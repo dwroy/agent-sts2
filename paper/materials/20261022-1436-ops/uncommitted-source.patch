@@ -1,0 +1,61 @@
+diff --git a/agent/src/reflex/rollout-live.ts b/agent/src/reflex/rollout-live.ts
+index fb3e42be8..976483ef1 100644
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -824,7 +824,7 @@ export function boardRolloutInput(
+   asc: number,
+   db: MonsterMoves = monsterMoves(),
+   mm: MoveModelData = moveModelData(),
+-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "observedSilentQueenAllyStrength" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
++): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "observedSilentQueenAllyStrength" | "observedSilentWellLaidPlans" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+   const combat = asRecord(state.raw["combat"]);
+   const raw = asArray(combat["enemies"]).map(asRecord);
+   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+@@ -921,6 +921,9 @@ export function boardRolloutInput(
+     ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
+     ...(passive ? { passive } : {}),
+     playerPowers: powersOf(asRecord(combat["player"])),
++    // silent-0258: only the observed active power; choosing to establish it is still unmodelled.
++    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 &&
++      powersOf(asRecord(combat["player"]))["WELL_LAID_PLANS_POWER"] === 1 ? { observedSilentWellLaidPlans: true } : {}),
+     ...(skull ? { fumesPoisonBonus: 1 } : {}),
+     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
+     ...(testSubjectPhasePowers ? { observedSilentTestSubjectPhasePowers: true } : {}),
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index bc5957d70..cb2785db9 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -640,6 +640,8 @@ export interface RolloutInput {
+   observedSilentAeonglassIntensity?: boolean;
+   /** Observed Silent A10 Queen/Amalgam ally Strength; whole-fight scripts only. */
+   observedSilentQueenAllyStrength?: boolean;
++  /** WQZVENQ7DTRP A10 F33 T8-T11: an already active single-layer Well-Laid Plans keeps the hand. */
++  observedSilentWellLaidPlans?: boolean;
+   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
+   continuation?: {
+     variants: { boss: string; count: number; input: RolloutInput }[];
+@@ -1270,6 +1272,7 @@ interface SimPlayer {
+    * last one (base cards; the next turn draws on top of them, up to the hand limit).
+    */
+   retainTurns: number;
++  wellLaidPlans: boolean;
+   retained: CardModel[];
+   /** Unmovable: the first card Block each turn is doubled. */
+   unmovable: boolean;
+@@ -2188,7 +2191,7 @@ function applyPlan(
+   // Ethereal cards left in hand are exhausted at the end of the turn (their Feel No Pain Block is in the solver's
+   // outcome): they leave the fight, not back through the discard pile.
+   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
+-  const keep = player.retainTurns > 0 && !o.winsFight;
++  const keep = (player.retainTurns > 0 || player.wellLaidPlans) && !o.winsFight;
+   for (const i of unplayed) if (!hand[i]!.ethereal) {
+     const retain = keep || (hand[i]!.retain === true && !discarded.has(i) && !o.winsFight);
+     (retain ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+@@ -2781,6 +2784,7 @@ function simulate(
+     ritual: input.playerPowers["RITUAL_POWER"] ?? 0,
+     clarityTurns: input.playerPowers["CLARITY_POWER"] ?? 0,
+     retainTurns: input.playerPowers["RETAIN_HAND_POWER"] ?? 0,
++    wellLaidPlans: input.observedSilentWellLaidPlans === true && input.playerPowers["WELL_LAID_PLANS_POWER"] === 1,
+     retained: [],
+     revives: base.revives ?? [],
+   };

@@ -1,6 +1,6 @@
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-22T14:08:43+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 11e62f95d886a9046759601d4c59f38fcf4f3c9e0335b4eeec47b4143cbee2be
-main d3b2a747453bba3ac6b2488dd518731651f54e98
+生成：2026-10-22T14:44:33+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 0647200cda33a5f1548b721da5be29b1ea7dd063f8617ae97af8f5d40b25c807
+main 3cbe91ae4638a35b37946d61bfde4a99d13d92bf
 live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
@@ -9,8 +9,8 @@ live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.
 - active_batches：在途 2；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 9；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 0；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
-- not_marked_completed_transactions：未标 completed 189；保留未知/失败与原件引用，不推定活进程或成功。
+- queued_events：队列 8；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- not_marked_completed_transactions：未标 completed 190；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。

@@ -1,0 +1,22 @@
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index 72e3788f4..d4382cfc7 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -93,7 +93,7 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+       v6ProjectionInputs(root, () => "2026-10-20T16:20:00.000Z"), {
+         // This contract needs all eight fixed samples; host load must not truncate it after two.
+         engine: new V6CardResultsEngine(runner, () => 0, 8), context: cardResultsContext,
+-        record(_env, table) { tables.push(table); },
++        record(_env, table) { tables.push(table); writeFileSync("/home/dw/Projects/agent-sts2/paper/materials/20261022-issue20-r3-integrator-review/diagnostic-tables.jsonl", JSON.stringify({run, floor, telemetry: table.telemetry, rows: table.immediate.map(r => ({option_id:r.option_id, samples:r.samples, n:r.metrics.death_rate?.n, capped:r.capped, time_up:r.time_up, missing:r.missing})), requests:runSamples.mock.calls.map(([r]) => ({samples:r.samples, range:r.range, deadlineMs:r.deadlineMs,seed:r.seed}))}) + "\n", {flag:"a"}); },
+       });
+     let polls = 0;
+     const server = await startFixtureServer((req, res) => {
+@@ -136,7 +136,7 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+       expect(ids.map(id => cardResultKnown(table, id))).toEqual([true, true, true, true]);
+       const rows = ids.map(id => table.immediate.find(r => r.option_id === id && r.target_id === target.id)!);
+       // Fixed shared samples verify actual results, not just three distinct cache identities.
+-      expect(rows.map(r => r.metrics.death_rate?.n)).toEqual([8, 8, 8, 8]);
++      expect(rows.map(r => r.metrics.death_rate?.n), JSON.stringify({telemetry: table.telemetry, rows, requests: runSamples.mock.calls.map(([r]) => ({samples:r.samples,range:r.range,deadlineMs:r.deadlineMs,seed:r.seed}))})).toEqual([8, 8, 8, 8]);
+       expect(new Set(rows.slice(0, 3).map(r => JSON.stringify([r.metrics, r.paired_delta]))).size).toBe(3);
+       const offers = reward["reward"] as { card_options: { card_id: string; energy_cost: number }[] };
+       for (const face of offers.card_options) {
