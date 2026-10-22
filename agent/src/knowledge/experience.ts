@@ -12,6 +12,7 @@
  */
 
 import { readFileSync, statSync } from "node:fs";
+import { knowledgeQueryActive, queryKnowledgeJson, queryKnowledgeText } from "./query-sources.js";
 
 import type { GameState } from "../hand/mod/schema.js";
 import { fillGuideFacts } from "../sim/boss-clock.js";
@@ -90,6 +91,11 @@ function here(file: string): string {
 }
 
 export function loadExperience(dir: string = KNOWLEDGE_DIR): ExperienceEntry[] {
+  if (knowledgeQueryActive()) {
+    let entries: ExperienceEntry[] = [];
+    try { const parsed = JSON.parse(queryKnowledgeText(dir, "experience.json")!) as ExperienceFile; entries = parsed.entries ?? []; } catch { /* Missing private knowledge is empty. */ }
+    return [...entries, ...loadSharedExperience(dir).entries];
+  }
   if (experienceOverride !== null) return experienceOverride;
   const stamp = ["experience.json", SHARED_EXPERIENCE_FILE].map(name => {
     const path = knowledgeFile(dir, name);
@@ -109,6 +115,8 @@ export function loadExperience(dir: string = KNOWLEDGE_DIR): ExperienceEntry[] {
 }
 
 export function loadOutcomeStats(): OutcomeStats {
+  const query = queryKnowledgeJson("outcome-stats.json");
+  if (query !== undefined) return query ?? {};
   if (statsOverride !== null) return statsOverride;
   const path = here("outcome-stats.json");
   let stamp = `${path}:missing`;

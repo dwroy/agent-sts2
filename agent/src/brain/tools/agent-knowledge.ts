@@ -3,6 +3,9 @@ import { createHash } from "node:crypto";
 import { readFileSync, statSync } from "node:fs";
 import { knowledgeCharacter, knowledgeFile } from "../../knowledge/files.js";
 import { loadExperience } from "../../knowledge/experience.js";
+import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../knowledge/query-sources.js";
+import { KNOWLEDGE_FILES } from "../../knowledge/render/data.js";
+import { OLD_SOURCES, OLD_SOURCE_KEYS, type OldSource } from "../../knowledge/render/old-knowledge.js";
 import { appliesAt, themeOf } from "../../knowledge/render/experience-text.js";
 import { loadOpenBook } from "../../knowledge/open-book.js";
 import { parseStrategyLibrary, retrieveStrategies } from "../../knowledge/strategy-entries.js";
@@ -44,30 +47,42 @@ function queryTool(name: string, description: string, lookup: (query: string, ct
   } };
 }
 
+/** Content dependencies, keyed by the same selectors and constants as the existing renderers. */
+function sourceFiles(tool: string, input: Record<string, unknown>): string[] {
+  switch (tool) {
+    case "kb_monster": case "kb_encounter": return [KNOWLEDGE_FILES.monsterDb, KNOWLEDGE_FILES.monsterRecords];
+    case "kb_experience": return [KNOWLEDGE_FILES.experience, KNOWLEDGE_FILES.sharedExperience];
+    case "kb_potion": return ["potion-equivalents.json"];
+    case "kb_stats":
+      if (input["table"] === "fights") return [KNOWLEDGE_FILES.monsterDb, KNOWLEDGE_FILES.monsterRecords];
+      return [input["table"] === "rest" ? KNOWLEDGE_FILES.outcomeStats : KNOWLEDGE_FILES.roomCosts];
+    case "kb_old_knowledge":
+      return (input["source"] ? [input["source"] as OldSource] : OLD_SOURCE_KEYS).map(key => OLD_SOURCES[key].file);
+    default: throw new Error(`unmapped knowledge tool ${tool}`);
+  }
+}
+
 export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
   const own = knowledgeTools().filter(t => ["kb_monster", "kb_encounter", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_experience"].includes(t.name)).map((tool): ToolDef => ({
     ...tool,
     async run(input, ctx) {
-      let result: ToolResult;
+      if (validateInput(tool.inputSchema, input).length) return tool.run(input, ctx);
       let selected: unknown = null;
-      if (tool.name === "kb_experience") {
-        const problems = validateInput(tool.inputSchema, input);
-        if (problems.length || ![input["theme"], input["id"], input["keyword"]].some(Boolean)) return { text: "请提供 theme、id 或 keyword；其他参数不接受。", isError: true };
-        selected = loadExperience(ctx.knowledgeDir).filter(e => appliesAt(e, ctx.ascension)
-          && (!input["theme"] || themeOf(e.scope) === input["theme"])
-          && (!input["id"] || e.id === input["id"])
-          && (!input["keyword"] || JSON.stringify(e).includes(String(input["keyword"]))));
-        result = { text: JSON.stringify(selected) };
-      } else result = await tool.run(input, ctx);
-      // Hash the applicable published files, preserving original text/evidence rather than relabelling external entries.
-      const names = tool.name === "kb_monster" || tool.name === "kb_encounter" ? ["monster-db.json", "monster-records.json"] : tool.name === "kb_experience" ? ["experience.json", "shared-experience.json"] : tool.name === "kb_potion" ? ["potion-equivalents.json"] : tool.name === "kb_stats" ? ["room-costs.json", "outcome-stats.json"] : [`${knowledgeCharacter()}-guide.md`, "ds-handbook.md", "jev-hints.md"];
-      const sources = names.flatMap(name => {
-        try { const text = readFileSync(knowledgeFile(ctx.knowledgeDir, name), "utf8"); let version = "unknown";
-          try { const v = JSON.parse(text); version = String(v.version ?? v.schema ?? "unknown"); } catch { /* Prose retains its file hash. */ }
-          return [{ source: "own", character: knowledgeCharacter(), file: name, version, sha256: sha(text) }];
-        } catch { return []; }
+      const audit = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => {
+        // These selectors use the renderer's file constants; dynamic fact loaders add their actual dependencies.
+        sourceFiles(tool.name, input).forEach(recordKnowledgeQuerySource);
+        if (tool.name === "kb_experience") {
+          if (![input["theme"], input["id"], input["keyword"]].some(Boolean)) return { text: "请提供 theme、id 或 keyword；其他参数不接受。", isError: true };
+          selected = loadExperience(ctx.knowledgeDir).filter(e => appliesAt(e, ctx.ascension)
+            && (!input["theme"] || themeOf(e.scope) === input["theme"])
+            && (!input["id"] || e.id === input["id"])
+            && (!input["keyword"] || JSON.stringify(e).includes(String(input["keyword"]))));
+          return { text: JSON.stringify(selected) };
+        }
+        return tool.run(input, ctx);
       });
-      if (Array.isArray(selected)) for (const entry of selected) if (object(entry) && typeof entry["source"] === "string" && entry["source"].startsWith("external:")) sources.push({ source: entry["source"], character: knowledgeCharacter(), file: "experience.json", version: String(entry["version"] ?? "unknown"), sha256: sha(JSON.stringify(entry)) });
+      const result = audit.result, sources = audit.sources;
+      if (Array.isArray(selected)) for (const entry of selected) if (object(entry) && typeof entry["source"] === "string" && entry["source"].startsWith("external:")) sources.push({ source: entry["source"], character: knowledgeCharacter(), representation: "entry", entry_id: entry["id"], version: String(entry["version"] ?? "unknown"), sha256: sha(JSON.stringify(entry)) });
       if (Buffer.byteLength(result.text) > MAX_BYTES) return { ...envelope([], sources, { error: "结果超过24KB，请缩小关键词/进阶/幕范围后查询" }), isError: true };
       return { ...envelope(selected ?? result.text, sources, { evidence_scope: "自有知识；条目内来源/反证保持原样；其他角色来源不计本角色验证" }), ...(result.isError ? { isError: true } : {}) };
     },
