@@ -28,7 +28,7 @@
 
 **logs/**　原始日志（decisions.jsonl、states.jsonl、brain.jsonl、runs.jsonl……），不进 git，只追加。原来在 jev-sts2/logs。
 
-**data/**　能重建的数据，不进 git：game-data.json（mod 的游戏数据缓存）、logdb/（日志库的 Parquet 分片）、logdb-venv/（日志库用的 Python 环境，带 duckdb）、fight-value-rows.jsonl。原来在 jev-sts2/.cache。
+**data/**　能重建的数据，不进 git：game-data.json（mod 的游戏数据缓存）、logdb/（日志库的 Parquet 分片）、logdb-venv/（日志库用的 Python 环境，带 duckdb）、fight-value-rows.jsonl 及训练周期回执。原来在 jev-sts2/.cache。局间增量、队列、发布锁与耗时读回见[知识刷新](knowledge-refresh.md)。
 
 ## agent/src 的模块
 

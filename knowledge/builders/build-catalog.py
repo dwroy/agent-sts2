@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Mechanically index published layout and mirror enemy data; never infer a game rule."""
+from refresh_publish import publication
 import argparse
 import base64
 import fcntl
@@ -36,9 +37,7 @@ def checked(root, path):
     return path
 
 
-def atomic(path, raw):
-    if path.is_file() and path.read_bytes() == raw:
-        return
+def staged(path, raw):
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, name = tempfile.mkstemp(prefix=".catalog-", dir=path.parent)
     try:
@@ -47,9 +46,20 @@ def atomic(path, raw):
             output.flush()
             os.fsync(output.fileno())
             os.fchmod(output.fileno(), 0o644)
+        return Path(name)
+    except BaseException:
+        Path(name).unlink(missing_ok=True)
+        raise
+
+
+def atomic(path, raw):
+    if path.is_file() and path.read_bytes() == raw:
+        return
+    name = staged(path, raw)
+    try:
         os.replace(name, path)
     finally:
-        Path(name).unlink(missing_ok=True)
+        name.unlink(missing_ok=True)
 
 
 def build(root):
@@ -129,29 +139,31 @@ def build(root):
             "generated_files": {name: {"sha256": sha(raw), "bytes": len(raw)} for name, raw in generated.items()},
             "curated_files_never_overwritten": True, "game_knowledge_added": False,
             "evidence_policy": "逐条保留原证据；无原局号时明确未知，仅有文件SHA不能补证。"}
-        # Validate the whole source cut before publishing. Existing legacy files are never rewritten.
-        for name, raw in originals.items():
-            if checked(root, root / name).read_bytes() != raw:
-                raise ValueError("parallel knowledge change; preserve candidate and rebuild")
-        for name, raw in creates.items():
-            path = checked(root, root / name)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            # A curator that arrived in parallel is retained, not overwritten.
-            fd, temporary = tempfile.mkstemp(prefix=".curated-stub-", dir=path.parent)
-            try:
-                with os.fdopen(fd, "wb") as output:
-                    output.write(raw)
-                    output.flush()
-                    os.fsync(output.fileno())
-                    os.fchmod(output.fileno(), 0o644)
-                os.link(temporary, path)
-            except FileExistsError:
-                raise ValueError("parallel curated rule retained; rebuild catalogue")
-            finally:
-                Path(temporary).unlink(missing_ok=True)
-        for name, raw in generated.items():
-            atomic(checked(root, root / name), raw)
-        atomic(root / "catalog.json", rendered(catalog))
+        # Render and fsync all candidate bytes before taking the publication lock.
+        ready, new_stubs = [], []
+        try:
+            for name, raw in creates.items():
+                path = checked(root, root / name)
+                new_stubs.append((path, staged(path, raw)))
+            for name, raw in [*generated.items(), ("catalog.json", rendered(catalog))]:
+                path = checked(root, root / name)
+                if not path.is_file() or path.read_bytes() != raw:
+                    ready.append((path, staged(path, raw)))
+            with publication():
+                # Revalidate the source cut under the original publication lock.
+                for name, raw in originals.items():
+                    if checked(root, root / name).read_bytes() != raw:
+                        raise ValueError("parallel knowledge change; preserve candidate and rebuild")
+                for path, temporary in new_stubs:
+                    try:
+                        os.link(temporary, checked(root, path))
+                    except FileExistsError:
+                        raise ValueError("parallel curated rule retained; rebuild catalogue")
+                for path, temporary in ready:
+                    os.replace(temporary, checked(root, path))
+        finally:
+            for _path, temporary in [*new_stubs, *ready]:
+                temporary.unlink(missing_ok=True)
         return {"schema": SCHEMA, "sources": len(sources), "enemies": len(enemy_index),
                 "generated_files": len(generated), "new_curated_stubs": len(creates),
                 "original_source_bytes_unchanged": True, "catalog_sha256": sha((root / "catalog.json").read_bytes()),

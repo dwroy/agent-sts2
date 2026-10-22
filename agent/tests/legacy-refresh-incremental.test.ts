@@ -8,6 +8,7 @@ const duckPython = `${root}data/logdb-venv/bin/python`;
 
 it.each([
   ["python3", "knowledge/builders/test_legacy_incremental.py", 11],
+  ["python3", "knowledge/builders/test_refresh_pipeline.py", 12],
   ["python3", "agent/tests/cost_incremental_test.py", 2],
   ["python3", "agent/tests/report_incremental_test.py", 4],
   [existsSync(duckPython) ? duckPython : "python3", "knowledge/builders/test_potion_incremental.py", 1],

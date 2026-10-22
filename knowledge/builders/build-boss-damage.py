@@ -41,6 +41,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import character_dir, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 
 # Boss clock key (strategy/boss-clock.ts BOSSES) -> the enemy ids of its bodies.
 BOSSES = {
@@ -328,7 +329,7 @@ def main() -> None:
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")
-    os.replace(tmp, args.out)
+    publish_replace(tmp, args.out)
     print(f"{len(out)} bosses, {len(rows)} fights -> {args.out}")
     if args.fights:
         with open(args.fights, "w", encoding="utf8") as handle:
