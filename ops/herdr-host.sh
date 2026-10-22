@@ -226,12 +226,13 @@ run() {
 
 close_pane() {
   local label="$1"; shift
-  local pane="" taillog="$TAIL_LOG_DEFAULT" delay=0
+  local pane="" taillog="$TAIL_LOG_DEFAULT" delay=0 require_idle=0
   while [ $# -gt 0 ]; do
     case "$1" in
       --pane) pane="$2"; shift 2 ;;
       --tail-log) [ "$2" != - ] && taillog="$2"; shift 2 ;;
       --delay) delay="$2"; shift 2 ;;
+      --require-idle) require_idle=1; shift ;;
       *) die "close: unknown option $1" 2 ;;
     esac
   done
@@ -239,6 +240,7 @@ close_pane() {
   [ -n "$pane" ] || pane=$(state_get "$label")
   [ -n "$pane" ] || die "no pane recorded for $label" 1
   [ "$(pane_label "$pane")" = "$label" ] || { lock; state_set "$label" ""; die "pane $pane is not labelled $label (gone?); forgot it" 1; }
+  if [ "$require_idle" = 1 ]; then pane_busy "$pane"; [ $? = 1 ] || die "pane is not idle; retained" 4; fi
   { echo "=== $(date '+%F %T') $label ($pane) closed; last lines:"; h pane read "$pane" --source recent-unwrapped --lines 40 2>/dev/null | grep -v '^[[:space:]]*$' | tail -n 30; } >> "$taillog"
   h pane close "$pane" > /dev/null
   lock; state_set "$label" ""

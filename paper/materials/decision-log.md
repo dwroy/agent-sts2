@@ -5749,3 +5749,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:53:58+08:00 [Claude] Roy 10-22：开发会话并发上限 5 → 10（每个项目；.agents/board.yaml roles.dev.max_parallel，全局记忆 agent-issue-workflow 已改）。
 
 - 2026-10-22T10:13:21+08:00 [dev #36] 完成只读对局大脑常驻视图及学习大脑中文 tab 标题，稳定 pane label/回收身份不变；最终 tsc0、完整654文件6167通过/2跳过、专项30及Python11通过，缺件首轮失败与自主中止原件保留。交review不改live/STOP/决策；ops集成前先brain_view=off、自然边界开启并读回。当前重检查已结束，按Claude指示在ops完成#33上线组合检查前不再起完整Vitest。报告paper/materials/20261022-issue36-visible-brain-tabs/report.md。
+
+- 2026-10-22T12:08:38+08:00 [dev #36] 沿60e0ed688补交学习批次Codex交互TUI（原提示/账号/权限预检，native turn+实际空闲+持久产物+精确PID退场后原finish/关tab；容量限流原会话十分钟退避、三次无工具进展转原ops，回执不确定保留租约）及#33既有Codex/dsh通知→脱敏实时文本→只读tail（4MiB双份滚动、128KiB队列、写失败不影响答题）；定向16文件218过、最终隔离/公开摘要增量5文件54过、最终tsc0、40输入SHA读回相同。遵守重任务窗口未重跑full；原full仅初版，新增完整组合及自然TUI/直播待原集成员/ops。未运行play、改live/STOP/共享配置或关闭他会话；生产brain_view沿原off门。材料paper/materials/20261022-issue36-interactive-learner/。

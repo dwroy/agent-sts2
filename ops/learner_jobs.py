@@ -32,18 +32,44 @@ def hosting(state_dir, key, env_name, default):
 def start_learner(argv, root, scripts, state_dir, label):
     """Start a learner batch in the background; returns (pid, pane id or None).
 
-    hosting learners=herdr (docs/codex-ops.md「herdr 托管」): in its own herdr pane `label` via ops/herdr-host.sh run
-    --close-on-exit (the pid is the pane-side wrapper, the batch script's parent); otherwise, or when herdr is not
-    available, setsid as before.
+    Hosted Codex batches have a detached supervisor and a dedicated interactive pane.
+    The supervisor PID remains the scheduler's lease; only verified completion closes the pane.
+    Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
+    launch_env = dict(os.environ)
+    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT"):
+        launch_env.pop(name, None)
     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
         os.makedirs(os.path.dirname(pidfile), exist_ok=True)
         envs = []
-        for name in sorted(os.environ):
+        for name in sorted(launch_env):
             if PASS_ENV.match(name) and not SECRET_NAME.search(name):
-                envs += ["--env", f"{name}={os.environ[name]}"]
+                envs += ["--env", f"{name}={launch_env[name]}"]
         try:
+            if not os.environ.get("LEARNER_CMD"):
+                result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "open-pane", label],
+                                        cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
+                pane = result.stdout.strip()
+                if result.returncode == 0 and re.fullmatch(r"[A-Za-z0-9]+:p[A-Za-z0-9]+", pane):
+                    env = dict(launch_env, LEARNER_HERDR_PANE=pane, LEARNER_HERDR_LABEL=label,
+                               LEARNER_TUI_RECEIPT=os.path.join(state_dir, "learner", label + ".tui.json"))
+                    proc = subprocess.Popen(["nice", "-n", "19", *argv], cwd=root, env=env, stdin=subprocess.DEVNULL,
+                                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+                    try:
+                        with open(pidfile, "w", encoding="utf8") as handle:
+                            handle.write(str(proc.pid) + "\n")
+                    except OSError:
+                        # The supervisor already exists: never fall back and start a second one.
+                        sys.stderr.write("learner supervisor pidfile unavailable; original PID returned for registration\n")
+                    return proc.pid, pane
+                if result.returncode == 4:
+                    raise RuntimeError("learner pane is already busy; preserve it without a second launch")
+                # No command was submitted: falling back cannot duplicate a model session.
+                sys.stderr.write(f"herdr-host open {label} failed (exit {result.returncode}); starting with setsid\n")
+                proc = subprocess.Popen(argv, cwd=root, env=launch_env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                        stderr=subprocess.DEVNULL, start_new_session=True)
+                return proc.pid, None
             result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "run", label, "--pidfile", pidfile, "--close-on-exit",
                                      *envs, "--", *argv], cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
             parts = result.stdout.split()
@@ -52,7 +78,7 @@ def start_learner(argv, root, scripts, state_dir, label):
             sys.stderr.write(f"herdr-host run {label} failed (exit {result.returncode}): {result.stderr.strip()[-300:]}; starting with setsid\n")
         except (OSError, subprocess.SubprocessError) as error:
             sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
-    proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    proc = subprocess.Popen(argv, cwd=root, env=launch_env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     if "boss-sim-batch" in argv:
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
         os.makedirs(os.path.dirname(pidfile), exist_ok=True)

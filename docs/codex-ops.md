@@ -116,12 +116,15 @@ Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspac
 | 键 | 值（默认在前） | 环境变量 | 管什么 |
 |---|---|---|---|
 | ops | exec / herdr | CODEX_OPS_MODE | 叫醒走 `codex exec resume`（无头），还是走 herdr 里的交互 TUI |
-| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | tab 标题 `学习大脑 · <批次> · <类型>`（复盘、经验更新、策略提案、修复等）；pane label 仍是 `learner-<批次 id>[-postmortem]`，结束照旧关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | tab 标题 `学习大脑 · <批次> · <类型>`（复盘、经验更新、策略提案、修复等）；pane label 仍是 `learner-<批次 id>[-postmortem]`，新批次直接运行 Codex 交互 TUI；实际会话结束、原输出持久化且完成事务登记后才关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
 | brain_view | herdr / off | CODEX_OPS_BRAIN_VIEW | 只读常驻 tab `对局大脑 · <run_id>`；pane label 固定 `brain-view`。独立关闭视图，不影响对局、学习或 autoplay |
 | autoplay | setsid / herdr | CODEX_OPS_AUTOPLAY_HOST | 动作 autoplay-start 把 `ops/autoplay.sh` 放进 pane `autoplay`；PID 仍写 `autoplay.pid`，autoplay-stop / kill / 卡死检查不变 |
 
-**大脑视图（#36）**：`ops/brain_view.py` 每秒增量读取本实例的 `logs/brain.jsonl`、`brain-wait.jsonl` 和 `run-config.jsonl`。每道已落盘的尝试显示时间、层数、题型、引擎/模型、请求强度、原生日志提供的实际强度、最终选择、理由、耗时；#33 的 `tool_calls` 显示工具名、参数摘要、返回字节数和耗时。等待、恢复、错误、超时和兜底用 `!!!` 标出。题面只显示前 160 字，理由最多 360 字；完整 payload、推理、工具返回正文、SQL/查询内容和外部玩家字段不输出，凭据、地址、邮箱与终端控制符隐藏。日志缺字段显示 `?`，不补推断。工具调用随该尝试完成后落盘显示，尚未落盘的推理与工具进度不可见；单条耗时不冒充跨重试整题总耗时。
+**对局直播（#36）**：沿 #33 现有 Codex app-server 通知监听和 dsh 流式观察器写入 `logs/brain-live/<run_id>/current.txt`，不新增模型、客户端或连接，不输入/修改原线程和回滚。每题先显示时间、层数、题型、引擎/模型、请求强度及 160 字题面摘要；提供方已送来的推理摘要/正文增量按安全分句滚动，工具开始及返回即时显示名称、参数形状、返回字节、180 字脱敏摘要和耗时；随后记录本次尝试答案、路由最终接受/拒绝、理由、总耗时，错误、卡住、超时与兜底标 `!!!`。这不额外请求或生成任何推理内容。未完成分句暂存，256 字进度可见；单段超过 4096 字折叠，避免把分块凭据的前缀先写出来。工具 SQL/查询参数只展示形状；敏感字段、凭据、地址、邮箱、外部玩家标识和终端控制符脱敏后才写盘。原生通知和完整 payload 不写直播文件。
 
+直播异步写入，不 await 磁盘，不调整原答题预算或 stall 时钟；写入错误停用该 writer，答题继续。待写队列最多 128 KiB，积压时丢展示增量并留缺口说明，原对局证据照常保存。每局 `current.txt` 最大 4 MiB，超出滚到同目录 `previous.txt`，两份共最多 8 MiB；不跨局覆盖。局结束保留这两份原件，沿现有对局 logs 保留边界处理，不因学习工作树回收删除，不新增清理调度器。
+
+`ops/brain_view.py` 每秒仅 tail 该脱敏文本并按 `run-config.jsonl` 更新同一 tab 标题，没有可输入的会话界面；直播缺失时兼容 `brain.jsonl`、`brain-wait.jsonl` 的非流式版本。旧版本只在尝试完成后显示工具等已落盘字段，不冒充直播。只读进程能处理半行、轮转和截断；单次尝试耗时不冒充跨重试整题耗时。
 视图与对局没有共享控制通道。`run.sh` 在自然进程边界异步尝试启动，原 `stall` tick 可恢复退出的视图；均为 nice 19，不阻塞对局，也不启动新模型、游戏动作或额外调度器。换局按 `run-config.jsonl` 更新同一 tab 的标题；日志轮转、缺失、半行和无效 JSON 可继续读取。视图挂掉只留下闲置 tab，重启复用它。环境可用时也可由 ops 在主运行根执行：
 
 ```bash
@@ -131,10 +134,15 @@ nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性�
 
 写 `brain_view=off` 到 hosting 可单独停视图（通常一秒，标题更新中的 herdr 故障最多延迟一次命令超时），tab 保留；写回 `brain_view=herdr` 后在下个自然启动边界或原 stall tick 恢复。显式 `CODEX_OPS_BRAIN_VIEW` 优先。herdr 不可用时跳过视图，对局照常。
 
-**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id、PID/argv、agent 名称与登记键保持原值。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
+**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id 与登记键保持原值；新批次的租约 PID 对应后台监管 wrapper，模型 PID/birth 另在交互回执核验，agent 名称仍用本批稳定 label。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
 
-herdr 不可用时（`herdr-host.sh available` 失败）学习者和 autoplay 退回 setsid，ops 叫醒退回 exec（日志里各有一行）。学习者的命令行、权限配置、key 预检、退出码、`learner/runs/*.jsonl`、批次登记都不变；pane 里 `tail -F` 显示 `.out/.err`，批次结束后 drain 放到 setsid 里（不随 pane 关掉）。
+**学习交互会话（#36）**：`learners=herdr` 的新批次先开专属 tab，后台 `codex-ops-learner.sh` 监管进程继续以原批次/PID/工作树持租约。`learner/run.ts` 沿原任务渲染、账号、模型/强度、key 预检和权限 profile 启动真正的 Codex TUI；从 herdr 发送原始任务，不再 tail `.out/.err` 假装会话。提示超过 96 KiB 时保存在同一 scratch 中的完整文件，首次提示要求完整读入；原完整提示仍记录在 `learner_launch`。TUI 的环境在原 `codexChildEnv` 去密钥结果上只保留本角色路径、locale、账号 home 和必要证书/无凭据代理设置，用 `env -i` 隔离 herdr server 环境；任意继承变量不写进启动脚本，含凭据代理则保留现场并拒绝启动；`--no-daemon`，nice 19，不改共用 config、账号或 home。交互 CLI 不支持 exec 专用的忽略配置参数，故启动前沿原只读配置检查器核账号及 cwd 各级配置：仅允许被显式覆盖的模型/强度、TUI 与项目 trust；继承 MCP、指令、hook 等非被动配置则零模型启动并交原 ops 核验，不改账号配置、不降级权限。原 `.out/.err`、learner JSONL、原生会话、任务产物和完成审计保留；日志和完成回执与 native session/turn 绑定，令牌按原生每回合最后用量去重累计。
 
+屏幕 idle 或进程退出都不能证明批次完成：须有匹配原提示的原生 `task_complete`、实际 TUI idle 且输入框空、无新原生回合；退出前复核本批 PID birth 与 pane 身份。原 `.out` 已刷新后，`ops/learner_tui.py` 核原日志 SHA/summary、原生完成记录、实际进程结束，再执行原 `finish` 产物审计。终态事务已登记且原件持久化才关闭本批闲置 pane；分类失败/超时也保留原输出与错误。会话退出不确定、新的人类输入、pane 身份变化、回执缺失等保留 tab/原监管租约，排队给原 ops，不标 done、不另开模型、不申请回收。key/模型预检失败仍为退出码 3、零模型启动，空 tab 保留待 ops 核验。运行中切换开关不热切已有批次。
+
+容量/限流/断流等报错空闲沿 #20 的方式接续：只在原生接受的同一批、同一原会话、实际 idle/done 且输入框空、原租约仍有效时，十分钟退避后发送“沿原任务接着做”；不重启、不换账号/线程，不重送原完整任务。即使失败回合缺少结束行，也不会把它算完成；明确报错空闲可接续。连续三次无原生工具进展后再观察完整退避，通知原 ops/Roy 并停自动提醒，保留原任务期限；人工接续有进展可恢复。发送回执不确定时只等匹配的原生用户消息核实，未核实不重发。注意通知排队不代表已送达 Roy。原超时和失败分类继续，只有本批精确 PID 可退出；不能核退场时监管进程保留租约等原 ops 核验。
+
+`learner-log-tab` 遇到新批交互回执时返回已经核实的 TUI tab，不另开日志 tab；旧在途 headless 批次仍可用原只读镜像，不重启或迁移。herdr 不可用且尚未提交模型命令时，学习者退回原 setsid；忙碌身份冲突不降级另起模型。autoplay/ops 的既有 fallback 不变。开发固定测试的 `LEARNER_CMD` 仍走通用命令 pane，不能当作真实 TUI 验收。
 **ops TUI**：第一轮（建会话）仍走 exec。之后每次叫醒：`herdr agent start ops --kind codex --pane <label ops 的 pane> -- resume <同样的 -c / 权限配置 / 模型 / 强度 / --disable …> --no-daemon <会话 id>`（lib.ts `interactiveArgs`；TUI 不接受 `--json`、`--ignore-user-config`、`--ignore-rules`，其余全收，2026-10-05 实测 codex 0.160）。TUI 常驻；参数变了（例如磁盘上多了一个 key 文件、强度改了）且空闲时重启。一次叫醒（herdr.ts `herdrWake`）：
 1. 等就绪：herdr 状态 idle/done（unknown 时看会话文件）、输入框空（ansi 读屏：占位符是暗色）、会话文件里没有没结束的 turn。最多等 10 分钟（CODEX_OPS_HERDR_READY_MIN），不就绪 → exit 75「延后」：事件留在队列，不算失败，下个 tick 再来。blocked（对话框）也延后，调度器不替人回答。
 2. `herdr agent prompt ops "<事件>"`，broker 照常在叫醒期间运行。

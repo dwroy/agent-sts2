@@ -198,8 +198,51 @@ class JsonlTail:
         return result
 
 
+class TextTail(JsonlTail):
+    """Tail the sanitized broadcast only; keep incomplete UTF-8/lines until the writer finishes them."""
+    def read_text(self):
+        # Reuse the bounded inode/truncation/anchor handling without interpreting text as JSON.
+        result = []
+        try:
+            with self.path.open("rb") as source:
+                stat = os.fstat(source.fileno())
+                identity = (stat.st_dev, stat.st_ino)
+                changed = False
+                if identity == self.identity and self.anchor and stat.st_size >= self.offset:
+                    source.seek(self.offset - len(self.anchor))
+                    changed = source.read(len(self.anchor)) != self.anchor
+                if identity != self.identity or stat.st_size < self.offset or changed:
+                    self.identity, self.offset, self.pending = identity, max(0, stat.st_size - self.initial), b""
+                    self.discard = self.offset > 0
+                source.seek(self.offset)
+                data = source.read(MAX_LINE)
+                self.offset += len(data)
+                source.seek(max(0, self.offset - 64))
+                self.anchor = source.read(min(64, self.offset))
+        except OSError:
+            return []
+        lines = (self.pending + data).split(b"\n")
+        self.pending = lines.pop()
+        if self.discard and lines:
+            lines.pop(0)
+            self.discard = False
+        if len(self.pending) > MAX_LINE:
+            self.pending = b""
+            self.discard = True
+        for line in lines:
+            try:
+                result.append(safe_text(line.decode("utf8"), 1600))
+            except UnicodeError:
+                pass
+        return result
+
+
 class Viewer:
     def __init__(self, logs, title, emit=print):
+        self.logs = Path(logs)
+        self.stream = None
+        self.stream_run = None
+        self.streaming = False
         self.config = JsonlTail(Path(logs) / "run-config.jsonl")
         self.brain = JsonlTail(Path(logs) / "brain.jsonl")
         self.wait = JsonlTail(Path(logs) / "brain-wait.jsonl", initial=64 * 1024)
@@ -228,15 +271,23 @@ class Viewer:
             if self.title(target):
                 self.titled = target
             if self.run and self.announced != self.run:
-                self.emit(f"\n对局大脑 · {self.run}（只读；完成的尝试与工具调用随日志刷新，不展示推理）")
+                self.emit(f"\n对局大脑 · {self.run}（只读直播；仅 tail 已脱敏文本，无会话连接）")
                 self.announced = self.run
+        if self.stream_run != self.run:
+            self.stream_run = self.run
+            self.stream = TextTail(self.logs / "brain-live" / self.run / "current.txt") if self.run else None
+            self.streaming = False
+        if self.stream:
+            for line in self.stream.read_text():
+                self.streaming = True
+                self.emit(line)
         for row in sorted([*(('brain', r) for r in brains), *(('wait', r) for r in waits)], key=lambda pair: str(pair[1].get("ts", ""))):
             kind, event = row
             if event.get("run_id") != self.run:
                 continue
-            if kind == "brain":
+            if kind == "brain" and not self.streaming:
                 self.emit(render_brain(event))
-            elif event.get("state") != "heartbeat":
+            elif kind == "wait" and not self.streaming and event.get("state") != "heartbeat":
                 self.emit(f"!!! 等待状态 {ident(event.get('state'))} · {ident(event.get('decision_type'))} · 题 {ident(event.get('question_id'))} · {safe_text(event.get('ts'), 40)}（错误原文已隐藏）")
 
 
@@ -280,7 +331,7 @@ def watch(root, logs, state, once=False):
         env = dict(os.environ, HERDR_HOST_STATE=str(state / "herdr.json"), HERDR_HOST_CWD=str(root))
         title = lambda text: command(["bash", str(root / "ops/herdr-host.sh"), "title", LABEL, text], env)
         view = Viewer(logs, title, lambda text: print(text, flush=True))
-        print("对局大脑视图 · 等待日志；仅呈现已落盘事实。工具返回正文和完整题面不显示。", flush=True)
+        print("对局大脑视图 · 等待直播；只读 tail 脱敏文本。未有直播文件时读历史 brain 日志。", flush=True)
         while enabled(state):
             view.poll()
             if once:

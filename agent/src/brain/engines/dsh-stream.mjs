@@ -5,7 +5,7 @@ export function apply(ctx) {
     if (frame.chunk) {
       const chunk = frame.chunk;
       if (["reasoning-delta", "text-delta", "tool-call-delta"].includes(chunk?.type)) {
-        process.stdout.write(`${JSON.stringify({ type: "sts2_stream", kind: chunk.type, chars: String(chunk.text ?? "").length })}\n`);
+        process.stdout.write(`${JSON.stringify({ type: "sts2_stream", kind: chunk.type, chars: String(chunk.text ?? "").length, ...(chunk.type === "tool-call-delta" ? {} : { text: String(chunk.text ?? "") }) })}\n`);
       }
     }
   });

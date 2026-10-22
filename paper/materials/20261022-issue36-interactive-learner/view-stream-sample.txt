@@ -1,0 +1,20 @@
+固定样例，非自然对局或真实模型验收。
+
+2026-10-22T04:09:58.348Z · F12 · reward/card · 题 fixture-q-1
+codex / gpt-6.1-sol · 请求强度 high
+题面（截断）：固定样例：从 A/B 选一项。
+推理摘要：先核固定资料，再回答。
+工具开始 kb_experience (query=文本/13字, character=文本/6字, limit=3)
+工具返回 kb_experience → 61 B · 7 ms · 摘要 {"source":"own","version":"fixture","facts":["固定资料"]}
+正文：[敏感字段已隐藏] [敏感字段已隐藏]
+正文：固定结果分句。
+本次尝试答案与理由：{"choice":"A","reason":"固定测试理由，无游戏知识结论"}
+最终选择与理由 · 题 fixture-q-1 · 总耗时 180 ms
+{"choice":"A","reason":"固定测试理由，无游戏知识结论"}
+
+2026-10-22T04:09:58.350Z · F12 · reward/card · 题 fixture-q-2
+deepseek / fixed-dsh · 请求强度 max · !!! 兜底
+题面（截断）：固定样例：从 A/B 选一项。
+推理摘要：dsh 既有观察器送来的固定摘要。
+状态 !!! 查询阶段兜底 time，用已有资料作答
+!!! 错误/卡住/超时 fixed stream stalled timeout

@@ -1,3 +1,4 @@
+import { observeBrain, type BrainObserver } from "../live-view.js";
 /** DeepSeek Harness through the installed Nova launcher, with an allowlisted per-call composition. */
 import { spawn } from "node:child_process";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
@@ -83,7 +84,7 @@ export class DshEngine implements BrainEngine {
       const sessions = join(root, "sessions");
       writeFileSync(patch, JSON.stringify(dshPatch(ids, req.system, this.model, effort, sessions, req.tools?.length ? this.mcpUrl : undefined)));
       const result = await this.run(["headless", "--patch", patch, "--json", "-"], cwd,
-        `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal);
+        `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal, req.observe);
       const parsed = parseAnswerText(result.text);
       return { engine: this.name, model: this.model, effort, answer: parsed ? normalisePick(req, parsed) : null,
         problems: parsed ? [] : ["dsh returned no JSON answer"], attempts: 1, latencyMs: Date.now() - started,
@@ -93,7 +94,7 @@ export class DshEngine implements BrainEngine {
     } finally { rmSync(dir, { recursive: true, force: true }); }
   }
 
-  private run(args: string[], cwd: string, input: string, signal?: AbortSignal): Promise<{ text: string; reasoning: string; usage: BrainUsage; sessionId: string; events: number }> {
+  private run(args: string[], cwd: string, input: string, signal?: AbortSignal, observe?: BrainObserver): Promise<{ text: string; reasoning: string; usage: BrainUsage; sessionId: string; events: number }> {
     return new Promise((resolve, reject) => {
       const child = spawn(this.config.dsh.bin, args, { cwd, env: dshEnv(), stdio: ["pipe", "pipe", "pipe"] });
       let buffer = "", text = "", reasoning = "", sessionId = "", events = 0, stalled = false;
@@ -114,6 +115,9 @@ export class DshEngine implements BrainEngine {
           let e: unknown; try { e = JSON.parse(line); } catch { continue; }
           if (!object(e)) continue;
           events += 1;
+          if (e["type"] === "sts2_stream" && typeof e["text"] === "string") {
+            observeBrain(observe, { kind: e["kind"] === "reasoning-delta" ? "reasoning" : "text", text: e["text"] });
+          }
           if (e["type"] === "session") sessionId = String(e["sessionId"] ?? "");
           if (e["type"] === "final") text = String(e["text"] ?? "");
           if (e["type"] === "thinking") reasoning = (reasoning + String(e["text"] ?? "")).slice(-64_000);

@@ -1,0 +1,49 @@
+{
+  "checks": {
+    "targeted-final-2": {
+      "exit_code": 0,
+      "log": "checks/targeted-final-2.log",
+      "sha256": "dfad6f04bf73cca06a7b4ac4ad1f8608a26d4311f168bf10f381da4e4a158b4b",
+      "files": 16,
+      "passed": 218,
+      "inputs": "tested-inputs-218.json"
+    },
+    "delivery-delta-final": {
+      "exit_code": 0,
+      "log": "checks/delivery-delta-final.log",
+      "sha256": "82ceaa7478ed3ff4bec1dcc96c470763c5e6c827b71163dc08e2049c50793da4",
+      "files": 5,
+      "passed": 54,
+      "inputs": "tested-inputs.json"
+    },
+    "tsc-delivery-final": {
+      "exit_code": 0,
+      "log": "checks/tsc-delivery-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "shell-syntax": {
+      "exit_code": 0,
+      "log": "checks/shell-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "generate-sample": {
+      "exit_code": 0,
+      "log": "checks/generate-sample.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gitleaks-materials": {
+      "exit_code": 0,
+      "log": "checks/gitleaks-materials.log",
+      "sha256": "94bf6c475f23590c505e8bf261ce63dd578625fcfd0fb322af1cfbc94913af5d"
+    },
+    "gitleaks-staged": {
+      "exit_code": 0,
+      "log": "checks/gitleaks-staged.log",
+      "scope": "final complete staged diff; scanner run after this record is staged"
+    }
+  },
+  "full_vitest": "not rerun: original heavy-window coordination; previous full applies only to initial delivery",
+  "natural_acceptance": "pending original integrator/ops",
+  "nice": 19,
+  "max_workers": 1
+}

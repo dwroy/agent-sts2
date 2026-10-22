@@ -159,6 +159,47 @@ class BrainView(unittest.TestCase):
         self.assertNotIn('stop', args)
         self.assertFalse(view.command(['/nonexistent/brain-view-fixture']))
 
+    def test_stream_text_is_visible_before_final_brain_row_and_survives_rotation_and_run_switch(self):
+        emitted, titles = [], []
+        self.append('run-config.jsonl', {'run_id': 'STREAM000001'})
+        folder = self.root / 'brain-live/STREAM000001'
+        folder.mkdir(parents=True)
+        text = folder / 'current.txt'
+        text.write_text('推理摘要：固定分句。\n工具开始 kb_test\n')
+        reader = view.Viewer(self.root, lambda title: titles.append(title) or True, emitted.append)
+        reader.poll()
+        self.assertIn('推理摘要：固定分句。', emitted)
+        self.assertFalse((self.root / 'brain.jsonl').exists())
+        before = list(emitted)
+        reader.poll()
+        self.assertEqual(emitted, before)
+        text.rename(folder / 'previous.txt')
+        text.write_text('工具返回 kb_test → 42 B · 10 ms\n')
+        reader.poll()
+        self.assertIn('工具返回 kb_test → 42 B · 10 ms', emitted)
+        self.append('run-config.jsonl', {'run_id': 'STREAM000002'})
+        next_folder = self.root / 'brain-live/STREAM000002'
+        next_folder.mkdir(parents=True)
+        (next_folder / 'current.txt').write_text('正文：下一局。\n')
+        reader.poll()
+        self.assertEqual(titles[-1], '对局大脑 · STREAM000002')
+        self.assertIn('正文：下一局。', emitted)
+        self.assertTrue((folder / 'previous.txt').exists())
+
+    def test_stream_tail_keeps_partial_unicode_and_redacts_terminal_control(self):
+        file = self.root / 'stream.txt'
+        tail = view.TextTail(file)
+        raw = '中文分句。\n'.encode()
+        file.write_bytes(raw[:1])
+        self.assertEqual(tail.read_text(), [])
+        with file.open('ab') as out:
+            out.write(raw[1:])
+        self.assertEqual(tail.read_text(), ['中文分句。'])
+        file.write_text('api_key="sk-fixedPrivateCredential"\x1b]0;unsafe\n')
+        rendered = ''.join(tail.read_text())
+        self.assertNotIn('sk-fixed', rendered)
+        self.assertNotIn('\x1b', rendered)
+
     def test_titles_keep_stable_learner_labels_protected_by_real_board_rules(self):
         board = Board.__new__(Board)
         board.root = self.root

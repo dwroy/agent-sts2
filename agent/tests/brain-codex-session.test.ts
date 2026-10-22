@@ -172,7 +172,9 @@ describe("codex session mode", () => {
   it("one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it", async () => {
     const fake = fakeSession("basic", { turns: [answering({ choice: "b", reason: "smith", route: null, cards: null }), answering({ choice: "a", reason: "heal" }, 3)] });
     const { engine, trace } = sessionEngine(fake);
-    const first = await engine.decide(request({ runId: "RUN1" }));
+    const live: unknown[] = [];
+    const first = await engine.decide(request({ runId: "RUN1", observe: (event) => live.push(event) }));
+    expect(live).toContainEqual({ kind: "text", text: "{" });
     const second = await engine.decide(request({ question: "Heal or smith, again?" }));
     expect(first.nativeReceipt).toMatchObject({ source: "turn_context", model: "gpt-6.1-sol", effort: "xhigh", turn_id: "turn-1", thread_id: "thr-1" });
     expect(trace()[0]?.native_receipt).toEqual(first.nativeReceipt);
@@ -204,6 +206,20 @@ describe("codex session mode", () => {
     expect(engine.usage.last?.windows[0]).toMatchObject({ usedPct: 3 });
     expect(engine.usage.status().calls_since_read).toBe(2);
   }, 30_000);
+
+  it("broadcasts the existing public summary/body deltas while leaving raw reasoning only in stall detection", async () => {
+    const fake = fakeSession("live-public-summary", { turns: [[
+      { method: "item/reasoning/textDelta", params: { threadId: "$THREAD", turnId: "$TURN", delta: "raw-private-fixture" } },
+      { method: "item/reasoning/summaryTextDelta", params: { threadId: "$THREAD", turnId: "$TURN", delta: "固定公开摘要。" } },
+      ...answering({ choice: "a", reason: "fixed" }),
+    ]] });
+    const { engine } = sessionEngine(fake); const seen: unknown[] = [];
+    expect((await engine.decide(request({ observe: (event) => seen.push(event) }))).answer).toMatchObject({ choice: "a" });
+    expect(seen).toContainEqual({ kind: "reasoning", text: "固定公开摘要。" });
+    expect(seen).toContainEqual({ kind: "text", text: "{" });
+    expect(JSON.stringify(seen)).not.toContain("raw-private-fixture");
+    expect(fake.requests().filter((r) => r.method === "turn/start")).toHaveLength(1);
+  });
 
   it("quoted TUI model state and project trust keep both questions on the same isolated session", async () => {
     const fake = fakeSession("passiveconfig", { turns: [answering({ choice: "a", reason: "first" }), answering({ choice: "b", reason: "second" })] });

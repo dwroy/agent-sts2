@@ -1,3 +1,4 @@
+import { BrainLiveWriter, observeBrain } from "./live-view.js";
 import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
 import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
 /**
@@ -252,7 +253,11 @@ export class BrainRouter {
   private readonly idPrefix = `${Date.now().toString(36)}-${process.pid}`;
   private questions = 0;
 
-  constructor(private readonly deps: RouterDeps) { this.wait = deps.wait ?? new BrainWait(); }
+  private readonly live: BrainLiveWriter | undefined;
+  constructor(private readonly deps: RouterDeps) {
+    this.wait = deps.wait ?? new BrainWait();
+    if (deps.config.log) this.live = new BrainLiveWriter(dirname(deps.config.log));
+  }
   get codexOnly(): boolean { return this.deps.codexOnly === true; }
   onRecovery(recover: () => Promise<void>): void { this.recover = recover; }
 
@@ -643,7 +648,16 @@ export class BrainRouter {
     const pace = currentDecisionBudget();
     const ms = pace ? Math.min(req.timeoutMs ?? Infinity, pace.remaining()) : req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
     if (pace && (ms ?? 0) <= 0) throw new DecisionBudgetExpired(req.label);
-    if (!ms && !this.codexOnly) return engine.decide(req);
+    let broadcast: ReturnType<BrainLiveWriter["begin"]> | undefined;
+    try { broadcast = this.live?.begin(req, engine.name, engine.model,
+      req.effort ?? this.deps.config.engines[engine.name].effort ?? "?", asFallback); } catch { /* display only */ }
+    const finishBroadcast = (answer: unknown, error?: string): void => { try { broadcast?.finish(answer, error); } catch { /* display only */ } };
+    const observer = req.observe;
+    req = { ...req, observe: (event) => { observeBrain(observer, event); observeBrain(broadcast?.observe, event); } };
+    if (!ms && !this.codexOnly) {
+      try { const answer = await engine.decide(req); finishBroadcast(answer.answer); return answer; }
+      catch (error) { finishBroadcast(null, message(error)); throw error; }
+    }
     const controller = new AbortController();
     const outer = this.codexOnly ? this.wait.signal : undefined;
     let rejectCancel: ((error: BrainBlockedError | DecisionBudgetExpired) => void) | undefined;
@@ -669,8 +683,10 @@ export class BrainRouter {
     try {
       const answer = await Promise.race([engine.decide({ ...req, ...(ms ? { timeoutMs: ms } : {}) }, controller.signal), timeout, cancellation]);
       this.timeouts.delete(engine.name);
+      finishBroadcast(answer.answer);
       return answer;
     } catch (error) {
+      finishBroadcast(null, message(error));
       if (outer?.aborted) throw new BrainBlockedError("cancelled", "Codex brain call cancelled by stop signal", error);
       if (error instanceof EngineFailure && error.kind === "timeout") this.noteTimeout(engine.name, ms ?? 0);
       else this.timeouts.delete(engine.name);
@@ -754,6 +770,7 @@ export class BrainRouter {
       ...(result?.reasoning ? { reasoning_chars: result.reasoning.length } : {}),
       ...(allNotes.length ? { notes: allNotes } : {}),
     };
+    try { this.live?.verdict(req, row.answer, row.accepted === true, row.latency_ms + (row.primary_ms ?? 0), row.error); } catch { /* display only */ }
     try {
       const limits = this.limitsFor(engine, fellBackFrom);
       if (limits) row.limits = limits;
