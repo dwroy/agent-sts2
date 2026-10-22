@@ -5818,3 +5818,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
 
 - 2026-10-22 15:13 [ops] 144301无源限定报告核61产物/十A10/两主题待证；baseline已核存在且零源差，报告完成JSON缺失，原failed/rc0/16:03冷却保持。0101旧first_run快照与Oct5更正分列；不改历史/补测试/空合入/重dataset。paper/materials/20261022-1506-ops/。
+
+- 2026-10-22 15:15 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:43一致；原CLI三研究ACK支持阻塞与正式pending保留，不重发/代填/重试或关父。paper/materials/20261022-1515-ops/notices-readback.json。
