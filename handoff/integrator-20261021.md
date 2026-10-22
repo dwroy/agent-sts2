@@ -1,11 +1,11 @@
 # 集成员交接：2026-10-21
 
-更新：2026-10-22T07:34:54+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
+更新：2026-10-22T08:44:23+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
 
 仅保留未完成项：
 
-- #33：276f3089c 技术核验退回补缺：kb_old_knowledge 漏记实际 jev-hints.json，kb_stats fights 漏记 monster-db/monster-records；固定复制数据复现正文变化而来源SHA不变，未合功能/未触生产。tsc/重建及4文件23项专项通过；发现阻断后主动停自身全检143，不计通过，原件保留且无遗留检查进程。补准确来源及回归、完整检查后再送review。报告 paper/materials/20261022-issue33-integrator-review/；隔离候选与原件 .worktrees/integrator-33-20261022、.artifacts/integrator-33-20261022 保留，不能回收开发现场。
-- #26：c3716ba15 六类只读统计工具已独立核验并合 main，工具层不等 #33，转 waiting-release。#33 仍须按精确提交联合查询/角色隔离/实际挂载，ops 自然局边界发布及首局读回待验；不增加已取消的前后指标对比。报告同 #20 本轮目录。
+- #33：276f3089c + ad5f37ae6 修复补交独立核验通过并合 main d3751e979，转 waiting-release。两项原阻断已真实 ToolHost 固定变更复验；完整 653 文件/6165通过/2跳过，tsc/重建0，2113输入SHA前后一致。ops仍须核实际live精确组合、#26真实挂载与自然首局读回；不追加取消的对比或额外对局。报告 paper/materials/20261022-issue33-integrator-admission/；原失败/中断和旧候选全部保留，不回收开发现场。
+- #26：c3716ba15 六类只读统计工具已独立核验并合 main，工具层不等 #33，转 waiting-release。#33 main联合检查已通过，ops仍须按精确live组合确认查询/角色隔离/实际挂载，ops 自然局边界发布及首局读回待验；不增加已取消的前后指标对比。报告同 #20 本轮目录。
 - #20：dec42bc98 自动接续/生命周期补交与私有 kit 95f1efb 技术核验通过并合 main，转 waiting-release。ops 安装须把 watchdog.py 与 board.py 一并升级，保持有效 off/无在途 tick、保留锁和 journal；owner授权、正式宿主登记/唯一入口、首 tick/实际送达及原命名/锁忙/回收仍待验，uncertain 不自动重发，不能以技术通过关整个issue。报告 paper/materials/20261022-issues26-20-integrator-review/。
 - #25/#16/#15/#8：ops已登记R411实际live发布305c67555；仍waiting-release，各消费者自然读回/局终验收及原R4 CLI本角色生产ACK以各issue最新ops评论为准。不得用源码或研究核验代角色确认。#25精确48文件组合准入见paper/materials/20261021-issue25-live-admission-review/；50文件0268备选未准入。Roy已取消#25/#26前后指标对比，不追加此门槛。
 - #23：main已集成，仍waiting-release；实际运行接入/原发布门及首轮安全回收由ops原链补验，不在集成会话执行回收。

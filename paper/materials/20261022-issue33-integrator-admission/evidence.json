@@ -1,0 +1,143 @@
+{
+  "source": "276f3089c413b129e67362e3c84eae23baae993f",
+  "repair": "ad5f37ae638153fe966a3b5b2d945eb8fa400717",
+  "base": "bba8f71923a47f3164ce7a4474ad81f7e6dfbfd0",
+  "main_integrated": "d3751e979f7e71717c8c12d309db28b2ac7256bd",
+  "tested_tree": "33017ac5b576e81ce69752efb3e75b1c139250a4",
+  "delivered_paths": 100,
+  "frozen_inputs": 2113,
+  "main_matching_inputs_excluding_runtime_records": 2107,
+  "excluded_runtime_records": [
+    "eval/versions.json",
+    "ops/autoplay.log",
+    "ops/inbox-dev.md",
+    "ops/refresh.log",
+    "ops/restarts.log",
+    "ops/win-notified"
+  ],
+  "checks": {
+    "state": "passed",
+    "files": 653,
+    "passed": 6165,
+    "skipped": 2,
+    "failed": 0,
+    "checks": [
+      {
+        "name": "rebuild",
+        "command": [
+          "python3",
+          "agent/tools/build-external-stats.py",
+          "--check"
+        ],
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-33-fix-20261022",
+        "exit_code": 0,
+        "seconds": 0.38803720474243164
+      },
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-33-fix-20261022/agent",
+        "exit_code": 0,
+        "seconds": 0.9175500869750977
+      },
+      {
+        "name": "vitest",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/integrator-33-fix-20261022/full/vitest.json"
+        ],
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-33-fix-20261022/agent",
+        "exit_code": 0,
+        "seconds": 1324.9893007278442
+      }
+    ],
+    "vitest_json_sha256": "336472bdbc20b57bbaaaecc9613460578dafc2fa9e2f9fc51443d329869af0f7"
+  },
+  "binding": {
+    "sha256_before": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+    "sha256_after": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+    "mode_before": "0o644",
+    "mode_after": "0o644"
+  },
+  "logs": [
+    {
+      "file": "rebuild.log.gz",
+      "bytes": 97,
+      "sha256": "17cc3bd30b86b93d38264127769e26137517a315d7c0aac6a3f5ec392c0f7227",
+      "archive_bytes": 103,
+      "archive_sha256": "fad9e7e57a989ef1d279b4d50ee0230ce123d56c38d634487b031252ed59a1aa",
+      "expanded_scan_exit": 0
+    },
+    {
+      "file": "tsc.log.gz",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_bytes": 20,
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "expanded_scan_exit": 0
+    },
+    {
+      "file": "vitest.log.gz",
+      "bytes": 78952,
+      "sha256": "8221fbd054b3637889f0bd2e8293cbce8acd55ddf37bb86f91771ed7f5d054ac",
+      "archive_bytes": 23264,
+      "archive_sha256": "69b5765d72d33322bb55a3985589fde77b58493a81f236c137dd085fbb15bc4c",
+      "expanded_scan_exit": 0
+    },
+    {
+      "file": "provenance.log.gz",
+      "bytes": 1073,
+      "sha256": "5b0c772ca47d0b26bdbfdd1d6b6f84a1d6fab9fb6c9bb8e3f9cae9511b09bb0f",
+      "archive_bytes": 495,
+      "archive_sha256": "fe3414015f67f790d838dad0dd1095655ff17bde90d01a9f23bb040616e30462",
+      "expanded_scan_exit": 0
+    },
+    {
+      "file": "frozen-inputs.json.gz",
+      "bytes": 329442,
+      "sha256": "a95e1b62ee8199c6e2532d986f9d1eaa06debf151c9c79972ec17cbc7ab3f69a",
+      "archive_bytes": 104997,
+      "archive_sha256": "1be955ab0317a44be62e5ec6dbe6fa57c044f4254436031dcf68581450e279b1",
+      "expanded_scan_exit": 0
+    }
+  ],
+  "developer_logs": 31,
+  "developer_log_descriptors_verified": 29,
+  "developer_expanded_scan_exit": 0,
+  "source_frozen_files": 46,
+  "dependency_leaves": 4,
+  "source_knowledge_changes": [],
+  "production_accepted": false,
+  "previous_failed_or_interrupted_originals_preserved": true,
+  "integration_attempts": [
+    {
+      "receipt": "integration.json",
+      "sha256": "8b1aa662fdfa67eef7c040e6f6c965ecf6a1c02f9312f33464e1b3ef5b40cb72",
+      "main_integrated": null
+    },
+    {
+      "receipt": "integration-resume.json",
+      "sha256": "ca92aa53d781fa8493017615c5ac69b1be9d262cf3d160810a7b10d72db6e0f1",
+      "main_integrated": "d3751e979f7e71717c8c12d309db28b2ac7256bd"
+    }
+  ],
+  "sparse_index_repair": {
+    "count": 87150,
+    "sha256_nul_paths": "6fb0f436374af4befafe44787f0cf73e41672f9f8622243150fb8b4e3554f0a8",
+    "overlap_with_test_inputs_or_delivery": [],
+    "commit_tree_equals_tested": true
+  }
+}
