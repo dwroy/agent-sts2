@@ -8,6 +8,7 @@ file is not in the tree; (c) knowledge/common/move-model.json (moves, average da
 
 Usage: python3 knowledge/builders/monster-db-check.py [--out PATH] [--dossiers PATH | --dossiers-rev REV]
 """
+from refresh_publish import write_text
 import argparse
 import json
 import os
@@ -267,8 +268,7 @@ def main():
     move_rules_section(db, w)
     death_rules_section(db, w)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    with open(args.out, "w", encoding="utf8") as handle:
-        handle.write("\n".join(out) + "\n")
+    write_text(args.out, "\n".join(out) + "\n")
     print(f"-> {args.out}")
 
 

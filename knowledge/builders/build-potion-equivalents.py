@@ -51,6 +51,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import LEGACY, NAMES_ZH, character_dir, character_key  # noqa: E402
+from refresh_publish import replace as publish_replace
 GAME_DATA = os.path.join(ROOT, "data", "game-data.json")
 POTION_VALUES_TS = os.path.join(ROOT, "agent", "src", "knowledge", "potion-values.ts")
 CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "reflex", "card-model.ts")
@@ -637,44 +638,87 @@ def runs_of(character, column="run_id"):
             f"HAVING lower(coalesce(arg_max(character, off), '{LEGACY}')) = '{character}')")
 
 
-def load_logs(con, ascensions, character=None):
+def _run_scope(character, column, run_id=..., run_ids=None):
+    own = runs_of(character, column)
+    if run_ids is not None:
+        quoted = ["'" + str(rid).replace("'", "''") + "'" for rid in run_ids if rid is not None]
+        terms = ([column + " IN (" + ",".join(quoted) + ")"] if quoted else [])
+        if None in run_ids:
+            terms.append(column + " IS NULL")
+        return own + " AND (" + " OR ".join(terms or ["FALSE"]) + ")"
+    if run_id is not ...:
+        own += " AND " + column + (" IS NULL" if run_id is None else " = '" + str(run_id).replace("'", "''") + "'")
+    return own
+
+
+def load_logs(con, ascensions, character=None, run_id=..., cache=None, run_ids=None):
+    if run_id is ... and run_ids is None:
+        from legacy_incremental import context
+        cache = cache or context(os.path.join(os.environ.get("LOGDB_LOGS", os.path.join(ROOT, "logs")), "states.jsonl"))
+        if cache:
+            return cache.potion_logs(con, ascensions, character, load_logs, fetch, runs_of)
     ascs = ",".join(str(a) for a in sorted(set(ascensions)))
-    own = runs_of(character)
+    partitioned = run_ids is not None
+    def scope(column="run_id"):
+        return _run_scope(character, column, run_id, run_ids)
+    own = scope()
+    prefix = "run_id AS _cache_run, " if partitioned else ""
     turns = fetch(con, f"""
         WITH b AS (
           SELECT t.*, lead(enemy_hp) OVER (PARTITION BY run_id, fight_no ORDER BY turn) AS next_enemy_hp
           FROM turns t WHERE room = 'boss' AND ascension IN ({ascs}){own})
-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
+        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
                CASE WHEN next_enemy_hp IS NULL THEN NULL ELSE greatest(enemy_hp - next_enemy_hp, 0) END AS dmg,
                enemy_turn_hp_lost AS loss, intent_damage AS intent, end_block, start_energy AS energy, cards_played AS cards, cards_n
         FROM b""")
     fights = fetch(con, f"""
-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
+        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
         FROM fights WHERE room = 'boss' AND ascension IN ({ascs}) AND turns IS NOT NULL{own}""")
+    group = "run_id, " if partitioned else ""
     seen = fetch(con, f"""
         WITH s AS (SELECT DISTINCT run_id, unnest(potions) AS id FROM frames WHERE potions IS NOT NULL{own})
-        SELECT id, count(*) AS runs FROM s GROUP BY 1""")
-    drinks = fetch(con, f"SELECT potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY 1")
+        SELECT {prefix}id, count(*) AS runs FROM s GROUP BY {group}id""")
+    drinks = fetch(con, f"SELECT {prefix}potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY {group}potion_id")
     boss_drinks = fetch(con, f"""
-        WITH u AS (SELECT ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
-        SELECT id, ascension, count(*) AS n FROM u GROUP BY 1, 2""")
+        WITH u AS (SELECT {group}ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
+        SELECT {prefix}id, ascension, count(*) AS n FROM u GROUP BY {group}id, ascension""")
     entropic = fetch(con, f"""
-        SELECT avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
-        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}""")
+        SELECT {prefix}avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
+        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}
+        {"GROUP BY run_id" if partitioned else ""}""")
     # Every combat question of these ascensions (the Monte Carlo summaries) and the boss drinks (the check).
     questions = fetch(con, f"""
         SELECT d.off, d.run_id, d.floor, d.turn, f.act, f.ascension, f.room
         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor
-        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
+        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
     boss_drink_rows = fetch(con, f"""
         SELECT d.off, d.run_id, d.floor, d.turn, d.label, d.potion_id, f.act, f.ascension
         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor AND f.room = 'boss'
-        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
-    last = fetch(con, f"SELECT max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own}")[0]
+        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
+    last = fetch(con, f"SELECT {prefix}max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own} {"GROUP BY run_id" if partitioned else ""}")
+    if partitioned:
+        # Query each parquet source once when initially filling many run caches.
+        # Every aggregate retains run identity until the unchanged global reducer.
+        parts = {rid: dict(turns=[], fights=[], seen={}, drinks={}, boss_drinks=[],
+                          entropic=dict(slots=None, n=0), questions=[], boss_drink_rows=[],
+                          last_fight='None', all_fights=0) for rid in run_ids}
+        for key, rows in (("turns", turns), ("fights", fights), ("seen", seen), ("drinks", drinks),
+                          ("boss_drinks", boss_drinks), ("entropic", entropic), ("last", last)):
+            for source in rows:
+                row = dict(source)
+                part = parts[row.pop('_cache_run')]
+                if key == 'seen': part[key][row['id']] = row['runs']
+                elif key == 'drinks': part[key][row['id']] = row['n']
+                elif key == 'entropic': part[key] = row
+                elif key == 'last': part.update(last_fight=str(row['last']), all_fights=row['n'])
+                else: part[key].append(row)
+        for key, rows in (("questions", questions), ("boss_drink_rows", boss_drink_rows)):
+            for row in rows: parts[row['run_id']][key].append(row)
+        return parts
     return {
         "turns": turns, "fights": fights, "seen": {r["id"]: r["runs"] for r in seen}, "drinks": {r["id"]: r["n"] for r in drinks},
         "boss_drinks": boss_drinks, "entropic": entropic[0], "questions": questions, "boss_drink_rows": boss_drink_rows,
-        "last_fight": str(last["last"]), "all_fights": last["n"],
+        "last_fight": str(last[0]["last"]), "all_fights": last[0]["n"],
     }
 
 
@@ -683,26 +727,36 @@ def read_raw(handle, off):
     return json.loads(handle.readline())
 
 
-def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None):
+def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None, run_id=..., run_ids=None):
     """The potion offers of the logged shop visits from `min_asc` up: [{id, rarity, price, act, asc}], one visit's offers
     from the first of its SHOP frames (up to SHOP_FRAMES_PER_VISIT) that lists priced potions; and the visits read."""
+    from legacy_incremental import context
+    cache = context(states_handle.name)
+    if cache and run_id is ... and run_ids is None:
+        return cache.potion_shops(con, states_handle, min_asc, character, load_shop_offers, fetch, runs_of)
+    own = _run_scope(character, "si.run_id", run_id, run_ids)
     visits = fetch(con, f"""
         SELECT si.run_id, si.floor, any_value(si.act) AS act, any_value(r.ascension) AS asc,
                list(si.off ORDER BY si.off) AS offs, list(si.len ORDER BY si.off) AS lens
         FROM state_index si JOIN runs r ON r.run_id = si.run_id
-        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{runs_of(character, "si.run_id")} GROUP BY 1, 2 ORDER BY 1, 2""")
+        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{own} GROUP BY 1, 2 ORDER BY 1, 2""")
     offers = []
     seen = 0
+    parts = {rid: ([], 0) for rid in run_ids} if run_ids is not None else None
     for visit in visits:
         for off, length in list(zip(visit["offs"], visit["lens"]))[:SHOP_FRAMES_PER_VISIT]:
             states_handle.seek(off)
             state = (json.loads(states_handle.read(length)) or {}).get("state") or {}
             potions = [p for p in ((state.get("shop") or {}).get("potions") or []) if isinstance(p.get("price"), (int, float)) and p.get("potion_id")]
             if potions:
+                if parts is not None:
+                    offers, seen = parts[visit['run_id']]
                 seen += 1
                 offers.extend({"id": p["potion_id"], "rarity": p.get("rarity"), "price": p["price"], "act": visit["act"], "asc": visit["asc"]} for p in potions)
+                if parts is not None:
+                    parts[visit['run_id']] = offers, seen
                 break
-    return offers, seen
+    return parts if parts is not None else (offers, seen)
 
 
 def gold_rates(offers, visits, entry, ascensions):
@@ -978,20 +1032,25 @@ def main(argv=None):
     solver = solver_models()
     names = {p["name"]: p["id"] for p in potions}
     names.update({p["id"]: p["id"] for p in potions})
+    from legacy_incremental import context
+    cache = context(os.path.join(logs_dir, "states.jsonl"))
     with logsync.read_lock(db, shared=True):
-        con = logquery.connect(db, threads=2)
+        con = logquery.connect(db, threads=1)
         has_runs = fetch(con, f"SELECT count(*) AS n FROM (SELECT 1 FROM frames WHERE TRUE{runs_of(character)} LIMIT 1)")[0]["n"]
-        logs = load_logs(con, ascensions, character) if has_runs else None
+        logs = load_logs(con, ascensions, character, cache=cache) if has_runs else None
     if logs is None:
         print(f"no {character} runs in the log database; nothing written -> {args.out}")
         return 0
     with open(os.path.join(logs_dir, "decisions.jsonl"), "rb") as handle:
-        mc = mc_summaries(logs["questions"], handle)
-        checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
+        if cache:
+            mc, checks = cache.potion_checks(logs, handle, names, mc_summaries, check_column)
+        else:
+            mc = mc_summaries(logs["questions"], handle)
+            checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
     rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks, character)
     # The gold rate (THIEF_COST): the logged shop visits' potion offers (states.jsonl by offset, read-only).
     with logsync.read_lock(db, shared=True):
-        con = logquery.connect(db, threads=2)
+        con = logquery.connect(db, threads=1)
         with open(os.path.join(logs_dir, "states.jsonl"), "rb") as handle:
             offers, shop_visits = load_shop_offers(con, handle, character=character)
     gold = gold_rates(offers, shop_visits, entry, ascensions)
@@ -1023,7 +1082,7 @@ def main(argv=None):
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         handle.write(text)
-    os.replace(tmp, args.out)
+    publish_replace(tmp, args.out)
     n_checks = sum(len(deltas) for deltas in checks.values())
     print(f"wrote {args.out}: {len(entry)} potions, rates for {len(out['rates'])} ascensions, {len(logs['fights'])} boss fights, {n_checks} boss drinks with rollout numbers ({len(logs['boss_drink_rows'])} boss drinks)")
     if gold:

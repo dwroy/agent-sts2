@@ -35,6 +35,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import character_dir, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 MAP_MARK = b'"screen":"MAP"'
 OVER_MARK = b'"screen":"GAME_OVER"'
 
@@ -51,14 +52,19 @@ def quantile(values, p):
     return xs[i] + (xs[j] - xs[i]) * (k - i)
 
 
-def scan(states_path, character=None):
+def scan(states_path, character=None, lines=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(states_path)
+        if cache:
+            return cache.room_scan(states_path, character, lambda rows: scan(states_path, character, rows))
     """run id -> floor -> {first, last, type, asc, avail} from the MAP frames; run id -> death floor. With `character`,
     only that character's MAP frames (a death floor is kept for every run: it only counts for a run with frames)."""
     runs = collections.defaultdict(dict)
     deaths = {}
     first_ts = last_ts = None
     with open(states_path, "rb") as handle:
-        for line in handle:
+        for line in (handle if lines is None else lines):
             head = line[:4000]
             is_map = MAP_MARK in head
             if not is_map and OVER_MARK not in head:
@@ -108,14 +114,19 @@ FP_RUN_RE = re.compile(rb'\\"run\\":\\"([A-Z0-9]+)\\"')
 FP_HP_RE = re.compile(rb'\\"hp\\":(-?\d+)')
 
 
-def map_choices(decisions_path, fights=None):
+def map_choices(decisions_path, fights=None, lines=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(decisions_path)
+        if cache:
+            return cache.room_choices(decisions_path, fights, lambda rows, fs: map_choices(decisions_path, fs, rows))
     """(run id, floor) -> the option index of the last map node chosen on that floor. With `fights` (a dict), also
     (run id, floor) -> [HP at the first, HP at the last combat decision] for every floor with a fight."""
     chosen = {}
     if not os.path.exists(decisions_path):
         return chosen
     with open(decisions_path, "rb") as handle:
-        for line in handle:
+        for line in (handle if lines is None else lines):
             if fights is not None and b'"screen":"COMBAT"' in line[:400]:
                 head = line[:3000]
                 floor, run, hp = FLOOR_RE.search(head), FP_RUN_RE.search(head), FP_HP_RE.search(head)
@@ -225,7 +236,7 @@ def main():
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, indent=1, sort_keys=True)
         handle.write("\n")
-    os.replace(tmp, out_path)
+    publish_replace(tmp, out_path)
     print(f"room costs: {len(runs)} runs -> {out_path} ({time.time() - started:.1f} s)", file=sys.stderr)
 
 

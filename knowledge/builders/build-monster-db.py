@@ -44,6 +44,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import LEGACY, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 
 
 def _default_logs():
@@ -94,13 +95,13 @@ def pile_statuses(raw, cut):
     return out
 
 
-def iter_entries(path):
+def iter_entries(path, lines=None):
     """Yield (screen, entry) for every state line worth reading, streaming the file.
 
     A combat state also carries `_piles`, the status cards in its draw/discard/exhaust piles (pile_statuses),
     read from the agent_view part that is otherwise cut before parsing."""
     with open(path, "rb") as handle:
-        for raw in handle:
+        for raw in (handle if lines is None else lines):
             match = SCREEN_RE.search(raw, 0, 20000)
             if not match or match.group(1) in SKIP_SCREENS:
                 continue
@@ -708,13 +709,18 @@ END_TURNS = None
 END_TURN_RE = re.compile(rb'^\{"ts":"([^"]+)"')
 
 
-def load_end_turns(path):
+def load_end_turns(path, lines=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(path)
+        if cache:
+            return cache.end_turns(path, lambda rows: load_end_turns(path, rows))
     """The (run id, frame ts) of every end-turn decision: the frame a decision was made on has the decision's ts."""
     if not path or not os.path.exists(path):
         return None
     out = set()
     with open(path, "rb") as handle:
-        for raw in handle:
+        for raw in (handle if lines is None else lines):
             if b'"chosen":{"action":"end_turn"' not in raw:
                 continue
             ts = END_TURN_RE.match(raw)
@@ -1662,8 +1668,8 @@ def build(states, runs_path, game_path, decisions_path=None):
     STATUS_CARDS.clear()
     STATUS_CARDS.update(c["id"] for c in game.get("cards") or [] if c.get("type") == "Status")
     builder = Builder(load_runs(runs_path))
-    for screen, entry in iter_entries(states):
-        builder.feed(screen, entry)
+    from legacy_incremental import consume_fights
+    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
     builder.finish()
     return build_output(builder, game), {c: records_output(builder, c) for c in sorted(builder.by_character)}
 
@@ -1677,7 +1683,7 @@ def write_json(path, data):
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(data, handle, ensure_ascii=False, indent=1, sort_keys=False)
         handle.write("\n")
-    os.replace(tmp, path)
+    publish_replace(tmp, path)
 
 
 def main(argv=None):
@@ -1709,7 +1715,7 @@ def main(argv=None):
         tmp = f"{args.move_model_out}.{os.getpid()}.tmp"
         with open(tmp, "w", encoding="utf8") as handle:
             json.dump(move_model_view(db), handle, ensure_ascii=False, indent=1, sort_keys=True)
-        os.replace(tmp, args.move_model_out)
+        publish_replace(tmp, args.move_model_out)
     if not args.quiet:
         meta = db["meta"]["generated_from"]
         print(f"{len(db['monsters'])} monsters, {meta['fights']} fights (by ascension {meta['fights_by_asc']}) in "

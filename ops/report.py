@@ -15,6 +15,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LIVE, ROOT  # noqa: E402
+import report_log_cache  # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
 from characters import run_character  # noqa: E402
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
@@ -26,6 +27,25 @@ PRICE_PER_M = 0.042  # $ per million tokens (in + out), handoff estimate
 # A model's own decision: the brain engine that answered (deepseek, codex, claude; "deepseek (for codex)" when the router's
 # fallback did), or a v3 escalator. Before 2026-10-03 every brain answer was logged as "deepseek" (jev-sts2 loop.ts).
 BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
+
+
+def run_brain_profile(run_id):
+    """Keep experimental arms visible to learners; never label an unknown/mixed run as baseline."""
+    profiles = []
+    path = os.path.join(ROOT, "logs/run-config.jsonl")
+    if os.path.exists(path):
+        with open(path) as handle:
+            for line in handle:
+                if run_id not in line:
+                    continue
+                row = json.loads(line)
+                if row.get("run_id") == run_id:
+                    profile = row.get("brain", {}).get("run_profile")
+                    if profile not in profiles:
+                        profiles.append(profile)
+    if not any(profiles):
+        return {}
+    return {"brain_run_profile": profiles[0] if len(profiles) == 1 else {"mixed": profiles}}
 
 
 def is_brain(decider):
@@ -54,33 +74,28 @@ def standalone_plan_costs(path, run_id, represented=()):
     rows = {}
     unknown = set()
     if os.path.exists(path):
-        with open(path, encoding="utf8") as handle:
-            for line_no, line in enumerate(handle, 1):
-                try:
-                    row = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
-                        or row.get("reused") or row.get("merged_into")):
-                    continue
-                ident = row.get("question_id")
-                if not isinstance(ident, str) or not ident:
-                    unknown.add(f"line:{line_no}:missing-question-id")
-                    continue
-                if ident in represented:
-                    continue
-                usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
-                values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
-                engine = row.get("engine")
-                if (not isinstance(engine, str) or not is_brain(engine)
-                        or any(type(value) is not int or value < 0 for value in values)
-                        or values[2] > values[0]):
-                    unknown.add(ident)
-                    continue
-                entry = (engine, *values)
-                if ident in rows and rows[ident] != entry:
-                    unknown.add(ident)
-                rows[ident] = entry
+        for line_no, row in report_log_cache.plans(path, run_id):
+            if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
+                    or row.get("reused") or row.get("merged_into")):
+                continue
+            ident = row.get("question_id")
+            if not isinstance(ident, str) or not ident:
+                unknown.add(f"line:{line_no}:missing-question-id")
+                continue
+            if ident in represented:
+                continue
+            usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
+            values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
+            engine = row.get("engine")
+            if (not isinstance(engine, str) or not is_brain(engine)
+                    or any(type(value) is not int or value < 0 for value in values)
+                    or values[2] > values[0]):
+                unknown.add(ident)
+                continue
+            entry = (engine, *values)
+            if ident in rows and rows[ident] != entry:
+                unknown.add(ident)
+            rows[ident] = entry
     valid = {ident: entry for ident, entry in rows.items() if ident not in unknown}
     return {"calls": len(valid), "input_tokens": sum(entry[1] for entry in valid.values()),
             "output_tokens": sum(entry[2] for entry in valid.values()),
@@ -140,19 +155,7 @@ def hp_of(record, states):
 
 def load_run_states(path, run_id, wanted):
     """Stream one run's frames, including fights with no action decision."""
-    states = {}
-    with open(path, encoding="utf8") as handle:
-        for line in handle:
-            if line[7:31] not in wanted and run_id not in line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            state = entry.get("state") or {}
-            if entry.get("ts") in wanted or state.get("run_id") == run_id:
-                states[entry["ts"]] = state
-    return states
+    return report_log_cache.states(path, run_id, wanted)
 
 
 def fights_of(recs, states, died=False):
@@ -293,18 +296,12 @@ def decider(record):
 
 def main(*, code=None):
     """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
-    decisions = [r for r in load(DEC) if r.get("mode") == "play"]
-    runs = [run_of(r) for r in decisions]
-    run_id = sys.argv[1] if len(sys.argv) > 1 else next((r for r in reversed(runs) if r), None)
+    run_id, recs, tail = report_log_cache.decisions(DEC, sys.argv[1] if len(sys.argv) > 1 else None)
     if not run_id:
         print("no run found")
         return
-    recs = [r for r in decisions if run_of(r) == run_id]
     # The GAME_OVER record has no run in its fingerprint: attach the one right after the last record.
     # V4 (2026-09-30) logs it with the run id; then the next GAME_OVER is a later run's, not this one's.
-    last_ts = recs[-1]["ts"] if recs else ""
-    own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
-    tail = [] if own_end else [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
     # Include the same run's state-only frames: automatic opening deaths have no COMBAT decision.
     wanted = {r["ts"] for r in tail + recs}
     states = load_run_states(STATES, run_id, wanted)
@@ -389,7 +386,10 @@ def main(*, code=None):
 
     out = []
     title = "胜利" if victory else ("阵亡" if ended else "未结束")
+    profile_note = run_brain_profile(run_id)
     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
+    if profile_note:
+        out.append("大脑实验分组（与既有基线分账，实际档位须核原生回执）：" + json.dumps(profile_note, ensure_ascii=False))
     out.append("")
     brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
     brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
@@ -446,6 +446,7 @@ def main(*, code=None):
                 break
         with open(RUNS, "a", encoding="utf8") as handle:
             handle.write(json.dumps({
+                **profile_note,
                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
@@ -502,18 +503,25 @@ def refresh_knowledge(character=None) -> None:
     import subprocess
     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
     # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
-    refresh = "bash " + shlex.quote(f"{LIVE}/knowledge/builders/refresh.sh") + " --ops-root " + shlex.quote(ROOT)
+    combined = os.path.isfile(os.path.join(LIVE, "knowledge/builders/refresh_driver.py"))
+    refresh = ["bash", f"{LIVE}/knowledge/builders/refresh.sh", "--ops-root", ROOT]
     if character and re.fullmatch(r"[a-z0-9_]+", character):
-        refresh += f" --character {character}"
-    cmd = refresh
+        refresh += ["--character", character]
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
-    # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
-    # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
-    fight = subprocess.Popen(["nice", "-n", "19", "bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
-                             stdout=log, stderr=log, start_new_session=True)
-    proc = subprocess.Popen(["nice", "-n", "19", "bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    # One queued worker per completed run, including incremental extraction.
+    # Model training is cadence-controlled; admission of the next game never waits.
+    if combined:
+        refresh += ["--all"]
+        fight = None
+    else:
+        # Main can be integrated before the matching live release. Retain the
+        # old argv until live actually contains the combined entry.
+        fight = subprocess.Popen(["nice", "-n", "19", *refresh, "--fight-value"],
+                                 stdout=log, stderr=log, start_new_session=True)
+    proc = subprocess.Popen(["nice", "-n", "19", *refresh], stdout=log, stderr=log, start_new_session=True)
     result = {"pid": proc.pid, "exit": None, "status": "background", "admission_wait": False,
-              "fight_value_pid": fight.pid, "fight_value": "background",
+              "fight_value_pid": proc.pid if combined else fight.pid, "fight_value": "background",
+              "refresh_worker": "combined" if combined else "legacy",
               "history_policy": "last_completed_packet"}
     # Even legacy REFRESH_WAIT callers must not block the next game (Roy 2026-10-20).
     if character:
@@ -532,9 +540,17 @@ def refresh_costs() -> None:
     """Paper accounting is independent of the next run's knowledge refresh and never waits for it."""
     import subprocess
     with open(os.path.join(ROOT, "ops", "cost-refresh.log"), "a") as log:
-        subprocess.Popen(["nice", "-n", "19", "python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
-                          "--root", ROOT, "--code-root", LIVE],
-                         stdout=log, stderr=log, start_new_session=True)
+        background_statistics(["python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
+                               "--root", ROOT, "--code-root", LIVE], log)
+
+
+def background_statistics(command, log):
+    """Share the knowledge worker's CPU slot; admission never acquires this lock."""
+    env = {**os.environ, **dict.fromkeys(("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                                        "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"), "1")}
+    return subprocess.Popen(["nice", "-n", "19", "ionice", "-c", "3", "flock",
+                             os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command],
+                            env=env, stdout=log, stderr=log, start_new_session=True)
 
 
 def boss_sim_check(character):
@@ -566,9 +582,8 @@ def global_build_funnel(character):
         return
     python = os.path.join(ROOT, 'data/logdb-venv/bin/python')
     with open(os.path.join(ROOT, 'ops/global-build-funnel.log'), 'a') as log:
-        subprocess.Popen(['nice', '-n', '19', python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
-                          '--root', ROOT, '--character', character],
-                         stdout=log, stderr=log, start_new_session=True)
+        background_statistics([python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
+                               '--root', ROOT, '--character', character], log)
 
 
 if __name__ == "__main__":
