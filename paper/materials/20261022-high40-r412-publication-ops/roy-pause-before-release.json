@@ -1,0 +1,41 @@
+{
+  "schema": "roy-check-window-pause-v1",
+  "owner": "Roy",
+  "id": "roy-check-window-20261022-172x",
+  "created_at": "2026-10-22T17:40:19+08:00",
+  "authorization": "paper/materials/20261022-roy-check-window-ops/authorization-original.md",
+  "scope": [
+    "new-game-admission",
+    "production-knowledge-refresh-dispatch"
+  ],
+  "switch_transaction": "codex3-20261022-1610",
+  "independent_of_switch_owned_flags": true,
+  "resume_requires": [
+    "codex3 handoff complete with new UUID verification",
+    "issue33 high narrow actual live publication",
+    "issue40 actual live publication",
+    "natural terminal boundary"
+  ],
+  "first_resumed_run_readback": [
+    "native high",
+    "incremental refresh"
+  ],
+  "check_order": [
+    33,
+    40,
+    35,
+    28,
+    37,
+    36
+  ],
+  "check_parallelism": {
+    "no_live_game_required": true,
+    "max_heavy_tasks": 2,
+    "33_high_and_40_may_parallelize": true
+  },
+  "no_current_game_process_at_intake": true,
+  "current_refresh": "naturally completed 2026-10-22T17:16:29.025133+08:00; no signal",
+  "refresh_guard_mode": "ops dispatch hold plus recognized STOP prevents the normal after-run refresh trigger; current source has no native REFRESH_PAUSE check; all manual report-run/refresh entry forbidden until original release condition",
+  "no_automatic_resume": true,
+  "created_recognized_stop": true
+}
