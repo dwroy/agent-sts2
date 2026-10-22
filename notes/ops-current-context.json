@@ -17489,5 +17489,35 @@
     "natural_acceptance": "paper/materials/20261022-issue36-r3-ops/natural-acceptance.json",
     "issue_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6334018837",
     "new_model_test_publication": false
+  },
+  "ordinary_20261022_134302_s2_parallel_record_attention": {
+    "state": "audited-original-attention-retained",
+    "receipt": "ops/codex-ops/ordinary-close/20261022-134302-s2-strategy-proposal.json",
+    "ops_readback": "paper/materials/20261022-1411-ops/readback.json",
+    "artifacts_verified": 52,
+    "waiting": 10,
+    "source_delta": 0,
+    "question_scope": {
+      "full": 10,
+      "total": 811,
+      "unread": 801
+    },
+    "dataset_attempts": 1,
+    "dataset_rc_not_in_receipt": true,
+    "rejected_exact_snapshot": {
+      "path": ".artifacts/ops-wake-20261022-1411/rejected-record-snapshot.tar.gz",
+      "bytes": 12293876,
+      "sha256": "46b83e6c50e23e5409314c3adb83f3f988418b4e0405963a984f85e597db3df5",
+      "entries": 365,
+      "uncompressed_bytes": 81212864,
+      "all_blobs_sha_verified": true,
+      "contains_rejected_private_append_not_published": true
+    },
+    "changed_since_scan": [
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "next": "retain original failures and parents; only original records ownership/finalization may continue without rerunning dataset; rejected private append is evidence, not closed/publication",
+    "new_test_model_dataset_merge": false
   }
 }
