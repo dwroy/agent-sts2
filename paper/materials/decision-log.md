@@ -5805,3 +5805,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 13:29 [ops] #38仅取消未检查的本方锁等待；知识刷新自然完成，4项锁回归通过，原#33唯一接续无持锁经pidfd待#20后入场，保留#33→#35→#28→#37与R411/待验；131302 fix无源码核验后保留failed/rc0/retry，不重复full/model/dataset。证据paper/materials/20261022-issue38-ops/及20261022-1319-ops/。
 
 - 2026-10-22 13:39 [ops] 五批普通收尾parallel-record attention核验：341产物/50 waiting/五proof源码差0，共享dataset已执行不重跑；原扫描后六记录不同，现有输出副本保留，不收编并行记录，不改原失败/父项或冒closed。paper/materials/20261022-1336-ops/。
+- 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。
