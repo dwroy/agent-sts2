@@ -5797,3 +5797,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T12:19:30+08:00 [ops] Roy撤回换号至codex1周90%，唯一原事务cancelled/实际控制器退出，只撤自有两旗，codex1/原session与其他STOP/PAUSE保留；session实际观察补记，high受旧H1硬编码覆盖，新三叶窄修红绿与唯一宿主检查排原锁，未发布/冒实际降档。paper/materials/20261022-codex3-abort/receipt.json。
 
 - 2026-10-22T12:24:18+08:00 [ops] 三manual依已取消换号/session观察/high唯一窄检查原回执去重；114301fix无源、157SHA/53子项48祖先/21定向过，严格171差保failed/rc0/冷却。八原notice送达证据同，CLI角色登记pending；无新full/模型/dataset或live改动。paper/materials/20261022-1221-ops/receipt.json。
+
+- 2026-10-22T13:01:28+08:00 [ops] #23接08:33停点，114实际去重回收/105成功+1失败分配与归档/绑定核同；近期34新建对11回收，原只读plan0eligible保原门。原采样空间净减38.85GiB未过，部署满24h17:57/原采样满24h18:13分列，保持pending不重部署或扩删。paper/materials/20261022-issue23-continue-ops/receipt.json。
