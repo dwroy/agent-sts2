@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261022T001321880320Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261022T003024623579Z",
   "performance": {
     "runs": 393,
     "finished": 391,
@@ -2836,15 +2836,15 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-22T00:13:21.496Z",
+  "generated_at": "2026-10-22T00:30:24.295Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 3628036975,
+    "decisions.jsonl": 3636756988,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 416286,
-    "states.jsonl": 15625385205,
+    "states.jsonl": 15636629640,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 10549836,
-    "brain.jsonl": 1299376938,
+    "run-plans.jsonl": 10555253,
+    "brain.jsonl": 1301517902,
     "sl-attempts.jsonl": 54444959,
     "run-config.jsonl": 2560111
   },
@@ -3168,7 +3168,7 @@
     "30": 15,
     "31": 25,
     "33": 193,
-    "35": 5,
+    "35": 4,
     "37": 8,
     "38": 8,
     "39": 17,
@@ -3177,7 +3177,7 @@
     "43": 7,
     "44": 4,
     "45": 18,
-    "46": 6,
+    "46": 7,
     "48": 158,
     "49": 41
   },
@@ -3212,7 +3212,7 @@
       "30": 8,
       "31": 14,
       "33": 56,
-      "35": 3,
+      "35": 2,
       "37": 4,
       "38": 4,
       "39": 7,
@@ -3221,7 +3221,7 @@
       "43": 3,
       "44": 1,
       "45": 9,
-      "46": 3,
+      "46": 4,
       "48": 60,
       "49": 38
     }
@@ -12322,10 +12322,10 @@
   },
   "api": {
     "jev": {
-      "calls": 122952,
-      "in_tokens": 2949088026,
-      "out_tokens": 47066362,
-      "cost_usd": 125.8385,
+      "calls": 123012,
+      "in_tokens": 2950327733,
+      "out_tokens": 47081034,
+      "cost_usd": 125.8912,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -12351,19 +12351,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 141.1043,
+  "api_cost_total_usd": 141.157,
   "decisions": {
-    "play_total": 472911,
-    "attributed_to_runs": 469423,
+    "play_total": 473121,
+    "attributed_to_runs": 469633,
     "unattributed_menu_timeline": 3488,
     "shadow": 20,
     "by_layer": {
-      "code": 236928,
-      "jev": 97604,
+      "code": 237011,
+      "jev": 97652,
       "deepseek": 12400,
       "claude": 186,
-      "code-fallback": 2075,
-      "jev-plan": 100133,
+      "code-fallback": 2079,
+      "jev-plan": 100193,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -12385,12 +12385,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 489848,
+  "states_lines_scanned": 490068,
   "console_logs": 1388,
   "commits": {
-    "total": 8040,
+    "total": 8042,
     "ref_snapshot": {
-      "HEAD": "bba8f71923a47f3164ce7a4474ad81f7e6dfbfd0",
+      "HEAD": "cafe088bb0b4f3f8c7407abfd78ab138e691f3f4",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -13671,6 +13671,7 @@
       "refs/heads/integrator-31-24-20-20261021": "67ef4775e6461fa1399a2a194eabbae779d753df",
       "refs/heads/integrator-31-live-admission-20261021": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
       "refs/heads/integrator-33-20261022": "5373a858aad0e30689f064247dbcde6978cb9de8",
+      "refs/heads/integrator-33-fix-20261022": "bba8f71923a47f3164ce7a4474ad81f7e6dfbfd0",
       "refs/heads/issue-12-card-increment": "de4d7d15fb920b3d890d8492972d4ecc746bd5d7",
       "refs/heads/issue-13-card-models-20261021": "e8811ce066141356035aaa10259b31f9dae88c7c",
       "refs/heads/issue-14-act3-calibration-20261021": "8fcc7c291ac063be914d6d4db6d235666843f70c",
@@ -13699,7 +13700,7 @@
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "refs/heads/live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "bba8f71923a47f3164ce7a4474ad81f7e6dfbfd0",
+      "refs/heads/main": "cafe088bb0b4f3f8c7407abfd78ab138e691f3f4",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15518,6 +15519,7 @@
       "all-tip:bb25df38fe110eb70268c00aa5414da69aa9afe2": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
+      "all-tip:cafe088bb0b4f3f8c7407abfd78ab138e691f3f4": "cafe088bb0b4f3f8c7407abfd78ab138e691f3f4",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15879,7 +15881,7 @@
       "all-tip:f1f2c083ca84a9b884c0cdbf6363c47248abd0ee": "f1f2c083ca84a9b884c0cdbf6363c47248abd0ee"
     },
     "upstream": 19,
-    "experiment": 8021
+    "experiment": 8023
   },
   "postmortems": {
     "runs_with_heading": 889,
