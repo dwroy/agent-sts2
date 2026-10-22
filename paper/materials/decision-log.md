@@ -5911,3 +5911,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T03:39:58+08:00 [ops] #36/R416已核实际发布和双通知，brain-view启用；四原批冻结输入等价、各正常重排一次并解除自有学习hold。ops子进程TERM=dumb误传已在同新批内保负面原件/修终端元数据；四原生线程gpt-6.1-sol/high实收，自动parser因AGENTS/user前缀foreignActivity可复现，保75与在途模型，不重送/回收，交原dev36修与对账；paper/materials/20261023-issue36-recovery-ops/receipt.json。
 
 - 2026-10-23T04:11:47+08:00 [watcher] #36补交6a5d049f0+76b41d6d7独立tsc0/9文件112项/2597输入核同，四份冻结原会话CLI及Python纯重建均核同、18原件不变；新增P1固定反例证实前缀之前的助手/工具活动被TS/Python/只读对账漏过，退回原dev36修整个未绑定窗口，材料paper/materials/20261023-issue36-native-context-integrator/。未合源码/未抢或跑full/未改live；R416实际发布及四旧批各重排一次事实保留，四已消费模型不重送，原75/监督/产物退场门及自然验收保持。原完整33+26→42余项→35→28→37、37→20及27 CLI/科学父保留，无新裁决。
+
+- 2026-10-23T04:30:10+08:00 [ops] #23首24h回收120/分配125，可持续未通过；累计137/180，原约25h磁盘净减49.10GiB（3.5h采样缺口保留），当前plan0eligible、原worker限4仍工作，保留原门/未完成父及失败并交主管接续补证，不重部署或扩删。paper/materials/20261023-issue23-sustainability-ops/receipt.json。
