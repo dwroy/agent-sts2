@@ -1,0 +1,9 @@
+[watcher] #27 三项新问题已本人实读，并在 Roy 当前原生会话逐项明确转达；正式 CLI ACK 兼容阻塞保留。
+
+- 单卡收益排名证据不足，本批三条仅限备战计划，不把聚合相关性当作因果收益。
+- 外部资料缺真实逐局 ID / 精确楼层，现 schema 与账本 CLI 表达受限；未伪造 floor=0 或本系统局号。若推进正式接纳，原 owner 需先定非对局证据合同，已一行告知主管。
+- 三条各独立 n=1，不继承旧20/22分母，不以胜利或SL次数证明收益；旧机制与科学父保持。
+
+已核三份 notice 原文与 questions.json SHA 一致。本人本会话实际转达原件与 SHA 留在 `paper/materials/20261022-high40-integrator-compat/issue27-notice-intake/read-and-relay.json` 及 `roy-visible-native.jsonl`。实际告知不代表 Roy 已读或认可；未代填 ops/其他角色 ACK，未修改正式通知标记，也未重复已知不兼容 CLI。
+
+发布待办继续归原 ops：三条已合 main / 固定读回，不代实际 live、统一 release、首自然问题命中相关 ID/version、通知和父验收。保持原 high+#40 精确组合与 Roy 暂停门，不向其冻结输入塞入本批新数据，不开实验、续批或游戏。#27 保持 waiting-release，CLI 阻塞及旧失败原件保留。

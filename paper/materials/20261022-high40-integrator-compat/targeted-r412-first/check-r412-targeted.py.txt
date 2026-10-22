@@ -1,0 +1,94 @@
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import time
+import traceback
+
+W = Path(__file__).resolve().parents[2]
+A = Path(__file__).resolve().parent
+F = A / 'targeted-r412-first'
+F.mkdir(exist_ok=False)
+prepared = json.loads((A / 'prepared-r412.json').read_text())
+snapshot = json.loads((A / 'knowledge-snapshot-r412.json').read_text())
+allowed_dirty = {row['path']: row['sha256'] for row in snapshot['paths']}
+
+def frozen_worktree():
+    dirty = subprocess.check_output(['git', 'diff', '--name-only'], cwd=W, text=True).splitlines()
+    assert set(dirty) <= set(allowed_dirty), dirty
+    for name, digest in allowed_dirty.items():
+        assert hashlib.sha256((W / name).read_bytes()).hexdigest() == digest, name
+
+status = {'knowledge_snapshot': 'knowledge-snapshot-r412.json', 'knowledge_json_count': len(allowed_dirty), 'state': 'preflight', 'tree': prepared['tree'], 'base_head': prepared['base_head'], 'steps': [],
+          'runner_pid': os.getpid(), 'runner_start': Path('/proc/self/stat').read_text().rsplit(')', 1)[1].split()[19],
+          'nice': os.getpriority(os.PRIO_PROCESS, 0), 'full_started': False, 'full_reused': 'bb1c16b0124be3e3fe09a59dae98043df1064675', 'supervisor_comment':6339963519}
+
+def save():
+    temp = F / 'checks.tmp'
+    temp.write_text(json.dumps(status, ensure_ascii=False, indent=2) + '\n')
+    os.replace(temp, F / 'checks.json')
+
+def manifest():
+    names = subprocess.check_output(['git', 'ls-files', '-z', 'agent', 'ops', 'learner', 'knowledge', 'eval',
+                                     'paper/materials/issue29-brain-speed/results.jsonl'], cwd=W).decode().split('\0')
+    result = []
+    for name in sorted(set(names)):
+        p = W / name
+        if not name or not p.is_file() or p.is_symlink() or p.name.startswith('.env'):
+            continue
+        b = p.read_bytes()
+        result.append({'path': name, 'bytes': len(b), 'sha256': hashlib.sha256(b).hexdigest()})
+    return result
+
+try:
+    status['started_at'] = subprocess.check_output(['date', '-Is'], text=True).strip()
+    assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=W, text=True).strip() == prepared['base_head']
+    assert subprocess.check_output(['git', 'write-tree'], cwd=W, text=True).strip() == prepared['tree']
+    frozen_worktree()
+    before = manifest()
+    (F / 'inputs-before.json').write_text(json.dumps(before, indent=2) + '\n')
+    status.update(state='running', input_count=len(before))
+    save()
+    env = dict(os.environ, PATH=str(Path.home() / '.local/node/bin') + ':' + os.environ['PATH'],
+               OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
+    old_inputs = json.loads((A/'full-timeout-compatible-first/inputs-before.json').read_text())
+    previous = {r['path']: r for r in old_inputs}
+    current = {r['path']: r for r in before}
+    delta = sorted(p for p in current.keys() | previous.keys() if current.get(p) != previous.get(p))
+    assert delta == ['eval/versions.json', 'knowledge/catalog.json', 'knowledge/characters/silent/strategy-entries.json'], delta
+    (F/'input-delta-from-reused-full.json').write_text(json.dumps({'paths':delta,'runtime_source_unchanged':True,'old_count':len(previous),'new_count':len(current)},indent=2)+'\n')
+    jobs = [
+        ('tsc', ['node', 'node_modules/typescript/bin/tsc', '-p', 'tsconfig.json', '--noEmit'], W/'agent'),
+        ('targeted', ['node', 'node_modules/vitest/vitest.mjs', 'run', 'tests/strategy-entries.test.ts', 'tests/knowledge-catalog.test.ts', 'tests/legacy-refresh-incremental.test.ts', '--pool=forks', '--maxWorkers=1', '--no-file-parallelism', '--reporter=default', '--reporter=json', '--outputFile.json='+str(F/'vitest.json')], W/'agent'),
+        ('strategy-consumer', ['node', '--import', str(W/'agent/node_modules/tsx/dist/loader.mjs'), str(A/'candidate-strategy-consumer.mts'), str(W), str(W), '/home/dw/Projects/agent-sts2/learner/runs/20261022-184754-e08ce39d-b6e8-490b-9b69-c66a8f59dd38-issue-27-brain-strategies-task/merged-main-consumer', str(F/'strategy-consumer')], W),
+        ('catalog-pipeline', ['python3', str(A/'candidate-catalog-pipeline.py')], W),
+    ]
+    for name, command, cwd in jobs:
+        step = {'name': name, 'command': command, 'started_at': subprocess.check_output(['date', '-Is'], text=True).strip()}
+        status['steps'].append(step)
+        start = time.monotonic()
+        with (F / (name + '.log')).open('wb') as output:
+            child = subprocess.Popen(['nice', '-n', '19', *command], cwd=cwd, env=env, stdout=output, stderr=subprocess.STDOUT)
+            step['pid'] = child.pid
+            status['full_started'] |= name == 'full'
+            save()
+            step['exit_code'] = child.wait()
+        step['seconds'] = time.monotonic() - start
+        save()
+        print(name, step['exit_code'], flush=True)
+        if step['exit_code']:
+            raise RuntimeError(name + ' failed; preserve original logs')
+    after = manifest()
+    (F / 'inputs-after.json').write_text(json.dumps(after, indent=2) + '\n')
+    assert before == after, 'fixed inputs changed'
+    assert subprocess.check_output(['git', 'write-tree'], cwd=W, text=True).strip() == prepared['tree']
+    frozen_worktree()
+    status.update(state='passed', inputs_unchanged=True)
+except BaseException as error:
+    status.update(state='failed-or-blocked', error=type(error).__name__, message=str(error))
+    (F / 'error.txt').write_text(traceback.format_exc())
+finally:
+    status['ended_at'] = subprocess.check_output(['date', '-Is'], text=True).strip()
+    save()
+    (F / 'driver.exit').write_text('0\n' if status['state'] == 'passed' else '1\n')

@@ -1,0 +1,78 @@
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { resolve, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
+
+const [contentArg, consumerArg, priorArg, outputArg] = process.argv.slice(2);
+assert(contentArg && consumerArg && priorArg && outputArg);
+const content = resolve(contentArg), consumer = resolve(consumerArg), prior = resolve(priorArg), out = resolve(outputArg);
+mkdirSync(out, { recursive: true });
+const sha = (b: string | Buffer) => createHash('sha256').update(b).digest('hex');
+const load = (p: string) => import(pathToFileURL(join(consumer, p)).href);
+const { parseStrategyLibrary, retrieveStrategies, applyStrategyEntries, StrategyEntries, STRATEGY_LIMITS } = await load('agent/src/knowledge/strategy-entries.ts');
+const { userMessage } = await load('agent/src/brain/message.ts');
+const { freeSpec } = await load('agent/src/brain/specs.ts');
+const { setKnowledgeCharacter } = await load('agent/src/knowledge/files.ts');
+const expected = JSON.parse(readFileSync(join(prior, 'consumer-readback.json'), 'utf8'));
+const files = ['agent/src/knowledge/strategy-entries.ts', 'agent/src/brain/message.ts', 'agent/src/brain/specs.ts', 'agent/src/knowledge/files.ts'];
+const sourceHashes = Object.fromEntries(files.map(p => [p, sha(readFileSync(join(consumer, p)))]));
+for (const p of files) assert.equal(sourceHashes[p], expected.source_hashes[p]);
+const raw = readFileSync(join(content, 'knowledge/characters/silent/strategy-entries.json'));
+assert.equal(sha(raw), expected.library_sha256);
+const library = parseStrategyLibrary(JSON.parse(raw.toString()));
+const loader = new StrategyEntries();
+const request = (label: string, payload: any) => ({ label, payload, system: 'offline fixed content verification', question: '固定回放；不执行动作', spec: freeSpec(label, { type: 'object' }) });
+const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
+setKnowledgeCharacter('silent');
+const checks = [];
+for (const e of library.entries) {
+  const old = expected.per_entry.find((x: any) => x.id === e.id);
+  assert(old);
+  const payload = { facts: { act: e.trigger.acts[0], floor: e.trigger.acts[0] === 1 ? 1 : 18, act_boss: e.trigger.bosses[0] }, run_brief: { character: '静默猎手' } };
+  const req = request('event/act-plan', payload);
+  assert.deepEqual(retrieveStrategies(library, req.label, payload), [e]);
+  const applied = loader.apply(req, join(content, 'knowledge'), 'silent');
+  assert.deepEqual(applied.payload.strategy_entries.entries, [e]);
+  assert.equal(sha(userMessage(applied)), old.prompt_sha256);
+  assert.equal(bytes(applied.payload.strategy_entries), old.block_bytes);
+  const misses = [
+    { ...payload, facts: { ...payload.facts, act_boss: 'UNMATCHED_BOSS' } },
+    { ...payload, facts: { act: payload.facts.act, floor: payload.facts.floor } },
+    { ...payload, facts: { act_boss: payload.facts.act_boss, floor: payload.facts.floor } },
+    { ...payload, facts: { act: payload.facts.act, act_boss: payload.facts.act_boss } },
+    { ...payload, facts: { ...payload.facts, floor: payload.facts.act === 1 ? 17 : 33 } },
+  ];
+  for (const p of misses) {
+    const r = request(req.label, p);
+    assert.equal(loader.apply(r, join(content, 'knowledge'), 'silent'), r);
+  }
+  for (const role of ['ironclad', 'regent', 'necrobinder', 'defect']) {
+    setKnowledgeCharacter(role);
+    const r = request(req.label, { ...payload, run_brief: { character: role } });
+    assert.equal(loader.apply(r, join(content, 'knowledge'), role), r);
+  }
+  setKnowledgeCharacter('silent');
+  checks.push({ id: e.id, version: e.version, source: e.source, evidence: e.evidence, positive: true, unknown_or_nonmatch: misses.length, other_roles: 4, block_bytes: old.block_bytes, prompt_sha256: old.prompt_sha256 });
+}
+const replay = [];
+for (const old of expected.replay) {
+  const req = JSON.parse(readFileSync(join(prior, old.type + '.question.json'), 'utf8'));
+  const applied = loader.apply(req, join(content, 'knowledge'), 'silent');
+  const entries = applied.payload.strategy_entries?.entries ?? [];
+  assert.deepEqual(entries.map((e: any) => ({ id: e.id, version: e.version, source: e.source, evidence: e.evidence })), old.entries);
+  const prompt = userMessage(applied) + '\n';
+  assert.equal(prompt, readFileSync(join(prior, old.type + '.prompt.txt'), 'utf8'));
+  writeFileSync(join(out, old.type + '.prompt.txt'), prompt);
+  replay.push({ type: old.type, entries: old.entries, dataset_id: old.dataset_id, prompt_sha256: sha(prompt) });
+}
+const overlap = { ...library, entries: Array.from({ length: 5 }, (_, i) => ({ ...library.entries[0], id: `budget-fixture-${i}`, trigger: { question_types: ['act_plan'] } })) };
+const req = request('event/act-plan', {});
+const block = applyStrategyEntries(req, parseStrategyLibrary(overlap)).payload.strategy_entries;
+assert.equal(block.entries.length, expected.budget.actual_content_overlap_count);
+assert.equal(bytes(block), expected.budget.actual_content_overlap_bytes);
+assert(block.entries.length <= STRATEGY_LIMITS.entries && bytes(block) <= STRATEGY_LIMITS.bytes);
+for (const p of files) assert.equal(sha(readFileSync(join(consumer, p))), sourceHashes[p]);
+const result = { passed: true, fixed_only: true, source_hashes: sourceHashes, consumer_root: consumer, content_root: content, library_sha256: sha(raw), entries: checks, replay, budget: { entries: block.entries.length, bytes: bytes(block) }, model_calls: 0, game_actions: 0, scope: 'Exact R412 candidate compatibility consumer, fixed isolated readback only; this is not a production publication. The unpublished issue33 knowledge-tool consumer is absent and is not claimed here.' };
+writeFileSync(join(out, 'consumer-readback.json'), JSON.stringify(result, null, 2) + '\n');
+process.stdout.write(JSON.stringify({ passed: true, entries: checks.length, replay: replay.length, budget: result.budget }) + '\n');

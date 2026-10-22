@@ -1,0 +1,275 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent
+
+ ✓ tests/screens.test.ts (153 tests) 477ms
+ ✓ tests/turn-solver.test.ts (137 tests) 394ms
+ ✓ tests/rollout.test.ts (86 tests) 3242ms
+     ✓ an illusion killed comes back at full HP: the fight goes on until the real enemy dies (FA82 F27)  306ms
+ ✓ tests/batch-b.test.ts (43 tests) 1960ms
+     ✓ the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again  1352ms
+ ✓ tests/sl-explore.test.ts (33 tests) 37949ms
+     ✓ recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte  11941ms
+     ✓ VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so  6288ms
+     ✓ every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's  6628ms
+     ✓ the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not  12169ms
+     ✓ the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion  537ms
+ ✓ tests/brain-codex.test.ts (31 tests) 10758ms
+     ✓ after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken  1632ms
+     ✓ a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)  2179ms
+     ✓ stalled twice: the question fails as a timeout and the fallback answers it  2141ms
+     ✓ the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked  1507ms
+     ✓ a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it  1511ms
+ ✓ tests/sl-early.test.ts (42 tests) 135ms
+ ✓ tests/sl-explore-gaps.test.ts (22 tests) 701ms
+ ✓ tests/sl.test.ts (42 tests) 65ms
+ ✓ tests/route-review.test.ts (27 tests) 2445ms
+     ✓ one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it  351ms
+     ✓ answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek  313ms
+     ✓ a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route  508ms
+ ✓ tests/learner.test.ts (47 tests) 689ms
+ ✓ tests/build-decider.test.ts (28 tests) 3867ms
+     ✓ combat still goes to Jev: no DeepSeek call, even on a near-guess  1639ms
+     ✓ card reward with keep (or no route): recorded in the card row only; the next map follows the plan  421ms
+ ✓ tests/brain-codex-session.test.ts (23 tests) 6676ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1103ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  358ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  332ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2170ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  393ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  658ms
+ ✓ tests/brain-codex-usage.test.ts (21 tests) 3044ms
+     ✓ fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program  1117ms
+     ✓ a server that stays up after its answer is killed after the grace; the answer stands  334ms
+     ✓ usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes  306ms
+ ✓ tests/boss-clock.test.ts (34 tests) 107ms
+ ✓ tests/target-options.test.ts (24 tests) 35888ms
+     ✓ shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap  3120ms
+     ✓ Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)  1114ms
+     ✓ gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies  1111ms
+     ✓ rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them  2636ms
+     ✓ is deterministic: the same board gives the same options and the same kill-order numbers  2282ms
+     ✓ stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first  1593ms
+     ✓ every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act  14156ms
+     ✓ the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged  2932ms
+     ✓ orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives  4019ms
+     ✓ an attacking illusion first (Parafright) gets no "dead by T5" count: it revives (981W F30); it stays a kill-order target  1427ms
+     ✓ The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left  981ms
+ ✓ tests/v6-room.test.ts (40 tests) 2400ms
+ ✓ tests/sl-explore-canon.test.ts (14 tests) 2898ms
+     ✓ every answer's resolution and point, recording and with a deviation, as 08ec8f9  1925ms
+     ✓ code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)  532ms
+ ✓ tests/sl-explore-potion.test.ts (18 tests) 1043ms
+     ✓ attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards  676ms
+ ✓ tests/batch-f.test.ts (28 tests) 299ms
+ ✓ tests/execution-gate.test.ts (17 tests) 965ms
+ ✓ tests/sl-explore-whole.test.ts (17 tests) 2510ms
+     ✓ every answer's resolution and point, recording, deviating and avoiding, as e0fa69b  1852ms
+ ✓ tests/run-plan-merge.test.ts (19 tests) 6438ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  792ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  635ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1221ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  688ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  616ms
+     ✓ the run start rides on the run's first question (no plan yet)  548ms
+     ✓ the real client reads the run plan from the answer, or from its own object after it  1275ms
+     ✓ the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan  322ms
+ ✓ tests/batch-c.test.ts (27 tests) 3598ms
+     ✓ Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code  1902ms
+     ✓ the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained  1404ms
+ ✓ tests/outcome-asc.test.ts (16 tests) 163ms
+ ✓ tests/brain-router.test.ts (30 tests) 6079ms
+     ✓ a timeout aborts the engine and falls back  1005ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2011ms
+     ✓ a timeout between answers starts the count over  2015ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1003ms
+ ✓ tests/batch-g.test.ts (22 tests) 505ms
+ ✓ tests/oneshot-shop.test.ts (51 tests) 1849ms
+     ✓ shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row  614ms
+     ✓ shop: a price change under the plan re-asks once, with what was bought  317ms
+ ✓ tests/run-journal.test.ts (19 tests) 164ms
+ ✓ tests/ops-herdr.test.ts (27 tests) 40737ms
+     ✓ new learner tabs follow the live ops pane when workspace labels are duplicated  1995ms
+     ✓ shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit  6425ms
+     ✓ shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit  6132ms
+     ✓ run, reuse, busy, status, stop; only its own labels  2038ms
+     ✓ --close-on-exit: the pane closes when the job ends and its last lines are kept  3218ms
+     ✓ starts the TUI once, prompts, reads the turn's answer and tokens from the session file  805ms
+     ✓ other arguments (a new key file, another effort): the idle TUI is restarted  1271ms
+     ✓ waits for both shell exit and registry retirement before starting the replacement  1841ms
+     ✓ retries a short name-release race only after rechecking that the pane and name are free  1700ms
+     ✓ defers a persistent name conflict without duplicate prompts or another stop  1462ms
+     ✓ defers a competing name conflict without duplicate prompts or another stop  1319ms
+     ✓ defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent  2472ms
+     ✓ a turn that does not end in time is interrupted with esc (124); the TUI stays  5465ms
+     ✓ a startup dialog (agent_not_ready) defers without answering it  394ms
+     ✓ a post-mortem batch runs in its own pane, reports as before, and the pane closes  3790ms
+     ✓ herdr unavailable: the batch starts with setsid as before  303ms
+ ✓ tests/loop.test.ts (21 tests) 13888ms
+     ✓ after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4)  3305ms
+     ✓ does not re-ask Jev while the board is unchanged  3756ms
+     ✓ skips the Jev call when the board moves while it is still planning  3756ms
+     ✓ the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)  323ms
+     ✓ keeps going when more runs were requested  391ms
+     ✓ skips a card reward once instead of claiming and skipping forever  330ms
+ ✓ tests/batch-j.test.ts (21 tests) 10203ms
+     ✓ Jev: the combat plan question carries it ahead of the advice (plain state and the v1 view)  472ms
+     ✓ the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then)  5072ms
+     ✓ the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it  3378ms
+     ✓ the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated")  358ms
+ ✓ tests/batch-e.test.ts (19 tests) 1077ms
+     ✓ "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option  584ms
+ ✓ tests/fight-plan.test.ts (28 tests) 317ms
+ ✓ tests/fix-queue-v4-fix2.test.ts (20 tests) 843ms
+     ✓ ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0)  335ms
+ ✓ tests/journal-replay.test.ts (10 tests) 4290ms
+     ✓ gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan  1103ms
+     ✓ after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so  1250ms
+     ✓ restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review  441ms
+     ✓ a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)  872ms
+     ✓ without the replay (the old behaviour) the restarted loop re-plans the route with an empty history  440ms
+ ✓ tests/batch-m.test.ts (27 tests) 321ms
+ ✓ tests/potion-cost.test.ts (26 tests) 1454ms
+     ✓ free, the potion-free line's later turns drink the potion; at a high cost they never do  365ms
+     ✓ hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line  326ms
+ ✓ tests/sl-replay-plays.test.ts (9 tests) 1182ms
+     ✓ SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here  308ms
+ ✓ tests/batch-i.test.ts (19 tests) 4363ms
+     ✓ logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)  3117ms
+     ✓ the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns  636ms
+ ✓ tests/batch-h.test.ts (13 tests) 1047ms
+     ✓ the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so  420ms
+ ✓ tests/card-conditions.test.ts (21 tests) 832ms
+ ✓ tests/sl-explore-where.test.ts (19 tests) 37ms
+ ✓ tests/fix-queue-v4.test.ts (20 tests) 170ms
+ ✓ tests/potions-jev-call.test.ts (15 tests) 4027ms
+     ✓ logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies  3277ms
+ ✓ tests/passive-pieces.test.ts (20 tests) 2718ms
+     ✓ Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block  372ms
+     ✓ the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off  722ms
+     ✓ unset, the solver is as before: the logged boards' plans are the same with the fields absent  843ms
+     ✓ a board without any of the relic pieces (F4K88F267RCX F48 T3, the Queen) builds the same rollout input and the same rollout on and off  376ms
+ ✓ tests/v6-prompt-summary.test.ts (14 tests) 4794ms
+   ✓ consumes known provider rows for all published R2 combos without replacing large snapshots with unknown  805ms
+   ✓ retains all 17 real metric snapshots for numeric validation and full content-addressed audit  441ms
+   ✓ bounds the real published shop prompt and preserves legal choices plus the leading combo  715ms
+   ✓ keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file  1102ms
+   ✓ keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan  935ms
+   ✓ preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid  396ms
+ ✓ tests/brain-knowledge.test.ts (15 tests) 203ms
+ ✓ tests/death-move-rules.test.ts (16 tests) 160ms
+ ✓ tests/batch-l.test.ts (26 tests) 296ms
+ ✓ tests/sl-retry.test.ts (19 tests) 45ms
+ ✓ tests/mechanics-step1.test.ts (27 tests) 210ms
+ ✓ tests/rollout-live.test.ts (139 tests) 59033ms
+     ✓ a drink-first potion option says it is not rolled out  370ms
+     ✓ up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)  13068ms
+     ✓ the controlled clock: every logged board's rollout stays inside the budget  17439ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (v1)  474ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (off)  433ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-brand (v1)  333ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-brand (off)  313ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 77uj-f33-t5 (v1)  327ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 77uj-f33-t5 (off)  319ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: bxaz-f17-t1-heart-of-iron (v1)  346ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: bxaz-f17-t1-heart-of-iron (off)  313ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (v1)  627ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (off)  546ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (v1)  658ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (off)  665ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (v1)  614ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (off)  459ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (v1)  593ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (off)  584ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (v1)  353ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (off)  345ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (v1)  397ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (off)  377ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (v1)  334ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (off)  325ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (v1)  523ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (off)  518ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (v1)  1345ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (off)  1618ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: xmy2-f17-t1 (v1)  327ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: xmy2-f17-t1 (off)  347ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (v1)  506ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (off)  407ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (v1)  373ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (off)  350ms
+     ✓ logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left  1048ms
+     ✓ the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it  1316ms
+     ✓ the dead Parafright's hit next turn is in every line's enemy_threat_next  1207ms
+ ✓ tests/v6-card-pick.test.ts (24 tests) 1776ms
+ ✓ tests/fix-queue-v4-fix6.test.ts (17 tests) 571ms
+     ✓ YVWAWAPXJXGV F40 T1: the lines before Enthralled is played are the lines after it (logged: every lock gone, energy 8 -> 6), Enthralled first  370ms
+ ✓ tests/sl-revive-judge.test.ts (14 tests) 52ms
+ ✓ tests/brain-claude.test.ts (15 tests) 2926ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2030ms
+ ✓ tests/potions-step1.test.ts (24 tests) 628ms
+ ✓ tests/gkb-render.test.ts (26 tests) 104ms
+ ✓ tests/sl-judge-bounds.test.ts (25 tests) 40ms
+ ✓ tests/route-next-rest.test.ts (14 tests) 25ms
+ ✓ tests/thief-cost.test.ts (11 tests) 7838ms
+     ✓ every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)  5920ms
+     ✓ T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it  372ms
+     ✓ no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off  651ms
+     ✓ the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn  550ms
+ ✓ tests/sl-early-planner.test.ts (15 tests) 4788ms
+     ✓ Z7D7 F28 T6: a random potion (Gambler's Brew) held: its samples are chance, so not early  3868ms
+     ✓ the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them  550ms
+ ✓ tests/monster-db-context.test.ts (17 tests) 95ms
+ ✓ tests/sl-draws-offtop.test.ts (15 tests) 64ms
+ ✓ tests/ops-codex.test.ts (12 tests) 5355ms
+     ✓ round trip: codex-ops-do.sh -> broker -> actions script -> answer and exit code  3268ms
+     ✓ victories, a new ascension, a post-mortem batch with a fake learner, the 10-pending inbox line  517ms
+     ✓ a failed batch is retried later; dispatch refuses unknown runs and a second batch  528ms
+     ✓ wakes once per cause, waits before the next wake, forgets the cause when OK  757ms
+ ✓ tests/compute-memo.test.ts (11 tests) 55934ms
+     ✓ the same question and every resolution as without it; the board planned again comes from it, rollout and B2  15537ms
+     ✓ on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again  6522ms
+     ✓ a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo  11492ms
+     ✓ a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept  10584ms
+     ✓ the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo  8342ms
+     ✓ with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut  3445ms
+ ✓ tests/potion-mc.test.ts (19 tests) 2428ms
+     ✓ logged boards: the combat question is the same twice (the samples are seeded per board)  1032ms
+     ✓ logged boards holding a random potion: its option has the distribution, the shares and the re-plan note  777ms
+     ✓ with the rollout on, the option's rollout facts are the median sample's line's  460ms
+ ✓ tests/boss-sim.test.ts (16 tests) 3260ms
+     ✓ is deterministic under a seed, and another seed changes it  506ms
+     ✓ runs on worker threads with exactly the serial numbers  942ms
+     ✓ redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP  477ms
+     ✓ kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers  487ms
+ ✓ tests/run-config.test.ts (14 tests) 474ms
+     ✓ the loop writes one row on the run's first state, next to its decision log  325ms
+ ✓ tests/thief.test.ts (11 tests) 10266ms
+     ✓ every logged thief board's decision is the pre-change one, byte for byte  8253ms
+     ✓ the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options  346ms
+     ✓ no thief_context, no thief fact, no thief log  610ms
+ ✓ tests/boss-lines-planner.test.ts (8 tests) 106320ms
+     ✓ BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte  13185ms
+     ✓ P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent  15399ms
+     ✓ a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log  4030ms
+     ✓ BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why  6094ms
+     ✓ BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers  30977ms
+     ✓ an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question  33066ms
+     ✓ turn 1: the fight plan from the best line's samples  3396ms
+ ✓ tests/batch-n.test.ts (15 tests) 3787ms
+       ✓ empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered  352ms
+       ✓ an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan)  1672ms
+       ✓ an empty reply takes the plan its reasoning drafted in one call  1609ms
+ ✓ tests/brain-deepseek.test.ts (12 tests) 72ms
+ ✓ tests/mech-move-rules.test.ts (13 tests) 66ms
+ ✓ tests/oneshot-act-start.test.ts (20 tests) 2846ms
+     ✓ one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step  713ms
+     ✓ an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route  636ms
+     ✓ a random outcome: two calls (the joint question, then the review), the review keeping the route  627ms
+     ✓ the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix  630ms
+ ✓ tests/sl-any-draw.test.ts (13 tests) 889ms
+ ✓ tests/jev-experience.test.ts (16 tests) 144ms
+ ✓ tests/v6-card-option-loop.test.ts (6 tests) 14887ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (fixed clocks)  6108ms
+   ✓ keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator (fixed clocks)  4905ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (solver budget exhausted)  1546ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (sampling budget exhausted)  1378ms
+   ✓ warms numeric B through the real brain reward loop without a separate request or foreground B fill  944ms

@@ -1,0 +1,70 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": ["act_plan", "rest", "shop"],
+        "acts": [1],
+        "floor": {"max": 16},
+        "bosses": ["THE_KIN_BOSS"]
+      },
+      "strategy": "同族备战先核对神官的实际击杀窗口和撑到该窗口的血量、格挡来源，再评价补强或休息；不要把三敌开场血量之和直接当成必须逐点打掉的伤害门槛。A10证据局首试53血进场，T7神官16血、25毒，两信徒仍55/62血，结束后进入奖励且玩家仅剩3血：存在信徒未被逐点击杀就结束战斗的轨迹，但存活代价很高。这不证明优先打神官总是最好，也不指定毒牌、杀序或固定回血线；按当前牌组的可兑现输出和存活条件比较。其他进阶不套用这些历史数值。",
+      "evidence": [
+        {"run": "FETDVL1P59B9", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12039634787"},
+        {"run": "FETDVL1P59B9", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040774765"},
+        {"run": "FETDVL1P59B9", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040838947"}
+      ],
+      "source": "own",
+      "confidence": 0.64,
+      "design": "observational",
+      "sample": {"independent_runs": 1, "first_attempt_fights": 1, "sl_attempts_used": 0, "observed_ascensions": [10]},
+      "limits": ["单局描述，未隔离牌、休息或杀序的因果收益。", "信徒退场不记成其剩余117点实际伤害。", "无反事实对照；当前机制和状态优先，其他进阶数值未知。"]
+    },
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": ["act_plan", "rest", "shop"],
+        "acts": [1],
+        "floor": {"max": 16},
+        "bosses": ["VANTOM_BOSS"]
+      },
+      "strategy": "墨影备战把有滑溜的早期推进与耗尽后的输出分开审查，并给早期存活留预算；牌面伤害或毒层不能直接当成已扣敌血，也不要只凭前两轮低推进就认定毒构筑无效。A10证据局首试开场183血、9滑溜，前两轮各只净推进3；后续轮首敌血177→133→74→11，最终胜出，但玩家55→17，第三轮净损25。该轨迹同时说明后段可有输出和前段仍需付血价；没有证明某张补牌、升级或休息一定改善结果，不给固定耗层顺序。其他进阶须重新核当前层数和来袭，不沿用历史数值。",
+      "evidence": [
+        {"run": "VGNDNGPFYRE3", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083191808"},
+        {"run": "VGNDNGPFYRE3", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083456038"},
+        {"run": "VGNDNGPFYRE3", "floor": 17, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12084068941"}
+      ],
+      "source": "own",
+      "confidence": 0.62,
+      "design": "observational",
+      "sample": {"independent_runs": 1, "first_attempt_fights": 1, "sl_attempts_used": 0, "observed_ascensions": [10]},
+      "limits": ["单局胜战同时有38净血价，不能由胜利证明安全或毒的因果收益。", "净血池推进包含已结算效果，不能拆成未经逐帧核实的单牌贡献。", "非出牌条目，不指定拿牌优先级、耗层顺序或药水时点。"]
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": ["act_plan", "rest", "shop"],
+        "acts": [2],
+        "floor": {"min": 18, "max": 32},
+        "bosses": ["KAISER_CRAB_BOSS"]
+      },
+      "strategy": "帝王蟹备战要把双体阶段与一侧退场后仍需处理的残敌分别核算；满血进场、已有毒牌或退掉一侧，都不足以证明整战输出和存活已够。A10证据局首试77/77血进场，T11仍有碾碎爪91血、火箭56血，7血时判死SL，不能写成已经执行死亡。另列同局第六试：火箭退场后，碾碎爪仍88血、99挡、12力量，玩家1血；最终玩家死亡而敌剩85血。制定补强与休息计划时保留残敌阶段的生存和有效输出缺口，不把回血本身记作失误；没有受控胜局支持固定先杀哪侧或哪张牌必选。",
+      "evidence": [
+        {"run": "YZQEEDWQ6AY6", "floor": 33, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12108239410"},
+        {"run": "YZQEEDWQ6AY6", "floor": 33, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12110446436"},
+        {"run": "YZQEEDWQ6AY6", "floor": 33, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123299008"},
+        {"run": "YZQEEDWQ6AY6", "floor": 33, "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123455148"}
+      ],
+      "source": "own",
+      "confidence": 0.65,
+      "design": "observational",
+      "sample": {"independent_runs": 1, "first_attempt_fights": 1, "sl_attempts_used": 1, "sl_attempt_numbers": [6], "observed_ascensions": [10]},
+      "limits": ["第六试不是新独立局；第2–5试不作本条逐帧证据。", "首次轨迹到第一次判死截断，第六试单列，不合成首试终局。", "只在A10观察，不给其他进阶固定阈值；未验证构筑、休息或杀序因果收益。"]
+    }
+  ]
+}

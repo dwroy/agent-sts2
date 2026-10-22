@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-22T19:50:14+08:00",
+  "state": "historical-frozen-input-passed-not-current-live-admission",
+  "code_commit": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+  "source_tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+  "knowledge_json_count": 462,
+  "input_count": 2488,
+  "checks": {
+    "knowledge_snapshot": "knowledge-snapshot.json",
+    "knowledge_json_count": 462,
+    "state": "passed",
+    "tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+    "base_head": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T19:25:29+08:00",
+        "pid": 1026584,
+        "exit_code": 0,
+        "seconds": 0.8219963290030137
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/vitest.json"
+        ],
+        "started_at": "2026-10-22T19:25:29+08:00",
+        "pid": 1026649,
+        "exit_code": 0,
+        "seconds": 1385.6368719019956
+      }
+    ],
+    "runner_pid": 1026528,
+    "runner_start": "9285804",
+    "nice": 19,
+    "full_started": true,
+    "started_at": "2026-10-22T19:25:28+08:00",
+    "input_count": 2488,
+    "inputs_unchanged": true,
+    "ended_at": "2026-10-22T19:48:36+08:00"
+  },
+  "vitest": {
+    "success": true,
+    "numTotalTests": 6012,
+    "numPassedTests": 6010,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "numTotalTestSuites": 1640,
+    "test_result_file_count": 637
+  },
+  "raw_artifacts": [
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/checks.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/checks.json",
+      "bytes": 1358,
+      "sha256": "e92600b1311beabf37791439bfc954494bc3dc85ad45dd818c86d61b2aaba3ec"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/driver.exit",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/full.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/full.log",
+      "bytes": 77773,
+      "sha256": "95b378809697db3017a7f6b49025897c7ede4ae904107c92cc965a1f392c7d18"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/inputs-after.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/inputs-after.json",
+      "bytes": 414169,
+      "sha256": "6b2bb357af797d7ebb9d6584b999f4bcd2a82d10b671538596b7f4d799d714d7"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/inputs-before.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/inputs-before.json",
+      "bytes": 414169,
+      "sha256": "6b2bb357af797d7ebb9d6584b999f4bcd2a82d10b671538596b7f4d799d714d7"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/tsc.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/vitest.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/vitest.json",
+      "bytes": 2342099,
+      "sha256": "7f2362bff3985ab8f6f7b1c9bdf43f429a50f62ce173eafd9ebd32e0ffa7496a"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/check-timeout-compatible.py",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/check-timeout-compatible.py.txt",
+      "bytes": 4455,
+      "sha256": "2860081d339a68734a4bb67b2cda6697d659bc861caa6700bcf1af081ae01633"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/source-v2.patch",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/source-v2.patch",
+      "bytes": 169885,
+      "sha256": "444690523b2ce4c5fc3a289acc751ee32525f6d25a881414a90c92a1a4de31c9"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/source-v2-final-gitleaks.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/full-timeout-compatible-first/source-v2-final-gitleaks.log",
+      "bytes": 80,
+      "sha256": "b3c56b4e400a8d1248239a75476aebd11322948df3c51f5910583e3343e796dc"
+    }
+  ],
+  "current_live_release": "V6-R412",
+  "requires_new_exact_combination": true,
+  "live_published": false
+}

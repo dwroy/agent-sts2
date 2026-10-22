@@ -1,0 +1,26 @@
+from pathlib import Path
+import hashlib, importlib.util, json, os, sys, types
+W=Path(__file__).resolve().parents[2]; A=Path(__file__).resolve().parent
+F=A/'targeted-r412-first'; root=F/'catalog-pipeline-fixture'
+strategy='characters/silent/strategy-entries.json'
+p=root/'knowledge'/strategy; p.parent.mkdir(parents=True,exist_ok=False)
+raw=(W/'knowledge'/strategy).read_bytes(); p.write_bytes(raw)
+sys.path.insert(0,str(W/'knowledge/builders'))
+spec=importlib.util.spec_from_file_location('candidate_refresh_driver',W/'knowledge/builders/refresh_driver.py')
+m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+m.ROOT=root
+# Empty fixed run list isolates the actual catalog step from training/game data.
+sys.modules['characters']=types.SimpleNamespace(characters_with_runs=lambda _:[])
+sys.argv=['refresh_driver','--ops-root',str(root),'--fight-value','--queue-entered']
+assert m.main()==0
+rows=[json.loads(line) for line in (root/'ops/refresh-timing.jsonl').read_text().splitlines()]
+steps=[r for r in rows if r['schema']=='knowledge-refresh-step-v1']
+assert len(steps)==1 and steps[0]['name']=='catalog' and steps[0]['exit_code']==0
+assert rows[-1]['failed_steps']==[]
+expected=json.loads((W/'knowledge/catalog.json').read_text())['sources'][strategy]
+actual=json.loads((root/'knowledge/catalog.json').read_text())['sources'][strategy]
+assert actual==expected
+assert p.read_bytes()==raw
+receipt={'passed':True,'fixed_only':True,'actual_driver_catalog_step':True,'published_source_row_reproduced':True,'strategy_sha256':hashlib.sha256(raw).hexdigest(),'source_row':actual,'strategy_bytes_unchanged':True,'timing_rows':rows,'production_changed':False,'training_calls':0,'model_calls':0,'game_actions':0}
+(F/'catalog-pipeline-readback.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'passed':True,'actual_driver_catalog_step':True,'published_source_row_reproduced':True}))

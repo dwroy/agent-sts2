@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-22T18:58:21+08:00",
+  "classification": "integrator-input-preparation-interruption",
+  "not_a_product_failure_or_pass": true,
+  "code_tree": "459699abeb08d0d238f6a537eea817476d72587f",
+  "checks": {
+    "state": "failed-or-blocked",
+    "tree": "459699abeb08d0d238f6a537eea817476d72587f",
+    "base_head": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T18:46:15+08:00",
+        "pid": 884468,
+        "exit_code": 0,
+        "seconds": 0.8639652699930593
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/vitest.json"
+        ],
+        "started_at": "2026-10-22T18:46:16+08:00",
+        "pid": 884517,
+        "exit_code": 143,
+        "seconds": 605.9320343270083
+      }
+    ],
+    "runner_pid": 884435,
+    "runner_start": "9050485",
+    "nice": 19,
+    "full_started": true,
+    "started_at": "2026-10-22T18:46:15+08:00",
+    "input_count": 2488,
+    "error": "RuntimeError",
+    "message": "full failed; preserve original logs",
+    "ended_at": "2026-10-22T18:56:22+08:00"
+  },
+  "reason": "221 knowledge JSONs were Git baseline instead of original ops latest snapshot; exact original 462 JSONs restored for new run",
+  "raw_artifacts": [
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/checks.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/checks.json",
+      "bytes": 1317,
+      "sha256": "ad7ecd2db4b978770196045b378b3b3b519b2686dc7187a9e8ec40f8a167eaa4"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/full.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/full.log",
+      "bytes": 26422,
+      "sha256": "5b106305b30a90f2dbf411ac46d5d5d4abeb4523b990f4e6e3b6ac8443e3ba78"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/tsc.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/driver.exit",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/driver.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/interruption-request.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/interruption-request.json",
+      "bytes": 853,
+      "sha256": "5a3d455348a308ba9dd5a0cb6d3efe0f7cf8c90c46a69b0f6fe4847a3f5df0c7"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/error.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/error.txt",
+      "bytes": 298,
+      "sha256": "61886fd727a21dfc8b83d0556bcd9dbb3ee951c9663b83e1fb843115707abf77"
+    },
+    {
+      "path": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/inputs-before.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/interrupted-baseline-knowledge/inputs-before.json",
+      "bytes": 414169,
+      "sha256": "874d8a8f9eb975d9bfbc62cf2eb5891c5ddee28ab6b4cbec47ae1584834e95f2"
+    }
+  ],
+  "new_artifacts": "full-latest-knowledge-first",
+  "original_knowledge_snapshot_matched_actual_live": true,
+  "archive_check_correction": "Initial archival check expected negative signal code; actual Vitest terminates with shell-style143. Original code preserved; both represent SIGTERM."
+}

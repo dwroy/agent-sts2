@@ -1,0 +1,48 @@
+{
+  "state": "failed-or-blocked",
+  "tree": "459699abeb08d0d238f6a537eea817476d72587f",
+  "base_head": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-22T18:46:15+08:00",
+      "pid": 884468,
+      "exit_code": 0,
+      "seconds": 0.8639652699930593
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-first/vitest.json"
+      ],
+      "started_at": "2026-10-22T18:46:16+08:00",
+      "pid": 884517,
+      "exit_code": 143,
+      "seconds": 605.9320343270083
+    }
+  ],
+  "runner_pid": 884435,
+  "runner_start": "9050485",
+  "nice": 19,
+  "full_started": true,
+  "started_at": "2026-10-22T18:46:15+08:00",
+  "input_count": 2488,
+  "error": "RuntimeError",
+  "message": "full failed; preserve original logs",
+  "ended_at": "2026-10-22T18:56:22+08:00"
+}

@@ -1,0 +1,37 @@
+diff --git a/agent/tests/v6_learning_loop_test.py b/agent/tests/v6_learning_loop_test.py
+index 799aff355..20da8777e 100644
+--- a/agent/tests/v6_learning_loop_test.py
++++ b/agent/tests/v6_learning_loop_test.py
+@@ -142,7 +142,7 @@ class IdentityTest(unittest.TestCase):
+ def fixture(root):
+     b = root / 'knowledge/builders'
+     b.mkdir(parents=True)
+-    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py'):
++    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py', 'refresh_driver.py', 'refresh_publish.py', 'characters.py'):
+         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
+     # Production Node CLI and schemas are used read-only; no copy of a checkout.
+     (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
+@@ -534,7 +534,7 @@ class RefreshTest(unittest.TestCase):
+             # Stub unrelated historical refresh steps; execute the real shell and V6 helper/CLIs.
+             b = root / 'knowledge/builders'
+             for name in ('build-monster-db.py', 'monster-db-check.py', 'build-card-upgrades.py', 'build-outcome-stats.py',
+-                         'build-construction-opportunities.py', 'build-room-costs.py', 'build-boss-damage.py', 'build-catalog.py'):
++                         'build-construction-opportunities.py', 'build-room-costs.py', 'build-boss-damage.py', 'build-catalog.py', 'build-fight-value.py'):
+                 (b / name).write_text('pass\n')
+             potion = b / 'refresh-potion-equivalents.sh'
+             potion.write_text('#!/bin/sh\nexit 0\n')
+@@ -573,6 +573,14 @@ class RefreshTest(unittest.TestCase):
+             self.assertIsNone(result['exit'])
+             self.assertEqual(result['status'], 'background')
+             self.assertFalse(result['admission_wait'])
++            cycles = [json.loads(line) for line in (root/'ops/refresh-timing.jsonl').read_text().splitlines()
++                      if json.loads(line)['schema'] == 'knowledge-refresh-cycle-v1']
++            self.assertEqual(len(cycles), 1)
++            self.assertEqual(cycles[0]['origin_pid'], result['pid'])
++            self.assertTrue(cycles[0]['cycle'])
++            self.assertGreaterEqual(cycles[0]['wall_seconds'], cycles[0]['seconds'])
++            publications = [json.loads(line) for line in (root/'ops/refresh-publication-timing.jsonl').read_text().splitlines()]
++            self.assertEqual({row['cycle'] for row in publications}, {cycles[0]['cycle']})
+             self.assertEqual(json.loads(target.read_bytes())['data']['character'], 'silent')
+             receipts = list((root / 'ops/codex-ops/v6-refresh/silent').glob('*/receipt.json'))
+             self.assertEqual(len(receipts), 1)

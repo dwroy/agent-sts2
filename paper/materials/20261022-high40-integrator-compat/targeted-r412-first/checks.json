@@ -1,0 +1,82 @@
+{
+  "knowledge_snapshot": "knowledge-snapshot-r412.json",
+  "knowledge_json_count": 463,
+  "state": "passed",
+  "tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+  "base_head": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-22T19:50:52+08:00",
+      "pid": 1166411,
+      "exit_code": 0,
+      "seconds": 0.9542244019976351
+    },
+    {
+      "name": "targeted",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/strategy-entries.test.ts",
+        "tests/knowledge-catalog.test.ts",
+        "tests/legacy-refresh-incremental.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/vitest.json"
+      ],
+      "started_at": "2026-10-22T19:50:53+08:00",
+      "pid": 1166523,
+      "exit_code": 0,
+      "seconds": 4.095933793010772
+    },
+    {
+      "name": "strategy-consumer",
+      "command": [
+        "node",
+        "--import",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent/node_modules/tsx/dist/loader.mjs",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-strategy-consumer.mts",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261022-184754-e08ce39d-b6e8-490b-9b69-c66a8f59dd38-issue-27-brain-strategies-task/merged-main-consumer",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer"
+      ],
+      "started_at": "2026-10-22T19:50:57+08:00",
+      "pid": 1167124,
+      "exit_code": 0,
+      "seconds": 0.5538182940072147
+    },
+    {
+      "name": "catalog-pipeline",
+      "command": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-catalog-pipeline.py"
+      ],
+      "started_at": "2026-10-22T19:50:58+08:00",
+      "pid": 1167171,
+      "exit_code": 0,
+      "seconds": 0.1321774789976189
+    }
+  ],
+  "runner_pid": 1166351,
+  "runner_start": "9438186",
+  "nice": 19,
+  "full_started": false,
+  "full_reused": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+  "supervisor_comment": 6339963519,
+  "started_at": "2026-10-22T19:50:52+08:00",
+  "input_count": 2489,
+  "inputs_unchanged": true,
+  "ended_at": "2026-10-22T19:50:58+08:00"
+}

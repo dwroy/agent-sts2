@@ -1,0 +1,331 @@
+{
+  "at": "2026-10-22T19:51:51+08:00",
+  "state": "r412-targeted-passed-full-reused-await-ops",
+  "code_commit": "326d5636f974c57b1a594ae78d75d68feaba838c",
+  "source_tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+  "release_base": "b9c9fdfdc3a8eb823ba274fa2b5022f38e85a1aa",
+  "release_id_retained": "V6-R412",
+  "delivery_path_count": 29,
+  "delivery_manifest": "prepared-r412.json",
+  "knowledge_json_count": 463,
+  "input_count": 2489,
+  "inputs_unchanged": true,
+  "supervisor_scope_url": "https://github.com/dwroy/agent-sts2/issues/40#issuecomment-6339963519",
+  "full_reused": {
+    "code_commit": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+    "tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+    "knowledge_json_count": 462,
+    "input_count": 2488,
+    "vitest": {
+      "success": true,
+      "numTotalTests": 6012,
+      "numPassedTests": 6010,
+      "numFailedTests": 0,
+      "numPendingTests": 2,
+      "numTotalTestSuites": 1640,
+      "test_result_file_count": 637
+    },
+    "checks_archive": "full-timeout-compatible-first/",
+    "runtime_source_identical": true,
+    "input_delta": [
+      "eval/versions.json",
+      "knowledge/catalog.json",
+      "knowledge/characters/silent/strategy-entries.json"
+    ]
+  },
+  "targeted_checks": {
+    "knowledge_snapshot": "knowledge-snapshot-r412.json",
+    "knowledge_json_count": 463,
+    "state": "passed",
+    "tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+    "base_head": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T19:50:52+08:00",
+        "pid": 1166411,
+        "exit_code": 0,
+        "seconds": 0.9542244019976351
+      },
+      {
+        "name": "targeted",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "tests/strategy-entries.test.ts",
+          "tests/knowledge-catalog.test.ts",
+          "tests/legacy-refresh-incremental.test.ts",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/vitest.json"
+        ],
+        "started_at": "2026-10-22T19:50:53+08:00",
+        "pid": 1166523,
+        "exit_code": 0,
+        "seconds": 4.095933793010772
+      },
+      {
+        "name": "strategy-consumer",
+        "command": [
+          "node",
+          "--import",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent/node_modules/tsx/dist/loader.mjs",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-strategy-consumer.mts",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+          "/home/dw/Projects/agent-sts2/learner/runs/20261022-184754-e08ce39d-b6e8-490b-9b69-c66a8f59dd38-issue-27-brain-strategies-task/merged-main-consumer",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer"
+        ],
+        "started_at": "2026-10-22T19:50:57+08:00",
+        "pid": 1167124,
+        "exit_code": 0,
+        "seconds": 0.5538182940072147
+      },
+      {
+        "name": "catalog-pipeline",
+        "command": [
+          "python3",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-catalog-pipeline.py"
+        ],
+        "started_at": "2026-10-22T19:50:58+08:00",
+        "pid": 1167171,
+        "exit_code": 0,
+        "seconds": 0.1321774789976189
+      }
+    ],
+    "runner_pid": 1166351,
+    "runner_start": "9438186",
+    "nice": 19,
+    "full_started": false,
+    "full_reused": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+    "supervisor_comment": 6339963519,
+    "started_at": "2026-10-22T19:50:52+08:00",
+    "input_count": 2489,
+    "inputs_unchanged": true,
+    "ended_at": "2026-10-22T19:50:58+08:00"
+  },
+  "targeted_vitest": {
+    "file_count": 3,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "consumer": {
+    "strategy_positive_entries": 3,
+    "prompt_replays": 5,
+    "budget": {
+      "entries": 2,
+      "bytes": 2992
+    },
+    "model_calls": 0,
+    "game_actions": 0,
+    "catalog_pipeline_source_row_reproduced": true,
+    "scope": "exact candidate fixed compatibility consumers; not production release or unpublished issue33 knowledge tool"
+  },
+  "raw_artifacts": [
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/checks.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/checks.json",
+      "bytes": 2962,
+      "sha256": "364dc1c2f33f56292db70482a08807b8f40da5662a6483c80bcd3ea2ceda524f"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/tsc.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/inputs-after.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/inputs-after.json",
+      "bytes": 414343,
+      "sha256": "bc4983b781c9de0c5c58709ed1564bba077d0345e1897bb6a797f8f32e272589"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-readback.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-readback.json",
+      "bytes": 1635,
+      "sha256": "50e394094fc628bd3e414d4c56fdfbb62682b20f4003f0e622b1bb0f044abf3b"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/vitest.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/vitest.json",
+      "bytes": 5471,
+      "sha256": "55b38655b5722ea5a6b10d2e4f879bc1c33dbdef48d2eca7539179c471bb9aa7"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/targeted.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/targeted.log",
+      "bytes": 826,
+      "sha256": "4c62a49ca2014a93e0cf2db5eb04f96e2972be890d1012a15f8e72ee887c7454"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer.log",
+      "bytes": 75,
+      "sha256": "1dfff9f4795802dc3a1d4fb527f4d0e67e8fcd1de061fa9014e905041d7e3912"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/driver.exit",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/input-delta-from-reused-full.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/input-delta-from-reused-full.json",
+      "bytes": 211,
+      "sha256": "65fd340b2b3ff85484fc1a6eb4062f118f2a8f1374311fece109ac091ab96a85"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/inputs-before.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/inputs-before.json",
+      "bytes": 414343,
+      "sha256": "bc4983b781c9de0c5c58709ed1564bba077d0345e1897bb6a797f8f32e272589"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline.log",
+      "bytes": 361,
+      "sha256": "4aee9f926e0286cabf69583a7fc6a8fb1dd5d90c5f1c9ba4346bff97a826811c"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/rest.prompt.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/rest.prompt.txt",
+      "bytes": 3090,
+      "sha256": "ffbdb88c9fc55aa10a7cf20b07bf7825c34923d2ea840dee7a2c2073beae6895"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/card_reward.prompt.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/card_reward.prompt.txt",
+      "bytes": 843,
+      "sha256": "217e4ae7008d94c5bc2f838d5b401ace8eebfedc90bc2585140ea392c2ec53a8"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/act_plan.prompt.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/act_plan.prompt.txt",
+      "bytes": 3180,
+      "sha256": "93fc2242195b760dbd7698cabf67f74fb90bcd105d1b5e6549d8eb48cefe2a63"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/consumer-readback.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/consumer-readback.json",
+      "bytes": 8421,
+      "sha256": "ea8580622f671d75e3a04cc9fda18d0ac8ad7ae939b5fca396a5408c4c58ee17"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/event.prompt.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/event.prompt.txt",
+      "bytes": 2220,
+      "sha256": "985de63cf9ddea83bb2fe4045dec8b8ddf98d41abbe0b3bcb092e6ae4f8f2a42"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer/shop.prompt.txt",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/strategy-consumer/shop.prompt.txt",
+      "bytes": 2842,
+      "sha256": "c8f9090e62803c9090b6ec36d074e771f26d69796f339ef8bc7b0251a10ddf2c"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/ops/knowledge-refresh.lock",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/ops/knowledge-refresh.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/ops/refresh-timing.jsonl",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/ops/refresh-timing.jsonl",
+      "bytes": 736,
+      "sha256": "ae5e386cc07301bd024395c79712995c6ca1ff1b880e3b5e22db3511dc0e1320"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/ops/live-merge.lock",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/ops/live-merge.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/ops/refresh-publication-timing.jsonl",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/ops/refresh-publication-timing.jsonl",
+      "bytes": 209,
+      "sha256": "36c7eb58bf8584a390f1ad39448882f12633cca81d415587b6436a53b936e2c5"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/knowledge/catalog.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/knowledge/catalog.json",
+      "bytes": 1085,
+      "sha256": "1fa6b12b1d28983e393c1c08e820e7e8a4ef56d7d7b1cfa2fba703e6c7d1c1c1"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/knowledge/common/enemies/_legacy-meta.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/knowledge/common/enemies/_legacy-meta.json",
+      "bytes": 58,
+      "sha256": "4fd11e2fae0278b4cf3d3890a9a7cacca88b6263d20f91ef8725a785459c8d3d"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/knowledge/characters/silent/strategy-entries.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/knowledge/characters/silent/strategy-entries.json",
+      "bytes": 5711,
+      "sha256": "9df3740b4254daade365a4c3cf48b25b2d840e9f656bcda50e64735a79b3d95e"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/catalog-pipeline-fixture/ops/codex-ops/knowledge-catalog.lock",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/catalog-pipeline-fixture/ops/codex-ops/knowledge-catalog.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/check-r412-targeted.py",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/check-r412-targeted.py.txt",
+      "bytes": 5651,
+      "sha256": "b64352f0d005a14fe01580e1f658f1d1dc956c2609c86ae7b86432b409eb5e5f"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-strategy-consumer.mts",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/candidate-strategy-consumer.mts.txt",
+      "bytes": 5962,
+      "sha256": "11fe36e6d5d19da7f82b0afb9e011970ec36f7ac42fc55e6bc705a01ea28f5f6"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-catalog-pipeline.py",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/candidate-catalog-pipeline.py.txt",
+      "bytes": 1928,
+      "sha256": "349f9d622a37e92109d7f33394f304d1db489c976ffe78ad3e8caba63a6c74d3"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/source-r412.patch",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/source-r412.patch",
+      "bytes": 169885,
+      "sha256": "444690523b2ce4c5fc3a289acc751ee32525f6d25a881414a90c92a1a4de31c9"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/source-r412-gitleaks.log",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/source-r412-gitleaks.log",
+      "bytes": 80,
+      "sha256": "8ae611686b86b8470e1e3318e334598ccb4650d2de4c9775405da760451ad7a1"
+    },
+    {
+      "original": ".worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/knowledge-snapshot-r412.json",
+      "archive": "paper/materials/20261022-high40-integrator-compat/targeted-r412-first/knowledge-snapshot-r412.json",
+      "bytes": 87910,
+      "sha256": "bbd805f02c914b9eb6567601ae62dea223b4fa8ce7e8f4e809e76f73dd38490b"
+    }
+  ],
+  "remote_branch": "integrator-high40-compat-20261022",
+  "remote_branch_verified": true,
+  "live_published": false,
+  "production_changed_by_integrator": false,
+  "notice_cli_compatibility_block_retained": true,
+  "remote_branch_head": "326d5636f974c57b1a594ae78d75d68feaba838c",
+  "push_transport": "/mnt/c/Windows/System32/OpenSSH/ssh.exe"
+}
