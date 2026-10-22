@@ -2,7 +2,7 @@
 
 公共来源 `459366bac49b7a959d3fd59b92bffcb12360aebe`；原交付重放 `04f7300faf417632518105cc0b806e386f678fb2`，基线 main `0eeb33ae7431039ebbcdb5860aa8be674ab00602`。kit 本轮未改，仍引用 `f1cc7285de2f14aeea33cebb8e6eba4ce618af01`；本轮没有重新取得私有 kit 完整检查，当前本地已安装 kit 不含此对象，不把开发证据或安装状态当本角色新准入。
 
-**影响 live 启动：是。** 本轮 #39 已知反例修复通过，#20 保持 review，尚未完整检查或合入 main/live。
+**影响 live 启动：是。** 本轮 #39 已知反例修复通过，#20 本轮原范围检查通过但未完整检查或合入 main/live；14:46发前复查发现补充需求4，已由主管转回 in-progress，等待多项目兼容补交。
 
 ## 独立结果
 
@@ -21,3 +21,9 @@
 实读原 #33 状态和 PID/start/wchan：唯一原 runner7161/start7136824仍阻塞 knowledge-refresh 的内核文件锁，held_locks=[]、full_started=false、steps=[]。这是本轮观察，不推断锁主或声称已释放；只沿原 ops/#38 通道协调，不重启检查、不发信号、不再造full。
 
 #39不提前关闭，随最终组合检查、main实际合入与原生产边界验收继续跟踪。首次 #20 main 合入仍须原 ops 在自然边界保持下一局准入，完成受检live协议、pin、安全接续及首局 source/run-config 读回。本轮不 pin、不启用 heavy、不改 main/live/STOP、账号或运维prompt。旧自然通知、派发、生命周期待验继续保留。
+
+## 发前新增范围
+
+[主管补充需求4](https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6334435683)及[来源补充](https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6334445892)已实读：私有 kit 须支持项目前缀会话/分支、统一 area 互斥、maintenance consumer/--project 权限边界，固定证明炉石开关off时STS2 tick不执行炉石动作。本轮来源不含此范围。#20最新状态为in-progress，保留冻结候选，不恢复review、不启动完整检查或安装共享kit；等沿原开发会话重新交付后，核最终公共+私有组合，再协调原窗口。上述原协调顺序只是预留关系，不是队列登记或新补交准入。
+
+本轮不读取或修改另一项目工作树，不把已通过的启动隔离反例推成多项目兼容已验收。#39继续保留，关闭条件仍为最终组合核验与实际main合入。
