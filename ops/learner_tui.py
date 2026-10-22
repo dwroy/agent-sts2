@@ -103,9 +103,10 @@ def verify_native(receipt):
                 complete, accepted = None, False
             if not active:
                 continue
-            if (not accepted and (pending_prelude or (preludes and preludes[-1]["turn_id"] == current))
+            # The active dispatch boundary was established above; older resume history stays outside it.
+            if (not accepted
                     and row.get("type") == "response_item"
-                    and (payload.get("type") in ("function_call", "custom_tool_call", "local_shell_call")
+                    and (re.search(r"_call(?:_output)?$", str(payload.get("type"))) or payload.get("type") == "reasoning"
                          or (payload.get("type") == "message" and payload.get("role") == "assistant"))):
                 raise ValueError("native activity precedes the dispatched prompt")
             if row.get("type") == "turn_context":

@@ -155,8 +155,9 @@ export class NativeBatch {
         this.bindings.push({ turn_id: this.turn, marker, prompt_sha256: hash }); this.pending.delete(marker);
       } else { this.accepted = false; this.foreignActivity = true; }
     }
-    if (!this.accepted && (this.pendingPrelude || this.preludes.some((proof) => proof.turn_id === this.currentTurn)) &&
-        row.type === "response_item" && (/^(function_call|custom_tool_call|local_shell_call)$/.test(String(p.type)) ||
+    // Cover the entire active turn before its dispatched prompt, including before any bootstrap item.
+    if (this.currentTurn && !this.accepted &&
+        row.type === "response_item" && (/_call(?:_output)?$/.test(String(p.type)) || p.type === "reasoning" ||
           (p.type === "message" && p.role === "assistant"))) this.foreignActivity = true;
     if (!this.accepted || this.currentTurn !== this.turn || this.foreignActivity) {
       if (row.type === "event_msg" && ["task_complete", "turn_aborted"].includes(String(p.type)) && p.turn_id === this.currentTurn) {

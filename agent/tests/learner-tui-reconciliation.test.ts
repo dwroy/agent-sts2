@@ -28,6 +28,36 @@ function fixture() {
 }
 
 describe("read-only reconciliation of an already submitted TUI", () => {
+  const activities = [
+    { kind: "function_call", payload: { type: "function_call", name: "foreign" } },
+    { kind: "custom_tool_call", payload: { type: "custom_tool_call", name: "foreign" } },
+    { kind: "local_shell_call", payload: { type: "local_shell_call", call_id: "foreign" } },
+    { kind: "function_call_output", payload: { type: "function_call_output", output: "Earlier result" } },
+    { kind: "custom_tool_call_output", payload: { type: "custom_tool_call_output", output: "Earlier result" } },
+    { kind: "reasoning", payload: { type: "reasoning", summary: [] } },
+    { kind: "assistant", payload: { type: "message", role: "assistant", content: [{ type: "output_text", text: "Earlier answer" }] } },
+  ];
+  const positions = ["before-prelude", "after-prelude", "after-context", "no-prelude", "continuation-before-context", "continuation-after-context"];
+  it.each(activities.flatMap((activity) => positions.map((position) => ({ ...activity, position }))))(
+    "rejects $kind at $position in the original receipt audit", ({ payload, position }) => {
+      const { receipt, rows } = fixture();
+      const item = { type: "response_item", payload };
+      if (position.startsWith("continuation")) {
+        rows.push({ type: "event_msg", payload: { type: "task_complete", turn_id: "turn", last_agent_message: "first report" } });
+        receipt.submissions.push({ marker: "retry", prompt_sha256: hash("retry\ncontinue") });
+        rows.push({ type: "event_msg", payload: { type: "task_started", turn_id: "turn-2" } });
+        if (position === "continuation-after-context") rows.push({ type: "turn_context", payload: { turn_id: "turn-2", cwd: receipt.cwd } });
+        rows.push(item);
+        if (position === "continuation-before-context") rows.push({ type: "turn_context", payload: { turn_id: "turn-2", cwd: receipt.cwd } });
+        rows.push({ type: "response_item", payload: { type: "message", role: "user", content: [{ type: "input_text", text: "retry\ncontinue" }] } });
+      } else {
+        if (position === "no-prelude") rows.splice(2, 1);
+        rows.splice(position === "before-prelude" ? 2 : position === "after-context" ? 4 : 3, 0, item);
+      }
+      const original = JSON.stringify(receipt), audit = reconcileTuiReceipt(receipt, rows);
+      expect(audit.observed).toMatchObject({ accepted: false, foreign_activity: true });
+      expect(audit.finish_authorized).toBe(false); expect(JSON.stringify(receipt)).toBe(original);
+    });
   it("reconstructs native acceptance without rewriting old 75/bindings or authorizing lifecycle actions", () => {
     const { receipt, rows } = fixture(); const before = JSON.stringify(receipt);
     const audit = reconcileTuiReceipt(receipt, rows);
@@ -66,6 +96,19 @@ describe("read-only reconciliation of an already submitted TUI", () => {
     const audit = JSON.parse(output[0]!);
     expect(audit.original_receipt_sha256).toBe(hash(original)); expect(audit.trailing_partial_bytes).toBe(8);
     expect(audit.finish_authorized).toBe(false); expect(errors).toEqual([]);
+    expect(readFileSync(receiptFile, "utf8")).toBe(original); expect(readFileSync(nativeFile, "utf8")).toBe(native);
+  });
+  it("returns 75 for pre-prelude activity without changing the source receipt or native snapshot", () => {
+    const { receipt, rows } = fixture();
+    rows.splice(2, 0, { type: "response_item", payload: { type: "function_call", name: "foreign" } });
+    const root = mkdtempSync(join(tmpdir(), "tui-reconcile-foreign-")); roots.push(root);
+    const receiptFile = join(root, "original.json"), nativeFile = join(root, "native.jsonl");
+    const original = JSON.stringify(receipt), native = rows.map((r) => JSON.stringify(r) + "\n").join("");
+    writeFileSync(receiptFile, original); writeFileSync(nativeFile, native);
+    const output: string[] = [];
+    expect(reconciliationMain(["--receipt", receiptFile, "--native", nativeFile], (s) => output.push(s))).toBe(75);
+    expect(JSON.parse(output[0]!)).toMatchObject({ observed: { accepted: false, foreign_activity: true },
+      original_receipt_modified: false, finish_authorized: false });
     expect(readFileSync(receiptFile, "utf8")).toBe(original); expect(readFileSync(nativeFile, "utf8")).toBe(native);
   });
 });

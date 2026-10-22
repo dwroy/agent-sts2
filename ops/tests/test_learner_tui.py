@@ -114,6 +114,72 @@ class CompletionGate(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     tui.verify(self.receipt, self.output)
 
+    def unbound_activities(self):
+        return [{"type": "response_item", "payload": payload} for payload in (
+            {"type": "function_call", "name": "foreign"}, {"type": "custom_tool_call", "name": "foreign"},
+            {"type": "local_shell_call", "call_id": "foreign"},
+            {"type": "function_call_output", "output": "Earlier result"},
+            {"type": "custom_tool_call_output", "output": "Earlier result"}, {"type": "reasoning", "summary": []},
+            {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": "Earlier answer"}]})]
+
+    def test_entire_unbound_window_rejects_activity_even_before_any_prelude(self):
+        original = json.dumps(self.value)
+        for activity in self.unbound_activities():
+            for position in ("before-prelude", "after-prelude", "after-context", "no-prelude",
+                             "continuation-before-context", "continuation-after-context"):
+                with self.subTest(activity=activity["payload"]["type"], position=position):
+                    self.value = json.loads(original)
+                    rows = self.bootstrap_rows()
+                    if position.startswith("continuation"):
+                        proof = {"marker": "retry", "prompt_sha256": tui.prompt_hash("retry\ncontinue")}
+                        self.value["submissions"].append(proof)
+                        self.value["bindings"].append(dict(proof, turn_id="two"))
+                        self.value["result"]["turn"] = "two"
+                        rows.append({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "two"}})
+                        context = {"type": "turn_context", "payload": {"turn_id": "two", "cwd": str(self.root)}}
+                        if position == "continuation-after-context": rows.append(context)
+                        rows.append(activity)
+                        if position == "continuation-before-context": rows.append(context)
+                        rows.extend([{"type": "event_msg", "payload": {"type": "user_message", "message": "retry\ncontinue"}},
+                                     {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "two", "last_agent_message": "report"}}])
+                    else:
+                        if position == "no-prelude":
+                            rows.pop(2)
+                            self.value["native_preludes"] = []
+                        rows.insert(2 if position == "before-prelude" else 4 if position == "after-context" else 3, activity)
+                    self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+                    with self.assertRaisesRegex(ValueError, "native activity precedes"):
+                        tui.verify_native(self.value)
+
+    def test_bound_model_activity_is_valid_in_first_and_continued_turns(self):
+        original = json.dumps(self.value)
+        for activity in self.unbound_activities():
+            with self.subTest(activity=activity["payload"]["type"]):
+                self.value = json.loads(original)
+                rows = self.bootstrap_rows()
+                rows.insert(-1, activity)
+                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+                tui.verify_native(self.value)
+                proof = {"marker": "retry", "prompt_sha256": tui.prompt_hash("retry\ncontinue")}
+                self.value["submissions"].append(proof)
+                self.value["bindings"].append(dict(proof, turn_id="two"))
+                self.value["result"]["turn"] = "two"
+                rows.extend([{"type": "event_msg", "payload": {"type": "task_started", "turn_id": "two"}},
+                             {"type": "turn_context", "payload": {"turn_id": "two", "cwd": str(self.root)}},
+                             {"type": "event_msg", "payload": {"type": "user_message", "message": "retry\ncontinue"}}, activity,
+                             {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "two", "last_agent_message": "report"}}])
+                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+                tui.verify_native(self.value)
+
+    def test_resume_history_is_outside_the_active_dispatch_window(self):
+        rows = self.bootstrap_rows()
+        history = [{"type": "event_msg", "payload": {"type": "task_started", "turn_id": "historical"}},
+                   *self.unbound_activities(),
+                   {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "historical", "last_agent_message": "old"}}]
+        rows[1:1] = history
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        tui.verify_native(self.value)
+
     def test_zero_exit_alone_never_suffices(self):
         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows[:-1]))
         with self.assertRaises(ValueError):

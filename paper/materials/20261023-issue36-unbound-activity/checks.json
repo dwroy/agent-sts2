@@ -1,0 +1,130 @@
+{
+  "base": "76b41d6d7ef4df6a2423210eb4a2780a686ed159",
+  "inputs": {
+    "learner/lib/herdr.ts": "64e1dccb003be7e9eb5eef1f43929e9eb3cb52e21a2a0e96873060049a672974",
+    "ops/learner_tui.py": "26346b8d4b783dc9109e7e4894b489f38e99f0745f9df81b6fc234c700d06ea5",
+    "learner/lib/tui-reconciliation.ts": "0534b272ac6177389f3558af41a802a8b5a7f4a33327124e549ea795f35d2ee8",
+    "learner/reconcile-tui.ts": "78633bd5bd1686a76f0338c4169067479f31c84be58b4dd3fac95483f0cf5b53",
+    "agent/tests/learner-native-prelude.test.ts": "cf17558ae5814590e7c6b9a9d5b038680f6fda80e452d3d52a1d22e79d920a27",
+    "agent/tests/learner-tui-reconciliation.test.ts": "c18e3929c7561c07c65428b6819f8bcc7301f91bdcbf79d681e4b3bd52d0c9c6",
+    "agent/tests/learner-herdr.test.ts": "37f1bbaf3e2040a9a3a5e61096a56f6f04ba4fbbf291cc371ed3ed873c61c09a",
+    "agent/tests/learner-herdr-ownership.test.ts": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+    "agent/tests/learner-herdr-launcher.test.ts": "38eb7cc58e79c8fe368269c69ebd795fc960dfb2a4bfbe0b32c6287670bf9607",
+    "agent/tests/learner-herdr-receipts.test.ts": "d3b234d079a94abfe8aa964c2a8250bea65bd7e7983006712ec395fa179902fc",
+    "agent/tests/boss-sim-home.test.ts": "2eb7b4aa15a5d5b095bc2c57b7b656923ec71ce71636ff536f552a26b8a9ed03",
+    "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+    "agent/tests/learner-startup-recovery.test.ts": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+    "ops/tests/test_learner_tui.py": "26d0ae7a46311c6ebae7d05641696c630e8a3d531abf9cfde07c4797aadbc89e",
+    "ops/tests/test_boss_sim_home.py": "45055661b272b74d02b92e4bc81e4111dfb3abfad3481489734b4e8d74305218",
+    "ops/learner_entry.py": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+    "ops/codex-ops-learner.sh": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
+    "learner/lib/launcher.ts": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
+    "learner/lib/startup-recovery.ts": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+    "docs/codex-ops.md": "4b9fc6e49619b25e1bb078f8229af7a6e569a8cdb93e4a48d7c0f898892813e0"
+  },
+  "reviewer_repro_copies": {
+    "repro.ts": {
+      "source": "e1084908d1ee90120f5c034630ee52154a57b7e0",
+      "sha256": "69d7c089cb10070925b2950e0ad44cf50b3584b9c7f39fb8dad1d2090b350f4d",
+      "byte_identical": true
+    },
+    "repro.py": {
+      "source": "e1084908d1ee90120f5c034630ee52154a57b7e0",
+      "sha256": "9a86658418adbaa77e4e1b0984d0e0bc2f537097366c8a64b5cc62a30f2dc1ba",
+      "byte_identical": true
+    }
+  },
+  "checks": [
+    {
+      "command": "Original byte-identical reviewer TS + reconciliation repro on 76b41d6d7",
+      "exit_code": 0,
+      "result": "Three before-prelude counterexamples incorrectly accepted; clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-ts-before.json",
+      "sha256": "4de1a6b3c6f17555ab1f36812b17e2e2508d5fffdef2e160d1efb078d7b12197"
+    },
+    {
+      "command": "Original byte-identical reviewer Python repro on 76b41d6d7",
+      "exit_code": 0,
+      "result": "Three before-prelude counterexamples incorrectly accepted as code0 proof; clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-python-before.json",
+      "sha256": "c88ec4b42549c373306102f4f8a467adde1cfec9fd4005d6145bc5d8b7de91b9"
+    },
+    {
+      "command": "Reviewer TS repro after initial whole-window guard fix",
+      "exit_code": 0,
+      "result": "All six negatives rejected and clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-ts-after.json",
+      "sha256": "bab73accc2a895e068916822fe0d569176749b5edd9158ca31870e5c75de21dd"
+    },
+    {
+      "command": "Reviewer Python repro after initial whole-window guard fix",
+      "exit_code": 0,
+      "result": "All six negatives rejected and clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-python-after.json",
+      "sha256": "5db69accde5426f7ea8378eab505ca297f20b1e1c67f0fbb73e4f6656a51e0ce"
+    },
+    {
+      "command": "node --import tsx ../paper/materials/20261023-issue36-unbound-activity/repro.ts (cwd: agent)",
+      "exit_code": 0,
+      "result": "Final source: all six negatives rejected in TS/reconciliation and clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-ts-final.json",
+      "sha256": "bab73accc2a895e068916822fe0d569176749b5edd9158ca31870e5c75de21dd"
+    },
+    {
+      "command": "python3 -B paper/materials/20261023-issue36-unbound-activity/repro.py",
+      "exit_code": 0,
+      "result": "Final source: all six code0 negatives rejected and clean positive accepted",
+      "log": ".artifacts/issue36-unbound-activity/checks/reviewer-python-final.json",
+      "sha256": "5db69accde5426f7ea8378eab505ca297f20b1e1c67f0fbb73e4f6656a51e0ce"
+    },
+    {
+      "command": "Vitest nine directed files before explicit CLI75 case",
+      "exit_code": 0,
+      "result": "9 files/165 passed",
+      "log": ".artifacts/issue36-unbound-activity/checks/targeted.log",
+      "sha256": "ba746058aee6822b673f44e214d0166c0aaa804b8c481382ec8f3e729d0458d7"
+    },
+    {
+      "command": "Vitest nine directed files with explicit CLI75 case",
+      "exit_code": 0,
+      "result": "9 files/166 passed before extending observed output/reasoning classes",
+      "log": ".artifacts/issue36-unbound-activity/checks/targeted-before-output-cases.log",
+      "sha256": "d83672e5e00c03b2ebc1705ab74ea7d0b182b9cef6e4d509e15e5962cfbf8184"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/boss-sim-home.test.ts tests/learner-entry.test.ts tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 0,
+      "result": "9 files/205 passed; includes Python26 via receipt wrapper, not additive",
+      "log": ".artifacts/issue36-unbound-activity/checks/targeted-final.log",
+      "sha256": "370af041a6a7c4278c2080012c062e2524c7b38d09b68bf1d82f9b74a23abcd5"
+    },
+    {
+      "command": "Python TUI suite before extending observed output/reasoning classes",
+      "exit_code": 0,
+      "result": "26 passed",
+      "log": ".artifacts/issue36-unbound-activity/checks/python-before-output-cases.log",
+      "sha256": "e18c2979fd62bdefafb489bda52fe38f5f25cf49572bdf53fda06f40b825c604"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py -v",
+      "exit_code": 0,
+      "result": "Final 26 passed; includes 7 classes x 6 unbound positions in subtests, not 42 extra unittest tests",
+      "log": ".artifacts/issue36-unbound-activity/checks/python.log",
+      "sha256": "eeee2c4a9e4537069f12258317cb40044eb3fa2db091d0e2a47f8af2832ba881"
+    },
+    {
+      "command": "Production typecheck before extending observed output/reasoning classes",
+      "exit_code": 0,
+      "result": "exit0",
+      "log": ".artifacts/issue36-unbound-activity/checks/tsc-before-output-cases.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "Final production typecheck exit0",
+      "log": ".artifacts/issue36-unbound-activity/checks/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

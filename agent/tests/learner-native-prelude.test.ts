@@ -21,6 +21,15 @@ function fixture() {
 }
 const user = (text = prompt) => row("response_item", { type: "message", role: "user", content: [{ type: "input_text", text }] });
 const complete = row("event_msg", { type: "task_complete", turn_id: "turn-1", last_agent_message: "报告已保存" });
+const activities = [
+  { kind: "function_call", item: row("response_item", { type: "function_call", name: "foreign" }) },
+  { kind: "custom_tool_call", item: row("response_item", { type: "custom_tool_call", name: "foreign" }) },
+  { kind: "local_shell_call", item: row("response_item", { type: "local_shell_call", call_id: "foreign" }) },
+  { kind: "function_call_output", item: row("response_item", { type: "function_call_output", output: "Earlier result" }) },
+  { kind: "custom_tool_call_output", item: row("response_item", { type: "custom_tool_call_output", output: "Earlier result" }) },
+  { kind: "reasoning", item: row("response_item", { type: "reasoning", summary: [] }) },
+  { kind: "assistant", item: row("response_item", { type: "message", role: "assistant", content: [{ type: "output_text", text: "Earlier answer" }] }) },
+];
 
 describe("native bootstrap before the dispatched prompt", () => {
   it("stages only the bootstrap, binds its context, then accepts the exact dispatched body", () => {
@@ -66,5 +75,37 @@ describe("native bootstrap before the dispatched prompt", () => {
       b.feed(prelude()); b.feed(user()); b.feed(complete);
       expect(b.foreignActivity).toBe(true); expect(b.successful()).toBe(false);
     }
+  });
+});
+
+describe("activity in the entire unbound dispatch window", () => {
+  const positions = ["before-prelude", "after-prelude", "after-context", "no-prelude", "continuation-before-context", "continuation-after-context"];
+  it.each(activities.flatMap((activity) => positions.map((position) => ({ ...activity, position }))))(
+    "retains $kind at $position despite a later correct marker", ({ item, position }) => {
+      const { b, start } = fixture(); start.forEach((r) => b.feed(r));
+      if (position.startsWith("continuation")) {
+        [prelude(), context(), user(), complete].forEach((r) => b.feed(r));
+        b.expectPrompt("retry", "retry\ncontinue");
+        b.feed(row("event_msg", { type: "task_started", turn_id: "turn-2" }));
+        if (position === "continuation-after-context") b.feed(context("turn-2"));
+        b.feed(item);
+        if (position === "continuation-before-context") b.feed(context("turn-2"));
+        b.feed(user("retry\ncontinue"));
+        b.feed(row("event_msg", { type: "task_complete", turn_id: "turn-2", last_agent_message: "later report" }));
+      } else {
+        const tail = position === "no-prelude" ? [context(), user(), complete] : [prelude(), context(), user(), complete];
+        const at = position === "before-prelude" ? 0 : position === "after-context" ? 2 : 1;
+        tail.splice(at, 0, item); tail.forEach((r) => b.feed(r));
+      }
+      expect(b.foreignActivity).toBe(true); expect(b.accepted).toBe(false); expect(b.successful()).toBe(false);
+    });
+  it.each(activities)("allows bound $kind work in the original and explicitly continued turns", ({ item }) => {
+    const { b, start } = fixture(); [...start, prelude(), context(), user(), item, complete].forEach((r) => b.feed(r));
+    expect(b.successful()).toBe(true);
+    b.expectPrompt("retry", "retry\ncontinue");
+    b.feed(row("event_msg", { type: "task_started", turn_id: "turn-2" })); b.feed(context("turn-2"));
+    b.feed(user("retry\ncontinue")); b.feed(item);
+    b.feed(row("event_msg", { type: "task_complete", turn_id: "turn-2", last_agent_message: "continued report" }));
+    expect(b.successful()).toBe(true); expect(b.bindings).toHaveLength(2);
   });
 });
