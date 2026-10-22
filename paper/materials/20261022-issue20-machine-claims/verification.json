@@ -1,0 +1,105 @@
+{
+  "schema": "issue20-machine-claims-dev-v1",
+  "inputs": "inputs.json",
+  "kit_commit": "63f1dde60fb70f38cb46982e040210eb8ab0818c",
+  "checks": {
+    "kit": {
+      "rc": 0,
+      "tests": 100,
+      "existing": 87,
+      "new_machine": 13,
+      "log": "final-kit100.log.gz"
+    },
+    "sts2_template_replay": {
+      "rc": 0,
+      "tests": 1,
+      "log": "sts2-replay.log.gz"
+    },
+    "project_lifecycle": {
+      "rc": 0,
+      "tests": 63,
+      "log": "public-python.log.gz"
+    },
+    "game_adapter": {
+      "rc": 0,
+      "tests": 4,
+      "log": "game-adapter.log.gz"
+    },
+    "launch": {
+      "rc": 0,
+      "tests": 20,
+      "log": "launch.log.gz"
+    },
+    "original_launch_reviewer": {
+      "rc": 0,
+      "tests": 23,
+      "log": "review-regression.log.gz"
+    },
+    "production_tsc": {
+      "rc": 0,
+      "log": "tsc.log.gz"
+    },
+    "targeted": {
+      "rc": 0,
+      "files": 4,
+      "tests": 19,
+      "python_tests_via_bridge": 36,
+      "log": "targeted.log.gz"
+    },
+    "consumer_inventory": {
+      "rc": 0,
+      "files": 329,
+      "variables": 285,
+      "unclassified": 0
+    },
+    "bash_syntax": {
+      "rc": 0,
+      "paths": [
+        "ops/run.sh"
+      ]
+    },
+    "full": {
+      "state": "pending-integrator-final-combination",
+      "new_run": false,
+      "order": "#37 -> #20; retain #41 source"
+    }
+  },
+  "original_failures": [
+    {
+      "log": "second.log.gz",
+      "tests": 97,
+      "failures": 1,
+      "cause": "Queued runner ancestry incorrectly hid a legacy child; only running owners may count as managed."
+    },
+    {
+      "log": "fourth.log.gz",
+      "tests": 88,
+      "errors": 1,
+      "cause": "New test command had a quoted-string SyntaxError; corrected before the successful real-exec test."
+    }
+  ],
+  "source_hashes_unchanged": true,
+  "impact_live_startup": true,
+  "production": {
+    "installed": false,
+    "shared_directory_created": false,
+    "registered": false,
+    "enabled": false,
+    "pinned": false,
+    "main_live_stop_changed": false,
+    "other_projects_or_sessions_changed": false
+  },
+  "migration": {
+    "per_project_install": true,
+    "per_project_registry": true,
+    "all_participating_owners_must_publish_games_before_enable": true,
+    "old_project_queue_not_reinterpreted": true,
+    "shared_protocol": "agent-board-machine-v1"
+  },
+  "issue40_integration": {
+    "source": "8f09b842628ce84e167b1f8917d2c8f807512f74",
+    "candidate": "c255682f53107cfbc09fd46e384c031c52812f59",
+    "state": "pending-exact-combination-with-new-protocol",
+    "required": "Preserve #20 ablation/cost queue, combined driver enqueues once, legacy live path uses outer learner queue."
+  }
+}

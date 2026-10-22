@@ -107,4 +107,4 @@ case "$arm" in
   ds) export ARM=ds-only DEEPSEEK_MAX_CALLS=400 ;;
 esac
 [ -n "$arm" ] && echo "ablation arm: $arm" >> "$out"
-exec npx tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1
+exec python3 "$OPS/board_heavy.py" --root "$ROOT" game -- npx tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1

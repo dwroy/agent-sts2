@@ -56,6 +56,25 @@ if [ "${FIXTURE_HOLD:-}" = 1 ]; then read -r _; printf '%s\\n' "$BRAIN_CODEX_MOD
         self.assertEqual(result.returncode,0,result.stderr)
         return result.stdout.strip()
 
+    def test_machine_game_helpers_are_published_critical_inputs(self):
+        value=self.pin()
+        for name in launch.MACHINE_LAUNCH:self.assertIn(name,value['critical'])
+        helper=self.root/'ops/board_heavy.py';helper.write_text(helper.read_text()+'\n# Fixed new helper revision.\n')
+        source=self.commit();self.assertEqual(self.invoke(),'exec|high|v1')
+        self.git(self.live,'merge','--ff-only',source)
+        with self.assertRaises(ValueError):launch.selection(self.root,self.live,'run')
+        refreshed=self.pin();self.assertEqual(self.invoke(),'exec|high|v1')
+        self.assertNotEqual(value['files']['ops/board_heavy.py'],refreshed['files']['ops/board_heavy.py'])
+
+    def test_existing_v1_pin_can_upgrade_to_machine_game_input_manifest(self):
+        value=self.pin()
+        for name in launch.MACHINE_LAUNCH:value['critical'].pop(name)
+        launch.atomic(launch.manifest_path(self.root),value)
+        self.assertEqual(self.invoke(),'exec|high|v1')
+        upgraded=self.pin()
+        for name in launch.MACHINE_LAUNCH:self.assertIn(name,upgraded['critical'])
+        self.assertEqual(self.invoke(),'exec|high|v1')
+
     def test_main_startup_and_policy_changes_wait_for_live_publication_and_pin(self):
         self.pin();self.assertEqual(self.invoke(),'exec|high|v1')
         self.write_release('session','v2');source=self.commit()

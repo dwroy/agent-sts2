@@ -87,12 +87,9 @@ nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled off
 
 未设置 `CODEX_AGENT_BOARD` 时，cron 每次从项目控制文件读取，缺文件为 off；设置 on/off 本身不调用 kit，不改登记表、账本、cron、会话或游戏，下一原 stall tick 才消费。on 要求 kit 已安装、本地候选宿主登记表格式正确、包含且仅包含一次本项目根、没有重复根；这些机器检查不代替各项目 owner 授权。显式环境 `CODEX_AGENT_BOARD=on|off` 始终优先，包含明确的 off；空值和其他值无效。设置命令同时返回 persisted/effective/source，避免把持久值与当前环境覆盖混淆。原有 cron 若没有此变量即可直接读项目文件；若已有显式环境覆盖，记录其来源并沿原调度维护流程处理，不在 pane export 后声称 cron 生效。损坏/异根控制、无效环境均保留本轮会话动作并写 inbox；不退到另一套回收器。关闭或回退保留原登记表、事件账本和 uncertain 项。
 
-宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围、一份宿主登记表及各项目唯一消费入口，不由 STS2 ops 扫描认领其他仓库：
+Roy 2026-10-22 最新架构取代原“共用一份派单器/宿主登记表”：**每项目一份实例、项目内固定 kit 版本、只从本项目原定时入口消费**。代码统一在上游 agent-board-kit，版本可各自固定；实例开关、派单账本、角色/会话、area 与维护锁均按项目分开。STS2 的登记表只能有本项目主根，接入器在启用及执行前都拒绝额外根，并固定 `--project <STS2主根>`；不登记炉石、不读其配置、不替其安装/启用。炉石升级由其原 owner 在自己目录和原维护流程办理。保留 maintenance/--project 兼容及旧 host pass 对自维护项目直接 delegated 的契约，不因此恢复共用部署。
 
-1. 每个原 owner 在自己项目的任务记录里确认实际主运行根、`.agents/board.yaml`、授权的派发/提醒/回收范围、角色 pane 与既有会话绑定，并给出本地回执位置及 SHA；未获准的项目保留 pending。公开评论仅引用回执，不贴私有根路径或凭据。
-2. 主管收齐确认并指定本机有相应权限的登记协调者。协调者将已获准的根/config 汇成一份忽略的候选 JSON（格式见 kit README），由各 owner 核对自己的条目。需要跨仓动作的权限沿原 owner 确认，不把“同机”当作已授权。
-3. 各 owner 确认本项目恰有一个 kit 消费入口。默认 `dispatcher.consumer: host` 由选定的原 STS2 stall tick 消费；声明 `consumer: maintenance` 的项目由自己的原维护入口核本项目开关、持有原维护锁后，以 `--project <已登记主根>` 只选自己。宿主 tick 在读该项目账本、取项目锁或调用 API 前返回 delegated，不能绕过其 off 或维护锁；选择参数本身不代权限或开关。仍共用一份登记表及宿主串行锁，不新增 timer。STS2 的 `dispatcher.registry` 指向本仓内正式登记文件，其他 owner 经协调登记，不修改 STS2 配置或安装。
-4. 主管确认本批范围与各项目唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
+各 owner 核自己的根/授权/既有会话、全局唯一的 Herdr 会话前缀与角色名、唯一原入口、持久默认 off 和 dry-run，再由本项目原 ops 安装精确上游版本、启用并核实际 tick。设置 on、API 排队、能力声明和源码通过均不能代送达/回收/首 tick。两个项目之间仅协调机器级资源协议目录、版本和对局声明，不共用控制开关或项目登记表。
 
 kit 的 `CAPABILITIES` 同时声明 project-consumer、agent-prefix、area-mutex、branch-prefix；新项目接入器先检查能力再登记/启用。`roles.dev.agent_prefix` 默认 issue-，炉石使用 hs-issue-，开发者身份及容量按本项目前缀计算；其他角色可用唯一 agent 名称加 kind 解析，或指定 pane，同时指定时两者都须匹配。重名/错名不投递。`worktree.branch_prefix` 如 codex/ 只加在本项目登记的逻辑 issue-N-slug 前，公共 main/live 仍须关联 #N 才算该任务进展。采用 kit SHA 后仍由各 owner 核实际默认 off、登记、dry-run、启用和原 tick 回执，不把能力声明当生产验收。
 
@@ -159,7 +156,9 @@ python3 ops/board_heavy.py learner -- bash knowledge/builders/refresh.sh --chara
 python3 /path/to/agent-board-kit/board.py heavy --root /project/root integrator -- <命令>
 ```
 
-容量配置在 `.agents/board.yaml`：有本项目 play 进程为 1 个位置，停止为 2 个；停止后剩余位置可放下一个任务，开始对局时不驱逐已跑任务，只等运行数降到新上限后再准入。优先级为 ops 上线检查 > 集成员核验 > 学习批次/离线实验 > 开发/其他；同档按登记顺序。高优先级只插到待执行任务之前，不打断在跑任务。位置由内核 flock 租约持有，命令结束或异常退出即释放；CLI 用 exec 保留租约，不增加常驻队列包装进程。等待用 inotify 与现有进程 pidfd，阻塞到锁关闭/进程退出事件，不加轮询、timer、daemon，不杀进程或发信号。
+机器协议容量固定为1/2，实例不能提高；本项目 `.agents/board.yaml` 只选择开关、探针及共同的 machine_state 目录：任一参与项目存在有效对局声明时全机共 1 个位置，全部停止时共 2 个；停止后剩余位置可放下一个任务，开始对局时不驱逐已跑任务，只等运行数降到新上限后再准入。优先级为 ops 上线检查 > 集成员核验 > 学习批次/离线实验 > 开发/其他；同档按登记顺序。高优先级只插到待执行任务之前，不打断在跑任务。共享目录默认 `~/.local/state/agent-board`（需要自定义时各实例必须使用同一绝对 machine_state）。队列/项目状态/启动声明原子写入，queue.lock 串行登记与准入，顺序号跨项目 FIFO；每请求有独立存活锁，每个实际资源位 slots/0、slots/1 另有内核 flock。位置由实际执行重任务的前台进程持有，命令结束或异常退出即释放；CLI 用 exec 同时保留请求和位置两把租约，不增加常驻队列包装进程。等待用 inotify 与现有进程 pidfd，阻塞到锁关闭/进程退出事件，不加轮询、timer、daemon，不杀进程或发信号。
+
+对局声明也是各项目的责任。STS2 受检 run.sh 通过固定版本的 board_heavy.py game -- 原命令登记 PID/start/boot 后原地 exec；关闭 heavy 时直接执行原命令、不写共享目录。各项目原 tick 和后续申领仅探测自身主根的既有对局/旧重任务，向共享 projects/<项目ID>.json 更新观察；game-running/ 保存启动声明。无心跳/超时猜测：PID 已退出、start 不同、旧 boot 均失效，排队者用 pidfd 立即获知；读不到身份或协议损坏时保留任务，不当成已停局。启用新协议前各原 owner 在自然边界完成自己的启动声明/既有进程补报，再启用重任务，不能把未接入项目的游戏视为已自动感知。上游 kit 的 MACHINE-PROTOCOL.md 规定唯一文件格式、固定容量和迁移规则；旧项目内队列不静默迁移或冒作同一协议。
 
 原 ops 完整检查/定向续验在取得原 live 锁前取得资源准入；局后知识刷新、fight-value 和统计重建在知识锁前排队。原发布锁、知识锁和输入核验不删、不反序持锁等资源。迁移期原来的完整 Vitest 由只读进程探针识别并以 pidfd 等待；不会再因“看见并行 Vitest”直接退出。手工组合准入改走 `ops/release_checks.py`，不得把旧的并行检查 assert 继续包在新入口内部；旧 09:37 驱动和失败回执作为历史原件保留。
 
@@ -177,7 +176,7 @@ python3 ops/release_checks.py --root /project/root --worktree /project/root/.wor
 
 集成员发现两个交付改同一文件时先定合入顺序，在相应 issue 留一行提醒及评论说明；后者沿该顺序变基、补必要的定向测试后重新交付，再进入合批完整检查。不要并行抢同一文件或用“两个分支都绿”代替组合检查。
 
-`board-digest.md` 的 Heavy queue 列当前任务/角色、running/queued、等待秒数；超过 `warn_minutes`（默认60）标 overdue。原未托管的完整 Vitest 也只读列出；退出/失去租约的历史记录不冒为仍运行或已通过。Area waits 列后者等谁。所有摘要沿既有 stall tick 刷新；关闭派单器只停摘要刷新，队列等待者仍由内核事件接续，不依赖 tick 才释放位置。回退先停止新增重任务、让在途任务自然结束，再由 ops 关闭资源配置，保留队列记录、原检查回执和 issue 待办。
+`board-digest.md` 的 Heavy queue 列全机项目/任务/角色、running/queued、等待秒数；超过 `warn_minutes`（默认60）标 overdue。各参与项目上报的原未托管完整 Vitest 也只读列出；退出/失去租约的历史记录不冒为仍运行或已通过。Area waits 列后者等谁。所有摘要沿既有 stall tick 刷新；关闭派单器只停摘要刷新，队列等待者仍由内核事件接续，不依赖 tick 才释放位置。回退先停止新增重任务、让在途任务自然结束，再由 ops 关闭资源配置，保留队列记录、原检查回执和 issue 待办。
 
 
 ## 发布时固定启动入口（#20，Roy 2026-10-22）

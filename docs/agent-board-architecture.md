@@ -71,7 +71,7 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 
 1. agent-sts2：派发/回收工具（#17）按本文做成配置驱动；派单器（#20）接入 ops 调度。
 2. watcher 改为集成员：更新角色说明与开场提示。
-3. 抽出 `dwroy/agent-board-kit`（私有），各机器安装；agent-sts2 只留 `.agents/board.yaml`。
+3. 抽出 `dwroy/agent-board-kit`（私有），各项目在自己的目录固定版本、从自己的原入口运行；agent-sts2 只留 `.agents/board.yaml`。
 4. 接入 agent-hearthstone，之后的新项目照此接入。
 
 ## 7. 集成员开场提示（每天换新会话时使用）
@@ -84,10 +84,10 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 完整流程见 [Issues 协作流程的资源与冲突](github-issues-workflow.md#资源与冲突20-补充-3roy-2026-10-22)。该整套流程取代当天早先仅发窗口提醒的方案；默认关闭，由 ops 安装后在自然边界启用，启用前各角色照旧。
 
 - 派单器读 area 标签，同区域已有 in-progress/review 或 ready 启动预约时等待，在汇总注明等待哪个 issue；无 area 照旧。同 tick 也预留区域，不制造并行编辑。
-- 重任务共用 kernel flock 队列。对局中1位、停局2位；ops 发布 > 集成员 > 学习/实验 > 其他，同档 FIFO。只决定下一空位，不打断在跑任务；等待用 inotify/pidfd，无轮询或额外守候模型。
+- 每项目独立实例/版本/本地单项目登记表，项目开关与维护入口各自负责；不共用中心派单器。重任务共用上游 kit 的机器级 kernel flock 申领协议（统一共享目录、队列、资源位和有效 PID/start/boot 对局声明）。对局中1位、停局2位；ops 发布 > 集成员 > 学习/实验 > 其他，同档 FIFO。只决定下一空位，不打断在跑任务；等待用 inotify/pidfd，无轮询或额外守候模型。
 - 开发交付只做 tsc 与定向测试并列改动文件；集成员合入前对一批 review 做一次完整测试；ops 同受测树 SHA 复用完整结果，不同组合重跑。完整 Vitest、知识重建和批量模拟统一经重任务入口；原发布锁在资源准入之后取得。
 - 集成员发现同文件交付先定顺序，后者变基再交，组合检查证明最终结果。
-- 原 stall digest 列在跑、等待、等待时长与超60分钟标记。队列不依赖 tick/模型释放位置，不杀进程、不发信号；原 ops 守卫改为等位，旧失败保留。
+- 各项目原 digest 列全机项目、在跑、等待、等待时长与超60分钟标记。队列不依赖 tick/模型释放位置，不杀进程、不发信号；原 ops 守卫改为等位，旧失败保留。
 
 
 ## 9. 启动也是发布输入（Roy 2026-10-22，#20）

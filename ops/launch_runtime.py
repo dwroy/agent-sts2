@@ -19,6 +19,7 @@ from issue_session_support import atomic, safe_path
 CRITICAL = ('ops/run.sh','ops/autoplay.sh','ops/paths.sh','ops/paths.py','ops/production-runtime.sh',
     'ops/instance_env.py','ops/instance_gate.py','ops/regent_lane_env.py','ops/brain_trial.py',
     'ops/brain_wait.py','ops/autoplay-console.sh','ops/launch_runtime.py')
+MACHINE_LAUNCH = ('ops/board_heavy.py', 'ops/issue_session_support.py')
 POLICY = ('ops/ablation.json','ops/regent-lane.json','ops/launch-settings.json')
 PREFIXES = ('BRAIN_','V6_','SL_','REFLEX_','BOSS_','CONSTRUCTION_','KNOWLEDGE_',
     'SIM_','S_','DEEPSEEK_','CLAUDE_','JEV_','ENRICHER_')
@@ -99,7 +100,7 @@ def validate(value,root,live=None):
             or not isinstance(value.get('live'),str) or live is not None and value['live']!=str(Path(live).resolve())
             or not isinstance(value.get('files'),dict) or not isinstance(value.get('modes'),dict)
             or set(value['files'])!=set(value['modes']) or not set(CRITICAL)<=set(value['files'])
-            or not isinstance(value.get('critical'),dict) or set(value['critical'])!=set((*CRITICAL,*POLICY))
+            or not isinstance(value.get('critical'),dict) or set(value['critical']) not in (set((*CRITICAL,*POLICY)), set((*CRITICAL,*POLICY,*MACHINE_LAUNCH)))
             or not isinstance(value.get('history'),list)):
         raise ValueError('invalid or rebound launch publication')
     if any(value['critical'][p]!=value['files'].get(p) for p in value['critical']):
@@ -123,7 +124,7 @@ def pin(root,live,source):
         paths=[p for p in names if p.endswith(('.py','.sh')) or p in POLICY]
         if any('..' in Path(p).parts or not re.fullmatch(r'ops/[\w./-]+',p) for p in paths):raise ValueError('unsafe launch path')
         modes={};files=source_files(live,source,paths,modes)
-        if not all(p in files for p in CRITICAL):raise ValueError('live lacks published launch protocol')
+        if not all(p in files for p in (*CRITICAL,*MACHINE_LAUNCH)):raise ValueError('live lacks published launch protocol')
         subprocess.run(['git','-C',str(live),'diff','--quiet','HEAD','--',*paths],check=True)
         launch_settings(files)
         private_environment(live)
@@ -151,7 +152,7 @@ def pin(root,live,source):
             atomic(progress,dict(schedule_sha=policy_id,i=policy.get('i',0)))
         history=(previous.get('history',[])+[{k:previous[k] for k in ('source','bundle','files')}]) if previous and previous['source']!=source else previous.get('history',[]) if previous else []
         value=dict(schema='launch-runtime-v1',root=str(root),live=str(live),source=source,bundle=str(target),
-            files=hashes,modes=modes,critical={p:hashes.get(p) for p in (*CRITICAL,*POLICY)},history=history)
+            files=hashes,modes=modes,critical={p:hashes.get(p) for p in (*CRITICAL,*POLICY,*MACHINE_LAUNCH)},history=history)
         atomic(manifest_path(root),value)
         return value
 

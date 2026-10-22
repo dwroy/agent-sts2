@@ -38,7 +38,7 @@ dispatcher:
   area_mutex: false # Enable with the resource/conflict rollout at its natural boundary.
   heavy:
     enabled: false # Original ops enables once at the natural deployment boundary.
-    state: ops/codex-ops/heavy
+    # Omit machine_state to use the shared ~/.local/state/agent-board protocol root.
     running_slots: 1
     stopped_slots: 2
     warn_minutes: 60

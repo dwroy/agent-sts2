@@ -1030,21 +1030,34 @@ class BoardLauncher(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         agent_board.effective_mode(config)
 
+    def test_instance_registry_refuses_any_foreign_root_even_alongside_own_root(self):
+        import agent_board
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);path=root/'registry.json'
+            config=SimpleNamespace(root=root,data={'dispatcher':{'registry':'registry.json'}})
+            for projects in ([],[{'root':str(root)},{'root':str(root/'other')}],
+                             [{'root':str(root),'config':'other.yaml'}]):
+                path.write_text(json.dumps({'projects':projects}))
+                with self.assertRaises(ValueError):agent_board.project_registry(config)
+            path.write_text(json.dumps({'projects':[{'root':str(root)}]}))
+            self.assertEqual(agent_board.project_registry(config),path)
+
     def test_launcher_replaces_process_and_passes_retention_disable_and_dry_run(self):
         import agent_board
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             install = root / 'kit'; install.mkdir(); (install / 'board.py').write_text('')
-            (root / 'registry.json').write_text('{"projects":[]}')
+            (root / 'registry.json').write_text(json.dumps({'projects':[{'root':str(root)}]}))
             from types import SimpleNamespace
-            config = SimpleNamespace(data={'dispatcher': {'install': 'kit', 'registry': 'registry.json'}})
+            config = SimpleNamespace(root=root, data={'dispatcher': {'install': 'kit', 'registry': 'registry.json'}})
             with patch.object(agent_board, 'Board', return_value=config), \
                     patch.object(agent_board.os, 'execv') as execute, \
                     patch.object(sys, 'argv', ['launcher', '--root', str(root), '--dry-run']), \
                     patch.dict(os.environ, {'CODEX_OPS_RETENTION': 'off'}):
                 agent_board.main()
             self.assertEqual(execute.call_args.args[1], [sys.executable, str(install / 'board.py'),
-                             '--registry', str(root / 'registry.json'), '--dry-run', '--no-reclaim'])
+                             '--registry', str(root / 'registry.json'), '--project', str(root), '--dry-run', '--no-reclaim'])
 
 
 if __name__ == '__main__':

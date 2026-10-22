@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the separately installed host-local agent-board-kit from the existing ops tick."""
+"""Run this project's pinned agent-board-kit from its own existing ops tick."""
 import argparse
 import json
 import os
@@ -35,6 +35,18 @@ def effective_mode(board):
     return persisted_mode(board)
 
 
+def project_registry(board):
+    """A local dispatcher instance is never authorized to dispatch another project."""
+    path = safe_path(board.root, board.data['dispatcher']['registry'])
+    registry = json.loads(path.read_text())
+    projects = registry.get('projects') if isinstance(registry, dict) else None
+    if (not isinstance(projects, list) or len(projects) != 1 or not isinstance(projects[0], dict)
+            or projects[0].get('root') != str(board.root)
+            or projects[0].get('config', '.agents/board.yaml') != '.agents/board.yaml'):
+        raise ValueError('project instance registry must contain only its own primary root')
+    return path
+
+
 def set_mode(board, mode):
     path = control_path(board)
     with locks([safe_path(board.root, path.with_suffix('.lock'))]):
@@ -44,15 +56,7 @@ def set_mode(board, mode):
             script = safe_path(board.root, settings['install']) / 'board.py'
             if script.is_symlink() or not script.is_file():
                 raise ValueError('kit installation required before enabling')
-            registry = json.loads(safe_path(board.root, settings['registry']).read_text())
-            projects = registry.get('projects') if isinstance(registry, dict) else None
-            if not isinstance(projects, list) or not projects:
-                raise ValueError('host registry required before enabling')
-            roots = [p.get('root') if isinstance(p, dict) else None for p in projects]
-            if (not all(isinstance(root, str) and Path(root).is_absolute() and '..' not in Path(root).parts
-                        and root == str(Path(root)) for root in roots)
-                    or len(set(roots)) != len(roots) or roots.count(str(board.root)) != 1):
-                raise ValueError('unique approved host roots including this project required')
+            project_registry(board)
         atomic(path, dict(schema='agent-board-control-v1', root=str(board.root), repo=board.repo,
                           mode=mode, updated_at=stamp()))
     return dict(persisted=mode, effective=effective_mode(board),
@@ -80,14 +84,15 @@ def main():
                 effective_mode(board)
             print(json.dumps(set_mode(board, args.set_enabled)))
             return 0
+        if not args.dry_run and effective_mode(board) != 'on':
+            print('{"state":"off"}')
+            return 0
         settings = board.data['dispatcher']
         script = safe_path(root, settings['install']) / 'board.py'
         if script.is_symlink() or not script.is_file():
             raise ValueError('agent-board-kit installation missing or unsafe')
-        registry = safe_path(root, settings['registry'])
-        if not registry.is_file():
-            raise ValueError('host project registry missing; register projects before enabling')
-        argv = [sys.executable, str(script), '--registry', str(registry)]
+        registry = project_registry(board)
+        argv = [sys.executable, str(script), '--registry', str(registry), '--project', str(root)]
         if args.dry_run:
             argv.append('--dry-run')
         if os.environ.get('CODEX_OPS_RETENTION') == 'off':
@@ -96,12 +101,12 @@ def main():
         os.execv(sys.executable, argv)
     except (OSError, ValueError, KeyError, TypeError):
         if args.show_enabled or args.set_enabled:
-            print('{"state":"retained","reason":"invalid control, environment or host registry; no dispatch"}')
+            print('{"state":"retained","reason":"invalid control, environment or project registry; no dispatch"}')
             return 1
         if board and not args.dry_run:
             with board.inbox.open('a') as handle:
-                handle.write(f'- {stamp()} [board] 启动失败：检查 kit 安装及本机项目登记；原现场保留。\n')
-        print('{"state":"retained","reason":"check kit installation and host project registry"}')
+                handle.write(f'- {stamp()} [board] 启动失败：检查 kit 安装及本项目登记；原现场保留。\n')
+        print('{"state":"retained","reason":"check kit installation and project instance registry"}')
         return 1
 
 

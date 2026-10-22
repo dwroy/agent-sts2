@@ -12,7 +12,7 @@ import launch_runtime as launch
 LAUNCHERS = ('run.sh','autoplay.sh','production-runtime.sh','paths.sh','paths.py',
     'brain_trial.py','brain_wait.py','instance_env.py','instance_gate.py','regent_lane_env.py',
     'autoplay-console.sh','autoplay-pane.sh','autoplay-reload.py','launch_runtime.py',
-    'codex-ops-actions.sh','report.py')
+    'codex-ops-actions.sh','report.py','board_heavy.py','issue_session_support.py')
 DERIVED = {'ROOT','OPS','LIVE','LOGS','DATA','NOTES','CONSOLE','RUNS','BASH_REMATCH','BASH_SOURCE',
     'CACHE_AGENT_TREE','CACHE_RUNNER','CACHE_RUNNER_SHA','CACHE_WORKTREE','DIR','MOD','STEAM_URI','TASK','WIN'}
 # Dynamic readers are reviewed separately from literal key readers. New sites must be audited.

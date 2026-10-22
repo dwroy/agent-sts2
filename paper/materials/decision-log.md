@@ -5814,3 +5814,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T14:22:34+08:00 [dev #20] 按#39补SIM/S及205行为环境来源隔离，TOKEN预算不再误作凭据；327源码/285键盘点0漏项，固定Bash与真实TS消费者回归、14文件117项及原审查21项0、tsc0；原失败保留，变基main0eeb33ae7，#37→#20原组合full待集成员、不另占窗口。影响live启动：是；未pin/启用/改main/live/STOP，材料paper/materials/20261022-issue20-sim-startup/。
 
 - 2026-10-22T14:50:59+08:00 [dev #20] 按补充4只读核炉石4aa2e250补丁后改写并入统一kit ba7a9c39d（已推上游核回）：项目前缀/角色名、codex分支、maintenance/--project隔离、统一area与uncertain持久预约；kit87/公共Python62/tsc0/定向2文件10过。STS2候选area/heavy显式false保原上线边界，未改生产安装/登记/开关/live/STOP；#39开发来源459366bac转review，最终组合full及原真实验收仍待集成员/ops。材料paper/materials/20261022-issue20-project-contract/。
+
+- 2026-10-22T16:23:08+08:00 [dev #20] 按Roy新架构改为每项目独立实例/单根登记，上游kit63f1dde60机器级申领协议v1（跨项目优先级/FIFO、每位flock、PID/start/boot对局声明、全机digest）；100项kit/STS2实际模板09:37双项目回放1/公共63/tsc0/定向4文件19/原审查23过，原失败保留；影响live启动：是，固定game桥接及关键helper随发布pin，兼容旧v1。保留#41完整测试来源、#37→#20与最终组合full待原窗口；未实际安装/启用/登记/pin/改main/live/STOP或其他项目。材料paper/materials/20261022-issue20-machine-claims/；决定https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6335710125 。
