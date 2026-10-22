@@ -59,3 +59,9 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 ## #42 学习侧完整检查终局（2026-10-22T21:47:48+08:00）
 
 本节覆盖此前排位/未full状态；最新裁决6341672283，ops6341754443已接。学习树e6e9b2934d254db429b5e0abbf4643c741000606，tsc0/full0（656文件6218过2跳0败）/独立Python3例绿，2595输入前后同，材料paper/materials/20261022-issue42-learning-full-integrator/。只合学习侧，agent-knowledge保持main59cc基线；源2c2d9f1a祖先不代延期工具已合，恢复须用deferred/精确patch/blob/断言，不能凭merge-base跳过。首轮4真实失败修复保原件；广树及首学习树主动取消143各保原件。固定#24行转测试fixture、不带正式知识。交ops16功能叶（R413上watchdog已同，15实际差异），按实际live/新知识原门核组合，不把main full等同live组合full，不重放旧脚本。学习实际live并核账本/检索后ops即派27第二批，不等工具；CLI/ACK、科学父与自然消费保留。顺序42学习→完整33+26含R413启动→42工具→35→28→37→36/37→20；单一发布。session启动登记不代service_tier隔离已恢复，20/43输入漏记阻塞及heavy off不变。
+
+## #20 / #43 补交复核（2026-10-22T22:02:32+08:00）
+
+公共380083709f49a06871be39b5c7f0c65e3a6ab5ac、kit26130354不变，原分支远端同SHA；自有W integrator20-r4-20261022已从d9快进380，保原r4反例及kit副本。tsc0，发布Python22+8=30过，2109枚举输入SHA前后同。真实单文件.mts消费者过→败负控保留；新门在模块首次就在场时拒绝/模拟命令0，exact/data两独立合成原回执随后加入模块均拒绝/零新增命令/原件不变。所有full runner仅mock，没有真实full/新等位者。材料paper/materials/20261022-issue20-integrator-r5/。#43技术补交已复核，通过不等于#20最终组合准入；按主管6340866821随#20核收，目前两issue开放review。
+
+#20源码未合main/live，#37→#20、唯一full窗与默认release/area/heavy off/ops自然迁移保留。main043a只读merge-tree仍report.py及decision-log冲突，没有新候选。最新发布队列42学习→完整33+26含R413启动→42工具→35→28→37→36不改；#42学习已main043a交ops，尚不代live/#27第二批。旧#43漏记阻塞已由本技术复核解决，旧d9不追认，父最终full/生产采用/#39首局与CLI/科学父仍待。勿重跑旧一次性有状态脚本。

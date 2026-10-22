@@ -5858,3 +5858,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T20:25:10+08:00 [dev #42] 策略新增external_aggregate严格合同/账本CLI与分账题面，纯外部confidence≤0.49、反证保留conflict；#24固定临时登记→检索→题面/工具贯通，tsc0/定向48+2/Python3+4绿，候选交review与集成员full，未改live/STOP或正式知识。报告paper/materials/20261022-issue42-external-evidence/report.md。
 
 - 2026-10-22T21:47:48+08:00 [watcher] #42按主管6341672283拆分：学习侧树e6e9b2934d254db429b5e0abbf4643c741000606唯一tsc/full0（656文件6218过2跳0败）及独立Python3例绿，2595枚举输入前后同；工具叶/专属断言延期且原件保留，首轮4失败与两次主动取消分账不改原件。合main交原ops按真实R413/新知识核精确学习发布，实际live及账本/检索后ops续#27第二批；后接完整33+26含启动→42工具→35→28→37→36。CLI/科学父与service_tier隔离反证保留，未碰生产。证据paper/materials/20261022-issue42-learning-full-integrator/。
+
+- 2026-10-22T22:02:32+08:00 [watcher] #20/#43补交380083709（kit26130354不变）独立定向复核通过：tsc0、Python30过、2109枚举输入SHA同；真实.mts消费者过→败保留，新门首次模块在场即拒绝，exact/data均拒绝且零新增模拟命令/合成原回执不变。无真实full/新等位者/源码main-live/生产变更；#43随#20核收不早关，#37→#20及唯一组合窗口、默认关闭门/ops自然迁移和CLI/科学父保留。材料paper/materials/20261022-issue20-integrator-r5/。
