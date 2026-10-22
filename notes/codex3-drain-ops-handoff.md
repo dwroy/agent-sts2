@@ -1,3 +1,21 @@
+# 最新原用户指令：联合发布 high+#40，并排除在途开发/集成员（2026-10-22T18:24:16+08:00）
+
+优先原文 paper/materials/20261022-high40-release-ops/user-authorization-verbatim.md。此段覆盖下方旧“等所有旧账号引擎”“两项live前不释放Roy暂停”的未完成阶段叙述；恢复仍须核真实终局，不能仅看授权当作已发布。
+
+原#33 high tsc/full6007+2skip0及#40 main候选31265530a/6177+2skip0原件核同。#40已main692242e7/cbbcfd7，legacy/off可独立。原集成员明确这些绿不代表精确live组合；因此只在R411基线构建27叶新精确树9e53f156c3e1662e2ab6cffe667610214b005ca4：原high3、原40的21、必需ops/report_log_cache.py及eval/jsonl_cache.py、原41 fixed-clock测试。没有整包33、35、旧20或whole-main。唯一固定检查/条件发布原生821586/start8890034（wrapper821585，w1H:pA2，nice19），18:21读回tsc0/首次full在途，2487冻结输入。原两个full不重跑，这是一棵新精确树的首次检查；不得启动第二同源full或候选。
+
+唯一运行脚本 .artifacts/ops-high40-release-20261022/check-and-publish-once.py，入口guard check-once.guard 保留；动态终局 paper/materials/20261022-high40-release-ops/checks.json。它在独占WT冻结当前知识、无生产长锁检查，通过且输入前后同后才在原K→L短锁内再核自然无局、Roy STOP所有权、最新catalog/JSON、精确27预像及binding备份/恢复，提交同一live行为、分配统一新release、root/live版本登记与双通知。只读实际live report/driver/helpers导入不发模型或训练。保runtime/全部最新独立知识/Regent标记、#20heavy off；回滚仅27叶至原0cd3629d3，不能回滚新数据/账号。通过后脚本仅释放roy-check-window-20261022-172x及自己核过的Roy STOP，不移换号两旗；失败保Roy STOP并写原事件，禁止重放已经提交过的阶段。publication.json存在时先核实际HEAD和版本，不能盲重发。
+
+换号仍同一codex3-20261022-1610。仅停止确认尚在draining、未activation的自有旧控制器609806/start8127174，其余角色未信号。唯一接续控制器826698/start8899747（wrapper826697，w1H:pA3，nice19）沿原 llm_switch.py/Handoff/adapter 全流程，只加本次明确授权的身份过滤。来源为登记issue角色和sts2-integrator/wJ:p1HD的原foreground PID/启动时间真实祖先；5项固定边界检查通过，27条old_account_engine均识别为保留角色，从阻塞改为有出处的excluded，原账号/TUI不变。未知、学习/play/assist不豁免，PID复用拒绝。当前只等本ops自己的821586组合检查/发布工作及原ops空闲，不再等开发TUI退出。policy/测试/替换证明见本轮目录，runtime .artifacts/ops-high40-release-20261022/drain-role-policy.json；别重开控制器或改本事务target/flags。文档补记当前特定授权例外。
+
+ready_to_drain 原source ops session01a1517b-e200-7c52-b463-6ea22220c0a9 / w1H:p8，本轮记录后空闲。控制器仍须等ops自己的固定工作结束，再正常quit旧ops，真实shell导出codex3并核新UUID/rollout；旧开发/集成员不热切，后续由主管在codex3重开。新bootstrap接管轮只核接管，不移旗/派发；controller核完后才释放自有LLM_DRAIN/PAUSE。
+
+原组合通过发布且Roy暂停已解除后，在codex3控制面complete事件沿原broker恢复正常autoplay（仅一次，先查实际进程；不要让换号失败继续无声挡开局，按新主管inbox规则回报）。这不是新实验局，用户已授权恢复正常循环。首正常局核native turn_context effort=high、codex3 brain-home、run-config/来源SHA；局末原增量刷新cold/warm/本角色十新局或idle触发训练、publication lock等位/持有与真实模型消费者SHA。未到训练阈值保未触发，不能额外训练或开局“补验收”。不宣布自然采用/收益或科学父完成。
+
+其他未完任务/失败/冷却、9通知、141301与154302同提案中断及Regent暂停仍读下方交接/context。发布后#35等须从实际新live重建，不能把旧准备树覆盖high/增量修复；下一顺序35→28→37→36，40已先按本授权处理。源码/版本真正变化后再登记retention完成，不回收在跑的WT/原日志。无外部push、新模型、模拟或A/B授权。
+
+--- 以下为历史交接，冲突以上述最新原文/动态回执为准 ---
+
 # Roy 17:2x 新指令优先：换号后仍不恢复开局/生产刷新（2026-10-22T17:46:04+08:00记录）
 
 授权原文paper/materials/20261022-roy-check-window-ops/authorization-original.md，#40主管评论6337610752。此段覆盖下方旧交接中“根STOP原不存在/不创建STOP”“验证后恢复下一局”的运行安排；原取消事务与失败历史不改。

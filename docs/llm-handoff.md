@@ -13,6 +13,8 @@ Roy 2026-10-11 授权：框架把切换 LLM/账号作为标准能力，采用 dr
 5. **接管验证**：沿原调度器、broker、权限和 ops prompt 新建会话，通过交接文件恢复任务语义。Codex 跨账号使用新 UUID，不恢复旧账号的加密 session。模型、强度、普通服务档、512k 上下文沿用项目既有策略。
 6. **释放**：新会话成功完成接管轮、UUID 和目标 rollout 校验通过后，只删除本事务仍拥有的标记。原有 PAUSE/STOP 保留；从原事件队列恢复，由新 ops 沿原 broker 收报告、启动下一局和未完成学习。
 
+Roy 2026-10-22 对事务 `codex3-20261022-1610` 明确授权的角色例外：已登记开发和集成员的常驻 Codex TUI 保留原账号及在途工作，由主管在其用完旧号后另行重开；它们不属于本次 ops 控制面排空条件。只对核实的登记角色、pane、PID/启动时间及其真实进程后代排除 `old_account_engine`，学习 wrapper、对局、辅助、ops 自己的未完工作及未知进程仍按原门核验，PID 复用不能继承例外。不停止或热切其他角色。原标准控制器仅经本事务隔离适配接续，事务/profile/自有旗不重建；身份边界5项固定检查和原授权回执见 `paper/materials/20261022-high40-release-ops/`。此例外不把在途任务标为完成，也不允许新会话绕过自身接管验证。
+
 **不能用 `ops/STOP` 做 drain**：它也会让 `agent/src/brain/wait.ts` 取消当前模型请求。本协议从不创建 STOP、不发送 SIGTERM、不停止 play、不搬运任务租约或重置失败/退避历史。`run.sh` 只在开始时读取 `LLM_DRAIN`，以 76 表示未启动；autoplay 在局末报告之后退出。正常对局中的模型调用不读取此标记。
 
 `complete` 表示控制面接管完成；验收回执的 `runtime_play_and_learning` 仍为 `awaiting normal dispatch`，直到原 ops 记录真实新 brain/learner 进程的账号配置。启动成功不等于学习完成、效果达标或最终 main/push 完成。

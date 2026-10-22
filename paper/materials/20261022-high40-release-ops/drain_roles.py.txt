@@ -1,0 +1,39 @@
+"""Identity-bound exception for Roy's retained developer and integrator TUIs."""
+import copy
+
+
+def retained_role(worker, policy, process):
+    if worker.get('kind') != 'old_account_engine':
+        return None
+    current = process(worker.get('pid'))
+    if not current or current['start_ticks'] != worker.get('start_ticks'):
+        return None
+    roots = {}
+    for role in policy['roles']:
+        for root in role['roots']:
+            live = process(root['pid'])
+            if live and live['start_ticks'] == root['start_ticks']:
+                roots[root['pid']] = role
+    seen = set()
+    while current and current['pid'] not in seen and len(seen) < 64:
+        seen.add(current['pid'])
+        if current['pid'] in roots:
+            return roots[current['pid']]
+        current = process(current.get('ppid'))
+    return None
+
+
+def filter_snapshot(snapshot, policy, process):
+    result = copy.deepcopy(snapshot)
+    result['active_workers'] = []
+    for worker in snapshot['active_workers']:
+        role = retained_role(worker, policy, process)
+        if role is None:
+            result['active_workers'].append(worker)
+        else:
+            result['excluded_workers'].append(dict(
+                worker, kind='retained_developer_or_integrator',
+                role=role['role'], name=role['name'], pane=role['pane'],
+                authorization=policy['authorization'], account_unchanged=True))
+    result['original_active_worker_records'] = len(snapshot['active_workers'])
+    return result

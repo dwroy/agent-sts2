@@ -1,0 +1,47 @@
+"""Resume the same standard transaction with Roy's explicit retained-role scope."""
+from pathlib import Path
+import hashlib, json, os, sys
+
+R = Path('/home/dw/Projects/agent-sts2')
+A = Path(__file__).resolve().parent
+sys.path.insert(0, str(R/'ops'))
+from llm_handoff import Handoff
+import llm_switch
+from drain_roles import filter_snapshot
+
+policy = json.loads((A/'drain-role-policy.json').read_text())
+raw_authority = (R/policy['authorization']).read_bytes()
+assert hashlib.sha256(raw_authority).hexdigest() == policy['authorization_sha256']
+original_snapshot = llm_switch.snapshot
+
+
+def scoped_snapshot(state):
+    result = filter_snapshot(original_snapshot(state), policy, llm_switch.process)
+    try:
+        work = json.loads((R/policy['ops_work_receipt']).read_text())
+        running = llm_switch.process(work.get('runner_pid'))
+        if running and running['start_ticks'] == work.get('runner_start'):
+            result['active_workers'].append(dict(kind='source_ops_fixed_check_publication',
+                pid=running['pid'], start_ticks=running['start_ticks'], receipt=policy['ops_work_receipt']))
+        elif work.get('state') not in policy['ops_work_terminal_states']:
+            result['active_workers'].append(dict(kind='unsettled_source_ops_fixed_work',
+                pid=work.get('runner_pid'), receipt=policy['ops_work_receipt']))
+    except (OSError, ValueError, KeyError, TypeError):
+        result['inventory_complete'] = False
+        result['active_workers'].append(dict(kind='unreadable_source_ops_fixed_work', pid=None,
+            receipt=policy['ops_work_receipt']))
+    return result
+
+
+transaction = Handoff(R, policy['transaction'])
+state = transaction.read()
+assert state['phase'] in ('prepared', 'draining', 'ready')
+transaction.save(state, drain_role_exception=dict(
+    authorization=policy['authorization'], authorization_sha256=policy['authorization_sha256'],
+    policy=str(A/'drain-role-policy.json'),
+    controller_pid=os.getpid(),
+    controller_start=Path('/proc/self/stat').read_text().rsplit(')', 1)[1].split()[19],
+    retained_role_accounts_unchanged=True, unknown_workers_remain_blocking=True))
+llm_switch.snapshot = scoped_snapshot
+sys.argv = [str(R/'ops/llm_switch.py'), 'run', '--id', policy['transaction']]
+llm_switch.main()

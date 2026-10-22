@@ -1,0 +1,58 @@
+{
+  "state": "passed",
+  "candidate": "31265530a748266feb87ce8953a89087f44bf0c3",
+  "steps": [
+    {
+      "name": "external-rebuild",
+      "command": [
+        "python3",
+        "agent/tools/build-external-stats.py",
+        "--check"
+      ],
+      "started_at": "2026-10-22T17:41:37+08:00",
+      "pid": 739115,
+      "exit_code": 0,
+      "seconds": 0.3556857470102841
+    },
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-22T17:41:37+08:00",
+      "pid": 739128,
+      "exit_code": 0,
+      "seconds": 0.7977586719935061
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/vitest.json"
+      ],
+      "started_at": "2026-10-22T17:41:38+08:00",
+      "pid": 739177,
+      "exit_code": 0,
+      "seconds": 1207.1354656049953
+    }
+  ],
+  "runner_pid": 739082,
+  "runner_start": "8662644",
+  "nice": 19,
+  "full_started": true,
+  "started_at": "2026-10-22T17:41:36+08:00",
+  "input_count": 2588,
+  "inputs_unchanged": true,
+  "ended_at": "2026-10-22T18:01:45+08:00"
+}

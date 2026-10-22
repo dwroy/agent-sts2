@@ -1,0 +1,164 @@
+"""One fixed high+#40 live combination, then the original locked publication gates."""
+from pathlib import Path
+import copy, datetime, fcntl, hashlib, importlib.util, json, os, subprocess, time, traceback
+
+R = Path('/home/dw/Projects/agent-sts2')
+A = Path(__file__).resolve().parent
+M = R / 'paper/materials/20261022-high40-release-ops'
+P = json.loads((A / 'prepared.json').read_text())
+W = Path(P['worktree'])
+L = R / '.worktrees/live'
+state = {}; locks = []
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def now(): return datetime.datetime.now().astimezone().isoformat(timespec='seconds')
+def git(tree, *args, data=None, env=None):
+    return subprocess.check_output(['git', '-C', str(tree), *args], input=data, env=env, stderr=subprocess.PIPE)
+def save():
+    raw = (json.dumps(state, ensure_ascii=False, indent=2) + '\n').encode()
+    for path in [A/'checks.json', M/'checks.json']:
+        tmp=path.with_suffix('.tmp'); tmp.write_bytes(raw); os.replace(tmp,path)
+def record(name, value):
+    raw=(json.dumps(value,ensure_ascii=False,indent=2)+'\n').encode()
+    (A/name).write_bytes(raw); (M/name).write_bytes(raw)
+def take(path):
+    handle=path.open('a'); fcntl.flock(handle,fcntl.LOCK_EX); locks.append(handle)
+def release():
+    while locks:
+        handle=locks.pop(); fcntl.flock(handle,fcntl.LOCK_UN); handle.close()
+def knowledge():
+    return [dict(path=str(p.relative_to(L)),bytes=p.stat().st_size,sha256=sha(p.read_bytes()))
+            for p in sorted((L/'knowledge').rglob('*.json')) if p.is_file() and not p.is_symlink()]
+def manifest():
+    names={p for p in git(W,'ls-files','-z','agent','ops','learner','eval','knowledge').decode().split('\0') if p}
+    names.update(str(p.relative_to(W)) for p in (W/'knowledge').rglob('*.json') if p.is_file())
+    return [dict(path=p,bytes=len(raw),sha256=sha(raw)) for p in sorted(names)
+            if not Path(p).name.startswith('.env') and p!='ops/inbox-dev.md'
+            and (W/p).is_file() and not (W/p).is_symlink() for raw in [(W/p).read_bytes()]]
+def scan(files,label):
+    result=subprocess.run(['gitleaks','stdin','--redact','--no-banner','--config',str(R/'paper/materials/20261021-W4-v2-P2-ops/record-gitleaks-scoped.toml')],input=b'\n'.join(files.values()),capture_output=True,env={**os.environ,'GOMAXPROCS':'1'})
+    (A/(label+'-gitleaks.log')).write_bytes(result.stdout+result.stderr)
+    assert result.returncode==0,'precommit scan rejected publication bytes'
+def commit_files(tree,files,label,message,modes=None):
+    scan(files,label); parent=git(tree,'rev-parse','HEAD').decode().strip()
+    assert not git(tree,'diff','--cached','--name-only').strip()
+    index=Path(git(tree,'rev-parse','--path-format=absolute','--git-path','index').decode().strip())
+    guard=Path(str(index)+'.lock'); fd=os.open(guard,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
+    try:
+        private=A/(label+'-index'); private.write_bytes(index.read_bytes()); env={**os.environ,'GIT_INDEX_FILE':str(private)}
+        for path,raw in files.items():
+            oid=git(tree,'hash-object','-w','--stdin',data=raw).decode().strip()
+            git(tree,'update-index','--add','--cacheinfo',f'{(modes or {}).get(path,"100644")},{oid},{path}',env=env)
+        made=git(tree,'write-tree',env=env).decode().strip()
+        assert set(git(tree,'diff','--name-only',parent,made).decode().splitlines())==set(files)
+        msg=message+'\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n'
+        commit=git(tree,'commit-tree',made,'-p',parent,data=msg.encode()).decode().strip()
+        assert git(tree,'rev-parse','HEAD').decode().strip()==parent
+        for path,raw in files.items():
+            target=tree/path; target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(raw)
+            target.chmod(0o755 if (modes or {}).get(path)=='100755' else 0o644)
+        git(tree,'update-ref','HEAD',commit,parent)
+        os.write(fd,private.read_bytes()); os.fsync(fd); os.close(fd); fd=None; os.replace(guard,index)
+        return dict(parent=parent,commit=commit,tree=made,paths=list(files))
+    finally:
+        if fd is not None: os.close(fd)
+        if guard.exists(): guard.unlink()
+def binding(action):
+    result=subprocess.run(['python3',str(R/'ops/instance_binding_backup.py'),action,'--root',str(R)],capture_output=True)
+    (A/('binding-'+action+'.log')).write_bytes(result.stdout+result.stderr)
+    assert result.returncode==0,'binding '+action+' failed'
+    value=json.loads(result.stdout); assert value['state']=='verified'; record('binding-'+action+'.json',value); return value
+def no_game():
+    spec=importlib.util.spec_from_file_location('original_runtime',R/'ops/autoplay-reload.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    runtime=module.Runtime(R,L,R/'ops/codex-ops')
+    return not any(runtime.kind(row) in ('play','autoplay') for row in runtime.rows())
+
+fd=os.open(A/'check-once.guard',os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600); os.close(fd)
+try:
+    state=dict(state='snapshotting-exact-combination',started_at=now(),runner_pid=os.getpid(),
+        runner_start=Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],
+        nice=os.getpriority(os.PRIO_PROCESS,0),base=P['base'],tree=P['tree'],worktree=str(W),
+        steps=[],full_started=False,new_model_API_MC_game_actions=0,source_count=len(P['paths']))
+    save(); take(R/'ops/knowledge-refresh.lock'); take(R/'ops/live-merge.lock')
+    assert git(L,'rev-parse','HEAD').decode().strip()==P['base'] and no_game()
+    stop=(R/'ops/STOP').read_bytes(); assert json.loads(stop)['id']=='roy-check-window-20261022-172x'
+    for row in P['paths']: assert sha((W/row['path']).read_bytes())==row['sha256']
+    assert git(W,'write-tree').decode().strip()==P['tree']
+    snap=knowledge(); record('snapshot-knowledge.json',snap)
+    for row in snap:
+        target=W/row['path'];target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((L/row['path']).read_bytes())
+    release(); before=manifest();record('inputs-before.json',before)
+    state.update(state='checking-fixed-combination',input_count=len(before));save()
+    env={**os.environ,'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1','MKL_NUM_THREADS':'1',
+         'PATH':str(Path.home()/'.local/node/bin')+':'+os.environ.get('PATH','')}
+    jobs=[('tsc',['node','node_modules/typescript/bin/tsc','-p','tsconfig.json','--noEmit']),
+          ('full',['node','node_modules/vitest/vitest.mjs','run','--pool=forks','--maxWorkers=1','--no-file-parallelism','--reporter=default','--reporter=json','--outputFile.json='+str(A/'vitest.json')])]
+    for name,cmd in jobs:
+        item=dict(name=name,command=cmd,started_at=now());state['steps'].append(item);started=time.monotonic()
+        with (A/(name+'.log')).open('wb') as out:
+            child=subprocess.Popen(['nice','-n','19',*cmd],cwd=W/'agent',env=env,stdout=out,stderr=subprocess.STDOUT)
+            item['pid']=child.pid;state['full_started']=state['full_started'] or name=='full';save();item['exit_code']=child.wait()
+        item['seconds']=time.monotonic()-started;save();assert item['exit_code']==0,name+' failed; original log retained'
+    after=manifest();record('inputs-after.json',after);assert before==after,'fixed combination inputs changed'
+    state.update(state='passed-await-short-publication-lock',inputs_unchanged=True);save()
+    take(R/'ops/knowledge-refresh.lock');take(R/'ops/live-merge.lock')
+    assert no_game() and (R/'ops/STOP').read_bytes()==stop
+    assert git(L,'rev-parse','HEAD').decode().strip()==P['base'],'live advanced; reconcile instead of replay'
+    protected=knowledge();record('latest-knowledge-before-publication.json',protected)
+    catalog=json.loads((L/'knowledge/catalog.json').read_text())
+    for key,row in catalog.get('sources',{}).items():
+        path=L/'knowledge'/row['path'];path=path if path.exists() else L/row['path']
+        assert path.is_file() and sha(path.read_bytes())==row['sha256'],key
+    b0=binding('backup');runtime=(L/'ops/production-runtime.sh').read_bytes()
+    files={row['path']:(W/row['path']).read_bytes() for row in P['paths']};modes={}
+    for path,raw in files.items():
+        assert sha(raw)==next(row['sha256'] for row in P['paths'] if row['path']==path)
+        old=subprocess.run(['git','-C',str(L),'show','HEAD:'+path],capture_output=True)
+        assert ((L/path).read_bytes()==old.stdout and old.returncode==0) if (L/path).exists() else old.returncode!=0,path
+        modes[path]=git(W,'ls-tree',P['tree'],path).decode().split()[0]
+    behavior=commit_files(L,files,'live-source','feat: publish exact Codex high and incremental refresh combination',modes)
+    assert behavior['tree']==P['tree'];record('source-publication.json',behavior)
+    assert knowledge()==protected and (L/'ops/production-runtime.sh').read_bytes()==runtime
+    binding('restore');b1=binding('verify');assert b0['sha256']==b1['sha256']
+    probe=['python3','-c',"import sys; sys.path[:0]=[sys.argv[1]+'/ops',sys.argv[1]+'/knowledge/builders',sys.argv[1]+'/learner']; import report, refresh_driver, legacy_incremental, refresh_publish; print('actual live report/driver/helpers imported; queue remains legacy/off')",str(L)]
+    result=subprocess.run(probe,cwd=L,capture_output=True);(A/'actual-live-import.log').write_bytes(result.stdout+result.stderr)
+    assert result.returncode==0,'actual live import failed; retain STOP'
+    docs={str(root):json.loads((root/'eval/versions.json').read_text()) for root in [R,L]}
+    numbers=[int(x['release_id'].split('-R')[1]) for doc in docs.values() for x in doc['release_numbering']['releases']]
+    release_id=f'V6-R{max(numbers)+1:03d}';name='V6.codex-high-and-incremental-refresh';registrations={}
+    description=f"{now()}; Roy authorized exact high narrow + issue40 legacy/off. Exact27 tree{P['tree']}; first exact fixed tsc/full0, before/after unchanged. Original high6007pass2skip and issue40 main6177pass2skip remain separate receipts. Includes accepted report cache dependencies and issue41 fixed-clock test only; no whole33/35/20/37. Latest independent knowledge and runtime/binding preserved. Configured Codex high now honored instead of paced hardcoded xhigh; incremental evidence caches, per-role ten-new-run/explicit-idle training cadence, short atomic publication. Native high, codex3 consumer and cold/warm/training timing/model SHA await first normal run; no causal quality claim. Roll back only27 leaves to {P['base']} preserving later knowledge/logs/account/binding."
+    for root in [L,R]:
+        assert (root/'eval/versions.json').read_bytes()==git(root,'show','HEAD:eval/versions.json')
+        doc=copy.deepcopy(docs[str(root)]);doc['versions'].append(dict(name=name,family='V6',commit=behavior['commit'],release_id=release_id,release_status='registered-primary-ops',source=description))
+        doc['release_numbering']['releases'].append(dict(release_id=release_id,commit=behavior['commit'],aliases=[name]))
+        key='live' if root==L else 'main';registrations[key]=commit_files(root,{'eval/versions.json':(json.dumps(doc,ensure_ascii=False,indent=2)+'\n').encode()},'registry-'+key,'ops: register '+release_id+' exact high and refresh publication')
+    publication=dict(at=now(),release_id=release_id,behavior=behavior,registrations=registrations,
+        source_count=len(files),fixed_inputs_unchanged=True,latest_knowledge_preserved=len(protected),
+        binding_sha256=b1['sha256'],whole_issue33_completed=False,heavy_enabled=False,natural_acceptance='pending first normal codex3 run')
+    record('publication.json',publication)
+    at=now();notice=f"\n- {at} [ops] 发布{release_id}，行为{behavior['commit']}，actual live{registrations['live']['commit']}。旧paced Codex强制xhigh，现遵循配置high；旧局末重复全量刷新，现原证据增量缓存/本角色十新局或显式idle才训练、短锁原子发布。精确27叶首次tsc/full通过、固定输入不变；原两个full单列，非整包33发布。保最新知识/绑定/runtime，#20heavy仍off。预期节省调用/刷新成本，不冒收益；回退仅27叶至{P['base']}，保后续知识/账号/日志。Roy双项live门已满足，可解除本检查窗暂停，换号自己的旗只由控制器释放；首正常局核原生high/codex3/增量刷新模型SHA和时序，科学父不关闭。原件paper/materials/20261022-high40-release-ops/publication.json。\n"
+    adds={}
+    for path in ['ops/inbox-dev.md','notes/for-roy.md']:
+        with (R/path).open('a') as handle:handle.write(notice)
+        adds[path]=notice
+    line=f"\n- {at} ops：精确27 high+#40 legacy/off新组合首tsc/full0、固定输入一致，发布{release_id}行为{behavior['commit']}，最新知识/绑定/runtime保留；仅解除Roy检查窗暂停，换号闸仍归原控制器，首正常局high/增量/账号消费待验。原件paper/materials/20261022-high40-release-ops/publication.json。\n"
+    with (R/'paper/materials/decision-log.md').open('a') as handle:handle.write(line)
+    adds['paper/materials/decision-log.md']=line;record('publication-record-additions.json',adds)
+    assert knowledge()==protected and (R/'ops/STOP').read_bytes()==stop and no_game()
+    pause_path=R/'ops/codex-ops/roy-check-window-pause.json';pause=json.loads(pause_path.read_text())
+    assert pause['owner']=='Roy' and pause['id']=='roy-check-window-20261022-172x'
+    record('roy-pause-before-release.json',pause)
+    pause.update(state='released-after-both-live',released_at=now(),publication=str(M/'publication.json'),release_id=release_id)
+    pause_path.write_text(json.dumps(pause,ensure_ascii=False,indent=2)+'\n');(R/'ops/STOP').unlink()
+    record('roy-pause-release.json',dict(at=now(),id=pause['id'],STOP_removed=True,switch_owned_flags_untouched=True,release_id=release_id))
+    state.update(state='published-await-account-completion-normal-dispatch',release_id=release_id,
+        actual_live=registrations['live']['commit'],behavior_commit=behavior['commit'],roy_pause_released=True,
+        normal_autoplay='new ops restores through original broker after verified codex3 handoff')
+except BaseException as error:
+    (A/'error.txt').write_text(traceback.format_exc())
+    state.update(state='blocked-or-failed-retain-roy-pause',error=type(error).__name__,message=str(error),
+                 publication_exists=(A/'publication.json').exists(),STOP_exists=(R/'ops/STOP').exists())
+finally:
+    release();state.update(ended_at=now(),held_locks=[]);save()
+    event=R/'ops/codex-ops/queue'/f'{time.time_ns()}-manual.md'
+    event.write_text('原high+#40精确live组合首检查/条件发布终局：'+json.dumps(state,ensure_ascii=False)+'；原件paper/materials/20261022-high40-release-ops/checks.json。只核终局和原发布门，不重复full/模型；通过则两项同一release已live、仅Roy暂停解除，待codex3控制面complete后沿原broker恢复正常开局并首局核native high/增量刷新/账号。失败保Roy STOP与原件，按阶段对账，不重复发布。\n')
