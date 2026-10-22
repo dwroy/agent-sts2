@@ -1,0 +1,76 @@
+[
+  {
+    "name": "public-lifecycle",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_issue_session*.py"
+    ],
+    "start": "2026-10-22T20:20:44.632331+08:00",
+    "end": "2026-10-22T20:21:00.799090+08:00",
+    "exit": 0
+  },
+  {
+    "name": "launch-regression",
+    "command": [
+      "python3",
+      "-B",
+      "paper/materials/20261022-issue20-sim-startup/review-regression.py"
+    ],
+    "start": "2026-10-22T20:21:00.799446+08:00",
+    "end": "2026-10-22T20:21:11.243007+08:00",
+    "exit": 0
+  },
+  {
+    "name": "machine-0937-replay",
+    "command": [
+      "python3",
+      "-B",
+      "paper/materials/20261022-issue20-machine-claims/replay_machine.py",
+      "--kit",
+      ".artifacts/kit-26130354",
+      "--config",
+      ".agents/board.yaml"
+    ],
+    "start": "2026-10-22T20:21:11.243250+08:00",
+    "end": "2026-10-22T20:21:11.509559+08:00",
+    "exit": 0
+  },
+  {
+    "name": "production-tsc",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "start": "2026-10-22T20:21:11.509884+08:00",
+    "end": "2026-10-22T20:21:12.362985+08:00",
+    "exit": 0
+  },
+  {
+    "name": "source-targeted",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/board-resources.test.ts",
+      "tests/launch-environment.test.ts",
+      "tests/learner-self-check.test.ts",
+      "tests/v6-card-option-loop.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1",
+      "--no-file-parallelism"
+    ],
+    "start": "2026-10-22T20:21:12.363252+08:00",
+    "end": "2026-10-22T20:21:50.618677+08:00",
+    "exit": 0
+  }
+]

@@ -43,3 +43,9 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 交原ops采用本候选29代码路径，不重full、不重放旧脚本，保持R412策略/catalog/versions及最新知识；沿精确预像、绑定、自然边界门发布。主管已明确由ops发布后解除Roy检查窗口暂停，首局读high和增量刷新，集成员不动暂停。#27首三条已R412，正式CLI兼容阻塞及科学父仍保留。ops工作中只在issue交接，不打断；空闲再按规定一行提醒，送达不代ACK。
 
 本窄候选不合main；新watchdog测试修补尚未回main，后续main集成时必须精确带入并由下一必要完整检查覆盖。#35依赖门、#28未提交MERGE_HEAD、#37/#36次序及#20heavy off继续。旧finalize-v2/records-v2不可执行；本轮新脚本 .artifacts/high40-prepare-r412.py、high40-finalize-r412.py、high40-records-r412.py 均是一次性有状态脚本，已执行的不能重跑。受测工作树知识覆盖仍脏，保原件不清理。
+
+## #20 本轮核验停点（2026-10-22T20:29:09+08:00）
+
+公共d9c4849b1fa69b6fae5510a82f20cf95abf796a8、kit26130354b86fbdbb4a1baddda07a770b0b9d6fd5三批补交已独立核源（26+9+14清单SHA全同）、kit113/公共生命周期64/启动23/双项目09:37回放1/4文件20项定向及tsc过；1969枚举输入前后同，#41完整时钟修复blob同。**新负例确认未跟踪.mts被实际.ts测试导入且变化后消费者失败，但inventory不变、发布状态机仍exact-reuse且零命令。full执行器仅mock，此轮没有真实full。** 已开#43交主管排期，d9当前不准入main/live。材料paper/materials/20261022-issue20-integrator-r4/含复现、真一过一败、mock回执分账与全部原件；自己的W .worktrees/integrator20-r4-20261022（精确源，只多忽略材料）保留。
+
+未派开发、未启动完整检查/等位者、未改生产。主管决定沿#20还是独立#43修复，修后只补定向再按#37→#20/原队列协调唯一完整检查。merge-tree仅探测到ops/report.py与decision-log冲突，不是已组装候选。新发布门默认false、各项目独立安装/自然迁移、旧回执不升级/#39首局等仍待。#40此前已交ops326d5636f及R412定向/原full复用，继续等实际发布回执；#35/28/37/36与watchdog测试修补回main、#27 CLI阻塞/科学父不关闭。
