@@ -5795,3 +5795,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T12:04:57+08:00 [Claude] Roy 10-22：主检出 run.sh 随 #33 合入使 live 08:55 起用上 session 模式，先保留并登记为已生效，对局大脑强度从下一局起调为 high，#33 之后照常上线；启动脚本纳入发布流程记入 #20。codex1 额度用完，交 ops 按 docs/llm-handoff.md 切到 codex3，在途会话不热切。
 
 - 2026-10-22T12:19:30+08:00 [ops] Roy撤回换号至codex1周90%，唯一原事务cancelled/实际控制器退出，只撤自有两旗，codex1/原session与其他STOP/PAUSE保留；session实际观察补记，high受旧H1硬编码覆盖，新三叶窄修红绿与唯一宿主检查排原锁，未发布/冒实际降档。paper/materials/20261022-codex3-abort/receipt.json。
+
+- 2026-10-22T12:24:18+08:00 [ops] 三manual依已取消换号/session观察/high唯一窄检查原回执去重；114301fix无源、157SHA/53子项48祖先/21定向过，严格171差保failed/rc0/冷却。八原notice送达证据同，CLI角色登记pending；无新full/模型/dataset或live改动。paper/materials/20261022-1221-ops/receipt.json。

@@ -4656,3 +4656,8 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 ### 2026-10-22T12:19:30+08:00 [ops] 取消换号及session/high两manual处置
 
 已按Roy新指令中止codex3-20261022-1146：绑定PID/start后仅SIGTERM实际控制器3783941，外层3783940自然退出；事务cancelled保历史，锁内核两owned标记后只撤本事务LLM_DRAIN/PAUSE，其他STOP/PAUSE、codex1双选择器及原session未变。周用量84%/90%条件按Roy报告存档，不另探额度/加轮询。原autoplay继续，恢复正常准入，无热切或重复启动。12:04/12:05原文与早先session核查均处理留证；wake锁忙保原队列，并记已处理避免重复中止。session自08:55已核五局142调用记录，按Roy保留补登记运行观察，非#33全包发布。env虽high，原生context仍xhigh，定位旧H1硬编码；独立三叶窄修撤源1败、修后两文件12过/tsc0，唯一完整检查排原锁，不冒已降档；待绿后原准入/自然边界/原生读回。原件paper/materials/20261022-codex3-abort/receipt.json。
+
+
+### 2026-10-22T12:24:18+08:00 [ops] 十二事件核回与去重
+
+三条manual沿eb6baa68原回执去重：codex3事务仍cancelled，自有两旗已撤，codex1双选择器和session保持；周90%再换，84%为Roy原报告，不另探额度。session实际调用与原生字节证据核回，运行观察已登记，不冒#33整包发布；high三叶窄候选已排唯一原锁，未重复实现/full或热切。114301-fix无新源/提交/合入，11产物及157源SHA核同，53历史子项/48祖先核同；较前批3文件变更属#35，未作本批修复。tsc0/5文件21定向过非full；严格main/live171源差，原failed/rc0/冷却保留，不空合并。旧两候选及#25压缩后11条超24KB仍原链，未重探。八notice原文/双箱/实际watcher转达证据同，CLI仍不支持三research，原角色false/拒绝及科学父保持，不重发/代ACK。无新dataset/模型/局或live变更。原件paper/materials/20261022-1221-ops/receipt.json。
