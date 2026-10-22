@@ -5810,3 +5810,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 14:08 [ops] #36 R3隔离候选1b0aeb68f接收核46输入/10原日志；review及最终full/自然验收pending，原顺序#33→#35→#28→#37→#36，brain_view off/旧准入停用，不另建等待或重full/model。paper/materials/20261022-issue36-r3-ops/。
 
 - 2026-10-22 14:13 [ops] 134302-s2 parallel-record attention核52产物/十waiting/源码差0；原一次dataset不重跑，365叶被拒提交精确快照保留，当前两账本差异不归因，不改原失败/父项或冒closed。paper/materials/20261022-1411-ops/。
+
+- 2026-10-22 14:15 [ops] 八重复notice原文/双箱/ops ACK及watcher实际转达证明核同；原CLI SHA不变仍不支持三research，正式角色ACK pending，保rc2拒绝和科学父，不重发/代ACK/重试。paper/materials/20261022-1414-ops/notices-readback.json。
