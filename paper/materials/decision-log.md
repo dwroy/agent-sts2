@@ -5784,3 +5784,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T11:10:12+08:00 [Claude] Roy 10-22：上线检查优先占用重任务窗口，有上线检查排队时开发会话暂缓新的完整 Vitest（#20 补充 3）。开卷只给大脑；Jev 出牌不附开卷、保持 V5 逻辑，后续优化走 Jev 条目（如更多 reflex 经验条目，#28）；#25 按大脑路径关闭，Jev 去开卷另开 #37。
 
 - 2026-10-22T11:19:20+08:00 [ops] #36原候选17叶/14原件与专项核回，生产off/无启用覆盖；#33唯一full仍持锁，终局后给原集成员绑定安全main短事务优先于本ops下一重检查，发布次序不变。无新等待者/模型/局，paper/materials/20261022-issue36-window-followup-ops/receipt.json。
+
+- 2026-10-22T11:28:59+08:00 [ops] #33+#26首轮full失败留原件；漏带两canonical helper补齐后定向17过，另两status-null原工程链pending，不重full/模型或发布。#36旧main窗口依原集成员取消，交互TUI待补交、视图off，见paper/materials/20261022-issue33-full-terminal-ops/receipt.json。

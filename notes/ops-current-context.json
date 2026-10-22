@@ -668,12 +668,14 @@
     },
     {
       "task": "issue33-exact-first-full-knowledge-lock-continuation",
-      "state": "running",
-      "pid": 3534422,
+      "state": "terminal-full-failed-retained",
+      "pid": null,
       "start": "6176142",
       "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930",
       "receipt": "paper/materials/20261022-1044-ops/receipt.json",
-      "new_model": false
+      "new_model": false,
+      "prior_pid": 3534422,
+      "terminal_receipt": "paper/materials/20261022-issue33-full-terminal-ops/receipt.json"
     },
     {
       "task": "issue35-prepared-follow-on-after33-publication",
@@ -1529,7 +1531,8 @@
     "all-five-repaired-fixed-input-start": "paper/materials/20261020-five-item-repaired-start-ops/receipt.json",
     "five-item-repaired-terminal": "paper/materials/20261020-2024-ops/receipt.json",
     "W8-timeout-materials-78e479-32a913": "paper/materials/20261020-W8-timeout-materials-ops/receipt.json",
-    "Roy-205x-low-load-once": "paper/materials/20261020-low-load-once-ops/receipt.json"
+    "Roy-205x-low-load-once": "paper/materials/20261020-low-load-once-ops/receipt.json",
+    "issue33_full_failed_and_issue36_scope_20261022": "paper/materials/20261022-issue33-full-terminal-ops/receipt.json"
   },
   "frozen_brain_request": {
     "receipt": "paper/materials/20261020-0249-ops/frozen-request-location.json",
@@ -17003,16 +17006,17 @@
     }
   },
   "issue33_exact_live_admission_20261022": {
-    "at": "2026-10-22T10:53:59+08:00",
-    "state": "running",
-    "receipt": "paper/materials/20261022-1044-ops/receipt.json",
+    "at": "2026-10-22T11:28:59+08:00",
+    "state": "failed-full-retained-test-closure-repaired-unreleased",
+    "receipt": "paper/materials/20261022-issue33-full-terminal-ops/receipt.json",
     "status": "paper/materials/20261022-issue33-live-ops/checks.json",
-    "runner_pid": 3534422,
-    "runner_start": "6176142",
-    "first_full_pending": false,
-    "first_full_running": true,
-    "wait_method": "original kernel knowledge lock acquired; first full running",
-    "prior_terminal": "10:44 knowledge-refresh nonblocking gate",
+    "runner_pid": null,
+    "prior_runner_pid": 3534422,
+    "first_full_running": false,
+    "first_full_failed": true,
+    "repaired_unreleased_tree": "ea3248d598da567732dc292fe6dd5f135c6aece7",
+    "remaining_failures": "two status-null wrappers; original owner, cause unknown",
+    "published": false,
     "no_new_model": true
   },
   "issue8_R4_ops_role_registered_20261022": {
@@ -17095,6 +17099,19 @@
       "waiting_start": "5984987",
       "no_new_model": true,
       "prior_terminal_receipt": "paper/materials/20261022-0937-ops/receipt.json"
+    },
+    {
+      "at": "2026-10-22T10:53:59+08:00",
+      "state": "running",
+      "receipt": "paper/materials/20261022-1044-ops/receipt.json",
+      "status": "paper/materials/20261022-issue33-live-ops/checks.json",
+      "runner_pid": 3534422,
+      "runner_start": "6176142",
+      "first_full_pending": false,
+      "first_full_running": true,
+      "wait_method": "original kernel knowledge lock acquired; first full running",
+      "prior_terminal": "10:44 knowledge-refresh nonblocking gate",
+      "no_new_model": true
     }
   ],
   "fix_20261022_101301_no_source_intake": {
@@ -17226,18 +17243,16 @@
     "new_full_or_model": false
   },
   "issue36_original_main_transaction_priority": {
-    "at": "2026-10-22T11:19:20+08:00",
-    "state": "reserved-original-main-transaction-after-current33-full",
-    "receipt": "paper/materials/20261022-issue36-window-followup-ops/receipt.json",
-    "owner": "original issue36 integrator",
-    "candidate": "07325c289ffbd010f2aeab2279bd1b58a652c5b6",
-    "wait_for_original_pid": 3534422,
-    "wait_for_original_start": "6176142",
-    "action": "After original full terminal releases live-merge.lock, allow original issue36 binding backup/merge-main/restore/SHA-mode transaction before ops begins next heavyweight check",
+    "at": "2026-10-22T11:28:59+08:00",
+    "state": "cancelled-await-interactive-TUI-redelivery",
+    "receipt": "paper/materials/20261022-issue33-full-terminal-ops/receipt.json",
+    "original_integrator_receipt": ".artifacts/integrator-36-20261022/awaiting-redelivery.json",
+    "original_integrator_comment": 6331879184,
+    "dev_comment": 6331898748,
+    "old_main_window_cancelled": true,
+    "old_candidate_not_admitted": true,
     "brain_view": "off",
-    "do_not_start_another_full_or_observer": true,
-    "release_priority_20_33_35_unchanged": true,
-    "main_merge_not_yet_executed": true,
-    "natural_enable_pending": true
+    "action": "No old candidate merge; await revised interactive TUI delivery and status:review; original release queue continues",
+    "do_not_start_another_full_or_observer": true
   }
 }
