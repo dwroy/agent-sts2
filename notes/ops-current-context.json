@@ -17283,7 +17283,8 @@
     "old_candidate_not_admitted": true,
     "brain_view": "off",
     "action": "No old candidate merge; await revised interactive TUI delivery and status:review; original release queue continues",
-    "do_not_start_another_full_or_observer": true
+    "do_not_start_another_full_or_observer": true,
+    "r3_redelivery_index": "issue36_r3_original_window_order_and_natural_acceptance"
   },
   "ordinary_20261022_101301_main_source_drift": {
     "at": "2026-10-22T11:38:42+08:00",
@@ -17424,7 +17425,16 @@
     "proof": "paper/materials/20261022-issue38-ops/window-readback.json",
     "checks": "paper/materials/20261022-issue33-high-ops/checks.json",
     "next": "original controller kernel-waits #20 then all-or-release admission and first check; no polling/repeated full; preserve #33→#35→#28→#37; #38 in-progress until actual entry evidence",
-    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6333489252"
+    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6333489252",
+    "latest_original_window_from_issue36_intake": {
+      "state": "waiting-one-kernel-lock-no-other-held",
+      "waiting_lock": "ops/knowledge-refresh.lock",
+      "prior_issue20_exited_at": "2026-10-22T13:33:35+08:00",
+      "full_started": false,
+      "held_locks": [],
+      "proof": "paper/materials/20261022-issue36-r3-ops/readback.json",
+      "no_new_waiter": true
+    }
   },
   "fix_20261022_131302_no_source_intake": {
     "state": "audited-no-source-original-failed-rc0-retry-preserved",
@@ -17456,5 +17466,189 @@
     "snapshot": ".artifacts/ops-wake-20261022-1336/dataset-retained/",
     "next": "preserve original attention/no auto reentry and all parents; only records ownership/finalization can be continued against original outputs, never repeat generator/full/model/merge; do not claim closed",
     "prior_dissent": "BTS HP wording retained along 20261022-1136-ops original delivery; no duplicate forwarding"
+  },
+  "issue36_r3_original_window_order_and_natural_acceptance": {
+    "state": "review-targeted-verified-final-full-and-natural-pending",
+    "source": "386c8b224ba476f2319cc258fcdffb18b120f085",
+    "candidate": "1b0aeb68f70876809e761ea563f2b1195318a32a",
+    "candidate_main_parent": "d3b2a747453bba3ac6b2488dd518731651f54e98",
+    "inputs_verified": 46,
+    "original_logs_verified": 10,
+    "planned_order": [
+      33,
+      35,
+      28,
+      37,
+      36
+    ],
+    "machine_queue_or_waiter_created": false,
+    "full_owner": "original integrator, latest main and predecessor combination recheck required before entry",
+    "brain_view": "off",
+    "old_07325_admission": "retired",
+    "receipt": "paper/materials/20261022-issue36-r3-ops/readback.json",
+    "natural_acceptance": "paper/materials/20261022-issue36-r3-ops/natural-acceptance.json",
+    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6334018837",
+    "new_model_test_publication": false
+  },
+  "ordinary_20261022_134302_s2_parallel_record_attention": {
+    "state": "audited-original-attention-retained",
+    "receipt": "ops/codex-ops/ordinary-close/20261022-134302-s2-strategy-proposal.json",
+    "ops_readback": "paper/materials/20261022-1411-ops/readback.json",
+    "artifacts_verified": 52,
+    "waiting": 10,
+    "source_delta": 0,
+    "question_scope": {
+      "full": 10,
+      "total": 811,
+      "unread": 801
+    },
+    "dataset_attempts": 1,
+    "dataset_rc_not_in_receipt": true,
+    "rejected_exact_snapshot": {
+      "path": ".artifacts/ops-wake-20261022-1411/rejected-record-snapshot.tar.gz",
+      "bytes": 12293876,
+      "sha256": "46b83e6c50e23e5409314c3adb83f3f988418b4e0405963a984f85e597db3df5",
+      "entries": 365,
+      "uncompressed_bytes": 81212864,
+      "all_blobs_sha_verified": true,
+      "contains_rejected_private_append_not_published": true
+    },
+    "changed_since_scan": [
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "next": "retain original failures and parents; only original records ownership/finalization may continue without rerunning dataset; rejected private append is evidence, not closed/publication",
+    "new_test_model_dataset_merge": false
+  },
+  "legacy_notices_20261022_1414": {
+    "state": "eight-original-proofs-verified-formal-role-registry-pending-unsupported-tasks",
+    "receipt": "paper/materials/20261022-1414-ops/notices-readback.json",
+    "notice_ids": [
+      "99a933ce6b140f81db812b16",
+      "f9a02febd8602a4ab46d685f",
+      "7430982d1c28981e46d44d75",
+      "7dcddb0749fa60e0f2f78f3f",
+      "751e5b79d972608c69f79626",
+      "4d4fd8d8ebbbf1b709b759fc",
+      "3d8e3359ffe4d6992bd3960e",
+      "99c134c7850ae5bae9fb64c9"
+    ],
+    "manual_cli_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+    "original_rejection": {
+      "path": "paper/materials/20261021-issue4-terminal-ops/ack-compatibility-attempt.json",
+      "sha256": "25bd6ec6eb4d4b33ff699df71237a96a01d896b73e291ede44b6d6cb5924cd1f",
+      "bytes": 1115,
+      "rc": 2
+    },
+    "unsupported_tasks": [
+      "issue-4-elite-calibration-task",
+      "issue-13-card-models-task",
+      "issue-14-act3-calibration-task"
+    ],
+    "actual_original_watcher_read_and_Roy_visible_relay_verified": true,
+    "Roy_personal_acceptance_inferred": false,
+    "new_send_or_proxy_ack_or_rejected_retry": false,
+    "scientific_parents_closed": false
+  },
+  "strategy_20261022_141301_s2_capacity_failure_source_retained": {
+    "state": "capacity-interrupted-original-uncommitted-source-and-evidence-retained",
+    "receipt": "paper/materials/20261022-1436-ops/readback.json",
+    "checkpoint": "ops/codex-ops/pending-continuations/original-20261022-141301-s2-active-plans.json",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-141301-s2",
+    "thread": "01a1623d-f478-76e2-9360-5f369b702c59",
+    "uncommitted_code_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts"
+    ],
+    "untracked_source": [
+      "agent/tests/silent-active-plans-evidence.json"
+    ],
+    "native_model": "gpt-6.1-sol",
+    "native_effort": "high",
+    "original_retry_at": 1792654374.588392,
+    "retry_at_CST": "2026-10-22T15:32:54.588392+08:00",
+    "wrapper_still_alive_at_intake": true,
+    "automatic_resume_registered": false,
+    "model_or_permissions_or_source_changed_by_ops": false,
+    "next": "Original wrapper/finish and checkout lease must exit/release first. Keep original failed report and cooldown. Continue from exact original task/thread/worktree/source/evidence; ordinary fresh-batch retry is not proof of same-thread recovery. Before any original-owner continuation, verify owner identity/lease, preserved source SHA, model availability and unchanged sandbox; finish evidence regression and required checks, then original publication gates. No reset, model/account switch, duplicate implementation or invented completion."
+  },
+  "legacy_notices_20261022_1443": {
+    "state": "eight-original-delivery-proofs-verified-research-CLI-registry-still-pending",
+    "receipt": "paper/materials/20261022-1443-ops/notices-readback.json",
+    "prior_receipt": "paper/materials/20261022-1414-ops/notices-readback.json",
+    "notice_ids": [
+      "99a933ce6b140f81db812b16",
+      "f9a02febd8602a4ab46d685f",
+      "7430982d1c28981e46d44d75",
+      "7dcddb0749fa60e0f2f78f3f",
+      "751e5b79d972608c69f79626",
+      "4d4fd8d8ebbbf1b709b759fc",
+      "3d8e3359ffe4d6992bd3960e",
+      "99c134c7850ae5bae9fb64c9"
+    ],
+    "manual_cli_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+    "unsupported_original_tasks": [
+      "issue-4-elite-calibration-task",
+      "issue-13-card-models-task",
+      "issue-14-act3-calibration-task"
+    ],
+    "original_rejection": {
+      "path": "paper/materials/20261021-issue4-terminal-ops/ack-compatibility-attempt.json",
+      "sha256": "25bd6ec6eb4d4b33ff699df71237a96a01d896b73e291ede44b6d6cb5924cd1f",
+      "bytes": 1115,
+      "rc": 2
+    },
+    "role_registry_pending": true,
+    "actual_original_watcher_read_and_Roy_visible_relay_verified": true,
+    "Roy_personal_acceptance_inferred": false,
+    "new_send_or_proxy_ack_or_rejected_retry": false,
+    "scientific_parents_closed": false
+  },
+  "strategy_20261022_144301_cadence_limited_report_guard_pending": {
+    "state": "no-source-limited-report-audited-original-failed-rc0-retained",
+    "receipt": "paper/materials/20261022-1506-ops/readback.json",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-144301",
+    "base": "3cbe91ae4638a35b37946d61bfde4a99d13d92bf",
+    "artifacts_verified": 61,
+    "actual_runs": "10 Silent A10; dispatch progress key A11 is not observed sample ascension",
+    "topics": "two waiting themes, no assigned proposal ids or new queue resolution",
+    "dispatch_baseline_exists_and_verified": true,
+    "report_completion_json_missing": true,
+    "provenance_snapshot_discrepancy": "silent-0101 first_run scope snapshot stale versus existing Oct5 correction; this batch only appended metadata to0286/0443",
+    "retry_at_CST": "2026-10-22T16:03:01.854748+08:00",
+    "next": "Retain original producer report and failure; no fabricated JSON/test/merge or parent completion. Original completion contract needs source-bound producer final-report evidence; no blind replay of generation/tests/models.",
+    "new_dataset_model_test_merge": false
+  },
+  "legacy_notices_20261022_1515": {
+    "state": "eight-original-delivery-proofs-verified-research-CLI-registry-still-pending",
+    "receipt": "paper/materials/20261022-1515-ops/notices-readback.json",
+    "prior_receipt": "paper/materials/20261022-1443-ops/notices-readback.json",
+    "notice_ids": [
+      "99a933ce6b140f81db812b16",
+      "f9a02febd8602a4ab46d685f",
+      "7430982d1c28981e46d44d75",
+      "7dcddb0749fa60e0f2f78f3f",
+      "751e5b79d972608c69f79626",
+      "4d4fd8d8ebbbf1b709b759fc",
+      "3d8e3359ffe4d6992bd3960e",
+      "99c134c7850ae5bae9fb64c9"
+    ],
+    "CLI_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+    "unsupported_original_tasks": [
+      "issue-4-elite-calibration-task",
+      "issue-13-card-models-task",
+      "issue-14-act3-calibration-task"
+    ],
+    "original_rejection": {
+      "path": "paper/materials/20261021-issue4-terminal-ops/ack-compatibility-attempt.json",
+      "sha256": "25bd6ec6eb4d4b33ff699df71237a96a01d896b73e291ede44b6d6cb5924cd1f",
+      "bytes": 1115,
+      "rc": 2
+    },
+    "formal_role_registry_pending": true,
+    "actual_original_watcher_read_and_Roy_visible_relay_verified": true,
+    "Roy_personal_acceptance_inferred": false,
+    "new_send_or_proxy_ack_or_retry": false,
+    "scientific_parents_closed": false
   }
 }

@@ -5807,4 +5807,20 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 13:39 [ops] 五批普通收尾parallel-record attention核验：341产物/50 waiting/五proof源码差0，共享dataset已执行不重跑；原扫描后六记录不同，现有输出副本保留，不收编并行记录，不改原失败/父项或冒closed。paper/materials/20261022-1336-ops/。
 - 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。
 
+- 2026-10-22 14:08 [ops] #36 R3隔离候选1b0aeb68f接收核46输入/10原日志；review及最终full/自然验收pending，原顺序#33→#35→#28→#37→#36，brain_view off/旧准入停用，不另建等待或重full/model。paper/materials/20261022-issue36-r3-ops/。
+
+- 2026-10-22 14:13 [ops] 134302-s2 parallel-record attention核52产物/十waiting/源码差0；原一次dataset不重跑，365叶被拒提交精确快照保留，当前两账本差异不归因，不改原失败/父项或冒closed。paper/materials/20261022-1411-ops/。
+
+- 2026-10-22 14:15 [ops] 八重复notice原文/双箱/ops ACK及watcher实际转达证明核同；原CLI SHA不变仍不支持三research，正式角色ACK pending，保rc2拒绝和科学父，不重发/代ACK/重试。paper/materials/20261022-1414-ops/notices-readback.json。
+
+- 2026-10-22 14:40 [ops] 141301-s2模型capacity中断1：原线程/high核回，保两源码草稿/证据夹具/45过程材料及原failed/冷却；包装器仍finish/dataset未退，不重领/切号/合入。仅登记原源码接续待办，非自动resume，保父与失败。paper/materials/20261022-1436-ops/。
+
+- 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
+
+- 2026-10-22 15:13 [ops] 144301无源限定报告核61产物/十A10/两主题待证；baseline已核存在且零源差，报告完成JSON缺失，原failed/rc0/16:03冷却保持。0101旧first_run快照与Oct5更正分列；不改历史/补测试/空合入/重dataset。paper/materials/20261022-1506-ops/。
+
+- 2026-10-22 15:15 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:43一致；原CLI三研究ACK支持阻塞与正式pending保留，不重发/代填/重试或关父。paper/materials/20261022-1515-ops/notices-readback.json。
+
 - 2026-10-22T14:23:04+08:00 [dev #40] 基于main d3b2a7474完成局间刷新增量/短锁开发：fight-value续接原reducer稳定rows与EOF尾段，card-upgrades持续聚合，共享索引代号跨步骤失效；每角色默认10新结束局训练、失败留旧完整模型，统一driver在锁前对接#20 other队列、发布候选后短持live锁并分别记耗时。冻结72行原训练器2trees的rows/model/gates逐字节同全量；铁甲计算/公式等价但统一训练时点也降频（#40授权），严格前缀SHA/怪物回放仍有线性成本。交review，#20 report同文件与避免嵌套入队交集成员，完整检查/精确发布/自然耗时与读回待原角色；未改main/live/STOP或游戏知识、不编号/关父项。材料paper/materials/20261022-issue40-incremental-refresh/。
+
+- 2026-10-22 15:33:01 CST [watcher] #40 源8f09b842628在隔离树与main 23a6a0e20试合并，仅记录冲突已保留双方；21源SHA、tsc、11文件55定向、Python12+54及实际CLI/精确#20适配器2项通过，首轮夹具失败保留。候选冻结待原#38/#33完整窗口，未合main/live、未启heavy；#20 report碰撞及精确部署/自然读回仍开放。证据paper/materials/20261022-issue40-integrator-review/review.json。
