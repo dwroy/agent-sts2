@@ -91,7 +91,9 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
     const runner = new SerialDeckRunner(), runSamples = vi.spyOn(runner, "run");
     const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, () => {},
       v6ProjectionInputs(root, () => "2026-10-20T16:20:00.000Z"), {
-        engine: new V6CardResultsEngine(runner, () => performance.now(), 8), context: cardResultsContext,
+        // This fixture verifies eight shared sample results, independent of host load.
+        // Partial rows and deadline enforcement have deterministic coverage in v6-card-results.test.ts.
+        engine: new V6CardResultsEngine(runner, () => 0, 8), context: cardResultsContext,
         record(_env, table) { tables.push(table); },
       });
     let polls = 0;
