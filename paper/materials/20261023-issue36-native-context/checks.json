@@ -1,0 +1,121 @@
+{
+  "base": "6ec71c313fe113b107b44867c0aca2352a1a59ea",
+  "inputs": {
+    "learner/lib/herdr.ts": "14d162cad315b4f1f2a3ee0ebcbbc691ba10f0c63a45e5c4703be22204e158c0",
+    "ops/learner_tui.py": "ceb943eb718ee5f6357ba2a6308ecf9b1d1a58f8d656da77b10823da5c28cbc7",
+    "learner/lib/tui-reconciliation.ts": "0534b272ac6177389f3558af41a802a8b5a7f4a33327124e549ea795f35d2ee8",
+    "learner/reconcile-tui.ts": "78633bd5bd1686a76f0338c4169067479f31c84be58b4dd3fac95483f0cf5b53",
+    "agent/tests/learner-native-prelude.test.ts": "fd2bbcbdf7b64a599e39bc1cc3b9a890da6979b1db0278927b8faa503893149c",
+    "agent/tests/learner-tui-reconciliation.test.ts": "6d0d93ea9bc7d4ffea3f07ca84fc0164b246be0a2bdfe4c9b397b4dd73283ff8",
+    "agent/tests/learner-herdr.test.ts": "b1a12c8a995fcdad732fee8b1f3d7d063a541eea9bb7a2346a4f65fa03cd9a89",
+    "agent/tests/learner-herdr-ownership.test.ts": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+    "agent/tests/learner-herdr-launcher.test.ts": "38eb7cc58e79c8fe368269c69ebd795fc960dfb2a4bfbe0b32c6287670bf9607",
+    "agent/tests/learner-herdr-receipts.test.ts": "d3b234d079a94abfe8aa964c2a8250bea65bd7e7983006712ec395fa179902fc",
+    "agent/tests/boss-sim-home.test.ts": "2eb7b4aa15a5d5b095bc2c57b7b656923ec71ce71636ff536f552a26b8a9ed03",
+    "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+    "agent/tests/learner-startup-recovery.test.ts": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+    "ops/tests/test_learner_tui.py": "51c165df463e3281a80208b99bff104b50310657e2b15f8a8f16d8439b5ec48e",
+    "ops/tests/test_boss_sim_home.py": "45055661b272b74d02b92e4bc81e4111dfb3abfad3481489734b4e8d74305218",
+    "ops/learner_entry.py": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+    "ops/codex-ops-learner.sh": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
+    "learner/lib/launcher.ts": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
+    "learner/lib/startup-recovery.ts": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+    "docs/codex-ops.md": "19cd3a7a16c773bdc8fe55071851739820341c8be05a62f925960cc07e15ed7e"
+  },
+  "original_four_prefixes": {
+    "path": ".artifacts/ops-issue36-recovery-20261023/native-prefix-replay.json",
+    "sha256": "0f2e6ccd3644fe2fa65db2517f5949ad8f47f5ba2bc98ed1d6c1d81b6fd8d8d1",
+    "bytes": 358971
+  },
+  "checks": [
+    {
+      "command": "Initial local replay harness used the wrong cwd path; no model/pane action",
+      "exit_code": 1,
+      "result": "Harness setup failed before native replay; preserved",
+      "log": ".artifacts/issue36-native-prelude/checks/replay-path-failed.log",
+      "sha256": "407557af6167be1abeafdac348c8f4c836a11bab957308753cc33ce92f7ec0ab"
+    },
+    {
+      "command": "Original HEAD NativeBatch replay on four original native-prefix fixtures",
+      "exit_code": 0,
+      "result": "4/4 reproduce accepted=false/foreignActivity=true; original source restored after the bounded replay",
+      "log": ".artifacts/issue36-native-prelude/checks/real-prefix-before.log",
+      "sha256": "954b0ee52b18eddf859619193a5066554c88f76697e5f5709c8db771f916e271"
+    },
+    {
+      "command": "Corrected NativeBatch replay on the same four native-prefix fixtures",
+      "exit_code": 0,
+      "result": "4/4 accepted=true/foreignActivity=false with one bootstrap proof and exact prompt SHA",
+      "log": ".artifacts/issue36-native-prelude/checks/real-prefix-after.log",
+      "sha256": "a97272e9975df6b52dcc18a6dc58935b442df32d4f5ee844994cf38516fe0976"
+    },
+    {
+      "command": "Vitest learner-native-prelude.test.ts (initial pure protocol cases)",
+      "exit_code": 0,
+      "result": "1 file/15 passed before adding tool-before-prompt case",
+      "log": ".artifacts/issue36-native-prelude/checks/prelude.log",
+      "sha256": "874dc17c208cbba456a177d06f0d85d952ffc6fb74dcd2ce1704281ec64de7e1"
+    },
+    {
+      "command": "Vitest 9 directed files, --pool=threads --maxWorkers=1 --no-file-parallelism",
+      "exit_code": 0,
+      "result": "9 files/111 passed before the full transport bootstrap case was added",
+      "log": ".artifacts/issue36-native-prelude/checks/targeted.log",
+      "sha256": "58a007d440da4354b016b7e0712dee996bc958b4d419c9cdc43208d975096059"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/boss-sim-home.test.ts tests/learner-entry.test.ts tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 0,
+      "result": "9 files/112 passed; includes Python23 via receipt wrapper, not additive",
+      "log": ".artifacts/issue36-native-prelude/checks/targeted-final.log",
+      "sha256": "3c538e6edb9df91bb17c6ecc65a7a4f9b706c9dce12e75a3c4d78b1bcdd5e5ad"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py -v",
+      "exit_code": 0,
+      "result": "23 passed; same suite also runs within Vitest",
+      "log": ".artifacts/issue36-native-prelude/checks/python.log",
+      "sha256": "1e1f8d5ba993a66d0097e5796d1143f6f23f28a7475e95194828c28f0aeb5da4"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "production typecheck passed before final audit snapshot helper",
+      "log": ".artifacts/issue36-native-prelude/checks/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "final production typecheck passed",
+      "log": ".artifacts/issue36-native-prelude/checks/tsc-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "read_only_cli_audits": [
+    {
+      "batch": "20261023-032433-fix-batch",
+      "exit_code": 0,
+      "audit": ".artifacts/issue36-native-prelude/reconciliation/20261023-032433-fix-batch.audit.json",
+      "sha256": "1828f7c9091b8fdef93fd6315d2dacd1014454c6c8ba6dd6094ad8be83da0307"
+    },
+    {
+      "batch": "20261023-032433-s2-strategy-proposal",
+      "exit_code": 0,
+      "audit": ".artifacts/issue36-native-prelude/reconciliation/20261023-032433-s2-strategy-proposal.audit.json",
+      "sha256": "4b8beeb97a2af50b81e1083654b318a4275918c0ade863694a038fe2dfe5b894"
+    },
+    {
+      "batch": "20261023-032433-strategy-proposal",
+      "exit_code": 0,
+      "audit": ".artifacts/issue36-native-prelude/reconciliation/20261023-032433-strategy-proposal.audit.json",
+      "sha256": "6286f342a47246fa2b031b26c6e950fdf3c858f593950e5bd27f827c3b68430e"
+    },
+    {
+      "batch": "20261023-032433",
+      "exit_code": 0,
+      "audit": ".artifacts/issue36-native-prelude/reconciliation/20261023-032433.audit.json",
+      "sha256": "9a56220d2416232fe9fc27ae02a88232b711209cf84bf434fd129655e520bc61"
+    }
+  ]
+}

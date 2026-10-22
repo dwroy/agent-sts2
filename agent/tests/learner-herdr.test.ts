@@ -77,7 +77,13 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
         prompts++;
         const text = args[3]!;
         const turn = `turn-${prompts}`;
-        write(row("event_msg", { type: "task_started", turn_id: turn }), row("event_msg", { type: "user_message", message: text }));
+        write(row("event_msg", { type: "task_started", turn_id: turn }));
+        if (kind === "bootstrap") write(row("response_item", { type: "message", role: "user", content: [
+          { type: "input_text", text: `# AGENTS.md instructions for ${root}\n\n<INSTRUCTIONS>\nFixed instructions.\n</INSTRUCTIONS>` },
+          { type: "input_text", text: `<environment_context>\n  <cwd>${root}</cwd>\n  <shell>bash</shell>\n</environment_context>` },
+        ] }), row("turn_context", { turn_id: turn, cwd: root }));
+        write(kind === "bootstrap" ? row("response_item", { type: "message", role: "user", content: [{ type: "input_text", text }] })
+          : row("event_msg", { type: "user_message", message: text }));
         if (kind === "capacity" || (kind === "retry-success" || kind === "stale-open-error") && prompts === 1) {
           write(row("event_msg", { type: "error", turn_id: turn, message: "at capacity" }));
           if (kind !== "stale-open-error") write(row("event_msg", { type: "task_complete", turn_id: turn }));
@@ -268,6 +274,16 @@ describe("native batch authority", () => {
 });
 
 describe("interactive batch lifecycle", () => {
+  it("persists bootstrap proof without interrupting the original native task or weakening retirement", async () => {
+    const f = fixture("bootstrap");
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    expect(f.prompts()).toBe(1);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ native_context_version: 1, retirement_authorized: true, submitted: true });
+    expect(receipt.native_preludes).toHaveLength(1); expect(receipt.bindings).toHaveLength(1);
+    expect(receipt.native_preludes[0]).toMatchObject({ turn_id: "turn-1", cwd: f.root });
+    expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
+  });
   it("refuses inherited MCP/config context before launching the TUI, without changing the account", async () => {
     const f = fixture();
     const path = join(f.opts.codexHome, "config.toml");

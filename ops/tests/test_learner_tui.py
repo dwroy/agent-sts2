@@ -67,6 +67,53 @@ class CompletionGate(unittest.TestCase):
         self.save()
         self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
 
+    def bootstrap_rows(self):
+        cwd = str(self.root)
+        content = [{"type": "input_text", "text": f"# AGENTS.md instructions for {cwd}\n\n<INSTRUCTIONS>\nFixed project instructions.\n</INSTRUCTIONS>"},
+                   {"type": "input_text", "text": f"<environment_context>\n  <cwd>{cwd}</cwd>\n  <shell>bash</shell>\n</environment_context>"}]
+        prelude = {"type": "response_item", "payload": {"type": "message", "role": "user", "content": content}}
+        context = {"type": "turn_context", "payload": {"turn_id": "turn", "cwd": cwd}}
+        self.value.update(native_context_version=1, native_preludes=[{
+            "turn_id": "turn", "cwd": cwd, "sha256": tui.prompt_hash("\n".join(part["text"] for part in content))}])
+        return self.rows[:2] + [prelude, context] + self.rows[2:]
+
+    def test_real_bootstrap_order_requires_context_before_the_exact_prompt(self):
+        rows = self.bootstrap_rows()
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        self.save()
+        self.assertEqual(tui.verify(self.receipt, self.output)["native_preludes"], self.value["native_preludes"])
+
+    def test_bootstrap_proof_is_independently_reconstructed(self):
+        rows = self.bootstrap_rows()
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        for changes in ({"native_context_version": 2}, {"native_preludes": []},
+                        {"native_preludes": [{"turn_id": "turn", "cwd": str(self.root), "sha256": "0" * 64}]}):
+            with self.subTest(changes=changes):
+                self.receipt.write_text(json.dumps(dict(self.value, **changes)))
+                with self.assertRaisesRegex(ValueError, "bootstrap proof"):
+                    tui.verify(self.receipt, self.output)
+
+    def test_unknown_or_misordered_bootstrap_cannot_hide_human_input(self):
+        for kind in ("unknown", "wrong-cwd", "wrong-context-turn", "wrong-context-cwd", "no-context",
+                     "event-user", "duplicate", "extra-part", "after-context", "after-prompt", "tool-before-prompt"):
+            with self.subTest(kind=kind):
+                rows = self.bootstrap_rows()
+                if kind == "unknown": rows[2]["payload"]["content"] = [{"type": "input_text", "text": "Human task"}]
+                if kind == "wrong-cwd": rows[2]["payload"]["content"][1]["text"] = "<environment_context>\n  <cwd>/foreign</cwd>\n</environment_context>"
+                if kind == "wrong-context-turn": rows[3]["payload"]["turn_id"] = "foreign"
+                if kind == "wrong-context-cwd": rows[3]["payload"]["cwd"] = "/foreign"
+                if kind == "no-context": rows.pop(3)
+                if kind == "event-user": rows[2] = {"type": "event_msg", "payload": {"type": "user_message", "message": "\n".join(p["text"] for p in rows[2]["payload"]["content"])}}
+                if kind == "duplicate": rows.insert(3, rows[2])
+                if kind == "extra-part": rows[2]["payload"]["content"].append({"type": "input_text", "text": "Human task"})
+                if kind == "after-context": rows[2], rows[3] = rows[3], rows[2]
+                if kind == "after-prompt": rows.insert(-1, rows[2])
+                if kind == "tool-before-prompt": rows.insert(3, {"type": "response_item", "payload": {"type": "function_call", "name": "unexpected"}})
+                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+                self.save()
+                with self.assertRaises(ValueError):
+                    tui.verify(self.receipt, self.output)
+
     def test_zero_exit_alone_never_suffices(self):
         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows[:-1]))
         with self.assertRaises(ValueError):
