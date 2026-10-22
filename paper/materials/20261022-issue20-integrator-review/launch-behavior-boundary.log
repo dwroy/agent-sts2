@@ -1,0 +1,54 @@
+test_bundle_mode_is_part_of_publication_identity (original_launch_tests.LaunchPublication.test_bundle_mode_is_part_of_publication_identity) ... ok
+test_cli_runs_published_header_and_rejects_behavior_arguments (original_launch_tests.LaunchPublication.test_cli_runs_published_header_and_rejects_behavior_arguments) ... ok
+test_dirty_live_or_changed_bundle_is_retained (original_launch_tests.LaunchPublication.test_dirty_live_or_changed_bundle_is_retained) ... ok
+test_main_environment_cannot_override_published_behavior (original_launch_tests.LaunchPublication.test_main_environment_cannot_override_published_behavior) ... ok
+test_main_startup_and_policy_changes_wait_for_live_publication_and_pin (original_launch_tests.LaunchPublication.test_main_startup_and_policy_changes_wait_for_live_publication_and_pin) ... ok
+test_missing_critical_publication_metadata_is_not_an_empty_success (original_launch_tests.LaunchPublication.test_missing_critical_publication_metadata_is_not_an_empty_success) ... ok
+test_published_ablation_policy_and_runtime_cursor_are_separate (original_launch_tests.LaunchPublication.test_published_ablation_policy_and_runtime_cursor_are_separate) ... ok
+test_reload_selects_published_script_and_retains_previous_known_identity (original_launch_tests.LaunchPublication.test_reload_selects_published_script_and_retains_previous_known_identity) ... ok
+test_running_controller_keeps_admitted_parameters_after_publication (original_launch_tests.LaunchPublication.test_running_controller_keeps_admitted_parameters_after_publication) ... ok
+test_shared_private_env_is_refused_without_reading_it (original_launch_tests.LaunchPublication.test_shared_private_env_is_refused_without_reading_it) ... ok
+test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch (__main__.BehaviorBoundary.test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch) ... FAIL
+test_sim_policy_can_be_published_explicitly (__main__.BehaviorBoundary.test_sim_policy_can_be_published_explicitly) ... ERROR
+test_ranking_policy_can_be_published_explicitly (__main__.BehaviorBoundary.test_ranking_policy_can_be_published_explicitly) ... ERROR
+
+======================================================================
+ERROR: test_sim_policy_can_be_published_explicitly (__main__.BehaviorBoundary.test_sim_policy_can_be_published_explicitly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/integrator-20-20261022/test_launch_behavior_boundary.py", line 28, in test_sim_policy_can_be_published_explicitly
+    self.assertEqual(launch.launch_settings(files), {'SIM_ADAPTIVE': 'shadow', 'SIM_FAILURE_EXIT': 'on'})
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/integrator-20-20261022/ops/launch_runtime.py", line 63, in launch_settings
+    raise ValueError('launch settings must contain only nonsecret game policy')
+ValueError: launch settings must contain only nonsecret game policy
+
+======================================================================
+ERROR: test_ranking_policy_can_be_published_explicitly (__main__.BehaviorBoundary.test_ranking_policy_can_be_published_explicitly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/integrator-20-20261022/test_launch_behavior_boundary.py", line 32, in test_ranking_policy_can_be_published_explicitly
+    self.assertEqual(launch.launch_settings(files), {'S_BUILD_RANK': 'shadow', 'S_READINESS': 'shadow'})
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/integrator-20-20261022/ops/launch_runtime.py", line 63, in launch_settings
+    raise ValueError('launch settings must contain only nonsecret game policy')
+ValueError: launch settings must contain only nonsecret game policy
+
+======================================================================
+FAIL: test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch (__main__.BehaviorBoundary.test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/integrator-20-20261022/test_launch_behavior_boundary.py", line 24, in test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch
+    self.assertEqual(leaked, {}, 'Unpublished parent game policy crossed publication boundary')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'SIM_ADAPTIVE': 'off', 'SIM_FAILURE_EXIT'[46 chars]'on'} != {}
++ {}
+- {'SIM_ADAPTIVE': 'off',
+-  'SIM_FAILURE_EXIT': 'off',
+-  'S_BUILD_RANK': 'on',
+-  'S_READINESS': 'on'} : Unpublished parent game policy crossed publication boundary
+
+----------------------------------------------------------------------
+Ran 13 tests in 6.822s
+
+FAILED (failures=1, errors=2)

@@ -1,0 +1,50 @@
+{
+  "issue": 20,
+  "source": "fdab9aeb91aba3457ea2d06ed475c22b300c9a63",
+  "private_kit": "f1cc7285de2f14aeea33cebb8e6eba4ce618af01",
+  "reviewed_at": "2026-10-22T13:49:42+08:00",
+  "conclusion": "changes_requested",
+  "live_startup_impact": true,
+  "source_inputs_sha256": {
+    "ops/launch_runtime.py": "579b0f503a7208cacf6119ff17fcdfb3f2bd1027a3830b864a787f637f41ecd5",
+    "ops/tests/test_launch_runtime.py": "72ec72d7cfcf75b409369eac2b7dd602b75355bd0de9414ef54664cc5b26f9c3",
+    "agent/src/core/config.ts": "cd98eb4d83c8b5bfc07f6e03342caa07f40e7521d260253d1932cb90197e6e8a",
+    "agent/tests/v6-card-option-loop.test.ts": "d59bebca34409458f5c78eec1f8dcd34d4df04b8f61f1ece2826a0408ab6dee7"
+  },
+  "fixed_regression": {
+    "tests": 13,
+    "passed": 10,
+    "failures": 1,
+    "errors": 2,
+    "exit_code": 1,
+    "logs": [
+      "launch-behavior-boundary.log",
+      "exact-source-regression.log"
+    ],
+    "parent_env_fixture": {
+      "SIM_ADAPTIVE": "off",
+      "SIM_FAILURE_EXIT": "off",
+      "S_BUILD_RANK": "on",
+      "S_READINESS": "on"
+    },
+    "production_environment_read": false,
+    "play_started": false
+  },
+  "full_checks_started": false,
+  "main_merged": false,
+  "production_changed": false,
+  "candidate_merge": {
+    "base": "73d09db93cdb76e9d221dc409c7164afea96cb18",
+    "conflicts": [
+      "paper/materials/decision-log.md"
+    ],
+    "aborted_after_negative_review": true,
+    "final_candidate_head": "fdab9aeb91aba3457ea2d06ed475c22b300c9a63",
+    "tracked_worktree_clean": true
+  },
+  "tests_and_logs_sha256": {
+    "test_launch_behavior_boundary.py": "d750c7b7dcfc63b66281279ac777cff4591cddc767b33693e3240dbdb41dcd03",
+    "launch-behavior-boundary.log": "cee90b3bece818dd91de407fc05c9eee0b6039839acf81b1f570980318846147",
+    "exact-source-regression.log": "050bea05f5b1b5726aaaad68a0a8f09f2f8f05d7386ed8084891fda2144580f8"
+  }
+}
