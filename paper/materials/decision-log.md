@@ -5812,3 +5812,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 14:13 [ops] 134302-s2 parallel-record attention核52产物/十waiting/源码差0；原一次dataset不重跑，365叶被拒提交精确快照保留，当前两账本差异不归因，不改原失败/父项或冒closed。paper/materials/20261022-1411-ops/。
 
 - 2026-10-22 14:15 [ops] 八重复notice原文/双箱/ops ACK及watcher实际转达证明核同；原CLI SHA不变仍不支持三research，正式角色ACK pending，保rc2拒绝和科学父，不重发/代ACK/重试。paper/materials/20261022-1414-ops/notices-readback.json。
+
+- 2026-10-22 14:40 [ops] 141301-s2模型capacity中断1：原线程/high核回，保两源码草稿/证据夹具/45过程材料及原failed/冷却；包装器仍finish/dataset未退，不重领/切号/合入。仅登记原源码接续待办，非自动resume，保父与失败。paper/materials/20261022-1436-ops/。
