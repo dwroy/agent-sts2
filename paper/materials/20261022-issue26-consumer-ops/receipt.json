@@ -1,0 +1,131 @@
+{
+  "schema": "ops-issue26-fixed-candidate-MCP-readback-v1",
+  "at": "2026-10-22T09:54:46+08:00",
+  "issue": 26,
+  "snapshot": {
+    "path": "ops/codex-ops/current.json",
+    "bytes": 1401046,
+    "sha256": "150f4eaa159dfbb2b5445183771ed1b6cfac616367b45158201a69e7a2966747"
+  },
+  "authorization_SHA_verified": true,
+  "identity": {
+    "pane": "w1H:p8",
+    "session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+    "args_hash": "54242b63a3ee7cde",
+    "started": "2026-10-21T09:55:03.552Z"
+  },
+  "execution": "host",
+  "source": {
+    "agent/src/brain/tools/external-stats-tools.ts": {
+      "bytes": 13527,
+      "sha256": "da2823886a05fc5b38836ae53ee8ce2e0918b8472d36ab56ac92595842bef193"
+    },
+    "agent/tests/external-stats-tools.test.ts": {
+      "bytes": 13402,
+      "sha256": "3acde00eeb2d9a869ef6d19df7965ace1d10b080184333ad3d6febe476c74d9d"
+    },
+    "agent/tools/build-external-stats.py": {
+      "bytes": 4098,
+      "sha256": "da77547167feedd63c66990646045025d209cac3bbbb3bbd1eab3f3597c55760"
+    },
+    "knowledge/external/sts2fun/silent-a10.json": {
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    }
+  },
+  "main_source_and_integration_ancestor": true,
+  "source_leaves": [
+    {
+      "path": "agent/src/brain/tools/external-stats-tools.ts",
+      "bytes": 13527,
+      "sha256": "da2823886a05fc5b38836ae53ee8ce2e0918b8472d36ab56ac92595842bef193"
+    },
+    {
+      "path": "agent/tests/external-stats-tools.test.ts",
+      "bytes": 13402,
+      "sha256": "3acde00eeb2d9a869ef6d19df7965ace1d10b080184333ad3d6febe476c74d9d"
+    },
+    {
+      "path": "agent/tools/build-external-stats.py",
+      "bytes": 4098,
+      "sha256": "da77547167feedd63c66990646045025d209cac3bbbb3bbd1eab3f3597c55760"
+    },
+    {
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    }
+  ],
+  "candidate_tree": "d768564f06977c5596de5b9ee1b1d3ef18104aa4",
+  "fixed_consumer": {
+    "path": "paper/materials/20261022-issue26-consumer-ops/fixed-MCP-readback.json",
+    "bytes": 1270,
+    "sha256": "a002539bf8cb7990c94e4c4990a40cc649fca6edac28e5a1bbf2bd39c09d1394"
+  },
+  "full_output_archive": {
+    "path": "paper/materials/20261022-issue26-consumer-ops/fixed-MCP-response.json.gz",
+    "bytes": 9458,
+    "sha256": "a0569899f8a7be06725659f764ec7cbe0d3b76ffc76bdab57dcf7ce9df787fc6"
+  },
+  "full_output_expanded": {
+    "bytes": 96429,
+    "sha256": "698cb0626e9045c1f75425237e385d860730b9ca8baac82c4e6200df39164bd4",
+    "gitleaks_rc": 0
+  },
+  "probe": {
+    "path": ".artifacts/ops-issue26-20261022/mcp-probe.mts",
+    "bytes": 5734,
+    "sha256": "5a804bae06dd72cddc709e260757694324c3978ecebef038738bfce58b364ce9"
+  },
+  "probe_success_log": {
+    "path": ".artifacts/ops-issue26-20261022/probe-attempt2.log",
+    "bytes": 1048,
+    "sha256": "7dcdf148ca3718aa36452dd00a4a64e7c984e78dbc09a24f205b9c6ec684f822"
+  },
+  "probe_original_error_log": {
+    "path": ".artifacts/ops-issue26-20261022/probe-attempt1.log",
+    "bytes": 418,
+    "sha256": "47d733a52b68e4078d51c2e9616635317c5a344e44bbd0e0c89369ebac016a79"
+  },
+  "probe_correction": "Original probe incorrectly parsed MCP schema-validation text as JSON for invalid version. Corrected only probe expectation, preserved original SyntaxError; six valid and four negative cases rerun0. No production file changed.",
+  "original_main_admission": {
+    "path": "paper/materials/20261022-issues26-20-ops/receipt.json",
+    "bytes": 15749,
+    "sha256": "22dfafe1cf4640ed6a490045a941f49c6a9b926d3b6775fc9e632efe03b711c8"
+  },
+  "issue33_admission": {
+    "path": "paper/materials/20261022-issue33-integrator-admission/evidence.json",
+    "bytes": 4749,
+    "sha256": "41db1b3517f300c2f7916640f7ccfa96aa6dbe1db71128c0575021c30376484c"
+  },
+  "issue33_actual_combination_stop": {
+    "path": "paper/materials/20261022-issue33-live-ops/checks.json",
+    "bytes": 464,
+    "sha256": "1fe8e86097a14777c8f44c05608eaea173179feca8596f1d1ced9a9f0f43eb23"
+  },
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "release": "V6-R411",
+  "live_external_data_absent": true,
+  "other_Vitest_observation": {
+    "observed_pid": 3148714,
+    "exists": true,
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-35-build-log/agent",
+    "start": "5753887",
+    "nice": "19"
+  },
+  "remaining": [
+    "First exact #33+#26 live combination rebuild/tsc/full needs original exclusive check window; prior driver exited before checks.",
+    "Offline Codex/dsh actual harness preflights and natural boundary explicit settings/binding/latest knowledge protection/release registration/dual notices.",
+    "First natural production queries with actual character/ascension/provenance/output sizes/timing; supervisor acceptance."
+  ],
+  "independent_new_full_or_dataset": false,
+  "new_model_game_external_service_calls": 0,
+  "new_local_MCP_calls": 10,
+  "production_mutation": false,
+  "before_after_checkpoint_comparison": false,
+  "scientific_parent_or_issue_closed": false,
+  "actual_issue_comment": {
+    "url": "https://github.com/dwroy/agent-sts2/issues/26#issuecomment-6330800601",
+    "exact_API_readback": true
+  }
+}
