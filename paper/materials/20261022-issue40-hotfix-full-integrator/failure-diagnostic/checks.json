@@ -1,0 +1,38 @@
+{
+  "kind": "diagnostic_only_not_full_pass",
+  "inputs_unchanged_after_failed_full": true,
+  "steps": [
+    {
+      "name": "targeted-brain-card-value",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/v6-brain-card-value-loop.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue40-hotfix-integrator-20261022/failure-diagnostic/vitest.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "production-entry-python",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "knowledge/builders/test_refresh_entrypoints.py",
+        "-v"
+      ],
+      "exit_code": 0
+    }
+  ]
+}
