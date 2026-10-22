@@ -1,0 +1,79 @@
+[
+  {
+    "pid": 3927598,
+    "start": "6711087",
+    "comm": "python3",
+    "wchan": "locks_lock_inode_wait",
+    "locks": [
+      {
+        "path": "ops/codex-ops/ordinary-close.lock",
+        "fd": "3",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t4100586\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:4100586 0 EOF\n"
+      },
+      {
+        "path": "ops/codex-ops/paper-dataset.lock",
+        "fd": "4",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t4157958\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:4157958 0 EOF\n"
+      },
+      {
+        "path": "ops/codex-ops/tick-snapshot.lock",
+        "fd": "5",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t383232\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:383232 0 EOF\n"
+      },
+      {
+        "path": "ops/live-merge.lock",
+        "fd": "6",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t372157\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:372157 0 EOF\n"
+      },
+      {
+        "path": "ops/knowledge-refresh.lock",
+        "fd": "7",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t1055837\n"
+      }
+    ]
+  },
+  {
+    "pid": 3893265,
+    "start": "6681484",
+    "comm": "bash",
+    "wchan": "do_wait",
+    "locks": [
+      {
+        "path": "ops/knowledge-refresh.lock",
+        "fd": "9",
+        "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t82\nino:\t1055837\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:30:1055837 0 EOF\n"
+      }
+    ]
+  },
+  {
+    "pid": 3951265,
+    "start": "6765077",
+    "comm": "python3",
+    "wchan": "do_wait",
+    "locks": [
+      {
+        "path": "ops/knowledge-refresh.lock",
+        "fd": "9",
+        "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t82\nino:\t1055837\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:30:1055837 0 EOF\n"
+      }
+    ]
+  },
+  {
+    "pid": 3951266,
+    "start": "6765079",
+    "comm": "python3",
+    "wchan": "locks_lock_inode_wait",
+    "locks": [
+      {
+        "path": "ops/codex-ops/v6-refresh/silent/refresh.lock",
+        "fd": "3",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t1059494\nlock:\t1: FLOCK  ADVISORY  WRITE 3951266 08:30:1059494 0 EOF\n"
+      },
+      {
+        "path": "ops/live-merge.lock",
+        "fd": "4",
+        "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t372157\n"
+      }
+    ]
+  }
+]

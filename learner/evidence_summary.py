@@ -22,7 +22,7 @@ def summarize(logs, runs):
     deciders = {run: Counter() for run in runs}
     fallbacks = {run: Counter() for run in runs}
     refs = {run: deque(maxlen=5) for run in runs}
-    cuts = frozen_sizes(logs, ('runs', 'decisions', 'v6-build', 'jev-prompts'))
+    cuts = frozen_sizes(logs, ('runs', 'decisions', 'v6-build', 'jev-prompts', 'construction-log'))
     for stream in ('runs', 'decisions'):
         path = logs / (stream + '.jsonl')
         info = {'path': str(path), 'exists': cuts[stream] is not None, 'cutoff_bytes': cuts[stream]}
@@ -75,6 +75,13 @@ def summarize(logs, runs):
             result['runs'][run][stream] = {'count': counts[run], 'last_five_refs': list(samples[run]),
                 'status': 'missing' if counts[run] is None else 'matched' if counts[run] else 'no_match',
                 'consumption_or_benefit': None}
+    info = {}
+    for row, ref in scan(logs / 'construction-log.jsonl', cuts['construction-log'], info):
+        run = run_identity(row)
+        if run in selected:
+            result['runs'][run]['construction_log'] = {
+                'entry_count': len(row.get('entries', [])), 'omitted': row.get('omitted'), 'ref': ref}
+    result['sources'].append(info)
     return result
 
 

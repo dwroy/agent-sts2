@@ -5748,8 +5748,61 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:50:02+08:00 [Claude] Roy 10-22：对局大脑不保留每题推理，但每局保留构筑记录（每个改牌组动作 + 不超过 20 字理由，随构筑题附上，#35）；游戏时对局大脑与学习大脑都开在 herdr tab 里可见，标题写“对局大脑 · <run_id>”“学习大脑 · <批次> · <类型>”（#36）。
 - 2026-10-22T08:53:58+08:00 [Claude] Roy 10-22：开发会话并发上限 5 → 10（每个项目；.agents/board.yaml roles.dev.max_parallel，全局记忆 agent-issue-workflow 已改）。
 
-- 2026-10-22T10:13:21+08:00 [dev #36] 完成只读对局大脑常驻视图及学习大脑中文 tab 标题，稳定 pane label/回收身份不变；最终 tsc0、完整654文件6167通过/2跳过、专项30及Python11通过，缺件首轮失败与自主中止原件保留。交review不改live/STOP/决策；ops集成前先brain_view=off、自然边界开启并读回。当前重检查已结束，按Claude指示在ops完成#33上线组合检查前不再起完整Vitest。报告paper/materials/20261022-issue36-visible-brain-tabs/report.md。
+- 2026-10-22 08:56 CST：[ops] #16数据/格式/检索/固定五类及R411自然空库验收核同，按基础设施范围关单；11735/410、原5275字段与缺失口径/原失败保留。#24主管已关闭，#27依赖解除转ready并实际读回，原ops待派未启动；真实条目/自然命中/科学父仍待，不重full/回放/模型或改对局。原件 paper/materials/20261022-issue16-acceptance-ops/receipt.json；issuecomment-6330017012、6330028673。
 
-- 2026-10-22T12:08:38+08:00 [dev #36] 沿60e0ed688补交学习批次Codex交互TUI（原提示/账号/权限预检，native turn+实际空闲+持久产物+精确PID退场后原finish/关tab；容量限流原会话十分钟退避、三次无工具进展转原ops，回执不确定保留租约）及#33既有Codex/dsh通知→脱敏实时文本→只读tail（4MiB双份滚动、128KiB队列、写失败不影响答题）；定向16文件218过、最终隔离/公开摘要增量5文件54过、最终tsc0、40输入SHA读回相同。遵守重任务窗口未重跑full；原full仅初版，新增完整组合及自然TUI/直播待原集成员/ops。未运行play、改live/STOP/共享配置或关闭他会话；生产brain_view沿原off门。材料paper/materials/20261022-issue36-interactive-learner/。
+- 2026-10-22T09:06:56+08:00 [ops] #20有效on/STS2-only/唯一stall核同；原tick累计6真实notify且原日志各唯一done，2superseded不作派发成功、11pending/6保留门，零sending或uncertain；原命名active核同，特定done状态/接续升级/锁忙/最终回收仍自然待验，保持开放。不新tick/full/模型/任务/游戏操作，原件 paper/materials/20261022-issue20-runtime-ops/receipt.json；issuecomment-6330154431。
 
-- 2026-10-22T13:52:34+08:00 [dev #36] 沿4500cdb50修复审查6332627007生命周期阻断：所有退出/按键先核监督租约、精确PID/birth、pane/前台/cwd和人工输入，不确定统一75保留原会话/租约，不升级强杀；原生回合按一次性marker+完整提示SHA绑定明确发送/接收的continuation，Python沿相同绑定独立核验。原样4反例先全红后全绿；最终定向8文件146过、Python18过、tsc0、46输入SHA读回同，退场元数据延迟首轮2失败及固定回归原件保留。未跑full（#33原窗口优先）、未运行play或改main/live/STOP/共享配置/关闭他会话；完整组合与自然TUI/直播仍待原集成员/ops。材料paper/materials/20261022-issue36-lifecycle-r3/。
+- 2026-10-22T09:19:40+08:00 [ops] #25 R411首DFY完整读回：16脑题/76开卷Jev预算范围核同，26无开卷基础包超24KB保缺口并入原工程队列；固定7牌/1敌人参考不代历史在途采用。交主管验收不关单、不重发布/full/API或前后指标对比；paper/materials/20261022-issue25-readback-ops/receipt.json。
+
+- 2026-10-22T09:31:12+08:00 [ops] 接#33 main准入，以R411组合#33+#26及所需回执/按局配置55叶；原锁占用首准入未跑检查，唯一PID3113069排原kernel锁后重建/tsc/full，完成回原队列。未发布/热切/恢复#31试验，首局验收待；paper/materials/20261022-issue33-live-ops/receipt.json。
+
+- 2026-10-22T09:22:05+08:00 [ops] 09:13八原notice原文/证据/双箱与watcher实际转达证明核同；原CLI不兼容三research、两角色登记pending，保旧rc2/false与科学父，不重试/代ACK/重复提醒或重模型/full/dataset。paper/materials/20261022-0913-ops/receipt.json。
+
+- 2026-10-22T09:38:53+08:00 [ops] #8 R411四叶核同；原R4完整proposal/四question/SHA保留，唯一notice f9d1cd080ff9e555700887e2真实双箱转发及ops本人CLI ack0，watcher两角色待本人回执，交review、不代ACK/关科学父/续批/重发布。paper/materials/20261022-issue8-role-ops/receipt.json。
+
+- 2026-10-22T09:42:53+08:00 [ops] 090940-s2唯一dataset正常日志后因新增原R4通知触发收尾attention，保十waiting/失败、不重生成器；R4已ops ACK等本人角色。#33并行Vitest守卫使原检查在tsc/full前退出，55叶保留、首检查待独占窗口，不叠full/守候/发布。paper/materials/20261022-0937-ops/receipt.json。
+- 2026-10-22T09:45:06+08:00 watcher/集成员 #8：沿正式R4通知f9d1cd080ff9e555700887e2实读四异议并逐字在本会话告Roy，本人watcher_received/roy_notified原CLI均0且回执/证据SHA独立读回；ops原ACK、六份原件和提案falseflags保持，R411既有发布不重复full/上线。材料 paper/materials/20261022-issue8-role-integrator/，交主管验收关闭；REFLEX off、草稿0，不关闭科学父，其他研究task CLI仍pending。
+
+- 2026-10-22T09:45:57+08:00 [ops] 090940主策略十waiting/无新源或纯bug，76产物/十原文/483原段核同、13/579完整；原R4新增notice使首次准入在dataset前停止，无本批生成器日志，不借s2补完成。保attention/科学父，不重dataset/full/合入，live不动；paper/materials/20261022-0944-ops/receipt.json。
+
+- 2026-10-22T09:54:46+08:00 [ops] #26四叶/55候选核同，本机MCP14工具/六查询与四负控、来源和关键统计读回通过；探针解析初错保留。仅固定候选消费，R411未含数据、#33组合full待原窗口，不单发/叠full或关科学父；paper/materials/20261022-issue26-consumer-ops/receipt.json。
+
+- 2026-10-22T09:59:45+08:00 [ops] 094302-fix无新源；157SHA/53旧子项48main祖先核同，tsc0/12定向44过非full，strict162源差导致failed/rc0保留。#25固定26请求压缩后11仍超24KB(max37383)，补原issue/队列，不空合并/重full或改live；paper/materials/20261022-0955-ops/receipt.json。
+
+- 2026-10-22T10:15:44+08:00 [ops] #27冻结52输入/434结束Silent局、独立树与协议9任务准备完成，渲染/扫描0；原10:13两策略槽占用，未启动模型，保原完成事件接续，不据准备关单或冒live/自然命中；paper/materials/20261022-issue27-dispatch-ops/receipt.json。
+
+- 2026-10-22T10:20:00+08:00 [ops] #33+#26原55叶/tree核同；此前未跑full。唯一驱动3387945内核等集成员#35新Vitest3369154退出，再沿原锁首次组合检查，旧失败保留；未模型/轮询/发布/额外局，首局读回待。paper/materials/20261022-issue33-window-ops/receipt.json。
+
+- 2026-10-22T10:23:56+08:00 [ops] 101301-fix无新源，157SHA/53旧子项48祖先核同；tsc及3文件12例0非full，strict162差/failed rc0保持。八notice原实际转达证明同、CLI登记仍pending；不重探针/代ACK/空合并/叠dataset或full，paper/materials/20261022-1021-ops/receipt.json。
+- 2026-10-22T10:40:28+08:00 — 集成员核验 #35：0485abd6f 已合本地 main c208665e6；独立 tsc/Python0、完整655文件/6174通过/2既有跳过，2116输入SHA不变，双引擎固定商店原计划理由/重启读回通过；绑定按原锁备份恢复校验，待 ops 精确live组合/自然边界发布及首局读回。报告 paper/materials/20261022-issue35-integrator-review/；未改live/STOP。
+
+- 2026-10-22T10:44:20+08:00 [ops] 八原异议及实际转达证明SHA核同，原CLI不支持三research身份、两角色登记仍pending；保原拒绝/科学父，不重复提醒或代ACK，不叠任务/改live。paper/materials/20261022-1043-ops/receipt.json。
+
+- 2026-10-22T10:53:59+08:00 [ops] 101301-s2唯一dataset后#35十一源变化保attention；#33旧3387945知识锁忙且未full，同55叶3534422等锁后首次full运行中；#36 hosting实际brain_view=off、无显式启用覆盖，供原集成员合main前核回，自然启用待。仅原事件，不重dataset/full/模型/局；paper/materials/20261022-1044-ops/receipt.json。
+
+- 2026-10-22T11:00:24+08:00 [ops] #35原14叶/main、12核验原件及655文件6174+2绿已核；隔离后续67路径f01856a4准备无冲突，尚未测试/发布，排#33实际live之后；原55叶检查不变，无新增full/模型/局。paper/materials/20261022-issue35-release-prep-ops/receipt.json。
+- 2026-10-22T11:10:12+08:00 [Claude] Roy 10-22：上线检查优先占用重任务窗口，有上线检查排队时开发会话暂缓新的完整 Vitest（#20 补充 3）。开卷只给大脑；Jev 出牌不附开卷、保持 V5 逻辑，后续优化走 Jev 条目（如更多 reflex 经验条目，#28）；#25 按大脑路径关闭，Jev 去开卷另开 #37。
+
+- 2026-10-22T11:19:20+08:00 [ops] #36原候选17叶/14原件与专项核回，生产off/无启用覆盖；#33唯一full仍持锁，终局后给原集成员绑定安全main短事务优先于本ops下一重检查，发布次序不变。无新等待者/模型/局，paper/materials/20261022-issue36-window-followup-ops/receipt.json。
+
+- 2026-10-22T11:28:59+08:00 [ops] #33+#26首轮full失败留原件；漏带两canonical helper补齐后定向17过，另两status-null原工程链pending，不重full/模型或发布。#36旧main窗口依原集成员取消，交互TUI待补交、视图off，见paper/materials/20261022-issue33-full-terminal-ops/receipt.json。
+
+- 2026-10-22T11:38:42+08:00 [ops] 101301主策略源码漂移在dataset前attention，61产物/十waiting保留；0268旧注8与原帧14异议入双箱沿原watcher转Roy pending，不改知识/参数或重dataset/full/模型/合入。paper/materials/20261022-1136-ops/receipt.json。
+
+- 2026-10-22T11:45:38+08:00 [ops] 八原notice送达证据核同、CLI三research角色登记仍pending；#28候选21源叶/1测试修补与原日志核回，完整/main门沿#33/#35之后原队列，学习/改善/开关/A-B未验。不重full/模型或改live。paper/materials/20261022-1143-ops/receipt.json。
+
+- 2026-10-22T11:49:53+08:00 [ops] codex3两home新目录/key预检通过，唯一事务codex3-20261022-1146/控制器3783940已draining并持自有闸；旧workers/在途开发与集成员不热切，选择器/新UUID/消费者未完成。本ops交接就绪后空闲，沿原控制器验证/释放，不造切换成功。paper/materials/20261022-codex3-switch/receipt.json。
+- 2026-10-22T12:04:57+08:00 [Claude] Roy 10-22：主检出 run.sh 随 #33 合入使 live 08:55 起用上 session 模式，先保留并登记为已生效，对局大脑强度从下一局起调为 high，#33 之后照常上线；启动脚本纳入发布流程记入 #20。codex1 额度用完，交 ops 按 docs/llm-handoff.md 切到 codex3，在途会话不热切。
+
+- 2026-10-22T12:19:30+08:00 [ops] Roy撤回换号至codex1周90%，唯一原事务cancelled/实际控制器退出，只撤自有两旗，codex1/原session与其他STOP/PAUSE保留；session实际观察补记，high受旧H1硬编码覆盖，新三叶窄修红绿与唯一宿主检查排原锁，未发布/冒实际降档。paper/materials/20261022-codex3-abort/receipt.json。
+
+- 2026-10-22T12:24:18+08:00 [ops] 三manual依已取消换号/session观察/high唯一窄检查原回执去重；114301fix无源、157SHA/53子项48祖先/21定向过，严格171差保failed/rc0/冷却。八原notice送达证据同，CLI角色登记pending；无新full/模型/dataset或live改动。paper/materials/20261022-1221-ops/receipt.json。
+
+- 2026-10-22T13:01:28+08:00 [ops] #23接08:33停点，114实际去重回收/105成功+1失败分配与归档/绑定核同；近期34新建对11回收，原只读plan0eligible保原门。原采样空间净减38.85GiB未过，部署满24h17:57/原采样满24h18:13分列，保持pending不重部署或扩删。paper/materials/20261022-issue23-continue-ops/receipt.json。
+
+- 2026-10-22T13:14:14+08:00 [ops] 八原notice原文/双箱/角色转达证据核同，三research原CLI不兼容及角色登记pending保留；不重发/代ACK或关科学父，无新full/dataset/模型/局/live改动。paper/materials/20261022-1313-ops/notices-readback.json。
+
+- 2026-10-22 13:29 [ops] #38仅取消未检查的本方锁等待；知识刷新自然完成，4项锁回归通过，原#33唯一接续无持锁经pidfd待#20后入场，保留#33→#35→#28→#37与R411/待验；131302 fix无源码核验后保留failed/rc0/retry，不重复full/model/dataset。证据paper/materials/20261022-issue38-ops/及20261022-1319-ops/。
+
+- 2026-10-22 13:39 [ops] 五批普通收尾parallel-record attention核验：341产物/50 waiting/五proof源码差0，共享dataset已执行不重跑；原扫描后六记录不同，现有输出副本保留，不收编并行记录，不改原失败/父项或冒closed。paper/materials/20261022-1336-ops/。
+- 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。

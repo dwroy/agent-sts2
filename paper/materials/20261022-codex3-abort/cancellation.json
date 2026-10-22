@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-22T12:08:30+08:00",
+  "actor": "ops",
+  "authorization": "paper/materials/20261022-codex3-abort/1792641929841329131-manual.md",
+  "controller_wrapper_pid": 3783940,
+  "controller_pid": 3783941,
+  "controller_start": "6540410",
+  "signal": "SIGTERM via identity-bound pidfd",
+  "controller_exit_verified": true,
+  "activation_never_started": true,
+  "removed_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "kept_original_flags": {
+    "ops/STOP": {
+      "exists": false,
+      "sha256": null
+    },
+    ".worktrees/regent-climb/ops/STOP": {
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    },
+    ".worktrees/regent-climb/ops/codex-ops/PAUSE": {
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    }
+  },
+  "selectors_unchanged": true,
+  "reason": "Roy defers switch until codex1 weekly usage reaches 90%; reported current usage 84%, not independently probed"
+}

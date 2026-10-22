@@ -5531,3 +5531,457 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22 08:45 CST — 0843 九事件核验
 
 081301主策略原报告/失败已核：自动收尾在dataset前因main于08:41合入#33两提交、46源码路径变化停止；本批81产物、十份原文、440原始段SHA一致，7/1838题完整阅读、1831未完整审阅，十提案waiting、无新源码/测试/合入/纯bug。实际WT仍bba8原基线且源差空；无started/dataset_attempts或生成器日志，不补closed、不重复dataset。旧宿主封存pending与现sealed分时保留。八条异议原文、证据、双收件箱及watcher实际转达回执再核相同，原CLI SHA未变，仍不支持三research任务，后两角色正式登记pending；保旧拒绝/false，不改名、不代ACK、不重复提醒。保牌堆身份、配对增量、跨界HP、逐卡分母与未知机制限制及科学父。本轮仅记核验与阻塞，#33合main不代组合发布准入，#26继续等原链；#2已关的窄验收不扩成0332完成，当前R411与对局不动。原件paper/materials/20261022-0843-ops/receipt.json。
+
+
+### 2026-10-22 08:56 CST — #16 基础设施关单，#27 前置交付
+
+#16基础设施验收完成并实际关单：R411九相关叶与原48叶准入相同，原636文件6005过2跳及独立645/6065+2跳的日志SHA复核；11,735题/410局、原5,275奖励所有字段一致，690版本未知及掉血/Boss/终层缺失4,868/536/47保留。五类固定回放命中、无命中逐字节等价，增量351—648B，原热中位0.031—0.060ms仅检索加序列化；29份归档核同。首自然DFY局16脑题均accepted、原事实保留且无strategy_entries，实际库仍缺；幕初仅固定验收，正式策略命中及收益归#27。#24已由主管关闭，故#27解除前置阻塞转ready，实际评论/状态读回完成，原ops待派，尚未启动学习批次。示例不进生产，旧Jev模仿计划保持停止，科学父及当前对局不动。本轮仅核原件和记录，原失败/未知保留，未重生成器/full/回放或模型。原件paper/materials/20261022-issue16-acceptance-ops/receipt.json。
+
+实际回执：https://github.com/dwroy/agent-sts2/issues/16#issuecomment-6330017012；https://github.com/dwroy/agent-sts2/issues/27#issuecomment-6330028673
+
+
+### 2026-10-22T09:06:56+08:00 — #20 后续原 tick 生产读回
+
+原09:04运行切点核实#20保持项目持久/有效on，STS2单项目登记、原stall入口1个，无独立kit定时项及显式环境覆盖；精确95f1efb六文件仍同，未重装。账本19事件中8done分为6条实际提醒与2条superseded，11pending；六提醒各有sent_at、目标pane及原日志唯一done记录，未重复发送。#35/#36现有生命周期active且名称/pane/cwd核同，但kit派发事件已被取代，不借作自动派发成功。6回收保留门未过，当前sending/uncertain为0；watchdog尝试均0，digest正常更新。接收前idle/done状态原回执未留，特定done场景仍待证；普通/错误接续与升级、真实锁忙重试和最终回收仍等自然触发。保有效on让原tick继续，不造故障/任务/守候；回退off保账本。Roy/Claude既有266672619将开发上限改10仅观察，原#33/#26发布链及游戏不动。已回写issue，#20保持开放。原件paper/materials/20261022-issue20-runtime-ops/receipt.json。
+
+实际issue回执：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6330154431
+
+
+### 2026-10-22T09:19:40+08:00 [ops] #25首局完整读回
+
+#25首自然局DFYBEW6NA6AJ读回：R411/live0cd3629d3十项相关源码/知识叶仍同原48叶准入，原发布、497知识保护及双通知不重做。16脑题均accepted并带v0.111.0开卷，封套17260–17834B；封套不代完整增量或端到端延迟。103条Jev原日志中76带开卷，最大23021B；另26条无开卷基础请求已超24000B，最大56272B，均有回答、无记载调用错误，不能报总预算通过，已补原工程队列。固定首局原帧以实际live消费者读回7牌/1敌人非枚举参考；不代历史在途采用、机制known扩大或收益。原8条窗口保留；缺失资料联网补全及主管验收仍待。只读原件及固定无API探针，不重full/模型/MC/数据集，不做前后检查点对比。证据：paper/materials/20261022-issue25-readback-ops/receipt.json、first-run-Jev-readback.json、first-run-brain-readback.json、fixed-natural-input-reference-readback.json。
+
+
+### 2026-10-22T09:31:12+08:00 [ops] #33实际live组合准入接续
+
+#33原功能276f3089c、返修ad5f37ae及集成员main d3751e979准入已接收；五份核验归档压缩/展开SHA核同，原失败与143中断不改写。隔离树从实际R411起，只组合#33与#26四叶及其已验收按局配置/原生回执依赖，共55叶；三方补丁保留live旧行为，未带#31交替试验或质量回放。首个非阻塞重任务准入遇原锁占用，tsc/full均未开始；该失败原件保留。唯一有限检查PID3113069沿原ordinary-close/paper-dataset/tick-snapshot/live锁排队，nice19、固定输入、单worker；取得锁后冻结最新知识并唯一跑重建/tsc/full，结束写原ops队列，不轮询/增模型。尚未获实际live组合准入或发布；后续须离线harness/来源读回、自然边界显式high/max及防旧配置覆盖、绑定/最新知识保护、核号双通知和首局指标，未触发保待验。原件paper/materials/20261022-issue33-live-ops/receipt.json、checks.json。
+
+
+### 2026-10-22T09:22:05+08:00 [ops] 09:13重复科学通知核回
+
+09:13八条重复科学通知已按原件核查：学习者原文、证据SHA、双收件箱实际字节窗口、ops_forwarded回执，以及watcher署名的实读/向Roy可见转达证明全部核同。转达不等Roy本人确认；不以queued或本轮归档冒充送达。原CLI源码SHA未变，manual白名单仍仅四类V6任务，不支持issue4/13/14三类研究身份；旧rc2拒绝原件保留，watcher_received/roy_notified正式登记仍false/pending。本轮不重试相同拒绝、不改任务名/范围/旗标，也不代其他角色ACK或重复发提醒。D1输入保真、D2候选增量、D3跨界HP、#13逐卡施放与unknown、#14固定轨迹和新局留出均沿原提案及科学父待办，不因报告结束关闭。仅追加记录，未改源码/live/当前局或CARDbrain/REFLEXoff，不重模型、MC、dataset或完整检查。逐项回执：paper/materials/20261022-0913-ops/receipt.json。
+
+- 2026-10-22T09:37:15.283835 [ops学习通知/learner-dissent] roy-20261020-v6-reflex-card-pick：{
+  "schema": "learning-notice-proposal-v1",
+  "request_id": "roy-20261020-v6-reflex-card-pick",
+  "task": "v6-reflex-distill-r4",
+  "batch": "v6-reflex-distill-r4-20261020-2313",
+  "character": "silent",
+  "route": [
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "questions": [
+    {
+      "id": "r4-no-supported-pick-advice",
+      "original_goal": "P3以牌组状态与同候选奖励机会提炼可消费的card_pick观察对照。",
+      "conclusion": "本轮只有3个可识别估计，各2拿/2未拿、4独立局，95%区间均跨0；不能声称拿牌收益或实战改进，也不能把旧出牌条目改名。",
+      "evidence": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/candidate-attempts.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/ranking.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/contrast-samples.json"
+      ],
+      "affected_experience_ids": [],
+      "next_step": "沿原请求积累更多已结束且同拿前状态/同候选的真实奖励机会；不放宽为孤立单卡胜率，不启动模拟或续批。"
+    },
+    {
+      "id": "r4-genuine-source-experience-missing",
+      "original_goal": "严格格式要求source_experience引用冻结正式经验，不虚构关联ID。",
+      "conclusion": "PREDATOR与DAGGER_THROW的3个已识别估计没有真实对应的正式card作用域经验；冻结schema要求非空source_experience。全部拒绝导出，不能借用无关旧ID。零均值条目的签名支持/反证计数也均为0，不能编造支持。",
+      "evidence": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/validation-preliminary-receipt.json",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r4-20261020-2313/knowledge/characters/silent/pending/v6-reflex-distill-r4-v6-reflex-distill-r4-20261020-2313/rejected/statistical-candidates.json"
+      ],
+      "affected_experience_ids": [],
+      "next_step": "原ops核本限制。未来有足够证据且沿正式知识授权形成真实来源经验后才能绑定；若拟改来源合同，交原开发/Roy流程，不由本批扩字段。"
+    },
+    {
+      "id": "r4-old-combat-scope-retained",
+      "original_goal": "保留前轮和正式经验的完整覆盖，不以新消费需求缩小分母。",
+      "conclusion": "正式85条及R1/R2/R3的13/85/85条都是combat_line。它们的战斗观察不构成本任务拿/未拿对照；244正式经验仍243 text_only、1 disputed，不代表旧机制被反证。",
+      "evidence": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/prior-entry-dispositions.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/experience-coverage-detail.json"
+      ],
+      "affected_experience_ids": [
+        "silent-knife-trap-count",
+        "silent-footwork-block",
+        "silent-bouncing-flask-poison",
+        "silent-finisher-attacks",
+        "silent-shockwave-duration",
+        "silent-gorget-plating",
+        "silent-strength-weak-observation",
+        "silent-giant-explosion-window",
+        "silent-insatiable-dual-clock",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation",
+        "silent-deck-burst-observation",
+        "silent-deadly-poison-application",
+        "silent-noxious-fumes-growth",
+        "silent-bubble-bubble-condition",
+        "silent-vambrace-opening-block",
+        "silent-frail-card-block",
+        "silent-kin-poison-sl-observation",
+        "silent-accelerant-triggers",
+        "silent-outbreak-immediate-poison",
+        "silent-poisoned-stab-components",
+        "silent-well-laid-plans-retention",
+        "silent-afterimage-per-card-block",
+        "silent-sai-start-block",
+        "silent-beating-remnant-loss-cap",
+        "silent-captains-wheel-third-turn",
+        "silent-test-subject-phase-reset",
+        "silent-lagavulin-siphon-poison-sl",
+        "silent-obscura-summon-growth",
+        "silent-regret-hand-loss",
+        "silent-shadow-step-delayed-damage",
+        "silent-prowess-strength-dexterity",
+        "silent-toasty-mittens-growth",
+        "silent-abrasive-thorns-dexterity",
+        "silent-speedster-draw-damage",
+        "silent-piercing-wail-temporary-strength",
+        "silent-orichalcum-zero-block",
+        "silent-ripple-basin-no-attack-block",
+        "silent-vajra-opening-strength",
+        "silent-terror-eel-vigor-vulnerable",
+        "silent-malaise-x-debuff",
+        "silent-accuracy-shiv-scaling",
+        "silent-letter-opener-third-skill",
+        "silent-maul-shared-growth",
+        "silent-wither-end-turn-loss",
+        "silent-forgotten-soul-exhaust-damage",
+        "silent-aeonglass-artifact-growth-sl",
+        "silent-daughter-wind-attack-block",
+        "silent-shuriken-attack-count-strength",
+        "silent-reptile-trinket-temporary-strength",
+        "silent-decimillipede-reattach-poison",
+        "silent-kaiser-crab-facing-sl",
+        "silent-expose-vulnerable",
+        "silent-spiked-gauntlets-power-cost",
+        "silent-mummified-hand-free-card",
+        "silent-paper-krane-weak-multihit",
+        "silent-sparkling-rouge-turn-three",
+        "silent-tuning-fork-skill-block",
+        "silent-cloak-clasp-end-turn-hand-block",
+        "silent-queen-poison-main-target",
+        "silent-corrosive-wave-draw-poison",
+        "silent-shadowmeld-new-block-double",
+        "silent-anticipate-temporary-dexterity",
+        "silent-devoted-sculptor-ritual-growth",
+        "silent-envenom-unblocked-attack-poison",
+        "silent-kunai-attack-count-dexterity",
+        "silent-mirage-poison-card-block",
+        "silent-snecko-skull-poison-application",
+        "silent-ornamental-fan-attack-block",
+        "silent-queen-poison-window-sl-observation",
+        "silent-throwing-axe-first-card-replay",
+        "silent-rolling-boulder-start-growth",
+        "silent-sturdy-clamp-retention-cap",
+        "silent-phantom-blades-first-shiv",
+        "silent-doubt-end-turn-weak",
+        "silent-precarious-shears-defense-observation",
+        "silent-knowledge-demon-healing-sl-observation",
+        "silent-helical-dart-shiv-dexterity",
+        "silent-mad-science-custom-strangle",
+        "silent-three-knights-output-buffer-observation",
+        "silent-thieving-hopper-poison-sl-observation",
+        "silent-bread-energy-timing",
+        "silent-construct-artifact-growth",
+        "silent-grand-finale-empty-draw",
+        "silent-burst-next-skills-replay",
+        "silent-glitter-future-reward-replay",
+        "silent-belt-buckle-empty-slots-dexterity",
+        "silent-lords-parasol-shop-acquisition",
+        "silent-iron-club-four-card-draw",
+        "silent-paels-legion-card-block-double",
+        "silent-ghost-seed-starter-ethereal",
+        "silent-bronze-scales-per-hit-thorns",
+        "silent-slumbering-beetle-wake-growth",
+        "silent-diamond-diadem-opening-retention",
+        "silent-serpent-form-per-card-damage",
+        "silent-ceremonial-beast-threshold-growth-sl",
+        "silent-byrdonis-strength-multihit-observation",
+        "silent-nightmare-next-turn-copies",
+        "silent-eternal-feather-rest-arrival-heal",
+        "silent-fasten-defend-extra-block",
+        "silent-miniature-tent-two-rest-options",
+        "silent-planisphere-unknown-arrival-heal",
+        "silent-fan-of-knives-capacity",
+        "silent-flechettes-remaining-skills",
+        "silent-white-star-double-rewards",
+        "silent-hidden-daggers-discard-shivs",
+        "silent-memento-mori-discard-scaling",
+        "silent-fiddle-draw-lock",
+        "silent-smooth-stone-opening-dexterity",
+        "silent-mr-struggles-turn-start-damage",
+        "silent-whispering-earring-first-turn-control",
+        "silent-juggernaut-block-gain-triggers",
+        "silent-infested-prism-tainted-skill-cost",
+        "silent-precise-cut-hand-count-observation",
+        "silent-fishing-rod-random-upgrade",
+        "silent-permafrost-first-power-block",
+        "silent-exoskeleton-poison-hit-cap",
+        "silent-beckon-held-end-turn-loss",
+        "silent-dowsing-rod-question-task",
+        "silent-lost-forgotten-possession",
+        "silent-pumpkin-candle-charge-energy",
+        "silent-bing-bong-tooth-five-rings",
+        "silent-paels-flesh-third-turn-energy",
+        "silent-berserker-growth-sl-observation",
+        "silent-tough-bandages-discard-block",
+        "silent-bowlbug-rock-full-block-stun",
+        "silent-royal-poison-blood-vial-opening-net",
+        "silent-replay-effect-counter-observation",
+        "silent-metamorphosis-generated-free-attacks",
+        "silent-stone-humidifier-rest-growth",
+        "silent-survivor-neutralize-discard",
+        "silent-apparition-player-intangible",
+        "silent-tunneler-burrow-block-stun",
+        "silent-gardener-skittish-shield",
+        "silent-panic-button-card-block-lock",
+        "silent-toxic-paid-exhaust-end-turn-loss",
+        "silent-snakebite-retained-poison",
+        "silent-scroll-paper-cuts-unblocked",
+        "silent-ceremonial-beast-ringing-one-card",
+        "silent-vantom-slippery-growth",
+        "silent-vantom-sl-observation",
+        "silent-caltrops-thorns",
+        "silent-sewer-clam-pressure-growth",
+        "silent-hunter-tender-card-attributes",
+        "silent-zapbot-high-voltage-growth",
+        "silent-haze-group-poison-weak",
+        "silent-apotheosis-combat-upgrades",
+        "silent-cure-all-energy-draw",
+        "silent-dark-shackles-temporary-strength",
+        "silent-horn-cleat-second-turn-block",
+        "silent-fysh-resource-sl-observation",
+        "silent-knowledge-demon-sloth-replay-observation",
+        "silent-bullet-time-no-draw-observation",
+        "silent-radiant-tincture-energy-window",
+        "silent-speed-potion-temporary-dexterity",
+        "silent-cunning-potion-shiv-capacity",
+        "silent-regen-potion-decay-heal",
+        "silent-strangle-following-card-hp-loss",
+        "silent-unsettling-lamp-first-debuff",
+        "silent-act-transition-missing-hp-heal",
+        "silent-myte-toxic-block-sl-observation",
+        "silent-dexterity-potion-card-block",
+        "silent-heart-of-iron-plating",
+        "silent-poison-potion-observed-application",
+        "silent-hand-trick-sly-card-limit",
+        "silent-dampen-battle-upgrade-observation",
+        "silent-three-knights-revival-blood-price",
+        "silent-liquid-bronze-per-hit-thorns",
+        "silent-tingsha-discard-damage",
+        "silent-tungsten-rod-hp-loss-observation",
+        "silent-infection-end-turn-block",
+        "silent-stone-calendar-end-turn-window",
+        "silent-toric-toughness-delayed-block",
+        "silent-battle-trance-draw-lock",
+        "silent-double-boss-resource-handoff",
+        "silent-alchemize-potion-resource-observation",
+        "silent-fight-me-upgraded-dual-strength",
+        "silent-ghost-in-a-jar-current-turn",
+        "silent-very-hot-cocoa-opening-energy",
+        "silent-spiny-toad-draw-block-sl",
+        "silent-rainbow-ring-three-card-types",
+        "silent-offering-direct-hp-cost",
+        "silent-bygone-effigy-wake-strength",
+        "silent-mercury-hourglass-start-observation",
+        "silent-fortifier-existing-block-triple",
+        "silent-axebot-stock-phase-budget",
+        "silent-stolen-card-availability-observation",
+        "silent-louse-progenitor-strength-growth",
+        "silent-calculated-gamble-upgraded-hand-reset",
+        "silent-unmovable-first-card-block",
+        "silent-petrified-toad-opening-rock",
+        "silent-flex-potion-temporary-strength",
+        "silent-dodge-and-roll-delayed-block",
+        "silent-infinite-blades-start-turn-shiv",
+        "silent-foul-potion-slot-replacement-observation",
+        "silent-weak-potion-hatching-window-observation",
+        "silent-lizard-tail-observed-revival",
+        "silent-panache-fifth-card-group-damage",
+        "silent-jaxfruit-strength-vulnerable-observation",
+        "silent-fabricator-living-summon-observation",
+        "silent-fairy-revival-exit-observation",
+        "silent-bottled-potential-execution-observation",
+        "silent-blur-leftover-block-carry",
+        "silent-core-poison-defense-observation",
+        "silent-core-dexterity-defense-observation",
+        "silent-core-shiv-defense-observation",
+        "silent-core-discard-relic-observation",
+        "silent-beetle-juice-shrink-observation",
+        "silent-chomper-artifact-temporary-block-sl-observation",
+        "silent-louse-poison-window-sl-observation",
+        "silent-leg-sweep-weak-vulnerable-observation",
+        "silent-ship-in-bottle-delayed-block",
+        "silent-entomancer-growth-hand-window",
+        "silent-ricochet-discard-intangible",
+        "silent-mecha-knight-strength-burn-budget",
+        "silent-kusarigama-random-hit-observation",
+        "silent-eternal-armor-finite-plating",
+        "silent-living-fog-smoggy-legality",
+        "silent-two-tailed-rat-backup-budget",
+        "silent-duplicator-next-card-replay",
+        "silent-ovicopter-hatch-poison-survivors",
+        "silent-bowlbug-nectar-buff-window",
+        "silent-flick-flack-discard-aoe",
+        "silent-intimidating-helmet-observed-replay-block",
+        "silent-owl-soar-double-damage-observation",
+        "silent-chemical-x-observed-effects",
+        "silent-stone-armor-plating",
+        "silent-constrict-poison-victory-blood-price",
+        "silent-rollout-endpoint-progress-observation",
+        "silent-parrying-shield-end-turn-hit",
+        "silent-volley-generated-x-energy",
+        "silent-skill-potion-empty-hand-consumption",
+        "silent-g1a-aeonglass-calibration-boundary",
+        "silent-g1a-queen-calibration-boundary",
+        "silent-g1a-test-subject-calibration-boundary",
+        "silent-g1a-fixed-production-boundary",
+        "silent-0332-continuation-contract-boundary",
+        "silent-sl-potion-retry-opportunity",
+        "silent-h0-kaiser-crab-calibration-boundary",
+        "silent-h0-knowledge-demon-calibration-boundary",
+        "silent-h0-insatiable-calibration-boundary",
+        "silent-h0-end-turn-measurement-boundary",
+        "silent-aeonglass-intensity-observed-turns",
+        "silent-queen-burn-bright-ally-strength"
+      ],
+      "next_step": "保留原用途和历史；本任务范围内不运输旧标签。"
+    },
+    {
+      "id": "r4-unavailable-provenance-and-damage",
+      "original_goal": "只用真实选择前信息及实际后续战斗，不填未知字段。",
+      "conclusion": "153个来源不连续、44个非三选一机会排除；下一精英与候选组合缓存均未知。没有可信逐伤害分子/分母，damage_per_turn不估计。启动清单task/character缺显式字段、source_manifest_sha无指向路径；已用任务/配置、精确commit/tree/逐文件SHA补核。另1个早期结束局角色及原帧缺失，未冒称Silent或Ironclad。",
+      "evidence": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/inventory-summary.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/unknown-character-audit.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/input-verification.json"
+      ],
+      "affected_experience_ids": [],
+      "next_step": "保留未知及原分母；后续由ops完善冻结元数据和按原角色流程采集真实证据，不回填最终牌组或敌HP差。"
+    }
+  ],
+  "delivery_status": "requires_original_ops_forwarding",
+  "ops_forwarded": false,
+  "watcher_received": false,
+  "roy_notified": false,
+  "reason": "本角色只获准写scratch/pending；此文件是交接原文，不是共享通知投递或其他角色ACK。"
+}
+ 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/f9d1cd080ff9e555700887e2.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:f9d1cd080ff9e555700887e2 -->
+
+
+### 2026-10-22T09:38:53+08:00 [ops] #8 R4正式通知链
+
+#8四项工程/协议叶已随R411发布，实际live与main字节核同，不重发版本或完整检查。原R4启动、bootstrap、完整proposal及旧拒绝/确认六份SHA核同，四question id及原proposal三项false均保留。原程序notify已按完整原字节创建唯一正式notice f9d1cd080ff9e555700887e2，实际写入双收件箱；ops本人沿已上线CLI登记ops_forwarded退出0，并独立读回实际回执及后两角色false。新通知不是新父要求、研究批次或知识发布。历史watcher转达与Roy接受四异议回执保留，不代本人登记；已把精确notice/source交回#8核收，两项角色登记仍pending。draft0、区间跨零、缺source_experience及旧combat_line用途不扩大；不续R4/模拟或开REFLEX，不关科学父。仅落记录，不改源码/live/当前局。原件paper/materials/20261022-issue8-role-ops/receipt.json、manual-source.json。
+
+
+### 2026-10-22T09:42:53+08:00 [ops] 09:37三事件核收
+
+09:37三事件核收：R4正式notice f9d1cd08原文/四question/SHA及双箱核同，ops ACK已0，#8已转review等watcher本人两角色登记，不重复发送/代ACK或续批。090940-s2十提案waiting、无源/合入/新纯bug；80产物冻结、十原文及12封存核同、18246原段回源核SHA，完整审阅8/811、803未读。唯一dataset日志正常终尾，随后新增R4通知触发原收尾守卫；不是本学习者新异议，原attention/正式成功字段缺保留，不重生成器。#33原PID3113069在取得锁后检出#35/#36并行Vitest，未冻结知识或启动重建/tsc/full即退出；55叶与预备树未变、实际live仍R411。首轮实际组合检查保pending，交原发布队列协调独占窗口；不杀其他任务、叠full/模型或派守候，不发布/热切。科学父、CARDbrain/REFLEXoff及Regent暂停保持。原件paper/materials/20261022-0937-ops/receipt.json。
+
+
+### 2026-10-22T09:45:57+08:00 [ops] 09:44主策略收尾注意
+
+090940主策略批次已核：十项均waiting，owner无源码/知识改动、提交、合入或补测，新纯bug为无。76份产物清单、十份恢复的原提案、封存文件及483段原日志字节SHA核同；完整逐题审阅13/579，566未读分列，不把机器提取当完整研究。原ordinary基线存在，唯一新增notice为ops按#8建立的原R4正式通知；主批报告没有新增异议。原初次准入因此在dataset前停止，未有started/dataset_attempts/ledger或dataset日志，不能借同前缀s2的唯一dataset证明补完成。保持attention、原报告和科学父，未启动/重启生成器，不手改基线通知列表、收尾成功字段或重合入。工作树.git及真实顶层核实，避免回收后Git向上读主根；原结束clean与当前现场分时保留。V6历史no_match/开关未知不补off；live仍R411，CARDbrain/REFLEXoff及Regent暂停不动。原件paper/materials/20261022-0944-ops/receipt.json。
+
+
+### 2026-10-22T09:54:46+08:00 [ops] #26候选MCP固定读回
+
+#26来源c3716ba15/main c905b2d63仍为当前main祖先，工具/测试/构建器/1775714B聚合四叶与原交付及#33候选逐字节核同；55叶预备树未变。一次本机MCP固定消费者复核：14工具含六统计入口，六类有效查询完整输出/来源/SHA审计一致，最大8964B；SNAKEBITE2188/533、首幕跳过1456/13307、百足死亡52/762及758局82玩家核同。三无数据与一schema拒绝负控通过，流派/共现保无法区分和非因果限制，不混自有分母。探针初稿误将schema错误文本当JSON，修正探针后复核0，原错误保留、产品未改。仅候选接口可读，不代已发布或自然采用；live仍R411且无该数据文件。#33首次组合full尚未启动，原窗口仍见#35 Vitest；不单发#26、不叠full/模型/外部拉数或额外局。依原同期发布/首局/主管核收，不做前后指标比较、不关科学父。原件paper/materials/20261022-issue26-consumer-ops/receipt.json、fixed-MCP-readback.json。
+
+
+### 2026-10-22T09:59:45+08:00 [ops] 09:55无源修复批次
+
+094302-fix无新增源或提交受阻，不做空合并。157文件SHA、53既有main子项/48祖先与原候选接续核同；tsc0、12定向文件44例0，非full。首次配置加载在收集前EROFS及原误报保留、精确SHA已重算。基线9a894427对live严格SOURCE_PATHS差162、宽代码/数据差369，verify_empty_fix仍拒绝，原failed/rc0/mergednull与冷却保留。原#25的26请求/回答逐SHA核同；现有投影及压缩固定诊断后11条仍超24000B、最大37383B，最大原56272B/plan40771B。两诊断模块与live字节同，但探针强制COMBAT_ENTRIES=on，仅固定诊断不代生产配置或预算修复。补回原#25及队列，保全部候选/unknown/审计，不删事实、抬预算或重复模型/MC/full；其他原候选和科学父保留。只落记录，当前局/live/REFLEXoff不动。原件paper/materials/20261022-0955-ops/receipt.json、budget-probe-readback.json。
+
+
+### 2026-10-22T10:15:44+08:00 [ops] #27首批任务准备与原槽待派
+
+#27首批任务已备妥并进入原ops待派清单，尚未启动学习者。前置#16/#24关闭状态已核实；冻结52份输入、434个已结束Silent局及日志字节上限，#16数据集与#24来源表SHA逐项核同，纳入#25开卷。新任务明确允许协议第9节外部证据，与自有证据分账，保留版本、样本、反例和观察性边界；优先第一/二幕Boss、拿牌及幕初方向，要求真实条目、自测、原合入发布和首自然脑题命中。独立工作树已由原分配器创建，任务渲染与gitleaks通过。派发门前10:13主/s2策略两槽已占用，原断言保留，未调用herdr或模型；沿原批次完成事件接续同一待派任务，不重复建批。初始化局清单字段误用已在启动前纠正，初稿留档。high仅请求档位，无原生消费回执；live仍R411，发布及自然命中两项验收待完成。原件paper/materials/20261022-issue27-dispatch-ops/receipt.json、capacity-gate.json；任务notes/learning-questions/issue-27-brain-strategies-task.md。
+
+
+### 2026-10-22T10:20:00+08:00 [ops] #33+#26原完整检查窗口接续
+
+#33+#26原组合检查已按10:08主管指示接续，同一55叶与预备树d768564f逐项核同，live仍R411。10:05结束的是#35开发者检查；实核集成员另于10:15启动完整Vitest，PID3369154、nice19、单worker仍运行。原09:29锁忙及09:37并行检查阻断均保留，重建/tsc/full此前未执行。唯一原检查驱动PID3387945已实际启动，nice19，以该既有PID/start的内核退出信号等待，不轮询、不发信号；退出后沿原收尾/数据/快照/live锁及无并行Vitest门执行首次重建、tsc、full，冻结知识/输入SHA，终局写原事件。当前tsc/full尚未开始，不冒检查绿或发布；后续准入、自然边界及首局工具/来源/预算验收仍待。无模型/额外局，#31仍取消。原件paper/materials/20261022-issue33-window-ops/receipt.json；终局沿20261022-issue33-live-ops/checks.json。
+
+
+### 2026-10-22T10:23:56+08:00 [ops] 10:21原fix与八异议回执核对
+
+101301-fix批次无新增源码、提交或合入受阻；11份产物SHA、157相关源文件与上批相同、53既有子项及48祖先提交已核。tsc0、定向3文件12例0，扫描零发现，无重跑或full；严格main/live仍差162个SOURCE_PATHS，原empty-fix门不通过，failed/rc0及冷却保留，不空合并或补成功。#25既有26题压缩后11题仍超24KB、最大37383B的缺口及原owner接续不变，本批与ops均未重跑诊断，不重提相同待办。八异议原文、证据SHA、双箱实际窗口、ops转达及watcher实读/Roy可见转达证明核同；不推定Roy本人接受，原CLI不支持三research身份，两角色正式登记仍pending。沿原拒绝回执保留兼容阻塞，不改名、代ACK或重复提醒，科学父保持。仅记录，不启动dataset/full/模型/刷新，不改live或#33原检查驱动。原件paper/materials/20261022-1021-ops/receipt.json、fix-readback.json、notices-readback.json。
+
+
+### 2026-10-22T10:44:20+08:00 [ops] 八项原学习异议重复事件核对
+
+10:43八项重复异议已沿原件逐一核回：原观点、新结论、证据/影响ID及下一步与原学习者文件一致；两收件箱的实际字节窗口、ops_forwarded写入回执、watcher署名实读及Roy可见转达证明SHA均核同。保留D1冻结提取主动剥离牌堆、D2绝对结果不能证明配对增量、D3终局跨界9HP未归因的限制；#13候选槽不作独立施放分母、钢铁风暴及EXPOSE缺口和SPORE零施放unknown保持；#14局部策略差异不外推整体误差根因。当前通知CLI源码SHA未变，仍不支持三原research任务身份，watcher_received/roy_notified正式登记继续pending；既有转达证明不代Roy本人接受或登记成功。原rc2拒绝保留，不改名、重试未变拒绝、代角色ACK或重复提醒。父要求、失败与待办保持，未启动源码修改、模型/full/dataset/刷新或游戏动作，live不动。原件paper/materials/20261022-1043-ops/receipt.json；前证20261022-1021-ops/notices-readback.json。
+
+
+### 2026-10-22T10:53:59+08:00 [ops] 普通收尾漂移、#33原检查及#36生产前置
+
+101301-s2唯一dataset正常终局、账本审计0后，因main合入#35的11源码路径，二次收尾attention保留；66产物、十原提案及163原片段SHA核同。2085请求中10行完整/六独立决定，2075未完整审阅、十waiting，无新源/测试/合入或纯bug；不补成功字段、不重dataset。#33原3387945等#35退出后，10:44在知识刷新锁非阻塞门失败，此前重建/tsc/full均未执行，持锁者未知，错误保留。同55叶/tree核同，原驱动3534422内核等锁后10:51重建/tsc0、首次full运行中，462知识JSON及2498输入SHA冻结；无轮询/模型/重复full，终局沿原事件。#36生产hosting已设brain_view=off，四运行链进程/三cron无启用覆盖，其他控制保持，供集成员合main前核回；自然启用和对局验收待。live仍R411，科学父/#27待派保持。原件paper/materials/20261022-1044-ops/receipt.json。
+
+
+### 2026-10-22T11:00:24+08:00 [ops] #35原交付核对与后续候选准备
+
+#35来源0485abd6f、main集成c208665e已核祖先，14交付文件逐字节一致；12份集成员原件SHA、原完整655文件6174通过/2跳过及Python17项核回，固定Codex/DeepSeek模拟链各一次商店请求执行七动作、四买牌理由/来源及重启四条恢复不冒自然消费。2116输入中2114当前SHA同，一受保护环境路径不读，ops收件箱为检查后记录变动，未冒全部当前相同。经原分配器创建隔离后续树，从原#33+#26候选叠#35补丁无冲突，共67路径，14叶仍等main；此树未受测、未武装发布，不触在跑55叶原检查。按issue顺序，待#33先实际发布，再以新live/最新知识精确重核#35，经原锁/自然边界核号及首局本局历史、20字理由/来源、恢复日志读回；固定测试不代上线。开头4+最近36及两万JS字符上限保留，不写成字节预算。无新full/模型/局，live仍R411，未关issue或科学父。原件paper/materials/20261022-issue35-release-prep-ops/receipt.json、feature-leaves.json。
+
+
+### 2026-10-22T11:19:20+08:00 [ops] #36原main短窗口协调
+
+#36技术核验已交原集成员，当前review待main，未发布。17交付叶在原source、受测及07325候选相同；14份本地原件SHA、独立tsc/Python11/四文件38例/三shell语法0核回，开发654文件6167通过2跳过单列，不冒当前组合独立full。候选仅运维记录变化，代码/配置/测试未变。生产hosting SHA与原关闭回执一致、brain_view仍off；本轮在场一角色链进程及三原cron入口无启用覆盖，无brain-view登记。实核#33唯一驱动3534422/start6176142仍持live-merge锁、原full进行中，未打断或另跑检查。原队列及issue登记：该轮终局释放后，先留原集成员#36绑定备份→main合入→恢复/SHA/模式核验短窗口，再启动本ops后续重检查；#20/#33/#35发布优先级保持。无新等待者/模型/轮询/额外局，不改live或提前启用。自然题目、换局与学习标题验收仍待。原件paper/materials/20261022-issue36-window-followup-ops/receipt.json。
+
+
+### 2026-10-22T11:28:59+08:00 [ops] #33首次full失败与#36新增范围
+
+核#33+#26首次宿主full终局：重建/tsc为0，643文件639过4败，6067例过、3败2跳过，live仍R411。失败包含缺fixture-command导致的收集/导入检查，以及两个包装子进程status=null；后两项缺error/signal，原因保留未知，接原工程链，不加时限或排除断言。冻结2498输入逐项SHA仍同；原驱动未写after清单，另存ops核回。已从获准源码原样补两helper，原55叶不变，新57叶仅暂存；相关两文件17例通过，不冒完整绿。一次因记录脚本目录错误而先跑的失败定向也保留。未重跑full、模型或额外局，不发布；原失败日志/树留存。#36原集成员已因新增交互TUI要求取消旧版main短窗口，开发者确认补交；已撤窗口待办，生产视图仍off。#35保持后续次序，须待实际#33新live重核。原件paper/materials/20261022-issue33-full-terminal-ops/receipt.json。
+
+
+### 2026-10-22T11:38:42+08:00 [ops] 101301主策略原收尾与0268异议
+
+101301主策略自动收尾因批中源码变化停在dataset前：原回执无启动/次数/成功/记录字段且无dataset日志，保attention不重跑。原报告SHA与61产物核同，十提案仍waiting，无源码/测试/合入；两个已live子修复不代整项完成。499题机械核验、5题完整审阅、494未读分列，历史V6开关/完整运行树未知保持。baseline至原proof提交无源码差，而截至当前main有11叶变化，不能误称本批改码。另按原字节SHA核BTS六帧：35→21；旧0268“净扣8”冲突保留，不改经验或调权。原文、证据、影响及下一步已入双收件箱，提醒现有watcher实际转Roy，未获角色回执前维持pending。未重dataset/full/刷新/模型或合入，live仍R411；原失败、十waiting与科学父保持。原件paper/materials/20261022-1136-ops/ordinary-readback.json。
+
+[ops] 学习者原文异议转达（非新增机制或参数）
+
+- BTS F30 70→42获胜，奖励后带液态记忆进F31（286112/286141/286146–147），未到F32。F31 T2 35→21实际损14；旧0268原注同时写30来袭/13牌挡/3覆甲却残留“净扣8”，与原HP差及算术不一致。本轮保留该原注冲突，按原帧用14，不改写旧行；不据此调权或关闭父项。F31 T1睡3→2→1→消失，后续醒后力量2/4、攻击20/22与临时资源分别核。
+
+旧观点：silent-0268旧注写30来袭/13牌挡/3覆甲，却残留“净扣8”。不同结论：本批学习者原帧核为35→21，净损14；本ops在原states按offset/bytes/SHA核六片段，保留旧注与原历史，不据此调权。证据及来源：.worktrees/codex-strategy-silent-20261022-101301/learner/runs/20261022-101323-c95db4f8-f40c-4b30-9faa-20d9b909e323-strategy-proposal/report.md，SHA256=a3d3d4ab7f7ff22de1d8dfdeab36058a313f6f1e648e22c2523bdb2f58efbb09；原窗口见ordinary-readback.json.raw_conflict_window_refs。
+
+影响：silent-0268及原多组件联合验收提案，不以本记录关闭科学父项。下一步：请现有watcher实际读取后告知Roy，并落接收/用户可见转达回执；后续仍沿原学习者证据闭环核旧记录，不新增模型、重试四局、补零或改评分。当前watcher_received/roy_notified均pending，不以收件箱写入当已读或Roy已知。
+
+
+### 2026-10-22T11:45:38+08:00 [ops] 八原通知去重与#28原窗口接续
+
+八条原notice逐项核原文/生产者/来源SHA、ops_forwarded、双收件箱字节窗口与watcher原角色可见转达证据，均同；并非新异议或Roy个人接受。原CLI字节未变，仍不兼容三个research任务，原rc2拒绝与watcher_received/roy_notified=false保留，不重认证/改名/代ACK或重复提醒。D1输入保真、D2候选增量、D3九HP归因、四卡与策略路径科学限制均保持，子项shipped不关闭父。另接#28：21叶与source/候选核同，1测试叶建.cache父目录；原85条及8份日志SHA核同，tsc双0、原定向失败与87过分列，完整仍pending。原集成员沿#33/#35发布检查后接full及main门，框架准入后再沿原槽派学习；未启动回放/学习或开开关。真实改善区间、Roy决定与A/B保留待验。无full/dataset/模型/局或live变更。原件paper/materials/20261022-1143-ops/notices-readback.json、issue28-readback.json。
+
+
+### 2026-10-22T11:49:53+08:00 [ops] codex1→codex3原事务draining
+
+Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146事务。目标仍原codex3/profile，两隔离home新checkCodex及key隔离均通过；仅目录/本地预检，无模型问答。首次begin遇learn锁忙原样保留，原一次性控制器3783940随后取得锁，已draining并自有LLM_DRAIN/PAUSE，未用STOP或发信号。现场48个worker条目含学习、对局/循环、旧账号引擎，非独立任务数，不冒排空。codex/brain选择器仍旧号，实际新UUID及新brain/learner消费待验；原在途开发/集成员不热切，待自然完成或额度后由主管重开。ops当前任务/失败/七科学父及#33/#35/#28顺序已写接管文件，旧20261017交接原字节备份保留。本轮提交后空闲，由原控制器正常quit、目标shell回执及bootstrap验证后才释放自己的闸；不重派旧活或额外开局。原件paper/materials/20261022-codex3-switch/receipt.json。
+
+
+### 2026-10-22T12:19:30+08:00 [ops] 取消换号及session/high两manual处置
+
+已按Roy新指令中止codex3-20261022-1146：绑定PID/start后仅SIGTERM实际控制器3783941，外层3783940自然退出；事务cancelled保历史，锁内核两owned标记后只撤本事务LLM_DRAIN/PAUSE，其他STOP/PAUSE、codex1双选择器及原session未变。周用量84%/90%条件按Roy报告存档，不另探额度/加轮询。原autoplay继续，恢复正常准入，无热切或重复启动。12:04/12:05原文与早先session核查均处理留证；wake锁忙保原队列，并记已处理避免重复中止。session自08:55已核五局142调用记录，按Roy保留补登记运行观察，非#33全包发布。env虽high，原生context仍xhigh，定位旧H1硬编码；独立三叶窄修撤源1败、修后两文件12过/tsc0，唯一完整检查排原锁，不冒已降档；待绿后原准入/自然边界/原生读回。原件paper/materials/20261022-codex3-abort/receipt.json。
+
+
+### 2026-10-22T12:24:18+08:00 [ops] 十二事件核回与去重
+
+三条manual沿eb6baa68原回执去重：codex3事务仍cancelled，自有两旗已撤，codex1双选择器和session保持；周90%再换，84%为Roy原报告，不另探额度。session实际调用与原生字节证据核回，运行观察已登记，不冒#33整包发布；high三叶窄候选已排唯一原锁，未重复实现/full或热切。114301-fix无新源/提交/合入，11产物及157源SHA核同，53历史子项/48祖先核同；较前批3文件变更属#35，未作本批修复。tsc0/5文件21定向过非full；严格main/live171源差，原failed/rc0/冷却保留，不空合并。旧两候选及#25压缩后11条超24KB仍原链，未重探。八notice原文/双箱/实际watcher转达证据同，CLI仍不支持三research，原角色false/拒绝及科学父保持，不重发/代ACK。无新dataset/模型/局或live变更。原件paper/materials/20261022-1221-ops/receipt.json。
+
+
+### 2026-10-22T13:01:28+08:00 [ops] #23接续可持续验收
+
+接上次08:33停点：#23已发布，四核心叶与审定源仍同，真实绑定verify通过，live原缺绑定保持，无需重合入。部署后114棵去重checkout回收，逐棵注册/.git缺失、保留分支HEAD及归档SHA核同；同期105次成功分配+1失败，原失败不改写。全期数量仍覆盖，但08:33后新建34、回收11，近期慢23棵。原worker继续每批限4；最新只读plan零eligible，26项未结算、36身份未知/冲突、22dirty及未发布/在用等原门保留，未手工删除或扩#18范围。原disk-admission首样21日18:13至22日12:43净减38.85GiB，不能全归因回收，空间验收未过。部署满24h为今日17:57，原采样满24h最早18:13，均不可提前通过。保持waiting-release及原调度接续，不另设清理模型/轮询/计时器，不关闭科学父。原件paper/materials/20261022-issue23-continue-ops/receipt.json。
+
+
+### 2026-10-22T13:14:14+08:00 [ops] 八原学习通知去重与登记阻塞
+
+八条通知沿12:21原回执逐项核回：学习者完整异议/来源SHA、ops_forwarded、双收件箱原字节窗口、watcher原角色实际读取及可见转达证据均一致；这不代Roy个人接受或科学验收。原CLI字节仍同，不支持issue-4/13/14三个research身份，原rc2拒绝及watcher_received/roy_notified=false保持，登记阻塞仍pending；未重认证、改名、代填角色或把queued记送达。D1显式牌堆剥离/身份问题、D2配对增量未校准、D3九HP口径与未知归因均保留；#13逐卡独立局/施放分母、钢铁风暴生成边界、SPORE未知、EXPOSE升级/清挡/制品缺口仍沿原提案；#14局部策略路径不外推整体4.40倍根因。原owner下一步及科学父不因子项shipped、报告结束或通知归档而关闭。既有实际转达证据未变，本轮不重复提醒/发学习；无新full、dataset、模型、实验局或live修改。原件paper/materials/20261022-1313-ops/notices-readback.json。
+
+- 2026-10-22 13:29 [ops] #38已沿原入口解除锁环：核实原控制器3927598/start6711087未执行任何检查，仅终止本方等待进程并保留once.guard及原件；原知识刷新13:22自然完成。取锁改为全部非阻塞尝试，任一受阻先释放已持锁，再作单锁内核等待；固定夹具4/4通过。原#33三叶候选唯一接续已托管，实际7161/start7136824，当前不持锁、通过pidfd等待#20原完整测试退出，尚未开始full。后续仍按#33→#35→#28→#37；#38保持in-progress，生产high及#33整包失败仍待验。live仍V6-R411。#38与#33评论均已API精确读回。证据见paper/materials/20261022-issue38-ops/的cancellation.json、refresh-completion.json、fixed-lock-tests.log、continuation-launch.json及window-readback.json；没有删除锁、停止刷新/对局或重复full、模型、dataset。
+- 2026-10-22 13:29 [ops] 接收131302 fix-batch终局，exit0、fixes为空、merged=null。已核11份产物字节/SHA、精确base9be860aa下157个源码SHA、48历史祖先与53已修子项，及两份原候选接续/四份预算证据。原自测tsc0、3文件12例通过，仅定向并非full；未重复测试、dataset、合入或发布。学习者32个跳过项保留原边界，#25固定26条请求仍11条超24000B、最大37383B，未重复探测。原六叶/三叶候选仍待发布与科学父项不变。调度器原state=failed而rc=0、retry_at保留，失败原因字段缺失，不据此改成completed或空合并。主/live路径差异203仅是当前所选目录原始计数，不冒严格准入结论。原件learner/runs/20261022-131308-b2e4feba-ac85-4a05-98a1-b8a3b1319d4c-fix-batch/；核验paper/materials/20261022-1319-ops/fix-readback.json。
+
+- 2026-10-22 13:39 [ops] 核五批121302主/s2、124302主/s2及131302-s2普通收尾：原报告SHA和341份产物均匹配，50项处置仍waiting，原自测为null，无源码/知识新改或live合入；五个proof至当前main源码差均0。五批同在13:24:46登记一次共享dataset，只有121302-s2原日志，正常结束但attention回执未落dataset.rc，不重跑。原记录扫描clean（15新扫/350复用）；当前六叶与该冻结快照不同，含成本表及提案账本，原拒绝不指明具体叶，不归因写入者。现有361份输出保留34.48MB副本及SHA，属当前留证，不冒原cut成果；原attention/失败、报告及科学父不改，不补closed。BTS净扣口径旧异议仍沿1136原链保留。只提交本轮核验/双箱记录，不收编并行数据，不重模型、测试或合入。原件ops/codex-ops/ordinary-close/上述批次.json；核验及差异paper/materials/20261022-1336-ops/。

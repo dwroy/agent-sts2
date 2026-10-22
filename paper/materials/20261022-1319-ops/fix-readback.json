@@ -1,0 +1,494 @@
+{
+  "batch": "20261022-131302-fix-batch",
+  "artifacts_verified": 11,
+  "source_sha_at_exact_base_verified": 157,
+  "base": "9be860aa02701127cc6a157a28c56115b0792806",
+  "historical_commits_verified": 48,
+  "historical_subitems": 53,
+  "skipped": 32,
+  "pending_refs_verified": 2,
+  "budget_refs_verified": 4,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 3,
+    "cases": 12,
+    "full_suite": false,
+    "reruns": false,
+    "command": "node tools/with-temp.mjs node_modules/vitest/vitest.mjs run tests/jev-context-limit.test.ts tests/jev-context-recovery.test.ts tests/jev-decision-projection.test.ts --configLoader runner --cache=false --pool=threads --maxWorkers=1"
+  },
+  "budget_probe": {
+    "rerun": false,
+    "reason": "当前相关源码与原固定诊断未变；沿队列原#25工程链，不重复诊断/派发。",
+    "prior_observed_over_budget": 26,
+    "prior_remaining_after_compaction": 11,
+    "prior_max_after_compaction": 37383,
+    "limit": 24000,
+    "run": "DFYBEW6NA6AJ",
+    "status": "unfixed"
+  },
+  "result": {
+    "task": "fix-batch",
+    "base": "9be860aa02701127cc6a157a28c56115b0792806",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0279：SL抽序升级改标身份",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0311",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0319",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0320",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0329",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "独立架构/学习任务，普通纯 bug 批次不实现"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "独立架构/学习任务，普通纯 bug 批次不实现"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "独立架构/学习任务，普通纯 bug 批次不实现"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "独立架构/学习任务，普通纯 bug 批次不实现"
+      },
+      {
+        "item": "silent-0332",
+        "reason": "证据不足：死亡优先纯工程子项已由b1773b2ae合入main；其余0332科学父及实际资源根缺口保留原链，不把子项修复当全部解决。"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0339",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0344，坚韧之环延迟格挡未接入推演",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0347",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0349",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "证据不足：原生通知rc2缺原stderr与确定送达状态；诊断保存子项已修，保原专项，不擅自重送。"
+      },
+      {
+        "item": "silent-0362",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "合后检查包装器总时限与整套重跑",
+        "reason": "证据不足：原merge-live.py属于历史批次执行器，原owner及精确分段覆盖待接续；不改当前发布事务。"
+      },
+      {
+        "item": "策略调度公平性归因核查",
+        "reason": "独立调度归因/架构任务；插入序观测不足以证明永久饥饿，普通纯bug批次不改排序。"
+      },
+      {
+        "item": "silent-0481",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0487：非阻塞三段攻击模型缺口，仅转录学习者证据",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0339续证（2026-10-17 20:40:08 CST，BXU0CKWKH2RU）",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "H1/G2预算完成及paired-DPR来源宽项",
+        "reason": "证据不足：宽根因仍由原H1/G2 owner核实际输入，窄诊断兼容已修不关闭父项。"
+      },
+      {
+        "item": "silent-0533 / 普通撕碎REND条件伤害模型缺口（非进程阻塞，原strategy-proposal链）",
+        "reason": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识"
+      },
+      {
+        "item": "silent-0535：单动作候选目标未传播双蟹朝向",
+        "reason": "策略类；已有silent-proposal-84af8bc877ca131f，保留独立strategy-proposal链，不重复派发"
+      },
+      {
+        "item": "原v5-dpr-health/H1 module-health V6兼容续项（RBMEQGXPE9Z2）",
+        "reason": "原001302监控四叶及两依赖候选仍未源码提交/发布，接续JSON SHA未变；队列明确禁止后批重复实现，保原owner与失败。"
+      },
+      {
+        "item": "infra-chest-claimed-action-conflict-0516",
+        "reason": "策略/结构类；保留原cf77920511042e9c独立提案链，不重复派发。"
+      },
+      {
+        "item": "infra-v6-brain-input-too-large-20261020宽项",
+        "reason": "原题面专项已窄运输；原故障自然复验与父要求不由本批关闭。"
+      },
+      {
+        "item": "infra-ordinary-close-candidate-failure-isolation-20261020 / ordinary-close-isolation 固定夹具成本续项",
+        "reason": "原014301三叶固定夹具候选仍未源码提交/发布，接续JSON SHA未变；队列明确禁止后批重复实现，保原owner与失败。"
+      },
+      {
+        "item": "silent-elite-simulation-pessimism-20261021",
+        "reason": "策略类；队列明确非fix-batch纯bug，沿原精英偏差学习问题与策略流程核实，不重复派发。"
+      },
+      {
+        "item": "sandbox-glob-startup-race / 上游扫描竞态与事件记录续证",
+        "reason": "证据不足：已有同profile一次重试且不降低权限；原161302-s2没有实际重试次数/删除者证据，保留rc3及冷却。队列明确不重复实现或重探针，沿原基础设施链核上游与事件记录。"
+      },
+      {
+        "item": "infra-jev-base-request-budget-issue25-20261022",
+        "reason": "太大：原DFYBEW6NA6AJ的26个超限请求按offset/bytes/SHA核同且都有原回答。当前投影加现有无损压缩仍11/26超过24000B，最大37383B；不能靠停止开卷追加声称总预算已守住。需沿原#25工程链扩展投影/必要字段契约，保unknown、全部候选和审计；本批不删事实、抬预算或制造API成功。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 12
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261022-131308-b2e4feba-ac85-4a05-98a1-b8a3b1319d4c-fix-batch/report.md"
+  },
+  "scheduler_matching_records": [
+    {
+      "state": "failed",
+      "rc": 0,
+      "exit_code": null,
+      "retry_at": 1792649989.397682,
+      "error": null,
+      "reason": "tick",
+      "checks_pending": null,
+      "base": null,
+      "report": {
+        "task": "fix-batch",
+        "base": "9be860aa02701127cc6a157a28c56115b0792806",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "silent-0279：SL抽序升级改标身份",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0311",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0319",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0320",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0329",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "arch-funnel-guard",
+            "reason": "独立架构任务"
+          },
+          {
+            "item": "arch-learning-priority",
+            "reason": "独立架构任务"
+          },
+          {
+            "item": "arch-unified-resource-value",
+            "reason": "独立架构任务"
+          },
+          {
+            "item": "inv-f33-regression",
+            "reason": "独立归因学习任务"
+          },
+          {
+            "item": "silent-0332",
+            "reason": "死亡优先工程子项已修；其余资源根因证据不足，保留科学父项"
+          },
+          {
+            "item": "silent-0334：升级隐秘匕首模型",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0339",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0344：坚韧之环延迟格挡",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0347",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0349",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "core-build-notify-222802-rc2",
+            "reason": "证据不足：原stderr及确定送达状态缺失；诊断保存子项已修"
+          },
+          {
+            "item": "silent-0362",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "合后检查包装器总时限与整套重跑",
+            "reason": "证据不足：历史执行器及精确分段覆盖待原负责会话核验"
+          },
+          {
+            "item": "策略调度公平性归因核查",
+            "reason": "独立归因任务，现有观测不足以证明永久饥饿"
+          },
+          {
+            "item": "silent-0481",
+            "reason": "游戏机制及事实传递，保留既有策略链"
+          },
+          {
+            "item": "silent-0487：三段攻击模型",
+            "reason": "策略类，保留既有strategy-proposal链"
+          },
+          {
+            "item": "silent-0339续证：BXU0CKWKH2RU",
+            "reason": "策略类，沿原提案接续"
+          },
+          {
+            "item": "H1/G2预算完成及paired-DPR来源宽项",
+            "reason": "证据不足；窄诊断兼容已修，宽根因待原负责会话核验"
+          },
+          {
+            "item": "silent-0533：REND条件伤害",
+            "reason": "策略类，保留原提案"
+          },
+          {
+            "item": "silent-0535：单动作候选双蟹朝向",
+            "reason": "策略类，已有silent-proposal-84af8bc877ca131f"
+          },
+          {
+            "item": "原v5-dpr-health/H1 module-health V6兼容续项",
+            "reason": "原六叶候选未发布，队列禁止后批重复实现"
+          },
+          {
+            "item": "infra-chest-claimed-action-conflict-0516",
+            "reason": "策略及结构类，保留原独立提案链"
+          },
+          {
+            "item": "infra-v6-brain-input-too-large-20261020宽项",
+            "reason": "窄运输子项已处理，原故障自然复验及父要求仍待原链完成"
+          },
+          {
+            "item": "ordinary-close-isolation固定夹具成本续项",
+            "reason": "原三叶候选未发布，队列禁止后批重复实现"
+          },
+          {
+            "item": "silent-elite-simulation-pessimism-20261021",
+            "reason": "策略类，队列明确非fix-batch纯bug"
+          },
+          {
+            "item": "sandbox-glob-startup-race上游竞态续项",
+            "reason": "证据不足：重试次数及删除者未知；已有有界重试子项不重复实现"
+          },
+          {
+            "item": "infra-jev-base-request-budget-issue25-20261022",
+            "reason": "太大：原诊断压缩后11/26条仍超过24000B，最大37383B；需沿原工程链扩展投影及必要字段契约"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 12
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261022-131308-b2e4feba-ac85-4a05-98a1-b8a3b1319d4c-fix-batch/report.md"
+      },
+      "head": null,
+      "commit": null,
+      "merged": null,
+      "no_source_changes": null
+    }
+  ],
+  "new_tests_or_dataset_or_merge": false,
+  "scheduler_record": {
+    "state": "failed",
+    "rc": 0,
+    "exit_code": null,
+    "retry_at": 1792649989.397682,
+    "error": null,
+    "reason": "tick",
+    "checks_pending": null,
+    "base": null,
+    "report": {
+      "task": "fix-batch",
+      "base": "9be860aa02701127cc6a157a28c56115b0792806",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "silent-0279：SL抽序升级改标身份",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0311",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0319",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0320",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0329",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "arch-funnel-guard",
+          "reason": "独立架构任务"
+        },
+        {
+          "item": "arch-learning-priority",
+          "reason": "独立架构任务"
+        },
+        {
+          "item": "arch-unified-resource-value",
+          "reason": "独立架构任务"
+        },
+        {
+          "item": "inv-f33-regression",
+          "reason": "独立归因学习任务"
+        },
+        {
+          "item": "silent-0332",
+          "reason": "死亡优先工程子项已修；其余资源根因证据不足，保留科学父项"
+        },
+        {
+          "item": "silent-0334：升级隐秘匕首模型",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0339",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0344：坚韧之环延迟格挡",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0347",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0349",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "core-build-notify-222802-rc2",
+          "reason": "证据不足：原stderr及确定送达状态缺失；诊断保存子项已修"
+        },
+        {
+          "item": "silent-0362",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "合后检查包装器总时限与整套重跑",
+          "reason": "证据不足：历史执行器及精确分段覆盖待原负责会话核验"
+        },
+        {
+          "item": "策略调度公平性归因核查",
+          "reason": "独立归因任务，现有观测不足以证明永久饥饿"
+        },
+        {
+          "item": "silent-0481",
+          "reason": "游戏机制及事实传递，保留既有策略链"
+        },
+        {
+          "item": "silent-0487：三段攻击模型",
+          "reason": "策略类，保留既有strategy-proposal链"
+        },
+        {
+          "item": "silent-0339续证：BXU0CKWKH2RU",
+          "reason": "策略类，沿原提案接续"
+        },
+        {
+          "item": "H1/G2预算完成及paired-DPR来源宽项",
+          "reason": "证据不足；窄诊断兼容已修，宽根因待原负责会话核验"
+        },
+        {
+          "item": "silent-0533：REND条件伤害",
+          "reason": "策略类，保留原提案"
+        },
+        {
+          "item": "silent-0535：单动作候选双蟹朝向",
+          "reason": "策略类，已有silent-proposal-84af8bc877ca131f"
+        },
+        {
+          "item": "原v5-dpr-health/H1 module-health V6兼容续项",
+          "reason": "原六叶候选未发布，队列禁止后批重复实现"
+        },
+        {
+          "item": "infra-chest-claimed-action-conflict-0516",
+          "reason": "策略及结构类，保留原独立提案链"
+        },
+        {
+          "item": "infra-v6-brain-input-too-large-20261020宽项",
+          "reason": "窄运输子项已处理，原故障自然复验及父要求仍待原链完成"
+        },
+        {
+          "item": "ordinary-close-isolation固定夹具成本续项",
+          "reason": "原三叶候选未发布，队列禁止后批重复实现"
+        },
+        {
+          "item": "silent-elite-simulation-pessimism-20261021",
+          "reason": "策略类，队列明确非fix-batch纯bug"
+        },
+        {
+          "item": "sandbox-glob-startup-race上游竞态续项",
+          "reason": "证据不足：重试次数及删除者未知；已有有界重试子项不重复实现"
+        },
+        {
+          "item": "infra-jev-base-request-budget-issue25-20261022",
+          "reason": "太大：原诊断压缩后11/26条仍超过24000B，最大37383B；需沿原工程链扩展投影及必要字段契约"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 12
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261022-131308-b2e4feba-ac85-4a05-98a1-b8a3b1319d4c-fix-batch/report.md"
+    },
+    "head": null,
+    "commit": null,
+    "merged": null,
+    "no_source_changes": null
+  },
+  "strict_current_main_live_source_delta": 203
+}

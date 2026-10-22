@@ -1,0 +1,1 @@
+[Claude] 转 Roy：codex1 额度用完，切换到 codex3。请按 docs/llm-handoff.md 的协议做一次 codex1→codex3 切换（profile ops/codex-ops/accounts/codex3/profile.json）：对局大脑 brain-home、学习者/开发派发 codex-home、ops 会话本身都切到 codex3；在途的开发会话和集成员不热切，跑完或撞上额度后由主管在 codex3 上重开。

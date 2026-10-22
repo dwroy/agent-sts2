@@ -1,0 +1,161 @@
+{
+  "at": "2026-10-22T10:40:28+08:00",
+  "source": "0485abd6f4d0ce8edefb9f747744528fadfbd85c",
+  "main_commit": "c208665e6dbcc8244f2516b7c3d7d0f3fde7a00a",
+  "commands": [
+    {
+      "name": "python",
+      "command": [
+        "python3",
+        "agent/tests/v6_learning_loop_test.py"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-35-20261022",
+      "exit_code": 0,
+      "seconds": 10.449812650680542
+    },
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-35-20261022/agent",
+      "exit_code": 0,
+      "seconds": 2.7171106338500977
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/integrator-35-20261022/full/vitest.json"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-35-20261022/agent",
+      "exit_code": 0,
+      "seconds": 1489.3376643657684
+    }
+  ],
+  "vitest": {
+    "success": true,
+    "numTotalTests": 6176,
+    "numPassedTests": 6174,
+    "numFailedTests": 0,
+    "numPendingTests": 2,
+    "test_files": 655
+  },
+  "fixture_probe": {
+    "fixture_only": true,
+    "real_game_runs": 0,
+    "reports": [
+      {
+        "engine": "codex",
+        "shop_requests": 1,
+        "shop_actions": 7,
+        "confirmed_buys": 4,
+        "restart_requests": 1,
+        "restored_entries": 4,
+        "final_entries": 5
+      },
+      {
+        "engine": "deepseek",
+        "shop_requests": 1,
+        "shop_actions": 7,
+        "confirmed_buys": 4,
+        "restart_requests": 1,
+        "restored_entries": 4,
+        "final_entries": 5
+      }
+    ]
+  },
+  "raw_refs": [
+    {
+      "path": ".artifacts/integrator-35-20261022/identity.json",
+      "bytes": 325091,
+      "sha256": "50c7eac5c59995f67dcbb10341a776a15de5c1eb78967ee09b5837394e85d02a"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/source.patch",
+      "bytes": 60125,
+      "sha256": "8047c378ca6c5e2364ea03c9d8444f0dcaa548334c20133fe8d8da1743c537be"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/full/python.log",
+      "bytes": 117,
+      "sha256": "566ea6e6d196f4f6f0c77295f5e65cdb801db38db99805063279c404578f5edc"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/full/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/full/vitest.log",
+      "bytes": 83027,
+      "sha256": "8b483cf535b6069cda928dfa792265adf3fd7aea9435ff58802d41cdac68c718"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/full/vitest.json",
+      "bytes": 2393854,
+      "sha256": "216d77a423ca1cdeff7e4f473efcf5aa4879529a07caec63587a3088396e6ce5"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/production-probe.mts",
+      "bytes": 5132,
+      "sha256": "48186a82049a0562fcf9906adb11989554128e66716a561d1938850c04636ff5"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/production-probe.log",
+      "bytes": 271,
+      "sha256": "e3d6514758043fd46396b5aa6cbf176d2117d8d7b497225e6e5bb31bfcdc2b63"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/production-probe.json",
+      "bytes": 470,
+      "sha256": "a95b15db0777066533d0c5e55f5f73245b7463146ac98a0f538deb76cba54cd0"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/source-gitleaks.log",
+      "bytes": 81,
+      "sha256": "c6450aa47d4ae2945bc2d354c040c73cb5d939f51573f74d10ae637c333421a0"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/candidate-merge.log",
+      "bytes": 181,
+      "sha256": "579432213789188b4fa78996b500c9efc65c3a43db73d0e6ad72f90689f7f3f4"
+    },
+    {
+      "path": ".artifacts/integrator-35-20261022/integration-receipt.json",
+      "bytes": 1614,
+      "sha256": "3ac8ef951d999d4a13ab44f81fc5b2c404f77d5f4ce5c26491eb033619516465"
+    }
+  ],
+  "identity_inputs": 2116,
+  "binding_sha256": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "binding_mode_before": "0o644",
+  "binding_mode_after": "0o644",
+  "feature_paths": [
+    "agent/src/brain/brain.ts",
+    "agent/src/eye/decision-log.ts",
+    "agent/src/hand/loop.ts",
+    "agent/src/memory/construction-log.ts",
+    "agent/src/memory/journal-replay.ts",
+    "agent/src/memory/run-journal.ts",
+    "agent/tests/construction-log-loop.test.ts",
+    "agent/tests/construction-log.test.ts",
+    "agent/tests/v6_learning_loop_test.py",
+    "docs/construction-log.md",
+    "learner/evidence_summary.py",
+    "learner/tasks/postmortem.md",
+    "paper/materials/20261022-issue35-build-log/report.md",
+    "paper/materials/20261022-issue35-build-log/verification.json"
+  ]
+}

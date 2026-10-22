@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-22T10:53:59+08:00",
+  "event_label": "2026-10-22 10:44 CST plus explicit user issue36 handoff",
+  "ordinary": {
+    "path": "paper/materials/20261022-1044-ops/ordinary-readback.json",
+    "bytes": 22169,
+    "sha256": "702057c385fd1cc37f40f98f437cddf555c87d7ff33d5de203ae37c94703dbcd"
+  },
+  "original_check_terminal": {
+    "path": "paper/materials/20261022-1044-ops/prior-check-checks.json",
+    "bytes": 803,
+    "sha256": "d2063d88e312098637215257b2c87a84814ea58027fd42b36ef4b8c011d180ff"
+  },
+  "original_check_error": {
+    "path": "paper/materials/20261022-1044-ops/prior-check-error.txt",
+    "bytes": 403,
+    "sha256": "fd94f9559b7a7b381d20abbf936f75148e14e13ec85a4ef96da691dc2431a302"
+  },
+  "same_check_continuation": {
+    "path": "paper/materials/20261022-1044-ops/check-launch.json",
+    "bytes": 328,
+    "sha256": "7ce8a1670588e55b471ba4b4b91b7cdd2d12c597e213eac3b3e6a7b9ca842f8a"
+  },
+  "current_check": {
+    "path": "paper/materials/20261022-1044-ops/check-status-at-record.json",
+    "bytes": 93007,
+    "sha256": "2bc3677532775a0d4bfb81f904100ec7aef17a772ba2068b77c30eccadb2ac1c"
+  },
+  "check_state": "running",
+  "check_runner_pid": 3534422,
+  "check_runner_start": "6176142",
+  "first_combination_full_started": true,
+  "steps": [
+    {
+      "name": "rebuild",
+      "pid": 3569090,
+      "exit_code": 0,
+      "started_at": "2026-10-22T10:51:48+08:00"
+    },
+    {
+      "name": "tsc",
+      "pid": 3569100,
+      "exit_code": 0,
+      "started_at": "2026-10-22T10:51:48+08:00"
+    },
+    {
+      "name": "full",
+      "pid": 3569148,
+      "exit_code": null,
+      "started_at": "2026-10-22T10:51:49+08:00"
+    }
+  ],
+  "knowledge_lock_at_original_failure_owner_unknown": true,
+  "knowledge_refresh_runs_outside_admission_live_lock": "knowledge/builders/refresh.sh line33; original lock retained and changed only finite driver wait from nonblocking to kernel blocking",
+  "no_timer_polling_model_or_duplicate_full": true,
+  "issue36_runtime_gate": {
+    "path": "paper/materials/20261022-issue36-preintegration-ops/receipt.json",
+    "bytes": 1814,
+    "sha256": "fa5c8474441ca04fbb4a08d58aa9a8e039fb40494d2417fb440ca617b3a7b974"
+  },
+  "live_changed": false,
+  "original_failures_and_parents_retained": true
+}

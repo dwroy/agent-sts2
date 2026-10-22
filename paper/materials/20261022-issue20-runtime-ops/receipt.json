@@ -1,0 +1,574 @@
+{
+  "at": "2026-10-22T09:04:38+08:00",
+  "state": "enabled-natural-notifications-verified-production-subitems-pending",
+  "kit": {
+    "commit": "95f1efb3251a27f3f702540773a2b466920821e9",
+    "clean": true,
+    "tracked_files": [
+      {
+        "file": ".gitignore",
+        "bytes": 27,
+        "sha256": "e776a3676ba6fdbe9c3a6bb73419225a29ed7c1a0b014d6a1050e2868873e463"
+      },
+      {
+        "file": "README.md",
+        "bytes": 14719,
+        "sha256": "ed4e754829e53a8cebe2a4fb492868935a18ffc9922f329a90fc8fcd9860c41d"
+      },
+      {
+        "file": "board.py",
+        "bytes": 27404,
+        "sha256": "81efff980ff4ac6d6b2f0e73ee206b16f64ac2607c73c64a7c990557950fad69"
+      },
+      {
+        "file": "test_board.py",
+        "bytes": 16734,
+        "sha256": "464d0bb82c322e0f53d155b4a2bb145c2435a2920b1759d58bfa31cef9f97b7a"
+      },
+      {
+        "file": "test_watchdog.py",
+        "bytes": 21309,
+        "sha256": "1b7c53cf073a95e1c4d739ec118ab6c28a8b3aaeb40fc95e1ad4bc11dc9fa041"
+      },
+      {
+        "file": "watchdog.py",
+        "bytes": 15573,
+        "sha256": "6d1b6d998b42090e5e6973178a5a26c17f0a50753d900f2aa23721550e246808"
+      }
+    ],
+    "reinstall_or_tests_repeated": false
+  },
+  "main": "8d291e9059a5cde452809f8c23ba7b181432d21c",
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "source_readback": [
+    {
+      "path": ".agents/board.yaml",
+      "reviewed_blob": "a1f249bc605ed0af9d2dd1e933a29c02ab0f2def",
+      "current_blob": "8eb45239ad70e0900f52818ae51088411fd56436",
+      "equal": false
+    },
+    {
+      "path": "ops/issue_session.py",
+      "reviewed_blob": "b6669820bd5988272dfc114a461f11120537cba3",
+      "current_blob": "b6669820bd5988272dfc114a461f11120537cba3",
+      "equal": true
+    },
+    {
+      "path": "ops/issue_session_support.py",
+      "reviewed_blob": "17be591a868068d032bef74e36fb64da4de7be20",
+      "current_blob": "17be591a868068d032bef74e36fb64da4de7be20",
+      "equal": true
+    },
+    {
+      "path": "ops/shared_tools.py",
+      "reviewed_blob": "bc1633b5480c38397dea2dcefb09ea4457592f9e",
+      "current_blob": "bc1633b5480c38397dea2dcefb09ea4457592f9e",
+      "equal": true
+    },
+    {
+      "path": "ops/worktree_checkout.py",
+      "reviewed_blob": "95fbd62fc0119bf121d5285b1edf2484396af386",
+      "current_blob": "95fbd62fc0119bf121d5285b1edf2484396af386",
+      "equal": true
+    },
+    {
+      "path": "ops/tests/test_issue_session.py",
+      "reviewed_blob": "9b10e36ad0ec74740c1b6ab2d3b36257c0636094",
+      "current_blob": "9b10e36ad0ec74740c1b6ab2d3b36257c0636094",
+      "equal": true
+    },
+    {
+      "path": "ops/tests/test_shared_tools.py",
+      "reviewed_blob": "70528c8629c31f9dc92c63892c20228779f2b382",
+      "current_blob": "70528c8629c31f9dc92c63892c20228779f2b382",
+      "equal": true
+    },
+    {
+      "path": "docs/github-issues-workflow.md",
+      "reviewed_blob": "5b5a0dda84cd43466348efdf83e50e2eaa43a017",
+      "current_blob": "5b5a0dda84cd43466348efdf83e50e2eaa43a017",
+      "equal": true
+    },
+    {
+      "path": "agent/tests/shared-tools.test.ts",
+      "reviewed_blob": "81d4b62545c2f8ab15a0b668361f5d03c0dab974",
+      "current_blob": "81d4b62545c2f8ab15a0b668361f5d03c0dab974",
+      "equal": true
+    }
+  ],
+  "config_dev_limit_change": {
+    "commit": "266672619c7f8fa812d45ae5712127fa48c37ace 2026-10-22T08:53:55+08:00 board: raise dev session limit to 10 (Roy 10-22)",
+    "current_limit": 10,
+    "scope": "existing Roy/Claude committed change, observed; no configuration modified by this audit"
+  },
+  "control": {
+    "persisted": "on",
+    "effective": "on",
+    "source": "project-control",
+    "file": {
+      "path": "ops/codex-ops/agent-board-control.json",
+      "bytes": 174,
+      "sha256": "3f91a4b1b76441e4e1b3421631cfa62f26a4ad8bd9561f71e5e7b73c810341ba"
+    }
+  },
+  "registry": {
+    "scope": "STS2-only; other projects unregistered",
+    "file": {
+      "path": "ops/codex-ops/agent-board-projects.json",
+      "bytes": 119,
+      "sha256": "c394b863675c2bdfb5fcc583b386de3fa8556a5474a045c5afc32060b8154d2e"
+    }
+  },
+  "unique_entry": {
+    "original_cron_stall_entries": 1,
+    "direct_kit_cron_entries": 0,
+    "no_new_tick_invoked": true,
+    "cron_explicit_CODEX_AGENT_BOARD_override": false
+  },
+  "journal_snapshot": {
+    "source": "ops/codex-ops/agent-board.json",
+    "frozen": {
+      "path": ".artifacts/ops-issue20-runtime-20261022/journal-frozen.json",
+      "bytes": 13110,
+      "sha256": "7aa9f52be1157539a9789767bd3be8661d974483d7bc00b2f9c126904abdbfab"
+    }
+  },
+  "sessions_snapshot": {
+    "source": "ops/codex-ops/issue-sessions.json",
+    "frozen": {
+      "path": ".artifacts/ops-issue20-runtime-20261022/sessions-frozen.json",
+      "bytes": 6966,
+      "sha256": "3d9651fc2d7c0caa0bfbe40d0443c0fec82df3df6ae75bf55a6bd35c3aeceb96"
+    }
+  },
+  "board_log_snapshot": {
+    "path": ".artifacts/ops-issue20-runtime-20261022/board-log-frozen.txt",
+    "bytes": 15107,
+    "sha256": "b39e866690a6571868732b6dc41c3721d6d3ae94933020d02c178ef037f792dd"
+  },
+  "board_log_rows": [
+    {
+      "offset": 0,
+      "bytes": 1607,
+      "sha256": "8080c763183ec9aab249562eabc1145e8bee275af744d048847739d283324498",
+      "done_events": []
+    },
+    {
+      "offset": 1607,
+      "bytes": 1607,
+      "sha256": "bb6a60ebcdb3f6004a94b1d3e0f73c7ce49f3fb1f89f59d879b8d9fbbbec225d",
+      "done_events": [
+        "15:status:waiting-release:33814671242",
+        "33:status:review:33900718819"
+      ]
+    },
+    {
+      "offset": 3214,
+      "bytes": 1478,
+      "sha256": "1cf42c34eaf6996a09d0c76f16bb3664be8acd7fea5087772888823a1b5179cb",
+      "done_events": []
+    },
+    {
+      "offset": 4692,
+      "bytes": 1418,
+      "sha256": "5e6b211ca09cf2f71fa79c18fa2ae30814533a478519f5daa054e604326a5f21",
+      "done_events": [
+        "23:status:waiting-release:33833365972"
+      ]
+    },
+    {
+      "offset": 6110,
+      "bytes": 1349,
+      "sha256": "50ab610a922b62f622a9c17f2bc56d28f7954ec3305f3cce1d0849740ed6064d",
+      "done_events": []
+    },
+    {
+      "offset": 7459,
+      "bytes": 1289,
+      "sha256": "f990b0769730bd8ec763e8b08de0e6d904c0db60fa9905bf09916f50353235bf",
+      "done_events": [
+        "2:status:waiting-release:33805245630"
+      ]
+    },
+    {
+      "offset": 8748,
+      "bytes": 1221,
+      "sha256": "1d7412446d0ac65a77b0eae86d2f57bf8f66d6c43b6c7829c70363d12a8593c7",
+      "done_events": []
+    },
+    {
+      "offset": 9969,
+      "bytes": 1221,
+      "sha256": "1d7412446d0ac65a77b0eae86d2f57bf8f66d6c43b6c7829c70363d12a8593c7",
+      "done_events": []
+    },
+    {
+      "offset": 11190,
+      "bytes": 1416,
+      "sha256": "6a69972ba0d86cd613908108926acc1798296702c2bcd6da919871179fa04d0f",
+      "done_events": [
+        "16:status:waiting-release:33835333117"
+      ]
+    },
+    {
+      "offset": 12606,
+      "bytes": 1221,
+      "sha256": "b3e965b83affef84c36daab615288e2b003a3fb6055e192c820c9fc245c38134",
+      "done_events": []
+    },
+    {
+      "offset": 13827,
+      "bytes": 1280,
+      "sha256": "6b79ade58d439539770c178bc59f53cb476838f1f688b0f7089cc055c6349c8e",
+      "done_events": [
+        "20:status:waiting-release:33898215405"
+      ]
+    }
+  ],
+  "event_phase_counts": {
+    "pending": 11,
+    "done": 8
+  },
+  "notifications_sent": [
+    {
+      "event": "23:status:waiting-release:33833365972",
+      "issue": 23,
+      "action": "notify",
+      "role": "ops",
+      "phase": "done",
+      "pane": "w1H:p8",
+      "sent_at": 1792628732.6514902,
+      "sent_at_CST": "2026-10-22T08:25:32.651490+08:00",
+      "done_log_occurrences": 1
+    },
+    {
+      "event": "20:status:waiting-release:33898215405",
+      "issue": 20,
+      "action": "notify",
+      "role": "ops",
+      "phase": "done",
+      "pane": "w1H:p8",
+      "sent_at": 1792630835.4241753,
+      "sent_at_CST": "2026-10-22T09:00:35.424175+08:00",
+      "done_log_occurrences": 1
+    },
+    {
+      "event": "16:status:waiting-release:33835333117",
+      "issue": 16,
+      "action": "notify",
+      "role": "ops",
+      "phase": "done",
+      "pane": "w1H:p8",
+      "sent_at": 1792630238.0020447,
+      "sent_at_CST": "2026-10-22T08:50:38.002045+08:00",
+      "done_log_occurrences": 1
+    },
+    {
+      "event": "15:status:waiting-release:33814671242",
+      "issue": 15,
+      "action": "notify",
+      "role": "ops",
+      "phase": "done",
+      "pane": "w1H:p8",
+      "sent_at": 1792628136.253751,
+      "sent_at_CST": "2026-10-22T08:15:36.253751+08:00",
+      "done_log_occurrences": 1
+    },
+    {
+      "event": "2:status:waiting-release:33805245630",
+      "issue": 2,
+      "action": "notify",
+      "role": "ops",
+      "phase": "done",
+      "pane": "w1H:p8",
+      "sent_at": 1792629334.666003,
+      "sent_at_CST": "2026-10-22T08:35:34.666003+08:00",
+      "done_log_occurrences": 1
+    },
+    {
+      "event": "33:status:review:33900718819",
+      "issue": 33,
+      "action": "notify",
+      "role": "integrator",
+      "phase": "done",
+      "pane": "wJ:p1HD",
+      "sent_at": 1792628136.5985773,
+      "sent_at_CST": "2026-10-22T08:15:36.598577+08:00",
+      "done_log_occurrences": 1
+    }
+  ],
+  "superseded_events": [
+    {
+      "event": "36:status:ready:33902585931",
+      "issue": 36,
+      "action": "spawn",
+      "role": null,
+      "phase": "done",
+      "outcome": "superseded"
+    },
+    {
+      "event": "35:status:ready:33902584860",
+      "issue": 35,
+      "action": "spawn",
+      "role": null,
+      "phase": "done",
+      "outcome": "superseded"
+    }
+  ],
+  "no_duplicate_done_log_records_for_sent_notifications": true,
+  "current_sending_or_uncertain_count": 0,
+  "role_readback": {
+    "ops": {
+      "pane_id": "w1H:p8",
+      "name": "ops",
+      "agent": "codex",
+      "agent_status": "working",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    "sts2-integrator": {
+      "pane_id": "wJ:p1HD",
+      "name": "sts2-integrator",
+      "agent": "codex",
+      "agent_status": "done",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  },
+  "existing_named_lifecycle_sessions": [
+    {
+      "issue": 35,
+      "state": "active",
+      "pane": "wJ:p1HK",
+      "name": "issue-35",
+      "cwd_matches": true,
+      "terminal": "term_65e634f08c7097a",
+      "base": "a960e08b3f1f3cb128c327a49789bdcdfd06daab",
+      "started_at": "2026-10-22T08:54:38+08:00",
+      "kit_event_outcome": "superseded; do not attribute creation to kit"
+    },
+    {
+      "issue": 36,
+      "state": "active",
+      "pane": "wJ:p1HJ",
+      "name": "issue-36",
+      "cwd_matches": true,
+      "terminal": "term_65e634d33f7b279",
+      "base": "a960e08b3f1f3cb128c327a49789bdcdfd06daab",
+      "started_at": "2026-10-22T08:54:06+08:00",
+      "kit_event_outcome": "superseded; do not attribute creation to kit"
+    }
+  ],
+  "retention_gates": [
+    {
+      "event": "31:closed",
+      "issue": 31,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "source leaf not in recorded publication: agent/src/brain/brain.ts"
+    },
+    {
+      "event": "29:closed",
+      "issue": 29,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "unknown or conflicting instance identity retained"
+    },
+    {
+      "event": "24:closed",
+      "issue": 24,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "unknown or conflicting instance identity retained"
+    },
+    {
+      "event": "19:closed",
+      "issue": 19,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "unknown or conflicting instance identity retained"
+    },
+    {
+      "event": "17:closed",
+      "issue": 17,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "unknown or conflicting instance identity retained"
+    },
+    {
+      "event": "12:closed",
+      "issue": 12,
+      "phase": "pending",
+      "lifecycle_state": "waiting-worktree",
+      "reason": "unknown or conflicting instance identity retained"
+    }
+  ],
+  "digest": {
+    "frozen": {
+      "path": ".artifacts/ops-issue20-runtime-20261022/digest-frozen.md",
+      "bytes": 2146,
+      "sha256": "7293b6b068deba26b98fed7e42d968e456867373edde3855bd2876d93a82234a"
+    },
+    "updated": "Updated: 2026-10-22T01:00:53+00:00",
+    "lead_delivery": "local digest configured, no lead prompt sent by this audit"
+  },
+  "watchdogs": [
+    {
+      "issue": 33,
+      "role": "dev",
+      "active": false,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": null,
+      "due": null
+    },
+    {
+      "issue": 26,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241836,
+      "due": null
+    },
+    {
+      "issue": 25,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241886,
+      "due": null
+    },
+    {
+      "issue": 23,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.42419,
+      "due": null
+    },
+    {
+      "issue": 20,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241908,
+      "due": null
+    },
+    {
+      "issue": 16,
+      "role": "ops",
+      "active": false,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241915,
+      "due": null
+    },
+    {
+      "issue": 15,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.424192,
+      "due": null
+    },
+    {
+      "issue": 8,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241922,
+      "due": null
+    },
+    {
+      "issue": 2,
+      "role": "ops",
+      "active": false,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241927,
+      "due": null
+    },
+    {
+      "issue": 33,
+      "role": "integrator",
+      "active": false,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": null,
+      "due": null
+    },
+    {
+      "issue": 33,
+      "role": "ops",
+      "active": true,
+      "state": "watching",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": 1792630835.4241936,
+      "due": null
+    },
+    {
+      "issue": 36,
+      "role": "dev",
+      "active": true,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": null,
+      "due": null
+    },
+    {
+      "issue": 35,
+      "role": "dev",
+      "active": true,
+      "state": "busy",
+      "attempts": 0,
+      "error_since": null,
+      "idle_since": null,
+      "due": null
+    }
+  ],
+  "acceptance": {
+    "installation_control_and_first_tick": true,
+    "actual_notification_delivery": true,
+    "actual_pre_send_done_vs_idle_state": "not persisted in original send receipts; specific done-status production case remains unproven",
+    "natural_lifecycle_names_currently_verified": [
+      35,
+      36
+    ],
+    "kit_automatic_spawn": "not proven: both events superseded",
+    "original_lifecycle_lock_busy_retry": "not naturally observed in this cut",
+    "watchdog_idle_error_escalation": "not naturally triggered: attempts0; fixed replay remains separate",
+    "actual_final_reclaim": "pending original six retention gates",
+    "overall": "remain open; do not create faults or extra tasks for acceptance"
+  },
+  "prior_first_tick": {
+    "path": "paper/materials/20261022-issue20-enable-ops/receipt.json",
+    "bytes": 7558,
+    "sha256": "190ccfd29345ac2e91791a61e35f6294523afd96c593b58f1197ab6e60e1226d"
+  },
+  "new_model_tick_timer_or_game_action": false,
+  "uncertain_resolved_or_journal_modified": false,
+  "scientific_parents_closed": false,
+  "issue_comment": {
+    "url": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6330154431",
+    "actual_api_readback": true,
+    "author": "dwroy",
+    "prefix": "[ops]",
+    "issue_left_open": true
+  }
+}

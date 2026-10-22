@@ -1,0 +1,338 @@
+{
+  "id": "codex3-20261022-1146",
+  "source": {
+    "session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  },
+  "target": {
+    "engine": "codex",
+    "account": "codex3",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "service_tier": "default",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "handoff": "notes/codex3-drain-ops-handoff.md"
+  },
+  "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "role": "learner",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.163.0"
+        },
+        "key_check": {
+          "ok": true,
+          "checked": 8
+        }
+      },
+      {
+        "role": "brain",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.163.0"
+        },
+        "key_check": {
+          "ok": true,
+          "checked": 8
+        }
+      }
+    ],
+    "at": "2026-10-22T11:47:30+08:00"
+  },
+  "created_at": "2026-10-22T11:47:30+08:00",
+  "phase": "draining",
+  "receipts": {},
+  "owned_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "preserved_flags": [],
+  "updated_at": "2026-10-22T11:49:02+08:00",
+  "snapshot": {
+    "at": "2026-10-22T11:49:02+08:00",
+    "active_workers": [
+      {
+        "kind": "learner",
+        "id": "20261022-111302-s2-strategy-proposal",
+        "pid": 3624357,
+        "start_ticks": "6331323"
+      },
+      {
+        "kind": "learner",
+        "id": "20261022-114301-strategy-proposal",
+        "pid": 3737264,
+        "start_ticks": "6511285"
+      },
+      {
+        "kind": "learner",
+        "id": "20261022-114301-s2-strategy-proposal",
+        "pid": 3737402,
+        "start_ticks": "6511343"
+      },
+      {
+        "kind": "learner",
+        "id": "20261022-114301-fix-batch",
+        "pid": 3737565,
+        "start_ticks": "6511463"
+      },
+      {
+        "kind": "play_or_loop",
+        "pid": 228609,
+        "start_ticks": "613852"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 351895,
+        "start_ticks": "856583"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 351902,
+        "start_ticks": "856588"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 352832,
+        "start_ticks": "857830"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1774516,
+        "start_ticks": "3728180"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1774523,
+        "start_ticks": "3728184"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1776884,
+        "start_ticks": "3730296"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1908790,
+        "start_ticks": "3889624"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1908806,
+        "start_ticks": "3889632"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 1911346,
+        "start_ticks": "3890638"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2951094,
+        "start_ticks": "5498012"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2951117,
+        "start_ticks": "5498016"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2951957,
+        "start_ticks": "5499090"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2952613,
+        "start_ticks": "5501083"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2952620,
+        "start_ticks": "5501086"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 2953495,
+        "start_ticks": "5502019"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3615071,
+        "start_ticks": "6309506"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3615079,
+        "start_ticks": "6309510"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3615752,
+        "start_ticks": "6313103"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3618640,
+        "start_ticks": "6319068"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3618647,
+        "start_ticks": "6319071"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3619491,
+        "start_ticks": "6320118"
+      },
+      {
+        "kind": "play_or_loop",
+        "pid": 3658120,
+        "start_ticks": "6366807"
+      },
+      {
+        "kind": "play_or_loop",
+        "pid": 3658713,
+        "start_ticks": "6367341"
+      },
+      {
+        "kind": "play_or_loop",
+        "pid": 3658714,
+        "start_ticks": "6367341"
+      },
+      {
+        "kind": "play_or_loop",
+        "pid": 3658740,
+        "start_ticks": "6367347"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3661160,
+        "start_ticks": "6368926"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3661178,
+        "start_ticks": "6368932"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3738780,
+        "start_ticks": "6512053"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3738826,
+        "start_ticks": "6512060"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3738896,
+        "start_ticks": "6512079"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3738935,
+        "start_ticks": "6512086"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3739888,
+        "start_ticks": "6513136"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3739992,
+        "start_ticks": "6513190"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3747552,
+        "start_ticks": "6517740"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3748135,
+        "start_ticks": "6518038"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3748588,
+        "start_ticks": "6518226"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3765664,
+        "start_ticks": "6530019"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3766134,
+        "start_ticks": "6530326"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3766138,
+        "start_ticks": "6530327"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3768329,
+        "start_ticks": "6530994"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3768866,
+        "start_ticks": "6531283"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3768867,
+        "start_ticks": "6531284"
+      },
+      {
+        "kind": "old_account_engine",
+        "pid": 3789316,
+        "start_ticks": "6547179"
+      }
+    ],
+    "excluded_workers": [
+      {
+        "kind": "source_ops_process",
+        "pid": 9375,
+        "start_ticks": "102982"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 10073,
+        "start_ticks": "104073"
+      }
+    ],
+    "ops_idle": false,
+    "checkpoint_ready": false,
+    "inventory_complete": true,
+    "ops_pane": "w1H:p8",
+    "ops_identity": [
+      {
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "pid": 9375,
+        "start_ticks": "102982"
+      }
+    ]
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "at": "2026-10-22T11:28:59+08:00",
+  "state": "failed-full-retained-test-closure-repaired-unreleased",
+  "issues": [
+    33,
+    26,
+    36
+  ],
+  "original_driver": {
+    "pid": 3534422,
+    "start": "6176142",
+    "terminal": "blocked-or-failed-retain-live",
+    "ended_at": "2026-10-22T11:19:38+08:00",
+    "process_absent": true
+  },
+  "original_stdout_totals": {
+    "files": 643,
+    "passed_files": 639,
+    "failed_files": 4,
+    "passed_tests": 6067,
+    "failed_tests": 3,
+    "skipped_tests": 2
+  },
+  "failures": [
+    {
+      "file": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/brain-agent-provenance.test.ts",
+      "failures": [],
+      "collection_message": "Cannot find module './fixture-command.js' imported from /home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/brain-agent-provenance.test.ts"
+    },
+    {
+      "file": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/check-imports.test.ts",
+      "failures": [
+        {
+          "name": "relative imports all resolve",
+          "message": [
+            "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/check-imports.test.ts:11:33\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ]
+        }
+      ],
+      "collection_message": ""
+    },
+    {
+      "file": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/learner-jobs.test.ts",
+      "failures": [
+        {
+          "name": "automatic learner write jobs an open fix queue launches one fix job, and a busy worktree launches none",
+          "message": [
+            "AssertionError: expected null to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/learner-jobs.test.ts:49:42\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ]
+        }
+      ],
+      "collection_message": ""
+    },
+    {
+      "file": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/ordinary-close-isolation.test.ts",
+      "failures": [
+        {
+          "name": "isolates failed candidates and revalidates preserved preflight failures before one dataset commit",
+          "message": [
+            "AssertionError: fatal: bad object 0000000000000000000000000000000000000000\nfatal: bad object 0000000000000000000000000000000000000000\n....: expected null to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/ops-issue33-live-20261022-0930/agent/tests/ordinary-close-isolation.test.ts:14:56\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ]
+        }
+      ],
+      "collection_message": ""
+    }
+  ],
+  "original_after_manifest_missing": true,
+  "independent_readback": {
+    "rows": 2498,
+    "sha_equal": 2498,
+    "protected_metadata_only": [],
+    "mismatches": [],
+    "not_original_driver_after_check": true
+  },
+  "repair": {
+    "old_failed_tree": "d768564f06977c5596de5b9ee1b1d3ef18104aa4",
+    "repaired_unreleased_tree": "ea3248d598da567732dc292fe6dd5f135c6aece7",
+    "source": "ad5f37ae638153fe966a3b5b2d945eb8fa400717",
+    "exact_canonical_test_helpers": [
+      {
+        "path": "agent/tests/fixture-command.ts",
+        "sha256": "17d73f446f67bd436704e80fe8ad914c6fafd02e4d2b6867ef1bea6cf7e87d3c",
+        "bytes": 1875
+      },
+      {
+        "path": "agent/tests/fixture-command.py",
+        "sha256": "a68145ebbf646a0d9c0dd0b7fd777f39f5a417b07aad8a5a311d97c57c2c939d",
+        "bytes": 474
+      }
+    ],
+    "only_changed_paths": [
+      "agent/tests/fixture-command.py",
+      "agent/tests/fixture-command.ts"
+    ],
+    "product_commit": false,
+    "full_repeated": false
+  },
+  "targeted_after_repair": {
+    "files": 2,
+    "passed_tests": 17,
+    "exit_code": 0,
+    "full": false
+  },
+  "pre_repair_targeted_attempt": {
+    "exit_code": 1,
+    "reason": "record-creation command used wrong cwd; repair did not run, targeted tests observed original missing dependency",
+    "retained": true,
+    "empty_own_wrong_directories_removed": true
+  },
+  "remaining_null_status_failures": {
+    "files": [
+      "learner-jobs.test.ts",
+      "ordinary-close-isolation.test.ts"
+    ],
+    "root_cause": "unknown; child error/signal absent in original wrapper",
+    "existing_owner": "infra-ordinary-close-candidate-failure-isolation-20261020 and original test infrastructure chain",
+    "no_timeout_increase_or_exclusion": true
+  },
+  "issue36": {
+    "state": "awaiting-interactive-TUI-redelivery",
+    "cancel_original_main_short_window": true,
+    "original_integrator_comment": 6331879184,
+    "dev_ack_comment": 6331898748,
+    "scope_comment": 6331830349,
+    "old_source_not_main": true,
+    "brain_view": "off",
+    "hosting_sha256": "79e470a6256a43bdbe29178686b350b19f98f1642185c27834ca34f21dbf488b"
+  },
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "full_repeated": false,
+  "new_model_API_MC_game_actions": 0,
+  "published": false,
+  "issue35": "original prepared tree retained, must reconstruct against actual accepted issue33 live; no publication",
+  "source_refs": [
+    {
+      "path": "paper/materials/20261022-issue33-live-ops/checks.json",
+      "sha256": "b7947777db43c7cf7d6b74e151ab143ebf2c1fe3c8fe677a91e4d426590df3ac",
+      "bytes": 93209
+    },
+    {
+      "path": ".artifacts/ops-issue33-release-20261022/full.log",
+      "sha256": "205af0fd7f22d82a1d21f9be9cbd58d31d3636250ee1b5e79dcb75e59337c12e",
+      "bytes": 84892
+    },
+    {
+      "path": ".artifacts/ops-issue33-release-20261022/vitest.json",
+      "sha256": "a3757faa2961b1c6a47e8c74d8585dd24dbdc34f207bae5721ff1a954758e155",
+      "bytes": 2367172
+    },
+    {
+      "path": ".artifacts/ops-issue33-release-20261022/inputs-before.json",
+      "sha256": "d6e595dd8cfbd0f7c27fd0a35e0d9768b240ab032b6a5639b336c44a37df8462",
+      "bytes": 415931
+    },
+    {
+      "path": ".artifacts/integrator-36-20261022/awaiting-redelivery.json",
+      "sha256": "49ae2fc07dea2efbdca8a1fb71608e0f7eb874555f1093096c37353315321685",
+      "bytes": 795
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/ops-postfailure-input-readback.json",
+      "sha256": "54c74e73bfd9d7a82bb3fe628c02e0601660b0941d2df7d614d34020fdab3e87",
+      "bytes": 136
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/test-closure-repair.json",
+      "sha256": "14850daf17832aaea69d469320ed60742f455a920bf440c64b3d4ad44026cfd6",
+      "bytes": 726
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/targeted-before-repair.json",
+      "sha256": "cfdf5cd133ac8e9c086dc111b2ff8a70e5975b8965a2ea7b67a39d3d2d5cc460",
+      "bytes": 2335
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/targeted-before-repair.log",
+      "sha256": "087c2be9f3e3e9cb1ae7aa7c09cd58d592f3b9300364ad5d2addd32b463ff4cd",
+      "bytes": 1889
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/targeted.json",
+      "sha256": "cf07ffbe24033a8ff4bf943dda4738bd5fded8f6a10fdfa015a61b290d92cfd0",
+      "bytes": 5487
+    },
+    {
+      "path": "paper/materials/20261022-issue33-full-terminal-ops/targeted.log",
+      "sha256": "25636c8a5ecc0b6b3a107fbee40ca1a6a0ae48f3f4004447ef18a6091a24548b",
+      "bytes": 585
+    }
+  ]
+}
