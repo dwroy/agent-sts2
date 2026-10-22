@@ -1,0 +1,1179 @@
+{
+  "fixed_only": true,
+  "model_calls": 0,
+  "game_calls": 0,
+  "simulation_calls": 0,
+  "production_library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+  "parsed_entries": 8,
+  "prior_entries_unchanged": true,
+  "limits": {
+    "entries": 3,
+    "bytes": 4096,
+    "textBytes": 1200,
+    "fileBytes": 1048576,
+    "libraryEntries": 500
+  },
+  "per_entry": [
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "version": "1.0.0",
+      "source": "own",
+      "evidence": [
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12039634787"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040774765"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040838947"
+        }
+      ],
+      "evidence_summary": null,
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": true,
+      "unknown_floor": true,
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 1607,
+      "tool_bytes": 2180,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "version": "1.0.0",
+      "source": "own",
+      "evidence": [
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083191808"
+        },
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083456038"
+        },
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12084068941"
+        }
+      ],
+      "evidence_summary": null,
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": true,
+      "unknown_floor": true,
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 1687,
+      "tool_bytes": 2260,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "version": "1.0.0",
+      "source": "own",
+      "evidence": [
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12108239410"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12110446436"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123299008"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123455148"
+        }
+      ],
+      "evidence_summary": null,
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": true,
+      "unknown_floor": true,
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 1855,
+      "tool_bytes": 2559,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "version": "1.0.0",
+      "source": "external:sts2fun",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+          },
+          "statistic": {
+            "name": "rate",
+            "value": 0.281038230405319,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 7821
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+          "role": "support",
+          "interval": {
+            "low": 0.20745451951842533,
+            "high": 0.37107431798918306,
+            "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+          }
+        }
+      ],
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "rate",
+            "denominator": {
+              "unit": "rewards",
+              "n": 7821
+            }
+          }
+        ]
+      },
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": "not required",
+      "unknown_floor": "not required",
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 2461,
+      "tool_bytes": 3805,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "version": "1.0.0",
+      "source": "external:sts2fun",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; deduplicated combat card-reward screens, not candidate slots/runs"
+          },
+          "statistic": {
+            "name": "rate",
+            "value": 0.38630695987304464,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 4411
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:20",
+          "role": "support",
+          "interval": {
+            "low": 0.3134360059449658,
+            "high": 0.4957741888332287,
+            "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+          }
+        }
+      ],
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "rate",
+            "denominator": {
+              "unit": "rewards",
+              "n": 4411
+            }
+          }
+        ]
+      },
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": "not required",
+      "unknown_floor": "not required",
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 2461,
+      "tool_bytes": 3805,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-act1-blade-dance-choice-context",
+      "version": "1.0.0",
+      "source": "external:sts2fun",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; picked=411/not_picked=643; players=83; repeated candidate slots; no upgrade split"
+          },
+          "statistic": {
+            "name": "win_difference",
+            "value": 0.05204088196675405,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 1054
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+          "role": "support",
+          "interval": {
+            "low": -0.03615654583529024,
+            "high": 0.10221408635664815,
+            "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+          }
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; within-player/act matched; players=49; strata=49; no upgrade split"
+          },
+          "statistic": {
+            "name": "player_act_adjusted_difference",
+            "value": 0.0026505734406033804,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 983
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+          "role": "support",
+          "interval": {
+            "low": -0.07934429860626409,
+            "high": 0.058595189483940914,
+            "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+          }
+        }
+      ],
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "win_difference",
+            "denominator": {
+              "unit": "offers",
+              "n": 1054
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "player_act_adjusted_difference",
+            "denominator": {
+              "unit": "offers",
+              "n": 983
+            }
+          }
+        ]
+      },
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": "not required",
+      "unknown_floor": "not required",
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 4062,
+      "tool_bytes": 6682,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "version": "1.0.0",
+      "source": "external:sts2fun",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 51,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 360
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+          "role": "support"
+        }
+      ],
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_p90",
+            "denominator": {
+              "unit": "fights",
+              "n": 360
+            }
+          }
+        ]
+      },
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": true,
+      "unknown_floor": "not required",
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 2517,
+      "tool_bytes": 3807,
+      "compatibility_count": 1
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "version": "1.0.0",
+      "source": "external:sts2fun",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 62,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 501
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+          "role": "support"
+        }
+      ],
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_p90",
+            "denominator": {
+              "unit": "fights",
+              "n": 501
+            }
+          }
+        ]
+      },
+      "positive": true,
+      "wrong_act": true,
+      "unknown_act": true,
+      "unknown_boss": true,
+      "unknown_floor": "not required",
+      "wrong_question_type": true,
+      "other_characters_excluded": [
+        "ironclad",
+        "regent"
+      ],
+      "block_bytes": 2600,
+      "tool_bytes": 3887,
+      "compatibility_count": 1
+    }
+  ],
+  "five_type_replays": [
+    {
+      "type": "card_reward",
+      "dataset_id": "C48LLXBGKXQ9/2/19",
+      "dataset_ref": {
+        "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+        "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+        "uncompressed_offset": 83781,
+        "bytes": 3448,
+        "line": 18,
+        "sha256": "a37eb19838cce13853adb3d9ce300979bb81ff90c8487bd75f3b7a8f5c3650e8"
+      },
+      "entries": [
+        {
+          "id": "silent-brain-act2-reward-skip-comparison",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+              },
+              "statistic": {
+                "name": "rate",
+                "value": 0.281038230405319,
+                "unit": "fraction"
+              },
+              "denominator": {
+                "unit": "rewards",
+                "n": 7821
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+              "role": "support",
+              "interval": {
+                "low": 0.20745451951842533,
+                "high": 0.37107431798918306,
+                "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+              }
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "rate",
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 7821
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "tool_entries": [
+        {
+          "id": "silent-brain-act2-reward-skip-comparison",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+              },
+              "statistic": {
+                "name": "rate",
+                "value": 0.281038230405319,
+                "unit": "fraction"
+              },
+              "denominator": {
+                "unit": "rewards",
+                "n": 7821
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+              "role": "support",
+              "interval": {
+                "low": 0.20745451951842533,
+                "high": 0.37107431798918306,
+                "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+              }
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "rate",
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 7821
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "block_bytes": 2461,
+      "base_prompt_bytes": 2632,
+      "prompt_bytes": 5113,
+      "tool_bytes": 3805,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "event",
+      "dataset_id": "T082DRCUHRRD/3/36/event/choose/47354db69c068cc3",
+      "dataset_ref": {
+        "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+        "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+        "uncompressed_offset": 727521,
+        "bytes": 6645,
+        "line": 123,
+        "sha256": "67bd77514a6d12dffdedce8e2c5a40f4c2828f278a27e4ca6e23aa66861505f3"
+      },
+      "entries": [
+        {
+          "id": "silent-brain-test-subject-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 62,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 501
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "tool_entries": [
+        {
+          "id": "silent-brain-test-subject-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 62,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 501
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "block_bytes": 2600,
+      "base_prompt_bytes": 5759,
+      "prompt_bytes": 8379,
+      "tool_bytes": 3887,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "rest",
+      "dataset_id": "T082DRCUHRRD/3/40/rest/plan/ab0a84ce7a99a5e6",
+      "dataset_ref": {
+        "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+        "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+        "uncompressed_offset": 762356,
+        "bytes": 11977,
+        "line": 128,
+        "sha256": "e8d394ce82ac1742a780dffd8a1ef74dac86cf74f123cfe1195d7cc5376d1ee8"
+      },
+      "entries": [
+        {
+          "id": "silent-brain-test-subject-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 62,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 501
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "tool_entries": [
+        {
+          "id": "silent-brain-test-subject-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 62,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 501
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "block_bytes": 2600,
+      "base_prompt_bytes": 11061,
+      "prompt_bytes": 13681,
+      "tool_bytes": 3887,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "act_plan",
+      "dataset_id": "KAY522KT5NXR/2/18/event/act-plan/8765deb684dd9ad4",
+      "dataset_ref": {
+        "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+        "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+        "uncompressed_offset": 1322917,
+        "bytes": 8508,
+        "line": 218,
+        "sha256": "c70d91cbdbf38b6ca18d768130cfcdc87f14a4b41c17e2d1be1a00fd9e5c015e"
+      },
+      "entries": [
+        {
+          "id": "silent-brain-knowledge-demon-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 51,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 360
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "tool_entries": [
+        {
+          "id": "silent-brain-knowledge-demon-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 51,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 360
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "block_bytes": 2517,
+      "base_prompt_bytes": 6999,
+      "prompt_bytes": 9536,
+      "tool_bytes": 3807,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "shop",
+      "dataset_id": "KAY522KT5NXR/2/24/shop/plan/8cbcea1c7261550a",
+      "dataset_ref": {
+        "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+        "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+        "uncompressed_offset": 1378302,
+        "bytes": 9693,
+        "line": 227,
+        "sha256": "f9f81e855f369401c764f243af7cb80237c344f567a42b9d21695ed301afe7d1"
+      },
+      "entries": [
+        {
+          "id": "silent-brain-knowledge-demon-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 51,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 360
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "tool_entries": [
+        {
+          "id": "silent-brain-knowledge-demon-external-tail-budget",
+          "version": "1.0.0",
+          "source": "external:sts2fun",
+          "evidence": [
+            {
+              "type": "external_aggregate",
+              "source": "external:sts2fun",
+              "url": "https://sts2.fun/static/sts2_public.db.zst",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "downloaded_at": "2026-10-21",
+              "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+              "filters": {
+                "character": "silent",
+                "ascension": 10,
+                "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+              },
+              "statistic": {
+                "name": "gross_damage_p90",
+                "value": 51,
+                "unit": "hp"
+              },
+              "denominator": {
+                "unit": "fights",
+                "n": 360
+              },
+              "design": "observational",
+              "limitations": [
+                "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+              ],
+              "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+              "role": "support"
+            }
+          ],
+          "evidence_summary": {
+            "own_runs": 0,
+            "own_support_runs": 0,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "gross_damage_p90",
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "block_bytes": 2517,
+      "base_prompt_bytes": 8677,
+      "prompt_bytes": 11214,
+      "tool_bytes": 3807,
+      "no_hit_byte_identical": true
+    }
+  ],
+  "stress": {
+    "available": 8,
+    "included": 2,
+    "block_bytes": 3293,
+    "long_text_count": 1,
+    "long_text_bytes": 2374,
+    "short_text_count": 3,
+    "short_text_bytes": 3118
+  },
+  "tool_scope": "#33 current source kb_strategies direct run; not live tool invocation or natural brain use",
+  "compatibility_scope": "actual StrategyEntries.apply and userMessage; not live prompt, model choice or game effect"
+}
