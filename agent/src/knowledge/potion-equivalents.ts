@@ -8,6 +8,7 @@
  */
 
 import { existsSync, readFileSync, statSync } from "node:fs";
+import { queryKnowledgeText } from "./query-sources.js";
 import { resolve } from "node:path";
 
 import { fillPotionText } from "./potion-values.js";
@@ -189,6 +190,8 @@ const cache = new Map<string, { stamp: string; file: PotionEquivalentsFile }>();
 /** The table in `dir` (the project's knowledge directory by default; knowledge/files.ts), cached by the file's mtime and size; throws KnowledgeLoadError. */
 export function loadPotionEquivalents(dir: string = DEFAULT_KNOWLEDGE_DIR): PotionEquivalentsFile {
   const path = knowledgeFile(resolve(dir), POTION_EQUIVALENTS_FILE);
+  const query = queryKnowledgeText(dir, POTION_EQUIVALENTS_FILE);
+  if (query !== undefined) return parsePotionEquivalents(query, path, knowledgeCharacter() !== DEFAULT_CHARACTER);
   let stamp: string;
   try {
     const info = statSync(path);

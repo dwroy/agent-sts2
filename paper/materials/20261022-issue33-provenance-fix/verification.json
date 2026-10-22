@@ -1,0 +1,101 @@
+{
+  "schema": "issue33-provenance-repair-v1",
+  "verified_at": "2026-10-22T00:11:47.733530+00:00",
+  "base": "276f3089c413b129e67362e3c84eae23baae993f",
+  "review_comment": "https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6328967393",
+  "source_files_verified": 10,
+  "knowledge_data_changed": false,
+  "external_stats_dependency_leaves_verified": 4,
+  "development_native_context": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "source": "own native turn_context",
+    "line_sha256": "3f58d9259093e480e0c70ecf1a0a3c752551ebd487db220cf38b6c98fc948605"
+  },
+  "tsc": {
+    "exit": 0,
+    "command": "cd agent; nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+  },
+  "full_vitest": {
+    "exit": 0,
+    "files": 652,
+    "passed": 6154,
+    "skipped": 2,
+    "failed": 0,
+    "duration_seconds": 1377.6,
+    "command": "cd agent; nice -n 19 node node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1 --no-file-parallelism --exclude tests/paths.test.ts --reporter=verbose"
+  },
+  "paths": {
+    "exit": 0,
+    "files": 1,
+    "passed": 11,
+    "command": "cd agent; nice -n 19 node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=verbose",
+    "reason": "process.chdir requires a fork"
+  },
+  "combined": {
+    "files": 653,
+    "passed": 6165,
+    "skipped": 2,
+    "failed": 0,
+    "full_run_interrupted": false,
+    "failed_file_rechecks_needed": false
+  },
+  "targeted": {
+    "files": 7,
+    "passed": 113,
+    "provenance_cases": 16
+  },
+  "logs": [
+    {
+      "source": "data/issue33-provenance-targeted-1.log",
+      "archive": "verification/issue33-provenance-targeted-1.log.gz",
+      "bytes": 4952,
+      "sha256": "18d5c323a160e11400846eed85fd484e7746598c472edcb9e15f5428d6fb4a4d",
+      "archive_sha256": "aac66dcb57156926ff7a1d0be7172dff8ecc2f44c521677bc79927d6aa207962"
+    },
+    {
+      "source": "data/issue33-provenance-targeted-2.log",
+      "archive": "verification/issue33-provenance-targeted-2.log.gz",
+      "bytes": 15017,
+      "sha256": "e60581cb6b1b3c854099912e60b3d1c92f24cccfd01a2f0991050874fa78e232",
+      "archive_sha256": "d81c4f830e9eb429adc44711f7753680379f7a80896db8c9c6656f6be7f28b19"
+    },
+    {
+      "source": "data/issue33-provenance-targeted-final.log",
+      "archive": "verification/issue33-provenance-targeted-final.log.gz",
+      "bytes": 16791,
+      "sha256": "b44a55c63af34f2a98061fe41ccd81e96003e7676a9126da25bc93993f72d6f4",
+      "archive_sha256": "18991a98449b9773e10e4290e0e5abd214377606a5355dc0985d1e06d21a0eb9"
+    },
+    {
+      "source": "data/issue33-provenance-full-tsc.log",
+      "archive": "verification/issue33-provenance-full-tsc.log.gz",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "data/issue33-provenance-full-paths.log",
+      "archive": "verification/issue33-provenance-full-paths.log.gz",
+      "bytes": 1737,
+      "sha256": "59ca08a7a4561241008525462515b7db4547b3b8d94b513a3b05e3f7c1408109",
+      "archive_sha256": "a5c1a179d141498156b8736a25d8b341a7754dfb6ca02d90bcfe781eefcb67b9"
+    },
+    {
+      "source": "data/issue33-provenance-full-vitest.log",
+      "archive": "verification/issue33-provenance-full-vitest.log.gz",
+      "bytes": 977521,
+      "sha256": "2c6bbdd47ede46d6f1aae2e27384d8c74d8e6a45b46eef9756d5712085fa7260",
+      "archive_sha256": "842c0edb2d102a0d2c16fb74503c7c27e64d22ea84b0faca1a072de6b62483ab"
+    }
+  ],
+  "real_model_calls": 0,
+  "games_started": 0,
+  "publication": {
+    "main": false,
+    "live": false,
+    "release_id_assigned": false,
+    "natural_run_acceptance": "pending original integration and ops workflow"
+  },
+  "historical_records": "Original #33 delivery, full-run exit 1/rechecks, and integrator exit 143 remain unchanged; this is a separate complete run on frozen repair sources."
+}

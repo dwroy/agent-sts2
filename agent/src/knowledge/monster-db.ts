@@ -1,4 +1,5 @@
 import { readCompatibleKnowledgeText } from "./catalog.js";
+import { queryKnowledgeJson, queryKnowledgeText, recordKnowledgeQuerySource } from "./query-sources.js";
 /**
  * The monster database (knowledge/builders/build-monster-db.py -> monster-db.json): measured facts about every enemy,
  * encounter and act boss from the logged fights, per ascension, with n on every number. DeepSeek sees it
@@ -161,7 +162,7 @@ export function mergeMonsterRecords(common: Record<string, unknown>, records: Re
 export function readMonsterRecords(dir: string = KNOWLEDGE_DIR): Record<string, unknown> | null {
   let text: string;
   try {
-    text = readFileSync(knowledgeFile(dir, MONSTER_RECORDS_FILE), "utf8");
+    text = queryKnowledgeText(dir, MONSTER_RECORDS_FILE) ?? readFileSync(knowledgeFile(dir, MONSTER_RECORDS_FILE), "utf8");
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
@@ -181,6 +182,11 @@ export function readMonsterDbJson(dir: string = KNOWLEDGE_DIR): Record<string, u
 let cached: MonsterDb | null = null;
 
 function load(): MonsterDb {
+  const query = queryKnowledgeJson("monster-db.json");
+  if (query !== undefined) {
+    const parsed = mergeMonsterRecords(query ?? {}, queryKnowledgeJson(MONSTER_RECORDS_FILE) ?? null) as Partial<MonsterDb>;
+    return { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {}, ...(parsed.observed ? { observed: parsed.observed } : {}) };
+  }
   if (cached) return cached;
   try {
     const parsed = readMonsterDbJson() as Partial<MonsterDb>;
@@ -1087,7 +1093,10 @@ export function fillDbNumbers(text: string, asc: number, db: Record<string, Mons
         return null;
     }
   };
-  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK|APPLIES):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => fill(kind, id, a, b) ?? "?");
+  return text.replace(/\{(HP|DMG|BEHIND|GAIN|POWER|BLOCK|APPLIES):([A-Z0-9_]+)(?::([A-Z0-9_]+))?(?::([A-Z0-9_]+))?\}/g, (_, kind: string, id: string, a?: string, b?: string) => {
+    recordKnowledgeQuerySource("monster-db.json"); recordKnowledgeQuerySource(MONSTER_RECORDS_FILE);
+    return fill(kind, id, a, b) ?? "?";
+  });
 }
 
 /**

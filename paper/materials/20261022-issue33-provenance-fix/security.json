@@ -1,0 +1,19 @@
+{
+  "tool": "gitleaks detect --no-git --redact",
+  "scans": [
+    {
+      "scope": "public test logs in cleartext",
+      "exit": 0,
+      "log": "verification/issue33-provenance-gitleaks-logs.log.gz",
+      "log_sha256": "7064637464240d83a46c50abd9e738ab76242a43795de7aadb8795e796b8f81e",
+      "archive_sha256": "edc1a901f47332f22582bc7b8b18759f4c57f34938458d46d293292341773099"
+    },
+    {
+      "scope": "complete staged source/report/receipt diff",
+      "exit": 0,
+      "log": "verification/issue33-provenance-gitleaks-staged.log.gz",
+      "log_sha256": "5e4d4ecdbbd57a082a68f56add1a1cba6b7335d2dde2d3edede78481a6a3b832",
+      "archive_sha256": "a5bee385a3168660b9813bc026cedc341197d749c3670ff027305f6c2f8a6822"
+    }
+  ]
+}
