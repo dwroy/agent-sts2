@@ -1,0 +1,19 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator40-hotfix-20261022/agent
+
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":295.72319500000003,"preparation_ms":298.5255769999999,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":249.15827100000024,"preparation_ms":251.38624299999992,"added_prompt_bytes":1591}
+ ✓ tests/v6-brain-card-value-loop.test.ts (6 tests) 6381ms
+   ✓ adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2  1503ms
+   ✓ adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3  1158ms
+   ✓ keeps the original brain question when missing  991ms
+   ✓ keeps the original brain question when corrupt  987ms
+   ✓ keeps the original brain question when timeout  944ms
+   ✓ keeps the original brain question when no-combat  793ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:06:21
+   Duration  9.89s (transform 2.79s, setup 395ms, import 2.98s, tests 6.38s, environment 0ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/issue40-hotfix-integrator-20261022/failure-diagnostic/vitest.json
