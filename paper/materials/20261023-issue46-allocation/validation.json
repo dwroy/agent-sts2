@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-23T07:43:24+08:00",
+  "base": "2c23c7197d71d37ac5b330a0f4d844d1b14abc11",
+  "source": [
+    {
+      "path": "ops/proposal_dispatch.py",
+      "bytes": 30903,
+      "sha256": "181764c3d54af9e6e6b41bddede98bc8494849486f205100c2da7214fe3f4d3f"
+    },
+    {
+      "path": "ops/worktree_allocation_report.py",
+      "bytes": 3786,
+      "sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a"
+    },
+    {
+      "path": "ops/tests/test_proposal_recheck.py",
+      "bytes": 8441,
+      "sha256": "a511da0b04c98c8271416f803411e2c5534fb1515b39b3a26387ad3572b0d416"
+    },
+    {
+      "path": "agent/tests/proposal-recheck.test.ts",
+      "bytes": 446,
+      "sha256": "b7f8d414bf5b36dcd525c801cd431315555e540b9d0a3113256548aa1baa830a"
+    }
+  ],
+  "primary_sandbox": {
+    "command": "SANDBOX_WORKERS=1 bash tools/test-sandbox.sh",
+    "cwd": "agent",
+    "nice": 19,
+    "exit": 1,
+    "production_tsc_exit": 0,
+    "files": {
+      "passed": 610,
+      "failed": 1
+    },
+    "tests": {
+      "passed": 5471,
+      "failed": 1
+    },
+    "duration_seconds": 1167.89,
+    "failure": "check-imports: sparse baseline omits paper/materials/issue29-brain-speed/results.jsonl",
+    "log": {
+      "path": "paper/materials/20261023-issue46-allocation/sandbox-tests.log",
+      "bytes": 1407,
+      "sha256": "a0a2651b4f0c0d29363214938247116d22f37e07cf3570727a6588841c2038fa"
+    }
+  },
+  "fixture_recovery": {
+    "command": "ops/worktree_storage.py materialize --workspace issue-46-task --path paper/materials/issue29-brain-speed/results.jsonl",
+    "exit": 0,
+    "head_unchanged": true,
+    "blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "receipt": "fixture-materialize.json"
+  },
+  "targeted_recheck": {
+    "command": "vitest run tests/check-imports.test.ts tests/proposal-recheck.test.ts --pool=threads --maxWorkers=1",
+    "exit": 0,
+    "files_passed": 2,
+    "tests_passed": 2
+  },
+  "remaining_sandbox_phase": {
+    "command": "vitest run tests/paths.test.ts --pool=forks --maxWorkers=1",
+    "exit": 0,
+    "files_passed": 1,
+    "tests_passed": 11
+  },
+  "targeted_log": {
+    "path": "paper/materials/20261023-issue46-allocation/recheck-tests.log",
+    "bytes": 492,
+    "sha256": "bc084a9360c0d99b9fc8224982c82fbaa559017ba90555db1c5d2d67991d938e"
+  },
+  "direct_python": {
+    "exit": 0,
+    "test_proposal_recheck": 10,
+    "test_strategy_concurrency": 6,
+    "test_cadence_no_change": 4,
+    "test_strategy_research_scheduling": 30,
+    "test_strategy_implementation": 11
+  },
+  "traffic_replay": {
+    "exit": 0,
+    "waiting_kept": 8,
+    "waiting_deferred": 51,
+    "estimated_total": 68
+  },
+  "gitleaks_initial_staged_diff_exit": 0,
+  "limits": [
+    "Primary sandbox exit 1 is preserved; no second complete suite was run or claimed green.",
+    "No source changes after primary check start; the failed import check passed after exact baseline input recovery; paths phase passed separately.",
+    "Host full checks on the final integrated tree remain with the integrator/ops.",
+    "No deployment or post-deployment 24-hour readback; no model, play, live, STOP, account/config or other session changes."
+  ]
+}

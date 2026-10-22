@@ -1,0 +1,1124 @@
+{
+  "schema": "issue46-traffic-replay-v1",
+  "since": "2026-10-21T23:17:29.331080+00:00",
+  "until": "2026-10-22T23:17:29.331080+00:00",
+  "inputs": {
+    "ops/codex-ops/learn.json": {
+      "sha256": "e4988f9b766e11572b87ef9148e95da67a7584851550515914868f390b8e001e",
+      "bytes": 11875529
+    },
+    "paper/materials/learning/code-proposals.jsonl": {
+      "sha256": "653fd3c721e1d09ae06f3f1d734d52cb2bda73cfcfef2784ba9423b592ee76d0",
+      "bytes": 6668474
+    },
+    "logs/runs.jsonl": {
+      "sha256": "8fc47ef9f8b56590222b06e75a2a158085ba3e2db548bdf2c79ea5c6e175839b",
+      "bytes": 431618
+    }
+  },
+  "original_allocations": 119,
+  "original_categories": {
+    "fix-batch": 9,
+    "integrator": 26,
+    "issue": 11,
+    "ops": 10,
+    "strategy-proposal": 63
+  },
+  "batches_by_class": {
+    "waiting-only": 59,
+    "postmortem": 8,
+    "fix-batch": 9,
+    "new-or-other-proposal": 4
+  },
+  "new_silent_run_rows": 31,
+  "waiting_only_kept": 8,
+  "waiting_only_deferred": 51,
+  "estimated_allocations_if_other_traffic_unchanged": 68,
+  "limits": [
+    "Uses original dispatch opportunities, known queue states strictly before each dispatch, and original run end times.",
+    "Deferral keeps work pending; later catch-up, model outcomes, clocks, new pending proposals and service failures can change future volume.",
+    "No model execution, checkout sharing, source mutation, deployment or actual post-publication observation."
+  ],
+  "batches": [
+    {
+      "batch": "20261022-074302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-074302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-081301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-081301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-084301",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "done",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-084301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-084301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 432,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-090940-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 433,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-090940-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 433,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-094302-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-094302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-094302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-101301-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-101301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-101301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 434,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-104302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 435,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-104302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 435,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-111301",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "done",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 435,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-111302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 435,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-111302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 435,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-114301-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 436,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-114301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 436,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-114301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 436,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-121302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 437,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-121302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 437,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-124302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 438,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-124302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 438,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-131302-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-131302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-131302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-134301",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "done",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-134302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-134302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 439,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-141301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 440,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-141301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 440,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-144301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "new-or-other-proposal",
+      "no_change": false,
+      "finished_runs_at_dispatch": 440,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-151302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 441,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-151302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 441,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-154302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 441,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-154302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 441,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-191302",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "done",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-191302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-191302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-194038-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-194038-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-201302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-201302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-204302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 443,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-211302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 444,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-211302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 444,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-214302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 444,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-214302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 444,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-221302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 445,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-221302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 445,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-224301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 446,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-224301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 446,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-231301",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "done",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 447,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261022-231302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 447,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-231302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 447,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261022-234301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 449,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-001301-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 449,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-001301-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 449,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-001301-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 449,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-004302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 450,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-004302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "done",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": true,
+      "finished_runs_at_dispatch": 450,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-011301",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 452,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-011302-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 452,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-011302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 452,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-011302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 452,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-014302-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "failed",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 453,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-014302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 453,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-014302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "failed",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 453,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-021302-fix-batch",
+      "task": "fix-batch",
+      "reason": "tick",
+      "state": "requeued-unstarted",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 453,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-021302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "tick",
+      "state": "requeued-unstarted",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "new-or-other-proposal",
+      "no_change": false,
+      "finished_runs_at_dispatch": 453,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-024302",
+      "task": "postmortem",
+      "reason": "tick",
+      "state": "requeued-unstarted",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 454,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-024302-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "state": "requeued-unstarted",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "waiting-only",
+      "no_change": false,
+      "finished_runs_at_dispatch": 454,
+      "proposed_action": "defer-repeat-review"
+    },
+    {
+      "batch": "20261023-032433",
+      "task": "postmortem",
+      "reason": "ops-authorized-unsubmitted-frozen-requeue",
+      "state": "running",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "postmortem",
+      "no_change": false,
+      "finished_runs_at_dispatch": 456,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-032433-fix-batch",
+      "task": "fix-batch",
+      "reason": "ops-authorized-unsubmitted-frozen-requeue",
+      "state": "running",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "fix-batch",
+      "no_change": false,
+      "finished_runs_at_dispatch": 456,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-032433-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "ops-authorized-unsubmitted-frozen-requeue",
+      "state": "running",
+      "proposal_count": 10,
+      "prior_states": {
+        "waiting": 10
+      },
+      "class": "new-or-other-proposal",
+      "no_change": false,
+      "finished_runs_at_dispatch": 456,
+      "proposed_action": "unchanged"
+    },
+    {
+      "batch": "20261023-032433-strategy-proposal",
+      "task": "strategy-proposal",
+      "reason": "ops-authorized-unsubmitted-frozen-requeue",
+      "state": "running",
+      "proposal_count": 0,
+      "prior_states": {},
+      "class": "new-or-other-proposal",
+      "no_change": false,
+      "finished_runs_at_dispatch": 456,
+      "proposed_action": "unchanged"
+    }
+  ]
+}
