@@ -1555,3 +1555,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] 2026-10-23T01:23:42+08:00 [ops/#36] 学习交互配置隔离阻塞：011301复盘及011302主/s2原三批在模型前以inherited-tui-config-not-isolated(code3)拒绝，非额度/登录归因；codex3 learner唯一拒绝键service_tier，brain预检过。复用#36原owner/候选，不另派模型实现；待Roy裁决先备份仅删learner该行或原dev修显式覆盖键合同，保持普通服务档/沙箱/账号权限。五局原attempts1/一小时重试及两策略失败保留，未即时重派/dataset/live发布。原件 paper/materials/20261023-0113-ops/receipt.json；issue36评论6346893335。
 
   - 2026-10-23T01:27:16+08:00 [ops/#36接续] 同分钟第四批011302-fix亦在TUI配置隔离门code3/零模型退出，原retry_at保留；无报告/源码/自测/合入，不重做001301四叶账本候选。补交36评论6346951782，原件 paper/materials/20261023-0124-ops/receipt.json。
+
+  - 2026-10-23T01:49:18+08:00 [ops/#36接续] 014302主/s2同一隔离拒绝models0原件保留；仅清理已由原CLI显式覆盖的本地learner service_tier，修改前备份learner-config-backups/20261023-0143/config-before.toml，其他配置/实际服务档/权限不变；四cwd原隔离预检现通过。配置阻塞已修，不据此称自然TUI/36发布完成，原批不即时重派/回收。原件 paper/materials/20261023-0143-ops/receipt.json；36评论6347387540。
