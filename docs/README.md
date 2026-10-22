@@ -14,6 +14,7 @@
 | [V5 S 决策实施计划](v5-s-decision-plan.md) | 2026-10-15 完成（`roy-20261014-s-decision`，P4/P5 未做）：必需计算故障出口与按需采样、S 排序、Boss 准备度诊断、Jev 平局仲裁的分阶段计划、验收与交接 |
 | [V5 全局构筑方向实施计划](v5-global-build-plan.md) | **2026-10-16 派发**（`roy-20261016-global-build`）：第三幕/最终 Boss 可信度与 S 验证 → 跨 Boss 全局评估 → 方向接入排序与前瞻校准 → 模板 → 路线 |
 | [量化计算与校准](quantitative-play.md) | 数值窗口、配对差、未知与日志/模型请求的不同用途 |
+| [怪物出牌条目与离线验证](jev-encounter-reflex.md) | #28：条目来源分账、同题面记忆消融、独立局区间；学习内容、真实回放及 Roy 开关决定仍待验 |
 | [V4 基础架构](v4-architecture.md) | V5 沿用的模块、Codex 大脑、知识/日志、学习闭环与 main/live |
 | [仓库布局](layout.md) | 模块路径、角色数据、工作区和运行目录 |
 | [学习协议](learning-protocol.md) | 游戏知识证据边界、角色隔离、职责与规则修改授权 |

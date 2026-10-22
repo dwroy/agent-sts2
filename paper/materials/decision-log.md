@@ -5786,3 +5786,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T11:19:20+08:00 [ops] #36原候选17叶/14原件与专项核回，生产off/无启用覆盖；#33唯一full仍持锁，终局后给原集成员绑定安全main短事务优先于本ops下一重检查，发布次序不变。无新等待者/模型/局，paper/materials/20261022-issue36-window-followup-ops/receipt.json。
 
 - 2026-10-22T11:28:59+08:00 [ops] #33+#26首轮full失败留原件；漏带两canonical helper补齐后定向17过，另两status-null原工程链pending，不重full/模型或发布。#36旧main窗口依原集成员取消，交互TUI待补交、视图off，见paper/materials/20261022-issue33-full-terminal-ops/receipt.json。
+- 2026-10-22T11:42:01+08:00 [watcher] #28 source83ea94191工程定向核验：双tsc0、干净树新CLI用例.cache缺失1失败原件保留，补测试前置后7文件87项通过；完整Vitest按Roy #20让位原ops #33/#35队列，候选留integrator-28-20261022未合main/live。原85条不变、真实调用/新条目0，收益/开关决定/A-B仍pending；paper/materials/20261022-issue28-integrator-review/。

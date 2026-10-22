@@ -7,7 +7,7 @@ const coverage = array(object({ experience_id: id, status: enumeration("converte
   reflex_ids: array(id), directions: array(id), reason: text(4000) }));
 const metric = object({ reflex_id: id, n: number(1, 1_000_000, true), method: text(4000), design: enumeration("observational", "paired"),
   effect_size: nullable(number()), se: nullable(number(0)), frequency: object({ n: number(0, 1_000_000, true), total: number(1, 1_000_000, true) }),
-  evidence: array(observationSchema, 1) });
+  evidence: array(observationSchema) });
 const reflexDraft = object({ schema: literal("v6-reflex-draft-v1"), character: characterSchema, vocab: reflexVocabSchema, reflex: reflexFile,
   coverage, metrics: array(metric), missing_fields: array(object({ field: text(), purpose: text(4000), evidence: array(observationSchema, 1) })), limitations: array(text(4000)) });
 const directionDraft = object({ schema: literal("v6-direction-draft-v1"), character: characterSchema, cards: directionFile, coverage, limitations: array(text(4000)) });
@@ -53,6 +53,7 @@ export function validateV6Draft(kind: "reflex" | "directions", raw: unknown, con
     for (const m of v.metrics) {
       if (m.frequency.n > m.frequency.total) issues.push(`${m.reflex_id}: frequency denominator`);
       const r = v.reflex.entries.find(r => r.id === m.reflex_id);
+      if (!m.evidence.length && (!r?.sources?.some(s => s.source.startsWith("external:")) || r.evidence.observations.length)) issues.push(`${m.reflex_id}: local metrics need local observations`);
       if (r && r.signal.kind !== "tag" && (m.effect_size !== r.signal.value || m.se !== (r.signal.se ?? null))) issues.push(`${m.reflex_id}: signal and audit disagree`);
       if (r?.signal.kind === "contrast" && (m.design !== "observational" || m.n !== r.signal.n.take + r.signal.n.not_take)) issues.push(`${m.reflex_id}: contrast design/sample counts disagree`);
     }
