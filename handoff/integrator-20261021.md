@@ -1,9 +1,10 @@
 # 集成员交接：2026-10-21
 
-更新：2026-10-22T09:45:06+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
+更新：2026-10-22T10:40:28+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
 
 仅保留未完成项：
 
+- #35：0485abd6f 独立核验通过，main c208665e6，转 waiting-release。tsc/Python 0，655 文件/6174 通过/2 既有跳过；2116 输入 SHA 不变，Codex/DeepSeek 真实 loop 固定商店计划复用与重启各读回4条，无额外请求。ops 原发布锁核精确 live 组合/#33依赖，按自然局边界发布、首局读回与release_id；报告 paper/materials/20261022-issue35-integrator-review/。未动生产或回收现场。
 - #33：276f3089c + ad5f37ae6 修复补交独立核验通过并合 main d3751e979，转 waiting-release。两项原阻断已真实 ToolHost 固定变更复验；完整 653 文件/6165通过/2跳过，tsc/重建0，2113输入SHA前后一致。ops仍须核实际live精确组合、#26真实挂载与自然首局读回；不追加取消的对比或额外对局。报告 paper/materials/20261022-issue33-integrator-admission/；原失败/中断和旧候选全部保留，不回收开发现场。
 - #26：c3716ba15 六类只读统计工具已独立核验并合 main，工具层不等 #33，转 waiting-release。#33 main联合检查已通过，ops仍须按精确live组合确认查询/角色隔离/实际挂载，ops 自然局边界发布及首局读回待验；不增加已取消的前后指标对比。报告同 #20 本轮目录。
 - #20：dec42bc98 自动接续/生命周期补交与私有 kit 95f1efb 技术核验通过并合 main，转 waiting-release。ops 安装须把 watchdog.py 与 board.py 一并升级，保持有效 off/无在途 tick、保留锁和 journal；owner授权、正式宿主登记/唯一入口、首 tick/实际送达及原命名/锁忙/回收仍待验，uncertain 不自动重发，不能以技术通过关整个issue。报告 paper/materials/20261022-issues26-20-integrator-review/。
