@@ -62,3 +62,28 @@ export function shopTable(input: { options: readonly { option: { key: string } }
   }
   return table;
 }
+
+/** One fixed grid shared by the transport contract and its separate host-performance measurement. */
+export function realisticCardGrid() {
+  const e = situation("card");
+  const metrics = { hp_loss: { mean: 17.123456789123, se: .123456789123, n: 100 }, turns: { mean: 8.5123456789, se: .25123456789, n: 100 },
+    damage_per_turn: { mean: 19.123456789123, se: .987654321987, n: 100 }, death_rate: { mean: .123456789, se: .02123456789, n: 100 },
+    losing_enemy_hp_fraction: { mean: .35123456789123, se: .03123456789123, n: 12 } };
+  const targets = Array.from({ length: 19 }, (_, i) => ({ id: `target${i}:FIXED_ENCOUNTER`, boss: `BOSS${i}`, act: i < 7 ? 1 : i < 10 ? 2 : 3,
+    floor: i === 0 ? 17 : i < 7 ? 8 : i < 10 ? 33 : 48,
+    kind: i === 0 ? "current" as const : i < 7 ? "elite" as const : i < 13 ? "future" as const : "chain" as const,
+    probability: i === 0 ? 1 : null, labels: [i < 7 ? "fixed_actual_boss_or_observed_elite_pool" : "fixed_uncalibrated_future_target"] }));
+  const row = { option_id: "skip", target_id: targets[0]!.id, metrics, paired_delta: metrics, samples: 100, requested_samples: 100,
+    capped: 0, time_up: 0, missing: 0, trust: { value: "unknown" as const, labels: ["fixed_untrusted_model"], details: { n: 43, brier: .2, bias: .1, passed: false } },
+    labels: [], unknown_reasons: [] };
+  const combos = summaries.flatMap(d => d.combos.map(c => ({ direction: d.id, combo: c })));
+  e.v6CardResults = { schema: "v6-card-combat-results-v1", targets,
+    immediate: ["card0", "card1", "card2", "skip"].flatMap(option_id => targets.slice(0, 7).map(t => ({ ...row, option_id, target_id: t.id,
+      ...(t.id === targets[6]!.id ? { unknown_reasons: ["fixed_partial_opening_limitation"] } : {}) }))),
+    long_term: combos.flatMap(({ direction, combo }) => targets.slice(7).map(t => ({ ...row, target_id: t.id,
+      direction_id: direction, combo_id: combo.id, added_cards: [] }))),
+    progress: { card0: combos.map(({ direction, combo }) => ({ direction, combo: combo.id, advanced: 1, missing_before: 3, missing_after: 2 })) }, labels: [],
+    telemetry: { elapsed_ms: 1, preparation_ms: 0, simulation_ms: 1, cache_hits: 0, simulations: 0,
+      long_term_cache: "hit", long_term_computed: 204, long_term_total: 204, pending_work: false } };
+  return { e, combos, targets };
+}

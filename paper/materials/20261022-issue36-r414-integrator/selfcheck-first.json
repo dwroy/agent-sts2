@@ -1,0 +1,43 @@
+{
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "seconds": 2.203
+    },
+    {
+      "name": "targeted",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-r414-integrator-20261022/selfcheck/vitest.json",
+        "tests/brain-codex-session.test.ts",
+        "tests/brain-live.test.ts",
+        "tests/brain-view.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/ops-herdr.test.ts",
+        "tests/legacy-refresh-incremental.test.ts"
+      ],
+      "exit_code": 1,
+      "seconds": 78.947
+    }
+  ],
+  "state": "running",
+  "production_written": false
+}

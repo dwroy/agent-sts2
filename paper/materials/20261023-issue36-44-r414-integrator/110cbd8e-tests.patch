@@ -1,0 +1,357 @@
+diff --git a/agent/tests/v6-brain-card-value-loop.test.ts b/agent/tests/v6-brain-card-value-loop.test.ts
+index 88011dc84..94725e98e 100644
+--- a/agent/tests/v6-brain-card-value-loop.test.ts
++++ b/agent/tests/v6-brain-card-value-loop.test.ts
+@@ -12,6 +12,7 @@ import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
+ import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+ import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
+ import { CardValueRuntime, type CardValueTable } from "../src/v6/card-value.js";
++import * as openingValue from "../src/v6/opening-value.js";
+ import { brainCardValueFacts } from "../src/v6/brain-card-value.js";
+ import { setupOneshotTests, FakeDeepSeek, type Raw } from "./oneshot-support.js";
+ import { startFixtureServer } from "./fixture-http.js";
+@@ -23,7 +24,9 @@ vi.mock("../src/knowledge/files.js", async original => ({
+ }));
+ setupOneshotTests();
+ const roots: string[] = [];
+-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.restoreAllMocks(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++// Keep host measurements separate from the computation clock; HTTP and async timers remain real.
++const wallNow = performance.now.bind(performance);
+ const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
+ function fixture() {
+   const root = mkdtempSync(join(tmpdir(), "v2-loop-")); roots.push(root); location.root = root;
+@@ -33,7 +36,13 @@ function fixture() {
+   setKnowledgeCharacter("silent"); setCardUpgradesForTests({}); return root;
+ }
+ 
+-async function replay(run: string, floor: number, mode: "present" | "missing" | "corrupt" | "off" | "timeout" | "no-combat" = "present") {
++async function replay(run: string, floor: number, mode: "present" | "missing" | "corrupt" | "off" | "timeout" | "no-combat" = "present", loadMs = 0) {
++  let computationNow = 0;
++  const clock = vi.spyOn(performance, "now").mockImplementation(() => computationNow);
++  const load = openingValue.loadOpeningModel;
++  const loading = vi.spyOn(openingValue, "loadOpeningModel").mockImplementation((...args) => {
++    const model = load(...args); computationNow += mode === "timeout" ? 450 : loadMs; return model;
++  });
+   const root = fixture(), combat: Raw = frozen.states[`${run}-f${floor}-COMBAT`], reward: Raw = frozen.states[`${run}-f${floor}-REWARD`];
+   if (mode === "missing") rmSync(join(root, "characters/silent/opening-value.json"));
+   if (mode === "corrupt") writeFileSync(join(root, "characters/silent/opening-value.json"), "{}");
+@@ -43,16 +52,23 @@ async function replay(run: string, floor: number, mode: "present" | "missing" |
+     appendFileSync(join(root, "v6-card-value.jsonl"), JSON.stringify({ ts: new Date().toISOString(), run_id: run, floor, table }) + "\n");
+     tables.push(table);
+   });
+-  if (mode === "timeout") vi.spyOn(value, "evaluate").mockImplementation(() => { throw new Error("card_value_preparation_budget"); });
+-  const evaluate = vi.spyOn(value, "evaluate");
++  const errors: { message: string; budgetMs: number | undefined; elapsedMs: number }[] = [];
++  const evaluate = vi.spyOn(value, "evaluate").mockImplementation((env, budgetMs) => {
++    const started = computationNow;
++    try { return CardValueRuntime.prototype.evaluate.call(value, env, budgetMs); }
++    catch (error) {
++      errors.push({ message: (error as Error).message, budgetMs, elapsedMs: computationNow - started }); throw error;
++    }
++  });
+   const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, undefined, undefined, undefined, value);
+   const prepare = runtime.evaluateBrainCardValue.bind(runtime);
+-  let preparationMs = 0;
++  let preparationMs = 0, wallPreparationMs = 0;
+   vi.spyOn(runtime, "evaluateBrainCardValue").mockImplementation(env => {
+-    const started = performance.now(), table = prepare(env);
++    const started = performance.now(), wallStarted = wallNow(), table = prepare(env);
+     // Include cold loading, full audit append and compact JSON packing in the preparation measurement.
+     if (table) JSON.stringify(brainCardValueFacts(table));
+     preparationMs += performance.now() - started;
++    wallPreparationMs += wallNow() - wallStarted;
+     return table;
+   });
+   let polls = 0;
+@@ -88,15 +104,19 @@ async function replay(run: string, floor: number, mode: "present" | "missing" |
+     const facts = call.state.facts as Raw;
+     const sim = facts.act_boss_sim as Raw | undefined;
+     if (sim && typeof sim.samples === "string") sim.samples = sim.samples.replace(/用时 [0-9.]+ 秒/, "用时 <elapsed> 秒");
+-    return { call, tables, preparationMs, evaluated: evaluate.mock.calls.length, simulations: simulate.mock.calls.length };
+-  } finally { await server.close(); }
++    return { call, tables, preparationMs, wallPreparationMs, errors, evaluations: evaluate.mock.calls,
++      evaluated: evaluate.mock.calls.length, simulations: simulate.mock.calls.length };
++  } finally { await server.close(); loading.mockRestore(); clock.mockRestore(); }
+ }
+ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bounded facts to the actual combat→reward brain question for %s F%i", async (run, floor) => {
+   const actual = await replay(run, floor), original = await replay(run, floor, "off");
+   const table = actual.tables.at(-1)!;
++  expect(table, JSON.stringify(actual.errors)).toBeDefined();
+   expect(table.options.map(o => o.known)).toEqual([true, true, true, true]);
+   expect(table.telemetry.elapsed_ms).toBeLessThan(500);
+   expect(actual.preparationMs).toBeLessThan(500);
++  expect(actual.errors).toEqual([]);
++  expect(actual.evaluations.every(([, budgetMs]) => budgetMs === 450)).toBe(true);
+   expect(actual.simulations).toBe(original.simulations);
+   expect(Object.keys(actual.call.criteria)).toEqual(Object.keys(original.call.criteria));
+   const cleaned = structuredClone(actual.call);
+@@ -119,10 +139,37 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bounded facts
+   const bytes = Buffer.byteLength(JSON.stringify(actual.call)) - Buffer.byteLength(JSON.stringify(original.call));
+   expect(bytes).toBeGreaterThan(0); expect(bytes).toBeLessThan(4000);
+   process.stdout.write(JSON.stringify({ fixture: `${run}-F${floor}`, prediction_ms: table.telemetry.elapsed_ms,
+-    preparation_ms: actual.preparationMs, added_prompt_bytes: bytes }) + "\n");
++    computation_preparation_ms: actual.preparationMs, wall_preparation_ms: actual.wallPreparationMs,
++    added_prompt_bytes: bytes }) + "\n");
+ }, 10000);
+ it.each(["missing", "corrupt", "timeout", "no-combat"] as const)("keeps the original brain question when %s", async mode => {
+   const actual = await replay("RBMEQGXPE9Z2", 3, mode), original = await replay("RBMEQGXPE9Z2", 3, "off");
+   expect(actual.call).toEqual(original.call);
++  if (mode === "timeout") {
++    expect(actual.tables).toEqual([]);
++    expect(actual.errors).toEqual([{ message: "card_value_preparation_budget", budgetMs: 450, elapsedMs: 450 }]);
++  } else expect(actual.errors).toEqual([]);
++  if (mode === "missing" || mode === "corrupt") {
++    expect(actual.evaluated).toBe(1);
++    expect(actual.tables).toHaveLength(1);
++    expect(actual.tables[0]!.model_id).toBeNull();
++    expect(actual.tables[0]!.options.every(o => !o.known && o.unknown.includes("opening_model_unavailable"))).toBe(true);
++  }
+   if (mode === "no-combat") expect(actual.evaluated).toBe(0);
+ }, 10000);
++
++it.each([449, 450, 451])("checks the real 450ms preparation boundary after %ims of loading", async loadMs => {
++  const actual = await replay("T0TP8S9MMU9Q", 2, "present", loadMs);
++  if (loadMs < 450) {
++    expect(actual.errors).toEqual([]);
++    expect(actual.tables).toHaveLength(1);
++    expect(actual.tables[0]!.telemetry.elapsed_ms).toBe(loadMs);
++    expect(actual.preparationMs).toBe(loadMs);
++    expect(actual.tables[0]!.options.map(o => o.known)).toEqual([true, true, true, true]);
++    expect(actual.call.state.facts).toHaveProperty("card_value_v2");
++  } else {
++    expect(actual.tables).toEqual([]);
++    expect(actual.errors).toEqual([{ message: "card_value_preparation_budget", budgetMs: 450, elapsedMs: loadMs }]);
++    expect(actual.call).toEqual((await replay("T0TP8S9MMU9Q", 2, "off")).call);
++  }
++}, 10000);
+diff --git a/agent/tests/v6-card-input-bridge.test.ts b/agent/tests/v6-card-input-bridge.test.ts
+index c26c0afb6..41bb02e57 100644
+--- a/agent/tests/v6-card-input-bridge.test.ts
++++ b/agent/tests/v6-card-input-bridge.test.ts
+@@ -1,4 +1,4 @@
+-import { afterEach, expect, it, vi } from "vitest";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
+ import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+@@ -27,7 +27,8 @@ vi.mock("../src/knowledge/files.js", async original => ({
+ }));
+ setupOneshotTests();
+ const roots: string[] = [];
+-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
++afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.restoreAllMocks(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+ function fixture(history = true) {
+   vi.stubEnv("V6_BUILD", "on");
+   const root = mkdtempSync(join(tmpdir(), "v6-input-")); roots.push(root);
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index ecabd4a4f..1f52768e4 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -205,6 +205,8 @@ it.each([
+   }, 15_000);
+ 
+ it("warms numeric B through the real brain reward loop without a separate request or foreground B fill", async () => {
++  // Fix both the background runtime's allowance and the inherited solver budget, as in the foreground contracts.
++  vi.spyOn(performance, "now").mockReturnValue(0);
+   const root = fixture(true); vi.stubEnv("V6_CARD_DECIDER", "brain");
+   const knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
+   const combat: Raw = frozen.states["T0TP8S9MMU9Q-f2-COMBAT"], reward: Raw = frozen.states["T0TP8S9MMU9Q-f2-REWARD"];
+@@ -220,8 +222,8 @@ it("warms numeric B through the real brain reward loop without a separate reques
+   const wait = vi.spyOn(runtime, "duringModelWait"), brain = new FakeDeepSeek(criteria => Object.keys(criteria)[0]!);
+   const original = brain.choose.bind(brain);
+   vi.spyOn(brain, "choose").mockImplementation(async (...args) => {
+-    // Fixed model latency, no API call. Existing network wait is the only scheduling opportunity.
+-    const answer = original(...args); await new Promise(resolve => setTimeout(resolve, 600)); return answer;
++    // Hold the already-issued model response until the real background work finishes; no host-speed race.
++    const answer = original(...args); await completed; return answer;
+   });
+   let polls = 0;
+   const server = await startFixtureServer((req, res) => {
+diff --git a/agent/tests/v6-card-value.test.ts b/agent/tests/v6-card-value.test.ts
+index 7cadc897d..7e8e59587 100644
+--- a/agent/tests/v6-card-value.test.ts
++++ b/agent/tests/v6-card-value.test.ts
+@@ -1,4 +1,4 @@
+-import { afterEach, expect, it, vi } from "vitest";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
+ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+@@ -12,7 +12,8 @@ import { loggedEnv } from "./logged.js";
+ 
+ const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
+ const roots: string[] = [];
+-afterEach(() => { vi.unstubAllEnvs(); roots.splice(0).forEach(path => rmSync(path, { recursive: true, force: true })); });
++beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
++afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); roots.splice(0).forEach(path => rmSync(path, { recursive: true, force: true })); });
+ function fixture() {
+   const root = mkdtempSync(join(tmpdir(), "card-value-")); roots.push(root);
+   mkdirSync(join(root, "characters/silent"), { recursive: true });
+diff --git a/agent/tests/v6-completed-core-peek.test.ts b/agent/tests/v6-completed-core-peek.test.ts
+index 916ce5e17..b014d6158 100644
+--- a/agent/tests/v6-completed-core-peek.test.ts
++++ b/agent/tests/v6-completed-core-peek.test.ts
+@@ -1,10 +1,12 @@
+-import { afterEach, expect, it, vi } from "vitest";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
+ import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
+ import { V6CardResultsEngine } from "../src/sim/v6-card-results.js";
+ import { v6Digest } from "../src/sim/v6-completion.js";
+ import { board, env, setupOneshotTests } from "./oneshot-support.js";
+ import { request, FixedRunner } from "./v6-projection-fixture.js";
+-setupOneshotTests(); afterEach(() => vi.unstubAllEnvs());
++setupOneshotTests();
++beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
++afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+ 
+ function fixture() {
+   vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "jev");
+diff --git a/agent/tests/v6-potions.test.ts b/agent/tests/v6-potions.test.ts
+index d21186de9..a6fa9fa62 100644
+--- a/agent/tests/v6-potions.test.ts
++++ b/agent/tests/v6-potions.test.ts
+@@ -1,7 +1,7 @@
+ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, readFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+-import { afterEach, expect, it, vi } from "vitest";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
+ import { potionEntries, rankPotions, rankPotionDiscards, v6PotionActive, withPotionJevBudget, potionAnswersComplete, notePotionFallback, validPotionAnswers } from "../src/v6/potion-entries.js";
+ import { planRest } from "../src/hand/screens/rest.js";
+ import { planEvent } from "../src/hand/screens/event.js";
+@@ -17,7 +17,8 @@ import { logged, loggedEnv } from "./logged.js";
+ import { board, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
+ setupOneshotTests();
+ const dirs: string[] = [];
+-afterEach(() => { vi.unstubAllEnvs(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
++beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
++afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
+ function active() { vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_POTION_DECIDER", "jev"); }
+ function temp() { const dir = mkdtempSync(join(tmpdir(), "v6-potions-")); dirs.push(dir); return dir; }
+ function fixture() {
+diff --git a/agent/tests/v6-projection-runtime.test.ts b/agent/tests/v6-projection-runtime.test.ts
+index 295a22afb..5aae85bab 100644
+--- a/agent/tests/v6-projection-runtime.test.ts
++++ b/agent/tests/v6-projection-runtime.test.ts
+@@ -1,11 +1,13 @@
+-import { afterEach, expect, it, vi } from "vitest";
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
+ import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+ import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
+ import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
+ import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
+ import { board, env, setupOneshotTests } from "./oneshot-support.js";
+ import { request } from "./v6-projection-fixture.js";
+-setupOneshotTests(); afterEach(() => vi.unstubAllEnvs());
++setupOneshotTests();
++beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
++afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+ it("does not load frozen inputs or simulate while off or in combat", async () => {
+   const load = vi.fn(), engine = { evaluate: vi.fn(), precompute: vi.fn() }, runtime = new V6ProjectionRuntime(engine, load);
+   const e = env(board("xljq-f5-reward", "reward"));
+diff --git a/agent/tests/v6-prompt-summary-fixtures.ts b/agent/tests/v6-prompt-summary-fixtures.ts
+index 78b48c1f9..5f61d9030 100644
+--- a/agent/tests/v6-prompt-summary-fixtures.ts
++++ b/agent/tests/v6-prompt-summary-fixtures.ts
+@@ -62,3 +62,28 @@ export function shopTable(input: { options: readonly { option: { key: string } }
+   }
+   return table;
+ }
++
++/** One fixed grid shared by the transport contract and its separate host-performance measurement. */
++export function realisticCardGrid() {
++  const e = situation("card");
++  const metrics = { hp_loss: { mean: 17.123456789123, se: .123456789123, n: 100 }, turns: { mean: 8.5123456789, se: .25123456789, n: 100 },
++    damage_per_turn: { mean: 19.123456789123, se: .987654321987, n: 100 }, death_rate: { mean: .123456789, se: .02123456789, n: 100 },
++    losing_enemy_hp_fraction: { mean: .35123456789123, se: .03123456789123, n: 12 } };
++  const targets = Array.from({ length: 19 }, (_, i) => ({ id: `target${i}:FIXED_ENCOUNTER`, boss: `BOSS${i}`, act: i < 7 ? 1 : i < 10 ? 2 : 3,
++    floor: i === 0 ? 17 : i < 7 ? 8 : i < 10 ? 33 : 48,
++    kind: i === 0 ? "current" as const : i < 7 ? "elite" as const : i < 13 ? "future" as const : "chain" as const,
++    probability: i === 0 ? 1 : null, labels: [i < 7 ? "fixed_actual_boss_or_observed_elite_pool" : "fixed_uncalibrated_future_target"] }));
++  const row = { option_id: "skip", target_id: targets[0]!.id, metrics, paired_delta: metrics, samples: 100, requested_samples: 100,
++    capped: 0, time_up: 0, missing: 0, trust: { value: "unknown" as const, labels: ["fixed_untrusted_model"], details: { n: 43, brier: .2, bias: .1, passed: false } },
++    labels: [], unknown_reasons: [] };
++  const combos = summaries.flatMap(d => d.combos.map(c => ({ direction: d.id, combo: c })));
++  e.v6CardResults = { schema: "v6-card-combat-results-v1", targets,
++    immediate: ["card0", "card1", "card2", "skip"].flatMap(option_id => targets.slice(0, 7).map(t => ({ ...row, option_id, target_id: t.id,
++      ...(t.id === targets[6]!.id ? { unknown_reasons: ["fixed_partial_opening_limitation"] } : {}) }))),
++    long_term: combos.flatMap(({ direction, combo }) => targets.slice(7).map(t => ({ ...row, target_id: t.id,
++      direction_id: direction, combo_id: combo.id, added_cards: [] }))),
++    progress: { card0: combos.map(({ direction, combo }) => ({ direction, combo: combo.id, advanced: 1, missing_before: 3, missing_after: 2 })) }, labels: [],
++    telemetry: { elapsed_ms: 1, preparation_ms: 0, simulation_ms: 1, cache_hits: 0, simulations: 0,
++      long_term_cache: "hit", long_term_computed: 204, long_term_total: 204, pending_work: false } };
++  return { e, combos, targets };
++}
+diff --git a/agent/tests/v6-prompt-summary-perf.test.ts b/agent/tests/v6-prompt-summary-perf.test.ts
+index 9a96fa9c9..05119b6bc 100644
+--- a/agent/tests/v6-prompt-summary-perf.test.ts
++++ b/agent/tests/v6-prompt-summary-perf.test.ts
+@@ -9,7 +9,7 @@ import { buildV6CardPick } from "../src/v6/card-pick.js";
+ import { buildV6RoomDecision } from "../src/hand/screens/v6-room.js";
+ import { v6ShopOptions, v6RestOptions } from "../src/hand/screens/v6-room-options.js";
+ import { setupOneshotTests } from "./oneshot-support.js";
+-import { knowledge, on, situation, shopTable, size } from "./v6-prompt-summary-fixtures.js";
++import { knowledge, on, situation, shopTable, size, realisticCardGrid } from "./v6-prompt-summary-fixtures.js";
+ 
+ setupOneshotTests();
+ afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+@@ -46,3 +46,13 @@ it.each(["card", "shop", "rest"] as const)("measures fixed %s summary constructi
+   }
+   if (process.env.PERF_OUTPUT) appendFileSync(process.env.PERF_OUTPUT, rows.map(r => JSON.stringify(r)).join("\n") + "\n");
+ }, 30_000);
++
++// Preserve the original 1.5s ceiling here, separately from the full-grid business assertions.
++it("measures the realistic 204-row cached card grid", () => {
++  on(); const { e } = realisticCardGrid();
++  const start = performance.now(), d = buildV6CardPick(e, undefined, knowledge)!.decision;
++  const elapsed_ms = performance.now() - start;
++  expect(elapsed_ms).toBeLessThan(1500);
++  if (process.env.PERF_OUTPUT) appendFileSync(process.env.PERF_OUTPUT,
++    JSON.stringify({ kind: "realistic_card_grid", elapsed_ms, state_bytes: size(d.state) }) + "\n");
++});
+diff --git a/agent/tests/v6-prompt-summary.test.ts b/agent/tests/v6-prompt-summary.test.ts
+index 4f11e4325..68a84b33f 100644
+--- a/agent/tests/v6-prompt-summary.test.ts
++++ b/agent/tests/v6-prompt-summary.test.ts
+@@ -23,7 +23,7 @@ import { ensureDirectionPlan } from "../src/v6/direction-runtime.js";
+ import { logRow } from "./v6-fixtures.js";
+ import { planned, setupOneshotTests } from "./oneshot-support.js";
+ 
+-import { knowledge, cores, summaries, weights, entries, size, on, situation, shopTable } from "./v6-prompt-summary-fixtures.js";
++import { knowledge, cores, summaries, weights, entries, size, on, situation, shopTable, realisticCardGrid } from "./v6-prompt-summary-fixtures.js";
+ 
+ setupOneshotTests();
+ afterEach(() => vi.unstubAllEnvs());
+@@ -244,28 +244,8 @@ it("keeps 28 low-P shop choices in compatibility audit while production keeps th
+ });
+ 
+ it("preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid", () => {
+-  on(); const e = situation("card");
+-  const metrics = { hp_loss: { mean: 17.123456789123, se: .123456789123, n: 100 }, turns: { mean: 8.5123456789, se: .25123456789, n: 100 },
+-    damage_per_turn: { mean: 19.123456789123, se: .987654321987, n: 100 }, death_rate: { mean: .123456789, se: .02123456789, n: 100 },
+-    losing_enemy_hp_fraction: { mean: .35123456789123, se: .03123456789123, n: 12 } };
+-  const targets = Array.from({ length: 19 }, (_, i) => ({ id: `target${i}:FIXED_ENCOUNTER`, boss: `BOSS${i}`, act: i < 7 ? 1 : i < 10 ? 2 : 3,
+-    floor: i === 0 ? 17 : i < 7 ? 8 : i < 10 ? 33 : 48,
+-    kind: i === 0 ? "current" as const : i < 7 ? "elite" as const : i < 13 ? "future" as const : "chain" as const,
+-    probability: i === 0 ? 1 : null, labels: [i < 7 ? "fixed_actual_boss_or_observed_elite_pool" : "fixed_uncalibrated_future_target"] }));
+-  const row = { option_id: "skip", target_id: targets[0]!.id, metrics, paired_delta: metrics, samples: 100, requested_samples: 100,
+-    capped: 0, time_up: 0, missing: 0, trust: { value: "unknown" as const, labels: ["fixed_untrusted_model"], details: { n: 43, brier: .2, bias: .1, passed: false } },
+-    labels: [], unknown_reasons: [] };
+-  const combos = summaries.flatMap(d => d.combos.map(c => ({ direction: d.id, combo: c })));
+-  e.v6CardResults = { schema: "v6-card-combat-results-v1", targets,
+-    immediate: ["card0", "card1", "card2", "skip"].flatMap(option_id => targets.slice(0, 7).map(t => ({ ...row, option_id, target_id: t.id,
+-      ...(t.id === targets[6]!.id ? { unknown_reasons: ["fixed_partial_opening_limitation"] } : {}) }))),
+-    long_term: combos.flatMap(({ direction, combo }) => targets.slice(7).map(t => ({ ...row, target_id: t.id,
+-      direction_id: direction, combo_id: combo.id, added_cards: [] }))),
+-    progress: { card0: combos.map(({ direction, combo }) => ({ direction, combo: combo.id, advanced: 1, missing_before: 3, missing_after: 2 })) }, labels: [],
+-    telemetry: { elapsed_ms: 1, preparation_ms: 0, simulation_ms: 1, cache_hits: 0, simulations: 0,
+-      long_term_cache: "hit", long_term_computed: 204, long_term_total: 204, pending_work: false } };
+-  const before = JSON.stringify(e.v6CardResults), start = performance.now(), d = buildV6CardPick(e, undefined, knowledge)!.decision;
+-  expect(performance.now() - start).toBeLessThan(1500);
++  on(); const { e, combos, targets } = realisticCardGrid();
++  const before = JSON.stringify(e.v6CardResults), d = buildV6CardPick(e, undefined, knowledge)!.decision;
+   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
+   const kept = asArray(d.state.core_metrics).map(asRecord), catalog = asArray(d.state.display_catalog);

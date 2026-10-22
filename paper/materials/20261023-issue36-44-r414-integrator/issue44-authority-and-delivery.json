@@ -1,0 +1,49 @@
+[
+  {
+    "url": "https://api.github.com/repos/dwroy/agent-sts2/issues/comments/6344459640",
+    "html_url": "https://github.com/dwroy/agent-sts2/issues/44#issuecomment-6344459640",
+    "issue_url": "https://api.github.com/repos/dwroy/agent-sts2/issues/44",
+    "id": 6344459640,
+    "node_id": "IC_kwDOU7DWbs8AAAABeijFeA",
+    "user": {
+      "login": "dwroy",
+      "id": 1374130,
+      "node_id": "MDQ6VXNlcjEzNzQxMzA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1374130?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dwroy",
+      "html_url": "https://github.com/dwroy",
+      "followers_url": "https://api.github.com/users/dwroy/followers",
+      "following_url": "https://api.github.com/users/dwroy/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dwroy/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dwroy/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dwroy/subscriptions",
+      "organizations_url": "https://api.github.com/users/dwroy/orgs",
+      "repos_url": "https://api.github.com/users/dwroy/repos",
+      "events_url": "https://api.github.com/users/dwroy/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dwroy/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "created_at": "2026-10-22T15:24:29Z",
+    "updated_at": "2026-10-22T15:24:29Z",
+    "body": "[dev #41] #44 已修复并完成同类契约排查：固定输入复现真实450ms异常/空表，交 review。\n\n提交 `110cbd8e113cf2dddf526bc196b8ad2e483b2181`，独立分支/工作树 `issue-44-clock`，基线 `d76da078334e57ba93f21471e160cdec15d32256`；按主管指派继续使用原 issue-41 会话。[报告与原件](https://github.com/dwroy/agent-sts2/tree/110cbd8e113cf2dddf526bc196b8ad2e483b2181/paper/materials/20261022-issue44-card-clock)。\n\n- 原冻结 F2/模型/核心卡输入与首败树 blob 核同。真实模型加载后把计算钟推进到450ms，原预测代码实际抛出 `card_value_preparation_budget`，外层实际捕获并返回空表；正向断言红测1败/6跳，记录 budgetMs=elapsedMs=450，没有伪造异常。补449成功、450/451原题面降级，以及真实缺失/坏模型对照。历史首败未采内部异常，本次证明足以复现的路径，仍不认定唯一历史原因。\n- 原两组四选项、数值/逐格精度、题面/criteria字节等价、模拟调用数和字节上限断言均保留；计算钟可控，宿主准备耗时另记。排查全部12个直接读取文件及3个间接预算路径：修复相关runtime/药水/预测缓存/输入桥接/后台缓存时钟；#41后台B改真实完成事件同步，前台既有回归保留。其余已有注入钟/fake timers的预算契约原样保留，逐项清单在报告。\n- 204行提示词业务断言保留，共用原fixture；1500ms宿主阈值移入专用perf文件原值不变，性能与业务分账。未提高生产/测试预算或timeout，未改生产算法/知识，不需行为发布编号。\n- tsc退出0；最终定向17文件167/167，含本单9项及#41六契约；nice19、单worker/文件不并行。首探针曾提前恢复源码并重叠启动下一轮，已终止第二轮(exit143)，误测正向结果不计红测；原件和操作失误保留，后续红测及正式检查串行。原#40完整首败摘录/SHA、完整原件本地副本均保留，不以重跑改写首败。提交补丁与本正文gitleaks均零泄漏。\n\n最终精确组合/full沿集成员原唯一窗口，排在当前在途项之后；不阻塞#40热修原发布门。本轮未起full/等位者、未合main/live或改STOP、未调用游戏/模型或关闭其他会话。新旧工作树保留；请保留#41完整时钟修复、原失败和归因限制。\n",
+    "author_association": "OWNER",
+    "pin": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/dwroy/agent-sts2/issues/comments/6344459640/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "performed_via_github_app": null,
+    "minimized": null
+  }
+]

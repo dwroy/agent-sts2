@@ -28,5 +28,22 @@
   ],
   "observed_live": "fdae435795f41d771da6df3457eb890e50d8ffeb",
   "ops_must_recheck": true,
-  "forbid_whole_source_or_main_overlay": true
+  "forbid_whole_source_or_main_overlay": true,
+  "r414_wrapper_port": {
+    "correction_comment": 6344801197,
+    "original_paths_new_blob_scope": "main only for agent/tests/legacy-refresh-incremental.test.ts",
+    "actual_R414_base": "fdae435795f41d771da6df3457eb890e50d8ffeb",
+    "method": "retain original R414 wrapper and append only [python3, knowledge/builders/test_refresh_entrypoints.py, 2] after its existing pipeline entry",
+    "r414_tested_wrapper": {
+      "path": "agent/tests/legacy-refresh-incremental.test.ts",
+      "category": "hotfix40-prerequisite",
+      "base_blob": "5ecebcec8aa40e93eb7f460236799bb76ff79820",
+      "tested_blob": "2cfb28aec13289979ac27dd69fcba06ec3857a03",
+      "sha256": "5a7ee279b38a20ff0dab442ddb12c5be17db8ae5f7bcd745c25dc7f15ef92479",
+      "mode": "100644"
+    },
+    "patch": "../20261022-issue36-r414-integrator/r414-hotfix40-prerequisite.patch",
+    "actual_combination_full": "../20261022-issue36-r414-integrator/full/checks.json",
+    "do_not_copy_main_wrapper_wholesale": true
+  }
 }

@@ -1,0 +1,140 @@
+{
+  "state": "passed",
+  "started_at": "2026-10-23T00:21:43+08:00",
+  "runner_pid": 2321598,
+  "runner_start": "11063307",
+  "nice": 19,
+  "base_live": "fdae435795f41d771da6df3457eb890e50d8ffeb",
+  "source": "1b0aeb68f70876809e761ea563f2b1195318a32a",
+  "tree": "6b8d15d12d6acf96cfbe9b4359878e142c5685f3",
+  "scope_url": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6345466773",
+  "full_started": true,
+  "attempt": "one-authorized-combined-36-fixture-and44-full",
+  "assembly_manifest": "assembly.json",
+  "test_fixes": {
+    "110cbd8e": {
+      "commit": "110cbd8e113cf2dddf526bc196b8ad2e483b2181",
+      "test_paths": [
+        "agent/tests/v6-brain-card-value-loop.test.ts",
+        "agent/tests/v6-card-input-bridge.test.ts",
+        "agent/tests/v6-card-option-loop.test.ts",
+        "agent/tests/v6-card-value.test.ts",
+        "agent/tests/v6-completed-core-peek.test.ts",
+        "agent/tests/v6-potions.test.ts",
+        "agent/tests/v6-projection-runtime.test.ts",
+        "agent/tests/v6-prompt-summary-fixtures.ts",
+        "agent/tests/v6-prompt-summary-perf.test.ts",
+        "agent/tests/v6-prompt-summary.test.ts"
+      ]
+    },
+    "f0a967266": {
+      "commit": "f0a967266449b1d758f7d28c5f3404804981ce4c",
+      "test_paths": [
+        "agent/tests/boss-sim-home.test.ts",
+        "ops/tests/test_boss_sim_home.py"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-23T00:21:44+08:00",
+      "pid": 2321661,
+      "exit_code": 0,
+      "seconds": 2.212
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-44-r414-integrator-20261023/full/vitest.json"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-23T00:21:46+08:00",
+      "pid": 2321886,
+      "exit_code": 0,
+      "seconds": 1713.383
+    },
+    {
+      "name": "python-view",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_brain_view.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-23T00:50:19+08:00",
+      "pid": 2445014,
+      "exit_code": 0,
+      "seconds": 0.373
+    },
+    {
+      "name": "python-tui",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_learner_tui.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-23T00:50:20+08:00",
+      "pid": 2445035,
+      "exit_code": 0,
+      "seconds": 0.143
+    },
+    {
+      "name": "production-entry-python",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "knowledge/builders/test_refresh_entrypoints.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-23T00:50:20+08:00",
+      "pid": 2445038,
+      "exit_code": 0,
+      "seconds": 2.84
+    }
+  ],
+  "input_count": 2509,
+  "inputs_unchanged": true,
+  "vitest": {
+    "files": 644,
+    "passed": 6109,
+    "failed": 0,
+    "pending": 2
+  },
+  "ended_at": "2026-10-23T00:50:23+08:00"
+}

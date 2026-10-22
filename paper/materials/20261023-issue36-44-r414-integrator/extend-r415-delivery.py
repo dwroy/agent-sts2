@@ -1,0 +1,10 @@
+from pathlib import Path
+p=Path(__file__).resolve().parent/'prepare-candidate.py';s=p.read_text()
+s=s.replace("ma = json.loads((B/'main-assembly.json').read_text())", "ma = json.loads((B/'main-assembly.json').read_text())\nr415 = json.loads((B/'r415-readback.json').read_text())\nassert r415['release_id'] == 'V6-R415' and all(v['same_as_inflight_full'] for v in r415['three_prerequisites'])")
+s=s.replace("put(dest/'delivery.json', delivery)", "delivery['actual_R415_compatibility'] = r415\ndelivery['hotfix40_prerequisites_already_live'] = True\ndelivery['R415_publication_instruction'] = 'Apply only 31 R3 and 12 test-fix leaves after checking exact preimages; three hotfix40 prerequisites are already live. Preserve all latest natural knowledge and release registration; never overlay frozen data.'\nput(dest/'delivery.json', delivery)")
+s=s.replace("(dest/'report.md').write_text(report)", "report += f\"\\n在途期间 #40 已由 ops 发布 V6-R415 `{r415['actual_live']}`，三叶前件与本轮受测树逐字节同；最新快照另记 `r415-readback.json`，其中 {len(r415['changed_knowledge'])} 份自然知识与冻结副本不同。保留这个差异，不改写 full 输入、不给 R415 新数据冒称 full0。发布时只接 R3/测试叶并保实际最新知识与 R415 编号；#40 三叶已 live，无须重放。\\n\"\n(dest/'report.md').write_text(report)")
+p.write_text(s)
+p=Path(__file__).resolve().parent/'prepare-handoff.py';s=p.read_text();s=s.replace("material = c['material']", "material = c['material']\nr415 = json.loads((B/'r415-readback.json').read_text())")
+s=s.replace("原序 #40 热修 → #36", "在途期间已实际发布 V6-R415 `{r415['actual_live']}`；#40 三叶与受测树逐字节同，已属 live 前件，不要重放。快照读回发现 {len(r415['changed_knowledge'])} 份自然知识与冻结 full 不同，详见 r415-readback.json；本轮 full 输入不改，不据此冒称在新数据树跑过 full。ops 按实际 R415 接 31 叶 R3 与 12 叶测试修复，保最新数据和已有编号。\n\n原序 #40 热修 → #36")
+p.write_text(s)
+print('R415 acknowledgement added to candidate and handoff generators; execution still gated on full and actual readback')

@@ -1,0 +1,82 @@
+diff --git a/agent/tests/boss-sim-home.test.ts b/agent/tests/boss-sim-home.test.ts
+index 3e3a72dee..4399022e6 100644
+--- a/agent/tests/boss-sim-home.test.ts
++++ b/agent/tests/boss-sim-home.test.ts
+@@ -8,6 +8,6 @@ it("passes the project Codex home from the report hook through learner dispatch
+     env: { PATH: process.env.PATH ?? "/usr/bin:/bin", TMPDIR: process.env.TMPDIR ?? "/tmp", PYTHONDONTWRITEBYTECODE: "1" },
+   });
+   expect(result.status, result.stderr).toBe(0);
+-  expect(result.stderr).toContain("Ran 5 tests");
++  expect(result.stderr).toContain("Ran 6 tests");
+   expect(result.stderr).toContain("OK");
+ });
+diff --git a/ops/tests/test_boss_sim_home.py b/ops/tests/test_boss_sim_home.py
+index b8c5d427f..2bf1f9012 100644
+--- a/ops/tests/test_boss_sim_home.py
++++ b/ops/tests/test_boss_sim_home.py
+@@ -33,6 +33,37 @@ class BossSimHome(unittest.TestCase):
+             report.boss_sim_check("SILENT")
+         return run
+ 
++    def assert_herdr_launch(self, env, *, fixed_command=False):
++        import sys
++        sys.path.insert(0, str(ROOT / "ops"))
++        import learner_jobs
++        launch_env = {**env, "CODEX_OPS_LEARNER_HOST": "herdr"}
++        if fixed_command:
++            launch_env["LEARNER_CMD"] = "/fixture/fixed-command"
++        output = "w1:p2 34567\n" if fixed_command else "w1:p2\n"
++        argv = ["bash", "/fixture/wrapper"]
++        with patch.dict(os.environ, launch_env, clear=True), \
++                patch.object(learner_jobs.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, output, "")) as start, \
++                patch.object(learner_jobs.subprocess, "Popen") as supervisor:
++            supervisor.return_value.pid = 34567
++            self.assertEqual(learner_jobs.start_learner(argv, str(self.root), "/fixture/scripts", str(self.state), "fixed"), (34567, "w1:p2"))
++        if fixed_command:
++            supervisor.assert_not_called()
++            command = start.call_args.args[0]
++            self.assertEqual(command[:4], ["bash", "/fixture/scripts/herdr-host.sh", "run", "fixed"])
++            index = command.index("LEARNER_CODEX_HOME=" + env["LEARNER_CODEX_HOME"])
++            self.assertEqual(command[index - 1], "--env")
++            self.assertIn("--close-on-exit", command)
++            self.assertEqual(command[-3:], ["--", *argv])
++        else:
++            start.assert_called_once_with(["bash", "/fixture/scripts/herdr-host.sh", "open-pane", "fixed"],
++                                          cwd=str(self.root), stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
++            supervisor.assert_called_once_with(["nice", "-n", "19", *argv], cwd=str(self.root),
++                                               env={**launch_env, "LEARNER_HERDR_PANE": "w1:p2", "LEARNER_HERDR_LABEL": "fixed",
++                                                    "LEARNER_TUI_RECEIPT": str(self.state / "learner/fixed.tui.json")},
++                                               stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
++            self.assertEqual((self.state / "learner/fixed.pid").read_text(), "34567\n")
++
+     def test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr(self):
+         call = self.dispatch({"HOME": str(self.root), "CODEX_HOME": "/fixture/global-home"})
+         env = call.call_args.kwargs["env"]
+@@ -40,17 +71,20 @@ class BossSimHome(unittest.TestCase):
+         self.assertEqual(env["CODEX_HOME"], "/fixture/global-home")
+         self.assertEqual(call.call_args.args[0][-3:], ["boss-check", "--character", "silent"])
+         self.assertEqual(call.call_args.kwargs["timeout"], 120)
+-        import sys
+-        sys.path.insert(0, str(ROOT / "ops"))
+-        import learner_jobs
+-        with patch.dict(os.environ, {**env, "CODEX_OPS_LEARNER_HOST": "herdr"}, clear=True), \
+-                patch.object(learner_jobs.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, "pane 123\n", "")) as start:
+-            self.assertEqual(learner_jobs.start_learner(["bash", "/fixture/wrapper"], str(self.root), "/fixture/scripts", str(self.state), "fixed"), (123, "pane"))
+-        self.assertIn("LEARNER_CODEX_HOME=" + str(self.home), start.call_args.args[0])
++        self.assert_herdr_launch(env)
+ 
+     def test_explicit_learner_home_remains_authoritative(self):
+         call = self.dispatch({"LEARNER_CODEX_HOME": "/fixture/explicit", "CODEX_HOME": "/fixture/global"})
+         self.assertEqual(call.call_args.kwargs["env"]["LEARNER_CODEX_HOME"], "/fixture/explicit")
++        self.assert_herdr_launch(call.call_args.kwargs["env"])
++
++    def test_explicit_fixed_command_keeps_legacy_herdr_environment_forwarding(self):
++        for override in ({}, {"LEARNER_CODEX_HOME": "/fixture/explicit"}):
++            with self.subTest(override=override):
++                call = self.dispatch({"CODEX_HOME": "/fixture/global", **override})
++                env = call.call_args.kwargs["env"]
++                self.assertEqual(env["LEARNER_CODEX_HOME"], override.get("LEARNER_CODEX_HOME", str(self.home)))
++                self.assert_herdr_launch(env, fixed_command=True)
+ 
+     def test_alternate_state_directory_uses_its_own_selector(self):
+         other = self.root / "other-state"

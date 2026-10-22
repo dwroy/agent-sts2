@@ -1,0 +1,87 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/agent
+
+ ❯ tests/learner-herdr-ownership.test.ts (4 tests | 4 failed) 681ms
+     × does not accept a different human turn as the batch completion 10ms
+     × retains the TUI and supervision when ownership is lease-lost 156ms
+     × retains the TUI and supervision when ownership is start-uncertain 149ms
+     × does not retire a TUI with unsent human text on timeout 364ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not accept a different human turn as the batch completion
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/learner-herdr-ownership.test.ts:111:28
+    109|     b.feed(row("event_msg", {type:"user_message",message:"An unrelated…
+    110|     b.feed(row("event_msg", {type:"task_complete",turn_id:"human-turn"…
+    111|     expect(b.successful()).toBe(false);
+       |                            ^
+    112|   });
+    113|   it.each(["lease-lost", "start-uncertain"])("retains the TUI and supe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is lease-lost
+ FAIL  tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is start-uncertain
+AssertionError: expected { code: 124, stopped: true, sends: 2 } to deeply equal { code: 75, stopped: false, sends: +0 }
+
+- Expected
++ Received
+
+  {
+-   "code": 75,
+-   "sends": 0,
+-   "stopped": false,
++   "code": 124,
++   "sends": 2,
++   "stopped": true,
+  }
+
+ ❯ tests/learner-herdr-ownership.test.ts:116:8
+    114|     const f = fixture(kind); const result = await runLearnerTui(f.opts…
+    115|     expect({code: result.code, stopped: result.stopped, sends: f.calls…
+    116|       .toEqual({code:75, stopped:false, sends:0});
+       |        ^
+    117|   });
+    118|   it("does not retire a TUI with unsent human text on timeout", async …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not retire a TUI with unsent human text on timeout
+AssertionError: expected { code: 124, stopped: true, sends: 1 } to deeply equal { code: 75, stopped: false, sends: +0 }
+
+- Expected
++ Received
+
+  {
+-   "code": 75,
+-   "sends": 0,
+-   "stopped": false,
++   "code": 124,
++   "sends": 1,
++   "stopped": true,
+  }
+
+ ❯ tests/learner-herdr-ownership.test.ts:123:8
+    121|     const result=await runLearnerTui(f.opts);
+    122|     expect({code:result.code,stopped:result.stopped,sends:f.calls.filt…
+    123|       .toEqual({code:75,stopped:false,sends:0});
+       |        ^
+    124|   });
+    125| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  12:29:40
+   Duration  2.45s (transform 1.32s, setup 439ms, import 1.15s, tests 681ms, environment 0ms)
+
