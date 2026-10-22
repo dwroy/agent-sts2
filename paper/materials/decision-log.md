@@ -5745,3 +5745,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:44:23+08:00 [watcher] #33 原交付276f3089c+来源修复ad5f37ae6独立核验通过，main d3751e979：两项真实ToolHost变更复验通过，完整653文件/6165通过/2跳过，tsc/重建0，2113输入SHA前后一致；沿原锁备份/恢复实例绑定且SHA/权限一致；转waiting-release，实际live组合与自然首局交ops，未触生产或新增试验，旧失败/中断原件保留。报告paper/materials/20261022-issue33-integrator-admission/。
 
 - 2026-10-22 08:45 CST：[ops] 0843九事件：八原异议真实转达证据及CLI不兼容阻塞未变，后两角色登记pending；081301主策略在dataset前遇#33 main两集成46源变化attention，81产物/十原文/440原段核同，7/1838完整、十waiting/无新纯bug。保失败/科学父，不补closed/代ACK/重复提醒或重dataset/full/发布/改当前局。原件 paper/materials/20261022-0843-ops/receipt.json。
+- 2026-10-22T08:50:02+08:00 [Claude] Roy 10-22：对局大脑不保留每题推理，但每局保留构筑记录（每个改牌组动作 + 不超过 20 字理由，随构筑题附上，#35）；游戏时对局大脑与学习大脑都开在 herdr tab 里可见，标题写“对局大脑 · <run_id>”“学习大脑 · <批次> · <类型>”（#36）。
