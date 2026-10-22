@@ -6,7 +6,9 @@ import os
 
 OPS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(OPS)
+ROOT = os.environ.get("STS2_LAUNCH_ROOT", ROOT)
 LOGS = os.path.join(ROOT, "logs")
 DATA = os.path.join(ROOT, "data")
 NOTES = os.path.join(ROOT, "notes")
 LIVE = os.environ.get("STS2_LIVE", os.path.join(ROOT, ".worktrees", "live"))
+LIVE = os.environ.get("STS2_LAUNCH_LIVE", LIVE)

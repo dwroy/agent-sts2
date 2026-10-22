@@ -35,6 +35,13 @@ dispatcher:
   digest: ops/codex-ops/board-digest.md
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
+  heavy:
+    enabled: false # Original ops enables once at the natural deployment boundary.
+    state: ops/codex-ops/heavy
+    running_slots: 1
+    stopped_slots: 2
+    warn_minutes: 60
+    probe: [python3, "{root}/ops/board_resources.py", --root, "{root}"]
   watchdog:
     idle_minutes: 30
     error_patterns: ["at capacity", "rate limit", "stream disconnected", "Reconnecting", "error sending request"]
@@ -52,4 +59,8 @@ session:
     docs/learning-protocol.md、docs/github-issues-workflow.md、docs/learner-retention.md，
     然后 gh issue view {issue} -R {repo} --comments，按目标、验收与边界完成。
     开工改标签 status:in-progress；交付结果写 issue 评论，首行 [dev #{issue}]，发前 gitleaks，改 status:review。
+    资源流程自然边界启用后：开发交付前只跑 tsc 与定向测试，列出改动文件；完整测试由集成员合入前统一做。
+    完整 Vitest、知识重建和大批量模拟经 python3 ops/board_heavy.py dev -- <命令> 排队；集成员 integrator、ops 上线 ops、学习 learner、离线 experiment。
+    同区域冲突与同文件合入顺序见 docs/github-issues-workflow.md；启用前各角色沿用原流程。
+    改动启动入口、行为环境或其配置时，交付单列“影响 live 启动：是/否”，集成员与 ops 按发布流程核对固定版本。
     对局在跑：nice {nice}、≤{max_procs} 进程；不运行 play、不改 live/STOP；不关其他会话。

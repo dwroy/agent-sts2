@@ -144,7 +144,11 @@ case "$action" in
       else echo "invalid herdr autoplay receipt: ${out:0:200}; inspect processes before retrying"; exit 1; fi
     fi
     if [ -z "$pid" ]; then
-      setsid nohup bash "$ROOT/ops/autoplay.sh" 7>&- > /dev/null 2>&1 < /dev/null &
+      if [ -f "$ROOT/ops/codex-ops/launch-runtime.json" ]; then
+        setsid nohup python3 "$OPS/launch_runtime.py" exec --root "$ROOT" --live "$LIVE" --kind autoplay 7>&- > /dev/null 2>&1 < /dev/null &
+      else
+        setsid nohup bash "$ROOT/ops/autoplay.sh" 7>&- > /dev/null 2>&1 < /dev/null &
+      fi
       pid=$!
       echo "$pid" > "$DIR/autoplay.pid"
     fi

@@ -3,10 +3,14 @@
 # Its logs/, data/ and agent/node_modules/ are links into the main checkout, so logs stay at $ROOT/logs; the console
 # log goes to $ROOT/logs/console/<ts>-<sha>.log. STS2_WORKSPACE: notes/ (lessons.md) and ops/ come from the main checkout.
 set -u
+launch_ops="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${STS2_LAUNCH_BUNDLE:-}" ] && [ -f "$launch_ops/codex-ops/launch-runtime.json" ]; then
+  exec python3 "$launch_ops/launch_runtime.py" exec --root "$(dirname "$launch_ops")" --kind run -- "$@"
+fi
 . "$(dirname "$0")/paths.sh"
 # Deployment settings are loaded only at a new play boundary, never into an active game.
-if [ -f "$ROOT/ops/production-runtime.sh" ]; then
-  . "$ROOT/ops/production-runtime.sh" || exit 78
+if [ -f "$OPS/production-runtime.sh" ]; then
+  . "$OPS/production-runtime.sh" || exit 78
 fi
 # Drain only at admission. Never use STOP, which cancels an in-flight brain request.
 if [ -f "$ROOT/ops/codex-ops/LLM_DRAIN" ]; then
@@ -55,6 +59,9 @@ console_link="$LOGS/console/.current-$$"
 ln -s "$(basename "$out")" "$console_link"
 mv -Tf "$console_link" "$LOGS/console/current"
 echo "$out"
+if [ -n "${STS2_LAUNCH_SOURCE:-}" ]; then
+  printf 'launch source: %s\n' "$STS2_LAUNCH_SOURCE" >> "$out"
+fi
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
 screen=$(curl -s -m 5 "$mod_url/state" | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
 if [ "$screen" = "GAME_OVER" ]; then
@@ -64,14 +71,21 @@ fi
 # Ablation (Roy 2026-09-27, A8): ops/ablation.json {"arms": [...], "i": n, "total": N} rotates the arms
 # code (no Jev, no DeepSeek), jev (no DeepSeek), ds (DeepSeek without Jev), full. The arm of the run
 # in progress is kept in ops/ablation-current.json until report.py marks it done (a restart keeps it).
-arm=$(python3 - "$OPS" <<'PY'
+arm=$(python3 - "$OPS" "$ROOT/ops" <<'PY'
 import json, os, sys
 ops = sys.argv[1]
+data_ops = sys.argv[2]
 try:
     sched = json.load(open(os.path.join(ops, "ablation.json")))
 except (OSError, json.JSONDecodeError):
     print(""); sys.exit()
-cur_path = os.path.join(ops, "ablation-current.json")
+cur_path = os.path.join(data_ops, "ablation-current.json")
+if os.environ.get('STS2_LAUNCH_BUNDLE'):
+    import hashlib
+    expected = hashlib.sha256(json.dumps({k:v for k,v in sched.items() if k!='i'},sort_keys=True).encode()).hexdigest()
+    progress = json.load(open(os.path.join(data_ops, 'ablation-progress.json')))
+    if progress.get('schedule_sha') != expected: raise ValueError('published ablation schedule mismatch')
+    sched['i'] = progress['i']
 try:
     cur = json.load(open(cur_path))
 except (OSError, json.JSONDecodeError):
@@ -85,7 +99,7 @@ arm = arms[i % len(arms)]
 json.dump({"arm": arm, "i": i, "done": False}, open(cur_path, "w"))
 print(arm)
 PY
-)
+) || exit 78
 extra=()
 case "$arm" in
   code) extra=(--no-jev) ;;

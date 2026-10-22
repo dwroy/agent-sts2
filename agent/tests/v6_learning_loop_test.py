@@ -550,7 +550,9 @@ class RefreshTest(unittest.TestCase):
             tree = ast.parse((ROOT / 'ops/report.py').read_text())
             fun = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'refresh_knowledge')
             import re, shlex
-            namespace = dict(ROOT=str(root), LIVE=str(root), os=os, re=re, shlex=shlex, json=json)
+            # This isolated legacy fixture has no enabled resource queue.
+            namespace = dict(ROOT=str(root), LIVE=str(root), os=os, re=re, shlex=shlex, json=json,
+                             queued_argv=lambda _root, _role, argv: argv)
             exec(compile(ast.Module(body=[fun], type_ignores=[]), '<real report.refresh_knowledge>', 'exec'), namespace)
             original = subprocess.Popen
             spawned = []
