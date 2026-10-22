@@ -392,7 +392,7 @@ export class BrainRouter {
       pace.promoteBrain();
       return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
-          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+          effort: this.codexOnly || this.engineFor(request.label) === "codex" ? this.deps.config.engines.codex.effort ?? "xhigh" : "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
     }
     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();

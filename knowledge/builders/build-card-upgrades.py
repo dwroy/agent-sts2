@@ -8,6 +8,7 @@ no rules, values or keyword effects are inferred from those faces.
 Usage: build-card-upgrades.py [states.jsonl] [--cards ID ...] [--out FILE]
 --cards updates only those ids in the destination, preserving every other entry.
 """
+from refresh_publish import write_text
 import argparse
 import collections
 import hashlib
@@ -57,20 +58,31 @@ def clean_face(card):
     return {key: card[key] for key in FACE_FIELDS if key in card}
 
 
-def build(states, selected=None, audit=None):
+def build(states, selected=None, audit=None, lines=None, accumulator=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(states)
+        if cache:
+            return cache.card_result(states, selected, audit, build, __file__)
     audit = audit if audit is not None else {}
     audit["invalid_json"] = []
     stats = collections.defaultdict(lambda: [collections.defaultdict(collections.Counter),
                                              collections.defaultdict(collections.Counter)])
     seen = collections.defaultdict(lambda: [set(), set()])
     faces = collections.defaultdict(lambda: [{}, {}])
+    if accumulator:
+        stats, seen, faces, previous_gaps = accumulator['value']
+        audit['invalid_json'].extend(previous_gaps)
     needles = [f'"{card}"'.encode() for card in sorted(selected)] if selected else None
     with Path(states).open("rb") as source:
-        while True:
-            off = source.tell()
-            line = source.readline()
-            if not line:
-                break
+        def raw_rows():
+            while True:
+                off = source.tell()
+                line = source.readline()
+                if not line:
+                    return
+                yield off, line
+        for off, line in (raw_rows() if lines is None else lines):
             if needles and not any(needle in line for needle in needles):
                 continue
             try:
@@ -113,7 +125,7 @@ def build(states, selected=None, audit=None):
                     # Frozen extracts retain the original raw source offset and hash.
                     evidence = row.get("source") or {
                         "file": "logs/states.jsonl", "off": off,
-                        "sha256": hashlib.sha256(line).hexdigest(),
+                        "sha256": row.get("_raw_sha256") or hashlib.sha256(line).hexdigest(),
                         "path": f"state.run.deck[{index}]",
                     }
                     profile = {"card": face, "runs": set(), "evidence": {
@@ -123,6 +135,9 @@ def build(states, selected=None, audit=None):
                     }}
                     faces[card_id][side][key] = profile
                 profile["runs"].add(run_id)
+
+    if accumulator is not None:
+        accumulator['value'] = (stats, seen, faces, audit['invalid_json'])
 
     def mode(counter):
         return counter.most_common(1)[0][0] if counter else None
@@ -173,7 +188,7 @@ def main():
         for card_id in args.cards:
             previous.pop(card_id, None)
         generated = {**previous, **generated}
-    args.out.write_text(json.dumps(generated, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    write_text(args.out, json.dumps(generated, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     if args.audit:
         args.audit.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n")
     if audit["invalid_json"]:

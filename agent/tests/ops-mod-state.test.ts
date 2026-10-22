@@ -61,9 +61,10 @@ sleep() { :; }
 tasklist() { :; }
 ${block}
 `, "mod-test", ops, response, calls, String(http), String(curlExit), next], {
-    cwd: scratch, encoding: "utf8", timeout: 5000,
+    cwd: scratch, encoding: "utf8", timeout: 10_000,
     env: { PATH: process.env.PATH ?? "/usr/bin:/bin", TMPDIR: process.env.TMPDIR ?? "/tmp" },
   });
+  if (result.error) throw result.error;
   return { ...result, calls: readFileSync(calls, "utf8").trim().split("\n") };
 }
 

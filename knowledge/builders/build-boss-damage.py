@@ -41,6 +41,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import character_dir, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 
 # Boss clock key (strategy/boss-clock.ts BOSSES) -> the enemy ids of its bodies.
 BOSSES = {
@@ -72,32 +73,7 @@ def fight_won(run, floor):
     return last > (floor or 0) or (bool((run or {}).get("victory")) and last == (floor or 0))
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
-    parser.add_argument("--fights", default=None)
-    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
-    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
-    args = parser.parse_args()
-    character = character_key(args.character)
-    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
-
-    runs = {}
-    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
-        for line in handle:
-            try:
-                run = json.loads(line)
-            except ValueError:
-                continue
-            runs[run.get("run_id")] = run
-    if not any(run_character(run) == character for run in runs.values()):
-        print(f"no {character} runs; nothing written -> {args.out}")
-        return
-
-    patterns = []
-    for enemy in BOSS_OF:
-        patterns += ["-e", f'"enemy_id":"{enemy}"']
-    grep = subprocess.Popen(["grep", "-F", *patterns, os.path.join(args.logs, "states.jsonl")], stdout=subprocess.PIPE)
+def extract_rows(lines, character):
     # (run, floor) -> {turn: (hp, shown attack)} from the final attempt's first frame per turn.
     fights = collections.defaultdict(dict)
     meta = {}
@@ -119,7 +95,7 @@ def main() -> None:
     # (run, floor) -> the Insatiable fight's last frame: (Sandpit, our HP, our block, the attack it shows) (a loss's
     # death line: NH8A A8 died on HP with the Sandpit at 2 after an Escape over damage; sandpitDeathRecord).
     sand_last = {}
-    for line in grep.stdout:
+    for line in lines:
         try:
             state = json.loads(line)["state"]
         except (ValueError, KeyError):
@@ -200,7 +176,51 @@ def main() -> None:
                     shown += (intent.get("damage") or 0) * max(1, intent.get("hits") or 1)
         fights[key][turn] = (hp, shown)
         meta.setdefault(key, (boss, run.get("ascension")))
-    grep.wait()
+    return {'fights': fights, 'meta': meta, 'previous_turn': previous_turn, 'giant_kills': giant_kills, 'entry_max': entry_max, 'crab_first': crab_first, 'lag_sleep': lag_sleep, 'queen_track': queen_track, 'sand_last': sand_last}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
+    parser.add_argument("--fights", default=None)
+    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
+    args = parser.parse_args()
+    character = character_key(args.character)
+    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
+
+    runs = {}
+    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
+        for line in handle:
+            try:
+                run = json.loads(line)
+            except ValueError:
+                continue
+            runs[run.get("run_id")] = run
+    if not any(run_character(run) == character for run in runs.values()):
+        print(f"no {character} runs; nothing written -> {args.out}")
+        return
+
+    from legacy_incremental import context
+    cache = context(os.path.join(args.logs, 'states.jsonl'))
+    if cache:
+        extracted = cache.boss_rows(os.path.join(args.logs, 'states.jsonl'), character, extract_rows, BOSS_OF)
+    else:
+        patterns = []
+        for enemy in BOSS_OF:
+            patterns += ['-e', f'"enemy_id":"{enemy}"']
+        grep = subprocess.Popen(['grep','-F',*patterns,os.path.join(args.logs,'states.jsonl')], stdout=subprocess.PIPE)
+        extracted = extract_rows(grep.stdout, character)
+        grep.wait()
+    fights = extracted['fights']
+    meta = extracted['meta']
+    previous_turn = extracted['previous_turn']
+    giant_kills = extracted['giant_kills']
+    entry_max = extracted['entry_max']
+    crab_first = extracted['crab_first']
+    lag_sleep = extracted['lag_sleep']
+    queen_track = extracted['queen_track']
+    sand_last = extracted['sand_last']
 
     pooled = collections.defaultdict(lambda: {"shown": 0, "lost": 0, "turns": 0, "fights": 0})
     rows = []
@@ -309,7 +329,7 @@ def main() -> None:
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")
-    os.replace(tmp, args.out)
+    publish_replace(tmp, args.out)
     print(f"{len(out)} bosses, {len(rows)} fights -> {args.out}")
     if args.fights:
         with open(args.fights, "w", encoding="utf8") as handle:

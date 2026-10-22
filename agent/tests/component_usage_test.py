@@ -168,8 +168,11 @@ class Components(unittest.TestCase):
         with mock.patch.object(report, "ROOT", str(self.root)), mock.patch.object(report, "LIVE", str(REPO)), mock.patch("subprocess.Popen") as popen:
             report.refresh_costs()
             args = popen.call_args.args[0]
-            self.assertEqual(args[:4], ["nice", "-n", "19", "python3"])
+            self.assertEqual(args[:9], ["nice", "-n", "19", "ionice", "-c", "3", "flock",
+                                       str(self.root / "ops/knowledge-refresh.lock"), "python3"])
             self.assertEqual(args[-4:], ["--root", str(self.root), "--code-root", str(REPO)])
+            for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+                self.assertEqual(popen.call_args.kwargs["env"][name], "1")
             self.assertTrue(popen.call_args.kwargs["start_new_session"])
             popen.return_value.wait.assert_not_called()
         with (self.root / "ops/cost-refresh.lock").open("a") as lock:

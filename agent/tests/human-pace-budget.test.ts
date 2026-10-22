@@ -142,3 +142,25 @@ it("restores the parent after synchronous and asynchronous observer failures and
   });
   expect(budget.record()).toMatchObject({ shared_actual_ms: 10000, independent_actual_ms: 4000, actual_ms: 14000 });
 });
+
+
+it.each(["high", "xhigh"])("honors configured Codex effort %s while preserving the independent 90-second deadline", async (effort) => {
+  vi.useFakeTimers();
+  const seen: (string | undefined)[] = [];
+  let aborted = 0;
+  const engine: BrainEngine = { name: "codex", model: "fixture-only", decide: async (req, signal) => {
+    seen.push(req.effort);
+    return new Promise((_, reject) => signal?.addEventListener("abort", () => {
+      aborted++; reject(new Error("fixed aborted"));
+    }));
+  } };
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: effort, BRAIN_LOG: "off" }).brain,
+    codexOnly: true, engine: () => engine, log: () => {} });
+  const budget = new DecisionBudget("configured-effort-L2", "routine", () => Date.now());
+  const rejection = expect(withDecisionBudget(budget, () => router.decide(request())))
+    .rejects.toBeInstanceOf(DecisionBudgetExpired);
+  await vi.advanceTimersByTimeAsync(90000); await rejection;
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(seen).toEqual([effort]);
+  expect(aborted).toBe(1);
+});

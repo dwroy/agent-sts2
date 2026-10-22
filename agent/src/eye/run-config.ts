@@ -490,7 +490,7 @@ export function runConfigRow(
       strict: config.strictJev,
       prompt_log: resolveJevPromptLog(config.log),
     },
-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
+    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: actualBrain.engine === "codex" ? config.brain.engines.codex.effort ?? "xhigh" : "xhigh", required_full_replaced: true } } : {}),
     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,

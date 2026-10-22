@@ -1,7 +1,8 @@
 """Append-only raw evidence index and content-addressed per-run intermediates.
 
-Old prefixes are byte-hashed, never trusted by mtime. Only new rows are decoded;
-changed/truncated prefixes rebuild their index. Cached aggregates are disposable.
+Changed sources have their old prefixes byte-hashed. Exact unchanged inode/stat
+tuples reuse that verification; only new rows are decoded. Rotation, truncation
+and changed prefixes rebuild their index. Cached aggregates are disposable.
 """
 import gzip
 import hashlib
@@ -10,6 +11,7 @@ import os
 from pathlib import Path
 import sqlite3
 import tempfile
+import uuid
 
 from evidence_identity import identities, run_identity
 
@@ -43,7 +45,8 @@ class FrozenLogIndex:
         self.db.execute('CREATE TABLE IF NOT EXISTS streams (name TEXT PRIMARY KEY, metadata TEXT)')
         self.db.execute('CREATE TABLE IF NOT EXISTS rows (stream TEXT, offset INTEGER, line INTEGER, bytes INTEGER, sha TEXT, rid TEXT, reason TEXT, PRIMARY KEY(stream, offset))')
         self.db.execute('CREATE INDEX IF NOT EXISTS run_rows ON rows(stream, rid, offset)')
-        self.stats = dict(decoded_rows=0, indexed_rows=0, rebuilt_streams=[], cache_hits=0, cache_misses=0)
+        self.stats = dict(decoded_rows=0, indexed_rows=0, rebuilt_streams=[], rebuild_reasons={},
+                          unchanged_streams=[], prefix_bytes_read=0, cache_hits=0, cache_misses=0)
 
     def close(self):
         self.db.close()
@@ -57,8 +60,20 @@ class FrozenLogIndex:
         if type(limit) is not int or limit < 0 or not path.exists() or path.stat().st_size < limit:
             raise ValueError('incomplete frozen source: ' + str(path))
         old = self.metadata(stream)
+        stat = path.stat()
+        identity = [stat.st_dev, stat.st_ino]
+        stamp = [*identity, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns]
+        # Within one append cycle all builders share this index. An unchanged
+        # inode/stat tuple reuses the already verified prefix, without rereading it.
+        if old and old.get('generation') and old.get('stat') == stamp and old['source_size'] == limit and old['source'] == str(path):
+            self.stats['unchanged_streams'].append(stream)
+            self.stats['indexed_rows'] += old['rows']
+            return old
         sha = hashlib.sha256()
-        reusable = bool(old and old['source'] == str(path) and old['source_size'] <= limit)
+        reusable = bool(old and old['source'] == str(path) and old['source_size'] <= limit
+                        and old.get('identity') == identity and old.get('generation'))
+        reason = 'cold' if old is None else ('rotation_or_identity' if old.get('identity') != identity
+                 or old['source'] != str(path) else 'truncated' if old['source_size'] > limit else 'prefix_changed')
         if reusable:
             with path.open('rb') as source:
                 left = old['source_size']
@@ -67,13 +82,17 @@ class FrozenLogIndex:
                     if not data:
                         raise ValueError('source truncated during prefix check')
                     sha.update(data)
+                    self.stats['prefix_bytes_read'] += len(data)
                     left -= len(data)
             reusable = sha.hexdigest() == old['source_sha256']
         if not reusable:
             old, sha = None, hashlib.sha256()
             self.stats['rebuilt_streams'].append(stream)
+            self.stats['rebuild_reasons'][stream] = reason
         start = old['source_size'] if old else 0
-        info = dict(old) if old else dict(source=str(path), rows=0, invalid_lines=0, incomplete_lines=0, gap_refs=[], gap_refs_limit=5)
+        info = dict(old) if old else dict(source=str(path), rows=0, invalid_lines=0, incomplete_lines=0,
+                                         gap_refs=[], gap_refs_limit=5, generation=uuid.uuid4().hex,
+                                         rebuild_reason=reason)
         number = info['rows']
         with self.db:
             if old is None:
@@ -105,13 +124,18 @@ class FrozenLogIndex:
                     self.stats['decoded_rows'] += 1
             for ref in info['gap_refs']:
                 ref['source_size'] = limit
-            info.update(source_size=limit, rows=number, status='scanned', source_sha256=sha.hexdigest())
+            after = path.stat()
+            after_stamp = [after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns]
+            info.update(source_size=limit, rows=number, status='scanned', source_sha256=sha.hexdigest(),
+                        identity=identity, stat=stamp if stamp == after_stamp else None)
             self.db.execute('INSERT OR REPLACE INTO streams VALUES (?,?)', (stream, json.dumps(info)))
         self.stats['indexed_rows'] += number
         return info
 
-    def references(self, stream, run_ids=None):
+    def references(self, stream, run_ids=None, start_offset=0):
         sql, args = 'SELECT offset,line,bytes,sha,rid,reason FROM rows WHERE stream=?', [stream]
+        sql += ' AND offset>=?'
+        args.append(start_offset)
         if run_ids is not None:
             if not run_ids:
                 return
