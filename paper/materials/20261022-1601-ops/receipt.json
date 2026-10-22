@@ -1,0 +1,44 @@
+{
+  "schema": "ops-high-narrow-terminal-intake-v1",
+  "at": "2026-10-22T16:04:58+08:00",
+  "original_state": "blocked-or-failed-retain-live",
+  "actual_lock_entry_at": "2026-10-22T15:56:04+08:00",
+  "original_rebuild_rc": 2,
+  "original_full_started": false,
+  "original_failure_preserved": true,
+  "harness_correction": "paper/materials/20261022-1601-ops/harness-correction.json",
+  "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+  "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "source_unchanged": true,
+  "new_original_controller": {
+    "pid": 589590,
+    "start": "8071265",
+    "wchan": "locks_lock_inode_wait",
+    "nice": "19",
+    "children": ""
+  },
+  "state_at_readback": "waiting-ordered-kernel-lock",
+  "held_locks_at_readback": [
+    "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock"
+  ],
+  "continuation_full_started": false,
+  "issue38_actual_entry_evidence": true,
+  "issue38_closed": false,
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "publication": false,
+  "native_high_readback": "pending natural published run",
+  "whole_issue33_original_failures_retained": true,
+  "original_order": [
+    33,
+    35,
+    28,
+    37,
+    36
+  ],
+  "issue40_dependencies_unchanged": true,
+  "comments": {
+    "38": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335867378",
+    "33": "https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6335868152"
+  },
+  "no_model_API_MC_game_actions": 0
+}

@@ -4690,3 +4690,27 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 - 2026-10-22 15:13 [ops] 核144301普通策略回报：61份产物SHA、三源码pin和十局身份一致，实见均Silent A10，不以派发A11 key扩范围。无源码/知识改动或候选待合入；两个异蛙策略主题仍待可比后继。原26条事实断言不等生产测试，tsc/vitest保持null；3/1357完整题、1354未读，7600原行与101状态仅限定核验。两条CLI账本追溯更新未触及保护字段；0101.first_run旧快照偏差与10-05已更正原行分列，不改历史。原baseline实际存在且至report.base源码/知识差0，已纠正最初误判；报告正文缺完成JSON段。原failed/rc0、16:03冷却及父要求保留，不回填报告或空合并；本批无ordinary-close/dataset回执，不盲重收尾。只记录核验，不重模型、测试、dataset或改live。原out见ops/codex-ops/learner/同批.out；回执paper/materials/20261022-1506-ops/。
 
 - 2026-10-22 15:15 [ops] 八条15:15学习通知与14:43核验一致：生产者完整原文、证据SHA、ops投递及双箱原字节窗口核同，既有watcher署名实读与Roy可见转达原件亦一致；不以此推定Roy本人确认。CLI仍为原SHA3f7afefb…e13e4，原CLI仍不支持这三项研究任务的ACK，原rc2拒绝保留，watcher_received/roy_notified正式登记仍false/pending。本轮未重复发送、另建watcher、代ACK、改任务名/来源合同/flags或重试已拒命令。D1真实开场保真、D2配对增量未校准、D3跨界HP归因，以及#13逐卡分母/钢铁风暴/SPORE未知/EXPOSE新增范围与#14前缀限制均保留原owner/ID；报告结束、子实现或固定回放不关科学父。仅更新原事件核验和双箱记录，无新模型、MC、full、dataset或对局动作。原通知ops/codex-ops/learning-notices/；本轮回执paper/materials/20261022-1515-ops/notices-readback.json。
+
+### 2026-10-22T15:52:01+08:00 #38 原检查锁窗口接续 / #40 收件
+
+#38原等待并非无主锁：FD核到原刷新397885/472524，15:38自然结束后既有刷新接续，另有原收尾/dataset持锁；全取或全放入口连续错过窗口。本轮只取消确认未执行检查的自有7161，保旧guard/失败；同一90c候选改知识→收尾→dataset→tick→发布锁序，快照后、测试前释知识锁，4项固定回归通过。唯一接续523632于15:45仍内核等知识锁、full未开始，不冒恢复验收。#40源/候选21文件双份SHA及8检查原件核同，仍review，保#20/#41最终组合门；原#33→#35→#28→#37→#36顺序不变。两个issue已实际评论并API读回；#38待真实进入检查，#40待完整窗口与自然消费。live仍R411，未停其他任务/删锁/重full/模型/实验局，账号及开关不动。原件：paper/materials/20261022-issue38-window-ops/。
+
+#38：https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335650614；#40：https://github.com/dwroy/agent-sts2/issues/40#issuecomment-6335651668
+
+### 2026-10-22T15:54:06+08:00 [ops] 15:43八条重复学习通知核验
+
+八条15:43学习通知已逐项核原生产者完整原文、证据SHA、ops回执与双箱原字节窗口，均与15:15一致；既有watcher署名实读及Roy可见转达证明亦核同，不能据此推定Roy本人确认。CLI仍为3f7afefb…e13e4，不支持原三研究task，原rc2拒绝保留；watcher_received/roy_notified正式登记仍false/pending。本轮不重复发信、另建watcher、代ACK、改任务名/来源合同/flags或重试拒绝命令。D1开场保真、D2候选配对增量、D3跨界HP归因，及#13逐卡独立分母/钢铁风暴生成边界/SPORE未知/EXPOSE新增范围、#14首计划前缀限制，均留原owner/ID及下一步；批次或子项完成不关科学父。本轮仅保留核验与阻塞记录，不触动原#33检查、#40窗口、当前局或开关，无新模型/MC/full/dataset。原件ops/codex-ops/learning-notices/；核验paper/materials/20261022-1543-ops/notices-readback.json。
+
+### 2026-10-22T16:04:58+08:00 [ops] #33窄入口终局与#38实际窗口
+
+原#33 high窄入口15:56:04实际取得全锁、完成知识快照并在检查前释知识锁，#38已有进入证据。随后rebuild rc2源于ops沿用整包#33+#26命令：R411及90c三叶候选均无外部聚合生成器/数据，非产品测试或稀疏缺文件；原日志/错误/2475输入/失败封存，tsc/full未开始。已修原入口，精确base/候选Git树及WT/live四处均证缺失才记聚合检查不适用，不引入#26。三叶SHA/暂存树不变，唯一接续589590/start8071265于16:03持知识锁等收尾锁，原首次tsc/full仍待；旧guard保留，无重复full。#38/#33实际评论及API读回已完成，入口恢复交主管核收不代关单。live仍R411，发布/自然新局原生high及整包旧失败分账待验，原后续顺序和#40依赖不动；未停其他任务/删锁/模型/MC/实验局或热切当前局。原件paper/materials/20261022-1601-ops/。
+
+#38 https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335867378；#33 https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6335868152
+
+### 2026-10-22T16:09:52+08:00 [ops] 154302-s2容量中断保现场
+
+154302-s2原生gpt-6.1-sol/high在codex1沙箱中因capacity中断，turn.failed/rc1，无完成报告/结果/提案文件，未提交或合入。原十提案原文SHA全核同（六旧路径已找回），不将启动失败或旧waiting当本批处置。现场3源码+2未跟踪测试文件、差异补丁、22件scratch及9份已封存内容对象已保留核SHA，原WT不删。两次定向启动因EROFS未跑用例，后续runner真实2文件11例/rc0；sandbox完整检查仅起始无终局，tsc/red前置证明未核成。证据审计另因decision_id缺失rc1，非全部失败归因容量。原failed与17:05:24冷却保持，无活原wrapper；同十ID的141301旧中断仍开放，不以新批覆盖或重复实现。本轮只记原任务/线程/home/源码续接检查点，非自动resume；由原owner核租约与SHA后补审计及必要验证，不能把草稿机制当正式知识。未新模型/测试/dataset/换号/合入或扩大沙箱，live仍R411。原件paper/materials/20261022-1605-ops/。
+
+### 2026-10-22T16:15:43+08:00 [ops] codex1→codex3新事务开始
+
+Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消事务及旧交接原字节保留。codex3两隔离home新checkCodex/key隔离通过，无模型问答；唯一控制器609806/start8127174/nice19已draining，自有主LLM_DRAIN/PAUSE，未用STOP或发信号。盘点34条在途进程记录非独立任务，未冒排空；两home选择器仍codex1，开发派发同读codex-home，须自然排空后正常quit旧ops、目标shell回执、新UUID/rollout通过才释放自有闸。原开发/集成员不热切，Regent原暂停保留；本轮ready_to_drain后空闲，不另起等待者。原#33窄589590现tsc0/首次full在途，后续发布顺序/#40依赖、154302-s2源码冷却、通知与科学父均随交接保留，不重模型/局/检查。控制面complete及真实brain/learner消费仍待验。原件paper/materials/20261022-codex3-switch-1610/。

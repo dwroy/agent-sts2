@@ -1,0 +1,45 @@
+{
+  "state": "blocked-or-failed-retain-live",
+  "started_at": "2026-10-22T15:44:50+08:00",
+  "runner_pid": 523632,
+  "runner_start": "7961993",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-high-20261022-1215",
+  "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+  "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "nice": 19,
+  "steps": [
+    {
+      "name": "rebuild",
+      "command": [
+        "python3",
+        "agent/tools/build-external-stats.py",
+        "--check"
+      ],
+      "started_at": "2026-10-22T15:56:04+08:00",
+      "pid": 575896,
+      "exit_code": 2,
+      "seconds": 0.015715519999503158
+    }
+  ],
+  "full_started": false,
+  "new_model_API_MC_game_actions": 0,
+  "continuation_of": "same high narrow candidate; prior controllers cancelled before any check step; ordered reservation replaces opportunistic admission",
+  "issue38_receipt": "paper/materials/20261022-issue38-window-ops/waiter-cancellation.json",
+  "lock_admission_sha256": "8aee45d278bbafe4dce358564a0eccc4e017e8094e53db9bf2c2a8c4464e94a0",
+  "held_locks": [],
+  "prior_issue20_test_exited_at": "2026-10-22T13:33:35+08:00",
+  "lock_order": [
+    "knowledge-refresh",
+    "ordinary-close",
+    "paper-dataset",
+    "tick-snapshot",
+    "live-merge"
+  ],
+  "waiting_lock": null,
+  "admitted_at": "2026-10-22T15:56:04+08:00",
+  "knowledge_snapshot_finished_at": "2026-10-22T15:56:04+08:00",
+  "input_count": 2475,
+  "ended_at": "2026-10-22T15:56:04+08:00",
+  "error": "RuntimeError",
+  "message": "rebuild failed; retain original log"
+}
