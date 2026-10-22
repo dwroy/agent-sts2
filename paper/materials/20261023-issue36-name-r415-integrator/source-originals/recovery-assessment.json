@@ -1,0 +1,34 @@
+{
+  "source_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6348039423",
+  "observed_snapshot": "paper/materials/20261023-0215-ops; not a fresh live process observation",
+  "original_batch": "20261023-021302-strategy-proposal",
+  "original_pane": "w1H:pB7",
+  "source_receipt": {
+    "submitted": false,
+    "bindings": [],
+    "code": 75,
+    "stopped": false
+  },
+  "source_files_sha256": {
+    "original-tui.json": "2e21e167c8aae3a03b68972e1f5ddaddb8f8452313f3cf3bfe6735057a911e9f",
+    "rename-diagnostic.json": "8da49842cc52d5ead7733dc45dff99e33a64da5e94574fc440f9c0646db7b7b4",
+    "control-audit.json": "3fa042b80bdd196cde663002de42ae487bd22c430a515cec46e20b989e5bd0fd"
+  },
+  "new_start_naming_fix": true,
+  "existing_pane_recovery_supported": false,
+  "recovery_state": "retain-original-supervisor-lease-and-artifacts; no supported post-launcher-exit reentry",
+  "reason": [
+    "original TypeScript launcher has already returned; remaining wrapper only waits for verify",
+    "ordinary learner/run.ts and --resume-thread start another TUI",
+    "learner_entry.py retry only accepts the fixed zero-output import failure",
+    "wrapper retains original rc=75; changing name/receipt cannot hand over result/output/summary/exit-code"
+  ],
+  "required_before_any_recovery": [
+    "explicit same-pane takeover with original lease, PID/birth, identity and empty composer",
+    "original marker and prompt SHA, original native journal and exact once-only send proof",
+    "original output/summary and supervisor exit-code handoff; original finish/retirement gates"
+  ],
+  "actions_on_original_session": [],
+  "original_batch_completed": false,
+  "automatic_replay_authorized": false
+}

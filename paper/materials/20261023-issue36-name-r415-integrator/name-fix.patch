@@ -1,0 +1,290 @@
+diff --git a/agent/tests/learner-herdr.test.ts b/agent/tests/learner-herdr.test.ts
+index 4fd5e6cb8..e61c0b9d0 100644
+--- a/agent/tests/learner-herdr.test.ts
++++ b/agent/tests/learner-herdr.test.ts
+@@ -6,7 +6,7 @@ import { join } from "node:path";
+ 
+ import { afterEach, describe, expect, it } from "vitest";
+ import { learnerInteractiveArgs } from "../../learner/lib/engines.js";
+-import { NativeBatch, NativeRows, learnerTuiEnv, runLearnerTui, type TuiOptions } from "../../learner/lib/herdr.js";
++import { NativeBatch, NativeRows, learnerAgentName, learnerTuiEnv, runLearnerTui, type TuiOptions } from "../../learner/lib/herdr.js";
+ import type { HerdrResult } from "../../ops/codex/herdr.js";
+ 
+ const roots: string[] = [];
+@@ -19,7 +19,7 @@ const row = (type: string, payload: Record<string, unknown>) => ({ type, payload
+ const ok = (result: Record<string, unknown> = {}, stdout = ""): HerdrResult => ({ ok: true, code: 0, result, stdout, stderr: "" });
+ const fail = (): HerdrResult => ({ ok: false, code: 1, error: "transport_uncertain", stdout: "", stderr: "" });
+ 
+-function fixture(kind = "success") {
++function fixture(kind = "success", label = "learner-20261022-120000-postmortem") {
+   const root = mkdtempSync(join(tmpdir(), "learner-tui-")); roots.push(root);
+   const home = join(root, "home");
+   const date = new Date();
+@@ -27,12 +27,13 @@ function fixture(kind = "success") {
+   mkdirSync(sessionDir, { recursive: true });
+   const file = join(sessionDir, "rollout-019a1000-1234-7123-8123-123456789abc.jsonl");
+   const session = "019a1000-1234-7123-8123-123456789abc";
+-  const pane = { pane_id: "w1:p2", label: "learner-20261022-120000-postmortem", tab_id: "w1:t2", terminal_id: "terminal-2", cwd: root };
++  const pane = { pane_id: "w1:p2", label, tab_id: "w1:t2", terminal_id: "terminal-2", cwd: root };
+   let clock = Date.now();
+   let child: ChildProcess | undefined;
+   let live = false;
+   let prompts = 0;
+   let status = "idle";
++  let name: string | undefined;
+   let afterPoll = 0;
+   let changed = false;
+   let leaseCurrent = true;
+@@ -67,8 +68,11 @@ function fixture(kind = "success") {
+         return kind === "start-uncertain" ? fail() : ok();
+       }
+       if (group === "pane" && action === "read") return ok({}, `header\n› \u001b[2mAsk Codex to do anything\u001b[0m\n${kind === "capacity" ? "at capacity" : ""}`);
+-      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name: pane.label, pane_id: pane.pane_id, agent_status: status, foreground_cwd: root } }) : fail();
+-      if (group === "agent" && action === "rename") return ok();
++      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name, pane_id: pane.pane_id, agent_status: status, foreground_cwd: root } }) : fail();
++      if (group === "agent" && action === "rename") {
++        if (!/^[a-z][a-z0-9_-]{0,31}$/.test(args[3]!)) return { ...fail(), error: "invalid_agent_name" };
++        name = args[3]; return ok();
++      }
+       if (group === "agent" && action === "prompt") {
+         prompts++;
+         const text = args[3]!;
+@@ -116,6 +120,93 @@ describe("learner interactive command policy", () => {
+   });
+ });
+ 
++describe("bounded native learner names", () => {
++  const labels = [
++    "learner-20261023-021302-strategy-proposal",
++    "learner-20261023-021302-s2-strategy-proposal",
++    "learner-20261023-021302-fix-batch",
++    "learner-20261023-021301-postmortem",
++  ];
++  it("reproduces the observed CLI name limit without touching the original pane", async () => {
++    const f = fixture();
++    expect(labels[0]).toHaveLength(41);
++    expect(await f.opts.h!(["agent", "rename", f.pane.pane_id, labels[0]!])).toMatchObject({ ok: false, error: "invalid_agent_name" });
++    expect(f.calls.some((c) => c[1] === "run" || c[1] === "prompt")).toBe(false);
++  });
++  it("is deterministic and distinguishes the full label, pane and cwd without truncating their suffixes", () => {
++    const names = labels.map((label) => learnerAgentName(label, "w1:p2", "/fixture/中文"));
++    expect(new Set(names).size).toBe(labels.length);
++    for (const name of names) expect(name).toMatch(/^learner-[a-f0-9]{24}$/);
++    expect(names[0]).toBe("learner-8f55a5ad47c4b2bb40b86574"); // shared Python/TypeScript UTF-8 contract
++    expect(names[0]).toBe(learnerAgentName(labels[0]!, "w1:p2", "/fixture/中文"));
++    expect(learnerAgentName(labels[0]!, "w1:p3", "/fixture/中文")).not.toBe(names[0]);
++    expect(learnerAgentName(labels[0]!, "w1:p2", "/fixture/other")).not.toBe(names[0]);
++  });
++  it.each(labels)("persists and reads back a bounded name for %s through completion and retirement", async (label) => {
++    const f = fixture("success", label); const h = f.opts.h!;
++    const expected = learnerAgentName(label, f.pane.pane_id, f.root);
++    f.opts.h = async (args) => {
++      if (args[1] === "rename") {
++        expect(args[3]).toBe(expected);
++        expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({
++          state: "naming", agent_name: expected, agent_name_version: 1, label, pane: f.pane.pane_id, submitted: false,
++        });
++      }
++      return h(args);
++    };
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true });
++    expect(f.prompts()).toBe(1);
++    expect(f.calls.filter((c) => c[1] === "rename")).toHaveLength(1);
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt).toMatchObject({ agent_name: expected, label, identity: { label }, submitted: true, retirement_authorized: true });
++    expect(receipt.bindings).toHaveLength(1);
++  });
++  it.each(["not-applied", "uncertain", "foreign"])("retains the unsubmitted TUI when naming is %s", async (kind) => {
++    const f = fixture(); const h = f.opts.h!;
++    f.opts.h = async (args) => {
++      if (args[0] === "agent" && args[1] === "rename") return kind === "uncertain" ? fail() : ok();
++      const response = await h(args);
++      if (kind === "foreign" && args[0] === "agent" && args[1] === "get" && response.ok) {
++        return ok({ agent: { ...response.result?.agent as object, name: "human-agent" } });
++      }
++      return response;
++    };
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
++    expect(f.prompts()).toBe(0);
++    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt).toMatchObject({ submitted: false, bindings: [], retirement_authorized: false });
++  });
++  it.each(["lease", "draft", "foreground", "cwd"])("does not rename or submit after pre-naming %s changes", async (kind) => {
++    const f = fixture(); const h = f.opts.h!; let started = false;
++    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !started };
++    f.opts.h = async (args) => {
++      const response = await h(args);
++      if (args[0] === "pane" && args[1] === "run") started = true;
++      if (started && kind === "draft" && args[1] === "read") return ok({}, "header\n› Human draft not sent");
++      if (started && kind === "foreground" && args[1] === "process-info") return ok({ process_info: { shell_pid: 1000, foreground_process_group_id: 99999 } });
++      if (started && kind === "cwd" && args[0] === "agent" && args[1] === "get") return ok({ agent: { ...response.result?.agent as object, foreground_cwd: "/foreign" } });
++      return response;
++    };
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
++    expect(f.prompts()).toBe(0);
++    expect(f.calls.filter((c) => c[1] === "rename" || c[1] === "send-keys")).toHaveLength(0);
++  });
++  it("checks the same bound name before continuation and every retirement key", async () => {
++    const f = fixture("retry-success"); const h = f.opts.h!;
++    f.opts.h = async (args) => {
++      const response = await h(args);
++      if (f.prompts() && args[0] === "agent" && args[1] === "get" && response.ok) {
++        return ok({ agent: { ...response.result?.agent as object, name: "foreign" } });
++      }
++      return response;
++    };
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
++    expect(f.prompts()).toBe(1);
++    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
++  });
++});
++
+ describe("native batch authority", () => {
+   it("ignores idle screens and unrelated/old completions, and requires a matching accepted native turn", () => {
+     const old = new NativeBatch("our-marker");
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 8366bab2d..6f953fd64 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -134,7 +134,7 @@ nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性
+ 
+ 写 `brain_view=off` 到 hosting 可单独停视图（通常一秒，标题更新中的 herdr 故障最多延迟一次命令超时），tab 保留；写回 `brain_view=herdr` 后在下个自然启动边界或原 stall tick 恢复。显式 `CODEX_OPS_BRAIN_VIEW` 优先。herdr 不可用时跳过视图，对局照常。
+ 
+-**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id 与登记键保持原值；新批次的租约 PID 对应后台监管 wrapper，模型 PID/birth 另在交互回执核验，agent 名称仍用本批稳定 label。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
++**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id 与登记键保持原值；新批次的租约 PID 对应后台监管 wrapper，模型 PID/birth 另在交互回执核验。herdr 原生 agent 名最多 32 字符，故使用 `learner-` 加完整 `[label, pane_id, 绝对 cwd]` 紧凑 JSON 的 SHA256 前 24 位十六进制字符（共 32 字符），不截断批次或类型。交互回执在命名前持久化 `agent_name`、`agent_name_version=1` 及原完整身份；命名前检查租约/前台/cwd/空输入框，命名后须读回该原生名才发提示，接续与每次退场按键沿用同一绑定。命名冲突、失败或回执不确定均保留现场，不另换名字或重送任务。Python 完成核验独立复核新名称绑定，既有无名称字段的 R3 原件仍按原身份/原生回合/退场合同核验。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
+ 
+ **学习交互会话（#36）**：`learners=herdr` 的新批次先开专属 tab，后台 `codex-ops-learner.sh` 监管进程继续以原批次/PID/工作树持租约。`learner/run.ts` 沿原任务渲染、账号、模型/强度、key 预检和权限 profile 启动真正的 Codex TUI；从 herdr 发送原始任务，不再 tail `.out/.err` 假装会话。提示超过 96 KiB 时保存在同一 scratch 中的完整文件，首次提示要求完整读入；原完整提示仍记录在 `learner_launch`。TUI 的环境在原 `codexChildEnv` 去密钥结果上只保留本角色路径、locale、账号 home 和必要证书/无凭据代理设置，用 `env -i` 隔离 herdr server 环境；任意继承变量不写进启动脚本，含凭据代理则保留现场并拒绝启动；`--no-daemon`，nice 19，不改共用 config、账号或 home。交互 CLI 不支持 exec 专用的忽略配置参数，故启动前沿原只读配置检查器核账号及 cwd 各级配置：仅允许被显式覆盖的模型/强度、TUI 与项目 trust；继承 MCP、指令、hook 等非被动配置则零模型启动并交原 ops 核验，不改账号配置、不降级权限。原 `.out/.err`、learner JSONL、原生会话、任务产物和完成审计保留；日志和完成回执与 native session/turn 绑定，令牌按原生每回合最后用量去重累计。
+ 
+@@ -142,6 +142,8 @@ nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性
+ 
+ 容量/限流/断流等报错空闲沿 #20 的方式接续：只在原生接受的同一批、同一原会话、实际 idle/done 且输入框空、原租约仍有效时，十分钟退避后发送“沿原任务接着做”；不重启、不换账号/线程，不重送原完整任务。即使失败回合缺少结束行，也不会把它算完成；明确报错空闲可接续。连续三次无原生工具进展后再观察完整退避，通知原 ops/Roy 并停自动提醒，保留原任务期限；人工接续有进展可恢复。发送回执不确定时只等匹配的原生用户消息核实，未核实不重发。注意通知排队不代表已送达 Roy。原超时和失败分类继续，所有退出原因都走同一处置权检查，每次 Esc/Ctrl-C 前重读；草稿、未知屏幕、前台变化、租约丢失或启动回执不确定即停止自动退出，返回 75，保留原监管租约与现场。退出按键回执不确定时同样保留，不升级为强杀；已核本批进程退出后只读等待 shell 复位。不能核退场时监管进程保留租约等原 ops 核验。
+ 
++**命名失败后尚未提交的旧 TUI**：若原 launcher 已返回 `75/stopped=false`，原 supervisor 只在等待原 `learner_tui.py verify`，不会因更新源码或手工补名字自动恢复。当前没有接管该在途进程的受控发送入口；`learner/run.ts` 正常入口会创建新的 scratch/TUI，`--resume-thread` 也会启动 TUI，`learner_entry.py` 的重试仅限零输出的特定 import 失败，均不能用来恢复这个旧 pane。必须保留原监督/租约、输出、回执、一次性提示和原生记录，交原 ops 登记恢复待办；不可修改 submitted/bindings、代填完成、重派或仅手工改名后发提示。需要在原进程恢复的工作，应另行实现基于原回执/原 lease/PID birth/提示 SHA 的明确接管入口，连同原输出/summary 与 supervisor 的退出码交接一起验证后才执行；本次短名称修复只适用于后续自然启动，不声称旧批已恢复或完成。
++
+ `learner-log-tab` 遇到新批交互回执时返回已经核实的 TUI tab，不另开日志 tab；旧在途 headless 批次仍可用原只读镜像，不重启或迁移。herdr 不可用且尚未提交模型命令时，学习者退回原 setsid；忙碌身份冲突不降级另起模型。autoplay/ops 的既有 fallback 不变。开发固定测试的 `LEARNER_CMD` 仍走通用命令 pane，不能当作真实 TUI 验收。
+ **ops TUI**：第一轮（建会话）仍走 exec。之后每次叫醒：`herdr agent start ops --kind codex --pane <label ops 的 pane> -- resume <同样的 -c / 权限配置 / 模型 / 强度 / --disable …> --no-daemon <会话 id>`（lib.ts `interactiveArgs`；TUI 不接受 `--json`、`--ignore-user-config`、`--ignore-rules`，其余全收，2026-10-05 实测 codex 0.160）。TUI 常驻；参数变了（例如磁盘上多了一个 key 文件、强度改了）且空闲时重启。一次叫醒（herdr.ts `herdrWake`）：
+ 1. 等就绪：herdr 状态 idle/done（unknown 时看会话文件）、输入框空（ansi 读屏：占位符是暗色）、会话文件里没有没结束的 turn。最多等 10 分钟（CODEX_OPS_HERDR_READY_MIN），不就绪 → exit 75「延后」：事件留在队列，不算失败，下个 tick 再来。blocked（对话框）也延后，调度器不替人回答。
+diff --git a/learner/lib/herdr.ts b/learner/lib/herdr.ts
+index a06492c61..c18c7646d 100644
+--- a/learner/lib/herdr.ts
++++ b/learner/lib/herdr.ts
+@@ -48,6 +48,11 @@ export interface PromptProof { marker: string; prompt_sha256?: string }
+ export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
+ const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
+ 
++/** Herdr names are limited to 32 ASCII characters; labels and scheduler keys remain complete. */
++export function learnerAgentName(label: string, pane: string, cwd: string): string {
++  return `learner-${createHash("sha256").update(JSON.stringify([label, pane, resolve(cwd)])).digest("hex").slice(0, 24)}`;
++}
++
+ /** Each turn needs its own one-use, explicitly sent prompt proof; authorization never carries across turns. */
+ export class NativeBatch {
+   session?: string;
+@@ -241,6 +246,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   let tuiEnv: Record<string, string>;
+   try { tuiEnv = learnerTuiEnv(o.env); } catch { return unstarted("unsafe-tui-environment"); }
+   if (!/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) || !/^learner-[a-z0-9-]+$/.test(o.label)) return unstarted("invalid-pane-identity");
++  const agentName = learnerAgentName(o.label, o.pane, o.request.cwd);
+   const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
+   const now = o.now ?? Date.now;
+   const pause = o.pause ?? sleep;
+@@ -293,6 +299,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   };
+   const save = (state: string, extra: Record<string, unknown> = {}): void => {
+     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
++      agent_name: agentName, agent_name_version: 1,
+       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
+       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
+     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+@@ -324,7 +331,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+       }
+     }
+   };
+-  const promptAllowed = async (bound: boolean): Promise<boolean> => {
++  const promptAllowed = async (bound: boolean, allowUnnamed = false): Promise<boolean> => {
+     if (!startConfirmed || uncertain || ownershipLost || !o.lease?.current() || !pid || !ownerBirth || !(await samePane())) return false;
+     const info = await h(["pane", "process-info", "--pane", o.pane]);
+     const p = info.result?.process_info as Record<string, unknown> | undefined;
+@@ -334,7 +341,8 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+     readNative();
+     return info.ok && p?.foreground_process_group_id === pid && birth(pid) === ownerBirth &&
+       agentInfo.ok && agent?.agent === "codex" && agent.pane_id === o.pane && agent.foreground_cwd === o.request.cwd &&
+-      [undefined, "", o.label].includes(agent.name as string | undefined) && ["idle", "done"].includes(String(agent.agent_status)) &&
++      (agent.name === agentName || (allowUnnamed && [undefined, ""].includes(agent.name as string | undefined))) &&
++      ["idle", "done"].includes(String(agent.agent_status)) &&
+       screen.ok && composerState(screen.stdout) === "empty" && !native.foreignActivity &&
+       (!bound || (native.accepted && !native.hasPending() && native.currentTurn === native.turn)) &&
+       (!rollout || readers.get(rollout)!.reader.settled(rollout)) && !!o.lease?.current();
+@@ -361,9 +369,11 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+       const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+       const idle = agent?.agent === "codex" && ["idle", "done"].includes(status) && screen.ok && composerState(screen.stdout) === "empty";
+       if (!submitted && !uncertain && idle && pid && ownerBirth && birth(pid) === ownerBirth &&
+-          [undefined, "", o.label].includes(agent?.name as string | undefined) &&
++          [undefined, "", agentName].includes(agent?.name as string | undefined) &&
+           (agent?.foreground_cwd === undefined || agent.foreground_cwd === o.request.cwd)) {
+-        const named = await h(["agent", "rename", o.pane, o.label]);
++        if (!(await promptAllowed(false, true))) { ownershipLost = true; attention("learner naming authority changed; keep original session"); break; }
++        save("naming"); // persist the complete label -> bounded native name binding before mutation
++        const named = await h(["agent", "rename", o.pane, agentName]);
+         if (!named.ok) { uncertain = true; attention("learner TUI name receipt uncertain; no task replay"); }
+         else {
+           if (!(await promptAllowed(false))) { ownershipLost = true; attention("learner prompt authority changed; keep original session"); break; }
+@@ -447,7 +457,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+         const agent = agentInfo.result?.agent as Record<string, unknown> | undefined;
+         if (!agentInfo.ok && birth(pid) === undefined) return "exited";
+         if (!agentInfo.ok || agent?.agent !== "codex" || agent.pane_id !== o.pane || agent.foreground_cwd !== o.request.cwd ||
+-            (submitted ? agent.name !== o.label : ![undefined, "", o.label].includes(agent.name as string | undefined)) ||
++            (submitted ? agent.name !== agentName : ![undefined, "", agentName].includes(agent.name as string | undefined)) ||
+             !["idle", "done", ...(submitted && native.open ? ["working"] : [])].includes(String(agent.agent_status))) return "denied";
+         const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+         readNative();
+diff --git a/ops/learner_tui.py b/ops/learner_tui.py
+index 126e3745e..70b3ccf4b 100644
+--- a/ops/learner_tui.py
++++ b/ops/learner_tui.py
+@@ -105,6 +105,12 @@ def verify_native(receipt):
+ 
+ def verify(path, output):
+     receipt = json.loads(Path(path).read_text())
++    if "agent_name" in receipt or "agent_name_version" in receipt:
++        binding = json.dumps([receipt["label"], receipt["pane"], os.path.abspath(receipt["cwd"])],
++                             ensure_ascii=False, separators=(",", ":"))
++        expected = "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
++        if receipt.get("agent_name_version") != 1 or receipt.get("agent_name") != expected:
++            raise ValueError("native agent name is not bound to the original pane/label/cwd")
+     result = receipt.get("result", {})
+     if receipt.get("state") == "not-started" and result.get("code") == 3 and receipt.get("models_started") == 0:
+         digest(output)
+diff --git a/ops/tests/test_learner_tui.py b/ops/tests/test_learner_tui.py
+index f1d23a00c..0bb5b0fe4 100644
+--- a/ops/tests/test_learner_tui.py
++++ b/ops/tests/test_learner_tui.py
+@@ -46,6 +46,27 @@ class CompletionGate(unittest.TestCase):
+         self.assertEqual(value["output"]["sha256"], tui.digest(self.output))
+         self.assertFalse(value["artifacts"]["out_pending_wrapper_flush"])
+ 
++    def test_bounded_agent_name_stays_bound_to_full_label_pane_and_cwd(self):
++        self.value.update(label="learner-20261023-021302-s2-strategy-proposal", pane="w1:p2", agent_name_version=1)
++        binding = json.dumps([self.value["label"], self.value["pane"], str(self.root)], ensure_ascii=False, separators=(",", ":"))
++        self.value["agent_name"] = "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
++        self.save()
++        self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
++        for key, changed in (("label", "learner-other"), ("pane", "w1:p3"), ("cwd", "/foreign"),
++                             ("agent_name", "learner-foreign"), ("agent_name_version", 2)):
++            with self.subTest(key=key):
++                bad = dict(self.value, **{key: changed})
++                self.receipt.write_text(json.dumps(bad))
++                with self.assertRaisesRegex(ValueError, "native agent name"):
++                    tui.verify(self.receipt, self.output)
++
++    def test_name_contract_matches_typescript_with_non_ascii_cwd(self):
++        self.value.update(label="learner-20261023-021302-strategy-proposal", pane="w1:p2", cwd="/fixture/中文",
++                          agent_name="learner-8f55a5ad47c4b2bb40b86574", agent_name_version=1,
++                          state="not-started", models_started=0, result={"code": 3})
++        self.save()
++        self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
++
+     def test_zero_exit_alone_never_suffices(self):
+         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows[:-1]))
+         with self.assertRaises(ValueError):

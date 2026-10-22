@@ -1,0 +1,66 @@
+{
+  "base": "f0a967266449b1d758f7d28c5f3404804981ce4c",
+  "inputs": {
+    "learner/lib/herdr.ts": "7533b0afd6a0429e4178d09b4dce66122f7b01ee84421a6c8caeee20ce0d5d80",
+    "ops/learner_tui.py": "b4439c3d761e7f97f1c65d16dd1a9f83af638892ae13f7265d92edc0fdb05778",
+    "docs/codex-ops.md": "7cf1f5d5719afbf82ebf883e05bd2a69d77b6184395bc42a305a7efc51877e4e",
+    "ops/tests/test_learner_tui.py": "67763ceda00297e45b4d748c8165343e2f827fe29a2a0ed128e940160a66ac71",
+    "agent/tests/learner-herdr.test.ts": "7062c6bb790dc40a4b8074aa71cf928f5630c226b2f2ce631676351b4ffe1ae4",
+    "agent/tests/learner-herdr-ownership.test.ts": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+    "agent/tests/learner-herdr-launcher.test.ts": "38eb7cc58e79c8fe368269c69ebd795fc960dfb2a4bfbe0b32c6287670bf9607",
+    "agent/tests/learner-herdr-receipts.test.ts": "d3b234d079a94abfe8aa964c2a8250bea65bd7e7983006712ec395fa179902fc",
+    "agent/tests/boss-sim-home.test.ts": "2eb7b4aa15a5d5b095bc2c57b7b656923ec71ce71636ff536f552a26b8a9ed03",
+    "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+    "agent/tests/learner-startup-recovery.test.ts": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+    "ops/learner_entry.py": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+    "ops/codex-ops-learner.sh": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
+    "learner/lib/launcher.ts": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
+    "learner/lib/startup-recovery.ts": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+    "ops/herdr-host.sh": "5eaed2e62493c979e8d128fb1de9fdae3ce9eed1afeed749cf93273969126ab0",
+    "ops/tests/test_boss_sim_home.py": "45055661b272b74d02b92e4bc81e4111dfb3abfad3481489734b4e8d74305218"
+  },
+  "checks": [
+    {
+      "command": "Vitest learner-herdr.test.ts -t \"runs one interactive TUI\" with original HEAD transport and strict CLI-length mock",
+      "exit_code": 1,
+      "result": "1 failed / 45 skipped; got 75/stopped=false instead of completion; original source restored after this run",
+      "log": ".artifacts/issue36-native-name/checks/before.log",
+      "sha256": "88784716115e95a09dc4238a1adc6d82ce80f75090959d5b7ad5bb7253f35c13"
+    },
+    {
+      "command": "Vitest 5 related files; threads/maxWorkers=1/no-file-parallelism",
+      "exit_code": 0,
+      "result": "5 files / 56 passed before adding pre-naming ownership and shared hash-vector cases",
+      "log": ".artifacts/issue36-native-name/checks/targeted-initial.log",
+      "sha256": "c9db51a03e45959c913da6a0d7566b9f7aae660222164b753e4514729bced081"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/boss-sim-home.test.ts tests/learner-entry.test.ts tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 0,
+      "result": "7 files / 86 passed; includes Python receipt and Boss-home wrappers, not additive",
+      "log": ".artifacts/issue36-native-name/checks/targeted-final.log",
+      "sha256": "4a000101a9c7c89a4c6bc14ebc676980ef1a7787801940a988c8337cec61db6c"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py -v",
+      "exit_code": 0,
+      "result": "19 passed before shared UTF-8 vector was added",
+      "log": ".artifacts/issue36-native-name/checks/python-initial.log",
+      "sha256": "5559ecfc2b3e24ace4e2231ab1b5eee8dcaf4fbbf742f12e59fb9a75d10452ab"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py -v",
+      "exit_code": 0,
+      "result": "20 passed; same Python tests also run by one Vitest wrapper, not additive",
+      "log": ".artifacts/issue36-native-name/checks/python-final.log",
+      "sha256": "c66da5c8ea262efd376a58b9b1aeee7c9868959fc1b4c6743a8bebac180aa336"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "production typecheck passed",
+      "log": ".artifacts/issue36-native-name/checks/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
