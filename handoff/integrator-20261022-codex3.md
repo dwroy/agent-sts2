@@ -55,3 +55,7 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 源2c2d9f1aa8027f59afc1969514a697559419a069，自己的W `.worktrees/integrator42-20261022`，基线c4ed1b2c079737086bcb83b78ebcf571a277b0aa、MERGE_HEAD该源，未提交暂存树80e764c44bcebab044c71868cf6904fb1f9a38ec。只有decision-log追加冲突且已保双方；27非日志交付叶核同，2594枚举输入前后同。tsc0、无名称过滤8文件71项定向、独立Python3例全绿；#24临时CLI→真实检索/题面/工具读回0自有局与13307外部分母，1966B，正式知识未改。材料 `paper/materials/20261022-issue42-integrator-review/`。**未full、未复用旧full、未合源码main/live，仍review。主管需确定#42完整检查排位，不擅自插原35→28→37→36/37→20队列；重核最新main精确组合后唯一full再合。** 不套#40复用授权。合入后才交原ops发布/续#27第二批，正式研究task CLI兼容与科学父保留。
 
 #40当前实读已由ops发布V6-R413，behavior84852effb177452fd9e989e8fdc91a3cf7646dd5/live0073e0eddf052d2fe21dfca914b2440d8491ce9b、29叶tree4fd9abc0；原native首局8FP19V1W4SRQ的gpt6.1sol/high两个thread/question已真核，但自然局末增量刷新/缓存模型SHA/十局训练门仍待。只释放Roy检查窗，原换号闸保留。#35旧准备树不准直接用、main watchdog定向最小测试修补仍待，不把#40窄组合整树合main；#20/#43输入漏记block保留。
+
+## #42 学习侧完整检查终局（2026-10-22T21:47:48+08:00）
+
+本节覆盖此前排位/未full状态；最新裁决6341672283，ops6341754443已接。学习树e6e9b2934d254db429b5e0abbf4643c741000606，tsc0/full0（656文件6218过2跳0败）/独立Python3例绿，2595输入前后同，材料paper/materials/20261022-issue42-learning-full-integrator/。只合学习侧，agent-knowledge保持main59cc基线；源2c2d9f1a祖先不代延期工具已合，恢复须用deferred/精确patch/blob/断言，不能凭merge-base跳过。首轮4真实失败修复保原件；广树及首学习树主动取消143各保原件。固定#24行转测试fixture、不带正式知识。交ops16功能叶（R413上watchdog已同，15实际差异），按实际live/新知识原门核组合，不把main full等同live组合full，不重放旧脚本。学习实际live并核账本/检索后ops即派27第二批，不等工具；CLI/ACK、科学父与自然消费保留。顺序42学习→完整33+26含R413启动→42工具→35→28→37→36/37→20；单一发布。session启动登记不代service_tier隔离已恢复，20/43输入漏记阻塞及heavy off不变。

@@ -1,0 +1,12 @@
+  setKnowledgeCharacter("silent");
+  const ctx = { ascension: 10, knowledgeDir: dir, logsDir: "/unused", label: request.label, payload: request.payload };
+  const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
+  const result = await host.call("kb_strategies", { query: "*" });
+  expect(result.isError).not.toBe(true);
+  const tool = JSON.parse(result.text);
+  expect(tool.entries[0].evidence_summary).toMatchObject({ own_runs: 0, external: [{ denominator: { n: 13307, unit: "rewards" } }] });
+  expect(tool.sources[0]).toMatchObject({ source: "external:sts2fun", dataset_sha256: ev.dataset_sha256 });
+  expect(tool.entries[0].limitation_notice).toContain("非因果");
+  expect(retrieveStrategies(lib, "reward/card", { act: 2 })).toEqual([]);
+  setKnowledgeCharacter("ironclad");
+  expect(JSON.parse((await host.call("kb_strategies", { query: "*" })).text).entries).toEqual([]);

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator42-20261022/agent
+
+ ✓ tests/boss-lines-planner.test.ts (8 tests) 106447ms
+     ✓ BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte  13695ms
+     ✓ P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent  14800ms
+     ✓ a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log  4227ms
+     ✓ BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why  6425ms
+     ✓ BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers  31533ms
+     ✓ an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question  32877ms
+     ✓ turn 1: the fight plan from the best line's samples  2719ms
+ ✓ tests/sl-explore-b2.test.ts (5 tests) 185918ms
+     ✓ a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's  79887ms
+     ✓ Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often  12877ms
+     ✓ a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch  63932ms
+     ✓ Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks  8846ms
+     ✓ The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would  20374ms
+ ✓ tests/sl-retry-planner.test.ts (9 tests) 83876ms
+     ✓ every logged retry board's decision is 3488dc5's, byte for byte  16136ms
+     ✓ VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry  15685ms
+     ✓ JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+  880ms
+     ✓ known draws the pile does not hold: none used, the decision as with the switch off  8768ms
+     ✓ the rollout runs 24 samples (frozen clock: the whole schedule); the log says so  23578ms
+     ✓ a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual  9320ms
+     ✓ B2 on a retried boss fight runs the compute's samples a line  1778ms
+     ✓ a retry step that throws leaves the decision exactly as with both switches off  7702ms
