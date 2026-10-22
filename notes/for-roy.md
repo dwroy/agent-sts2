@@ -4696,3 +4696,7 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 #38原等待并非无主锁：FD核到原刷新397885/472524，15:38自然结束后既有刷新接续，另有原收尾/dataset持锁；全取或全放入口连续错过窗口。本轮只取消确认未执行检查的自有7161，保旧guard/失败；同一90c候选改知识→收尾→dataset→tick→发布锁序，快照后、测试前释知识锁，4项固定回归通过。唯一接续523632于15:45仍内核等知识锁、full未开始，不冒恢复验收。#40源/候选21文件双份SHA及8检查原件核同，仍review，保#20/#41最终组合门；原#33→#35→#28→#37→#36顺序不变。两个issue已实际评论并API读回；#38待真实进入检查，#40待完整窗口与自然消费。live仍R411，未停其他任务/删锁/重full/模型/实验局，账号及开关不动。原件：paper/materials/20261022-issue38-window-ops/。
 
 #38：https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335650614；#40：https://github.com/dwroy/agent-sts2/issues/40#issuecomment-6335651668
+
+### 2026-10-22T15:54:06+08:00 [ops] 15:43八条重复学习通知核验
+
+八条15:43学习通知已逐项核原生产者完整原文、证据SHA、ops回执与双箱原字节窗口，均与15:15一致；既有watcher署名实读及Roy可见转达证明亦核同，不能据此推定Roy本人确认。CLI仍为3f7afefb…e13e4，不支持原三研究task，原rc2拒绝保留；watcher_received/roy_notified正式登记仍false/pending。本轮不重复发信、另建watcher、代ACK、改任务名/来源合同/flags或重试拒绝命令。D1开场保真、D2候选配对增量、D3跨界HP归因，及#13逐卡独立分母/钢铁风暴生成边界/SPORE未知/EXPOSE新增范围、#14首计划前缀限制，均留原owner/ID及下一步；批次或子项完成不关科学父。本轮仅保留核验与阻塞记录，不触动原#33检查、#40窗口、当前局或开关，无新模型/MC/full/dataset。原件ops/codex-ops/learning-notices/；核验paper/materials/20261022-1543-ops/notices-readback.json。
