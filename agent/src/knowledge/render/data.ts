@@ -7,6 +7,7 @@
  */
 
 import { readCompatibleKnowledgeText } from "../catalog.js";
+import { knowledgeQueryActive, queryKnowledgeText } from "../query-sources.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -119,7 +120,7 @@ function readText(dir: string, name: string): string {
   const path = knowledgeFile(dir, name);
   let text: string;
   try {
-    text = readCompatibleKnowledgeText(dir, name);
+    text = queryKnowledgeText(dir, name) ?? readCompatibleKnowledgeText(dir, name);
   } catch (error) {
     throw new KnowledgeLoadError(`知识文件读取失败 ${path}: ${(error as Error).message}`);
   }
@@ -214,8 +215,8 @@ function parseAll(dir: string): KnowledgeData {
     outcomeStats: outcome as unknown as KnowledgeData["outcomeStats"],
     // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt (no
     // ascension). The full prefix, the kb_* tools and gkb-dump fill the templates at the run's ascension.
-    guide: fillGuideFacts(guideTemplate),
-    handbook: fillGuideFacts(handbookTemplate),
+    guide: knowledgeQueryActive() ? guideTemplate : fillGuideFacts(guideTemplate),
+    handbook: knowledgeQueryActive() ? handbookTemplate : fillGuideFacts(handbookTemplate),
     guideTemplate,
     handbookTemplate,
     jevHints: hints as unknown as JevHintsFile,
@@ -249,6 +250,8 @@ const cache = new Map<string, { stamp: string; data: KnowledgeData }>();
  */
 export function loadKnowledgeData(dir: string): KnowledgeData {
   const resolved = resolve(dir);
+  // Query renderers fill only the selected templates; never reuse or mutate gameplay's filled-data cache.
+  if (knowledgeQueryActive()) return parseAll(resolved);
   const key = `${resolved}|${knowledgeCharacter()}`;
   const now = stamp(resolved);
   const hit = cache.get(key);

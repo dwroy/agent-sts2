@@ -54,13 +54,15 @@ it("does not invent native evidence from an argument, another thread or another 
   expect(receiptFromRollout("{}", "own", "turn")).toBeUndefined();
 });
 
-it("rejects invalid profiles and reserves DeepSeek without silently substituting Codex", () => {
+it("rejects invalid profiles and selects DeepSeek without silently substituting Codex", () => {
   for (const raw of ['{}', '{"engine":"codex","effort":"bad"}', '{"engine":"codex","effort":"high","extra":"x"}']) {
     expect(() => parseBrainRunProfile(raw)).toThrow();
   }
   const config = loadConfig({ BRAIN_RUN_CONFIG: '{"engine":"deepseek","effort":"high"}' });
   expect(config.brain.runProfile?.engine).toBe("deepseek");
-  expect(() => createRouter(config, null)).toThrow("#32");
+  expect(createRouter(config, null).engineFor("reward/card")).toBe("deepseek");
+  expect(parseBrainRunProfile('{"engine":"deepseek","effort":"max"}')).toEqual({ engine: "deepseek", effort: "max" });
+  expect(() => parseBrainRunProfile('{"engine":"codex","effort":"max"}')).toThrow();
 });
 
 it("appends native confirmation to run-config without changing configuration identity or restart status", () => {
@@ -83,5 +85,20 @@ it("appends native confirmation to run-config without changing configuration ide
     expect(confirmed.restart).toBe(false);
     expect(log.observe(state)).toBeNull();
     expect(readFileSync(log.path, "utf8").trim().split("\n")).toHaveLength(2);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+it("records the dsh model/max and budget rather than the unused direct API configuration", () => {
+  const dir = mkdtempSync(join(tmpdir(), "brain-dsh-profile-"));
+  try {
+    const config = loadConfig({ BRAIN_LOG: "off", CHARACTER: "SILENT", DEEPSEEK_API_KEY: "fixture", DEEPSEEK_MODEL: "unused-api-model",
+      BRAIN_DEEPSEEK_MODEL: "deepseek/deepseek-flash", DEEPSEEK_MAX_CALLS: "30", BRAIN_RUN_CONFIG: '{"engine":"deepseek","effort":"max"}' });
+    const brain = { router: createRouter(config, null), deepseek: { systemPrompt: "fixed" } } as Brain;
+    const log = new RunConfigLog({ config, brain, jevEnabled: false, mode: "play", env: {}, knowledgeDir: join(dir, "empty"),
+      code: () => ({ commit: "a".repeat(40), code: "aaaaaaa", dirty: false, dirty_files: [], branch: "test", worktree: "test" }) }, join(dir, "run-config.jsonl"));
+    const row = log.observe({ run: { ascension: 10, floor: 1, character_name: "Silent" }, raw: { run_id: "DSH-FIXED", run: { character_id: "SILENT" } } })!;
+    expect(row.brain.engines.deepseek).toMatchObject({ model: "deepseek/deepseek-flash", effort: "max", tools: true, max_calls: null });
+    expect(row.brain.agent).toMatchObject({ transport: "dsh-Nova", deepseekTotalMs: 900000 });
+    expect(row.human_pace).toMatchObject({ model_effort: "max", budgets: { brain: 900000 } });
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

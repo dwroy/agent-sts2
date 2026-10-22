@@ -29,6 +29,9 @@ export interface JsonSchema {
 export interface ToolContext {
   /** Ascension of the current run: renderers pick per-ascension numbers from this. */
   ascension: number;
+  /** Current question for state-filtered strategy retrieval; never a model-selected path. */
+  label?: string;
+  payload?: unknown;
   /** Current act (1-3) when known. */
   act?: number;
   /** Directory holding monster-db.json, experience.json, room-costs.json, outcome-stats.json, ... */

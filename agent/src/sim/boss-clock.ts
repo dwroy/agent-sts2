@@ -21,6 +21,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import { queryKnowledgeJson } from "../knowledge/query-sources.js";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import { OUTCOME_BASE_ASC, hasAscensionTables, outcomeView, pairHelps, pairThin, referenceNote, referenceRow } from "../knowledge/outcome-tables.js";
@@ -195,6 +196,8 @@ export function setUnblockedSharesForTests(shares: Record<string, UnblockedShare
 }
 
 export function unblockedShare(bossKey: string): UnblockedShare | null {
+  const query = queryKnowledgeJson("boss-damage.json");
+  if (query !== undefined) return (query?.[bossKey] as UnblockedShare | undefined) ?? null;
   if (!unblockedCache) {
     try {
       unblockedCache = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "boss-damage.json"), "utf8")) as Record<string, UnblockedShare>;

@@ -1,7 +1,10 @@
 import { nativeReceipt } from "./native-receipt.js";
 import type { BrainNativeReceipt } from "../run-profile.js";
 /**
- * Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
+ * Production knowledge mode additionally bridges only its own MCP tools through a gkb dynamic namespace.
+ * It does not configure native MCP servers, which would add generic resource tools.
+ *
+ * Historical Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
  * with one saved thread that holds only our system prompt; every brain question is a turn on it, answered with the
  * strict schema, then `thread/revert` takes the thread back to that base, so answers stay independent and the next
  * question's request is the system prompt plus the new question only. The prompt cache then holds the system prompt
@@ -148,6 +151,8 @@ export class AppServer {
   dead: string | null = null;
   /** Where notifications go (method, params). */
   onNotification: ((method: string, params: Json) => void) | null = null;
+  /** Only the explicitly installed knowledge-tool bridge may handle a server request. */
+  onRequest: ((method: string, params: Json) => Promise<unknown>) | null = null;
   /** Server-to-client requests seen (an approval, a tool call: none is expected), answered with an error. */
   readonly serverRequests: string[] = [];
 
@@ -176,7 +181,7 @@ export class AppServer {
     child.stdin.on("error", () => this.die("its stdin closed"));
     child.on("error", (error) => this.die(`it could not start: ${error.message}`));
     child.on("exit", (code, signal) => this.die(`it exited ${code ?? signal}`));
-    await this.request("initialize", { clientInfo: { name: clientName, version: "1" } }, 30_000);
+    await this.request("initialize", { clientInfo: { name: clientName, version: "1" }, ...(this.onRequest ? { capabilities: { experimentalApi: true } } : {}) }, 30_000);
     this.notify("initialized");
   }
 
@@ -213,8 +218,15 @@ export class AppServer {
     const id = message["id"];
     const method = typeof message["method"] === "string" ? message["method"] : null;
     if (method && id !== undefined && id !== null) {
-      // The server asks us something (an approval, a tool call, input): the brain gives codex no tool, so no.
+      // Only the knowledge bridge handles tool calls; approvals and all other server requests remain unavailable.
       this.serverRequests.push(method);
+      if (method === "item/tool/call" && this.onRequest) {
+        void this.onRequest(method, isObject(message["params"]) ? message["params"] : {}).then(
+          result => this.write({ jsonrpc: "2.0", id, result }),
+          () => this.write({ jsonrpc: "2.0", id, result: { contentItems: [{ type: "inputText", text: "knowledge bridge unavailable; answer with existing information" }], success: false } }),
+        ).catch(() => undefined);
+        return;
+      }
       this.write({ jsonrpc: "2.0", id, error: { code: -32601, message: "not available to this client" } });
       return;
     }
@@ -363,6 +375,7 @@ export interface SessionOptions {
   stateDir: string;
   model: string;
   serviceTier: string | null;
+  knowledgeMcpUrl?: string;
   /** The plan's rate limits pushed by the server (account/rateLimits/updated's params). */
   onRateLimits?: (params: Json) => void;
   /** Request timeouts (tests). */
@@ -436,6 +449,7 @@ export class CodexSession {
   private thread: { id: string; sha: string; path: string | null } | null = null;
   /** Make a new thread before the next question (a failed turn, a failed revert). */
   private renew = false;
+  private knowledgeNames = new Set<string>();
   private readonly cwd: string;
   /** The current turn's listener. */
   private listener: ((method: string, params: Json) => void) | null = null;
@@ -469,6 +483,13 @@ export class CodexSession {
     server.onNotification = (method, params) => {
       if (method === "account/rateLimits/updated") this.opts.onRateLimits?.(params);
       this.listener?.(method, params);
+    };
+    if (this.opts.knowledgeMcpUrl) server.onRequest = async (_method, params) => {
+      const tool = typeof params["tool"] === "string" ? params["tool"] : "";
+      if (!this.listener || params["threadId"] !== this.thread?.id || params["namespace"] !== "gkb" || !this.knowledgeNames.has(tool)) return { contentItems: [{ type: "inputText", text: "tool is outside the knowledge allowlist" }], success: false };
+      const result = await this.knowledgeRpc("tools/call", { name: tool, arguments: params["arguments"] ?? {} });
+      const content = Array.isArray(result["content"]) ? result["content"] : [];
+      return { contentItems: content.filter(isObject).filter(c => c["type"] === "text").map(c => ({ type: "inputText", text: String(c["text"] ?? "") })), success: result["isError"] !== true };
     };
     this.server = server;
     try {
@@ -513,6 +534,15 @@ export class CodexSession {
     }
   }
 
+  /** Forward only fixed MCP methods to our process-owned loopback endpoint. */
+  private async knowledgeRpc(method: "tools/list" | "tools/call", params: Json): Promise<Json> {
+    const response = await fetch(this.opts.knowledgeMcpUrl!, { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }), signal: AbortSignal.timeout(10_000) });
+    const payload: unknown = await response.json();
+    if (!response.ok || !isObject(payload) || !isObject(payload["result"])) throw new Error("knowledge MCP returned no result");
+    return payload["result"];
+  }
+
   /**
    * The base thread for this system prompt: the current one, or a new one (the old deleted) when there is none, the
    * prompt changed, or the last turn left it unclean. Checks config.toml and the instruction files first.
@@ -524,6 +554,13 @@ export class CodexSession {
     await this.dropThread();
     const problems = guards();
     if (problems.length > 0) throw new SessionError(`session mode isolation: ${problems.join("; ").slice(0, 300)}`, "isolation");
+    let dynamicTools: unknown[] | undefined;
+    if (this.opts.knowledgeMcpUrl) {
+      const listed = await this.knowledgeRpc("tools/list", {});
+      const tools = Array.isArray(listed["tools"]) ? listed["tools"].filter(isObject) : [];
+      this.knowledgeNames = new Set(tools.map(t => String(t["name"])));
+      dynamicTools = [{ type: "namespace", name: "gkb", description: "只读已发布游戏知识；标明自有/外部来源与版本。", tools: tools.map(t => ({ type: "function", name: t["name"], description: t["description"], inputSchema: t["inputSchema"] })) }];
+    }
     const result = await server.request(
       "thread/start",
       {
@@ -534,6 +571,7 @@ export class CodexSession {
         baseInstructions: system,
         ephemeral: false,
         threadSource: "jev-brain",
+        ...(dynamicTools ? { dynamicTools } : {}),
         ...(this.opts.serviceTier ? { serviceTier: this.opts.serviceTier } : {}),
       },
       this.timeout("thread"),

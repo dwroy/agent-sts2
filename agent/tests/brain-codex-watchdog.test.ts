@@ -69,7 +69,7 @@ function harness(env: Record<string, string> = {}) {
       run.event({ type: "turn.started" });
     });
   });
-  const config = loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_HOME: home,
+  const config = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_HOME: home,
     BRAIN_CODEX_BIN: "fixed-no-native-codex", BRAIN_CODEX_STALL_MS: "1000", ...env });
   const engine = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex,
     stateDir: join(dir, "state"), traceFile,

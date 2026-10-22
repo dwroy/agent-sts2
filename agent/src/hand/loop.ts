@@ -448,7 +448,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
    * it is used up the router asks BRAIN_FALLBACK, and DeepSeek's budget applies again.
    */
   const brainBudgetLeft = (label: string): boolean => {
-    if (brain?.router.codexOnly) return true;
+    if (brain?.router.codexOnly || brain?.router.knowledgeAgent) return true;
     if (!brain) return deepseekBudgetLeft();
     const engine = brain.engineFor(label);
     return (engine !== "deepseek" && brain.router.budgetLeft(engine)) || deepseekBudgetLeft();
@@ -786,8 +786,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       shopDiscardPotions: config.shop.discardPotions,
       jevContext: config.jevContext,
       fightPlan: config.fightPlan,
-      // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
-      buildDecider: v6HandoverState.current || brain?.router.codexOnly || (config.buildDecider === "deepseek" && deepseekClient) ? "deepseek" : "jev",
+      // Production knowledge agents do not need the historical direct-API client or its budget.
+      buildDecider: v6HandoverState.current || brain?.router.codexOnly || brain?.router.knowledgeAgent || (config.buildDecider === "deepseek" && deepseekClient) ? "deepseek" : "jev",
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
       ...(slRecord ? { slRecord } : {}),
@@ -1637,7 +1637,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
           for (const escalator of options.escalators ?? []) {
-            if (brain?.router.codexOnly && escalator.name === "claude") continue;
+            if ((brain?.router.codexOnly || brain?.router.knowledgeAgent) && escalator.name === "claude") continue;
             const capped =
               escalator.name === "claude"
                 ? stats.claudeCalls >= config.escalation.claudeMaxCalls

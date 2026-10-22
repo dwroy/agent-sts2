@@ -1,7 +1,7 @@
 /** A process freezes this per-run request; only the next run may select another arm. */
 export interface BrainRunProfile {
   engine: "codex" | "deepseek";
-  effort: "low" | "medium" | "high" | "xhigh";
+  effort: "low" | "medium" | "high" | "xhigh" | "max";
   trial_id?: string;
   sequence?: number;
 }
@@ -23,7 +23,7 @@ export function parseBrainRunProfile(raw: string | undefined): BrainRunProfile |
   const v = value as Record<string, unknown>;
   if (Object.keys(v).some((k) => !["engine", "effort", "trial_id", "sequence"].includes(k))
     || !["codex", "deepseek"].includes(String(v["engine"]))
-    || !["low", "medium", "high", "xhigh"].includes(String(v["effort"]))
+    || !(v["engine"] === "deepseek" ? ["low", "high", "max"] : ["low", "medium", "high", "xhigh"]).includes(String(v["effort"]))
     || (v["trial_id"] !== undefined && (typeof v["trial_id"] !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(v["trial_id"])))
     || (v["sequence"] !== undefined && (!Number.isSafeInteger(v["sequence"]) || Number(v["sequence"]) < 0))) {
     throw new Error("invalid engine, effort or trial identity");

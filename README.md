@@ -26,7 +26,7 @@
 ```
 
 - **Jev**（TypeSafe System One）：参与战斗候选线选择，与代码求解和推演配合。
-- **大脑**：Roy 2026-10-07 授权后仅由 Codex 回答。额度、登录或服务不可用时在原题等待恢复；没有其他引擎、Jev 或代码代答。知识整份放进系统提示。战斗执行继续由 Jev 和代码负责。
+- **大脑**：Roy 2026-10-22 授权后使用[知识工具模式](docs/brain-agent-mode.md)：Codex 默认 high，DeepSeek 默认 max、经 dsh/Nova，按局选择且无跨引擎自动兜底。状态和投影随题给出，知识、经验、开卷与策略按需只读查询；Codex 服务不可用时仍在原题等待恢复。战斗执行继续由 Jev 和代码负责。
 - **SL**：在适用战斗的终局判断触发时读档重试，保留失败尝试与探索记录；具体开关、角色名单和判定以代码及角色数据为准。
 
 架构的当前实现及已发布/待实现边界见 [V5 架构](docs/v5-architecture.md)，沿用的模块基础见 [V4 基础架构](docs/v4-architecture.md)，目录怎么分见 [仓库布局](docs/layout.md)。[文档索引](docs/README.md) 区分现行说明与历史设计/验证材料。
@@ -69,8 +69,8 @@ npm run shadow -- --max-decisions 20              # 只决策不动手
 
 - `CHARACTER`：选哪个角色。
 - `TARGET_ASCENSION`：进阶，可以填固定数字，或者设成随胜利升阶。
-- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。`BRAIN_CODEX_MODEL`、推理强度、超时、额度保护及 `exec|session` 模式仍生效；默认统一为 GPT-6.1 Sol / xhigh / normal（Fast 关闭），context 上限 512000；项目隔离启动器显式传入这些设置。
-- `KNOWLEDGE_PREFIX=full`：整份适用知识进入系统提示；配置解析默认 `off`，应核实际 run-config，不能只凭文档判断已启用。
+- `BRAIN_ENGINE`／`BRAIN_RUN_CONFIG`：生产按局选择 Codex 或 DeepSeek，默认 GPT-6.1 Sol / high / normal（Fast 关闭）；DeepSeek 经 dsh/Nova、默认 max。分题引擎、fallback 与 exec 仅保留历史适配；生产 Codex 只使用隔离 app-server。知识调用数、查询与作答时间预算和实际引擎写入 run-config，配置见[知识工具模式](docs/brain-agent-mode.md)。
+- `KNOWLEDGE_PREFIX=full`：历史适配器的全量知识前缀；生产知识工具模式不再发送前缀或开卷附件，应核实际 run-config 与每题工具日志。
 - `SL_*`：读档相关的开关。
 
 学习者：

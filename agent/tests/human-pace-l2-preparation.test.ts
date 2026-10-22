@@ -31,7 +31,7 @@ it.each(["off", "shadow"])("leaves 90s for the real L2 after B3 and G2=%s, and a
   const actions: unknown[] = [];
   vi.useFakeTimers(); setKnowledgeCharacter("silent"); setMonsterDbForTests(FIXTURE_DB);
   vi.stubEnv("CONSTRUCTION_MODE", "off"); vi.stubEnv("HUMAN_PACE_H2", "off"); vi.stubEnv("GLOBAL_BUILD_EVAL", globalMode);
-  const cfg = loadConfig({ CHARACTER: "silent", BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
+  const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", CHARACTER: "silent", BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
   cfg.log.decisionLog = join(dir, "decisions.jsonl"); cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
   const router = new BrainRouter({ config: cfg.brain, codexOnly: true, engine: () => ({ name: "codex", model: "fixed", decide: async (req) => {
     asks++; expect(req.effort).toBe("xhigh"); expect(req.timeoutMs).toBe(90000);

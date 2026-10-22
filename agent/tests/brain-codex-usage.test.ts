@@ -468,7 +468,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     const fake = fakeCodex(name);
     const log = join(dir, `${name}-brain.jsonl`);
     rmSync(log, { force: true });
-    const cfg = loadConfig({ BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home(name), BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_LOG: log, ...env } as unknown as NodeJS.ProcessEnv);
+    const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home(name), BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_LOG: log, ...env } as unknown as NodeJS.ProcessEnv);
     const notes: string[] = [];
     const deepseek = new StubDeepSeek();
     const brain = createBrain(cfg, deepseek);
@@ -578,7 +578,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     const fake = fakeCodex("router-recover");
     fake.setMode({ error: "no answer within 20000 ms (fake)" });
     let clock = 10_000_000;
-    const cfg = loadConfig({ BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home("router-recover"), BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
+    const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home("router-recover"), BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
     const notes: string[] = [];
     const codex = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: join(dir, "state-router-recover"), now: () => clock, note: (m) => notes.push(m) });
     const deepseek: BrainEngine = { name: "deepseek", model: "fake", decide: async (): Promise<BrainAnswer> => ({ engine: "deepseek", model: "fake", answer: { choice: "a", reason: "deepseek" }, problems: [], attempts: 1, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] }) };
@@ -612,7 +612,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
   it("an engine used without preflight reads before its first call", async () => {
     const fake = fakeCodex("engine-direct");
     fake.setMode({ result: liveResult(90) });
-    const cfg = loadConfig({ BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home("engine-direct"), BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
+    const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home("engine-direct"), BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
     const engine = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: join(dir, "state-direct") });
     const req = { label: "rest/plan", system: "S", question: "Heal or smith?", options, payload: { hp: 20 }, spec: pickSpec("rest/plan", options, {}) };
     await expect(engine.decide(req)).rejects.toMatchObject({ kind: "quota", message: expect.stringContaining("90% used") });
