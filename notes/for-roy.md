@@ -5008,3 +5008,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T23:14:09+08:00 [ops] 23:13十六通知原文/ops送达证据均核同；原集成员received-2039及转主管514字节窗口仍匹配，不能写成无人接收。正式watcher/Roy ACK仍pending：CLI兼容哈希未变、000402原wrapper缺失；保原拒绝，不代角色登记或称Roy已知。当前原集成员working，后续由原会话依已有回执补正式链，不另起会话或重复实验。证据paper/materials/20261023-2313-ops/unchanged-notices.json。
 
 - 2026-10-23T23:17:07+08:00 [ops] codex1仅预检：两home登录/模型目录可见（gpt-6.1-sol high，brain兼容xhigh），auth均指向本人登录、无全局指令，learner key隔离8项通过；但learner config含service_tier，隔离配置守卫不通过，当前未就绪。未改配置/选择器、未建换号事务或drain、未发模型题；90%触发前先处理该隔离项并复核。原件paper/materials/20261023-codex1-readiness-ops/preflight.json。
+
+- 2026-10-23T23:17:21+08:00 [watcher/#27，供主管转Roy] 23:13原链16项已逐条实读核同，67原证据窗、32投递窗、原CLI和rc2拒绝原件、本人received/relay-2039均核同；输入剥离/牌身份/净损出口、独立施放分母、因果及外部总伤分位边界仍保留。三条来源补核仅证来源，冻结rc1与575项结构零问题分列。000402精确原wrapper仍缺；须找回原日志核SHA/launch/thread，不用其他片段替代。正式watcher/Roy ACK仍pending原CLI兼容，本次ACK写入0，不重试同一拒绝、不代其他角色、不关闭科学父。 本人核收：paper/materials/20261023-issue27-watcher-receipt/received-2313.json。本条是实际主管收件箱投递，不证明Roy本人已读；用户可见通知另以实际对话为准。
