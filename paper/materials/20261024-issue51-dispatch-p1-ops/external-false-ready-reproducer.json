@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-24T03:38:39+08:00",
+  "read_only_function_probe": true,
+  "normal_experience_now_running": "20261024-033643-experience-update",
+  "actual_external_dispatched": false,
+  "source_prepared": true,
+  "isolated_nonlaunchable_markers": [
+    {
+      "isolated_case": "queued-and-calibration",
+      "priority_hold": true,
+      "production_state_written": false
+    },
+    {
+      "isolated_case": "queued-only",
+      "priority_hold": true,
+      "production_state_written": false
+    },
+    {
+      "isolated_case": "no-nonlaunchable-markers",
+      "priority_hold": false,
+      "production_state_written": false
+    }
+  ],
+  "finished_Silent_A11_count": 0,
+  "missing_calibration_tree": true,
+  "original_priority_preserved": true,
+  "finding": "shared priority_hold treats forecast queued audit without completed evidence and calibration_due with missing checkout as heavy ready work. After normal experience finishes, these can still block external forever. No source state/priority bypass applied.",
+  "required_fix": "Gate deferred demands by actual launch readiness; preserve their request and evidence/retry/lease protections. Original normal postmortem/fix priority and two shared strategy slots remain."
+}
