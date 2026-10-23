@@ -6476,3 +6476,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T04:17:16+08:00 [ops] 16学习通知原文/角色状态未变，32真实投递与67冻结证据核同；空闲原watcher已实际提醒，未代理ACK/Roy可见确认，不重复写主管或原两收件箱。paper/materials/20261024-0413-notices-ops/receipt.json、watcher-reminder.json；正式兼容与转达保持pending。
 
 - 2026-10-24T04:23:04.233236+08:00 [ops] 核033643 failed/rc0、单叶草稿与原检查现场；冻结SHA/原清单全同，提案静态链接通过，完整门/source commit未过，不发布；等#52原窗口释放协调，见paper/materials/20261024-experience-033643-ops/receipt.json。
+
+- 2026-10-24T04:44:45.944183+08:00 [ops] 核041301四节/账本/三原提案，0581新非阻塞与0461旧复现入原队列；登记一次受控dataset --no-raw，实际退出待worker，不重模型/finish/full或关科学父。原件paper/materials/20261024-postmortem-041301-ops/records-review.json。
