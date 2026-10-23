@@ -1,0 +1,568 @@
+diff --git a/agent/src/eye/jev-prompt-log.ts b/agent/src/eye/jev-prompt-log.ts
+index 355000722..ce0fecd87 100644
+--- a/agent/src/eye/jev-prompt-log.ts
++++ b/agent/src/eye/jev-prompt-log.ts
+@@ -15,7 +15,7 @@ import { appendJsonLine } from "../core/util/jsonl.js";
+ import { measureDecisionBudgetStage } from "../core/decision-budget.js";
+ 
+ import type { AnswerSet } from "../reflex/jev/answers.js";
+-import { classifyJevError, markJevOpenBookPrepared, prepareJevOpenBook, type JevAskResult } from "../reflex/jev/client.js";
++import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
+ import type { QuestionSet } from "../reflex/jev/questions.js";
+ import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
+ import type { DecisionProjection } from "../reflex/jev/decision-projection.js";
+@@ -113,7 +113,6 @@ export interface JevAsker {
+  */
+ export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
+   const started = Date.now();
+-  state = prepareJevOpenBook(state, questions, meta.label.startsWith("combat/plan"));
+   const projection = meta.label.startsWith("combat/plan") ? measureDecisionBudgetStage("combat_jev_projection", () => projectCombatDecision(state, questions)) : null;
+   const wireState = projection?.state ?? state, wireQuestions = projection?.questions ?? questions;
+   try {
+@@ -147,7 +146,6 @@ async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevP
+     ...(projection ? { decision_projection: projection.contract, ...(includeEvidence ? { decision_evidence: projection.evidence } : {}) } : {}),
+   };
+   try {
+-    markJevOpenBookPrepared(state, questions);
+     const result = await jev.ask(state, questions);
+     measureDecisionBudgetStage("jev_prompt_log", () => log?.write({ ...base, request_id: result.requestId, latency_ms: result.latencyMs, input_tokens: result.inputTokens, output_tokens: result.outputTokens, answers: result.answers }));
+     return result;
+diff --git a/agent/src/reflex/jev/client.ts b/agent/src/reflex/jev/client.ts
+index b5c23f192..f52ba9b62 100644
+--- a/agent/src/reflex/jev/client.ts
++++ b/agent/src/reflex/jev/client.ts
+@@ -12,33 +12,6 @@ import { novaJevFetch } from "./nova.js";
+ 
+ import { readAnswers, type AnswerSet } from "./answers.js";
+ import type { QuestionSet } from "./questions.js";
+-import { attachOpenBook } from "../../knowledge/open-book.js";
+-import { projectCombatDecision } from "./combat-entry-projection.js";
+-
+-const preparedRequests = new WeakMap<object, WeakSet<object>>();
+-/** Projected/compacted logged requests are already final, including deliberate omission at the byte limit. */
+-export function markJevOpenBookPrepared(state: unknown, questions: QuestionSet): void {
+-  if (state === null || typeof state !== "object") return;
+-  let requests = preparedRequests.get(state);
+-  if (!requests) { requests = new WeakSet(); preparedRequests.set(state, requests); }
+-  requests.add(questions);
+-}
+-
+-/** Shared by direct calls and the logged path, before projection/compaction, so audit equals wire. */
+-export function prepareJevOpenBook(state: unknown, questions: QuestionSet, projectForBudget = false): unknown {
+-  const board = state !== null && typeof state === "object" ? state as Record<string, unknown> : {};
+-  if (preparedRequests.get(board)?.has(questions)) return state;
+-  if ((board["open_book"] as Record<string, unknown> | undefined)?.["schema"] === "open-book-context-v1") return state;
+-  const brief = board["run_brief"] as Record<string, unknown> | undefined;
+-  // Leave 1 KB for model/transport fields within the existing 24 KB request budget.
+-  const baseBytes = (projectForBudget ? projectCombatDecision(state, questions)?.contract.projectedBytes : undefined)
+-    ?? Buffer.byteLength(JSON.stringify({ state, questions }));
+-  const enriched = attachOpenBook({ questions, board: state }, {
+-    character: typeof brief?.["character"] === "string" ? brief["character"] : undefined,
+-    maxBytes: Math.max(0, 23_000 - baseBytes),
+-  });
+-  return enriched && typeof enriched === "object" && "open_book" in enriched ? { ...board, open_book: enriched.open_book } : state;
+-}
+ 
+ export type JevFailureKind = "auth" | "permission" | "validation" | "rate_limit" | "server" | "connection" | "unknown";
+ 
+@@ -257,7 +230,6 @@ export class JevClient {
+   }
+ 
+   private async askBounded(state: unknown, questions: QuestionSet, timeoutMs?: number, signal?: AbortSignal): Promise<JevAskResult> {
+-    state = prepareJevOpenBook(state, questions);
+     interface RawResult {
+       answers?: unknown;
+       model?: string;
+diff --git a/agent/tests/jev-decision-projection.test.ts b/agent/tests/jev-decision-projection.test.ts
+index 6785606cd..c4c2caaf0 100644
+--- a/agent/tests/jev-decision-projection.test.ts
++++ b/agent/tests/jev-decision-projection.test.ts
+@@ -4,7 +4,7 @@ import { expect, it } from "vitest";
+ import { projectSilentCombatDecision } from "../src/reflex/jev/decision-projection.js";
+ import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
+ import type { QuestionSet } from "../src/reflex/jev/questions.js";
+-import { JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
++import { JevError } from "../src/reflex/jev/client.js";
+ 
+ const rawFixture = JSON.parse(readFileSync(new URL("./jev-context-recovery-request.json", import.meta.url), "utf8")) as { state: Record<string, unknown>; questions: QuestionSet };
+ const fixture = { state: rawFixture.state, questions: rawFixture.questions };
+@@ -82,9 +82,9 @@ it("the actual Jev call receives the replacement while the joined prompt log kee
+   expect(JSON.parse(q.criteria.plan1!)).toHaveProperty("boss_evaluation");
+   expect(JSON.parse(q.criteria.plan1!)).not.toHaveProperty("boss_relative_margin");
+   expect(rows[0]!.request).toEqual({ model: client.model, ...calls[0] });
+-  const enriched = { state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions };
+-  expect(rows[0]!.decision_evidence).toEqual(enriched);
+-  expect(rows[0]!.decision_projection?.sourceSha256).toBe(createHash("sha256").update(JSON.stringify(enriched)).digest("hex"));
++  const original = { state: fixture.state, questions: fixture.questions };
++  expect(rows[0]!.decision_evidence).toEqual(original);
++  expect(rows[0]!.decision_projection?.sourceSha256).toBe(createHash("sha256").update(JSON.stringify(original)).digest("hex"));
+   expect(rows[0]!.input_tokens).toBe(4321);
+ });
+ 
+@@ -94,8 +94,8 @@ it("a projected rejection cannot retry the discarded full payload or bypass the
+   const client = { model: "same", async ask(_state: unknown, questions: QuestionSet): Promise<never> { calls.push(questions); throw error; } };
+   await expect(askJevLogged(client, { path: "fixed", write: (row) => rows.push(row) }, meta, fixture.state, fixture.questions)).rejects.toThrow("max_tokens_exceeded");
+   expect(calls.length).toBeLessThanOrEqual(2);
+-  const enriched = { state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions };
+-  expect(rows[0]!.decision_evidence).toEqual(enriched);
++  const original = { state: fixture.state, questions: fixture.questions };
++  expect(rows[0]!.decision_evidence).toEqual(original);
+   for (const row of rows) expect(row.decision_projection?.schema).toBe("silent-combat-decision-v1");
+   for (const questions of calls) expect(JSON.stringify(questions)).not.toContain("modeled_after_actions");
+ });
+diff --git a/agent/tests/open-book.test.ts b/agent/tests/open-book.test.ts
+index a4c867932..9316c0ed1 100644
+--- a/agent/tests/open-book.test.ts
++++ b/agent/tests/open-book.test.ts
+@@ -15,7 +15,7 @@ import { BrainRouter } from "../src/brain/router.js";
+ import { loadConfig } from "../src/core/config.js";
+ import type { BrainRequest } from "../src/brain/types.js";
+ import { userMessage } from "../src/brain/message.js";
+-import { JevClient, JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
++import { JevClient, JevError } from "../src/reflex/jev/client.js";
+ import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
+ 
+ type Row = Record<string, any>;
+@@ -136,7 +136,7 @@ describe("offline open book", () => {
+     expect(enemySims(board, 10, "ironclad")[0]!.externalReference).toBeUndefined();
+     expect(JSON.stringify(enemy)).not.toContain("externalReference");
+   });
+-  it("passes enriched options through the actual Brain request and supplies Jev the same references", async () => {
++  it("passes enriched options through the actual Brain request", async () => {
+     setKnowledgeCharacter("silent");
+     let sent: BrainRequest | undefined;
+     const router = new BrainRouter({ config: loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_LOG: "off", KNOWLEDGE_PREFIX: "off" } as NodeJS.ProcessEnv).brain,
+@@ -148,12 +148,8 @@ describe("offline open book", () => {
+     await brain.choose({}, "Pick", options, { label: "reward/card" });
+     expect(userMessage(sent!)).toContain("基础资料补全");
+     expect((sent!.payload as Row).open_book.entries[0].id).toBe(e.id);
+-    const questions = { pick: { type: "choice" as const, instructions: "Pick", criteria: options } };
+-    const state = prepareJevOpenBook({ run_brief: { character: "SILENT" }, enemies: [{ enemy_id: "AEONGLASS" }] }, questions) as Row;
+-    expect(keys(state)).toEqual(expect.arrayContaining(["cards:ABRASIVE", "monsters:AEONGLASS"]));
+-    expect(prepareJevOpenBook(state, questions)).toBe(state);
+   });
+-  it("sends the same enriched Jev state that the log and projection hash describe", async () => {
++  it("sends the pre-open-book Jev state with matching log and projection evidence", async () => {
+     const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
+     let wire: Row = {}, logged: JevPromptRecord | undefined;
+     const sdk = (client as unknown as { client: { systemOne: unknown } }).client;
+@@ -165,17 +161,27 @@ describe("offline open book", () => {
+       label: "combat/plan-choice", jevContext: null, call: "ask",
+     }, state, questions);
+     expect(logged!.request).toEqual(wire);
+-    expect(keys(wire.state)).toEqual(expect.arrayContaining(["cards:ABRASIVE", "monsters:AEONGLASS"]));
++    expect(wire.state).not.toHaveProperty("open_book");
++    const { jev_decision_contract, ...board } = wire.state;
++    expect(board).toEqual(state);
++    expect(jev_decision_contract.schema).toBe("silent-combat-decision-v1");
++    expect(wire.questions.pick).toEqual({ ...questions.pick, criteria: { p0: '{"card_id":"ABRASIVE"}' } });
+     expect(logged!.decision_projection!.projectedBytes).toBe(Buffer.byteLength(JSON.stringify({ state: wire.state, questions: wire.questions })));
+-    expect(logged!.decision_evidence!.state).toMatchObject({ open_book: { schema: "open-book-context-v1" } });
++    expect(logged!.decision_evidence).toEqual({ state, questions });
+   });
+-  it("keeps Jev references inside the existing request budget", () => {
+-    const state = { run_brief: { character: "SILENT" }, padding: "x".repeat(16_000), cards: loadOpenBook().entries.filter(e => e.kind === "cards").slice(0, 30).map(e => ({ card_id: e.id })) };
+-    const enriched = prepareJevOpenBook(state, {});
+-    expect(Buffer.byteLength(JSON.stringify({ model: "fixed", state: enriched, questions: {} }))).toBeLessThanOrEqual(24_000);
+-    expect((enriched as Row).open_book.omitted).toBeGreaterThan(0);
++  it.each(["SILENT", "IRONCLAD"])("direct Jev calls preserve %s request bytes without open-book enrichment", async (character) => {
++    const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
++    let wire: Row = {};
++    const sdk = (client as unknown as { client: { systemOne: unknown } }).client;
++    sdk.systemOne = (request: Row) => { wire = request; return { withResponse: async () => ({ data: { answers: {}, usage: {} } }) }; };
++    const state = { run_brief: { character }, cards: [{ card_id: "ABRASIVE", description: "?(数值未知)" }], enemies: [{ enemy_id: "AEONGLASS" }] };
++    const questions = { pick: { type: "choice" as const, instructions: "Pick", criteria: { p0: '{"card_id":"ABRASIVE"}' } } };
++    const before = JSON.stringify({ model: "fixed", state, questions });
++    await client.ask(state, questions);
++    expect(JSON.stringify(wire)).toBe(before);
++    expect(wire.state).not.toHaveProperty("open_book");
+   });
+-  it("does not add references after a logged context-recovery retry deliberately omitted them", async () => {
++  it("keeps both logged context-recovery attempts free of open-book fields", async () => {
+     const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
+     const calls: Row[] = [], rows: JevPromptRecord[] = [];
+     const sdk = (client as unknown as { client: { systemOne: unknown } }).client;
+diff --git a/agent/tests/v6-combat-entries.test.ts b/agent/tests/v6-combat-entries.test.ts
+index d01eef99c..d47476df9 100644
+--- a/agent/tests/v6-combat-entries.test.ts
++++ b/agent/tests/v6-combat-entries.test.ts
+@@ -7,7 +7,7 @@ import * as knowledgeLoader from "../src/v6/knowledge.js";
+ import { loadCombatEntries, combatEntryAudit } from "../src/reflex/jev/combat-entries.js";
+ import { projectCombatDecision } from "../src/reflex/jev/combat-entry-projection.js";
+ import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
+-import { JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
++import { JevError } from "../src/reflex/jev/client.js";
+ import type { QuestionSet } from "../src/reflex/jev/questions.js";
+ import { annotatedFrozen, fixedBoss, fixedPlan, fixedRollout, fixedState, installFixture } from "./v6-combat-fixtures.js";
+ import baselines from "./v6-combat-off-baseline.json";
+@@ -34,11 +34,10 @@ for (const character of Object.keys(baselines)) it.each([undefined, "off", "true
+     return { model: this.model, answers: {}, inputTokens: 0, outputTokens: 0, latencyMs: 0, requestId: null };
+   } };
+   await askJevLogged(client, null, meta, fixture.state, fixture.questions);
+-  // #25 adds references independently of W8; all pre-existing wire fields retain their frozen hash.
++  // Match the complete pre-#25 wire bytes, including the absence of open-book fields.
+   const wire = calls[0] as { state: Record<string, unknown>; questions: QuestionSet };
+-  const { open_book, ...originalState } = wire.state;
+-  expect(hash({ state: originalState, questions: wire.questions })).toBe((baselines as Record<string, string>)[character]);
+-  expect(open_book).toEqual((prepareJevOpenBook(fixture.state, fixture.questions, true) as Record<string, unknown>).open_book);
++  expect(hash(wire)).toBe((baselines as Record<string, string>)[character]);
++  expect(wire.state).not.toHaveProperty("open_book");
+ });
+ 
+ it("requires explicit on and both valid role-local files; missing knowledge preserves the old wire without fallback", () => {
+@@ -150,7 +149,7 @@ it("sends the W8 projection and keeps joined evidence through a single bounded c
+   } };
+   await askJevLogged(client, { path: "fixed", write: r => rows.push(r) }, meta, fixture.state, fixture.questions);
+   expect(calls).toHaveLength(2); expect(rows).toHaveLength(2);
+-  expect(rows[0]!.decision_evidence).toEqual({ state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions });
++  expect(rows[0]!.decision_evidence).toEqual({ state: fixture.state, questions: fixture.questions });
+   expect(rows[1]!.decision_evidence).toBeUndefined();
+   expect(rows[1]!.decision_projection).toEqual(rows[0]!.decision_projection);
+   expect(criterion(calls[0]!.questions).combat_memory).toHaveLength(2);
+diff --git a/docs/open-book.md b/docs/open-book.md
+index 4e2d4efb1..1d73e37dd 100644
+--- a/docs/open-book.md
++++ b/docs/open-book.md
+@@ -1,6 +1,6 @@
+ # 开卷机械资料（#25）
+ 
+-本地库提供 v0.111.0 卡牌、遗物、怪物、事件的静态资料。大脑和 Jev 只按当前题目取相关条目，决策中不联网。当前接入 Silent；Ironclad 的题面、模拟序列化与评分保持原样。
++本地库提供 v0.111.0 卡牌、遗物、怪物、事件的静态资料。大脑按当前题目取相关条目，决策中不联网。当前接入 Silent；Ironclad 的题面、模拟序列化与评分保持原样。Roy 2026-10-22 在 #37 指定开卷只给大脑，Jev 出牌请求不附开卷。
+ 
+ ## 来源与许可
+ 
+@@ -20,7 +20,7 @@
+ 
+ 共 595 牌、298 遗物、115 怪物、66 事件。其他角色池只在跨池获得等条件下参考，不计入 Silent 经验分母。版本不为 v0.111.0 的条目拒绝加载；未知版本不能由 mod_version 推断。
+ 
+-调用 `externalReference(kind, id, character, directory?)` 可按精确 ID 读全部条目，`externalCardReference` 是卡牌快捷接口。`attachOpenBook({options, question, payload}, options?)` 在 Brain request 组装时调用，也识别实际选项里的 JSON 字符串及拿牌摘要的 `card` 名称与 `text`。优先处理选项和题干，再处理牌组等背景；跳过有歧义的名称，ASCII 名称要求完整词边界。已有明确 ID 时不以名称猜测替代。遍历限制 120,000 字符、16 层；匹配未覆盖的描述保留原样。
++调用 `externalReference(kind, id, character, directory?)` 可按精确 ID 读全部条目，`externalCardReference` 是卡牌快捷接口。生产大脑经 #33 的 `kb_open_book` 工具按需查询，见 [知识工具模式](brain-agent-mode.md)。历史适配器的 `attachOpenBook({options, question, payload}, options?)` 在 Brain request 组装时调用，也识别实际选项里的 JSON 字符串及拿牌摘要的 `card` 名称与 `text`。优先处理选项和题干，再处理牌组等背景；跳过有歧义的名称，ASCII 名称要求完整词边界。已有明确 ID 时不以名称猜测替代。遍历限制 120,000 字符、16 层；匹配未覆盖的描述保留原样。
+ 
+ `open_book` 含相关完整条目、所需来源、冲突、缺项和 `omitted`。附加总量（含替换描述的增量）上限 18,000 UTF-8 bytes；按整条加入，放不下就省略并计数，避免截断 JSON。单个很大的事件也可能被省略，仍可按 ID 查本地文件。上限约束新增部分，不压缩或丢弃原题。资料按文件 inode/size/mtime 缓存，缺失文件或原子替换后的文件在下一次查阅时重读。
+ 
+@@ -30,7 +30,7 @@
+ 
+ `modelHandCard(...).externalReference` 与 `enemySims(...)[i].externalReference` 提供同一离线条目的数值；字段不可枚举，不进入现有模型 JSON、指纹或求解器克隆。机制支持仍由原模型判定：查到资料不会把 `known=false` 改为 true，也不改变评分。#13 可通过上述接口读取静态事实，再按学习协议建立机制实现与回放证据。
+ 
+-Jev 的 direct 和 logged 入口共用 `prepareJevOpenBook`，先附同源资料，再进行原投影/压缩；实际发送、题面日志和投影 hash/字节口径一致。Jev 的 board 动态字段保持不变。重复准备同一题不重复附加。Jev 在原 24 KB 请求预算内加入资料：按实际投影后的基础题面预留空间，并留 1 KB 给 model 等传输字段；空间不足时整条省略。logged 路径的投影或无损压缩重试在 SDK 入口不再补第二次，防止日志与实际请求不一致。
++Jev 的 direct 和 logged 入口已删除 #25 的开卷准备调用及配套去重代码，恢复 #25 之前的 V5 请求路径。原投影、无损压缩和重试继续使用原状态与问题，实际发送、题面日志和投影 hash/字节口径一致；不增加开关，不改 REFLEX 开关。Jev 后续出牌优化走 #28 的经验条目。
+ 
+ 外部条目没有本系统局号、胜率、角色验证分母或实战结论，不修改文字策略库、学习账本，也不把静态数据当作支持某种打法的证据。
+ 
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/input-stability-1.json b/paper/materials/20261022-issue37-jev-no-open-book/input-stability-1.json
+new file mode 100644
+index 000000000..e8315656f
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/input-stability-1.json
+@@ -0,0 +1,5 @@
++{
++  "count": 2635,
++  "unchanged": true,
++  "changed": []
++}
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/input-stability-2.json b/paper/materials/20261022-issue37-jev-no-open-book/input-stability-2.json
+new file mode 100644
+index 000000000..e8315656f
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/input-stability-2.json
+@@ -0,0 +1,5 @@
++{
++  "count": 2635,
++  "unchanged": true,
++  "changed": []
++}
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/report.md b/paper/materials/20261022-issue37-jev-no-open-book/report.md
+new file mode 100644
+index 000000000..fa7239dc0
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/report.md
+@@ -0,0 +1,23 @@
++# #37 Jev 出牌移除开卷
++
++来源：[issue #37](https://github.com/dwroy/agent-sts2/issues/37)，基线 `aca65750cc75be8f6782477eb06ad64f053e84f5`。
++
++删除 Jev direct / logged 两个入口的开卷准备调用、`prepareJevOpenBook` 及其 WeakMap 去重标记；不增加开关。Roy 已明确开卷只给大脑，删除调用可直接恢复原路径，避免额外配置分支和默认值误启用。
++
++`agent/src/reflex/jev/client.ts`、`agent/src/eye/jev-prompt-log.ts` 均与 #25 集成前 `09b7aa19b5dc17c02f3bc035df0a1ceed85f756a` 的原文件字节完全一致，SHA 见 `source-parity.json`。原战斗投影、候选、评分、上下文压缩、重试、日志和 REFLEX 开关均未调整。其他角色（含 Ironclad）维持原请求字段。
++
++大脑原开卷适配器、#33 的 `kb_open_book` 查询工具、模拟器不可枚举静态参考及知识数据均未改动。`docs/open-book.md` 同步当前分工，历史 #25 报告保留。
++
++固定验证覆盖完整的 pre-#25 冻结请求哈希（多角色与 W8 off 配置），Jev SDK direct / logged 无开卷、日志等于实际发送体、投影来源哈希与原证据一致、压缩重试两次均不附开卷；大脑历史开卷与 #33 工具查询继续由已有测试核验。全部使用本地固定数据与 SDK 测试替身，不调用游戏或外部模型。
++
++生产类型检查已通过。先运行 6 文件 / 82 项定向测试，全过；完整 Vitest 按 #20 的上线检查优先规则，待 #33 原检查终局后启动。本树稀疏检出缺失的既有 #29 `results.jsonl` 已从 HEAD 精确展开并核对 SHA，没有修改该数据。
++
++首轮完整 Vitest：655 文件中 654 通过、1 失败；6173 项通过、2 项失败、2 项既有跳过，退出 1。2635 份输入 SHA 前后完全一致。失败均为既有 `v6-card-option-loop` 两个数值用例：实际完成 2 样本，断言要求 8 样本。同代码单独复跑 4 项全过；临时恢复两个 Jev 源文件至本树未改基线后，该旧测试也复现了缺失数值失败，之后已 finally 恢复 #37 源码。原失败及基线输出分别保留于 `full-1.log`、`card-option-base.log`。
++
++测试修复仅将这两个固定 8 样本用例注入引擎的时钟从真实墙钟改为固定值，避免宿主负载决定是否完成第 2→8 样本切片；不降低断言、不改样本数或生产时间预算。既有 `v6-card-results.test.ts` 的可控时钟仍验证部分样本及预算约束。该文件与预算文件 25 项复验全过。
++
++第二轮完整验证：生产 tsc 退出 0；单 fork 完整 Vitest 655 文件全过，6175 项通过、2 项既有跳过，退出 0。11:55:37 开始、耗时 1489.63 秒，nice 19、单 worker、文件不并行，2635 份输入 SHA 前后完全一致。两个生产文件与 #25 前原件的字节一致性再次核实。汇总、原件路径及 SHA 见 `verification.json`；原始日志和 JSON 报告保留在本材料目录的忽略 `.log` 文件中，不以成功结果覆盖首轮失败或基线复现。
++
++交付不操作 main/live/STOP，不运行 play，不关闭其他会话。集成员核验后由 ops 依原流程在自然边界发布、分配 release_id、登记通知；首自然局仍须读回 Jev 请求无 `open_book` 且无调用错误。本地固定验证不代替该生产验收。
++
++回退：撤回本补丁的两个源码文件即可恢复 #25 开卷路径；由 ops 沿正常发布流程处理，保留原日志和回执。
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/source-parity.json b/paper/materials/20261022-issue37-jev-no-open-book/source-parity.json
+new file mode 100644
+index 000000000..b6b43ee5e
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/source-parity.json
+@@ -0,0 +1,18 @@
++{
++  "baseline": "09b7aa19b5dc17c02f3bc035df0a1ceed85f756a",
++  "issue25_merge": "d2fbd4106",
++  "files": [
++    {
++      "path": "agent/src/reflex/jev/client.ts",
++      "pre_issue25_sha256": "a5f8bf8f80b9e4b46b796342f1ff6b168ced52b53e44b483ef4b2a5d15028bad",
++      "current_sha256": "a5f8bf8f80b9e4b46b796342f1ff6b168ced52b53e44b483ef4b2a5d15028bad",
++      "identical": true
++    },
++    {
++      "path": "agent/src/eye/jev-prompt-log.ts",
++      "pre_issue25_sha256": "709fa8abe7a15834c59a38a9be59d23ae107b3ab748cb865d3468001da193cad",
++      "current_sha256": "709fa8abe7a15834c59a38a9be59d23ae107b3ab748cb865d3468001da193cad",
++      "identical": true
++    }
++  ]
++}
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/sparse-fixture.json b/paper/materials/20261022-issue37-jev-no-open-book/sparse-fixture.json
+new file mode 100644
+index 000000000..0a03931bf
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/sparse-fixture.json
+@@ -0,0 +1,5 @@
++{
++  "path": "paper/materials/issue29-brain-speed/results.jsonl",
++  "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef",
++  "matches_HEAD": true
++}
+diff --git a/paper/materials/20261022-issue37-jev-no-open-book/verification.json b/paper/materials/20261022-issue37-jev-no-open-book/verification.json
+new file mode 100644
+index 000000000..6b9b43903
+--- /dev/null
++++ b/paper/materials/20261022-issue37-jev-no-open-book/verification.json
+@@ -0,0 +1,211 @@
++{
++  "schema": "issue37-development-verification-v1",
++  "base": "aca65750cc75be8f6782477eb06ad64f053e84f5",
++  "tsc_exit_code": 0,
++  "tsc_command": [
++    "node",
++    "node_modules/typescript/bin/tsc",
++    "-p",
++    "tsconfig.json",
++    "--noEmit"
++  ],
++  "vitest_command": [
++    "node",
++    "node_modules/vitest/vitest.mjs",
++    "run",
++    "--pool=forks",
++    "--maxWorkers=1",
++    "--no-file-parallelism"
++  ],
++  "nice": 19,
++  "checks": [
++    {
++      "name": "targeted",
++      "exit_code": 0,
++      "files": 6,
++      "passed": 82,
++      "failed": 0,
++      "skipped": 0,
++      "success": true,
++      "failures": []
++    },
++    {
++      "name": "full_initial",
++      "exit_code": 1,
++      "files": 655,
++      "passed": 6173,
++      "failed": 2,
++      "skipped": 2,
++      "success": false,
++      "failures": [
++        {
++          "file": "agent/tests/v6-card-option-loop.test.ts",
++          "tests": [
++            "keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator",
++            "keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator"
++          ]
++        }
++      ]
++    },
++    {
++      "name": "unmodified_targeted_recheck",
++      "exit_code": 0,
++      "files": 1,
++      "passed": 4,
++      "failed": 0,
++      "skipped": 0,
++      "success": true,
++      "failures": []
++    },
++    {
++      "name": "base_reproduction",
++      "exit_code": 1,
++      "files": 1,
++      "passed": 3,
++      "failed": 1,
++      "skipped": 0,
++      "success": false,
++      "failures": [
++        {
++          "file": "agent/tests/v6-card-option-loop.test.ts",
++          "tests": [
++            "keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator"
++          ]
++        }
++      ]
++    },
++    {
++      "name": "test_clock_fix_and_budget",
++      "exit_code": 0,
++      "files": 2,
++      "passed": 25,
++      "failed": 0,
++      "skipped": 0,
++      "success": true,
++      "failures": []
++    },
++    {
++      "name": "full_final",
++      "exit_code": 0,
++      "files": 655,
++      "passed": 6175,
++      "failed": 0,
++      "skipped": 2,
++      "success": true,
++      "failures": []
++    }
++  ],
++  "final_input_count": 2635,
++  "final_inputs_unchanged": true,
++  "logs": [
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-base.log",
++      "bytes": 1745,
++      "sha256": "d045dba62e9965a6e254d9cebaa57ee431431c503416121e06ab2dae219fa41e",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-base.result.json.log",
++      "bytes": 2349,
++      "sha256": "d8fbd5a6aba96fbf467e623d0b3637196838f4be3b56a27677dc477e6d80001e",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-fixed.log",
++      "bytes": 906,
++      "sha256": "fcfc4945bdc01287171dbde5f8a63f698a2a9aa65e5f0e83355153b19f958d11",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-fixed.result.json.log",
++      "bytes": 8590,
++      "sha256": "3b368180fc9ad814c64162be002e4677111b5bd6c47bd075ab40a4743894b562",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-recheck-1.log",
++      "bytes": 855,
++      "sha256": "54818d940768b9c6273a7329b7d40b618d1df48bb4bc0c0e07cb40db793ea85d",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-recheck-1.result.json.log",
++      "bytes": 2066,
++      "sha256": "03181255621c118437dd969aeba5f9f0100ed488c362eaf6fa583fc54533a33c",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1-start.json.log",
++      "bytes": 168,
++      "sha256": "9bd6287ff58f451904439af3383d2d64044db4b859e3642c3913ae8cc06ca9d9",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1.log",
++      "bytes": 86708,
++      "sha256": "f7e1f567b4d4c681b97b61c3893a8ec6e545746d98f19020156aef8771ef24a2",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1.result.json.log",
++      "bytes": 2396598,
++      "sha256": "4fd342f81897129492c171b1f340c3e5aedbd4e57492d74cf82c89fa9bdfea1e",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2-start.json.log",
++      "bytes": 117,
++      "sha256": "138a53c6da5a901e9d3768a780d05e916c3ad3fa5161092b4a9ffd531534c41b",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2.log",
++      "bytes": 81256,
++      "sha256": "4f302eee6911886d7bf59613a12266aa767d2b9022f3a33a5dbfa420ebb79fe9",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2.result.json.log",
++      "bytes": 2396125,
++      "sha256": "d7c8e38f5ea5b2cb037ecf3afdcc578f4a0be52dd0ec82ea747d66fc4e90c061",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/inputs-before-2.json.log",
++      "bytes": 387521,
++      "sha256": "bb4e46181a42c7ee2625199335be7c6c66fc7135cb33c0040a9f12c70cf497b4",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/inputs-before.json.log",
++      "bytes": 387521,
++      "sha256": "1d74c2cb4f4b26e44ab992ca0ca798c534e9561a86b38d7b1f06c82a43d7359a",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/targeted.log",
++      "bytes": 901,
++      "sha256": "e90fc844d8bfd95ca67b1d2c80dfecb8667c3910fe88938fb6cb5dbc1cd234af",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/targeted.result.json.log",
++      "bytes": 26623,
++      "sha256": "6757225ffab9c7133de4d03a03ff8b9f257badfad486414c3ef1cc797db51834",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/tsc-2.log",
++      "bytes": 0,
++      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "storage": "local original; retained in source worktree"
++    },
++    {
++      "path": "paper/materials/20261022-issue37-jev-no-open-book/tsc.log",
++      "bytes": 0,
++      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "storage": "local original; retained in source worktree"
++    }
++  ],
++  "production_readback": "pending integrator admission and ops natural-boundary release; no live/STOP/game operations"
++}
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 3b1eb333f..9be02a32a 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -6506,3 +6506,9 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-24T06:28:06+08:00 [ops] #28 R424净十二叶唯一full6536过/2跳、两tsc0及冻结输入核同，接原自然边界监督407393；发布前修正builder源码/知识数据保护清单，旧停点保留，无游戏信号或新full/模型，科学父保持。paper/materials/20261024-issue28-r424-received-ops/receipt.json。
+ 
+ - 2026-10-24T06:39:28+08:00 [ops] 接#51评论6376022286新交替派发授权，五叶隔离候选定向45过，原full退出后做唯一检查，原28发布释放核完后再部署并写实际生效时间；当前未生效，原normal/来源/租约/失败历史保留。paper/materials/20261024-issue51-alternation-ops/received-before-check.json。
++
++- 2026-10-22T11:16:00+08:00 [dev #37] 按Roy经#37指定删除Jev direct/logged开卷调用与去重辅助代码，不增开关；两源码与#25前09b7aa19b5字节相同，大脑开卷/查询及REFLEX保持。tsc0，完整Vitest待原上线窗口释放；交付及首局验收沿集成员→ops，不改live/STOP。材料paper/materials/20261022-issue37-jev-no-open-book/。
++
++- 2026-10-22T11:56:00+08:00 [dev #37] 首完整655文件654过/1败（6173过/2败/2skip），2635输入SHA同；旧候选数值测试的8样本断言受墙钟预算影响，恢复未改Jev基线亦复现、同代码单跑4过。仅固定该测试注入的模拟时钟、不降低断言或改生产预算，含部分样本/预算测试25项全过；第二轮完整验证中，原失败与基线记录保留。材料paper/materials/20261022-issue37-jev-no-open-book/。
++
++- 2026-10-22T12:21:05+08:00 [dev #37] 删除Jev开卷交付最终验证：tsc0，单fork完整655文件/6175过/2既有skip，2635输入SHA前后一致；两生产文件仍与#25前09b7aa19b5相同，旧失败/基线复现及测试时钟修复分列保留。交集成员review及ops自然边界发布/首局无开卷无调用错误读回，不改live/STOP或分配发布号。材料paper/materials/20261022-issue37-jev-no-open-book/verification.json。
