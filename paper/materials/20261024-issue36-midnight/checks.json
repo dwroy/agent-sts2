@@ -1,0 +1,78 @@
+{
+  "tsc": {
+    "exit": 0,
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+  },
+  "typescript": {
+    "exit": 0,
+    "files": 7,
+    "cases": 275,
+    "command": "node node_modules/vitest/vitest.mjs run tests/learner-native-environment.test.ts tests/learner-tui-observation.test.ts tests/learner-native-prelude.test.ts tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr-launcher.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism"
+  },
+  "python_core": {
+    "exit": 0,
+    "methods": 42,
+    "command": "python3 -B -m unittest ops.tests.test_learner_tui_recovery ops.tests.test_learner_environment ops.tests.test_learner_tui"
+  },
+  "wrapper_compatibility": {
+    "exit": 0,
+    "methods": 17,
+    "note": "Included in the earlier 59-method directed run; later Python edits are confined to completed recovery, not the normal wrapper gates."
+  },
+  "shared_negative_cases": 49,
+  "baseline": {
+    "source": "60300e8bf",
+    "typescript_failed": 5,
+    "typescript_skipped": 131,
+    "original_python_rejected_midnight": true,
+    "real_pair_audit_exits": [
+      75,
+      75
+    ]
+  },
+  "full": false,
+  "models_started": 0,
+  "production_controls": false,
+  "logs": {
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "directed.log": {
+      "bytes": 265,
+      "sha256": "3a072ea719bb202bda3c2060690173f43a3a1714a35533a0fb2111ab0655a56e"
+    },
+    "python-core.log": {
+      "bytes": 141,
+      "sha256": "b3233ced6e7e94bfe054908059d05716bc3f682b3474fab12ba4e20cefd3c7dd"
+    },
+    "python.log": {
+      "bytes": 158,
+      "sha256": "ec504c6b62f55c3a0bed6724d1aae12594332c0697a0477dc85ecfe5faa35d19"
+    },
+    "baseline.log": {
+      "bytes": 5526,
+      "sha256": "2abb686a955e18ff8b7de68acc0e48b7670c1da6bd06ffa5135406faff0cae69"
+    },
+    "python-baseline.log": {
+      "bytes": 105,
+      "sha256": "d86db9a3586a676baec1515ba7fea0ed97f6559bfb154bbc6eba7fcad23779be"
+    },
+    "first-directed-failure.log": {
+      "bytes": 1423,
+      "sha256": "36d3a241ff61e22c0643118926efe40d31edd968c8665ef29fb337f831cf1858"
+    },
+    "recovery-notice-first-failure.log": {
+      "bytes": 1399,
+      "sha256": "cec50b6deef54ad5bc44430a88dc97f68ef4af3f82b266d14a970755da04d371"
+    },
+    "watch-experience.log": {
+      "bytes": 124,
+      "sha256": "0a09ed768d69faa1f19714614b53f5617d468904ec7a5d1f881d8d01b7c31139"
+    },
+    "watch-postmortem.log": {
+      "bytes": 89,
+      "sha256": "32943f460491a314fb20c0c9772e192fd333ad0a0210099c717abce577ff0562"
+    }
+  }
+}

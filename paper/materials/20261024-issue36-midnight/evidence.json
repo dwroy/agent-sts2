@@ -1,0 +1,426 @@
+{
+  "source_comments": [
+    "6369156059",
+    "6369420221",
+    "6369442769"
+  ],
+  "frozen_inputs": {
+    "experience-receipt.json": {
+      "path": "ops/codex-ops/learner/learner-20261023-235635-experience-update.tui.json",
+      "bytes": 2539,
+      "sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68"
+    },
+    "experience-native.jsonl": {
+      "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T23-56-44-01a1697a-98c4-7142-a460-d9437cd6c2a7.jsonl",
+      "bytes": 988561,
+      "sha256": "f00208be44af4e34da663feecee2b134a160a433000b776d37893fff9a815dee"
+    },
+    "postmortem-receipt.json": {
+      "path": "ops/codex-ops/learner/learner-20261023-234301-postmortem.tui.json",
+      "bytes": 2493,
+      "sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471"
+    },
+    "postmortem-native.jsonl": {
+      "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T23-43-11-01a1696e-2e9c-7571-95d8-9009fd4dd982.jsonl",
+      "bytes": 2104666,
+      "sha256": "aed0fbdce245dab372b854b62cf9d51f4dbe5a7b931a343fbd690effcf38f6a6"
+    },
+    "postmortem-terminal-native.jsonl": {
+      "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T23-43-11-01a1696e-2e9c-7571-95d8-9009fd4dd982.jsonl",
+      "bytes": 2195302,
+      "sha256": "2c0fa589e5c9aca765add3eeaed4a0e321075de4f7f0208c1aa451337fc20097"
+    }
+  },
+  "parser_before_midnight": {
+    "source": "60300e8bf",
+    "main_2346": "d23925417",
+    "native_batch_sha256": "deea30a5597637b3567ebae15c26bc81c66b414f5f6777429eeab25a2b4e2d8f",
+    "identical": true
+  },
+  "batches": {
+    "experience": {
+      "original_receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+      "original_result_code": 75,
+      "bindings": [
+        {
+          "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "marker": "[learner-batch:a25a61f0-bc89-422c-8e11-98ea4cf981b3]",
+          "prompt_sha256": "3c07bf7075ed6beec959a5d1004764e8b6b64f52ca41e86de01e0cb5e9748625"
+        }
+      ],
+      "old_parser": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "needs-attention",
+        "original_result_code": 75,
+        "observed": {
+          "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+          "cwd": ".worktrees/exp",
+          "turn": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "accepted": false,
+          "foreign_activity": true,
+          "complete": false,
+          "open": false,
+          "successful": false,
+          "bindings": [
+            {
+              "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+              "marker": "[learner-batch:a25a61f0-bc89-422c-8e11-98ea4cf981b3]",
+              "prompt_sha256": "3c07bf7075ed6beec959a5d1004764e8b6b64f52ca41e86de01e0cb5e9748625"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+              "cwd": ".worktrees/exp",
+              "sha256": "384f96b81d970c797bc97bd89c5a6e999c7857a8c555aad958617eeec044db62"
+            }
+          ],
+          "native_environment_version": 1
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+        "native_snapshot_sha256": "f00208be44af4e34da663feecee2b134a160a433000b776d37893fff9a815dee",
+        "native_snapshot_bytes": 988561,
+        "trailing_partial_bytes": 0
+      },
+      "fixed_frozen_audit": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "needs-attention",
+        "original_result_code": 75,
+        "observed": {
+          "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+          "cwd": ".worktrees/exp",
+          "turn": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "accepted": true,
+          "foreign_activity": false,
+          "complete": true,
+          "open": false,
+          "successful": true,
+          "bindings": [
+            {
+              "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+              "marker": "[learner-batch:a25a61f0-bc89-422c-8e11-98ea4cf981b3]",
+              "prompt_sha256": "3c07bf7075ed6beec959a5d1004764e8b6b64f52ca41e86de01e0cb5e9748625"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+              "cwd": ".worktrees/exp",
+              "sha256": "384f96b81d970c797bc97bd89c5a6e999c7857a8c555aad958617eeec044db62"
+            }
+          ],
+          "native_environment_version": 1,
+          "native_environment_updates": [
+            {
+              "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+              "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+              "cwd": ".worktrees/exp",
+              "timestamp": "2026-10-23T16:00:02.025Z",
+              "message_id": "msg_01a1697d-9be9-7012-a302-fe8f9c0c6466",
+              "current_date": "2026-10-24",
+              "timezone": "Asia/Shanghai",
+              "filesystem_sha256": "ecd4a1b9cbdda1a0dc3f8dd93c45d022d2e47f6341ddadc4cc50e34723dc1cbc",
+              "sha256": "47f572b84f01fb09acb506f2156bfe2c251026af17b63a89bf60310974c0f376"
+            }
+          ]
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+        "native_snapshot_sha256": "f00208be44af4e34da663feecee2b134a160a433000b776d37893fff9a815dee",
+        "native_snapshot_bytes": 988561,
+        "trailing_partial_bytes": 0
+      },
+      "python_environment_proof": [
+        {
+          "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+          "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "cwd": ".worktrees/exp",
+          "timestamp": "2026-10-23T16:00:02.025Z",
+          "message_id": "msg_01a1697d-9be9-7012-a302-fe8f9c0c6466",
+          "current_date": "2026-10-24",
+          "timezone": "Asia/Shanghai",
+          "filesystem_sha256": "ecd4a1b9cbdda1a0dc3f8dd93c45d022d2e47f6341ddadc4cc50e34723dc1cbc",
+          "sha256": "47f572b84f01fb09acb506f2156bfe2c251026af17b63a89bf60310974c0f376"
+        }
+      ],
+      "recovery_dry_run": {
+        "batch": "20261023-235635-experience-update",
+        "state": "eligible-for-identity-check",
+        "apply": false,
+        "origin_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+        "native_sha256": "f00208be44af4e34da663feecee2b134a160a433000b776d37893fff9a815dee",
+        "environment_updates": 1,
+        "finish_authorized": false,
+        "retirement_authorized": false
+      },
+      "readonly_observer": {
+        "schema": "learner-tui-readonly-observation-v1",
+        "observer_pid": 3513523,
+        "batch": "20261023-235635-experience-update",
+        "receipt": "ops/codex-ops/learner/learner-20261023-235635-experience-update.tui.json",
+        "state": "completed-observed",
+        "original_receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+        "registration_sha256": "e46a5b52a3a028c825991adb3a648f6e6fba263eb951e511192323f581f03bdc",
+        "deadline_ms": 1792773248874,
+        "pane_pid_registration_revalidated": true,
+        "native_snapshot_current": true,
+        "observed_at_ms": 1792773248073,
+        "audit": {
+          "schema": "learner-tui-native-reconciliation-v1",
+          "original_state": "needs-attention",
+          "original_result_code": 75,
+          "observed": {
+            "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+            "cwd": ".worktrees/exp",
+            "turn": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+            "accepted": true,
+            "foreign_activity": false,
+            "complete": true,
+            "open": false,
+            "successful": true,
+            "bindings": [
+              {
+                "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+                "marker": "[learner-batch:a25a61f0-bc89-422c-8e11-98ea4cf981b3]",
+                "prompt_sha256": "3c07bf7075ed6beec959a5d1004764e8b6b64f52ca41e86de01e0cb5e9748625"
+              }
+            ],
+            "native_context_version": 1,
+            "native_preludes": [
+              {
+                "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+                "cwd": ".worktrees/exp",
+                "sha256": "384f96b81d970c797bc97bd89c5a6e999c7857a8c555aad958617eeec044db62"
+              }
+            ],
+            "native_environment_version": 1,
+            "native_environment_updates": [
+              {
+                "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+                "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+                "cwd": ".worktrees/exp",
+                "timestamp": "2026-10-23T16:00:02.025Z",
+                "message_id": "msg_01a1697d-9be9-7012-a302-fe8f9c0c6466",
+                "current_date": "2026-10-24",
+                "timezone": "Asia/Shanghai",
+                "filesystem_sha256": "ecd4a1b9cbdda1a0dc3f8dd93c45d022d2e47f6341ddadc4cc50e34723dc1cbc",
+                "sha256": "47f572b84f01fb09acb506f2156bfe2c251026af17b63a89bf60310974c0f376"
+              }
+            ]
+          },
+          "original_receipt_modified": false,
+          "prompt_send_authorized": false,
+          "retirement_authorized": false,
+          "finish_authorized": false,
+          "pane_pid_lease_revalidated": false,
+          "original_receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+          "native_snapshot_sha256": "f00208be44af4e34da663feecee2b134a160a433000b776d37893fff9a815dee",
+          "native_snapshot_bytes": 988561,
+          "trailing_partial_bytes": 0
+        },
+        "original_receipt_modified": false,
+        "registration_modified": false,
+        "prompt_send_authorized": false,
+        "finish_authorized": false,
+        "retirement_authorized": false
+      }
+    },
+    "postmortem": {
+      "original_receipt_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+      "original_result_code": 75,
+      "bindings": [
+        {
+          "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+          "marker": "[learner-batch:a054d27a-9c64-4764-bdf8-a5ab3b91ef90]",
+          "prompt_sha256": "5030a2e9f45e3556439a31a636525d1b21a89a03f8bee4053721b7f58395f3da"
+        }
+      ],
+      "old_parser": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "needs-attention",
+        "original_result_code": 75,
+        "observed": {
+          "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "turn": "01a1696e-866d-7112-9865-7417add28418",
+          "accepted": false,
+          "foreign_activity": true,
+          "complete": false,
+          "open": true,
+          "successful": false,
+          "bindings": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "marker": "[learner-batch:a054d27a-9c64-4764-bdf8-a5ab3b91ef90]",
+              "prompt_sha256": "5030a2e9f45e3556439a31a636525d1b21a89a03f8bee4053721b7f58395f3da"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "sha256": "e289b3c54263ef413aa854e862432d897d9fa7369eadbd490e1bd8dc28876139"
+            }
+          ],
+          "native_environment_version": 1
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+        "native_snapshot_sha256": "aed0fbdce245dab372b854b62cf9d51f4dbe5a7b931a343fbd690effcf38f6a6",
+        "native_snapshot_bytes": 2104666,
+        "trailing_partial_bytes": 0
+      },
+      "fixed_frozen_audit": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "needs-attention",
+        "original_result_code": 75,
+        "observed": {
+          "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "turn": "01a1696e-866d-7112-9865-7417add28418",
+          "accepted": true,
+          "foreign_activity": false,
+          "complete": false,
+          "open": true,
+          "successful": false,
+          "bindings": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "marker": "[learner-batch:a054d27a-9c64-4764-bdf8-a5ab3b91ef90]",
+              "prompt_sha256": "5030a2e9f45e3556439a31a636525d1b21a89a03f8bee4053721b7f58395f3da"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "sha256": "e289b3c54263ef413aa854e862432d897d9fa7369eadbd490e1bd8dc28876139"
+            }
+          ],
+          "native_environment_version": 1,
+          "native_environment_updates": [
+            {
+              "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "timestamp": "2026-10-23T16:01:30.534Z",
+              "message_id": "msg_01a1697e-f5a6-70e0-aa4f-7bc5abf8c352",
+              "current_date": "2026-10-24",
+              "timezone": "Asia/Shanghai",
+              "filesystem_sha256": "5a5a66097631a59b692955fd4b1e06ccfd320d7d66a9a9127984373a14e647ab",
+              "sha256": "eff8f033538ec6095bdadc17f8680755b2b438278f05f61b9f34046951aaf7cb"
+            }
+          ]
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+        "native_snapshot_sha256": "aed0fbdce245dab372b854b62cf9d51f4dbe5a7b931a343fbd690effcf38f6a6",
+        "native_snapshot_bytes": 2104666,
+        "trailing_partial_bytes": 0
+      },
+      "python_environment_proof": [
+        {
+          "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+          "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "timestamp": "2026-10-23T16:01:30.534Z",
+          "message_id": "msg_01a1697e-f5a6-70e0-aa4f-7bc5abf8c352",
+          "current_date": "2026-10-24",
+          "timezone": "Asia/Shanghai",
+          "filesystem_sha256": "5a5a66097631a59b692955fd4b1e06ccfd320d7d66a9a9127984373a14e647ab",
+          "sha256": "eff8f033538ec6095bdadc17f8680755b2b438278f05f61b9f34046951aaf7cb"
+        }
+      ],
+      "recovery_dry_run": {
+        "batch": "20261023-234301",
+        "state": "eligible-for-identity-check",
+        "apply": false,
+        "origin_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+        "native_sha256": "2c0fa589e5c9aca765add3eeaed4a0e321075de4f7f0208c1aa451337fc20097",
+        "environment_updates": 1,
+        "finish_authorized": false,
+        "retirement_authorized": false
+      },
+      "terminal_audit": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "needs-attention",
+        "original_result_code": 75,
+        "observed": {
+          "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "turn": "01a1696e-866d-7112-9865-7417add28418",
+          "accepted": true,
+          "foreign_activity": false,
+          "complete": true,
+          "open": false,
+          "successful": true,
+          "bindings": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "marker": "[learner-batch:a054d27a-9c64-4764-bdf8-a5ab3b91ef90]",
+              "prompt_sha256": "5030a2e9f45e3556439a31a636525d1b21a89a03f8bee4053721b7f58395f3da"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "sha256": "e289b3c54263ef413aa854e862432d897d9fa7369eadbd490e1bd8dc28876139"
+            }
+          ],
+          "native_environment_version": 1,
+          "native_environment_updates": [
+            {
+              "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+              "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "timestamp": "2026-10-23T16:01:30.534Z",
+              "message_id": "msg_01a1697e-f5a6-70e0-aa4f-7bc5abf8c352",
+              "current_date": "2026-10-24",
+              "timezone": "Asia/Shanghai",
+              "filesystem_sha256": "5a5a66097631a59b692955fd4b1e06ccfd320d7d66a9a9127984373a14e647ab",
+              "sha256": "eff8f033538ec6095bdadc17f8680755b2b438278f05f61b9f34046951aaf7cb"
+            }
+          ]
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+        "native_snapshot_sha256": "2c0fa589e5c9aca765add3eeaed4a0e321075de4f7f0208c1aa451337fc20097",
+        "native_snapshot_bytes": 2195302,
+        "trailing_partial_bytes": 0
+      },
+      "readonly_observer": {
+        "exit": 75,
+        "reason": "canonical registration lost; no takeover performed"
+      }
+    }
+  },
+  "production_recovery_apply": false,
+  "original_receipts_modified": false
+}

@@ -11,7 +11,9 @@ import type { HerdrResult } from "../../ops/codex/herdr.js";
 
 const roots: string[] = [];
 const children: ChildProcess[] = [];
+const signalTimers: ReturnType<typeof setTimeout>[] = [];
 afterEach(async () => {
+  for (const timer of signalTimers.splice(0)) clearTimeout(timer);
   for (const child of children.splice(0)) if (child.exitCode === null && child.signalCode === null) { child.kill("SIGKILL"); await new Promise<void>((done) => child.once("close", () => done())); }
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
@@ -19,7 +21,7 @@ const row = (type: string, payload: Record<string, unknown>) => ({ type, payload
 const ok = (result: Record<string, unknown> = {}, stdout = ""): HerdrResult => ({ ok: true, code: 0, result, stdout, stderr: "" });
 const fail = (): HerdrResult => ({ ok: false, code: 1, error: "transport_uncertain", stdout: "", stderr: "" });
 
-function fixture(kind = "success", label = "learner-20261022-120000-postmortem") {
+function fixture(kind = "success", label = "learner-20261022-120000-postmortem", exitSignalDelayMs = 0) {
   const root = mkdtempSync(join(tmpdir(), "learner-tui-")); roots.push(root);
   const home = join(root, "home");
   const date = new Date();
@@ -38,6 +40,7 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
   let changed = false;
   let leaseCurrent = true;
   let stopping = false;
+  let exitObserved = Promise.resolve();
   const calls: string[][] = [];
   const events: Record<string, unknown>[] = [];
   const notices: string[] = [];
@@ -62,7 +65,7 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
       if (group === "pane" && action === "run") {
         expect(readFileSync(join(root, "tui.sh"), "utf8")).toContain("exec env -i");
         child = spawn("sleep", ["600"]); children.push(child); live = true;
-        child.once("close", () => { live = false; });
+        exitObserved = new Promise<void>((done) => child!.once("close", () => { live = false; done(); }));
         writeFileSync(join(root, "tui.pid"), String(child.pid));
         write(row("session_meta", { id: session, cwd: root }));
         return kind === "start-uncertain" ? fail() : ok();
@@ -98,7 +101,11 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
       }
       if (group === "agent" && action === "send-keys") {
         stopping = true;
-        if (args[3] === "ctrl+c" && child && live) child.kill("SIGTERM");
+        if (args[3] === "ctrl+c" && child && live) {
+          const owned = child;
+          if (exitSignalDelayMs) signalTimers.push(setTimeout(() => owned.kill("SIGTERM"), exitSignalDelayMs));
+          else owned.kill("SIGTERM");
+        }
         return ok();
       }
       throw new Error(`unexpected fake call ${args.join(" ")}`);
@@ -106,7 +113,16 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
   };
   if (kind === "capacity") opts.timeoutMs = 3_000_000;
   if (kind === "retry-success" || kind === "stale-open-error") opts.retryMs = 100;
-  return { opts, root, events, notices, calls, file, pane, prompts: () => prompts };
+  const waitForExit = async (): Promise<void> => {
+    if (!live) return;
+    // The injected clock must not outrun the real child-process close event.
+    // A missing exit still fails closed after a bounded wall-clock wait.
+    await new Promise<void>((done, reject) => {
+      const timer = setTimeout(() => reject(new Error("fixed TUI child did not close within 2s")), 2000);
+      void exitObserved.then(() => { clearTimeout(timer); done(); });
+    });
+  };
+  return { opts, root, events, notices, calls, file, pane, prompts: () => prompts, stopping: () => stopping, waitForExit };
 }
 
 describe("learner interactive command policy", () => {
@@ -165,6 +181,31 @@ describe("startup readiness and queued inputs", () => {
     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).retirement_authorized).toBe(false);
     expect(screens.length).toBeGreaterThan(0); expect(screens.every((args) => args.includes("visible"))).toBe(true);
+  });
+});
+
+describe("midnight TUI completion", () => {
+  it("persists a native environment proof and retires the original completed TUI without another prompt", async () => {
+    const f = fixture("bootstrap"), h = f.opts.h!;
+    const pause = f.opts.pause!;
+    f.opts.pause = async (ms) => { if (f.stopping()) await f.waitForExit(); await pause(ms); };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[0] === "pane" && args[1] === "run") rmSync(f.file);
+      if (args[0] === "agent" && args[1] === "prompt") {
+        const rows = JSON.parse(readFileSync(new URL("./fixtures/learner-midnight.json", import.meta.url), "utf8")
+          .replaceAll("/fixture/learner", f.root)).rows;
+        rows[4].payload.content[0].text = args[3];
+        writeFileSync(f.file, rows.map((r) => JSON.stringify(r) + "\n").join(""));
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, reason: "native-task-complete" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ native_environment_version: 1, retirement_authorized: true });
+    expect(receipt.native_environment_updates).toHaveLength(1); expect(receipt.bindings).toHaveLength(1);
+    expect(receipt.native_environment_updates[0]).toMatchObject({ cwd: f.root, current_date: "2026-10-24", turn_id: "fixture-turn" });
+    expect(f.prompts()).toBe(1); expect(f.notices).toEqual([]);
   });
 });
 
@@ -256,12 +297,17 @@ describe("bounded native learner names", () => {
 });
 
 describe("delayed native acceptance after prompt delivery", () => {
-  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" | "queue" = "paste", neighbour = "aaa") {
-    const f = fixture("bootstrap"); const h = f.opts.h!;
+  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" | "queue" = "paste", neighbour = "aaa", exitSignalDelayMs = 0) {
+    const f = fixture("bootstrap", undefined, exitSignalDelayMs); const h = f.opts.h!;
     let clock = Date.now(), sentAt: number | undefined, sent: string[] | undefined, meta = "", promptCalls = 0;
     f.opts.now = () => clock;
     f.opts.timeoutMs = 800_000;
     f.opts.pause = async () => {
+      if (f.stopping()) {
+        await f.waitForExit();
+        clock += f.opts.pollMs ?? 1000;
+        return;
+      }
       clock += 10_000;
       await new Promise((done) => setTimeout(done, 2));
       if (sent) {
@@ -314,6 +360,24 @@ describe("delayed native acceptance after prompt delivery", () => {
     expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual(delay > 120_000
       ? ["learner native acceptance delayed; observing original session until deadline; no task replay"] : []);
     expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
+  });
+
+  it.each(["aaa", "zzz"])("waits for real exit after delayed acceptance and a 250ms signal delay (%s)", async (neighbour) => {
+    const f = delayed(35_000, "paste", neighbour, 250);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);
+    expect(receipt.rollout).toBe(f.file); expect(receipt.retirement_authorized).toBe(true);
+    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual([]);
+    expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
+  });
+
+  it("does not certify retirement when the delayed fixture child misses its bounded real exit", async () => {
+    const f = delayed(35_000, "paste", "aaa", 5000);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false, turn: "turn-1" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.bindings).toHaveLength(1); expect(receipt.retirement_authorized).toBe(false);
+    expect(f.promptCalls()).toBe(1);
   });
 
   it.each(["paste", "human", "empty", "queue"] as const)("bounds missing acceptance with %s visible and never sends keys or replays", async (screen) => {

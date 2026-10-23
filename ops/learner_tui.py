@@ -10,6 +10,11 @@ import datetime as dt
 import tempfile
 import fcntl
 import time
+import math
+import copy
+import uuid
+import contextlib
+from zoneinfo import ZoneInfo
 
 
 def persist(path, value):
@@ -76,7 +81,79 @@ def bootstrap_context(row, cwd):
             and match is not None and match[1] == cwd)
 
 
-def verify_native(receipt):
+def native_environment_source(row, turn, bootstrap=False):
+    payload = row.get("payload", {})
+    meta = payload.get("internal_chat_message_metadata_passthrough")
+    if (not isinstance(payload.get("id"), str) or not re.fullmatch(r"msg_[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}", payload["id"])
+            or sorted(payload) != ["content", "id", "internal_chat_message_metadata_passthrough", "role", "type"]
+            or not isinstance(meta, dict) or sorted(meta) != ["content_item_kinds", "content_item_metadata", "create_time", "turn_id"]
+            or meta.get("turn_id") != turn or type(meta.get("create_time")) not in (int, float) or not math.isfinite(meta["create_time"])):
+        return False
+    try:
+        instant = dt.datetime.fromisoformat(str(row.get("timestamp", "")).replace("Z", "+00:00"))
+        if math.floor(meta["create_time"] * 1000) != round(instant.timestamp() * 1000):
+            return False
+    except (ValueError, OverflowError):
+        return False
+    kinds = ["agents_md.instructions", "environments.environment_context"] if bootstrap else ["environments.environment_context"]
+    sources = ["agents_md", "harness"] if bootstrap else ["harness"]
+    items = meta.get("content_item_metadata")
+    return (meta.get("content_item_kinds") == kinds and isinstance(items, list) and len(items) == len(sources)
+            and all(isinstance(item, dict) and list(item) == ["provenance"] and isinstance(item["provenance"], dict)
+                    and sorted(item["provenance"]) == (["hook", "type"] if source == "harness" else ["type"])
+                    and item["provenance"].get("type") == source
+                    and (source != "harness" or item["provenance"].get("hook") is False)
+                    for item, source in zip(items, sources)))
+
+
+def restricted_filesystem(xml, cwd):
+    """The same native-only managed/restricted grammar as the TypeScript observer."""
+    if re.search(r"[<>&\r\n]", cwd) or len(xml.encode()) > 64 * 1024:
+        return False
+    prefix = (f'<filesystem><workspace_roots><root>{cwd}</root></workspace_roots>'
+              '<permission_profile type="managed"><file_system type="restricted" glob_scan_max_depth="')
+    if not xml.startswith(prefix):
+        return False
+    rest = re.fullmatch(r'[0-9]{1,3}">(.+)</file_system></permission_profile></filesystem>', xml[len(prefix):])
+    if not rest:
+        return False
+    body, at = rest[1], 0
+    entry = re.compile(r'<entry access="(?:read|write|deny)"(?: escalatable="false")?><(path|glob|special)>([^<>&\x00-\x1f]+)</\1></entry>')
+    while at < len(body):
+        match = entry.match(body, at)
+        if not match or (match[2] not in (":root", ":slash_tmp", ":tmpdir") if match[1] == "special" else not match[2].startswith("/")):
+            return False
+        at = match.end()
+    return at > 0
+
+
+def environment_profile(text, timestamp, cwd, bootstrap=False):
+    if not isinstance(timestamp, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z", timestamp):
+        return None
+    try:
+        instant = dt.datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    start = "<environment_context>\n" + (f"  <cwd>{cwd}</cwd>\n  <shell>bash</shell>\n" if bootstrap else "")
+    if not text.startswith(start):
+        return None
+    fields = re.fullmatch(r"  <current_date>(\d{4}-\d{2}-\d{2})</current_date>\n  <timezone>([A-Za-z0-9_+./-]{1,64})</timezone>\n  (<filesystem>[^\r\n]+</filesystem>)\n</environment_context>", text[len(start):])
+    if not fields or not restricted_filesystem(fields[3], cwd):
+        return None
+    try:
+        if instant.astimezone(ZoneInfo(fields[2])).date().isoformat() != fields[1]:
+            return None
+    except (ValueError, KeyError):
+        return None
+    return dict(date=fields[1], timezone=fields[2], filesystem=fields[3], timestamp=instant)
+
+
+def policy_identity(payload):
+    return json.dumps([payload.get("approval_policy"), payload.get("sandbox_policy")],
+                      ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def reconstruct_native(receipt):
     """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
     result = receipt["result"]
     bindings = receipt.get("bindings", [])
@@ -103,6 +180,10 @@ def verify_native(receipt):
     preludes = []
     pending_prelude = None
     context_seen = False
+    environment, policy = None, None
+    restricted_policy, open_turn = False, False
+    updates = []
+    environment_ids = set()
     with open(result["rollout"]) as source:
         for line in source:
             if not line.endswith("\n"):
@@ -125,6 +206,7 @@ def verify_native(receipt):
                         raise ValueError("unbound or replayed native turn")
                     seen.append(current)
                 complete, accepted = None, False
+                open_turn = True
             if not active:
                 continue
             # The active dispatch boundary was established above; older resume history stays outside it.
@@ -136,6 +218,13 @@ def verify_native(receipt):
             if row.get("type") == "turn_context":
                 if payload.get("turn_id") != current or payload.get("cwd") != cwd:
                     raise ValueError("native turn context identity changed")
+                next_policy = policy_identity(payload)
+                if policy is not None and policy != next_policy:
+                    raise ValueError("native permission policy changed")
+                policy = next_policy
+                sandbox = payload.get("sandbox_policy") or {}
+                restricted_policy = (payload.get("approval_policy") == "never" and isinstance(sandbox, dict)
+                                     and sandbox.get("type") == "workspace-write" and sandbox.get("network_access") is False)
                 context_seen = True
                 if pending_prelude:
                     preludes.append(pending_prelude)
@@ -149,7 +238,29 @@ def verify_native(receipt):
                 if (meta and cwd and len(seen) == 1 and not accepted and not used and not preludes
                         and not pending_prelude and not context_seen and bootstrap_context(row, cwd)):
                     pending_prelude = {"turn_id": current, "cwd": cwd, "sha256": prompt_hash(user)}
+                    environment = (environment_profile(payload["content"][1]["text"].replace("\r\n", "\n"), row.get("timestamp"), cwd, True)
+                                   if native_environment_source(row, current, True) else None)
+                    if environment:
+                        environment_ids.add(payload["id"])
                     continue
+                parts = payload.get("content")
+                if (accepted and open_turn and environment and restricted_policy and context_seen
+                        and current in turns
+                        and row.get("type") == "response_item" and payload.get("type") == "message" and payload.get("role") == "user"
+                        and isinstance(parts, list) and len(parts) == 1 and isinstance(parts[0], dict)
+                        and parts[0].get("type") == "input_text" and isinstance(parts[0].get("text"), str)
+                        and sorted(parts[0]) == ["text", "type"] and native_environment_source(row, current)
+                        and payload["id"] not in environment_ids and len(environment_ids) < 1024):
+                    update = environment_profile(parts[0]["text"].replace("\r\n", "\n"), row.get("timestamp"), cwd)
+                    days = (dt.date.fromisoformat(update["date"]) - dt.date.fromisoformat(environment["date"])).days if update else -1
+                    if (update and update["timezone"] == environment["timezone"] and update["filesystem"] == environment["filesystem"]
+                            and update["timestamp"] >= environment["timestamp"] and days in (0, 1)):
+                        environment = update
+                        environment_ids.add(payload["id"])
+                        updates.append(dict(session=meta, turn_id=current, cwd=cwd, timestamp=row["timestamp"], message_id=payload["id"],
+                                            current_date=update["date"], timezone=update["timezone"],
+                                            filesystem_sha256=prompt_hash(update["filesystem"]), sha256=prompt_hash(user)))
+                        continue
                 if pending_prelude:
                     raise ValueError("dispatched prompt precedes bootstrap turn_context")
                 binding = turns.get(current, {})
@@ -162,6 +273,7 @@ def verify_native(receipt):
                 accepted = True
             if row.get("type") == "event_msg" and payload.get("type") in ("task_complete", "turn_aborted"):
                 if payload.get("turn_id") == current:
+                    open_turn = False
                     complete = payload.get("last_agent_message") if payload.get("type") == "task_complete" and accepted else None
     if (meta != result.get("session") or cwd != receipt.get("cwd") or not accepted
             or current != result.get("turn") or seen != [item["turn_id"] for item in bindings]
@@ -171,6 +283,15 @@ def verify_native(receipt):
         raise ValueError("native bootstrap proof differs from the original dispatch")
     if result.get("code") == 0 and (not complete or complete != result.get("message")):
         raise ValueError("matching native task completion is missing")
+    return updates
+
+
+def verify_native(receipt):
+    updates = reconstruct_native(receipt)
+    if updates is None:
+        return
+    if (updates and receipt.get("native_environment_version") != 1) or receipt.get("native_environment_updates", []) != updates:
+        raise ValueError("native environment proof differs from the original dispatch")
 
 
 def verify(path, output):
@@ -246,7 +367,7 @@ def finished(state, batch, path, output, launcher_rc, supervisor):
 
 def attention(directory, batch, stage):
     """One durable exception notification per wrapper/stage, independent of an ops model turn."""
-    if not re.fullmatch(r"[a-z0-9-]+", batch) or stage not in ("verify", "finish", "seal", "registration"):
+    if not re.fullmatch(r"[a-z0-9-]+", batch) or stage not in ("verify", "finish", "seal", "registration", "recovery"):
         raise ValueError("invalid wrapper attention identity")
     directory = Path(directory)
     record = directory / "learner" / f"{batch}.wrapper-attention-{stage}.json"
@@ -288,7 +409,12 @@ def apply_deferrals(state, directory):
                 or batch.get("pid") != record.get("supervisor", {}).get("pid")
                 or any(batch.get(key) != registration.get(key) for key in REGISTRATION_FIELDS)):
             continue
-        batch.update(state="awaiting_review", review_required="tui-verification-timeout",
+        if record.get("wait_for_owner_exit") is True:
+            owner_birth = record.get("supervisor", {}).get("birth")
+            if isinstance(owner_birth, str) and process_birth(record["supervisor"]["pid"]) == owner_birth:
+                continue
+            attention(directory, record["batch"], "recovery")
+        batch.update(state="awaiting_review", review_required="recovery-supervisor-exited" if record.get("wait_for_owner_exit") is True else "tui-verification-timeout",
                      deferred_at=record["at"], verification_deferred=str(path))
         changed = True
     return changed
@@ -364,6 +490,238 @@ def close(root, state, batch, path, output):
                     "--pane", pane, "--require-idle"], check=True)
 
 
+def process_birth(pid):
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+        return None if fields[0] in ("Z", "X") else fields[19]
+    except FileNotFoundError:
+        return None
+
+
+@contextlib.contextmanager
+def recovery_state_lock(directory):
+    with (Path(directory) / "learn.lock").open("a") as lock:
+        until = time.monotonic() + 2
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= until:
+                    raise ValueError("registration lock busy")
+                time.sleep(0.05)
+        yield
+
+
+def recovery_native(receipt):
+    """Build a new producer result from the exact completed original turn, never from a screen."""
+    native = Path(receipt["rollout"])
+    with native.open("rb") as stream:
+        data = stream.read(64 * 1024 * 1024 + 1)
+    if len(data) > 64 * 1024 * 1024 or not data.endswith(b"\n"):
+        raise ValueError("native recovery snapshot is incomplete or oversized")
+    message, error, turn = None, False, None
+    for line in data.splitlines():
+        row = json.loads(line)
+        payload = row.get("payload", {})
+        if row.get("type") == "event_msg" and payload.get("type") == "task_started":
+            turn, error, message = payload.get("turn_id"), False, None
+        if turn == receipt["turn"] and row.get("type") == "event_msg":
+            if payload.get("type") == "error":
+                error = True
+            if payload.get("type") == "task_complete" and payload.get("turn_id") == turn:
+                message = payload.get("last_agent_message")
+            if payload.get("type") == "turn_aborted":
+                message = None
+    if (turn != receipt["turn"] or not isinstance(message, str) or not message.strip() or error
+            or re.search(r"at capacity|rate.?limit|stream disconnected|reconnecting|error sending request", message, re.I)):
+        raise ValueError("original turn has no successful native completion")
+    candidate = copy.deepcopy(receipt)
+    # The old transport stopped early; its partial usage is retained only in the archived origin result.
+    candidate["result"].pop("usage", None)
+    candidate["result"].update(code=0, message=message, session=receipt["session"], turn=receipt["turn"], rollout=str(native))
+    candidate.update(native_environment_version=1, native_environment_updates=reconstruct_native(candidate))
+    verify_native(candidate)
+    if digest(native) != hashlib.sha256(data).hexdigest():
+        raise ValueError("native snapshot changed during validation")
+    return candidate, data
+
+
+def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=None, finish_runner=None,
+                      birth_fn=process_birth, clock=time.monotonic, pause=time.sleep):
+    """Explicit new supervisor transaction for a completed retained postmortem/experience turn."""
+    root, directory = Path(root).resolve(), Path(directory).resolve()
+    if (not directory.is_relative_to(root / "ops") or not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-experience-update)?", batch)
+            or not re.fullmatch(r"[a-f0-9]{64}", expected_sha)):
+        raise ValueError("invalid recovery identity")
+    state_path = directory / "learn.json"
+    before = json.loads(state_path.read_text())
+    original_row = before["batches"][batch]
+    task = original_row.get("task", "postmortem")
+    if task not in ("postmortem", "experience-update"):
+        raise ValueError("unsupported retained task")
+    label = "learner-" + batch + ("-postmortem" if task == "postmortem" else "")
+    path = directory / "learner" / (label + ".tui.json")
+    output = directory / "learner" / (batch + ".out")
+    raw = path.read_bytes()
+    original = json.loads(raw)
+    native = Path(original["rollout"]).resolve()
+    if (hashlib.sha256(raw).hexdigest() != expected_sha or not native.is_relative_to(root) or "sessions" not in native.parts or native.suffix != ".jsonl"
+            or original.get("state") != "needs-attention" or original.get("result", {}).get("code") != 75
+            or original.get("submitted") is not True or not original.get("bindings") or original.get("retirement_authorized") is not False
+            or original.get("result", {}).get("stopped") is not False or original.get("wrapper")
+            or original.get("label") != label or original_row.get("pane") != original.get("pane")
+            or ("worktree" in original_row and not isinstance(original_row["worktree"], str))
+            or str(Path(original_row.get("worktree") or root).resolve()) != original.get("cwd")
+            or original_row.get("state") not in ("lost", "awaiting_review", "running")
+            or any(original_row.get(k) is not None for k in ("rc", "finished")) or original_row.get("cancelled")
+            or original_row.get("tui_recovery") or type(original_row.get("pid")) is not int or original_row["pid"] <= 1
+            or birth_fn(original_row["pid"]) is not None):
+        raise ValueError("original supervisor or recovery registration is not available")
+    candidate, native_data = recovery_native(original)
+    # Validate the bounded full-label/native-name binding before claiming any control.
+    binding = json.dumps([label, original["pane"], os.path.abspath(original["cwd"])], ensure_ascii=False, separators=(",", ":"))
+    if (original.get("agent_name_version") != 1 or original.get("agent_name") != "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
+            or original.get("result", {}).get("rollout") != original["rollout"]
+            or not isinstance(original.get("birth"), str) or not re.fullmatch(r"[0-9]+", original["birth"])
+            or type(original.get("pid")) is not int or original["pid"] <= 1):
+        raise ValueError("original native name or process identity differs")
+    native_sha = hashlib.sha256(native_data).hexdigest()
+    if not apply:
+        return dict(batch=batch, state="eligible-for-identity-check", apply=False, origin_sha256=expected_sha,
+                    native_sha256=native_sha, environment_updates=len(candidate["native_environment_updates"]),
+                    finish_authorized=False, retirement_authorized=False)
+    if h is None:
+        def h(args):
+            reply = subprocess.run([os.environ.get("HERDR_BIN", "herdr"), *args], check=True, capture_output=True, timeout=20)
+            return reply.stdout.decode() if args[:2] == ["pane", "read"] else json.loads(reply.stdout)["result"]
+    if finish_runner is None:
+        def finish_runner(stage, argv):
+            script = root / "ops" / ("codex-ops-learn.py" if stage == "finish" else "learner_tui.py")
+            subprocess.run([sys.executable, str(script), *argv], cwd=root, check=True, timeout=120, capture_output=True,
+                           env={**os.environ, "CODEX_OPS_ROOT": str(root), "CODEX_OPS_DIR": str(directory)})
+    import issue_session
+    owner = os.getpid()
+    owner_birth = process_birth(owner)
+    if not owner_birth:
+        raise ValueError("recovery supervisor identity unavailable")
+    attempt = directory / "learner" / (batch + ".recovery-" + uuid.uuid4().hex)
+    journal = dict(schema="learner-tui-completed-recovery-v1", batch=batch, phase="preparing", origin_sha256=expected_sha,
+                   supervisor=dict(pid=owner, birth=owner_birth), controls=[], native_sha256=native_sha)
+    claimed = False
+    with (directory / "learner" / (batch + ".recovery.lock")).open("a") as lease:
+        fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        try:
+            with recovery_state_lock(directory):
+                state = json.loads(state_path.read_text())
+                if state["batches"].get(batch) != original_row or digest(path) != expected_sha or birth_fn(original_row["pid"]) is not None:
+                    raise ValueError("recovery predecessor changed")
+                attempt.mkdir(mode=0o700)
+                for name, data in (("original.tui.json", raw), ("original.out", output.read_bytes()),
+                                   ("native.jsonl", native_data), ("original.registration.json", json.dumps(original_row).encode())):
+                    target = attempt / name
+                    with target.open("xb") as archive:
+                        os.fchmod(archive.fileno(), 0o600); archive.write(data); archive.flush(); os.fsync(archive.fileno())
+                archived_output_sha = digest(attempt / "original.out")
+                if digest(output) != archived_output_sha:
+                    raise ValueError("original output changed during archival")
+                journal.update(phase="claimed", archive=str(attempt), original_output_sha256=archived_output_sha)
+                persist(attempt / "recovery.json", journal)
+                current = copy.deepcopy(original_row)
+                guard = directory / "learner" / (attempt.name + ".verification-deferred.json")
+                current.update(state="running", pid=owner, tui_recovery=dict(version=1, archive=str(attempt), origin_sha256=expected_sha,
+                                                                          supervisor=dict(pid=owner, birth=owner_birth), liveness_guard=str(guard)))
+                # Arm the existing pre-lost deferral gate before publishing the new owner.
+                # A killed recovery supervisor cannot silently become a replayable lost batch.
+                persist(guard, dict(schema="learner-verification-deferred-v1", batch=batch, wait_for_owner_exit=True,
+                                    at=dt.datetime.now().astimezone().isoformat(), reason="recovery-supervisor-exited",
+                                    supervisor=dict(pid=owner, birth=owner_birth), registration=current,
+                                    finish_authorized=False, retirement_authorized=False, automatic_replay_authorized=False))
+                state["batches"][batch] = current
+                claimed = True
+                persist(state_path, state)
+
+            def authority():
+                if (json.loads(state_path.read_text())["batches"].get(batch) != current or digest(path) != expected_sha
+                        or digest(native) != native_sha or digest(output) != journal["original_output_sha256"]):
+                    raise ValueError("recovery lease or original evidence changed")
+                pane = h(["pane", "get", original["pane"]])["pane"]
+                if any(not original.get("identity", {}).get(k) or pane.get(k) != original["identity"][k]
+                       for k in ("pane_id", "tab_id", "terminal_id", "workspace_id")):
+                    raise ValueError("original pane changed")
+                process = h(["pane", "process-info", "--pane", original["pane"]])["process_info"]
+                live = birth_fn(original["pid"])
+                if live is not None and live != original["birth"]:
+                    raise ValueError("native PID was reused")
+                if live is not None:
+                    agent = h(["agent", "get", original["pane"]])["agent"]
+                    if (agent.get("agent") != "codex" or agent.get("pane_id") != original["pane"] or agent.get("name") != original["agent_name"]
+                            or agent.get("foreground_cwd") != original["cwd"] or agent.get("agent_status") not in ("idle", "done")
+                            or process.get("foreground_process_group_id") != original["pid"]):
+                        raise ValueError("completed original TUI is not idle and owned")
+                    screen = h(["pane", "read", original["pane"], "--source", "visible", "--format", "ansi"])
+                    if issue_session.composer_state(screen) != "empty" or "Queued follow-up inputs" in screen:
+                        raise ValueError("pending input prevents native retirement")
+                elif process.get("foreground_process_group_id") not in (process.get("shell_pid"), original["pid"]):
+                    raise ValueError("native exit did not return to the original shell")
+                if (json.loads(state_path.read_text())["batches"].get(batch) != current or digest(path) != expected_sha
+                        or digest(native) != native_sha or birth_fn(original["pid"]) != live):
+                    raise ValueError("final recovery authority changed")
+                return "owned" if live is not None else "exited" if process.get("shell_pid") == process.get("foreground_process_group_id") else "waiting"
+
+            deadline = clock() + 10
+            disposition = authority()
+            while disposition != "exited":
+                if clock() >= deadline:
+                    raise ValueError("original native retirement timed out")
+                if disposition == "owned":
+                    journal["controls"].append(dict(key="ctrl+c", at=dt.datetime.now().astimezone().isoformat()))
+                    persist(attempt / "recovery.json", journal)
+                    h(["agent", "send-keys", original["pane"], "ctrl+c"])
+                pause(0.1)
+                disposition = authority()
+            # Publish a new producer epoch only after actual retirement. All predecessor bytes stay archived.
+            candidate.update(state="session-ended", retirement_authorized=True,
+                             recovery=dict(version=1, archive=str(attempt), origin_sha256=expected_sha,
+                                           origin_result=original["result"], supervisor=dict(pid=owner, birth=owner_birth)))
+            candidate["result"].update(reason="recovered-native-task-complete", stopped=True)
+            log = attempt / "completion.jsonl"
+            rows = [dict(type="learner_tui_recovery", origin_sha256=expected_sha, native_sha256=native_sha),
+                    dict(type="learner_summary", exit_code=0, summary=dict(engine="codex", sessionId=original["session"], status="turn.completed"))]
+            with log.open("x") as target:
+                os.fchmod(target.fileno(), 0o600)
+                target.write("".join(json.dumps(row) + "\n" for row in rows)); target.flush(); os.fsync(target.fileno())
+            candidate["artifacts"] = dict(log=str(log), sha256=digest(log), summary=True, out_pending_wrapper_flush=False)
+            if digest(output) != journal["original_output_sha256"]:
+                raise ValueError("original output changed before recovery append")
+            with output.open("ab") as target:
+                target.write(("\n" + candidate["result"]["message"] + "\n").encode()); target.flush(); os.fsync(target.fileno())
+            fresh = attempt / "completed.tui.json"
+            persist(fresh, candidate)
+            verified = verify(fresh, output)
+            with recovery_state_lock(directory):
+                state = json.loads(state_path.read_text())
+                if state["batches"].get(batch) != current or digest(path) != expected_sha:
+                    raise ValueError("recovery registration changed before publication")
+                persist(path, verified)
+            journal["phase"] = "native-retired-and-published"; persist(attempt / "recovery.json", journal)
+            finish_runner("finish", ["finish", "--batch", batch, "--rc", "0", "--character", str(original_row.get("character", "silent"))])
+            finish_runner("finished", ["finished", str(state_path), batch, str(path), str(output), "0", str(owner)])
+            journal["phase"] = "finished"; persist(attempt / "recovery.json", journal)
+            terminal = json.loads(state_path.read_text())["batches"][batch]
+            return dict(batch=batch, state="finished", batch_state=terminal["state"], native_rc=0,
+                        archive=str(attempt), seal="pending-original-20-gate")
+        except BaseException:
+            if claimed:
+                journal["phase"] = "awaiting-review"; persist(attempt / "recovery.json", journal)
+                with recovery_state_lock(directory):
+                    state = json.loads(state_path.read_text()); row = state["batches"].get(batch)
+                    if row == current:
+                        row.update(state="awaiting_review", review_required="tui-recovery-unverified")
+                        persist(state_path, state)
+            raise
+
+
 def main(argv):
     try:
         if argv[0] == "verify" and len(argv) == 3:
@@ -378,6 +736,10 @@ def main(argv):
             defer(*argv[1:])
         elif argv[0] == "close" and len(argv) == 6:
             close(*argv[1:])
+        elif argv[0] == "recover-completed" and len(argv) in (5, 6):
+            if len(argv) == 6 and argv[5] != "--apply":
+                return 2
+            print(json.dumps(recover_completed(*argv[1:5], apply=len(argv) == 6), ensure_ascii=False))
         else:
             return 2
         return 0

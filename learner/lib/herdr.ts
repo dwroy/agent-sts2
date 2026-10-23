@@ -9,7 +9,7 @@ import { configTomlProblems } from "../../agent/src/brain/engines/codex-session.
 import { learnerInteractiveArgs, shellQuote, type EngineRequest } from "./engines.js";
 import type { StartupLease } from "./startup-recovery.js";
 
-type Row = { type?: string; payload?: Record<string, unknown> };
+type Row = { timestamp?: string; type?: string; payload?: Record<string, unknown> };
 const TRANSIENT = /at capacity|rate.?limit|stream disconnected|reconnecting|error sending request/i;
 const ACCEPTANCE_WARN_MS = 120_000;
 const ACCEPTANCE_TIMEOUT_MS = 600_000;
@@ -51,7 +51,66 @@ export class NativeRows {
 export interface PromptProof { marker: string; prompt_sha256?: string }
 export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
 export interface NativePreludeProof { turn_id: string; cwd: string; sha256: string }
+export interface NativeEnvironmentProof {
+  session: string; turn_id: string; cwd: string; timestamp: string; message_id: string;
+  current_date: string; timezone: string; filesystem_sha256: string; sha256: string;
+}
 const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
+
+interface EnvironmentProfile { date: string; timezone: string; filesystem: string; timestamp: number }
+function nativeEnvironmentSource(row: Row, turn: string, bootstrap = false): boolean {
+  const p = row.payload ?? {}, meta = p.internal_chat_message_metadata_passthrough as Record<string, unknown> | undefined;
+  if (typeof p.id !== "string" || p.id.length !== 40 || !/^msg_[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(p.id) ||
+      Object.keys(p).sort().join(",") !== "content,id,internal_chat_message_metadata_passthrough,role,type" || !meta ||
+      Object.keys(meta).sort().join(",") !== "content_item_kinds,content_item_metadata,create_time,turn_id" ||
+      meta.turn_id !== turn || typeof meta.create_time !== "number" || !Number.isFinite(meta.create_time) ||
+      Math.floor(meta.create_time * 1000) !== Date.parse(row.timestamp ?? "")) return false;
+  const kinds = bootstrap ? ["agents_md.instructions", "environments.environment_context"] : ["environments.environment_context"];
+  const sources = bootstrap ? ["agents_md", "harness"] : ["harness"];
+  const items = meta.content_item_metadata;
+  return JSON.stringify(meta.content_item_kinds) === JSON.stringify(kinds) && Array.isArray(items) && items.length === sources.length &&
+    items.every((item, at) => item && Object.keys(item).join(",") === "provenance" && item.provenance &&
+      Object.keys(item.provenance).sort().join(",") === (sources[at] === "harness" ? "hook,type" : "type") &&
+      item.provenance.type === sources[at] && (sources[at] !== "harness" || item.provenance.hook === false));
+}
+/** Match only the native managed/restricted grammar. No XML entities, free text or unknown tags. */
+function restrictedFilesystem(xml: string, cwd: string): boolean {
+  if (/[<>&\r\n]/.test(cwd) || Buffer.byteLength(xml) > 64 * 1024) return false;
+  const prefix = `<filesystem><workspace_roots><root>${cwd}</root></workspace_roots><permission_profile type="managed"><file_system type="restricted" glob_scan_max_depth="`;
+  if (!xml.startsWith(prefix)) return false;
+  const rest = /^[0-9]{1,3}">(.+)<\/file_system><\/permission_profile><\/filesystem>$/.exec(xml.slice(prefix.length));
+  if (!rest) return false;
+  const body = rest[1]!;
+  const entry = /<entry access="(?:read|write|deny)"(?: escalatable="false")?><(path|glob|special)>([^<>&\x00-\x1f]+)<\/\1><\/entry>/gy;
+  let at = 0;
+  while (at < body.length) {
+    entry.lastIndex = at;
+    const match = entry.exec(body);
+    if (!match || (match[1] === "special" ? ![":root", ":slash_tmp", ":tmpdir"].includes(match[2]!) : !match[2]!.startsWith("/"))) return false;
+    at = entry.lastIndex;
+  }
+  return at > 0;
+}
+function environmentProfile(text: string, timestamp: unknown, cwd: string, bootstrap = false): EnvironmentProfile | undefined {
+  if (typeof timestamp !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(timestamp)) return undefined;
+  const millis = Date.parse(timestamp);
+  if (!Number.isFinite(millis) || new Date(millis).toISOString() !== timestamp) return undefined;
+  const start = `<environment_context>\n${bootstrap ? `  <cwd>${cwd}</cwd>\n  <shell>bash</shell>\n` : ""}`;
+  if (!text.startsWith(start)) return undefined;
+  const fields = /^  <current_date>(\d{4}-\d{2}-\d{2})<\/current_date>\n  <timezone>([A-Za-z0-9_+./-]{1,64})<\/timezone>\n  (<filesystem>[^\r\n]+<\/filesystem>)\n<\/environment_context>$/.exec(text.slice(start.length));
+  if (!fields || fields[0] !== text.slice(start.length) || !restrictedFilesystem(fields[3]!, cwd)) return undefined;
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: fields[2], year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(millis);
+    const value = (kind: string) => parts.find((part) => part.type === kind)?.value;
+    if (`${value("year")}-${value("month")}-${value("day")}` !== fields[1]) return undefined;
+  } catch { return undefined; }
+  return { date: fields[1]!, timezone: fields[2]!, filesystem: fields[3]!, timestamp: millis };
+}
+const policyIdentity = (p: Record<string, unknown>): string => {
+  const sorted = (value: unknown): unknown => Array.isArray(value) ? value.map(sorted) : value && typeof value === "object"
+    ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, sorted(item)])) : value;
+  return JSON.stringify(sorted([p.approval_policy ?? null, p.sandbox_policy ?? null]));
+};
 
 /** Herdr names are limited to 32 ASCII characters; labels and scheduler keys remain complete. */
 export function learnerAgentName(label: string, pane: string, cwd: string): string {
@@ -89,6 +148,11 @@ export class NativeBatch {
   readonly submissions: PromptProof[] = [];
   readonly bindings: TurnBinding[] = [];
   readonly preludes: NativePreludeProof[] = [];
+  readonly environmentUpdates: NativeEnvironmentProof[] = [];
+  private environment?: EnvironmentProfile;
+  private policy?: string;
+  private restrictedPolicy = false;
+  private environmentIds = new Set<string>();
   private pendingPrelude?: NativePreludeProof;
   private contextSeen = false;
   private pending = new Map<string, PromptProof>();
@@ -133,6 +197,11 @@ export class NativeBatch {
     }
     if (row.type === "turn_context") {
       if (!this.currentTurn || p.turn_id !== this.currentTurn || !this.cwd || p.cwd !== this.cwd) this.foreignActivity = true;
+      const policy = policyIdentity(p);
+      if (this.policy !== undefined && this.policy !== policy) this.foreignActivity = true;
+      this.policy = policy;
+      const sandbox = p.sandbox_policy as Record<string, unknown> | undefined;
+      this.restrictedPolicy = p.approval_policy === "never" && sandbox?.type === "workspace-write" && sandbox.network_access === false;
       this.contextSeen = true;
       if (this.pendingPrelude) {
         if (!this.foreignActivity) this.preludes.push(this.pendingPrelude);
@@ -145,7 +214,27 @@ export class NativeBatch {
       if (!this.foreignActivity && this.session && this.cwd && this.currentTurn && this.seenTurns.size === 1 &&
           !this.bindings.length && !this.preludes.length && !this.pendingPrelude && !this.contextSeen && bootstrapContext(row, this.cwd)) {
         this.pendingPrelude = { turn_id: this.currentTurn, cwd: this.cwd, sha256: promptHash(user) };
+        this.environment = nativeEnvironmentSource(row, this.currentTurn, true)
+          ? environmentProfile(String((p.content as { text: string }[])[1]!.text).replace(/\r\n/g, "\n"), row.timestamp, this.cwd, true) : undefined;
+        if (this.environment) this.environmentIds.add(p.id as string);
         return; // Staged context alone never accepts a task; the matching turn_context must precede the exact prompt.
+      }
+      if (!this.foreignActivity && this.accepted && this.open && !this.complete && !this.aborted &&
+          this.session && this.cwd && this.turn === this.currentTurn && this.contextSeen &&
+          this.environment && this.restrictedPolicy && row.type === "response_item" && p.type === "message" && p.role === "user" &&
+          Array.isArray(p.content) && p.content.length === 1 && p.content[0]?.type === "input_text" && typeof p.content[0].text === "string" &&
+          Object.keys(p.content[0]).sort().join(",") === "text,type" && nativeEnvironmentSource(row, this.turn!) &&
+          !this.environmentIds.has(p.id as string) && this.environmentIds.size < 1024) {
+        const update = environmentProfile(p.content[0].text.replace(/\r\n/g, "\n"), row.timestamp, this.cwd);
+        const days = update ? (Date.parse(update.date) - Date.parse(this.environment.date)) / 86_400_000 : -1;
+        if (update && update.timezone === this.environment.timezone && update.filesystem === this.environment.filesystem &&
+            update.timestamp >= this.environment.timestamp && (days === 0 || days === 1)) {
+          this.environment = update;
+          this.environmentIds.add(p.id as string);
+          this.environmentUpdates.push({ session: this.session, turn_id: this.turn!, cwd: this.cwd, timestamp: row.timestamp!, message_id: p.id as string,
+            current_date: update.date, timezone: update.timezone, filesystem_sha256: promptHash(update.filesystem), sha256: promptHash(user) });
+          return; // Metadata never consumes a prompt, starts a turn, or grants new task authority.
+        }
       }
       const marker = user.replace(/\r\n/g, "\n").split("\n")[0]!;
       const hash = promptHash(user);
@@ -369,6 +458,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let continuation = 0;
   let retirementAuthorized = false;
   let persistedBindings = 0;
+  let persistedUpdates = 0;
   let alerted = false;
   let retries = 0;
   let progress = 0;
@@ -385,6 +475,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
       agent_name: agentName, agent_name_version: 1,
       native_context_version: 1, native_preludes: native.preludes,
+      native_environment_version: 1, native_environment_updates: native.environmentUpdates,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
       native_acceptance_warn_at_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_WARN_MS,
       native_acceptance_deadline_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_TIMEOUT_MS,
@@ -414,8 +505,9 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         if (file === rollout) {
           o.log(row as Record<string, unknown>);
           if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
-          if (native.accepted && !native.foreignActivity && native.bindings.length > persistedBindings) {
+          if (native.accepted && !native.foreignActivity && (native.bindings.length > persistedBindings || native.environmentUpdates.length > persistedUpdates)) {
             persistedBindings = native.bindings.length;
+            persistedUpdates = native.environmentUpdates.length;
             save("native-accepted"); // Persist consumption while the original task is still running, not only at retirement.
           }
         }

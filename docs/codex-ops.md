@@ -144,6 +144,16 @@ Codex 0.163 的首题在派发提示前，会先写一个 `response_item/message
 
 对已经投递、却被旧解析器误判而保留 75 的会话，可先用只读入口对账（在 `agent/` 目录）：`nice -n 19 node --import tsx ../learner/reconcile-tui.ts --receipt <原回执> --native <原生JSONL>`。它仅核完整原 label/pane/cwd/短名与原提交 marker/SHA，从最多 64 MiB 原生快照的完整行重建实际 session/turn/前缀和接受状态，报告来源 SHA 与半行字节数；不会连接 herdr、发提示、改原回执/状态或授权退场/finish。退出 0 仅表示该快照的原任务已被原生接受，不代表完成或已核当前 pane/PID/lease。原回执的 75、空 bindings 与原件照留；原 ops 仍须按原实例/产物/监督/退场门处理，不能将对账报告写回为完成回执或重派已消费的任务。
 
+Codex 0.164 的跨日期环境更新必须在已绑定且仍打开的原 turn 内核验：原生 metadata 的类型只能是 `environments.environment_context`，来源为 `harness` 且非 hook，turn_id、消息 ID、create_time 与原始行一致；普通 `user.text` 即使形似环境上下文也拒绝。正文仅接受日期、原时区和完整 filesystem；日期须符合该行时间戳在原时区的日期，保持或递增一天，时间不倒退。workspace roots、managed/restricted 配置及每条权限须与可信启动上下文逐字相同，turn_context 的 approval/sandbox 也不得变化。重复消息 ID、额外文本/字段、新 turn 或未知格式均不继承例外。传输器持久化独立 `native_environment_version=1` / `native_environment_updates`，Python 从原生记录独立重建并比较全部证明；不会把元数据当作新任务绑定。旧 75 缺此证明的原件只能只读对账，不人工补填为完成。
+
+原 ops 需要持续观察保留的原进程时，可显式使用同一工具的只读监督模式：在上述 `--receipt` / `--native` 后加 `--watch-state <原learn.json> --batch <原批次key> --output <全新路径.observation.json> --timeout-seconds <1至3600>`。它仅对原生、回执及原登记做只读重建，并经 Herdr `pane get` / `agent get` / `pane process-info` 核原 pane/tab/terminal/workspace、短名/cwd、前台 PID/birth；来源回执 SHA、登记快照或原生既有字节变化就保留待核。只写新的 0600 观察产物，既有输出路径拒绝覆盖；不发 prompt/按键、不改 canonical/旧回执，不重开模型或替换原 supervisor。`completed-observed`/退出0只证明本次观察的原轮完成及身份核验，不授予 finish/retirement，也不撤销原 rc75。原 PID 已退、登记已交他人、未知或超时均按75交原 ops。实际恢复完成事务和回收仍须原 supervisor/产物合同，不把观察文件写回为旧完成回执。
+
+**同会话完成恢复**仅支持已原生完成、旧监督已退出的复盘和经验更新批：`nice -n 19 python3 ops/learner_tui.py recover-completed ROOT DIR BATCH ORIGINAL_RECEIPT_SHA256` 默认只读预检，不授权退场。ops 在发布后明确加 `--apply` 才登记新的恢复监督事务。它核完整原生绑定/环境/成功完成，原 PID/birth、短名、pane 与空 composer；只对确已完成的原 TUI 发送经过逐次复核的 Ctrl-C，不发任务、不重启模型或关 tab。原监督仍活着、人工/排队输入、身份变化、原生追加不明内容、回执不确定、锁忙或十秒退场预算耗尽均拒绝。
+
+恢复事务先以原 SHA 归档旧75回执、原输出、登记及原生快照，原绑定不变；只有原生实际退出并回到同 pane 的 shell 后才生成带 `recovery` 来源的新完成回执和新监督日志。原输出仅追加经核实的原生最终回报，旧前缀另存；canonical 回执切换到明确的新 producer epoch，旧75原字节保留在归档，不能将其描述为原监督返回成功。新监督仍调用原 `verify`、`finish` 产物审计与 `finished` PID/父进程合同，native rc0不代语义done；原失败/空修复验收不放宽。之后由原 #20 门核新 wrapper 监督实际退出与封存/关 tab，恢复入口不自行 seal 或回收。任何中途不确定都保留恢复 journal/证据并将仍属本恢复监督的批次置待核，不盲目重试；已经退场或发布的阶段不回写成未发生。不能对保留了未完成恢复事务的批次重复 `--apply`。
+
+恢复登记前会预先写入带原恢复监督 PID/birth 的存活保护记录；监督存活时原调度器跳过它，监督被杀或退出且登记仍未完成时，在 lost/重试之前沿原 deferral 门转待核并发 recovery attention。旧 deferral 记录不覆盖，任务/局号与外部学习绑定完整保留；不会把中断的恢复自动重派为新模型任务。
+
 容量/限流/断流等报错空闲沿 #20 的方式接续：只在原生接受的同一批、同一原会话、实际 idle/done 且输入框空、原租约仍有效时，十分钟退避后发送“沿原任务接着做”；不重启、不换账号/线程，不重送原完整任务。即使失败回合缺少结束行，也不会把它算完成；明确报错空闲可接续。连续三次无原生工具进展后再观察完整退避，通知原 ops/Roy 并停自动提醒，保留原任务期限；人工接续有进展可恢复。发送回执不确定时只等匹配的原生用户消息核实，未核实不重发。注意通知排队不代表已送达 Roy。原超时和失败分类继续，所有退出原因都走同一处置权检查，每次 Esc/Ctrl-C 前重读；草稿、未知屏幕、前台变化、租约丢失或启动回执不确定即停止自动退出，返回 75，保留原监管租约与现场。退出按键回执不确定时同样保留，不升级为强杀；已核本批进程退出后只读等待 shell 复位。不能核退场时监管进程保留租约等原 ops 核验。
 
 **命名失败后尚未提交的旧 TUI**：若原 launcher 已返回 `75/stopped=false`，原 supervisor 只在等待原 `learner_tui.py verify`，不会因更新源码或手工补名字自动恢复。当前没有接管该在途进程的受控发送入口；`learner/run.ts` 正常入口会创建新的 scratch/TUI，`--resume-thread` 也会启动 TUI，`learner_entry.py` 的重试仅限零输出的特定 import 失败，均不能用来恢复这个旧 pane。必须保留原监督/租约、输出、回执、一次性提示和原生记录，交原 ops 登记恢复待办；不可修改 submitted/bindings、代填完成、重派或仅手工改名后发提示。需要在原进程恢复的工作，应另行实现基于原回执/原 lease/PID birth/提示 SHA 的明确接管入口，连同原输出/summary 与 supervisor 的退出码交接一起验证后才执行；本次短名称修复只适用于后续自然启动，不声称旧批已恢复或完成。
