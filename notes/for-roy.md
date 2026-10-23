@@ -5040,3 +5040,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-24T00:45:03+08:00 [ops] 本轮16项重复学习通知原文未变，32处原投递及watcher原读取/转达回执均核同；CLI来源兼容仍原SHA/原rc2，正式ACK与Roy已读继续pending，不重复提醒正在工作的既有watcher或代填确认。000402原wrapper仍缺。原件paper/materials/20261024-0043-notices-ops/receipt.json。
 
 - 2026-10-24T00:50:40+08:00 [ops] #47原详细展示证据复核通过；compact临时块仅对主实例下一自然启动生效，当前play未变，待原tab读回后撤本块恢复detailed。未重启/另开局/模型，未称自然回退通过。原件paper/materials/20261024-issue47-resume-ops/compact-boundary.json。
+
+- 2026-10-24T01:15:01+08:00 [ops] 按主管最新“12项均等待、回Fast”指示，ops专用启动参数已恢复Fast/high并合main ce40ebdb6222；四份代码/测试与已验Fast版本逐字同，当前tsc0/3文件45项过，复用原6508项完整回执，未重跑full。原入口下次空闲按参数hash恢复同session，实际原生生效待核；不改共享配置或其他角色。#47已完成自然compact及原tab读回并撤临时块恢复detailed；#35原6429项检查过后已挂自然发布。原件paper/materials/20261024-ops-return-fast/publication.json、paper/materials/20261024-issue47-resume-ops/restore-and-acceptance.json。

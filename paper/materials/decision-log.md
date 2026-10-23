@@ -6414,3 +6414,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:00:33+08:00 [ops] #48已核冻结244/首6条有效，enabled=true、处理0/剩244，尚无首批原生启动；原tick正常修复先行、backfill_hold=true，#51优先级保留，未强派/重置T。后24h截止10-24 18:19:29，现仅部分窗。原件paper/materials/20261024-issue48-resume-ops/progress-readback.json。
 
 - 2026-10-24T01:06:59+08:00 [watcher] #43接续核六叶同已审380083709/e1204dcf且main/live均缺；19份原证据SHA全同，原2109输入前后核同。原30项定向与真实.mts一过一败、模拟exact/data拒绝回执仍可追溯，本轮不重测或合产品。原ops35唯一full在途，birth实际吻合；依35→50→28→37→20父及39/43顺序，随20最终组合核收。原件paper/materials/20261024-issue43-evidence-readback/。
+
+- 2026-10-24T01:15:01+08:00 [ops] 按主管最新“12项均等待、回Fast”指示，ops专用启动参数已恢复Fast/high并合main ce40ebdb6222；四份代码/测试与已验Fast版本逐字同，当前tsc0/3文件45项过，复用原6508项完整回执，未重跑full。原入口下次空闲按参数hash恢复同session，实际原生生效待核；不改共享配置或其他角色。#47已完成自然compact及原tab读回并撤临时块恢复detailed；#35原6429项检查过后已挂自然发布。原件paper/materials/20261024-ops-return-fast/publication.json、paper/materials/20261024-issue47-resume-ops/restore-and-acceptance.json。
