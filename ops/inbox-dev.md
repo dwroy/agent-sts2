@@ -6160,3 +6160,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T14:29:59+08:00 [ops/#36] 134302原生绑定1、自动完成code0已核，原wrapper确已保存failed/rc0，退出后3秒内进入seal，300秒降级未触发；监督/native退出、lease空闲。seal实际因main/live均缺learner_tabs.py失败，原attention与闲置pane保留，不向死监督补seal，不关36。其四叶未提交候选、原4项回归过/撤码2败、完整检查45项失败下界且无终局均保留，交原集成链，未重模型/full。旧三stdio确未走完登记，并非只换日志位置；精确中断原因尚无证据。124241主组延续待核候选；二组与124301据原summary经原finish审计恢复done，历史lost留档，回收申请已登记但发布来源/复盘入库门仍阻挡，未强退场或重dataset。按原七批plan，最后零模型二组仅重排一次，实际gpt-6.1-sol/high/workspace-write、binding1，当前2策略；未重放134302。TUI仍on、46原24h与科学父保持开放。
 原件：paper/materials/20261023-1419-ops/receipt.json、initial-readback.json、recovered-finish.json、frozen-native-start.json。
+
+- 2026-10-23T14:35:37+08:00 [ops/14:31] 本轮两事件均为上轮补登记后发出的原完成回报，原输出/报告SHA与done/rc0核同，未重复finish。策略二组十项仍waiting，十条处置已在dd669提交；本轮只取其尚未提交的silent-0576一条审计记录，其他并行账本与提案保持。复盘五局均已有标题而跳过，新增知识、复盘、bug和提案为零，lessons无本批增量，不整文件夹带并行记录。当前账本独立检查577项0问题。事件引用较早124312成功日志，最终out对应131255终局，两份历史均保留，不改写原生身份。为两批准备共用唯一dataset --no-raw事务，沿原写锁运行，结束后冻结实际生成文件SHA/blob并受控提交；失败按阶段发回原事件，不重跑学习或完整检查。回收已实际deferred：二组受发布来源门、复盘受入库门阻挡；完成登记不代表strict-close、live经验或科学父完成。
+原件：paper/materials/20261023-1431-ops/review.json、dataset-request.json；上轮paper/materials/20261023-1419-ops/recovered-finish.json。
