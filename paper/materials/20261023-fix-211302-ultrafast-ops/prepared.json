@@ -1,0 +1,78 @@
+{
+  "main_base": "76b40520a3627f6decbd820e09dd871b59fe329c",
+  "prepared_tree": "446a8ef4fd02e5ff9b68bb4b914332ace6eb501b",
+  "check_worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-fix-ultrafast-check-20261023",
+  "fix_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-211302",
+  "ultrafast_worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-ultrafast-backlog-20261023",
+  "paths": [
+    {
+      "path": "ops/proposal_dispatch.py",
+      "feature": "waiting-fix",
+      "sha256": "9567adb9789defd94e630633b8edafd1e62bd3963ccc679dd436c66ec5ec19c1",
+      "main_preimage_sha256": "6c5714d6a7dd9af8ef9b8ef7cd7eb0fa3aeac4d72b2f545a0d0e1372515c2cbe",
+      "origin": ".worktrees/codex-fix-silent-20261023-211302/ops/proposal_dispatch.py"
+    },
+    {
+      "path": "ops/tests/test_unassigned_proposal_resolution.py",
+      "feature": "waiting-fix",
+      "sha256": "851227f366c449d95b77baa3e84222d635e5ba556cd57733b4e3a291f83a226a",
+      "main_preimage_sha256": "27ee1431351766c4f27458137277ca3eae8569805eecdd7b920ac76f036e1ced",
+      "origin": ".worktrees/codex-fix-silent-20261023-211302/ops/tests/test_unassigned_proposal_resolution.py"
+    },
+    {
+      "path": "agent/tests/unassigned-proposal-resolution.test.ts",
+      "feature": "waiting-fix",
+      "sha256": "274442d87b0568ab0a1485b9b488079a341b3b01225d8574f0fa59b47f37614e",
+      "main_preimage_sha256": "20f5ec8e1fe8c6121f3cdf943c05f2ce6953c9559f698225d334583e73d01bb4",
+      "origin": ".worktrees/codex-fix-silent-20261023-211302/agent/tests/unassigned-proposal-resolution.test.ts"
+    },
+    {
+      "path": "ops/codex/lib.ts",
+      "feature": "ops-ultrafast",
+      "sha256": "bdc1bfaa102c579aab71425b29c2d41cf4367fd089609706d3d824cae486ef4b",
+      "main_preimage_sha256": "813ab0a1cc17650494fe13f00c48eba2d95aac92ae720e2df1e8df0ed9c46e0b",
+      "origin": ".worktrees/ops-ultrafast-backlog-20261023/ops/codex/lib.ts"
+    },
+    {
+      "path": "agent/tests/codex-fast.test.ts",
+      "feature": "ops-ultrafast",
+      "sha256": "e2aeba13ae9c00e29bcaaf00a7e2beb6072754e24075409f33c5b65709c4fb85",
+      "main_preimage_sha256": "0435740b7fa1f791ef2b2a7967dd4bbf2b8afb6201b57acebeb3027e20d8c6c9",
+      "origin": ".worktrees/ops-ultrafast-backlog-20261023/agent/tests/codex-fast.test.ts"
+    },
+    {
+      "path": "agent/tests/ops-codex.test.ts",
+      "feature": "ops-ultrafast",
+      "sha256": "f9e784c36bada13f49222e4e1f4a08a1b423fba28cd800504412e254b2d3f5b8",
+      "main_preimage_sha256": "230f8f874581276c2dca44ba2e4d04752b1c0f878806f83478974a0d3cc51b23",
+      "origin": ".worktrees/ops-ultrafast-backlog-20261023/agent/tests/ops-codex.test.ts"
+    },
+    {
+      "path": "agent/tests/ops-herdr.test.ts",
+      "feature": "ops-ultrafast",
+      "sha256": "8177301c13ecd1c80335da9a33383ae282b97babb5945878f072b84df3465a14",
+      "main_preimage_sha256": "73fc2bc1c7be767a7859f19bfea7f952900428d3c642f45ea4c6f9701e008205",
+      "origin": ".worktrees/ops-ultrafast-backlog-20261023/agent/tests/ops-herdr.test.ts"
+    },
+    {
+      "path": "docs/codex-fast.md",
+      "feature": "ops-ultrafast",
+      "sha256": "c7e9850e55c3b8930e47d73de4f5cf66ae5ab2596bd80cb081b7bb343f0bad36",
+      "main_preimage_sha256": "148a42f72dfda933706b5272f865aefc3f2b2f8ce09d647c391abdb16a3a2fc6",
+      "origin": ".worktrees/ops-ultrafast-backlog-20261023/docs/codex-fast.md"
+    }
+  ],
+  "original_fix_candidate": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/candidate.json",
+  "original_fix_candidate_sha256": "3452075b4aabd8d99ce719cc8c5ccb73f60bcb1637039e51fb1cc2b9bdc270e7",
+  "fix_original_base": "16a3d49d25f0e7744876f256433c6c69c9067cb0",
+  "hostile_or_sandbox_failure_is_not_product_failure": true,
+  "full_runs_planned": 1,
+  "main_runtime_producer": "ops/codex-ops-learn.py imports root ops/proposal_dispatch.py",
+  "game_live_transport": false,
+  "live_difference_preserved": "main-only #48 backfill proof integration is not in live; do not overwrite whole live script",
+  "ops_requested_tier": "ultrafast",
+  "ops_requested_effort": "high",
+  "other_role_tier_changes": false,
+  "native_ops_adoption": "pending idle original launcher resume/native receipt",
+  "downgrade": "when relevant backlog <4, restore ops-only Fast startup parameter"
+}

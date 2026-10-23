@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-23T22:24:07+08:00",
+  "batch": "20261023-211302-fix-batch",
+  "original_state": "failed/rc0",
+  "source_uncommitted_at_intake": true,
+  "fixed_targeted_cases": 18,
+  "without_fix_failed_cases": 2,
+  "sandbox_partial_EPERM_cases": 47,
+  "sandbox_controlled_interrupt": 130,
+  "sandbox_full_denominator": null,
+  "refs": [
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/report.md",
+      "bytes": 13393,
+      "sha256": "3726230d716dc80a31ff94402a4e8c24a119d800084620a80550c4d87b4f7f32"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/candidate.json",
+      "bytes": 3453,
+      "sha256": "3452075b4aabd8d99ce719cc8c5ccb73f60bcb1637039e51fb1cc2b9bdc270e7"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/fix.patch",
+      "bytes": 10695,
+      "sha256": "281381e0e0b3a8271c1e9b87d845213ad23939219504aa703779729666bb9823"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/proposal-source.patch",
+      "bytes": 2647,
+      "sha256": "98eb3f2054ccf7763fbc7bb088fe5069df237af97ad70a66e45f6ef91cd3fde6"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/proposal-vitest-green.log",
+      "bytes": 266,
+      "sha256": "e0695dd4220fca676a3abcb2d1b28eadad5edbb47bb31e08d1ead604abc8e023"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/proposal-vitest-red.log",
+      "bytes": 4513,
+      "sha256": "889a1e56a85a542a0549ef07f3cb7c9961e682f71701be8702609081462783ba"
+    },
+    {
+      "path": "learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/sandbox-source.interruption.json",
+      "bytes": 1041,
+      "sha256": "6011654ebd6c87bea044054e612037894e942258aa8d8e73f8eb26627ea63881"
+    }
+  ],
+  "all_other_deferred_candidates_and_science_parents_unchanged": true,
+  "main_producer_verified_in_source": [
+    "ops/codex-ops-learn.py:SCRIPTS",
+    "ops/codex-ops-learn.py:proposal_dispatch",
+    "ops/learner_jobs.py:job_proposals"
+  ],
+  "live_main_backfill_difference_preserved": true,
+  "ultrafast_requested_not_native_applied": true
+}
