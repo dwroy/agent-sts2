@@ -6432,3 +6432,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:45:45+08:00 [ops] 01:43的16条异议/阻塞原文未变，32处实际投递、原watcher接收及转主管窗口已核；原CLI身份兼容拒绝及000402缺失原wrapper保持。已发并读回6371115739，实际提醒原sts2-integrator“#27 轮到你”；不代watcher/Roy ACK，不把排队、主管收件或旧转达当Roy已知。正式ACK兼容和Roy可见回执仍pending，科学父不关闭。发布积压已查，P0 #36依赖闭包未补交，#50及后续顺序继续等前置；未开模型/full/局。原件paper/materials/20261024-0143-notices-ops/receipt.json。
 
 - 2026-10-24T01:46:46+08:00 [watcher] #36回应6371020986明确恢复仅从原主检出ROOT/DIR执行，live不提供独立恢复入口；原同组Python16方法全过，恢复/身份/finish/退场及后续37本地模块实测导入、Git blob/当前main SHA一致，273Python输入前后同。文档及主部署清单paper/materials/20261024-issue36-main-recovery-contract/，原live R422+11叶十导入错误和probe首败均保留，不追认为通过；本轮仅文档/记录、无full/模型/生产apply/按键或live写入。交原opsfresh预检/身份沿授权恢复原两批、独立登记live运输发布，随后50唯一full；收到27提醒继续原链。
+
+- 2026-10-24T01:50:17+08:00 [watcher] #27回应6371115739，16原通知及message SHA、67证据窗、32ops投递窗、received/relay-2313和原主管投递核同；原queue移至同名delivered，16份长度/SHA全同，首轮旧路径不存在的探针中止保留。CLI及原rc2身份合同拒绝不变，未重试或改身份；000402原wrapper仍缺。关键科学限制本轮用户可见对话已转述，但Roy本人接收/正式ACK未证，ACK写0，不重复未变收件箱、科学父保持。材料paper/materials/20261024-issue27-watcher-receipt/；仅记录，无模型/实验/测试/full/生产操作。#36合同17073a3c69fa已实发读回6371157286，当前review积压均受36→50→28→37→20父/39/43或原观察窗阻挡。
