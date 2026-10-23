@@ -228,3 +228,5 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T22:52:01+08:00 [watcher] 按主管#20评论6367705371新增集成员接续入口notes/integrator-current.md，每轮结束更新state/issue/时间；当前clear-ok、issue20，原开发交付未到，已落盘六项review依赖及42候选。ops原full已6513过/2跳过并合main86b3b1721，不把其结果用于未合候选；旧交接保历史，后续先读新入口。无产品或生产操作。
 
 2026-10-23T22:55:28+08:00 [watcher] 按主管#20评论6367774091补全notes/integrator-current.md每轮三项：进行中的事、在等谁、下一步；state仅总结，客观信号冲突不清，自动清先dry-run一天并等主管核准。当前clear-ok/issue20，原开发子项交付待到，无自有在途测试或生产操作。
+
+2026-10-23T22:56:57+08:00 [watcher] #43接续：候选e1204dcf9250六份发布检查叶逐blob同已审380083709f49，main尚无六叶，复用原30项定向；原反例及失败保留，随#37→#20父组合核收，不单独关闭或另起full。交接已更新clear-ok/issue43及进行中的事、在等谁、下一步；review六项无新交付，下一步等原#20一分钟/任务边界子项。证据.artifacts/issue43-resume-20261023-2256/verification.json。
