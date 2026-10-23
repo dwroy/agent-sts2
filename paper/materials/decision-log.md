@@ -6141,3 +6141,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:52:24+08:00 [ops/#46] 重提醒对账：actual live b0c3f412133b0五叶核同、无新交接；T+24h为10-24 13:46:30未到，保原自然验收/开放父，不重发或重full/模型。原件paper/materials/20261023-issue46-followup-ops/receipt.json。
 
 2026-10-23T13:53:38+08:00 [watcher] #36收尾合同5b8a458在#46实际live/b0c3f412133b0上精确两叶核验：learner_tui.finished删native code0必须done等价，真实failed/rc0、空fix原验收/原生证据/主管PID-birth/75/回收权限保持；live组合tree17eb73389507452aacae07b9e4a6d955bf0819e1 tsc0/6文件85过，main兼容tsc0/3文件22过，两轮输入SHA不变/469知识及46五叶保留。按主管6358115660仅定向+组合自查，无新增full；46原655文件6333过2skip的覆盖结果保留。仅两受测叶合main交原ops精确发布/核下一自然批，原131316失败/attention/pane不改，不补造tests或已退出主管seal；36五项与科学父、46实际24h验收均开放。首组装缩写/full-index补丁比较断言在测试前失败，原件保留并核分配后恢复，无产品首败覆盖。后47→26→42余→35→28→37（37→20）；27原15异议/67证据与CLI正式ACK阻塞保留。未动live/STOP/TUI/模型或在途任务。材料paper/materials/20261023-issue36-semantic-integrator/。
+
+- 2026-10-23T13:58:47+08:00 [ops/#36] 真实终态收尾合同精确2叶发live b49984b7d716e02d8a2f3e324f66ebf68fa1b5a7，85/22定向与tsc0证据沿用、不新full；保46/TUI/知识/原131316失败与pane；下一自然wrapper收尾/lease/后批待核，不伪造seal或关父，46原24h窗口不变。原件paper/materials/20261023-issue36-finish-publication-ops/publication.json。
