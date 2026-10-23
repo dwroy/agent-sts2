@@ -1,0 +1,181 @@
+{
+  "at": "2026-10-23T22:13:45+08:00",
+  "release_id": "V6-R419",
+  "actual_live": "5ac042189bc8708528a902b4cbb52403d1e4c96c",
+  "single_product_leaf_verified": "knowledge/characters/silent/experience.json",
+  "source": "f3f439cf49181ad69d2f6353c26760987479db3b",
+  "baseline": "2bcf7876fe1c0173c2a2d3257d52b5699af0c1e1",
+  "scans_and_registries_verified": true,
+  "fixed_consumer_readbacks": 25,
+  "original_autoplay": {
+    "pid": 1248445,
+    "birth": "9590346",
+    "still_running": true,
+    "ops_restart": false
+  },
+  "normal_play": {
+    "pid": 2873224,
+    "birth": "18915904",
+    "run_id": "W1MQ7FARJQAV",
+    "console": "logs/console/20261023-221024-5ac042189+dirty.log"
+  },
+  "natural_terminal_ref_verified": true,
+  "own_admission_released": true,
+  "natural_partial_window": [
+    {
+      "kind": "run-config",
+      "run_id": "W1MQ7FARJQAV",
+      "character": "SILENT",
+      "experience_version": "2026-10-23.1",
+      "code_error_retained": "git status failed: spawnSync git ENOBUFS"
+    },
+    {
+      "kind": "run-config",
+      "run_id": "W1MQ7FARJQAV",
+      "character": "SILENT",
+      "experience_version": "2026-10-23.1",
+      "code_error_retained": "git status failed: spawnSync git ENOBUFS"
+    },
+    {
+      "kind": "brain",
+      "run_id": "W1MQ7FARJQAV",
+      "question_id": "mvl1rth1-2873224-1",
+      "label": "event/choose",
+      "accepted": true,
+      "experience_queries": []
+    },
+    {
+      "kind": "brain",
+      "run_id": "W1MQ7FARJQAV",
+      "question_id": "mvl1rth1-2873224-2",
+      "label": "map/route-plan",
+      "accepted": true,
+      "experience_queries": [
+        {
+          "input": {
+            "theme": "route",
+            "relevant": true
+          },
+          "hit_ids": [
+            "silent-act-transition-missing-hp-heal",
+            "silent-rest-buffer-observation",
+            "silent-route-hp-observation"
+          ],
+          "changed_hit_ids": [
+            "silent-rest-buffer-observation",
+            "silent-route-hp-observation"
+          ],
+          "sources": [
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "experience.json",
+              "path": "characters/silent/experience.json",
+              "sha256": "ed9a7749bd1409ef72ae56ff0474a45615233d1d4d0a04aaaa1dba505ee1d89a",
+              "version": "2026-10-23.1"
+            },
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "shared-experience.json",
+              "path": "common/shared-experience.json",
+              "sha256": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+              "version": "2026-10-13.1"
+            },
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "monster-db.json",
+              "path": "common/monster-db.json",
+              "sha256": "6472278b204515cc3ca7ea870c8d3d68d0784f8bb94cfca8be4113a4cb550ef2",
+              "version": "sha256:6472278b204515cc3ca7ea870c8d3d68d0784f8bb94cfca8be4113a4cb550ef2"
+            },
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "monster-records.json",
+              "path": "characters/silent/monster-records.json",
+              "sha256": "c228f0aa4a367144c907a579aa171227f5a690b14ea388435a102dcabc504c3e",
+              "version": "sha256:c228f0aa4a367144c907a579aa171227f5a690b14ea388435a102dcabc504c3e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "brain",
+      "run_id": "W1MQ7FARJQAV",
+      "question_id": "mvl1rth1-2873224-3",
+      "label": "reward/card",
+      "accepted": true,
+      "experience_queries": [
+        {
+          "input": {
+            "keyword": "DEFLECT",
+            "theme": "deck"
+          },
+          "hit_ids": [],
+          "changed_hit_ids": [],
+          "sources": [
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "experience.json",
+              "path": "characters/silent/experience.json",
+              "sha256": "ed9a7749bd1409ef72ae56ff0474a45615233d1d4d0a04aaaa1dba505ee1d89a",
+              "version": "2026-10-23.1"
+            },
+            {
+              "source": "own",
+              "character": "silent",
+              "file": "shared-experience.json",
+              "path": "common/shared-experience.json",
+              "sha256": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+              "version": "2026-10-13.1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "raw_refs": [
+    {
+      "path": "logs/run-config.jsonl",
+      "offset": 3068351,
+      "bytes": 6132,
+      "sha256": "1e6411d32ae15f605108f6a027bb0e2f28bd1635c257ca44b8a62492208132c5"
+    },
+    {
+      "path": "logs/run-config.jsonl",
+      "offset": 3074483,
+      "bytes": 6457,
+      "sha256": "2456720d478289b6be0820a589620a1a564c59a4c3f3f57b7b6aa7b3f30d608c"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1525618041,
+      "bytes": 71306,
+      "sha256": "fd751c951e3eeacaa4429ea4dcc7df07cc38a0938ab704055c3c21605a1227dc"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1525689347,
+      "bytes": 66392,
+      "sha256": "a02d7215d4c731b20dd20308cc301bac50f8fdcb8d5c1e0f4513bfb483423a59"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1525755739,
+      "bytes": 73518,
+      "sha256": "eb668e447a5a9b5ca1dee92b4816fdc84ae39be038259975a9454f5880351b01"
+    }
+  ],
+  "natural_gain_or_mechanism_validation_claimed": false,
+  "old_ENOBUFS_source_error_preserved": true,
+  "batches_failed_rc0_preserved": [
+    "20261023-211302-experience-update",
+    "20261023-193545-experience-update"
+  ],
+  "new_full_model_or_game_or_restart": 0,
+  "scientific_parents_closed": false
+}
