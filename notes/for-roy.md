@@ -4819,3 +4819,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T12:45:35+08:00 [ops] 已处理12:42十五件重复学习通知：逐项原文指纹、67份原证据及通知CLI与11:43一致，原ops_forwarded实际写入回执核同有效。既有watcher会话身份/可提交通道已核，已实际发送一行提醒并保存真实提交回执；提醒提交不算已读或Roy已知，十五条watcher_received/roy_notified继续pending。原手动task白名单及输入来源合同兼容未变，保留此前CLI拒绝，不重复相同失败调用、不代其他角色ACK。完整问题、旧观点差异、证据和下一步沿本轮交接索引交原watcher；三条并行账本沿06:43授权局清单核验，保学习者冻结check原rc1，结构/当前清单检查不代逐帧来源验证。牌堆保真、配对增量、退出HP口径，独立施放分母与机制缺口，外部因果/样本/分账限制均沿原owner，合同进展不代live、自然命中或收益。仅核验、提醒及双记录，无新增模型、full、dataset、源码或发布，不关闭科学父。原件paper/materials/20261023-1242-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder-send.json。
+
+
+- 2026-10-23T13:02:52+08:00 [ops/#36] 已核最新交接6357625567：main d5e10110b精确十五叶与原受测tree9642c7c逐blob/SHA相符，唯一完整6332过/2跳/0败，2540冻结输入一致，38份原检查工件已核；新增日志夹具首败及修正stub后213定向过分列保留，不重full/模型。实际发布首次在原知识锁等待45秒超时，尚未写live且TUI仍off，原件与原刷新PID/birth/nice19已保存；未杀/停刷新或创建对局hold。沿同一发布事务已启动一份nice19原生接续，先K后L，一次有界内核锁等待，准入后才精确十五叶发布，保届时最新知识/数据/绑定/80/60/版本；无新守护器或轮询模型。事务将实际核live后在原learn.lock内仅切learner_tui=on，下一自然新学习消费，在途及旧镜像不动，并自动双通知/issue读回/终局入原队列；失败停在实际阶段，不自动重试。此刻不把等待称已发布，首自然批五项、正式ACK及科学父仍pending。原件paper/materials/20261023-issue36-p0-publication-ops/preflight.json、first-lock-admission.json、continuation.json及paper/materials/20261023-issue36-p0-publication-intake-ops/receipt.json。
