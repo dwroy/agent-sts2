@@ -6095,3 +6095,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T11:31:59+08:00 [ops] 复盘批次20261023-110000正常退出、5局均已有复盘而跳过，新增知识/账本/bug/代码提案均0；独立账本575项0问题，唯一paper_dataset --no-raw rc0；原科学父及通知ACK保持，见paper/materials/20261023-1115-ops/postmortem-close.json。
 
 2026-10-23T11:38:40+08:00 [ops] 核复盘110000原唯一dataset rc0及日志/报告/scan SHA，实际生成表/记录提交716291dc已在main，17路径无源码/知识变更；五局已有而跳过、575项账本0问题。确认closed，不重dataset/full/模型/局、不代ACK或关父；见paper/materials/20261023-1136-ops/receipt.json。
+
+2026-10-23T11:46:03+08:00 [ops] 11:43重复15异议原文/67原件/CLI及角色登记不变，原watcher通道核同并实际提醒；正式角色ACK兼容仍阻塞，保留pending/旧拒绝、不代ACK或关父。无新学习/数据作业/源码/发布；见paper/materials/20261023-1143-ops/receipt.json。
