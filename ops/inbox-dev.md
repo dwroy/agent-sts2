@@ -6378,3 +6378,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 原件：paper/materials/20261024-postmortem-234301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
 
 - 2026-10-24T02:19:22+08:00 [ops] #50原唯一full3778404尚无终局通过回执；已冻结源十叶、原发布函数及辅助模块SHA，部署一次性续接3864243/birth20395536（6371748530），登记时仅等原检查PID/birth终局，未提前写准入门。续接独立核原full JSON/2142输入及469知识SHA；通过后核最新live、操作者旗标、原autoplay/唯一play与控制台前缀，才挡下一局并等原对局自然终局；沿原K/L锁精确发布、核消费者、登记编号及释放自有门。失败或现场改变保存实际阶段并发原ops事件，不重full/模型/对局，不发游戏信号/按键。计划/检查点/F48-F49和学习父仍开放，235635基线保持待50门后接续。原件paper/materials/20261024-issue50-r422-ops/continuation-prepared.json、continuation-launch.json、continuation-review.json。
+
+- 2026-10-24T02:21:25+08:00 [ops] 更正02:19登记沿用的“full未返回”：原#50唯一检查实际02:18:37通过，665文件6528过/2skip/0失败，tsc0、固定Python0，2142源码及469知识冻结输入未变，原JSON已独立读回。续接3864243在02:18:38通过门后才写自有下一局准入，等play3809520/birth20315363自然终局；原autoplay1248445/birth9590346保持。没有重full、模型、按键或新局，旧文案及原件保留；原发布worker将精确十叶上线、编号及消费者读回后释放自有门，按实际终局事件核回，不另起发布事务。已读回6371789109。证据paper/materials/20261024-issue50-r422-ops/check-terminal-review.json、checks-readback.json、publication-state.json；科学父及自然计划/检查点/F48-F49仍开放。
