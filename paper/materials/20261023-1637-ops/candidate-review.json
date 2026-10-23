@@ -1,0 +1,202 @@
+{
+  "at": "2026-10-23T16:44:49+08:00",
+  "batch": "20261023-154301-strategy-proposal",
+  "phase": "original-three-leaf-candidate-frozen-await-host-combination-window",
+  "actual_state": "failed/rc0",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-154301",
+  "base": "2282f70fca090a8d626e9f39b55a56d1c37ff0b8",
+  "candidate_staged_tree": "1794ba1c37aadd6fc14a8c2d7de359fe8e3695de",
+  "source_commit": null,
+  "source_files": [
+    {
+      "path": "agent/src/reflex/combat.ts",
+      "mode": "100644",
+      "blob": "8b072153090c21eb5fd28bec9c2f80908363cda5",
+      "bytes": 25272,
+      "sha256": "2b2b32afab0e4fd3b1e6a38048d09d8b967b054248a8a168e380624e3625bec2"
+    },
+    {
+      "path": "agent/tests/silent-single-action-tainted-state.json",
+      "mode": "100644",
+      "blob": "461253b634ff8eb5e43ef9ab7709563ed9560918",
+      "bytes": 280983,
+      "sha256": "6de35484631607c04dda725ddc0bbc2b6d2023713b6496515686667ace622e8c"
+    },
+    {
+      "path": "agent/tests/silent-single-action-tainted.test.ts",
+      "mode": "100644",
+      "blob": "3413c26a15eaa663ca15a305b4e7bb74452273e4",
+      "bytes": 5852,
+      "sha256": "47e976e5091ad8f8d5083de987d1965c2ef4c07b66b007c30c727be030d8c044"
+    }
+  ],
+  "original_candidate_patch": {
+    "path": ".worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/candidate.patch",
+    "bytes": 299305,
+    "sha256": "58e972586c6a8c78ec312f6f2a6bbe4d190efd31e6d8431cfcabdabae5cfcea6"
+  },
+  "frozen_patch": {
+    "path": ".artifacts/ops-1637-20261023/candidate-exact-staged.patch",
+    "bytes": 299491,
+    "sha256": "d391d913a5ded1ae0cac6b40c640852a9de3bb716b5235e890bc5703ab6afed0"
+  },
+  "report": {
+    "path": ".worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/report.md",
+    "bytes": 14174,
+    "sha256": "654fac069014b516941ccc5b0347550ad31319db098e98495f94b275d0c3848e"
+  },
+  "proposal": {
+    "path": ".worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/proposal.md",
+    "bytes": 4534,
+    "sha256": "8b6bf07ee714ad5a72e3c443888d26f70c5fcc19c8f15ec37d51e6ba693462a2"
+  },
+  "verification": {
+    "run_identity_checked": 10,
+    "full_jev_questions": 3,
+    "indexed_jev_rows": 1138,
+    "raw_refs_seek_verified": 12,
+    "decision_fingerprint_state_links": 3,
+    "base": "2282f70fca090a8d626e9f39b55a56d1c37ff0b8",
+    "candidate_files": {
+      "agent/src/reflex/combat.ts": "2b2b32afab0e4fd3b1e6a38048d09d8b967b054248a8a168e380624e3625bec2",
+      "agent/tests/silent-single-action-tainted.test.ts": "47e976e5091ad8f8d5083de987d1965c2ef4c07b66b007c30c727be030d8c044",
+      "agent/tests/silent-single-action-tainted-state.json": "6de35484631607c04dda725ddc0bbc2b6d2023713b6496515686667ace622e8c"
+    },
+    "candidate_patch_sha256": "58e972586c6a8c78ec312f6f2a6bbe4d190efd31e6d8431cfcabdabae5cfcea6",
+    "gitleaks_exit": 0,
+    "negative_control": {
+      "exit": 1,
+      "failed": 3,
+      "passed": 6
+    },
+    "restored": {
+      "exit": 0,
+      "passed": 9
+    },
+    "live_mutated": false
+  },
+  "raw_evidence_refs_verified": [
+    {
+      "stream": "jev-prompts",
+      "run": "HD6BM39PYL21",
+      "source": "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl",
+      "offset": 2973939550,
+      "bytes": 19551,
+      "sha256": "c6d5ecf2d8d0c341b53b5bb6952ca7570560429adcdf02ec537b51f376f4cd05"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 4248174878,
+      "bytes": 5238,
+      "sha256": "9511055b06333283ef8fd316a8be1d44379ed8d30eb6088c88c830f0ad4137d4"
+    },
+    {
+      "stream": "jev-prompts",
+      "run": "HD6BM39PYL21",
+      "source": "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl",
+      "offset": 2973959101,
+      "bytes": 19281,
+      "sha256": "7f5b59b4e9f6c1818d3a3c4b633d3fdad6d9efe37729e3de9826dff09db7904f"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 4248180116,
+      "bytes": 5041,
+      "sha256": "3dfef925a6d041d38935c7081c45530877450fd044265a9487ca83812d482895"
+    },
+    {
+      "stream": "jev-prompts",
+      "run": "HD6BM39PYL21",
+      "source": "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl",
+      "offset": 2973978382,
+      "bytes": 18072,
+      "sha256": "8ce3ffecf51bbb724bf59c02c33dd4433fb810e86254b4545c370fed1f389060"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 4248185157,
+      "bytes": 4660,
+      "sha256": "9803aad6a4d112a4db12737d8c88c511de79ee88e8286fc120385d87541fa6d6"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491182306,
+      "bytes": 36720,
+      "sha256": "19ca63a90a3833a74b5363d3fdd508e3fdbe053864fa3fa9080934b6a202f0b7"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491219026,
+      "bytes": 35814,
+      "sha256": "591bf5067d6fc00bcb00abcb2f4a607ed890a23397d52d5bb1b01387e585fca3"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491254840,
+      "bytes": 35113,
+      "sha256": "337a1992c5a7b417aba7a6c63cdcaee46d9f01eb7cf279c9c74ebbe7cf1a6aaa"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491289953,
+      "bytes": 36428,
+      "sha256": "9ed7a2fbb61f4aab02473b2de8cbfcde26a5ab41ce66e9232a65c54ba1f32dbe"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491326381,
+      "bytes": 35604,
+      "sha256": "8421e92e58dba2a3742ad767361d5156a635dc3d08c5d48245b399e6c5eec45a"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 16491361985,
+      "bytes": 34510,
+      "sha256": "56bb699ed2437738ed6b2efb1aa2214066157a9191dd5a0242442e020c46cd85"
+    }
+  ],
+  "original_checks": {
+    "tsc": 0,
+    "directed_passed": 9,
+    "valid_negative_failed": 3,
+    "valid_negative_passed": 6,
+    "full_observed_failures": 45,
+    "original_sandbox_log": {
+      "path": ".worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/sandbox.log",
+      "bytes": 3816,
+      "sha256": "25d3481b0544c400364cacabf6fb49064cc6bcd653017c9a68c580a07f8d3e67"
+    },
+    "terminal_rc": null,
+    "terminal_file_absent": true,
+    "current_worktree_processes": [],
+    "scope": "original observed 8 brain-agent-mode plus37 ops-mod-state; one dsh failure cause unclassified; missing terminal is not full pass or a high-load timeout"
+  },
+  "current_live": "59a1dc80367762a19d29d85a3258aac57a91f54f",
+  "combat_preimage": "cad6686ed01fd06564e84a6a8362ceebbc29caf2",
+  "candidate_apply_check": 0,
+  "whole_merge_original_preflight": {
+    "path": ".worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/latest-live-preflight.json",
+    "bytes": 1562,
+    "sha256": "bf7b4d18a759000ff67a42eb8036e2e28e3595e59c8bbd3ffab644e310216fd4"
+  },
+  "whole_merge_original_conflicts": 17,
+  "native_receipt": {
+    "path": "ops/codex-ops/learner/learner-20261023-154301-strategy-proposal.tui.json",
+    "bytes": 5174,
+    "sha256": "4c87b968504795548b84960ed95ce548c40865bc11738293eb0c03de8dd67089"
+  },
+  "native_binding_count": 2,
+  "native_and_supervisor_stopped": true,
+  "lease_free": true,
+  "retention_request": {
+    "path": "ops/codex-ops/retention/requests/20261023-154301-strategy-proposal.json",
+    "bytes": 583,
+    "sha256": "d75f572040db7d5ff7bc17e2b10e403c33aef7537c926d0178f7e0fe983f2d68"
+  },
+  "semantic_limit": "5→11 and11→17 are current-attack components inferred from the following intent/block, not observed immediate HP deductions. Jev already marked all3 questions lethal; no demonstrated decision or win improvement.",
+  "scope": "one Silent A10 F27T6 run; A11 and other characters unchanged, no claimed current-A11 natural adoption",
+  "original_proposal": "silent-proposal-08f9b6f1658b5d7b",
+  "owned_ledger_rows": 1,
+  "scientific_parents_closed": false,
+  "new_model_full_or_merge": 0
+}
