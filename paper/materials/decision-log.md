@@ -6368,3 +6368,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:43:39+08:00 [ops] #23最新24h17回收路径/118新建、磁盘-108.48GiB仍失败；plan0，保37未结算等原门，等#46完整24h。已核R420实际发布与原循环继续。paper/materials/20261023-issue23-continue-ops/audit.json。
 
 - 2026-10-23T23:44:26+08:00 [ops] 23:41 R420发布完成事件去重核回：live902206965e06/11叶一致，自有准入已释放、原autoplay及下一play均在；不重启/重full或模型，新自然窗口尚未结案。paper/materials/20261023-2341-ops/receipt.json。
+
+- 2026-10-23T23:45:21+08:00 [ops] 十六通知已核新增集成员实读/转达回执，正式ACK仍pending原CLI；不重复提醒/实验。paper/materials/20261023-2344-ops/receipt.json。
