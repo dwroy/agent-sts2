@@ -1,41 +1,16 @@
 state: in-flight
-issue: 52
-updated: 2026-10-24T06:21:41+08:00
+issue: 28
+updated: 2026-10-24T06:28:06+08:00
 
-进行中的事: #52四生产脚本宿主部署已完成，本轮重核四生产/四测试叶SHA仍同原交付55546b98b；原唯一full6644过/2跳及窗口释放保留，不重跑。原不可派校准/进阶标记改按实际可派性判断，普通优先、双槽、租约及失败/重试通道保持。部署后原自然tick已派普通经验061302，当前running；当次backfill_hold=true、外部/回刷均null，未把普通派发当外部采用。033643后续已实际发布R424及18消费者/准入释放；#28唯一净full正在运行。
+进行中的事: #28 R424净树c3ba93abc61b唯一完整检查06:23:39通过，666文件6536过/2skip/零败、生产/v6工具tsc0，2139输入/469知识/1417依赖/183宿主源码核同。12后像同原候选，保R424经验与49/42/35/50。自然发布worker407393/birth21897369持自有LLM_DRAIN，绑定原play302576/birth21688750、autoplay302180/birth21688242及原console055233前缀244774/SHAeab41e02，pidfd等终局；当前未发布。监督清单误含builder源码，已在源写前停止旧自有监督404987并保留原件，准入无缝转移、同边界/同源码/同检查，无游戏信号或请求。
 
-在等谁: #52自然验收等原调度器在正常优先与租约门满足时，产生#51外部首批及#48回刷的真实派发/native/来源回执；当前两类批次均未登记。源码部署不等于首外部消费，不能据null改成新代码失败或通过。#28仍等原worker回调。
+在等谁: #28等原play自然终局，随后同publisher沿K→L核12叶前像、最新知识漂移/保存、绑定备份恢复、原85条基线/候选/实际消费者及唯一编号/双通知；不得以工程交付关闭真实两臂/学习条目与反证/Roy开关/A-B科学门。所有旧失败/rc0保持。
 
-下一步: 沿原自然tick核首派身份、两槽/正常优先、冻结来源和产物，再核实际live消费者，原科学父及旧失败保留；不强派、不开新模型/full。#28检查过门才接自然发布/读回/释放→37→20父，#51首双Boss后各幕Boss先于#48自有回刷。
+下一步: 核paper/materials/20261024-issue28-r424-publication-ops/publication-state.json回调及实际消费者/准入释放；成功后37→20父（含39/43）。原autoplay自然退出且自有准入释放后才沿原broker恢复。失败/未知不转序，不重full/模型、不覆盖新知识或开关。检查及接收原件paper/materials/20261024-issue28-r424-ops/、20261024-issue28-r424-received-ops/；原监督清单修正/同边界转移在publication-ops/。
 
-原件: paper/materials/20261024-issue52-deployment-ops/deployment.json；ops/codex-ops/learn.json；paper/materials/20261024-r424-received-ops/receipt.json；paper/materials/20261024-issue28-r424-ops/check-state.json。
+并行: #52八叶宿主SHA同原交付；06:13原tick派061302普通经验running，backfill_hold=true、外部/回刷null，正常优先/双槽/租约保持。#51已启用首双Boss/次各幕Boss，四冻结任务/清单核同，当前未见external_source批次，等原自然tick真实native/来源/产物与live消费者；先于#48自有回刷，不强派。#46原T10-23 13:46:30，前24h基线106核同，至10-24 13:46:30才核完整[T,T+24h)与complete=true、各类别实际工作量/pending-repair-续跑重试/积压水印；不提前截断/比较，停派与外部优先不算节省。
 
-并行事项与其他未完成门（保留前检查点）:
-进行中的事: 06:13原16通知逐项原文/flags/真实ops发送及32投递窗口核同；原watcher接收与CLI旧拒绝保留，000402原wrapper仍缺。原sts2-integrator空闲，已沿原session实际发送一次#27提醒，未代角色ACK或称Roy已知。新回执paper/materials/20261024-0613-notices-ops/{receipt,watcher-reminder}.json。
-
-在等谁: 正式ACK等原request/task/character/thread兼容修复；Roy可见证明等watcher/主管自有真实回执，通知保持pending。并行#28唯一full仍等原回调，#46观察门等13:46:30。
-
-下一步: 有真实接收/来源变化再沿原CLI分角色登记；未变不重复拒绝/主管收件箱、不补造wrapper或结案科学父。#28过门后原自然发布/读回/释放→37→20父；#51自然派发及其余观察门保留。
-
-并行观察与未完成事项（保留前检查点）:
-进行中的事: #46已精确发布五叶，原上线时间T=2026-10-23 13:46:30；当前处于实际24小时观察窗口。原完整检查6333过/2跳及上线读回保留，原前24小时106份成功分配基线SHA已核同，本轮不重算或生成截断窗口比较。调度规则仍以原发布及04:04门读回为依据：新增10局或6小时启轮，每轮最多2批，单项新局门保持。
-
-在等谁: 等北京时间2026-10-24 13:46:30完整观察门，以及原调度器积累的真实回执；尚不能验收节省或关闭#46。#51外部优先、停派、重试和正常工作量必须分账；静态68/日估计不是收益。并行#28唯一full仍在运行，等待原worker回调。
-
-下一步: 到门后的原自然唤醒才执行已部署报告器，固定[T,T+24h)且要求complete=true，核全部任务类别、实际局量、pending/repair/专项/续跑/retry、waiting积压与轮次水印，再评估分配变化。保留legacy/restore和未触发分支限制；不新增模型、计时器、手动tick或提前发布验收结论。
-
-原件: paper/materials/20261024-issue46-gate-readback-ops/receipt.json；paper/materials/20261023-issue46-publication-ops/{publication,allocation-baseline-original-24h}.json；#46评论6373683201。
-
-并行事项与未完成清单（保留前一检查点）:
-进行中的事: #51首两批外部学习已启用，顺序为双Boss issue51-dual-boss-001→各幕Boss issue51-act-boss-002；四份任务/输入清单按冻结字节与SHA核同。#52四脚本宿主部署及原窗口释放已核，033643已发布R424并完成18项消费者/准入释放，对局已恢复。#28接原窗口，净树c3ba93abc61b在05:57:35进入唯一full；生产/v6工具tsc均0，冻结2139输入/469知识/1417依赖，尚无完整退出结论。
-
-在等谁: #51等原调度器自然tick，在正常任务优先、原两槽和写者租约门下形成首批真实native/产物；当前learn.json未见external_source批次，启用不等于已派发或入库。#28等原worker304616/birth21695846检查回调，不再等旧知识锁。
-
-下一步: 核#51真实派发身份、来源分账、产物和实际live消费者；首双Boss后各幕Boss，均先于#48自有回刷。#28完整通过才接自然发布/读回/释放，再37→20父；不重full/模型、不强派，不改旧失败及科学父。
-
-原件: notes/strategy-external-silent.json；paper/materials/20261024-issue28-r424-ops/check-state.json；paper/materials/20261024-r424-received-ops/receipt.json。
-
-其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、244/首6冻结校验/未见native消费，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。16通知原文/flags/32投递核同，旧watcher实际接收/提醒存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
+其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、244/首6冻结校验/未见native消费，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。06:13原16通知/32投递核同、同一空闲watcher实际提醒已发，回执20261024-0613-notices-ops/，旧watcher实际接收存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e

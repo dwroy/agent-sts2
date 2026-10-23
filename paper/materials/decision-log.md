@@ -6502,3 +6502,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T05:54:31+08:00 [ops] 核V6-R424实际18消费者/自有准入释放并沿原broker恢复唯一循环；#28精确R424十二叶冻结检查已监督接续，当前full0；旧失败/科学父不改。paper/materials/20261024-r424-received-ops/receipt.json。
 
 - 2026-10-24T06:14:53+08:00 [ops] 06:13原16异议/32实际投递核同，已提醒空闲原watcher；正式ACK兼容/Roy可见回执及000402原wrapper仍pending，不代ACK或重复主管收件箱，科学父保留。paper/materials/20261024-0613-notices-ops/receipt.json。
+
+- 2026-10-24T06:28:06+08:00 [ops] #28 R424净十二叶唯一full6536过/2跳、两tsc0及冻结输入核同，接原自然边界监督407393；发布前修正builder源码/知识数据保护清单，旧停点保留，无游戏信号或新full/模型，科学父保持。paper/materials/20261024-issue28-r424-received-ops/receipt.json。
