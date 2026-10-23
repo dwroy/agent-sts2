@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-23T16:31:40+08:00",
+  "issue": 28,
+  "title": "Jev 出牌小脑经验：按怪物的打法条目，回放证明有效再上线",
+  "state": null,
+  "body": "## 目标\n\nJev 出牌用的小脑经验（`docs/v6-plan.md` 第 13 节步骤 4）：按怪物或遭遇整理打法条目（出招规律、威胁回合、应对要点），来源包括 #25 的知识库、#24 的真人战斗统计，以及我们自己的战斗记录。\n\n## 要做\n\n- 条目格式沿用现有出牌条目（`reflex-entry-v1`；85 条旧出牌条目还在，目前 `V6_COMBAT_ENTRIES=off`），补上来源字段。\n- 先做第一幕、第二幕 Boss 和常见精英。\n- **证明有效再上线**：固定回放（同一场战斗，有条目和没条目的 Jev 决策与掉血）；通过后再用 A/B 对局确认。上次出牌条目没有用上，就是因为没有证明有效。\n\n## 验收\n\n- [ ] 固定回放结果：掉血或胜负有改善，附区间\n- [ ] 决定是否开 `V6_COMBAT_ENTRIES`，交 Roy 拍板\n\n## 负责人与边界\n\nowner:dev（框架与回放），条目内容由学习者写；等 #24、#25（status:blocked）。出牌维持 V5，开关由 Roy 定。\n",
+  "comments": [
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeWZLUA",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] 转 Roy（10-22）：Jev 保持 V5 的逻辑出牌，不附开卷；Jev 的后续优化走 Jev 条目，例如增加更多 reflex 经验条目。本 issue 按这个方向推进；开卷不再是本 issue 的前置。\n",
+      "createdAt": "2026-10-22T03:08:50Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6331714384",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeWa7lQ",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[ops] 已派 issue-28：工作树 `.worktrees/issue-28-task`，pane `wJ:p1HN`、tab `wJ:t1HK`，基线 `2bb0a9cffafa568858a3b7a62311235b6bc61adc`；独立 Codex 会话，启动参数 gpt-6.1-sol/high（实际档位由原生回执验收）。\n\n<!-- issue-session:28:6cdf136c3539457f426c -->\n",
+      "createdAt": "2026-10-22T03:11:09Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6331743125",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeWnXkA",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[dev #28] 来源与离线回放框架已交付；真实改善验收未完成，保持出牌开关现状，交工程 review。\n\n提交：83ea9419187924c3a66b355b14f4b3664651844e（分支 issue-28-task）。报告：paper/materials/20261022-issue28-combat-entries/report.md；接口/命令：docs/jev-encounter-reflex.md。\n\n- reflex-entry-v1 增兼容来源字段，外部/本系统分母分账；原85条数据字节未改。\n- 冻结原状态/原Plan的capture、共用V5题面仅增减记忆的两臂回放、逐候选同种子结果校验、独立局95%区间；默认零模型调用，显式调用限额、无重试，uncertain不重发。\n- 学习内容仍由学习者写。供原ops派发的模板：learner/tasks/jev-encounter-reflex.md，覆盖第一/二幕Boss与常见精英、来源/反例、冻结留出局及排除表；本会话未派学习或运行实验。\n\n验证：production/tools两项tsc退出0，7文件117项定向通过，外部空本地局号draft CLI通过，gitleaks提交/评论扫描通过。首轮失败原件及修复见报告。按#20 Roy上线检查优先指令，当前#33/#35等排队期间未启动完整Vitest；请集成员协调窗口补全检，不能称完整测试已绿。\n\n实际Jev调用0、游戏动作0、新学习条目0、掉血改善/区间未知。两个原验收框保持未完成：还需原ops派发学习、真实固定回放结果，再交Roy决定开关，获准后另做A/B及自然消费。没有改live/STOP、运行开关或其他会话，没有发布版本、合main/live或登记回收；不据框架/合成测试关闭#28。\n",
+      "createdAt": "2026-10-22T03:27:50Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6331946896",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeWzPfw",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[watcher] 工程定向核验通过；完整检查仍让位上线队列，#28 暂未准入 main，保持 review。\n\nsource `83ea9419187924c3a66b355b14f4b3664651844e`；保留候选 `7087caea9ee456953a060c0bf73846b6b5f0b249`（仅本地 integrator-28-20261022 分支）。报告：`paper/materials/20261022-issue28-integrator-review/report.md`，精确停点：同目录 `pending-window.json`。\n\n- 已实读来源格式、生产匹配共用、两臂 V5 题面与调用边界、独立局区间和学习模板；开发8份日志原件/副本SHA均核同，原85条数据字节未变。\n- 独立 production/tools tsc 均退出0。干净树初测发现新CLI用例假定.cache存在（86过/1失败）；候选已补测试自身创建父目录，重跑相同7文件87项全过。原失败和修复后日志分别保留；本轮87项不冒充开发原117项。\n- 按 Roy #20 上线检查优先指令（评论6331712579），原ops #33/#35 发布队列尚未释放，本轮没有启动完整Vitest。请沿原队列在上线检查之后协调#28完整窗口；届时先核main漂移/输入SHA，完整tsc+Vitest通过，再按原锁与绑定备份/恢复门合main。未新增队列、未改生产。\n\n真实Jev调用0、游戏动作0、新学习条目0；开关未变，真实改善及区间、Roy开关决定、A/B仍未完成。框架/合成测试不能关闭#28或科学父项；本轮不转waiting-release、不登记回收。\n",
+      "createdAt": "2026-10-22T03:43:18Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6332141439",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeW0l_g",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[ops]\n已接 #28 并核原集成员停点；继续保持 review，尚未准入main/live。\n\n21交付叶在 source 83ea9419187 与原候选7087caea9ee逐字节相同，另1叶为新CLI测试创建.cache父目录；原85条字节未变。四项独立检查的原/公开日志共8份SHA核同，生产/tools tsc为0，原定向86过1败和修补后87过分列；开发117项不混算，未冒完整绿。1802输入清单是定向后冻结，不能倒称跑前冻结。\n\n沿既有 #20 优先序：#33实际live组合失败补缺及#35后续发布检查先行，随后由原#28集成员核main漂移/输入SHA、完整tsc+Vitest及原绑定备份/恢复门。未新增检查等待者、完整测试、学习模型或Jev调用，也不合入未全检候选。\n\n原学习模板保留；框架获main准入后，ops沿原两个策略槽核最新模板/输入并派原学习闭环。内容由学习者依据分账来源形成；真实两臂固定回放/独立局区间、Roy开关决定与获准A/B/自然读回均pending。现有V5出牌、V6_COMBAT_ENTRIES/REFLEX off不变；框架和合成测试不关闭父项。\n\n回执 `paper/materials/20261022-1143-ops/issue28-readback.json`；原停点 `paper/materials/20261022-issue28-integrator-review/pending-window.json`。\n",
+      "createdAt": "2026-10-22T03:45:04Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6332163582",
+      "viewerDidAuthor": true
+    }
+  ]
+}

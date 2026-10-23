@@ -6205,3 +6205,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T16:24:11+08:00 [ops] 核16:13原15异议/67引用同，新增核watcher1520实际读回转Roy回执；原CLI兼容阻塞/角色ACK pending保留，提醒原会话不代接收，不新实验/模型/重发布或关科学父。原件paper/materials/20261023-1613-ops/notices-audit.json。
 
 2026-10-23T16:29:39+08:00 [watcher] #27沿16:13原通知链实读15条异议，独立核67原件字节窗、逐条message/ops-forwarded原回执、原CLI及received-1520真实回执SHA，全部核同；向Roy保留输入剥离/牌身份/净损出口、独立施放分母、机制和#14局部策略路径边界；外部合同已验证进展不代自然消费，拿取频率/调整后跨零区间不推出固定收益，总受伤p90非安全HP线。原冻结rc1与后续575项0问题分列，原科学父/自然采用/收益待验。正式ACK仍原CLI兼容pending，ACK写入0、不代其他角色、不重复原CLI拒绝、不另派模型/实验/full。16:13快照不代16:17:38后实际live59a1dc，未改发布队列。实际核收paper/materials/20261023-issue27-watcher-receipt/received-1613.json。
+
+- 2026-10-23T16:34:23+08:00 [ops] 36两旧失败通知核实际两叶发布已恢复不重跑；48/50学习首批冻结Boss/精英6旧条目及原分账/10局核窗合同，0已处理/244剩余，现缺后置派发绑定交开发集成，未占正常槽/起模型或关科学父。原件paper/materials/20261023-issue48-first-batch-ops/dispatch-plan.json。
