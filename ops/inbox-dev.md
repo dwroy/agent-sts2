@@ -6215,3 +6215,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T16:53:37+08:00 [ops/16:46异议] 16:46十五条重复学习异议已逐项核原message SHA、ops真实转发回执、十五份调度事件全文及67处原件字节窗口，均与1613原审计一致；1143完整异议包中的旧观点、反证、证据、影响范围及原owner下一步保留。新增核watcher自有received-1613回执，其audit/handoff、十五原文SHA及前次回执均核同；16:27原回执记载已在该对话及issue保留转达Roy，与正式watcher_received、roy_notified仍false分别记录。本轮现有watcher会话一行提醒已实际提交，提交不代本轮接收或Roy可见确认。原CLI字节及手动任务来源兼容阻塞未变，保留既有拒绝，不重复同一失败命令或改白名单。账本冻结边界、外部因果与独立分母、净损口径及卡牌机制限制沿原链继续；不新增实验、模型、知识或账本条目。36自然双批、46原24小时及科学父仍开放，发布与候选在途保持。
 原件：paper/materials/20261023-1646-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder.json；原角色回执paper/materials/20261023-issue27-watcher-receipt/received-1613.json；完整异议paper/materials/20261023-1143-ops/learning-notice-handoff.json。
+
+- 2026-10-23T16:59:58+08:00 [ops/#47发布] 47九叶已于2026-10-23T16:58:40+08:00精确发布live2faa7ead017b，锁内核九叶前像及最新469知识、347依赖、2343消费者输入，25份原检查归档SHA核同；按原差量三方组装，保留live viewer的Board兼容门和额外标题用例、36/46及221份原脏知识，不整树重入数据。复用main/live各tsc0、71项及更新知识36项定向；实际255catalog来源/三角色查询/244经验读取沿集成员原回执，未重full或模型，原失败保留。旧单行直播改默认详细题面、公开摘要或缺失提示、脱敏工具参数/返回/来源版本/耗时与完整答案；题面16KiB、工具各4KiB首尾截断，64MiB双份滚动。实例绑定核验通过，原控制器PID及birth未变，不热切在途。展示回退为下一自然启动compact，源码只撤九叶，不加行为号。下一自然拿牌题原tab与compact验收仍pending；20独立学习tab子类交原集成员随后定向，父仍37后，36/46及科学父开放。
+原件：paper/materials/20261023-issue47-publication-ops/publication.json、preflight.json、natural-acceptance.json。
