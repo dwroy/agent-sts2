@@ -1,0 +1,336 @@
+{
+  "at": "2026-10-24T02:16:09+08:00",
+  "journal_path": "ops/codex-ops/agent-board.json",
+  "journal_sha256": "e734415e74fae35a81a3c0ef1d8fcb3239d36e1cc45635443d0cdee1acdc0a09",
+  "events": [
+    {
+      "key": "20:watchdog:integrator:40:stall:1",
+      "sent_at": 1792771865.8237374,
+      "role": "integrator",
+      "pane": "wJ:p1HD",
+      "phase": "done",
+      "recovery": {
+        "watch": "20:integrator",
+        "generation": 40,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": 1792771527.431,
+      "conversation_reasons": [
+        "handoff-before-last-turn-end",
+        "owned-process-running",
+        "publication-or-check-lock-held"
+      ]
+    },
+    {
+      "key": "46:watchdog:ops:2:stall:1",
+      "sent_at": 1792772405.7164433,
+      "role": "ops",
+      "pane": "w1H:p8",
+      "phase": "done",
+      "recovery": {
+        "watch": "46:ops",
+        "generation": 2,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": null,
+      "conversation_reasons": [
+        "native-turn-not-verified-ended",
+        "owned-process-running",
+        "publication-or-check-lock-held",
+        "publication-or-check-lock-held",
+        "in-flight-needs-updated-handoff",
+        "unsupported-codex-new-ui"
+      ]
+    },
+    {
+      "key": "37:watchdog:integrator:20:stall:1",
+      "sent_at": 1792772525.6552775,
+      "role": "integrator",
+      "pane": "wJ:p1HD",
+      "phase": "done",
+      "recovery": {
+        "watch": "37:integrator",
+        "generation": 20,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": 1792772131.833,
+      "conversation_reasons": [
+        "handoff-before-last-turn-end",
+        "owned-process-running",
+        "publication-or-check-lock-held",
+        "publication-or-check-lock-held"
+      ]
+    },
+    {
+      "key": "50:watchdog:integrator:5:stall:1",
+      "sent_at": 1792773546.816185,
+      "role": "integrator",
+      "pane": "wJ:p1HD",
+      "phase": "done",
+      "recovery": {
+        "watch": "50:integrator",
+        "generation": 5,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": 1792772656.655,
+      "conversation_reasons": [
+        "handoff-before-last-turn-end",
+        "owned-process-running",
+        "publication-or-check-lock-held"
+      ]
+    },
+    {
+      "key": "47:watchdog:ops:6:stall:1",
+      "sent_at": 1792774087.0378058,
+      "role": "ops",
+      "pane": "w1H:p8",
+      "phase": "done",
+      "recovery": {
+        "watch": "47:ops",
+        "generation": 6,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": 1792773930.282,
+      "conversation_reasons": [
+        "handoff-before-last-turn-end",
+        "owned-process-running",
+        "publication-or-check-lock-held",
+        "publication-or-check-lock-held",
+        "unsupported-codex-new-ui"
+      ]
+    },
+    {
+      "key": "39:watchdog:integrator:14:stall:1",
+      "sent_at": 1792774503.580976,
+      "role": "integrator",
+      "pane": "wJ:p1HD",
+      "phase": "done",
+      "recovery": {
+        "watch": "39:integrator",
+        "generation": 14,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": null,
+      "conversation_reasons": [
+        "handoff-or-native-or-resource-proof-unavailable"
+      ]
+    },
+    {
+      "key": "48:watchdog:ops:4:stall:1",
+      "sent_at": 1792774747.508707,
+      "role": "ops",
+      "pane": "w1H:p8",
+      "phase": "done",
+      "recovery": {
+        "watch": "48:ops",
+        "generation": 4,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": 1792774573.013,
+      "conversation_reasons": [
+        "handoff-before-last-turn-end",
+        "owned-process-running",
+        "publication-or-check-lock-held",
+        "publication-or-check-lock-held",
+        "unsupported-codex-new-ui"
+      ]
+    },
+    {
+      "key": "43:watchdog:integrator:12:stall:1",
+      "sent_at": 1792775165.1282678,
+      "role": "integrator",
+      "pane": "wJ:p1HD",
+      "phase": "done",
+      "recovery": {
+        "watch": "43:integrator",
+        "generation": 12,
+        "kind": "stall",
+        "attempt": 1
+      },
+      "native_ended": null,
+      "conversation_reasons": [
+        "handoff-or-native-or-resource-proof-unavailable"
+      ]
+    }
+  ],
+  "retained_sample_matches": [
+    {
+      "sample": {
+        "at": 1792772405.7164505,
+        "pane": "w1H:p8",
+        "role": "ops",
+        "seconds": 123
+      },
+      "event": "46:watchdog:ops:2:stall:1",
+      "sent_at": 1792772405.7164433,
+      "idle_since_inferred_interval": [
+        1792772281.7164505,
+        1792772282.7164505
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "51:status:waiting-release:34067467244",
+      "previous_pane_sent_at": 1792770956.0436635,
+      "pane_cooldown_end": 1792771556.0436635,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        3.0,
+        4.0
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "retained-raw-idle-within-180s"
+    },
+    {
+      "sample": {
+        "at": 1792772525.655285,
+        "pane": "wJ:p1HD",
+        "role": "integrator",
+        "seconds": 364
+      },
+      "event": "37:watchdog:integrator:20:stall:1",
+      "sent_at": 1792772525.6552775,
+      "idle_since_inferred_interval": [
+        1792772160.655285,
+        1792772161.655285
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "20:watchdog:integrator:40:stall:1",
+      "previous_pane_sent_at": 1792771865.8237374,
+      "pane_cooldown_end": 1792772465.8237374,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        59.831547498703,
+        59.831547498703
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "pane-cooldown-explains-raw-over-180s"
+    },
+    {
+      "sample": {
+        "at": 1792773546.816192,
+        "pane": "wJ:p1HD",
+        "role": "integrator",
+        "seconds": 844
+      },
+      "event": "50:watchdog:integrator:5:stall:1",
+      "sent_at": 1792773546.816185,
+      "idle_since_inferred_interval": [
+        1792772701.816192,
+        1792772702.816192
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "37:watchdog:integrator:20:stall:1",
+      "previous_pane_sent_at": 1792772525.6552775,
+      "pane_cooldown_end": 1792773125.6552775,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        421.16091442108154,
+        421.16091442108154
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "unexplained-after-known-pane-cooldown"
+    },
+    {
+      "sample": {
+        "at": 1792774087.0378149,
+        "pane": "w1H:p8",
+        "role": "ops",
+        "seconds": 124
+      },
+      "event": "47:watchdog:ops:6:stall:1",
+      "sent_at": 1792774087.0378058,
+      "idle_since_inferred_interval": [
+        1792773962.0378149,
+        1792773963.0378149
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "46:watchdog:ops:2:stall:1",
+      "previous_pane_sent_at": 1792772405.7164433,
+      "pane_cooldown_end": 1792773005.7164433,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        4.0,
+        5.0
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "retained-raw-idle-within-180s"
+    },
+    {
+      "sample": {
+        "at": 1792774503.5809834,
+        "pane": "wJ:p1HD",
+        "role": "integrator",
+        "seconds": 181
+      },
+      "event": "39:watchdog:integrator:14:stall:1",
+      "sent_at": 1792774503.580976,
+      "idle_since_inferred_interval": [
+        1792774321.5809834,
+        1792774322.5809834
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "50:watchdog:integrator:5:stall:1",
+      "previous_pane_sent_at": 1792773546.816185,
+      "pane_cooldown_end": 1792774146.816185,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        61.0,
+        62.0
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "raw-over-180s-not-explained-by-pane-cooldown"
+    },
+    {
+      "sample": {
+        "at": 1792774747.5087156,
+        "pane": "w1H:p8",
+        "role": "ops",
+        "seconds": 125
+      },
+      "event": "48:watchdog:ops:4:stall:1",
+      "sent_at": 1792774747.508707,
+      "idle_since_inferred_interval": [
+        1792774621.5087156,
+        1792774622.5087156
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "47:watchdog:ops:6:stall:1",
+      "previous_pane_sent_at": 1792774087.0378058,
+      "pane_cooldown_end": 1792774687.0378058,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        5.0,
+        6.0
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "retained-raw-idle-within-180s"
+    },
+    {
+      "sample": {
+        "at": 1792775165.128277,
+        "pane": "wJ:p1HD",
+        "role": "integrator",
+        "seconds": 423
+      },
+      "event": "43:watchdog:integrator:12:stall:1",
+      "sent_at": 1792775165.1282678,
+      "idle_since_inferred_interval": [
+        1792774741.128277,
+        1792774742.128277
+      ],
+      "idle_since_is_reconstruction_not_original_sample": true,
+      "previous_pane_event": "39:watchdog:integrator:14:stall:1",
+      "previous_pane_sent_at": 1792774503.580976,
+      "pane_cooldown_end": 1792775103.580976,
+      "residual_after_known_120s_idle_and_600s_pane_gates_interval": [
+        61.547301054000854,
+        61.547301054000854
+      ],
+      "residual_is_not_proven_actionable_backlog_latency": true,
+      "classification": "pane-cooldown-explains-raw-over-180s"
+    }
+  ],
+  "hour_notifications_without_retained_idle_sample": [
+    "20:watchdog:integrator:40:stall:1"
+  ]
+}
