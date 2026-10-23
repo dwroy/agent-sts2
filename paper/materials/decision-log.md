@@ -6177,3 +6177,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T15:18:44+08:00 [ops] 原141301三叶未提交候选保留，原full45失败无终局且无进程，持久化0328两审计；普通151302主组已绑定、二组retirement-unverified/75/绑定0交原36，不新模型或冒完成。原件paper/materials/20261023-1509-ops/。
 
 - 2026-10-23T15:29:17+08:00 [ops] 原151302二组空绑定/草稿告警保现场交36；144301五复盘、33账本行、五提案精确持久化，0579纯bug入原队列，本批唯一dataset另核终局；15异议实际转达与正式ACK阻塞分账。原件paper/materials/20261023-1520-ops/。
+
+2026-10-23T15:31:14+08:00 [watcher] #36实读6359677330并独立核普通151302二组原身份：15:29:45原pane/terminal/PID1034144/birth16412055/cwd匹配，原agent仍working；原生session 01a1679b-4956-7843-88b8-99d2c695ef69/turn 01a1679b-d263-7281-8953-bf119b7cf9b4、gpt-6.1-sol/high及完整prompt SHA核同，现有NativeBatch离线前十行accepted1/foreign0/pending0，不回填原bindings0/code75。原attention为unsent human draft，原屏幕未留存，自身提交渲染race仅待原36补固定回归；原生日志记录晚于监视器summary约30s不作此前文件不存在推断。300s降级15:18:18已持久化/通知written，batch awaiting_review；原监督已退/lease单次非阻塞空闲即释放，原模型/pane保留，finish/retirement/replay权限全false。live d1f523bb及46原24h窗不变，36/20/科学父开放，无生产修改/新full/重开模型；材料paper/materials/20261023-issue36-normal151302-integrator/。
