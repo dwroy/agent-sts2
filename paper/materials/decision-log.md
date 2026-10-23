@@ -6350,3 +6350,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:14:09+08:00 [ops] 十六原异议去重、实际送达/集成员实读及转主管窗口核同；正式ACK兼容与缺原件仍pending，不重复拒绝/模型。paper/materials/20261023-2313-ops/unchanged-notices.json。
 
 - 2026-10-23T23:14:44+08:00 [ops] 原集成员新会话01a1694e空闲后已实际送出一次#27接续提醒（agent_prompted），提示16通知/CLI兼容及Roy通知链；只登记发送，不代接收或Roy可见ACK。paper/materials/20261023-2313-ops/watcher-reminder.json。
+
+- 2026-10-23T23:17:07+08:00 [ops] 按预授权仅做codex1就绪预检：登录/目录/key8通过，learner继承service_tier阻塞隔离；保原配置账号及所有准入，未prepare/drain/切换。paper/materials/20261023-codex1-readiness-ops/preflight.json。

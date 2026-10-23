@@ -5006,3 +5006,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T23:10:55+08:00 [ops] Roy优先#51外部对局学习已冻结双Boss/各幕Boss两批计划，并入#48原提炼线；正常复盘/修bug之后、自动策略/旧回刷之前，按实际额度仅启动参数允许ultrafast。原#48来源合同只接自有经验与局号，已交原issue补外部来源、两模板及额度档位，原会话working不另开/注入重复任务。未读玩家标识/敏感字段，未派模型或冒注册原生线程；F48入场与终局快照、版本分母分核。回执评论6368097809/6368098578，计划paper/materials/20261023-issue51-intake-ops/launch-plan.json；待原入口交付后实际派发，科学父及#28回放门保持。
 
 - 2026-10-23T23:14:09+08:00 [ops] 23:13十六通知原文/ops送达证据均核同；原集成员received-2039及转主管514字节窗口仍匹配，不能写成无人接收。正式watcher/Roy ACK仍pending：CLI兼容哈希未变、000402原wrapper缺失；保原拒绝，不代角色登记或称Roy已知。当前原集成员working，后续由原会话依已有回执补正式链，不另起会话或重复实验。证据paper/materials/20261023-2313-ops/unchanged-notices.json。
+
+- 2026-10-23T23:17:07+08:00 [ops] codex1仅预检：两home登录/模型目录可见（gpt-6.1-sol high，brain兼容xhigh），auth均指向本人登录、无全局指令，learner key隔离8项通过；但learner config含service_tier，隔离配置守卫不通过，当前未就绪。未改配置/选择器、未建换号事务或drain、未发模型题；90%触发前先处理该隔离项并复核。原件paper/materials/20261023-codex1-readiness-ops/preflight.json。
