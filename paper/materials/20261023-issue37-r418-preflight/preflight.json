@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-23T21:53:25+08:00",
+  "main": "b0fe8cbd94d5b6a017b85e399539149b76468d4d",
+  "live": "c2a249380bae547fc5545fcd3807dbdff2d58869",
+  "live_release": "V6-R418",
+  "live_behavior_commit": "3db681b6330f50b66e21c28a9ce7a19f154274ab",
+  "source": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+  "remote_source": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+  "latest_issue37_comment": 6353179013,
+  "merge_exit": 1,
+  "preview_tree": "9b68100be363fb1ca6c27d09c16d9616acf3a101",
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in agent/tests/v6-card-option-loop.test.ts",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+  ],
+  "runtime_changed_paths": [
+    "agent/src/eye/jev-prompt-log.ts",
+    "agent/src/reflex/jev/client.ts"
+  ],
+  "blobs": {
+    "agent/src/eye/jev-prompt-log.ts": {
+      "main": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "live": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "source": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8",
+      "preview": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8",
+      "pre25": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8"
+    },
+    "agent/src/reflex/jev/client.ts": {
+      "main": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "live": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "source": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c",
+      "preview": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c",
+      "pre25": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c"
+    }
+  },
+  "shared_test_blob": "1f52768e4418ed48e65c9cf1c6002843e5cade21",
+  "shared_test_unchanged_since_r417": true,
+  "shared_main_clock_contracts": {
+    "afterEach(() =>": true,
+    "samplingNow = 0": true,
+    "samplingNow = 5_000": true,
+    "solver budget exhausted": true,
+    "sampling budget exhausted": true,
+    "budgets.map(b => b.remaining)": true,
+    "[5000, 0]": true,
+    "[0, 5000]": true
+  },
+  "preview_preserves_main_brain_and_knowledge": true,
+  "predecessor_issue_states": [
+    {
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:infra",
+        "status:waiting-release",
+        "area:learning"
+      ],
+      "number": 42,
+      "state": "open",
+      "updated_at": "2026-10-22T14:48:39Z"
+    },
+    {
+      "labels": [
+        "owner:dev",
+        "P2",
+        "type:feature",
+        "status:waiting-release"
+      ],
+      "number": 35,
+      "state": "open",
+      "updated_at": "2026-10-22T03:00:28Z"
+    },
+    {
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:feature",
+        "status:review",
+        "area:brain"
+      ],
+      "number": 50,
+      "state": "open",
+      "updated_at": "2026-10-23T12:19:53Z"
+    },
+    {
+      "labels": [
+        "owner:dev",
+        "P3",
+        "type:feature",
+        "status:review"
+      ],
+      "number": 28,
+      "state": "open",
+      "updated_at": "2026-10-22T03:45:04Z"
+    }
+  ],
+  "queue": [
+    42,
+    35,
+    50,
+    28,
+    37,
+    "20-parent"
+  ],
+  "queue_confirmation_comment": 6364720672,
+  "prior_directed_review": "paper/materials/20261022-issue37-integrator-review/checks.json",
+  "new_tests_run": false,
+  "full_started": false,
+  "candidate_created": false,
+  "source_merged": false,
+  "production_changed": false,
+  "proposed_resolution": "Keep main shared test with #41/#44 complete solver/sampling clocks, budget contrasts and cleanup. Preserve both append-only histories. Rebuild after predecessors; this unresolved preview is not an admission candidate."
+}

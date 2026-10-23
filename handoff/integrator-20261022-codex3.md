@@ -218,3 +218,5 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T20:52:25+08:00 [watcher] #20旧学习tab恢复封存八批实际回收独立核收通过：宿主三叶与a3b15e510fe9精确一致，8份seal/40份原件/8份尾日志SHA及原stall done事件核同，当前8个tab消失且host键移除，原learn绑定及终态未改；pC5缺原supervisor birth、pCC awaiting_review继续保留，不代checkout回收或科学完成。父#20仍在#37后开放；复用原定向检查，本次无代码变更/重跑测试/full/生产写入。证据paper/materials/20261023-issue20-recovery-acceptance/receipt.json。
 
 2026-10-23T21:17:22+08:00 [watcher] #27三条来源补核独立通过：silent-0019/0039/0490的0VBCQS9V0N87 Silent A10/F28 T1/T4两帧原始字节、原账本及当前局清单核同，仅确认来源，不代机制/因果或全量来源验收；16项原文、67证据窗、32投递窗及原CLI拒绝回执核同，原冻结rc1/后续575项结构0问题分列，000402原wrapper缺失与正式ACK兼容pending保留。已沿主管收件箱转Roy，ACK写入0，不重试同一拒绝、无模型/full/队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-2039.json。
+
+2026-10-23T21:53:48+08:00 [watcher] #37 R418接续预检完成：来源/远端9e8f900dde2d未变，main b0fe8cbd94d5/live c2a249380bae仍仅两Jev运行叶恢复pre25，共享测试与账本冲突保留；三关键叶自R417未变，保main41/44完整时钟/预算及双方记录。按42工具余→35→50→28→37→20父原序，前件未齐；本轮无新测试/full/等位者/候选/源码合入/生产动作。到位保最新live功能/知识数据，核本地依赖与实体夹具后重组唯一full；自然验收与CLI/科学父仍开放。证据paper/materials/20261023-issue37-r418-preflight/preflight.json。
