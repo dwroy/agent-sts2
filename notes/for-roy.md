@@ -5030,3 +5030,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-24T00:15:31+08:00 [ops] #20最终kit50565fd已安装核同精确树，原分钟cron/registry/控制/缓存保留，/new仍shadow。入口一小时观察仍截至01:07:46；修正后首个真实影子样本00:15:05起单独满一天，最早10-25 00:15:05交主管核准。#42原full保留未重跑。原件paper/materials/20261024-issue20-final-kit-deploy-ops/installation.json、first-final-observation.json。
 
 - 2026-10-24T00:16:54+08:00 [ops] #36两批同turn原生完成已核，原reconcile仍75/foreign，退场授权仍false；原流程finish/seal被挡，保留原PID/会话/旧75，等原#36严格校验与恢复入口再收尾。新证据paper/materials/20261024-midnight-native-ops/terminal-readback.json，评论6369442769。
+
+- 2026-10-24T00:31:58+08:00 [ops] #42工具两叶净组合唯一full已实际通过：660文件6420过/2skip/零失败、tsc0；原固定外部证据消费者通过，实际库15类读回无错误但无外部条目，自然采用待核。已沿原play3457576挂自然边界发布，阶段waiting-original-natural-terminal；只持自有下一局准入，不停本局，不重跑full、不带#35。原件paper/materials/20261024-issue42-publication-ops/check-acceptance.json、publication-state.json。
