@@ -1,0 +1,8 @@
+2026-10-23: The first diagnostic.py run exited 1 before writing diagnostic.json.
+AssertionError: ('01a165af-bd07-70d3-b637-3701f88fa7a7', 0)
+The reader assumed every completed Codex thread retained its base transcript.
+An expanded filename lookup also exited 1: no original or fork remained for the first completed thread.
+The deployed close path removes a completed thread and its forks (codex-session.ts, close lines 788-794).
+Corrected only this diagnostic reader to record missing native metadata explicitly and inspect retained
+current-run metadata; the brain.jsonl tool offers and original offline transport receipts remain available.
+No product source, production state, test expectation or game action changed.
