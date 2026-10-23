@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-23T13:13:08+08:00",
+  "state": "publication-reconciled-await-first-natural-new-batch",
+  "actual_live": "c707d5c903c03de3bc8d8cb2864f643b59b254a6",
+  "source_leaves_verified": 15,
+  "hosting": "on",
+  "brain_view": "herdr",
+  "inflight_from_before_activation": {
+    "20261023-124241-strategy-proposal": {
+      "state": "running",
+      "pid": 328703,
+      "pid_same_as_activation": true
+    },
+    "20261023-124241-s2-strategy-proposal": {
+      "state": "running",
+      "pid": 328896,
+      "pid_same_as_activation": true
+    },
+    "20261023-124301": {
+      "state": "running",
+      "pid": 331766,
+      "pid_same_as_activation": true
+    }
+  },
+  "new_batches_since_activation": [],
+  "acceptance": {
+    "native_nonempty_bindings": "pending",
+    "automatic_completion": "pending",
+    "timeout_fallback_not_triggered_or_correct": "pending",
+    "slot_release": "pending",
+    "next_batch_dispatch": "pending"
+  },
+  "actual_issue": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6357912956",
+  "publication_record_commit": "4da728070096930e112c3034340cda9de28e90c8",
+  "evidence": [
+    {
+      "path": "paper/materials/20261023-issue36-p0-publication-ops/publication.json",
+      "sha256": "4f907ed1e80be49027f0d41b5277ac2e3ae983e0eed34d643c95601a6f4637a0"
+    },
+    {
+      "path": "paper/materials/20261023-issue36-p0-publication-ops/activation.json",
+      "sha256": "42b679fe805d2eeb2187e06ad6c2329ae25b656b3247f41c05c46ab14add409c"
+    },
+    {
+      "path": "paper/materials/20261023-issue36-p0-publication-ops/natural-acceptance.json",
+      "sha256": "a144a84827163982d9e2b1fc373938cb84f6b92a9995b70327041f14a2d25c15"
+    },
+    {
+      "path": "paper/materials/20261023-issue36-p0-publication-ops/continuation.json",
+      "sha256": "fff16c1cd07df63e536d5e5fe1e507a867992b4774a26ca09595f51af7bbd15e"
+    },
+    {
+      "path": "paper/materials/20261023-issue36-p0-publication-ops/actual-issue-readback.json",
+      "sha256": "f92059c07037da3f1eaba21a0f7bbc1f496507622d0407b0722b4f2f0994e627"
+    }
+  ],
+  "new_full_model_game_task_starts": 0,
+  "scientific_parents_closed": false,
+  "other_role_ACKs_written": false,
+  "next_step": "Next actual strategy-done/fix-done/learner event: compare against activation.registered_before_on, verify native binding receipt for first genuinely new on-mode batch; later inspect completion/timeout/slot/next dispatch. Do not count old stdio batches."
+}
