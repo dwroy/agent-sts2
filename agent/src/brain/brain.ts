@@ -43,6 +43,7 @@ import { DshEngine } from "./engines/dsh.js";
 import { buildKnowledgeTools } from "./tools/agent-knowledge.js";
 import { systemRules } from "./llm/deepseek.js";
 import { memoryWithoutLessons } from "./knowledge.js";
+import { isConstructionQuestion } from "../memory/construction-log.js";
 import { attachOpenBook } from "../knowledge/open-book.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { attachQueryGuidance } from "./tools/query-guidance.js";
@@ -298,6 +299,12 @@ export class Brain {
     const runId = typeof liveRun === "string" ? liveRun : "";
     // Legacy fixed-data adapters retain their historical prompt layout.
     const agentMode = this.router.knowledgeAgent;
+    const combatQuestion = isObject(this.context?.state) && this.context.state["in_combat"] === true;
+    if (agentMode && !combatQuestion && isConstructionQuestion(label) && spec.schema.properties?.["reason"]) {
+      // Reuse the answer already requested; truncation at the journal boundary never causes a re-ask.
+      spec = { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties,
+        reason: { type: "string", description: "一句中文构筑理由，不超过20字" } } } };
+    }
     // Options and the question take precedence over background deck references under the byte cap.
     if (!agentMode && isObject(payload)) {
       const enriched = attachOpenBook({ options, question, payload }, { directory: this.context?.knowledgeDir });

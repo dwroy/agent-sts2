@@ -40,6 +40,7 @@ default.code_dir: {{project_root}}/.worktrees/live
   - `runs.jsonl`：run_id、ended、victory、floor、ascension、code（代码版本）、tokens、ds_cache_hit、death_fight 等；
   - `decisions.jsonl`：每条有 run_id、floor、turn、label、decider、chosen、rationale、confidence、fallback、usage、journal、result；
   - `run-plans.jsonl`：run id 在 `run` 字段；
+  - `construction-log.jsonl`：按 `run_id` 读最后一条快照，`entries` 是本局已确认的改牌组动作与跳过（层、动作、牌/当时选项、≤20字理由、来源），`omitted` 是中间省略条数；开头4条及最近36条保留。SL恢复改变记录时也追加快照，旧尝试原行仍保留；省略或缺记录时回查 `states/decisions`，不把短理由当成已验证规则或推理全文；
   - `deepseek-reasoning.jsonl`：**没有 run id**，按这局第一条到最后一条决策的时间窗（decisions.jsonl 的 ts）抽；
   - `states.jsonl`：大文件；新版 state.run_id 可按局号流式抽取，旧帧按 session / 时间窗核对；
 - 这些文件都很大，**只能按 run id grep，或者按字节偏移 seek 后流式读**（`grep -F <run id>`、`tail -c`、`dd skip=`、Python 按偏移读都行）。不许整份 cat，不许整份读进内存，不许用 Read 工具打开整个大文件。

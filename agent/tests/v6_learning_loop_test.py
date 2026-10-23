@@ -89,6 +89,16 @@ class IdentityTest(unittest.TestCase):
             put(d / 'decisions.jsonl', {'run_id': RUN})
             summary = summarize(d, [RUN])
             self.assertEqual(summary['runs'][RUN]['decision_count'], 1)
+            self.assertNotIn('construction_log', summary['runs'][RUN])
+            abandoned = raw({'run_id': RUN, 'entries': [{'action': '拿', 'cards': 'future'}], 'omitted': 0})
+            restored = raw({'run_id': RUN, 'entries': [], 'omitted': 0})
+            foreign = raw({'run_id': OTHER, 'entries': [RUN], 'omitted': 7})
+            (d / 'construction-log.jsonl').write_bytes(abandoned + restored + foreign)
+            latest = summarize(d, [RUN])['runs'][RUN]['construction_log']
+            self.assertEqual((latest['entry_count'], latest['omitted']), (0, 0))
+            self.assertEqual(latest['ref']['offset'], len(abandoned))
+            self.assertEqual(latest['ref']['bytes'], len(restored))
+            self.assertEqual(latest['ref']['sha256'], hashlib.sha256(restored).hexdigest())
             for s in ('jev-prompts', 'v6-build'):
                 self.assertEqual(summary['runs'][RUN][s]['status'], 'missing')
                 self.assertIsNone(summary['runs'][RUN][s]['count'])

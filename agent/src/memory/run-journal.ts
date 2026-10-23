@@ -30,6 +30,7 @@ import { asArray, asRecord, bool, num, str, type JsonValue } from "../core/util/
 import { deckEntries } from "./deck.js";
 import { deckProfileLine } from "./deck-profile.js";
 import type { Decision, RememberedMap, ResolvedAction, ScreenMemory } from "./types.js";
+import { constructionLogView, emptyConstructionLog, isConstructionQuestion, observeConstruction, recordConstruction, renderConstructionLog, type ConstructionLog, type ConstructionLogView } from "./construction-log.js";
 
 /** One decision this run: every DeepSeek decision, plus the key non-combat picks of Jev and code. */
 export interface JournalChoice {
@@ -102,6 +103,8 @@ export interface RouteRecord {
  * terse line in `history` (floors left behind) or `this_floor` (the floor the run is on).
  */
 export interface RunMemory {
+  /** Bounded, run-local construction choices; carried as state, never as learned rules. */
+  construction_log?: string;
   /**
    * The current act, stable until the next act: its elites and dangerous hallway fights from the monster
    * DB (the map ahead), the act boss and its monster-DB entry (measured HP, moves, our record).
@@ -154,6 +157,8 @@ export interface QuestionContext {
 export type JournalChange = "none" | "mark" | "items";
 
 export interface JournalEntry {
+  executed?: boolean;
+  planRef?: string;
   label: string;
   by: string;
   choice: string;
@@ -275,6 +280,18 @@ const SOURCE_BY_SCREEN: Record<string, string> = {
 type Counted = Map<string, { name: string; count: number }>;
 
 export class RunJournal {
+  private construction = emptyConstructionLog();
+  constructor(private readonly onConstructionLog?: (runId: string, log: ConstructionLogView) => void) {}
+
+  constructionSnapshot(): ConstructionLog { return structuredClone(this.construction); }
+  restoreConstruction(snapshot: ConstructionLog): void {
+    this.construction = structuredClone(snapshot);
+    this.publishConstruction();
+  }
+  /** Also called once after log replay, which suppresses historical writes. */
+  publishConstruction(): void {
+    this.onConstructionLog?.(this.runId, constructionLogView(this.construction));
+  }
   runId = "";
   choices: JournalChoice[] = [];
   /** Every fight this run. */
@@ -323,6 +340,8 @@ export class RunJournal {
     const items = this.itemSignature();
     const mark = floor === null ? "" : JSON.stringify(this.floors.get(floor) ?? null);
     this.syncRun(state);
+    const constructionChanged = observeConstruction(this.construction, state);
+    if (constructionChanged) this.publishConstruction();
     if (context.knowledge) this.knowledge = context.knowledge;
     if (state.run) {
       this.trackFight(state);
@@ -331,7 +350,7 @@ export class RunJournal {
     }
     this.trackSilentHpRecovery(state);
     if (context.screenMemory) this.trackRoute(state, context.screenMemory.routePlan);
-    if (this.itemSignature() !== items) return "items";
+    if (constructionChanged || this.itemSignature() !== items) return "items";
     return floor !== null && JSON.stringify(this.floors.get(floor) ?? null) !== mark ? "mark" : "none";
   }
 
@@ -341,13 +360,14 @@ export class RunJournal {
    * record, potions and resource changes are gone with it.
    */
   snapshot(): unknown {
-    const { knowledge: _knowledge, ...data } = this as unknown as Record<string, unknown>;
+    const { knowledge: _knowledge, onConstructionLog: _onConstructionLog, ...data } = this as unknown as Record<string, unknown>;
     return structuredClone(data);
   }
 
   /** Back to a snapshot() of this journal (the knowledge reference is kept). */
   restore(snapshot: unknown): void {
     Object.assign(this, structuredClone(snapshot));
+    this.publishConstruction();
   }
 
   /** The map node type of the room on `floor` as chosen on the map ("Monster", "Elite", "Unknown", "Boss", ...), or null. */
@@ -379,6 +399,8 @@ export class RunJournal {
   /** Called once per executed decision, with the state it was decided on. */
   record(state: GameState, entry: JournalEntry): void {
     this.syncRun(state);
+    recordConstruction(this.construction, state, entry);
+    this.publishConstruction();
     if (entry.intent?.action === "choose_map_node") {
       const node = asArray(asRecord(state.raw["map"])["available_nodes"])
         .map(asRecord)
@@ -609,6 +631,7 @@ export class RunJournal {
     const runId = str(state.raw["run_id"]);
     if (!runId || runId === this.runId) return;
     this.runId = runId;
+    this.construction = emptyConstructionLog();
     this.choices = [];
     this.fights = [];
     this.floors = new Map();
@@ -637,6 +660,7 @@ export class RunJournal {
       history: this.renderHistory(state, (floor) => floor < current),
       now: question.factsCovered ? "" : this.renderNow(state, knowledge, context),
       this_floor: this.renderThisFloor(state, current),
+      ...(!state.in_combat && isConstructionQuestion(question.label ?? "") ? { construction_log: renderConstructionLog(this.construction) } : {}),
       route: this.renderRoute(state),
       lookahead: renderLookahead(state, context.lastMap, this.position),
       knowledge: renderKnowledge(state, question),

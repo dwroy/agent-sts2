@@ -33,6 +33,7 @@ import { observeSilentSkittish } from "../reflex/silent-skittish.js";
 import { noteFightReplay, observeFightPlays } from "../reflex/fight-plays.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.js";
 import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
+import type { ConstructionLog } from "./construction-log.js";
 import { createScreenMemory, type AskDecision, type Decision, type RememberedMap, type ScreenMemory } from "./types.js";
 
 type Row = Record<string, JsonValue>;
@@ -315,10 +316,13 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       if (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) && typeof (cardValue as Record<string, unknown>)["fight"] === "string") memory.thiefCardValue = cardValue as unknown as NonNullable<ScreenMemory["thiefCardValue"]>;
       // Only an executed decision is recorded (a failed action, or a paid decision the board moved past
       // before it was sent, "not dispatched", is logged, not recorded).
+      if (decision["construction_restore"] && str(decision["result"]).startsWith("not dispatched: SL reloaded")) {
+        journal.restoreConstruction(decision["construction_restore"] as unknown as ConstructionLog);
+      }
       if (/^(failed|not dispatched)/.test(str(decision["result"]))) continue;
       options.beforeRecord?.(state, decision, journal, memory);
       const entry = journalEntry(decision);
-      journal.record(state, entry);
+      journal.record(state, { ...entry, executed: !str(decision["result"]).startsWith("shadow") });
       // The node a logged map move chose (the rooms after it have no map position), as the live loop notes it.
       rememberChosenNode(memory, state, entry.intent);
       noteFacing(memory, state, entry.intent);
@@ -344,7 +348,7 @@ export function journalEntry(row: Row): JournalEntry {
   const intent = (row["chosen"] ?? null) as JournalEntry["intent"];
   const logged = row["journal"];
   if (logged && typeof logged === "object" && !Array.isArray(logged)) {
-    return { label, by, choice: str(logged["choice"]), reason: str(logged["reason"]), asked: true, intent };
+    return { label, by, choice: str(logged["choice"]), reason: str(logged["reason"]), ...(str(logged["planRef"]) ? { planRef: str(logged["planRef"]) } : {}), asked: true, intent };
   }
   const deepseek = row["deepseek"] ?? undefined;
   const escalation = row["escalation"] ?? undefined;

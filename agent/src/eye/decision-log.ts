@@ -12,6 +12,8 @@ import type { BrainDecider } from "../brain/types.js";
 import type { JsonValue } from "../core/util/json.js";
 
 export interface DecisionRecord {
+  /** The run-local construction checkpoint after a successful SL reload (replayed even without dispatch). */
+  construction_restore?: JsonValue;
   v6_card?: JsonValue;
   v6_unknown_to_brain?: JsonValue;
   time_budget?: ReturnType<import("../core/decision-budget.js").DecisionBudget["record"]>;
@@ -126,7 +128,7 @@ export interface DecisionRecord {
   /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */
   observed_ts?: string;
   /** What the run journal filed for this decision (the choice text and the model's raw reason), for replay. */
-  journal?: { choice: string; reason: string };
+  journal?: { choice: string; reason: string; planRef?: string };
   /** The route plan this decision made (map/route-plan, map/route-change), so a restart resumes it instead of re-planning. */
   route_plan?: JsonValue;
   /** A route review that rode on this question (card reward, rest site): {answer, outcome, reason, invalid?, plan_ref?, plan_step?}. */
