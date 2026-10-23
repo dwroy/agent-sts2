@@ -4966,3 +4966,9 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T19:52:28.872722+08:00 [ops/193545原收尾回读] 193545修复批在TERM恢复后已于原生会话正常结束：native-task-complete、rc0、进程已退，原wrapper实际写回failed/rc0、merged=null。报告无新增修复、提交或源码，已有工程候选仍沿原owner等待宿主准入；本批tsc0及定向三文件三项通过，首次配置加载EROFS原件保留，不把定向结果称完整检查。独立复核空修复验收仍不通过，冻结main基线与实际live的可执行源不同，不能据此伪造合入或把旧源码差异当新测试失败；没有覆盖源码、重full、回滚或续派模型。现经验更新与一组策略的原监督仍存活，原生已绑定high，继续按原批次运行。策略二组保持awaiting_review与沙箱启动失败，旧174301/175037及124241/151302待核原件也不关闭。本轮恢复的是正常派发和监督链，科学父、策略收益、原18局对照及周期双库自然验收继续开放。
 原件：paper/materials/20261023-1926-ops/final-runtime-readback.json、accepted-native-contexts.json。
+
+- 2026-10-23T20:08:45.332513+08:00 [ops/1956事件去重与通知] 本轮41件按原件去重，171301四局复盘唯一dataset的rc0、原238bf提交祖先及十四输出blob/字节/SHA逐项核同，未重dataset、finish或模型；原回收门仍因报告含已知0461旧bug返回postmortem not settled，保持现场与父要求。三十一次通知去重为十六项，旧十五项原文SHA与18:04审计相同，CLI兼容拒绝未变，不重试同一失败或代填watcher/Roy ACK。新增000402缺原wrapper日志，注册和输入SHA仍同，211项旧scratch归档未包含绑定JSONL；恢复exp checkout不能代原日志恢复，保原thread/source/attempt及blocked，不以战斗片段或native文件顶替。完整问题、证据、旧观点差异与下一步已写16项交接及27实际评论，真实双收件箱回执核回；现原watcher工作中，未发送新的会话提醒，原通知链继续pending，不称Roy已知，也不新开会话或定时器。
+原件：paper/materials/20261023-1956-ops/events-disposition.json、dataset-171301-audit.json、notices-audit.json、notice-handoff.json、missing-original-log-review.json、watcher-reminder.json；27实际评论6364412342。
+
+- 2026-10-23T20:08:45.332513+08:00 [ops/首自然技术读回] 40周期四叶后的首原自然cycle已实际完成：同worker双库同步两步均nice19/rc0，manifest时间19:26:21及19:26:37，完整cycle无失败。两个原解释器以no-sync分别查库，均970局、965个已结束局，最新结束CST19:23:29.807；本轮没有再同步、刷新、重full或改行为号，原105条人工补齐另账。R418首自然局GV9当前切片三十三题均接受，策略/reflex/经验查询33/33/18次、非空命中10/5/10次，真实ID与引擎互斥题型分母分账；工具执行耗时与总延迟分列，fallback零。十四道拿牌题有可选提示及四十二个候选ID，外部统计工具仍零调用，保采用缺口。原十八局精确切点、完整局和收益验收仍待，不关科学父。旧193545启动注意事件沿上轮恢复回执去重，经验监督仍在、修复原生0但空修复门failed/0保留；194330二组沙箱启动失败仍待核，不重派或手工回收。
+原件：paper/materials/20261023-1956-ops/periodic-natural-acceptance.json、natural-query-cut.json、natural-query-report.json、natural-query-observation.json；40评论6364413094、49评论6364484400、26评论6364485033。
