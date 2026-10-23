@@ -1,6 +1,6 @@
 state: clear-ok
 issue: 27
-updated_at: 2026-10-24T01:50:17+08:00
+updated_at: 2026-10-24T01:51:58+08:00
 
 # 集成员当前交接
 
@@ -19,6 +19,8 @@ updated_at: 2026-10-24T01:50:17+08:00
 - 当前 #20 为 `status:review`，独立分钟子项已核但父仍待依赖；其余积压 #50、#28、#37、#39、#43 均有依赖。已完成的独立核验见 `paper/materials/20261023-review-backlog/review.json` 与本轮读回；不重复旧测试或提前关闭。
 
 ## 已完成与接续位置
+
+- 2026-10-24T01:51:58+08:00 #27已实发并逐字远端读回6371236059，原ACK/Roy已读pending不变。#36文档工作树原保留器complete登记accepted，source24514d333080/main d20d7a4ddc3d，live_required=false；仅登记、未删除工作树，原调度器后续按空闲/产物门回收。原稀疏add拒材料后用--sparse显式保存八份记录，文档与证据均有保留分支提交。
 
 - 2026-10-24T01:50:17+08:00 #27原16通知核收：67证据窗、32ops投递窗、本人received/relay-2313及实际主管投递核同，16队列已移delivered但SHA同；CLI/rc2拒绝及000402原wrapper缺失不变。材料paper/materials/20261024-issue27-watcher-receipt/；ACK写0、Roy本人接收未证、科学父保留，未重派/重测。
 
