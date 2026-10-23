@@ -1,0 +1,49 @@
+{
+  "title": "经验提炼为策略与 rk：并入策略提炼流水线，过往经验逐批回刷",
+  "state": "OPEN",
+  "body": "[Claude] 转 Roy：经验提炼为策略与 reflex knowledge，并入策略提炼流水线，过往经验逐批回刷（Roy 10-23 定）\n\n## 起因\n\n- 经验库 `knowledge/characters/silent/experience.json` 有 244 条（约 6.9 万字），多是带局号、回合与数字的案例笔记（例：刀刃陷阱条目），不是“情境 → 做法”；大脑只能经 `kb_experience` 自取，实际每题平均 0.3 次工具调用，构筑类题多数一次不查。\n- 经验更新任务 10-13 之后没再跑（最后一批 `20261013-100759-experience-update` exit 1），经验库自 10-18 未变。\n- 文字策略库（#27）上线仅 3 条；Jev 的 reflex 85 条，按怪物的打法条目在 #28。\n\n## Roy 的决定\n\n1. 经验进一步提炼为**策略条目**（大脑用，#27 格式）和 **reflex knowledge（rk）**（Jev 用，#28 格式与回放门槛），**并入策略提炼流水线统一做**，不另起一条经验更新链。\n2. 过往经验统一回刷，但**不能卡住正常流水线**：逐批放入，回刷批次排在正常学习之后、按现有重任务队列与槽位让行。\n3. 大脑侧的查询引导另见配套 issue（不把条目直接塞进题面）。\n\n## 要做的\n\n1. 流水线：复盘与新局证据照常进入提炼；新增“经验 → 策略 / rk”的提炼步骤，输出分别走 #27、#28 的格式、证据与上线流程。\n2. 回刷：244 条旧经验按 scope（Boss、精英、卡牌、遗物、药水、普通战、通用）分批，每批小到能在一个正常批次内完成；先做死得最多的 Boss 与精英。回刷批次不占用正常复盘/策略批次的位置。\n3. 每条带触发条件、做法文字、证据（局号或外部来源与版本）、可信度与反例；观察结果标 `design=observational`；冲突保留。旧经验条目被提炼后标明去向，不删除。\n4. 条目数量适度、可检索：同一情境合并，不按单局堆条目。\n\n## 验收\n\n- [ ] 流水线改动经集成员定向核验后上线；正常批次的派发间隔与产出不因回刷下降（上线前后各 24 小时对比）。\n- [ ] 首批回刷（Boss 与精英）产出的策略与 rk 条目上线；rk 条目按 #28 的回放门槛。\n- [ ] 回刷进度可查：已处理 / 剩余条数、每批耗时。\n\n## 负责人\n\nowner:learner（提炼与回刷，经 ops 按学习协议派发）；流水线代码改动由开发会话做，交集成员核验。与 #27、#28、#42 相关。\n",
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvLcQ",
+      "name": "owner:learner",
+      "description": "learner batch (game knowledge from runs only)",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNTA",
+      "name": "P1",
+      "description": "high",
+      "color": "d93f0b"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPDw",
+      "name": "type:research",
+      "description": "analysis or experiment, no production change",
+      "color": "7057ff"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvQ8Q",
+      "name": "status:waiting-release",
+      "description": "accepted, waiting for live publication at a run boundary",
+      "color": "5319e7"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvSCw",
+      "name": "area:learning",
+      "description": "learning loop and refresh",
+      "color": "bfd4f2"
+    }
+  ],
+  "comments": [
+    {
+      "url": "https://github.com/dwroy/agent-sts2/issues/48#issuecomment-6362251983",
+      "author": "dwroy",
+      "body": "[watcher] #48 补交准入通过，16 叶精确合 main `a163d8897d08164cb95431ccad8d5fa9ebb010ea`，交原 ops 核宿主自然采用；学习父保持开放。\n\n实读 6362136822 / dbb16bd65。原 14 生产叶核同，仅追加两测试叶；当前 main 0c85d6d9 上 tsc0、两 shell0、wrapper17、原定向11文件163项通过，2625输入SHA前后不变。测试夹具收尾等待真实close（上限2s），250ms延迟两正例与5000ms拒绝负例同时通过；ordinary-close原六Python场景及断言保留、各自15s。原首败、无48基线超时及受控前2败均保留，不据本次绿称全局稳定。\n\n发布输入见 `paper/materials/20261023-issue48-sync-admission/main-assembly.json`；47个脚本/模块闭包齐全（前条记录的46是计数笔误，以review.json逐项47为准），包括learner_tabs.py。实际game live仍2faa7ead，469份知识只读保留；原47自然验收、46原24h、36旧失败/原身份、27正式ACK CLI兼容门均不变。\n\n采用路径是宿主main原调度入口；来源enabled=false，请原ops核16叶与依赖后按原授权开启，下一原tick沿正常复盘/策略优先、重任务槽/锁/lease/账号/磁盘门派发，不重开旧线程/抢槽。不要把16叶裸拷到game live。当前未派模型/开游戏/写live，未改变开关。实际入口采用、首次原生绑定/真实产出、策略/rk回放上线、自然消费者/收益以及实际发布T前后各24h吞吐均待原ops核，48/50科学父保持。\n\n下一49+26合成一次唯一full，再42余→35→50→28→37→20父。材料及解压日志经gitleaks；[独立复核](https://github.com/dwroy/agent-sts2/tree/a163d8897d08164cb95431ccad8d5fa9ebb010ea/paper/materials/20261023-issue48-sync-admission)，原失败目录不改写。\n"
+    },
+    {
+      "url": "https://github.com/dwroy/agent-sts2/issues/48#issuecomment-6376508490",
+      "author": "dwroy",
+      "body": "[ops]\n#48接续已核到R425：冻结首批仍可派的来源合同通过，但未出现真实回刷批次；父要求保持开放。\n\n生产source()只读校验18份冻结原件/同SHA持久副本通过，原244条与首6条一致；enabled=true，learn.json尚无backfill_source批次或strategy_backfill初始化，当前已处理0/剩244、native cursor0、耗时null。只读进度投影：`paper/materials/20261024-issue48-resume-0704-ops/progress-readonly.json`；没有写调度游标或把冻结当处理。\n\n前置状态已更新：#52四脚本宿主门已部署，不再写“等52开发/full”；#28工程框架已实际发布R425，冻存rk任务与当前任务SHA仍同d55c6287…，但真实两臂/条目与反证/Roy开关/A-B仍开放。原work-spec的准备时点文字保留，不改冻结输入。#51外部首两批在自有回刷前，交替候选原唯一full及宿主部署尚在途；#48仍按Roy要求排正常和外部之后，未强派或改优先级。\n\n另有须原集成员核父验收的显式合同缺口：当前普通`learner/tasks/strategy-proposal.md`没有brain-strategies、策略/rk、经验提炼或#48输出步骤；代码只在`strategy_backfill_jobs.task_file()`的专用附文中约束旧ID→strategy/rk去向。这是静态显式要求核验，不断言普通学习绝不会生成策略；请核“新局证据并入正常策略提炼”是否已完整交付，缺项沿原开发/集成入口补齐，不把后置回刷可派替代该父验收。原模板SHA与专用附文定位已保存。\n\n完整后24h仍到今天18:19:29才核；本轮未做截断比较/收益声明，停派、P1优先和失败重试须分账。无新模型/full/tick/游戏/调度状态写入，不因报告/队列或部署关闭父。原件`paper/materials/20261024-issue48-resume-0704-ops/{readback,progress-readonly}.json`、`backfill-task-appendix.txt`。\n"
+    }
+  ]
+}

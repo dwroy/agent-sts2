@@ -1,0 +1,202 @@
+
+learner/tasks/strategy-proposal.md:23
+23: 工作树：{{worktree}}；基线：{{base_branch}}；日志（只读）：{{logs_dir}}；临时文件只放 {{scratch}}。
+24: 
+25: ## 摘要优先（Roy 2026-10-18 用量节省）
+26: 先运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，只把该摘要及本批提案/已有复盘作为初始材料。摘要是事实索引，不提供游戏结论；需要验证的机制、资源、关键决定仍须按原始 offset/bytes/SHA 定位读取原文，并保留反例和缺失。不要把整份 `states.evidence.jsonl` 或本局所有 state 灌进上下文；脚本可完整流式分析，模型只读所需窗口和结构化结果。冻结专项输入/原请求若规定额外完整证据，仍全部覆盖，不能用摘要替代科学验收。
+27: 
+28: ## 1. 开工与证据
+29: - 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净并核第 1.2 节身份；已绑定纯研究保持 dispatch_base，不合入后续 main。其他提案仍 git merge --no-edit {{base_branch}}；冲突就停下回报。
+30: - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
+31: - 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
+32: - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
+33: - 提取原日志用共用入口：`python3 {{worktree}}/learner/extract_evidence.py --logs "{{logs_dir}}" --output "{{scratch}}/evidence" --runs "<本批核实局号，逗号分隔>"`。身份读取包括 run-plans 的 `run`、其他流的 `run_id`／`state.run_id`／fingerprint.run；不把正文提及当所属局，冲突身份拒收。保存各流 source_size、逐行 offset/bytes/SHA 与计数；复核旧截点用 `--streams run-plans --source-size <原字节截点>` 并另存输出，不覆盖旧报告或零行初稿。0 行仅说明该截点未选到，不据此断言原日志缺失。
+34: 
+35: ## 1.1 派发提案与补链
+36: 本次调度批次为 {{batch}}。从 {{project_root}}/ops/codex-ops/learn.json 只读对应行，核对角色和工作树；若存在 proposal_ids，只处理这些已领取的 id，不领取其他批次或扩展到整条队列。batch=manual 时保持原手动证据任务。
+37: 只读本次调度 batch 的 proposal_ids / proposal_repair。逐项读取专用队列的角色、证据、账本和保存的 Markdown，不忽略其他待处理 id。补链任务要核对原经验或已追加复盘，补提案与账本链接，不重复写历史复盘。最终每个派来的 id 都有 proposal_results：implemented/duplicate 带实际 live 祖先源码 commit 与理由；waiting 带具体缺数据理由，保留待新局重派。
+38: 
+39: 没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+40: 
+
+learner/tasks/strategy-proposal.md:61
+61: ## 2. 边界与实现
+62: - 依据已有证据提出并实现策略；涉及 Roy 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
+63: - 怪物血量与伤害按当前进阶从数据库取，第一个样本起就用；房间代价保留 5 个样本门槛。
+64: - 出牌、药水、SL、终局价值规则按本角色实盘证据决定；Roy 2026-10-07 已授权学习者有理由和数据时修改既有人定规则，原规则不是不可修改的前提。
+65: - 推演相同的选项标并列；DeepSeek 负责构筑、路线和休息，Jev 执行战斗；代码提供事实及参考排名，不删选项。
+66: - 每项实现单独提交，写明局号、层、回合、账本 id。代码注释英文，模型知识文本中文；铁甲行为若变化说明证据和原因。
+67: 
+68: ## 3. 验证与记录
+69: - 保存原源码副本时在 {{scratch}} 使用 .txt/.patch 等材料扩展名，保留原字节；不要把临时副本命名为可执行 .ts，避免导入检查将它误当生产源码。
+70: - 用固定局面测试，不依赖刷新的知识 JSON，不调 LLM 或网络。源码撤掉时测试必须失败，恢复后通过，两次结果写回报。
+71: - mkdir -p "{{scratch}}"；export TMPDIR="{{scratch}}"；export PATH=$HOME/.local/node/bin:$PATH；每次代码提交前在 agent/ 跑 bash tools/test-sandbox.sh，退出码为 0。高负载超时重跑一次并报告。
+72: - 提交前 gitleaks 扫描，git commit（使用本机全局身份，不设仓库级 user.*），Co-Authored-By 写真实引擎和模型；不推送。
+73: - 往文件写时间前先 date。只经 {{project_root}}/learner/ledger.py add/update 登记本角色提案、证据与提交；status=proposed，by=learner:strategy-proposal；不得直接改账本或标 shipped。
+74: 
+
+learner/tasks/strategy-proposal.md:92
+92: ## 6. 回报
+93: 
+94: 回报列出提案、证据局号/层/回合/账本 id、提交、撤源码失败与恢复通过、tsc/vitest结果、合入提交和版本、未实现原因。把 {{scratch}}/proposal.md 路径交运维；实际上线后由运维核实并登记 shipped。最后单独给 JSON：
+95: 
+96: ```json
+97: {"task":"strategy-proposal","base":"...","runs":[],"fixes":[],"skipped":[],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":0}, "code_proposals": [], "implementation_domains": [], "report": "{{scratch}}/report.md"}
+98: ```
+99: 
+100: 
+101: ## Roy 2026-10-07 学习授权与代码提案
+102: 先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+103: 
+104: Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+105: 
+106: 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+107: 
+108: 消费队列最终 JSON 还须加 `proposal_results:[{"id":"<派发id>","state":"waiting","reason":"具体缺数据原因"}]` 和 `report:"{{scratch}}/report.md"`；implemented/duplicate 另带实际 commit。
+
+ops/codex-ops-learner.sh:12
+12: task="${4:-postmortem}"; worktree="${5:-$ROOT}"
+13: case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
+14: learner_task="${6:-$task}"
+15: research_request=""
+16: implementation_request=""
+17: implementation_task_file=""
+18: backfill_source=""
+19: source_kind=backfill
+20: unset LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
+21: backfill_task_file=""
+22: if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+23:   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
+24:     && { [[ "$7" =~ ^(backfill|external):[a-z0-9][a-z0-9._-]{0,119}$ ]] || [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
+25:       || [ "$7" = roy-20261010-silent-core-output-value ] \
+26:       || [ "$7" = roy-20261012-concrete-core-decklists ] \
+27:       || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
+28:       || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
+29:   if [[ "$7" == external:* ]]; then
+30:     source_kind=external
+31:     backfill_source="${7#external:}"
+32:   elif [[ "$7" == backfill:* ]]; then
+33:     backfill_source="${7#backfill:}"
+34:   elif [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
+
+ops/codex-ops-learner.sh:155
+155: # Prepare the exact task source after the saved registration and tree exist.
+156: # The launcher records the fully rendered prompt in its normal learner_launch log.
+157: if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
+158:   exec 8> "$DIR/learn.lock"
+159:   if flock -w 120 8; then
+160:     implementation_task_file="$(python3 "$OPS/strategy_implementation_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err")" || audit_ready=0
+161:     flock -u 8
+162:   else
+163:     echo "implementation input lock timed out; no model started" >> "$err"
+164:     audit_ready=0
+165:   fi
+166:   exec 8>&-
+167: fi
+168: if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
+169:   exec 8> "$DIR/learn.lock"
+170:   if flock -w 120 8; then
+171:     backfill_task_file="$(python3 "$OPS/strategy_${source_kind}_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
+172:     flock -u 8
+173:   else
+174:     echo "backfill task input lock timed out; no model started" >> "$err"
+175:     audit_ready=0
+
+ops/codex-ops-learner.sh:208
+208:   # Preserve specialist research and explicitly bound implementation requests.
+209:   if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
+210:     learner_effort=xhigh
+211:   fi
+212:   args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
+213:   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+214:   if [ "$learner_task" = silent-historical-core-builds ]; then
+215:     args+=(--set "evidence=${7}" --set "batch=$batch")
+
+ops/strategy_backfill_jobs.py:450
+450: def task_file(root, directory, bid, character, tree, ident):
+451:     batch, spec = prepare(root, directory, bid, character, tree, ident)
+452:     if subprocess.check_output(["git", "-C", tree, "rev-parse", "HEAD"], text=True).strip() != batch["backfill_binding"]["dispatch_base"]:
+453:         raise ValueError("backfill tree differs from dispatch base")
+454:     template = Path(tree, "learner/tasks/strategy-proposal.md").read_text()
+455:     appendix = ("\n\n## 本批后置回刷来源（优先于普通选题及旧专题章节）\n"
+456:                 + json.dumps({"batch": bid, "worktree": tree, **{k: v for k, v in batch["backfill_binding"].items() if k != "all_entry_ids"}}, ensure_ascii=False, indent=2)
+457:                 + "\n" + spec.decode() + "\n"
+458:                 + "只处理绑定的 entry_ids；不读取旧专题请求，不承接旧线程。冻结源从 project_root 的上述精确路径读回。"
+459:                 + "HEAD保持dispatch_base，不执行普通选题的git merge；本批先在 scratch 保存策略/rk候选与旧ID去向；正式发布、消费者及科学父仍交原流程，不在本批改源码/正式知识。"
+460:                 + "最终JSON必填task=strategy-proposal、character=silent、batch=本批实际ID、base=dispatch_base；runs仅派发锚点。另带backfill_source、input_sha256及backfill_results。"
+461:                 + "backfill_results逐entry_id一行 {id,state:processed或waiting,destinations:[{kind:strategy或rk或merged-into,id:目标ID,path:scratch内真实候选文件绝对路径}],reason:具体理由}。"
+462:                 + "processed要求至少一个真实候选文件，waiting保留空destinations；缺证允许全waiting。"
+463:                 + "tests固定{tsc:null,vitest:null,cases:null}，fixes=[]、merged=null，不冒称live/收益；report为scratch/report.md。\n")
+464:     if "{{" in appendix or "}}" in appendix:
+465:         raise ValueError("backfill text contains template delimiters")
+466:     path = Path(directory, "learner", bid + ".backfill-input", "strategy-proposal.md")
+
+ops/strategy_external_jobs.py:230
+230: 
+231: def task_file(root, directory, bid, character, tree, ident):
+232:     batch, spec = prepare(root, directory, bid, character, tree, ident)
+233:     if subprocess.check_output(["git", "-C", tree, "rev-parse", "HEAD"], text=True).strip() != batch["external_binding"]["dispatch_base"]:
+234:         raise ValueError("external tree differs from dispatch base")
+235:     template = Path(tree, "learner/tasks/strategy-external.md").read_text()
+236:     topic = batch["external_binding"]["topic"]
+237:     if topic in ("dual-boss", "act-boss"):
+238:         template += "\n" + Path(tree, "learner/tasks/strategy-external-" + topic + ".md").read_text()
+239:     appendix = "\n\n本批冻结身份（路径相对 project_root）：\n" + json.dumps({"batch": bid, "worktree": tree, **batch["external_binding"]}, ensure_ascii=False, indent=2) + "\n" + spec.decode()
+240:     if "{{" in appendix or "}}" in appendix:
+241:         raise ValueError("external text contains template delimiters")
+242:     path = Path(directory, "learner", bid + ".external-input", "strategy-proposal.md")
+243:     path.parent.mkdir(parents=True, exist_ok=True)
+
+learner/lib/task.ts:186
+186: /** A task by name (learner/tasks/<name>.md) or by path. */
+187: export function loadTask(nameOrPath: string, tasksDir: string): TaskSpec {
+188:   const looksLikePath = nameOrPath.includes("/") || nameOrPath.endsWith(".md");
+189:   const path = looksLikePath ? (isAbsolute(nameOrPath) ? nameOrPath : resolve(nameOrPath)) : join(tasksDir, `${nameOrPath}.md`);
+190:   if (!existsSync(path)) throw new LearnerUsageError(`找不到任务说明 ${path}`);
+191:   return parseTask(readFileSync(path, "utf8"), basename(path, ".md"), path);
+192: }
+193: 
+
+learner/lib/launcher.ts:385
+385:     const spec = loadTask(options.task, deps.tasksDir);
+386:     // Parallel workers can launch the same task within one second, including manual runs without a lease.
+387:     const stem = `${stamp(deps.now())}-${randomUUID()}-${spec.name}`;
+388:     // No-change strategy reports must belong to the batch's worktree; event logs remain centralized.
+389:     const scratch = spec.name === "strategy-proposal" ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
+390:     if (spec.name === "strategy-proposal") {
+391:       for (const dir of [join(cwd, "learner"), join(cwd, "learner", "runs")]) {
+392:         if (existsSync(dir) && !inside(realpathSync(cwd), realpathSync(dir))) {
+393:           throw new LearnerUsageError(`策略任务临时目录 ${dir} 不在工作树 ${cwd} 里`);
+394:         }
+395:       }
+396:     }
+397:     const character = resolveCharacter(options, deps.env);
+398:     const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name, ...characterBuiltins(character) };
+399:     const sets = parseSets(options.sets);
+400:     // A lane rooted in a worktree has its own baseline and merge target. Explicit task sets still win.
+401:     if (spec.defaults.base_branch !== undefined && deps.env.LEARNER_BASE_REF && sets.base_branch === undefined) {
+402:       sets.base_branch = deps.env.LEARNER_BASE_REF;
+403:     }
+404:     if (spec.defaults.merge_dir !== undefined && deps.env.STS2_LIVE && sets.merge_dir === undefined) {
+405:       sets.merge_dir = resolve(deps.env.STS2_LIVE);
+406:     }
+407:     if (spec.defaults.code_dir !== undefined && deps.env.STS2_LIVE && sets.code_dir === undefined) {
+408:       sets.code_dir = resolve(deps.env.STS2_LIVE);
+409:     }
+410:     checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
+411:     const rendered = renderTask(spec, sets, builtins);
+
+docs/brain-strategies.md:1
+1: # 大脑文字策略库 v1（#16）
+2: 
+3: 范围依据 `docs/v6-plan.md` 第 13 节（main `c57f78a49`）和 #16 新验收：大脑继续拿牌，检索只补充情境匹配的文字策略；策略内容由学习者 #27 维护。开发者只维护数据管道、格式、校验和检索。旧 Jev 模仿试验见 `paper/materials/2026-10-21-issue-16-brain-distillation/report.md`，已停止，不再作为发布依据。
+4: 
+5: ## 存储与条目
+6: 
+7: 新增 `knowledge/characters/silent/strategy-entries.json`，与 `experience.json` 并列，**不扩展或迁移 experience.json**。旧经验的消费者保持原样；新文件只有本文的检索消费者读取，不会自动从经验生成策略。本次不放置游戏策略或默认示例库；文件缺失等价空库。学习者发布真实内容时创建文件：
+8: 
+9: ```json
+10: {"schema":"brain-strategies-v1","character":"silent","entries":[]}
+11: ```
+12: 
+13: 机器格式见 `knowledge/schemas/brain-strategies-v1.schema.json`，TS 类型和运行时校验见 `agent/src/knowledge/strategy-entries.ts`。每条必须有：
