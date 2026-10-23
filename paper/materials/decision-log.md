@@ -6183,3 +6183,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T15:33:57+08:00 [watcher] #27实读15:20原15异议及通知完整payload，独立核67证据窗/ops-forwarded原回执/CLI SHA和received-1443均未变；本轮对话向Roy保留输入/牌身份/净损出口、独立施放分母、因果/外部总伤分位边界及自然采用收益缺口，原冻结rc1与后续575项0问题分列；formal ACK仍原CLI兼容pending，ACK写入0，不代其他角色、不另派实验/模型，科学父开放，实际核收paper/materials/20261023-issue27-watcher-receipt/received-1520.json。#36实读6359841317后独立证明见6359885567/2fe011a9；原dev pane身份核同但已working，未插入提醒或操作学习pane，原登记缺口待其同issue固定回归。
 
 - 2026-10-23T15:39:13+08:00 [ops] 核151302主组原生done/rc0、10处置/32既有账本链接，保MC原整体duplicate异议并沿watcher转达；checkout原回收、研究保留，二组及后批自然验收仍开放，不重测试/模型/dataset或上线。原件paper/materials/20261023-1536-ops/。
+
+- 2026-10-23T15:44:12+08:00 [ops] 原144301五局复盘唯一dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261023-1520-dataset-ops/。
