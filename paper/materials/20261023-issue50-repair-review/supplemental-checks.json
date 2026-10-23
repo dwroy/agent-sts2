@@ -1,0 +1,35 @@
+{
+  "checks": [
+    {
+      "name": "check-imports-recheck",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/check-imports.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--fileParallelism=false"
+      ],
+      "exit": 0,
+      "log": "check-imports-recheck.log",
+      "sha256": "13877819e9a8b448a5114de42ffbab2a0cd0687fff570405b26e2db4f0b6969a"
+    },
+    {
+      "name": "rollback-probe",
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "/home/dw/Projects/agent-sts2/.artifacts/issue50-repair-2017/rollback-probe.mts"
+      ],
+      "exit": 0,
+      "log": "rollback-probe.log",
+      "sha256": "dfc0c6476e075fa8ac9c59c3e91f1da3fe7b85ff21f8d29b6c6690fd4a8684b2"
+    }
+  ],
+  "source_changed": false,
+  "inputs_unchanged": true,
+  "cache_directory_created": ".cache at repository root (initial allocation mistakenly created agent/.cache)",
+  "full_started": false
+}

@@ -1,0 +1,142 @@
+{
+  "base_main": "dbacc557f6f4c013380af140a3b9f89b80dcef69",
+  "original_candidate": "108b9841d68f7f9b6eba6aae0ee8f35e0d483a9a",
+  "retained_original_ref": "issue50-before-review-fixes-108b9841d",
+  "replayed_candidate": "fb03c0cc8",
+  "tsc_exit": 0,
+  "negative_control": {
+    "exit": 1,
+    "failed": 7,
+    "skipped_name_filter": 22,
+    "same_regression_test_sha256": "e0001a2a7c7455f277c2cde4cce8dba913959c7ef74cb70e7ef14a8c02e89826"
+  },
+  "first_targeted": {
+    "exit": 1,
+    "files": 10,
+    "passed": 117,
+    "failed": 1,
+    "failure": "sparse historical issue29 fixture absent after rebase"
+  },
+  "final_targeted": {
+    "exit": 0,
+    "files": 10,
+    "passed": 118,
+    "workers": 1,
+    "file_parallelism": false,
+    "nice": 19
+  },
+  "full_started": false,
+  "frozen_input_count": 2261,
+  "frozen_inputs_changed": [],
+  "brain_only_five_feature_edits_over_main": true,
+  "published_rk_experience_and_construction_leaves_unchanged": [
+    {
+      "path": "agent/src/brain/tools/query-guidance.ts",
+      "sha256": "22e59c6c1b9fa3f31de5e636f372210e438ef01331108db01edc172ecdf99c8d"
+    },
+    {
+      "path": "agent/src/brain/tools/agent-knowledge.ts",
+      "sha256": "0f7f29777fafa0df62241cc4bf1d7efad8fa0784da9d2958fbf41eaf0036d222"
+    },
+    {
+      "path": "agent/src/brain/tools/reflex-knowledge.ts",
+      "sha256": "ce76cdce9f8e0fcbca88cf6a34c373764517af1d4ad49cf2ed8b45046d4a4f19"
+    },
+    {
+      "path": "agent/src/memory/construction-log.ts",
+      "sha256": "af8c4b7c31692336d79400d2c0a1dec585b7c4c3472f880e69d08fd46f254fb8"
+    },
+    {
+      "path": "agent/src/memory/run-journal.ts",
+      "sha256": "3150ea6c912cb22a88ac303bc471845026f53d207a5ee4372281414bf3927c2b"
+    }
+  ],
+  "original_development_materials_unchanged": true,
+  "restored_fixture": {
+    "path": "paper/materials/issue29-brain-speed/results.jsonl",
+    "git_blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
+  },
+  "product_leaves": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "9b5f9aa449425a64a0f81aae401614380789159e62f9cc91600a5cc485d99da4"
+    },
+    {
+      "path": "agent/src/brain/build-facts.ts",
+      "sha256": "83dba1210c7b0e205f205e0e95e2fe25a2b54af17ed7072bce29986775ba1012"
+    },
+    {
+      "path": "agent/src/brain/specs.ts",
+      "sha256": "58cdf6a5d8edc64bd62e514c30154c0a862c8c307ed3f2e32bc2620dbfae2e29"
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "3d3f6e85344c6c7cff957a2a669dcfab5e182e381f1af14cf6c57ad855ebf8ef"
+    },
+    {
+      "path": "agent/src/memory/endgame-plan.ts",
+      "sha256": "8f7a2c1897d2acef41a79de93b3dabe5110b95219ede1d83e9f565e6912316fd"
+    },
+    {
+      "path": "agent/src/memory/run-plan-merge.ts",
+      "sha256": "1518cb29192aeed7eaad813641a545f8b032df7234cea560b955fad21a814961"
+    },
+    {
+      "path": "agent/src/memory/run-plan.ts",
+      "sha256": "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab"
+    },
+    {
+      "path": "agent/tests/endgame-plan.test.ts",
+      "sha256": "e0001a2a7c7455f277c2cde4cce8dba913959c7ef74cb70e7ef14a8c02e89826"
+    },
+    {
+      "path": "agent/tools/brain-agent-report.ts",
+      "sha256": "75d77ecb46cfd30bac30b084194bba84503bf56806de18357ca0e234a056c388"
+    },
+    {
+      "path": "docs/endgame-plan.md",
+      "sha256": "e07da599a6701e61e9ae4e5d0042d8854def08f6004c80589169d10cb8ab9582"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/input-manifest.json",
+      "sha256": "9e3d4accf67a14d4b2aad5c31c4af21dddfbc509393d79d4983fee67816a8657"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/negative-control.json",
+      "sha256": "beb01d7c43a8062d4cc6f4c1a8ea8d292f9629bf2143ccf8300f48c5f952b012"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/negative-control.log",
+      "sha256": "ae750ef9a7585f04e9df8097c2ce2a590094b911a92d770ac8bae8873ce33c7a"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/source.patch",
+      "sha256": "763d8be396da2c92202a058f8b20d69111463abe206c2ffa8d1e30c037ae0e5f"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/targeted-final.log",
+      "sha256": "dbd7a4c5d72c3a21f4e9e146e042e76d0bbf0f68f8b2c4f3e559abaf9dbd859c"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/targeted.log",
+      "sha256": "62813dd8c37183b3b02544e68cce786b627134b164020bd28e94615528d3a209"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/report.md",
+      "sha256": "dd9ae99f02badce482eeb4a2758002e2b74b0e63259c647efd15055f8197eb3c"
+    },
+    {
+      "path": "paper/materials/20261023-issue50-review-fixes/gitleaks-staged.log",
+      "sha256": "e1bd6b59be0adcb96183b1f0250c258faec8833a8039671e71005777a2b0ca3d"
+    }
+  ],
+  "gitleaks_staged_exit": 0,
+  "artifact_whitespace": "Raw logs and canonical source.patch retain their original EOF/context blank lines; product, prose and JSON diff check is clean."
+}
