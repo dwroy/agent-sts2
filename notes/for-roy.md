@@ -5026,3 +5026,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T23:57:33+08:00 [ops] #51启用后一次原学习核心tick已rc0，原锁/优先级未改；正常复盘234301和新派经验235635在途，因此外部两批未派、单元消耗0，非输入/开关失败。两冻结source仍通过，等正常任务结束由原tick先外部后自动策略；未起full或新增定时器，未声称实际ultrafast。原件paper/materials/20261023-issue51-first-tick-ops/tick-receipt.json，评论6369043821。
 
 - 2026-10-24T00:09:21+08:00 [ops] #20分钟入口已按main 3c86ce747/kit 8940977启用，原stall delegated，/new保持shadow；一小时和一天实测待核。#42两叶已在R420重组，tsc0、唯一full运行中，未发布；#35等其发布后重组。234301/235635同一已绑定轮出现跨午夜环境上下文，被现有校验判未绑定；原会话保留，证据已交#36（6369156059），不补记done。原件paper/materials/20261024-issue20-minute-deploy-ops/activation.json、20261024-issue42-publication-ops/check-state.json、20261024-midnight-native-ops/receipt.json。
+
+- 2026-10-24T00:15:31+08:00 [ops] #20最终kit50565fd已安装核同精确树，原分钟cron/registry/控制/缓存保留，/new仍shadow。入口一小时观察仍截至01:07:46；修正后首个真实影子样本00:15:05起单独满一天，最早10-25 00:15:05交主管核准。#42原full保留未重跑。原件paper/materials/20261024-issue20-final-kit-deploy-ops/installation.json、first-final-observation.json。

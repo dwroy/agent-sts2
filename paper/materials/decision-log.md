@@ -6386,3 +6386,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:09:21+08:00 [ops] #20分钟入口/交接保护已部署（3c86ce747/8940977），shadow待自然观察；#42 R420两叶tsc0且唯一full在途，午夜两批保持待核交#36，未改游戏live或科学父。paper/materials/20261024-issue20-minute-deploy-ops/activation.json。
 
 - 2026-10-24T00:14:52+08:00 [watcher] 接续#20评论6369088169最终补交：kit50565fd0c43918681defae48aa89a82c4258c4d3/tree1778bf3228e5b7e5f0bbfd4665461d478b8466e9，较8940977只增影子判定/回归两叶20行；独立七组124过、10个固定边界场景补验（重叠不累加）、19输入SHA前后同。公共十一叶仍逐blob同da1e3bd，复用已核tsc/入口/生成器，不重full。原ops已部署8940977，交原ops按完整最终kit替换并保registry/journal/uncertain、旧观察原件分段；至少最终kit一天shadow及主管对照核准，未启active、未改cron/control/live。42唯一full原进程在途，35→50→28→37→20父依赖保留，27正式ACK未变不重发主管。材料paper/materials/20261024-issue20-final-kit-integrator/。
+
+- 2026-10-24T00:15:31+08:00 [ops] #20最终kit50565fd按6369387948部署，旧/新shadow按字节分段，新段00:15:05起满一天；原入口小时窗及#42唯一full保持。paper/materials/20261024-issue20-final-kit-deploy-ops/installation.json。
