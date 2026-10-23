@@ -6127,3 +6127,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:11:41+08:00 [ops/#36] 最小P0+原tab日志精确15叶已发布live c707d5c903c03de3bc8d8cb2864f643b59b254a6，原full6332过/2skip，保最新知识/绑定/80/60/版本；仅将hosting TUI切on，下次自然学习生效，五项自然验收待后续原事件，未新full/模型/关父。原件paper/materials/20261023-issue36-p0-publication-ops/publication.json。
 
 - 2026-10-23T13:13:08+08:00 [ops/#36] 发布终局对账live c707d5c903c0精确15叶/hosting on及双通知；切换后新登记批次0，五项自然验收保持pending，原三批stdio不计。不重full/模型/旧任务，不关父。原件paper/materials/20261023-1312-ops/receipt.json。
+
+- 2026-10-23T13:17:33+08:00 [ops] KUHYZ A10无SL通关48分23秒/下局A10；15通知核67证据、正式ACK仍阻塞；121302五局复盘记录受控入库，dataset前源码漂移停点保留不重跑；36首on批131316原生绑定已核，余四项pending。原件paper/materials/20261023-1313-ops/。
