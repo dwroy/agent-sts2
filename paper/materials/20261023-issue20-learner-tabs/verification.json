@@ -1,0 +1,51 @@
+{
+  "adapter": {
+    "tests": 24,
+    "exit_code": 0,
+    "log": "adapter-final.log.2",
+    "native_verifier": "exact c8ff9caf5 verify_native; terminal/proc fixtures only"
+  },
+  "lifecycle": {
+    "tests": 64,
+    "exit_code": 0,
+    "log": "lifecycle.log"
+  },
+  "scheduler_final": {
+    "tests": 1,
+    "exit_code": 0,
+    "log": "scheduler-final.log",
+    "reason": "follow-up timeout notice coverage; held wake lock, on/off board and retention pause"
+  },
+  "tsc": {
+    "exit_code": 0,
+    "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 agent/node_modules/.bin/tsc -p agent/tsconfig.json --noEmit",
+    "log": "tsc.log"
+  },
+  "bash_syntax": {
+    "command": "bash -n ops/codex-ops.sh",
+    "exit_code": 0
+  },
+  "initial_failure": {
+    "tests": 16,
+    "pass": 15,
+    "error": 1,
+    "test": "test_owned_done_codex_with_ended_native_turn_reclaimed",
+    "cause": "fixed fixture did not stub idle_codex_helpers, attempted /proc/333/exe and got PermissionError; added helper fixture",
+    "evidence": "session tool output only, no saved initial raw log"
+  },
+  "production_actions": false,
+  "full_vitest": false,
+  "logs_sha256": {
+    "adapter-delivery.log": "acb63f7fe321fefa0ad7e07942048338a6598ae20b963a5cf252bf1a3767ff9d",
+    "adapter-final.log": "268e89922c681f703938c04bb81f22484da7deb353dffd3e77b0f78ace6de6da",
+    "adapter-final.log.2": "665055f75273e7c94ea1a00eb44f3df699308c77d84010e43a57f13c0a9ca5ad",
+    "adapter-final2.log": "a220dc7f7568fd4867bc0fea451b291f4d57c1dc1a473fe4107af1a6f1aa4386",
+    "adapter-final24.log": "56c883a37c06857f2d0a8d8e308b853d91d398d4c3d46051c437bbcc15f0f052",
+    "lifecycle.log": "7351200841e207aba0e5fd1ca7a0d9f10efaf04e44c3f6ce91a48245d2c11cf7",
+    "native-integration.log": "07cde3f64a92f963aa26fed9b625eeed6a018e5e3209a457da60ab2694839003",
+    "scheduler-final.log": "614b364697de26fb654d0e3903fc9987e056fba6042f6e52a7d1712b65de016b",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unit-final.log": "5c2b4bf8b824dea28d5a373dea0ae0f39d425bc8307a170edaccc41362030387",
+    "unit.log": "4d5bac7c6e635f3b7c332b65143f041cc6a44f92950b4dcb2d63acf13d5868c5"
+  }
+}

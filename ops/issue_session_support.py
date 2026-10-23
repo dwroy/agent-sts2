@@ -184,7 +184,11 @@ class Board:
         for rule in self.data["never_reclaim"]:
             if not isinstance(rule, str):
                 raise ValueError("invalid board protection rule")
-            if rule.startswith("panes:"):
+            if rule.startswith("running-panes:"):
+                if (any(fnmatch.fnmatch(row["label"], pattern.strip()) for pattern in rule.split(":", 1)[1].split(","))
+                        and row.get("state") not in ("done", "failed", "rejected", "cancelled")):
+                    raise ValueError("running learner pane retained")
+            elif rule.startswith("panes:"):
                 for role in rule.split(":", 1)[1].split(","):
                     role = role.strip()
                     if fnmatch.fnmatch(row["label"], role) or row.get("pane") == roles.get(role, {}).get("pane", "unset"):

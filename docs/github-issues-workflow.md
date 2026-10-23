@@ -24,6 +24,8 @@ Roy 2026-10-21 定为标准流程。工具见 #17（`ops/issue_session.py`），
 4. **回收**：issue 关闭后回收它的会话与工作树。**下列前提全部满足才回收**：issue 已关闭；会话空闲；没有进程在工作树内；工作树干净，或未提交改动已存成补丁放进材料目录；分支提交已在 main，或分支引用保留。回收动作：保存 pane 末尾若干行到日志 → 关 tab → 工作树交 `ops/worktree_retention.py complete` 由原调度器回收（保留唯一产物）→ 在 issue 评论 `[...] 已回收…`。**前提不满足只评论原因，不强删。**
 5. **自动执行**：ops 调度每个 tick 对“已关闭且在登记表中”的 issue 执行回收；幂等，失败写 inbox。
 6. **永不回收**：watcher、ops、在跑的学习者与对局相关的 pane；`.worktrees/live`；登记表之外的 tab；未合入的提交、原日志、经验、账本、未完成的学习材料。
+学习 tab 是独立回收类（Roy 2026-10-23，#20 [6355664194](https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6355664194)），不套用开发 issue 的关闭/合入门。项目 adapter `ops/learner_tabs.py` 在原 `stall` tick、`drain` 之前执行，不等 ops 模型空闲，也不依赖 GitHub/派单器启用状态；原 PAUSE/LLM_DRAIN 和 `CODEX_OPS_RETENTION=off` 仍暂停。仅扫描 `sts2-run` 中标题 `学习大脑 · …` 或旧 `learner-*` 的 tab，须唯一绑定原 learn.json 批次与 herdr.json 记录。批次终态、原回执/产物持久化、原 supervisor 已退出、单 pane 空闲、无人工输入且仍属本批时才保存尾日志、关 tab、释放 host 学习槽位；工作树与原材料交原 retention worker，不据关 tab 推断学习入库/测试/发布/父要求完成。`never_reclaim` 的学习规则改为 `running-panes: learner-*`，在跑的学习 pane 不触碰，ops/集成员/对局/live 等永久保护不变。未登记、缺回执、身份不符、草稿输入、失权或动作回执不确定一律保留，主管收件箱按身份与原因去重写一行供 ops 处理；不静默重关。wrapper 只完成原 finish 和封存回执，不能自行关闭 tab。CLI/schema 与兼容边界见 [学习 tab 回收](learner-tab-reclamation.md)。
+
 7. **定期清积压**：按 `ops/worktree_retention.py plan` 定期出清单（可回收 / 保留 / 需人工判断），watcher 核对后分批回收（见 #18）。
 8. **长期会话**：watcher 每天换一次新会话，旧会话写交接文件后在同一 pane 开新对话，交接文件用完即删；ops 沿用其调度器既有的接续机制，压缩明显变频繁时同样换新。
 
