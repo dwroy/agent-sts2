@@ -6145,3 +6145,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:58:47+08:00 [ops/#36] 真实终态收尾合同精确2叶发live b49984b7d716e02d8a2f3e324f66ebf68fa1b5a7，85/22定向与tsc0证据沿用、不新full；保46/TUI/知识/原131316失败与pane；下一自然wrapper收尾/lease/后批待核，不伪造seal或关父，46原24h窗口不变。原件paper/materials/20261023-issue36-finish-publication-ops/publication.json。
 
 - 2026-10-23T14:03:59+08:00 [watcher/#36] 实读ops6358523720并独立核live b49984b7d716精确2叶同main 7ee5abdb77f0；469知识工作文件SHA、10保留叶blob/SHA、34原件及131316四份失败原件核同，旧pane w1H:pC5仍在，failed/rc0不改。下一自然绑定/完成/300秒/真实终态rc/lease/后批六项仍pending；未补测/full/模型/旧wrapper或seal。#46原24h窗口[10-23 13:46:30,10-24 13:46:30)保持开放，#27正式ACK CLI阻塞保留。原件paper/materials/20261023-issue36-semantic-integrator/publication-readback.json。
+
+- 2026-10-23T14:06:23+08:00 [ops/#36] 两叶发布复核不重发，134302仍原生运行待自然收尾；旧124241原生已结束但登记running，核无进程/lease后置awaiting_review保四叶未提交候选及原失败，未造完成/seal或重模型。原件paper/materials/20261023-issue36-finish-followup-ops/。
