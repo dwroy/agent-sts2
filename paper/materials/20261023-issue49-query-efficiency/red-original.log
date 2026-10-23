@@ -1,0 +1,89 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-49-brain-query-guidance/agent
+
+ ❯ tests/brain-query-efficiency.test.ts (9 tests | 8 failed) 84ms
+   × empty matching cues do not encourage strategy or rk queries in either instruction layer 18ms
+   × construction lookup excludes combat lines even if requested and returns summaries without predicate JSON 9ms
+   × event/plan filters combat knowledge while fight-plan preserves its existing full result 6ms
+   × rest/plan filters combat knowledge while fight-plan preserves its existing full result 5ms
+   × shop/plan filters combat knowledge while fight-plan preserves its existing full result 4ms
+   × event/act-plan filters combat knowledge while fight-plan preserves its existing full result 5ms
+   × reward/card gives truthful optional external lookup counts and executable inputs without statistics 13ms
+   × shop/plan gives truthful optional external lookup counts and executable inputs without statistics 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > empty matching cues do not encourage strategy or rk queries in either instruction layer
+AssertionError: expected { status: 'ok', count: +0, …(4) } to not have property "tool"
+
+- Expected:
+undefined
+
++ Received:
+"kb_strategies"
+
+ ❯ tests/brain-query-efficiency.test.ts:41:67
+     39|   const result = await attachQueryGuidance(req), body = await cues();
+     40|   expect(body.strategies).toMatchObject({ count: 0 }); expect(body.rk)…
+     41|   for (const cue of [body.strategies, body.rk]) { expect(cue).not.toHa…
+       |                                                                   ^
+     42|   expect(result.question).not.toContain("先调用"); expect(result.system).…
+     43| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > construction lookup excludes combat lines even if requested and returns summaries without predicate JSON
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/brain-query-efficiency.test.ts:47:52
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > event/plan filters combat knowledge while fight-plan preserves its existing full result
+ FAIL  tests/brain-query-efficiency.test.ts > rest/plan filters combat knowledge while fight-plan preserves its existing full result
+ FAIL  tests/brain-query-efficiency.test.ts > shop/plan filters combat knowledge while fight-plan preserves its existing full result
+ FAIL  tests/brain-query-efficiency.test.ts > event/act-plan filters combat knowledge while fight-plan preserves its existing full result
+AssertionError: expected [ 'combat-only', 'construction-only' ] to not include 'combat-only'
+ ❯ tests/brain-query-efficiency.test.ts:56:63
+     54| it.each(["event/plan", "rest/plan", "shop/plan", "event/act-plan"])("%…
+     55|   const { combat, construction, library, cues, ctx } = fixture(label);…
+     56|   expect((await cues()).rk.entries.map((e: any) => e.id)).not.toContai…
+       |                                                               ^
+     57|   const fightCtx = { ...ctx, label: "fight-plan" };
+     58|   const host = new ToolHost(buildKnowledgeTools(fightCtx), fightCtx);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > reward/card gives truthful optional external lookup counts and executable inputs without statistics
+ FAIL  tests/brain-query-efficiency.test.ts > shop/plan gives truthful optional external lookup counts and executable inputs without statistics
+AssertionError: expected undefined to match object { status: 'ok', …(3) }
+
+- Expected:
+{
+  "matched_cards": 1,
+  "source": "external:sts2fun",
+  "status": "ok",
+  "version": "v0.111",
+}
+
++ Received:
+undefined
+
+ ❯ tests/brain-query-efficiency.test.ts:67:16
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 1 passed (9)
+   Start at  23:09:36
+   Duration  1.34s (transform 904ms, setup 286ms, import 827ms, tests 84ms, environment 0ms)
+

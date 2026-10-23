@@ -5,6 +5,8 @@ import { guidanceKind, queryAudit } from "../src/brain/tools/query-guidance.js";
 type Row = Record<string, any>;
 const p95 = (xs: number[]) => xs.length ? [...xs].sort((a, b) => a - b)[Math.ceil(xs.length * .95) - 1] : null;
 const mean = (xs: number[]) => xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
+const median = (xs: number[]) => { const sorted = [...xs].sort((a, b) => a - b), middle = Math.floor(sorted.length / 2);
+  return sorted.length ? sorted.length % 2 ? sorted[middle]! : (sorted[middle - 1]! + sorted[middle]!) / 2 : null; };
 export function brainAgentReport(rows: Row[], runIds: string[] = []) {
   const questions = new Map<string, Row>();
   for (const row of rows) if (row.knowledge?.mode === "tools" && (!runIds.length || runIds.includes(row.run_id))) questions.set(`${row.run_id}/${row.question_id ?? `${row.ts}/${row.label}`}`, row);
@@ -19,6 +21,7 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
       completion_rate: selected.length ? selected.filter(r => r.accepted === true).length / selected.length : null,
       tool_call_rate: calls.filter(n => n > 0).length / selected.length, calls_total: calls.reduce((a, b) => a + b, 0), calls_mean: mean(calls), calls_p95: p95(calls),
       tool_execution_ms_mean: mean(toolTime), tool_execution_ms_p95: p95(toolTime), latency_ms_mean: mean(latency), latency_ms_p95: p95(latency),
+      latency_ms_median: median(selected.flatMap(r => typeof r.latency_ms === "number" && Number.isFinite(r.latency_ms) ? [r.latency_ms] : [])),
       tool_phase_ms_mean: mean(selected.flatMap(r => typeof r.agent?.toolPhaseMs === "number" ? [r.agent.toolPhaseMs] : [])),
       final_phase_fallbacks: fallback.length, fallback_rate: fallback.length / selected.length,
       fallback_reasons: Object.fromEntries(["calls", "time", "stall"].map(reason => [reason, fallback.filter(r => r.agent.fallback === reason).length])),
@@ -45,7 +48,7 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
     return { engine: selected[0]!.engine, question_type: key.slice(key.indexOf("/") + 1), questions: selected.length,
       strategies: summarize("strategies"), rk: summarize("rk"), experience: summarize("experience"),
       rk_available_questions: selected.filter(r => Array.isArray(r.tools) && r.tools.includes("kb_reflex")).length, calls_mean: mean(calls), calls_p95: p95(calls),
-      latency_ms_mean: mean(latency), latency_ms_p95: p95(latency) };
+      latency_ms_mean: mean(latency), latency_ms_median: median(latency), latency_ms_p95: p95(latency) };
   });
   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
@@ -63,7 +66,8 @@ export function compareBrainQueryReports(before: Row[], after: Row[], beforeRunI
         strategies_query_rate_delta: old ? group.strategies.query_rate - old.strategies.query_rate : null,
         rk_query_rate_delta: old ? group.rk.query_rate - old.rk.query_rate : null,
         calls_mean_delta: old && group.calls_mean !== null && old.calls_mean !== null ? group.calls_mean - old.calls_mean : null,
-        latency_ms_mean_delta: old && group.latency_ms_mean !== null && old.latency_ms_mean !== null ? group.latency_ms_mean - old.latency_ms_mean : null };
+        latency_ms_mean_delta: old && group.latency_ms_mean !== null && old.latency_ms_mean !== null ? group.latency_ms_mean - old.latency_ms_mean : null,
+        latency_ms_median_delta: old && group.latency_ms_median !== null && old.latency_ms_median !== null ? group.latency_ms_median - old.latency_ms_median : null };
     }), limitation: "上线前18局与上线后首批自然局须由调用者明确冻结原日志和局号；缺失题型变化为null，不补零，不追加实验局。" };
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
