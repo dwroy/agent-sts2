@@ -193,21 +193,52 @@ else
     rc=75
   fi
 fi
+launcher_rc="$rc"
+wrapper_attention() {
+  nice -n 19 python3 "$OPS/learner_tui.py" attention "$DIR" "$batch" "$1" 2>> "$err"
+}
 # A failed transport receipt never releases the scheduler lease or marks the batch complete.
 # Preserve this supervisor until ops verifies the original session/artifacts; never start a second model.
 if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
-  while ! nice -n 19 python3 "$OPS/learner_tui.py" verify "$LEARNER_TUI_RECEIPT" "$out" 2>> "$err"; do
-    sleep 30
+  verify_timeout="${LEARNER_TUI_VERIFY_TIMEOUT_S:-300}"
+  if ! [[ "$verify_timeout" =~ ^[1-9][0-9]{0,3}$ ]] || [ "$verify_timeout" -gt 3600 ]; then verify_timeout=300; fi
+  verify_deadline=$((SECONDS + verify_timeout))
+  while true; do
+    remaining=$((verify_deadline - SECONDS))
+    if [ "$remaining" -le 0 ]; then
+      nice -n 19 python3 "$OPS/learner_tui.py" defer "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err" \
+        || echo "$(date '+%F %T') [dev #36 wrapper] $batch verification timeout; deferral persistence failed, preserve original batch/pane and inspect learner journal" >> "$DIR/inbox-claude.md"
+      exit 75
+    fi
+    if rc="$(nice -n 19 timeout --kill-after=1s "${remaining}s" python3 "$OPS/learner_tui.py" verified-code "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" 2>> "$err")"; then break; fi
+    wrapper_attention verify
+    remaining=$((verify_deadline - SECONDS))
+    if [ "$remaining" -gt 0 ]; then
+      if [ "$remaining" -gt 30 ]; then remaining=30; fi
+      sleep "$remaining"
+    fi
   done
 fi
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
+finish_rc=75
 if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
   finish_rc=0
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
   if [ "$finish_rc" = 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
-    nice -n 19 python3 "$OPS/learner_tui.py" close "$ROOT" "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" \
-      >> "$DIR/scheduler.log" 2>&1 || echo "learner TUI pane retained for $batch; finish audit or pane identity is not ready" >> "$DIR/scheduler.log"
+    if nice -n 19 python3 "$OPS/learner_tui.py" finished "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err"; then
+      # Seal only. The #20 recycler independently waits for this supervisor to exit before closing a tab.
+      if ! nice -n 19 python3 "$OPS/learner_tabs.py" seal --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
+          >> "$DIR/scheduler.log" 2>> "$err"; then
+        wrapper_attention seal
+        finish_rc=75
+      fi
+    else
+      wrapper_attention finish
+      finish_rc=75
+    fi
+  elif [ "$finish_rc" != 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ]; then
+    wrapper_attention finish
   fi
   if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] \
       && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
@@ -217,7 +248,10 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
     nice -n 19 python3 "$OPS/learner_retention.py" request --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
       >> "$DIR/scheduler.log" 2>&1 || echo "learner cleanup request deferred for $batch; normal tick will retry" >> "$DIR/scheduler.log"
   fi
+else
+  if [ -n "${LEARNER_HERDR_PANE:-}" ]; then wrapper_attention registration; fi
 fi
+if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$finish_rc" != 0 ]; then rc=75; fi
 if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
   # Keep the wake outside either the legacy command pane or the new supervised TUI lifecycle.
   if [ -n "${HERDR_HOST_LABEL:-}${LEARNER_HERDR_PANE:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &

@@ -166,7 +166,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
         return False, None
     key = "feature:" + request["request_id"]
     prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
-    if (any(batch.get("state") == "done" or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
+    if (any(batch.get("state") in ("done", "awaiting_review") or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
             or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
         return True, None
     worktree = os.path.join(root, ".worktrees", learner_task)
@@ -222,7 +222,7 @@ def busy(state, task, alive):
 
 def retryable(state, task, key):
     previous = [batch for batch in state["batches"].values() if batch.get("task") == task and batch.get("key") == key]
-    if any(batch.get("state") == "done" for batch in previous) or len(previous) >= 3:
+    if any(batch.get("state") in ("done", "awaiting_review") for batch in previous) or len(previous) >= 3:
         return False
     return not previous or max(batch.get("retry_at", 0) for batch in previous) <= time.time()
 
@@ -264,6 +264,12 @@ def fix_key(root, character):
 
 
 def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
+    # A released supervisor slot does not authorize replay of its unresolved original demand.
+    if any(batch.get("state") == "awaiting_review" and batch.get("task") == task
+           and batch.get("character") == character
+           and (batch.get("key") == key or (runs and sorted(batch.get("runs", [])) == sorted(runs)))
+           for batch in state["batches"].values()):
+        return None
     if implementation_request is not None:
         from strategy_implementation_jobs import REQUEST, CONTINUATION
         if (implementation_request not in (REQUEST, CONTINUATION) or research_request is not None or task != "strategy-proposal"

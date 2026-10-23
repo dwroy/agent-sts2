@@ -278,9 +278,42 @@ export interface TuiResult {
 
 /** Never retry a start or an uncertain prompt. Every retry continues the same live native session. */
 export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
-  const unstarted = (reason: string): TuiResult => {
+  const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
+  let originalHostTitle: string | undefined;
+  const paneSnapshot = async (): Promise<Record<string, unknown> | undefined> => {
+    const info = await h(["pane", "get", o.pane]);
+    const pane = info.result?.pane as Record<string, unknown> | undefined;
+    if (!info.ok || pane?.pane_id !== o.pane) return undefined;
+    if (pane.label === o.label) return pane;
+    if (pane.label !== undefined || !o.lease?.current() ||
+        [pane.workspace_id, pane.tab_id, pane.terminal_id].some((id) => typeof id !== "string" || !id)) return undefined;
+    // Current Herdr exposes labels on tabs, while older receipts included pane.label.
+    // Require the original host registration and exact tab title; never invent a pane label.
+    try {
+      const directory = resolve(o.request.projectRoot ?? o.request.cwd, o.env.CODEX_OPS_DIR ?? "ops/codex-ops");
+      const host = JSON.parse(readFileSync(join(directory, "herdr.json"), "utf8"));
+      const entry = host.panes?.[o.label];
+      if (host.workspace_id !== pane.workspace_id || entry?.pane_id !== o.pane || typeof entry.title !== "string" ||
+          !entry.title || (originalHostTitle !== undefined && originalHostTitle !== entry.title)) return undefined;
+      const tabs = await h(["tab", "list", "--workspace", String(pane.workspace_id)]);
+      const matches = (tabs.result?.tabs as Record<string, unknown>[] | undefined)?.filter((tab) => tab.tab_id === pane.tab_id);
+      if (!tabs.ok || matches?.length !== 1 || matches[0]!.label !== entry.title || matches[0]!.pane_count !== 1) return undefined;
+      originalHostTitle = entry.title;
+      return pane;
+    } catch { return undefined; }
+  };
+  const unstarted = async (reason: string): Promise<TuiResult> => {
     const result: TuiResult = { code: 3, reason, message: "", stopped: true };
-    writeFileSync(o.receipt, JSON.stringify({ state: "not-started", models_started: 0, result }) + "\n", { mode: 0o600 });
+    let identity: Record<string, unknown> | undefined;
+    if (/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) && /^learner-[a-z0-9-]+$/.test(o.label) && o.lease?.current()) {
+      try {
+        identity = await paneSnapshot();
+      } catch { /* Missing identity is preserved as missing evidence for the independent recycler. */ }
+    }
+    writeFileSync(o.receipt, JSON.stringify({ state: "not-started", models_started: 0, result,
+      pane: o.pane, label: o.label, cwd: o.request.cwd, identity, submitted: false,
+      submissions: [], bindings: [], retirement_authorized: false }) + "\n", { mode: 0o600 });
+    const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
     o.attention("learner TUI initialization refused before model startup; inspect original local settings");
     return result;
   };
@@ -289,7 +322,6 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   try { tuiEnv = learnerTuiEnv(o.env); } catch { return unstarted("unsafe-tui-environment"); }
   if (!/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) || !/^learner-[a-z0-9-]+$/.test(o.label)) return unstarted("invalid-pane-identity");
   const agentName = learnerAgentName(o.label, o.pane, o.request.cwd);
-  const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
   const now = o.now ?? Date.now;
   const pause = o.pause ?? sleep;
   const started = now();
@@ -332,13 +364,11 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let progress = 0;
   let retryAt: number | undefined;
   let result: TuiResult = { code: 1, reason: "startup-failed", message: "", stopped: false };
-  const initial = await h(["pane", "get", o.pane]);
-  const identity = initial.result?.pane as Record<string, unknown> | undefined;
-  if (!initial.ok || identity?.label !== o.label) return unstarted("pane-identity-changed-before-startup");
+  const identity = await paneSnapshot();
+  if (!identity) return unstarted("pane-identity-changed-before-startup");
   const samePane = async (): Promise<boolean> => {
-    const info = await h(["pane", "get", o.pane]);
-    const pane = info.result?.pane as Record<string, unknown> | undefined;
-    return info.ok && !!pane && pane.pane_id === o.pane && pane.label === o.label && pane.tab_id === identity.tab_id &&
+    const pane = await paneSnapshot();
+    return !!pane && pane.pane_id === o.pane && pane.tab_id === identity.tab_id &&
       pane.terminal_id === identity.terminal_id && pane.workspace_id === identity.workspace_id;
   };
   const save = (state: string, extra: Record<string, unknown> = {}): void => {
@@ -557,6 +587,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   }
   result = { ...result, session: native.session, turn: native.turn, rollout, message: native.message, usage: native.totalUsage(), ...(native.error ? { error: native.error.slice(0, 2000) } : {}) };
   if (!result.stopped) { result.code = 75; result.reason = "retirement-unverified"; attention("learner TUI retirement unverified; finish and reclamation forbidden"); }
+  else if (result.code !== 0) attention("learner TUI ended exceptionally; preserve original evidence for ops review");
   save(result.stopped ? "session-ended" : "needs-attention", { result });
   return result;
 }

@@ -439,7 +439,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const unavailable = (message: string): number => {
     if (request.engine === "codex" && deps.env.LEARNER_HERDR_PANE && deps.env.LEARNER_TUI_RECEIPT) {
       writeFileSync(deps.env.LEARNER_TUI_RECEIPT, JSON.stringify({ state: "not-started", models_started: 0,
+        pane: deps.env.LEARNER_HERDR_PANE, label: deps.env.LEARNER_HERDR_LABEL, cwd: request.cwd,
+        submitted: false, submissions: [], bindings: [], retirement_authorized: false,
         result: { code: 3, reason: "engine-preflight-unavailable" } }) + "\n", { mode: 0o600 });
+      const fd = openSync(deps.env.LEARNER_TUI_RECEIPT, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
     }
     deps.err(message);
     return 3;
@@ -525,7 +528,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ...(prepared.timeoutMin ? { timeoutMs: prepared.timeoutMin * 60_000 } : {}), log,
       attention: (reason) => {
         mkdirSync(queue, { recursive: true });
-        const name = `${Date.now()}-${randomUUID()}-learner-tui-attention.md`;
+        const name = `${BigInt(Date.now()) * 1_000_000n}-learner-tui-attention-${randomUUID()}.md`;
         writeFileSync(join(queue, name), `学习批次 ${lease.batch} 需要原 ops 核验：${reason}。原 pane ${deps.env.LEARNER_HERDR_PANE}；回执 ${receipt}。保留批次和会话，不另开模型、不回收。\n`);
       },
     });
