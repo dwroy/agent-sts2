@@ -6378,3 +6378,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:53:22+08:00 [ops] #51首两批安全聚合/6单元已冻结并启用，21叶/原199项定向核同；6348局分版本，未开full或模型，等原tick真实启动。#35旧检查失联保留，新R420组合待验。paper/materials/20261023-issue51-enable-ops/。
 
 - 2026-10-23T23:57:33+08:00 [ops] #51启用后一次原学习核心tick已rc0，原锁/优先级未改；正常复盘234301和新派经验235635在途，因此外部两批未派、单元消耗0，非输入/开关失败。两冻结source仍通过，等正常任务结束由原tick先外部后自动策略；未起full或新增定时器，未声称实际ultrafast。原件paper/materials/20261023-issue51-first-tick-ops/tick-receipt.json，评论6369043821。
+
+- 2026-10-24T00:01:07+08:00 [watcher] #20一分钟派单器独立子项按6368947281定向核验并合main：公共11叶逐blob等于da1e3bd51ce95f5ca343783afa51950ca70b879d，配套kit8940977373e028664dae5fbcf3fea870c8950500/tree77ee8bc2eb7ebfbd9356cafa4c56feae2a4e7fbf；tsc0、kit123、入口6、生成器8、Vitest3文件4过（包装不累加），1812输入哈希前后同。首次Vitest参数不兼容及重定向失败原件保留，修正定向通过；未full/模型/游戏。原控制不自动切分钟、/new保持shadow、ops角色区和原声明时间保护；交原ops安装同组合/唯一入口/一小时调用与延迟，满一天交主管核准，未增行为号或写live。父20/39/43仍待最终组合，42工具余项与35新R420检查→50→28→37依赖保持；35旧full已核lost-no-final-result，27未变不重发主管。材料paper/materials/20261024-issue20-minute-integrator/。

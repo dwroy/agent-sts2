@@ -76,6 +76,8 @@ nice -n 19 python3 ops/issue_session.py register 123 example-fix \
 
 ### 通用派单器（#20）
 
+Roy 2026-10-23追加独立一分钟入口、两分钟空闲感知、条件请求/额度降频及任务边界 `/new` 先观察一天，见[一分钟入口与任务边界观察](agent-board-minute.md)。实际入口由 ops 的项目控制显式切换，以下原五分钟入口仍为回退路径；源码配置不自动启用新 cron 或清对话。
+
 确定性程序位于私有仓库 [agent-board-kit](https://github.com/dwroy/agent-board-kit)，不调用模型。`.agents/board.yaml` 的 `dispatcher` 配置指定安装位置、同机项目登记表、事件账本、汇总与收件箱；生命周期命令仍调用本项目 `issue_session.py spawn/reclaim`，沿用原发布、进程、归档与保护门禁。不在开发工作树执行生产派发或回收。
 
 集成后先按 kit README 安装并协调同机项目登记，在主运行根用 `nice -n 19 python3 ops/agent_board.py --root "$PWD" --dry-run` 演练。ops 核登记与 pane 身份后，用下面的项目内持久开关启用，沿现有五分钟 `stall` tick 执行一份；其他 tick 不重复运行。开关默认 off，未安装不改变旧调度。启用后由 kit 接管已登记 issue 的回收重试，原 retention worker 仍负责实际删除；`CODEX_OPS_RETENTION=off` 只暂停回收，`PAUSE/LLM_DRAIN` 暂停整个 tick。不新增 cron、daemon，不修改 ops prompt。

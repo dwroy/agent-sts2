@@ -1,0 +1,109 @@
+{
+  "issue": 20,
+  "requests": [
+    6367397414,
+    6367705371,
+    6367774091,
+    6367983979,
+    6368125909
+  ],
+  "at": "2026-10-23T15:47:33.783914+00:00",
+  "project": {
+    "base": "c70ebc5af0475f2e7be7a288711ada5a49c334d2",
+    "commit": "da1e3bd51ce95f5ca343783afa51950ca70b879d",
+    "tree": "c2a3dbe7ed63d552fbe7dd5ffe78556d2657bd7e",
+    "files": {
+      ".agents/board.yaml": "ba126b05ef1869bb8bf9787eb38e6e85892feb0a81bc3477312278b06441ec8e",
+      "AGENTS.md": "d3affe5e8430f83392a7326a85f74d6c2c006627d65f9b59639e58c4bda7e192",
+      "agent/tests/agent-board-poll.test.ts": "38226a783e7e7d7a14eee150ef5471d1c1b3121c927c9c6fe5edd20be98e2b80",
+      "agent/tests/ops-current-budget.test.ts": "805ab7a0b400bf54ce0ff7de55113407356d641abcee17af30d967389a35b56f",
+      "docs/agent-board-minute.md": "ea5e64dfde5da5a6cf3c82f8f6da8684af7fd27bc3e3d87ce331298e1df8084a",
+      "docs/github-issues-workflow.md": "e08ea83aec7dfc4ca41a60ad7ed061b7d8b0c4bb19d94d7d471be255fa1208fd",
+      "ops/agent_board.py": "126dec686d97ab544c18c7ba19fb2ee7579d6df3c932a22af6ac9b957de7fd1d",
+      "ops/codex-ops.sh": "8515ad8915d2334ec8c62e852dc2e672c4ca7189a49a3e74b2bf558049d99dda",
+      "ops/ops_current.py": "c947e4052ac5d9a9014c9a4dc613718a54fd31c3ea9abef8a9e3d3030b24bd0c",
+      "ops/tests/test_agent_board_poll.py": "f1bde362d4900c6c8d385f7ff737ab7f8c5ae773b34f529e75858ce28f5dba5f",
+      "ops/tests/test_ops_current_budget.py": "bfc9de71e487f78b61f6707672c298e75f3a67173c9da9856d5479785fb2c6fa",
+      "paper/materials/decision-log.md": "9c21c0591278c0fa415888a92c279255246719f935db0f3f9c73139650aeabca"
+    }
+  },
+  "kit": {
+    "base": "6662c1726501610e489b3d93eef8b82383feff7f",
+    "commit": "8940977373e028664dae5fbcf3fea870c8950500",
+    "tree": "77ee8bc2eb7ebfbd9356cafa4c56feae2a4e7fbf",
+    "required_modules": {
+      "board.py": "a45a5f0c3241d17de75ebcaf8c04ae19ec34274af862b134d8450e6b7da3a2ac",
+      "watchdog.py": "a3eeb07e5756b3bc7e1a88d30fb20c1f3e9d0e7e4fce77722236ba82050fcb1a",
+      "heavy.py": "23ecac9c434df48120bcdb4de854793e73555d42d624931fa07bd2a9465cf220",
+      "machine.py": "d44443240862eb226440374cc938a462c06d4de5223f62efb6b877488655c30f",
+      "polling.py": "d4ebc077772a1a30b41bbd017fb023813d3fc7829d2ac774d0d548226f98abf8",
+      "conversation.py": "8bf20673e7e26c9ae5c3286daed146a98d98c9b5c9848f21ec20bc6aaea744e6"
+    },
+    "all_modules_tracked": true
+  },
+  "checks": [
+    {
+      "name": "production-tsc",
+      "cwd": "agent",
+      "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kit-directed",
+      "cwd": "ops/codex-ops/agent-board-kit",
+      "command": "nice -n 19 python3 -B -m unittest test_conversation test_polling test_watchdog test_board test_outcomes test_release_order test_project_contract",
+      "exit": 0,
+      "tests": 123,
+      "log": "kit-directed.log",
+      "log_sha256": "244265c0f4d82a002685f804e0bdfbb9b9f9f279d8322cb064172adaa44ba009"
+    },
+    {
+      "name": "adapter",
+      "cwd": ".",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_agent_board_poll.py",
+      "exit": 0,
+      "tests": 6,
+      "log": "adapter.log",
+      "log_sha256": "6c799e05befe53a65a3d6e2fe9a29f05651433ae6c547ee3ac06cbd84b49e6a9"
+    },
+    {
+      "name": "ops-current",
+      "cwd": ".",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_ops_current_budget.py",
+      "exit": 0,
+      "tests": 8,
+      "log": "ops-current.log",
+      "log_sha256": "8d54467f354b2655eedff783fdfdce986815fd0eb63cbe693a94ccdef8902d90"
+    },
+    {
+      "name": "vitest-directed",
+      "cwd": "agent",
+      "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 node node_modules/vitest/vitest.mjs run tests/agent-board-poll.test.ts tests/ops-current-budget.test.ts --pool=threads --maxWorkers=1 --fileParallelism=false",
+      "exit": 0,
+      "files": 2,
+      "tests": 2,
+      "log": "vitest.log.gz",
+      "uncompressed_sha256": "554433cf3209aac685bab1cef2c2968e233e80d06797813f4f2172aa8fbb9499",
+      "log_sha256": "cd310a800dd1e6d7a7f8165c00546989d39d7b25acc0d92dd6ee3ddd85b2743f"
+    },
+    {
+      "name": "shell-syntax",
+      "cwd": ".",
+      "command": "nice -n 19 bash -n ops/codex-ops.sh",
+      "exit": 0
+    }
+  ],
+  "live_start_affected": false,
+  "full_suite_run": false,
+  "conversations_mode": "shadow",
+  "actual_new": 0,
+  "actual_prompts": 0,
+  "production_control_writes": 0,
+  "cron_changes": 0,
+  "actual_one_hour_rate_readback": "pending original ops deployment",
+  "actual_one_day_shadow_and_lead_approval": "pending; not automatically enabled",
+  "nice": 19,
+  "workers": 1
+}

@@ -1,6 +1,7 @@
 """Fixed checklist growth fixtures; no production state, credentials, games or models."""
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -101,6 +102,61 @@ class ChecklistBudget(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "authorization SHA mismatch"):
             self.generate()
         self.assertEqual((self.root / "notes/ops-current.md").read_bytes(), b"previous checklist retained\n")
+
+    def handoff(self):
+        return 'state: in-flight\nissue: 35\n\n进行中的事: 原发布未完\n在等谁: 原自然边界\n下一步: 核原回执\n\n'.encode()
+
+    def test_refresh_and_index_fallback_keep_role_section_without_refreshing_declaration(self):
+        prefix=self.handoff()
+        path=self.root/'notes/ops-current.md'; path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_bytes(prefix+current.GENERATED+'）\n原投影\n'.encode()); os.utime(path,ns=(123456789,123456789))
+        self.generate()
+        receipt=self.directory/'ops-current-handoff.json'
+        first=json.loads(receipt.read_bytes())
+        self.assertEqual(first['declared_at_ns'],123456789)
+        self.assertEqual(first['sha256'],hashlib.sha256(prefix).hexdigest())
+        self.context['summary']+='保留原授权和原失败。'*2000
+        _,text=self.generate()
+        self.assertTrue(text.startswith(prefix.decode())); self.assertIn('索引模式',text)
+        self.assertEqual(json.loads(receipt.read_bytes()),first)
+
+    def test_explicit_handoff_update_keeps_generated_body_and_can_reaffirm_same_content(self):
+        _,text=self.generate(); prefix=self.handoff()
+        with patch.object(current.time,'time_ns',return_value=2000000000):
+            first=current.write_handoff(self.root,self.directory,prefix)
+        after=(self.root/'notes/ops-current.md').read_bytes()
+        self.assertEqual(after,prefix+text.encode())
+        with patch.object(current.time,'time_ns',return_value=3000000000):
+            second=current.write_handoff(self.root,self.directory,prefix)
+        self.assertEqual(second['sha256'],first['sha256'])
+        self.assertEqual(second['declared_at_ns'],3000000000)
+        self.assertEqual((self.root/'notes/ops-current.md').read_bytes(),after)
+
+    def test_concurrent_role_update_is_retained_and_not_overwritten(self):
+        path=self.root/'notes/ops-current.md'; prefix=self.handoff()
+        path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(prefix+current.GENERATED+b')\nold\n')
+        replacement=prefix.replace(b'35',b'20')+current.GENERATED+b')\nnew\n'
+        calls=0
+        def advance(*args,**kwargs):
+            nonlocal calls
+            calls+=1
+            if calls==3: path.write_bytes(replacement)
+            return 'a'*40
+        with patch.object(current,'git',side_effect=advance),self.assertRaisesRegex(ValueError,'handoff changed'):
+            self.generate()
+        self.assertEqual(path.read_bytes(),replacement)
+
+    def test_oversize_handoff_is_not_truncated_and_bad_draft_does_not_overwrite(self):
+        path=self.root/'notes/ops-current.md'; prefix=self.handoff()+b'x'*12000+b'\n\n'
+        path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(prefix+current.GENERATED+b')\nold\n')
+        before=path.read_bytes()
+        with self.assertRaisesRegex(ValueError,'exceeds 12KB'): self.generate()
+        self.assertEqual(path.read_bytes(),before)
+        with self.assertRaisesRegex(ValueError,'complete role handoff'):
+            current.write_handoff(self.root,self.directory,b'state: clear-ok\nissue: 20\n')
+        with self.assertRaisesRegex(ValueError,'must not include generated'):
+            current.write_handoff(self.root,self.directory,before)
+        self.assertEqual(path.read_bytes(),before)
 
 
 if __name__ == "__main__":

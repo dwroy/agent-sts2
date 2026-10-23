@@ -1,6 +1,6 @@
 state: clear-ok
-issue: 51
-updated_at: 2026-10-23T23:46:15+08:00
+issue: 20
+updated_at: 2026-10-24T00:01:07+08:00
 
 # 集成员当前交接
 
@@ -8,17 +8,19 @@ updated_at: 2026-10-23T23:46:15+08:00
 
 ## 本轮接续
 
-- **进行中的事**：#51外部来源入口972898058已在当前main隔离组合定向核验：tsc0、15文件199过（内含Python11项夹具），21源码叶与开发交付逐blob相同，合main交原ops；未full/模型/对局。材料 `paper/materials/20261023-issue51-external-source-integrator/`。
-- **在等谁**：#51等原ops冻结双Boss→各幕Boss真实安全聚合/规格并启用新外部队列，实际原生启动后绑正式学习要求；当前disabled/空，科学父、实际档位/吞吐/自然采用未验收。另等原#20开发交付、ops对账#35唯一full与实际发布；#50依赖保留。#27未变不重复通知。
-- **下一步**：原ops按#51逐叶清单部署宿主入口、保#48队列；不开full、不整抄main到game live。随后沿20→42余项→35→50→28→37→20父原顺序；#42候选与已发#49重叠须再核组合。
+进行中的事: #20一分钟独立子项已定向核验合main交原ops；11公共叶逐blob等于da1e3bd，配套kit8940977。tsc0、kit123、入口6、生成器8，Vitest3文件4过（包装不累加），未full/模型/游戏。材料paper/materials/20261024-issue20-minute-integrator/。
+在等谁: 原ops安装同组合、切唯一分钟入口，核一小时真实调用和空闲提醒；/new保持shadow，满一天后交主管裁决。#51原ops已冻结启用两批6单元，等原生实际启动/科学父验收。#35旧full已确认为lost-no-final-result，等新R420组合唯一检查；#50依赖保留。#27未变不重发主管。
+下一步: 查原#42额外工具候选的当前组合与发布门；沿42余项→35→50→28→37→20父顺序，不把一分钟子项代父功能，不重开full。
 
 ## 当前任务与顺序
 
-- 原 issue-20 开发会话正在做独立一分钟派单器＋空闲感知；新增任务边界清上下文合同见 #20 评论 6367705371。尚未收到开发交付。交付后只做定向核验，再交 ops；不代开发实现、不改 cron。
+- #20一分钟派单器＋空闲感知和交接保护已定向合main交原ops，来源评论6368947281；真实一小时/一天观察待核。任务边界清理保持shadow；集成员不改cron或生产控制。
 - 原顺序：已核收 #20 学习 tab 子类 → #20 一分钟节拍子项 → #42 工具余项 → #35 → #50 → #28 → #37 → #20 父功能。#42 父合同已关闭，未合工具候选的处置单独保留；#49 新小修正已由原ops发布V6-R420，最终组合须保其合同。#39、#43 随 #20 父功能最终组合核收。
-- 当前 #20 已转 `status:in-progress`；其余积压 #50、#28、#37、#39、#43 均有依赖。已完成的独立核验见 `paper/materials/20261023-review-backlog/review.json` 与本轮读回；不重复旧测试或提前关闭。
+- 当前 #20 为 `status:review`，独立分钟子项已核但父仍待依赖；其余积压 #50、#28、#37、#39、#43 均有依赖。已完成的独立核验见 `paper/materials/20261023-review-backlog/review.json` 与本轮读回；不重复旧测试或提前关闭。
 
 ## 已完成与接续位置
+
+- #20分钟子项：公共da1e3bd（11叶），kit8940977/tree77ee8bc；隔离树e6136139bd基于931e1525。定向核验与输入哈希材料paper/materials/20261024-issue20-minute-integrator/；首个Vitest参数不兼容和重定向失败保留，修正后通过。默认shadow，真/new未启用。
 
 - #51入口：源码 `97289805831237cf9140db5384e9597d12af84c1`，21叶默认disabled/空计划，原#48配置/冻结别名未动；独立tsc0、15文件199过。材料 `paper/materials/20261023-issue51-external-source-integrator/`。仅基础设施合main，交原ops实际部署/冻结/启动；owner:learner、科学父与下游真实验收保持。
 
@@ -35,7 +37,7 @@ updated_at: 2026-10-23T23:46:15+08:00
 
 - 本轮#49产品受测基线 main `50722d45459f6136c2871aecc3904cd2dc5099dd`，受测树 `8d09a0cf2890fe0dd6847917b887116fd1561c0b`；前述 #42 候选基线较旧。
 - 较早 ops 唯一 full 已完成：tsc0、6513过/2跳过，`paper/materials/20261023-fix-211302-ultrafast-ops/transaction.json` 阶段 `main-published-notified-await-idle-native-resume`，原 failed/rc0 保留。不是 #42/#20 未合源码的 full。下一窗口先重读事务和进程实际状态，不能因旧 PID 存在推定仍在测试。
-- #35 后续唯一 full：状态文件 `paper/materials/20261023-ops-backlog-readback/issue35-check-state.json` 仍记 running/tsc0；本轮原 PID 3144467 不存在、日志空、未见 full JSON，结果未知。等原 ops 对账，不复用较早 full 为它背书、不另开重复 full。
+- #35旧R419唯一full：原ops已核lost-no-final-result，PID/子进程、tool session均无，未留full JSON或退出码；原件paper/materials/20261023-r420-natural-ops/issue35-loss-receipt.json，旧running不改写。新R420净12叶树438155cb0cc73dc9b90cdeb6275c1f74a6beebd7已准备，未full、未发布；必须单独受监督核验，不借旧结果背书。
 - #49原ops已登记V6-R420：`902206965e0698253fab1f9a135c9666bdd1ed3b`，状态published-registered-readback-notified-admission-released（23:39:17）；证据 `paper/materials/20261023-issue49-efficiency-ops/publication-state.json`。约14秒目标仍待后续自然窗口，不能由发布完成代验；后续组合再核实际live和最新知识。
 
 ## 权限与保留项
@@ -49,4 +51,4 @@ updated_at: 2026-10-23T23:46:15+08:00
 - #27 正式角色 ACK 仍受原 CLI 来源兼容阻塞；23:13核收16项原文（含000402原日志缺失）、67引用及32投递窗，原rc2拒绝保留；实读/转达不等于正式ACK，科学父保留。#46原24h窗口、#47自然验收等仍由原角色沿原 issue 读回。
 - 全部历史与详细审查见 `handoff/integrator-20261022-codex3.md`；重启先读本文件、AGENTS/架构/工作流，再读对应 issue 最新评论。摘要与原件冲突时查原件，不自行消除待办。
 
-当前等待：原ops接#51宿主入口并冻结/启动首两批，核回#35原full结果；原#20开发交付。#50保留待最终组合。
+当前等待：原ops部署#20分钟子项并做真实一小时/一天读回，#51已启用首两批等原生实际启动；#35新R420组合待唯一检查。继续按原顺序处置#42额外工具候选，#50保留待最终组合。

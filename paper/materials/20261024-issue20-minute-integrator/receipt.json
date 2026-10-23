@@ -1,0 +1,118 @@
+{
+  "checks": [
+    {
+      "name": "kit",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_conversation",
+        "test_polling",
+        "test_watchdog",
+        "test_board",
+        "test_outcomes",
+        "test_release_order",
+        "test_project_contract"
+      ],
+      "exit": 0,
+      "seconds": 1.074
+    },
+    {
+      "name": "adapter",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_agent_board_poll.py"
+      ],
+      "exit": 0,
+      "seconds": 0.248
+    },
+    {
+      "name": "ops-current",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_ops_current_budget.py"
+      ],
+      "exit": 0,
+      "seconds": 0.144
+    },
+    {
+      "name": "shell",
+      "command": [
+        "bash",
+        "-n",
+        "ops/codex-ops.sh"
+      ],
+      "exit": 0,
+      "seconds": 0.006
+    },
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0,
+      "seconds": 1.604
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/agent-board-poll.test.ts",
+        "tests/ops-current-budget.test.ts",
+        "tests/ops-current-events.test.ts",
+        "--maxWorkers=1",
+        "--minWorkers=1"
+      ],
+      "exit": 1,
+      "seconds": 0.493,
+      "superseded_by": "vitest-corrected"
+    },
+    {
+      "name": "vitest-corrected",
+      "exit": 0,
+      "files": 3,
+      "tests": 4,
+      "command": "npx --no-install vitest run tests/agent-board-poll.test.ts tests/ops-current-budget.test.ts tests/ops-current-events.test.ts --pool=threads --maxWorkers=1 --fileParallelism=false"
+    }
+  ],
+  "inputs": 1812,
+  "inputs_unchanged": true,
+  "full_started": false,
+  "game_started": false,
+  "kit_commit": "8940977373e028664dae5fbcf3fea870c8950500",
+  "inputs_unchanged_after_vitest": true,
+  "passed": true,
+  "vitest_redirect_first_attempt": "incorrect relative output path rejected by shell before tests; corrected to absolute path",
+  "kit_tests": 123,
+  "adapter_tests": 6,
+  "ops_current_tests": 8,
+  "vitest_counts_overlap_python_wrappers": true,
+  "production_activated": false,
+  "actual_new": 0,
+  "cron_changes": 0,
+  "reviewed_kit_tree": "77ee8bc2eb7ebfbd9356cafa4c56feae2a4e7fbf",
+  "gitleaks_manifest_false_positive": "generic-api-key matched fixture path label followed by SHA256 in hash map; values are computed file hashes, never credentials; published same manifests as sha256/path rows and rescanned"
+}

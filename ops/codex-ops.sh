@@ -278,7 +278,7 @@ case "$cmd" in
     # One host dispatcher on the existing five-minute cadence; activation follows integration review.
     if [ "$board_mode" = on ]; then
       if [ "$job" = stall ]; then
-        nice -n 19 timeout 240s python3 "$OPS/agent_board.py" --root "$ROOT" >> "$DIR/agent-board.log" 2>&1 || {
+        nice -n 19 timeout 240s python3 "$OPS/agent_board.py" --root "$ROOT" --stall >> "$DIR/agent-board.log" 2>&1 || {
           log "agent board tick failed (see agent-board.log)"
           printf '%s\n' "- $(date '+%F %T') [board] tick 未完成；原现场保留，见 ops/codex-ops/agent-board.log。" >> "$ROOT/ops/inbox-dev.md"
         }

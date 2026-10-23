@@ -8,8 +8,65 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import time
 
 ACCOUNT_CONFIG_RULE = "Roy 2026-10-23：codex3 learner 删除 service_tier 保持现状；账号配置等可回退小改动 ops 可自行处理，做完须写 notes/for-roy.md 并向 ops/codex-ops/inbox-claude.md 追加一行，由主管转达 Roy；不读凭据、不扩大权限。"
+GENERATED = "# 运维当前清单（调度器生成".encode()
+
+
+def handoff_parts(raw):
+    match = re.search(rb"(?m)^" + re.escape(GENERATED), raw)
+    return (raw[:match.start()], raw[match.start():]) if match else (raw, b"")
+
+
+def handoff_snapshot(root, directory):
+    path = root / "notes/ops-current.md"
+    receipt = directory / "ops-current-handoff.json"
+    for target in (path, receipt):
+        if not target.is_relative_to(root): raise ValueError("handoff outside project")
+        current = root
+        for part in target.relative_to(root).parts:
+            current /= part
+            if current.is_symlink(): raise ValueError("symlink handoff retained")
+    before = path.read_bytes() if path.exists() else b""
+    prefix, _ = handoff_parts(before)
+    if prefix and not prefix.endswith(b"\n"):
+        prefix += b"\n\n"
+    record = None
+    if prefix:
+        digest = hashlib.sha256(prefix).hexdigest()
+        previous = json.loads(receipt.read_bytes()) if receipt.exists() else None
+        if previous is not None and (previous.get("schema") != "ops-current-handoff-v1"
+                or previous.get("root") != str(root) or previous.get("path") != "notes/ops-current.md"
+                or type(previous.get("declared_at_ns")) is not int or previous["declared_at_ns"] < 0):
+            raise ValueError("invalid protected handoff receipt")
+        declared = previous["declared_at_ns"] if previous and previous.get("sha256") == digest else path.stat().st_mtime_ns
+        record = dict(schema="ops-current-handoff-v1", root=str(root), path="notes/ops-current.md",
+                      sha256=digest, declared_at_ns=declared)
+    return path, receipt, before, prefix, record
+
+
+def write_handoff(root, directory, draft):
+    """Role-owned updates share the generator's existing lock; never refresh on projection writes."""
+    root, directory = Path(root).resolve(), Path(directory).resolve()
+    if not directory.is_relative_to(root): raise ValueError("handoff directory outside project")
+    directory.mkdir(parents=True, exist_ok=True)
+    text = draft.decode()
+    if handoff_parts(draft)[1]: raise ValueError("handoff draft must not include generated projection")
+    if (not re.match(r"\Astate: (?:clear-ok|in-flight)\nissue: [1-9][0-9]{0,8}\n", text)
+            or any(not re.search(r"^"+key+r"[:：]\s*\S", text, re.M) for key in ("进行中的事", "在等谁", "下一步"))):
+        raise ValueError("complete role handoff required")
+    with (directory / "current.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        path, receipt, before, _, _ = handoff_snapshot(root, directory)
+        prefix = draft.rstrip(b"\n") + b"\n\n"
+        _, generated = handoff_parts(before)
+        if len(prefix + generated) > 12288: raise ValueError("handoff too large; previous declaration retained")
+        record = dict(schema="ops-current-handoff-v1", root=str(root), path="notes/ops-current.md",
+                      sha256=hashlib.sha256(prefix).hexdigest(), declared_at_ns=time.time_ns())
+        save(receipt, record)
+        atomic(path, prefix + generated)
+        return record
 
 
 def stamp():
@@ -32,9 +89,9 @@ def git(root, *args, **kw):
     return subprocess.check_output(["git", "-C", str(root), *args], **kw).decode().strip()
 
 
-def bounded_checklist(text, current, receipt, receipt_sha):
+def bounded_checklist(text, current, receipt, receipt_sha, budget=12288):
     """Fall back to a mandatory, hash-bound read list, never partial authority or evidence."""
-    if len(text.encode()) <= 12288:
+    if len(text.encode()) <= budget:
         return text
     lines = ["# 运维当前清单（调度器生成；索引模式）",
              f"生成：{current['at']}；原件索引：{receipt} SHA256 {receipt_sha}",
@@ -208,17 +265,32 @@ def generate(root, directory):
                       "H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。",
                       "严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。",
                       "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。\n主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。"])
-        text = bounded_checklist("\n".join(lines) + "\n", current, receipt, receipt_sha)
-        if len(text.encode()) > 12288:
+        path, handoff_receipt, before, prefix, declaration = handoff_snapshot(root, directory)
+        text = bounded_checklist("\n".join(lines) + "\n", current, receipt, receipt_sha, budget=12288-len(prefix))
+        raw = prefix + text.encode()
+        if len(raw) > 12288:
             raise ValueError("ops-current exceeds 12KB; retain previous checklist and inspect current.json")
         if git(root, "rev-parse", "HEAD") != main_head or git(live, "rev-parse", "HEAD") != live_head:
             raise ValueError("main/live advanced during checklist generation; retain original event")
-        atomic(root / "notes/ops-current.md", text.encode())
+        # Keep the declaration's own timestamp: a generated refresh cannot authorize /new.
+        if declaration is not None: save(handoff_receipt, declaration)
+        if (path.read_bytes() if path.exists() else b"") != before:
+            raise ValueError("role handoff changed during generation; retain current declaration")
+        atomic(path, raw)
         return current
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root"); parser.add_argument("directory")
+    parser.add_argument("--handoff", type=Path, help="ops-owned draft; update only the protected handoff under current.lock")
     args = parser.parse_args()
-    generate(args.root, args.directory)
+    if args.handoff:
+        root = Path(args.root).resolve()
+        draft = args.handoff if args.handoff.is_absolute() else root / args.handoff
+        if (not draft.is_relative_to(root) or any(p.is_symlink() for p in [draft, *draft.parents])
+                or draft.suffix in ('.pem','.key') or any(part.startswith('.env') or part=='auth.json' for part in draft.parts)):
+            raise ValueError("unsafe handoff draft")
+        write_handoff(root, args.directory, draft.read_bytes())
+    else:
+        generate(args.root, args.directory)
