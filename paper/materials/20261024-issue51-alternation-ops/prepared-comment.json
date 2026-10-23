@@ -1,0 +1,8 @@
+{
+  "id": 6376158243,
+  "url": "https://github.com/dwroy/agent-sts2/issues/51#issuecomment-6376158243",
+  "body": "[ops]\n已按6376022286完成交替派发五叶候选；当前尚未部署，生效时间待真实宿主部署后自动回本issue，不报预估时间。\n\n原普通经验/修复持续优先改为：外部冻结单元待派时，按已注册有PID批次的时间序列交替，两个外部单元间最多插一个普通批；复盘先走原入口且不占轮次。空tick/拒绝不耗轮，活跃批次/原审计租约仍挡新派发，普通轮次含后续升阶审计只用一个名额。正常无可派任务时外部可续接，无外部待派时保留原流水线；来源/两槽/重试/原生验收与权限保持。\n\n隔离工作树`ops-issue51-alternation-20261024`，五叶树`787503aeb774247d82c95af767ae409bd05cfecc`：learner_jobs、strategy_external_jobs、原tick入口、固定回归及retention文档。定向Python18+7+20=45项通过，新增集成夹具首次mock错误已保留说明并修正；源未提交/未合main。\n\n原exp完整检查406019/406027仍在，候选监督449851/birth21955302通过原PID/birth pidfd等其结束后，只冻一次完整检查；当前新full0。该检查不持#28发布K/L锁。部署续接452030/birth21964974仅在候选full通过且原#28实际发布/85消费者/准入释放及退出后，在learn.lock内精确部署三宿主脚本并核实际导入、当前状态只读策略，记录真实T和下一原tick加载边界；未强派、热切会话或改知识/游戏live/账号权限。原28的183宿主输入目前保持。\n\n原件`paper/materials/20261024-issue51-alternation-ops/{authorization-comment,assembly,checks,deployment-state,received-before-check}.json`。首外部native、来源消费与经验live另验，不以调度部署关闭科学父。\n",
+  "author": "dwroy",
+  "readback_equal": true,
+  "gitleaks_rc": 0
+}

@@ -1,14 +1,14 @@
 state: in-flight
-issue: 28
-updated: 2026-10-24T06:28:06+08:00
+issue: 51
+updated: 2026-10-24T06:39:28+08:00
 
-进行中的事: #28 R424净树c3ba93abc61b唯一完整检查06:23:39通过，666文件6536过/2skip/零败、生产/v6工具tsc0，2139输入/469知识/1417依赖/183宿主源码核同。12后像同原候选，保R424经验与49/42/35/50。自然发布worker407393/birth21897369持自有LLM_DRAIN，绑定原play302576/birth21688750、autoplay302180/birth21688242及原console055233前缀244774/SHAeab41e02，pidfd等终局；当前未发布。监督清单误含builder源码，已在源写前停止旧自有监督404987并保留原件，准入无缝转移、同边界/同源码/同检查，无游戏信号或请求。
+进行中的事: 主管6376022286已授权外部与正常学习交替，复盘优先；原一直正常优先的顺序将由新规则替代。五叶候选在.worktrees/ops-issue51-alternation-20261024，树787503aeb774，三宿主脚本+回归+文档；固定45过/首夹具mock错误记录保留。当前宿主未改、尚未生效。候选检查449851/birth21955302先pidfd等原exp full406019/21895801及406027/21895805退出，再按已释放ops检查窗口冻结最新数据做唯一完整检查，当前newfull0；不持#28发布K/L锁。部署续接452030/birth21964974只等实际检查及#28释放，不开模型/tick，完成沿原queue回调并写issue/双收件箱实际生效时间。
 
-在等谁: #28等原play自然终局，随后同publisher沿K→L核12叶前像、最新知识漂移/保存、绑定备份恢复、原85条基线/候选/实际消费者及唯一编号/双通知；不得以工程交付关闭真实两臂/学习条目与反证/Roy开关/A-B科学门。所有旧失败/rc0保持。
+在等谁: #51新规则先等原exp完整检查退出及本候选唯一full结果，再等#28 publisher407393/birth21897369实际发布/85消费者/准入释放且退出，才在learn.lock内精确部署五叶宿主main并核三脚本实际导入/只读策略。#28仍绑定原play302576/birth21688750、auto302180/birth21688242、原console055233前缀244774/SHAeab41e02，自有LLM_DRAIN无缝保留，未发布，不能改其183宿主输入。
 
-下一步: 核paper/materials/20261024-issue28-r424-publication-ops/publication-state.json回调及实际消费者/准入释放；成功后37→20父（含39/43）。原autoplay自然退出且自有准入释放后才沿原broker恢复。失败/未知不转序，不重full/模型、不覆盖新知识或开关。检查及接收原件paper/materials/20261024-issue28-r424-ops/、20261024-issue28-r424-received-ops/；原监督清单修正/同边界转移在publication-ops/。
+下一步: 按checks.json/deployment-state.json真实回调核收，不重full/模型。新交替按已注册PID批次判轮，空tick/拒绝不耗轮；一普通批共用含升阶审计的名额，复盘/在途/租约/双槽/来源与重试保持，无外部时保原流水线。只有宿主实际部署读回才报生效时间，之后原自然tick核首外部native/产物/live消费者，不以部署代采用。#28实际发布释放后37→20父的顺序，受本次优先门修协调；旧失败、85条、开关/真实两臂/A-B及科学父保持。原件paper/materials/20261024-issue51-alternation-ops/、paper/materials/20261024-issue28-r424-publication-ops/。
 
-并行: #52八叶宿主SHA同原交付；06:13原tick派061302普通经验running，backfill_hold=true、外部/回刷null，正常优先/双槽/租约保持。#51已启用首双Boss/次各幕Boss，四冻结任务/清单核同，当前未见external_source批次，等原自然tick真实native/来源/产物与live消费者；先于#48自有回刷，不强派。#46原T10-23 13:46:30，前24h基线106核同，至10-24 13:46:30才核完整[T,T+24h)与complete=true、各类别实际工作量/pending-repair-续跑重试/积压水印；不提前截断/比较，停派与外部优先不算节省。
+并行: #52原四脚本宿主部署已核，现有normal-first状态在上述部署前保持；#51首双Boss/次各幕Boss冻结队列仍enabled true，先于#48自有回刷，不以新调度授权改冻结来源。#46观察完整门10-24 13:46:30、基线106保留，禁提前截断比较；#27 06:13原16/32投递核同且空闲原watcher已提醒，正式ACK兼容/Roy可见及原wrapper仍pending，未重复主管收件箱。
 
 其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、244/首6冻结校验/未见native消费，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。06:13原16通知/32投递核同、同一空闲watcher实际提醒已发，回执20261024-0613-notices-ops/，旧watcher实际接收存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
 

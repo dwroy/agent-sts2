@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-24T06:39:28+08:00",
+  "authorization_comment": 6376022286,
+  "source_leaf_count": 5,
+  "targeted_final": {
+    "test_strategy_external.py": 18,
+    "test_strategy_priority.py": 7,
+    "test_strategy_backfill.py": 20,
+    "total": 45,
+    "exit_codes": [
+      0,
+      0,
+      0
+    ]
+  },
+  "targeted_fixture_first_failure_preserved": {
+    "stage": "before unique full",
+    "test": "test_original_tick_keeps_postmortem_first_and_shares_the_audit_admission",
+    "error": "TypeError: Object of type MagicMock is not JSON serializable, pending_notified",
+    "correction": "Fixed synthetic check_pending mock to return None; final18 tests passed. No production state or original batch failure modified."
+  },
+  "checks": {
+    "at": "2026-10-24T06:37:03+08:00",
+    "phase": "waiting-original-exp-full-terminal",
+    "worker_pid": 449851,
+    "worker_birth": "21955302",
+    "new_full_runs": 0,
+    "model_calls": 0,
+    "main_merged": false,
+    "live_written": false,
+    "original_full_pids": [
+      406019,
+      406027
+    ]
+  },
+  "deployment_supervision": {
+    "at": "2026-10-24T06:38:39+08:00",
+    "phase": "waiting-original-candidate-check-worker",
+    "worker_pid": 452030,
+    "worker_birth": "21964974",
+    "deployed": false,
+    "new_full_models_games_ticks": 0
+  },
+  "original28_state": {
+    "at": "2026-10-24T06:27:25+08:00",
+    "phase": "waiting-original-natural-terminal",
+    "worker_pid": 407393,
+    "worker_birth": "21897369",
+    "published": false,
+    "new_full_model_or_game": 0,
+    "held_locks": [],
+    "boundary": {
+      "at": "2026-10-24T06:26:43+08:00",
+      "play_pid": 302576,
+      "play_birth": "21688750",
+      "play_cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "autoplay_pid": 302180,
+      "autoplay_birth": "21688242",
+      "console_path": "logs/console/20261024-055233-1744e7715+dirty.log",
+      "prefix_bytes": 244774,
+      "prefix_sha256": "eab41e02e00e27853bf5a482e222d8cfc75184a956ed9c8a3ac0a4fd9752533d",
+      "wait": "original PID/birth pidfd natural terminal only; no signals, keys or game requests"
+    }
+  },
+  "effective_at": null,
+  "not_deployed": true,
+  "new_models_games_ticks": 0
+}
