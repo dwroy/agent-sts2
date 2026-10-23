@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-24T01:46:10+08:00",
+  "issue": 36,
+  "change": "documentation deployment contract only",
+  "tested_base": "394904a54745e6170cd320967661bf5dcb9e7d01",
+  "python_command": "nice -n 19 /usr/bin/python3 -B -m unittest ops.tests.test_learner_environment ops.tests.test_learner_tui_recovery",
+  "python_rc": 0,
+  "python_methods": 16,
+  "imports_rc": 0,
+  "loaded_local_modules": 37,
+  "full_runs": 0,
+  "model_starts": 0,
+  "production_apply": false,
+  "live_written": false,
+  "initial_probe_failure": "Instrumentation KeyError: before-snapshot omitted agent/tools; original stderr retained; corrected scope then import/byte checks passed.",
+  "existing_live_failure": "R422 plus exact 11 leaves: 16 Python methods, 10 import errors. This unsupported deployment remains failed, not repaired or reclassified as passed.",
+  "prior_ops_check": "paper/materials/20261024-issue36-midnight-publication-ops/check.json",
+  "prior_main_check": "paper/materials/20261024-issue36-midnight-integrator/checks.json",
+  "prior_ops_log_sha_verified": 6,
+  "logs": [
+    {
+      "path": "python-tests.log",
+      "sha256": "a82f1fa0c8ce1f74a2a2692a5092dc06176ee5a3f2639b14a40fef6663fbade0"
+    },
+    {
+      "path": "probe.stderr",
+      "sha256": "f3fea6d2d538aed6686d978af4450e58a35dd0b196f8a56b261d294f8f81dbbf"
+    },
+    {
+      "path": "probe-v2.stdout",
+      "sha256": "0d50a4eefa5509b7c220cd44ac43c5c858685afb1f6eca213421d66a677bfe9a"
+    },
+    {
+      "path": "probe-v2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "probe-v3.stdout",
+      "sha256": "92a36cd5561fdb1673016aede37078480a8653e56b2cc3224dd13bde76cb66ca"
+    },
+    {
+      "path": "probe-v3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

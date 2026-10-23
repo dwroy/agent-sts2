@@ -158,7 +158,11 @@ Codex 0.164 的跨日期环境更新必须在已绑定且仍打开的原 turn �
 
 原 ops 需要持续观察保留的原进程时，可显式使用同一工具的只读监督模式：在上述 `--receipt` / `--native` 后加 `--watch-state <原learn.json> --batch <原批次key> --output <全新路径.observation.json> --timeout-seconds <1至3600>`。它仅对原生、回执及原登记做只读重建，并经 Herdr `pane get` / `agent get` / `pane process-info` 核原 pane/tab/terminal/workspace、短名/cwd、前台 PID/birth；来源回执 SHA、登记快照或原生既有字节变化就保留待核。只写新的 0600 观察产物，既有输出路径拒绝覆盖；不发 prompt/按键、不改 canonical/旧回执，不重开模型或替换原 supervisor。`completed-observed`/退出0只证明本次观察的原轮完成及身份核验，不授予 finish/retirement，也不撤销原 rc75。原 PID 已退、登记已交他人、未知或超时均按75交原 ops。实际恢复完成事务和回收仍须原 supervisor/产物合同，不把观察文件写回为旧完成回执。
 
-**同会话完成恢复**仅支持已原生完成、旧监督已退出的复盘和经验更新批：`nice -n 19 python3 ops/learner_tui.py recover-completed ROOT DIR BATCH ORIGINAL_RECEIPT_SHA256` 默认只读预检，不授权退场。ops 在发布后明确加 `--apply` 才登记新的恢复监督事务。它核完整原生绑定/环境/成功完成，原 PID/birth、短名、pane 与空 composer；只对确已完成的原 TUI 发送经过逐次复核的 Ctrl-C，不发任务、不重启模型或关 tab。原监督仍活着、人工/排队输入、身份变化、原生追加不明内容、回执不确定、锁忙或十秒退场预算耗尽均拒绝。
+**同会话完成恢复**仅支持已原生完成、旧监督已退出的复盘和经验更新批：`nice -n 19 python3 ops/learner_tui.py recover-completed ROOT DIR BATCH ORIGINAL_RECEIPT_SHA256` 默认只读预检，不授权退场。ops 在部署核同后明确加 `--apply` 才登记新的恢复监督事务。它核完整原生绑定/环境/成功完成，原 PID/birth、短名、pane 与空 composer；只对确已完成的原 TUI 发送经过逐次复核的 Ctrl-C，不发任务、不重启模型或关 tab。原监督仍活着、人工/排队输入、身份变化、原生追加不明内容、回执不确定、锁忙或十秒退场预算耗尽均拒绝。
+
+恢复入口归主检出运维运行根所有。上例必须从原主运行根执行，或用该根下 `ops/learner_tui.py` 的绝对路径；`ROOT` 为同一主运行根，`DIR` 为其原 `ops/codex-ops` 实例目录，批次登记、原输出和原生会话路径保持原绑定。不要把 `ROOT` 换成 live、开发树或另一实例，也不要用主目录的依赖路径给 live 入口补导入。`--apply` 所需的 `issue_session.py`、`issue_session_support.py`，同根的 `codex-ops-learn.py` 完成链及其依赖，以及后续 `learner_tabs.py` 原退场链，都在主检出核部署与 SHA；恢复子进程以同一 `ROOT` 为 cwd，并显式传同一 `CODEX_OPS_ROOT` / `CODEX_OPS_DIR`。live 中的游戏代码另沿原发布锁和自然边界部署；仅运输午夜修复的11叶不会在 live 提供独立恢复入口，不要求把主目录派单器或退场模块整套复制过去。
+
+默认预检在导入 `issue_session` 前就会返回，因此 rc0 不能证明 apply 依赖齐全。原 ops 在 apply 前须核主运行根源码与已审清单一致、恢复和 finish 的本地模块均可导入，并重新核原两批的只读预检及 fresh 身份。主目录恢复可用、live 游戏补丁已发布、原两批真实恢复和后续自然验收分别留回执；不得合写成“live 恢复链通过”。2026-10-24 的 R422+11叶 Python 导入失败保留原件，采用此主目录部署合同不会追认其成功。
 
 恢复事务先以原 SHA 归档旧75回执、原输出、登记及原生快照，原绑定不变；只有原生实际退出并回到同 pane 的 shell 后才生成带 `recovery` 来源的新完成回执和新监督日志。原输出仅追加经核实的原生最终回报，旧前缀另存；canonical 回执切换到明确的新 producer epoch，旧75原字节保留在归档，不能将其描述为原监督返回成功。新监督仍调用原 `verify`、`finish` 产物审计与 `finished` PID/父进程合同，native rc0不代语义done；原失败/空修复验收不放宽。之后由原 #20 门核新 wrapper 监督实际退出与封存/关 tab，恢复入口不自行 seal 或回收。任何中途不确定都保留恢复 journal/证据并将仍属本恢复监督的批次置待核，不盲目重试；已经退场或发布的阶段不回写成未发生。不能对保留了未完成恢复事务的批次重复 `--apply`。
 

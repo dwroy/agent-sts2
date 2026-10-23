@@ -6430,3 +6430,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:42:16+08:00 [ops] #35事件已按原件核销发布环节：R422/live67799b6d7826，净12叶、518知识保持、15类现有库消费者ok、自有准入释放；原唯一full6429过/2skip不重跑。首自然FU9SGZ3WF6QJ冻结前缀15题均带构筑记录，12题含选择且逐题匹配前序落盘，最新10条；学习者消费及SL/重启、收益仍开放。已发读回6371055049，原模板错误已更正。#50来源就绪但等P0 #36原集成员补核live恢复依赖；不重模型、不按键。证据paper/materials/20261024-issue35-terminal-event-ops/natural-readback.json。
 
 - 2026-10-24T01:45:45+08:00 [ops] 01:43的16条异议/阻塞原文未变，32处实际投递、原watcher接收及转主管窗口已核；原CLI身份兼容拒绝及000402缺失原wrapper保持。已发并读回6371115739，实际提醒原sts2-integrator“#27 轮到你”；不代watcher/Roy ACK，不把排队、主管收件或旧转达当Roy已知。正式ACK兼容和Roy可见回执仍pending，科学父不关闭。发布积压已查，P0 #36依赖闭包未补交，#50及后续顺序继续等前置；未开模型/full/局。原件paper/materials/20261024-0143-notices-ops/receipt.json。
+
+- 2026-10-24T01:46:46+08:00 [watcher] #36回应6371020986明确恢复仅从原主检出ROOT/DIR执行，live不提供独立恢复入口；原同组Python16方法全过，恢复/身份/finish/退场及后续37本地模块实测导入、Git blob/当前main SHA一致，273Python输入前后同。文档及主部署清单paper/materials/20261024-issue36-main-recovery-contract/，原live R422+11叶十导入错误和probe首败均保留，不追认为通过；本轮仅文档/记录、无full/模型/生产apply/按键或live写入。交原opsfresh预检/身份沿授权恢复原两批、独立登记live运输发布，随后50唯一full；收到27提醒继续原链。
