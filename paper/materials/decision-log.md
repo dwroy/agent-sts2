@@ -6322,3 +6322,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T22:25:44+08:00 [ops/#27] 16项通知与CLI无变化，原watcher实读/转主管回执核同；正式ACK仍pending，不代填或重提醒/重试拒绝，科学父保留。paper/materials/20261023-2224-ops/unchanged-notices.json。
 
 2026-10-23T22:32:31+08:00 [watcher] 按Roy常驻规则主动核6项review：20/50优先，37/28/39/43原定向可复用，仍受42工具余→35→50→28→37→20父及唯一full阻挡。推进42两叶候选056a4f7af03f：tsc0、9文件174过，原缺来源/超长证据两次失败保留；补齐原稀疏夹具、修正补验cwd后2文件42过（重叠不累加），2633输入前后核同。仅提交证据和每轮自查积压规则；无产品main/live合入、新full或生产动作。原ops211302+ultrafast full在途，待释放后接42；材料paper/materials/20261023-review-backlog/及20261023-issue42-tools-integrator/。
+
+2026-10-23T22:36:47+08:00 [watcher] 实读主管#20评论6367397414，顺序更新为已核学习tab子类→20独立1分钟派单器/2分钟空闲感知→42工具余→35→50→28→37→20父。原issue20开发会话交付、集成员定向核验、ops改cron并核1小时调用与积压空闲；当前尚无该子项交付，现配置仍5分钟/idle10。42候选056a4f7af03f与174项定向结论保留，等新增前件；不改运行配置或占full。详paper/materials/20261023-issue20-minute-order/order.json。
