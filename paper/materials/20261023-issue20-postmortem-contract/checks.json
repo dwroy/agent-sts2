@@ -1,0 +1,29 @@
+{
+  "before": {
+    "tests": 1,
+    "exit_code": 1,
+    "log": "before.log",
+    "error": "KeyError: learner-20261023-032433"
+  },
+  "after": {
+    "tests": 53,
+    "exit_code": 0,
+    "log": "final.log",
+    "postmortem": 28,
+    "non_postmortem": 25,
+    "native_verifier": "real #36 0933ea0 verify_native; fixed pane/proc fixture"
+  },
+  "tsc": {
+    "exit_code": 0,
+    "log": "tsc.log",
+    "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 agent/node_modules/.bin/tsc -p agent/tsconfig.json --noEmit"
+  },
+  "full_vitest": false,
+  "production_actions": false,
+  "logs_sha256": {
+    "after.log": "c7997cbaa394a80ca9ad9cecebe277514270649dbed7f42b4c21c9d47f1693a4",
+    "before.log": "1852e34d890483a10fd88d5d149b41e99a072c7e5064dbbcb5a60a5a2f67f187",
+    "final.log": "4af17323942b8a5d60cbaac394827b4f473f7784abc47e835c6c8b0ebb366444",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

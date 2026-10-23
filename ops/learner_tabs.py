@@ -44,6 +44,11 @@ def binding(row):
     return {key: row.get(key) for key in BINDING}
 
 
+def batch_label(batch, row):
+    """Match the original writer: postmortem uses a timestamp key and a suffixed host label."""
+    return "learner-" + batch + ("-postmortem" if row.get("task", "postmortem") == "postmortem" else "")
+
+
 def shell_empty(screen):
     """Accept only a visible, empty standard bash prompt; unknown/custom prompts stay retained."""
     plain = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", screen).replace("\r", "")
@@ -93,8 +98,9 @@ class LearnerTabs:
             self.data["notices"][key] = "done"; self.save()
         return dict(pane=pane, state="retained", reason=reason)
 
-    def receipt_path(self, batch, suffix):
-        return safe_path(self.root, self.directory / "learner" / ("learner-" + batch + suffix))
+    def receipt_path(self, batch, suffix, row=None):
+        row = load(self.state)["batches"][batch] if row is None else row
+        return safe_path(self.root, self.directory / "learner" / (batch_label(batch, row) + suffix))
 
     def files(self, paths):
         result = {}
@@ -116,7 +122,7 @@ class LearnerTabs:
         if any(key != batch and other.get("pane") == row.get("pane") for key, other in batches.items()):
             raise ValueError("batch pane ownership is ambiguous")
         host = load(self.host)
-        label = "learner-" + batch
+        label = batch_label(batch, row)
         if (host.get("workspace_label") != "sts2-run" or not row.get("pane")
                 or host["panes"][label]["pane_id"] != row["pane"]):
             raise ValueError("batch or host binding changed")
@@ -187,8 +193,8 @@ class LearnerTabs:
         row, host = self.current(batch)
         if row["pid"] != os.getppid() or birth(row["pid"]) is None:
             raise ValueError("only the registered supervisor may seal retirement")
-        label = "learner-" + batch
-        path = self.receipt_path(batch, ".tui.json")
+        label = batch_label(batch, row)
+        path = self.receipt_path(batch, ".tui.json", row)
         output = self.directory / "learner" / (batch + ".out")
         receipt = load(path)
         result = receipt["result"]
@@ -252,7 +258,7 @@ class LearnerTabs:
             raise ValueError("live learner cwd retained")
         proof["identity"] = self.idle(pane, proof)
         proof["files"] = self.files(paths)
-        destination = self.receipt_path(batch, ".tab-retirement.json")
+        destination = self.receipt_path(batch, ".tab-retirement.json", row)
         if destination.exists():
             old = load(destination)
             proof["sealed_at"] = old.get("sealed_at")
@@ -264,8 +270,8 @@ class LearnerTabs:
 
     def reclaim(self, batch, pane_id):
         row, host = self.current(batch)
-        label = "learner-" + batch
-        proof = load(self.receipt_path(batch, ".tab-retirement.json"))
+        label = batch_label(batch, row)
+        proof = load(self.receipt_path(batch, ".tab-retirement.json", row))
         if (proof.get("schema") != SCHEMA or proof.get("root") != str(self.root)
                 or proof.get("state_file") != str(self.state) or proof.get("batch") != batch
                 or proof.get("binding") != binding(row) or proof.get("authority") != "batch" or proof.get("label") != label
@@ -273,7 +279,7 @@ class LearnerTabs:
             raise ValueError("retirement receipt or ownership differs")
         if birth(proof["owner_pid"]) == proof["owner_birth"]:
             return dict(pane=pane_id, state="queued", reason="supervisor still retiring")
-        receipt = load(self.receipt_path(batch, ".tui.json"))
+        receipt = load(self.receipt_path(batch, ".tui.json", row))
         if (receipt.get("pane") != row["pane"] or receipt.get("label") != label or receipt.get("cwd") != proof.get("cwd")
                 or (receipt.get("state") != "not-started" and receipt.get("retirement_authorized") is not True)):
             raise ValueError("batch disposal authority missing")

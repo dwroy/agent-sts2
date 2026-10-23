@@ -14,6 +14,9 @@ import learner_tabs as tabs
 
 
 class LearnerTabs(unittest.TestCase):
+    fixture_batch = "20261023-032433-s2-strategy-proposal"
+    fixture_task = "strategy-proposal"
+    fixture_label = "learner-20261023-032433-s2-strategy-proposal"
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -21,10 +24,10 @@ class LearnerTabs(unittest.TestCase):
         self.files = self.directory / "learner"; self.files.mkdir(parents=True)
         (self.root / ".agents").mkdir()
         (self.root / ".agents/board.yaml").write_bytes((Path(tabs.__file__).parents[1] / ".agents/board.yaml").read_bytes())
-        self.batch = "20261023-032433-s2-strategy-proposal"
-        self.label = "learner-" + self.batch
+        self.batch = self.fixture_batch
+        self.label = self.fixture_label
         self.tree = self.root / ".worktrees/fixture"; self.tree.mkdir(parents=True)
-        self.row = dict(state="failed", rc=3, finished="2026-10-23T03:46:00+08:00", pid=222, pane="wR:p1", worktree=str(self.tree), task="strategy-proposal")
+        self.row = dict(state="failed", rc=3, finished="2026-10-23T03:46:00+08:00", pid=222, pane="wR:p1", worktree=str(self.tree), task=self.fixture_task)
         self.host = dict(workspace_label="sts2-run", workspace_id="wR", panes={self.label: dict(pane_id="wR:p1", title="学习大脑 · fixture")})
         self.pane = dict(pane_id="wR:p1", tab_id="wR:t1", workspace_id="wR", terminal_id="terminal-1", revision=1, cwd=str(self.root), foreground_cwd=str(self.root))
         self.tab = dict(tab_id="wR:t1", label="学习大脑 · fixture", pane_count=1)
@@ -304,6 +307,58 @@ class LearnerTabs(unittest.TestCase):
                 self.assertEqual(tabs.main(argv),1)
             self.assertEqual(json.loads(output.getvalue())['state'],'failed')
             self.assertTrue(self.worker.inbox.exists())
+
+    def test_awaiting_review_is_retained_without_close_or_original_rewrite(self):
+        self.row.update(state='awaiting_review', review_required='tui-verification-timeout')
+        self.row.pop('rc'); self.row.pop('finished'); self.write_state()
+        original={path:path.read_bytes() for path in self.files.iterdir()}
+        state=(self.directory/'learn.json').read_bytes()
+        self.assertEqual(self.tick()[0]['state'],'retained')
+        self.assertTrue(self.present); self.assertTrue(self.worker.inbox.exists())
+        self.assertFalse(any(c[:2] in (('tab','close'),('pane','get')) for c in self.calls))
+        self.assertEqual(state,(self.directory/'learn.json').read_bytes())
+        self.assertEqual(original,{path:path.read_bytes() for path in original})
+        with self.assertRaises(ValueError): self.worker.board.protect(dict(self.row,label=self.label))
+
+
+class PostmortemContract(LearnerTabs):
+    # The scheduler batch key is timestamp-only; only its host label/receipts carry this suffix.
+    fixture_batch = "20261023-032433"
+    fixture_task = "postmortem"
+    fixture_label = "learner-20261023-032433-postmortem"
+
+    def test_timestamp_postmortem_paths_seal_owner_exit_and_tick(self):
+        originals={path:path.read_bytes() for path in self.files.iterdir()}
+        state=(self.directory/'learn.json').read_bytes()
+        self.worker.seal(self.batch)
+        proof=self.files/(self.label+'.tab-retirement.json')
+        self.assertTrue(proof.is_file())
+        self.assertFalse((self.files/('learner-'+self.batch+'.tab-retirement.json')).exists())
+        self.assertEqual(self.worker.receipt_path(self.batch,'.tui.json'),self.files/(self.label+'.tui.json'))
+        self.assertEqual(tabs.load(proof)['batch'],self.batch)
+        self.assertEqual(tabs.load(proof)['label'],self.label)
+        self.assertEqual(self.tick()[0]['state'],'queued')
+        self.assertTrue(self.present)
+        self.births.pop(222)
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        self.assertNotIn(self.label,tabs.load(self.directory/'herdr.json')['panes'])
+        self.assertEqual(state,(self.directory/'learn.json').read_bytes())
+        self.assertEqual(originals,{path:path.read_bytes() for path in originals})
+
+    def test_legacy_missing_task_uses_the_same_postmortem_default_as_writer(self):
+        self.row.pop('task'); self.write_state()
+        self.seal()
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        self.assertEqual(list(tabs.load(self.directory/'learn.json')['batches']),[self.batch])
+        self.assertNotIn(self.label,tabs.load(self.directory/'herdr.json')['panes'])
+
+    def test_unsuffixed_receipt_is_not_guessed_or_rewritten(self):
+        original=self.files/(self.label+'.tui.json')
+        unsuffixed=self.files/('learner-'+self.batch+'.tui.json')
+        original.rename(unsuffixed); before=unsuffixed.read_bytes()
+        with self.assertRaises(FileNotFoundError): self.worker.seal(self.batch)
+        self.assertEqual(before,unsuffixed.read_bytes())
+        self.assertFalse(original.exists()); self.assertTrue(self.present)
 
 
 if __name__ == "__main__": unittest.main()

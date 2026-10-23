@@ -10,13 +10,13 @@
 nice -n 19 python3 ops/learner_tabs.py seal --root "$ROOT" --state-dir "$DIR" --batch "$batch"
 ```
 
-seal 只封存回执，不关 tab、不发模型提示、不改 learn.json 的结果或重试安排。调用者的直接父 PID 必须是 learn.json 的本批原 supervisor，核 `/proc` birth；终态为 done/failed/rejected/cancelled，必须有 finished 与整数 rc，75/124 不视为安全终态。原 pane 唯一绑定本批、herdr.json 的 learner-BATCH、sts2-run 与单 pane tab。永久保护角色及 live 仍拒绝。
+seal 只封存回执，不关 tab、不发模型提示、不改 learn.json 的结果或重试安排。调用者的直接父 PID 必须是 learn.json 的本批原 supervisor，核 `/proc` birth；终态为 done/failed/rejected/cancelled，必须有 finished 与整数 rc，75/124 不视为安全终态。原 pane 唯一绑定本批、herdr.json 的本批 LABEL、sts2-run 与单 pane tab。永久保护角色及 live 仍拒绝。
 
-输入是 `learner/learner-BATCH.tui.json`、`BATCH.out`、`BATCH.err`。TUI 回执须有原 pane/label/cwd/identity（pane_id/tab_id/workspace_id/terminal_id）。正常/取消任务另核 session-ended/turn-ended、retirement_authorized=true、agent_name v1、pid/birth、原 native bindings/submissions；调用 #36 的 `learner_tui.verify_native`，核原 summary/session/exit、learner log SHA 和本批最后原生回合确已 task_complete/turn_aborted。只看到 idle 不代原生回合结束。所有路径限项目内非软链接、非凭据；产物原件仍保留。
+原 batch key 不变；label 按原批次 task 确定：postmortem（含旧记录缺 task 的默认值）为 `learner-BATCH-postmortem`，其他任务为 `learner-BATCH`。回执读取、封存路径及 host 删除键都使用同一 label，不扫描/猜测其他文件名、不改旧原件。输入是 `learner/LABEL.tui.json`、`BATCH.out`、`BATCH.err`。TUI 回执须有原 pane/label/cwd/identity（pane_id/tab_id/workspace_id/terminal_id）。正常/取消任务另核 session-ended/turn-ended、retirement_authorized=true、agent_name v1、pid/birth、原 native bindings/submissions；调用 #36 的 `learner_tui.verify_native`，核原 summary/session/exit、learner log SHA 和本批最后原生回合确已 task_complete/turn_aborted。只看到 idle 不代原生回合结束。所有路径限项目内非软链接、非凭据；产物原件仍保留。
 
 零模型失败只接受 not-started、models_started=0、code3、未 submitted/无 bindings 或 submissions、原身份齐全；允许原 launcher 明确的 code3→learn.rc1 失败映射，或 rc3，绝不写成成功。out 可为空，out/err 必须存在。未知失败、缺身份或没有原终态保留，不靠空 bash 猜完成。取消同样须原回合终结和本批处置权。
 
-seal 生成 `learner/learner-BATCH.tab-retirement.json`（schema `learner-tab-retirement-v1`）：root/state_file/batch、原批次 binding、owner PID/birth、authority=batch、原 label/cwd、pane/tab/workspace/terminal、shell PID/birth、tab 标题与 pane activity revision、每份原件 path/SHA。回执原子落盘；重封存只允许字节意义相同的身份/证据，不覆盖旧证明。新增回执由本 helper 生成，wrapper 无需手拼 schema。#36 wrapper 变更及其真实终态/回执合同是采用前置；旧在途回执不改写，历史 tab 缺封存证明仍保留并报主管，不能从冻结测试推断历史已回收。
+seal 生成 `learner/LABEL.tab-retirement.json`（schema `learner-tab-retirement-v1`）：root/state_file/batch、原批次 binding、owner PID/birth、authority=batch、原 label/cwd、pane/tab/workspace/terminal、shell PID/birth、tab 标题与 pane activity revision、每份原件 path/SHA。回执原子落盘；重封存只允许字节意义相同的身份/证据，不覆盖旧证明。新增回执由本 helper 生成，wrapper 无需手拼 schema。#36 wrapper 变更及其真实终态/回执合同是采用前置；旧在途回执不改写，历史 tab 缺封存证明仍保留并报主管，不能从冻结测试推断历史已回收。
 
 ## 原 tick 回收
 
