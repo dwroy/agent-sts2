@@ -100,7 +100,9 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
     queryTool("kb_strategies", knowledgeCharacter() !== "silent" ? "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。" : "按本题非空线索与需要查本角色已发布策略库（按本题状态匹配触发条件），query=* 查本题匹配项，也可用条目 id /关键词。0匹配时跳过；空库返回空，保留自有/外部来源、置信度、证据和限制。", (query, ctx) => {
       const data = strategyMatches(ctx);
       const rows = data.entries.filter(e => query === "*" || `${e.id} ${e.strategy}`.includes(query));
-      return bounded(rows, [...data.sources, ...rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null }))], { status: data.status, ...(data.library_sha256 ? { library_sha256: data.library_sha256 } : {}) });
+      return bounded(rows, [...data.sources, ...rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null })), ...rows.flatMap(e => e.evidence.map(ev => ev.type === "external_aggregate"
+        ? { source: ev.source, version: ev.version, dataset_sha256: ev.dataset_sha256, denominator: ev.denominator }
+        : { source: "own", version: e.version }))], { status: data.status, ...(data.library_sha256 ? { library_sha256: data.library_sha256 } : {}) });
     }),
     ...(knowledgeCharacter() === "silent" ? [reflexKnowledgeTool()] : []),
     ...externalStatsTools(),
