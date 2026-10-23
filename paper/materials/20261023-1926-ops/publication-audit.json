@@ -1,0 +1,75 @@
+{
+  "20261023-issue49-26-publication-ops": {
+    "commit": "3db681b6330f50b66e21c28a9ce7a19f154274ab",
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/router.ts",
+      "agent/src/brain/tools/agent-knowledge.ts",
+      "agent/src/brain/tools/query-guidance.ts",
+      "agent/src/brain/tools/reflex-knowledge.ts",
+      "agent/src/brain/tools/types.ts",
+      "agent/src/hand/screens/reward-external-stats-ids.ts",
+      "agent/src/hand/screens/reward-external-stats.ts",
+      "agent/src/hand/screens/reward.ts",
+      "agent/src/knowledge/strategy-entries.ts",
+      "agent/src/v6/knowledge.ts",
+      "agent/tests/brain-agent-mode.test.ts",
+      "agent/tests/brain-query-guidance.test.ts",
+      "agent/tests/brain-reflex-knowledge.test.ts",
+      "agent/tests/reward-external-stats.test.ts",
+      "agent/tools/brain-agent-report.ts",
+      "docs/brain-agent-mode.md",
+      "docs/brain-strategies.md",
+      "knowledge/schemas/brain-strategies-v1.schema.json"
+    ],
+    "tree": "f1e17844efbf69286f7c2bdd86e0fb8eece9f056",
+    "receipt_sha256": "5443aa41b4c1ef5982fda127f5064a86d4f3bc7f83f331d9742bb9d2fe29bd08"
+  },
+  "20261023-issue40-periodic-release-ops": {
+    "commit": "0f5dfa4726f2f8e20723100eac55e617d3191c19",
+    "paths": [
+      "agent/tests/legacy-refresh-incremental.test.ts",
+      "docs/logdb.md",
+      "knowledge/builders/refresh_driver.py",
+      "knowledge/builders/test_refresh_pipeline.py"
+    ],
+    "tree": "ee9c0b230a5ade669735934f09ff4fa4c6b005a7",
+    "receipt_sha256": "a11436ceb8cdd375952000a87c518947b0001fda78f44028f706eef4db2ebe8f"
+  },
+  "actual_live": "0f5dfa4726f2f8e20723100eac55e617d3191c19",
+  "runtime": [
+    {
+      "pid": 1248445,
+      "uid": 1000,
+      "start": "9590346",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "kind": "autoplay"
+    },
+    {
+      "pid": 2047538,
+      "uid": 1000,
+      "start": "17918329",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "play",
+      "stdout": "/home/dw/Projects/agent-sts2/logs/console/20261023-192408-0f5dfa472+dirty.log"
+    }
+  ],
+  "gates": {
+    "ops/STOP": false,
+    "ops/PAUSE": false,
+    "ops/codex-ops/LLM_DRAIN": false,
+    "ops/codex-ops/ACCOUNT_DRAIN": false
+  },
+  "release_rows": [
+    {
+      "name": "V6.strategy-reflex-query-guidance-reward-statistics-cues",
+      "family": "V6",
+      "commit": "3db681b6330f50b66e21c28a9ce7a19f154274ab",
+      "release_id": "V6-R418",
+      "release_status": "registered-primary-ops",
+      "source": "2026-10-23T19:23:45+08:00; issue49 7d262cd778 and issue26 c9848dd6, exact19 net anchor 4569d11ff35a1d919ca921061e7383b2921db642. Original sole full672files6490pass1fail2skip rc1 retained: sparse tracked issue29 fixture missing; exact Git fixture supplement1pass. Supervisor explicitly authorized reuse; net tsc0/93files1263pass0skip plus latest469knowledge supplement same93/1263 and actual9rk IDs/source/confidence. Silent gets real kb_reflex (15tools), strategy/rk/experience separate query audit; clue IDs/counts only, no inline knowledge. Original8call/time/fallback budgets unchanged; other roles14tools/Jev/V6_COMBAT_ENTRIES unchanged. Reward/card only optional exact-ID external stats cue, no ordering/causal value rule. Excludes unpublished35 construction-log. Rollback only19 leaves to preserved preimages, keep latest data/logs/config; natural18-run comparison/benefit pending."
+    }
+  ]
+}

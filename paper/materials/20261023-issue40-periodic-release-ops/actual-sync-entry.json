@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-23T19:23:50+08:00",
+  "loaded_source": ".worktrees/live/knowledge/builders/refresh_driver.py",
+  "steps": [
+    {
+      "name": "logdb-sync",
+      "argv": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/data/logdb-venv/bin/python",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/sync.py",
+        "--logs",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "--db",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/data/logdb",
+        "--no-wait"
+      ]
+    },
+    {
+      "name": "logdb-sync-ops-root",
+      "argv": [
+        "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/sync.py",
+        "--logs",
+        "/home/dw/Projects/agent-sts2/logs",
+        "--db",
+        "/home/dw/Projects/agent-sts2/data/logdb",
+        "--no-wait"
+      ]
+    }
+  ],
+  "invoked": false,
+  "new_sync_or_refresh_replayed": false
+}

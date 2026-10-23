@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-23T19:43:32.718999+08:00",
+  "original_entry": "learner_jobs.dispatch_write",
+  "held_pending_ids": [
+    "silent-proposal-04b6b430759815ed",
+    "silent-proposal-0800d092e6d7eab0",
+    "silent-proposal-167b20d3b7105257",
+    "silent-proposal-2b42d1fc73a94000",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-3cc456821c19d2f1",
+    "silent-proposal-3edf35d9b47a7486",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-8d0219c3a8a99060",
+    "silent-proposal-90e0bc4e45916d16",
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-9952ee8e8df9a0fe",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a9c0bfa7e34da37d",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-f35501885edc7aa1",
+    "silent-proposal-f6f27a4e9301d1f9"
+  ],
+  "pending_total": 880,
+  "starts": [
+    [
+      "20261023-194330-strategy-proposal",
+      2127116
+    ],
+    [
+      "20261023-194330-s2-strategy-proposal",
+      2127287
+    ]
+  ],
+  "attempts": [
+    {
+      "ids": [
+        "silent-proposal-afe154edb1392350",
+        "silent-proposal-d779d007d2f17ffd",
+        "silent-proposal-2d70265e0aee98eb",
+        "silent-proposal-4cc2c7b669db7017",
+        "silent-proposal-0579a2900b4c4443",
+        "silent-proposal-df4f5dbaaf0c7e51",
+        "silent-proposal-a16dab7fba23fade",
+        "silent-proposal-8a00f9885abb91af",
+        "silent-proposal-10edfa9a4c4ebc08",
+        "silent-proposal-5b9756af44ec0dad"
+      ],
+      "runs": [
+        "0DJ6GFZZ0TG9",
+        "KSX97DF5H3NY"
+      ],
+      "key": "code-proposals:silent-proposal-afe154edb1392350,silent-proposal-d779d007d2f17ffd,silent-proposal-2d70265e0aee98eb,silent-proposal-4cc2c7b669db7017,silent-proposal-0579a2900b4c4443,silent-proposal-df4f5dbaaf0c7e51,silent-proposal-a16dab7fba23fade,silent-proposal-8a00f9885abb91af,silent-proposal-10edfa9a4c4ebc08,silent-proposal-5b9756af44ec0dad:484",
+      "result": [
+        "20261023-194330-strategy-proposal",
+        2127116
+      ]
+    },
+    {
+      "ids": [
+        "silent-proposal-50fc8708a8026ba9",
+        "silent-proposal-67cef9acde6d7d8b",
+        "silent-proposal-a5acd24139ff1a06",
+        "silent-proposal-4a79fe52aef8fde5",
+        "silent-proposal-88803f81438cc2e9",
+        "silent-proposal-9343a6f35cc15d46",
+        "silent-proposal-72030b5325429f45",
+        "silent-proposal-7566591d4777f7fe",
+        "silent-proposal-dd783758e92b9169",
+        "silent-proposal-44122224c84c509b"
+      ],
+      "runs": [
+        "KSX97DF5H3NY",
+        "SV2GP9NX4HQD",
+        "CSLHFCBSC1UM"
+      ],
+      "key": "code-proposals:silent-proposal-50fc8708a8026ba9,silent-proposal-67cef9acde6d7d8b,silent-proposal-a5acd24139ff1a06,silent-proposal-4a79fe52aef8fde5,silent-proposal-88803f81438cc2e9,silent-proposal-9343a6f35cc15d46,silent-proposal-72030b5325429f45,silent-proposal-7566591d4777f7fe,silent-proposal-dd783758e92b9169,silent-proposal-44122224c84c509b:484",
+      "result": [
+        "20261023-194330-s2-strategy-proposal",
+        2127287
+      ]
+    }
+  ],
+  "strategy_cap": 2,
+  "originals_replayed": false,
+  "backfill_dispatched": false,
+  "code_fix_needed": "proposal_dispatch selects held first10 then returns None; original dev chain should skip held demand without changing its owner/status"
+}
