@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-23T23:01:15+08:00",
+  "normal_batches": [
+    {
+      "state": "running",
+      "task": "strategy-proposal",
+      "rc": null,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-221930",
+      "proposal_audit_errors": null,
+      "batch": "20261023-221930-strategy-proposal",
+      "tui_path": "ops/codex-ops/learner/learner-20261023-221930-strategy-proposal.tui.json",
+      "tui_sha256": "f0a75d4c6a284af1228e0850d790c8527c089f53422c1f37a57784c70a7622c9",
+      "tui_fields": {
+        "status": null,
+        "state": "native-accepted",
+        "reason": null,
+        "native_session_id": null,
+        "session_id": null,
+        "binding": null,
+        "bindings": [
+          {
+            "turn_id": "01a16922-1c95-7093-9406-899a83397b6b",
+            "marker": "[learner-batch:4209a316-370c-4f31-bfba-d6847d931aab]",
+            "prompt_sha256": "a5375c92ce6ceb64ba29be5851a0922319237be7aa8d08fda72c1d7d1dac7d7a"
+          }
+        ],
+        "task_complete": null,
+        "retired": null
+      }
+    },
+    {
+      "state": "failed",
+      "task": "experience-update",
+      "rc": 0,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+      "proposal_audit_errors": [],
+      "batch": "20261023-224301-experience-update",
+      "tui_path": "ops/codex-ops/learner/learner-20261023-224301-experience-update.tui.json",
+      "tui_sha256": "d2ed42c639e291caf93048f18611244318ac99ce5132db135ab9f75ff378c0ff",
+      "tui_fields": {
+        "status": null,
+        "state": "session-ended",
+        "reason": null,
+        "native_session_id": null,
+        "session_id": null,
+        "binding": null,
+        "bindings": [
+          {
+            "turn_id": "01a16937-cd81-7820-a08d-047d7fe5ac5b",
+            "marker": "[learner-batch:dd128527-9801-4516-a61d-4daf7bde3307]",
+            "prompt_sha256": "db4b3c44094338c23a11f73fabdbc409aa0976e1dad7ba985ffb675c0f94529b"
+          }
+        ],
+        "task_complete": null,
+        "retired": null
+      }
+    }
+  ],
+  "backfill_progress_initialized": false,
+  "waiting_release": [
+    {
+      "number": 49,
+      "title": "引导大脑多查策略库与 rk：更多工具调用引导"
+    },
+    {
+      "number": 48,
+      "title": "经验提炼为策略与 rk：并入策略提炼流水线，过往经验逐批回刷"
+    },
+    {
+      "number": 47,
+      "title": "对局大脑直播显示完整对话：题目全文、推理过程、检索参数与返回（只截断系统知识）"
+    },
+    {
+      "number": 46,
+      "title": "降低学习批次的工作树分配量（#23 后续）"
+    },
+    {
+      "number": 42,
+      "title": "策略库外部证据合同：文字策略引用外部聚合统计（解除 #27 阻断）"
+    },
+    {
+      "number": 36,
+      "title": "对局大脑与学习大脑在 herdr tab 里可见（tab 标题写明）"
+    },
+    {
+      "number": 35,
+      "title": "每局构筑记录：每道构筑题附本局已做选择与简短理由"
+    },
+    {
+      "number": 27,
+      "title": "大脑文字策略库：学习者编写首批“情境 → 策略”条目"
+    },
+    {
+      "number": 26,
+      "title": "外部统计做成大脑查询工具（sts2.fun，配合 #33 agent 模式）"
+    },
+    {
+      "number": 23,
+      "title": "回收机制不运转：实例绑定文件进了 git、发布门要求进 live（P0）"
+    }
+  ]
+}
