@@ -10,6 +10,7 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
 - **派生库**在 `data/logdb/`（`.cache` 软链到 jev-sts2/.cache，所有工作树共用），随时可以整个删掉重建（`sync.py --reset`，全量约 30 秒）。
 - **增量同步** `agent/tools/logdb/sync.py`：`manifest.json` 记每个源文件已处理到的字节偏移；每次只读新追加的**完整行**（没写完的最后一行留到下次），每行变成一行紧凑的记录（`agent/tools/logdb/extract.py`），写成 Parquet 分片 `data/logdb/<表>/part-<源>-<起>-<止>.parquet`（zstd）。分片写完不再改；同一个源连着 8 个以上小于 16 MB 的小分片时合并成一个新分片，旧的删掉。
 - **重建条件**（只重建出问题的那个源）：记录的偏移超过文件大小（被截断）、偏移前一个字节不是换行（文件被改写）、首行哈希变了（文件被换掉）、源文件没了、或者这个源的抽取器版本（`extract.VERSIONS`）变了。启动时还会删掉 manifest 里没有的分片（上次同步中途死掉留下的）。
+- **周期同步**：每局结束后的原 `refresh.sh` / `refresh_driver.py` 在同一刷新 worker 内增量同步，先于知识消费者；显式绑定日志和库路径。live 与运维主检出各有独立 `data/logdb` 时两份都更新；目录实际共享时只同步一次。均使用 `--no-wait`，同步锁忙则留到下一原刷新周期；失败沿原步骤日志保留，不新增 daemon、cron、模型或阻塞下一局。`--no-sync` 查询不再承担保鲜触发职责。
 - **不抢对局的资源**：sync 把自己设成 `nice 19` + `ionice -c3`，DuckDB 只用 2 个线程、内存上限 2 GB。
 - **并发**：同时只有一个 sync（`sync.lock`，query.py 顺带的同步拿不到锁就跳过）；查询持共享读锁，sync 只在删除/替换分片的那一刻持排他锁，所以查询不会看到一半替换的表。
 - **key 不进库**：进库的自由文本（rationale、模型的简短理由、计划摘要、chosen）都过 `scrub()`，像 key 的串（`sk-…`、`Bearer …`、`api_key: …`）换成 `[REDACTED]`；问题、推理、memory 原文不进库，只存长度和源文件字节偏移。

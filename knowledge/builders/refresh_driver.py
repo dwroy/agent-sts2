@@ -33,6 +33,17 @@ def queue_command(ops_root, command):
         sys.path.pop(0)
 
 
+def logdb_sync_steps(ops_root):
+    """Refresh both deployed readers when live and ops do not share a cache."""
+    roots = [ROOT]
+    if (ops_root / 'data/logdb').resolve() != (ROOT / 'data/logdb').resolve():
+        roots.append(ops_root)
+    return [('logdb-sync' if i == 0 else 'logdb-sync-ops-root',
+             [root / 'data/logdb-venv/bin/python', ROOT / 'agent/tools/logdb/sync.py',
+              '--logs', root / 'logs', '--db', root / 'data/logdb', '--no-wait'])
+            for i, root in enumerate(roots)]
+
+
 def step(ops_root, name, argv):
     started = time.monotonic()
     stamp = datetime.now(timezone.utc).isoformat()
@@ -103,7 +114,8 @@ def main():
             run('monster-db-check', build('monster-db-check'))
             run('card-upgrades', build('build-card-upgrades'))
             run('report-state-index', [sys.executable, ROOT / 'ops/report_log_cache.py', '--warm-states', ROOT / 'logs/states.jsonl'])
-            run('logdb-sync', [ROOT / 'data/logdb-venv/bin/python', ROOT / 'agent/tools/logdb/sync.py'])
+            for name, command in logdb_sync_steps(root):
+                run(name, command)
             for c in characters:
                 run('outcome:'+c, build('build-outcome-stats', '--character', c))
                 if c == 'silent':

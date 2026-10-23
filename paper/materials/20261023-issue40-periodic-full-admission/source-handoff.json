@@ -1,0 +1,58 @@
+{
+  "schema": "ops-logdb-periodic-candidate-v1",
+  "worktree": ".worktrees/ops-logdb-periodic-20261023",
+  "base": "0c85d6d9a526264631461fe8cf8221ace499b695",
+  "leaves": [
+    {
+      "path": "knowledge/builders/refresh_driver.py",
+      "bytes": 7592,
+      "sha256": "45d40c71ee62e94506562ab55c52312790b4da45d96e37bfc5134080fd31a959",
+      "base_sha256": "4fbb5393a41c439ac59221a960e152fab521e9a20021994bda868f5dc3f2d947"
+    },
+    {
+      "path": "knowledge/builders/test_refresh_pipeline.py",
+      "bytes": 18632,
+      "sha256": "b7bfeece6b397d00d5b33389292244fe81024f4c6220c1f3b7a27376db31911a",
+      "base_sha256": "576d971664a024cc59c8f1e7819a6ea9f992d6c754a0bab66bbe4fe927e38d8a"
+    },
+    {
+      "path": "agent/tests/legacy-refresh-incremental.test.ts",
+      "bytes": 1540,
+      "sha256": "db6173a783ec6e9c9e36ae32bc0e6a7f1b3d7a95393c0a9588051039455b8f28",
+      "base_sha256": "c09896566b00c8c9b0d9235f81f974854620768d7781e3479f5529c2b3b22b01"
+    },
+    {
+      "path": "docs/logdb.md",
+      "bytes": 23987,
+      "sha256": "decc56e79d2c2667b9b2bb857fa9d105260aadc1e6efdcfa8b99e2fc6461f897",
+      "base_sha256": "25a7963d28194c1065fb256146773679806a382b00f7de80b82def1d37852c8a"
+    }
+  ],
+  "source_patch": ".artifacts/ops-logdb-sync-20261023/periodic-source.patch",
+  "patch_sha256": "cfa1f50ed5abf26d2a3fd0ad940932b62caf127aad01fbe8f2b5856687c99c02",
+  "problem": "per-run refresh sync exists in game-live; main and live data/logdb are separate, main no-sync readers stale",
+  "new_behavior": "original refresh_driver logdb step also syncs explicit ops-root database; both --no-wait; shared cache deduplicated; same existing after-run worker",
+  "validation": {
+    "red_control": "3 regressions failed before fix (2 missing helper errors,1 missing ops sync assertion)",
+    "python_pipeline": {
+      "exit_code": 0,
+      "cases": 15,
+      "log": ".artifacts/ops-logdb-sync-20261023/periodic-python.log"
+    },
+    "tsc": {
+      "exit_code": 0,
+      "log": ".artifacts/ops-logdb-sync-20261023/periodic-tsc.log"
+    },
+    "vitest_directed": {
+      "exit_code": 0,
+      "files": 2,
+      "passed": 14,
+      "report": ".artifacts/ops-logdb-sync-20261023/periodic-directed.json"
+    },
+    "full": null
+  },
+  "publication": "not committed or published; original #49+#26 exclusive full window has priority; candidate awaits coordinated full on final input tree",
+  "not_a_new_model_or_daemon": true,
+  "raw_logs_and_both_databases_retained": true,
+  "behavior_release_unchanged": true
+}
