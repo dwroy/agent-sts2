@@ -37,7 +37,7 @@ dispatcher:
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
   watchdog:
-    idle_minutes: 30
+    idle_minutes: 10
     error_patterns: ["at capacity", "rate limit", "stream disconnected", "Reconnecting", "error sending request"]
 session:
   state_dir: ops/codex-ops
