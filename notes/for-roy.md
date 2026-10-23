@@ -4982,3 +4982,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T21:03:59+08:00 [ops/Fast] ops 初始化、exec resume、herdr resume 已以专用 -c 参数固定 Fast，推理默认 high（main a4a2ce799c；tsc/full 6508过）；不使用 /fast 写共享配置，其他角色档位未改，回退将 ops/codex/lib.ts 的 serviceTier 改回 default；下次自然启动/resume采用，实际原生读回仍待核。paper/materials/20261023-ops-fast-startup/。
 
 - 2026-10-23 21:05 CST [ops] Fast 五叶已核实际 main a4a2ce799c、tsc/full 6508过0败2跳，未写 game live；本轮原生 high 已核，service_tier 字段缺失，Fast 实际采用仍 pending。204301 两提案 waiting、19条追溯链接读回且原状态保留；原经验源已补 f3f439cf49，live/消费者仍待验。无源码补链被 unassigned live-merge 门误拒，保 failed/rc0 原件，将递归补链置 ops-await-original-publication，未重模型/dataset/测试或关闭科学父。原件 paper/materials/20261023-2104-ops/。
+
+- 2026-10-23 21:14 CST [ops/#27] 本轮16项重复通知原文与实际ops投递回执逐项SHA未变；已独立核到集成员20:48本人received-1956及主管收件箱relay-1956真实字节窗，故“正式ACK仍缺”不等于“未实读”。原CLI SHA未改，16项正式watcher/Roy ACK及Roy用户可见通知仍pending，未代填或重试原拒绝。现有集成员done可接收，已实际投递一行提醒接续三条来源补核和CLI回执；不能把提醒当再次读取或Roy知悉。000402精确原日志仍缺，原科学父/冻结rc1/因果分母边界不改；未新派研究、模型、测试、局或计时器。#27评论6365728221精确读回；原件paper/materials/20261023-2113-ops/notice-delta-review.json。

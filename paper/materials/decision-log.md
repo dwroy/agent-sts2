@@ -6300,3 +6300,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23 21:05 CST [ops] 核 Fast main a4a2ce799c/6508过，原生 high、tier缺字段待自然回执；204301保waiting与失败，暂停无源码合入门导致的递归补链，接原193545发布，不重模型/检查。paper/materials/20261023-2104-ops/。
 
 - 2026-10-23 21:12 CST [ops/#36] 204301自然原生唯一绑定/完成及退场、租约与原stall回收核实；wrapper仍failed/rc0，迟到与双批验收开放。无重发/重测；评论6365686801、paper/materials/20261023-issue36-natural-2110-ops/receipt.json。
+
+- 2026-10-23 21:14 CST [ops/#27] 16项消息未变，核回watcher本人20:48实读和主管转达；正式ACK/用户可见Roy通知仍阻于原CLI，实际提醒现有会话接续，不代ACK、不关父。评论6365728221，paper/materials/20261023-2113-ops/notice-delta-review.json。
