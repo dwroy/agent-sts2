@@ -6496,3 +6496,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T05:28:42+08:00 [ops] #36核三自然学习tab原封存/自动回收及物理缺席、最新对局视图标题/样例扫描通过；五旧tab缺wrapper/绑定或超恢复任务范围继续原门保留，不代入库/语义done，不强关或新模型。paper/materials/20261024-issue36-natural-tabs-ops/receipt.json。
 
 - 2026-10-24T05:40:36+08:00 [ops] 原033643唯一净full6528过/2跳、真实源c803e037与提案审计/18消费者通过；单叶自然发布285630等原play终局，旧失败/科学父保持，实际发布释放后才28。paper/materials/20261024-experience-033643-received-ops/receipt.json。
+
+- 2026-10-24T05:49:01+08:00 [ops] V6-R424 原033643单经验叶自然发布、main同步及18项实际消费者通过；源审计/唯一full6528过原件保留，不重full/模型，不改三旧失败或科学父；自然采用另计。paper/materials/20261024-experience-033643-publication-ops/publication.json。
+
+- 2026-10-24T05:54:31+08:00 [ops] 核V6-R424实际18消费者/自有准入释放并沿原broker恢复唯一循环；#28精确R424十二叶冻结检查已监督接续，当前full0；旧失败/科学父不改。paper/materials/20261024-r424-received-ops/receipt.json。

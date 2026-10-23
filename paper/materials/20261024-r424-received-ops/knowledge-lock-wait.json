@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-24T05:54:59+08:00",
+  "lock": "ops/knowledge-refresh.lock",
+  "owner_pid": 294049,
+  "waiters": [
+    294053,
+    294055,
+    304616
+  ],
+  "processes": [
+    {
+      "pid": 294049,
+      "birth": "21654341",
+      "parent": "330",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "python3.14",
+      "wchan": "do_wait"
+    },
+    {
+      "pid": 294053,
+      "birth": "21654395",
+      "parent": "330",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "flock",
+      "wchan": "locks_lock_inode_wait"
+    },
+    {
+      "pid": 294055,
+      "birth": "21654408",
+      "parent": "330",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "flock",
+      "wchan": "locks_lock_inode_wait"
+    },
+    {
+      "pid": 304616,
+      "birth": "21695846",
+      "parent": "330",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "python3.14",
+      "wchan": "locks_lock_inode_wait"
+    }
+  ],
+  "no_signals_lock_unlink_or_duplicate_worker": true
+}
