@@ -6460,3 +6460,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T03:09:40+08:00 [ops] #23完整交接先写并续核：累计153回收路径/286分配，新增2/15，近24h16/111；唯一只读plan0eligible，可持续失败及保留门保持，等原owner结算与#46完整窗。paper/materials/20261024-issue23-handoff-ops/audit.json。
 
 - 2026-10-24T03:15:37+08:00 [ops] 16重复学习通知原文/32投递窗口/67证据核同，实际watcher01:49接收已核；原CLI身份兼容与Roy可见回执仍pending，原watcher工作中不打断，不代角色ACK。paper/materials/20261024-0313-notices-ops/receipt.json。
+
+- 2026-10-24T03:16:35+08:00 [ops] Claude常驻指示：#27状态未变不再写主管收件箱，仅状态变化或需Roy裁决时一行通知，细节留issue；已写保护交接及原pending，本轮未写主管收件箱。
