@@ -6488,3 +6488,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T05:00:44.777460+08:00 [ops] 核041301 dataset daead9/14生成叶及四局复盘标记；原只读回收plan明确retained/postmortem not settled，保原bug/未入库门和scratch，不重dataset/finish/模型或关科学父。paper/materials/20261024-041301-dataset-received-ops/receipt.json。
 
 - 2026-10-24T05:06:16.691297+08:00 [ops] #52首部署后native待原tick；033643仍由原worker等正常刷新，备齐18项消费者及仅检查通过后可用的真实提交审计入口，不重模型/full/派发或改失败。paper/materials/20261024-issue52-acceptance-ops/receipt.json。
+
+- 2026-10-24T05:17:27+08:00 [ops] #23续核153历史回收/290分配、近24h16/108、空间净减101.54GiB；原worker限4、只读plan0及原保护保留，可持续验收未过，不手删或提前跑46整窗。paper/materials/20261024-issue23-resume-0515-ops/。
