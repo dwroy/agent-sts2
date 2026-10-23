@@ -5771,3 +5771,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:25:06+08:00 [dev #36] 按主管134302 seal缺模块指示采用去调用方案：wrapper原finished落盘后不再调用未发布learner_tabs.py，不拆入#20依赖；保原终态/failed rc0/空fix验收/300s及退场权限，不关tab。补Git发布集合+实际文件的12脚本完整性检查、旧seal缺文件及逐项遗漏反例，修正旧stub掩盖部署缺项；实际b499 wrapper仅一块差量且stdio日志原字节/SHA保留，组合17项过。tsc0、定向3文件23过（内含Python43）；未跑full/动生产/补造旧批封印。材料paper/materials/20261023-issue36-wrapper-script-closure/。
 
 - 2026-10-23T14:28:55+08:00 [dev #36] 接6358830755固定夹具边界，常规wrapper夹具去除learner_tabs stub，与实际发布缺模块状态一致；仅保留独立误调用陷阱负例，不模拟seal成功。更新后定向3文件23过，实际发布组合17项再过，生产差量不变，不做full/生产操作。材料仍paper/materials/20261023-issue36-wrapper-script-closure/。
+
+- 2026-10-23T15:40:27+08:00 [dev #36] 151302-s2监督因屏幕text在原生任务消息时间戳前32秒退出；两批原件离线解析均唯一绑定，交叉配对拒绝，未发现并发串绑。未确认提交改为只读观察最多120秒，原生完整SHA仍唯一授权，期间不重发/按键/退场；原300秒wrapper降级、真实草稿与ownership门禁保留。旧源新增6反例全失败，补丁tsc0、定向4文件183过，不跑full/模型，不改原rc75/awaiting_review/live。材料paper/materials/20261023-issue36-delayed-native-151302/。

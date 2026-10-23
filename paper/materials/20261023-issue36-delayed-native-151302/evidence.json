@@ -1,0 +1,113 @@
+{
+  "frozen_inputs": {
+    "receipt.json": {
+      "path": "ops/codex-ops/learner/learner-20261023-151302-strategy-proposal.tui.json",
+      "bytes": 1740,
+      "sha256": "24c3bf3d3002729e0c69fc88496d2f3b432db66fade8937be77315a036133382"
+    },
+    "native.jsonl": {
+      "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T15-13-11-01a1679b-445b-7812-8a18-3c56cdb63cc7.jsonl",
+      "bytes": 2340865,
+      "sha256": "a32a8f07adb0295c67a362fac4ce94ffea98b0c9dbe0c86f162c6a5e60d99bb8"
+    },
+    "receipt-s2.json": {
+      "path": "ops/codex-ops/learner/learner-20261023-151302-s2-strategy-proposal.tui.json",
+      "bytes": 1423,
+      "sha256": "98e4804fe06002229c84f91810ea0984101fc762570ad25cb8fe2d1b8bcd4473"
+    },
+    "native-s2.jsonl": {
+      "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T15-13-12-01a1679b-4956-7843-88b8-99d2c695ef69.jsonl",
+      "bytes": 1787677,
+      "sha256": "4d269f017fcfa1d3051ff377d6ad98a07450172dcdf112373ab4373ce7708741"
+    }
+  },
+  "reconciliation": {
+    "main": {
+      "schema": "learner-tui-native-reconciliation-v1",
+      "original_state": "native-accepted",
+      "observed": {
+        "session": "01a1679b-445b-7812-8a18-3c56cdb63cc7",
+        "cwd": ".worktrees/codex-strategy-silent-20261023-151302",
+        "turn": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2",
+        "accepted": true,
+        "foreign_activity": false,
+        "complete": false,
+        "open": true,
+        "bindings": [
+          {
+            "turn_id": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2",
+            "marker": "[learner-batch:8cc49807-308f-4bec-acf6-827dd65c377d]",
+            "prompt_sha256": "f39144ab11f059458661fcc0f94925bac8f8ed4b236e5beea51dcdba93074f95"
+          }
+        ],
+        "native_context_version": 1,
+        "native_preludes": [
+          {
+            "turn_id": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2",
+            "cwd": ".worktrees/codex-strategy-silent-20261023-151302",
+            "sha256": "3448698854ac097621d948564816983104f61e0919e10c214e66a1abaa079afb"
+          }
+        ]
+      },
+      "original_receipt_modified": false,
+      "prompt_send_authorized": false,
+      "retirement_authorized": false,
+      "finish_authorized": false,
+      "pane_pid_lease_revalidated": false,
+      "original_receipt_sha256": "24c3bf3d3002729e0c69fc88496d2f3b432db66fade8937be77315a036133382",
+      "native_snapshot_sha256": "a32a8f07adb0295c67a362fac4ce94ffea98b0c9dbe0c86f162c6a5e60d99bb8",
+      "native_snapshot_bytes": 2340865,
+      "trailing_partial_bytes": 0
+    },
+    "s2": {
+      "schema": "learner-tui-native-reconciliation-v1",
+      "original_state": "needs-attention",
+      "original_result_code": 75,
+      "observed": {
+        "session": "01a1679b-4956-7843-88b8-99d2c695ef69",
+        "cwd": ".worktrees/codex-strategy-silent-20261023-151302-s2",
+        "turn": "01a1679b-d263-7281-8953-bf119b7cf9b4",
+        "accepted": true,
+        "foreign_activity": false,
+        "complete": false,
+        "open": true,
+        "bindings": [
+          {
+            "turn_id": "01a1679b-d263-7281-8953-bf119b7cf9b4",
+            "marker": "[learner-batch:e153b882-fc82-4d14-8d3e-87203c6e5a90]",
+            "prompt_sha256": "055ac5d37b461e0cc0d52486578309daed250e9d4c6ee3ce663b18dca2b677ed"
+          }
+        ],
+        "native_context_version": 1,
+        "native_preludes": [
+          {
+            "turn_id": "01a1679b-d263-7281-8953-bf119b7cf9b4",
+            "cwd": ".worktrees/codex-strategy-silent-20261023-151302-s2",
+            "sha256": "2aef6c215ef1a59032534fe5ea64fcb02608a6727e190237101fc9d160375a7c"
+          }
+        ]
+      },
+      "original_receipt_modified": false,
+      "prompt_send_authorized": false,
+      "retirement_authorized": false,
+      "finish_authorized": false,
+      "pane_pid_lease_revalidated": false,
+      "original_receipt_sha256": "98e4804fe06002229c84f91810ea0984101fc762570ad25cb8fe2d1b8bcd4473",
+      "native_snapshot_sha256": "4d269f017fcfa1d3051ff377d6ad98a07450172dcdf112373ab4373ce7708741",
+      "native_snapshot_bytes": 1787677,
+      "trailing_partial_bytes": 0
+    }
+  },
+  "cross_receipt_native_exit": 75,
+  "original_receipts_modified": false,
+  "native_event_timeline": {
+    "s2_supervisor_summary": "2026-10-23T07:13:16.980Z",
+    "s2_task_started": "2026-10-23T07:13:47.628Z",
+    "s2_exact_task_message": "2026-10-23T07:13:49.366Z",
+    "main_task_started": "2026-10-23T07:13:47.705Z",
+    "main_exact_task_message": "2026-10-23T07:13:49.612Z"
+  },
+  "no_original_ansi_snapshot": true,
+  "finish_authorized": false,
+  "retirement_authorized": false
+}
