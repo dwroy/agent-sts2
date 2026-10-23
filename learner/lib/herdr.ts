@@ -351,6 +351,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let pid: number | undefined;
   let ownerBirth: string | undefined;
   let submitted = false;
+  let submittedAt: number | undefined;
   let pendingMarker = marker;
   let cancelled = false;
   let uncertain = false;
@@ -376,6 +377,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       agent_name: agentName, agent_name_version: 1,
       native_context_version: 1, native_preludes: native.preludes,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
+      native_acceptance_deadline_ms: submittedAt === undefined ? undefined : submittedAt + 120_000,
       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
   };
@@ -458,6 +460,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
           if (!(await promptAllowed(false))) { ownershipLost = true; attention("learner prompt authority changed; keep original session"); break; }
           save("submitting", { prompt_sha256: createHash("sha256").update(prompt).digest("hex") });
           submitted = true;
+          submittedAt = now();
           const sent = await h(["agent", "prompt", o.pane, sentPrompt]);
           if (!sent.ok) { uncertain = true; attention("learner prompt receipt uncertain; verify native acceptance before any continuation"); }
           save(sent.ok ? "submitted" : "uncertain");
@@ -476,7 +479,14 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       if (native.foreignActivity) {
         ownershipLost = true; attention("unbound native/human turn; keep original session and supervision"); break;
       }
-      if (currentScreen.ok && composerState(currentScreen.stdout) === "text") {
+      // Prompt delivery can return while its paste is still visible and before the native file exists.
+      // Observe only: a screen/API receipt cannot bind a turn or authorize any replay or disposal.
+      const awaitingNative = submitted && (!native.accepted || native.bindings.at(-1)?.marker !== pendingMarker);
+      if (awaitingNative && submittedAt !== undefined && now() - submittedAt >= 120_000) {
+        uncertain = true; result.reason = "native-acceptance-timeout";
+        attention("learner native acceptance timed out; keep original session; no task replay"); break;
+      }
+      if (!awaitingNative && currentScreen.ok && composerState(currentScreen.stdout) === "text") {
         ownershipLost = true; attention("unsent human draft; keep original session and supervision"); break;
       }
       if (native.successful() && finalIdle && caughtUp && !uncertain) { result = { ...result, code: 0, reason: "native-task-complete" }; break; }
@@ -494,6 +504,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
             pendingMarker = `${marker}:retry:${++continuation}`;
             const prompt = `${pendingMarker}\n上一轮因模型/网络错误中断，请沿原任务、原批次和已有产物接着做；不要重启或另开会话。`;
             native.expectPrompt(pendingMarker, prompt);
+            submittedAt = now();
             save("retry-sending", { next_retry: retries + 1 });
             const sent = await h(["agent", "prompt", o.pane, prompt]);
             retries++; retryAt = undefined;

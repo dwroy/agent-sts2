@@ -6191,3 +6191,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T15:48:54+08:00 [ops] 核144301唯一dataset rc0及真实提交2282f70f、14生成物同SHA/23数据记录路径；原回收仍deferred，保原bug与经验入库门，不重dataset/finish/模型或关科学父。原件paper/materials/20261023-1546-ops/dataset-verification.json。
 
 - 2026-10-23T15:56:04+08:00 [ops] 核154301无新增源码、原tsc0/定向77+Python17通过，完整测试未运行；空修复原SOURCE_PATHS等价门不满足，保failed/rc0及报告路径回收门，不重检查/finish/模型或冒合入。原件paper/materials/20261023-1553-ops/fix-review.json。
+
+2026-10-23T16:02:35+08:00 [watcher] #36延迟确认补交61d63376f在实际live d1f523bb精确两叶核验：提交后原生确认最多120秒只读等待，完整prompt SHA/marker/cwd/turn绑定，确认后草稿/foreign/lease/pane/PID及原finished/空fix门保持，不重发或补旧bindings。组合tree874f25ba348c507e1c3415ba1bfc5ce65e7fe6d8与main兼容各tsc0/7文件209过，输入SHA不变；469知识及已发布36/46叶保留，递归347源码/1637引用/20动态加载目标清单与实际文件核同。原旧源码六回归首败和冻结8原件SHA核同保留，首K→L冻结锁忙仅测试前暂缓、同候选核同恢复。按主管仅定向+组合自查，无新full/模型/生产动作；仅两叶合main交原ops沿最新live数据精确发布，下一自然双批待核，不热切原任务。151302-s2原75/空binding/awaiting_review/草稿告警及300s defer不改，不据离线已消费补finish/retire；主组自然完成及workspace-only回收与MC整体waiting/已转Roy分别保留。36/20与科学父开放，46原24h窗不重置；后47→26提示→42余→35→28→37（37→20），27原十五异议/67引用及正式ACK CLI阻塞保留。材料paper/materials/20261023-issue36-delayed-native-integrator/。
