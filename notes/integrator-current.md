@@ -1,6 +1,6 @@
 state: clear-ok
-issue: 39
-updated_at: 2026-10-24T00:57:46+08:00
+issue: 43
+updated_at: 2026-10-24T01:06:59+08:00
 
 # 集成员当前交接
 
@@ -8,9 +8,9 @@ updated_at: 2026-10-24T00:57:46+08:00
 
 ## 本轮接续
 
-进行中的事: #39按用户接续完成R421消费者增量诊断。六叶仍同e1204dcf，原23项可复用；交付清单329源/285变量核同。当前main游戏代理源码+交付启动器诊断334源/289变量，新增4个BRAIN_LIVE_*均受原行为分类覆盖，未分类0。材料paper/materials/20261024-issue39-consumer-preflight/，非最终组合、未起full/合产品。
-在等谁: 原ops #35 R421净12叶唯一full仍在途（00:48状态），未发布；#20新版kit一天观察最早10-25 00:15:05、一小时入口到01:07:46。#39无新补交，最终预览有6处冲突，含当前派单器更新，须保留。
-下一步: 35实际发布→50→28→37→20父，39/43随最终组合。实际合并后重新核消费者清单/唯一full，再由ops核pin与自然source/run-config；当前诊断不代最终验收。
+进行中的事: #43接续核六个发布检查叶同已审380083709/e1204dcf，main/live均缺；19份原证据SHA全同，原2109输入前后核同，原30项及真实.mts一过一败/模拟exact与data拒绝回执保持。材料paper/materials/20261024-issue43-evidence-readback/；本轮未重测、未合产品。
+在等谁: 原ops #35 R421唯一full仍在途，worker3525747实际birth19828947吻合，未发布。#43无新补交，依主管随#20最终组合核收；#20新版kit一天观察最早10-25 00:15:05，入口一小时到01:07:46由原ops核。
+下一步: 35实际发布→50→28→37→20父及39/43。最终组合保#43六叶并绑定实际输入/唯一full，ops核自然部署与#39启动读回；不把模拟full算绿，不单独关闭43。
 
 ## 当前任务与顺序
 
@@ -39,7 +39,7 @@ updated_at: 2026-10-24T00:57:46+08:00
 - #50：来源`c72ff7845533`；最新R421隔离树`b0988d7c1bb49b701fd65af801e7439a9c4cca4c`已修旧v2及恒定工具断言，tsc0/5文件103过；七叶同旧审，brain/report保49新合同，测试兼容另有补丁。两轮93过/10败原件保留；父35未上线，等顺序及最终full。新材料`paper/materials/20261024-issue50-r421-preflight/`，旧修补审查及环境首败保留。
 - #28：`7087caea9ee4`，原定向87过，旧 cache 环境首败保留；默认开关关闭，85条原 reflex 保留，真实收益/启用/A-B 尚待。材料 `paper/materials/20261022-issue28-integrator-review/`。
 - #37：`9e8f900dde2d`，两实现叶原定向96过；最终组合保 main 共享 card-option 测试里的 #41/#44 修复。材料 `paper/materials/20261023-issue37-r418-preflight/`。
-- #43 本轮：2026-10-23 22:56 六叶核同且 main 均缺，证据 `.artifacts/issue43-resume-20261023-2256/verification.json`；原30项及真实 `.mts` 正负控见 `paper/materials/20261022-issue20-integrator-r5/`。无新补交，不重复测试、不单独关闭。
+- #43 本轮：2026-10-24T01:06:59+08:00 六叶与已审380083709/e1204dcf相同且main/live均缺；19份原证据SHA及2109输入前后核同。原30项及真实.mts正负控、模拟拒绝回执保留，不重测、不单独关闭。材料paper/materials/20261024-issue43-evidence-readback/。
 - #20 父：公共 `e1204dcf9250` / kit `7e5a408f`，原 tsc0、Python102＋边界4过；上次预检冲突 report.py、run.sh、decision-log，必须保已发布 learner_tabs、codex/lib。材料 `paper/materials/20261023-issue20-tick-integrator/`。#43 六叶原定向30过随父核收。
 - #39：六启动实现/回归叶逐 blob 同已审 e1204dcf，原23项隔离检查可复用，但尚未合 main。最新独立回读 #39 评论6367608617；本轮证据 `.artifacts/issue39-resume-20261023-2246/`。最终组合重算盘点行为环境消费者，保原失败；等 #37→#20最终full及 ops实际 pin、自然局 source/run-config，不能拿一分钟子项或 #33 启动补丁替代。
 

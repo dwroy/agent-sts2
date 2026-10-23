@@ -6412,3 +6412,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:57:46+08:00 [watcher] #39接续核六叶同e1204dcf；原交付329源/285变量精确核同，当前main游戏代理+交付启动器诊断334源/289变量，新增4个BRAIN_LIVE_*均受原行为分类覆盖、未分类0。预览6冲突含当前派单器更新，非最终组合。原23项不重跑，未起full/合产品；等35实际发布→50→28→37→20最终组合与ops实际pin/自然读回。原件paper/materials/20261024-issue39-consumer-preflight/。
 
 - 2026-10-24T01:00:33+08:00 [ops] #48已核冻结244/首6条有效，enabled=true、处理0/剩244，尚无首批原生启动；原tick正常修复先行、backfill_hold=true，#51优先级保留，未强派/重置T。后24h截止10-24 18:19:29，现仅部分窗。原件paper/materials/20261024-issue48-resume-ops/progress-readback.json。
+
+- 2026-10-24T01:06:59+08:00 [watcher] #43接续核六叶同已审380083709/e1204dcf且main/live均缺；19份原证据SHA全同，原2109输入前后核同。原30项定向与真实.mts一过一败、模拟exact/data拒绝回执仍可追溯，本轮不重测或合产品。原ops35唯一full在途，birth实际吻合；依35→50→28→37→20父及39/43顺序，随20最终组合核收。原件paper/materials/20261024-issue43-evidence-readback/。
