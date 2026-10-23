@@ -5976,3 +5976,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T11:03:24+08:00 [ops] #36原九叶按6324过+2skip唯一检查精确落live 3a06cb43d751245ec2930d1526b064056db24a76，保留469知识/磁盘80五叶/实例绑定与off回退文档；13tab退场、12attention原件归档、7零模型输入冻结。独立开关full与有限发布/原槽重排事务在途，自有学习hold待核绿后释放，不称完成或恢复。见paper/materials/20261023-learner-recovery-ops/publication-continuation.json。
 
 2026-10-23T11:10:06+08:00 [ops] #36八源码/测试+合并docs精确落live，保留最新知识/80/60/绑定；Roy选A learner_tui=off读取器main/live已核，原full6324+2及开关full6206+2分列，不新增行为号。13tab退场，7冻结重排4启动/3待槽，自有学习hold释放；P0/ACK/科学父保留，见paper/materials/20261023-learner-recovery-ops/recovery-final.json。
+
+2026-10-23T11:14:54+08:00 [ops] 对账11:06旧#36事务失败与后续原ops恢复：off/herdr/brain_view实际读取一致，三暂停标记均无；4已启动中复盘done(rc0)、其余3原PID/birth在跑，另3冻结待槽，无重派/full/模型/局/ACK/父关闭。保留旧失败原件；见paper/materials/20261023-1106-ops/receipt.json。

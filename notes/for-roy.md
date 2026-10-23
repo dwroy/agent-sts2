@@ -4789,3 +4789,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T11:10:06+08:00 [ops] Roy选A的学习非交互回退已实际落main/live：hosting设learner_tui=off，保留learners=herdr及brain_view=herdr，下次自然学习启动生效，不热切。原九叶按6356260910精确发布，6324过/2跳原full复用；开关单独tsc及full6206过/0败/2跳，知识、80/60与绑定保留，仍V6-R417。13个旧tab已核正常退场；四原任务不重放，保留2done及2failed(rc0)审计。五复盘与15条自有账本更新已提交，575项检查0问题，唯一dataset另记。7个零模型旧批均冻结提示及原局清单比对通过，4个按原槽位正常启动、3个排队待槽，queued不称原生送达；自有ACCOUNT_DRAIN已释放。12个UUID命名漏读attention已逐件处理并保留原件，根因交原owner。回退为仅将learner_tui恢复on，须下个自然边界；当前继续off，P0/seal、正式ACK及科学父均不关闭。原序36→46→47→26→42→35→28→37→20。原件paper/materials/20261023-learner-recovery-ops/recovery-final.json、normal-frozen-requeues-latest.json。
+
+
+- 2026-10-23T11:14:54+08:00 [ops] 已对账11:06旧失败事件：publication-continuation.json保留当时停止状态，不改成成功；后续original-transaction-followup及实际发布回执证明已由原ops完成恢复。本轮核main/live实际读取learner_tui=off、learners=herdr、brain_view=herdr，源码SHA与已发布开关一致；ACCOUNT_DRAIN、LLM_DRAIN、PAUSE均不存在，没有删除其他角色标记。七个冻结重排维持4已启动/3待槽；首波复盘登记done(rc0)，两策略与一修复的原PID/birth仍匹配在跑，尚无对应空槽，不因旧失败事件重复派发。四个真实stdio/gpt-6.1-sol/high/workspace-write原生回执及#36评论6356448167、双收件箱实际写入回执均保留。12件旧attention原件及分配失败记录不删，后续三批仍沿同一冻结计划与逐原批一次守卫，等真实完成事件再处理；不把queued当已投递。本轮仅补当前事实，不重full、模型、dataset或对局动作，不代正式ACK、不关闭科学父。原件paper/materials/20261023-1106-ops/receipt.json；后续恢复索引paper/materials/20261023-learner-recovery-ops/original-transaction-followup.json。
