@@ -5044,3 +5044,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-24T01:15:01+08:00 [ops] 按主管最新“12项均等待、回Fast”指示，ops专用启动参数已恢复Fast/high并合main ce40ebdb6222；四份代码/测试与已验Fast版本逐字同，当前tsc0/3文件45项过，复用原6508项完整回执，未重跑full。原入口下次空闲按参数hash恢复同session，实际原生生效待核；不改共享配置或其他角色。#47已完成自然compact及原tab读回并撤临时块恢复detailed；#35原6429项检查过后已挂自然发布。原件paper/materials/20261024-ops-return-fast/publication.json、paper/materials/20261024-issue47-resume-ops/restore-and-acceptance.json。
 
 - 2026-10-24T01:39:00+08:00 [ops] #49 R420两局已结束、43题完成/零最终兜底；原18局520题冻结，工具题占比17.7%→76.7%、调用/题0.285→0.930、中位13.381→13.061秒，商店2题27.344秒单列；没有非空rk场景，采用和因果收益仍开放。已发并读回6370983482；原件paper/materials/20261024-issue49-r420-complete-ops/report.md。#35实核R422十二叶、15类现有库消费者一致、518知识及准入释放；原发布通知误留“#35尚未混入/回退两叶”的模板文字，现明确更正为#35已发布、回退仅其十二叶且保新知识，旧通知不擦除。下一优先#36午夜恢复，随后#50。
+
+- 2026-10-24T01:41:05+08:00 [ops] #36两批只读预检rc0、旧75及原binding不变；精确11叶live组合tsc0/TS149过，Python16中10导入错误（live缺issue_session及辅助依赖），已在6371020986交原集成员补核并实际提醒。未发布、未apply/按键/模型/full；#50十叶来源已核，等P0后接唯一full。#49完整自然读回6370983482交主管，记录3df5ed64ba14；#35已为R422。原件paper/materials/20261024-issue36-midnight-publication-ops/report.md。
