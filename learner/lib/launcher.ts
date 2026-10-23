@@ -28,6 +28,8 @@ import { PROJECT_ROOT as REPO_ROOT, workspaceRoot } from "../../agent/src/core/p
 import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js";
 import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
+import { readCodexUsage, type CodexUsage } from "../../agent/src/brain/engines/codex-usage.js";
+import { externalRegistration, externalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
@@ -72,6 +74,7 @@ export function secretFilesOf(workspace: string, home: string = homedir()): stri
 }
 
 export interface LauncherDeps {
+  readExternalUsage?: (bin: string, home: string, env: Record<string, string>) => Promise<CodexUsage>;
   env: NodeJS.ProcessEnv;
   projectRoot: string;
   tasksDir: string;
@@ -102,6 +105,7 @@ export function defaultDeps(): LauncherDeps {
     checkCodex: (bin, home, model, effort) => checkCodex({ bin, home }, model, effort, { stateDir: join(LEARNER_CODEX_STATE, "check") }),
     refreshCodexAuth: (bin, home, env) => refreshCodexAuth({ bin, home, env, stateDir: join(LEARNER_CODEX_STATE, "auth") }),
     checkKeys: codexKeyCheck,
+    readExternalUsage: (bin, home, env) => readCodexUsage({ bin, home, env, stateDir: join(LEARNER_CODEX_STATE, "external-usage") }),
   };
 }
 
@@ -109,7 +113,7 @@ export function defaultDeps(): LauncherDeps {
 const LEARNER_CODEX_STATE = join(tmpdir(), "jev-learner-codex-state");
 
 export const USAGE = `usage: agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task <name|path.md> --cwd <dir> [--set name=value ...]
-         [--model M] [--effort E] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
+         [--model M] [--effort E] [--service-tier ultrafast|fast|default（仅外部来源）] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
 tasks: learner/tasks/*.md (postmortem, experience-update, fix-batch, smoke)`;
 
 export interface LauncherOptions {
@@ -119,6 +123,7 @@ export interface LauncherOptions {
   sets: string[];
   model?: string;
   effort?: string;
+  serviceTier?: ExternalTier;
   maxTurns?: number;
   timeoutMin?: number;
   resumeThread?: string;
@@ -158,6 +163,12 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--set": options.sets.push(value()); break;
       case "--model": options.model = value(); break;
       case "--effort": options.effort = value(); break;
+      case "--service-tier": {
+        const tier = value();
+        if (!["ultrafast", "fast", "default"].includes(tier)) throw new LearnerUsageError("--service-tier 只能为 ultrafast/fast/default");
+        options.serviceTier = tier as ExternalTier;
+        break;
+      }
       case "--max-turns": options.maxTurns = wholeNumber(arg, value()); break;
       case "--timeout-min": options.timeoutMin = wholeNumber(arg, value()); break;
       case "--resume-thread": {
@@ -415,6 +426,13 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ...(options.resumeThread ? { resumeThread: options.resumeThread } : {}),
       ...(options.withTools ? { mcp: toolServerSpec(options, deps.projectRoot, deps.env) } : {}),
     }, deps.env);
+    if (options.serviceTier || deps.env.LEARNER_EXTERNAL_SOURCE) {
+      const lease = captureStartupLease(deps.env, deps.projectRoot, cwd);
+      if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || !externalRegistration(deps.env, lease, spec.name)) {
+        throw new LearnerUsageError("外部档位参数必须绑定原外部批次租约，不能用于普通任务或另开续跑");
+      }
+      request.serviceTier = options.dryRun ? "default" : options.serviceTier ?? "ultrafast";
+    }
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
     const storageRules = existsSync(join(deps.projectRoot, "ops/worktree_storage.py"))
       ? `\n\n工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 ${join(deps.projectRoot, "ops/worktree_storage.py")} materialize --root ${deps.projectRoot} --workspace ${cwd.split("/").at(-1)} --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。`
@@ -434,7 +452,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 
   const { request, prompt, logPath, scratch } = prepared;
   const binary = engineBinary(request.engine, deps.env);
-  const command = engineCommand(request, prompt, binary ?? request.engine);
+  let command = engineCommand(request, prompt, binary ?? request.engine);
   const stripped = strippedEnvNames(deps.env, request.engine);
   const unavailable = (message: string): number => {
     if (request.engine === "codex" && deps.env.LEARNER_HERDR_PANE && deps.env.LEARNER_TUI_RECEIPT) {
@@ -472,12 +490,25 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     }
   }
 
+  let externalDecision: ExternalTierDecision | undefined;
+  if (deps.env.LEARNER_EXTERNAL_SOURCE) {
+    let usage: CodexUsage | null = null;
+    try { usage = await deps.readExternalUsage?.(binary, learnerCodexHome(deps.env), codexChildEnv(deps.env, binary)) ?? null; }
+    catch { /* Never persist account identities or raw quota diagnostics. */ }
+    externalDecision = externalTier(usage, deps.now(), options.serviceTier ?? "ultrafast");
+    const lease = captureStartupLease(deps.env, deps.projectRoot, request.cwd);
+    if (!externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约，不启动模型\n");
+    request.serviceTier = externalDecision.effective;
+    command = engineCommand(request, prompt, binary);
+  }
+
   mkdirSync(scratch, { recursive: true });
   mkdirSync(deps.runsDir, { recursive: true });
   const started = deps.now();
   const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
   log({
     type: "learner_launch",
+    ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision } : {}),
     ts: started.toISOString(),
     engine: request.engine,
     task: prepared.taskName,
@@ -495,15 +526,28 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const lease = request.engine === "codex" ? captureStartupLease(deps.env, deps.projectRoot, request.cwd) : undefined;
   const inputSha = createHash("sha256").update(command.stdin).digest("hex");
   const commandSha = createHash("sha256").update(JSON.stringify([command.command, command.args, request.cwd])).digest("hex");
-  if (deps.env.LEARNER_BACKFILL_SOURCE) {
+  if (externalDecision) {
+    env.LEARNER_EXTERNAL_SOURCE = deps.env.LEARNER_EXTERNAL_SOURCE!;
+    env.LEARNER_EXTERNAL_SERVICE_TIER = externalDecision.effective;
+  }
+  if (deps.env.LEARNER_BACKFILL_SOURCE || externalDecision) {
     if (!lease || !deps.env.LEARNER_STATE_FILE) return unavailable("后置回刷缺少原批次租约，不启动模型\n");
     // A launch receipt is evidence of registration only; native acceptance consumes the source IDs.
-    const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.backfill-launch.json`);
-    writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: deps.env.LEARNER_BACKFILL_SOURCE,
+    const kind = externalDecision ? "external" : "backfill";
+    const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.${kind}-launch.json`);
+    writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: externalDecision ? deps.env.LEARNER_EXTERNAL_SOURCE : deps.env.LEARNER_BACKFILL_SOURCE,
+      ...(externalDecision ? { external_tier: externalDecision } : {}),
       cwd: request.cwd, log: logPath, codex_home: learnerCodexHome(deps.env),
       input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
       command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
     const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+  }
+  if (externalDecision?.reason === "weekly_over_85" || externalDecision?.reason === "weekly_unknown") {
+    const message = `[learner] #51 外部批次 ${lease!.batch}：周额度 ${externalDecision.weekly_used_percent ?? "unknown"}%，本次启动降为 default；${externalDecision.reason === "weekly_over_85" ? "请 ops→watcher 提醒 Roy" : "请 ops 核验原账号额度"}。这是启动请求，实际档位以原生回执为准。`;
+    const queue = join(dirname(deps.env.LEARNER_STATE_FILE!), "queue");
+    mkdirSync(queue, { recursive: true });
+    writeFileSync(join(queue, `${BigInt(Date.now()) * 1_000_000n}-external-tier-${lease!.batch}.md`), message + "\n", { flag: "wx" });
+    if (externalDecision.reason === "weekly_over_85") appendFileSync(join(deps.projectRoot, "notes/for-roy.md"), `\n${deps.now().toISOString()} ${message}\n`);
   }
   let child: ChildProcess | undefined;
   const stop = (signal: NodeJS.Signals): void => {

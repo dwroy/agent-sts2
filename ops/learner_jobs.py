@@ -37,7 +37,7 @@ def start_learner(argv, root, scripts, state_dir, label):
     Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
     launch_env = dict(os.environ)
-    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE"):
+    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE", "LEARNER_EXTERNAL_SOURCE", "LEARNER_EXTERNAL_SERVICE_TIER"):
         launch_env.pop(name, None)
     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
@@ -264,7 +264,14 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None):
+    if external_source is not None:
+        from strategy_backfill_jobs import ID
+        if (not isinstance(external_source, str) or not ID.fullmatch(external_source)
+                or task != "strategy-proposal" or character != "silent" or reason != "external" or runs
+                or not re.fullmatch(re.escape("strategy-external:" + external_source) + r":[0-9]+", str(key))
+                or research_request or implementation_request or backfill_source):
+            return None
     if backfill_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(backfill_source, str) or not ID.fullmatch(backfill_source)
@@ -305,7 +312,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         return None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
     argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
-    if backfill_source:
+    if external_source:
+        argv += [task, "external:" + external_source]
+    elif backfill_source:
         argv += [task, "backfill:" + backfill_source]
     elif research_request:
         argv += [task, research_request]
@@ -319,7 +328,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
     if pane:
         state["batches"][batch_id]["pane"] = pane
-    if backfill_source:
+    if external_source:
+        state["batches"][batch_id]["external_source"] = external_source
+    elif backfill_source:
         state["batches"][batch_id]["backfill_source"] = backfill_source
     elif research_request:
         state["batches"][batch_id]["research_request"] = research_request
@@ -356,20 +367,36 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
     research = dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)
+    # External work uses the same writer after ordinary evidence/fixes and heavy work.
+    # Leave the legacy order intact whenever there is no eligible external generation.
+    import strategy_external_jobs as external_jobs
+    directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    external_jobs.reconcile(state, directory)
+    external_ready = character == "silent" and external_jobs.ready(state, root)
+    early_fix = early_calibration = early_boss = external = None
+    if external_ready:
+        key = fix_key(root, character)
+        early_fix = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+        early_calibration = calibration_job(state, root, scripts, character, alive, stamp)
+        from boss_sim_jobs import check
+        early_boss = check(state, root, scripts, character, alive, stamp, start_learner)
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
+            {"experience": experience, "fixes": early_fix, "core_builds": core, "learning_requests": learning, "strategy_research": research,
+             "calibration": early_calibration, "boss_sim": early_boss, "postmortem_wait": state.get("postmortem_wait", {}).get(character), "backfill_hold": bool(attempted or core_ready)})
     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(proposals)
-    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer)
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer) if not external_ready else None
     # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
     key = fix_key(root, character)
-    fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer) if not proposal and not research else None
-    calibration = calibration_job(state, root, scripts, character, alive, stamp)
+    fixes = early_fix if external_ready else (priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None)
+    strategy = strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer) if not proposal and not research and not external_ready else None
+    calibration = early_calibration if external_ready else calibration_job(state, root, scripts, character, alive, stamp)
     from boss_sim_jobs import check
-    boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+    boss_sim = early_boss if external_ready else check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
-            "core_builds": core, "backfill_hold": bool(attempted or core_ready),
+            "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
             "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
 
 

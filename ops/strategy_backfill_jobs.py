@@ -124,10 +124,19 @@ def priority_hold(state, character, alive, normal):
     return False
 
 
+def source_kind(batch):
+    """Keep source identities separate while sharing native lease verification."""
+    return "external" if batch.get("external_source") else "backfill"
+
+
+def source_value(batch, suffix):
+    return batch[source_kind(batch) + "_" + suffix]
+
+
 def stdio_registration(batch_id, batch, directory, complete=False):
     """Locate only this launcher's own session in its original selected account."""
-    launch = json.loads(Path(directory, "learner", batch_id + ".backfill-launch.json").read_bytes())
-    if any(launch.get(k) != v for k, v in {"batch": batch_id, "source": batch["backfill_source"], "cwd": batch["worktree"]}.items()):
+    launch = json.loads(Path(directory, "learner", batch_id + "." + source_kind(batch) + "-launch.json").read_bytes())
+    if any(launch.get(k) != v for k, v in {"batch": batch_id, "source": source_value(batch, "source"), "cwd": batch["worktree"]}.items()):
         raise ValueError("backfill stdio launch mismatch")
     log = Path(launch["log"]).resolve()
     if not log.is_relative_to(Path(batch["worktree"]).parent.parent / "learner/runs"):
@@ -167,11 +176,11 @@ def stdio_registration(batch_id, batch, directory, complete=False):
 def retired(batch_id, batch, directory):
     """Recovery needs a verified original exit, including wrapper pre-model failures."""
     folder = Path(directory, "learner")
-    no_model = folder / (batch_id + ".backfill-not-started.json")
+    no_model = folder / (batch_id + "." + source_kind(batch) + "-not-started.json")
     if no_model.exists():
         saved = json.loads(no_model.read_bytes())
-        if (saved == {"batch": batch_id, "source": batch["backfill_source"], "worktree": batch["worktree"], "models_started": 0}
-                and not (folder / (batch_id + ".backfill-launch.json")).exists()
+        if (saved == {"batch": batch_id, "source": source_value(batch, "source"), "worktree": batch["worktree"], "models_started": 0}
+                and not (folder / (batch_id + "." + source_kind(batch) + "-launch.json")).exists()
                 and not (folder / ("learner-" + batch_id + ".tui.json")).exists()):
             return
         raise ValueError("backfill pre-model failure proof changed")
@@ -221,6 +230,7 @@ def native_start(batch_id, batch, directory):
         raise ValueError("backfill native submission mismatch")
     meta = current = started = None
     accepted = context = False
+    observed_tier = None
     prefix = bytearray()
     with open(receipt["rollout"], "rb") as stream:
         for _ in range(128):
@@ -245,6 +255,7 @@ def native_start(batch_id, batch, directory):
                         or payload.get("model") != "gpt-6.1-sol" or payload.get("effort") != "high"
                         or payload.get("sandbox_policy", {}).get("type") != "workspace-write"):
                     raise ValueError("backfill native execution context mismatch")
+                observed_tier = payload.get("service_tier") if payload.get("service_tier") in ("ultrafast", "fast", "default") else None
                 context = True
             user = None
             if row.get("type") == "event_msg" and payload.get("type") == "user_message":
@@ -258,27 +269,27 @@ def native_start(batch_id, batch, directory):
                         or prompt_hash(user) != first["prompt_sha256"]):
                     raise ValueError("backfill native prompt mismatch")
                 if not accepted and any(token not in user for token in (
-                        batch_id, batch["backfill_source"], batch["backfill_binding"]["input_manifest"]["sha256"])):
+                        batch_id, source_value(batch, "source"), source_value(batch, "binding")["input_manifest"]["sha256"])):
                     raise ValueError("backfill native prompt lacks frozen source binding")
                 accepted = True
             if meta and current and context and accepted:
                 return {"session": meta, "turn": current, "started_at": started, "prompt_sha256": first["prompt_sha256"],
-                        "rollout": receipt["rollout"], "prefix_bytes": len(prefix), "prefix_sha256": digest(prefix)}
+                        "service_tier": observed_tier, "rollout": receipt["rollout"], "prefix_bytes": len(prefix), "prefix_sha256": digest(prefix)}
     raise ValueError("backfill native start not yet verified")
 
 
-def _reconcile(state, directory):
+def _reconcile(state, directory, kind="backfill"):
     """Recover progress from saved batches; never mutate a running startup lease."""
-    own = [(bid, b) for bid, b in state["batches"].items() if b.get("backfill_source")]
+    own = [(bid, b) for bid, b in state["batches"].items() if b.get(kind + "_source")]
     if not own:
         return
-    record = progress(state)
+    record = state.setdefault("strategy_" + kind, {"schema": 1, "cursor": 0, "entries": {}, "plans": {}})
     for bid, batch in own:
-        binding = batch["backfill_binding"]; ident = binding["plan_id"]
+        binding = source_value(batch, "binding"); ident = binding["plan_id"]
         plan = record["plans"].setdefault(ident, {"attempts": [], "state": "registered"})
         attempt = next((row for row in plan["attempts"] if row["batch"] == bid), None)
         if attempt is None:
-            attempt = {"batch": bid, "registered_at": batch["backfill_registered_at"], "state": "registered",
+            attempt = {"batch": bid, "registered_at": batch[kind + "_registered_at"], "state": "registered",
                        "input_manifest_sha256": binding["input_manifest"]["sha256"],
                        "work_spec_sha256": binding["work_spec"]["sha256"], "entry_ids": binding["entry_ids"], "worktree": batch["worktree"]}
             plan["attempts"].append(attempt)
@@ -295,24 +306,34 @@ def _reconcile(state, directory):
                     entry.update(status="started", batch=bid)
             except (OSError, ValueError, KeyError, IndexError, TypeError):
                 pass  # Missing/uncertain acceptance preserves the reservation without consuming IDs.
+        if kind == "external" and "native" in attempt:
+            try:
+                launch = json.loads(Path(directory, "learner", bid + ".external-launch.json").read_bytes())
+                if (launch.get("batch") == bid and launch.get("source") == source_value(batch, "source")
+                        and launch.get("cwd") == batch["worktree"]):
+                    attempt["tier_decision"] = launch.get("external_tier")
+                    attempt["usage_log"] = launch["log"]
+                    attempt["observed_service_tier"] = attempt["native"].get("service_tier")
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
         plan["state"] = attempt["state"]
         if batch.get("state") not in ("done", "failed", "lost", "awaiting_review"):
             continue
         attempt.update(finished=batch.get("finished"), rc=batch.get("rc"), state=batch["state"])
         attempt["elapsed_seconds"] = None
-        if attempt.get("started_at") and batch.get("backfill_finished_at"):
+        if attempt.get("started_at") and batch.get(kind + "_finished_at"):
             started = dt.datetime.fromisoformat(attempt["started_at"].replace("Z", "+00:00")).timestamp()
-            elapsed = batch["backfill_finished_at"] - started
+            elapsed = batch[kind + "_finished_at"] - started
             if elapsed >= 0:
                 attempt["elapsed_seconds"] = elapsed
-        if "native" in attempt and batch.get("state") == "done" and batch.get("backfill_result"):
-            attempt["destination_files"] = batch.get("backfill_output_files", [])
-            for row in batch["backfill_result"]:
+        if "native" in attempt and batch.get("state") == "done" and batch.get(kind + "_result"):
+            attempt["destination_files"] = batch.get(kind + "_output_files", [])
+            for row in batch[kind + "_result"]:
                 entry = record["entries"][row["id"]]
                 if entry.get("batch") != bid:
                     continue
                 entry.update(status=row["state"], destinations=row["destinations"], reason=row["reason"], batch=bid)
-            plan["state"] = "processed" if all(row["state"] == "processed" for row in batch["backfill_result"]) else "waiting"
+            plan["state"] = "processed" if all(row["state"] == "processed" for row in batch[kind + "_result"]) else "waiting"
         elif "native" in attempt:
             for old_id in binding["entry_ids"]:
                 entry = record["entries"][old_id]
@@ -321,18 +342,18 @@ def _reconcile(state, directory):
             plan["state"] = batch["state"]
         else:
             plan["state"] = "unverified-start"
-    all_ids = set(own[0][1]["backfill_binding"]["all_entry_ids"])
+    all_ids = {ident for _, batch in own for ident in source_value(batch, "binding")["all_entry_ids"]}
     record.update(total=len(all_ids), processed=sum(record["entries"].get(ident, {}).get("status") == "processed" for ident in all_ids))
     record["remaining"] = record["total"] - record["processed"]
-    atomic_json(Path(directory, "strategy-backfill-progress.json"), record)
+    atomic_json(Path(directory, "strategy-" + kind + "-progress.json"), record)
 
 
-def reconcile(state, directory):
+def reconcile(state, directory, kind="backfill"):
     try:
-        _reconcile(state, directory)
+        _reconcile(state, directory, kind)
     except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError) as error:
         # An unreadable progress artifact must not lose the normal scheduler transaction.
-        state["strategy_backfill_error"] = {"at": time.time(), "reason": str(error)}
+        state["strategy_" + kind + "_error"] = {"at": time.time(), "reason": str(error)}
 
 
 def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
@@ -446,12 +467,13 @@ def task_file(root, directory, bid, character, tree, ident):
 
 
 def report_proof(report, batch, root):
-    binding = batch["backfill_binding"]
+    kind = source_kind(batch)
+    binding = source_value(batch, "binding")
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
     native_start(bid, batch, directory)
     if (report.get("task") != "strategy-proposal" or report.get("character") != "silent"
-            or report.get("backfill_source") != batch["backfill_source"]
+            or report.get(kind + "_source") != source_value(batch, "source")
             or report.get("input_sha256") != binding["input_manifest"]["sha256"]
             or report.get("runs") != batch["runs"] or report.get("fixes") != [] or report.get("merged") is not None
             or report.get("tests") != {"tsc": None, "vitest": None, "cases": None}):
@@ -468,13 +490,13 @@ def report_proof(report, batch, root):
             continue
         if isinstance(candidate, dict) and candidate.get("task") == "strategy-proposal":
             saved = candidate; break
-    keys = ("task", "character", "batch", "base", "runs", "fixes", "merged", "tests", "backfill_source", "input_sha256", "backfill_results")
+    keys = ("task", "character", "batch", "base", "runs", "fixes", "merged", "tests", kind + "_source", "input_sha256", kind + "_results")
     if not saved or any(saved.get(k) != report.get(k) for k in keys):
         raise ValueError("backfill report differs from preserved output")
     bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
     if report.get("batch") != bid or report.get("base") != binding["dispatch_base"]:
         raise ValueError("backfill report batch/base mismatch")
-    rows = report.get("backfill_results")
+    rows = report.get(kind + "_results")
     if (not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows)
             or [row.get("id") for row in rows] != binding["entry_ids"]):
         raise ValueError("backfill needs one ordered disposition per old ID")
@@ -484,15 +506,15 @@ def report_proof(report, batch, root):
                 or not isinstance(row.get("destinations"), list) or bool(row["destinations"]) != (row["state"] == "processed")):
             raise ValueError("invalid backfill disposition")
         for target in row["destinations"]:
-            if (not isinstance(target, dict) or target.get("kind") not in ("strategy", "rk", "merged-into")
+            if (not isinstance(target, dict) or target.get("kind") not in (("strategy", "rk", "merged-into", "knowledge") if kind == "external" else ("strategy", "rk", "merged-into"))
                     or not isinstance(target.get("id"), str) or not target["id"].strip()):
                 raise ValueError("invalid backfill destination")
             candidate = Path(target["path"]).resolve()
             if not candidate.is_relative_to(path.parent) or not candidate.is_file() or candidate == path or candidate.stat().st_size == 0:
                 raise ValueError("backfill destination lacks its scratch artifact")
-            files.append({"old_id": row["id"], "kind": target["kind"], "id": target["id"],
+            files.append({("unit_id" if kind == "external" else "old_id"): row["id"], "kind": target["kind"], "id": target["id"],
                           "path": str(candidate), "bytes": candidate.stat().st_size, "sha256": digest(candidate.read_bytes())})
-    return {"destination_files": files, "plan_id": batch["backfill_source"], "report_sha256": digest(path.read_bytes()), "dispositions": rows}
+    return {"destination_files": files, "plan_id": source_value(batch, "source"), "report_sha256": digest(path.read_bytes()), "dispositions": rows}
 
 
 if __name__ == "__main__":

@@ -133,7 +133,7 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
 
 
 def links(report,batch,root,scripts):
-    if batch.get('backfill_source'):
+    if batch.get('backfill_source') or batch.get('external_source'):
         try:
             from strategy_backfill_jobs import report_proof
             report_proof(report, batch, root)
@@ -482,7 +482,7 @@ def no_change(report,batch,root):
         cadence=None
         backfill=None
         if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
-            if batch.get('backfill_source'):
+            if batch.get('backfill_source') or batch.get('external_source'):
                 from strategy_backfill_jobs import report_proof
                 backfill=report_proof(report,batch,root)
             elif batch.get('reason') == 'tick':
@@ -513,7 +513,7 @@ def no_change(report,batch,root):
         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
         proof={'base':base,'report':str(path),'dispositions':rows}
         if backfill:
-            proof["backfill"]=backfill
+            proof["external" if batch.get("external_source") else "backfill"]=backfill
         if cadence:
             proof['cadence']=cadence
         if research:

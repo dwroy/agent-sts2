@@ -195,6 +195,11 @@ export function learnerTuiEnv(env: Record<string, string>): Record<string, strin
     "CODEX_OPS_ROOT", "CODEX_OPS_DIR", "LEARNER_BASE_REF", "LEARNER_BATCH_ID", "LEARNER_STATE_FILE", "LEARNER_CODEX_HOME",
     "CHARACTER", "TARGET_ASCENSION", "WSL_INTEROP", "WSL_DISTRO_NAME", "SYSTEMROOT", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS", "REQUESTS_CA_BUNDLE"];
   const out = Object.fromEntries(names.filter((key) => env[key] !== undefined).map((key) => [key, env[key]!]));
+  if (/^[a-z0-9][a-z0-9._-]{0,119}$/.test(env.LEARNER_EXTERNAL_SOURCE ?? "")
+      && ["ultrafast", "fast", "default"].includes(env.LEARNER_EXTERNAL_SERVICE_TIER ?? "")) {
+    out.LEARNER_EXTERNAL_SOURCE = env.LEARNER_EXTERNAL_SOURCE!;
+    out.LEARNER_EXTERNAL_SERVICE_TIER = env.LEARNER_EXTERNAL_SERVICE_TIER!;
+  }
   // Herdr provides an ANSI terminal even when a noninteractive dispatcher inherits TERM=dumb.
   // Prevent Codex's pre-TUI confirmation; never answer a startup dialog with task input.
   if (!out.TERM?.trim() || out.TERM.trim().toLowerCase() === "dumb") out.TERM = "xterm-256color";

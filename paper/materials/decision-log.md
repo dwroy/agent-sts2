@@ -6370,3 +6370,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:44:26+08:00 [ops] 23:41 R420发布完成事件去重核回：live902206965e06/11叶一致，自有准入已释放、原autoplay及下一play均在；不重启/重full或模型，新自然窗口尚未结案。paper/materials/20261023-2341-ops/receipt.json。
 
 - 2026-10-23T23:45:21+08:00 [ops] 十六通知已核新增集成员实读/转达回执，正式ACK仍pending原CLI；不重复提醒/实验。paper/materials/20261023-2344-ops/receipt.json。
+
+- 2026-10-23T23:46:15+08:00 [watcher] #51外部来源入口972898058按原issue定向核验并合main：21叶与开发源码逐blob同，tsc0、15文件199过（包含Python11项固定夹具），未full/模型/游戏；external_source/runs=[]分账、正常任务优先、原生接纳推进、严格周额度70/85门与普通标志清理核收。默认disabled/空计划、#48配置不变；交原ops冻结双Boss→各幕Boss真实安全聚合并按真实原生启动绑要求，科学父/正式发布/回放/实际档位及吞吐自然采用未关闭，不增行为号。材料paper/materials/20261023-issue51-external-source-integrator/。队列20无新交付、35原full仍待对账，50/28/37/39/43依赖保留；27未变不重复主管通知。

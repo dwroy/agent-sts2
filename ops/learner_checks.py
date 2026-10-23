@@ -124,13 +124,15 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
                                        "stderr": os.path.join(out_dir, batch_id + ".err")}
     if proposal_only:
         batch["no_change_proposals"] = proposal_only
-        if batch.get("backfill_source") and batch["state"] == "done":
-            batch["backfill_result"] = proposal_only["backfill"]["dispositions"]
-            batch["backfill_output_files"] = proposal_only["backfill"]["destination_files"]
+        if (batch.get("backfill_source") or batch.get("external_source")) and batch["state"] == "done":
+            kind = "external" if batch.get("external_source") else "backfill"
+            batch[kind + "_result"] = proposal_only[kind]["dispositions"]
+            batch[kind + "_output_files"] = proposal_only[kind]["destination_files"]
     if proposal_errors:
         inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
-        if batch.get("backfill_source"):
-            batch["backfill_completion_errors"] = proposal_errors
+        if batch.get("backfill_source") or batch.get("external_source"):
+            kind = "external" if batch.get("external_source") else "backfill"
+            batch[kind + "_completion_errors"] = proposal_errors
         else:
             batch["proposal_repair_needed"] = True
     if empty:
