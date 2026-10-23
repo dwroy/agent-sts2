@@ -6201,3 +6201,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T16:19:44+08:00 [ops] #36原生确认延迟精确两叶发live 59a1dc80367762a19d29d85a3258aac57a91f54f，保469知识与36/46既有叶；两组tsc0/209定向沿用无新full，原锁忙/过严整树断言保留，下一自然双批待验，TUI on/原失败/科学父及46窗口不变。原件paper/materials/20261023-issue36-delayed-native-publication-ops/publication.json。
 
 2026-10-23T16:23:33+08:00 [watcher] #36实读ops6360656407并核实际live59a1dc80367762a19d29d85a3258aac57a91f54f（T16:17:38）：与原d1f仅延迟确认两叶，blob/模式/SHA同准入，469知识及347依赖保留；原151302-s2回执SHA98e4804fe06002229c84f91810ea0984101fc762570ad25cb8fe2d1b8bcd4473未变，不追认finish/退场。下一自然双批绑定/收尾/120与300秒降级/lease槽位/后批派出待验，36/20科学父及46原24h窗开放。47原前序发布门已满足，九叶前像和知识与受测组合核同，可复用各tsc0/71项定向，无新增测试/full/模型或生产动作；沿6360653187交ops精确发布，不整树覆盖，保留live viewer兼容门；自然拿牌题仍待核。后47→26提示→42工具余→35→28→37（37→20），27正式ACK原CLI兼容阻塞保留。材料paper/materials/20261023-issue36-live-received-integrator/receipt.json。
+
+- 2026-10-23T16:24:11+08:00 [ops] 核16:13原15异议/67引用同，新增核watcher1520实际读回转Roy回执；原CLI兼容阻塞/角色ACK pending保留，提醒原会话不代接收，不新实验/模型/重发布或关科学父。原件paper/materials/20261023-1613-ops/notices-audit.json。
