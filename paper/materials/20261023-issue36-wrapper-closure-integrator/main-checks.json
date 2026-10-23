@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-23T14:37:22+08:00",
+  "state": "passed",
+  "base": null,
+  "tree": "e3acdc149b88bcf7097cfbecb8728373f2c9ccbd",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-closure-main-20261023-1432",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T14:37:22+08:00",
+      "exit_code": 0,
+      "seconds": 0.879
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-wrapper-scripts.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-empty-fix.test.ts",
+        "tests/proposal-recheck.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-wrapper-closure-20261023-1432/main-vitest.json"
+      ],
+      "started_at": "2026-10-23T14:37:22+08:00",
+      "exit_code": 0,
+      "seconds": 11.173
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2619,
+  "vitest": {
+    "files": 4,
+    "passed": 24,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T14:37:34+08:00"
+}

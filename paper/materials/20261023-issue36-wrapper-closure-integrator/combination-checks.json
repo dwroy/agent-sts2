@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-23T14:45:03+08:00",
+  "state": "passed",
+  "base": "b49984b7d716e02d8a2f3e324f66ebf68fa1b5a7",
+  "tree": "3f5ca0dce812f0fcf564779bfa1a64b0affdcc55",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-closure-live-20261023-1432",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T14:45:03+08:00",
+      "exit_code": 0,
+      "seconds": 0.88
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-wrapper-scripts.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-empty-fix.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-stdio-view.test.ts",
+        "tests/proposal-recheck.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-wrapper-closure-20261023-1432/combination-vitest.json"
+      ],
+      "started_at": "2026-10-23T14:45:03+08:00",
+      "exit_code": 0,
+      "seconds": 22.403
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2543,
+  "vitest": {
+    "files": 7,
+    "passed": 87,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T14:45:26+08:00"
+}

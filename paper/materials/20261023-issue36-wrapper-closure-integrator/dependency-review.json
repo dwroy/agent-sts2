@@ -1,0 +1,205 @@
+{
+  "at": "2026-10-23T14:45:02+08:00",
+  "verdict": "passed",
+  "local_source_files": 347,
+  "recursive_edges": 1637,
+  "dynamic_loads": [
+    {
+      "path": "ops/learner_checks.py",
+      "line": 14,
+      "text": "spec = importlib.util.spec_from_file_location(\"check_proposals\", os.path.join(os.path.dirname(__file__),\"proposal_dispatch.py\"))",
+      "resolved_targets": [
+        "ops/proposal_dispatch.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "line": 284,
+      "text": "spec = importlib.util.spec_from_file_location(\"learner_check_continuation\", os.path.join(os.path.dirname(__file__), \"learner_check_continuation.py\"))",
+      "resolved_targets": [
+        "ops/learner_check_continuation.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/proposal_dispatch.py",
+      "line": 63,
+      "text": "spec=importlib.util.spec_from_file_location('learner_code_proposals',path)",
+      "resolved_targets": [
+        "learner/code_proposals.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/proposal_dispatch.py",
+      "line": 311,
+      "text": "registry_spec=importlib.util.spec_from_file_location('proposal_research_registry',",
+      "resolved_targets": [
+        "ops/strategy_research_jobs.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "learner/code_proposals.py",
+      "line": 147,
+      "text": "spec = importlib.util.spec_from_file_location('proposal_ledger', module_path);ledger = importlib.util.module_from_spec(spec);spec.loader.exec_module(ledger)",
+      "resolved_targets": [
+        "learner/ledger.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/ordinary_close.py",
+      "line": 124,
+      "text": "spec = importlib.util.spec_from_file_location(\"ordinary_ledger\", Path(root) / \"learner/ledger.py\")",
+      "resolved_targets": [
+        "learner/ledger.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "line": 624,
+      "text": "spec = importlib.util.spec_from_file_location(\"dataset_eval_metrics\", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), \"eval\", \"metrics.py\"))",
+      "resolved_targets": [
+        "eval/metrics.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "line": 1035,
+      "text": "spec = importlib.util.spec_from_file_location(\"learning_curve\", os.path.join(ROOT, \"eval\", \"learning-curve.py\"))",
+      "resolved_targets": [
+        "eval/learning-curve.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "line": 1048,
+      "text": "spec = importlib.util.spec_from_file_location(\"paper_cost\", os.path.join(code_root, \"eval\", \"cost.py\"))",
+      "resolved_targets": [
+        "eval/cost.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "eval/learning-curve.py",
+      "line": 43,
+      "text": "spec = importlib.util.spec_from_file_location(name, path)",
+      "resolved_targets": [
+        "eval/metrics.py",
+        "learner/ledger.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/report_run.py",
+      "line": 159,
+      "text": "spec = importlib.util.spec_from_file_location(\"recovery_original_report\", self.root / \"ops/report.py\")",
+      "resolved_targets": [
+        "ops/report.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/global_build_funnel.py",
+      "line": 15,
+      "text": "spec = importlib.util.spec_from_file_location('funnel_eval', CODE_ROOT / 'eval/global_build_funnel.py')",
+      "resolved_targets": [
+        "eval/global_build_funnel.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/codex-ops-learn.py",
+      "line": 370,
+      "text": "spec = importlib.util.spec_from_file_location(\"ledger\", os.path.join(os.path.dirname(SCRIPTS), \"learner\", \"ledger.py\"))",
+      "resolved_targets": [
+        "learner/ledger.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "line": 252,
+      "text": "spec = importlib.util.spec_from_file_location(\"job_ledger\", os.path.join(root, \"learner\", \"ledger.py\"))",
+      "resolved_targets": [
+        "learner/ledger.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "line": 340,
+      "text": "spec = importlib.util.spec_from_file_location(\"job_proposals\", os.path.join(os.path.dirname(__file__),\"proposal_dispatch.py\"))",
+      "resolved_targets": [
+        "ops/proposal_dispatch.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "line": 365,
+      "text": "spec = importlib.util.spec_from_file_location(\"boss_refresh_cadence\", os.path.join(scripts, \"../agent/tools/boss-sim/cadence.py\"))",
+      "resolved_targets": [
+        "agent/tools/boss-sim/cadence.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/boss_sim_jobs.py",
+      "line": 268,
+      "text": "spec = importlib.util.spec_from_file_location(\"boss_acceptance\", Path(__file__).resolve().parents[1] / \"agent/tools/boss-sim/acceptance.py\")",
+      "resolved_targets": [
+        "agent/tools/boss-sim/acceptance.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/regent-startup-check.py",
+      "line": 14,
+      "text": "spec = importlib.util.spec_from_file_location('regent_inspection', Path(__file__).with_name('regent-launch-inspect.py'))",
+      "resolved_targets": [
+        "ops/regent-launch-inspect.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/regent-native-repair.py",
+      "line": 14,
+      "text": "spec=importlib.util.spec_from_file_location('regent_probe',Path(__file__).with_name('regent-launch-inspect.py'))",
+      "resolved_targets": [
+        "ops/regent-launch-inspect.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    },
+    {
+      "path": "ops/regent-launch-solo.py",
+      "line": 15,
+      "text": "_spec = importlib.util.spec_from_file_location('regent_inspection', Path(__file__).with_name('regent-launch-inspect.py'))",
+      "resolved_targets": [
+        "ops/regent-launch-inspect.py"
+      ],
+      "review": "read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included"
+    }
+  ],
+  "shell_syntax_exit": 0,
+  "stdio_block_sha256": "f584c781dd3dccab5d0f6b16adfd7bc1d3a75bc39c92190ea7a46c2cbaf1f1e5",
+  "stdio_block_unchanged": true,
+  "old_missing_seal_removed": true,
+  "tracked_files_and_modes_match": true,
+  "resolution_notes": [
+    "Production ROOT/.worktrees/live in codex-ops-actions boss-check resolves to this actual candidate, not a nested test path.",
+    "Python local search uses source directory, ops/learner/eval/knowledge/builders as declared by source sys.path. Relative TS .js imports resolve to tracked .ts files; installed node_modules validated by original allocator, not copied or recursively treated as repository modules.",
+    "learner_tui finished/defer/verified-code use standard library only; existing retire requires explicit CLI and identity/idle gates and is never called by patched wrapper.",
+    "paths.sh instance/lane helpers and policy wrappers are included. Optional configs remain guarded by existing file gates; no config changed.",
+    "LEARNER_CMD and configured external commands remain external override boundaries; no production code or model executed for this audit."
+  ],
+  "scanner_preflight_issue": "Initial broad scanner followed node_modules symlink outside candidate and stopped before any tests or production operation; fixed by excluding verified installed providers; no product failure hidden.",
+  "module_closure_limit": "Source references under this wrapper, retained call graph and enumerated dynamic loaders; no claim about arbitrary future config commands or all repository features.",
+  "full_started": false,
+  "production_written": false
+}

@@ -1,0 +1,179 @@
+diff --git a/agent/tests/learner-wrapper-scripts.test.ts b/agent/tests/learner-wrapper-scripts.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5f723f9acda0d1e5e36aca0292283b7cee3b8905
+--- /dev/null
++++ b/agent/tests/learner-wrapper-scripts.test.ts
+@@ -0,0 +1,43 @@
++import { execFileSync } from "node:child_process";
++import { readFileSync, statSync } from "node:fs";
++import { resolve } from "node:path";
++import { fileURLToPath } from "node:url";
++import { describe, expect, it } from "vitest";
++
++const root = fileURLToPath(new URL("../..", import.meta.url));
++const wrapper = readFileSync(resolve(root, "ops/codex-ops-learner.sh"), "utf8");
++const published = new Set(execFileSync("git", ["ls-tree", "-r", "--name-only", "HEAD", "--", "ops", "learner"],
++  { cwd: root, encoding: "utf8" }).trim().split("\n"));
++
++function scripts(text: string): string[] {
++  // paths.sh is sourced relative to this wrapper; the other repo scripts use ROOT or OPS.
++  const result = new Set(["ops/paths.sh"]);
++  for (const match of text.matchAll(/\$(?:OPS|\{OPS\})\/([\w./-]+\.(?:py|sh|ts|mjs))\b/g)) result.add(`ops/${match[1]}`);
++  for (const match of text.matchAll(/\$(?:ROOT|\{ROOT\})\/([\w./-]+\.(?:py|sh|ts|mjs))\b/g)) result.add(match[1]!);
++  return [...result].sort();
++}
++
++function missing(text: string, files: Set<string>): string[] {
++  return scripts(text).filter((path) => !files.has(path));
++}
++
++describe("learner wrapper published script closure", () => {
++  it("ships every literal repo script referenced by the wrapper, including both task routes", () => {
++    const required = scripts(wrapper);
++    expect(required).toEqual(expect.arrayContaining(["ops/paths.sh", "ops/learner_tui.py", "ops/learner_entry.py",
++      "ops/codex-learner.sh", "ops/codex-fast.sh", "ops/codex-ops-learn.py", "learner/run.ts"]));
++    expect(missing(wrapper, published)).toEqual([]);
++    for (const path of required) expect(statSync(resolve(root, path)).isFile(), path).toBe(true);
++  });
++
++  it("rejects the exact old unpublished seal reference and any omitted required script", () => {
++    const withoutRecycler = new Set(published);
++    withoutRecycler.delete("ops/learner_tabs.py");
++    expect(missing(`${wrapper}\npython3 "$OPS/learner_tabs.py" seal\n`, withoutRecycler)).toEqual(["ops/learner_tabs.py"]);
++    for (const path of scripts(wrapper)) {
++      const incomplete = new Set(published);
++      incomplete.delete(path);
++      expect(missing(wrapper, incomplete)).toEqual([path]);
++    }
++  });
++});
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index f6a4dbf0b45ea615f7481eeaee4ee9f46fcfaa61..321f15d77c1427dadc25568c325de1b3e0c47b24 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -227,12 +227,8 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
+   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
+   if [ "$finish_rc" = 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
+     if nice -n 19 python3 "$OPS/learner_tui.py" finished "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err"; then
+-      # Seal only. The #20 recycler independently waits for this supervisor to exit before closing a tab.
+-      if ! nice -n 19 python3 "$OPS/learner_tabs.py" seal --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
+-          >> "$DIR/scheduler.log" 2>> "$err"; then
+-        wrapper_attention seal
+-        finish_rc=75
+-      fi
++      # The durable wrapper receipt completes this handoff. Tab reclamation belongs to #20.
++      :
+     else
+       wrapper_attention finish
+       finish_rc=75
+diff --git a/ops/tests/test_learner_wrapper_completion.py b/ops/tests/test_learner_wrapper_completion.py
+index 2392bea4caf99b1dc65f2c61168deb62662934fb..fe4eee52d0480f67b5a8e2690b230a7cf2631af4 100644
+--- a/ops/tests/test_learner_wrapper_completion.py
++++ b/ops/tests/test_learner_wrapper_completion.py
+@@ -1,4 +1,4 @@
+-"""Real shell wrapper with frozen receipts and finish/seal stubs; no model or Herdr calls."""
++"""Real shell wrapper with frozen receipts and a finish stub; no model or Herdr calls."""
+ import json
+ import importlib.util
+ import os
+@@ -44,12 +44,6 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
+      "task":os.environ["FIXTURE_TASK"],
+      "finished":"2026-10-23T12:00:00+08:00", "pid":os.getppid(), "pane":"w1:p2", "worktree":str(root)}
+ (root/"ops/codex-ops/learn.json").write_text(json.dumps({"batches":{batch:row}}))
+-''')
+-        (self.root / "ops/learner_tabs.py").write_text('''import json,os,sys
+-from pathlib import Path
+-root=Path(os.environ["CODEX_OPS_ROOT"])
+-(root/"seal-args.json").write_text(json.dumps(sys.argv[1:]))
+-sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+ ''')
+         sleep = self.root / "home/.local/node/bin/sleep"
+         sleep.parent.mkdir(parents=True)
+@@ -70,7 +64,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+     def attention_files(self):
+         return list((self.directory / "queue").glob("*learner-tui-attention.md"))
+ 
+-    def test_clean_finish_seals_without_ops_attention_or_pane_commands(self):
++    def test_clean_finish_records_without_ops_attention_or_recycler_commands(self):
+         env = self.prepare()
+         result = self.run_wrapper(env)
+         self.assertEqual(result.returncode, 0, result.stderr)
+@@ -81,8 +75,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         self.assertEqual(value["wrapper"]["supervisor"]["pid"], json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["pid"])
+         self.assertTrue(value["wrapper"]["supervisor"]["birth"])
+         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
+-        self.assertEqual(json.loads((self.root / "seal-args.json").read_text()),
+-                         ["seal", "--root", str(self.root), "--state-dir", str(self.directory), "--batch", self.batch])
++        self.assertFalse((self.root / "seal-args.json").exists())
+         self.assertEqual(self.attention_files(), [])
+         self.assertEqual(self.receipt.stat().st_mode & 0o777, 0o600)
+ 
+@@ -98,7 +91,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         self.assertEqual(value["wrapper"]["rc"], 3)
+         self.assertEqual(value["wrapper"]["launcher_rc"], 1)
+         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
+-        self.assertTrue((self.root / "seal-args.json").exists())
++        self.assertFalse((self.root / "seal-args.json").exists())
+         self.assertEqual(self.attention_files(), [])
+ 
+     def test_invalid_native_binding_preserves_original_and_never_finishes_or_seals(self):
+@@ -114,7 +107,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         self.assertEqual(len(self.attention_files()), 1)
+         self.assertRegex(self.attention_files()[0].name, r"^[0-9]+-[a-z][a-z0-9-]*\.md$")
+ 
+-    def test_semantic_failure_preserves_failed_rc_zero_and_seals_transport(self):
++    def test_semantic_failure_preserves_failed_rc_zero_and_records_transport(self):
+         env = self.prepare()
+         result = self.run_wrapper(dict(env, FIXTURE_FINISH_STATE="failed"))
+         self.assertEqual(result.returncode, 0)
+@@ -123,7 +116,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         self.assertEqual(value["wrapper"]["state"], "failed")
+         self.assertEqual(value["wrapper"]["rc"], 0)
+         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "failed")
+-        self.assertTrue((self.root / "seal-args.json").exists())
++        self.assertFalse((self.root / "seal-args.json").exists())
+         self.assertEqual(self.attention_files(), [])
+ 
+     def test_empty_fix_audit_stays_failed_while_native_completion_is_recorded(self):
+@@ -175,24 +168,28 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         receipt = json.loads(self.receipt.read_text())
+         self.assertEqual((receipt["wrapper"]["state"], receipt["wrapper"]["rc"]), ("rejected", 0))
+         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "rejected")
+-        self.assertTrue((self.root / "seal-args.json").is_file())
++        self.assertFalse((self.root / "seal-args.json").exists())
+ 
+-    def test_seal_failure_keeps_verified_finish_but_reports_retained_handoff(self):
++    def test_unreleased_recycler_does_not_affect_verified_finish(self):
+         env = self.prepare()
+-        result = self.run_wrapper(dict(env, FIXTURE_SEAL_RC="75"))
+-        self.assertEqual(result.returncode, 75)
++        # A presence-only trap must never run; ordinary fixtures contain no recycler module.
++        (self.root / "ops/learner_tabs.py").write_text(
++            "from pathlib import Path\n"
++            f"Path({str(self.root / 'seal-args.json')!r}).write_text('unexpected recycler invocation')\n"
++            "raise RuntimeError('unreleased recycler must not run')\n")
++        result = self.run_wrapper(env)
++        self.assertEqual(result.returncode, 0)
+         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
+-        self.assertEqual(len(self.attention_files()), 1)
+-        notification = self.attention_files()[0].read_bytes()
+-        tui.attention(self.directory, self.batch, "seal")
+-        self.assertEqual(self.attention_files()[0].read_bytes(), notification)
+-        self.assertEqual(len(self.attention_files()), 1)
++        self.assertFalse((self.root / "seal-args.json").exists())
++        self.assertEqual(self.attention_files(), [])
+ 
+-    def test_missing_seal_adapter_never_falls_back_to_closing(self):
++    def test_missing_recycler_does_not_block_completion_or_close_pane(self):
+         env = self.prepare()
+-        (self.root / "ops/learner_tabs.py").unlink()
+-        self.assertEqual(self.run_wrapper(env).returncode, 75)
+-        self.assertEqual(len(self.attention_files()), 1)
++        self.assertFalse((self.root / "ops/learner_tabs.py").exists())
++        self.assertEqual(self.run_wrapper(env).returncode, 0)
++        self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
++        self.assertFalse((self.root / "seal-args.json").exists())
++        self.assertEqual(self.attention_files(), [])
+ 
+     def test_mismatched_launcher_exit_is_not_silently_replaced(self):
+         env = self.prepare()

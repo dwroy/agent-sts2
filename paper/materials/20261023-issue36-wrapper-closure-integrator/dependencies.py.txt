@@ -1,0 +1,55 @@
+from pathlib import Path
+import ast,re,json,hashlib,subprocess
+B=Path(__file__).resolve().parent;R=Path('/home/dw/Projects/agent-sts2/.worktrees/integrator36-closure-live-20261023-1432').resolve()
+manual={
+'ops/codex-ops-learn.py':['learner/ledger.py'],
+'ops/proposal_dispatch.py':['learner/code_proposals.py','ops/strategy_research_jobs.py'],
+'ops/ordinary_close.py':['learner/ledger.py'],
+'learner/code_proposals.py':['learner/ledger.py'],
+'eval/learning-curve.py':['eval/metrics.py','learner/ledger.py'],
+'ops/paper_dataset.py':['eval/metrics.py','eval/learning-curve.py','eval/cost.py'],
+'ops/global_build_funnel.py':['eval/global_build_funnel.py'],
+'ops/learner_jobs.py':['learner/ledger.py','agent/tools/boss-sim/cadence.py'],
+'ops/boss_sim_jobs.py':['agent/tools/boss-sim/acceptance.py'],
+'ops/learner_checks.py':['agent/tools/with-temp.mjs'],
+'ops/codex-ops.sh':['ops/codex/main.ts']}
+paths=set();queue=['ops/codex-ops-learner.sh','learner/run.ts'];edges=[];dynamic=[];externals=[]
+def local(p):return p.is_file() and p.resolve().is_relative_to(R) and 'node_modules' not in p.parts
+while queue:
+ n=queue.pop()
+ if n in paths:continue
+ p=R/n
+ if not local(p):externals.append(n);continue
+ paths.add(n);s=p.read_text(errors='replace');deps=set(manual.get(n,[]))
+ if n.endswith('.py'):
+  for a in ast.walk(ast.parse(s)):
+   mods=([a.module] if a.module else []) if isinstance(a,ast.ImportFrom) else [x.name for x in a.names] if isinstance(a,ast.Import) else []
+   for mod in mods:
+    for loc in [p.parent/(mod.replace('.','/')+'.py'),R/(mod.replace('.','/')+'.py'),*[R/base/(mod.replace('.','/')+'.py') for base in ['ops','learner','knowledge/builders','eval']]]:
+     if local(loc):deps.add(str(loc.relative_to(R)))
+ elif n.endswith(('.ts','.mjs','.js')):
+  for m in re.finditer(r'''(?:from\s*|import\s*\(|require\s*\()\s*['"](\.[^'"]+)['"]''',s):
+   t=p.parent/m[1]
+   for loc in [t,t.with_suffix('.ts'),t.with_suffix('.js'),t/'index.ts']:
+    if local(loc):deps.add(str(loc.resolve().relative_to(R)));break
+ for m in re.finditer(r'''(?:\$(?:ROOT|\{ROOT\})/|["'])(ops/[\w/.-]+\.(?:py|sh|ts|mjs))\b|\$(?:OPS|\{OPS\})/([\w/.-]+\.(?:py|sh|ts|mjs))\b''',s):
+  dep=m[1] or 'ops/'+m[2]
+  if 'node_modules' not in dep:deps.add(dep)
+ for m in re.finditer(r'''["']([\w.-]+\.(?:py|sh))["']''',s):
+  q=p.parent/m[1]
+  if local(q):deps.add(str(q.relative_to(R)))
+ for m in re.finditer(r'''\$(?:ROOT|\{ROOT\})/([\w/.-]+\.(?:py|sh|ts|mjs))\b''',s):
+  if 'node_modules' not in m[1]:deps.add(m[1])
+ if n.endswith('.sh'):deps.add('ops/paths.sh')
+ for d in sorted(deps):
+  # Production ROOT/.worktrees/live is this exact candidate, not a nested test checkout.
+  d=d.removeprefix('.worktrees/live/')
+  edges.append(dict(caller=n,target=d,present=local(R/d)))
+  if local(R/d):queue.append(d)
+ for i,line in enumerate(s.splitlines(),1):
+  if 'spec_from_file_location' in line or 'import_module(' in line:dynamic.append(dict(path=n,line=i,text=line.strip()))
+rows=[]
+for n in sorted(paths):
+ r=subprocess.check_output(['git','ls-files','-s','--',n],cwd=R).decode().split();rows.append(dict(path=n,mode=r[0],blob=r[1],sha256=hashlib.sha256((R/n).read_bytes()).hexdigest()))
+x=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),files=rows,edges=edges,missing=[e for e in edges if not e['present']],dynamic=dynamic,external_paths=externals,automatic_scan_not_proof_of_dynamic_closure=True)
+(B/'dependencies.json').write_text(json.dumps(x,indent=2)+'\n');print(json.dumps(dict(files=len(paths),edges=len(edges),missing=x['missing'],dynamic=dynamic),indent=2))
