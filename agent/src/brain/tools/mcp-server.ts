@@ -86,7 +86,7 @@ export class ToolHost {
     } catch { /* Legacy prose tools have no envelope. */ }
     if (this.knowledgeAudit || record.sources) { record.outputBytes = Buffer.byteLength(result.text, "utf8"); record.sources ??= []; }
     this.records.push(record);
-    observeBrain(this.observe, { kind: "tool-end", name, output: result.text, ms: record.ms, isError: result.isError });
+    observeBrain(this.observe, { kind: "tool-end", name, output: result.text, ms: record.ms, isError: result.isError, sources: record.sources });
     this.onRecord?.(record);
     return result;
   }

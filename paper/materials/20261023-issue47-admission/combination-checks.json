@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-23T16:16:06+08:00",
+  "state": "passed",
+  "base": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+  "tree": "d64c891f326eedf899f48dfa2ff62686f2346ae9",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator47-live-20261023-1615",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T16:16:06+08:00",
+      "exit_code": 0,
+      "seconds": 0.94
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/brain-live.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/brain-agent-codex.test.ts",
+        "tests/brain-agent-loop.test.ts",
+        "tests/brain-router.test.ts",
+        "tests/mcp-server.test.ts",
+        "tests/brain-view.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue47-admission-20261023/combination-vitest.json"
+      ],
+      "started_at": "2026-10-23T16:16:07+08:00",
+      "exit_code": 0,
+      "seconds": 13.816
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2543,
+  "vitest": {
+    "files": 7,
+    "passed": 71,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T16:16:21+08:00"
+}

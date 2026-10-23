@@ -200,6 +200,15 @@ class BrainView(unittest.TestCase):
         self.assertNotIn('sk-fixed', rendered)
         self.assertNotIn('\x1b', rendered)
 
+    def test_stream_preserves_long_lines_and_sha_without_second_truncation(self):
+        file = self.root / 'stream.txt'
+        sha = 'a' * 64
+        line = '完整答案：{"key_turns":[1,2]} ' + '固定中文，' * 2000 + '尾部标记'
+        file.write_text('系统提示 SHA256 ' + sha + '\n' + line + '\n')
+        lines = view.TextTail(file).read_text()
+        self.assertIn(sha, lines[0])
+        self.assertEqual(lines[1], line)
+
     def test_exec_completed_question_remains_visible_after_session_stream_stops(self):
         emitted, titles = [], []
         reader = view.Viewer(self.root, lambda title: titles.append(title) or True, emitted.append)
