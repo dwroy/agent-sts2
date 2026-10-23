@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { CodexEngine, CODEX_DISABLED_FEATURES } from "../src/brain/engines/codex.js";
 import { KnowledgeAgent } from "../src/brain/engines/knowledge-agent.js";
 import { loadConfig } from "../src/core/config.js";
+import type { BrainLiveEvent } from "../src/brain/live-view.js";
 import { pickSpec } from "../src/brain/specs.js";
 
 it("Codex app-server exposes only gkb, keeps all isolation switches and records native effort plus tool results", async () => {
@@ -25,6 +26,10 @@ const send=m=>console.log(JSON.stringify(m));
 for await(const line of createInterface({input:process.stdin})){
 const m=JSON.parse(line),p=m.params??{};if(m.id===undefined)continue;
 if(!m.method&&m.id===999){
+send({method:'item/reasoning/textDelta',params:{threadId:'fixed-thread',turnId:'fixed-turn',itemId:'private',delta:'PRIVATE_RAW_REASONING'}});
+send({method:'item/completed',params:{threadId:'fixed-thread',turnId:'fixed-turn',item:{id:'summary-only',type:'reasoning',summary:[{type:'summary_text',text:'fixed public summary'}],content:[{text:'PRIVATE_RAW_REASONING'}]}}});
+send({method:'item/reasoning/summaryTextDelta',params:{threadId:'fixed-thread',turnId:'fixed-turn',itemId:'streamed',delta:'fixed streamed summary'}});
+send({method:'item/completed',params:{threadId:'fixed-thread',turnId:'fixed-turn',item:{id:'streamed',type:'reasoning',summary:['fixed streamed summary']}}});
 send({method:'item/completed',params:{threadId:'fixed-thread',turnId:'fixed-turn',item:{type:'agentMessage',text:'{"choice":"a","reason":"fixed"}'}}});
 send({method:'turn/completed',params:{threadId:'fixed-thread',turn:{id:'fixed-turn',status:'completed'}}});continue;}
 
@@ -44,10 +49,17 @@ send({id:999,method:'item/tool/call',params:{threadId:'fixed-thread',turnId:'fix
       readUsage: async () => ({ readAt: new Date().toISOString(), ms: 1, plan: null, windows: [], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false }) });
     engines.push(e); return e;
   });
+  const events: BrainLiveEvent[] = [];
   try {
-    const result = await engine.decide({ label: "reward/card", system: "fixed rules", question: "choose", options: { a: null }, payload: {}, spec: pickSpec("reward/card", { a: null }),
+    const result = await engine.decide({ label: "reward/card", observe: event => events.push(event), system: "fixed rules", question: "choose", options: { a: null }, payload: {}, spec: pickSpec("reward/card", { a: null }),
       toolContext: { ascension: 0, knowledgeDir: "", logsDir: "" }, tools: [{ name: "kb_open_book", description: "fixture", inputSchema: { type: "object" }, run: () => ({ text: '{"sources":[{"source":"external:fixture","version":"fixture"}],"entries":[]}' }) }] });
     expect(result).toMatchObject({ answer: { choice: "a" }, nativeReceipt: { source: "turn_context", effort: "high" }, toolCalls: [{ name: "kb_open_book", sources: [{ source: "external:fixture", version: "fixture" }] }] });
+    expect(events.filter(e => e.kind === "reasoning")).toEqual([
+      { kind: "reasoning", text: "fixed public summary" }, { kind: "reasoning", text: "fixed streamed summary" },
+    ]);
+    expect(events).toContainEqual({ kind: "text", text: '{"choice":"a","reason":"fixed"}' });
+    expect(JSON.stringify(events)).not.toContain("PRIVATE_RAW_REASONING");
+    expect(events.find(e => e.kind === "tool-end")).toMatchObject({ sources: [{ source: "external:fixture", version: "fixture" }] });
     const observedCall = JSON.parse(readFileSync(observed, "utf8"));
     const args: string[] = observedCall.args;
     expect(observedCall.dynamicTools).toMatchObject([{ type: "namespace", name: "gkb", tools: [{ type: "function", name: "kb_open_book" }] }]);

@@ -26,12 +26,18 @@ REDACTIONS = [
 ]
 
 
-def safe_text(value, limit=240):
+def safe_text(value, limit=240, stream=False):
     if not isinstance(value, (str, int, float, bool)):
         return "?"
     text = str(value)
     for pattern, replacement in REDACTIONS:
-        text = re.sub(pattern, replacement, text)
+        if stream and pattern == REDACTIONS[3][0]:
+            # The writer already redacts structured fields. Retain legitimate game fields (key_turns).
+            text = re.sub(pattern.replace('(?:key|token|secret', '(?:api[_ -]?key|token|secret'), replacement, text)
+        elif stream and pattern == REDACTIONS[-1][0]:
+            text = re.sub(pattern, lambda match: match[0] if re.fullmatch(r"[a-fA-F0-9]{64}", match[0]) else replacement, text)
+        else:
+            text = re.sub(pattern, replacement, text)
     # Strip terminal controls, including OSC/CSI introducers; no log may execute terminal commands.
     text = re.sub(r"[\x00-\x1f\x7f-\x9f]", " ", text)
     return text[:limit] + ("…" if len(text) > limit else "")
@@ -231,7 +237,7 @@ class TextTail(JsonlTail):
             self.discard = True
         for line in lines:
             try:
-                result.append(safe_text(line.decode("utf8"), 1600))
+                result.append(safe_text(line.decode("utf8"), MAX_LINE, stream=True))
             except UnicodeError:
                 pass
         return result
