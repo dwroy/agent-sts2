@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-23T12:16:03+08:00",
+  "state": "targeted-passed-await-original-issue36-full-and-publication",
+  "authorization": "Roy via Claude 2026-10-23 12:1x 每个后续非交互批次实时日志；不动在途进程",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-learner-stdio-log-20261023-1213",
+  "base": "950e323e8a52790e729f06fc92661e1e0c1ac96e",
+  "candidate_tree": "9943a45c2065323e8c36afc22577095debb17a0b",
+  "paths": [
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "blob": "6bf41356247aedf451ab49f9e4da375399234d2e",
+      "sha256": "0670976f6489499557903ee8dd9302bb03c903337d65d4208c8c6cf209471453"
+    },
+    {
+      "path": "agent/tests/learner-stdio-view.test.ts",
+      "blob": "bad8e011d7666d330b42528a2f0ea670222cd70f",
+      "sha256": "c727a098109f7dfd3cc53bf694c6836d694b7d3c9863326970743b5a89fbaf50"
+    }
+  ],
+  "tsc": 0,
+  "shell_syntax": 0,
+  "targeted": {
+    "files": 1,
+    "passed": 4,
+    "failed": 0,
+    "seconds": 1.84
+  },
+  "full_started": false,
+  "published": false,
+  "running_processes_touched": false,
+  "new_models": 0,
+  "rollback": "撤回本次wrapper单块即可，下一自然学习启动生效；保持learner_tui=off和brain_view配置，现有进程不变。",
+  "behavior": "原herdr命令pane内nice19只读tail该批.out/.err；--pid绑定本wrapper自动退出，交互TUI与ops等其他label不启用，不新增镜像tab。",
+  "source_withdrawal": {
+    "exit_code": 1,
+    "passed": 2,
+    "failed": 2,
+    "log": ".artifacts/ops-learner-stdio-log-20261023/source-withdrawal.log",
+    "sha256": "13db7d059a85ada7d5cadd2a7634093b3722c549a535d22d2db07a85ec5bfdf6",
+    "restored_sha256": "0670976f6489499557903ee8dd9302bb03c903337d65d4208c8c6cf209471453"
+  }
+}
