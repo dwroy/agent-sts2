@@ -43,15 +43,17 @@ Codex 保留空 cwd、project docs/hooks/apps/skills/multi-agent/shell/网络搜
 
 Roy/主管 2026-10-23 最新裁定（issue评论6361846602）：rk 指 **reflex knowledge**，即 `reflex.json` 条目（v6-plan §5），不是 experience/shared-experience 的别名。此前开发6290300d8的解释已撤回，原提交、交付报告和失败证据保留为历史；本节为修正后的合同。
 
-Silent 的拿牌、商店、休息、事件、幕初路线和 fight-plan 题，基础指令与题面要求作答前先查询 `kb_strategies {"query":"*"}` 与 `kb_reflex {"query":"*"}`；可按线索里的 Boss/精英/卡牌/条目 ID 缩小 rk 查询。经验继续由独立的 `kb_experience` 查询，`relevant=true` 只表示本题相关经验。Ironclad 的基础指令和原工具表/schema 保持原样。
+Roy 2026-10-23 晚同意的小修正（评论6367991625）：Silent 的拿牌、商店、休息、事件、幕初路线和 fight-plan 题先给实际检索匹配数，只按非空线索和需要查询。策略/rk 数为0或库缺失/错误时不附工具名和调用参数，也不在基础指令、题面或工具说明中无条件要求先查。非空时可按工具参数或线索里的 Boss/精英/卡牌/条目 ID 缩小查询。经验继续由独立的 `kb_experience` 查询，`relevant=true` 只表示本题相关经验。Ironclad 的基础指令和原工具表/schema 保持原样。
 
-题面末尾 `brain-query-cues-v2` 分列 strategies、rk、experience，只含候选数量、最多六条身份/已有策略标题、经验 scope、工具名和参数。rk 只给真实 reflex ID/applies_to，不给 label_en、predicate、signal、证据或可信度正文；另列本幕 Boss、当前敌人与已发布幕威胁的文本提及数量及查询参数。这个数量是检索候选数，不证明 predicate 已成立、预测下一个精英、Jev 采用或收益。缺失/损坏库数量为 null，合法空库为0；文件变化后重新读取，不编造条目。
+题面末尾 `brain-query-cues-v3` 分列 strategies、rk、experience，只含候选数量、最多六条身份/已有策略标题、经验 scope、工具名和参数。rk 只给经本题用途筛选后的真实 reflex ID/applies_to，不给 label_en、predicate、signal、证据或可信度正文；另列非零的本幕 Boss、当前敌人与已发布幕威胁文本提及数量及查询参数。这个数量是检索候选数，不证明 predicate 已成立、预测下一个精英、Jev 采用或收益。缺失/损坏库数量为 null，合法空库为0；文件变化后重新读取，不编造条目。
 
-`kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。原始条目完整返回：版本、predicate、signal、confidence、evidence、source_experience 均保留；后者为来源经验关联，不是 reflex 命中 ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。
+`kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。构筑题按用途筛选：拿牌仅card_pick，商店为shop/card_pick/potion，休息仅rest，事件与幕初规划为四种构筑用途，均排除combat_line（显式请求也不能绕过）。返回一句话摘要（原label_en）、ID/版本/用途、原confidence/evidence/source_experience，不返回原始predicate或signal JSON；摘要省略条件并不意味着无条件适用。fight-plan仍返回完整原条目，其他角色不变。source_experience为来源经验关联，不是reflex命中ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。
 
-检索不执行 predicate，不把未知战斗/选项状态当作满足条件；返回明确 `predicate_evaluation=not_evaluated`。`V6_COMBAT_ENTRIES=off` 关闭的是 Jev 执行消费，rk 仍可供大脑只读规划，查询不会打开它、修改知识或发送条目给 Jev。缺库/空库/无命中返回明确空结果，坏库/坏引用返回工具错误；正文最多12条/24KB，省略数单列，不截断证据，元数据本身超限则报错。
+检索不执行 predicate，不把未知战斗/选项状态当作满足条件；返回明确 `predicate_evaluation=not_evaluated`。`V6_COMBAT_ENTRIES=off` 关闭的是 Jev 执行消费，备战题仍可供大脑只读规划，构筑题排除combat_line；查询不会打开它、修改知识或发送条目给 Jev。缺库/空库/无命中返回明确空结果，坏库/坏引用返回工具错误；正文最多12条/24KB，省略数单列，不截断证据，元数据本身超限则报错。
 
 `kb_experience relevant=true` 仍按既有 relevance 和进阶有效性查询经验，最多12条/24KB；保留原置信度、支持/反例、来源、证据与文件版本/SHA，可结合 theme/id/keyword 筛选。策略触发题型包含 fight_plan，旧策略不自动外推。新增查询工具后仍为原8次调用及查询/作答预算，无新增重问、强制查询闸或跨引擎兜底；错误/空结果或预算耗尽后用已有信息作答。
+
+拿牌/商店的 `external_stats` 为可选线索：复用 #26 已审核且SHA固定的聚合，按当前候选精确ID、幕、Silent A10/v0.111核实际数据行是否存在；给六工具的非零可执行参数、匹配候选数及最多六张候选ID，不内嵌拿取率/胜率/区间等统计正文。缺库、SHA错误、其他角色/进阶/题型不提示。卡牌/跳过表来自奖励机会，不冒称商店购买率；聚类/共现保留非因果、不能作方向依据说明，由大脑自行决定调用。原 #26 奖励提示不改，不引入额外依赖或联网请求。
 
 工具模式 brain 日志使用 `query_audit.schema=brain-query-audit-v2`，strategies 只计 kb_strategies，rk 只计 kb_reflex，experience 只计 kb_experience；分别记录 queried/calls/hit_calls/unknown_hit_calls/hit_ids，成功与失败题均从实际 tool_calls 重建。错误、空结果、线索及模型文字不算命中，未知输出不补零。完整参数、来源、返回字节和耗时仍留在 tool_calls。
 
@@ -75,7 +77,7 @@ dsh 预检启动真实内核并以同一按角色工具清单（Silent为15项�
 nice -n 19 node --import tsx tools/brain-agent-report.ts <brain.jsonl> <run-id> ...
 ```
 
-#49 的 `query_groups` 按引擎及互斥题型分别列策略/rk/经验查询率、每题调用次数均值/p95、工具命中率、实际命中ID及每题耗时均值/p95；幕初事件只进 act_plan 分母。命中率为非空ID返回次数/该工具调用次数（含错误），没有调用或存在未知历史输出时为 null。`rk_available_questions` 另列该窗口实际公布 kb_reflex 的题数。历史日志按原 tool_calls 重建，kb_experience 绝不追认为 rk，即使旧 query_audit 曾误标；前18局没有 rk 工具时明确显示可用题数为0。冻结上线前18个自然局号与上线后首批自然局号后比较：
+#49 的 `query_groups` 按引擎及互斥题型分别列策略/rk/经验查询率、每题调用次数均值/p95、工具命中率、实际命中ID及每题耗时均值/中位数/p95；幕初事件只进 act_plan 分母。命中率为非空ID返回次数/该工具调用次数（含错误），没有调用或存在未知历史输出时为 null。`rk_available_questions` 另列该窗口实际公布 kb_reflex 的题数。历史日志按原 tool_calls 重建，kb_experience 绝不追认为 rk，即使旧 query_audit 曾误标；前18局没有 rk 工具时明确显示可用题数为0。冻结上线前18个自然局号与上线后首批自然局号后比较：
 
 ```bash
 nice -n 19 node --import tsx tools/brain-agent-report.ts <after.jsonl> <after-run-id> ... \
@@ -87,3 +89,5 @@ nice -n 19 node --import tsx tools/brain-agent-report.ts <after.jsonl> <after-ru
 分别报告完成率、原生工具调用率/次数、工具执行耗时、查询阶段耗时、总耗时、调用/时间/卡住后作答比例。另列“有思考但无原生工具调用”和“把工具调用写进文字 JSON”的观测；前者不自动判失败，后者只匹配工具调用文字，不把正常答案 JSON 算失败。自然题的 `knowledge.mode=tools`、无前缀预算导致的开卷遗漏、来源标记与完整工具返回均须核实。零题或仅离线预检不构成自然局验收。
 
 接口参考：[官方 Codex App Server 文档](https://developers.openai.com/codex/app-server/)。实际 CLI、dsh 的已安装协议和固定夹具另行验证；没有外部游戏知识变更。
+
+小修正的自然验收须另冻结发布后首批窗口，继续分列查询率、命中率及 latency_ms_median/mean/p95，与原18局口径比较。约14秒中位数为目标，固定测试不证明时延或命中率收益；不追加实验局。

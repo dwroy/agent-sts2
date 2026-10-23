@@ -97,7 +97,7 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
       const sources = library.sources.map(s => ({ ...s, ...(object(s["sources"]) ? { sources: Object.fromEntries(Object.entries(s["sources"]).filter(([key]) => provenance.has(key))) } : {}) }));
       return bounded(rows, sources, { source: "external:spire-codex", game_version: "v0.111.0", character_scope: "公共机械资料，不是本角色对局验证" });
     }, ["cards", "relics", "monsters", "events"]),
-    queryTool("kb_strategies", knowledgeCharacter() !== "silent" ? "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。" : "构筑、幕初路线与备战题作答前查本角色已发布策略库（按本题状态匹配触发条件），query=* 查本题匹配项，也可用条目 id /关键词。空库返回空，保留自有/外部来源、置信度、证据和限制。", (query, ctx) => {
+    queryTool("kb_strategies", knowledgeCharacter() !== "silent" ? "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。" : "按本题非空线索与需要查本角色已发布策略库（按本题状态匹配触发条件），query=* 查本题匹配项，也可用条目 id /关键词。0匹配时跳过；空库返回空，保留自有/外部来源、置信度、证据和限制。", (query, ctx) => {
       const data = strategyMatches(ctx);
       const rows = data.entries.filter(e => query === "*" || `${e.id} ${e.strategy}`.includes(query));
       return bounded(rows, [...data.sources, ...rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null }))], { status: data.status, ...(data.library_sha256 ? { library_sha256: data.library_sha256 } : {}) });

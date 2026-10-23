@@ -130,7 +130,7 @@ it("routes production guidance and records actual query identities in brain logs
   let seen: BrainRequest | undefined;
   brain.router.decide = async r => { seen = r; return answer(); };
   await brain.choose(req.payload as any, "fixed question", { a: "FIXTURE_CARD" }, { label: "reward/card" });
-  expect(seen!.question).toContain("brain-query-cues-v2");
+  expect(seen!.question).toContain("brain-query-cues-v3");
   const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
   await host.call("kb_strategies", { query: "*" }); await host.call("kb_experience", { relevant: true });
   const logs: BrainLogRow[] = [];

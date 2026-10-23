@@ -33,7 +33,7 @@ function fixture() {
     predicate: { op: "eq", field: "enemy.id", value: "FIXTURE_BOSS" }, label_en: "Reflex content fixture only" };
   const library = { schema: "reflex-file-v1", character: "silent", entries: [entry] };
   write("reflex.json", library);
-  const ctx = { label: "reward/card", ascension: 10, act: 1, knowledgeDir: dir, logsDir: "/forbidden", payload: { facts: { act: 1, act_boss: "FIXTURE_BOSS" } } };
+  const ctx = { label: "fight-plan", ascension: 10, act: 1, knowledgeDir: dir, logsDir: "/forbidden", payload: { facts: { act: 1, act_boss: "FIXTURE_BOSS" } } };
   const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
   const req: BrainRequest = { label: ctx.label, system: "fixed", question: "fixed", payload: ctx.payload, toolContext: ctx, tools: buildKnowledgeTools(ctx), knowledge: { mode: "tools" }, spec: pickSpec(ctx.label, { a: null }) };
   return { dir, ctx, host, write, entry, library, req };

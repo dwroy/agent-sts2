@@ -10,6 +10,7 @@ import type { GameState } from "../../hand/mod/schema.js";
 import type { BrainRequest, ToolCallRecord } from "../types.js";
 import type { ToolContext } from "./types.js";
 import { reflexMatches } from "./reflex-knowledge.js";
+import { externalStatsQueryHints } from "./external-stats-tools.js";
 
 const record = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 const CUE_LIMIT = 6;
@@ -96,16 +97,19 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
   const threats = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [])
     .catch(() => ({ result: [] as string[], sources: [] }));
   const entities = [...new Set([questionFacts(ctx)["act_boss"], ...enemies, ...threats.result].filter((id): id is string => typeof id === "string" && !!id))];
-  const cues = { schema: "brain-query-cues-v2", question_type: kind,
+  const external = externalStatsQueryHints(ctx);
+  const cues = { schema: "brain-query-cues-v3", question_type: kind,
     strategies: { status: strategies.status, count: strategies.status === "invalid" || strategies.status === "missing" ? null : strategies.entries.length,
       entries: strategies.entries.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(typeof record(e)["title"] === "string" ? { title: identity(String(record(e)["title"])) } : {}) })),
-      omitted: Math.max(0, strategies.entries.length - CUE_LIMIT), tool: "kb_strategies", input: { query: "*" } },
+      omitted: Math.max(0, strategies.entries.length - CUE_LIMIT), ...(strategies.entries.length ? { tool: "kb_strategies", input: { query: "*" } } : {}) },
     rk: { status: reflex.status, count: reflex.status === "loaded" ? reflex.entries.length : null,
       entries: reflex.entries.slice(0, CUE_LIMIT).map(e => ({ id: e.id, applies_to: e.applies_to })), omitted: Math.max(0, reflex.entries.length - CUE_LIMIT),
-      tool: "kb_reflex", input: { query: "*" },
-      entity_queries: entities.slice(0, CUE_LIMIT).map(id => ({ entity: identity(id), count: reflex.status === "loaded" ? reflex.entries.filter(e => JSON.stringify(e).toLowerCase().includes(id.toLowerCase())).length : null, input: { query: id } })) },
-    experience: { ...experience, tool: "kb_experience", input: { relevant: true } } };
-  return { ...req, question: `${req.question}\n\n作答前先查本题相关策略与 rk（reflex knowledge，小脑记忆）；备战题优先本幕 Boss / 精英及当前敌人。以下仅为检索候选线索，不是正文或predicate成立证明。先调用 kb_strategies 和 kb_reflex，经验另用kb_experience。rk实体计数只是条目文本提及数，不代表当前条件命中或Jev采用；不启用关闭的出牌条目。按返回的来源、可信度及反证判断；空结果/错误或查询预算结束后用已有信息作答，不重试刷空库。\n${JSON.stringify(cues)}` };
+      ...(reflex.entries.length ? { tool: "kb_reflex", input: { query: "*" } } : {}),
+      entity_queries: entities.map(id => ({ entity: identity(id), count: reflex.entries.filter(e => JSON.stringify(e).toLowerCase().includes(id.toLowerCase())).length, input: { query: id } }))
+        .filter(e => e.count > 0).slice(0, CUE_LIMIT) },
+    experience: { ...experience, ...(typeof experience["count"] === "number" && experience["count"] > 0 ? { tool: "kb_experience", input: { relevant: true } } : {}) },
+    ...(external ? { external_stats: external } : {}) };
+  return { ...req, question: `${req.question}\n\n本题实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。构筑rk为相关摘要，不含combat_line或原始谓词；备战rk仍为检索候选，不证明条件成立或Jev采用。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
 }
 
 /** Only successful, actually returned entries count as hits; cues and model prose never count. */
