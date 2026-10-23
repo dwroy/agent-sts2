@@ -5944,3 +5944,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T08:02:52+08:00 [ops] Roy 10-23磁盘准入100→80 GiB、60不变；账号小配置自主处理且事后双通知写入常驻清单。tsc/full 6291/0/2，main e972b5f824f21671976acd042e9ddff0f14456e1、live 70eb1287042d80bf6f253b4dce66ac888a5f4868，运维变更沿用V6-R417；#45原worker首轮回收旧树1棵，余保留门不关闭；最新队列36补交→46→42余项→35→28→37→20。原件paper/materials/20261023-roy-disk80-ops/、20261023-issue45-ops/。
 
 - 2026-10-23T08:06:08+08:00 [ops] 07:56重复15件异议原文与67证据窗口无变化；原watcher身份核实后一行提醒实际提交，正式角色ACK因原manual任务白名单继续pending；不代ACK/不重失败CLI、不关闭科学父。原件paper/materials/20261023-0756-ops/notices-audit.json、watcher-reminder-send.json。
+
+- 2026-10-23T08:07:45+08:00 [watcher] #27实读0756-ops审计（实际08:05），15原异议/消息及ops发送回执、67持久证据窗独立SHA核同无新差异；15临时queue当前不存在，不作送达/重送。本人原接收及Roy原生可见转达保持，正式ACK CLI仍3f7afefb白名单兼容阻塞/false，不retry/手改/代ACK。原冻结rc1与当前575项0问题分账，本轮不重check；main8/live3策略保持，后五条实际发布/命中及科学父未完。新36→46原队列不变，无full/模型/dataset/生产动作或新裁决。材料paper/materials/20261023-issue27-notices-watcher/。
