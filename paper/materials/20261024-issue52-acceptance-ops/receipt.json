@@ -1,0 +1,126 @@
+{
+  "at": "2026-10-24T05:06:16.691297+08:00",
+  "issue": 52,
+  "host_deployment": "paper/materials/20261024-issue52-deployment-ops/deployment.json",
+  "actual_last_original_tick": {
+    "ref": {
+      "path": "ops/codex-ops/learn.out",
+      "offset": 973910,
+      "bytes": 4204,
+      "sha256": "026280018facfa73df6a4820874910add597d2f288532ff3e9cfb6be2bf57ac0"
+    },
+    "tick_at": "2026-10-24T04:43:02.026472+08:00",
+    "write_jobs": {
+      "experience": null,
+      "fixes": null,
+      "strategy": null,
+      "calibration": null,
+      "core_builds": null,
+      "backfill_hold": true,
+      "strategy_external": null,
+      "code_proposal": null,
+      "boss_sim": null,
+      "strategy_research": null,
+      "learning_requests": null,
+      "strategy_backfill": null
+    },
+    "before_host_deployment": true
+  },
+  "post_deployment_native_acceptance_proven": false,
+  "check_state": {
+    "at": "2026-10-24T04:57:31+08:00",
+    "phase": "snapshot-latest-live-knowledge",
+    "worker_pid": 166165,
+    "worker_birth": "21358068",
+    "batch": "20261024-033643-experience-update",
+    "new_full_runs": 0,
+    "new_model_game": 0,
+    "published": false,
+    "source_commit": null,
+    "preserve_original_failed_rc0": true
+  },
+  "original_worker_identity_verified": true,
+  "observed_locks": [
+    {
+      "pid": 166165,
+      "command": "python3",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/exp.lock",
+      "mode": "WRITE",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 177382,
+      "command": "flock",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE*",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 177373,
+      "command": "flock",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE*",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 177369,
+      "command": "python3",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE*",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 166165,
+      "command": "python3",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE*",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 104559,
+      "command": "flock",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE*",
+      "type": "FLOCK"
+    },
+    {
+      "pid": 104467,
+      "command": "flock",
+      "path": "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock",
+      "mode": "WRITE",
+      "type": "FLOCK"
+    }
+  ],
+  "refresh_holder": {
+    "pid": 104443,
+    "birth": "21237561",
+    "child_pid": 158948,
+    "child_birth": "21322933",
+    "state_observed": "original refresh parent waits for CPU-active child; child stdout/stderr ops/refresh.log; current cross-validation output, no signal or lock removal"
+  },
+  "prepared_after_check_materials": [
+    {
+      "path": ".artifacts/ops-experience-033643-check-20261024/audit-source.py",
+      "bytes": 4627,
+      "sha256": "0d6e279c38237bbc5dc51a12b6f099a24386a3f7e3b047ab3ba06e5d73d448a2"
+    },
+    {
+      "path": ".artifacts/ops-experience-033643-check-20261024/consumer.mts",
+      "bytes": 1743,
+      "sha256": "a04063b1c8e806bcaedce1b86a5a369000833f1400d5cacea4f30d5e79db2f66"
+    },
+    {
+      "path": ".artifacts/ops-experience-033643-check-20261024/expected-changed-entries.json",
+      "bytes": 57268,
+      "sha256": "85f53e4aae3fa9a029a76b82b7fdab76ea7f6752f27be6a5352d6949f494bded"
+    }
+  ],
+  "prepared_entry_count": 18,
+  "source_finalizer_default_invocation": {
+    "prepared_only": true,
+    "side_effects": false
+  },
+  "source_commit_created": false,
+  "new_full_model_game_tick": 0,
+  "next": "Original refresh completion resumes same033643worker; require passed exact live-net gate, then explicitly run guarded audit-source and 18 legacy/tool readbacks, natural publication. Only after actual release advance28. Next original learn tick must establish post-deployment native source acceptance; no forced tick."
+}
