@@ -6376,3 +6376,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:47:46+08:00 [ops] R420首自然局NGP前缀8题均accepted，中位14.2615秒/均值14.4468/p95 19.835，7次工具，策略3/2命中、rk0、经验4/3命中，最终兜底0；未结束，不判目标或收益，旧18局保持。另核#35原full主进程与工作树进程均不存在、原tool session不可取且无终局JSON，改标lost-no-final-result并保存旧running原件，不冒通过；后续必须在R420重组新组合验证。原件paper/materials/20261023-r420-natural-ops/。
 
 - 2026-10-23T23:53:22+08:00 [ops] #51首两批安全聚合/6单元已冻结并启用，21叶/原199项定向核同；6348局分版本，未开full或模型，等原tick真实启动。#35旧检查失联保留，新R420组合待验。paper/materials/20261023-issue51-enable-ops/。
+
+- 2026-10-23T23:57:33+08:00 [ops] #51启用后一次原学习核心tick已rc0，原锁/优先级未改；正常复盘234301和新派经验235635在途，因此外部两批未派、单元消耗0，非输入/开关失败。两冻结source仍通过，等正常任务结束由原tick先外部后自动策略；未起full或新增定时器，未声称实际ultrafast。原件paper/materials/20261023-issue51-first-tick-ops/tick-receipt.json，评论6369043821。
