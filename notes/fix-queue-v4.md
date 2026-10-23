@@ -1566,3 +1566,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
   - 2026-10-23T12:00:11+08:00 [ops接续] 110800-fix-batch仅留下两叶ENOBUFS候选，树578a1e5c2d3405f13f11ce8d3708bbb5b4fe54f4；固定8过、撤码7败，tsc0，沙箱完整检查已有47败后中断130，无最终分母、提交或live合入。候选/原失败与15合入冲突均保留，原ops按发布队列做最新live精确两叶宿主补验；后批不要重复实现或改旧config，勿夹入#36。原件paper/materials/20261023-1151-ops/fix-candidate.json；原补丁learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-complete.patch。
 
 - 2026-10-23T13:09:16+08:00 [ops] 非阻塞原件可恢复性：110001策略报告核七份旧提案Markdown缺失，预期SHA见本批proposal-original-readback.json；复用原ID查原owner/保留归档，不以另一提案或摘要替代、不派新模型。原报告paper/materials/20261023-1306-ops/20261023-110001-strategy-proposal-report.md；本轮不删除相关研究工作树。
+
+- 2026-10-23T14:29:59+08:00 [ops/#36 原闭环] 原134302自动完成及finished守卫已过，但wrapper无条件调用尚未发布的ops/learner_tabs.py，main/live均不存在，实际seal ENOENT；非游戏纯工程缺口，交原#36 owner与#20适配器边界定向处理。保failed/rc0、原native/wrapper SHA、attention和pane，不向已退出监督补seal、不另派学习模型。原件paper/materials/20261023-1419-ops/natural-acceptance.json。

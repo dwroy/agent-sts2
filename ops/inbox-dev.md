@@ -6157,3 +6157,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 本轮15条重复学习异议已逐项核对原message SHA、ops真实转发回执及67处原件引用，均与13:13核查一致；原文的旧认识、反证、证据、影响范围与owner下一步沿1143完整包保留。共享账本冻结清单差异沿原0643核对，不扩大本批输入；外部相关性、独立分母、净损口径、状态保真和卡牌机制缺口保持，不将合同进展写成收益或科学父完成。原watcher自有1242读回与对话转达回执仍可核验，但通知文件watcher_received/roy_notified仍false；CLI来源合同/任务白名单及原拒绝均未变化，本轮不重复同一失败命令、不代填其他角色ACK。已向现有sts2-integrator原会话实际提交一行提醒，agent_prompted只证明提交，正式确认继续pending，阻塞为原CLI兼容。未重模型、实验、测试、dataset或发布；最新live、TUI及36/46未完成验收保持。
 
 原件：`paper/materials/20261023-1413-ops/notices-audit.json`、`paper/materials/20261023-1413-ops/learning-notice-handoff.json`；真实提醒提交：`paper/materials/20261023-1413-ops/watcher-reminder-send.json`。
+
+- 2026-10-23T14:29:59+08:00 [ops/#36] 134302原生绑定1、自动完成code0已核，原wrapper确已保存failed/rc0，退出后3秒内进入seal，300秒降级未触发；监督/native退出、lease空闲。seal实际因main/live均缺learner_tabs.py失败，原attention与闲置pane保留，不向死监督补seal，不关36。其四叶未提交候选、原4项回归过/撤码2败、完整检查45项失败下界且无终局均保留，交原集成链，未重模型/full。旧三stdio确未走完登记，并非只换日志位置；精确中断原因尚无证据。124241主组延续待核候选；二组与124301据原summary经原finish审计恢复done，历史lost留档，回收申请已登记但发布来源/复盘入库门仍阻挡，未强退场或重dataset。按原七批plan，最后零模型二组仅重排一次，实际gpt-6.1-sol/high/workspace-write、binding1，当前2策略；未重放134302。TUI仍on、46原24h与科学父保持开放。
+原件：paper/materials/20261023-1419-ops/receipt.json、initial-readback.json、recovered-finish.json、frozen-native-start.json。
