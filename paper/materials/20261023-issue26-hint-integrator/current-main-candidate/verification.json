@@ -1,0 +1,58 @@
+{
+  "source": "c9848dd6b3e258a2c7ab5433479dc0725e4e73ba",
+  "candidate_base": "dc20478742386f194fc9d60eec7b972ebca92f6e",
+  "candidate_tree": "c96f0a341e10e60b3278be95754989cdfb973ff1",
+  "exact_product_leaves": {
+    "agent/src/hand/screens/reward.ts": "269f3e5f363c8f43b048a58264655f45cdca118a9a558dcf4678026ba5e77091",
+    "agent/src/hand/screens/reward-external-stats.ts": "63c4670c677aba69995746b1db654fc3e777b807f701bb2552aaea8a5d8646ab",
+    "agent/src/hand/screens/reward-external-stats-ids.ts": "361eafee4121a3fc6e97b1766e8baf4b421a053ca9db6ac22d617acd9a77fe53",
+    "agent/tests/reward-external-stats.test.ts": "46df76b1f5f4582e52f451a98ee7780445e9e29d05028541a525089f9a65aedc"
+  },
+  "fixed_input_files": 2103,
+  "fixed_input_digest": "4d88c58e16f61ff33aae98d7511b7b2a97657a9320231a690929ee9a01e6a1bf",
+  "all_fixed_inputs_unchanged": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "args": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 1.435
+    },
+    {
+      "name": "vitest",
+      "args": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/reward-external-stats.test.ts",
+        "tests/reward-special.test.ts",
+        "tests/silent-reward-addition.test.ts",
+        "tests/v6-card-pick.test.ts",
+        "tests/v6-card-reward-scope.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/issue26-hint-review-20261023/current-main-candidate/vitest.json"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 7.16
+    }
+  ],
+  "passed_tests": 78,
+  "failed_tests": 0,
+  "skipped_tests": 0,
+  "full_test_run": false,
+  "source_merged_to_main": false,
+  "live_modified": false,
+  "purpose": "current main plus four exact leaves compatibility; final queued full remains pending"
+}
