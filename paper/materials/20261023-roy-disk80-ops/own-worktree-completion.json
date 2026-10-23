@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-23T08:03:12+08:00",
+  "prior_wrong_name_argument": {
+    "argument": ".worktrees/ops-disk80-20261023",
+    "exit_code": 1,
+    "reason": "protected or invalid workspace; CLI expects allocation name, no lifecycle state changed"
+  },
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_retention.py",
+    "complete",
+    "--workspace",
+    "ops-disk80-20261023",
+    "--source",
+    "bfb814b671acddeef79dcbd78f345edebc95171e",
+    "--main-commit",
+    "e972b5f824f21671976acd042e9ddff0f14456e1",
+    "--live-commit",
+    "70eb1287042d80bf6f253b4dce66ac888a5f4868"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"schema\": \"workspace-lifecycle-v1\", \"root\": \"/home/dw/Projects/agent-sts2\", \"worktree\": \"/home/dw/Projects/agent-sts2/.worktrees/ops-disk80-20261023\", \"state\": \"accepted\", \"at\": \"2026-10-23T08:03:12+08:00\", \"acceptance\": {\"source\": \"bfb814b671acddeef79dcbd78f345edebc95171e\", \"base\": \"2c23c7197d71d37ac5b330a0f4d844d1b14abc11\", \"main_commit\": \"e972b5f824f21671976acd042e9ddff0f14456e1\", \"live_commit\": \"70eb1287042d80bf6f253b4dce66ac888a5f4868\", \"verified_source_paths\": [\"agent/tests/disk-admission.test.ts\", \"ops/disk_admission.py\", \"ops/ops_current.py\", \"ops/tests/test_disk_admission.py\"], \"live_required\": true, \"scope\": \"workspace-only; no parent request or gameplay claim closed\", \"allocation_receipt\": \"ops/codex-ops/retention/allocations/ops-disk80-20261023.json\", \"allocation_sha256\": \"2a0b3695f0701e6cba46dd1167d5e7f224bef2b2a8351db9c1b267232cc54e73\"}}\n",
+  "stderr": "",
+  "old_backlog_reclaimed_count_unchanged": 1
+}

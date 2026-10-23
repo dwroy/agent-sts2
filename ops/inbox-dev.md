@@ -6071,3 +6071,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 本轮十五重复学习通知的原文、67份原始证据窗口、既有watcher实读和Roy可见转达核同，无新增科学异议；原CLI SHA未变，手动任务白名单兼容仍阻塞正式watcher_received/roy_notified，保留原拒绝及pending，不代ACK或认定Roy亲读/同意。对账本冻结清单异议补做ops侧当前清单核验：0VBCQS9V0N87确在真实Silent A10局清单，三条并行记录为silent-0019/0039/0490；冻结当前ledger/runs/versions后原check为575项0问题。学习者原冻结清单rc1和LEDGER_RUNS=none结构检查原件均保留；本次只验证结构及局号引用，不代表逐帧科学内容、五条新策略上线或自然采用。新增对账写#27，向现有集成员单行提醒，发送与接收分开记录；其余原异议不重复提醒、不启研究/模型/full/dataset/对局。现有V6-R417及42余项→35→28→37队列保留，科学父继续开放。
 
 原件：paper/materials/20261023-0643-ops/notices-audit.json、ledger-inventory-reconciliation.json、receipt.json；原实际转达paper/materials/20261023-issue27-batch2-watcher/read-and-relay.json。
+
+
+- 2026-10-23T08:02:52+08:00 [ops] Roy 10-23指令已落实：新学习/工作准入水位由100改为80 GiB（含80即暂停），下一局60、Regent 200/48小时不变。同步修正读取器原100硬编码，主目录与live实际读取80/60及各16项Python检查通过；tsc及完整回归6291过、0败、2跳过，首次仅包装数量断言失败原件保留。codex3 learner删除service_tier维持，本轮未读取或修改账号配置；“可回退小改动自主处理、事后通知Roy及主管”已写入常驻短清单。#45首轮原worker回收旧树1棵，回执218292224字节；31份dirty差异已归档，其余身份/验收/收尾门仍保留，未关闭父任务。发布顺序#36补交→#46→#42余项→#35→#28→#37→#20。仅运维5文件，沿用V6-R417；回退可恢复本次policy及读取器原件，不回退service_tier删除。证据：paper/materials/20261023-roy-disk80-ops/publication.json、actual-consumers.json；paper/materials/20261023-issue45-ops/settlement-register.json。
