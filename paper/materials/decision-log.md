@@ -6318,3 +6318,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23 22:15 CST [ops] R419单经验叶/双注册/实际25项消费者核收，原循环自行续W1MQ7FARJQAV并两次查经验；不重启、不冒收益/改旧failed，科学父保留。paper/materials/20261023-2211-ops/publication-received.json。
 
 - 2026-10-23T22:24:07+08:00 [ops] 原211302-fix三叶及ops临时ultrafast五叶独立候选组成一次宿主完整检查，tsc0/full在途；发布目标仅实际宿主producer与ops-c参数，旧失败/其他角色/live/R419保留。paper/materials/20261023-fix-211302-ultrafast-ops/transaction.json。
+
+- 2026-10-23T22:25:44+08:00 [ops/#27] 16项通知与CLI无变化，原watcher实读/转主管回执核同；正式ACK仍pending，不代填或重提醒/重试拒绝，科学父保留。paper/materials/20261023-2224-ops/unchanged-notices.json。
