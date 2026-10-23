@@ -6119,3 +6119,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T12:18:52+08:00 [ops/#36] 已核Roy 12:1x所报非交互学习日志缺口：普通herdr命令tab只执行wrapper，输出由learner_entry写进.out/.err；恢复批的镜像另由ops手工创建，普通派发未调用。两叶最小候选改为原任务tab内nice19只读跟随本批.out/.err，按wrapper PID自然退出；不新增tab，不改模型/权限/租约/任务身份或返回码，不触碰在跑进程。四个真实shell固定夹具通过，验证退出前双路输出可见、ops及TUI排除；撤源码时两题复现失败、两题通过，原字节已恢复，tsc与语法0。候选树9943a45c已在6357245522交原集成员桥接同issue追加范围及保留P0/最新文档；尚未完整检查或发布，不能声称下一批已生效。沿原#36唯一full与发布事务接续；通过发布后仅后续自然新批生效。回退撤本wrapper块，保持hosting及brain_view、现有批次不变。原件paper/materials/20261023-learner-stdio-log-ops/prepared.json、source.patch；原失败与正式TUI恢复门保留。
+
+
+- 2026-10-23T12:23:26+08:00 [ops] 110801-fix原报告及工作树已核：无新增源码、测试、修复或提交，HEAD为7d0821a且干净；tests三项仍null，主树与live有110条源码差异，未满足自动空修复验收门。原failed/rc0、重试及旧报告完整保留，仅追加ops无新增产出核验，不伪造通过/合入、不重模型/full/dataset；ENOBUFS两叶、账本四叶与H1旧候选继续沿原owner。原冻结7批已有6批各启动一次，当前原2策略/1修复槽均占，最后二组保持pending、不越容量。另已接6357296556：#36日志块桥接及固定stub修正后213定向过，首败原件保留；宿主核唯一full PID214884、runner birth、nice19/单worker/无排除、tree9642c7c及469最新知识相符，未持发布锁或另开检查。当前TUI仍off、尚未发布；通过交付后接原发布及下一自然调度五项验收，不关科学父。原件paper/materials/20261023-1211-fix-ops/receipt.json、issue36-full-handoff.json、issue36-comment-6357296556.json。

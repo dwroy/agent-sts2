@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-23T12:22:26+08:00",
+  "comment": 6357296556,
+  "author": "dwroy/[watcher]",
+  "state": "original-unique-full-running",
+  "full": {
+    "state": "running",
+    "at": "2026-10-23T12:20:15+08:00",
+    "runner_pid": 214676,
+    "runner_birth": "15374516",
+    "nice": 19,
+    "tree": "9642c7c3899221cf0e9e0ee03dd54ffba7f9f7db",
+    "base": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+    "source": "0933ea0ef60304bfe4634d4bfb4ad35e32015f09",
+    "supervisor_comment": 6356904617,
+    "full_started": true,
+    "steps": [
+      {
+        "name": "tsc",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-23T12:20:15+08:00",
+        "pid": 214723,
+        "exit_code": 0,
+        "seconds": 1.507
+      },
+      {
+        "name": "full",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-p0-minimal-20261023-1153/full/vitest.json"
+        ],
+        "started_at": "2026-10-23T12:20:17+08:00",
+        "pid": 214884
+      }
+    ],
+    "K_or_L_held_during_checks": false,
+    "new_model_API_game_actions": 0,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-minimal-20261023-1153",
+    "existing_sandbox_selftests": [],
+    "input_count": 2540,
+    "knowledge_count": 469
+  },
+  "assembly_tree": "9642c7c3899221cf0e9e0ee03dd54ffba7f9f7db",
+  "knowledge_count": 469,
+  "issue20_included": false,
+  "actual_process_verified": {
+    "pid": 214884,
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-minimal-20261023-1153/agent",
+    "argv": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--pool=forks",
+      "--maxWorkers=1",
+      "--no-file-parallelism",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-p0-minimal-20261023-1153/full/vitest.json"
+    ],
+    "nice": 19
+  },
+  "wrapper_bridge_sha256": "3e57011b3539a843cac8236bd9d4bb0133f7ffceb54faaf3cc50bd9a71b09b80",
+  "test_sha256": "9ad2437dd7aa861f8af99946432d85b3f2e5cd1641cf4f2258dda77508f79cd0",
+  "bridge_first_targeted_failure_preserved": ".artifacts/issue36-p0-minimal-20261023-1153/stdio-bridge-first-red",
+  "corrected_bridge_targeted": {
+    "files": 11,
+    "passed": 213,
+    "failed": 0
+  },
+  "original_standalone_four_cases_not_substituted_for_this_tree": true,
+  "published": false,
+  "TUI": "off",
+  "no_new_full_or_model_by_ops": true
+}
