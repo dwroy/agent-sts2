@@ -1,0 +1,3 @@
+本轮核R425实际发布：T06:53:14、行为80d9c78c、登记live8f20ce51，12叶同原净树，85条基线/候选/实际库消费者等价；469份知识、绑定备份恢复及保护旗标核同，自有LLM_DRAIN已释放。原autoplay302180自行续行，play498198从R425启动，新局Q7SFDZSJLULD为Silent A10，无需重复恢复broker或手动开局。工程前置已交37原集成员先重组，但P1交替派发候选#51原唯一full在途，不能另占完整窗口。061302报告exit0、实际failed/rc0且无源提交：只改经验单叶，.1→.2草稿14条补证、active244不变，SHA6034dc5b已在原exp锁内冻结；原定向44过/账本0不替完整门，EROFS/EPERM、重试退出未知及missing source audit保留，提案0293仍pending。待51实际检查/宿主部署释放后接本草稿精确补测、真实源审计与原发布闭环，不借51/28绿。净候选仍有staged源/知识快照，不用空HEAD差冒完成回收；原科学父、85条/开关、真实两臂及A/B保持。
+
+原件：receipt.json；paper/materials/20261024-issue28-r424-publication-ops/；paper/materials/20261024-experience-061302-ops/；paper/materials/20261024-issue51-alternation-ops/checks.json。
