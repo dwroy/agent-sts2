@@ -4783,3 +4783,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T09:44:22+08:00 [ops] 处理09:43十五件重复异议：原文SHA、67份原始收件箱窗口/证据、通知CLI均与08:43相同，未见新的角色ACK。原watcher身份及空闲状态核同，已实际提交一行提醒，提交不当已读或Roy已知。原ops_forwarded实际写入及既有watcher接收/Roy可见转达证据仍完整；正式watcher_received/roy_notified登记受原手动任务白名单兼容限制，十五条继续pending，保留原拒绝，不重复同一失败CLI或代其他角色确认。三条并行账本已由原ops授权当前局清单核回；原学习者冻结check rc1与ops结构/局号check rc0均保留，不把结构验证当逐帧来源验证。牌堆提取/配对增量/退出HP口径、单卡覆盖和机制缺口、外部统计的因果/样本/分账限制均沿原owner处理；合同可表达不代live、自然采用或收益。本轮仅核验、实际提醒与双记录，无新学习/dataset/full/发布/对局，不关闭科学父；待原角色兼容后凭真实回执登记。原件paper/materials/20261023-0943-ops/notices-audit.json、watcher-reminder-send.json；历史账本核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
+
+
+- 2026-10-23T11:03:24+08:00 [ops] 已核13个旧学习tab正常退场：7个零模型空shell、2个#27已有结果、4个032433原生完成；原75与bindings[]保留，4批沿原finish为2done/2failed(rc0)，不伪造通过。五复盘与15条自有账本更新已提交6b502e9949，575项独立检查0问题，唯一dataset在跑。12个积压attention因UUID数字开头不符队列kind规则而漏读，逐件处理后原字节存delivered，已交36原owner补修。7个旧零模型批冻结原提示/局清单，dry-run全通过，尚未投递新模型。Roy选A已设learner_tui=off，herdr及brain_view保持；独立开关代码tsc及固定路由通过，唯一full未终局。九叶已按原6324过/2跳检查精确落live，知识、80/60、绑定未变；有限原事务等原full终局核绿后发布开关及原槽位重排，再释放自有学习hold。当前不称准入已恢复；P0/seal、ACK与科学父均保留。队列36→46→47→26→42→35→28→37→20。原件paper/materials/20261023-learner-recovery-ops/publication-continuation.json、nine-leaf-publication.json。
