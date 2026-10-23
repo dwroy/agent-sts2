@@ -6080,3 +6080,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T08:39:58+08:00 [ops] 已核#26最新主管评论6354550608（dwroy/[Claude]）并更新常驻发布顺序：#36漏洞补交→#46→#26提示→#42工具剩余→#35→#28→#37（续#20）。旧顺序原件保留，#26由原issue会话实施，ops仅登记和后续发布运行核验。补交范围限定战后reward/card拿牌及跳过题：候选附现成映射的精确ID，缺映射仅省略该牌ID；增加一句可选外部真人Silent A10/v0.111观察统计导航。保持不强制调用、不代查、不预塞结果、不排序、不改预算，商店和方向题此次不扩。验收沿原owner固定测试覆盖提示/ID/缺映射与字节上限，正式发布后读首批自然局调用次数及题型；先前零调用诊断不当因果收益，也不替代自然采用。本轮未改产品或live、未开模型/full/验收局，不提前合入#26，也不据排位关闭父要求。原件paper/materials/20261023-issue26-queue-ops/issue26-decision-readback.json、instruction-original.md；短清单notes/ops-current.md。
+
+
+- 2026-10-23T08:44:18+08:00 [ops] 处理08:43十五件重复学习异议，已核原文SHA、67份原始收件箱窗口/证据和通知CLI，与07:56均无变化。已向身份核实且空闲的原watcher提交一行提醒；仅提交不代接收、Roy已读或正式角色ACK。原ops_forwarded写入与既有watcher实际读取/Roy可见转达证据保留；十五项watcher_received/roy_notified登记仍受原手动任务白名单限制，继续pending，保留原CLI拒绝且不重复同一失败操作，不代其他角色确认。原ops已用授权当前局清单核回三条并行账本；学习者冻结check rc1、ops结构/局号check rc0并列保留，不代逐帧来源验真。D1牌堆剥离、D2增量未校准、D3退出HP、卡牌覆盖/机制缺口及外部统计因果/样本限制均沿原owner处理，不改知识或关闭科学父。本轮无新增学习、dataset、full、发布或对局动作；待原角色兼容后凭真实回执登记。原件paper/materials/20261023-0843-ops/notices-audit.json、watcher-reminder-send.json；历史核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
