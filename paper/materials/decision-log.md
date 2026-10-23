@@ -6342,3 +6342,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:15:00+08:00 [Claude] 转 Roy：外部玩家对局（sts2.fun）尽快学习提炼进知识库、策略库与 rk，开 #51 优先（正常复盘/修复之后、自动提案与旧经验回刷之前），该学习线可用 ultrafast（只走启动参数，额度 >70% 退 fast）；同意 #49 小修正（0 匹配不引导查询、构筑题 rk 只给构筑摘要、外部统计给线索）。
 
 - 2026-10-23T23:10:55+08:00 [ops] #51优先外部Boss两批计划已冻结并交#48原开发，待外部来源/模板/按额度CLI档位入口；无新模型/原始玩家读取/伪造本系统局号。paper/materials/20261023-issue51-intake-ops/launch-plan.json。
+
+- 2026-10-23T23:11:39+08:00 [watcher] 优先核#20/#50：#20已in-progress无新子项交付；#50十产品叶在main 8678e21c0e09预览同已审，复用原定向不另起full。#35原PID3144467消失且无full结果，等ops对账；#42父合同已关闭但额外候选056a4f7保留，#49新小修正待原开发。未合产品/未改live，证据paper/materials/20261023-integrator-priority-readback/review.json。
