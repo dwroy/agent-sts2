@@ -193,6 +193,81 @@ class LearnerTabs:
         row, host = self.current(batch)
         if row["pid"] != os.getppid() or birth(row["pid"]) is None:
             raise ValueError("only the registered supervisor may seal retirement")
+        proof = self.seal_proof(batch, row, host, birth(row["pid"]))
+        return self.store_seal(batch, row, proof)
+
+    def recovery_owner(self, batch, row, receipt):
+        """Require the original wrapper's persisted identity, never a replacement PID."""
+        wrapper = receipt.get("wrapper") or {}
+        supervisor = wrapper.get("supervisor") or {}
+        owner_birth = supervisor.get("birth")
+        expected = hashlib.sha256(json.dumps(row, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        if (type(wrapper.get("version")) is not int or wrapper["version"] != 1
+                or wrapper.get("batch") != batch or wrapper.get("state") != row["state"]
+                or wrapper.get("rc") != row["rc"] or wrapper.get("finished") != row["finished"]
+                or wrapper.get("batch_sha256") != expected or supervisor.get("pid") != row["pid"]
+                or not isinstance(owner_birth, str) or not re.fullmatch(r"[0-9]+", owner_birth)):
+            raise ValueError("original wrapper supervisor proof missing or changed")
+        if birth(row["pid"]) is not None:
+            raise ValueError("recovery requires the original supervisor PID to be absent")
+        if receipt.get("state") != "session-ended" or birth(receipt["pid"]) is not None:
+            raise ValueError("recovery requires the original native PID to be absent")
+        output = self.directory / "learner" / (batch + ".out")
+        if receipt.get("output") != dict(path=str(output), sha256=sha(safe_path(self.root, output))):
+            raise ValueError("original output proof missing or changed")
+        event = self.data["events"].get(batch)
+        if event and event.get("phase") != "pending":
+            raise ValueError("tab close acknowledgement uncertain; reconcile explicitly")
+        return owner_birth
+
+    def recovery_proof(self, batch, evidence):
+        row, host = self.current(batch)
+        evidence_record = self.files({"evidence": evidence})["evidence"]
+        receipt = load(self.receipt_path(batch, ".tui.json", row))
+        owner_birth = self.recovery_owner(batch, row, receipt)
+        proof = self.seal_proof(batch, row, host, owner_birth)
+        proof.update(authority="ops-recovery", recovery=dict(version=1, evidence=evidence_record))
+        # Native verification can take time: recheck the entire row, original files and
+        # terminal immediately before allowing an explicit recovery seal to persist.
+        row2, host2 = self.current(batch)
+        if (row2 != row or host2 != host
+                or self.idle(self.pane(row2, host2, proof["label"]), proof) != proof["identity"]
+                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}) != proof["files"]
+                or self.files({"evidence": evidence})["evidence"] != evidence_record):
+            raise ValueError("batch or recovery evidence changed before seal")
+        self.recovery_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2)))
+        return row, proof
+
+    def recover_seal(self, batch, evidence):
+        row, proof = self.recovery_proof(batch, evidence)
+        destination = self.receipt_path(batch, ".tab-retirement.json", row)
+        if destination.exists():
+            old = load(destination)
+            proof["sealed_at"] = old.get("sealed_at")
+            if old.get("authority") == "ops-recovery":
+                proof["recovery"].update({key: old["recovery"].get(key) for key in ("operator_pid", "operator_birth")})
+                self.check_recovery_operator(proof["recovery"])
+            if old != proof:
+                raise ValueError("retirement seal changed; original retained")
+        else:
+            operator = os.getpid()
+            operator_birth = birth(operator)
+            if operator_birth is None:
+                raise ValueError("recovery operator identity unavailable")
+            proof["recovery"].update(operator_pid=operator, operator_birth=operator_birth)
+            self.check_recovery_operator(proof["recovery"])
+        if self.dry:
+            return dict(batch=batch, state="eligible", authority="ops-recovery", action="seal only")
+        return self.store_seal(batch, row, proof)
+
+    def check_recovery_operator(self, recovery):
+        if (type(recovery.get("operator_pid")) is not int or recovery["operator_pid"] <= 1
+                or not isinstance(recovery.get("operator_birth"), str)
+                or not re.fullmatch(r"[0-9]+", recovery["operator_birth"])):
+            raise ValueError("ops recovery operator provenance missing")
+
+    def seal_proof(self, batch, row, host, owner_birth):
+        """Share all original native, artifact, authority and empty-input gates."""
         label = batch_label(batch, row)
         path = self.receipt_path(batch, ".tui.json", row)
         output = self.directory / "learner" / (batch + ".out")
@@ -203,9 +278,10 @@ class LearnerTabs:
         if result.get("code") != row["rc"] and not (result.get("code") == 3 and row["rc"] == 1 and receipt.get("state") == "not-started"):
             raise ValueError("batch finish and native result differ")
         paths = dict(tui=path, output=output, stderr=self.directory / "learner" / (batch + ".err"))
+        initial_files = self.files(paths)
         unstarted = receipt.get("state") == "not-started" and type(receipt.get("models_started")) is int and receipt["models_started"] == 0
         proof = dict(schema=SCHEMA, root=str(self.root), state_file=str(self.state), batch=batch, binding=binding(row),
-                     owner_pid=row["pid"], owner_birth=birth(row["pid"]), authority="batch", label=label,
+                     owner_pid=row["pid"], owner_birth=owner_birth, authority="batch", label=label,
                      cwd=(row.get("worktree") or str(self.root)), sealed_at=stamp())
         if (receipt.get("pane") != row["pane"] or receipt.get("label") != label or receipt.get("cwd") != proof["cwd"]):
             raise ValueError("original receipt is not bound to the registered batch")
@@ -221,7 +297,7 @@ class LearnerTabs:
                     or birth(receipt["pid"]) == receipt.get("birth"))):
                 raise ValueError("native process is not verified stopped")
             paths.update(learner_log=Path(receipt["artifacts"]["log"]), rollout=Path(result["rollout"]))
-            self.files(paths)
+            initial_files = self.files(paths)
             name_binding = json.dumps([label, row["pane"], proof["cwd"]], ensure_ascii=False, separators=(",", ":"))
             if (receipt.get("agent_name_version") != 1
                     or receipt.get("agent_name") != "learner-" + hashlib.sha256(name_binding.encode()).hexdigest()[:24]):
@@ -258,6 +334,11 @@ class LearnerTabs:
             raise ValueError("live learner cwd retained")
         proof["identity"] = self.idle(pane, proof)
         proof["files"] = self.files(paths)
+        if proof["files"] != initial_files or load(path) != receipt:
+            raise ValueError("original artifacts changed during seal verification")
+        return proof
+
+    def store_seal(self, batch, row, proof):
         destination = self.receipt_path(batch, ".tab-retirement.json", row)
         if destination.exists():
             old = load(destination)
@@ -274,12 +355,21 @@ class LearnerTabs:
         proof = load(self.receipt_path(batch, ".tab-retirement.json", row))
         if (proof.get("schema") != SCHEMA or proof.get("root") != str(self.root)
                 or proof.get("state_file") != str(self.state) or proof.get("batch") != batch
-                or proof.get("binding") != binding(row) or proof.get("authority") != "batch" or proof.get("label") != label
+                or proof.get("binding") != binding(row) or proof.get("authority") not in ("batch", "ops-recovery") or proof.get("label") != label
                 or proof.get("owner_pid") != row["pid"] or not proof.get("owner_birth") or row["pane"] != pane_id):
             raise ValueError("retirement receipt or ownership differs")
         if birth(proof["owner_pid"]) == proof["owner_birth"]:
             return dict(pane=pane_id, state="queued", reason="supervisor still retiring")
         receipt = load(self.receipt_path(batch, ".tui.json", row))
+        if proof["authority"] == "ops-recovery":
+            recovery = proof.get("recovery") or {}
+            self.check_recovery_operator(recovery)
+            if (type(recovery.get("version")) is not int or recovery["version"] != 1 or not proof.get("sealed_at")
+                    or self.recovery_owner(batch, row, receipt) != proof["owner_birth"]):
+                raise ValueError("ops recovery provenance missing or changed")
+            recovery_evidence = recovery["evidence"]
+            if self.files({"evidence": self.root / recovery_evidence["path"]})["evidence"] != recovery_evidence:
+                raise ValueError("ops recovery evidence changed")
         if (receipt.get("pane") != row["pane"] or receipt.get("label") != label or receipt.get("cwd") != proof.get("cwd")
                 or (receipt.get("state") != "not-started" and receipt.get("retirement_authorized") is not True)):
             raise ValueError("batch disposal authority missing")
@@ -312,6 +402,10 @@ class LearnerTabs:
             raise ValueError("batch or artifacts changed before close")
         if self.idle(self.pane(row2, host2, label), proof) != proof["identity"]:
             raise ValueError("pane changed before close")
+        if proof["authority"] == "ops-recovery":
+            if (row2 != row or self.recovery_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2))) != proof["owner_birth"]
+                    or self.files({"evidence": self.root / recovery_evidence["path"]})["evidence"] != recovery_evidence):
+                raise ValueError("ops recovery authority changed before close")
         self.data["events"][batch] = dict(phase="sending", pane=pane_id, tab=pane["tab_id"], tail=str(tail_path.relative_to(self.root)))
         self.save()
         self.herdr("tab", "close", pane["tab_id"])
@@ -361,12 +455,21 @@ class LearnerTabs:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("tick", "seal"))
+    parser.add_argument("command", choices=("tick", "seal", "recover-seal"))
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--state-dir", type=Path)
     parser.add_argument("--batch")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--evidence", type=Path, help="existing local review file inside this repository (recover-seal only)")
+    parser.add_argument("--apply", action="store_true", help="persist an ops recovery seal; never close a tab")
     args = parser.parse_args(argv)
+    if args.apply and (args.command != "recover-seal" or args.dry_run):
+        parser.error("--apply is exclusive to recover-seal and cannot be combined with --dry-run")
+    if args.command == "recover-seal" and (not args.batch or not args.evidence):
+        parser.error("recover-seal requires --batch and --evidence")
+    if args.evidence and args.command != "recover-seal":
+        parser.error("--evidence is exclusive to recover-seal")
+    args.dry_run = args.dry_run or (args.command == "recover-seal" and not args.apply)
     root = args.root.resolve()
     directory = safe_path(root, args.state_dir or root / "ops/codex-ops")
     stage = "configuration"
@@ -378,11 +481,17 @@ def main(argv=None):
         with locks([] if args.dry_run else [directory / "learn.lock", directory / "herdr.json.lock", directory / "learner-tabs.lock"]):
             stage = "worker"
             tab = LearnerTabs(root, directory, dry=args.dry_run)
-            result = tab.seal(args.batch) if args.command == "seal" else tab.tick()
+            if args.command == "recover-seal":
+                evidence = args.evidence if args.evidence.is_absolute() else root / args.evidence
+                result = tab.recover_seal(args.batch, evidence)
+            else:
+                result = tab.seal(args.batch) if args.command == "seal" else tab.tick()
         print(json.dumps(result, ensure_ascii=False)); return 0
     except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError, subprocess.SubprocessError) as error:
         if isinstance(error, BlockingIOError) and stage == "lock":
             print('{"state":"queued","reason":"learner retirement lock busy"}'); return 0
+        if args.command == "recover-seal" and isinstance(error, (ValueError, FileNotFoundError)) and not isinstance(error, json.JSONDecodeError):
+            print('{"state":"retained","reason":"ops recovery evidence or current safety gates unverified"}'); return 0
         if not args.dry_run:
             # Do not touch a damaged journal to report its failure.
             marker = safe_path(root, directory / "learner-tabs-failure-notice.json")
