@@ -214,3 +214,5 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T20:19:18+08:00 [watcher] #50 c72ff7845533完整十叶在main2921da7638a4组合eed9751983cf定向修补复验通过：tsc0，10文件118项原轮117过/1根.cache环境败，补根目录后原check-imports单项1过；2635输入SHA不变，F2仅F9日志真实二读/异局均null，v2/rk/15工具与35记录通过，旧首败均保留。仅登记材料、产品未合main/live、未开full，状态review；按42余→35→50原序等唯一full及35实际live，48学习/自然验收与27正式ACK CLI门保持。材料paper/materials/20261023-issue50-repair-review/。
 
 2026-10-23T20:48:24+08:00 [watcher] #27核收19:56原链16项：旧15项/67证据窗及32双收件箱原文核同；新增000402原wrapper日志缺失，注册/输入SHA核同，211项旧归档不含该文件，原batch/thread/source与失败保留，找回精确日志后才验原launch/thread，否则blocked。已沿主管收件箱转Roy；原科学父、冻结rc1与后续575项0问题分列，正式ACK仍原CLI兼容pending，ACK写入0，无新模型/full或队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-1956.json。
+
+2026-10-23T20:52:25+08:00 [watcher] #20旧学习tab恢复封存八批实际回收独立核收通过：宿主三叶与a3b15e510fe9精确一致，8份seal/40份原件/8份尾日志SHA及原stall done事件核同，当前8个tab消失且host键移除，原learn绑定及终态未改；pC5缺原supervisor birth、pCC awaiting_review继续保留，不代checkout回收或科学完成。父#20仍在#37后开放；复用原定向检查，本次无代码变更/重跑测试/full/生产写入。证据paper/materials/20261023-issue20-recovery-acceptance/receipt.json。
