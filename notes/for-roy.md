@@ -4988,3 +4988,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23 21:23 CST [ops] 211302经验任务零新增/改写，因沙箱只读.agents/board.yaml阻断基线合并，保原failed/rc0与报告。已在宿主原exp树准备main a1a5527601，保193545原稿f3f439cf49字节不变；tsc0、唯一宿主full按nice19/串行文件进行，结束沿原队列回报，未冒通过/基线提交/live或消费者验收。未改学习者权限/账号、不重模型。原件paper/materials/20261023-experience-baseline-211302-ops/transaction.json、initial-review.json。
 
 - 2026-10-23 21:44 CST [ops/#27] 16项原文/实际ops投递回执未变；新核集成员本人received-2039及relay-2039原字节窗，确认三条来源补核也已实读并转主管。原提醒已在#27评论6365792729获本人回应，本轮无新payload不重复发送；不把转主管等同Roy用户可见通知。CLI和原rc2拒绝字节未变，16项正式watcher/Roy ACK仍pending兼容修复，不代填、不重复失败CLI或关科学父；000402精确wrapper日志仍缺，原来源/因果/分母/冻结rc1边界保留。未新模型、实验、full或对局。原件paper/materials/20261023-2143-ops/receipt-review.json。
+
+- 2026-10-23 21:56 CST [ops] 原211302基线实际提交2bcf7876fe已核：宿主tsc0/full6508过0败2跳、原193545经验稿SHA不变；以实际live消费者源码读取候选，传统加载及kb_experience均25/25完整读回。已按原自然边界通道启动一次性单经验叶发布事务，当前只等原局2692765自然退场，尚未写live/编号；自有LLM_DRAIN只拦下一准入，无信号/手动局或权限变更。完成/失败回原队列，原211302/193545 failed/rc0、waiting与科学父保持。原件paper/materials/20261023-experience-publication-ops/host-checks-readback.json、candidate-consumers.json、publication-state.json。
