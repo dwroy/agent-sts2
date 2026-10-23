@@ -6123,3 +6123,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:02:52+08:00 [ops/#36] 原6332过/2skip及main15叶核同；发布45秒知识锁首败未写live/off保留，原生一次有界K→L发布接续已启动，终局自动回原队列；不重full/模型/实验局，不称等待已发布。原件paper/materials/20261023-issue36-p0-publication-intake-ops/receipt.json、../20261023-issue36-p0-publication-ops/continuation.json。
 
 - 2026-10-23T13:09:16+08:00 [ops] 两批普通策略收尾人工核验：仅共享main #36源码漂移；20项waiting/无合入；沿用原唯一dataset核心表，成本输出被并行刷新后原件封存待核，保留attention/父要求，不重跑。原件paper/materials/20261023-1306-ops/review.json。
+
+- 2026-10-23T13:11:41+08:00 [ops/#36] 最小P0+原tab日志精确15叶已发布live c707d5c903c03de3bc8d8cb2864f643b59b254a6，原full6332过/2skip，保最新知识/绑定/80/60/版本；仅将hosting TUI切on，下次自然学习生效，五项自然验收待后续原事件，未新full/模型/关父。原件paper/materials/20261023-issue36-p0-publication-ops/publication.json。
