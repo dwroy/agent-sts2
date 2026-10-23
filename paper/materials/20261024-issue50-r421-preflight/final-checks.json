@@ -1,0 +1,44 @@
+{
+  "tree": "b0988d7c1bb49b701fd65af801e7439a9c4cca4c",
+  "checks": [
+    {
+      "name": "tsc",
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "start": "2026-10-24T00:44:33+08:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "directed",
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/endgame-plan.test.ts",
+        "tests/brain-query-guidance.test.ts",
+        "tests/brain-agent-report.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/external-strategy-evidence.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--fileParallelism=false",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/issue50-resume-20261024/final-directed.json"
+      ],
+      "start": "2026-10-24T00:44:36+08:00",
+      "log_sha256": "07f45f4506d74e78c637724b628020ed36ba506b581ba9dc4dafda396f56c21e"
+    }
+  ],
+  "input_count": 2363,
+  "inputs_unchanged": true,
+  "full_started": false,
+  "workers": 1,
+  "nice": 19
+}

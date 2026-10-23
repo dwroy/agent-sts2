@@ -1,0 +1,25 @@
+diff --git a/agent/tests/endgame-plan.test.ts b/agent/tests/endgame-plan.test.ts
+index 805bd67b1..5777ba94c 100644
+--- a/agent/tests/endgame-plan.test.ts
++++ b/agent/tests/endgame-plan.test.ts
+@@ -176,10 +176,16 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
+     expect((requests[0]!.payload as any).facts.your_run_plan).toBeNull();
+     expect((requests[0]!.payload as any).run_plan_task.current_plan).toBeNull();
+     const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
+-    expect(cues.schema).toBe("brain-query-cues-v2");
+-    expect(cues.rk.tool).toBe("kb_reflex");
+-    expect(cues.experience.tool).toBe("kb_experience");
+-    expect(requests[0]!.system).toContain("reflex knowledge");
++    expect(cues.schema).toBe("brain-query-cues-v3");
++    for (const [key, tool] of [["strategies", "kb_strategies"], ["rk", "kb_reflex"], ["experience", "kb_experience"]]) {
++      if (typeof cues[key].count === "number" && cues[key].count > 0) expect(cues[key].tool).toBe(tool);
++      else {
++        expect(cues[key].tool).toBeUndefined();
++        expect(cues[key].input).toBeUndefined();
++      }
++    }
++    expect(requests[0]!.system).toContain("匹配数为0、缺失或错误时跳过");
++    expect(requests[0]!.system).toContain("构筑rk只读构筑相关摘要");
+     expect(requests[0]!.system).toContain("经验另用kb_experience");
+     expect(requests[0]!.question).not.toContain("calibrated on logged A8");
+     expect((requests[1]!.memory as any).construction_log).toContain("格式构筑理由");

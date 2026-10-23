@@ -1,0 +1,671 @@
+diff --git a/agent/src/brain/brain.ts b/agent/src/brain/brain.ts
+index e4e9b2db8..5c78770f0 100644
+--- a/agent/src/brain/brain.ts
++++ b/agent/src/brain/brain.ts
+@@ -47,11 +47,13 @@ import { isConstructionQuestion } from "../memory/construction-log.js";
+ import { attachOpenBook } from "../knowledge/open-book.js";
+ import { knowledgeCharacter } from "../knowledge/files.js";
+ import { attachQueryGuidance } from "./tools/query-guidance.js";
++import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope } from "../memory/endgame-plan.js";
+ 
+ /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
+-export function agentSystemPrompt(): string {
++export function agentSystemPrompt(state?: unknown): string {
+   const guidance = knowledgeCharacter() === "silent" ? "\n构筑、幕初路线和备战题按题面非空线索与需要查询策略/rk；匹配数为0、缺失或错误时跳过，不为查工具而查。构筑rk只读构筑相关摘要；经验另用kb_experience。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
+-  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}`;
++  const endgame = endgameRawScope(state) ? `\n${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE}` : "";
++  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${endgame}`;
+ }
+ 
+ /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
+@@ -333,7 +335,7 @@ export class Brain {
+         if (!isObject(v)) return v;
+         return Object.fromEntries(Object.entries(v).filter(([k]) => !["open_book", "strategy_entries"].includes(k)).map(([k, value]) => [k, strip(value)]));
+       };
+-      return { ...base, system: agentSystemPrompt(),
++      return { ...base, system: agentSystemPrompt(this.context?.state),
+         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
+         ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
+         knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
+diff --git a/agent/src/brain/build-facts.ts b/agent/src/brain/build-facts.ts
+index 0d3b910ca..1645885af 100644
+--- a/agent/src/brain/build-facts.ts
++++ b/agent/src/brain/build-facts.ts
+@@ -18,6 +18,7 @@ import { fightPlanInput } from "../memory/fight-plan.js";
+ import { actOf } from "../memory/run-plan.js";
+ import { lizardTailResourceState } from "../memory/relic-resources.js";
+ import { deckBudgetFacts } from "../memory/run-constraints.js";
++import { ENDGAME_OBJECTIVE, endgameScope } from "../memory/endgame-plan.js";
+ 
+ /** Act boss floors (acts are 17, 16 and 15 floors). */
+ const BOSS_FLOORS = [17, 33, 48];
+@@ -77,11 +78,13 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> =
+           boss_prep: plan.bossPrep,
+           summary: plan.summary,
+           ...(plan.construction ? { construction: plan.construction } : {}),
++          ...(plan.endgame ? { endgame: plan.endgame } : {}),
+         }
+       : null,
+     ...extra,
+     ...deckBudgetFacts(state),
+   };
++  if (endgameScope(state)) facts["endgame_objective"] = ENDGAME_OBJECTIVE;
+   const continuation = doubleBossPreparation(state);
+   const tail = lizardTailResourceState(state, env.screenMemory);
+   if (tail) facts["relic_resources"] = [tail];
+diff --git a/agent/src/brain/specs.ts b/agent/src/brain/specs.ts
+index eda609840..8de13e1e3 100644
+--- a/agent/src/brain/specs.ts
++++ b/agent/src/brain/specs.ts
+@@ -18,6 +18,7 @@ import { directionPlanSpec } from "../v6/direction-plan.js";
+ import { directionRideTask } from "../v6/direction-rides.js";
+ import type { AnswerSpec } from "./types.js";
+ import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
++import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems } from "../memory/endgame-plan.js";
+ 
+ type Json = Record<string, unknown>;
+ 
+@@ -153,6 +154,7 @@ export function pickSpec(label: string, options: Record<string, string | null>,
+   // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
+   // due for the next question; strategy/run-plan-merge.ts).
+   if (carriesRunPlan(st)) properties["run_plan"] = runPlanField(st);
++  if (endgameRequired(st)) required.push("run_plan");
+   return {
+     label,
+     kind: "pick",
+@@ -265,7 +267,8 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[];
+ export function stableSchema(spec: AnswerSpec): JsonSchema {
+   if (spec.kind === "pick") {
+     const run = spec.schema.properties?.["run_plan"];
+-    const base = run?.properties?.["construction"] || run?.properties?.["v6"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } }
++    const base = run?.properties?.["construction"] || run?.properties?.["v6"] || run?.properties?.["endgame"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run },
++      required: spec.schema.required?.includes("run_plan") ? [...STABLE_PICK_SCHEMA.required!, "run_plan"] : STABLE_PICK_SCHEMA.required }
+       : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+     const direction = spec.schema.properties?.["v6"];
+     const riding = direction ? { ...base, properties: { ...base.properties, v6: direction } } : base;
+@@ -413,8 +416,10 @@ function runPlanSchema(construction = false): JsonSchema {
+ /** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
+ const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
+ function runPlanField(state: unknown): JsonSchema {
+-  return withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
++  const schema = withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
+     ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
++  return endgameRequired(state) ? { ...schema, properties: { ...schema.properties, endgame: ENDGAME_PLAN_SCHEMA },
++    required: [...(schema.required ?? []), "endgame"] } : schema;
+ }
+ 
+ /** Optional direction updates never invalidate the original V5 answer or cause a re-ask. */
+@@ -435,7 +440,8 @@ export function carriesRunPlan(state: unknown): boolean {
+  * run_plan field; its checks are its own (a missing or unusable run plan is never a problem: it stays due).
+  */
+ export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec {
+-  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) } } };
++  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) },
++    ...(endgameRequired(state) ? { required: [...(spec.schema.required ?? []), "run_plan"] } : {}) } };
+ }
+ 
+ /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
+@@ -448,7 +454,8 @@ export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
+     schema: withDirectionRideField({ label, kind: "plan", schema: runPlanSchema(constructionContext(state) !== null), validate: () => [] }, state).schema,
+     validate(answer: unknown): string[] {
+       if (!isObject(answer)) return ["the answer is not a JSON object"];
+-      return isRunPlanReply(answer) ? constructionProblems(answer, state) : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
++      return isRunPlanReply(answer) ? [...constructionProblems(answer, state), ...(endgameRequired(state)
++        ? endgameProblems(answer["endgame"], endgameCheckpointRequired(state)) : [])] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
+     },
+   };
+ }
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 657fbcc4c..6da8e1f22 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -44,6 +44,7 @@ import { computeMemoOptions } from "../sim/compute-memo.js";
+ import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
+ import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "../memory/run-plan.js";
+ import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "../memory/run-plan-merge.js";
++import { endgameScope, endgameQuestion, endgameTask, endgameProblems, endgameCheckpointRequired } from "../memory/endgame-plan.js";
+ import type { Knowledge } from "../knowledge/index.js";
+ import type { ActionRequest, ModClient } from "./mod/client.js";
+ import type { ActionResult, GameState } from "./mod/schema.js";
+@@ -833,10 +834,13 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+     }
+     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
+     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
+-    if (v6Config().mode !== "off" && !state.in_combat && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId)) {
+-      screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
++    const endgamePlanning = brain?.router.knowledgeAgent === true && endgameScope(state);
++    const runPlanFloor = endgamePlanning ? state.run?.floor ?? 0 : Infinity;
++    if ((v6Config().mode !== "off" || endgamePlanning) && !state.in_combat
++      && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId || endgamePlanning && screenMemory.runPlan.floor > (state.run?.floor ?? 0))) {
++      screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId, runPlanFloor);
+     }
+-    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
++    if (!endgamePlanning && !planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+       const deepseek = brain;
+       if (deepseek && brainBudgetLeft("run-plan")) {
+         const items = journal.itemCount;
+@@ -859,7 +863,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+       }
+     }
+     if (config.runPlan === "v1") {
+-      if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]));
++      if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]), runPlanFloor);
+       const line = screenMemory.runPlan && screenMemory.runPlan.runId === str(state.raw["run_id"]) ? runPlanLine(screenMemory.runPlan) : null;
+       if (line) env.brief.plan = line;
+     }
+@@ -1155,13 +1159,15 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
+         // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of
+         // its own call. Anything wrong in building it: the question goes as without it, the plan stays due.
+-        if (runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
++        const endgameUpdate = endgamePlanning && endgameQuestion(state, decision.label);
++        if (endgameUpdate || runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
+           try {
+             const runId = str(state.raw["run_id"]);
+-            const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId) : null;
+-            const trigger = runId ? runPlanDueAtQuestion(screenMemory, state, plan) : null;
++            const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId, runPlanFloor) : null;
++            const trigger = runId ? endgameUpdate ? runPlanTrigger(plan, state) ?? "review" : runPlanDueAtQuestion(screenMemory, state, plan) : null;
+             if (trigger) {
+-              const task = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
++              const context = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
++              const task = endgameUpdate ? { ...context, ...endgameTask(state, decision.label), due_because: "每道构筑题更新本局核心、缺口与终局计划" } : context;
+               const carried = withRunPlanTask({ ...decision, deepseek: spec }, task);
+               const carriedQuestion = carried.questions[spec.question];
+               if (carriedQuestion?.type === "choice") {
+@@ -1172,7 +1178,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+               }
+             }
+           } catch (error) {
+-            if (brain.router.codexOnly) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
++            if (brain.router.codexOnly || endgameUpdate) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
+             onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
+           }
+         }
+@@ -1251,6 +1257,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+             onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
+           };
+           if ("missing" in found) return fail("missing", found.missing);
++          if (endgameUpdate) {
++            const problems = endgameProblems(found.plan["endgame"], endgameCheckpointRequired(ask.state));
++            if (problems.length) return fail("invalid", problems.join("; "));
++          }
+           try {
+             const plan = parseRunPlan(found.plan, state, knowledge, ride.trigger);
+             acceptDirectionRide(env, plan, found.plan, directionRide, ask.label, config.runPlanLog);
+diff --git a/agent/src/memory/endgame-plan.ts b/agent/src/memory/endgame-plan.ts
+new file mode 100644
+index 000000000..816c32dcd
+--- /dev/null
++++ b/agent/src/memory/endgame-plan.ts
+@@ -0,0 +1,67 @@
++/** Roy's #50 planning contract. Content and readiness thresholds remain the learner's responsibility. */
++import type { GameState } from "../hand/mod/schema.js";
++import type { JsonSchema } from "../brain/tools/types.js";
++import { asRecord, str, type JsonValue } from "../core/util/json.js";
++import { isConstructionQuestion } from "./construction-log.js";
++
++export const ENDGAME_OBJECTIVE = "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。";
++export const ENDGAME_PLAN_NOTE = "每道构筑题在同一答案的 run_plan.endgame 更新本局核心、缺口、成长性输出、可持续防御、两战资源和终局怎么赢；这是本局假设，不是知识规则。查相关策略与 rk 后说明依据、可信度和未知；达标线只能引用已发布条目，不自行补伤害/防御/血量门槛。endgame_checkpoint 仅在题面给出时作答，否则写空字符串。保留原方向及转向条件的语义，选择可以改变计划。";
++export const ENDGAME_TEXT_LIMIT = 240;
++export const ENDGAME_FIELDS = ["core", "gaps", "scaling_damage", "sustainable_defense", "resources", "win_condition"] as const;
++export type EndgamePlan = Record<(typeof ENDGAME_FIELDS)[number] | "checkpoint", string>;
++
++/** Raw mod context is also available at the brain boundary before any facts are constructed. */
++export function endgameRawScope(raw: unknown): boolean {
++  const run = asRecord(asRecord(raw)["run"]);
++  return str(run["character_id"]).toLowerCase() === "silent" && run["ascension"] === 10;
++}
++export function endgameScope(state: GameState): boolean { return endgameRawScope(state.raw); }
++export function endgameQuestion(state: GameState, label: string): boolean {
++  return endgameScope(state) && !state.in_combat && isConstructionQuestion(label);
++}
++
++/** The last two pre-boss floors of the current act; post-boss rewards never count as a checkpoint. */
++export function endgameCheckpoint(state: GameState, label: string): Record<string, JsonValue> | null {
++  if (!endgameQuestion(state, label)) return null;
++  const act = Number(asRecord(state.run?.raw)["act_id"]) + 1;
++  const bossFloor = [17, 33, 48][act - 1], floor = state.run?.floor;
++  if (bossFloor === undefined || floor == null || floor < bossFloor - 2 || floor >= bossFloor) return null;
++  return { act, before_boss_floor: bossFloor,
++    instruction: "幕末检查：核心已成型、部分成型还是未知？还缺什么？本幕 Boss 怎么过、离 F48→F49 连胜还差什么？写明成长性输出、持续防御与两战 HP/药水依据；缺证保持未知，在 run_plan.endgame.checkpoint 明确作答。" };
++}
++
++export function endgameTask(state: GameState, label: string): Record<string, JsonValue> {
++  const checkpoint = endgameCheckpoint(state, label);
++  return { endgame_objective: ENDGAME_OBJECTIVE, endgame_plan_required: true,
++    ...(checkpoint ? { endgame_checkpoint: checkpoint } : {}) };
++}
++export function endgameRequired(payload: unknown): boolean {
++  const p = asRecord(payload);
++  return asRecord(p["run_plan_task"])["endgame_plan_required"] === true;
++}
++export function endgameCheckpointRequired(payload: unknown): boolean {
++  return Boolean(asRecord(asRecord(payload)["run_plan_task"])["endgame_checkpoint"]);
++}
++
++export const ENDGAME_PLAN_SCHEMA: JsonSchema = {
++  type: "object", description: "本局终局假设；每项1句，最多240 Unicode字符，缺证明确写未知。",
++  properties: Object.fromEntries([...ENDGAME_FIELDS, "checkpoint"].map(key => [key, { type: "string" as const,
++    description: key === "checkpoint" ? "只在 endgame_checkpoint 给出时回答幕末检查，其余题写空字符串" : `${key}：本题选择之后的判断及依据，最多240字符` }])),
++  required: [...ENDGAME_FIELDS, "checkpoint"], additionalProperties: false,
++};
++
++export function endgameProblems(value: unknown, checkpoint: boolean): string[] {
++  const plan = asRecord(value), problems: string[] = [];
++  for (const key of [...ENDGAME_FIELDS, "checkpoint"] as const) {
++    const text = plan[key];
++    if (typeof text !== "string" || ((key !== "checkpoint" || checkpoint) && !text.trim())) problems.push(`endgame.${key} is required (write unknown when unsupported)`);
++    else if (Array.from(text).length > ENDGAME_TEXT_LIMIT) problems.push(`endgame.${key} exceeds ${ENDGAME_TEXT_LIMIT} characters`);
++    else if (key === "checkpoint" && !checkpoint && text.trim()) problems.push("endgame.checkpoint must be empty outside an endgame_checkpoint question");
++  }
++  return problems;
++}
++export function parseEndgamePlan(value: unknown): EndgamePlan | null {
++  const p = asRecord(value);
++  if (endgameProblems(value, Boolean(str(p["checkpoint"]).trim())).length) return null;
++  return Object.fromEntries([...ENDGAME_FIELDS, "checkpoint"].map(k => [k, str(p[k]).trim()])) as EndgamePlan;
++}
+diff --git a/agent/src/memory/run-plan-merge.ts b/agent/src/memory/run-plan-merge.ts
+index abd4786b9..00ce1a278 100644
+--- a/agent/src/memory/run-plan-merge.ts
++++ b/agent/src/memory/run-plan-merge.ts
+@@ -30,6 +30,7 @@ import type { GameState } from "../hand/mod/schema.js";
+ import type { AskDecision, ScreenMemory } from "./types.js";
+ import { asArray, asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
+ import { fightPlanInput } from "./fight-plan.js";
++import { ENDGAME_PLAN_NOTE, ENDGAME_OBJECTIVE } from "./endgame-plan.js";
+ import { actOf, constructionPlanContext, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
+ 
+ /**
+@@ -59,10 +60,12 @@ export const RUN_PLAN_MERGE_NOTE = [
+ /** The fields of runPlanInput a question's facts (strategy/build-facts.ts) already carry. */
+ const IN_FACTS = ["act", "floor", "ascension", "hp", "gold", "act_boss", "act_boss_clock", "deck_size", "deck_profile", "deck", "relics", "potions", "potion_slots"] as const;
+ 
+-/** The run plan in force for this run: the screen memory's, else the last one logged (a restart). */
+-export function currentRunPlan(memory: ScreenMemory, logFile: string, runId: string): RunPlan | null {
+-  if (!memory.runPlan || memory.runPlan.runId !== runId) memory.runPlan = loadRunPlan(logFile, runId);
+-  return memory.runPlan && memory.runPlan.runId === runId ? memory.runPlan : null;
++/** The plan in this run and floor window, including every cache miss and rollback read. */
++export function currentRunPlan(memory: ScreenMemory, logFile: string, runId: string, throughFloor = Infinity): RunPlan | null {
++  const usable = (plan: RunPlan | null | undefined): plan is RunPlan => Boolean(plan && plan.runId === runId
++    && (throughFloor === Infinity || plan.floor <= throughFloor));
++  if (!usable(memory.runPlan)) memory.runPlan = loadRunPlan(logFile, runId, throughFloor);
++  return usable(memory.runPlan) ? memory.runPlan : null;
+ }
+ 
+ /** Whether every node the map offers is the act boss (the map before the boss fight). */
+@@ -155,7 +158,9 @@ export function withRunPlanTask(decision: AskDecision & { deepseek: NonNullable<
+   return {
+     ...decision,
+     state: { ...decision.state, [RUN_PLAN_TASK_KEY]: task },
+-    questions: { ...decision.questions, [key]: { ...question, instructions: `${question.instructions} ${RUN_PLAN_MERGE_NOTE}` } },
++    questions: { ...decision.questions, [key]: { ...question, instructions: `${question.instructions} ${task["endgame_plan_required"] === true
++      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} 在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`
++      : RUN_PLAN_MERGE_NOTE}` } },
+   };
+ }
+ 
+diff --git a/agent/src/memory/run-plan.ts b/agent/src/memory/run-plan.ts
+index 752e5812e..0c71cbfbb 100644
+--- a/agent/src/memory/run-plan.ts
++++ b/agent/src/memory/run-plan.ts
+@@ -28,6 +28,7 @@ import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
+ import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
+ import { loadConstructionData } from "../construction/data.js";
+ import { CONSTRUCTION_EVALUATION_NOTE, constructionEvaluationEnabled } from "../construction/consumer.js";
++import { parseEndgamePlan, type EndgamePlan } from "./endgame-plan.js";
+ 
+ export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
+ export type EliteAppetite = "seek" | "normal" | "avoid";
+@@ -55,6 +56,7 @@ export interface RunPlan {
+   rest: RestPolicy;
+   bossPrep: string;
+   summary: string;
++  endgame?: EndgamePlan;
+   construction?: { primary: string; alternatives: string[]; checkpoint: number; reason: string; pivot_if: string };
+ }
+ 
+@@ -208,6 +210,7 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
+   const validConstruction = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
+     && (allowedCores.has(primary) || primary === "uncommitted") && typeof checkpoint === "number" && Number.isInteger(checkpoint)
+     && checkpoint > (state.run?.floor ?? 0) && checkpoint <= 100 && str(construction["reason"]).length > 0 && str(construction["pivot_if"]).length > 0;
++  const endgame = parseEndgamePlan(json["endgame"]);
+   return {
+     runId: str(state.raw["run_id"]),
+     act: actOf(state),
+@@ -223,6 +226,7 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
+     rest,
+     bossPrep: typeof json["boss_prep"] === "string" ? json["boss_prep"].trim() : "",
+     summary: typeof json["summary"] === "string" ? json["summary"].trim() : "",
++    ...(endgame ? { endgame } : {}),
+     ...(validConstruction ? { construction: { primary, alternatives: [...new Set(asArray(construction["alternatives"]).map((v) => str(v)).filter((id) => id !== primary && allowedCores.has(id)))].slice(0, 3),
+       checkpoint, reason: str(construction["reason"]).slice(0, 500), pivot_if: str(construction["pivot_if"]).slice(0, 500) } } : {}),
+   };
+@@ -283,7 +287,7 @@ export function logRunPlan(file: string, entry: Record<string, JsonValue>): void
+ }
+ 
+ /** The last logged plan of this run (a restart keeps it), else null. */
+-export function loadRunPlan(file: string, runId: string): RunPlan | null {
++export function loadRunPlan(file: string, runId: string, throughFloor = Infinity): RunPlan | null {
+   if (!file || !existsSync(file)) return null;
+   try {
+     const size = statSync(file).size;
+@@ -299,7 +303,7 @@ export function loadRunPlan(file: string, runId: string): RunPlan | null {
+       if (!line.includes(runId)) continue;
+       try {
+         const entry = JSON.parse(line) as { plan?: RunPlan };
+-        if (entry.plan && entry.plan.runId === runId) return entry.plan;
++        if (entry.plan && entry.plan.runId === runId && (throughFloor === Infinity || entry.plan.floor <= throughFloor)) return entry.plan;
+       } catch {
+         // a torn first line
+       }
+diff --git a/agent/tests/endgame-plan.test.ts b/agent/tests/endgame-plan.test.ts
+new file mode 100644
+index 000000000..5777ba94c
+--- /dev/null
++++ b/agent/tests/endgame-plan.test.ts
+@@ -0,0 +1,221 @@
++/** Format-only planning fixtures; no learned thresholds, model calls or live game API. */
++import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { agentSystemPrompt, createBrain } from "../src/brain/brain.js";
++import { pickSpec, stableSchema, runPlanSpec, routePlanSpec, shopPlanSpec, withRunPlanField } from "../src/brain/specs.js";
++import type { BrainRequest } from "../src/brain/types.js";
++import { strictSchema } from "../src/brain/engines/codex.js";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { ENDGAME_OBJECTIVE, endgameCheckpoint, endgameProblems, endgameTask, endgameQuestion, endgameRawScope } from "../src/memory/endgame-plan.js";
++import { loadRunPlan, parseRunPlan } from "../src/memory/run-plan.js";
++import { currentRunPlan } from "../src/memory/run-plan-merge.js";
++import { createScreenMemory } from "../src/memory/types.js";
++import * as buildSim from "../src/sim/build-sim-facts.js";
++import type { JevClient } from "../src/reflex/jev/client.js";
++import { mainMenuPayload, rewardCardPayload, testKnowledge } from "./scenarios.js";
++import { envelope } from "./support.js";
++import { brainAgentReport } from "../tools/brain-agent-report.js";
++
++const dirs: string[] = [];
++afterEach(() => { vi.restoreAllMocks(); setKnowledgeCharacter(null); dirs.splice(0).forEach(d => rmSync(d, { recursive: true, force: true })); });
++const plan = (index = 1, checkpoint = "") => ({ archetype: "格式方向", want: [], avoid: [], remove: [], block_target: 0,
++  elites: "normal", rest: "auto", boss_prep: "未知，查库", summary: `格式计划${index}`,
++  endgame: { core: `格式核心${index}`, gaps: `格式缺口${index}`, scaling_damage: "未知，待证", sustainable_defense: "未知，待证",
++    resources: "两场资源未知，待证", win_condition: `格式终局假设${index}，尚未验证`, checkpoint } });
++function board(floor = 1, act = 1, character = "SILENT", ascension = 10) {
++  const raw = rewardCardPayload(); raw["run"] = { ...raw["run"] as object, character_id: character, ascension, act_id: String(act - 1), floor };
++  return raw;
++}
++
++it("scopes the base goal from act one to Silent A10 and keeps other characters and levels byte equivalent", () => {
++  setKnowledgeCharacter("silent");
++  expect(agentSystemPrompt(board())).toContain(ENDGAME_OBJECTIVE);
++  expect(agentSystemPrompt(board(18, 2))).toContain("成长性输出");
++  for (const [character, asc] of [["IRONCLAD", 10], ["SILENT", 9], ["REGENT", 10], ["SILENT", 11]] as const) {
++    const raw = board(1, 1, character, asc);
++    expect(endgameRawScope(raw)).toBe(false);
++    expect(agentSystemPrompt(raw)).toBe(agentSystemPrompt());
++  }
++});
++
++it.each(["reward/card", "reward/skip", "shop/plan", "rest/choose", "selection/deck", "event/act-plan", "bundle/choose", "capstone/choose", "map/act-start", "map/route-plan", "run-plan"])("updates %s with no extra decision", label => {
++  expect(endgameQuestion(parseGameState(board()), label)).toBe(true);
++});
++
++it("offers checkpoints only on pre-boss construction questions in each act", () => {
++  for (const [act, boss] of [[1, 17], [2, 33], [3, 48]]) {
++    for (const floor of [boss! - 2, boss! - 1]) expect(endgameCheckpoint(parseGameState(board(floor, act)), "rest/choose"))
++      .toMatchObject({ act, before_boss_floor: boss });
++    for (const floor of [boss! - 3, boss!, boss! + 1]) expect(endgameCheckpoint(parseGameState(board(floor, act)), "reward/card")).toBeNull();
++  }
++  const raw = board(32, 2);
++  expect(endgameCheckpoint(parseGameState(raw), "combat/plan")).toBeNull();
++  expect(endgameTask(parseGameState(board(1)), "reward/card")).not.toHaveProperty("endgame_checkpoint");
++  raw["in_combat"] = true;
++  expect(endgameQuestion(parseGameState(raw), "selection/choose")).toBe(false);
++});
++
++it("requires bounded nonempty plan fields and a checkpoint answer only when it was asked", () => {
++  const early = { run_plan_task: endgameTask(parseGameState(board()), "reward/card") };
++  const late = { run_plan_task: endgameTask(parseGameState(board(32, 2)), "rest/choose") };
++  expect(runPlanSpec("run-plan", early).validate(plan())).toEqual([]);
++  expect(runPlanSpec("run-plan", early).validate({ summary: "echo" }).join()).toContain("endgame.core");
++  expect(runPlanSpec("run-plan", late).validate(plan()).join()).toContain("endgame.checkpoint");
++  expect(runPlanSpec("run-plan", late).validate(plan(1, "核心未知、缺口待证，终局资源尚未验证"))).toEqual([]);
++  expect(runPlanSpec("run-plan", early).validate(plan(1, "不该出现")).join()).toContain("must be empty");
++  expect(endgameProblems({ ...plan().endgame, core: "😀".repeat(241) }, false).join()).toContain("exceeds 240");
++  expect(endgameProblems({ ...plan().endgame, core: "😀".repeat(240) }, false)).toEqual([]);
++  for (const spec of [pickSpec("reward/card", { a: null }, early), withRunPlanField(shopPlanSpec("shop/plan", { leave: null }, {}), early),
++    withRunPlanField(routePlanSpec("map/route-plan", {}), early)]) {
++    expect(spec.schema.required).toContain("run_plan");
++    const stable = stableSchema(spec);
++    expect(stable.properties?.["run_plan"]?.required).toContain("endgame");
++    expect(stable.required).toContain("run_plan");
++    expect(JSON.stringify(strictSchema(stable))).toContain('"endgame"');
++  }
++});
++
++it("persists the full hypothesis and refuses a future-floor plan when restoring after rollback", () => {
++  const dir = mkdtempSync(join(tmpdir(), "endgame-restore-")); dirs.push(dir);
++  const file = join(dir, "run-plans.jsonl");
++  const first = parseRunPlan(plan(1), parseGameState(board(1)), testKnowledge, "start");
++  const future = parseRunPlan(plan(2), parseGameState(board(9)), testKnowledge, "review");
++  writeFileSync(file, [first, future].map(p => JSON.stringify({ plan: p })).join("\n") + "\n");
++  expect(loadRunPlan(file, "TESTRUN123", 2)?.endgame?.core).toBe("格式核心1");
++  expect(loadRunPlan(file, "TESTRUN123")?.endgame?.core).toBe("格式核心2");
++  expect(loadRunPlan(file, "ANOTHER_RUN", 2)).toBeNull();
++});
++
++it.each(["restart", "cached rollback"])("keeps a future-only log unknown across repeated reads after %s", mode => {
++  const dir = mkdtempSync(join(tmpdir(), "endgame-future-only-")); dirs.push(dir);
++  const file = join(dir, "run-plans.jsonl");
++  const future = parseRunPlan(plan(9), parseGameState(board(9)), testKnowledge, "review");
++  writeFileSync(file, JSON.stringify({ plan: future }) + "\n");
++  const memory = createScreenMemory();
++  memory.runPlan = mode === "restart" ? loadRunPlan(file, "TESTRUN123", 2) : future;
++  expect(currentRunPlan(memory, file, "TESTRUN123", 2)).toBeNull();
++  expect(memory.runPlan).toBeNull();
++  expect(currentRunPlan(memory, file, "TESTRUN123", 2)).toBeNull();
++  expect(currentRunPlan(memory, file, "OTHER_RUN", 2)).toBeNull();
++  expect(memory.runPlan).toBeNull();
++});
++
++it("restores an available past plan after rollback and preserves the legacy unbounded default", () => {
++  const dir = mkdtempSync(join(tmpdir(), "endgame-past-plan-")); dirs.push(dir);
++  const file = join(dir, "run-plans.jsonl");
++  const past = parseRunPlan(plan(1), parseGameState(board(1)), testKnowledge, "start");
++  const future = parseRunPlan(plan(9), parseGameState(board(9)), testKnowledge, "review");
++  writeFileSync(file, [past, future].map(p => JSON.stringify({ plan: p })).join("\n") + "\n");
++  const memory = createScreenMemory(); memory.runPlan = future;
++  expect(currentRunPlan(memory, file, "TESTRUN123", 2)?.floor).toBe(1);
++  const legacy = createScreenMemory();
++  expect(currentRunPlan(legacy, file, "TESTRUN123")?.floor).toBe(9);
++});
++
++for (const engine of ["codex", "deepseek"] as const) for (const start of [
++  { floor: 1, act: 1, recovery: "normal" }, { floor: 31, act: 2, recovery: "normal" },
++  { floor: 1, act: 1, recovery: "future-only" }, { floor: 9, act: 1, recovery: "rollback" },
++  { floor: 1, act: 1, recovery: "other-run" },
++]) {
++  it(`${engine}, F${start.floor}, ${start.recovery}: construction answers update the next question, survive restart and keep #35 / #49`, async () => {
++    setKnowledgeCharacter("silent");
++    const dir = mkdtempSync(join(tmpdir(), "endgame-loop-")); dirs.push(dir);
++    const cfg = loadConfig({ BRAIN_RUN_CONFIG: JSON.stringify({ engine, effort: engine === "codex" ? "high" : "max" }),
++      BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
++    cfg.log.decisionLog = join(dir, "decisions.jsonl"); cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
++    if (["future-only", "other-run"].includes(start.recovery)) {
++      const future = parseRunPlan(plan(9), parseGameState(board(9)), testKnowledge, "review");
++      if (start.recovery === "other-run") future.runId = "OTHER_RUN";
++      writeFileSync(cfg.runPlanLog, JSON.stringify({ plan: future }) + "\n");
++    }
++    const requests: BrainRequest[] = [];
++    // Supply a fixed completed computation while exercising the production admission gate unchanged.
++    vi.spyOn(buildSim, "withBossSim").mockImplementation(async decision => ({ decision,
++      record: { samples: 1, requested: 1, completion: { status: "complete" } } }));
++    let current = board(start.floor, start.act), sent = 0;
++    const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, options) => {
++      if (String(url).endsWith("/state")) return Response.json(envelope(current));
++      const intent = JSON.parse(String(options?.body)); sent++;
++      if (sent <= 2) {
++        const rawRun = current["run"] as Record<string, unknown>;
++        const offered = (current["reward"] as Record<string, unknown>)["card_options"] as Record<string, unknown>[];
++        current = board(start.floor + sent, start.act);
++        current["run"] = { ...rawRun, floor: start.floor + sent, deck: [...rawRun["deck"] as unknown[], offered[0]] };
++      } else current = mainMenuPayload();
++      return Response.json(envelope({ action: intent.action, status: "completed", stable: true, message: "fixed", state: current }));
++    }) as typeof fetch });
++    const jevAsk = vi.fn().mockRejectedValue(new Error("unexpected Jev request"));
++    const playFixed = async (maxDecisions: number) => {
++      const brain = createBrain(cfg, null);
++      vi.spyOn(brain.router, "decide").mockImplementation(async req => {
++        requests.push(req);
++        const checkpoint = (req.payload as any).run_plan_task?.endgame_checkpoint ? "幕末格式判断：核心和缺口待证，两战资源未知" : "";
++        const answer = { choice: Object.keys(req.options ?? {})[0], reason: "格式构筑理由", run_plan: { ...plan(requests.length, checkpoint),
++          ...(req.spec.schema.properties?.["run_plan"]?.properties?.["construction"] ? { construction: {
++            primary: "uncommitted", alternatives: [], checkpoint: start.floor + sent + 1, reason: "格式方向依据待证", pivot_if: "出现新证据再改" } } : {}) } };
++        expect(req.spec.validate(answer)).toEqual([]);
++        expect(req.spec.validate({ choice: answer.choice, reason: "缺计划" }).join()).toContain("run_plan");
++        return { engine, model: "fixed", answer, problems: [], attempts: 1, latencyMs: 1,
++          usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
++      });
++      return runLoop({ config: cfg, mode: "play", client, jev: { ask: jevAsk } as unknown as JevClient, brain,
++        buildSim: {} as buildSim.BuildSimSetup, knowledge: testKnowledge, maxDecisions, maxMinutes: 1, pollIntervalMs: 0, restoreRun: false });
++    };
++    expect((await playFixed(2)).acts).toBe(2);
++    expect(requests).toHaveLength(2);
++    const second = requests[1]!.payload as any;
++    expect(second.facts.your_run_plan.endgame.core).toBe("格式核心1");
++    expect(requests[0]!.system).toContain(ENDGAME_OBJECTIVE);
++    expect(requests[0]!.question).toContain("run_plan.endgame");
++    expect((requests[0]!.payload as any).facts.your_run_plan).toBeNull();
++    expect((requests[0]!.payload as any).run_plan_task.current_plan).toBeNull();
++    const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
++    expect(cues.schema).toBe("brain-query-cues-v3");
++    for (const [key, tool] of [["strategies", "kb_strategies"], ["rk", "kb_reflex"], ["experience", "kb_experience"]]) {
++      if (typeof cues[key].count === "number" && cues[key].count > 0) expect(cues[key].tool).toBe(tool);
++      else {
++        expect(cues[key].tool).toBeUndefined();
++        expect(cues[key].input).toBeUndefined();
++      }
++    }
++    expect(requests[0]!.system).toContain("匹配数为0、缺失或错误时跳过");
++    expect(requests[0]!.system).toContain("构筑rk只读构筑相关摘要");
++    expect(requests[0]!.system).toContain("经验另用kb_experience");
++    expect(requests[0]!.question).not.toContain("calibrated on logged A8");
++    expect((requests[1]!.memory as any).construction_log).toContain("格式构筑理由");
++    expect(requests[1]!.tools).toHaveLength(15);
++    expect(requests[1]!.tools?.map(t => t.name)).toEqual(expect.arrayContaining(["kb_reflex", "kb_experience"]));
++    if (start.recovery === "rollback") current = board(2);
++    expect((await playFixed(1)).acts).toBe(1);
++    if (start.recovery === "rollback") {
++      expect((requests[2]!.payload as any).facts.your_run_plan).toBeNull();
++      expect((requests[2]!.payload as any).run_plan_task.current_plan).toBeNull();
++    } else expect((requests[2]!.payload as any).facts.your_run_plan.endgame.core).toBe("格式核心2");
++    expect(sent).toBe(3); expect(requests).toHaveLength(3);
++    // The existing Silent construction shadow still runs once per card question; no combat is played.
++    expect(jevAsk).toHaveBeenCalledTimes(3);
++    expect(jevAsk.mock.calls.every(args => (args[0] as any).direction === "uncommitted")).toBe(true);
++    const stored = readFileSync(cfg.runPlanLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
++    expect(stored.filter(r => r.merged_into && r.plan?.endgame).map(r => r.plan.endgame.core)).toEqual(["格式核心1", "格式核心2", "格式核心3"]);
++    expect(stored.filter(r => r.plan?.endgame?.checkpoint)).toHaveLength(start.floor === 31 ? 2 : 0);
++  });
++}
++
++it("reports actual prior plans and accepted checkpoint updates per engine and act without treating empty samples as passed", () => {
++  const payload = (floor: number, previous?: unknown) => ({ facts: { act: 2, your_run_plan: previous ? { endgame: previous } : null },
++    run_plan_task: endgameTask(parseGameState(board(floor, 2)), "reward/card") });
++  const rows = [{ run_id: "fixture", question_id: "one", engine: "codex", knowledge: { mode: "tools" },
++    payload: payload(31), accepted: true, answer: { run_plan: plan(1, "检查点未知") } },
++  { run_id: "fixture", question_id: "two", engine: "codex", knowledge: { mode: "tools" },
++    payload: payload(32, plan().endgame), accepted: false, answer: { run_plan: plan(2) } }];
++  const result = brainAgentReport(rows).endgame_groups[0]!;
++  expect(result).toMatchObject({ engine: "codex", act: "2", questions: 2, prior_plan_nonempty: 1,
++    prior_plan_nonempty_rate: .5, accepted_plan_updates: 1, accepted_plan_update_rate: .5, checkpoints_requested: 2, checkpoints_answered: 1 });
++  expect(brainAgentReport(rows, ["missing"]).endgame_groups).toEqual([]);
++});
+diff --git a/agent/tools/brain-agent-report.ts b/agent/tools/brain-agent-report.ts
+index 4d84a0d71..644752fc1 100644
+--- a/agent/tools/brain-agent-report.ts
++++ b/agent/tools/brain-agent-report.ts
+@@ -2,6 +2,7 @@
+ import { readFileSync } from "node:fs";
+ import { pathToFileURL } from "node:url";
+ import { guidanceKind, queryAudit } from "../src/brain/tools/query-guidance.js";
++import { endgameRequired, endgameCheckpointRequired, endgameProblems, parseEndgamePlan } from "../src/memory/endgame-plan.js";
+ type Row = Record<string, any>;
+ const p95 = (xs: number[]) => xs.length ? [...xs].sort((a, b) => a - b)[Math.ceil(xs.length * .95) - 1] : null;
+ const mean = (xs: number[]) => xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
+@@ -50,7 +51,21 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
+       rk_available_questions: selected.filter(r => Array.isArray(r.tools) && r.tools.includes("kb_reflex")).length, calls_mean: mean(calls), calls_p95: p95(calls),
+       latency_ms_mean: mean(latency), latency_ms_median: median(latency), latency_ms_p95: p95(latency) };
+   });
++  const endgame = data.filter(r => endgameRequired(r.payload));
++  const endgameGroups = [...new Set(endgame.map(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}`))].sort().map(key => {
++    const selected = endgame.filter(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}` === key);
++    const checkpoints = selected.filter(r => endgameCheckpointRequired(r.payload));
++    const nonempty = selected.filter(r => parseEndgamePlan(r.payload?.facts?.your_run_plan?.endgame ?? r.payload?.run_plan_task?.previous_plan?.endgame));
++    const accepted = selected.filter(r => r.accepted === true && endgameProblems(r.answer?.run_plan?.endgame, endgameCheckpointRequired(r.payload)).length === 0);
++    return { engine: selected[0]!.engine, act: key.slice(key.indexOf("/") + 1), questions: selected.length,
++      prior_plan_nonempty: nonempty.length, prior_plan_nonempty_rate: nonempty.length / selected.length,
++      accepted_plan_updates: accepted.length, accepted_plan_update_rate: accepted.length / selected.length,
++      checkpoints_requested: checkpoints.length, checkpoints_answered: checkpoints.filter(r => accepted.includes(r)).length,
++      question_ids: selected.map(r => r.question_id ?? null) };
++  });
+   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
++    endgame_groups: endgameGroups,
++    endgame_limitation: "仅统计显式 endgame_plan_required 题，按引擎/幕分账；首次无旧计划属正常，不计作更新失败。非空不证明内容成立，accepted不证明落盘或实际采用；需核run-plans与下一题。未发给大脑的代码/Jev动作不在分母。F48/F49到达与首试/SL结果须沿同角色/进阶/脑来源的原对局日志另核；空样本不构成验收。",
+     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
+     inline_knowledge_rows: data.filter(r => r.payload?.open_book || r.payload?.strategy_entries || r.knowledge?.mode === "full").length,
+     groups, query_groups: queryGroups, rk_definition: "reflex.json via kb_reflex; kb_experience is experience, never rk", limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。" };
+diff --git a/docs/endgame-plan.md b/docs/endgame-plan.md
+new file mode 100644
+index 000000000..8b697fcfb
+--- /dev/null
++++ b/docs/endgame-plan.md
+@@ -0,0 +1,42 @@
++# Silent A10 终局计划
++
++Roy 的 [#50](https://github.com/dwroy/agent-sts2/issues/50) 第 1–3 条：从第一幕起明确 F48→F49 连续两战目标，在每道大脑构筑题更新本局核心、缺口和终局方案。第 4 条的达标线仍由学习者沿 #48 原经验提炼流水线处理，开发不生成知识或数值门槛。
++
++生产知识工具模式下，只对 mod 实际 `character_id=SILENT`、`ascension=10` 生效。基础指令及构筑 facts 带终局目标。复用 #35 的构筑题范围：拿/跳牌、商店、休息、非战斗选牌、事件、bundle/capstone、幕初/路线计划和运行计划；代码执行的后续步骤及 Jev 独立作答的题不额外请求大脑。其他角色、其他进阶及历史非工具适配器沿原链路。
++
++每道适用题在原请求内携带 `state.run_plan_task.endgame_plan_required=true`，答案的 `run_plan` 必填，原字段与 `construction` / 可选 V6 更新合同继续有效；新增必填 `endgame`：
++
++| 字段 | 内容 |
++|---|---|
++| `core` | 本题选择之后的核心及当前成型判断 |
++| `gaps` | 还缺什么，以及缺证部分 |
++| `scaling_damage` | 成长性输出方案及依据 |
++| `sustainable_defense` | 持续防御方案及依据 |
++| `resources` | 两战 HP / 药水预算及未知 |
++| `win_condition` | 连续赢两战的假设与限制 |
++| `checkpoint` | 仅题面给出幕末检查时作答，其余题为空字符串 |
++
++每字段最多 240 Unicode 字符，前六项必须非空，未知须明确写未知。计划是本局假设，不能充当正式经验；已有策略/rk 工具提供实际知识，缺失或预算耗尽后照原规则用已有信息回答。原工具数、调用/时间预算、修复与故障处理保留。无效计划不能覆盖原计划；不造默认核心或虚假达标判断。
++
++幕末检查只出现在当前幕 Boss 前两层的适用构筑题：第一幕 F15–16、第二幕 F31–32、第三幕 F46–47。题面 `run_plan_task.endgame_checkpoint` 给当前幕和 Boss 层数，要求明确回答核心成型状态、缺口、本幕 Boss 与终局两战差距。Boss 当层奖励、幕中题和战斗选牌不触发；没有自然对应题时不补造请求。
++
++答案沿原 `parseRunPlan` → screen memory → `run-plans.jsonl` / journal 存储，下一题 `facts.your_run_plan.endgame` 读回。没有 facts 的原题沿 `run_plan_task.previous_plan` 显示原计划。进程重启可从原计划日志恢复；向更早层数回退时排除未来层的计划，缺记录保持空。日志仍保留放弃尝试；同层旧计划是可修订假设，不作为已执行选择，实际构筑记录继续由 #35 的牌组差分与 SL 快照维护。
++
++当前楼层上限须贯穿首次日志恢复、旧 RUN_PLAN 配置的懒加载及构筑题 `currentRunPlan` 二次读回；后者同时校验缓存与日志。只有同局未来层记录时，重复读取仍为空；有同局过去计划才恢复过去计划。此限制仅传给本功能适用范围，其他角色沿原无上限默认合同。固定回归覆盖冷重启、缓存未来计划、实际两引擎 F9/F10→F2 回退及异局负控。
++
++这条每题更新链独立于旧 `RUN_PLAN` / `RUN_PLAN_MERGE` 开关，适用范围内不再为旧地图检查点单独发运行计划请求；每道构筑题本身承担更新。原方向权重通过既有 `acceptDirectionRide` 保留，已有转向条件仍可改变，不改 Jev 战斗出牌。
++
++集成顺序为 #49 查询引导 → 本补丁；实际发布还须先核 #35 已进入 live。ops 沿原发布锁、最新知识叶、完整联合检查和自然开局边界发布，分配正式 release_id，并追加旧/新行为、证据及回退通知；候选开发不改 live/STOP。
++
++核验修订基于 main `dbacc557f6f4c013380af140a3b9f89b80dcef69`，保留已修正 #49/#26：`brain-query-cues-v2` 的 rk 对应 `kb_reflex`，经验对应 `kb_experience`，Silent 工具合同为15项。早期依赖 `6290300d8` 和原14工具断言只保留为历史交付记录，不作为本版组装来源。
++
++自然验收使用冻结的同角色/进阶/脑来源局号，沿已有工具读回：
++
++```bash
++cd agent
++nice -n 19 node node_modules/tsx/dist/cli.mjs tools/brain-agent-report.ts <冻结brain.jsonl> <局号...>
++```
++
++新增 `endgame_groups` 按引擎/幕列旧计划非空率、accepted 更新率、检查点请求/回答数及 question_id。首次题旧计划为空是预期；必须再核相同 question_id 的 `run-plans.jsonl` 落盘及下一题真实读回，不能仅凭 accepted 或非空断言成功。没有题的分组为空，不冒充 100%。F48/F49 到达局数与结果继续由原实盘统计核对，首试、SL、最终结果分开，未结束保持未知，不沿用 issue 的旧分母，不做 A/B 或追加实验局。
++
++回退只撤本 #50 代码差量，保留 #49 / #35、原计划日志与失败证据。旧解析器忽略新增 `endgame`；不删除历史，未发布的达标线和自然验收继续开放。

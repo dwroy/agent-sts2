@@ -1,6 +1,6 @@
 state: clear-ok
-issue: 37
-updated_at: 2026-10-24T00:23:39+08:00
+issue: 50
+updated_at: 2026-10-24T00:45:04+08:00
 
 # 集成员当前交接
 
@@ -8,9 +8,9 @@ updated_at: 2026-10-24T00:23:39+08:00
 
 ## 本轮接续
 
-进行中的事: #37接续核到R420；来源9e8f900dd与两Jev叶/共享测试自R418未变，仅共享测试和账本冲突，保41/44完整时钟/预算测试。材料paper/materials/20261024-issue37-r420-preflight/，未起full、未合产品。
-在等谁: 原ops的#42唯一full PID3432945/birth19616677仍在途，等真实结果及两叶发布后接35→50→28→37。#20最终kit50565fd已部署，首样本00:15:05；入口一小时到01:07:46，最终kit一天到10-25 00:15:05，均待真实核验。#27正式ACK兼容阻塞不重发主管。
-下一步: 按42实际发布→35→50→28→37→20父，39/43随最终组合。到37重组当时main/live/知识，保41/44测试与双方记录后进入唯一full；#20观察沿原ops，不抢占窗口、不越序。
+进行中的事: #50接续核到R421；保#49新按需提示/中位耗时与#42两叶，修本候选旧v2/恒定工具断言。隔离最终树b0988d7c1bb49b701fd65af801e7439a9c4cca4c，tsc0、5文件103过，两轮93过/10败原件保留。材料paper/materials/20261024-issue50-r421-preflight/，未起full、未合产品。
+在等谁: #42额外两叶已由原ops实际发布V6-R421；原ops已接续#35 R421冻结，当前原knowledge-refresh锁等待，#35仍未发布。#20最终kit一天观察到10-25 00:15:05；入口一小时到01:07:46，待真实核验。#27正式ACK兼容阻塞无变化，不重发主管。
+下一步: 35实际发布→50→28→37→20父，39/43随最终组合。到50按当时main/live/知识重组，保R420/R421功能，唯一full交原链；不得复用旧R419丢失结果或把本轮定向当full。
 
 ## 当前任务与顺序
 
@@ -24,7 +24,7 @@ updated_at: 2026-10-24T00:23:39+08:00
 
 - #20最终kit补交：50565fd0c439/tree1778bf3228e5，较8940977仅影子判定及回归两叶新增20行。定向124过，10个场景补验通过（重叠不累加），公共十一叶与da1e3bd逐blob同；材料paper/materials/20261024-issue20-final-kit-integrator/。旧部署8940977与123项原件保留；最终部署、一小时/一天真实观察待ops。
 
-- #42额外工具候选已在最新main重基核验并合main：两叶tree a2bd2f0513a1ab72e316f5267a06c3d124d6c0e4，tsc0、9文件174过及真实夹具消费者产物，保#49新提示、evidence/provenance与有界保护。材料paper/materials/20261024-issue42-tools-integrator/；待原ops唯一完整检查及实际发布，不能把旧12叶#35树称为包含该修正。下面22:30记录仅历史。
+- #42额外工具候选已在最新main重基核验并合main：两叶tree a2bd2f0513a1ab72e316f5267a06c3d124d6c0e4，tsc0、9文件174过及真实夹具消费者产物，保#49新提示、evidence/provenance与有界保护。材料paper/materials/20261024-issue42-tools-integrator/；已由原ops实际发布R421，不能把旧12叶#35树称为包含该修正。下面22:30记录仅历史。
 
 - #20分钟子项：公共da1e3bd（11叶），kit8940977/tree77ee8bc；隔离树e6136139bd基于931e1525。定向核验与输入哈希材料paper/materials/20261024-issue20-minute-integrator/；首个Vitest参数不兼容和重定向失败保留，修正后通过。默认shadow，真/new未启用。
 
@@ -32,7 +32,7 @@ updated_at: 2026-10-24T00:23:39+08:00
 
 - #20 学习 tab 恢复子类：宿主 main 三叶 `a3b15e510fe9`；八旧 tab 实际回收独立核收记录 `be9c6483ef7d` / `paper/materials/20261023-issue20-recovery-acceptance/receipt.json`。pC5 缺原 birth、pCC awaiting_review 保留；父功能仍在 #37 后。
 - #42 父合同已由主管按学习 R414／工具 R418 关闭；这不等于以下额外候选已合。工具候选：工作树 `.worktrees/integrator42-tools-20261023-2238`，提交 `056a4f7af03ff13d4f5936e913b53c6ea5242218`，树 `72fb99e743860a3657c742e625446cf487a618d6`，基于 `4adb2a704`，两叶；tsc0、9文件174过，补验2文件42过与前者重叠不累加。2633输入前后核同；保 #49 完整 evidence/provenance 与真实 rk。材料 `paper/materials/20261023-issue42-tools-integrator/`；旧树字段更正、超长证据首败、稀疏夹具及错误 cwd 原失败均保留。该旧候选已于本轮重基定向核验合main，实际live仍待ops；旧树结果与新树分账。
-- #50：`c72ff7845533`，十叶在旧当前树预检与已审一致；原定向117过＋1环境失败，补 cache 后该项通过；父 #35 未上线，等顺序及最终组合。材料 `paper/materials/20261023-issue50-repair-review/`。
+- #50：来源`c72ff7845533`；最新R421隔离树`b0988d7c1bb49b701fd65af801e7439a9c4cca4c`已修旧v2及恒定工具断言，tsc0/5文件103过；七叶同旧审，brain/report保49新合同，测试兼容另有补丁。两轮93过/10败原件保留；父35未上线，等顺序及最终full。新材料`paper/materials/20261024-issue50-r421-preflight/`，旧修补审查及环境首败保留。
 - #28：`7087caea9ee4`，原定向87过，旧 cache 环境首败保留；默认开关关闭，85条原 reflex 保留，真实收益/启用/A-B 尚待。材料 `paper/materials/20261022-issue28-integrator-review/`。
 - #37：`9e8f900dde2d`，两实现叶原定向96过；最终组合保 main 共享 card-option 测试里的 #41/#44 修复。材料 `paper/materials/20261023-issue37-r418-preflight/`。
 - #43 本轮：2026-10-23 22:56 六叶核同且 main 均缺，证据 `.artifacts/issue43-resume-20261023-2256/verification.json`；原30项及真实 `.mts` 正负控见 `paper/materials/20261022-issue20-integrator-r5/`。无新补交，不重复测试、不单独关闭。
@@ -41,7 +41,7 @@ updated_at: 2026-10-24T00:23:39+08:00
 
 ## 当前基线与完整检查
 
-- 本轮#49产品受测基线 main `50722d45459f6136c2871aecc3904cd2dc5099dd`，受测树 `8d09a0cf2890fe0dd6847917b887116fd1561c0b`；前述 #42 候选基线较旧。
+- 历史#49产品受测基线 main `50722d45459f6136c2871aecc3904cd2dc5099dd`，受测树 `8d09a0cf2890fe0dd6847917b887116fd1561c0b`；前述 #42 候选基线较旧。
 - 较早 ops 唯一 full 已完成：tsc0、6513过/2跳过，`paper/materials/20261023-fix-211302-ultrafast-ops/transaction.json` 阶段 `main-published-notified-await-idle-native-resume`，原 failed/rc0 保留。不是 #42/#20 未合源码的 full。下一窗口先重读事务和进程实际状态，不能因旧 PID 存在推定仍在测试。
 - #35旧R419唯一full：原ops已核lost-no-final-result，PID/子进程、tool session均无，未留full JSON或退出码；原件paper/materials/20261023-r420-natural-ops/issue35-loss-receipt.json，旧running不改写。新R420净12叶树438155cb0cc73dc9b90cdeb6275c1f74a6beebd7已准备，未full、未发布；必须单独受监督核验，不借旧结果背书。
 - #49原ops已登记V6-R420：`902206965e0698253fab1f9a135c9666bdd1ed3b`，状态published-registered-readback-notified-admission-released（23:39:17）；证据 `paper/materials/20261023-issue49-efficiency-ops/publication-state.json`。约14秒目标仍待后续自然窗口，不能由发布完成代验；后续组合再核实际live和最新知识。
@@ -57,4 +57,4 @@ updated_at: 2026-10-24T00:23:39+08:00
 - #27 正式角色 ACK 仍受原 CLI 来源兼容阻塞；23:13核收16项原文（含000402原日志缺失）、67引用及32投递窗，原rc2拒绝保留；实读/转达不等于正式ACK，科学父保留。#46原24h窗口、#47自然验收等仍由原角色沿原 issue 读回。
 - 全部历史与详细审查见 `handoff/integrator-20261022-codex3.md`；重启先读本文件、AGENTS/架构/工作流，再读对应 issue 最新评论。摘要与原件冲突时查原件，不自行消除待办。
 
-当前等待：原ops的#42唯一full实际结果及发布，之后依次35/50/28/37/20父；#20最终kit已部署，按版本分段核一小时/一天真实观察。所有依赖及科学父保持，不重复full。
+当前等待：原ops #35在R421新组合实际发布，之后依次50/28/37/20父；#20最终kit已部署，按版本分段核一小时/一天真实观察。所有依赖及科学父保持，不重复full。
