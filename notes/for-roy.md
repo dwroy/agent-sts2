@@ -4875,3 +4875,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T15:18:44+08:00 [ops/15:09策略及续派] 141301原生code0结束，原batch及wrapper均真实failed/rc0，原监督/native已退、lease空闲。三文件蜡烛条件参考候选保持暂存未提交，原定向11过、有效负控2败9过、tsc0；完整日志45失败而无退出码，当前宿主无本树测试进程，不能续称仍在运行、伪造终态或把两例EPERM外推全部失败。原知识冲突/锁忙与patch、源码blob/SHA保留，待原集成检查链，不整枝覆盖live。本轮精确持久化原0328两条受阻审计，579项账本检查0问题，不标implemented/shipped或新版本。另核下一普通调度：151302主组实际绑定1/high/workspace-write；二组submitted但绑定0、无session/rollout、retirement-unverified/75，原herdr agent仍working，保现场交36，不称零模型、送达或已退出，不重开模型。前轮dataset提交和144302记录已完成，本轮不重dataset/full/测试，候选、36身份阻塞、20回收、46原窗口及科学父分账保留。
 原件paper/materials/20261023-1509-ops/candidate-141301.json、record-review.json、issue36-next-normal-dispatch.json。
+
+- 2026-10-23T15:29:17+08:00 [ops/15:20] 151302二组原未发送草稿告警及wrapper核验失败已核：原bindings仍空、无session身份，300秒后注册转awaiting_review，原生PID仍在且屏幕显示后台检查中，当前输入框显示默认占位；不能据此抹除原告警、认定零模型或提交/清空草稿，现场与原任务去重键保留并回传36。144301五局真实复盘退出0，五节原文、33条本批账本追加和五条pending提案按原UUID精确选取；新增0578/0579，不混入并行学习记录。唯一新纯bug是HD6 F27T6技能污染漏算，按原0579/提案登记非阻塞修复队列，不推断修正可赢。账本本次独立检查退出0；随后只启动本批唯一dataset事务，结果须终局事件核回。十五条重复异议的原文SHA、真实转发和67字节引用核同，新增核watcher自有1443读回/转达回执；正式角色ACK仍受原CLI兼容阻塞，不代填、不关科学父。
+原件：paper/materials/20261023-1520-ops/s2-unverified.json、postmortem-review.json、notices-audit.json；原watcher回执paper/materials/20261023-issue27-watcher-receipt/received-1443.json。

@@ -1570,3 +1570,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-23T14:29:59+08:00 [ops/#36 原闭环] 原134302自动完成及finished守卫已过，但wrapper无条件调用尚未发布的ops/learner_tabs.py，main/live均不存在，实际seal ENOENT；非游戏纯工程缺口，交原#36 owner与#20适配器边界定向处理。保failed/rc0、原native/wrapper SHA、attention和pane，不向已退出监督补seal、不另派学习模型。原件paper/materials/20261023-1419-ops/natural-acceptance.json。
 
 - 2026-10-23T15:18:44+08:00 [ops 原silent-0328/167b20链补证，非新派单] 141301三叶候选未提交：原11项定向过/有效负控2败9过/tsc0，原full日志45失败但缺rc文件且宿主已无本树进程；两个单例EPERM仅解释各自，不重任务/改排除名单或强合live知识。沿原候选/集成检查窗口核精确三叶及旧20261020重叠候选，保留原ID、证据/科学父。原件paper/materials/20261023-1509-ops/candidate-141301.json。
+
+- 2026-10-23T15:29:17+08:00 [ops/复盘144301] 非阻塞纯bug，复用 silent-0579 / silent-proposal-08f9b6f1658b5d7b：HD6BM39PYL21 F27/T6，感染棱柱单步题漏算技能新污染，防御后净损报5而原题核为11。未证明修正后能赢；沿原提案由策略学习者补实现及固定用例，不由ops补机制或另派模型。原报告：learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/report.md；agent/src/reflex/combat.ts:163。
