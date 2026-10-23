@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-24T00:07:46+08:00",
+  "phase": "minute-enabled-shadow-observation",
+  "control": {
+    "persisted": "on",
+    "effective": "on",
+    "source": "project-control",
+    "poll_source": "minute"
+  },
+  "readback": "minute",
+  "old_stall": {
+    "state": "delegated"
+  },
+  "registry_unchanged": true,
+  "new_full_model_game": 0,
+  "actual_one_hour_acceptance": "pending",
+  "shadow_one_day_acceptance": "pending lead approval required",
+  "rollback": "python3 ops/agent_board.py --root /home/dw/Projects/agent-sts2 --set-poll-source stall"
+}
