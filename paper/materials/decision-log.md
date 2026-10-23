@@ -5964,3 +5964,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T09:30:26+08:00 [ops] #33 R417首批自然续验7完整局156+在途6脑题，162 accepted/48工具/0兜底漏书；来源字节及新增6原生high/read-only核同，154内嵌null/16配置ENOBUFS保留，非阻塞项入修复队列；dsh自然/未触发预算与26统计0分列。评论6355179196，交主管原标准验收，无新full/模型/发布/实验局，原件paper/materials/20261023-issue33-natural-followup-ops/。
 
 - 2026-10-23T09:34:26+08:00 [watcher] #20接续实读无新补交/改序：公共e1204dcf与kit7e5a408f远端核同，main195d5d9e5/live70eb12870实际R417；7路径同上次、report.py/run.sh/decision-log仍冲突且37未合。原tsc/102+4及43定向结论保持，零重复测试/full/候选/源码合入/生产操作；按36补交→46→26提示→42余项→35→28→37（37→20）待最终组合唯一full。README旧inbox句待原线同步，生产tick/默认门/自然迁移/39采用、27正式ACK CLI及科学父保留，无新裁决。材料paper/materials/20261023-issue20-r417-preflight/。
+
+- 2026-10-23T09:44:22+08:00 [ops] 09:43重复15异议原文/67证据/CLI不变，原watcher身份及空闲状态核同，已实际提交一行提醒；原manual任务白名单兼容阻塞正式角色ACK继续pending，不代ACK/重试/关父。原件paper/materials/20261023-0943-ops/。

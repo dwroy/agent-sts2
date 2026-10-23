@@ -4780,3 +4780,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T09:30:26+08:00 [ops] #33已接R417首10题停点，09:22固定原日志窗口核162题（7完整局156、在途6），均匹配Codex终结记录且accepted；7局原终局计数逐项核同。30题有工具、共48次，14项工具每题齐备、返回字节/来源齐备，工具执行合计342ms；全题均值13.260s/P95 25.974s，兜底/漏书/伪调用0。新增独立原生high/read-only回执6份，旧10份保留；日志内嵌8份/154 null分列，不从配置推162份原生证明。dsh仍仅原离线证据；上限/超时未自然触发，统计工具仍0归#26可选提示补交，不强制调用或做收益推断。16条run-config原Git ENOBUFS缺提交号保留，已列非阻塞修复；实际live58叶及R417号/绑定另核，不反填历史。报告已回#33评论6355179196并逐字API读回，交主管按原标准验收；无新模型/full/发布/实验局，不关闭科学父。原件paper/materials/20261023-issue33-natural-followup-ops/receipt.json、completed-runs-report.json、natural-report.json、native-receipt-audit.json。
+
+
+- 2026-10-23T09:44:22+08:00 [ops] 处理09:43十五件重复异议：原文SHA、67份原始收件箱窗口/证据、通知CLI均与08:43相同，未见新的角色ACK。原watcher身份及空闲状态核同，已实际提交一行提醒，提交不当已读或Roy已知。原ops_forwarded实际写入及既有watcher接收/Roy可见转达证据仍完整；正式watcher_received/roy_notified登记受原手动任务白名单兼容限制，十五条继续pending，保留原拒绝，不重复同一失败CLI或代其他角色确认。三条并行账本已由原ops授权当前局清单核回；原学习者冻结check rc1与ops结构/局号check rc0均保留，不把结构验证当逐帧来源验证。牌堆提取/配对增量/退出HP口径、单卡覆盖和机制缺口、外部统计的因果/样本/分账限制均沿原owner处理；合同可表达不代live、自然采用或收益。本轮仅核验、实际提醒与双记录，无新学习/dataset/full/发布/对局，不关闭科学父；待原角色兼容后凭真实回执登记。原件paper/materials/20261023-0943-ops/notices-audit.json、watcher-reminder-send.json；历史账本核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
