@@ -6194,3 +6194,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T15:44:12+08:00 [ops/dataset] 144301五局真实复盘的唯一dataset --no-raw已实际结束，rc0且source_checks_passed=true；实际生成字节在原写锁内冻结SHA与Git blob，成本源保留自身切点。五节复盘、33条本批账本追加及五条pending提案已由先行受控记录提交精确持久化，新增0578/0579，非阻塞感染棱柱技能污染漏算已按0579及原提案进入修复队列；未把修正净损等同于实盘获胜。当前提交只含实际生成物、自有双通知与回执，并行源码和记录保持；不重模型、full、finish或旧任务，无行为版本或live经验发布。原144301回收请求此前因postmortem not settled保留，后续由原回收器核真实数据入库和提交门，不能因本次dataset成功代称已回收。原151302二组缺绑定/草稿告警及其待核验状态独立保留；十五条异议正式角色ACK仍pending，科学父不因本次数据事务完成而关闭。后续只沿本终局事件核原生成物和提交，不再重建本切点。
 原件：paper/materials/20261023-1520-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-23T15:48:54+08:00 [ops/15:46] 144301五局复盘的唯一dataset已核实际运行15:32:36至15:44:12，退出0、attempts=1、source_checks_passed=true；提交2282f70f已是当前main祖先，23项变化中14个实际生成物的Git blob、字节数和SHA逐一与原锁内清单相符，均无生产源码。本批原五节复盘、33条账本追加、五条提案的先行记录提交仍在历史中，工作副本并行记录保持；成本源保留自身冻结切点，不混称同一核心切点。原dataset worker已退出，本轮只核证，不重dataset、finish、模型、full或生成新的行为版本。原144301回收请求仍deferred且无归档完成回执，本次只读准入核得postmortem not settled；原报告感染棱柱技能污染漏算bug仍保留，不能为回收清空bugs或把数据生成替代受测live经验入库。后续由原调度器按原门重试，不新派清理会话、不强删主检出或研究scratch。科学父、消费者、异议角色确认与151302二组现场均独立保留。
+原件：paper/materials/20261023-1546-ops/dataset-verification.json；原提交与清单paper/materials/20261023-1520-dataset-ops/record-commit.json、generated-manifest.json。
