@@ -4813,3 +4813,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T12:23:26+08:00 [ops] 110801-fix原报告及工作树已核：无新增源码、测试、修复或提交，HEAD为7d0821a且干净；tests三项仍null，主树与live有110条源码差异，未满足自动空修复验收门。原failed/rc0、重试及旧报告完整保留，仅追加ops无新增产出核验，不伪造通过/合入、不重模型/full/dataset；ENOBUFS两叶、账本四叶与H1旧候选继续沿原owner。原冻结7批已有6批各启动一次，当前原2策略/1修复槽均占，最后二组保持pending、不越容量。另已接6357296556：#36日志块桥接及固定stub修正后213定向过，首败原件保留；宿主核唯一full PID214884、runner birth、nice19/单worker/无排除、tree9642c7c及469最新知识相符，未持发布锁或另开检查。当前TUI仍off、尚未发布；通过交付后接原发布及下一自然调度五项验收，不关科学父。原件paper/materials/20261023-1211-fix-ops/receipt.json、issue36-full-handoff.json、issue36-comment-6357296556.json。
+
+
+- 2026-10-23T12:25:47+08:00 [ops] 121225-fix已按原报告完成无新增产出核验：工作树HEAD950e323e、干净且已在main；无新源码、测试、提交、提案或合入。本批tsc/vitest未运行，cases=0按原值保留，不能借用110800候选8过/完整130，也不把空修复当本批修复上线。原调度failed/rc0与retry_at保留，仅写ops_review；自动空修复门要求真实检查及源码与live一致，本批未满足，无源码可代提交，不重模型/full/dataset。ENOBUFS两叶、H1六叶、账本四叶沿原owner补验，ACK身份、Jev预算、通知恢复与策略机制专项保原链；报告无新纯bug，不重复加队列或改游戏知识。当前两条策略实际PID仍活，最后014302二组冻结重排保持pending，7批仍6次唯一启动/1待槽，不把空闲fix槽当策略槽，不重放已登记批次。#36继续沿原唯一full及日志桥接事务，TUI仍off，未新发布或关闭科学父。原件paper/materials/20261023-1223-fix-ops/receipt.json；原报告learner/runs/20261023-121231-7f200ce9-5118-4017-a4ec-aa0e00c6cfee-fix-batch/report.md。

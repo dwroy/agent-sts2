@@ -6109,3 +6109,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T12:18:52+08:00 [ops/#36] Roy非交互每批实时日志追加：两叶候选固定4过、撤码2败、tsc/语法0，交原最小P0完整检查/发布，尚未生效；原任务tab跟随.out/.err，不改在途或TUI开关。原件paper/materials/20261023-learner-stdio-log-ops/prepared.json；评论6357245522。
 
 - 2026-10-23T12:23:26+08:00 [ops] 110801修复无新增产出/自测/合入，原failed rc0保留并完成ops核验；余1冻结二组待原槽。#36日志桥接已入原tree9642c7c唯一full，PID214884实际在跑，TUI仍off，待终局接发布。原件paper/materials/20261023-1211-fix-ops/。
+
+- 2026-10-23T12:25:47+08:00 [ops] 121225-fix无新增源码/修复/合入，原failed rc0及未运行检查保留，已核干净950e323e并登记ops_review；余1冻结二组待2策略槽释放，无重模型/full/dataset/发布或关闭科学父。原件paper/materials/20261023-1223-fix-ops/receipt.json。

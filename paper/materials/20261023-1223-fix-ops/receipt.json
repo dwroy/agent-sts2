@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-23T12:25:02+08:00",
+  "batch": "20261023-121225-fix-batch",
+  "registry_state": "failed",
+  "launcher_exit": 0,
+  "retry_at_preserved": 1792732857.382847,
+  "original_completion_gate": "verify_empty_fix requires actual passing checks and equality with live; this batch has unrun checks and a different baseline",
+  "report": {
+    "task": "fix-batch",
+    "base": "950e323e8a52790e729f06fc92661e1e0c1ac96e",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "ENOBUFS、H1六叶及账本四叶候选",
+        "reason": "已有原候选；队列明确要求原负责人续验，后批不得重复实现"
+      },
+      {
+        "item": "手动通知ACK后续任务兼容、Jev基础请求预算",
+        "reason": "太大：沿原专项来源合同与投影实现链"
+      },
+      {
+        "item": "核心构筑通知失败、调度公平性",
+        "reason": "证据不足"
+      },
+      {
+        "item": "完整检查分段收尾协议",
+        "reason": "太大：保留原负责人及失败记录"
+      },
+      {
+        "item": "37条策略/模型/架构项",
+        "reason": "策略类或独立功能；逐项出处见报告"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261023-121231-7f200ce9-5118-4017-a4ec-aa0e00c6cfee-fix-batch/report.md"
+  },
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-121225",
+  "head": "950e323e8a52790e729f06fc92661e1e0c1ac96e",
+  "clean": true,
+  "head_already_in_main": true,
+  "live": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+  "live_source_diff_count": 110,
+  "verify_empty_fix_accepted": false,
+  "new_source_or_commit": false,
+  "ops_disposition": "已核无新增产出，无源码可代提交或合入；原failed/rc0及null/null/0保持，原候选/专项/科学父保留。",
+  "model_full_dataset_repeated": false,
+  "active_batches": [
+    {
+      "batch": "20261023-110001-strategy-proposal",
+      "task": "strategy-proposal",
+      "pid": 133718
+    },
+    {
+      "batch": "20261023-121225-strategy-proposal",
+      "task": "strategy-proposal",
+      "pid": 180832
+    },
+    {
+      "batch": "20261023-121302",
+      "task": "postmortem",
+      "pid": 185421
+    }
+  ],
+  "remaining_frozen": [
+    "20261023-110001-s2-strategy-proposal"
+  ],
+  "strategy_capacity_busy": true,
+  "frozen_requeue_replayed": false,
+  "evidence": [
+    {
+      "path": "ops/codex-ops/learner/20261023-121225-fix-batch.out",
+      "bytes": 2802,
+      "sha256": "6b1c9fede64b05b6d5f1e5539a3c1577879313aedf1f3ef724736ea7534ced40"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261023-121225-fix-batch.err",
+      "bytes": 6199,
+      "sha256": "0a15d294f377004fdd9c3376fe848850b3c105bddcb968d9adb747619e920b25"
+    },
+    {
+      "path": "learner/runs/20261023-121231-7f200ce9-5118-4017-a4ec-aa0e00c6cfee-fix-batch/report.md",
+      "bytes": 17687,
+      "sha256": "e4536e85960c762ad29db9b38d6f9f167cb5eccf4856d0d93201faf849abf510"
+    }
+  ]
+}
