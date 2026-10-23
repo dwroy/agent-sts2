@@ -4768,3 +4768,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T08:06:08+08:00 [ops] 处理07:56十五件重复异议：逐条核原文SHA、67份原始证据/收件箱窗口及通知CLI，均与06:43一致。原ops_forwarded真实写入、watcher接收与Roy可见转达证据保留；原watcher身份核实且空闲，已实际提交一行提醒，提交不代已读或角色ACK。正式watcher_received/roy_notified仍受原手动任务白名单限制，十五条继续pending，不重复同一失败CLI、不代其他角色登记。D1牌堆提取、D2配对增量、D3退出HP口径及EXPOSE/钢铁风暴/SPORE_MIND限制原样保留；#27拿牌因果、外部分母、单战支持边界不升级为收益或shipped。三条并行账本已由原ops当前授权清单核回，原学习者冻结check rc1保留，现有结构/局号check rc0不代逐帧来源验证。本轮仅核验与转达，无新学习/full/dataset/发布/对局操作，不关闭科学父；阻塞沿原通知链处理。原件paper/materials/20261023-0756-ops/notices-audit.json、watcher-reminder-send.json；原账本核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
+
+
+- 2026-10-23T08:39:58+08:00 [ops] 已核#26最新主管评论6354550608（dwroy/[Claude]）并更新常驻发布顺序：#36漏洞补交→#46→#26提示→#42工具剩余→#35→#28→#37（续#20）。旧顺序原件保留，#26由原issue会话实施，ops仅登记和后续发布运行核验。补交范围限定战后reward/card拿牌及跳过题：候选附现成映射的精确ID，缺映射仅省略该牌ID；增加一句可选外部真人Silent A10/v0.111观察统计导航。保持不强制调用、不代查、不预塞结果、不排序、不改预算，商店和方向题此次不扩。验收沿原owner固定测试覆盖提示/ID/缺映射与字节上限，正式发布后读首批自然局调用次数及题型；先前零调用诊断不当因果收益，也不替代自然采用。本轮未改产品或live、未开模型/full/验收局，不提前合入#26，也不据排位关闭父要求。原件paper/materials/20261023-issue26-queue-ops/issue26-decision-readback.json、instruction-original.md；短清单notes/ops-current.md。
