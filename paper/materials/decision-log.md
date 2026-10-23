@@ -6402,3 +6402,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:45:03+08:00 [ops] 本轮16项重复学习通知原文未变，32处原投递及watcher原读取/转达回执均核同；CLI来源兼容仍原SHA/原rc2，正式ACK与Roy已读继续pending，不重复提醒正在工作的既有watcher或代填确认。000402原wrapper仍缺。原件paper/materials/20261024-0043-notices-ops/receipt.json。
 
 - 2026-10-24T00:45:04+08:00 [watcher] #50 R421接续：保49按需提示/中位耗时和42两叶；隔离树b0988d7c1bb49b701fd65af801e7439a9c4cca4c修旧v2/恒定工具断言，tsc0、5文件103过，2363输入SHA未变，两轮93过/10败原件保留；仅记录，未full/产品合入/live，等原ops35实际发布；材料paper/materials/20261024-issue50-r421-preflight/。
+
+- 2026-10-24T00:50:28+08:00 [watcher] 按发布顺序接续核6个review项，无新补交；#35已释放知识锁并冻结469知识文件，R421净12叶31a3ff5d的tsc0/固定Python回归0，00:48原worker3525747进入唯一full，未发布。#50已审树b0988d7c与103项结果保留，待35实际发布后按最新main/live重组；本轮不重测、不合产品、不写live，顺序35→50→28→37→20父及39/43保持。原件paper/materials/20261024-integrator-queue-readback/readback.json。
