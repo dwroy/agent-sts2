@@ -131,6 +131,20 @@ def available_worktree(worktree):
     return result.returncode == 0 and not result.stdout.strip()
 
 
+def feature_worktree(state, root, learner_task, request_id, alive):
+    """The original feature retry/tree gates, also used by deferred priority checks."""
+    prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request_id]
+    if (any(batch.get("state") in ("done", "awaiting_review") or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
+            or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
+        return None
+    worktree = os.path.join(root, ".worktrees", learner_task)
+    if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
+            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
+            or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
+        return None
+    return worktree
+
+
 def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
     if character != "silent" or reason not in ("ops", "calibration-refresh", "core-builds"):
@@ -166,14 +180,8 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
     if request is None:
         return False, None
     key = "feature:" + request["request_id"]
-    prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
-    if (any(batch.get("state") in ("done", "awaiting_review") or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
-            or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
-        return True, None
-    worktree = os.path.join(root, ".worktrees", learner_task)
-    if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
-            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
-            or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
+    worktree = feature_worktree(state, root, learner_task, request["request_id"], alive)
+    if worktree is None:
         return True, None
     batch_id = stamp + "-fix-batch"
     if batch_id in state["batches"]:
@@ -425,8 +433,7 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
     request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
                "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
-    prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
-    if len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior):
+    if feature_worktree(state, root, request["task"], request["request_id"], alive) is not None:
         state["calibration_ready"][character] = request["request_id"]
     _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
     return result

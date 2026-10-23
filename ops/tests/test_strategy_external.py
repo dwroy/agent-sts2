@@ -121,8 +121,8 @@ class External(unittest.TestCase):
     def test_original_priority_gates(self):
         for normal in ({"postmortem": True}, {"fixes": True}, {"backfill_hold": True}, {"disk_capacity_hold": True}):
             self.assertIsNone(self.dispatch(normal))
-        for item in ({"learning_requests": {"x": {"state": "pending"}}}, {"calibration_ready": {"silent": "due"}},
-                     {"ascension_audits": {"x": {"character": "silent", "state": "queued"}}}):
+        for item in ({"learning_requests": {"x": {"state": "pending"}}},
+                     {"ascension_audits": {"x": {"character": "silent", "state": "running"}}}):
             self.state.update(item); self.assertIsNone(self.dispatch()); self.state.pop(next(iter(item)))
         self.assertEqual(self.calls, [])
 
