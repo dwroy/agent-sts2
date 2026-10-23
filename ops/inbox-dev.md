@@ -6254,3 +6254,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T18:36:33+08:00 [ops/dataset] 171301四局真实复盘的唯一dataset --no-raw已实际结束，rc0且source_checks_passed=true；实际生成字节在原写锁内冻结SHA与Git blob，成本来源保留自身切点。四节复盘、28条本批账本追加及四条pending提案已由先行受控记录提交精确持久化，没有新增经验ID；斗篷生成误记抽牌仅旧0461再次复现，沿原f4eb策略链去重，未另派学习或改变机制。当前提交只含实际生成物、自有双通知与回执，并行源码和记录保持；不重模型、full、finish或旧任务，无行为版本或live经验发布。原171301回收请求此前因postmortem not settled保留，后续由原回收器核真实入库和提交门，不因dataset成功代称已回收。174301空修复failed/rc0及原候选链保留，十五条异议正式角色ACK仍pending，科学父不因数据事务结束而关闭。后续只沿本终局事件核实际生成物和提交，不再重建本切点。
 原件：paper/materials/20261023-1804-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-23T18:52:58+08:00 [ops/#49+#26边界发布准备] 已实读主管准许复用的49/26净发布交接，19叶逐blob与预像核同，264模块及1496字面导入无缺；brain保持live未含35构筑理由的原行为，不整抄main。原唯一full6490过、1环境败、2跳与原Git夹具单项补验分账保留。发布前发现live已有53份知识自然更新，保最新469份，在独立净产品树补验tsc及原93文件1263项全过，实际rk九ID、来源与可信度同原回执，未重full。另用48既有artifact_copies保存两份被49更新的合同原Git字节，原输入SHA、18:19:29切点、开关与进度不变。当前局1945293继续运行，只持有原LLM_DRAIN下一局准入位，有限事务worker以pidfd等其自然终局，再核K/L、知识漂移与绑定，精确发布、登记统一号及双通知后释放自有门；没有发停止信号、重启或新模型/实验局。实际源码发布、正式编号和原18局/首批自然验收仍pending，科学父保持。
+原件：paper/materials/20261023-issue49-26-publication-ops/preflight.json、supplement-checks.json、issue48-compatibility.json、natural-boundary.json、worker-launch.json、publication-state.json。

@@ -1,0 +1,515 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "brain-strategies-v1.schema.json",
+  "title": "Brain text strategies v1",
+  "description": "Runtime additionally validates unique ids, min<=max, whitespace-only text, UTF-8 byte caps and file size. Runtime also checks source/evidence agreement, conflict roles and external-only confidence <=0.49; old own evidence without type stays valid.",
+  "type": "object",
+  "required": [
+    "schema",
+    "character",
+    "entries"
+  ],
+  "properties": {
+    "schema": {
+      "const": "brain-strategies-v1"
+    },
+    "character": {
+      "const": "silent"
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "trigger",
+          "strategy",
+          "evidence",
+          "source",
+          "confidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question_types"
+            ],
+            "properties": {
+              "question_types": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "card_reward",
+                    "event",
+                    "rest",
+                    "shop",
+                    "act_plan"
+                  ]
+                }
+              },
+              "acts": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3
+                }
+              },
+              "floor": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "min": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "max": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "bosses": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "hp_ratio": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "min": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "max": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "deck_size": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "min": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "max": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "deck_cards": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "count"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "count": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "properties": {
+                        "min": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "strategy": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Runtime also enforces <=1200 UTF-8 bytes."
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ownEvidence"
+                },
+                {
+                  "$ref": "#/$defs/externalAggregate"
+                }
+              ]
+            }
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^(own|mixed|external:\\S+)$"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "url",
+              "version",
+              "sha256",
+              "license"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "^https?://"
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "license": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "evidence_status": {
+            "enum": [
+              "aligned",
+              "conflict",
+              "unassessed"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "source": {
+                  "const": "mixed"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "evidence_status"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "evidence": {
+                  "not": {
+                    "contains": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/ownEvidence"
+                        },
+                        {
+                          "properties": {
+                            "role": {
+                              "not": {
+                                "const": "contradict"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "confidence": {
+                  "maximum": 0.49
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "allOf": [
+                {
+                  "properties": {
+                    "evidence": {
+                      "contains": {
+                        "type": "object",
+                        "required": [
+                          "role"
+                        ],
+                        "properties": {
+                          "role": {
+                            "const": "contradict"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "evidence": {
+                      "contains": {
+                        "$ref": "#/$defs/externalAggregate"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "required": [
+                "evidence_status"
+              ],
+              "properties": {
+                "evidence_status": {
+                  "const": "conflict"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "ownEvidence": {
+      "type": "object",
+      "required": [
+        "run",
+        "floor"
+      ],
+      "properties": {
+        "run": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[0-9A-Z]{12}$"
+        },
+        "floor": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "const": "own"
+        },
+        "role": {
+          "enum": [
+            "support",
+            "contradict",
+            "repeat"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalAggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "source",
+        "url",
+        "version",
+        "dataset_sha256",
+        "downloaded_at",
+        "filters",
+        "statistic",
+        "denominator",
+        "design",
+        "limitations",
+        "license"
+      ],
+      "properties": {
+        "type": {
+          "const": "external_aggregate"
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^external:\\S+$"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://[^\\s/]+"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "downloaded_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "format": "date"
+        },
+        "filters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "character",
+            "ascension",
+            "criteria"
+          ],
+          "properties": {
+            "character": {
+              "const": "silent"
+            },
+            "ascension": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "criteria": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "statistic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "value",
+            "unit"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "denominator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "n"
+          ],
+          "properties": {
+            "unit": {
+              "enum": [
+                "runs",
+                "players",
+                "offers",
+                "fights",
+                "rooms",
+                "rewards",
+                "cards"
+              ]
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "interval": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "low",
+            "high",
+            "method"
+          ],
+          "properties": {
+            "low": {
+              "type": "number"
+            },
+            "high": {
+              "type": "number"
+            },
+            "method": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "design": {
+          "const": "observational"
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "support",
+            "contradict"
+          ]
+        }
+      }
+    }
+  }
+}
