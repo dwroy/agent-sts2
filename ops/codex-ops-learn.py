@@ -426,6 +426,10 @@ def cmd_finish(args):
             boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
         else:
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
+        if batch.get("external_source"):
+            import strategy_external_jobs
+            batch["external_finished_at"] = time.time()
+            strategy_external_jobs.reconcile(state, DIR)
         if batch.get("backfill_source"):
             import strategy_backfill_jobs
             batch["backfill_finished_at"] = time.time()

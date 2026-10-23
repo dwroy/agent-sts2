@@ -3,6 +3,16 @@
 args=()
 tail_args=()
 role_effort=high
+role_tier=default
+if [ -n "${LEARNER_EXTERNAL_SERVICE_TIER:-}" ]; then
+  case "$LEARNER_EXTERNAL_SERVICE_TIER" in ultrafast|fast|default) ;; *) exit 2 ;; esac
+  # Acceleration belongs only to a registered external batch, never shared config.
+  [ -n "${LEARNER_STATE_FILE:-}" ] && [ -n "${CODEX_OPS_ROOT:-}" ] && [ -n "${LEARNER_BATCH_ID:-}" ] \
+    && [ -n "${LEARNER_EXTERNAL_SOURCE:-}" ] || exit 2
+  python3 "$(dirname "${BASH_SOURCE[0]}")/strategy_external_jobs.py" registered \
+    "$CODEX_OPS_ROOT" "$(dirname "$LEARNER_STATE_FILE")" "$LEARNER_BATCH_ID" silent "$PWD" "$LEARNER_EXTERNAL_SOURCE" || exit 2
+  role_tier="$LEARNER_EXTERNAL_SERVICE_TIER"
+fi
 read_role_effort() {
   local value="${1#*=}"
   value="${value#\"}"; value="${value%\"}"
@@ -31,6 +41,6 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 policy=(-c 'model="gpt-6.1-sol"' -c "model_reasoning_effort=\"$role_effort\""
-        -c 'service_tier="default"' -c 'model_context_window=512000'
+        -c "service_tier=\"$role_tier\"" -c 'model_context_window=512000'
         -c 'model_auto_compact_token_limit=460800')
 exec "$codex_bin" "${args[@]}" "${policy[@]}" "${tail_args[@]}"

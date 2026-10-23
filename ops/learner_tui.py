@@ -274,7 +274,7 @@ def attention(directory, batch, stage):
 
 
 REGISTRATION_FIELDS = ("pid", "pane", "started", "task", "character", "worktree", "key", "runs",
-                       "learner_task", "feature_request", "research_request", "implementation_request", "backfill_source", "backfill_binding")
+                       "learner_task", "feature_request", "research_request", "implementation_request", "backfill_source", "backfill_binding", "external_source", "external_binding")
 
 
 def apply_deferrals(state, directory):
