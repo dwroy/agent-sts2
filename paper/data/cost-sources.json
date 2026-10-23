@@ -2,9 +2,9 @@
   "cuts": {
     "/home/dw/Projects/agent-sts2/logs/runs.jsonl": 449679,
     "/home/dw/Projects/agent-sts2/logs/run-config.jsonl": 3194237,
-    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": 60476569,
-    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": 1544892695,
-    "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl": 3151061940,
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": 60535536,
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": 1546754367,
+    "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl": 3153502038,
     "/home/dw/Projects/agent-sts2/learner/runs/20261004-223128-fix-batch.jsonl": 239611,
     "/home/dw/.codex/sessions/2026/10/04/rollout-2026-10-04T22-31-28-01a10753-b441-7470-9b40-456c1c884bdc.jsonl": 675813,
     "/home/dw/Projects/agent-sts2/learner/runs/20261004-224302-postmortem.jsonl": 1205573,
@@ -2636,8 +2636,8 @@
     "/home/dw/Projects/agent-sts2/learner/runs/20261023-234306-ac968361-900e-45f5-9416-97834a9c46ac-postmortem.jsonl": 1797806,
     "/home/dw/Projects/agent-sts2/learner/runs/20261023-235639-b9546efc-2b60-4539-a495-265375f706ef-experience-update.jsonl": 385287,
     "/home/dw/Projects/agent-sts2/learner/runs/20261024-004325-51acf5d8-4cce-46f3-a576-d11e8e5af9ad-fix-batch.jsonl": 1301342,
-    "/home/dw/Projects/agent-sts2/learner/runs/20261024-014307-82e29d01-df07-4d66-a989-dfa1da442eb0-postmortem.jsonl": 2081753,
-    "/home/dw/Projects/agent-sts2/ops/codex-ops/wakes.jsonl": 2991950,
+    "/home/dw/Projects/agent-sts2/learner/runs/20261024-014307-82e29d01-df07-4d66-a989-dfa1da442eb0-postmortem.jsonl": 2311284,
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/wakes.jsonl": 2992786,
     "/home/dw/.codex/sessions/2026/10/04/rollout-2026-10-04T21-40-33-01a10725-17b7-7702-a5ab-917d414a0c77.jsonl": 636144617,
     "/home/dw/Projects/agent-sts2/paper/materials/session/codex/ops/rollout-01a12bec-c83f-7c21-b76f-eb8e5304eb8f.jsonl": 328283326,
     "/home/dw/Projects/agent-sts2/paper/materials/session/codex/ops/rollout-01a14a9f-38e7-78e2-95d0-ba274d4b3e19.jsonl": 17067726,
@@ -2656,7 +2656,7 @@
     "/home/dw/.claude/projects/-home-dw-Projects-agent-sts2/e331f6c7-96a3-43f1-bdf3-552e7b1e0575.jsonl": 47097,
     "/home/dw/.claude/projects/-home-dw-Projects-agent-sts2/e90e91aa-4406-4f95-ae79-7983f3e19982.jsonl": 1930906,
     "/home/dw/Projects/agent-sts2/logs/subscription-usage-snapshots.jsonl": 6403,
-    "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl": 1978283
+    "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl": 1979195
   },
   "bad_lines": {
     "/home/dw/Projects/agent-sts2/logs/runs.jsonl": 0,
@@ -5599,7 +5599,15 @@
       "provider": "codex",
       "start": "2026-10-23T17:42:32+00:00",
       "reset": "2026-10-30T17:42:32+00:00",
-      "observed": "2026-10-23T18:05:01.509000+00:00",
+      "observed": "2026-10-23T18:15:02.167000+00:00",
+      "used_percent": 2,
+      "usd": 2.3076923076923075
+    },
+    {
+      "provider": "codex",
+      "start": "2026-10-23T17:42:33+00:00",
+      "reset": "2026-10-30T17:42:33+00:00",
+      "observed": "2026-10-23T18:10:02.113000+00:00",
       "used_percent": 1,
       "usd": 1.1538461538461537
     }
@@ -7635,22 +7643,22 @@
             "run_ids": []
           }
         },
-        "total_tokens": 12739798320.047619,
-        "known_estimated_usd": 1442.6893043772386,
+        "total_tokens": 12747395334.047619,
+        "known_estimated_usd": 1444.4167500246324,
         "cost_coverage": "partial",
-        "usd_per_run": 3.1568693750048986,
-        "usd_per_win": 206.09847205389124,
-        "cumulative_tokens": 14046345461.0,
-        "cumulative_known_usd": 1520.2764334468595,
+        "usd_per_run": 3.160649343598758,
+        "usd_per_win": 206.3452500035189,
+        "cumulative_tokens": 14053942475.0,
+        "cumulative_known_usd": 1522.0038790942533,
         "component_token_share": {
-          "brain:codex": 0.13402661667831,
-          "brain:deepseek": 0.00102948034737421,
-          "combat:jev": 0.03820984341910528,
-          "learner:experience-update": 0.027524250791961465,
-          "learner:postmortem": 0.15260649031944276,
-          "learner:strategy-proposal": 0.27515571432017116,
-          "observer:claude": 0.03328622199086861,
-          "ops:codex": 0.33816138213276653
+          "brain:codex": 0.13394674137385795,
+          "brain:deepseek": 0.0010288668121062768,
+          "combat:jev": 0.038187071652184594,
+          "learner:experience-update": 0.027507847274762343,
+          "learner:postmortem": 0.15311150802602927,
+          "learner:strategy-proposal": 0.2749917308742128,
+          "observer:claude": 0.03326638453483582,
+          "ops:codex": 0.33795984945201096
         }
       }
     ],

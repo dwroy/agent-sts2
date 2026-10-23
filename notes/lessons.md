@@ -34122,3 +34122,356 @@ Boss时钟模型：F16休息候选（d505976）以62HP对['CEREMONIAL_BEAST']、
 
 证据边界：66WD8GWWF39D的60条Jev原始行中答案60、错误0分列，不以请求数当成功调用数；重点核读一题完整主題面（66WD8GWWF39D-full-question.json），其余59题做机械字段／身份／答案错误与回执后继索引，并按上述问题精读相关候选，不声称全部题面全文精读，覆盖与未读原因见本批report.md。V6配置on、reflex／direction_replan=off；v6-build冻结前缀无本局匹配，entries／jev_answer／fallback／unknown均缺本局原行，不补零。construction-log无匹配，改牌组回查decisions及states；run-plans仅方向基线／乘载记录，不冒充构筑推理。旧deepseek-reasoning本批同窗无记录。runs.code=current，run-config commit=null／ENOBUFS，当前live 902206965e0698253fab1f9a135c9666bdd1ed3b仅为源码对照，不能充作本局确切提交。外部open_book附件标external:spire-codex/v0.111.0并保留原URL／SHA／许可，本文未据附件补游戏事实；独立focus作答、完整分源伤害与未执行反事实均未记录。提案登记不证明发布、下一局消费或自然收益。
 
+
+## NGP83Z1W5GYR（A10，静默猎手，第30层，死于虱虫之祖 LOUSE_PROGENITOR：四试10/75空药，末试T6仅2血面对13攻击，敌毒后44/138血）
+
+- [赢的精英战耗血必须接到下一战入口；打法（Codex路线／构筑／休息）] F25、F27两次休息把10血补到54，F29残杀千足虫 DECIMILLIPEDE_SEGMENT_FRONT／MIDDLE／BACK胜战又54→10，F30虱虫之祖 LOUSE_PROGENITOR四试均10/75血、空药入场。多营火路线确有恢复，但没有把强制精英的44净HP损失抹掉；未执行路线不能证明更安全。（之前见过：silent-0019）
+- [暂时减力与后续成长分开核；打法（Jev出牌／代码推演）] 末试虱虫之祖 LOUSE_PROGENITOR的T3力量7、18挡；萎靡+ MALAISE后力量3、虚弱4，意图23→14。T6又到力量10、18挡，尖啸+ PIERCING_WAIL暂降到2、意图19→13；2血最终未活过该轮。毒雾+ NOXIOUS_FUMES直到T5才建立3层，不能把持有能力牌写成开场已生效。（之前学过：silent-0316，S1.exp197）
+- [全败推演的最优仍只是有限模型排序；打法（Jev出牌／代码SL）] 末试F30T2完整题的五线均5轮24/24死亡；Jev以0.89选触媒 ACCELERANT＋蛇咬 SNAKEBITE，预测该轮损0、敌114→101，实际后继相符。最终活到T6、敌44/138而死；不是题面预计约T3结束的直接复现，更不是所有可行打法已穷尽。（之前学过：silent-0239，S1.exp183）
+
+- [记录] 核证时间2026-10-24T02:01:40+08:00，本局runs.code=current；run-config的commit=null／ENOBUFS，不能恢复精确运行源码。原始决策共562行；Jev低信心（<0.35）6次，含选牌。可读rollout best／tied题中原答选中比例84/84（100.00%），分母不含无可用最优标记题，不混用code rank或整场Boss并列；替换前选择不等于执行。代码自行发起计划／斩杀／least-loss／兜底的尝试-层-回合去重92个，排除续链和普通end_turn，可能与Jev同轮重叠，定义及原始键见audit-details.json。HP护栏替换0次，具体代价见经验行及下文；无替换局不补反事实收益。末试F30T2完整题04746a14-a7ef-41ad-a707-41834d8ceac2无独立focus，单一目标虱虫；动作触媒／蛇咬回执completed，gate_reject未记录，selection_dispatch只证明单动作返回，whole_plan_executed=null。F23两试首试T6判死、次试胜；F30前三试T4／T6／T6判死，末试T6实死。
+大脑记录实际是Codex，DeepSeek旧命名calls／tokens不是引擎证明；同决策时间窗deepseek-reasoning匹配0行。路线／休息原话按下列原决策引用，未读全部brain题面，不以短理由当完整推理。
+- 大脑F1 map/route-plan：Codex planned: 四火两精英，先补强再借海螺取遗物，保留首领前恢复 | route plan: r1c6 普通战 → r2c6 普通战 → r3c6 普通战 → r4c6 商店 → r5c6 普通战 → r6c6 休息 → r7c6 精英 → r8c6 问号 → r9c5 宝箱 → r10c6 休息 → r11c6 普通战 → r12c5 休息 → r13c4 普通战 → r14c4 精英 → r15c4 休息 → r16c3 Boss（d506136）
+- 大脑F7 rest/plan：Codex decided o0: Heal to 59 before the forced elite; preserve survival now and upgrade Fumes at a later campfire. Keep the safer, rest-heavy route. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 10; not shown to Codex)（d506247）
+- 大脑F11 rest/plan：Codex decided o1:c17: Upgrade Noxious Fumes for stronger sustained poison with Accelerant. Current HP covers the next hallway; two later campfires allow recovery. | Codex chose 锻造 (SMITH): upgrade 毒雾 (code's fallback order: 6.05, rank 1 of 11; not shown to Codex)（d506298）
+- 大脑F13 rest/plan：Codex decided o0: Heal to 63 HP: a hallway and forced elite precede the next campfire. Survival buffer matters more than these upgrades. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 10; not shown to Codex)（d506325）
+- 大脑F16 rest/plan：Codex decided o0: 休息至58血，保障毒雾与触媒启动。当前防御薄弱、下一站强制首领，回血比单卡升级更能降低暴毙风险。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 10; not shown to Codex)（d506384）
+- 大脑F18 event/act-plan：Codex decided o0: 额外能量支撑毒防长战；双店三火补强防御，避早精英。 | Codex chose 佩尔之肉 (code's fallback order: 0, rank 1 of 3; not shown to Codex)（d506424）
+- 大脑F25 rest/plan：Codex decided o0: 回血至32，配合下一火恢复可提高精英进场血量；当前生存压力远高于单卡升级收益。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 13; not shown to Codex)（d506547）
+- 大脑F27 rest/plan：Codex decided o0: 回血至54，优先撑过强制精英与后续走廊；32血无药，升级不足以替代眼前的生存缓冲。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 13; not shown to Codex)（d506554）
+- 构筑原答F2：Codex decided card1: 蛇咬补足持续伤害，保留便于择机施放，适合精英与首领；原路线休息充足，无需改线。 | Codex chose 蛇咬 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d506159）
+- 构筑原答F3：Codex decided card2: 刀刃之舞直接补足前期爆发，不依赖额外组件；终结技和蜃景目前条件不足。原路线休息充足，保持不变。 | Codex chose 刀刃之舞 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d506184）
+路线入口投影／Boss时钟：F16所选回血题原文“打本幕 boss（同族，A10）的模拟：当前牌组胜率 75%；选这个（进场 58 血） 92%（+17 ± 3.1），赢局掉血中位 45，约 9 回合；boss 平均剩血 49（当前牌组 142，−93.3 ± 9.9）（34 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；预算截止，n=34；差值对同前缀基准）；回血后 HP 58/75，进场血量按它投影”（d506384）；实到F17为58，T7胜、净损38。这是投影对实到和模型对实打，校准率不作自然胜率。旧式DPR需要／估计单标量未记录，不用不同窗口自行补齐。
+用时：首决策2026-10-23T15:40:03.461Z至末决策2026-10-23T16:13:58.433Z，差2034.972秒（含SL；不是纯思考时延）。runs.tokens=918071；脑输入898814、输出4940、命中742016／898814＝82.56%；token账分开，不把旧ds字段当DeepSeek实际调用。
+
+实盘资源链（包括赢战；HP净变化不是敌人总伤害，SL截断只报末见HP）：
+
+|窗口／层|进→离HP（上限）|进→离药水|净HP损失／边界|原states行／时间|
+|---|---|---|---|---|
+|1／F2|56→53（70→70）|空→空|3；实退场；首帧T1|s525365→s525386；2026-10-23T15:40:15.633Z→2026-10-23T15:41:04.803Z|
+|2／F3|53→53（70→70）|空→空|0；实退场；首帧T1|s525391→s525412；2026-10-23T15:41:31.899Z→2026-10-23T15:42:15.572Z|
+|3／F4|53→47（70→70）|空→空|6；实退场；首帧T1|s525417→s525440；2026-10-23T15:42:46.628Z→2026-10-23T15:43:40.710Z|
+|4／F6|47→38（70→70）|槽0 FIRE_POTION→空|9；实退场；首帧T1|s525451→s525473；2026-10-23T15:44:50.317Z→2026-10-23T15:45:33.642Z|
+|5／F8|59→40（70→70）|槽0 EXPLOSIVE_AMPOULE→空|19；实退场；首帧T1|s525482→s525519；2026-10-23T15:46:36.918Z→2026-10-23T15:48:17.494Z|
+|6／F12|45→41（75→75）|空→空|4；实退场；首帧T1|s525536→s525554；2026-10-23T15:49:41.416Z→2026-10-23T15:50:17.823Z|
+|7／F14|63→53（75→75）|槽0 ATTACK_POTION→空|10；实退场；首帧T1|s525563→s525588；2026-10-23T15:51:12.696Z→2026-10-23T15:52:22.262Z|
+|8／F15|53→36（75→75）|空→空|17；实退场；首帧T1|s525593→s525614；2026-10-23T15:52:48.844Z→2026-10-23T15:53:31.817Z|
+|9／F17|58→20（75→75）|槽0 DUPLICATOR→空|38；实退场；首帧T1|s525624→s525656；2026-10-23T15:54:26.426Z→2026-10-23T15:56:53.004Z|
+|10／F19|64→54（75→75）|槽0 SWIFT_POTION→空|10；实退场；首帧T1|s525665→s525678；2026-10-23T15:57:18.957Z→2026-10-23T15:57:46.664Z|
+|11／F22|54→34（75→75）|槽0 SWIFT_POTION；槽1 HEART_OF_IRON→空|20；实退场；首帧T1|s525696→s525722；2026-10-23T15:59:39.046Z→2026-10-23T16:01:26.445Z|
+|12／F23|34→10（75→75）|空→空|未记录；SL截断，非实退场；首帧T1|s525727→s525752；2026-10-23T16:01:58.543Z→2026-10-23T16:03:22.356Z|
+|13／F23|34→10（75→75）|空→空|24；实退场；首帧T1|s525753→s525781；2026-10-23T16:03:35.418Z→2026-10-23T16:04:59.292Z|
+|14／F29|54→10（75→75）|空→空|44；实退场；首帧T1|s525803→s525842；2026-10-23T16:06:48.203Z→2026-10-23T16:09:05.043Z|
+|15／F30|10→1（75→75）|空→空|未记录；SL截断，非实退场；首帧T1|s525848→s525864；2026-10-23T16:09:21.218Z→2026-10-23T16:10:10.335Z|
+|16／F30|10→1（75→75）|空→空|未记录；SL截断，非实退场；首帧T1|s525865→s525889；2026-10-23T16:10:20.384Z→2026-10-23T16:11:30.773Z|
+|17／F30|10→1（75→75）|空→空|未记录；SL截断，非实退场；首帧T1|s525890→s525915；2026-10-23T16:11:41.260Z→2026-10-23T16:12:36.226Z|
+|18／F30|10→0（75→75）|空→空|10；实退场；首帧T1|s525916→s525940；2026-10-23T16:12:45.182Z→2026-10-23T16:13:58.433Z|
+
+战外HP变化与恢复逐项：
+- F7 REST 38/70→F7 REST 59/70；战外实变，来源与上述休息／事件决策联核；s525479→s525480，2026-10-23T15:46:35.432Z。
+- F9 EVENT 40/70→F9 EVENT 45/75；战外实变，来源与上述休息／事件决策联核；s525525→s525526，2026-10-23T15:49:10.153Z。
+- F13 REST 41/75→F13 REST 63/75；战外实变，来源与上述休息／事件决策联核；s525560→s525561，2026-10-23T15:51:11.275Z。
+- F16 REST 36/75→F16 REST 58/75；战外实变，来源与上述休息／事件决策联核；s525621→s525622，2026-10-23T15:54:24.923Z。
+- F17 MAP 20/75→F18 EVENT 64/75；战外实变，来源与上述休息／事件决策联核；s525661→s525662，2026-10-23T15:57:16.847Z。
+- F23 COMBAT 10/75→F23 COMBAT 34/75；SL恢复，非回血；s525752→s525753，2026-10-23T16:03:35.418Z。
+- F25 REST 10/75→F25 REST 32/75；战外实变，来源与上述休息／事件决策联核；s525790→s525791，2026-10-23T16:05:58.773Z。
+- F27 REST 32/75→F27 REST 54/75；战外实变，来源与上述休息／事件决策联核；s525797→s525798，2026-10-23T16:06:22.203Z。
+- F30 COMBAT 1/75→F30 COMBAT 10/75；SL恢复，非回血；s525864→s525865，2026-10-23T16:10:20.384Z。
+- F30 COMBAT 1/75→F30 COMBAT 10/75；SL恢复，非回血；s525889→s525890，2026-10-23T16:11:41.260Z。
+- F30 COMBAT 1/75→F30 COMBAT 10/75；SL恢复，非回血；s525915→s525916，2026-10-23T16:12:45.182Z。
+
+末试逐回合观测（伤害缺源时只报可见下界；四同ID身份模糊时0下界不表示无伤害，复活新增也不能抵作负伤）：
+
+|末试回合|可见存活敌HP总量（首→下轮／退出）|可见扣血下界／新增HP|边界|
+|---|---|---|---|
+|T1|129→114|15／0|无已标身份缺口；s525916→s525920|
+|T2|114→101|13／0|无已标身份缺口；s525920→s525923|
+|T3|101→92|9／0|无已标身份缺口；s525923→s525926|
+|T4|92→67|25／0|无已标身份缺口；s525926→s525932|
+|T5|67→52|15／0|无已标身份缺口；s525932→s525936|
+|T6|52→44|8／0|无已标身份缺口；s525936→s525940|
+每回合完整分源总伤害及未采到的中间死亡／回合末补挡过程未记录。上表为实见HP端点与局部扣血下界，击杀所需按当时各存活体HP及挡核，死亡末态缺口已在标题／经验中说明；不把HP差冒充所有伤害。机制：虱虫之祖力量7→3→10→2、两次建18挡与临时尖啸／虚弱见上述实帧；末试触媒1令T2蛇咬7毒实结13（114→101），T5才建毒雾3。机制均支持既有0316，毒的触发范围不外推。
+
+药水：新增／补充槽位观测7瓶次，SL恢复0瓶次另算；饮用动作7次，主动丢弃0次（完整决策扫描）；没有瓶UID，不把恢复同槽记新拿药。取药／购买与饮用分别核对，pending不当稳定执行：
+- F5TNone：{"action": "buy_potion", "option_index": 2}；identity={"option": {"id": "FIRE_POTION"}, "from": "decision"}；completed: Action completed.；d506216@2026-10-23T15:44:48.489Z。
+- F6T1：{"action": "use_potion", "option_index": 0, "target_index": 0}；identity={"potion": {"id": "FIRE_POTION"}, "target": {"id": "VINE_SHAMBLER"}, "turn": 1, "from": "decision"}；completed: Action completed.；d506227@2026-10-23T15:45:03.471Z。
+- F8T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "EXPLOSIVE_AMPOULE"}, "turn": 1, "from": "decision"}；completed: Action completed.；d506254@2026-10-23T15:46:48.504Z。
+- F14T4：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "ATTACK_POTION"}, "turn": 4, "from": "decision"}；pending (unstable): Action queued but state is still transitioning.；d506341@2026-10-23T15:52:07.784Z。
+- F17T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "DUPLICATOR"}, "turn": 2, "from": "line", "hand": "DEFEND_SILENT,DEFEND_SILENT,DEFEND_SILENT,SNAKEBITE", "enemies": "0:KIN_FOLLOWER|1:KIN_FOLLOWER|2:KIN_PRIEST"}；completed: Action completed.；d506396@2026-10-23T15:55:40.108Z。
+- F19T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "SWIFT_POTION"}, "turn": 1, "from": "decision"}；completed: Action completed.；d506427@2026-10-23T15:57:24.254Z。
+- F21TNone：{"action": "buy_potion", "option_index": 1}；identity={"option": {"id": "HEART_OF_IRON"}, "from": "decision"}；completed: Action completed.；d506450@2026-10-23T15:59:36.257Z。
+- F22T3：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "SWIFT_POTION"}, "turn": 3, "from": "decision"}；completed: Action completed.；d506464@2026-10-23T16:00:27.459Z。
+- F22T5：{"action": "use_potion", "option_index": 1}；identity={"potion": {"id": "HEART_OF_IRON"}, "turn": 5, "from": "line", "hand": "PREDATOR", "enemies": "0:TUNNELER"}；completed: Action completed.；d506476@2026-10-23T16:01:15.417Z。
+- 新增／补充：F5TNone 槽0 FIRE_POTION，s525447→s525448@2026-10-23T15:44:48.721Z。
+- 新增／补充：F6T4 槽0 EXPLOSIVE_AMPOULE，s525474→s525475@2026-10-23T15:45:34.076Z。
+- 新增／补充：F12T4 槽0 ATTACK_POTION，s525555→s525556@2026-10-23T15:50:18.289Z。
+- 新增／补充：F15T4 槽0 DUPLICATOR，s525615→s525616@2026-10-23T15:53:32.283Z。
+- 新增／补充：F17T7 槽0 SWIFT_POTION，s525657→s525658@2026-10-23T15:56:53.470Z。
+- 新增／补充：F19T2 槽0 SWIFT_POTION，s525679→s525680@2026-10-23T15:57:47.127Z。
+- 新增／补充：F21TNone 槽1 HEART_OF_IRON，s525690→s525691@2026-10-23T15:59:36.491Z。
+
+证据覆盖：Jev原始请求101行，answers=93、error=8分别计；错误是human-pace预算耗尽，不能当空答案或执行失败。所有题逐行机械核身份、答案／错误及decisions执行字段，重点完整题面与后继人工覆盖范围见本批report.md，其他题只机械索引／定向原文窗口，不声称全部全文精读。V6 on而reflex／direction_replan off；冻结v6-build无本局匹配，entries／jev_answer／fallback／unknown都缺原行，不能补零。construction-log无匹配，构筑回查原decisions／states；run-plans共34行，仅作原方向基线／乘载与计划关联，不冒充全部脑推理。offset／bytes／SHA、冻结切点、identity／decision_id关联及已核原字节在本批v6-evidence/evidence-manifest.json、audit-details.json及*-selected.jsonl。外部open_book仅作题面附件，来源external:spire-codex/v0.111.0、URL／SHA／许可保留在原题；本文游戏结论使用本局mod与states，不把外部附件计自有验证。未知身份／历史坏行未分配给本局，缺失不是零。本批只写复盘／账本／提案，不证明正式发布、下一局消费或自然收益。
+
+
+## NMEKQ3BFJ54Z（A10，静默猎手，第17层，死于乐加维林族母 LAGAVULIN_MATRIARCH：四试32/70空药，末试T10仅3血3挡对12攻击，毒后敌107/233血）
+
+- [休息兑现不等于Boss安全；打法（Codex路线／构筑／休息）] F15花园幽灵鳗 PHANTASMAL_GARDENER胜战45→11，F16休息实际11→32，乐加维林族母 LAGAVULIN_MATRIARCH四试均32/70空药入场。两次升级致命毒药 DEADLY_POISON已经完成，不能据本局失败倒推出回血不如锻造或拿毒错误。（之前见过：silent-0020）
+- [灵魂汲取后直伤和牌挡缩水而毒仍推进；打法（Jev出牌）] 末试族母 LAGAVULIN_MATRIARCH在T7后把玩家力量／敏捷0→−2，自己力量0→2。T9防御 DEFEND_SILENT与偏折 DEFLECT合5挡仍挡不住虚弱后9×2；T10中和 NEUTRALIZE、致命毒药+ DEADLY_POISON后敌122血15毒，结毒剩107/233，3血3挡对12攻击阵亡。（之前见过：silent-0030）
+- [校准展示率、原始零胜与实际结局必须分列；打法（代码推演／Jev出牌）] 末试F17T4再打一张致命毒药+ DEADLY_POISON的完整题，Jev0.94选plan1，预计损10、敌229→215，实到22血且敌215。该线整场50样本无赢局，题面同时展示校准win49%；五轮24样本尚无死亡也不等于整场能赢，最后T10阵亡。（之前学过：silent-0239，S1.exp183）
+
+- [记录] 核证时间2026-10-24T02:01:40+08:00，本局runs.code=current；run-config的commit=null／ENOBUFS，不能恢复精确运行源码。原始决策共457行；Jev低信心（<0.35）12次，含选牌。可读rollout best／tied题中原答选中比例77/78（98.72%），分母不含无可用最优标记题，不混用code rank或整场Boss并列；替换前选择不等于执行。代码自行发起计划／斩杀／least-loss／兜底的尝试-层-回合去重78个，排除续链和普通end_turn，可能与Jev同轮重叠，定义及原始键见audit-details.json。HP护栏替换0次，具体代价见经验行及下文；无替换局不补反事实收益。末试F17T4完整题d0e2c1ea-dbfa-46ce-ae66-a7077f5c872d无独立focus，单一目标族母；chosen为再打致命毒药+，completed且无gate_reject记录，selection_dispatch全线认证仍null。前三试均T9判死，第四试T10实死；不能把SL截断算三次实际死亡。
+大脑记录实际是Codex，DeepSeek旧命名calls／tokens不是引擎证明；同决策时间窗deepseek-reasoning匹配0行。路线／休息原话按下列原决策引用，未读全部brain题面，不以短理由当完整推理。
+- 大脑F1 map/route-plan：Codex planned: 先四战补强，双精英配多营火，兼顾成长与容错。 | route plan: r1c5 普通战 → r2c5 普通战 → r3c4 问号 → r4c4 普通战 → r5c3 普通战 → r6c3 休息 → r7c4 普通战 → r8c5 休息 → r9c6 宝箱 → r10c6 休息 → r11c5 精英 → r12c4 休息 → r13c4 普通战 → r14c4 精英 → r15c4 休息 → r16c3 Boss（d506701）
+- 大脑F7 rest/plan：Codex decided o0: 回血至40，优先保障无药过渡；后续营火再升级毒药，不为远期模拟优势承担眼前死亡风险。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 8; not shown to Codex)（d506824）
+- 大脑F9 rest/plan：Codex decided o1:c15: 下个营火前没有战斗，可届时回血；现在升级致命毒药，永久增强持续输出，且Boss相对优势最佳。 | Codex chose 锻造 (SMITH): upgrade 致命毒药 (code's fallback order: 6.05, rank 2 of 9; not shown to Codex)（d506856）
+- 大脑F11 rest/plan：Codex decided o0: 无药且下一场强制精英；回血至55优先确保生存，升级收益不足以抵消当前风险。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 9; not shown to Codex)（d506864）
+- 大脑F13 rest/plan：Codex decided o1:c18: Upgrade Deadly Poison for lasting damage and the best eligible boss margin; 45 HP, opening defenses, and Beetle Juice provide a reasonable survival buffer. | Codex chose 锻造 (SMITH): upgrade 致命毒药 (code's fallback order: 6.05, rank 2 of 9; not shown to Codex)（d506902）
+- 大脑F16 rest/plan：Codex decided o0: Heal to 32 HP. Boss is next with no potions; surviving long enough for poison outweighs every available upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 9; not shown to Codex)（d506992）
+- 构筑原答F2：Codex decided card0: 致命毒药补持续输出，Boss比较指标最佳；循环覆盖未知，暂不押定构筑。 | Codex chose 致命毒药 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d506721）
+- 构筑原答F3：Codex decided card2: Leg Sweep provides immediate block and sustained weakness, supports poison damage, and has the strongest eligible boss margin. | Codex chose 扫腿 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d506749）
+路线入口投影／Boss时钟：F16所选回血题原文“打本幕 boss（乐加维林族母，A10）的模拟：当前牌组胜率 31%；选这个（进场 32 血） 69%（+38.2 ± 11.2），赢局掉血中位 30，约 12 回合；boss 平均剩血 80（当前牌组 157，−76.3 ± 2.5）（200 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；领先停止，n=200；差值对同前缀基准）；回血后 HP 32/70，进场血量按它投影”（d506992）；实到F17为32，末试T10死、净损32。这是投影对实到和模型对实打，校准率不作自然胜率。旧式DPR需要／估计单标量未记录，不用不同窗口自行补齐。
+用时：首决策2026-10-23T16:15:04.450Z至末决策2026-10-23T16:37:37.202Z，差1352.752秒（含SL；不是纯思考时延）。runs.tokens=880484；脑输入560139、输出3838、命中337792／560139＝60.31%；token账分开，不把旧ds字段当DeepSeek实际调用。
+
+实盘资源链（包括赢战；HP净变化不是敌人总伤害，SL截断只报末见HP）：
+
+|窗口／层|进→离HP（上限）|进→离药水|净HP损失／边界|原states行／时间|
+|---|---|---|---|---|
+|1／F2|56→45（70→70）|空→空|11；实退场；首帧T1|s525947→s525965；2026-10-23T16:15:30.161Z→2026-10-23T16:16:21.369Z|
+|2／F3|45→36（70→70）|空→空|9；实退场；首帧T1|s525970→s525993；2026-10-23T16:16:40.734Z→2026-10-23T16:17:31.280Z|
+|3／F5|36→35（70→70）|槽0 DUPLICATOR→空|1；实退场；首帧T1|s526002→s526023；2026-10-23T16:18:11.556Z→2026-10-23T16:18:56.564Z|
+|4／F6|35→19（70→70）|空→空|16；实退场；首帧T1|s526028→s526070；2026-10-23T16:19:17.567Z→2026-10-23T16:21:13.338Z|
+|5／F8|40→34（70→70）|空→空|6；实退场；首帧T1|s526077→s526102；2026-10-23T16:21:54.894Z→2026-10-23T16:22:53.376Z|
+|6／F12|55→45（70→70）|空→空|10；实退场；首帧T1|s526118→s526147；2026-10-23T16:23:53.168Z→2026-10-23T16:25:00.347Z|
+|7／F14|45→45（70→70）|槽0 BEETLE_JUICE→空|0；实退场；首帧T1|s526158→s526185；2026-10-23T16:25:53.274Z→2026-10-23T16:26:58.049Z|
+|8／F15|45→11（70→70）|空→空|34；实退场；首帧T1|s526190→s526257；2026-10-23T16:27:18.828Z→2026-10-23T16:30:13.171Z|
+|9／F17|32→13（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s526266→s526305；2026-10-23T16:30:45.529Z→2026-10-23T16:32:22.938Z|
+|10／F17|32→10（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s526306→s526344；2026-10-23T16:32:30.627Z→2026-10-23T16:34:06.611Z|
+|11／F17|32→13（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s526345→s526382；2026-10-23T16:34:14.283Z→2026-10-23T16:35:43.775Z|
+|12／F17|32→0（70→70）|空→空|32；实退场；首帧T1|s526383→s526427；2026-10-23T16:35:51.522Z→2026-10-23T16:37:37.202Z|
+
+战外HP变化与恢复逐项：
+- F7 REST 19/70→F7 REST 40/70；战外实变，来源与上述休息／事件决策联核；s526074→s526075，2026-10-23T16:21:53.422Z。
+- F11 REST 34/70→F11 REST 55/70；战外实变，来源与上述休息／事件决策联核；s526115→s526116，2026-10-23T16:23:51.718Z。
+- F16 REST 11/70→F16 REST 32/70；战外实变，来源与上述休息／事件决策联核；s526263→s526264，2026-10-23T16:30:44.102Z。
+- F17 COMBAT 13/70→F17 COMBAT 32/70；SL恢复，非回血；s526305→s526306，2026-10-23T16:32:30.627Z。
+- F17 COMBAT 10/70→F17 COMBAT 32/70；SL恢复，非回血；s526344→s526345，2026-10-23T16:34:14.283Z。
+- F17 COMBAT 13/70→F17 COMBAT 32/70；SL恢复，非回血；s526382→s526383，2026-10-23T16:35:51.522Z。
+
+末试逐回合观测（伤害缺源时只报可见下界；四同ID身份模糊时0下界不表示无伤害，复活新增也不能抵作负伤）：
+
+|末试回合|可见存活敌HP总量（首→下轮／退出）|可见扣血下界／新增HP|边界|
+|---|---|---|---|
+|T1|233→233|0／0|无已标身份缺口；s526383→s526385|
+|T2|233→233|0／0|无已标身份缺口；s526385→s526386|
+|T3|233→229|4／0|无已标身份缺口；s526386→s526393|
+|T4|229→215|14／0|无已标身份缺口；s526393→s526397|
+|T5|215→202|13／0|无已标身份缺口；s526397→s526402|
+|T6|202→175|27／0|无已标身份缺口；s526402→s526408|
+|T7|175→164|11／0|无已标身份缺口；s526408→s526410|
+|T8|164→154|10／0|无已标身份缺口；s526410→s526415|
+|T9|154→131|23／0|无已标身份缺口；s526415→s526421|
+|T10|131→107|24／0|无已标身份缺口；s526421→s526427|
+每回合完整分源总伤害及未采到的中间死亡／回合末补挡过程未记录。上表为实见HP端点与局部扣血下界，击杀所需按当时各存活体HP及挡核，死亡末态缺口已在标题／经验中说明；不把HP差冒充所有伤害。机制：灵魂汲取后玩家力量与敏捷各−2、敌力量＋2；T9两格挡牌合5、T10防御仅3，致命毒药+仍加7毒（8→15），最终结15到107。支持既有0030，不能把负力量下技能毒当作被减伤。
+
+药水：新增／补充槽位观测2瓶次，SL恢复0瓶次另算；饮用动作2次，主动丢弃0次（完整决策扫描）；没有瓶UID，不把恢复同槽记新拿药。取药／购买与饮用分别核对，pending不当稳定执行：
+- F5T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "DUPLICATOR"}, "turn": 1, "from": "line", "hand": "ASCENDERS_BANE,DEFEND_SILENT,NEUTRALIZE,STRIKE_SILENT,SURVIVOR", "enemies": "0:SEAPUNK"}；completed: Action completed.；d506757@2026-10-23T16:18:19.535Z。
+- F14T3：{"action": "use_potion", "option_index": 0, "target_index": 1}；identity={"potion": {"id": "BEETLE_JUICE"}, "target": {"id": "DAMP_CULTIST"}, "turn": 3, "from": "line", "hand": "ASCENDERS_BANE,DEFEND_SILENT,DEFEND_SILENT,SURVIVOR", "enemies": "0:CALCIFIED_CULTIST|1:DAMP_CULTIST"}；completed: Action completed.；d506918@2026-10-23T16:26:28.722Z。
+- 新增／补充：F3T5 槽0 DUPLICATOR，s525994→s525995@2026-10-23T16:17:31.743Z。
+- 新增／补充：F12T6 槽0 BEETLE_JUICE，s526148→s526149@2026-10-23T16:25:00.809Z。
+
+证据覆盖：Jev原始请求95行，answers=94、error=1分别计；错误是human-pace预算耗尽，不能当空答案或执行失败。所有题逐行机械核身份、答案／错误及decisions执行字段，重点完整题面与后继人工覆盖范围见本批report.md，其他题只机械索引／定向原文窗口，不声称全部全文精读。V6 on而reflex／direction_replan off；冻结v6-build无本局匹配，entries／jev_answer／fallback／unknown都缺原行，不能补零。construction-log无匹配，构筑回查原decisions／states；run-plans共17行，仅作原方向基线／乘载与计划关联，不冒充全部脑推理。offset／bytes／SHA、冻结切点、identity／decision_id关联及已核原字节在本批v6-evidence/evidence-manifest.json、audit-details.json及*-selected.jsonl。外部open_book仅作题面附件，来源external:spire-codex/v0.111.0、URL／SHA／许可保留在原题；本文游戏结论使用本局mod与states，不把外部附件计自有验证。未知身份／历史坏行未分配给本局，缺失不是零。本批只写复盘／账本／提案，不证明正式发布、下一局消费或自然收益。
+
+
+## G2XYF48GKAUW（A10，静默猎手，第9层，死于花园幽灵鳗 PHANTASMAL_GARDENER：54/80进场，T2打孤注一掷，T4仍49血16挡对22攻击直接死亡，三敌23／24／18血）
+
+- [高血进入精英仍需核实际致死条件；打法（Codex路线／休息）] F7下水道蚌 SEWER_CLAM胜战60→54，F8选择升级弹跳药瓶 BOUNCING_FLASK并保留双精英路线，F9花园幽灵鳗 PHANTASMAL_GARDENER实以54/80进场。梨子 PEAR带来的80上限和此前回血没有覆盖后来孤注一掷的直接死亡条件；没有休息／另一线实打对照。（之前见过：silent-0019）
+- [孤注一掷的当轮大挡带着整场致死条件；打法（Jev选牌／代码出牌）] F9T2喝无色药水 COLORLESS_POTION后，完整三选一同时给究极打击 ULTIMATE_STRIKE、箭雨 SALVO、孤注一掷 THE_GAMBIT；Jev0.52选后者，代码实际打出。55挡过了本轮，T4仍49血但16挡面对7＋6＋3×3＝22攻击，带THE_GAMBIT_POWER直接49→0，三敌仍23／24／18血。该末态要全挡尚差6挡，额外HP不能解除这条死亡条件；不由本局规定永远禁选或宣称换牌能赢。（第一次遇到）
+- [护栏改线后随机药水重算，原预测不能记为整轮实果；打法（代码HP护栏／Jev出牌）] F9T2 Jev0.69选弹跳药瓶+ BOUNCING_FLASK＋打击 STRIKE_SILENT，护栏替为药瓶＋防御 DEFEND_SILENT：题面预测净损18→13、伤29→23（省5血少6伤）。实际随后又喝无色药水并打孤注一掷，T2净损0；原候选的3轮1样本、约73%模型估计及0/1已赢样本都不能当自然胜率。（之前学过：silent-0418，S1.exp182）
+
+- [记录] 核证时间2026-10-24T02:01:40+08:00，本局runs.code=current；run-config的commit=null／ENOBUFS，不能恢复精确运行源码。原始决策共133行；Jev低信心（<0.35）1次，含选牌。可读rollout best／tied题中原答选中比例18/18（100.00%），分母不含无可用最优标记题，不混用code rank或整场Boss并列；替换前选择不等于执行。代码自行发起计划／斩杀／least-loss／兜底的尝试-层-回合去重19个，排除续链和普通end_turn，可能与Jev同轮重叠，定义及原始键见audit-details.json。HP护栏替换1次，具体代价见经验行及下文；无替换局不补反事实收益。F9T2选牌完整题62066c5d-a270-4dfc-80e7-2018e3936b39，chosen=card2，回执completed、无gate_reject／selection_dispatch字段；随后d507280打出孤注一掷且状态实建。T3退出首个原始index1花园鳗（28最大HP），T4剩原index0／2／3；没有独立focus题，不能由相同enemy_id跨index自动认个体。无SL。
+大脑记录实际是Codex，DeepSeek旧命名calls／tokens不是引擎证明；同决策时间窗deepseek-reasoning匹配0行。路线／休息原话按下列原决策引用，未读全部brain题面，不以短理由当完整推理。
+- 大脑F1 map/route-plan：Codex planned: 三场普通战备战首精英，双精英四营火兼顾成长与容错。 | route plan: r1c1 普通战 → r2c0 普通战 → r3c1 问号 → r4c0 问号 → r5c1 问号 → r6c2 普通战 → r7c1 休息 → r8c0 精英 → r9c0 宝箱 → r10c0 休息 → r11c1 问号 → r12c1 休息 → r13c0 精英 → r14c0 普通战 → r15c0 休息 → r16c3 Boss（d507162）
+- 大脑F8 rest/plan：Codex decided o1:c13: 保留双精英、多营火路线。54血有下一战缓冲；升级药瓶强化现有触媒，Boss配对收益显著领先。 | Codex chose 锻造 (SMITH): upgrade 弹跳药瓶 (code's fallback order: 6.05, rank 1 of 10; not shown to Codex)（d507267）
+- 构筑原答F2：Codex decided card2: 弹跳药瓶提供独立持续输出，绕过护甲，Boss收益明显优于其他选项；无需等待额外组件。 | Codex chose 弹跳药瓶 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d507186）
+- 构筑原答F3：Codex decided card2: 预判零费强化多张防御，支持药瓶持续输出；Boss配对S改善明确，不必押注未来组件。 | Codex chose 预判 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d507206）
+路线入口投影／Boss时钟：未到本幕Boss；F8“54血有下一战缓冲”的原答与F9实到54已核，未来Boss入口和实打／估值未记录，不把升级对Boss的模型收益当当前精英收益。旧式DPR需要／估计单标量未记录。
+用时：首决策2026-10-23T16:38:40.828Z至末决策2026-10-23T16:46:10.396Z，差449.568秒（含SL；不是纯思考时延）。runs.tokens=191797；脑输入309095、输出2349、命中227968／309095＝73.75%；token账分开，不把旧ds字段当DeepSeek实际调用。
+
+实盘资源链（包括赢战；HP净变化不是敌人总伤害，SL截断只报末见HP）：
+
+|窗口／层|进→离HP（上限）|进→离药水|净HP损失／边界|原states行／时间|
+|---|---|---|---|---|
+|1／F2|66→59（80→80）|空→空|7；实退场；首帧T1|s526435→s526456；2026-10-23T16:39:01.792Z→2026-10-23T16:39:49.993Z|
+|2／F3|59→56（80→80）|槽0 CURE_ALL→空|3；实退场；首帧T1|s526462→s526478；2026-10-23T16:40:12.509Z→2026-10-23T16:40:44.027Z|
+|3／F5|66→60（80→80）|槽0 GHOST_IN_A_JAR→空|6；实退场；首帧T1|s526487→s526507；2026-10-23T16:41:43.185Z→2026-10-23T16:42:30.493Z|
+|4／F7|60→54（80→80）|槽0 STRENGTH_POTION→空|6；实退场；首帧T1|s526517→s526537；2026-10-23T16:43:23.260Z→2026-10-23T16:44:08.280Z|
+|5／F9|54→0（80→80）|槽0 COLORLESS_POTION→空|54；实退场；首帧T1|s526547→s526573；2026-10-23T16:45:07.042Z→2026-10-23T16:46:10.396Z|
+
+战外HP变化与恢复逐项：
+- F1 REWARD 56/70→F1 EVENT 66/80；战外实变，来源与上述休息／事件决策联核；s526432→s526433，2026-10-23T16:38:41.497Z。
+- F4 EVENT 56/80→F4 EVENT 66/80；战外实变，来源与上述休息／事件决策联核；s526484→s526485，2026-10-23T16:41:41.564Z。
+
+末试逐回合观测（伤害缺源时只报可见下界；四同ID身份模糊时0下界不表示无伤害，复活新增也不能抵作负伤）：
+
+|末试回合|可见存活敌HP总量（首→下轮／退出）|可见扣血下界／新增HP|边界|
+|---|---|---|---|
+|T1|119→111|0／0|ambiguous_enemy_identity；s526547→s526555|
+|T2|111→89|0／0|ambiguous_enemy_identity；s526555→s526562|
+|T3|89→68|0／0|ambiguous_enemy_identity；s526562→s526568|
+|T4|68→65|0／0|ambiguous_enemy_identity；s526568→s526573|
+每回合完整分源总伤害及未采到的中间死亡／回合末补挡过程未记录。上表为实见HP端点与局部扣血下界，击杀所需按当时各存活体HP及挡核，死亡末态缺口已在标题／经验中说明；不把HP差冒充所有伤害。机制：孤注一掷建立THE_GAMBIT_POWER 1，T2防御5＋孤注50形成55挡，T4有49HP而未全挡就直接0；题面明确持续本场。预判 ANTICIPATE的2敏捷只在T3出现，T4轮初已无，不能把T3的敏捷算到T4。这是本角色新机制观察，来源为当前mod题面与实盘，不引用铁甲旧局验证。
+
+药水：新增／补充槽位观测4瓶次，SL恢复0瓶次另算；饮用动作4次，主动丢弃0次（完整决策扫描）；没有瓶UID，不把恢复同槽记新拿药。取药／购买与饮用分别核对，pending不当稳定执行：
+- F3T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "CURE_ALL"}, "turn": 1, "from": "decision"}；completed: Action completed.；d507189@2026-10-23T16:40:16.450Z。
+- F5T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "GHOST_IN_A_JAR"}, "turn": 1, "from": "line", "hand": "ANTICIPATE,ASCENDERS_BANE,BOUNCING_FLASK,SURVIVOR", "enemies": "0:TOADPOLE|1:TOADPOLE"}；completed: Action completed.；d507216@2026-10-23T16:41:51.764Z。
+- F7T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "STRENGTH_POTION"}, "turn": 1, "from": "line", "hand": "ANTICIPATE,ASCENDERS_BANE,DEFEND_SILENT,STRIKE_SILENT,STRIKE_SILENT,SUCKER_PUNCH", "enemies": "0:SEWER_CLAM"}；completed: Action completed.；d507243@2026-10-23T16:43:28.689Z。
+- F9T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "COLORLESS_POTION"}, "turn": 2, "from": "decision"}；pending (unstable): Action queued but state is still transitioning.；d507278@2026-10-23T16:45:37.359Z。
+- 新增／补充：F2T5 槽0 CURE_ALL，s526457→s526458@2026-10-23T16:39:50.458Z。
+- 新增／补充：F3T3 槽0 GHOST_IN_A_JAR，s526479→s526480@2026-10-23T16:40:44.426Z。
+- 新增／补充：F5T5 槽0 STRENGTH_POTION，s526508→s526509@2026-10-23T16:42:30.957Z。
+- 新增／补充：F7T5 槽0 COLORLESS_POTION，s526538→s526539@2026-10-23T16:44:08.746Z。
+
+证据覆盖：Jev原始请求21行，answers=21、error=0分别计；错误是human-pace预算耗尽，不能当空答案或执行失败。所有题逐行机械核身份、答案／错误及decisions执行字段，重点完整题面与后继人工覆盖范围见本批report.md，其他题只机械索引／定向原文窗口，不声称全部全文精读。V6 on而reflex／direction_replan off；冻结v6-build无本局匹配，entries／jev_answer／fallback／unknown都缺原行，不能补零。construction-log无匹配，构筑回查原decisions／states；run-plans共11行，仅作原方向基线／乘载与计划关联，不冒充全部脑推理。offset／bytes／SHA、冻结切点、identity／decision_id关联及已核原字节在本批v6-evidence/evidence-manifest.json、audit-details.json及*-selected.jsonl。外部open_book仅作题面附件，来源external:spire-codex/v0.111.0、URL／SHA／许可保留在原题；本文游戏结论使用本局mod与states，不把外部附件计自有验证。未知身份／历史坏行未分配给本局，缺失不是零。本批只写复盘／账本／提案，不证明正式发布、下一局消费或自然收益。
+
+
+## DXF5L8WH8X12（A10，静默猎手，第23层，死于寄生惧魔 PARAFRIGHT／胧光怪 THE_OBSCURA：两试4/70带火焰药，末试T4仅3血0挡，主怪14攻击且毒后83/129血）
+
+- [通关一幕后赢的走廊仍会耗尽恢复量；打法（Codex路线／构筑）] F17墨影幻灵 VANTOM以59→12获胜、跨幕恢复到58，F19地道虫 TUNNELER胜战58→9，F21偷窃草蜢 THIEVING_HOPPER胜战9→4，F22骨茶事件未回血，F23胧光怪 THE_OBSCURA两试均4/70、槽0火焰药水 FIRE_POTION入场。避精英不等于普通／问号战无代价。（之前见过：silent-0019）
+- [幻象退场与复活不能算永久削减敌方总血；打法（Jev出牌／代码推演）] 末试F23T2寄生惧魔 PARAFRIGHT被火焰药水 FIRE_POTION打21→1，5毒结算后下一帧又21血；缺中间死亡帧，不把20新增HP写成回血。T4蛇咬 SNAKEBITE后幻象10血10毒，结算后又21血，主怪 THE_OBSCURA仍83/129；3血0挡对主怪14攻击已不足。（之前见过：silent-0039）
+- [护栏保当轮HP的成本与SL恢复单列；打法（代码HP护栏／Jev出牌）] F19T4 Jev0.74选尖啸 PIERCING_WAIL＋蛇咬 SNAKEBITE，护栏改为两防御 DEFEND_SILENT＋尖啸，模型净损20→10、伤21→14，省10血少7伤、末毒20→13。实际该轮28→18、敌43→29吻合替线，整场仍只剩9。F23第一试喝掉火焰药后SL恢复同一槽瓶，第二试再喝；不是新拿第二瓶。（之前学过：silent-0418，S1.exp182）
+
+- [记录] 核证时间2026-10-24T02:01:40+08:00，本局runs.code=current；run-config的commit=null／ENOBUFS，不能恢复精确运行源码。原始决策共378行；Jev低信心（<0.35）7次，含选牌。可读rollout best／tied题中原答选中比例50/50（100.00%），分母不含无可用最优标记题，不混用code rank或整场Boss并列；替换前选择不等于执行。代码自行发起计划／斩杀／least-loss／兜底的尝试-层-回合去重59个，排除续链和普通end_turn，可能与Jev同轮重叠，定义及原始键见audit-details.json。HP护栏替换1次，具体代价见经验行及下文；无替换局不补反事实收益。F19T4完整题c53c3428-ea15-4adc-8982-58ade6548d83两线5轮各8/8赢，plan2未来损20、plan1损21.5，但均属模型；原答plan2被护栏替plan1，requested/gated首动作均防御、completed、whole_plan_executed=null，实后继两防御＋尖啸另核。F23首试T2判死，次试T4死；幻象与主怪双目标，题面focus／推演顺序不等于永久击杀。
+大脑记录实际是Codex，DeepSeek旧命名calls／tokens不是引擎证明；同决策时间窗deepseek-reasoning匹配0行。路线／休息原话按下列原决策引用，未读全部brain题面，不以短理由当完整推理。
+- 大脑F1 map/route-plan：Codex planned: 双商店补强，三营火缓冲，延后精英降低早期风险。 | route plan: r1c3 普通战 → r2c2 普通战 → r3c2 普通战 → r4c2 商店 → r5c1 普通战 → r6c0 普通战 → r7c0 普通战 → r8c0 休息 → r9c0 宝箱 → r10c0 商店 → r11c0 休息 → r12c1 问号 → r13c2 精英 → r14c2 普通战 → r15c3 休息 → r16c3 Boss（d507299）
+- 大脑F9 rest/plan：Codex decided o0: 回血提高精英进场安全与Boss启动容错；后续营火仍可视商店补强选择锻造。 | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 14; not shown to Codex)（d507442）
+- 大脑F12 rest/plan：Codex decided o0: 回血至65，保障精英前容错并争取遗物；保留路线的Boss进场投影62血，比单次升级更稳。 | Codex chose 休息 (HEAL) (code's fallback order: 5, rank 14 of 14; not shown to Codex)（d507456）
+- 大脑F16 rest/plan：Codex decided o0: Heal to 59 HP. Poison needs setup time; the survival buffer is substantially stronger than any upgrade against the imminent boss. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 14; not shown to Codex)（d507526）
+- 大脑F18 event/act-plan：Codex decided o2: 额外抽牌加速施毒与防御到手；避开精英，留钱商店补强。 | Codex chose 佩尔之血 (code's fallback order: 0, rank 1 of 3; not shown to Codex)（d507568）
+- 构筑原答F1：Codex decided b0: Deadly Poison supplies sustained boss damage, Precise Cut improves immediate offense, and Dodge and Roll adds defense without requiring further synergy. | Codex chose bundle 0 (code's fallback order: 0, rank 1 of 2; not shown to Codex)（d507296）
+- 构筑原答F2：Codex decided card0: 蛇咬强化现有施毒，保留便于择机使用；Boss配对收益明显，背刺的短期收益不足以替代。 | Codex chose 蛇咬 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d507318）
+路线入口投影／Boss时钟：F16所选回血题原文“打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 68%；选这个（进场 59 血） 94%（+25.3 ± 1.9），赢局掉血中位 49，约 10 回合；boss 平均剩血 12（当前牌组 82，−69.7 ± 3.3）（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；领先停止，n=100；差值对同前缀基准）；回血后 HP 59/70，进场血量按它投影”（d507526）；实到F17为59，T8胜、净损47。这是投影对实到和模型对实打，校准率不作自然胜率。旧式DPR需要／估计单标量未记录，不用不同窗口自行补齐。
+用时：首决策2026-10-23T16:47:13.513Z至末决策2026-10-23T17:08:10.987Z，差1257.474秒（含SL；不是纯思考时延）。runs.tokens=619567；脑输入941797、输出4323、命中743680／941797＝78.96%；token账分开，不把旧ds字段当DeepSeek实际调用。
+
+实盘资源链（包括赢战；HP净变化不是敌人总伤害，SL截断只报末见HP）：
+
+|窗口／层|进→离HP（上限）|进→离药水|净HP损失／边界|原states行／时间|
+|---|---|---|---|---|
+|1／F2|56→51（70→70）|空→空|5；实退场；首帧T1|s526582→s526599；2026-10-23T16:48:07.311Z→2026-10-23T16:48:45.483Z|
+|2／F3|51→51（70→70）|空→空|0；实退场；首帧T1|s526604→s526624；2026-10-23T16:49:11.883Z→2026-10-23T16:50:06.125Z|
+|3／F4|51→48（70→70）|空→空|3；实退场；首帧T1|s526629→s526640；2026-10-23T16:50:25.559Z→2026-10-23T16:50:48.601Z|
+|4／F6|48→46（70→70）|槽0 BLOCK_POTION→空|2；实退场；首帧T1|s526651→s526671；2026-10-23T16:51:41.508Z→2026-10-23T16:52:27.786Z|
+|5／F7|46→23（70→70）|空→空|23；实退场；首帧T1|s526676→s526698；2026-10-23T16:52:49.095Z→2026-10-23T16:53:38.235Z|
+|6／F8|23→23（70→70）|槽0 BLOCK_POTION→空|0；实退场；首帧T1|s526704→s526725；2026-10-23T16:53:57.557Z→2026-10-23T16:54:39.820Z|
+|7／F14|65→61（70→70）|槽0 SPEED_POTION→空|4；实退场；首帧T1|s526750→s526780；2026-10-23T16:56:43.269Z→2026-10-23T16:57:57.041Z|
+|8／F15|61→38（70→70）|空→空|23；实退场；首帧T1|s526786→s526810；2026-10-23T16:58:15.956Z→2026-10-23T16:59:31.262Z|
+|9／F17|59→12（70→70）|槽0 FLEX_POTION→空|47；实退场；首帧T1|s526820→s526854；2026-10-23T17:00:05.608Z→2026-10-23T17:02:03.505Z|
+|10／F19|58→9（70→70）|空→空|49；实退场；首帧T1|s526863→s526888；2026-10-23T17:02:43.441Z→2026-10-23T17:03:54.732Z|
+|11／F21|9→4（70→70）|空→空|5；实退场；首帧T1|s526897→s526922；2026-10-23T17:04:35.544Z→2026-10-23T17:05:37.651Z|
+|12／F23|4→4（70→70）|槽0 FIRE_POTION→空|未记录；SL截断，非实退场；首帧T1|s526933→s526946；2026-10-23T17:06:20.113Z→2026-10-23T17:06:59.159Z|
+|13／F23|4→0（70→70）|槽0 FIRE_POTION→空|4；实退场；首帧T1|s526947→s526970；2026-10-23T17:07:08.957Z→2026-10-23T17:08:10.987Z|
+
+战外HP变化与恢复逐项：
+- F9 REST 23/70→F9 REST 44/70；战外实变，来源与上述休息／事件决策联核；s526730→s526731，2026-10-23T16:55:31.940Z。
+- F12 REST 44/70→F12 REST 65/70；战外实变，来源与上述休息／事件决策联核；s526744→s526745，2026-10-23T16:56:22.901Z。
+- F16 REST 38/70→F16 REST 59/70；战外实变，来源与上述休息／事件决策联核；s526817→s526818，2026-10-23T17:00:04.148Z。
+- F17 MAP 12/70→F18 EVENT 58/70；战外实变，来源与上述休息／事件决策联核；s526859→s526860，2026-10-23T17:02:41.373Z。
+
+末试逐回合观测（伤害缺源时只报可见下界；四同ID身份模糊时0下界不表示无伤害，复活新增也不能抵作负伤）：
+
+|末试回合|可见存活敌HP总量（首→下轮／退出）|可见扣血下界／新增HP|边界|
+|---|---|---|---|
+|T1|129→116|34／21|无已标身份缺口；s526947→s526954|
+|T2|116→113|23／20|hp_increase_without_intermediate_death_frame；s526954→s526960|
+|T3|113→107|6／0|无已标身份缺口；s526960→s526965|
+|T4|107→104|14／11|hp_increase_without_intermediate_death_frame；s526965→s526970|
+每回合完整分源总伤害及未采到的中间死亡／回合末补挡过程未记录。上表为实见HP端点与局部扣血下界，击杀所需按当时各存活体HP及挡核，死亡末态缺口已在标题／经验中说明；不把HP差冒充所有伤害。机制：毒雾 NOXIOUS_FUMES在末试T2建立2层，T3轮初两敌补毒；尖啸临时把幻象力量0→−6、17攻→11，10挡仍净损1（4→3），T4双方力量又3、幻象20／主怪14攻击。恢复与成长不是永久减力失效的纯bug。
+
+药水：新增／补充槽位观测5瓶次，SL恢复1瓶次另算；饮用动作6次，主动丢弃0次（完整决策扫描）；没有瓶UID，不把恢复同槽记新拿药。取药／购买与饮用分别核对，pending不当稳定执行：
+- F6T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "BLOCK_POTION"}, "turn": 2, "from": "line", "hand": "SNAKEBITE", "enemies": "0:LEAF_SLIME_M|1:FLYCONID"}；completed: Action completed.；d507376@2026-10-23T16:52:06.988Z。
+- F8T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "BLOCK_POTION"}, "turn": 2, "from": "line", "hand": "DEFEND_SILENT,STRIKE_SILENT", "enemies": "0:CUBEX_CONSTRUCT"}；completed: Action completed.；d507426@2026-10-23T16:54:16.889Z。
+- F11TNone：{"action": "buy_potion", "option_index": 1}；identity={"option": {"id": "SPEED_POTION"}, "from": "decision"}；completed: Action completed.；d507452@2026-10-23T16:56:01.334Z。
+- F14T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "SPEED_POTION"}, "turn": 2, "from": "line", "hand": "ASCENDERS_BANE,DEFEND_SILENT,SNAKEBITE,STRIKE_SILENT,SURVIVOR", "enemies": "0:PHROG_PARASITE"}；completed: Action completed.；d507467@2026-10-23T16:57:01.592Z。
+- F17T5：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "FLEX_POTION"}, "turn": 5, "from": "line", "hand": "DAGGER_SPRAY,POISONED_STAB,SUCKER_PUNCH,WOUND", "enemies": "0:VANTOM"}；completed: Action completed.；d507548@2026-10-23T17:01:18.333Z。
+- F23T2：{"action": "use_potion", "option_index": 0, "target_index": 0}；identity={"potion": {"id": "FIRE_POTION"}, "target": {"id": "PARAFRIGHT"}, "turn": 2, "from": "decision"}；completed: Action completed.；d507648@2026-10-23T17:06:58.258Z。
+- F23T2：{"action": "use_potion", "option_index": 0, "target_index": 0}；identity={"potion": {"id": "FIRE_POTION"}, "target": {"id": "PARAFRIGHT"}, "turn": 2, "from": "line", "hand": "DAGGER_SPRAY,SNAKEBITE,STRIKE_SILENT,SUCKER_PUNCH,SURVIVOR", "enemies": "0:PARAFRIGHT|1:THE_OBSCURA"}；completed: Action completed.；d507660@2026-10-23T17:07:29.060Z。
+- 新增／补充：F4T3 槽0 BLOCK_POTION，s526641→s526642@2026-10-23T16:50:49.067Z。
+- 新增／补充：F7T5 槽0 BLOCK_POTION，s526699→s526700@2026-10-23T16:53:38.700Z。
+- 新增／补充：F11TNone 槽0 SPEED_POTION，s526740→s526741@2026-10-23T16:56:01.601Z。
+- 新增／补充：F15T6 槽0 FLEX_POTION，s526812→s526813@2026-10-23T16:59:31.996Z。
+- 新增／补充：F21T5 槽0 FIRE_POTION，s526924→s526925@2026-10-23T17:05:38.349Z。
+- SL恢复：F23T1 槽0 FIRE_POTION，s526946→s526947@2026-10-23T17:07:08.957Z。
+
+证据覆盖：Jev原始请求68行，answers=65、error=3分别计；错误是human-pace预算耗尽，不能当空答案或执行失败。所有题逐行机械核身份、答案／错误及decisions执行字段，重点完整题面与后继人工覆盖范围见本批report.md，其他题只机械索引／定向原文窗口，不声称全部全文精读。V6 on而reflex／direction_replan off；冻结v6-build无本局匹配，entries／jev_answer／fallback／unknown都缺原行，不能补零。construction-log无匹配，构筑回查原decisions／states；run-plans共30行，仅作原方向基线／乘载与计划关联，不冒充全部脑推理。offset／bytes／SHA、冻结切点、identity／decision_id关联及已核原字节在本批v6-evidence/evidence-manifest.json、audit-details.json及*-selected.jsonl。外部open_book仅作题面附件，来源external:spire-codex/v0.111.0、URL／SHA／许可保留在原题；本文游戏结论使用本局mod与states，不把外部附件计自有验证。未知身份／历史坏行未分配给本局，缺失不是零。本批只写复盘／账本／提案，不证明正式发布、下一局消费或自然收益。
+
+
+## H5BVXA9SQWTY（A10，静默猎手，第23层，死于寄生惧魔 PARAFRIGHT／胧光怪 THE_OBSCURA：四试6/70空药，末试T3仅6血15挡对15＋10攻击，主怪98/129血）
+
+- [连赢走廊也要逐段带资源到死因；打法（Codex路线／休息）] F17灵魂异鱼 SOUL_FYSH胜战32→2、跨幕到56；随后F19地道虫 TUNNELER 56→43、F20盛碗虫 BOWLBUG_EGG／BOWLBUG_ROCK 43→25、F21棘刺蟾蜍 SPINY_TOAD 25→20、F22啃咬机 CHOMPER 20→6。F23四试均6/70空药；计划三火无精英并没有使这些已赢战斗的消耗归零。（之前见过：silent-0019）
+- [先杀幻象只取消当前攻击，力量成长后它还会回来；打法（Jev出牌）] 末试F23T2用打击 STRIKE_SILENT＋猎杀者 PREDATOR把寄生惧魔 PARAFRIGHT打到0；T3恢复21血且力量3、20攻击，胧光怪 THE_OBSCURA同时10攻击。扫腿+ LEG_SWEEP令幻象20→15，最终15挡对25总攻击、6血死亡；只杀幻象一次不能当整场关闭该攻击源。（之前见过：silent-0039）
+- [弃掉计划后继会使原整条格挡预测失效；打法（Jev弃牌／代码重算）] 末试F23T3 Jev0.84选隐秘匕首 HIDDEN_DAGGERS、小刀 SHIV×2、防御 DEFEND_SILENT、扫腿+ LEG_SWEEP，预测21挡、6→2血；实际选牌先弃进阶之灾 ASCENDERS_BANE再弃防御，代码重算改打毒雾+ NOXIOUS_FUMES，最终只有15挡且阵亡。苦无 KUNAI实建1敏捷仍未补足被弃掉的6挡；原plan2不能登记完整执行。（之前学过：silent-0418，S1.exp182）
+
+- [记录] 核证时间2026-10-24T02:01:40+08:00，本局runs.code=current；run-config的commit=null／ENOBUFS，不能恢复精确运行源码。原始决策共450行；Jev低信心（<0.35）20次，含选牌。可读rollout best／tied题中原答选中比例57/59（96.61%），分母不含无可用最优标记题，不混用code rank或整场Boss并列；替换前选择不等于执行。代码自行发起计划／斩杀／least-loss／兜底的尝试-层-回合去重63个，排除续链和普通end_turn，可能与Jev同轮重叠，定义及原始键见audit-details.json。HP护栏替换1次，具体代价见经验行及下文；无替换局不补反事实收益。末试F23T3完整题f59cf96e-fede-4bd0-88aa-02c49d40785b有focus=胧光怪／寄生惧魔两线，Jev选择后者；其5轮24样本23死，主怪线24死，均0赢。requested/gated为隐秘匕首，回执pending且全线认证null；真实弃牌和重算见d508118—508124。前三试T3／T5／T3判死，末试T3实死。F13T2另一次护栏模型省8血少6伤、少5末毒，替线含待弃牌未知；未完整精读其余候选，不把它当整战反事实。
+大脑记录实际是Codex，DeepSeek旧命名calls／tokens不是引擎证明；同决策时间窗deepseek-reasoning匹配0行。路线／休息原话按下列原决策引用，未读全部brain题面，不以短理由当完整推理。
+- 大脑F1 map/route-plan：Codex planned: 早店兑现金币，避开连续精英，双店补强并保留首领前休整。 | route plan: r1c5 普通战 → r2c6 问号 → r3c6 商店 → r4c6 普通战 → r5c6 问号 → r6c6 休息 → r7c5 问号 → r8c5 问号 → r9c4 宝箱 → r10c4 普通战 → r11c3 问号 → r12c2 精英 → r13c3 问号 → r14c3 商店 → r15c4 休息 → r16c3 Boss（d507678）
+- 大脑F7 rest/plan：Codex decided o0: Healing secures the long stretch before the next rest, improves elite survival, and provides the strongest eligible boss margin. | Codex chose 休息 (HEAL) (code's fallback order: 5, rank 11 of 11; not shown to Codex)（d507743）
+- 大脑F16 rest/plan：Codex decided o0: Heal to 32 HP. The immediate boss demands survival buffer for poison and Kunai setup; no single upgrade compensates for entering at 11 HP. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 17; not shown to Codex)（d507863）
+- 大脑F18 event/act-plan：Codex decided o0: 四升强化毒伤、虚弱与苦无；走三火无精英保命。 | Codex chose 美味饼干 (code's fallback order: 0, rank 1 of 3; not shown to Codex)（d507927）
+- 构筑原答F2：Codex decided card1: Hidden Daggers offers repeatable zero-cost damage, discards curses and statuses, and shows the strongest eligible boss margin. | Codex chose 隐秘匕首 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)（d507701）
+- 构筑原答F4：Codex planned: Spend 258 gold: Haze adds poison and Weak; Accelerant supports poison damage; Flash of Steel provides free cycling; Flick-Flack supplies discard-compatible AoE. Combined performance is unsimulated. | plan H5BVXA9SQWTY:F4:shop#1: buy 迷雾 (38g), buy 亮剑 (90g), buy 触媒 (78g), buy 翻越撑击 (52g), stop shopping; step 1: buy 迷雾 (38g)（d507708）
+路线入口投影／Boss时钟：F16所选回血题原文“打本幕 boss（灵魂异鱼，A10）的模拟：当前牌组胜率 48%；选这个（进场 32 血） 87%（+39 ± 5.7），赢局掉血中位 27，约 8 回合；boss 平均剩血 32（当前牌组 115，−83.3 ± 3.9）（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；领先停止，n=100；差值对同前缀基准）；回血后 HP 32/70，进场血量按它投影”（d507863）；实到F17为32，T9胜、净损30。这是投影对实到和模型对实打，校准率不作自然胜率。旧式DPR需要／估计单标量未记录，不用不同窗口自行补齐。
+用时：首决策2026-10-23T17:09:10.712Z至末决策2026-10-23T17:30:09.036Z，差1258.324秒（含SL；不是纯思考时延）。runs.tokens=958615；脑输入784018、输出3843、命中523520／784018＝66.77%；token账分开，不把旧ds字段当DeepSeek实际调用。
+
+实盘资源链（包括赢战；HP净变化不是敌人总伤害，SL截断只报末见HP）：
+
+|窗口／层|进→离HP（上限）|进→离药水|净HP损失／边界|原states行／时间|
+|---|---|---|---|---|
+|1／F2|56→50（70→70）|空→空|6；实退场；首帧T1|s526977→s526998；2026-10-23T17:09:30.699Z→2026-10-23T17:10:19.400Z|
+|2／F5|50→41（70→70）|空→空|9；实退场；首帧T1|s527014→s527033；2026-10-23T17:11:29.091Z→2026-10-23T17:12:07.565Z|
+|3／F8|62→62（70→70）|槽0 STRENGTH_POTION→空|0；实退场；首帧T1|s527046→s527064；2026-10-23T17:12:55.590Z→2026-10-23T17:13:32.164Z|
+|4／F11|55→48（70→70）|槽0 POWDERED_DEMISE→空|7；实退场；首帧T1|s527077→s527092；2026-10-23T17:14:13.689Z→2026-10-23T17:14:45.528Z|
+|5／F13|48→11（70→70）|槽0 CLARITY→空|37；实退场；首帧T1|s527101→s527147；2026-10-23T17:15:16.767Z→2026-10-23T17:16:57.276Z|
+|6／F17|32→2（70→70）|槽0 VULNERABLE_POTION；槽1 RADIANT_TINCTURE→空|30；实退场；首帧T1|s527170→s527228；2026-10-23T17:18:36.471Z→2026-10-23T17:21:01.144Z|
+|7／F19|56→43（70→70）|空→空|13；实退场；首帧T1|s527240→s527259；2026-10-23T17:21:49.283Z→2026-10-23T17:22:31.286Z|
+|8／F20|43→25（70→70）|空→空|18；实退场；首帧T1|s527264→s527287；2026-10-23T17:22:51.116Z→2026-10-23T17:23:54.257Z|
+|9／F21|25→20（70→70）|槽0 LUCKY_TONIC→空|5；实退场；首帧T1|s527293→s527310；2026-10-23T17:24:18.346Z→2026-10-23T17:25:04.581Z|
+|10／F22|20→6（70→70）|槽0 SKILL_POTION→空|14；实退场；首帧T1|s527316→s527352；2026-10-23T17:25:19.844Z→2026-10-23T17:26:52.054Z|
+|11／F23|6→6（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s527357→s527375；2026-10-23T17:27:06.552Z→2026-10-23T17:27:38.202Z|
+|12／F23|6→1（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s527376→s527403；2026-10-23T17:27:45.770Z→2026-10-23T17:28:47.811Z|
+|13／F23|6→6（70→70）|空→空|未记录；SL截断，非实退场；首帧T1|s527404→s527421；2026-10-23T17:28:55.438Z→2026-10-23T17:29:27.133Z|
+|14／F23|6→0（70→70）|空→空|6；实退场；首帧T1|s527422→s527440；2026-10-23T17:29:34.652Z→2026-10-23T17:30:09.036Z|
+
+战外HP变化与恢复逐项：
+- F7 REST 41/70→F7 REST 62/70；战外实变，来源与上述休息／事件决策联核；s527043→s527044，2026-10-23T17:12:54.126Z。
+- F9 EVENT 62/70→F9 EVENT 55/70；战外实变，来源与上述休息／事件决策联核；s527070→s527071，2026-10-23T17:14:10.156Z。
+- F16 REST 11/70→F16 REST 32/70；战外实变，来源与上述休息／事件决策联核；s527167→s527168，2026-10-23T17:18:35.093Z。
+- F17 MAP 2/70→F18 EVENT 56/70；战外实变，来源与上述休息／事件决策联核；s527232→s527233，2026-10-23T17:21:45.966Z。
+- F23 COMBAT 1/70→F23 COMBAT 6/70；SL恢复，非回血；s527403→s527404，2026-10-23T17:28:55.438Z。
+
+末试逐回合观测（伤害缺源时只报可见下界；四同ID身份模糊时0下界不表示无伤害，复活新增也不能抵作负伤）：
+
+|末试回合|可见存活敌HP总量（首→下轮／退出）|可见扣血下界／新增HP|边界|
+|---|---|---|---|
+|T1|129→132|18／21|无已标身份缺口；s527422→s527428|
+|T2|132→132|21／21|无已标身份缺口；s527428→s527431|
+|T3|132→113|19／0|无已标身份缺口；s527431→s527440|
+每回合完整分源总伤害及未采到的中间死亡／回合末补挡过程未记录。上表为实见HP端点与局部扣血下界，击杀所需按当时各存活体HP及挡核，死亡末态缺口已在标题／经验中说明；不把HP差冒充所有伤害。机制：胧光怪航行后双方力量3，幻象17→20；末试T3第三次攻击后苦无 KUNAI使敏捷0→1，扫腿+实得15挡，比14基础多1，仍比原候选21挡少6。毒雾+建立3层但主怪当轮未获得毒，末帧98血不能再减假想毒伤。
+
+药水：新增／补充槽位观测7瓶次，SL恢复0瓶次另算；饮用动作7次，主动丢弃0次（完整决策扫描）；没有瓶UID，不把恢复同槽记新拿药。取药／购买与饮用分别核对，pending不当稳定执行：
+- F8T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "STRENGTH_POTION"}, "turn": 1, "from": "line", "hand": "ACCELERANT,ASCENDERS_BANE,DEFEND_SILENT,DEFEND_SILENT,PREDATOR,STRIKE_SILENT", "enemies": "0:CORPSE_SLUG|1:CORPSE_SLUG"}；completed: Action completed.；d507747@2026-10-23T17:13:02.740Z。
+- F11T1：{"action": "use_potion", "option_index": 0, "target_index": 1}；identity={"potion": {"id": "POWDERED_DEMISE"}, "target": {"id": "TWO_TAILED_RAT"}, "turn": 1, "from": "line", "hand": "ASCENDERS_BANE,PREDATOR,STRIKE_SILENT,SURVIVOR", "enemies": "0:TWO_TAILED_RAT|1:TWO_TAILED_RAT|2:TWO_TAILED_RAT"}；completed: Action completed.；d507779@2026-10-23T17:14:21.235Z。
+- F13T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "CLARITY"}, "turn": 1, "from": "decision"}；completed: Action completed.；d507803@2026-10-23T17:15:27.855Z。
+- F15TNone：{"action": "buy_potion", "option_index": 0}；identity={"option": {"id": "RADIANT_TINCTURE"}, "from": "decision"}；completed: Action completed.；d507856@2026-10-23T17:18:18.812Z。
+- F17T1：{"action": "use_potion", "option_index": 0, "target_index": 0}；identity={"potion": {"id": "VULNERABLE_POTION"}, "target": {"id": "SOUL_FYSH"}, "turn": 1, "from": "line", "hand": "DAGGER_SPRAY,FLASH_OF_STEEL,NEUTRALIZE,SPOILS_MAP,STRIKE_SILENT", "enemies": "0:SOUL_FYSH"}；completed: Action completed.；d507868@2026-10-23T17:18:47.351Z。
+- F17T2：{"action": "use_potion", "option_index": 1}；identity={"potion": {"id": "RADIANT_TINCTURE"}, "turn": 2, "from": "line", "hand": "ACCELERANT,STRIKE_SILENT,STRIKE_SILENT", "enemies": "0:SOUL_FYSH"}；completed: Action completed.；d507878@2026-10-23T17:19:18.849Z。
+- F21T2：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "LUCKY_TONIC"}, "turn": 2, "from": "line", "hand": "CLOAK_AND_DAGGER,DEFEND_SILENT,STRIKE_SILENT,STRIKE_SILENT", "enemies": "0:SPINY_TOAD"}；completed: Action completed.；d507993@2026-10-23T17:24:40.186Z。
+- F22T1：{"action": "use_potion", "option_index": 0}；identity={"potion": {"id": "SKILL_POTION"}, "turn": 1, "from": "decision"}；pending (unstable): Action queued but state is still transitioning.；d508011@2026-10-23T17:25:31.765Z。
+- 新增／补充：F5T3 槽0 STRENGTH_POTION，s527034→s527035@2026-10-23T17:12:07.997Z。
+- 新增／补充：F8T3 槽0 POWDERED_DEMISE，s527065→s527066@2026-10-23T17:13:32.630Z。
+- 新增／补充：F11T3 槽0 CLARITY，s527093→s527094@2026-10-23T17:14:45.962Z。
+- 新增／补充：F13T8 槽0 VULNERABLE_POTION，s527148→s527149@2026-10-23T17:16:57.719Z。
+- 新增／补充：F15TNone 槽1 RADIANT_TINCTURE，s527160→s527161@2026-10-23T17:18:19.045Z。
+- 新增／补充：F20T5 槽0 LUCKY_TONIC，s527288→s527289@2026-10-23T17:23:54.723Z。
+- 新增／补充：F21T4 槽0 SKILL_POTION，s527311→s527312@2026-10-23T17:25:05.047Z。
+
+证据覆盖：Jev原始请求97行，answers=96、error=1分别计；错误是human-pace预算耗尽，不能当空答案或执行失败。所有题逐行机械核身份、答案／错误及decisions执行字段，重点完整题面与后继人工覆盖范围见本批report.md，其他题只机械索引／定向原文窗口，不声称全部全文精读。V6 on而reflex／direction_replan off；冻结v6-build无本局匹配，entries／jev_answer／fallback／unknown都缺原行，不能补零。construction-log无匹配，构筑回查原decisions／states；run-plans共32行，仅作原方向基线／乘载与计划关联，不冒充全部脑推理。offset／bytes／SHA、冻结切点、identity／decision_id关联及已核原字节在本批v6-evidence/evidence-manifest.json、audit-details.json及*-selected.jsonl。外部open_book仅作题面附件，来源external:spire-codex/v0.111.0、URL／SHA／许可保留在原题；本文游戏结论使用本局mod与states，不把外部附件计自有验证。未知身份／历史坏行未分配给本局，缺失不是零。本批只写复盘／账本／提案，不证明正式发布、下一局消费或自然收益。
+
