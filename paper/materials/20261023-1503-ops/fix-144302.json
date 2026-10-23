@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-23T15:06:51+08:00",
+  "batch": "20261023-144302-fix-batch",
+  "actual_state": "failed/rc0",
+  "original_report": {
+    "path": "learner/runs/20261023-144309-eb5f3d22-7445-4b36-852a-50f1c37234c2-fix-batch/report.md",
+    "bytes": 19983,
+    "sha256": "a032835d9e2c70a258c8ffccbe9e5d30bf7271d1023e21e499a19aba4f066cf4"
+  },
+  "output": {
+    "path": "ops/codex-ops/learner/20261023-144302-fix-batch.out",
+    "bytes": 3023,
+    "sha256": "b5d3a4801476bd6c9d5e93a328d3cf6f0e4f565e556e219e1cea3181d5ffde83"
+  },
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-144302",
+  "head": "97305c2d7af99b79a88c9700f95093ac996a1a70",
+  "worktree_clean": true,
+  "source_fixes_or_commits": 0,
+  "tests_original": {
+    "tsc": null,
+    "vitest": null,
+    "cases": 0
+  },
+  "original_empty_fix_verifier": "None; unchanged acceptance requires original passing checks/nonzero cases and source equivalence; no fake no_changes/done",
+  "skipped": [
+    {
+      "item": "37项策略/模型/架构提案",
+      "reason": "策略类，逐项保留原提案链，详见报告"
+    },
+    {
+      "item": "ENOBUFS、账本状态回退、H1监控候选",
+      "reason": "已有原候选待完整检查和集成，队列禁止后批重复实现"
+    },
+    {
+      "item": "wrapper缺失learner_tabs.py",
+      "reason": "队列明确交原#36/#20负责人处理"
+    },
+    {
+      "item": "手动学习通知后续issue来源认证",
+      "reason": "来源合同扩展，沿原#27/#8专项处理"
+    },
+    {
+      "item": "Jev基础请求预算",
+      "reason": "涉及投影和必要字段合同，沿原#25/#37专项处理"
+    },
+    {
+      "item": "框架完整检查分段收尾",
+      "reason": "涉及分段身份、续跑及回退协议，沿原工程链处理"
+    },
+    {
+      "item": "原生通知失败、调度公平性、七份旧提案原件恢复",
+      "reason": "证据不足，保留原失败和追溯链"
+    }
+  ],
+  "already_fixed_scope": "27 old fixes were reverified by learner as existing ancestors; not 27 new fixes in this batch",
+  "new_pure_bug_or_roy_decision": false,
+  "native_transport_proof": "paper/materials/20261023-issue36-closure-publication-ops/natural-144302.json",
+  "native_receipt_unchanged": true,
+  "retention_actual": {
+    "batch": "20261023-144302-fix-batch",
+    "task": "fix-batch",
+    "character": "silent",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-144302",
+    "schema": "learner-cleanup-request-v1",
+    "requested_at": "2026-10-23T14:52:19+08:00",
+    "requested_by": "learner-wrapper",
+    "state": "deferred",
+    "admission_required": true,
+    "model_finished_does_not_prove_ingestion": true,
+    "last_result": {
+      "state": "deferred",
+      "reason": "scratch ownership not bound to original report"
+    },
+    "updated_at": "2026-10-23T14:52:20+08:00"
+  },
+  "new_model_full_check_or_finish_calls": 0,
+  "new_live_merge": false,
+  "source_candidates_preserved": "ENOBUFS/ledger/H1 original candidates and original owners remain; no duplicate implementation",
+  "scientific_parents_closed": false
+}
