@@ -5769,3 +5769,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:28:15+08:00 [dev #36] 按6358044084/6358077224补原生正常退出与批次语义失败合同：finished仅删code0必须done的错误等价，保留原failed/rejected与rc、原生/日志/直接主管身份等处置门；真实empty-fix检查null/null/0仍拒绝，固定原审计failed/rc0可写wrapper且batch字节不变，旧源码同例拒绝可复现。原验收源码/测试不动，tsc0、定向2文件21过（内含Python43）、wrapper17过；不跑full/占46位，不回写131316旧批或补造已退出主管封印，不改wrapper/main/live/STOP/在途。材料paper/materials/20261023-issue36-semantic-terminal/。
 
 - 2026-10-23T14:25:06+08:00 [dev #36] 按主管134302 seal缺模块指示采用去调用方案：wrapper原finished落盘后不再调用未发布learner_tabs.py，不拆入#20依赖；保原终态/failed rc0/空fix验收/300s及退场权限，不关tab。补Git发布集合+实际文件的12脚本完整性检查、旧seal缺文件及逐项遗漏反例，修正旧stub掩盖部署缺项；实际b499 wrapper仅一块差量且stdio日志原字节/SHA保留，组合17项过。tsc0、定向3文件23过（内含Python43）；未跑full/动生产/补造旧批封印。材料paper/materials/20261023-issue36-wrapper-script-closure/。
+
+- 2026-10-23T14:28:55+08:00 [dev #36] 接6358830755固定夹具边界，常规wrapper夹具去除learner_tabs stub，与实际发布缺模块状态一致；仅保留独立误调用陷阱负例，不模拟seal成功。更新后定向3文件23过，实际发布组合17项再过，生产差量不变，不做full/生产操作。材料仍paper/materials/20261023-issue36-wrapper-script-closure/。

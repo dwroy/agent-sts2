@@ -1,4 +1,4 @@
-"""Real shell wrapper with frozen receipts and finish/seal stubs; no model or Herdr calls."""
+"""Real shell wrapper with frozen receipts and a finish stub; no model or Herdr calls."""
 import json
 import importlib.util
 import os
@@ -44,12 +44,6 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
      "task":os.environ["FIXTURE_TASK"],
      "finished":"2026-10-23T12:00:00+08:00", "pid":os.getppid(), "pane":"w1:p2", "worktree":str(root)}
 (root/"ops/codex-ops/learn.json").write_text(json.dumps({"batches":{batch:row}}))
-''')
-        (self.root / "ops/learner_tabs.py").write_text('''import json,os,sys
-from pathlib import Path
-root=Path(os.environ["CODEX_OPS_ROOT"])
-(root/"seal-args.json").write_text(json.dumps(sys.argv[1:]))
-sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
 ''')
         sleep = self.root / "home/.local/node/bin/sleep"
         sleep.parent.mkdir(parents=True)
@@ -178,7 +172,12 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
 
     def test_unreleased_recycler_does_not_affect_verified_finish(self):
         env = self.prepare()
-        result = self.run_wrapper(dict(env, FIXTURE_SEAL_RC="75"))
+        # A presence-only trap must never run; ordinary fixtures contain no recycler module.
+        (self.root / "ops/learner_tabs.py").write_text(
+            "from pathlib import Path\n"
+            f"Path({str(self.root / 'seal-args.json')!r}).write_text('unexpected recycler invocation')\n"
+            "raise RuntimeError('unreleased recycler must not run')\n")
+        result = self.run_wrapper(env)
         self.assertEqual(result.returncode, 0)
         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
         self.assertFalse((self.root / "seal-args.json").exists())
@@ -186,7 +185,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
 
     def test_missing_recycler_does_not_block_completion_or_close_pane(self):
         env = self.prepare()
-        (self.root / "ops/learner_tabs.py").unlink()
+        self.assertFalse((self.root / "ops/learner_tabs.py").exists())
         self.assertEqual(self.run_wrapper(env).returncode, 0)
         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
         self.assertFalse((self.root / "seal-args.json").exists())
