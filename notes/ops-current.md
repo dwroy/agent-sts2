@@ -1,22 +1,18 @@
 state: in-flight
-issue: 36
-updated: 2026-10-24T07:35:11+08:00
+issue: 37
+updated: 2026-10-24T07:41:19+08:00
 
-进行中的事: #36继续核学习会话可见、封存及原流程回收闭环。05:28已核033643、041301、051302原关tab及物理缺席，不代本轮新UI观察或经验入库；五旧现场及失败/rc0保留。
+进行中的事: 原窗口6376551030的061302精确R425单经验叶唯一宿主检查通过，666文件6536过/2跳/tsc0；监督556166已退出，2139输入/469知识/1417依赖/183宿主逐项SHA同，净树ff32f36912bb。沿原exp实际源2c4c541fb929（叶SHA6034dc5b）及0293提案审计通过；原failed/rc0、报告null源及EPERM/EROFS/retry未知不改。
 
-在等谁: 等原#36/#20合同owner续核五旧项：131316-fix缺wrapper/birth证明；151302-s2与194330-s2缺native绑定和处置权；174301与175037虽session-ended，仍awaiting_review/rcnull，当前recover-completed仅支持复盘/经验，不能改task或补造证明。本轮只维护交接，061302→#37顺序保持。
+在等谁: 原自然发布监督660420/birth22339983于07:41接play602792/birth22247889及原循环302180，自有准入仅等原pidfd自然终局，未写live。十四项候选传统/脑工具读回通过，边界实际14项消费者/编号/双通知/准入释放待原回调；#37继续full0，窗口尚未交回。
 
-下一步: 待原owner补证或恢复入口后，核身份、产物/日志、空闲输入及处置权，满足原门再收尾；缺证pending，不重finish/full或强关。原件paper/materials/20261024-issue36-natural-tabs-ops/receipt.json及remaining-old-tabs.json。
+下一步: 核paper/materials/20261024-experience-061302-publication-ops/publication-state.json及原终局/消费者/准入释放，真实退出后在37明确交回。集成员再重冻最新live知识/依赖，对候选657293922065做唯一full，保41/44时钟预算/afterEach与双方账本；37自然发布/首局Jev无open_book与脑工具读回→20父（39/43）。不重full/模型、不关科学父；本轮原件20261024-0740-061302-check-received-ops/receipt.json。
+
+并行#51: 源795d32b0/main c7adca66/07:04:28宿主部署已核，唯一full680文件6644过/2跳保持。首原tick071301按要求优先派五局复盘，external_alternation_hold=true，外部/回刷null；首双Boss、次各幕Boss的真实native/来源/high与沙箱待自然门，不强派。原件20261024-0710-51-callbacks-ops/。
+
+并行#36: 05:28已核033643/041301/051302自然封存关tab，不代入库；五旧现场缺wrapper/native绑定/策略恢复范围仍待原36/20 owner，缺证不强关。原件20261024-issue36-handoff-0735-ops/。
 
 并行#23（05:15原核验）：代码已发布，可持续仍未通过；累计回收153/分配290，近24h16（物理/分支15）/108，可用空间净减101.54GiB，只读plan0 eligible。等原回收流程/工作树owner结算保护项，#46完整窗今天13:46:30再核正式比较；原件20261024-issue23-resume-0515-ops/及20261024-issue23-handoff-0724-ops/。
-
-并行原检查点（以下保留各自核验时间）：
-
-进行中的事: #37本轮原排位6376551030已接，07:20核061302原监督556166/birth22173759与full1仍在途、tsc0；#37 full0，窗口尚未交回。本轮无新检查/模型；本次回执paper/materials/20261024-0720-37-window-ops/receipt.json。#51原两回调已核，源795d32b0/main c7adca66/07:04:28宿主部署、三脚本实际导入及只读策略保持，原唯一full680文件6644过/2skip/tsc0，2246输入/1688依赖/469知识受测副本与前后SHA核同不重跑。部署后首原tick071301优先派PM552590五局（DDR9U5D07U49,0LH6KZ26VXJR,QVDR4R3UWKXU,5ZT1SKS66C1N,BKK8KAR3E83C），external_alternation_hold=true，外部/回刷null；PM优先符合原指示，不当外部native或收益。
-
-在等谁: #51等原自然tick/资源槽真正派外部首双Boss、次各幕Boss及原生高档/沙箱/冻结来源读回，不能强派或用登记代采用。另已接原集成员6376551030明确窗口：061302原十四补证草稿由监督556166/birth22173759于07:13启动R425单经验叶净full；树ff32f36912bb，生产tsc0，2139输入/469知识/1417依赖及183当前宿主源码冻结，full1在途，原exp HEAD23f810480与草稿SHA6034dc5b同。候选14项真实传统/脑工具读回已过，仅前置；无提交/发布或旧failed/rc0改写。
-
-下一步: 核paper/materials/20261024-experience-061302-check-ops/check-state.json回调；过门沿原exp真实非空源提交、0293提案审计、原自然发布/14实际消费者/唯一编号/双通知及准入释放。旧EROFS/EPERM与retry未知保持，严禁借51/28结果；本窗口检查/发布真正退出后在37明确交回。#37现候选657293922065保41/44时钟预算/afterEach及双方记录，按原集成员协调在此明确释放后重冻最新实际live知识/依赖再做唯一full，不并行抢位；之后37自然发布/首局读回→20父（39/43）。新的回调/首tick证据paper/materials/20261024-0710-51-callbacks-ops/，061302原件experience-061302-ops/及experience-061302-check-ops/。
 
 并行: #48原18冻结输入/244/首6生产source通过，实际0/244/state未初始化，不改冻结合同或游标；普通strategy模板经验→策略/rk显式输出步骤缺口已交原集成员核父范围，回刷专用附文不能代普通提炼验收。首两外部在自有回刷前，#48完整24h门10-24 18:19:29，不提前比较。#28已实际R425 T06:53:14/live8f20ce51，12叶/85实际消费者/469知识/绑定/准入核同，原循环302180自行续行Q7SFDZSJLULD Silent A10；科学父/真实两臂/开关/A-B和净Wstaged/旧HEAD回收限制保持。#46完整门10-24 13:46:30及原基线106保留。#27原16/32投递/06:13提醒有回执，正式ACK兼容/Roy可见及原wrapper仍pending，未变不重复主管收件箱。
 

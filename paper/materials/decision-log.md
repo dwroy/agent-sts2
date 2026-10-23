@@ -6518,3 +6518,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T07:16:45+08:00 [ops] 核51原两回调及07:13原tick复盘优先/交替占位门，首外部native未证；按6376551030接061302单经验叶R425净补测，原监督556166、tsc0/唯一full在途，旧失败不改，实际退出后明确释放给37。paper/materials/20261024-0710-51-callbacks-ops/receipt.json。
 
 - 2026-10-24 07:20 [ops] #37原唯一窗口排位已接：061302监督556166/birth22173759与full1仍在途，#37 full0、未释放；本轮无新full/模型，原失败/科学父保留。原件 paper/materials/20261024-0720-37-window-ops/receipt.json。
+
+- 2026-10-24 07:41 [ops] 061302精确R425单经验叶唯一full6536过/2跳/tsc0，真实源2c4c541fb929及0293审计通过；原自然发布660420等待play602792终局，尚未发布/释放给37，旧失败及科学父保留。paper/materials/20261024-0740-061302-check-received-ops/receipt.json。
