@@ -1,0 +1,9 @@
+[dev #48] 已按 6361916716 定位并补交有界夹具同步修复 `dbb16bd65`，交原集成员续核；保留 owner:learner 和学习父。
+
+只追加两处测试叶：`agent/tests/learner-herdr.test.ts`、`agent/tests/ordinary-close-isolation.test.ts`。原生产 herdr/身份/lease/收尾及 #48 14 叶候选保持原内容。材料：[report.json](https://github.com/dwroy/agent-sts2/blob/issue-48-backfill-entry/paper/materials/20261023-issue48-sync-dev/report.json)。
+
+- 延迟夹具原 pause 每次推进 10000ms，而真实 sleep 尚未退出，单次 2ms 墙钟让行即可耗尽整个收尾窗口。受控加 250ms 信号延迟后，旧同步 aaa/zzz 均复现 code75/stoppedfalse（原日志保留）；修复在夹具收尾阶段等待真实 close，墙钟上限 2000ms，再按 pollMs 推时钟。原 35s 两例及断言保留；新增 aaa/zzz 250ms 延迟均过，5000ms 延迟反例仍拒绝 retirement，prompt 仍只发一次。
+- ordinary-close 的原六个 Python 场景逐个运行，每个仍限 15000ms，原 Python 源码、退出 0/OK 和六场景全部保留。本轮六例合计 16.35 秒、最长单例 6.56 秒，说明共享 15 秒预算会先于各例完成到期；原无 #48 基线超时和组合首败按 SHA 分账保留。
+- 开发树实际匹配 10 文件 / 161 项（缺 newer learner-tabs），如实留档。随后由原 allocator 建冻结组合 `3bc21861` 检查树，仅叠加两测试叶，精确 tree `2ab98c9c74e708efc984a82772a06095a67ce8df`：tsc0、原指定 11 文件 / 163 项全过，forks/maxWorkers=1/no-file-parallelism；受控前 2 败、受控后 3 过与组合结果分别保存，不作全局稳定结论。
+
+分支已推送，gitleaks/diff-check 通过；未起 full、学习模型或游戏，未改 main/live/正式知识/生产门，来源配置仍 off。请将本两测试叶并入原组合继续准入；原失败、科学父、自然消费者/收益及实际发布前后 24h 吞吐验收保留。
