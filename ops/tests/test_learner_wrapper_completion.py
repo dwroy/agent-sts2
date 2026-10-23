@@ -70,7 +70,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
     def attention_files(self):
         return list((self.directory / "queue").glob("*learner-tui-attention.md"))
 
-    def test_clean_finish_seals_without_ops_attention_or_pane_commands(self):
+    def test_clean_finish_records_without_ops_attention_or_recycler_commands(self):
         env = self.prepare()
         result = self.run_wrapper(env)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -81,8 +81,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
         self.assertEqual(value["wrapper"]["supervisor"]["pid"], json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["pid"])
         self.assertTrue(value["wrapper"]["supervisor"]["birth"])
         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
-        self.assertEqual(json.loads((self.root / "seal-args.json").read_text()),
-                         ["seal", "--root", str(self.root), "--state-dir", str(self.directory), "--batch", self.batch])
+        self.assertFalse((self.root / "seal-args.json").exists())
         self.assertEqual(self.attention_files(), [])
         self.assertEqual(self.receipt.stat().st_mode & 0o777, 0o600)
 
@@ -98,7 +97,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
         self.assertEqual(value["wrapper"]["rc"], 3)
         self.assertEqual(value["wrapper"]["launcher_rc"], 1)
         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
-        self.assertTrue((self.root / "seal-args.json").exists())
+        self.assertFalse((self.root / "seal-args.json").exists())
         self.assertEqual(self.attention_files(), [])
 
     def test_invalid_native_binding_preserves_original_and_never_finishes_or_seals(self):
@@ -114,7 +113,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
         self.assertEqual(len(self.attention_files()), 1)
         self.assertRegex(self.attention_files()[0].name, r"^[0-9]+-[a-z][a-z0-9-]*\.md$")
 
-    def test_semantic_failure_preserves_failed_rc_zero_and_seals_transport(self):
+    def test_semantic_failure_preserves_failed_rc_zero_and_records_transport(self):
         env = self.prepare()
         result = self.run_wrapper(dict(env, FIXTURE_FINISH_STATE="failed"))
         self.assertEqual(result.returncode, 0)
@@ -123,7 +122,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
         self.assertEqual(value["wrapper"]["state"], "failed")
         self.assertEqual(value["wrapper"]["rc"], 0)
         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "failed")
-        self.assertTrue((self.root / "seal-args.json").exists())
+        self.assertFalse((self.root / "seal-args.json").exists())
         self.assertEqual(self.attention_files(), [])
 
     def test_empty_fix_audit_stays_failed_while_native_completion_is_recorded(self):
@@ -175,24 +174,23 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
         receipt = json.loads(self.receipt.read_text())
         self.assertEqual((receipt["wrapper"]["state"], receipt["wrapper"]["rc"]), ("rejected", 0))
         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "rejected")
-        self.assertTrue((self.root / "seal-args.json").is_file())
+        self.assertFalse((self.root / "seal-args.json").exists())
 
-    def test_seal_failure_keeps_verified_finish_but_reports_retained_handoff(self):
+    def test_unreleased_recycler_does_not_affect_verified_finish(self):
         env = self.prepare()
         result = self.run_wrapper(dict(env, FIXTURE_SEAL_RC="75"))
-        self.assertEqual(result.returncode, 75)
+        self.assertEqual(result.returncode, 0)
         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
-        self.assertEqual(len(self.attention_files()), 1)
-        notification = self.attention_files()[0].read_bytes()
-        tui.attention(self.directory, self.batch, "seal")
-        self.assertEqual(self.attention_files()[0].read_bytes(), notification)
-        self.assertEqual(len(self.attention_files()), 1)
+        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertEqual(self.attention_files(), [])
 
-    def test_missing_seal_adapter_never_falls_back_to_closing(self):
+    def test_missing_recycler_does_not_block_completion_or_close_pane(self):
         env = self.prepare()
         (self.root / "ops/learner_tabs.py").unlink()
-        self.assertEqual(self.run_wrapper(env).returncode, 75)
-        self.assertEqual(len(self.attention_files()), 1)
+        self.assertEqual(self.run_wrapper(env).returncode, 0)
+        self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
+        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertEqual(self.attention_files(), [])
 
     def test_mismatched_launcher_exit_is_not_silently_replaced(self):
         env = self.prepare()

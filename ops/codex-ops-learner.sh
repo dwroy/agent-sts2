@@ -227,12 +227,8 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
   if [ "$finish_rc" = 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
     if nice -n 19 python3 "$OPS/learner_tui.py" finished "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err"; then
-      # Seal only. The #20 recycler independently waits for this supervisor to exit before closing a tab.
-      if ! nice -n 19 python3 "$OPS/learner_tabs.py" seal --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
-          >> "$DIR/scheduler.log" 2>> "$err"; then
-        wrapper_attention seal
-        finish_rc=75
-      fi
+      # The durable wrapper receipt completes this handoff. Tab reclamation belongs to #20.
+      :
     else
       wrapper_attention finish
       finish_rc=75
