@@ -1,0 +1,182 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator49-live-net-20261023-1826/agent
+
+ ✓ tests/brain-codex.test.ts (31 tests) 10746ms
+     ✓ after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken  1646ms
+     ✓ a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)  2192ms
+     ✓ stalled twice: the question fails as a timeout and the fallback answers it  2148ms
+     ✓ the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked  1512ms
+     ✓ a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it  1512ms
+ ✓ tests/route-review.test.ts (27 tests) 2505ms
+     ✓ one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it  354ms
+     ✓ answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek  318ms
+     ✓ a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route  513ms
+ ✓ tests/learner.test.ts (47 tests) 593ms
+ ✓ tests/brain-codex-session.test.ts (25 tests) 6931ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1099ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  357ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  342ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2161ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  401ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  742ms
+ ✓ tests/build-decider.test.ts (28 tests) 3882ms
+     ✓ combat still goes to Jev: no DeepSeek call, even on a near-guess  1647ms
+     ✓ card reward with keep (or no route): recorded in the card row only; the next map follows the plan  425ms
+ ✓ tests/brain-codex-usage.test.ts (21 tests) 3364ms
+     ✓ fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program  1239ms
+     ✓ a server that stays up after its answer is killed after the grace; the answer stands  378ms
+     ✓ usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes  343ms
+ ✓ tests/run-plan-merge.test.ts (19 tests) 6430ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  803ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  647ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1224ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  692ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  620ms
+     ✓ the run start rides on the run's first question (no plan yet)  546ms
+     ✓ the real client reads the run plan from the answer, or from its own object after it  1248ms
+     ✓ the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan  318ms
+ ✓ tests/batch-c.test.ts (27 tests) 3619ms
+     ✓ Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code  1901ms
+     ✓ the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained  1430ms
+ ✓ tests/brain-router.test.ts (30 tests) 6076ms
+     ✓ a timeout aborts the engine and falls back  1006ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2010ms
+     ✓ a timeout between answers starts the count over  2011ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1006ms
+ ✓ tests/batch-g.test.ts (22 tests) 536ms
+ ✓ tests/batch-j.test.ts (21 tests) 8266ms
+     ✓ the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then)  3670ms
+     ✓ the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it  3240ms
+     ✓ the logged F17 T3 board (Brew and one empty slot): "2 random potions", re-planned with them; no "effect not simulated"  309ms
+     ✓ the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated")  382ms
+ ✓ tests/batch-e.test.ts (19 tests) 1007ms
+     ✓ "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option  503ms
+ ✓ tests/journal-replay.test.ts (10 tests) 4221ms
+     ✓ gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan  1024ms
+     ✓ after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so  1260ms
+     ✓ restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review  444ms
+     ✓ a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)  887ms
+     ✓ without the replay (the old behaviour) the restarted loop re-plans the route with an empty history  443ms
+ ✓ tests/batch-m.test.ts (27 tests) 346ms
+ ✓ tests/batch-i.test.ts (19 tests) 4673ms
+     ✓ logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)  3356ms
+     ✓ the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns  688ms
+ ✓ tests/batch-h.test.ts (13 tests) 1137ms
+     ✓ the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so  467ms
+     ✓ Jev's "Stone Armor, Liquid Memories, Bash+ from it": the drink notes Bash+, the screen takes Bash+ (not asked), and Bash+ is played next  304ms
+ ✓ tests/fix-queue-v4.test.ts (20 tests) 179ms
+ ✓ tests/brain-knowledge.test.ts (15 tests) 164ms
+ ✓ tests/batch-l.test.ts (26 tests) 308ms
+ ✓ tests/v6-card-pick.test.ts (24 tests) 1770ms
+ ✓ tests/brain-claude.test.ts (15 tests) 3223ms
+     ✓ with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded  605ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2007ms
+ ✓ tests/run-config.test.ts (14 tests) 494ms
+     ✓ the loop writes one row on the run's first state, next to its decision log  340ms
+ ✓ tests/batch-n.test.ts (15 tests) 3785ms
+       ✓ empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered  347ms
+       ✓ an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan)  1672ms
+       ✓ an empty reply takes the plan its reasoning drafted in one call  1614ms
+ ✓ tests/brain-deepseek.test.ts (12 tests) 78ms
+ ✓ tests/v6-direction-runtime.test.ts (20 tests) 349ms
+ ✓ tests/codex-only-brain.test.ts (36 tests) 561ms
+ ✓ tests/brain-agent-mode.test.ts (15 tests) 332ms
+ ✓ tests/brain-specs.test.ts (11 tests) 21ms
+ ✓ tests/brain-reflex-knowledge.test.ts (13 tests) 139ms
+ ✓ tests/deepseek-cache-layout.test.ts (11 tests) 108ms
+ ✓ tests/multi-character.test.ts (14 tests) 159ms
+ ✓ tests/open-book.test.ts (19 tests) 611ms
+     ✓ prioritizes choices, bounds crowded prompts, and reports omitted entries  475ms
+ ✓ tests/brain-query-guidance.test.ts (16 tests) 102ms
+ ✓ tests/brain-live.test.ts (12 tests) 148ms
+ ✓ tests/batch-k.test.ts (9 tests) 3345ms
+     ✓ the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's  3111ms
+ ✓ tests/brain-loop.test.ts (8 tests) 1762ms
+     ✓ BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine  377ms
+     ✓ BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale)  608ms
+ ✓ tests/external-stats-tools.test.ts (34 tests) 6138ms
+     ✓ cooccurrence: paginates whole rows under hard cap; out-of-range is explicit  4855ms
+ ✓ tests/construction-integration.test.ts (8 tests) 29ms
+ ✓ tests/v6-combat-entries.test.ts (31 tests) 826ms
+ ✓ tests/brain-agent-provenance.test.ts (16 tests) 1970ms
+   ✓ labels a catalogue reconstruction as a compatible view with its actual catalogue hash  654ms
+ ✓ tests/potion-equivalents.test.ts (15 tests) 104ms
+ ✓ tests/gkb-tools.test.ts (18 tests) 34ms
+ ✓ tests/deepseek.test.ts (12 tests) 95ms
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":210.79721500000005,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":170.22871099999998,"added_prompt_bytes":1591}
+ ✓ tests/v6-brain-card-value-loop.test.ts (9 tests) 6541ms
+   ✓ adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2  1154ms
+   ✓ adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3  841ms
+   ✓ keeps the original brain question when missing  738ms
+   ✓ keeps the original brain question when corrupt  756ms
+   ✓ keeps the original brain question when timeout  751ms
+   ✓ keeps the original brain question when no-combat  625ms
+   ✓ checks the real 450ms preparation boundary after 449ms of loading  436ms
+   ✓ checks the real 450ms preparation boundary after 450ms of loading  633ms
+   ✓ checks the real 450ms preparation boundary after 451ms of loading  604ms
+ ✓ tests/codex-cache-probe.test.ts (10 tests) 33ms
+ ✓ tests/human-pace-budget.test.ts (10 tests) 34ms
+ ✓ tests/v6-direction-plan.test.ts (8 tests) 99ms
+ ✓ tests/prefix-facts.test.ts (9 tests) 303ms
+ ✓ tests/v6-infrastructure.test.ts (15 tests) 54ms
+ ✓ tests/deepseek-consistency.test.ts (12 tests) 108ms
+ ✓ tests/silent-reward-addition.test.ts (10 tests) 157ms
+ ✓ tests/paths.test.ts (11 tests) 50ms
+ ✓ tests/mcp-server.test.ts (6 tests) 31ms
+ ✓ tests/build-rank.test.ts (13 tests) 42ms
+ ✓ tests/v6-direction-rides.test.ts (11 tests) 175ms
+ ✓ tests/v6-formats.test.ts (14 tests) 14ms
+ ✓ tests/reward-external-stats.test.ts (15 tests) 65ms
+ ✓ tests/strategy-entries.test.ts (7 tests) 27ms
+ ✓ tests/build-rank-integration.test.ts (10 tests) 1050ms
+   ✓ retains every supported candidate identity for u6ru-f22-shop/open  536ms
+ ✓ tests/codex-cache-engine.test.ts (5 tests) 37ms
+ ✓ tests/brain-run-profile.test.ts (7 tests) 22ms
+ ✓ tests/codex-usage-recovery.test.ts (18 tests) 18ms
+ ✓ tests/silent-tail-resource.test.ts (10 tests) 94ms
+ ✓ tests/shared-experience.test.ts (8 tests) 75ms
+ ✓ tests/silent-route-relic.test.ts (6 tests) 74ms
+ ✓ tests/silent-deck-cap.test.ts (9 tests) 48ms
+ ✓ tests/logdb.test.ts (8 tests) 8730ms
+     ✓ passes tests/logdb_test.py (without the venv only the extractor tests run)  6145ms
+     ✓ turns failures into isError with the reason  1095ms
+     ✓ answers SQL over the derived tables  707ms
+     ✓ refuses writes and files outside the database  419ms
+ ✓ tests/brain-codex-watchdog.test.ts (3 tests) 43ms
+ ✓ tests/silent-boss-phase.test.ts (14 tests) 97ms
+ ✓ tests/codex-paid-credit-policy.test.ts (19 tests) 15ms
+ ✓ tests/external-strategy-evidence.test.ts (41 tests) 197ms
+ ✓ tests/brain-agent-codex.test.ts (1 test) 121ms
+ ✓ tests/human-pace-shadow-loop.test.ts (2 tests) 643ms
+   ✓ keeps silent actual questions, choices, gates and worker requests equal with shadow enabled  462ms
+ ✓ tests/v6-card-reward-scope.test.ts (24 tests) 320ms
+ ✓ tests/build-rank-loop.test.ts (1 test) 363ms
+   ✓ reasks a missing override reason, dispatches once, and records the actual accepted reason  362ms
+ ✓ tests/human-pace-l2-preparation.test.ts (2 tests) 325ms
+ ✓ tests/jsonl-boundary-recovery.test.ts (25 tests) 66ms
+ ✓ tests/potion-unmeasured.test.ts (6 tests) 41ms
+ ✓ tests/human-pace-loop.test.ts (2 tests) 341ms
+ ✓ tests/reward-special.test.ts (5 tests) 10ms
+ ✓ tests/subscription-usage.test.ts (5 tests) 10ms
+ ✓ tests/computation-failure-loop.test.ts (1 test) 317ms
+   ✓ dispatches exactly once after two required runner failures and a failed degraded attempt  316ms
+ ✓ tests/codex-fast.test.ts (5 tests) 12ms
+ ✓ tests/legacy-brain-notes.test.ts (2 tests) 12ms
+ ✓ tests/brain-agent-loop.test.ts (6 tests) 862ms
+ ✓ tests/knowledge-check-guides.test.ts (2 tests) 56ms
+ ✓ tests/brain-codex-usage-contract.test.ts (1 test) 15ms
+ ✓ tests/codex-cache-observation.test.ts (4 tests) 6ms
+ ✓ tests/codex-abort-fixture.test.ts (1 test) 5ms
+ ✓ tests/file-escalation.test.ts (2 tests) 130ms
+ ✓ tests/brain-agent-report.test.ts (1 test) 4ms
+ ✓ tests/brain-view.test.ts (1 test) 360ms
+   ✓ renders and follows fixed brain logs with redaction, title protection and isolated lifecycle  359ms
+ ✓ tests/brain-decision-dataset.test.ts (1 test) 112ms
+
+ Test Files  93 passed (93)
+      Tests  1263 passed (1263)
+   Start at  18:28:54
+   Duration  152.93s (transform 4.46s, setup 4.96s, import 24.09s, tests 113.53s, environment 9ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/issue49-combination-1756/live-net-directed-vitest.json

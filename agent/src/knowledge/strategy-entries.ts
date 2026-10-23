@@ -3,7 +3,7 @@ import { readFileSync, statSync } from "node:fs";
 import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
 import type { BrainRequest } from "../brain/types.js";
 
-export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan"] as const;
+export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan", "fight_plan"] as const;
 export type QuestionType = typeof QUESTION_TYPES[number];
 type Range = { min?: number; max?: number };
 export interface OwnStrategyEvidence { type?: "own"; run: string; floor: number; ref?: string; role?: "support" | "contradict" | "repeat" }
@@ -171,7 +171,8 @@ export function questionTypes(label: string, payload: unknown): QuestionType[] {
   else if (label.startsWith("event/")) result.push("event");
   else if (label.startsWith("rest/")) result.push("rest");
   else if (label.startsWith("shop/")) result.push("shop");
-  if (label === "event/act-plan" || label === "run-plan" && ["start", "act"].includes(String((object(p["run_state"]) ? p["run_state"] : p)["trigger"])) || ["start", "act"].includes(String(plan["trigger"]))) result.push("act_plan");
+  else if (label === "fight-plan") result.push("fight_plan");
+  if (label === "event/act-plan" || label === "map/act-start" || label === "run-plan" && ["start", "act"].includes(String((object(p["run_state"]) ? p["run_state"] : p)["trigger"])) || ["start", "act"].includes(String(plan["trigger"]))) result.push("act_plan");
   return result;
 }
 function within(value: number | undefined, r: Range | undefined): boolean {

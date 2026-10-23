@@ -45,10 +45,13 @@ import { systemRules } from "./llm/deepseek.js";
 import { memoryWithoutLessons } from "./knowledge.js";
 import { isConstructionQuestion } from "../memory/construction-log.js";
 import { attachOpenBook } from "../knowledge/open-book.js";
+import { knowledgeCharacter } from "../knowledge/files.js";
+import { attachQueryGuidance } from "./tools/query-guidance.js";
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
 export function agentSystemPrompt(): string {
-  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。`;
+  const guidance = knowledgeCharacter() === "silent" ? "\n拿牌、商店、休息、事件和幕初路线题作答前先查本题相关策略（kb_strategies query=\"*\"）与 rk（reflex knowledge，小脑记忆，kb_reflex query=\"*\"或Boss/精英/卡牌ID）；战斗备战题先查本幕 Boss / 精英及当前敌人的策略与rk。经验另用kb_experience查询。题面线索只有检索候选数量和身份，不代表已查询、predicate成立或Jev采用；只读查询不会启用关闭的战斗条目。空库或错误不反复查询，调用/耗时预算用完立即用已有信息作答。" : "";
+  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}`;
 }
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
@@ -332,7 +335,7 @@ export class Brain {
       };
       return { ...base, system: agentSystemPrompt(),
         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
-        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: base.payload } } : {}),
+        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
         knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
     }
     const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
@@ -357,6 +360,7 @@ export class Brain {
    * with v3's prompt (no prefix), the reason in that row's knowledge note (brain.jsonl).
    */
   private async decide(req: BrainRequest): Promise<BrainAnswer> {
+    req = await attachQueryGuidance(req);
     try {
       return await this.router.decide(req);
     } catch (error) {

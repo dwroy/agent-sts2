@@ -37,7 +37,7 @@ it("exposes only fixed knowledge selectors, keeps external provenance, and retur
   writeFileSync(join(dir, "common/open-book.json"), JSON.stringify({ schema: "open-book-v1", sources: source, entries: [{ kind: "cards", id: "FIXTURE", name: "fixture", aliases: [], source: source.source, game_version: source.game_version, provenance: [], facts: { fixture: true } }] }));
   const ctx = { ascension: 10, knowledgeDir: dir, logsDir: "/forbidden", payload: { exact: "question state" } };
   const tools = buildKnowledgeTools(ctx), host = new ToolHost(tools, ctx);
-  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
+  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "kb_reflex", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
   const result = await host.call("kb_open_book", { query: "FIXTURE", category: "cards" });
   expect(JSON.parse(result.text)).toMatchObject({ entries: [{ id: "FIXTURE", source: source.source, game_version: "v0.111.0" }], sources: [source] });
   expect(JSON.parse((await host.call("kb_open_book", { query: "FIXTURE" })).text).entries).toHaveLength(1);

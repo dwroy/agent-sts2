@@ -32,6 +32,8 @@ export interface ToolContext {
   /** Current question for state-filtered strategy retrieval; never a model-selected path. */
   label?: string;
   payload?: unknown;
+  /** Displayed option facts for context-matched experience queries. */
+  options?: Record<string, string | null>;
   /** Current act (1-3) when known. */
   act?: number;
   /** Directory holding monster-db.json, experience.json, room-costs.json, outcome-stats.json, ... */

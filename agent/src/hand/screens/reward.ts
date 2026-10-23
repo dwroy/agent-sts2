@@ -22,6 +22,7 @@ import { silentRewardAdditionFacts } from "./silent-reward-addition.js";
 import { buildV6CardPick } from "../../v6/card-pick.js";
 import { v6Config } from "../../v6/config.js";
 import { brainCardValueFacts } from "../../v6/brain-card-value.js";
+import { rewardExternalStatsView } from "./reward-external-stats.js";
 
 /**
  * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
@@ -152,6 +153,8 @@ export function planReward(env: DecisionEnv): Decision | null {
     // The act's route rides on the same question while a fork is left (route-review.ts): keep or change.
     const review = routeReviewBlock(env, "card", CARD_REWARD_ROOMS);
     const note = "in_deck: copies of that card already in your deck.";
+    const external = rewardExternalStatsView(env, options);
+    const brainNote = external.note ? `${note} ${external.note}` : note;
     // DeepSeek's state: the deck as it is, without code's card-role counts (deck_needs) or its advice on skipping.
     const { deck_needs: _needs, note: _advice, ...deepseekState } = params.state;
     return withRouteReview(
@@ -159,9 +162,9 @@ export function planReward(env: DecisionEnv): Decision | null {
       buildPickDecision({
         ...params,
         state: review ? { ...deepseekState, route_review: review.state } : deepseekState,
-        options,
+        options: external.options,
         deepseek: { facts: buildFacts(env, { ...silentRewardAdditionFacts(state, options),
-          ...(supplement ? { card_value_v2: supplement.context } : {}) }), baseline, note: review ? `${note} ${review.note}` : note },
+          ...(supplement ? { card_value_v2: supplement.context } : {}) }), baseline, note: review ? `${brainNote} ${review.note}` : brainNote },
       }),
       review,
     );

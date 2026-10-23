@@ -15,7 +15,7 @@
 | 字段 | 含义 |
 | --- | --- |
 | id / version | 库内唯一稳定编号 / 学习者维护的条目版本（非行为 release_id） |
-| trigger.question_types | card_reward、event、rest、shop、act_plan 的非空数组；任一命中 |
+| trigger.question_types | card_reward、event、rest、shop、act_plan、fight_plan 的非空数组；任一命中（fight_plan 为 #49 备战查询入口，旧条目不自动扩用） |
 | trigger.acts / floor / bosses | 幕号数组、全局楼层闭区间、当前幕 Boss 原始 ID 数组；不同字段全部满足 |
 | trigger.hp_ratio | 当前 HP / 最大 HP，闭区间 0–1 |
 | trigger.deck_size | 当前牌组张数闭区间 |
@@ -50,12 +50,13 @@
 
 ## 检索和 prompt
 
-五类大脑请求在 `Brain.request` 中统一处理，发生在 full knowledge prefix 构建之前，因此普通调用、full prefix 和上下文溢出回退都带同一检索结果。模型及工具路由不变。
+历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式只给查询线索，正文由 `kb_strategies` 返回，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
 
 - reward/card → card_reward；event/* → event；rest/* → rest；shop/* → shop。
 - event/act-plan 同时匹配 event 和 act_plan。
+- map/act-start 匹配 act_plan；fight-plan 匹配 fight_plan，供已明确声明该触发题型的条目查询。
 - run-plan 的 run_state.trigger 为 start/act，或任意题携带 run_plan_task.trigger=start/act 时，也匹配 act_plan。hp_drop/age 的独立重规划不计幕初规划。
-- 只读取静默角色文件。其他角色及无规划任务的战斗题不会读取它。
+- 只读取静默角色文件。其他角色及无规划任务的普通战斗题不会读取它；独立 fight-plan 备战题有专用触发类型。
 - 上下文取 facts → payload 根 → run_state → run_plan_task → run_brief，数值幕号兼容旧字符串。HP 允许尾随百分比。
 - 排序：触发字段数＋指定牌条件数更多优先，再按 confidence 降序、id 升序。同一条即使匹配多个题型也只注入一次。
 - 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源、派生分账及局限。装不下的条目跳过，不截断证据。
