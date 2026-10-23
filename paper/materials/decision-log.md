@@ -6163,3 +6163,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:50:21+08:00 [ops] 原124241二组/124301共用唯一dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261023-1431-dataset-ops/。
 
 2026-10-23T14:56:05+08:00 [watcher] #36提醒接续：原ops三叶已于14:51:13发live d1f523bb166b02e4ab11a93ec5e14883c6c954a6，父b49984b7；14:55:14独立短K共享→L共享回读，精确三叶差量及347本地源码/1637引用/20动态点目标清单blob模式SHA核同，469知识、36其余叶、46五叶/P0、stdio与保护文件及131316/134302原失败不变。原首次锁冲突保留，后原发布门通过；仅记录回读未重full/定向/模型/生产动作，V6-R417不加号。实际下一自然收尾原ops14:53:19仍pending，不补死主管seal、不重跑旧批、不代done；36与科学父开放，46原24h窗不变，后47→26提示→42余→35→28→37（37→20）。核验原件paper/materials/20261023-issue36-closure-readback-integrator/readback.json；27正式ACK原CLI兼容阻塞保留。
+
+- 2026-10-23T14:53:19+08:00 [ops/#36] 去未发布seal依赖精确3叶发live d1f523bb166b02e4ab11a93ec5e14883c6c954a6，26原件/347本地源码核同，87/24定向沿用、不重full；保知识/46/TUI/原失败，下一自然收尾开放。原件paper/materials/20261023-issue36-closure-publication-ops/publication.json。
+
+- 2026-10-23T14:57:29+08:00 [ops/#36] 三叶发布后原144302自然finished真实failed/rc0已核，绑定1、0.51秒原wrapper回收申请、stderr空/无attention及lease空闲；retention路径门deferred与后续普通tick仍开放，不关科学父。原件paper/materials/20261023-issue36-closure-publication-ops/natural-144302.json。

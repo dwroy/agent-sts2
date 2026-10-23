@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-23T14:56:26+08:00",
+  "batch": "20261023-144302-fix-batch",
+  "native_completed_at": "2026-10-23T06:52:18.490Z",
+  "native_summary": {
+    "path": "learner/runs/20261023-144309-eb5f3d22-7445-4b36-852a-50f1c37234c2-fix-batch.jsonl",
+    "offset": 1139680,
+    "bytes": 3280,
+    "sha256": "bf8d100ce2f7a9de7e0455c183d7401b75f9df69a66c57b03f3a2064dcc66571"
+  },
+  "native_session": "01a1677f-db4b-79e2-bc2a-9bf174614246",
+  "native_turn": "01a16780-724b-7c33-b62a-a7bb0bf72e7e",
+  "binding_count": 1,
+  "submission_count": 1,
+  "native_verified_read_only": true,
+  "native_context": [
+    {
+      "turn": "01a16780-724b-7c33-b62a-a7bb0bf72e7e",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-144302",
+      "sandbox_policy": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261023-144302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "line_sha256": "f2614dae4b95509f75b1ce5718b8fbc9087c5d3928bf177b9f449a2288455a7b"
+    }
+  ],
+  "native_receipt": {
+    "path": "ops/codex-ops/learner/learner-20261023-144302-fix-batch.tui.json",
+    "sha256": "fe60eecb77630a1ff0cb9ee5717e8301509e9f316f3d673e6d75a6b4d128e9f2",
+    "bytes": 5264
+  },
+  "wrapper": {
+    "version": 1,
+    "batch": "20261023-144302-fix-batch",
+    "state": "failed",
+    "rc": 0,
+    "launcher_rc": 0,
+    "finished": "2026-10-23 14:52",
+    "supervisor": {
+      "pid": 848380,
+      "birth": "16231417"
+    },
+    "batch_sha256": "d4e261d3de88d9c94f6e7ade369df0d5ea82c6197af901cfb6bb68da174ca3d5"
+  },
+  "batch_hash_matches_original_wrapper": true,
+  "genuine_semantic_result": "failed/rc0; report tests null/null/0, fixes empty, merged null. No source or checks invented.",
+  "supervisor_and_native_stopped": true,
+  "lease": {
+    "path": "ops/codex-ops/learner/codex-fix-silent-20261023-144302.lock",
+    "exclusive_nonblocking_probe": "free"
+  },
+  "wrapper_to_retention_seconds": 0.51,
+  "verification_300s_timeout": "not triggered; original automatic retention request under5s after native summary",
+  "stderr": {
+    "path": "ops/codex-ops/learner/20261023-144302-fix-batch.err",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "wrapper_attention_files": [],
+  "original_retention": {
+    "batch": "20261023-144302-fix-batch",
+    "task": "fix-batch",
+    "character": "silent",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-144302",
+    "schema": "learner-cleanup-request-v1",
+    "requested_at": "2026-10-23T14:52:19+08:00",
+    "requested_by": "learner-wrapper",
+    "state": "deferred",
+    "admission_required": true,
+    "model_finished_does_not_prove_ingestion": true,
+    "last_result": {
+      "state": "deferred",
+      "reason": "scratch ownership not bound to original report"
+    },
+    "updated_at": "2026-10-23T14:52:20+08:00"
+  },
+  "retention_not_complete": true,
+  "new_model_or_task_replayed": false,
+  "tab_retirement": "#20 independent; no pane closed",
+  "next_ordinary_tick_dispatch": "pending; existing strategy141301 predates this case and recovery110001-s2 is not a new ordinary tick",
+  "new_publication_case_is_inflight": "batch started14:43 before live publication; actual natural completion afterT at14:52. It verifies this original finish path, not a fresh postpublication startup."
+}

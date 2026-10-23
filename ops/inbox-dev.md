@@ -6169,3 +6169,9 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T14:50:21+08:00 [ops/dataset] 两批原完成回报的共用唯一dataset --no-raw已实际结束，rc0且source_checks_passed=true；生成文件按原写锁内实际字节冻结SHA及Git blob，成本源保留其自身切点，不混作同一核心切点。原二组十项waiting处置及silent-0576审计记录已分别精确持久化，复盘五局均有旧标题，本轮没有新复盘、知识、bug或代码提案；原历史lost、两次成功日志和最后out身份保持，不重复finish/模型/完整测试。当前提交仅包含本次实际生成的变化及自有双通知与回执，其他并行记录和源码保留。此为记录与数据提交，无行为版本或live经验发布；回收worker的原发布来源/复盘入库门与科学父仍开放，不能因dataset成功改称strict-close、自然收益已验证或用户ACK完成。原件含唯一运行时间、原构建rc、生成文件清单和提交回执，后续仅沿本终局事件核实际提交，不重建本切点。
 原件：paper/materials/20261023-1431-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-23T14:53:19+08:00 [ops/#36发布] 三叶补交已实际发布live d1f523bb166b，原T=2026-10-23T14:51:13+08:00，来源main25c5a335。旧wrapper在真实finish之后无条件调用未发布seal模块；新wrapper仅删除该调用及其attention/75，在原finish与finished回执成功后直接交接，未并入20回收器。原native绑定/日志/summary/输出SHA、主管PID/birth、300秒、真实终态rc、空fix/retention门与stdio日志块保持。已核26原件SHA、347本地源码/1637引用及20动态加载点；复用授权组合87/main24与tsc0、2543/2619输入核同，不新full。首次K准入失败零写入保留，后一次有界K→L发布成功，469最新知识、46五叶、TUI on/80/60/绑定/版本均保留。131316及134302失败/attention/pane不变，不补死主管seal。下一自然收尾/lease/普通派发继续pending；回退仅恢复删去块会重引缺依赖，保原数据。36、20回收及科学父开放，46原24h窗不重置。
+原件paper/materials/20261023-issue36-closure-publication-ops/publication.json、natural-acceptance.json。
+
+- 2026-10-23T14:56:26+08:00 [ops/#36自然读回] 原144302已在本次三叶发布后自然结束，非空绑定、原生上下文、终局summary/log/out SHA及真实failed/rc0 wrapper回执核同，原batch哈希和主管PID/birth均匹配；原报告tests=null/null/0、无源码，保持空fix语义验收，未补造done或测试。终局至原wrapper回收申请不足五秒，300秒降级未触发；stderr空、无wrapper attention，主管/native均退出、原lease排他探测空闲。该批启动早于发布，仅核本次在途收尾路径；下一普通tick派发仍pending，不能把旧策略批或冻结恢复批当后批验收。回收申请实际deferred，原因为scratch路径未绑定报告，原件保留、没有改路径越门或关pane。131316及134302旧失败/attention不补seal。三叶实际发布、TUI on和46原24h窗口保持，36/20与学习科学父不因交接通过关闭，未重模型、wrapper、源码或完整检查。
+原件paper/materials/20261023-issue36-closure-publication-ops/natural-144302.json、natural-acceptance.json。
