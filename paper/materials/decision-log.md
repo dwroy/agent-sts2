@@ -6167,3 +6167,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:53:19+08:00 [ops/#36] 去未发布seal依赖精确3叶发live d1f523bb166b02e4ab11a93ec5e14883c6c954a6，26原件/347本地源码核同，87/24定向沿用、不重full；保知识/46/TUI/原失败，下一自然收尾开放。原件paper/materials/20261023-issue36-closure-publication-ops/publication.json。
 
 - 2026-10-23T14:57:29+08:00 [ops/#36] 三叶发布后原144302自然finished真实failed/rc0已核，绑定1、0.51秒原wrapper回收申请、stderr空/无attention及lease空闲；retention路径门deferred与后续普通tick仍开放，不关科学父。原件paper/materials/20261023-issue36-closure-publication-ops/natural-144302.json。
+
+2026-10-23T15:01:12+08:00 [watcher] #36接续已实读6359300403/6359351513：15:00:45独立核原144302 summary字节窗口、log/out/SHA、native上下文行SHA与session/turn/单提交绑定，实际gpt-6.1-sol/high；原native code0、wrapper真实failed/rc0与原batch规范SHA匹配，空fix tests=null/null/0未补测。native及监督已退出、lease单次排他非阻塞空闲即释放；无stderr/attention，原请求距summary0.51秒，300s未自然触发。原scratch请求deferred与报告路径父级不属原工作树核同，不放宽/搬运/重试回收；下一普通tick仍待原ops，不把发布前启动且T后结束的在途批记新启动。live d1f523bb及原失败SHA不变，46原24h窗不变，36/20/科学父开放；无新full/模型/生产动作。材料paper/materials/20261023-issue36-natural144302-integrator/readback.json。
