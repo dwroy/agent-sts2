@@ -37,7 +37,7 @@ def start_learner(argv, root, scripts, state_dir, label):
     Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
     launch_env = dict(os.environ)
-    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT"):
+    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE"):
         launch_env.pop(name, None)
     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
@@ -264,7 +264,13 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None):
+    if backfill_source is not None:
+        from strategy_backfill_jobs import ID
+        if (not isinstance(backfill_source, str) or not ID.fullmatch(backfill_source)
+                or task != "strategy-proposal" or character != "silent" or reason != "backfill"
+                or not re.fullmatch(re.escape("strategy-backfill:" + backfill_source) + r":[0-9]+", str(key)) or research_request or implementation_request):
+            return None
     # A released supervisor slot does not authorize replay of its unresolved original demand.
     if any(batch.get("state") == "awaiting_review" and batch.get("task") == task
            and batch.get("character") == character
@@ -299,7 +305,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         return None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
     argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
-    if research_request:
+    if backfill_source:
+        argv += [task, "backfill:" + backfill_source]
+    elif research_request:
         argv += [task, research_request]
     elif implementation_request:
         argv += [task, implementation_request]
@@ -311,7 +319,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
     if pane:
         state["batches"][batch_id]["pane"] = pane
-    if research_request:
+    if backfill_source:
+        state["batches"][batch_id]["backfill_source"] = backfill_source
+    elif research_request:
         state["batches"][batch_id]["research_request"] = research_request
     elif implementation_request:
         state["batches"][batch_id]["implementation_request"] = implementation_request
@@ -322,39 +332,47 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
         return {"disk_capacity_hold": True, "dispatched": None}
+    attempted = []
+    def priority_writer(*args, **kwargs):
+        # A ready normal source retains priority even when its writer/lease gate waits.
+        if args[7] == "ops" or retryable(args[0], args[3], args[6]):
+            attempted.append(args[3])
+        return dispatch_write(*args, **kwargs)
     core = None
+    request = None
     if character == "silent":
         import core_build_jobs
         request = core_build_jobs.pending_request(root)
         if request:
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
     runs = pending(root, scripts, character)
-    experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
     from learning_requests import reconcile as reconcile_learning
     learning = reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
-    research = dispatch_research(state, root, scripts, character, alive, stamp, dispatch_write, STRATEGY_WORKERS)
+    research = dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)
     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(proposals)
-    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, dispatch_write)
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer)
     # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
     key = fix_key(root, character)
-    fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal and not research else None
+    fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+    strategy = strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer) if not proposal and not research else None
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
     from boss_sim_jobs import check
     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
-            "core_builds": core,
+            "core_builds": core, "backfill_hold": bool(attempted or runs or request),
             "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):
     """Roy-authorized periodic calibration; read live data, never overwrite refreshing knowledge."""
+    state.setdefault("calibration_ready", {}).pop(character, None)
     if character != "silent":
         return None
     try:
@@ -377,11 +395,12 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
     request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
                "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
+    state["calibration_ready"][character] = request["request_id"]
     _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
     return result
 
 
-def strategy_job(state, root, scripts, character, alive, stamp):
+def strategy_job(state, root, scripts, character, alive, stamp, writer=None):
     """Dispatch after an ascension change or ten new completed postmortems, retaining a busy trigger."""
     runs = list(dict.fromkeys(run for batch in state["batches"].values()
                              if batch.get("task", "postmortem") == "postmortem"
@@ -399,7 +418,7 @@ def strategy_job(state, root, scripts, character, alive, stamp):
     if not runs or (level <= progress["ascension"] and len(runs) < progress["runs"] + 10):
         return None
     key = f"{character}:A{level}:{len(runs)}"
-    result = dispatch_write(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
+    result = (writer or dispatch_write)(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
     if result:
         state["batches"][result[0]]["strategy_progress"] = {"ascension": level, "runs": len(runs)}
     return result

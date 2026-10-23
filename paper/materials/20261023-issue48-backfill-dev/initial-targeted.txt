@@ -1,0 +1,57 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-48-backfill-entry/agent
+
+ ❯ tests/learner-wrapper-scripts.test.ts (2 tests | 2 failed) 13ms
+     × ships every literal repo script referenced by the wrapper, including both task routes 10ms
+     × rejects the exact old unpublished seal reference and any omitted required script 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > ships every literal repo script referenced by the wrapper, including both task routes
+AssertionError: expected [ 'ops/strategy_backfill_jobs.py' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "ops/strategy_backfill_jobs.py",
++ ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:29:41
+     27|     expect(required).toEqual(expect.arrayContaining(["ops/paths.sh", "…
+     28|       "ops/codex-learner.sh", "ops/codex-fast.sh", "ops/codex-ops-lear…
+     29|     expect(missing(wrapper, published)).toEqual([]);
+       |                                         ^
+     30|     for (const path of required) expect(statSync(resolve(root, path)).…
+     31|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > rejects the exact old unpublished seal reference and any omitted required script
+AssertionError: expected [ 'ops/learner_tabs.py', …(1) ] to deeply equal [ 'ops/learner_tabs.py' ]
+
+- Expected
++ Received
+
+  [
+    "ops/learner_tabs.py",
++   "ops/strategy_backfill_jobs.py",
+  ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:36:91
+     34|     const withoutRecycler = new Set(published);
+     35|     withoutRecycler.delete("ops/learner_tabs.py");
+     36|     expect(missing(`${wrapper}\npython3 "$OPS/learner_tabs.py" seal\n`…
+       |                                                                                           ^
+     37|     for (const path of scripts(wrapper)) {
+     38|       const incomplete = new Set(published);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  2 failed | 116 passed (118)
+   Start at  16:59:33
+   Duration  5.96s (transform 6.58s, setup 3.31s, import 5.03s, tests 13.32s, environment 1ms)
+

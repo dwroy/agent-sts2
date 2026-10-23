@@ -122,10 +122,17 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
     if missing_failed_report:
         batch["completion_failure"] = {"reason": "learner exited without a completion report", "rc": rc,
                                        "stderr": os.path.join(out_dir, batch_id + ".err")}
-    if proposal_only: batch["no_change_proposals"] = proposal_only
+    if proposal_only:
+        batch["no_change_proposals"] = proposal_only
+        if batch.get("backfill_source") and batch["state"] == "done":
+            batch["backfill_result"] = proposal_only["backfill"]["dispositions"]
+            batch["backfill_output_files"] = proposal_only["backfill"]["destination_files"]
     if proposal_errors:
         inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
-        batch["proposal_repair_needed"] = True
+        if batch.get("backfill_source"):
+            batch["backfill_completion_errors"] = proposal_errors
+        else:
+            batch["proposal_repair_needed"] = True
     if empty:
         batch["no_changes"] = empty
     kind = {"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done")

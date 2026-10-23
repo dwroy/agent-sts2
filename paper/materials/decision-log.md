@@ -6209,3 +6209,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T16:34:23+08:00 [ops] 36两旧失败通知核实际两叶发布已恢复不重跑；48/50学习首批冻结Boss/精英6旧条目及原分账/10局核窗合同，0已处理/244剩余，现缺后置派发绑定交开发集成，未占正常槽/起模型或关科学父。原件paper/materials/20261023-issue48-first-batch-ops/dispatch-plan.json。
 
 2026-10-23T16:39:48+08:00 [watcher] #48实读6360915341与50学习第4条，冻结任务/输入/入口源码SHA核同，244旧条目、首批6条逐ID原文等价、92旧引用不继承；固定runs切点重算Silent A10最终失败34/32/18局仅作选题。现有research仅4旧ID且排普通提案前，48无登记开发会话，不具后置回刷绑定；交主管落实开发归属后沿review定向核验→ops发布→原自然调度。保持原槽/锁/lease/账号/磁盘门，真实启动才推进可恢复游标，正常学习先行；本轮未派模型/抢槽/测试/full/改live，processed0/remaining244，48/50内容/自然消费/收益及实际上线前后24h吞吐待验。证据paper/materials/20261023-issue48-integrator/admission.json。
+
+- 2026-10-23T17:08:31+08:00 [dev #48] 后置经验回刷开发候选：自然tick全部正常复盘/策略/提案及原重任务/升阶审计之后才准入独立backfill_source，沿原strategy-proposal槽位/锁/lease/账号/磁盘门；冻结manifest/work_spec与逐ID原文核SHA，实际原生接受才推进唯一游标，失败/waiting原批次保留、核退场后显式有界恢复。首批244/6原件核同，源码候选配置默认off、未派模型/未改知识或live；tsc与18固定夹具过，已提交树定向回归待随后登记。交集成员核验→ops发布→自然调度，48/50科学父及真实T前后24h吞吐/正式入库/rk回放/消费者保持开放。材料paper/materials/20261023-issue48-backfill-dev/。
