@@ -234,6 +234,49 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(actual, ['queue',str(self.root),'other','--',*command])
         self.assertEqual(status, 'enabled')
 
+    def test_logdb_sync_covers_separate_live_and_ops_databases(self):
+        driver = load('refresh_driver')
+        live = self.root / 'live'
+        with patch.object(driver, 'ROOT', live):
+            steps = driver.logdb_sync_steps(self.root)
+        self.assertEqual([name for name, _ in steps], ['logdb-sync', 'logdb-sync-ops-root'])
+        for (_name, command), root in zip(steps, (live, self.root)):
+            self.assertEqual(command, [root / 'data/logdb-venv/bin/python',
+                live / 'agent/tools/logdb/sync.py', '--logs', root / 'logs',
+                '--db', root / 'data/logdb', '--no-wait'])
+
+    def test_logdb_sync_deduplicates_same_or_shared_database(self):
+        driver = load('refresh_driver')
+        live = self.root / 'live'
+        with patch.object(driver, 'ROOT', self.root):
+            self.assertEqual(len(driver.logdb_sync_steps(self.root)), 1)
+        target = self.root / 'data/logdb'
+        target.mkdir(parents=True)
+        (live / 'data').mkdir(parents=True)
+        (live / 'data/logdb').symlink_to(target, target_is_directory=True)
+        with patch.object(driver, 'ROOT', live):
+            self.assertEqual(len(driver.logdb_sync_steps(self.root)), 1)
+
+    def test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry(self):
+        driver = load('refresh_driver')
+        live = self.root / 'live'
+        calls = []
+        def step(_root, name, argv):
+            calls.append((name, argv))
+            return 0
+        with patch.object(driver, 'ROOT', live), patch.object(driver, 'BUILDERS', live / 'knowledge/builders'), \
+                patch.object(driver, 'step', side_effect=step), patch.dict(os.environ), \
+                patch.object(sys, 'argv', ['refresh_driver.py', '--ops-root', str(self.root),
+                                          '--character', 'silent', '--queue-entered']):
+            self.assertEqual(driver.main(), 0)
+        names = [name for name, _ in calls]
+        self.assertEqual([n for n in names if n.startswith('logdb-sync')],
+                         ['logdb-sync', 'logdb-sync-ops-root'])
+        self.assertLess(names.index('logdb-sync-ops-root'), names.index('construction-opportunities:silent'))
+        command = next(argv for name, argv in calls if name == 'logdb-sync-ops-root')
+        self.assertIn('--no-wait', command)
+        self.assertEqual(command[command.index('--db') + 1], self.root / 'data/logdb')
+
     def test_real_fit_full_and_incremental_models_and_gates_match_bytes(self):
         fv = load('build-fight-value')
         fixture = list(fv.bmd._synthetic_lines())
