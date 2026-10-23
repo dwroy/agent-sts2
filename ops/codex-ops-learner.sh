@@ -15,14 +15,18 @@ learner_task="${6:-$task}"
 research_request=""
 implementation_request=""
 implementation_task_file=""
+backfill_source=""
+backfill_task_file=""
 if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
-    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
+    && { [[ "$7" =~ ^backfill:[a-z0-9][a-z0-9._-]{0,119}$ ]] || [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
       || [ "$7" = roy-20261010-silent-core-output-value ] \
       || [ "$7" = roy-20261012-concrete-core-decklists ] \
       || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
       || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
-  if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
+  if [[ "$7" == backfill:* ]]; then
+    backfill_source="${7#backfill:}"
+  elif [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
     implementation_request="$7"
   else
     research_request="$7"
@@ -73,6 +77,17 @@ if [ -n "$research_request" ]; then
   fi
   exec 8>&-
 fi
+if [ -n "$backfill_source" ]; then
+  exec 8> "$DIR/learn.lock"
+  if flock -w 120 8; then
+    research_base="$(python3 "$OPS/strategy_backfill_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
+    flock -u 8
+  else
+    echo "backfill registration lock timed out; no model started" >> "$err"
+    audit_ready=0
+  fi
+  exec 8>&-
+fi
 if [ -n "$implementation_request" ]; then
   exec 8> "$DIR/learn.lock"
   if flock -w 120 8; then
@@ -105,7 +120,7 @@ if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
     echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
     audit_ready=0
   fi
-  if [ "$audit_ready" = 1 ] && [ -n "$research_request" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
+  if [ "$audit_ready" = 1 ] && [ -n "$research_request$backfill_source" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
     echo "research worktree HEAD differs from its registered dispatch baseline; no model started" >> "$err"
     audit_ready=0
   fi
@@ -145,9 +160,23 @@ if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
   fi
   exec 8>&-
 fi
+if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
+  exec 8> "$DIR/learn.lock"
+  if flock -w 120 8; then
+    backfill_task_file="$(python3 "$OPS/strategy_backfill_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
+    flock -u 8
+  else
+    echo "backfill task input lock timed out; no model started" >> "$err"
+    audit_ready=0
+  fi
+  exec 8>&-
+fi
 # Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
 # LEARNER_CMD overrides the command for fixed tests only.
 if [ "$audit_ready" != 1 ]; then
+  if [ -n "$backfill_source" ]; then
+    python3 "$OPS/strategy_backfill_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
+  fi
   rc=1
 elif [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 19 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
@@ -175,7 +204,7 @@ else
   if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
     learner_effort=xhigh
   fi
-  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
+  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
@@ -190,6 +219,7 @@ else
   fi
   # The launcher may retry only a proven pre-session failure under this same registration.
   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
+  if [ -n "$backfill_source" ]; then export LEARNER_BACKFILL_SOURCE="$backfill_source"; else unset LEARNER_BACKFILL_SOURCE; fi
   # The parent spawns us before saving the registration. Wait for its state transaction
   # before either entry point captures the lease; release the lock before running a learner.
   if (flock -w 120 8) 8> "$DIR/learn.lock"; then
@@ -201,6 +231,11 @@ else
     echo "learner registration lock wait timed out after 120 seconds; no model started" >> "$err"
     rc=75
   fi
+fi
+if [ -n "$backfill_source" ] && [ "$rc" != 0 ] \
+    && [ ! -e "$DIR/learner/$batch.backfill-launch.json" ] \
+    && [ ! -e "$DIR/learner/learner-$batch.tui.json" ]; then
+  python3 "$OPS/strategy_backfill_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
 fi
 launcher_rc="$rc"
 wrapper_attention() {
@@ -231,6 +266,7 @@ fi
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
 finish_rc=75
 if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
+    && { [ -z "$backfill_source" ] || python3 "$OPS/strategy_backfill_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"; } \
     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
   finish_rc=0
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?

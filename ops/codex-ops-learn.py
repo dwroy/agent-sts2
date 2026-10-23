@@ -329,6 +329,11 @@ def cmd_tick(args):
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     report["ascension_audit"] = check_ascension_audits(state, character)
+    import strategy_backfill_jobs
+    normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
+    report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
+        state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"),
+        dispatch_write, normal)
     save_state(state)
     report["retention"] = learner_retention.kick(ROOT, DIR, SCRIPTS)
     print(json.dumps(report, ensure_ascii=False))
@@ -421,6 +426,10 @@ def cmd_finish(args):
             boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
         else:
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
+        if batch.get("backfill_source"):
+            import strategy_backfill_jobs
+            batch["backfill_finished_at"] = time.time()
+            strategy_backfill_jobs.reconcile(state, DIR)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
         if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)

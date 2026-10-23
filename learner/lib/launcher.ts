@@ -21,7 +21,7 @@ import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { appendFileSync, closeSync, existsSync, fsyncSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { join, relative, resolve, sep } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
 
 import { PROJECT_ROOT as REPO_ROOT, workspaceRoot } from "../../agent/src/core/paths.js";
@@ -495,6 +495,16 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const lease = request.engine === "codex" ? captureStartupLease(deps.env, deps.projectRoot, request.cwd) : undefined;
   const inputSha = createHash("sha256").update(command.stdin).digest("hex");
   const commandSha = createHash("sha256").update(JSON.stringify([command.command, command.args, request.cwd])).digest("hex");
+  if (deps.env.LEARNER_BACKFILL_SOURCE) {
+    if (!lease || !deps.env.LEARNER_STATE_FILE) return unavailable("后置回刷缺少原批次租约，不启动模型\n");
+    // A launch receipt is evidence of registration only; native acceptance consumes the source IDs.
+    const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.backfill-launch.json`);
+    writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: deps.env.LEARNER_BACKFILL_SOURCE,
+      cwd: request.cwd, log: logPath, codex_home: learnerCodexHome(deps.env),
+      input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
+      command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
+    const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+  }
   let child: ChildProcess | undefined;
   const stop = (signal: NodeJS.Signals): void => {
     if (!child) return;

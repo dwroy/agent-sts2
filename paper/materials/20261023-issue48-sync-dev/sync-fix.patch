@@ -1,0 +1,152 @@
+diff --git a/agent/tests/learner-herdr.test.ts b/agent/tests/learner-herdr.test.ts
+index a6e4eec91..5df54c6d6 100644
+--- a/agent/tests/learner-herdr.test.ts
++++ b/agent/tests/learner-herdr.test.ts
+@@ -11,7 +11,9 @@ import type { HerdrResult } from "../../ops/codex/herdr.js";
+ 
+ const roots: string[] = [];
+ const children: ChildProcess[] = [];
++const signalTimers: ReturnType<typeof setTimeout>[] = [];
+ afterEach(async () => {
++  for (const timer of signalTimers.splice(0)) clearTimeout(timer);
+   for (const child of children.splice(0)) if (child.exitCode === null && child.signalCode === null) { child.kill("SIGKILL"); await new Promise<void>((done) => child.once("close", () => done())); }
+   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+ });
+@@ -19,7 +21,7 @@ const row = (type: string, payload: Record<string, unknown>) => ({ type, payload
+ const ok = (result: Record<string, unknown> = {}, stdout = ""): HerdrResult => ({ ok: true, code: 0, result, stdout, stderr: "" });
+ const fail = (): HerdrResult => ({ ok: false, code: 1, error: "transport_uncertain", stdout: "", stderr: "" });
+ 
+-function fixture(kind = "success", label = "learner-20261022-120000-postmortem") {
++function fixture(kind = "success", label = "learner-20261022-120000-postmortem", exitSignalDelayMs = 0) {
+   const root = mkdtempSync(join(tmpdir(), "learner-tui-")); roots.push(root);
+   const home = join(root, "home");
+   const date = new Date();
+@@ -38,6 +40,7 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
+   let changed = false;
+   let leaseCurrent = true;
+   let stopping = false;
++  let exitObserved = Promise.resolve();
+   const calls: string[][] = [];
+   const events: Record<string, unknown>[] = [];
+   const notices: string[] = [];
+@@ -62,7 +65,7 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
+       if (group === "pane" && action === "run") {
+         expect(readFileSync(join(root, "tui.sh"), "utf8")).toContain("exec env -i");
+         child = spawn("sleep", ["600"]); children.push(child); live = true;
+-        child.once("close", () => { live = false; });
++        exitObserved = new Promise<void>((done) => child!.once("close", () => { live = false; done(); }));
+         writeFileSync(join(root, "tui.pid"), String(child.pid));
+         write(row("session_meta", { id: session, cwd: root }));
+         return kind === "start-uncertain" ? fail() : ok();
+@@ -98,7 +101,11 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
+       }
+       if (group === "agent" && action === "send-keys") {
+         stopping = true;
+-        if (args[3] === "ctrl+c" && child && live) child.kill("SIGTERM");
++        if (args[3] === "ctrl+c" && child && live) {
++          const owned = child;
++          if (exitSignalDelayMs) signalTimers.push(setTimeout(() => owned.kill("SIGTERM"), exitSignalDelayMs));
++          else owned.kill("SIGTERM");
++        }
+         return ok();
+       }
+       throw new Error(`unexpected fake call ${args.join(" ")}`);
+@@ -106,7 +113,16 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
+   };
+   if (kind === "capacity") opts.timeoutMs = 3_000_000;
+   if (kind === "retry-success" || kind === "stale-open-error") opts.retryMs = 100;
+-  return { opts, root, events, notices, calls, file, pane, prompts: () => prompts };
++  const waitForExit = async (): Promise<void> => {
++    if (!live) return;
++    // The injected clock must not outrun the real child-process close event.
++    // A missing exit still fails closed after a bounded wall-clock wait.
++    await new Promise<void>((done, reject) => {
++      const timer = setTimeout(() => reject(new Error("fixed TUI child did not close within 2s")), 2000);
++      void exitObserved.then(() => { clearTimeout(timer); done(); });
++    });
++  };
++  return { opts, root, events, notices, calls, file, pane, prompts: () => prompts, stopping: () => stopping, waitForExit };
+ }
+ 
+ describe("learner interactive command policy", () => {
+@@ -214,12 +230,17 @@ describe("bounded native learner names", () => {
+ });
+ 
+ describe("delayed native acceptance after prompt delivery", () => {
+-  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa") {
+-    const f = fixture("bootstrap"); const h = f.opts.h!;
++  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa", exitSignalDelayMs = 0) {
++    const f = fixture("bootstrap", undefined, exitSignalDelayMs); const h = f.opts.h!;
+     let clock = Date.now(), sentAt: number | undefined, sent: string[] | undefined, meta = "", promptCalls = 0;
+     f.opts.now = () => clock;
+     f.opts.timeoutMs = 200_000;
+     f.opts.pause = async () => {
++      if (f.stopping()) {
++        await f.waitForExit();
++        clock += f.opts.pollMs ?? 1000;
++        return;
++      }
+       clock += 10_000;
+       await new Promise((done) => setTimeout(done, 2));
+       if (sent && delayMs !== undefined && clock - sentAt! >= delayMs) {
+@@ -260,6 +281,24 @@ describe("delayed native acceptance after prompt delivery", () => {
+     expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
+   });
+ 
++  it.each(["aaa", "zzz"])("waits for real exit after delayed acceptance and a 250ms signal delay (%s)", async (neighbour) => {
++    const f = delayed(35_000, "paste", neighbour, 250);
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);
++    expect(receipt.rollout).toBe(f.file); expect(receipt.retirement_authorized).toBe(true);
++    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual([]);
++    expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
++  });
++
++  it("does not certify retirement when the delayed fixture child misses its bounded real exit", async () => {
++    const f = delayed(35_000, "paste", "aaa", 5000);
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false, turn: "turn-1" });
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt.bindings).toHaveLength(1); expect(receipt.retirement_authorized).toBe(false);
++    expect(f.promptCalls()).toBe(1);
++  });
++
+   it.each(["paste", "human", "empty"] as const)("bounds missing acceptance with %s visible and never sends keys or replays", async (screen) => {
+     const f = delayed(undefined, screen);
+     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+diff --git a/agent/tests/ordinary-close-isolation.test.ts b/agent/tests/ordinary-close-isolation.test.ts
+index 19805e5a3..7f4d2c218 100644
+--- a/agent/tests/ordinary-close-isolation.test.ts
++++ b/agent/tests/ordinary-close-isolation.test.ts
+@@ -1,17 +1,21 @@
+ import { spawnSync } from "node:child_process";
+ import { expect, it } from "vitest";
+ 
+-it("isolates failed candidates and revalidates preserved preflight failures before one dataset commit", () => {
+-  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_ordinary_close.py",
+-    "OrdinaryClose.test_candidate_source_failure_does_not_poison_valid_peer",
+-    "OrdinaryClose.test_predataset_attention_reenters_original_guards_with_failure_history",
+-    "OrdinaryClose.test_any_dataset_side_effect_marker_prevents_attention_reentry",
+-    "OrdinaryClose.test_postdataset_candidate_failure_is_isolated_and_never_replayed",
+-    "OrdinaryClose.test_final_git_candidate_guard_rejects_only_its_own_private_record",
+-    "OrdinaryClose.test_reclaimed_worktree_cannot_fall_back_to_enclosing_main_git"], {
++const cases = [
++  "test_candidate_source_failure_does_not_poison_valid_peer",
++  "test_predataset_attention_reenters_original_guards_with_failure_history",
++  "test_any_dataset_side_effect_marker_prevents_attention_reentry",
++  "test_postdataset_candidate_failure_is_isolated_and_never_replayed",
++  "test_final_git_candidate_guard_rejects_only_its_own_private_record",
++  "test_reclaimed_worktree_cannot_fall_back_to_enclosing_main_git",
++];
++
++// Each independent Git fixture keeps the original 15s budget instead of sharing it across six cases.
++it.each(cases)("isolates ordinary completion with the original guards: %s", (name) => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_ordinary_close.py", `OrdinaryClose.${name}`], {
+     encoding: "utf8", timeout: 15_000,
+   });
+-  expect(result.status, result.stdout + result.stderr).toBe(0);
+-  expect(result.stderr).toContain("Ran 6 tests");
++  expect(result.status, result.stdout + result.stderr + String(result.error ?? "")).toBe(0);
++  expect(result.stderr).toContain("Ran 1 test");
+   expect(result.stderr).toContain("OK");
+ });
