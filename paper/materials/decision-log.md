@@ -6348,3 +6348,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:20:00+08:00 [Claude] 转 Roy：codex3 周用量到 90% 时自动换到 codex1（预先授权，不再等 Roy 定时机），主管巡检发现后唤醒 ops 按 docs/llm-handoff.md 执行，做完告知 Roy；换号后速度档按新号用量重新套用（>70% 最高 fast）。
 
 - 2026-10-23T23:14:09+08:00 [ops] 十六原异议去重、实际送达/集成员实读及转主管窗口核同；正式ACK兼容与缺原件仍pending，不重复拒绝/模型。paper/materials/20261023-2313-ops/unchanged-notices.json。
+
+- 2026-10-23T23:14:44+08:00 [ops] 原集成员新会话01a1694e空闲后已实际送出一次#27接续提醒（agent_prompted），提示16通知/CLI兼容及Roy通知链；只登记发送，不代接收或Roy可见ACK。paper/materials/20261023-2313-ops/watcher-reminder.json。
