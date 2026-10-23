@@ -6409,3 +6409,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T04:56:22+08:00 [ops/dataset] 原041301四局复盘的唯一受控dataset --no-raw已实际结束、rc0且source_checks_passed=true；实际生成字节在原写锁内冻结SHA与Git blob，成本来源保持自身切点。四节复盘、27条账本追加及三条pending提案已由d8a9839baf06先持久化；0581新非阻塞预算截断和0461旧修饰复现已入原队列，未由ops补游戏知识、实现代码或新建重复模型。本事务仅一次原build_locked调用，不自动重试；无新full、模型、finish、实验或游戏，不增加行为版本。实际dataset完成只说明论文数据生成及源检查通过，不代表策略提案实现、经验草稿提交/上线、自然采用或胜率收益。当前033643经验仍保原failed/rc0和冻结草稿，原两批旧失败不改；原严格回收及科学父保持。
 原件：paper/materials/20261024-postmortem-041301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-24T04:59:05.569409+08:00 [ops/#52] 核#52原唯一full实际退出、6644过/2跳/tsc0及原结果SHA，6374492713已明确释放。宿主main55546b98b四生产脚本/四测试叶逐SHA同来源，四模块实际导入均来自根ops，183项宿主源码闭包核同；原调度下一自然tick使用，未整main复制game live或改账号配置。旧门把缺专树校准及无目标证据queued审计当就绪，新门复用真实可派性，保deferred需求/重试/锁/普通优先/双槽；来源与八项刷新知识分账，不借本full覆盖下游。按释放顺序登记033643单经验叶R423净组合worker166165，持原exp租约等待知识刷新锁，full当前0，不抢锁或另起模型；通过后才接真实提交审计/自然发布，再28最新知识净full。回退仅四脚本前像组合并保请求/进度。并核041301 dataset实际rc0、14生成叶/四局标记及提交daead9，原回收门保留。原件paper/materials/20261024-issue52-deployment-ops/deployment.json。

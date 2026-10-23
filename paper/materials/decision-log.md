@@ -6482,3 +6482,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T04:50:44+08:00 [watcher] #52门修1fd887cfce534定向7项通过；冻结tree94fe7717d202a725e60a6394977caf4c807e3ca4，production tsc0、唯一full680文件/6644过/2跳过/0失败；2246源码夹具、1688依赖和469知识SHA前后同。8叶精确合main，保原校准/审计请求、重试/锁、普通优先与双槽；四生产脚本交原ops宿主部署，不复制整main到game live。#51原窗口须实发明确释放后原ops先核033643冻结草稿补测/审计/发布，再#28最新知识净组合full/实际发布读回→37→20父；live八个生成知识产物自然刷新，原full仅覆盖冻结469知识；无知识写入，后续重冻最新知识，科学父不关闭。paper/materials/20261024-issue52-integrator/。
 
 - 2026-10-24T04:56:22+08:00 [ops] 原041301四局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-041301-dataset-ops/。
+
+- 2026-10-24T04:59:05.569409+08:00 [ops] #52四脚本宿主实际部署/183闭包核同、原full6644过及明确释放回执核实；窗口给033643精确净候选166165（等待原K锁、full0），实际发布释放后才28，不重检查或模型；041301 dataset daead9/14叶核同，科学父开放。paper/materials/20261024-issue52-deployment-ops/。
