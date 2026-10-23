@@ -6110,3 +6110,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T11:46:03+08:00 [ops] 已处理11:43十五件重复学习异议：逐项原文SHA、67份原始证据/收件箱窗口及通知CLI与11:15一致，未出现新的正式角色回执；原ops_forwarded实际写入有效。原watcher会话身份及交互通道核同，已实际提交一行提醒并保留发送回执，提交不算已读或Roy已知。十五条正式watcher_received/roy_notified仍受原手动任务白名单兼容限制，保留pending及原拒绝，不重复相同失败CLI，也不代其他角色登记。三条并行账本的原ops当前局清单核验继续引用06:43原件；原学习者冻结全量rc1、结构检查rc0及授权清单检查结论分列，不冒称新增逐帧来源验证。牌堆提取、配对增量与退出HP口径，单卡独立覆盖及机制缺口，外部因果/样本/分账限制均沿原owner和原证据处理；external_aggregate合同进展不代live、自然命中或收益。完整原文、旧观点差异与下一步已在本轮交接索引供watcher读取。本轮仅核验、真实提醒及双记录，无新学习、dataset、full、发布或对局动作，不关闭科学父。原件paper/materials/20261023-1143-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder-send.json。
+
+
+- 2026-10-23T12:04:37+08:00 [ops] #36按主管6356904617核原live最小P0：无本次增量的基线ordinary-close单题1过，暂无同败豁免；main定向209过及tsc/Python/语法0，实际live仍f3fb25b73be7、TUI保持off。原集成员尚未交live组合唯一full终局，保最新知识锁自然释放及原检查窗口；已在6357086215回传并实际提醒原会话，正式通过发布后下个自然学习调度才切on并核五项。110800修复批exit0不等于验收：ENOBUFS两叶候选固定8过/撤码7败、tsc0，沙箱完整检查47项可见失败后中断130、无总分母/提交/合入；保候选和冲突，不夹入P0，后批不重复实现。原冻结014302主策略及修复已各重排一次，原生核stdio/gpt-6.1-sol/high/workspace-write；7批累计6启动，余二组待原槽。缺失预分配树先失败保原件，再由分配器显式恢复同基线；日志tab加“· 日志”。原件paper/materials/20261023-1151-ops/（issue36-reconciliation.json、fix-candidate.json、frozen-requeue-followup.json、two-new-native-starts.json）。

@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-23T12:00:11.908249+08:00",
+  "batch": "20261023-110800-fix-batch",
+  "launcher_exit": 0,
+  "accepted_or_merged": false,
+  "base": "b19d35de77d11b169095ec7a53b5c9fd7f8c2926",
+  "candidate_tree": "578a1e5c2d3405f13f11ce8d3708bbb5b4fe54f4",
+  "source_paths": [
+    "agent/src/eye/run-config.ts",
+    "agent/tests/run-config-git-failure.test.ts"
+  ],
+  "checks": {
+    "tsc": 0,
+    "targeted_passed": 8,
+    "source_withdrawal_failed": 7,
+    "full_exit": 130,
+    "full_observed_failed": 47,
+    "final_totals": null
+  },
+  "preserved_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110800",
+  "evidence": [
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/report.md",
+      "bytes": 21176,
+      "sha256": "04ba586658a48e993649d203fd7b69a73189c35001ba5f655af1abaa1883dfd7"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-complete.patch",
+      "bytes": 8095,
+      "sha256": "9c6a435f8a45982b6bab5d266829c2423a56a0f3cfa122a1307af546337351a7"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/source-manifest.json",
+      "bytes": 1458,
+      "sha256": "d501503799937b09344aea324795b44079d8dec82129a7522ff1761a7b4c2662"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/sandbox-source.log",
+      "bytes": 4101,
+      "sha256": "46d098f78eebe1deef9321affde6030c0fb8e66298e85c244358111f37440fbf"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-red.log",
+      "bytes": 6172,
+      "sha256": "c5616618ed893af24d2e5ce6ac4cac4722db557d6cc4e2d40897145af37d879e"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-final-green.log",
+      "bytes": 264,
+      "sha256": "dbde02cd7f603c07deb80afb7f39c345c67b45c8154f4b9fac140308bf0d10e4"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/external-strategy-recheck.log",
+      "bytes": 95,
+      "sha256": "47058d5338b6891cc41b2917d28dca763072c438273464ad96534d2d7e5cf36f"
+    },
+    {
+      "path": "learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/live-preflight.json",
+      "bytes": 11288,
+      "sha256": "94617aecaf048b5493931af9e2fdb1a6eac794e775f3229557e6a80beee8ad88"
+    },
+    {
+      "path": ".worktrees/codex-fix-silent-20261023-110800/agent/src/eye/run-config.ts",
+      "bytes": 36371,
+      "sha256": "f2a658b0389410bce7661f201d993faa28e8c31f38afaff67ea5eb94eddd6fd5"
+    },
+    {
+      "path": ".worktrees/codex-fix-silent-20261023-110800/agent/tests/run-config-git-failure.test.ts",
+      "bytes": 4465,
+      "sha256": "12ef69714b388774ac48b6cb05655d5ea71f34425b9499f5f0d025518a87da84"
+    }
+  ],
+  "next_step": "原ops精确两叶保留待宿主完整检查；不夹入#36、不整支合并、不重复模型实现、不回写历史config。",
+  "no_cleanup": true
+}

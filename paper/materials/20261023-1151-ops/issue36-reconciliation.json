@@ -1,0 +1,161 @@
+{
+  "at": "2026-10-23T12:01:55+08:00",
+  "issue": 36,
+  "directive_comment": 6356904617,
+  "latest_handoff_comment": 6356987344,
+  "live": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+  "learner_tui": "off",
+  "published": false,
+  "full_started": false,
+  "baseline": {
+    "at": "2026-10-23T11:54:51+08:00",
+    "base": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+    "baseline_tree": "bc955aa0141b900c11dd84dce43f7d896c5be093",
+    "without_current_issue36_delta": true,
+    "without_issue20": true,
+    "knowledge_count_from_live_git_only": true,
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/ordinary-close-isolation.test.ts",
+      "--pool=forks",
+      "--maxWorkers=1",
+      "--no-file-parallelism",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-p0-minimal-20261023-1153/baseline-vitest.json"
+    ],
+    "exit_code": 0,
+    "seconds": 12.802,
+    "log_sha256": "490d53eb8d1fb682541e25fbd2770c71d6532246e2cd84b5443851a9e4f5a197",
+    "inputs_unchanged": true,
+    "vitest": {
+      "success": true,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 0
+    }
+  },
+  "main_directed": {
+    "at": "2026-10-23T11:56:18+08:00",
+    "state": "passed",
+    "base": "7d0821a0dc746766ea5aaab24bc7f931d1888332",
+    "tree": "65bab4b444ff97a73e45ee6a671882852d8a6a4c",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-minimal-main-20261023-1156",
+    "steps": [
+      {
+        "name": "tsc",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-23T11:56:18+08:00",
+        "exit_code": 0,
+        "seconds": 0.833
+      },
+      {
+        "name": "directed",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "tests/learner-native-prelude.test.ts",
+          "tests/learner-tui-reconciliation.test.ts",
+          "tests/learner-herdr.test.ts",
+          "tests/learner-herdr-ownership.test.ts",
+          "tests/learner-herdr-launcher.test.ts",
+          "tests/learner-herdr-receipts.test.ts",
+          "tests/boss-sim-home.test.ts",
+          "tests/learner-entry.test.ts",
+          "tests/learner-startup-recovery.test.ts",
+          "tests/brain-view.test.ts",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-p0-minimal-20261023-1153/main-vitest.json"
+        ],
+        "started_at": "2026-10-23T11:56:18+08:00",
+        "exit_code": 0,
+        "seconds": 20.967
+      },
+      {
+        "name": "python-tui",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "../ops/tests",
+          "-p",
+          "test_learner_tui.py"
+        ],
+        "started_at": "2026-10-23T11:56:39+08:00",
+        "exit_code": 0,
+        "seconds": 0.139
+      },
+      {
+        "name": "syntax",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "bash",
+          "-n",
+          "../ops/codex-ops-learner.sh"
+        ],
+        "started_at": "2026-10-23T11:56:40+08:00",
+        "exit_code": 0,
+        "seconds": 0.005
+      }
+    ],
+    "full_repeated": false,
+    "inputs_unchanged": true,
+    "input_count": 2614,
+    "vitest": {
+      "files": 10,
+      "passed": 209,
+      "failed": 0,
+      "pending": 0
+    },
+    "ended_at": "2026-10-23T11:56:40+08:00"
+  },
+  "required_next": "原集成员最新知识快照及最小P0唯一full完成，核冻结清单与实际live后发布；发布后下一自然学习调度切on并核五项消费。",
+  "evidence": [
+    {
+      "path": ".artifacts/issue36-p0-minimal-20261023-1153/baseline-check.json",
+      "sha256": "110d32883304c1c95e4e43a3f8f2998b1c256dad26b28fa98219b2c8e95b011f"
+    },
+    {
+      "path": ".artifacts/issue36-p0-minimal-20261023-1153/main-checks.json",
+      "sha256": "62abcd3611c96b856a6fd9df3ef9a4c444060c99caadc9b6cfd7fbbea31ad02e"
+    },
+    {
+      "path": ".artifacts/issue36-p0-minimal-20261023-1153/knowledge-admission-first-exit.json",
+      "sha256": "f7b6482404de7c229d0d1ceb9584dc7baf7e39a9f397bc3a18b92f6f0b53fad6"
+    },
+    {
+      "path": "ops/codex-ops/hosting",
+      "sha256": "0a553825f02069f03e2baaa7b7d81c9b85cc412776b26af866935d6239d9771f"
+    }
+  ]
+}

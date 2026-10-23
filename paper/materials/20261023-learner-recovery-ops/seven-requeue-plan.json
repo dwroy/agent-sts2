@@ -769,8 +769,8 @@
       "old_prompt_sha256": "4b655da38cc0f99ec2c40486b08bf21c14939b11e6027f68f7a8c08198228424",
       "dry_prompt_sha256": "a883fb1cd070044a902d01c2263185d6ef3a28b85136d9230100bdfef52bf4cd",
       "max_requeues": 1,
-      "started": 0,
-      "state": "frozen-requeue-accepted-await-original-slot",
+      "started": 1,
+      "state": "normal-start-registered",
       "original_state_fields": {
         "task": "strategy-proposal",
         "character": "silent",
@@ -900,7 +900,19 @@
         },
         "retry_at": 1792694603.2171683
       },
-      "old_disposition": "未启动、已重排（待原槽位）"
+      "old_disposition": "未启动、已重排",
+      "start_receipt": {
+        "original": "20261023-014302-strategy-proposal",
+        "new_batch": "20261023-110001-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 133718,
+        "birth": "15263123",
+        "pane": "w1H:pBV",
+        "label": "learner-20261023-110001-strategy-proposal",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
+      }
     },
     {
       "original": "20261023-014302-s2-strategy-proposal",
@@ -1118,8 +1130,8 @@
       "old_prompt_sha256": "2d13689c2260d6167d74b386a5039241ef06849a0e34a7e7a9b4d0769b0988ea",
       "dry_prompt_sha256": "3b7b0f2fa15e04a9d0eab5e29c44f5c10b0029798dc6e5bc176570ca8b78f17a",
       "max_requeues": 1,
-      "started": 0,
-      "state": "frozen-requeue-accepted-await-original-slot",
+      "started": 1,
+      "state": "normal-start-registered",
       "original_state_fields": {
         "task": "fix-batch",
         "character": "silent",
@@ -1232,7 +1244,19 @@
       },
       "unused_reserved_batch": "20261023-110001-fix-batch",
       "unconsumed_allocation_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110001",
-      "old_disposition": "未启动、已重排（待原槽位）"
+      "old_disposition": "未启动、已重排",
+      "start_receipt": {
+        "original": "20261023-014302-fix-batch",
+        "new_batch": "20261023-110801-fix-batch",
+        "task": "fix-batch",
+        "pid": 134337,
+        "birth": "15263453",
+        "pane": "w1H:pBW",
+        "label": "learner-20261023-110801-fix-batch",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
+      }
     }
   ]
 }

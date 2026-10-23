@@ -1562,3 +1562,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 
 - [ ] 2026-10-23T09:30:26+08:00 [ops/#33] **infra-run-config-git-status-enobufs-20261023（非阻塞溯源缺口）**：R417首批8局的16条run-config均原样记录git status failed: spawnSync git ENOBUFS，code.commit/code/dirty/branch为null；前次06:21已发现，此次补全分母，不当新游戏故障。当前实际live58叶/统一R417与绑定由独立证据核对，不能反填旧config或据请求配置宣称原生证明。入口agent/src/eye/run-config.ts codeInfo单次execFileSync git status失败后清空全部code字段；具体输出/资源根因待原工程链用固定数据核实，不预断为maxBuffer问题。沿原修复队列补可靠HEAD/branch与有界dirty溯源及失败负例，保原错误，不伪造成功/版本、不热切在途进程、不另开模型或实验局。本轮仅记录。原件paper/materials/20261023-issue33-natural-followup-ops/config-audit.json、byte-refs.json、actual-source-verification.json；#33评论6355179196。
+
+  - 2026-10-23T12:00:11+08:00 [ops接续] 110800-fix-batch仅留下两叶ENOBUFS候选，树578a1e5c2d3405f13f11ce8d3708bbb5b4fe54f4；固定8过、撤码7败，tsc0，沙箱完整检查已有47败后中断130，无最终分母、提交或live合入。候选/原失败与15合入冲突均保留，原ops按发布队列做最新live精确两叶宿主补验；后批不要重复实现或改旧config，勿夹入#36。原件paper/materials/20261023-1151-ops/fix-candidate.json；原补丁learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-complete.patch。
