@@ -6323,3 +6323,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T23:17:07+08:00 [ops] codex1仅预检：两home登录/模型目录可见（gpt-6.1-sol high，brain兼容xhigh），auth均指向本人登录、无全局指令，learner key隔离8项通过；但learner config含service_tier，隔离配置守卫不通过，当前未就绪。未改配置/选择器、未建换号事务或drain、未发模型题；90%触发前先处理该隔离项并复核。原件paper/materials/20261023-codex1-readiness-ops/preflight.json。
 
 - 2026-10-23T23:27:21+08:00 [ops] 231302空fix无新增源码/提交，工作树干净；tsc0、定向6文件23项通过，Python18/3分列，初次EROFS保留。原empty-fix核验因main基线与live源码有差异返回None，保持failed/rc0，不重full/空合并/假seal；gzip与waiting补链为main祖先但不是live祖先，其余原候选沿原宿主链。原件paper/materials/20261023-2326-ops/receipt.json。
+
+- 2026-10-23T23:30:17+08:00 [ops] #49效率修正按88b53d81c原11叶净补丁完成隔离复核：tsc0、8文件136项通过、六类消费者读回；未带main未发#35。首取知识锁忙原件保留，改用集成员冻结518知识定向，实际发布将在原当前局3240762自然终局后持K→L核最新知识；仅自有LLM_DRAIN挡下一局，未STOP/热切/加局。已挂有限事务，未冒上线；14秒目标及新自然窗口未验，旧18局保持。状态声明另写notes/ops-state.md两行，原件paper/materials/20261023-issue49-efficiency-ops/。
