@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-23T21:12:06+08:00",
+  "publication": "c2a249380bae547fc5545fcd3807dbdff2d58869",
+  "handoff_latest_comment": 6364912964,
+  "batch": "20261023-204301-strategy-proposal",
+  "read_only_native_verify": "passed",
+  "native": {
+    "state": "session-ended",
+    "code": 0,
+    "reason": "native-task-complete",
+    "session": "01a168c9-a60e-7df1-a8df-838141367e51",
+    "turn": "01a168ca-0a30-76e1-ab37-a44bddf24068",
+    "bindings": [
+      {
+        "turn_id": "01a168ca-0a30-76e1-ab37-a44bddf24068",
+        "marker": "[learner-batch:e38acbf0-9da4-4659-abca-3247c5c9f39d]",
+        "prompt_sha256": "6ca2dd4c42625467658e14c36ccceded922b252ceccee39cae76a1c86bf15ad2"
+      }
+    ],
+    "submitted": true,
+    "starts": [
+      {
+        "at": "2026-10-23T12:43:53.785Z",
+        "turn": "01a168ca-0a30-76e1-ab37-a44bddf24068"
+      }
+    ],
+    "contexts": [
+      {
+        "at": "2026-10-23T12:43:55.337Z",
+        "turn_id": "01a168ca-0a30-76e1-ab37-a44bddf24068",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-204301",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "sandbox_type": "workspace-write"
+      }
+    ],
+    "completes": [
+      {
+        "at": "2026-10-23T12:57:47.182Z",
+        "turn": "01a168ca-0a30-76e1-ab37-a44bddf24068"
+      }
+    ]
+  },
+  "native_pid_birth_stopped": true,
+  "supervisor_pid_birth_stopped": true,
+  "original_worktree_lock_available": true,
+  "seal": {
+    "path": "ops/codex-ops/learner/learner-20261023-204301-strategy-proposal.tab-retirement.json",
+    "sha256": "888310b9387191cec763302e02fb0c1327800506badd9683031417911b9289e7",
+    "files": [
+      {
+        "kind": "tui",
+        "path": "ops/codex-ops/learner/learner-20261023-204301-strategy-proposal.tui.json",
+        "sha256": "00d69054e0f842458f365f6781e495ca15faa7dc9ef2ad9d46ced8f746682b71",
+        "verified": true
+      },
+      {
+        "kind": "output",
+        "path": "ops/codex-ops/learner/20261023-204301-strategy-proposal.out",
+        "sha256": "d917cccea67c25456f9bc05d02a6f14a149bbd9cb395f75227710ccefccb17a5",
+        "verified": true
+      },
+      {
+        "kind": "stderr",
+        "path": "ops/codex-ops/learner/20261023-204301-strategy-proposal.err",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "verified": true
+      },
+      {
+        "kind": "learner_log",
+        "path": "learner/runs/20261023-204322-b2a54d24-dadd-45c4-b44b-62999a168ed8-strategy-proposal.jsonl",
+        "sha256": "caad35da42ac013459cafe1a8635ae6c1135b44a744b18f60ca15ad9f66150a7",
+        "verified": true
+      },
+      {
+        "kind": "rollout",
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T20-43-28-01a168c9-a60e-7df1-a8df-838141367e51.jsonl",
+        "sha256": "f9cce87d1e1682443d670f73e3398cd02cb4dd0777f5be32d1765502fc922dea",
+        "verified": true
+      }
+    ]
+  },
+  "original_stall_tab_reclamation": {
+    "phase": "done",
+    "pane": "w1H:pCT",
+    "tab": "w1H:tCQ",
+    "tail": "ops/codex-ops/learner-tab-tails/20261023-204301-strategy-proposal-907499fe5f79d83d31c372aff3ce3792285fc9cd5443ab5c96ac63ada32e597f.log",
+    "state": "reclaimed",
+    "closed_at": "2026-10-23T21:05:04+08:00"
+  },
+  "wrapper_failed_rc0_preserved": true,
+  "wrapper_failure": [
+    "unassigned report lacks an actual live merge"
+  ],
+  "previous_review": "paper/materials/20261023-2104-ops/strategy-review.json",
+  "pending": [
+    "actual TERM not persisted in retired process; no inferred environment proof",
+    "natural late acceptance after120s / 600s hard deadline not exercised by this batch",
+    "new startup patch dual-batch complete-wrapper contract and later normal dispatch still open",
+    "prior awaiting_review failures and science parents unchanged"
+  ],
+  "new_models_tests_or_publications": 0,
+  "manual_tab_close": false,
+  "task_finished_claimed": false
+}

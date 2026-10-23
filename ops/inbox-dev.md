@@ -6291,3 +6291,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T21:03:59+08:00 [ops/Fast] ops 初始化、exec resume、herdr resume 已以专用 -c 参数固定 Fast，推理默认 high（main a4a2ce799c；tsc/full 6508过）；不使用 /fast 写共享配置，其他角色档位未改，回退将 ops/codex/lib.ts 的 serviceTier 改回 default；下次自然启动/resume采用，实际原生读回仍待核。paper/materials/20261023-ops-fast-startup/。
 
 - 2026-10-23 21:05 CST [ops] Fast 五叶已核实际 main a4a2ce799c、tsc/full 6508过0败2跳，未写 game live；本轮原生 high 已核，service_tier 字段缺失，Fast 实际采用仍 pending。204301 两提案 waiting、19条追溯链接读回且原状态保留；原经验源已补 f3f439cf49，live/消费者仍待验。无源码补链被 unassigned live-merge 门误拒，保 failed/rc0 原件，将递归补链置 ops-await-original-publication，未重模型/dataset/测试或关闭科学父。原件 paper/materials/20261023-2104-ops/。
+
+- 2026-10-23 21:12 CST [ops/#36] 最新评论仍为既有两叶已发布交接，本轮未重发。204301发布后自然批通过原verify_native：唯一marker/SHA/turn、gpt-6.1-sol/high/workspace-write及native-task-complete/rc0，原生/监督PID+birth已退、原工作树锁可独占；原stall 21:05:04已回收tab，5份封存产物SHA核同。wrapper因无源码补链合入门仍failed/rc0，保旧失败、waiting与递归补链暂停；非#36绑定失败，不冒普通收尾成功。TERM未持久化及120/600秒迟到路径、双批/后批验收继续pending，不新模型/检查/发布。#36评论6365686801已实际读回；原件paper/materials/20261023-issue36-natural-2110-ops/receipt.json。

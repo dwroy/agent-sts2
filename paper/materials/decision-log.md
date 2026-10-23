@@ -6298,3 +6298,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T21:03:59+08:00 [ops] Fast仅ops启动参数精确合main a4a2ce799c，tsc/full 6508过；首次稀疏夹具缺失失败保留，未写共享配置/未改game live；自然ops采用待核。paper/materials/20261023-ops-fast-startup/。
 
 - 2026-10-23 21:05 CST [ops] 核 Fast main a4a2ce799c/6508过，原生 high、tier缺字段待自然回执；204301保waiting与失败，暂停无源码合入门导致的递归补链，接原193545发布，不重模型/检查。paper/materials/20261023-2104-ops/。
+
+- 2026-10-23 21:12 CST [ops/#36] 204301自然原生唯一绑定/完成及退场、租约与原stall回收核实；wrapper仍failed/rc0，迟到与双批验收开放。无重发/重测；评论6365686801、paper/materials/20261023-issue36-natural-2110-ops/receipt.json。
