@@ -121,7 +121,7 @@ def reconcile(state, directory):
 def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     reconcile(state, directory)
-    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or shared.priority_hold(state, character, alive, normal):
+    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or shared.priority_hold(state, character, alive, normal, root=root):
         return None
     try:
         configured = queue(root)

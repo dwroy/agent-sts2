@@ -176,18 +176,18 @@ class Backfill(unittest.TestCase):
         self.assertIsNone(self.dispatch())
         self.state.pop("learning_requests")
         self.state["calibration_ready"] = {"silent": "fixed-calibration"}
-        self.assertIsNone(self.dispatch())
+        self.assertFalse(backfill.priority_hold(self.state, "silent", lambda pid: False, {}, root=str(self.root)))
         self.state.pop("calibration_ready")
         self.state["batches"]["heavy"] = {"state": "running", "pid": 20, "task": "fix-batch"}
         self.assertIsNone(self.dispatch(alive=lambda pid: True))
         self.assertEqual(self.calls, [])
 
-    def test_pending_heavy_queue_and_audit_are_not_overtaken(self):
+    def test_pending_heavy_queue_holds_but_evidenceless_audit_is_deferred(self):
         self.state["boss_sim_observed"] = {"silent": {"eligible": [{"boss": "FIXTURE", "mode": "b4", "key": "fixed"}]}}
         self.assertIsNone(self.dispatch())
         self.state.pop("boss_sim_observed")
-        self.state["ascension_audits"] = {"fixed": {"character": "silent", "state": "queued"}}
-        self.assertIsNone(self.dispatch())
+        self.state["ascension_audits"] = {"fixed": {"character": "silent", "state": "queued", "level": 11, "attempts": 0}}
+        self.assertFalse(backfill.priority_hold(self.state, "silent", lambda pid: False, {}, root=str(self.root)))
 
     def test_normal_writer_wait_retains_priority_without_a_launch(self):
         with patch.object(jobs, "pending", return_value=[RUN]), patch.object(jobs, "dispatch_write", return_value=None), \

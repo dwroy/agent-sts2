@@ -97,7 +97,7 @@ def progress(state):
     return state.setdefault("strategy_backfill", {"schema": 1, "cursor": 0, "entries": {}, "plans": {}})
 
 
-def priority_hold(state, character, alive, normal):
+def priority_hold(state, character, alive, normal, root=None):
     """Existing ready dispatch attempts and live heavy leases always win."""
     if normal.get("disk_capacity_hold") or normal.get("backfill_hold") or any(
             value for key, value in normal.items() if key != "backfill_hold"):
@@ -106,12 +106,18 @@ def priority_hold(state, character, alive, normal):
            and (alive(batch.get("pid")) or batch.get("state") == "launching")
            for batch in state["batches"].values()):
         return True
-    if state.get("calibration_ready", {}).get(character) or any(
+    if any(
             req.get("state") in ("pending", "running") and req.get("character", character) == character
             for req in state.get("learning_requests", {}).values()):
         return True
-    if any(req.get("character") == character and req.get("state") in ("queued", "running", "launching")
-           for req in state.get("ascension_audits", {}).values()):
+    from learner_jobs import available_worktree, feature_worktree
+    from ascension_audit import priority_pending
+    root = root or os.environ.get("CODEX_OPS_ROOT") or str(Path(__file__).resolve().parent.parent)
+    calibration = state.get("calibration_ready", {}).get(character)
+    if (calibration and character == "silent"
+            and feature_worktree(state, root, "silent-boss-calibration", calibration, alive) is not None):
+        return True
+    if priority_pending(state, root, character, available_worktree):
         return True
     # Existing heavy evidence waiting on a lease/retry must not be overtaken.
     observed = state.get("boss_sim_observed", {}).get(character, {}).get("eligible", [])
@@ -359,7 +365,7 @@ def reconcile(state, directory, kind="backfill"):
 def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     reconcile(state, directory)
-    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or priority_hold(state, character, alive, normal):
+    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or priority_hold(state, character, alive, normal, root=root):
         return None
     try:
         configured = queue(root)

@@ -6478,3 +6478,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T04:23:04.233236+08:00 [ops] 核033643 failed/rc0、单叶草稿与原检查现场；冻结SHA/原清单全同，提案静态链接通过，完整门/source commit未过，不发布；等#52原窗口释放协调，见paper/materials/20261024-experience-033643-ops/receipt.json。
 
 - 2026-10-24T04:44:45.944183+08:00 [ops] 核041301四节/账本/三原提案，0581新非阻塞与0461旧复现入原队列；登记一次受控dataset --no-raw，实际退出待worker，不重模型/finish/full或关科学父。原件paper/materials/20261024-postmortem-041301-ops/records-review.json。
+
+- 2026-10-24T04:50:44+08:00 [watcher] #52门修1fd887cfce534定向7项通过；冻结tree94fe7717d202a725e60a6394977caf4c807e3ca4，production tsc0、唯一full680文件/6644过/2跳过/0失败；2246源码夹具、1688依赖和469知识SHA前后同。8叶精确合main，保原校准/审计请求、重试/锁、普通优先与双槽；四生产脚本交原ops宿主部署，不复制整main到game live。#51原窗口须实发明确释放后原ops先核033643冻结草稿补测/审计/发布，再#28最新知识净组合full/实际发布读回→37→20父；live八个生成知识产物自然刷新，原full仅覆盖冻结469知识；无知识写入，后续重冻最新知识，科学父不关闭。paper/materials/20261024-issue52-integrator/。
