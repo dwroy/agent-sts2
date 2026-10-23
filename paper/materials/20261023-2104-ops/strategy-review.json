@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-23T21:05:40+08:00",
+  "batch": "20261023-204301-strategy-proposal",
+  "canonical_state_preserved": {
+    "state": "failed",
+    "rc": 0,
+    "proposal_audit_errors": [
+      "unassigned report lacks an actual live merge"
+    ]
+  },
+  "repair_before": {
+    "character": "silent",
+    "runs": [
+      "QU61RVKHPTZS",
+      "AX56AR19UCHD",
+      "YP428GT9ZLL3",
+      "4YPGHGJD393H",
+      "Y2K25VFDU95P",
+      "X7REGM0RUNSA",
+      "A3X30TN54LSH",
+      "ATP5MCMJDMQY",
+      "FGKZALWSTQQ1",
+      "FD8NZAHU7SNY"
+    ],
+    "state": "pending",
+    "reason": "experience/proposal link audit failed"
+  },
+  "repair_after": {
+    "character": "silent",
+    "runs": [
+      "QU61RVKHPTZS",
+      "AX56AR19UCHD",
+      "YP428GT9ZLL3",
+      "4YPGHGJD393H",
+      "Y2K25VFDU95P",
+      "X7REGM0RUNSA",
+      "A3X30TN54LSH",
+      "ATP5MCMJDMQY",
+      "FGKZALWSTQQ1",
+      "FD8NZAHU7SNY"
+    ],
+    "state": "ops-await-original-publication",
+    "reason": "No-source waiting report is blocked by unassigned live-merge proof; original source link already recovered by ops. Do not recursively dispatch another model for the same missing merge.",
+    "source_commit": "f3f439cf49181ad69d2f6353c26760987479db3b",
+    "parent_batch": "20261023-193545-experience-update",
+    "ops_receipt": "paper/materials/20261023-2104-ops/strategy-review.json"
+  },
+  "refs": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-204301/learner/runs/20261023-204322-b2a54d24-dadd-45c4-b44b-62999a168ed8-strategy-proposal/report.md",
+      "bytes": 12183,
+      "sha256": "f01ef5a2f64b5ff8cf4b65fe6408cde6e585f607d58aff92174f86120190b4fb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-204301/learner/runs/20261023-204322-b2a54d24-dadd-45c4-b44b-62999a168ed8-strategy-proposal/proposal.md",
+      "bytes": 3649,
+      "sha256": "cefc317332618fe0fec1e0a663674df5e1ff89aa83ad43e37cb2ceb20289457d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-204301/learner/runs/20261023-204322-b2a54d24-dadd-45c4-b44b-62999a168ed8-strategy-proposal/ledger-links-readback.json",
+      "bytes": 3092,
+      "sha256": "8a29058f233220852c64fd1a36b6c3047dbf7186d5820089f59b0903d9d2c8ef"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-204301/learner/runs/20261023-204322-b2a54d24-dadd-45c4-b44b-62999a168ed8-strategy-proposal/completion-preflight.json",
+      "bytes": 1167,
+      "sha256": "b85da5361e9be7a60e39ab604478eb78ac3171668c28df789b0d4fd638e0c363"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261023-204301-strategy-proposal.out",
+      "bytes": 3574,
+      "sha256": "d917cccea67c25456f9bc05d02a6f14a149bbd9cb395f75227710ccefccb17a5"
+    }
+  ],
+  "head": "dac2dde07d25dded3be5e2b1b791261b9bfbec7a",
+  "working_tree_clean": true,
+  "ledger_links_readback": 19,
+  "dispositions": "two waiting; no new mechanism or policy inferred",
+  "source_recovery_receipt": "paper/materials/20261023-2039-ops/experience-source-recovery.json",
+  "actual_live_merge": null,
+  "dataset_started": false,
+  "models_started": 0,
+  "source_changed": false,
+  "scientific_parents_closed": false
+}

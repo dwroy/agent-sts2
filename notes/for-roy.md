@@ -4980,3 +4980,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23 21:03 CST [ops] 20:39 事件已去重核验：194330 复用唯一原 dataset（970 局）完成受控记录提交 94f595adb2；193545 经验原稿补源提交 f3f439cf49、提案审计零缺口，宿主检查/发布待原 K→L 窗口，未冒称上线。三条冻结外账本引用已核真实 Silent A10/F28/T1/T4 来源，原冻结 rc1 保留；16 项提醒实际送达现有集成员，接收/Roy ACK 仍待本人回执（#27 评论 6365520165）。原 20:13 隔离失败已由 20:43 原生受理证明恢复，旧失败及重试时间不改。证据：paper/materials/20261023-2039-ops/。
 
 - 2026-10-23T21:03:59+08:00 [ops/Fast] ops 初始化、exec resume、herdr resume 已以专用 -c 参数固定 Fast，推理默认 high（main a4a2ce799c；tsc/full 6508过）；不使用 /fast 写共享配置，其他角色档位未改，回退将 ops/codex/lib.ts 的 serviceTier 改回 default；下次自然启动/resume采用，实际原生读回仍待核。paper/materials/20261023-ops-fast-startup/。
+
+- 2026-10-23 21:05 CST [ops] Fast 五叶已核实际 main a4a2ce799c、tsc/full 6508过0败2跳，未写 game live；本轮原生 high 已核，service_tier 字段缺失，Fast 实际采用仍 pending。204301 两提案 waiting、19条追溯链接读回且原状态保留；原经验源已补 f3f439cf49，live/消费者仍待验。无源码补链被 unassigned live-merge 门误拒，保 failed/rc0 原件，将递归补链置 ops-await-original-publication，未重模型/dataset/测试或关闭科学父。原件 paper/materials/20261023-2104-ops/。
