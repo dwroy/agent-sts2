@@ -6294,3 +6294,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T20:52:25+08:00 [watcher] #20旧学习tab恢复封存八批实际回收独立核收通过：宿主三叶与a3b15e510fe9精确一致，8份seal/40份原件/8份尾日志SHA及原stall done事件核同，当前8个tab消失且host键移除，原learn绑定及终态未改；pC5缺原supervisor birth、pCC awaiting_review继续保留，不代checkout回收或科学完成。父#20仍在#37后开放；复用原定向检查，本次无代码变更/重跑测试/full/生产写入。证据paper/materials/20261023-issue20-recovery-acceptance/receipt.json。
 
 - 2026-10-23 21:03 CST [ops] 194330 复用原 dataset 收尾 94f595adb2；193545 原经验补源 f3f439cf49、审计通过，宿主检查/发布待锁；16 项通知实际提醒但不代 ACK，冻结外三条仅核来源。原件 paper/materials/20261023-2039-ops/。
+
+- 2026-10-23T21:03:59+08:00 [ops] Fast仅ops启动参数精确合main a4a2ce799c，tsc/full 6508过；首次稀疏夹具缺失失败保留，未写共享配置/未改game live；自然ops采用待核。paper/materials/20261023-ops-fast-startup/。
