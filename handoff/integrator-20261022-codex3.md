@@ -147,3 +147,5 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T12:46:52+08:00 [watcher] #27 12:42原链15异议/发送凭证和67证据窗SHA及原CLI SHA实核一致，已本轮告知Roy；实读回执paper/materials/20261023-issue27-watcher-receipt/received-1242.json，正式角色ACK仍pending兼容，不代ACK、不重放原CLI、不关闭科学父。
 
 2026-10-23T12:55:48+08:00 [watcher] #47来源68f7db4282技术审查通过：9产品/测试/文档叶，8输入与Git/验证清单同、4日志字节/SHA同；复用开发tsc0及7文件71项（含Python16包装，不相加），本轮未重跑测试/full；差量对main d5e10110b只读apply-check0。来源仅本地核，远端未见；原143和开发首败保留。最终组合仍按36实际发布→46→47视图→26提示→42余项→35→28→37（37→20），保届时live知识/数据和36绑定/日志；未合47源码/未动live，自然拿牌题原tab验收及27正式ACK CLI阻塞保持开放。材料paper/materials/20261023-issue47-integrator-review/。
+
+2026-10-23T13:18:22+08:00 [watcher] 实读#36 ops6357912956：live c707d5c903c0的15叶同main d5e10110b及受测9642c7c；hosting on实读SHA核同，原6332pass+2skip复用，无重跑，首自然五项仍pending。#46按6353937742在实际c707上组装e635daf2，469知识、36全部15叶保留；13:16:35开启唯一单worker/nice19完整检查，tsc0，结果待回。#27 13:13审计15原文/67证据/CLI及received-1242 SHA核同，正式ACK兼容阻塞、科学父保留，未写ACK；原异议已在对话告知Roy。未改live/STOP/共享配置或在途任务。
