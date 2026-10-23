@@ -27,6 +27,8 @@ Roy 2026-10-21 定为标准流程。工具见 #17（`ops/issue_session.py`），
 7. **定期清积压**：按 `ops/worktree_retention.py plan` 定期出清单（可回收 / 保留 / 需人工判断），watcher 核对后分批回收（见 #18）。
 8. **长期会话**：watcher 每天换一次新会话，旧会话写交接文件后在同一 pane 开新对话，交接文件用完即删；ops 沿用其调度器既有的接续机制，压缩明显变频繁时同样换新。
 
+学习tab回收为#20独立子类，按Roy/主管新裁决提前单独发布、排#47后定向核验，不等#37/#20父功能或kit安装。当前wrapper在原finish/回执持久化后调用`learner_tabs.py seal`，原stall在drain前调用同一adapter的`tick`；两端脚本与保护规则须同组合发布。running/awaiting_review保留，缺回执/输入不明/失权写主管收件箱，工作树仍走原retention门；接口与发布输入检查见[学习tab回收合同](learner-tab-reclamation.md)。
+
 ### 工具用法与恢复
 
 在已集成工具的主检出执行（开发工作树内检查时须显式 `--root <主检出>`，不能把开发树当运行根目录）：

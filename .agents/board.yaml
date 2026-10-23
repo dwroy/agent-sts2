@@ -23,7 +23,7 @@ roles:
   lead: {kind: claude, notify: board-digest}
 resource_gate: {when: "game running", max_procs_per_task: 2, nice: 19}
 # Protection uses stable pane labels; readable tab titles never enter lifecycle matching.
-never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*, brain-view"]
+never_reclaim: [".worktrees/live", "panes: integrator, ops, brain-view", "running-panes: learner-*"]
 verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 dispatcher:
   install: ops/codex-ops/agent-board-kit

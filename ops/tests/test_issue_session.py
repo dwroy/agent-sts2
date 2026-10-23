@@ -922,9 +922,10 @@ class Scheduler(unittest.TestCase):
             (ops / 'paths.sh').write_text('OPS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"\nROOT="$CODEX_OPS_ROOT"\n')
             record = 'import os\nfrom pathlib import Path\np=Path(os.environ["CODEX_OPS_ROOT"])/"calls"\n'
             for script, name in [('codex-ops-learn.py', 'learn'), ('paper_dataset.py', 'snapshot'),
-                                  ('module_health.py', 'health'), ('issue_session.py', 'issues')]:
+                                  ('module_health.py', 'health'), ('issue_session.py', 'issues'), ('learner_tabs.py', 'learner-tabs')]:
                 (ops / script).write_text(record + f'with p.open("a") as h: h.write("{name}\\n")\n' +
-                                         ('raise SystemExit(5 if (p.parent/"fail-issues").exists() else 0)\n' if name == 'issues' else ''))
+                                         ('raise SystemExit(5 if (p.parent/"fail-issues").exists() else 0)\n' if name == 'issues' else
+                                          'raise SystemExit(124 if (p.parent/"fail-tabs").exists() else 0)\n' if name == 'learner-tabs' else ''))
             stall = ops / 'stall-check.sh'
             stall.write_text('#!/bin/bash\necho stall >> "$CODEX_OPS_ROOT/calls"\necho "OK fixed"\n')
             engine = ops / 'fake-tsx'
@@ -938,7 +939,7 @@ class Scheduler(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
             tick('learn'); tick('snapshot'); tick('stall')
             self.assertEqual((root / 'calls').read_text().splitlines(),
-                             ['learn', 'issues', 'snapshot', 'issues', 'stall', 'health', 'issues'])
+                             ['learn', 'issues', 'snapshot', 'issues', 'stall', 'learner-tabs', 'health', 'issues'])
             before = (root / 'calls').read_bytes()
             (directory / 'PAUSE').touch(); tick('learn')
             self.assertEqual((root / 'calls').read_bytes(), before)
@@ -952,7 +953,7 @@ class Scheduler(unittest.TestCase):
             before = (root / 'calls').read_text()
             tick('learn'); tick('snapshot'); tick('stall')
             self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(),
-                             ['learn', 'snapshot', 'stall', 'health', 'board'])
+                             ['learn', 'snapshot', 'stall', 'learner-tabs', 'health', 'board'])
             (directory / 'PAUSE').touch(); before = (root / 'calls').read_bytes(); tick('stall')
             self.assertEqual(before, (root / 'calls').read_bytes())
             (directory / 'PAUSE').unlink()
@@ -967,7 +968,7 @@ class Scheduler(unittest.TestCase):
             control = directory / 'agent-board-control.json'
             env.pop('CODEX_AGENT_BOARD')
             before = (root / 'calls').read_text(); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health', 'issues'])
             def set_control(mode):
                 result = subprocess.run(['python3', str(ops / 'agent_board.py'), '--root', str(root), '--set-enabled', mode],
                                         capture_output=True, text=True, env=env, timeout=15)
@@ -975,19 +976,38 @@ class Scheduler(unittest.TestCase):
             before = (root / 'calls').read_text(); set_control('on')
             self.assertEqual((root / 'calls').read_text(), before)  # Setting on does not dispatch.
             tick('learn'); tick('snapshot'); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['learn', 'snapshot', 'stall', 'health', 'board'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['learn', 'snapshot', 'stall', 'learner-tabs', 'health', 'board'])
             env['CODEX_AGENT_BOARD'] = 'off'; before = (root / 'calls').read_text(); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health', 'issues'])
             env.pop('CODEX_AGENT_BOARD'); set_control('off')
             env['CODEX_AGENT_BOARD'] = 'on'; before = (root / 'calls').read_text(); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'board'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health', 'board'])
             env.pop('CODEX_AGENT_BOARD'); control.write_text('damaged')
             before = (root / 'calls').read_text(); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health'])
             self.assertIn('开关', (ops / 'inbox-dev.md').read_text())
             env['CODEX_AGENT_BOARD'] = 'off'; before = (root / 'calls').read_text(); tick('stall')
-            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health', 'issues'])
 
+
+            # A held wake lock models an occupied ops model. Reclamation runs first and never waits on it.
+            import fcntl
+            env['CODEX_OPS_NO_DRAIN'] = '0'
+            (directory / 'queue/fixed.md').write_text('fixed event')
+            with (directory / 'wake.lock').open('a') as wake:
+                fcntl.flock(wake, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'learner-tabs', 'health', 'issues'])
+            self.assertIn('a wake is running', (directory / 'scheduler.log').read_text())
+            env['CODEX_OPS_RETENTION'] = 'off'
+            before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health'])
+
+            env['CODEX_OPS_RETENTION'] = 'on'; (root / 'fail-tabs').touch()
+            tick('stall'); tick('stall')
+            self.assertEqual((directory / 'inbox-claude.md').read_text().count('学习tab回收超时'),1)
+            (root / 'fail-tabs').unlink(); tick('stall')
+            self.assertFalse((directory / 'learner-tabs-timeout-notified').exists())
 
 class BoardLauncher(unittest.TestCase):
     def test_control_default_persistence_identity_and_explicit_environment_priority(self):

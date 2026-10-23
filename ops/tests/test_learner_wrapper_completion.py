@@ -45,6 +45,22 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
      "finished":"2026-10-23T12:00:00+08:00", "pid":os.getppid(), "pane":"w1:p2", "worktree":str(root)}
 (root/"ops/codex-ops/learn.json").write_text(json.dumps({"batches":{batch:row}}))
 ''')
+        (self.root / "ops/learner_tabs.py").write_text('''import json,os,sys
+from pathlib import Path
+root=Path(os.environ["CODEX_OPS_ROOT"])
+args=sys.argv[1:]
+assert args[0]=="seal"
+batch=args[args.index("--batch")+1]
+assert args[args.index("--root")+1]==str(root)
+assert args[args.index("--state-dir")+1]==str(root/"ops/codex-ops")
+row=json.loads((root/"ops/codex-ops/learn.json").read_text())["batches"][batch]
+assert row["pid"]==os.getppid()
+receipt=json.loads(Path(os.environ["LEARNER_TUI_RECEIPT"]).read_text())
+assert receipt["wrapper"]["batch"]==batch
+assert receipt["wrapper"]["state"]==row["state"]
+(root/"seal-args.json").write_text(json.dumps(args))
+raise SystemExit(int(os.environ.get("FIXTURE_SEAL_RC","0")))
+''')
         sleep = self.root / "home/.local/node/bin/sleep"
         sleep.parent.mkdir(parents=True)
         # End only this fixture's wrapper after its first deferred verification, without a 30s wait.
@@ -64,7 +80,7 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
     def attention_files(self):
         return list((self.directory / "queue").glob("*learner-tui-attention.md"))
 
-    def test_clean_finish_records_without_ops_attention_or_recycler_commands(self):
+    def test_clean_finish_records_and_seals_without_ops_attention(self):
         env = self.prepare()
         result = self.run_wrapper(env)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -75,7 +91,7 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
         self.assertEqual(value["wrapper"]["supervisor"]["pid"], json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["pid"])
         self.assertTrue(value["wrapper"]["supervisor"]["birth"])
         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
-        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertEqual(json.loads((self.root / "seal-args.json").read_text())[-2:], ["--batch", self.batch])
         self.assertEqual(self.attention_files(), [])
         self.assertEqual(self.receipt.stat().st_mode & 0o777, 0o600)
 
@@ -91,7 +107,7 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
         self.assertEqual(value["wrapper"]["rc"], 3)
         self.assertEqual(value["wrapper"]["launcher_rc"], 1)
         self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
-        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertTrue((self.root / "seal-args.json").is_file())
         self.assertEqual(self.attention_files(), [])
 
     def test_invalid_native_binding_preserves_original_and_never_finishes_or_seals(self):
@@ -116,7 +132,7 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
         self.assertEqual(value["wrapper"]["state"], "failed")
         self.assertEqual(value["wrapper"]["rc"], 0)
         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "failed")
-        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertTrue((self.root / "seal-args.json").is_file())
         self.assertEqual(self.attention_files(), [])
 
     def test_empty_fix_audit_stays_failed_while_native_completion_is_recorded(self):
@@ -168,28 +184,26 @@ row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed
         receipt = json.loads(self.receipt.read_text())
         self.assertEqual((receipt["wrapper"]["state"], receipt["wrapper"]["rc"]), ("rejected", 0))
         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "rejected")
-        self.assertFalse((self.root / "seal-args.json").exists())
+        self.assertTrue((self.root / "seal-args.json").is_file())
 
-    def test_unreleased_recycler_does_not_affect_verified_finish(self):
+    def test_failed_seal_preserves_verified_finish_and_notifies_without_closing(self):
         env = self.prepare()
-        # A presence-only trap must never run; ordinary fixtures contain no recycler module.
-        (self.root / "ops/learner_tabs.py").write_text(
-            "from pathlib import Path\n"
-            f"Path({str(self.root / 'seal-args.json')!r}).write_text('unexpected recycler invocation')\n"
-            "raise RuntimeError('unreleased recycler must not run')\n")
-        result = self.run_wrapper(env)
-        self.assertEqual(result.returncode, 0)
+        result = self.run_wrapper(dict(env, FIXTURE_SEAL_RC="75"))
+        self.assertEqual(result.returncode, 75)
         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
-        self.assertFalse((self.root / "seal-args.json").exists())
-        self.assertEqual(self.attention_files(), [])
+        self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "done")
+        self.assertTrue((self.root / "seal-args.json").is_file())
+        self.assertEqual(len(self.attention_files()), 1)
+        self.assertIn("seal", self.attention_files()[0].name)
 
-    def test_missing_recycler_does_not_block_completion_or_close_pane(self):
+    def test_missing_recycler_preserves_completion_and_reports_incomplete_handoff(self):
         env = self.prepare()
+        (self.root / "ops/learner_tabs.py").unlink()
         self.assertFalse((self.root / "ops/learner_tabs.py").exists())
-        self.assertEqual(self.run_wrapper(env).returncode, 0)
+        self.assertEqual(self.run_wrapper(env).returncode, 75)
         self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
         self.assertFalse((self.root / "seal-args.json").exists())
-        self.assertEqual(self.attention_files(), [])
+        self.assertEqual(len(self.attention_files()), 1)
 
     def test_mismatched_launcher_exit_is_not_silently_replaced(self):
         env = self.prepare()
