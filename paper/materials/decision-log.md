@@ -6236,3 +6236,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T17:26:56+08:00 [ops] 171303空修复无新源码，tsc0/定向77过但116源码路径与live不等价，原failed/rc0及checkout属主deferred保留；#20首个原wrapper seal17:21:30已核五原件SHA/处置权，锁忙queued不代关闭/看板槽位释放，不重模型/full/finish。原件paper/materials/20261023-1721-ops/fix-review.json。
 
 2026-10-23T17:34:25+08:00 [watcher] #49按主管/Roy裁定rk=reflex.json，经验仍kb_experience；只读检索带来源/可信度/命中ID，不改知识、不启V6_COMBAT_ENTRIES、不动Jev；issue6361846602已实读回并提醒原dev49。#48十四叶定向准入暂退回：tsc0/两shell0/wrapper17过/11文件153过2败；ordinary-close隔离15秒超时在无48同基线亦败，组合原六项直接6过10.545s，learner-herdr原延迟aaa首败及组合复验aaa/zzz双败保留，基线62过不代稳定。244条冻结源/首6身份及26Python依赖核同，配置off、未派模型/合main/live。原件paper/materials/20261023-issue48-directed-admission/；队列20子类→48定向→49+26唯一full→42余→35→50→28→37→20父，唯一full未起；实际live2faa7ead/469知识、47自然/46原24h/36旧现场/27正式ACK CLI门保留。
+
+- 2026-10-23T17:36:20+08:00 [ops] #20旧10tab：9终态/native/产物/空输入核同，pCC同birth原生仍在保留；seal仅活原supervisor，九批退出后无ops恢复入口，交原开发不伪造/手关。171303首自然seal→原tick17:30reclaimed已核尾SHA/无tab/host移除，checkout与父门保持。原件paper/materials/20261023-issue20-old-tabs-ops/old-tabs-review.json。
