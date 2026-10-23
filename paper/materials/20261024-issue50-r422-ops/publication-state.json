@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-24T02:53:12+08:00",
+  "phase": "published-registered-readback-notified-admission-released",
+  "worker_pid": 3902319,
+  "worker_birth": "20456390",
+  "published": true,
+  "boundary": {
+    "at": "2026-10-24T02:27:14+08:00",
+    "play_pid": 3892467,
+    "play_birth": "20440652",
+    "play_cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "autoplay_pid": 1248445,
+    "autoplay_birth": "9590346",
+    "console_path": "logs/console/20261024-022432-e6debc3a1+dirty.log",
+    "prefix_bytes": 16476,
+    "prefix_sha256": "0961af751232fefde30a914b1af81b881f31123d2cd3b99b0b7aeb3e4bd2e274",
+    "wait": "original next natural play PID/birth pidfd only after prewrite lock timeout; no signal/key/game request",
+    "prior_boundary_retained": "natural-boundary-prewrite-lock-failure.json"
+  },
+  "held_locks": [],
+  "new_full_model_or_game": 0,
+  "waiting_lock": "ops/live-merge.lock",
+  "T": "2026-10-24T02:53:05+08:00",
+  "behavior": {
+    "parent": "e6debc3a13f4749b98f55822dd856e753c583b52",
+    "commit": "5c29110623be69100580809127752e5b333ed932",
+    "tree": "8747f1345e736af3414a54fa1eafe149946d2dd1",
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/build-facts.ts",
+      "agent/src/brain/specs.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/endgame-plan.ts",
+      "agent/src/memory/run-plan-merge.ts",
+      "agent/src/memory/run-plan.ts",
+      "agent/tests/endgame-plan.test.ts",
+      "agent/tools/brain-agent-report.ts",
+      "docs/endgame-plan.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/237ce6fe44c74280b8ea3e6e18d07dd6/manifest.json",
+      "manifest_sha256": "ea3360377eebbfac25b6f96eec7a53963128d318aebadc9228850632a411edd4",
+      "scanned_leaves": 10,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "release_id": "V6-R423",
+  "live": "6d89243c385c11eec7b923fba907cb8dd250e4bc"
+}

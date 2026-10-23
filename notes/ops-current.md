@@ -1,3 +1,13 @@
+state: in-flight
+issue: 28
+updated: 2026-10-24T03:02:33+08:00
+
+进行中的事: #50已于02:53:05发布V6-R423，live6d89243c385c；十叶同受测树，原唯一full665文件6528过/2skip、tsc及固定Python0。15固定库消费者ok、518知识保持、自有准入释放；原autoplay1248445/birth9590346及新play3929639/birth20615032正常，无另起循环。首自然Silent A10局W546CNAWY3RG冻结前5题，5更新/5计划落盘/后4题原计划逐字读回，实际live报告器核同；checkpoint0，幕末/F48-F49/SL/重启/学习/收益待验，不关父。原ENOBUFS代码字段null和写前锁失败保留。6372507584、6372553957。
+
+在等谁: #28仍review，已沿原会话sts2-integrator交50前置释放及最终组合/唯一full（6372508138），再37→20父。exp235635重新取得原锁确认无属主，新main合并预览全等main，11失败残留及旧经验SHA未变；当前main与R423净组合有169源码/检查叶差异，不能用50full代main全检，等28原最终组合/唯一full精确输入后准备宿主基线，保原failed/0和学习沙箱（6372554666）。没有启动另一个full或模型。50幕末等原自然样本。
+
+下一步: 原集成员完成28最终main组合/唯一full后，核可复用的精确源码/依赖/知识输入；按原exp锁host准备基线，只处置已核归档的11残留，不扩学习权限、不把235635/211302改done；28→37→20父依序。234301五局dataset bcce9fdf502e已核，17生成叶/5局has_postmortem=1，scratch仍等tested live经验，不重dataset/finish。36两原tab已由原调度器01:55:03关闭；新正常双批验收开放。35首自然15题/12非空已核，学习消费/SL重启待验；49旧18局与新43题分账，rk非空自然场景待验，已交主管；47详细/compact核完且默认详细已恢复。51首两批及48按原正常学习优先队列，不手动tick；46窗至10-24 13:46:30、48至18:19:29；20最终kit一天至10-25 00:15:05，idle844秒待分类，/new不启。ops Fast源码已合，原生high已见，Fast实际请求回执仍待核，不热切。17通知正式角色ACK兼容和Roy可见回执仍阻塞，不代填。原件paper/materials/20261024-issue50-r422-ops/；paper/materials/20261024-issue36-recovery-ops/；paper/materials/20261024-postmortem-234301-dataset-ops/。
+
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
 main dda4eed98e4ba57c7101f8c7c600437c4823a8a1

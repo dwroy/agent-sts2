@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-24T03:02:05+08:00",
+  "reporter": "actual live agent/tools/brain-agent-report.ts",
+  "run": "W546CNAWY3RG",
+  "frozen_input": ".artifacts/ops-issue50-r422-20261024/natural-first-five/brain.jsonl",
+  "input_sha256": "cd9967f102683c8c728321e854f85495769f6c85af77b526d2b13a9da536dca7",
+  "output": ".artifacts/ops-issue50-r422-20261024/natural-first-five/reporter.json",
+  "output_sha256": "430112e53da6d8a67513231dfe42393c62516c24d2c75b727fe357e287ea56a4",
+  "endgame_groups": [
+    {
+      "engine": "codex",
+      "act": "1",
+      "questions": 5,
+      "prior_plan_nonempty": 4,
+      "prior_plan_nonempty_rate": 0.8,
+      "accepted_plan_updates": 5,
+      "accepted_plan_update_rate": 1,
+      "checkpoints_requested": 0,
+      "checkpoints_answered": 0,
+      "question_ids": [
+        "mvlbw037-3929639-1",
+        "mvlbw037-3929639-2",
+        "mvlbw037-3929639-3",
+        "mvlbw037-3929639-4",
+        "mvlbw037-3929639-5"
+      ]
+    }
+  ],
+  "endgame_limitation": "仅统计显式 endgame_plan_required 题，按引擎/幕分账；首次无旧计划属正常，不计作更新失败。非空不证明内容成立，accepted不证明落盘或实际采用；需核run-plans与下一题。未发给大脑的代码/Jev动作不在分母。F48/F49到达与首试/SL结果须沿同角色/进阶/脑来源的原对局日志另核；空样本不构成验收。",
+  "new_model_game_calls": 0
+}

@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-24T02:58:09+08:00",
+  "release_id": "V6-R423",
+  "live": "6d89243c385c11eec7b923fba907cb8dd250e4bc",
+  "behavior": "5c29110623be69100580809127752e5b333ed932",
+  "tested_tree": "8747f1345e736af3414a54fa1eafe149946d2dd1",
+  "exact_paths": [
+    "agent/src/brain/brain.ts",
+    "agent/src/brain/build-facts.ts",
+    "agent/src/brain/specs.ts",
+    "agent/src/hand/loop.ts",
+    "agent/src/memory/endgame-plan.ts",
+    "agent/src/memory/run-plan-merge.ts",
+    "agent/src/memory/run-plan.ts",
+    "agent/tests/endgame-plan.test.ts",
+    "agent/tools/brain-agent-report.ts",
+    "docs/endgame-plan.md"
+  ],
+  "knowledge_files": 518,
+  "knowledge_unchanged": true,
+  "fixed_consumer_contexts": 15,
+  "statuses_ok": true,
+  "external_contexts": 0,
+  "model_game_calls": 0,
+  "admission_release": {
+    "at": "2026-10-24T02:53:12+08:00",
+    "own_LLM_DRAIN_removed": true,
+    "autoplay_restarted": false,
+    "other_flags_unchanged": true
+  },
+  "runtime": [
+    {
+      "pid": 1248445,
+      "uid": 1000,
+      "start": "9590346",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "kind": "autoplay"
+    },
+    {
+      "pid": 3929639,
+      "uid": 1000,
+      "start": "20615032",
+      "state": "R",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "play"
+    }
+  ],
+  "broker_restart_needed": false,
+  "flags": {
+    "STOP": false,
+    "PAUSE": false,
+    "LLM_DRAIN": false,
+    "ACCOUNT_DRAIN": false
+  },
+  "prior_prewrite_lock_failure_retained": true,
+  "natural_plan_checkpoint_F48_F49_learning_acceptance": "pending original natural observations",
+  "scientific_parent": "open"
+}

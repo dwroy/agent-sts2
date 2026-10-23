@@ -6452,3 +6452,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T02:25:02+08:00 [ops] 原234301受控no-raw数据事务已实核rc0及提交bcce9fdf502e：17生成叶逐项核Git blob/SHA、24实际提交路径无源码，五局生成表has_postmortem均1，source_checks_passed=true，成本保自身切点。原笔记/30账本行/五提案另在ffd4677ce648，不重复生成或重跑finish/模型；先前误调用中断单独保留。原回收plan明确因“尚未进入已完整检查live经验”保留，已按原CLI补回收意图，原worker状态deferred；不删除scratch、不将数据成功代入库或关闭科学父。原#20已关闭tab与scratch门分别登记。结果已读回6371865646。原件paper/materials/20261024-234301-dataset-readback-ops/commit-readback.json、five-run-generated-readback.json、retention-plan.json、retention-current-readback.json；#50仍沿原自然终局发布事务。
 
 - 2026-10-24T02:30:27+08:00 [ops] #50原3864243在02:24:30写源码前等K锁30秒超时，live e6debc3a13f4未变、自有门已释放，原失败/边界/门/终局原件全部保留；没有重full。已核宿主刷新Python持有K及排队者，原事务接续3902319/birth20456390，fresh绑定play3892467/birth20440652及原autoplay1248445。沿既有LLM_DRAIN仅暂缓新局/新学习派发，不发当前局或在途学习信号；等原自然终局后单次内核按K→L等锁，不轮询抢锁或杀owner，再精确发布10叶/编号/消费者并释放自有门。已读回6371942158；原665文件6528过/2skip复用，科学父不关。数据事务另已核销bcce9fdf/17生成叶、回收因尚未入tested-live经验保留（54e2e6c5629e）。原件paper/materials/20261024-issue50-r422-ops/prewrite-lock-review.json、lock-resume-launch.json、lock-resume-review.json。
+
+- 2026-10-24T02:53:12+08:00 [ops] V6-R423 #50终局计划十叶自然发布，原唯一full6528过/2skip、实际消费者读回及最新知识保持；旧检查失败和科学父保留，计划/检查点及F48-F49自然验收开放。paper/materials/20261024-issue50-r422-ops/publication.json。
+
+- 2026-10-24T03:02:05+08:00 [ops] #50 V6-R423实核发布/15固定读回/自有门释放；原循环续行，首自然5计划落盘/4后继读回已核，幕末与收益未验；接原28唯一组合检查→37→20父，经验235635保持failed/0等同main受测输入。paper/materials/20261024-issue50-r422-ops/final-readback.json、natural-first-five.json。
