@@ -4912,3 +4912,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T17:09:06+08:00 [ops/#47自然验收接续] 47再次接续已核最新issue评论与原发布回执，实际live2faa7ead017b九叶blob/SHA保持，无重复发布。原autoplay1248445/birth9590346、play1398321/birth16847206与16:58发布后相同；当前ZF8PX27B46H5最新run-config为16:26，早于发布。现有brain-view的pane w1H:pBA、tab w1H:tB7及标题已向herdr实际读回，脱敏stream固定前缀SHA与run-config原行offset/bytes/SHA落盘，未抄录题面或外部标识。当前流中详细题目和检索标记为零，只能说明仍非新版自然验收，不能当新功能失败或以旧compact记录充当回退成功。17:06调度索引已自然刷新，按新SHA核读，原16:46边界保留。下一自然控制器及原tab拿牌题需逐项读回题面、公开摘要或缺失提示、工具参数/返回/来源版本/耗时和答案，compact回退仍pending。不改运行环境、不热切在途、不重full/模型或额外开局；原20子类接续、36/46及科学父保持。
 原件：paper/materials/20261023-issue47-natural-followup-ops/readback.json；原发布paper/materials/20261023-issue47-publication-ops/publication.json。
+
+- 2026-10-23T17:18:10+08:00 [ops/#20宿主采用核验] 20独立学习tab子类已核main aab5613eee祖先、十三叶模式/blob/SHA及33本地脚本模块闭包，宿主cron三入口均指主检出，wrapper原finished→seal与stall/drain前tick配对，不向game live裸发。复用原tsc0、两bash入口0、wrapper Python17、调度Python62及四Vitest文件67过，2622输入前后同；回收55与视图包装不重复加计，缺PYTHONPATH首败保留。主树具备下一自然wrapper/原stall采用条件，当前无tab-retirement、learner-tabs journal或回收日志，故实际seal→关闭读回→槽位释放pending，不据测试报生产回收成功。旧在途缺证明仍保留，不补写历史、不重放任务或模型。原board父功能/kit不安装启用，PAUSE/LLM_DRAIN/RETENTION off与brain-view永久保护、36原生延迟/收尾保持；47自然展示/compact、46原24小时和20父37后保持开放。
+原件：paper/materials/20261023-issue20-host-adoption-ops/host-admission.json；原准入paper/materials/20261023-issue20-tabs-admission/。
