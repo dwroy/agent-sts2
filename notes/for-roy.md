@@ -4774,3 +4774,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T08:44:18+08:00 [ops] 处理08:43十五件重复学习异议，已核原文SHA、67份原始收件箱窗口/证据和通知CLI，与07:56均无变化。已向身份核实且空闲的原watcher提交一行提醒；仅提交不代接收、Roy已读或正式角色ACK。原ops_forwarded写入与既有watcher实际读取/Roy可见转达证据保留；十五项watcher_received/roy_notified登记仍受原手动任务白名单限制，继续pending，保留原CLI拒绝且不重复同一失败操作，不代其他角色确认。原ops已用授权当前局清单核回三条并行账本；学习者冻结check rc1、ops结构/局号check rc0并列保留，不代逐帧来源验真。D1牌堆剥离、D2增量未校准、D3退出HP、卡牌覆盖/机制缺口及外部统计因果/样本限制均沿原owner处理，不改知识或关闭科学父。本轮无新增学习、dataset、full、发布或对局动作；待原角色兼容后凭真实回执登记。原件paper/materials/20261023-0843-ops/notices-audit.json、watcher-reminder-send.json；历史核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
+
+
+- 2026-10-23T08:49:23+08:00 [ops] 已接#23上次04:30停点：原部署仍有效，四核心叶/真实绑定/139棵已回收checkout的注册缺失、保留分支及归档SHA核同。部署后139回收对186成功分配，最近24小时35对113；04:30后新增2回收/6分配。两棵分列为#45结算旧树1棵及本次已验收运维树1棵，不把后者充历史积压。原磁盘22日08:43至23日08:43端点约24h净减75.90GiB，中间最大3.5h缺口保留；首24h120/125与原空间失败不改写，全机变化不归因本仓。原worker08:43仍自动执行且限4，本轮唯一只读plan为0eligible：普通收尾36、身份36、dirty31、scratch19、运行/失败11等继续保留。#23可持续验收仍失败、父要求开放；下一步沿#45原owner结算和#46审查后按序发布，届时记T并沿原tick读T+24h真实分配/积压，历史估算不代收益。结果已写#23评论6354673160并API逐字核回，无源码/删除apply/full/模型/新计时器或对局动作。原件paper/materials/20261023-issue23-followup-0845-ops/receipt.json、audit.json、plan.json、issue-comment-readback.json。
