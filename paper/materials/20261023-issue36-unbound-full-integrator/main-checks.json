@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-23T10:53:17+08:00",
+  "state": "passed",
+  "base": "1558616ba79877f0e2e5bc1b70b75d0820088f5b",
+  "tree": "fe5faa6dc3542fcf09a3187303b509f952bf9aec",
+  "source": "c8ff9caf5edefd3c21e73b60386202a3d90920ed",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-main-20261023-1022",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T10:53:17+08:00",
+      "exit_code": 0,
+      "seconds": 0.891
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-native-prelude.test.ts",
+        "tests/learner-tui-reconciliation.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/boss-sim-home.test.ts",
+        "tests/learner-entry.test.ts",
+        "tests/learner-startup-recovery.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-unbound-r417-resume-20261023-1022/main-vitest.json"
+      ],
+      "started_at": "2026-10-23T10:53:18+08:00",
+      "exit_code": 0,
+      "seconds": 15.18
+    },
+    {
+      "name": "python",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "../ops/tests",
+        "-p",
+        "test_learner_tui.py"
+      ],
+      "started_at": "2026-10-23T10:53:33+08:00",
+      "exit_code": 0,
+      "seconds": 0.149
+    }
+  ],
+  "full_repeated": false,
+  "inputs_unchanged": true,
+  "input_count": 2613,
+  "vitest": {
+    "files": 9,
+    "passed": 205,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T10:53:34+08:00"
+}
