@@ -1,0 +1,37 @@
+{
+  "before": {
+    "tests": 15,
+    "passed": 14,
+    "failed": 1,
+    "exit_code": 1,
+    "log": "before.log",
+    "reason": "legacy protected board role regex does not match running learner pane retained"
+  },
+  "after": {
+    "brain_view": {
+      "tests": 15,
+      "exit_code": 0,
+      "log": "brain-view.log",
+      "source": "exact main Python fixture; JS Vitest wrapper not run"
+    },
+    "learner_tabs": {
+      "tests": 55,
+      "exit_code": 0,
+      "log": "learner-tabs.log",
+      "native_verifier": "0933ea0:ops/learner_tui.py, fixed pane/proc"
+    },
+    "tsc": {
+      "exit_code": 0,
+      "log": "tsc.log"
+    }
+  },
+  "full_vitest": false,
+  "production_actions": false,
+  "resource_warning": "existing learner_jobs.hosting unclosed-file warning remains in both raw brain-view logs",
+  "logs_sha256": {
+    "before.log": "977de129171aaf71abe928a49029de20c909f00e3da34cf30fed0518c1f9c98c",
+    "brain-view.log": "997184bcdb895b3d7a15b74af5efe70189b53a8d3607e819756a611324207d10",
+    "learner-tabs.log": "ec45013636c9ffafb4e67986fdc22b607d7f4b0437b0faec45fabb6e7985e419",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

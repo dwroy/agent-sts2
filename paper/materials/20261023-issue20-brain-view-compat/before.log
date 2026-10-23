@@ -1,0 +1,21 @@
+............/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/codex-ops/agent-board-kit/.state/brain-view-compat/ops/learner_jobs.py:23: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpedu30d9o/hosting' mode='r' encoding='utf8'>
+  for line in open(os.path.join(state_dir, "hosting"), encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..F
+======================================================================
+FAIL: test_titles_keep_stable_learner_labels_protected_by_real_board_rules (test_brain_view.BrainView.test_titles_keep_stable_learner_labels_protected_by_real_board_rules)
+----------------------------------------------------------------------
+ValueError: running learner pane retained
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/codex-ops/agent-board-kit/.state/brain-view-compat/ops/tests/test_brain_view.py", line 258, in test_titles_keep_stable_learner_labels_protected_by_real_board_rules
+    with self.assertRaisesRegex(ValueError, 'protected board role'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "protected board role" does not match "running learner pane retained"
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.330s
+
+FAILED (failures=1)

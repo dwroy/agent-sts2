@@ -320,6 +320,15 @@ class LearnerTabs(unittest.TestCase):
         self.assertEqual(original,{path:path.read_bytes() for path in original})
         with self.assertRaises(ValueError): self.worker.board.protect(dict(self.row,label=self.label))
 
+    def test_running_role_preserves_legacy_error_classification_and_terminal_gate(self):
+        for state in (None,'running','awaiting_review'):
+            with self.subTest(state=state), self.assertRaisesRegex(ValueError,'protected board role') as error:
+                self.worker.board.protect(dict(self.row,state=state,label=self.label))
+            self.assertIn('running learner pane retained',str(error.exception))
+        for state in ('done','failed','rejected','cancelled'):
+            with self.subTest(state=state):
+                self.worker.board.protect(dict(self.row,state=state,label=self.label))
+
 
 class PostmortemContract(LearnerTabs):
     # The scheduler batch key is timestamp-only; only its host label/receipts carry this suffix.

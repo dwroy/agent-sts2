@@ -1,0 +1,35 @@
+{
+  "main": "d7c5eafd128f889cf2077f2c3417df35486d41e5",
+  "parent": "fc37ac1fd9d9959c49b369b1682a818d4af4c583",
+  "main_files": {
+    "ops/brain_view.py": "9012288a8e27edc1b8e66dedab17ee4d17976213e5c71a26ab1656c80ad6376c",
+    "ops/herdr_titles.py": "835c2db82b7c523ccf23ad11fb27d394363fdfdf61f27edbd76f303c5d00c04e",
+    "ops/tests/test_brain_view.py": "a1083c3d17d0473c06bcf9e283d2c311c0a6594e501369c0363e9ba36164110b",
+    "agent/tests/brain-view.test.ts": "1b660fe1cb6d94a8106b2112011da5215cc4ccf34d9e39fe0a7dbe7959a5fa12",
+    ".agents/board.yaml": "756f46b307cd657510a3e1306ef164d44a81e7ce563ce238b73db3dff06ed57f"
+  },
+  "config_adaptation": {
+    "before": [
+      ".worktrees/live",
+      "panes: integrator, ops, learner-*, brain-view"
+    ],
+    "after": [
+      ".worktrees/live",
+      "panes: integrator, ops, brain-view",
+      "running-panes: learner-*"
+    ],
+    "other_fields_unchanged": true
+  },
+  "changed": {
+    "ops/issue_session_support.py": "e2a9281edb16e96acf843e0dcd58ab9e3e5dcffdba62fa555c60d81fb43e956b",
+    "ops/tests/test_learner_tabs.py": "6757a665445a3d6c02d01364dbe14f5487f13bfed48f4036dc6daa29c049230a"
+  },
+  "snapshot_modules": {
+    "ops/brain_view.py": "9012288a8e27edc1b8e66dedab17ee4d17976213e5c71a26ab1656c80ad6376c",
+    "ops/herdr_titles.py": "835c2db82b7c523ccf23ad11fb27d394363fdfdf61f27edbd76f303c5d00c04e",
+    "ops/tests/test_brain_view.py": "a1083c3d17d0473c06bcf9e283d2c311c0a6594e501369c0363e9ba36164110b",
+    "ops/issue_session_support.py": "e2a9281edb16e96acf843e0dcd58ab9e3e5dcffdba62fa555c60d81fb43e956b",
+    "ops/learner_jobs.py": "a54ea69d8ff1389292438fc15c176e40bec7f7e5faf31c6bbeb7d5bfee29185a",
+    ".agents/board.yaml": "e0155f18822fca2a2a272effcb3aa4efeb2366f0fa2e81ec1587c4cc2bea2241"
+  }
+}

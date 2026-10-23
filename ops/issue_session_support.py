@@ -187,7 +187,7 @@ class Board:
             if rule.startswith("running-panes:"):
                 if (any(fnmatch.fnmatch(row["label"], pattern.strip()) for pattern in rule.split(":", 1)[1].split(","))
                         and row.get("state") not in ("done", "failed", "rejected", "cancelled")):
-                    raise ValueError("running learner pane retained")
+                    raise ValueError("protected board role or pane: running learner pane retained")
             elif rule.startswith("panes:"):
                 for role in rule.split(":", 1)[1].split(","):
                     role = role.strip()
