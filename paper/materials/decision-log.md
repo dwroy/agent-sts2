@@ -6362,3 +6362,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:27:21+08:00 [ops] 231302空fix无新增源码/提交，工作树干净；tsc0、定向6文件23项通过，Python18/3分列，初次EROFS保留。原empty-fix核验因main基线与live源码有差异返回None，保持failed/rc0，不重full/空合并/假seal；gzip与waiting补链为main祖先但不是live祖先，其余原候选沿原宿主链。原件paper/materials/20261023-2326-ops/receipt.json。
 
 - 2026-10-23T23:30:17+08:00 [ops] #49效率净11叶tsc/136定向通过，原自然终局事务已挂并保最新知识；未重full/模型，旧18局与新窗口分账。paper/materials/20261023-issue49-efficiency-ops/preflight.json。
+
+- 2026-10-23T23:39:17+08:00 [ops] V6-R420 #49效率净11叶自然发布/六类实际读回，保最新知识与#35未发布边界，136定向通过；不重full/模型，14秒目标待自然窗口。paper/materials/20261023-issue49-efficiency-ops/publication.json。
+
+- 2026-10-23T23:43:39+08:00 [ops] #23最新24h17回收路径/118新建、磁盘-108.48GiB仍失败；plan0，保37未结算等原门，等#46完整24h。已核R420实际发布与原循环继续。paper/materials/20261023-issue23-continue-ops/audit.json。
