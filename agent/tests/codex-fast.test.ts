@@ -22,7 +22,7 @@ describe("Shared Codex defaults across session entry points", () => {
     }
   });
 
-  it("applies temporary Ultrafast tier and 512k only to ops init/resume and interactive resume", () => {
+  it("applies Fast tier and 512k only to ops init/resume and interactive resume", () => {
     const commands = [
       initCommand(request, "TASK", "codex").args,
       resumeCommand(request, SESSION, "TASK", "codex").args,
@@ -31,7 +31,7 @@ describe("Shared Codex defaults across session entry points", () => {
     for (const args of commands) {
       expect(args).toContain("model_context_window=512000");
       expect(args).toContain("model_auto_compact_token_limit=460800");
-      expect(args).toContain('service_tier="ultrafast"');
+      expect(args).toContain('service_tier="fast"');
       expect(args).toContain('model_reasoning_effort="xhigh"');
       expect(args).toContain("gpt-6.1-sol");
     }
@@ -41,7 +41,7 @@ describe("Shared Codex defaults across session entry points", () => {
     expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "high" });
     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(opsArgs).toContain("gpt-6.1-sol");
-    expect(opsArgs).toContain('service_tier="ultrafast"');
+    expect(opsArgs).toContain('service_tier="fast"');
     expect(opsArgs).toContain('model_reasoning_effort="high"');
     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(args).toContain("gpt-6.1-sol");
