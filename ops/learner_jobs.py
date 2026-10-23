@@ -339,11 +339,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             attempted.append(args[3])
         return dispatch_write(*args, **kwargs)
     core = None
+    core_ready = False
     request = None
     if character == "silent":
         import core_build_jobs
         request = core_build_jobs.pending_request(root)
         if request:
+            prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
+            core_ready = len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior)
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
     runs = pending(root, scripts, character)
     experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
@@ -366,7 +369,7 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from boss_sim_jobs import check
     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
-            "core_builds": core, "backfill_hold": bool(attempted or runs or request),
+            "core_builds": core, "backfill_hold": bool(attempted or core_ready),
             "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
 
 
@@ -395,7 +398,9 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
     request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
                "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
-    state["calibration_ready"][character] = request["request_id"]
+    prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
+    if len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior):
+        state["calibration_ready"][character] = request["request_id"]
     _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
     return result
 

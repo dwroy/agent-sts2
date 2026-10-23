@@ -197,6 +197,15 @@ class Backfill(unittest.TestCase):
         self.assertTrue(normal["backfill_hold"])
         self.assertIsNone(self.dispatch(normal))
 
+    def test_completed_normal_source_does_not_starve_backfill_on_a_stale_pending_index(self):
+        self.state["batches"]["completed"] = {"task": "experience-update", "key": RUN, "state": "done"}
+        with patch.object(jobs, "pending", return_value=[RUN]), patch.object(jobs, "dispatch_write", return_value=None), \
+                patch.object(jobs, "fix_key", return_value=None), patch.object(jobs, "strategy_job", return_value=None), \
+                patch.object(jobs, "calibration_job", return_value=None), patch("boss_sim_jobs.check", return_value=None):
+            normal = jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: False, STAMP)
+        self.assertFalse(normal["backfill_hold"])
+        self.assertEqual(self.dispatch(normal), (BID, 10))
+
     def test_shared_writer_slots_and_available_gates_are_preserved(self):
         for mode in ("slots", "writer"):
             self.state = {"batches": {}}
@@ -206,6 +215,18 @@ class Backfill(unittest.TestCase):
                 result = self.dispatch(writer=jobs.dispatch_write, alive=lambda pid: True)
             self.assertIsNone(result)
             self.assertNotIn("strategy_backfill", self.state)
+
+    def test_durable_contract_copy_preserves_original_sha_after_owner_tree_reclaim(self):
+        original = self.ref(".worktrees/temporary/task.md", "固定冻结参考")
+        copied = self.ref("frozen/contract.md", "固定冻结参考")
+        self.manifest["contracts"] = [original]
+        self.plan["input_manifest"] = self.ref("frozen/manifest.json", self.manifest)
+        self.plan["artifact_copies"] = {original["path"]: copied["path"]}
+        (self.root / original["path"]).unlink()
+        self.save_config()
+        self.assertEqual(self.dispatch(), (BID, 10))
+        (self.root / copied["path"]).write_text("改变的参考")
+        with self.assertRaises(ValueError): backfill.source(str(self.root), self.plan)
 
     def test_frozen_input_tamper_stops_before_registration(self):
         (self.root / self.original["path"]).write_text("tampered")

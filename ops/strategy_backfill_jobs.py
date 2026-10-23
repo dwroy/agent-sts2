@@ -60,8 +60,14 @@ def source(root, plan):
     selected = json.loads(artifact(root, manifest["first_batch"]))
     inventory = json.loads(artifact(root, manifest["own_ended_inventory"]))
     artifact(root, manifest["priority"])
-    for ref in manifest["external_aggregates"] + manifest["contracts"]:
-        artifact(root, ref)
+    copies = plan.get("artifact_copies", {})
+    refs = manifest["external_aggregates"] + manifest["contracts"]
+    if not isinstance(copies, dict) or not set(copies) <= {ref["path"] for ref in refs}:
+        raise ValueError("backfill artifact copy is not a frozen manifest reference")
+    for ref in refs:
+        # The manifest retains its original path and SHA. Only an identical durable
+        # copy can replace a temporary owner checkout; no input bytes are revised.
+        artifact(root, {**ref, "path": copies.get(ref["path"], ref["path"])})
     if selected.get("batch_plan_id") != ident or inventory.get("character") != "silent":
         raise ValueError("backfill selection/inventory identity mismatch")
     entries = selected["entries"]
@@ -83,7 +89,7 @@ def source(root, plan):
         raise ValueError("backfill has no ended dispatch anchors")
     binding = {"request_id": REQUEST, "plan_id": ident, "input_manifest": plan["input_manifest"],
                "work_spec": plan["work_spec"], "entry_ids": ids,
-               "all_entry_ids": list(originals), "dispatch_runs": anchors}
+               "all_entry_ids": list(originals), "dispatch_runs": anchors, "artifact_copies": copies}
     return binding, spec
 
 

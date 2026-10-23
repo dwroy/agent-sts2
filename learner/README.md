@@ -79,7 +79,7 @@ boss-sim、静默校准、双 boss、核心组合等专题各有任务文件；�
 
 `ops/strategy_backfill_jobs.py` 是统一 `strategy-proposal` 的来源适配器。自然 `tick` 先运行原复盘、经验、注册学习、旧专题、提案、普通策略、修复、校准、Boss 重任务和升阶审计，再考虑回刷；正常来源已经就绪但在等 writer/lease 时仍让行。运行中的正常任务及原重任务候选队列也先行。原两个策略槽、learn.lock、账号选择、磁盘门和工作树锁继续由原启动器管理；不增加定时器或独立经验更新链。铁甲战士的派发行为不变。
 
-来源配置是 `notes/strategy-backfill-silent.json`，随代码交付时 `enabled=false`。集成员核验、ops 精确发布后，ops 沿原发布步骤开启，再等自然 tick；这不是新增审批。首计划 `issue48-boss-elite-001` 直接引用原冻结 manifest/work_spec，每次派发和宿主准备都核全部输入 SHA、原经验 ID/原文及已结束 Silent 锚点；不继承旧专题 ID、旧批次或旧线程。每次注册使用当次真实 batch、独立工作树和 `backfill_source/backfill_binding`，模型请求保持 gpt-6.1-sol/high，实际生效以原生回执为准。
+来源配置是 `notes/strategy-backfill-silent.json`，随代码交付时 `enabled=false`。集成员核验、ops 精确发布后，ops 沿原发布步骤开启，再等自然 tick；这不是新增审批。首计划 `issue48-boss-elite-001` 直接引用原冻结 manifest/work_spec，每次派发和宿主准备都核全部输入 SHA、原经验 ID/原文及已结束 Silent 锚点；不继承旧专题 ID、旧批次或旧线程。`artifact_copies` 只允许把 manifest 中原引用指向同 SHA/字节数的持久冻结副本；首批 rk 参考使用 ops 已保存的 `rk-task-reference.md`，保留其原临时树路径及 SHA，不依赖原树继续存在。每次注册使用当次真实 batch、独立工作树和 `backfill_source/backfill_binding`，模型请求保持 gpt-6.1-sol/high，实际生效以原生回执为准。
 
 进度位于原 `learn.json.strategy_backfill`，只读投影是同目录 `strategy-backfill-progress.json`。`cursor` 是已核原生接受任务的唯一旧 ID 数；注册 wrapper、提交 prompt 或空 bindings 不推进。TUI 沿原 journal；原启动器退回 stdio 时，只核该 launcher、该账号、该 session 的原生 prompt/context。进度另记实际 batch/session/turn、输入 SHA、原生启动时间、结束及耗时、逐 ID 去向、processed/remaining。运行中只更新独立进度，不改变批次租约指纹；重启从原批次和原生原件恢复，重复 tick 不重计。
 
