@@ -351,12 +351,35 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
         return {"disk_capacity_hold": True, "dispatched": None}
+    import strategy_external_jobs as external_jobs
+    directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    external_jobs.reconcile(state, directory)
+    external_ready = character == "silent" and external_jobs.ready(state, root)
+    if external_ready and (external_jobs.external_turn(state, character) or external_jobs.alternating_hold(
+            state, root, character, alive, {"postmortem_wait": state.get("postmortem_wait", {}).get(character)})):
+        # Roy/Claude #51: at most one ordinary launch between external units.
+        # Postmortems run first in the original tick and retain their admission.
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
+            {"postmortem_wait": state.get("postmortem_wait", {}).get(character)}, alternating=True)
+        return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
+                "core_builds": None, "backfill_hold": True, "strategy_external": external,
+                "external_alternation_hold": True,
+                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
     attempted = []
+    ordinary_claimed = [False]
+    def claim(result):
+        if result:
+            ordinary_claimed[0] = True
+        return result
+    def normal_allowed():
+        return not external_ready or not ordinary_claimed[0]
     def priority_writer(*args, **kwargs):
-        # A ready normal source retains priority even when its writer/lease gate waits.
+        # Keep the ordinary order, but spend at most one launch on its turn.
+        if not normal_allowed():
+            return None
         if args[7] == "ops" or retryable(args[0], args[3], args[6]):
             attempted.append(args[3])
-        return dispatch_write(*args, **kwargs)
+        return claim(dispatch_write(*args, **kwargs))
     core = None
     core_ready = False
     request = None
@@ -367,45 +390,38 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
             core_ready = len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior)
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
+            claim(core)
     runs = pending(root, scripts, character)
     experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
     from learning_requests import reconcile as reconcile_learning
-    learning = reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)
+    learning = claim(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)) if normal_allowed() else None
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
-    research = dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)
-    # External work uses the same writer after ordinary evidence/fixes and heavy work.
-    # Leave the legacy order intact whenever there is no eligible external generation.
-    import strategy_external_jobs as external_jobs
-    directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
-    external_jobs.reconcile(state, directory)
-    external_ready = character == "silent" and external_jobs.ready(state, root)
-    early_fix = early_calibration = early_boss = external = None
-    if external_ready:
-        key = fix_key(root, character)
-        early_fix = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-        early_calibration = calibration_job(state, root, scripts, character, alive, stamp)
-        from boss_sim_jobs import check
-        early_boss = check(state, root, scripts, character, alive, stamp, start_learner)
-        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
-            {"experience": experience, "fixes": early_fix, "core_builds": core, "learning_requests": learning, "strategy_research": research,
-             "calibration": early_calibration, "boss_sim": early_boss, "postmortem_wait": state.get("postmortem_wait", {}).get(character), "backfill_hold": bool(attempted or core_ready)})
-    # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+    research = claim(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)) if normal_allowed() else None
+    # Normal turns retain the ordinary proposal/fix/strategy order.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(proposals)
-    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer) if not external_ready else None
-    # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer) if normal_allowed() else None
     key = fix_key(root, character)
-    fixes = early_fix if external_ready else (priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None)
-    strategy = strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer) if not proposal and not research and not external_ready else None
-    calibration = early_calibration if external_ready else calibration_job(state, root, scripts, character, alive, stamp)
+    fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+    strategy = claim(strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer)) if normal_allowed() and not proposal and not research else None
+    calibration = claim(calibration_job(state, root, scripts, character, alive, stamp)) if normal_allowed() else None
     from boss_sim_jobs import check
-    boss_sim = early_boss if external_ready else check(state, root, scripts, character, alive, stamp, start_learner)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
-            "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
-            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    boss_sim = claim(check(state, root, scripts, character, alive, stamp, start_learner)) if normal_allowed() else None
+    external = None
+    from ascension_audit import priority_pending as audit_pending
+    audit_turn = external_ready and not ordinary_claimed[0] and audit_pending(state, root, character, available_worktree)
+    if external_ready and not ordinary_claimed[0] and not audit_turn:
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
+            {"postmortem_wait": state.get("postmortem_wait", {}).get(character)}, alternating=True)
+    result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+              "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
+              "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    if external_ready and (ordinary_claimed[0] or external):
+        result["external_alternation_hold"] = True
+    return result
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

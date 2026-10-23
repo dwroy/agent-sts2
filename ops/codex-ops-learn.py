@@ -328,7 +328,9 @@ def cmd_tick(args):
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    report["ascension_audit"] = check_ascension_audits(state, character)
+    # #51 shares one alternating admission across ordinary writers and audits.
+    report["ascension_audit"] = (None if report["write_jobs"].get("external_alternation_hold")
+                                 else check_ascension_audits(state, character))
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(

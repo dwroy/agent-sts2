@@ -118,10 +118,46 @@ def reconcile(state, directory):
     shared.reconcile(state, directory, "external")
 
 
-def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
+def external_turn(state, character):
+    """Use registered launch order, never tick count or an unstarted attempt."""
+    launches = [(bid, batch) for bid, batch in state["batches"].items()
+                if re.fullmatch(r"[0-9]{8}-[0-9]{6}-.+", bid)
+                and batch.get("character") == character
+                and batch.get("task", "postmortem") != "postmortem"
+                and type(batch.get("pid")) is int and batch["pid"] > 0]
+    # Start with external work; already registered ordinary work also makes it due.
+    return not launches or not max(launches, key=lambda item: item[0])[1].get("external_source")
+
+
+def alternating_hold(state, root, character, alive, normal):
+    """Alternate pending demand without overtaking a real launch or original lease."""
+    if any(normal.values()):
+        return True
+    if any(batch.get("state") in ("running", "launching", "awaiting_review")
+           and (alive(batch.get("pid")) or batch.get("state") == "launching")
+           for batch in state["batches"].values()):
+        return True
+    from ascension_audit import lease_busy
+    directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
+    for request in state.get("ascension_audits", {}).values():
+        if request.get("character") != character:
+            continue
+        if request.get("state") in ("running", "launching"):
+            return True
+        if (type(request.get("level")) is int and request["level"] >= 0
+                and lease_busy(directory, request, create=False)):
+            return True
+    return False
+
+
+def dispatch(state, root, scripts, character, alive, stamp, writer, normal, *, alternating=False):
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     reconcile(state, directory)
-    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or shared.priority_hold(state, character, alive, normal, root=root):
+    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
+        return None
+    held = (alternating_hold(state, root, character, alive, normal) if alternating
+            else shared.priority_hold(state, character, alive, normal, root=root))
+    if held:
         return None
     try:
         configured = queue(root)

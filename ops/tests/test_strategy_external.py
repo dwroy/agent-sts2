@@ -160,7 +160,7 @@ class External(unittest.TestCase):
         self.assertEqual(self.state["strategy_external"]["plans"][PLAN]["attempts"][0]["elapsed_seconds"], 2)
         self.assertFalse(external.ready(self.state, self.root))
 
-    def test_priority_order_and_ready_normal_fix_wait(self):
+    def test_first_external_turn_preempts_ready_normal_fix(self):
         for fix in (None, "normal-fix"):
             self.state = {"batches": {}}; self.calls = []
             def writer(*args, **kwargs):
@@ -173,9 +173,131 @@ class External(unittest.TestCase):
                     patch("strategy_research_jobs.dispatch", return_value=None) as research, patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
                 result = jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: False, STAMP)
             self.assertTrue(result["backfill_hold"])
-            auto.assert_not_called(); research.assert_called_once()
-            self.assertEqual([args[3] for args, _ in self.calls], ["fix-batch"] if fix else ["strategy-proposal"])
-            self.assertEqual(bool(result["strategy_external"]), not bool(fix))
+            auto.assert_not_called(); research.assert_not_called()
+            self.assertEqual([args[3] for args, _ in self.calls], ["strategy-proposal"])
+            self.assertTrue(result["strategy_external"])
+
+    def tick(self, stamp, writer, alive=lambda pid: False):
+        with patch.object(jobs, "pending", return_value=[fixture.RUN]), patch.object(jobs, "dispatch_write", side_effect=writer), \
+                patch.object(jobs, "fix_key", return_value=None), patch.object(jobs, "strategy_job", return_value=None), \
+                patch.object(jobs, "calibration_job", return_value=None), patch("boss_sim_jobs.check", return_value=None), \
+                patch("strategy_research_jobs.dispatch", return_value=None), patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
+            return jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", alive, stamp)
+
+    def second_plan(self):
+        plan = copy.deepcopy(self.plan); plan["plan_id"] = "external-second-plan"
+        manifest = copy.deepcopy(self.manifest); manifest.update(batch_plan_id=plan["plan_id"], unit_ids=["external-second-unit"])
+        plan["input_manifest"] = self.ref("frozen/second-manifest.json", manifest)
+        self.config["plans"].append(plan); self.save_config()
+
+    def test_registered_batches_alternate_across_ticks_and_restart(self):
+        self.second_plan(); lanes = []
+        self.state["batches"]["20251231-235959-experience-update"] = {
+            "task":"experience-update", "character":"silent", "pid":9, "state":"done"}
+        def writer(*args, **kwargs):
+            if kwargs.get("external_source"):
+                lanes.append("external"); return self.writer(*args, **kwargs)
+            lanes.append("normal"); bid = args[9] + "-" + args[3]
+            self.state["batches"][bid] = {"task":args[3], "character":args[4], "pid":11, "state":"running"}
+            return bid, 11
+        first = self.tick(STAMP, writer)
+        self.assertTrue(first["strategy_external"]); self.assertIsNone(first["experience"])
+        occupied = self.tick("20260101-000002", writer, alive=lambda pid: pid == 10)
+        self.assertIsNone(occupied["experience"]); self.assertEqual(lanes, ["external"])
+        self.state["batches"][BID]["state"] = "done"
+        normal = self.tick("20260101-000002", writer)
+        self.assertTrue(normal["experience"]); self.assertIsNone(normal["strategy_external"])
+        waiting = self.tick("20260101-000003", writer, alive=lambda pid: pid == 11)
+        self.assertIsNone(waiting["strategy_external"]); self.assertEqual(lanes, ["external", "normal"])
+        self.state["batches"]["20260101-000002-experience-update"]["state"] = "done"
+        # A process restart does not reset the registered launch order.
+        self.state = json.loads(json.dumps(self.state))
+        third = self.tick("20260101-000004", writer)
+        self.assertTrue(third["strategy_external"]); self.assertIsNone(third["experience"])
+        self.assertEqual(lanes, ["external", "normal", "external"])
+        self.assertEqual(self.state["strategy_external"]["cursor"], 0)
+
+    def test_no_launchable_normal_work_allows_next_external_without_losing_demand(self):
+        self.second_plan(); self.registered(); self.state["batches"][BID]["state"] = "done"
+        attempted = []
+        def writer(*args, **kwargs):
+            if kwargs.get("external_source"): return self.writer(*args, **kwargs)
+            attempted.append(args[3]); return None
+        result = self.tick("20260101-000002", writer)
+        self.assertEqual(attempted, ["experience-update"])
+        self.assertTrue(result["strategy_external"])
+        self.assertIsNone(result["experience"])
+        self.assertEqual(len(self.state["batches"]), 2)
+
+
+    def test_failed_admission_does_not_spend_external_turn_or_start_normal(self):
+        calls = []
+        def unavailable(*args, **kwargs): calls.append(kwargs.get("external_source")); return None
+        self.assertIsNone(self.tick(STAMP, unavailable)["strategy_external"])
+        self.assertIsNone(self.tick("20260101-000002", unavailable)["strategy_external"])
+        self.assertEqual(len(calls), 2); self.assertTrue(all(calls))
+        self.assertEqual(self.state["batches"], {}); self.assertTrue(external.external_turn(self.state, "silent"))
+
+    def test_postmortem_active_writer_and_audit_lease_still_hold_external_turn(self):
+        def never(*args, **kwargs): self.fail("existing launch or lease must not be overtaken")
+        self.state["batches"]["original"] = {"task":"postmortem", "state":"running", "pid":99, "character":"silent"}
+        self.assertIsNone(self.tick(STAMP, never, alive=lambda pid: pid == 99)["strategy_external"])
+        self.state["batches"] = {}; self.state["postmortem_wait"] = {"silent":{"since":1}}
+        self.assertIsNone(self.tick(STAMP, never)["strategy_external"])
+        self.state.pop("postmortem_wait")
+        import ascension_audit as audit
+        request = {"character":"silent", "level":11, "state":"queued"}
+        self.state["ascension_audits"] = {"silent:A11":request}
+        with patch.object(audit, "lease_busy", return_value=True):
+            self.assertIsNone(self.tick(STAMP, never)["strategy_external"])
+
+    def test_disabled_external_keeps_normal_pipeline_and_character_history_separate(self):
+        self.config["enabled"] = False; self.save_config(); calls = []
+        def normal(*args, **kwargs): calls.append(args[3]); return ("ordinary", 12)
+        result = self.tick(STAMP, normal)
+        self.assertTrue(result["experience"]); self.assertEqual(calls, ["experience-update"])
+        self.state["batches"] = {"20990101-000001-strategy-proposal":{
+            "character":"ironclad", "task":"strategy-proposal", "pid":1, "external_source":"other"}}
+        self.assertTrue(external.external_turn(self.state, "silent"))
+        self.state["batches"]["20990102-000001-postmortem"] = {
+            "character":"silent", "task":"postmortem", "pid":2}
+        self.assertTrue(external.external_turn(self.state, "silent"))
+
+
+    def test_normal_turn_leaves_runnable_audit_to_original_later_tick_stage(self):
+        import ascension_audit as audit
+        self.second_plan(); self.registered(); self.state["batches"][BID]["state"] = "done"
+        def unavailable(*args, **kwargs):
+            self.assertFalse(kwargs.get("external_source")); return None
+        with patch.object(audit, "priority_pending", return_value=True):
+            result = self.tick("20260101-000002", unavailable)
+        self.assertIsNone(result["strategy_external"])
+        self.assertFalse(result.get("external_alternation_hold"))
+
+
+    def test_original_tick_keeps_postmortem_first_and_shares_the_audit_admission(self):
+        import contextlib
+        import importlib.util
+        import io
+        from types import SimpleNamespace
+        spec = importlib.util.spec_from_file_location("alternating_original_tick", REPO / "ops/codex-ops-learn.py")
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        for held in (True, False):
+            calls = []
+            result = {"external_alternation_hold":True} if held else {}
+            def postmortem(*args): calls.append("postmortem"); return ("fixed-postmortem", 90)
+            def writes(*args): calls.append("writes"); return result
+            with patch.object(module, "ROOT", str(self.root)), patch.object(module, "DIR", str(self.directory)), \
+                    patch.object(module, "load_state", return_value={"batches":{}}), patch.object(module, "save_state"), \
+                    patch.object(module, "check_victories", return_value=[]), patch.object(module, "check_ascension", return_value=[]), \
+                    patch.object(module.disk_admission, "snapshot", return_value={}), patch.object(module, "check_pending", return_value=None), \
+                    patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
+                    patch.object(module, "check_ascension_audits", return_value=("audit", 91)) as audit, \
+                    patch.object(shared, "dispatch", return_value=None), patch.object(module.learner_retention, "kick", return_value={}):
+                with contextlib.redirect_stdout(io.StringIO()): module.cmd_tick(SimpleNamespace(character="silent"))
+            self.assertEqual(calls, ["postmortem", "writes"])
+            self.assertEqual(audit.call_count, 0 if held else 1)
+
 
     def test_original_writer_gates_and_scope(self):
         binding = external.source(self.root, self.plan)[0]
