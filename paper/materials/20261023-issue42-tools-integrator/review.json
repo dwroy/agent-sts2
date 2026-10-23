@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-23T22:31:40+08:00",
+  "candidate": "056a4f7af03ff13d4f5936e913b53c6ea5242218",
+  "base": "4adb2a70434ee6da9c51a9d3a64a26a23f846632",
+  "tree": "72fb99e743860a3657c742e625446cf487a618d6",
+  "product_paths": [
+    "agent/src/brain/tools/agent-knowledge.ts",
+    "agent/tests/external-strategy-evidence.test.ts"
+  ],
+  "verdict": "directed-pass; awaiting unique full and final live assembly",
+  "tsc_exit": 0,
+  "directed_files": 9,
+  "directed_pass": 174,
+  "supplemental_files": 2,
+  "supplemental_pass": 42,
+  "supplemental_overlaps_directed": true,
+  "import_missing_final": 0,
+  "inputs_unchanged_after_supplemental": true,
+  "input_count": 2633,
+  "full_started": false,
+  "source_in_main": false,
+  "live_written": false,
+  "negative_missing_aggregate_metadata": {
+    "pass": 40,
+    "fail": 1
+  },
+  "first_combination": {
+    "pass": 173,
+    "fail": 1,
+    "cause": "Old deferred source summary replaced current #49 evidence/provenance envelope and broke oversized-evidence protection; repaired by appending aggregate metadata while retaining original sources."
+  },
+  "environment_failures": [
+    {
+      "log": "42-check-imports.log",
+      "pass": 0,
+      "fail": 1,
+      "cause": "tracked issue29 results.jsonl absent in sparse tree; materialized exact Git blob"
+    },
+    {
+      "log": "42-supplemental.log",
+      "pass": 40,
+      "fail": 2,
+      "cause": "supplemental command ran from root with --root instead of actual agent cwd; fixture relative paths failed; repeated from correct cwd with unchanged product and fixed inputs"
+    }
+  ],
+  "prelaunch_error": "First supplemental redirection path did not exist; no test process started.",
+  "raw_tree_metadata_correction": "assembly-correction.json",
+  "real_consumer": "e2e/e2e.json",
+  "science_boundary": "Fixture only: own_runs=0, external denominator=13307, non-causal notice; no real run, model, ledger or knowledge writes."
+}

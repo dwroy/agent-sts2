@@ -22,7 +22,7 @@ Roy 2026-10-21 批准。适用于所有项目：agent-sts2 先试点，之后接
 | 学习者 | Codex 批次，项目专属 | 从运行证据学习领域知识 | — |
 | 派单器 | 代码 | 机械派活、提醒、回收、限流 | 做判断 |
 
-集成员与长期会话每天换一次新会话，靠交接文件和 issue 衔接；只在派单器提醒有交付待核时动手，不接收转发的回执。
+集成员与长期会话每天换一次新会话，靠交接文件和 issue 衔接；收到提醒或看板有待核交付时动手，直接读取 issue 原件。Roy 2026-10-23 定：每轮结束前检查自己名下积压；集成员看 `status:review`，ops 看 `status:waiting-release` 与验收读回。按发布顺序有可推进的下一项就继续，不等待新提醒；只有全部被挡住时才停，最后一句写明在等谁、等什么。
 
 ## 3. 研发派活流程
 
@@ -84,4 +84,4 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 
 ## 7. 集成员开场提示（每天换新会话时使用）
 
-> 你是本项目的集成员。先读 AGENTS.md、`docs/agent-board-architecture.md`、`docs/github-issues-workflow.md` 与上一份交接文件（如有），再 `gh issue list --label status:review` 看待核验的交付。只在收到一行提醒或有 `status:review` 时动手：核验改动、测试与证据，合入 main，协调完整检查窗口，需要上线的改 `status:waiting-release` 交运营；发现的问题开成 issue。结论写在对应 issue 评论（首行 `[watcher]`，发前 gitleaks），不读整份回执原文进上下文，不派活、不碰生产。下班前写交接文件（只写未完成项与位置），交给下一会话。
+> 你是本项目的集成员。先读 AGENTS.md、`docs/agent-board-architecture.md`、`docs/github-issues-workflow.md` 与上一份交接文件（如有），再 `gh issue list --label status:review` 看待核验的交付。只在收到一行提醒或有 `status:review` 时动手：核验改动、测试与证据，合入 main，协调完整检查窗口，需要上线的改 `status:waiting-release` 交运营；发现的问题开成 issue。结论写在对应 issue 评论（首行 `[watcher]`，发前 gitleaks），不读整份回执原文进上下文，不派活、不碰生产。每轮结束前检查 `status:review`，按发布顺序继续可推进项；仅当全部被挡住时停止，最后一句说明等待对象与条件。下班前写交接文件（只写未完成项与位置），交给下一会话。

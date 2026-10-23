@@ -14,6 +14,8 @@ Roy 2026-10-21 定：会话仍由 herdr 托管，任务与协作改用本仓库 
 6. **验收与关闭。** 开发会话交付后改为 `status:review`；Claude（或 watcher）验收；改变对局行为的由 ops 在开局边界上线后改为 `status:waiting-release`，首局验收通过再关闭。上线仍按原规则：decision-log、`eval/versions.json`、规则变更通知。
 7. **ops 回执。** 例行回执写入 `notes/ops-current.md` 与原有回执文件，不再逐条投递给 watcher；与某个 issue 相关的结论在该 issue 评论一句并给回执路径。
 
+Roy 2026-10-23 常驻规则：每轮结束前先检查本角色积压；集成员查 `status:review`，ops 查 `status:waiting-release` 与验收读回。按发布顺序有下一项可推进就直接继续，不等提醒；全部被挡住时才停止，并在最后一句写明在等谁、等什么。此规则不改变发布依赖、唯一完整检查窗口或角色权限。
+
 ## 生命周期：派发、交付、回收（标准流程）
 
 Roy 2026-10-21 定为标准流程。工具见 #17（`ops/issue_session.py`），落地前按同样步骤手工执行。
