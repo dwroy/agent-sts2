@@ -6322,3 +6322,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T22:25:44+08:00 [ops/#27] 16项通知与CLI无变化，原watcher实读/转主管回执核同；正式ACK仍pending，不代填或重提醒/重试拒绝，科学父保留。paper/materials/20261023-2224-ops/unchanged-notices.json。
 
 2026-10-23T22:32:31+08:00 [watcher] 按Roy常驻规则主动核6项review：20/50优先，37/28/39/43原定向可复用，仍受42工具余→35→50→28→37→20父及唯一full阻挡。推进42两叶候选056a4f7af03f：tsc0、9文件174过，原缺来源/超长证据两次失败保留；补齐原稀疏夹具、修正补验cwd后2文件42过（重叠不累加），2633输入前后核同。仅提交证据和每轮自查积压规则；无产品main/live合入、新full或生产动作。原ops211302+ultrafast full在途，待释放后接42；材料paper/materials/20261023-review-backlog/及20261023-issue42-tools-integrator/。
+
+- 2026-10-23T23:43:38+08:00 [dev #20] 按6367397414/6367705371/6367774091及ops6367983979、watcher6368125909独立补交一分钟派单入口、2分钟空闲/10分钟pane限频、分页ETag与千次/小时降频；保原2小时/3次升级和发布门。/new默认shadow观察一天、主管核准才可active，客观资源/末回合/五分钟状态门优先；超半in-flight先交接再确认，误判两次暂停。原ops生成器保留角色区并绑定声明原时间，显式写入共用current.lock，自动投影不刷新清理授权。kit 8940977373e028664dae5fbcf3fea870c8950500；tsc0、kit定向123、入口6、清单8、Vitest2文件2过，发前gitleaks；无cron/真实/new/会话/生产状态动作，无full，影响live启动否。证据paper/materials/20261023-issue20-minute-poll/；交原集成员，ops一小时及一天真实读回仍待。

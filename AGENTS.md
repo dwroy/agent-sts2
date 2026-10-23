@@ -19,6 +19,8 @@ Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-reque
 
 ## 规矩
 
+- **任务边界交接**（Roy 2026-10-23，#20）：ops/集成员每轮结束前维护 `notes/ops-current.md` / `notes/integrator-current.md`，开头两行为 `state: clear-ok | in-flight`、`issue: N`，正文写全“进行中的事、在等谁、下一步”。开发会话一 issue 一会话，不清。派单器 `/new` 先观察一天、主管对照核准后才开；原生末回合、交接新鲜度、资源/进程/发布和五分钟状态变化客观门优先，拿不准就不清。详见 [一分钟入口与任务边界观察](docs/agent-board-minute.md)。不代填其他角色的声明。
+
 - **运行模型**：模型统一 `gpt-6.1-sol`。Roy 2026-10-18 用量节省指示更新档位：大脑保持 `xhigh`；例行分析、开发、运维和学习任务在下一自然启动点显式用 `high`；纯格式任务可用 `medium` 或代码；困难专项可记录理由保留 `xhigh`。STS2 现有账号仍 codex3；需要临时 xhigh 时记录任务原因与下一停点。不热切在途会话，不修改共用 config、账号/home、普通服务档或权限。须核实际原生 turn_context/请求回执才能报告档位生效；续跑保留任务、线程和对局身份，旧记录不改写。
 - **记录**：决定和上线都在 `paper/materials/decision-log.md` 追加一行，写之前先跑 `date`，格式和已有的行一致。改变对局行为的上线，还要在 `eval/versions.json` 加一个版本，并通知运维会话。讨论、数据、转录都要落盘，不能丢历史。
 - **发布编号**：对外使用 `eval/versions.json` 的 `release_id`，格式 `V4-R307`（架构代数 + 累计行为发布序号），规则见 [统一发布编号](docs/eval.md#统一发布编号)。ops 在 `ops/live-merge.lock` 内核实际 live 提交后分配；同一发布提交的多个补丁名称共用一号，新行为发布才加一，纯文档/运维记录不加号。保留原 `name/family/commit/source`、旧顺序和经验库日期版本；不按名称末尾数字相加，不重编号历史。学习者沿用原上线流程，由 ops 统一核号。
