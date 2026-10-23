@@ -4963,3 +4963,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T19:49:12.552424+08:00 [ops/#20恢复封存] 20恢复封存三叶与宿主main原提交逐SHA核同，不复制game live、不启父派单器或重full。十批沿新recover-seal逐个默认只读，当前符合安全门的八批才显式apply，均只补封存，不冒原监督身份。八份证明单列ops-recovery、原owner PID/birth、实际执行者与证据SHA；原TUI、learn终态及产物保持。独立读回原19:40 stall的done事件、八份尾日志SHA、tab列表实际消失与host键移除，实际关闭由原回收入口完成，ops手工关tab为零；释放的是tab监督登记，不据此认定checkout已回收或批次源码已发布。pC5缺原监督birth、pCC仍awaiting_review均保留，未覆写sending或伪造seal。前序36自然双批与46原24小时门不因本轮回收关闭，20父仍在37后。后续按原stall和回收门核新批完成，保原失败、草稿及所有科学父要求。
 原件：paper/materials/20261023-1926-ops/issue20-host-source.json、issue20-recovery-results.json、issue20-natural-reclamation.json；#20实际评论6364151323。
+
+- 2026-10-23T19:52:28.872722+08:00 [ops/193545原收尾回读] 193545修复批在TERM恢复后已于原生会话正常结束：native-task-complete、rc0、进程已退，原wrapper实际写回failed/rc0、merged=null。报告无新增修复、提交或源码，已有工程候选仍沿原owner等待宿主准入；本批tsc0及定向三文件三项通过，首次配置加载EROFS原件保留，不把定向结果称完整检查。独立复核空修复验收仍不通过，冻结main基线与实际live的可执行源不同，不能据此伪造合入或把旧源码差异当新测试失败；没有覆盖源码、重full、回滚或续派模型。现经验更新与一组策略的原监督仍存活，原生已绑定high，继续按原批次运行。策略二组保持awaiting_review与沙箱启动失败，旧174301/175037及124241/151302待核原件也不关闭。本轮恢复的是正常派发和监督链，科学父、策略收益、原18局对照及周期双库自然验收继续开放。
+原件：paper/materials/20261023-1926-ops/final-runtime-readback.json、accepted-native-contexts.json。
