@@ -4786,3 +4786,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T11:03:24+08:00 [ops] 已核13个旧学习tab正常退场：7个零模型空shell、2个#27已有结果、4个032433原生完成；原75与bindings[]保留，4批沿原finish为2done/2failed(rc0)，不伪造通过。五复盘与15条自有账本更新已提交6b502e9949，575项独立检查0问题，唯一dataset在跑。12个积压attention因UUID数字开头不符队列kind规则而漏读，逐件处理后原字节存delivered，已交36原owner补修。7个旧零模型批冻结原提示/局清单，dry-run全通过，尚未投递新模型。Roy选A已设learner_tui=off，herdr及brain_view保持；独立开关代码tsc及固定路由通过，唯一full未终局。九叶已按原6324过/2跳检查精确落live，知识、80/60、绑定未变；有限原事务等原full终局核绿后发布开关及原槽位重排，再释放自有学习hold。当前不称准入已恢复；P0/seal、ACK与科学父均保留。队列36→46→47→26→42→35→28→37→20。原件paper/materials/20261023-learner-recovery-ops/publication-continuation.json、nine-leaf-publication.json。
+
+
+- 2026-10-23T11:10:06+08:00 [ops] Roy选A的学习非交互回退已实际落main/live：hosting设learner_tui=off，保留learners=herdr及brain_view=herdr，下次自然学习启动生效，不热切。原九叶按6356260910精确发布，6324过/2跳原full复用；开关单独tsc及full6206过/0败/2跳，知识、80/60与绑定保留，仍V6-R417。13个旧tab已核正常退场；四原任务不重放，保留2done及2failed(rc0)审计。五复盘与15条自有账本更新已提交，575项检查0问题，唯一dataset另记。7个零模型旧批均冻结提示及原局清单比对通过，4个按原槽位正常启动、3个排队待槽，queued不称原生送达；自有ACCOUNT_DRAIN已释放。12个UUID命名漏读attention已逐件处理并保留原件，根因交原owner。回退为仅将learner_tui恢复on，须下个自然边界；当前继续off，P0/seal、正式ACK及科学父均不关闭。原序36→46→47→26→42→35→28→37→20。原件paper/materials/20261023-learner-recovery-ops/recovery-final.json、normal-frozen-requeues-latest.json。

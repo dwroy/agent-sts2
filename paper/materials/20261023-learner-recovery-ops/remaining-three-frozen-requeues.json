@@ -1,0 +1,18 @@
+{
+  "schema": "original-ops-frozen-recovery-v1",
+  "at": "2026-10-23T11:10:06+08:00",
+  "state": "first-four-running-three-frozen-requeues-await-slots",
+  "authorization": "Claude/Roy 2026-10-23 10:1x and 10:2x A",
+  "plan": "paper/materials/20261023-learner-recovery-ops/seven-requeue-plan.json",
+  "native_receipt": "paper/materials/20261023-learner-recovery-ops/four-new-native-starts.json",
+  "only_pending_originals": [
+    "20261023-014302-strategy-proposal",
+    "20261023-014302-s2-strategy-proposal",
+    "20261023-014302-fix-batch"
+  ],
+  "resume_at": "next actual original strategy-done/fix-done event with free corresponding slot; do not poll or launch past cap",
+  "original_ops_action": ".artifacts/ops-learner-recovery-20261023-101x/start-frozen-wave.py",
+  "guards": "same original zero-model proof and frozen refs; max one per original; original disk80 gate and 2 strategy/1 fix caps; no restart of already registered batch",
+  "do_not_restore_tui": true,
+  "scientific_parents_closed": false
+}

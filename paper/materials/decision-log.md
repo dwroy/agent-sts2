@@ -5974,3 +5974,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T10:54:03+08:00 [watcher] #36原已审三补丁6a5d049f+76b41d6d+c8ff9caf九叶最终组合：实际R417/70eb12870保留磁盘80五叶及469知识，treee083c31ce06b唯一完整tsc0/6324过+2skip/0败，2538输入前后SHA同；main兼容tsc0/九文件205过及Python通过，不重复full。精确八源码/测试叶加三方合并docs合main交ops，保留6356069735回退段落，未碰live/学习开关/模型、未重派四批，原07:56准入退出保留。主管6355920170新增P0超时降级、终态seal/#20回收及自然学习槽位/后批仍待；临时非交互由ops维护，不能据本轮关闭P0或恢复交互。原后续46→47视图→26提示→42余项→35→28→37（37→20）、27正式ACK CLI阻塞及科学父保留。材料paper/materials/20261023-issue36-unbound-full-integrator/。
 
 2026-10-23T11:03:24+08:00 [ops] #36原九叶按6324过+2skip唯一检查精确落live 3a06cb43d751245ec2930d1526b064056db24a76，保留469知识/磁盘80五叶/实例绑定与off回退文档；13tab退场、12attention原件归档、7零模型输入冻结。独立开关full与有限发布/原槽重排事务在途，自有学习hold待核绿后释放，不称完成或恢复。见paper/materials/20261023-learner-recovery-ops/publication-continuation.json。
+
+2026-10-23T11:10:06+08:00 [ops] #36八源码/测试+合并docs精确落live，保留最新知识/80/60/绑定；Roy选A learner_tui=off读取器main/live已核，原full6324+2及开关full6206+2分列，不新增行为号。13tab退场，7冻结重排4启动/3待槽，自有学习hold释放；P0/ACK/科学父保留，见paper/materials/20261023-learner-recovery-ops/recovery-final.json。

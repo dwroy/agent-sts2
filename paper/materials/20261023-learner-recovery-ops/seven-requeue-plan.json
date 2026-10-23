@@ -1,5 +1,5 @@
 {
-  "state": "prepared-no-model-started",
+  "state": "first-wave-started-remaining-frozen-requeues-await-slots",
   "rows": [
     {
       "original": "20261023-011301",
@@ -178,7 +178,7 @@
     },
     {
       "original": "20261023-011302-strategy-proposal",
-      "new_batch": "20261023-110000-strategy-proposal",
+      "new_batch": "20261023-110800-strategy-proposal",
       "task": "strategy-proposal",
       "character": "silent",
       "runs": [
@@ -190,7 +190,7 @@
         "DUZUBAJ3A8GP"
       ],
       "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-011302",
-      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110000",
+      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110800",
       "base": "893e0fa837393d99d4d929194696b8831f275cb5",
       "original_tui": ".artifacts/ops-learner-recovery-20261023-101x/learner-20261023-011302-strategy-proposal.tui.json",
       "original_log": "/home/dw/Projects/agent-sts2/learner/runs/20261023-011307-39558523-8744-4eb7-bd67-e27ad8cf60cd-strategy-proposal.jsonl",
@@ -221,8 +221,8 @@
       "old_prompt_sha256": "f5647b22f8d291104007b82acd3dbaf2a8e2597737397f1a776cd6de0ed42946",
       "dry_prompt_sha256": "181817b63744e7d596bae8197f683c516887cfcbe05f7a6bb5d9670bd139bbfc",
       "max_requeues": 1,
-      "started": 0,
-      "state": "prepared-not-started",
+      "started": 1,
+      "state": "normal-start-registered",
       "original_state_fields": {
         "task": "strategy-proposal",
         "character": "silent",
@@ -351,6 +351,21 @@
           "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-011302-strategy-proposal.err"
         },
         "retry_at": 1792692794.8014677
+      },
+      "unused_reserved_batch": "20261023-110000-strategy-proposal",
+      "unconsumed_allocation_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110000",
+      "old_disposition": "未启动、已重排",
+      "start_receipt": {
+        "original": "20261023-011302-strategy-proposal",
+        "new_batch": "20261023-110800-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 4097646,
+        "birth": "14935164",
+        "pane": "w1H:pBH",
+        "label": "learner-20261023-110800-strategy-proposal",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
       }
     },
     {
@@ -398,8 +413,8 @@
       "old_prompt_sha256": "61f75cb069ca25be92d54c2b97c8e8a125809562acd2f7f23d539e76a63bc8c2",
       "dry_prompt_sha256": "409fe90f8685b5724e32823e7844372c45a8fb9293cc283ec4ffc48e3668db43",
       "max_requeues": 1,
-      "started": 0,
-      "state": "prepared-not-started",
+      "started": 1,
+      "state": "normal-start-registered",
       "original_state_fields": {
         "task": "strategy-proposal",
         "character": "silent",
@@ -528,16 +543,29 @@
           "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-011302-s2-strategy-proposal.err"
         },
         "retry_at": 1792692795.2072523
+      },
+      "old_disposition": "未启动、已重排",
+      "start_receipt": {
+        "original": "20261023-011302-s2-strategy-proposal",
+        "new_batch": "20261023-110000-s2-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 4097826,
+        "birth": "14935231",
+        "pane": "w1H:pBJ",
+        "label": "learner-20261023-110000-s2-strategy-proposal",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
       }
     },
     {
       "original": "20261023-011302-fix-batch",
-      "new_batch": "20261023-110000-fix-batch",
+      "new_batch": "20261023-110800-fix-batch",
       "task": "fix-batch",
       "character": "silent",
       "runs": [],
       "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-011302",
-      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110000",
+      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110800",
       "base": "893e0fa837393d99d4d929194696b8831f275cb5",
       "original_tui": ".artifacts/ops-learner-recovery-20261023-101x/learner-20261023-011302-fix-batch.tui.json",
       "original_log": "/home/dw/Projects/agent-sts2/learner/runs/20261023-011309-9bda180b-1693-476d-b358-13a384178369-fix-batch.jsonl",
@@ -568,8 +596,8 @@
       "old_prompt_sha256": "aa0c20c5fc66902ce9fed0ca741d5c1cf89ecf59419d4dda6dc5b1544d656bfe",
       "dry_prompt_sha256": "dcdcd8e02b4576559ab82b0419c41ce7a5b7d7ee0c8fd33a0956f5953843af20",
       "max_requeues": 1,
-      "started": 0,
-      "state": "prepared-not-started",
+      "started": 1,
+      "state": "normal-start-registered",
       "original_state_fields": {
         "task": "fix-batch",
         "character": "silent",
@@ -679,6 +707,21 @@
         },
         "retry_at": 1792692795.6420164,
         "dispatch_queue_sha256": "2c9ab043f03f65533332b7c88a778a27b368afc88e1d9813f60908208e10a9b6"
+      },
+      "unused_reserved_batch": "20261023-110000-fix-batch",
+      "unconsumed_allocation_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110000",
+      "old_disposition": "未启动、已重排",
+      "start_receipt": {
+        "original": "20261023-011302-fix-batch",
+        "new_batch": "20261023-110800-fix-batch",
+        "task": "fix-batch",
+        "pid": 4098062,
+        "birth": "14935591",
+        "pane": "w1H:pBK",
+        "label": "learner-20261023-110800-fix-batch",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
       }
     },
     {
@@ -727,7 +770,7 @@
       "dry_prompt_sha256": "a883fb1cd070044a902d01c2263185d6ef3a28b85136d9230100bdfef52bf4cd",
       "max_requeues": 1,
       "started": 0,
-      "state": "prepared-not-started",
+      "state": "frozen-requeue-accepted-await-original-slot",
       "original_state_fields": {
         "task": "strategy-proposal",
         "character": "silent",
@@ -856,7 +899,8 @@
           "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-014302-strategy-proposal.err"
         },
         "retry_at": 1792694603.2171683
-      }
+      },
+      "old_disposition": "未启动、已重排（待原槽位）"
     },
     {
       "original": "20261023-014302-s2-strategy-proposal",
@@ -904,7 +948,7 @@
       "dry_prompt_sha256": "3b8a65813e287fee899f8119f8048d3870524887dbd8e41fae7054007d2026a4",
       "max_requeues": 1,
       "started": 0,
-      "state": "prepared-not-started",
+      "state": "frozen-requeue-accepted-await-original-slot",
       "original_state_fields": {
         "task": "strategy-proposal",
         "character": "silent",
@@ -1033,16 +1077,17 @@
           "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-014302-s2-strategy-proposal.err"
         },
         "retry_at": 1792694603.7692714
-      }
+      },
+      "old_disposition": "未启动、已重排（待原槽位）"
     },
     {
       "original": "20261023-014302-fix-batch",
-      "new_batch": "20261023-110001-fix-batch",
+      "new_batch": "20261023-110801-fix-batch",
       "task": "fix-batch",
       "character": "silent",
       "runs": [],
       "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-014302",
-      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110001",
+      "new_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110801",
       "base": "4d27513beba43b10e147a066d288e3ddf1bf05ad",
       "original_tui": ".artifacts/ops-learner-recovery-20261023-101x/learner-20261023-014302-fix-batch.tui.json",
       "original_log": "/home/dw/Projects/agent-sts2/learner/runs/20261023-014320-d5c38a66-f451-48a1-bd9e-76d3718e7c90-fix-batch.jsonl",
@@ -1074,7 +1119,7 @@
       "dry_prompt_sha256": "3b7b0f2fa15e04a9d0eab5e29c44f5c10b0029798dc6e5bc176570ca8b78f17a",
       "max_requeues": 1,
       "started": 0,
-      "state": "prepared-not-started",
+      "state": "frozen-requeue-accepted-await-original-slot",
       "original_state_fields": {
         "task": "fix-batch",
         "character": "silent",
@@ -1184,7 +1229,10 @@
         },
         "retry_at": 1792694606.575245,
         "dispatch_queue_sha256": "ad0df7258b9899c00d20cd2aedf9b7ee0ba49fe2d4280fbeee4d62fa468bceaf"
-      }
+      },
+      "unused_reserved_batch": "20261023-110001-fix-batch",
+      "unconsumed_allocation_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-110001",
+      "old_disposition": "未启动、已重排（待原槽位）"
     }
   ]
 }
