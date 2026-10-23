@@ -1,7 +1,16 @@
 state: in-flight
-issue: 27
-updated: 2026-10-24T06:14:53+08:00
+issue: 52
+updated: 2026-10-24T06:21:41+08:00
 
+进行中的事: #52四生产脚本宿主部署已完成，本轮重核四生产/四测试叶SHA仍同原交付55546b98b；原唯一full6644过/2跳及窗口释放保留，不重跑。原不可派校准/进阶标记改按实际可派性判断，普通优先、双槽、租约及失败/重试通道保持。部署后原自然tick已派普通经验061302，当前running；当次backfill_hold=true、外部/回刷均null，未把普通派发当外部采用。033643后续已实际发布R424及18消费者/准入释放；#28唯一净full正在运行。
+
+在等谁: #52自然验收等原调度器在正常优先与租约门满足时，产生#51外部首批及#48回刷的真实派发/native/来源回执；当前两类批次均未登记。源码部署不等于首外部消费，不能据null改成新代码失败或通过。#28仍等原worker回调。
+
+下一步: 沿原自然tick核首派身份、两槽/正常优先、冻结来源和产物，再核实际live消费者，原科学父及旧失败保留；不强派、不开新模型/full。#28检查过门才接自然发布/读回/释放→37→20父，#51首双Boss后各幕Boss先于#48自有回刷。
+
+原件: paper/materials/20261024-issue52-deployment-ops/deployment.json；ops/codex-ops/learn.json；paper/materials/20261024-r424-received-ops/receipt.json；paper/materials/20261024-issue28-r424-ops/check-state.json。
+
+并行事项与其他未完成门（保留前检查点）:
 进行中的事: 06:13原16通知逐项原文/flags/真实ops发送及32投递窗口核同；原watcher接收与CLI旧拒绝保留，000402原wrapper仍缺。原sts2-integrator空闲，已沿原session实际发送一次#27提醒，未代角色ACK或称Roy已知。新回执paper/materials/20261024-0613-notices-ops/{receipt,watcher-reminder}.json。
 
 在等谁: 正式ACK等原request/task/character/thread兼容修复；Roy可见证明等watcher/主管自有真实回执，通知保持pending。并行#28唯一full仍等原回调，#46观察门等13:46:30。
