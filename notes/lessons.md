@@ -32605,3 +32605,352 @@ silent-0039当前fold为proposed（账本行36719，2026-10-22T23:34:06+08:00，
 - F16→F16 38/77→61/77，REST→REST，s516338@2026-10-23T06:19:13.198Z→s516339@2026-10-23T06:19:13.462Z。
 - F17→F18 42/78→70/78，MAP→EVENT，s516399@2026-10-23T06:23:41.645Z→s516400@2026-10-23T06:24:00.005Z。
 - F24→F24 51/81→75/81，REST→REST，s516509@2026-10-23T06:30:21.029Z→s516510@2026-10-23T06:30:21.281Z。
+## 8JNHX23GX7ET（A10，静默猎手，第33层，火箭 ROCKET／碾碎爪 CRUSHER：53/70血进场，第四试T4以15血9挡面对火箭48伤意图后死亡，两敌仍162／133血）
+
+- [面向和削弱改变的是实际双目标来袭；打法（Jev出牌）] 末试F33T2猎杀者 PREDATOR 打火箭 ROCKET 后，碾碎爪 CRUSHER／火箭意图由3／30变4／20；T4尖啸 PIERCING_WAIL 使火箭力量3→−3，意图57→48。仍有15HP和9挡，未杀任一侧；目标选择必须连着来袭核，不能把集中攻击或喝药本身写成已经击杀。s517152→517155、s517160→517166。（之前见过：silent-0065）
+- [敏捷已建立多少，比持有几张步法更关键；打法（Jev出牌）] F14／F21购入灵动步法 FOOTWORK；末试F33T2只实际建立2敏捷，防御+ DEFEND_SILENT 实给10挡（该牌基础8，增加2）。T4升级步法仍在手却已0能，未建立额外3敏捷；毒雾 NOXIOUS_FUMES 只有2层实际常驻。s517154／517155／517164，不能把牌组内双步法当5敏捷兑现，也无强制先打另一张的实战胜局。（之前见过：silent-0005）
+- [赢下连续普通战也会压缩Boss启动缓冲；打法（DeepSeek路线／休息兼容栏，实际Codex）] F29休息40→61，F30啃咬机 CHOMPER 61→44，F31盛碗虫 BOWLBUG_ROCK／BOWLBUG_EGG／BOWLBUG_SILK 44→32，F32休息只补至53；F33四次均以53进双蟹。休息实际回21，不等于已补足后续战斗；原话“21 guaranteed HP outweighs any single upgrade”见d498331。未打过替代路线或升级分支，不断言少掉血就可赢。（之前见过：silent-0020）
+
+- [记录] 复盘时间2026-10-23T17:41:15+08:00；runs.jsonl代码版本为current。只读live对照提交2faa7ead017b977051b317355e352aa229b1344d；run-config的git状态采集报ENOBUFS、commit=null，不能据此认定运行树等于该提交。四次F33尝试依次T7以1血判死、T6以2血判死、T8以6血判死，末次T4实际死亡；前3次不是已发生的死亡，也不是治疗。末次逐轮HP为53→39→25→15→0，轮净损14／14／10／15（末轮受死亡截断）；初始敌219＋209＝428HP，末帧两敌133＋162＝295，未发生击杀。T3所选匕首雨 DAGGER_SPRAY→致命毒药+ DEADLY_POISON→匕首雨中目标、毒及后续帧已核。T4毒药水 POISON_POTION对爪加毒12→18，实后结18／5毒，两敌仍活；另目标或更早用药的整战收益未知。 F1选钓鱼竿 FISHING_ROD并规划普战触发升级；F8卡奖后改走F9休息，F9升致命毒药、F25升毒雾，其余关键休息回血。F14购灵动步法／带毒刺击 POISONED_STAB／力量药水 STRENGTH_POTION；F21购第二步法及两药。大脑实际为Codex，DeepSeek实际调用未见，旧字段名不当引擎归属。 机制：灵动步法已建2敏使防御+的8挡实增至10；T4脆弱 FRAIL_POWER2下生存者+ SURVIVOR给9挡。火箭先有3力量，尖啸暂减6使其变−3，57意图降至48；这些是已兑现局部减损，不是整场成功。背攻、虚弱、毒与敏捷均按当前状态分开，未隔离整战胜因。
+
+Jev低信心（<0.35）38/156次；原请求标有单一rollout_best的111题中，原答案选该键97题（87.39%）；带并列描述9题，选入并列集合7题，可能与前一口径交叠，不能相加。代码rank1和推演最优分列，不把原答比例称为最终整线执行率。原请求focus题0，目标依据实际chosen/expect核；终战未击杀任何一个敌人。按层／SL尝试／回合分窗，完全由code或code-fallback执行的战斗回合24个，混合窗口44个；至少一次实际派发代码自主选线／斩杀／兜底的窗口62个（排除纯续步、end_turn及未派发行）。原decider=code包含Jev计划续步，不全部计为代码自主决策。HP护栏显式替换0次。
+未出现显式HP护栏替换，替换代价0；SL改线不混计护栏。
+
+排除SL恢复后观测新增9瓶；饮用12次，其中8次在F33前，F33同一瓶毒药水在4次尝试的T7／T6／T8／T4各用一次，不能算取得4瓶。弃药0次。 所有取得、饮用／使用、丢弃、自动消失的逐槽证据及时点见下表及本批report.md；不从缺动作的槽位消失补推饮用。
+d498038曾预测改线后F13精英进70，实际66；两题之间有事件与休息，差4不是固定路线模型的受控误差。d498331所选回血选项预测F33进53，实到53；该选项50样本原始胜0、校准0.3118、模拟终点轮数4、平均余敌362.46，实际首次T7判死／末次T4死亡，未按同一策略整线校准。传统Boss时钟“需要DPR／估计DPR”未记录（题面已采用整场模拟）。
+首末决策窗2026-10-23T06:33:12.926Z—2026-10-23T07:12:04.339Z，相隔2331.413秒；run战报用时38.9分钟。runs.tokens=1593029；旧ds_tokens_in/out=1166315/7640，cache_hit=108672（输入口径9.32%），不是两个引擎token可相加的同一口径。
+
+实盘资源链（每场胜战也列；HP净差包含回复／自伤，不是敌人总伤害。SL未退出帧只列截至判死的观测，最后一列s为原states行号）：
+
+|层／序号|敌人ID|入口HP/max；槽位:药水ID|退出或末观测HP/max；槽位|净HP变化／结局证据|原行／时间|
+|---|---|---|---|---|---|
+|F2/1|SHRINKER_BEETLE|56/70；空|52/70；空|-4；退出＋奖励／后续决策证实获胜|s516559@2026-10-23T06:33:36.895Z→s516584@2026-10-23T06:34:36.831Z|
+|F3/2|FUZZY_WURM_CRAWLER|52/70；空|52/70；空|+0；退出＋奖励／后续决策证实获胜|s516589@2026-10-23T06:34:51.635Z→s516613@2026-10-23T06:35:44.076Z|
+|F4/3|LEAF_SLIME_S、TWIG_SLIME_M、TWIG_SLIME_S|52/70；0:DEXTERITY_POTION|47/70；空|-5；退出＋奖励／后续决策证实获胜|s516619@2026-10-23T06:36:02.209Z→s516635@2026-10-23T06:36:40.853Z|
+|F5/4|FOGMOG|47/70；空|40/70；空|-7；退出＋奖励／后续决策证实获胜|s516641@2026-10-23T06:36:58.456Z→s516665@2026-10-23T06:37:50.815Z|
+|F6/5|VINE_SHAMBLER|40/70；空|36/70；空|-4；退出＋奖励／后续决策证实获胜|s516670@2026-10-23T06:38:05.226Z→s516693@2026-10-23T06:38:58.177Z|
+|F8/6|FUZZY_WURM_CRAWLER、SHRINKER_BEETLE|57/70；空|36/70；空|-21；退出＋奖励／后续决策证实获胜|s516701@2026-10-23T06:39:40.273Z→s516727@2026-10-23T06:40:40.794Z|
+|F13/7|BYRDONIS|66/70；0:CUNNING_POTION|49/70；空|-17；退出＋奖励／后续决策证实获胜|s516749@2026-10-23T06:42:18.768Z→s516770@2026-10-23T06:43:02.926Z|
+|F15/8|INKLET|49/70；0:DUPLICATOR；1:STRENGTH_POTION|49/70；0:DUPLICATOR；1:STRENGTH_POTION|+0；退出＋奖励／后续决策证实获胜|s516784@2026-10-23T06:43:56.729Z→s516790@2026-10-23T06:44:07.408Z|
+|F17/9|VANTOM|70/70；0:DUPLICATOR；1:STRENGTH_POTION|24/70；空|-46；退出＋奖励／后续决策证实获胜|s516798@2026-10-23T06:44:42.611Z→s516838@2026-10-23T06:46:37.551Z|
+|F19/10|EXOSKELETON|60/70；空|44/70；空|-16；退出＋奖励／后续决策证实获胜|s516846@2026-10-23T06:47:25.755Z→s516861@2026-10-23T06:48:09.235Z|
+|F20/11|THIEVING_HOPPER|44/70；0:MAZALETHS_GIFT|26/70；空|-18；退出＋奖励／后续决策证实获胜|s516867@2026-10-23T06:48:35.014Z→s516888@2026-10-23T06:49:28.300Z|
+|F22/12|EXOSKELETON|26/70；0:DEXTERITY_POTION；1:SWIFT_POTION|19/70；空|-7；退出＋奖励／后续决策证实获胜|s516902@2026-10-23T06:50:42.844Z→s516933@2026-10-23T06:52:04.118Z|
+|F30/13|CHOMPER|61/70；0:SWIFT_POTION|44/70；空|-17；退出＋奖励／后续决策证实获胜|s516965@2026-10-23T06:54:30.428Z→s516999@2026-10-23T06:56:28.637Z|
+|F31/14|BOWLBUG_EGG、BOWLBUG_ROCK、BOWLBUG_SILK|44/70；0:POISON_POTION|32/70；0:POISON_POTION|-12；退出＋奖励／后续决策证实获胜|s517005@2026-10-23T06:56:53.342Z→s517032@2026-10-23T06:58:07.053Z|
+|F33/15|CRUSHER、ROCKET|53/70；0:POISON_POTION|1/70；空|-52；判死后SL；退出帧缺失|s517041@2026-10-23T06:58:42.233Z→s517076@2026-10-23T07:01:51.345Z|
+|F33/16|CRUSHER、ROCKET|53/70；0:POISON_POTION|2/70；空|-51；判死后SL；退出帧缺失|s517077@2026-10-23T07:02:16.658Z→s517104@2026-10-23T07:04:55.905Z|
+|F33/17|CRUSHER、ROCKET|53/70；0:POISON_POTION|6/70；空|-47；判死后SL；退出帧缺失|s517105@2026-10-23T07:05:20.120Z→s517145@2026-10-23T07:09:36.990Z|
+|F33/18|CRUSHER、ROCKET|53/70；0:POISON_POTION|0/70；空|-53；实际死亡|s517146@2026-10-23T07:10:02.456Z→s517166@2026-10-23T07:12:04.339Z|
+
+关键场外资源（只列观测，不用SL恢复充当回血）：
+- F7→F7，36/70→57/70，REST→REST，s516698@2026-10-23T06:39:38.607Z→s516699@2026-10-23T06:39:38.869Z。
+- F11→F11，36/70→45/70，EVENT→CARD_SELECTION，s516742@2026-10-23T06:42:02.263Z→s516743@2026-10-23T06:42:02.654Z。
+- F12→F12，45/70→66/70，REST→REST，s516746@2026-10-23T06:42:17.055Z→s516747@2026-10-23T06:42:17.328Z。
+- F16→F16，49/70→70/70，REST→REST，s516795@2026-10-23T06:44:40.784Z→s516796@2026-10-23T06:44:41.055Z。
+- F17→F18，24/70→60/70，MAP→EVENT，s516842@2026-10-23T06:46:58.429Z→s516843@2026-10-23T06:47:23.664Z。
+- F27→F27，19/70→40/70，REST→REST，s516954@2026-10-23T06:53:54.779Z→s516955@2026-10-23T06:53:55.055Z。
+- F29→F29，40/70→61/70，REST→REST，s516962@2026-10-23T06:54:28.725Z→s516963@2026-10-23T06:54:28.978Z。
+- F32→F32，32/70→53/70，REST→REST，s517038@2026-10-23T06:58:40.336Z→s517039@2026-10-23T06:58:40.607Z。
+
+药水动作（d为原decisions行；“pending”先保留回执身份，后续槽位／选牌消费证据在report与原state引用中）：
+- F4T1／尝试普通，槽0 DEXTERITY_POTION：饮用；completed: Action completed.；d497935@2026-10-23T06:36:10.121Z。
+- F13T1／尝试普通，槽0 CUNNING_POTION：饮用；completed: Action completed.；d498059@2026-10-23T06:42:26.814Z。
+- F17T1／尝试1，槽0 DUPLICATOR：饮用；completed: Action completed.；d498105@2026-10-23T06:44:54.692Z。
+- F17T2／尝试1，槽1 STRENGTH_POTION：饮用；completed: Action completed.；d498110@2026-10-23T06:45:14.704Z。
+- F20T1／尝试普通，槽0 MAZALETHS_GIFT：饮用；completed: Action completed.；d498174@2026-10-23T06:48:51.126Z。
+- F22T1／尝试1，槽0 DEXTERITY_POTION：饮用；completed: Action completed.；d498205@2026-10-23T06:50:52.272Z。
+- F22T3／尝试1，槽1 SWIFT_POTION：饮用；completed: Action completed.；d498212@2026-10-23T06:51:18.287Z。
+- F30T1／尝试普通，槽0 SWIFT_POTION：饮用；completed: Action completed.；d498266@2026-10-23T06:54:43.435Z。
+- F33T7／尝试1，槽0 POISON_POTION：饮用；completed: Action completed.；d498367@2026-10-23T07:01:50.456Z。
+- F33T6／尝试2，槽0 POISON_POTION：饮用；completed: Action completed.；d498395@2026-10-23T07:04:54.991Z。
+- F33T8／尝试3，槽0 POISON_POTION：饮用；completed: Action completed.；d498436@2026-10-23T07:09:36.093Z。
+- F33T4／尝试4，槽0 POISON_POTION：饮用；completed: Action completed.；d498456@2026-10-23T07:11:59.053Z。
+
+新增槽位（排除SL恢复；同一次混沌的随机产物不跨尝试当独立自然资源）：
+- F3T6：0:DEXTERITY_POTION；s516614→s516615@2026-10-23T06:35:44.540Z。
+- F8T6：0:CUNNING_POTION；s516729→s516730@2026-10-23T06:40:42.413Z。
+- F13T4：0:DUPLICATOR；s516771→s516772@2026-10-23T06:43:03.376Z。
+- F14TNone：1:STRENGTH_POTION；s516780→s516781@2026-10-23T06:43:55.111Z。
+- F19T4：0:MAZALETHS_GIFT；s516862→s516863@2026-10-23T06:48:09.701Z。
+- F21TNone：0:DEXTERITY_POTION；s516897→s516898@2026-10-23T06:50:40.633Z。
+- F21TNone：1:SWIFT_POTION；s516898→s516899@2026-10-23T06:50:40.870Z。
+- F28TNone：0:SWIFT_POTION；s516958→s516959@2026-10-23T06:54:12.376Z。
+- F30T8：0:POISON_POTION；s517000→s517001@2026-10-23T06:56:29.123Z。
+
+原证据范围：本局全部run笔记、588条decisions、611条states均以原始字节偏移核SHA；不是把末五条当全局。完整题面核读的原questions／动态state及答案或错误见8JNHX23GX7ET-full-question.json与question-audit.jsonl，其他请求只做机械字段核验，覆盖限制见report.md。V6配置on、reflex与direction_replan=off；v6-build冻结流本局no_match，entries／jev_answer／fallback／unknown均无可归属原行，不能当零或推出未尝试／已采用。construction-log.jsonl缺失；run-plans本局只有v6_direction_ride，不是完整构筑快照，构筑以上述实际decisions/states回查。deepseek-reasoning在本局决策时间窗无匹配。传统DPR时钟、完整伤害来源／毛受伤、替代顺序／路线胜负与运行源码精确commit未记录；不补未知或跨角色借证。源码提案独立登记，不表示已上线、下一局消费或自然收益。
+
+## PEM07PPDE9Z4（A10，静默猎手，第24层，猎人杀手 HUNTER_KILLER：31/70血进场，第四试T4仅9血6挡对6×3＝18攻击死亡，结毒后敌仍27/126血）
+
+- [柔嫩使逐牌属性持续下降，毒已启动仍不等于能撑过多击；打法（Jev出牌／代码兜底）] 末试T4以1敏捷打防御 DEFEND_SILENT 实给6挡，随后打击 STRIKE_SILENT 使力量−1→−2、敏捷0→−1；中和 NEUTRALIZE 施虚弱后敌8×3变6×3。最终力量−5、敏捷−4，9HP＋6挡仍小于18。毒雾 NOXIOUS_FUMES4与触媒 ACCELERANT1已建立，最后毒18→16、敌62→27，但未击杀。s517601→517613，只支持原柔嫩时序，未证明另一顺序可赢。（之前学过：silent-0232，S1.exp199）
+- [超时后的动作要归给代码，不归给未返回的Jev；打法（代码／Jev出牌审计）] F24T4原题j83246包含中和、匕首雨 DAGGER_SPRAY、蛇咬 SNAKEBITE、打击、混沌药水 ENTROPIC_BREW及结束；Jev报human-pace budget exhausted。d498867按确定性兜底打击，随后兜底喝混沌、易伤 VULNERABLE_POTION、异鱼之油 FYSH_OIL、迅捷 SWIFT_POTION等，不能把整段写成Jev选择或“低信心照做”。本局10个请求错误与35条code-fallback决策不是同一分母。（之前学过：silent-0418，S1.exp182）
+- [休息点尚未到达时，普通胜战的耗血已兑现；打法（DeepSeek路线／休息兼容栏，实际Codex）] 瀑布巨兽 WATERFALL_GIANT 60→33获胜，幕间33→62；F19盛碗虫 BOWLBUG_EGG／BOWLBUG_ROCK胜后41，F22地道虫 TUNNELER胜后31，F24问号遭遇猎人杀手，计划F25首火尚未到。不能用“三休路线”抵销此前两场实损21／10；没有另一问号结果或换线的实打对照。（之前见过：silent-0020）
+
+- [记录] 复盘时间2026-10-23T17:41:15+08:00；runs.jsonl代码版本为current。只读live对照提交2faa7ead017b977051b317355e352aa229b1344d；run-config的git状态采集报ENOBUFS、commit=null，不能据此认定运行树等于该提交。F24四次均31/70血、槽1混沌药水进场；前三次均T4在9HP＋6挡对18攻击时判死读档，第四次实际死亡。末试T1—T4的HP净损0／4／18／9；敌轮初126／126／98／81，最后27，未击杀。T4药后异鱼之油短暂使属性−2／−1回到−1／0，后续出牌继续减；不可把这次修正当作永久敏捷。d498867—498877与s517602—517613核了实际动作。 F1选药瓶皮套 PHIAL_HOLSTER；F4购冲刺 DASH、蛇咬；F15购步法与计算下注 CALCULATED_GAMBLE。F16原话“Upgrade Footwork: Pantograph ensures 60 HP”，实际35→60的缩放仪 PANTOGRAPH入Boss回血已核；F18取佩尔之泪 PAELS_TEARS并规划三休路线。F22卡奖跳过，理由优先防御与抽牌；F23事件取杀灭 EXTERMINATE。均为Codex，不将旧DeepSeek字段当调用。 机制：柔嫩 TENDER_POWER1在每张牌后扣力量／敏捷；T4防御先按1敏给6挡，之后属性逐步下降。毒雾4及触媒1实际保留，最终18毒两次结算可见敌62→27、毒18→16，仍余27；中和把24总攻击降到18，6挡后需损12，而仅9HP，维持同一末态存活至少差4HP。不是柔嫩重放旧bug的复现，也未隔离单张能力对胜负的贡献。
+
+Jev低信心（<0.35）11/135次；原请求标有单一rollout_best的117题中，原答案选该键105题（89.74%）；带并列描述15题，选入并列集合14题，可能与前一口径交叠，不能相加。代码rank1和推演最优分列，不把原答比例称为最终整线执行率。原请求focus题0，目标依据实际chosen/expect核；终战未击杀任何一个敌人。按层／SL尝试／回合分窗，完全由code或code-fallback执行的战斗回合9个，混合窗口12个；至少一次实际派发代码自主选线／斩杀／兜底的窗口21个（排除纯续步、end_turn及未派发行）。原decider=code包含Jev计划续步，不全部计为代码自主决策。HP护栏显式替换1次。
+护栏d498618（F12T1，尝试普通战）：预测损13→8、伤31→23；这些是候选数字，抽牌／SL／重算后的整线收益未记录。
+
+排除SL恢复后新增入栏19次＝常规取得7瓶＋4次混沌各生成3瓶（同一重打链，不是19瓶自然独立资源）。主动饮用请求21次，含早期2条pending随后槽位消失／选牌核效；F24四试喝4／3／4／4瓶，第二试剩槽2迅捷未饮便读档。弃药0次。 所有取得、饮用／使用、丢弃、自动消失的逐槽证据及时点见下表及本批report.md；不从缺动作的槽位消失补推饮用。
+d498680所选升级步法o1:c23预测一幕Boss60HP入口，实到60；100样本原始全胜、选项胜战掉血24／终点10轮，实打10轮净损27剩33（模拟与实际策略非受控同线）。F24猎人杀手没有Boss时钟；传统所需／估计DPR未记录。
+首末决策窗2026-10-23T07:13:05.318Z—2026-10-23T07:39:42.708Z，相隔1597.390秒；run战报用时26.6分钟。runs.tokens=1295436；旧ds_tokens_in/out=948736/6012，cache_hit=66432（输入口径7.00%），不是两个引擎token可相加的同一口径。
+
+实盘资源链（每场胜战也列；HP净差包含回复／自伤，不是敌人总伤害。SL未退出帧只列截至判死的观测，最后一列s为原states行号）：
+
+|层／序号|敌人ID|入口HP/max；槽位:药水ID|退出或末观测HP/max；槽位|净HP变化／结局证据|原行／时间|
+|---|---|---|---|---|---|
+|F2/1|SLUDGE_SPINNER|56/70；0:REGEN_POTION；1:ENTROPIC_BREW|64/70；1:ENTROPIC_BREW|+8；退出＋奖励／后续决策证实获胜|s517173@2026-10-23T07:13:36.047Z→s517199@2026-10-23T07:14:33.977Z|
+|F3/2|CORPSE_SLUG|64/70；0:FORTIFIER；1:ENTROPIC_BREW|64/70；1:ENTROPIC_BREW|+0；退出＋奖励／后续决策证实获胜|s517205@2026-10-23T07:14:53.034Z→s517223@2026-10-23T07:15:36.902Z|
+|F5/3|TOADPOLE|64/70；1:ENTROPIC_BREW|56/70；1:ENTROPIC_BREW|-8；退出＋奖励／后续决策证实获胜|s517234@2026-10-23T07:16:37.524Z→s517252@2026-10-23T07:17:26.576Z|
+|F6/4|PUNCH_CONSTRUCT|56/70；0:ATTACK_POTION；1:ENTROPIC_BREW|53/70；1:ENTROPIC_BREW|-3；退出＋奖励／后续决策证实获胜|s517258@2026-10-23T07:17:50.948Z→s517274@2026-10-23T07:18:32.823Z|
+|F7/5|HAUNTED_SHIP|53/70；1:ENTROPIC_BREW|51/70；1:ENTROPIC_BREW|-2；退出＋奖励／后续决策证实获胜|s517279@2026-10-23T07:18:53.888Z→s517298@2026-10-23T07:19:48.236Z|
+|F9/6|PHANTASMAL_GARDENER|70/70；1:ENTROPIC_BREW|42/70；1:ENTROPIC_BREW|-28；退出＋奖励／后续决策证实获胜|s517306@2026-10-23T07:20:27.418Z→s517329@2026-10-23T07:21:36.859Z|
+|F12/7|TERROR_EEL|63/70；0:FIRE_POTION；1:ENTROPIC_BREW|37/70；1:ENTROPIC_BREW|-26；退出＋奖励／后续决策证实获胜|s517343@2026-10-23T07:22:26.751Z→s517369@2026-10-23T07:23:37.261Z|
+|F13/8|FOSSIL_STALKER|37/70；1:ENTROPIC_BREW|35/70；1:ENTROPIC_BREW|-2；退出＋奖励／后续决策证实获胜|s517375@2026-10-23T07:24:01.477Z→s517392@2026-10-23T07:24:46.700Z|
+|F17/9|WATERFALL_GIANT|60/70；1:ENTROPIC_BREW|33/70；1:ENTROPIC_BREW|-27；退出＋奖励／后续决策证实获胜|s517411@2026-10-23T07:26:26.320Z→s517449@2026-10-23T07:28:46.131Z|
+|F19/10|BOWLBUG_EGG、BOWLBUG_ROCK|62/70；0:DROPLET_OF_PRECOGNITION；1:ENTROPIC_BREW|41/70；1:ENTROPIC_BREW|-21；退出＋奖励／后续决策证实获胜|s517458@2026-10-23T07:29:32.589Z→s517480@2026-10-23T07:30:49.351Z|
+|F22/11|TUNNELER|41/70；0:SNECKO_OIL；1:ENTROPIC_BREW|31/70；1:ENTROPIC_BREW|-10；退出＋奖励／后续决策证实获胜|s517494@2026-10-23T07:32:05.477Z→s517515@2026-10-23T07:33:14.045Z|
+|F24/12|HUNTER_KILLER|31/70；1:ENTROPIC_BREW|9/70；空|-22；判死后SL；退出帧缺失|s517523@2026-10-23T07:33:51.725Z→s517545@2026-10-23T07:35:03.449Z|
+|F24/13|HUNTER_KILLER|31/70；1:ENTROPIC_BREW|9/70；2:SWIFT_POTION|-22；判死后SL；退出帧缺失|s517546@2026-10-23T07:35:20.742Z→s517565@2026-10-23T07:36:29.157Z|
+|F24/14|HUNTER_KILLER|31/70；1:ENTROPIC_BREW|9/70；空|-22；判死后SL；退出帧缺失|s517566@2026-10-23T07:36:44.140Z→s517589@2026-10-23T07:38:05.330Z|
+|F24/15|HUNTER_KILLER|31/70；1:ENTROPIC_BREW|0/70；空|-31；实际死亡|s517590@2026-10-23T07:38:19.042Z→s517613@2026-10-23T07:39:42.708Z|
+
+关键场外资源（只列观测，不用SL恢复充当回血）：
+- F8→F8，51/70→70/70，REST→REST，s517303@2026-10-23T07:20:25.673Z→s517304@2026-10-23T07:20:25.938Z。
+- F11→F11，42/70→63/70，REST→REST，s517340@2026-10-23T07:22:24.904Z→s517341@2026-10-23T07:22:25.157Z。
+- F16→F17，35/70→60/70，MAP→COMBAT，s517410@2026-10-23T07:26:24.440Z→s517411@2026-10-23T07:26:26.320Z。
+- F17→F18，33/70→62/70，MAP→EVENT，s517454@2026-10-23T07:29:08.376Z→s517455@2026-10-23T07:29:30.119Z。
+
+药水动作（d为原decisions行；“pending”先保留回执身份，后续槽位／选牌消费证据在report与原state引用中）：
+- F2T1／尝试普通，槽0 REGEN_POTION：饮用；completed: Action completed.；d498468@2026-10-23T07:13:44.922Z。
+- F3T1／尝试普通，槽0 FORTIFIER：饮用；completed: Action completed.；d498495@2026-10-23T07:15:00.878Z。
+- F6T1／尝试普通，槽0 ATTACK_POTION：饮用；pending (unstable): Action queued but state is still transitioning.；d498545@2026-10-23T07:18:01.689Z。
+- F12T1／尝试普通，槽0 FIRE_POTION：饮用；completed: Action completed.；d498622@2026-10-23T07:22:37.900Z。
+- F19T2／尝试普通，槽0 DROPLET_OF_PRECOGNITION：饮用；pending (unstable): Action queued but state is still transitioning.；d498734@2026-10-23T07:29:50.050Z。
+- F22T1／尝试普通，槽0 SNECKO_OIL：饮用；completed: Action completed.；d498764@2026-10-23T07:32:10.161Z。
+- F24T4／尝试1，槽1 ENTROPIC_BREW：饮用；completed: Action completed.；d498803@2026-10-23T07:34:52.180Z。
+- F24T4／尝试1，槽0 VULNERABLE_POTION：饮用；completed: Action completed.；d498804@2026-10-23T07:34:52.945Z。
+- F24T4／尝试1，槽1 FYSH_OIL：饮用；completed: Action completed.；d498805@2026-10-23T07:34:53.852Z。
+- F24T4／尝试1，槽2 SWIFT_POTION：饮用；completed: Action completed.；d498807@2026-10-23T07:34:56.415Z。
+- F24T4／尝试2，槽1 ENTROPIC_BREW：饮用；completed: Action completed.；d498825@2026-10-23T07:36:22.026Z。
+- F24T4／尝试2，槽0 VULNERABLE_POTION：饮用；completed: Action completed.；d498826@2026-10-23T07:36:22.865Z。
+- F24T4／尝试2，槽1 FYSH_OIL：饮用；completed: Action completed.；d498827@2026-10-23T07:36:23.748Z。
+- F24T4／尝试3，槽1 ENTROPIC_BREW：饮用；completed: Action completed.；d498847@2026-10-23T07:37:55.529Z。
+- F24T4／尝试3，槽0 VULNERABLE_POTION：饮用；completed: Action completed.；d498848@2026-10-23T07:37:56.328Z。
+- F24T4／尝试3，槽1 FYSH_OIL：饮用；completed: Action completed.；d498849@2026-10-23T07:37:57.234Z。
+- F24T4／尝试3，槽2 SWIFT_POTION：饮用；completed: Action completed.；d498851@2026-10-23T07:37:59.825Z。
+- F24T4／尝试4，槽1 ENTROPIC_BREW：饮用；completed: Action completed.；d498868@2026-10-23T07:39:28.733Z。
+- F24T4／尝试4，槽0 VULNERABLE_POTION：饮用；completed: Action completed.；d498869@2026-10-23T07:39:29.507Z。
+- F24T4／尝试4，槽1 FYSH_OIL：饮用；completed: Action completed.；d498870@2026-10-23T07:39:30.402Z。
+- F24T4／尝试4，槽2 SWIFT_POTION：饮用；completed: Action completed.；d498872@2026-10-23T07:39:32.967Z。
+
+新增槽位（排除SL恢复；同一次混沌的随机产物不跨尝试当独立自然资源）：
+- F1TNone：0:REGEN_POTION；1:ENTROPIC_BREW；s517170→s517171@2026-10-23T07:13:05.751Z。
+- F2T5：0:FORTIFIER；s517200→s517201@2026-10-23T07:14:34.444Z。
+- F5T5：0:ATTACK_POTION；s517253→s517254@2026-10-23T07:17:27.041Z。
+- F9T5：0:FIRE_POTION；s517330→s517331@2026-10-23T07:21:37.358Z。
+- F17T10：0:DROPLET_OF_PRECOGNITION；s517450→s517451@2026-10-23T07:28:46.562Z。
+- F19T6：0:SNECKO_OIL；s517481→s517482@2026-10-23T07:30:49.818Z。
+- F24T4：0:VULNERABLE_POTION；1:FYSH_OIL；2:SWIFT_POTION；s517536→s517537@2026-10-23T07:34:52.945Z。
+- F24T4：0:VULNERABLE_POTION；1:FYSH_OIL；2:SWIFT_POTION；s517559→s517560@2026-10-23T07:36:22.865Z。
+- F24T4：0:VULNERABLE_POTION；1:FYSH_OIL；2:SWIFT_POTION；s517581→s517582@2026-10-23T07:37:56.328Z。
+- F24T4：0:VULNERABLE_POTION；1:FYSH_OIL；2:SWIFT_POTION；s517603→s517604@2026-10-23T07:39:29.507Z。
+
+原证据范围：本局全部run笔记、416条decisions、444条states均以原始字节偏移核SHA；不是把末五条当全局。完整题面核读的原questions／动态state及答案或错误见PEM07PPDE9Z4-full-question.json与question-audit.jsonl，其他请求只做机械字段核验，覆盖限制见report.md。V6配置on、reflex与direction_replan=off；v6-build冻结流本局no_match，entries／jev_answer／fallback／unknown均无可归属原行，不能当零或推出未尝试／已采用。construction-log.jsonl缺失；run-plans本局只有v6_direction_ride，不是完整构筑快照，构筑以上述实际decisions/states回查。deepseek-reasoning在本局决策时间窗无匹配。传统DPR时钟、完整伤害来源／毛受伤、替代顺序／路线胜负与运行源码精确commit未记录；不补未知或跨角色借证。源码提案独立登记，不表示已上线、下一局消费或自然收益。
+
+## BDJTF3FDA8W5（A10，静默猎手，第49层，实验体 #C112 TEST_SUBJECT：沙漏胜后8/58血连续进场，第四试T1以8血12挡面对25攻击死亡，敌仍96/111血）
+
+- [首Boss获胜剩血必须实际传给第二Boss；打法（DeepSeek路线／休息兼容栏，实际Codex／代码终局价值）] F44史莱姆狂战士 SLIMED_BERSERKER 53→33、F45巨斧机器人 AXEBOT 33→10、F46电球头 GLOBE_HEAD 10→17；F47休息17→34，F48永世沙漏 AEONGLASS第二试胜后8，F49实验体 TEST_SUBJECT实到8且常驻能力重新从空开始。赢了F48不是整局结束，也没有中间回血。药水形状的石头 POTION_SHAPED_ROCK 是新战斗补充，非跨战保留原瓶；不能把前战取得能力当后场已建。（之前学过：silent-0228，S1.legacy17-1）
+- [面包的首轮能量代价在低血连战里已兑现；打法（DeepSeek构筑兼容栏，实际Codex／Jev出牌）] F39购面包 BREAD时已写“despite its opening penalty”；F49首轮实际只有1能量，首试防御+ DEFEND_SILENT给16挡后到次轮3HP／4能量。末试斗篷与匕首+ CLOAK_AND_DAGGER耗尽唯一1能，后续步法 FOOTWORK／触媒 ACCELERANT均未施放。只证实首轮1、后轮4的时序，不宣称不买面包或换首牌即可通关。（之前学过：silent-0109，S1.exp134）
+- [升级斗篷仍把生成两刀误记为抽两张，虚构启动后继；bug（代码）] F49末三试Jev均选plan6，含斗篷+→石头→生产制造+ PRODUCTION→触媒+→迷雾+ HAZE，题面明确cards_drawn=2；s518407→518408实际只生成两张0费4伤小刀 SHIV，能量1→0，未抽到生产制造。随后仅用石头15伤并结束，未执行后继，8血死亡。只读live agent/src/reflex/card-model.ts:1042排除升级斗篷、:1068回退Cards→draw，:1188生成分支亦不命中；这是旧0461宽项的repeat，notes/fix-queue.md未单列，notes/fix-queue-v4.md:1224／1375／1460及原f4eb提案已有。普通6挡窄修未证明覆盖升级12挡，修后整战胜负未知。（之前见过：silent-0461）
+
+- [记录] 复盘时间2026-10-23T17:41:15+08:00；runs.jsonl代码版本为current。只读live对照提交2faa7ead017b977051b317355e352aa229b1344d；run-config的git状态采集报ENOBUFS、commit=null，不能据此认定运行树等于该提交。F48首试T5在9血判死，第二试T10胜后8；F49首试T2在3血判死，后三试均T1达到判死／末试实死。所有F49尝试入口都是8/58。首试T1防御线预测掉5、剩3，实际8→3相符；末试斗篷后的真实合法前缀为12挡、敌力量0→3、意图22→25，石头使111→96；波纹水盆 RIPPLE_BASIN的回合末作用不能用已生成小刀当作已经打出或额外抽牌。末次完整HP损失8受死亡截断。 F6购弹跳药瓶 BOUNCING_FLASK／触媒／生产制造等；F31买波纹水盆、摆动球 PENDULUM、步法、蛇咬及药；F34取图章戒指 SIGNET_RING，原话“888金币兑现双商店补强，避精英保存连王资源”。F37买律动残余 BEATING_REMNANT、净化 PURITY、删打击，F39买面包／蜃景 MIRAGE并弃速度药水，F43买暴露 EXPOSE；F47确为无药，下一战的石头由遗物开场补给。计划与实际消费均有记录，未证实购买组合的整战因果。 机制：面包令首轮1能，次轮实4；佩尔的士兵 PAELS_LEGION使首张防御+实16挡、斗篷+实12挡，两线不同。实验体激怒 ENRAGE_POWER3在斗篷技能后敌力0→3、意图22→25，能力牌没有被本次前缀施放，不能预支其效果。斗篷+实生成两张小刀、不抽牌，属旧0462机制支持；这些局部机制与旧0028的技能加力观察相接，未出现换相新事实。
+
+Jev低信心（<0.35）33/175次；原请求标有单一rollout_best的91题中，原答案选该键86题（94.51%）；带并列描述54题，选入并列集合47题，可能与前一口径交叠，不能相加。代码rank1和推演最优分列，不把原答比例称为最终整线执行率。原请求focus题0，目标依据实际chosen/expect核；终战未击杀任何一个敌人。按层／SL尝试／回合分窗，完全由code或code-fallback执行的战斗回合29个，混合窗口63个；至少一次实际派发代码自主选线／斩杀／兜底的窗口87个（排除纯续步、end_turn及未派发行）。原decider=code包含Jev计划续步，不全部计为代码自主决策。HP护栏显式替换1次。
+护栏d499559（F48T2，尝试2）：预测损20→16、伤14→4；这些是候选数字，抽牌／SL／重算后的整线收益未记录。
+
+不计SL恢复，新入栏28次＝普通药15瓶＋各战补充石头13次；主动use_potion请求30条（含石头投掷，不能全称口服）、discard_potion1条，另F46瓶中精灵 FAIRY_IN_A_BOTTLE自动触发须单列。F48多一次石头、F49多三次石头来自SL恢复后重用，不计新取得；F39丢弃速度药水 SPEED_POTION后买能力药水 POWER_POTION。 所有取得、饮用／使用、丢弃、自动消失的逐槽证据及时点见下表及本批report.md；不从缺动作的槽位消失补推饮用。
+d499516所选回血预测F48进34，实到34；50样本原始胜0、模拟终点5轮、平均余敌481.98，实际首试T5判死后重打T10获胜。readiness有效归属0/50、缺50，不能把raw=0解释成50条完整已归属败局。F49仅8HP实际连入，联合胜率及传统所需／估计DPR未记录；F48预测终点不是胜利所需轮数。
+首末决策窗2026-10-23T07:40:52.385Z—2026-10-23T08:25:00.550Z，相隔2648.165秒；run战报用时44.1分钟。runs.tokens=1869836；旧ds_tokens_in/out=2231323/14182，cache_hit=516224（输入口径23.14%），不是两个引擎token可相加的同一口径。
+
+实盘资源链（每场胜战也列；HP净差包含回复／自伤，不是敌人总伤害。SL未退出帧只列截至判死的观测，最后一列s为原states行号）：
+
+|层／序号|敌人ID|入口HP/max；槽位:药水ID|退出或末观测HP/max；槽位|净HP变化／结局证据|原行／时间|
+|---|---|---|---|---|---|
+|F2/1|SLUDGE_SPINNER|56/58；空|51/58；空|-5；退出＋奖励／后续决策证实获胜|s517620@2026-10-23T07:41:12.936Z→s517636@2026-10-23T07:41:50.410Z|
+|F3/2|TOADPOLE|51/58；空|48/58；空|-3；退出＋奖励／后续决策证实获胜|s517641@2026-10-23T07:42:17.175Z→s517652@2026-10-23T07:42:41.408Z|
+|F4/3|CORPSE_SLUG|48/58；0:RADIANT_TINCTURE|48/58；空|+0；退出＋奖励／后续决策证实获胜|s517658@2026-10-23T07:42:59.780Z→s517677@2026-10-23T07:43:35.423Z|
+|F12/4|TERROR_EEL|58/58；0:RADIANT_TINCTURE；1:SPEED_POTION|50/58；空|-8；退出＋奖励／后续决策证实获胜|s517715@2026-10-23T07:46:51.200Z→s517744@2026-10-23T07:47:58.844Z|
+|F13/5|FOSSIL_STALKER|50/58；0:POTION_SHAPED_ROCK|50/58；空|+0；退出＋奖励／后续决策证实获胜|s517750@2026-10-23T07:48:15.344Z→s517766@2026-10-23T07:48:52.928Z|
+|F14/6|GREMLIN_MERC|50/58；0:POTION_SHAPED_ROCK|45/58；空|-5；退出＋奖励／后续决策证实获胜|s517771@2026-10-23T07:49:13.793Z→s517785@2026-10-23T07:49:52.168Z|
+|F17/7|LAGAVULIN_MATRIARCH|58/58；0:SKILL_POTION；1:POWER_POTION|28/58；空|-30；退出＋奖励／后续决策证实获胜|s517801@2026-10-23T07:51:08.446Z→s517847@2026-10-23T07:53:41.342Z|
+|F19/8|EXOSKELETON|52/58；0:BLESSING_OF_THE_FORGE；1:POTION_SHAPED_ROCK|52/58；空|+0；退出＋奖励／后续决策证实获胜|s517856@2026-10-23T07:54:12.828Z→s517883@2026-10-23T07:55:29.384Z|
+|F20/9|THIEVING_HOPPER|52/58；0:POTION_SHAPED_ROCK|52/58；空|+0；退出＋奖励／后续决策证实获胜|s517888@2026-10-23T07:55:46.284Z→s517900@2026-10-23T07:56:15.952Z|
+|F21/10|BOWLBUG_EGG、BOWLBUG_ROCK、BOWLBUG_SILK|52/58；0:ENERGY_POTION；1:POTION_SHAPED_ROCK|50/58；空|-2；退出＋奖励／后续决策证实获胜|s517907@2026-10-23T07:56:39.638Z→s517936@2026-10-23T07:57:58.505Z|
+|F27/11|LOUSE_PROGENITOR|44/58；0:WEAK_POTION；1:POTION_SHAPED_ROCK|44/58；空|+0；退出＋奖励／后续决策证实获胜|s517967@2026-10-23T08:00:19.399Z→s517982@2026-10-23T08:00:56.216Z|
+|F28/12|OVICOPTER|44/58；0:POTION_SHAPED_ROCK|44/58；空|+0；退出＋奖励／后续决策证实获胜|s517987@2026-10-23T08:01:14.371Z→s517999@2026-10-23T08:01:48.116Z|
+|F33/13|THE_INSATIABLE|54/58；0:CLARITY；1:FIRE_POTION|46/58；空|-8；退出＋奖励／后续决策证实获胜|s518026@2026-10-23T08:04:15.623Z→s518046@2026-10-23T08:05:39.676Z|
+|F35/14|DEVOTED_SCULPTOR|55/58；0:FYSH_OIL；1:POTION_SHAPED_ROCK|53/58；空|-2；退出＋奖励／后续决策证实获胜|s518055@2026-10-23T08:06:54.082Z→s518067@2026-10-23T08:07:28.908Z|
+|F36/15|LIVING_SHIELD、TURRET_OPERATOR|53/58；0:POTION_SHAPED_ROCK|53/58；空|+0；退出＋奖励／后续决策证实获胜|s518072@2026-10-23T08:07:48.536Z→s518089@2026-10-23T08:08:27.904Z|
+|F44/16|SLIMED_BERSERKER|53/58；0:DUPLICATOR；1:POWER_POTION|33/58；空|-20；退出＋奖励／后续决策证实获胜|s518130@2026-10-23T08:11:40.731Z→s518191@2026-10-23T08:15:13.370Z|
+|F45/17|AXEBOT|33/58；0:POTION_SHAPED_ROCK|10/58；空|-23；退出＋奖励／后续决策证实获胜|s518196@2026-10-23T08:15:31.340Z→s518245@2026-10-23T08:17:32.726Z|
+|F46/18|GLOBE_HEAD|10/58；0:FAIRY_IN_A_BOTTLE；1:POTION_SHAPED_ROCK|17/58；空|+7；退出＋奖励／后续决策证实获胜|s518251@2026-10-23T08:17:48.844Z→s518276@2026-10-23T08:18:56.408Z|
+|F48/19|AEONGLASS|34/58；0:POTION_SHAPED_ROCK|9/58；空|-25；判死后SL；退出帧缺失|s518284@2026-10-23T08:19:31.779Z→s518321@2026-10-23T08:20:52.905Z|
+|F48/20|AEONGLASS|34/58；0:POTION_SHAPED_ROCK|8/58；空|-26；退出＋奖励／后续决策证实获胜|s518322@2026-10-23T08:20:59.626Z→s518390@2026-10-23T08:24:04.748Z|
+|F49/21|TEST_SUBJECT|8/58；0:POTION_SHAPED_ROCK|3/58；空|-5；判死后SL；退出帧缺失|s518392@2026-10-23T08:24:06.157Z→s518400@2026-10-23T08:24:22.884Z|
+|F49/22|TEST_SUBJECT|8/58；0:POTION_SHAPED_ROCK|8/58；空|+0；判死后SL；退出帧缺失|s518401@2026-10-23T08:24:32.239Z→s518403@2026-10-23T08:24:35.054Z|
+|F49/23|TEST_SUBJECT|8/58；0:POTION_SHAPED_ROCK|8/58；空|+0；判死后SL；退出帧缺失|s518404@2026-10-23T08:24:43.986Z→s518406@2026-10-23T08:24:46.780Z|
+|F49/24|TEST_SUBJECT|8/58；0:POTION_SHAPED_ROCK|0/58；空|-8；实际死亡|s518407@2026-10-23T08:24:55.686Z→s518410@2026-10-23T08:25:00.550Z|
+
+关键场外资源（只列观测，不用SL恢复充当回血）：
+- F11→F11，48/58→58/58，REST→REST，s517712@2026-10-23T07:46:49.356Z→s517713@2026-10-23T07:46:49.624Z。
+- F16→F16，45/58→58/58，REST→REST，s517798@2026-10-23T07:51:06.637Z→s517799@2026-10-23T07:51:06.911Z。
+- F17→F18，28/58→52/58，MAP→EVENT，s517852@2026-10-23T07:53:57.538Z→s517853@2026-10-23T07:54:10.708Z。
+- F23→F23，50/58→44/58，EVENT→CARD_SELECTION，s517949@2026-10-23T07:59:20.974Z→s517950@2026-10-23T07:59:21.517Z。
+- F30→F30，44/58→41/58，EVENT→EVENT，s518008@2026-10-23T08:02:42.263Z→s518009@2026-10-23T08:02:53.912Z。
+- F30→F30，41/58→37/58，EVENT→EVENT，s518009@2026-10-23T08:02:53.912Z→s518010@2026-10-23T08:03:05.986Z。
+- F32→F32，37/58→54/58，REST→REST，s518023@2026-10-23T08:04:13.922Z→s518024@2026-10-23T08:04:14.173Z。
+- F33→F34，46/58→55/58，MAP→EVENT，s518051@2026-10-23T08:06:31.318Z→s518052@2026-10-23T08:06:51.817Z。
+- F47→F47，17/58→34/58，REST→REST，s518281@2026-10-23T08:19:29.902Z→s518282@2026-10-23T08:19:30.163Z。
+
+药水动作（d为原decisions行；“pending”先保留回执身份，后续槽位／选牌消费证据在report与原state引用中）：
+- F4T1／尝试普通，槽0 RADIANT_TINCTURE：饮用；completed: Action completed.；d498923@2026-10-23T07:43:07.727Z。
+- F12T1／尝试普通，槽0 RADIANT_TINCTURE：饮用；completed: Action completed.；d498977@2026-10-23T07:46:58.519Z。
+- F12T1／尝试普通，槽1 SPEED_POTION：饮用；completed: Action completed.；d498978@2026-10-23T07:46:59.846Z。
+- F13T1／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499010@2026-10-23T07:48:22.163Z。
+- F14T2／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499035@2026-10-23T07:49:38.411Z。
+- F17T1／尝试1，槽1 POWER_POTION：饮用；pending (unstable): Action queued but state is still transitioning.；d499060@2026-10-23T07:51:38.636Z。
+- F17T3／尝试1，槽0 SKILL_POTION：饮用；pending (unstable): Action queued but state is still transitioning.；d499068@2026-10-23T07:52:24.556Z。
+- F19T1／尝试普通，槽0 BLESSING_OF_THE_FORGE：饮用；completed: Action completed.；d499114@2026-10-23T07:54:23.924Z。
+- F19T3／尝试普通，槽1 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499130@2026-10-23T07:55:13.122Z。
+- F20T1／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499147@2026-10-23T07:56:01.756Z。
+- F21T1／尝试普通，槽1 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499162@2026-10-23T07:56:48.677Z。
+- F21T2／尝试普通，槽0 ENERGY_POTION：饮用；completed: Action completed.；d499167@2026-10-23T07:57:05.578Z。
+- F27T1／尝试普通，槽0 WEAK_POTION：饮用；completed: Action completed.；d499217@2026-10-23T08:00:28.237Z。
+- F27T1／尝试普通，槽1 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499218@2026-10-23T08:00:29.144Z。
+- F28T1／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499237@2026-10-23T08:01:24.920Z。
+- F33T1／尝试1，槽0 CLARITY：饮用；completed: Action completed.；d499271@2026-10-23T08:04:29.505Z。
+- F33T1／尝试1，槽1 FIRE_POTION：饮用；completed: Action completed.；d499273@2026-10-23T08:04:43.888Z。
+- F35T2／尝试普通，槽0 FYSH_OIL：饮用；completed: Action completed.；d499304@2026-10-23T08:07:18.686Z。
+- F35T2／尝试普通，槽1 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499305@2026-10-23T08:07:19.715Z。
+- F36T2／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499321@2026-10-23T08:08:09.907Z。
+- F39TNone／尝试普通，槽1 SPEED_POTION：丢弃；completed: Action completed.；d499350@2026-10-23T08:10:37.337Z。
+- F44T1／尝试普通，槽0 DUPLICATOR：饮用；completed: Action completed.；d499371@2026-10-23T08:11:47.638Z。
+- F44T10／尝试普通，槽1 POWER_POTION：饮用；pending (unstable): Action queued but state is still transitioning.；d499421@2026-10-23T08:14:52.396Z。
+- F45T3／尝试普通，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499447@2026-10-23T08:16:06.468Z。
+- F46T4／尝试1，槽1 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499508@2026-10-23T08:18:45.004Z。
+- F48T1／尝试1，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499525@2026-10-23T08:19:56.556Z。
+- F48T1／尝试2，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499554@2026-10-23T08:21:26.387Z。
+- F49T1／尝试1，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499608@2026-10-23T08:24:11.843Z。
+- F49T1／尝试2，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499616@2026-10-23T08:24:34.243Z。
+- F49T1／尝试3，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499619@2026-10-23T08:24:45.967Z。
+- F49T1／尝试4，槽0 POTION_SHAPED_ROCK：使用（石头为投掷）；completed: Action completed.；d499622@2026-10-23T08:24:57.669Z。
+
+新增槽位（排除SL恢复；同一次混沌的随机产物不跨尝试当独立自然资源）：
+- F3T3：0:RADIANT_TINCTURE；s517653→s517654@2026-10-23T07:42:41.872Z。
+- F4T4：0:RADIANT_TINCTURE；s517678→s517679@2026-10-23T07:43:35.924Z。
+- F6TNone：1:SPEED_POTION；s517693→s517694@2026-10-23T07:44:59.569Z。
+- F13T1：0:POTION_SHAPED_ROCK；s517749→s517750@2026-10-23T07:48:15.344Z。
+- F14T1：0:POTION_SHAPED_ROCK；s517770→s517771@2026-10-23T07:49:13.793Z。
+- F14T4：0:SKILL_POTION；s517787→s517788@2026-10-23T07:49:52.833Z。
+- F15TNone：1:POWER_POTION；s517794→s517795@2026-10-23T07:50:46.796Z。
+- F17T9：0:BLESSING_OF_THE_FORGE；s517848→s517849@2026-10-23T07:53:41.785Z。
+- F19T1：1:POTION_SHAPED_ROCK；s517855→s517856@2026-10-23T07:54:12.828Z。
+- F20T1：0:POTION_SHAPED_ROCK；s517887→s517888@2026-10-23T07:55:46.284Z。
+- F20T2：0:ENERGY_POTION；s517901→s517902@2026-10-23T07:56:16.418Z。
+- F21T1：1:POTION_SHAPED_ROCK；s517906→s517907@2026-10-23T07:56:39.638Z。
+- F21T6：0:WEAK_POTION；s517937→s517938@2026-10-23T07:57:58.970Z。
+- F27T1：1:POTION_SHAPED_ROCK；s517966→s517967@2026-10-23T08:00:19.399Z。
+- F28T1：0:POTION_SHAPED_ROCK；s517986→s517987@2026-10-23T08:01:14.371Z。
+- F31TNone：0:CLARITY；s518018→s518019@2026-10-23T08:03:55.175Z。
+- F31TNone：1:FIRE_POTION；s518019→s518020@2026-10-23T08:03:55.411Z。
+- F33T5：0:FYSH_OIL；s518047→s518048@2026-10-23T08:05:40.139Z。
+- F35T1：1:POTION_SHAPED_ROCK；s518054→s518055@2026-10-23T08:06:54.082Z。
+- F36T1：0:POTION_SHAPED_ROCK；s518071→s518072@2026-10-23T08:07:48.536Z。
+- F37TNone：0:DUPLICATOR；s518099→s518100@2026-10-23T08:09:34.188Z。
+- F37TNone：1:SPEED_POTION；s518100→s518101@2026-10-23T08:09:34.423Z。
+- F39TNone：1:POWER_POTION；s518111→s518112@2026-10-23T08:10:37.799Z。
+- F45T1：0:POTION_SHAPED_ROCK；s518195→s518196@2026-10-23T08:15:31.340Z。
+- F45T9：0:FAIRY_IN_A_BOTTLE；s518246→s518247@2026-10-23T08:17:33.193Z。
+- F46T1：1:POTION_SHAPED_ROCK；s518250→s518251@2026-10-23T08:17:48.844Z。
+- F48T1：0:POTION_SHAPED_ROCK；s518283→s518284@2026-10-23T08:19:31.779Z。
+- F49T1：0:POTION_SHAPED_ROCK；s518391→s518392@2026-10-23T08:24:06.157Z。
+
+原证据范围：本局全部run笔记、744条decisions、794条states均以原始字节偏移核SHA；不是把末五条当全局。完整题面核读的原questions／动态state及答案或错误见BDJTF3FDA8W5-full-question.json与question-audit.jsonl，其他请求只做机械字段核验，覆盖限制见report.md。V6配置on、reflex与direction_replan=off；v6-build冻结流本局no_match，entries／jev_answer／fallback／unknown均无可归属原行，不能当零或推出未尝试／已采用。construction-log.jsonl缺失；run-plans本局只有v6_direction_ride，不是完整构筑快照，构筑以上述实际decisions/states回查。deepseek-reasoning在本局决策时间窗无匹配。传统DPR时钟、完整伤害来源／毛受伤、替代顺序／路线胜负与运行源码精确commit未记录；不补未知或跨角色借证。源码提案独立登记，不表示已上线、下一局消费或自然收益。
+
+## ZF8PX27B46H5（A10，静默猎手，第33层，知识恶魔 KNOWLEDGE_DEMON：84/84满血进场，第四试T13仅2血10挡对弱化后20攻击死亡，结算后敌仍144/399血）
+
+- [恶魔回血和力量增长使初始399血低估需推进量；打法（Jev出牌／构筑）] 末试T4／T8／T12敌HP跨响应分别291→316、234→261、154→170，净回升25／27／16，夹有荆棘 THORNS_POWER3及毒，不能直接称毛回血。累计需清血下界399＋68＝467；末帧仍144。敌力量逐次3／6／9，T7三连12×3＝36，而灵动步法 FOOTWORK仅T8建立2敏捷，未将后段威胁压到可持续承受。（之前学过：silent-0102，S1.exp200）
+- [护栏省血和输出代价要逐次分账；打法（代码HP护栏／Jev出牌）] F33尝试1／3／4的T2，Jev原选猎杀者 PREDATOR＋匕首雨 DAGGER_SPRAY，护栏换防御 DEFEND_SILENT＋猎杀者：预测损15→10、省5，伤27→19、少8；三次分别属于重打，不能合称同一实线省15血。末试实际T2损10；未实打原线完成整战，不能因此判护栏导致死亡或要求撤销阈值。（之前见过：silent-0125）
+- [满血进王只证明回复兑现，不证明毒防窗口足够；打法（DeepSeek路线／休息兼容栏，实际Codex）] F29寄生惧魔／胧光怪 PARAFRIGHT／THE_OBSCURA 79→59，F31感染棱柱 INFESTED_PRISM 59→37且两药用尽；F32入火永恒羽毛 ETERNAL_FEATHER先37→55，随后皇家枕头 REGAL_PILLOW休息55→84。两项回血18／29分别兑现，不能把d500100的29算成47或把满84当安全线；四次同满血仍未胜，未执行锻造分支的结果未知。（之前见过：silent-0020）
+
+- [记录] 复盘时间2026-10-23T17:41:15+08:00；runs.jsonl代码版本为current。只读live对照提交2faa7ead017b977051b317355e352aa229b1344d；run-config的git状态采集报ENOBUFS、commit=null，不能据此认定运行树等于该提交。F33前三试T14／T13／T14判死，末试T13实死；四次均84/84、空药进场。末试逐轮HP为84→84→74→69→66→66→63→41→32→32→27→16→2→0；逐轮净损0／10／5／3／0／3／22／9／0／5／11／14／2（死亡截断）。末T12 Jev0.08选匕首雨+→突然一拳 SUCKER_PUNCH→打击 STRIKE_SILENT，预测损14／剩2，实相符；预测当轮伤40须与敌当轮回血分账，T12三个动作扣12＋8＋9，之后结毒／回血／荆棘混合使154→170，不把轮净降13当完整伤害。T13代码用回响斩击 ECHOING_SLASH、中和 NEUTRALIZE、生存者 SURVIVOR；中和使27意图降20、生存者得10挡，2HP不足维持该末态。未击杀敌人，无另一线实战胜例。 F1卷轴箱 SCROLL_BOXES选择牌包，F13升匕首雨，F18取营养汤 NUTRITIOUS_SOUP；F30花705买准备背包 BAG_OF_PREPARATION、铜质鳞片 BRONZE_SCALES、金斧 GOLD_AXE、深谋远虑 THINKING_AHEAD及复制药水 DUPLICATOR。F31拿弹跳药瓶，F32选择休息至84，原话“额外29血比单次升级更可靠”。均为Codex；购买／持牌不代表计划能力全建立或组合收益已校准。 机制：敌T4／T8／T12加力后下一轮分别3／6／9力量；T3三连9×3、T7三连12×3，后者多9总意图，其他弱化时点另核。灵动步法在T8建立2敏，末T13生存者给10挡，中和把27降至20仍需损10，只有2血，维持同末态存活至少差9HP。懒惰 SLOTH_POWER3、心灵腐化 MIND_ROT_POWER1和衰朽 WASTE_AWAY_POWER1已在场，不能把余手牌／低费当后继全部可打；没有发现新的叠层或重放机制。
+
+Jev低信心（<0.35）30/151次；原请求标有单一rollout_best的113题中，原答案选该键106题（93.81%）；带并列描述11题，选入并列集合11题，可能与前一口径交叠，不能相加。代码rank1和推演最优分列，不把原答比例称为最终整线执行率。原请求focus题0，目标依据实际chosen/expect核；终战未击杀任何一个敌人。按层／SL尝试／回合分窗，完全由code或code-fallback执行的战斗回合24个，混合窗口102个；至少一次实际派发代码自主选线／斩杀／兜底的窗口99个（排除纯续步、end_turn及未派发行）。原decider=code包含Jev计划续步，不全部计为代码自主决策。HP护栏显式替换3次。
+护栏d500111（F33T2，尝试1）：预测损15→10、伤27→19；这些是候选数字，抽牌／SL／重算后的整线收益未记录。
+护栏d500239（F33T2，尝试3）：预测损15→10、伤27→19；这些是候选数字，抽牌／SL／重算后的整线收益未记录。
+护栏d500307（F33T2，尝试4）：预测损15→10、伤27→19；这些是候选数字，抽牌／SL／重算后的整线收益未记录。
+
+观测取得8瓶、主动使用8次，弃药0次；F31T1用复制药水、T3用能力药水，后者pending后确有能力选牌与槽位消失；F33四次均无药，不是忘喝持有药。 所有取得、饮用／使用、丢弃、自动消失的逐槽证据及时点见下表及本批report.md；不从缺动作的槽位消失补推饮用。
+d500100所选休息预测Boss84，实际84；50样本原始胜0、校准0.3118、模拟终点11轮、平均余敌184.7，实首次T14判死／末次T13死亡。末T12两线各50/100有限样本均无胜例却显示校准约49%，rankingEligible=false；rollout原最优为毒线plan2，Jev实际答plan1，不能把49%当已见成功或把代码rank1当推演最优。传统所需／估计DPR未记录。
+首末决策窗2026-10-23T08:26:02.214Z—2026-10-23T09:10:13.671Z，相隔2651.457秒；run战报用时44.2分钟。runs.tokens=1684112；旧ds_tokens_in/out=1403399/7040，cache_hit=267392（输入口径19.05%），不是两个引擎token可相加的同一口径。
+
+实盘资源链（每场胜战也列；HP净差包含回复／自伤，不是敌人总伤害。SL未退出帧只列截至判死的观测，最后一列s为原states行号）：
+
+|层／序号|敌人ID|入口HP/max；槽位:药水ID|退出或末观测HP/max；槽位|净HP变化／结局证据|原行／时间|
+|---|---|---|---|---|---|
+|F2/1|SHRINKER_BEETLE|56/70；空|52/70；空|-4；退出＋奖励／后续决策证实获胜|s518419@2026-10-23T08:27:07.409Z→s518434@2026-10-23T08:27:37.601Z|
+|F3/2|NIBBIT|52/70；0:EXPLOSIVE_AMPOULE|47/70；空|-5；退出＋奖励／后续决策证实获胜|s518440@2026-10-23T08:28:04.664Z→s518454@2026-10-23T08:28:34.193Z|
+|F4/3|LEAF_SLIME_M、LEAF_SLIME_S、TWIG_SLIME_S|47/70；空|46/70；空|-1；退出＋奖励／后续决策证实获胜|s518459@2026-10-23T08:28:57.697Z→s518475@2026-10-23T08:29:40.413Z|
+|F6/4|VINE_SHAMBLER|46/70；0:FIRE_POTION|28/70；空|-18；退出＋奖励／后续决策证实获胜|s518487@2026-10-23T08:30:50.260Z→s518501@2026-10-23T08:31:19.028Z|
+|F7/5|FLYCONID、SNAPPING_JAXFRUIT|28/70；空|14/70；空|-14；退出＋奖励／后续决策证实获胜|s518506@2026-10-23T08:31:44.933Z→s518528@2026-10-23T08:32:33.847Z|
+|F9/6|BYRDONIS|35/70；0:FLEX_POTION|11/70；空|-24；退出＋奖励／后续决策证实获胜|s518537@2026-10-23T08:33:35.452Z→s518555@2026-10-23T08:34:21.380Z|
+|F12/7|FUZZY_WURM_CRAWLER、SHRINKER_BEETLE|65/84；空|37/84；空|-28；退出＋奖励／后续决策证实获胜|s518568@2026-10-23T08:35:15.578Z→s518602@2026-10-23T08:36:59.032Z|
+|F17/8|KIN_FOLLOWER、KIN_PRIEST|77/84；0:TOUCH_OF_INSANITY；1:LIQUID_BRONZE|1/84；空|-76；退出＋奖励／后续决策证实获胜|s518624@2026-10-23T08:39:06.561Z→s518674@2026-10-23T08:42:22.144Z|
+|F19/9|BOWLBUG_EGG、BOWLBUG_ROCK|67/84；空|58/84；空|-9；退出＋奖励／后续决策证实获胜|s518682@2026-10-23T08:42:59.232Z→s518703@2026-10-23T08:43:44.308Z|
+|F20/10|TUNNELER|58/84；0:ENERGY_POTION|47/84；空|-11；退出＋奖励／后续决策证实获胜|s518709@2026-10-23T08:44:01.608Z→s518726@2026-10-23T08:44:32.105Z|
+|F21/11|CHOMPER|47/84；空|30/84；空|-17；退出＋奖励／后续决策证实获胜|s518731@2026-10-23T08:45:03.104Z→s518759@2026-10-23T08:46:05.371Z|
+|F22/12|EXOSKELETON|30/84；空|17/84；空|-13；退出＋奖励／后续决策证实获胜|s518764@2026-10-23T08:46:34.009Z→s518784@2026-10-23T08:47:23.597Z|
+|F29/13|THE_OBSCURA|79/84；空|59/84；空|-20；退出＋奖励／后续决策证实获胜|s518812@2026-10-23T08:49:49.184Z→s518838@2026-10-23T08:50:52.329Z|
+|F31/14|INFESTED_PRISM|59/84；0:POWER_POTION；1:DUPLICATOR|37/84；空|-22；退出＋奖励／后续决策证实获胜|s518853@2026-10-23T08:52:20.559Z→s518896@2026-10-23T08:53:59.889Z|
+|F33/15|KNOWLEDGE_DEMON|84/84；空|1/84；空|-83；判死后SL；退出帧缺失|s518905@2026-10-23T08:54:27.783Z→s518988@2026-10-23T08:57:58.933Z|
+|F33/16|KNOWLEDGE_DEMON|84/84；空|7/84；空|-77；判死后SL；退出帧缺失|s518989@2026-10-23T08:58:11.029Z→s519061@2026-10-23T09:01:56.119Z|
+|F33/17|KNOWLEDGE_DEMON|84/84；空|2/84；空|-82；判死后SL；退出帧缺失|s519062@2026-10-23T09:02:09.971Z→s519145@2026-10-23T09:06:02.474Z|
+|F33/18|KNOWLEDGE_DEMON|84/84；空|0/84；空|-84；实际死亡|s519146@2026-10-23T09:06:17.153Z→s519223@2026-10-23T09:10:13.671Z|
+
+关键场外资源（只列观测，不用SL恢复充当回血）：
+- F8→F8，14/70→35/70，REST→REST，s518534@2026-10-23T08:33:34.116Z→s518535@2026-10-23T08:33:34.269Z。
+- F9→F9，11/70→25/84，REWARD→REWARD，s518556@2026-10-23T08:34:21.531Z→s518557@2026-10-23T08:34:21.664Z。
+- F11→F11，25/84→65/84，REST→REST，s518565@2026-10-23T08:35:14.240Z→s518566@2026-10-23T08:35:14.400Z。
+- F16→F16，37/84→77/84，REST→REST，s518621@2026-10-23T08:39:05.237Z→s518622@2026-10-23T08:39:05.388Z。
+- F17→F18，1/84→67/84，MAP→EVENT，s518678@2026-10-23T08:42:36.363Z→s518679@2026-10-23T08:42:57.462Z。
+- F25→F25，17/84→57/84，REST→REST，s518797@2026-10-23T08:48:45.731Z→s518798@2026-10-23T08:48:45.893Z。
+- F27→F27，57/84→52/84，EVENT→EVENT，s518804@2026-10-23T08:49:01.835Z→s518805@2026-10-23T08:49:16.117Z。
+- F27→F27，52/84→46/84，EVENT→EVENT，s518805@2026-10-23T08:49:16.117Z→s518806@2026-10-23T08:49:28.407Z。
+- F27→F27，46/84→39/84，EVENT→EVENT，s518806@2026-10-23T08:49:28.407Z→s518807@2026-10-23T08:49:28.834Z。
+- F28→F28，39/84→79/84，REST→REST，s518809@2026-10-23T08:49:47.781Z→s518810@2026-10-23T08:49:47.934Z。
+- F31→F32，37/84→55/84，MAP→REST，s518901@2026-10-23T08:54:13.796Z→s518902@2026-10-23T08:54:26.356Z。
+- F32→F32，55/84→84/84，REST→REST，s518902@2026-10-23T08:54:26.356Z→s518903@2026-10-23T08:54:26.519Z。
+
+药水动作（d为原decisions行；“pending”先保留回执身份，后续槽位／选牌消费证据在report与原state引用中）：
+- F3T1／尝试普通，槽0 EXPLOSIVE_AMPOULE：饮用；completed: Action completed.；d499655@2026-10-23T08:28:10.375Z。
+- F6T1／尝试普通，槽0 FIRE_POTION：饮用；completed: Action completed.；d499701@2026-10-23T08:30:57.209Z。
+- F9T1／尝试普通，槽0 FLEX_POTION：饮用；completed: Action completed.；d499746@2026-10-23T08:33:43.108Z。
+- F17T1／尝试1，槽0 TOUCH_OF_INSANITY：饮用；pending (unstable): Action queued but state is still transitioning.；d499833@2026-10-23T08:39:43.585Z。
+- F17T1／尝试1，槽1 LIQUID_BRONZE：饮用；completed: Action completed.；d499836@2026-10-23T08:39:45.731Z。
+- F20T2／尝试普通，槽0 ENERGY_POTION：饮用；completed: Action completed.；d499923@2026-10-23T08:44:19.942Z。
+- F31T1／尝试普通，槽1 DUPLICATOR：饮用；completed: Action completed.；d500057@2026-10-23T08:52:30.414Z。
+- F31T3／尝试普通，槽0 POWER_POTION：饮用；pending (unstable): Action queued but state is still transitioning.；d500070@2026-10-23T08:53:12.302Z。
+
+新增槽位（排除SL恢复；同一次混沌的随机产物不跨尝试当独立自然资源）：
+- F2T4：0:EXPLOSIVE_AMPOULE；s518435→s518436@2026-10-23T08:27:37.878Z。
+- F4T4：0:FIRE_POTION；s518476→s518477@2026-10-23T08:29:40.678Z。
+- F7T5：0:FLEX_POTION；s518529→s518530@2026-10-23T08:32:34.160Z。
+- F12T9：0:TOUCH_OF_INSANITY；s518603→s518604@2026-10-23T08:36:59.314Z。
+- F15TNone：1:LIQUID_BRONZE；s518616→s518617@2026-10-23T08:38:44.203Z。
+- F19T5：0:ENERGY_POTION；s518704→s518705@2026-10-23T08:43:44.608Z。
+- F29T5：0:POWER_POTION；s518839→s518840@2026-10-23T08:50:52.596Z。
+- F30TNone：1:DUPLICATOR；s518849→s518850@2026-10-23T08:52:19.118Z。
+
+原证据范围：本局全部run笔记、735条decisions、810条states均以原始字节偏移核SHA；不是把末五条当全局。完整题面核读的原questions／动态state及答案或错误见ZF8PX27B46H5-full-question.json与question-audit.jsonl，其他请求只做机械字段核验，覆盖限制见report.md。V6配置on、reflex与direction_replan=off；v6-build冻结流本局no_match，entries／jev_answer／fallback／unknown均无可归属原行，不能当零或推出未尝试／已采用。construction-log.jsonl缺失；run-plans本局只有v6_direction_ride，不是完整构筑快照，构筑以上述实际decisions/states回查。deepseek-reasoning在本局决策时间窗无匹配。传统DPR时钟、完整伤害来源／毛受伤、替代顺序／路线胜负与运行源码精确commit未记录；不补未知或跨角色借证。源码提案独立登记，不表示已上线、下一局消费或自然收益。
+
