@@ -6390,3 +6390,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:15:31+08:00 [ops] #20最终kit50565fd按6369387948部署，旧/新shadow按字节分段，新段00:15:05起满一天；原入口小时窗及#42唯一full保持。paper/materials/20261024-issue20-final-kit-deploy-ops/installation.json。
 
 - 2026-10-24T00:16:54+08:00 [ops] #36两批同turn原生完成已核，原reconcile仍75/foreign，退场授权仍false；原流程finish/seal被挡，保留原PID/会话/旧75，等原#36严格校验与恢复入口再收尾。新证据paper/materials/20261024-midnight-native-ops/terminal-readback.json，评论6369442769。
+
+- 2026-10-24T00:23:39+08:00 [watcher] #37续核R420：main aec606583、live902206965，来源/远端9e8f900dd与三关键叶自R418未变；只读预览326cc2c4e18f，两Jev运行叶同pre25，冲突仅共享测试/账本，保41/44完整时钟预算及双方记录。复用历史96项/tsc0，不代当前组合；42唯一full原PID3432945仍在途未发布，35→50→28→37→20父原序保持，未新full/合产品/动生产。20最终kit已部署，真实观察原链待核。材料paper/materials/20261024-issue37-r420-preflight/，原失败及27拒绝原件保留。
