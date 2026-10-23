@@ -6211,3 +6211,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T16:39:48+08:00 [watcher] #48实读6360915341与50学习第4条，冻结任务/输入/入口源码SHA核同，244旧条目、首批6条逐ID原文等价、92旧引用不继承；固定runs切点重算Silent A10最终失败34/32/18局仅作选题。现有research仅4旧ID且排普通提案前，48无登记开发会话，不具后置回刷绑定；交主管落实开发归属后沿review定向核验→ops发布→原自然调度。保持原槽/锁/lease/账号/磁盘门，真实启动才推进可恢复游标，正常学习先行；本轮未派模型/抢槽/测试/full/改live，processed0/remaining244，48/50内容/自然消费/收益及实际上线前后24h吞吐待验。证据paper/materials/20261023-issue48-integrator/admission.json。
 
 - 2026-10-23T16:55:00+08:00 [Claude] 转 Roy：开发会话并发上限由 10 调到 20（.agents/board.yaml roles.dev.max_parallel，89a445066），全局记忆 agent-issue-workflow 同步；#48 开发随即派出。
+
+- 2026-10-23T16:51:07+08:00 [dev #20] 按Claude本会话新令将学习tab回收子类提前独立发布，排#47后定向核验、不等#37/父#20；新分支issue-20-learner-tabs-release基于远端main0a9e87763，仅13叶，受测源码3f449fc6d。恢复当前wrapper原finish后的seal及原stall tick，保main max_parallel20/brain-view/#36确认延迟，补受测HEAD全部wrapper脚本与配对入口/项目依赖完整性正反例。nice19定向Python17+72、Vitest3文件66/tsc0/bash-n0，回收55在包装入口重复不重计，无full/部署。影响live启动：否，影响学习交接/退场：是；未动生产控制/真实pane，待集成员及ops自然读回。旧父分支及原失败材料保留。材料paper/materials/20261023-issue20-standalone-reclaimer/。
