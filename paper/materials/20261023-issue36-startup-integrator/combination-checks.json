@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-23T20:05:20+08:00",
+  "state": "passed",
+  "base": "0f5dfa4726f2f8e20723100eac55e617d3191c19",
+  "tree": "cb5ad79508c2e6eb841dfb179807fded51588276",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-startup-live-20261023-2003",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T20:05:20+08:00",
+      "exit_code": 0,
+      "seconds": 1.447
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-native-prelude.test.ts",
+        "tests/learner-tui-reconciliation.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-empty-fix.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-startup-integrator-20261023-2003/combination-vitest.json"
+      ],
+      "started_at": "2026-10-23T20:05:22+08:00",
+      "exit_code": 0,
+      "seconds": 23.291
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2550,
+  "vitest": {
+    "files": 7,
+    "passed": 226,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T20:05:45+08:00"
+}

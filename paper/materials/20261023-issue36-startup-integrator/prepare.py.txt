@@ -1,0 +1,50 @@
+from pathlib import Path
+import fcntl,hashlib,json,os,subprocess,sys,time
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent
+S='60300e8bf386f43a93b00f264a71a4f0d28b867e';OLD=S+'^'
+P=['learner/lib/herdr.ts','agent/tests/learner-herdr.test.ts']
+def git(*a,cwd=R,data=None):return subprocess.check_output(['git',*a],cwd=cwd,input=data,stderr=subprocess.PIPE)
+def sha(b):return hashlib.sha256(b).hexdigest()
+phase=sys.argv[1];assert phase in ('combination','main')
+base=git('rev-parse','HEAD',cwd=R/'.worktrees/live' if phase=='combination' else R).decode().strip()
+W=R/('.worktrees/integrator36-startup-'+('live' if phase=='combination' else 'main')+'-20261023-2003')
+assert not W.exists()
+with (B/(phase+'-allocation.log')).open('xb') as out:subprocess.run(['nice','-n','19','python3','-B','ops/worktree_checkout.py',str(R),str(W),base,'--require-node'],cwd=R,stdout=out,stderr=subprocess.STDOUT,check=True)
+patch=git('diff','--binary','--full-index',OLD,S,'--',*P)
+(B/'source.patch').write_bytes(patch)
+git('apply','--3way','--index','-',cwd=W,data=patch)
+rows=[]
+for name in P:
+ raw=(W/name).read_bytes();probe=subprocess.run(['git','rev-parse',base+':'+name],cwd=R,capture_output=True)
+ rows.append(dict(path=name,blob=git('rev-parse',':'+name,cwd=W).decode().strip(),preimage=probe.stdout.decode().strip() if probe.returncode==0 else None,mode=git('ls-files','-s','--',name,cwd=W).decode().split()[0],sha256=sha(raw)))
+assert git('rev-parse', S+':learner/lib/herdr.ts').decode().strip()==rows[0]['blob']
+knowledge=[]
+if phase=='combination':
+ with (R/'ops/knowledge-refresh.lock').open('a') as k,(R/'ops/live-merge.lock').open('a') as l:
+  fcntl.flock(k,fcntl.LOCK_SH|fcntl.LOCK_NB);fcntl.flock(l,fcntl.LOCK_SH|fcntl.LOCK_NB)
+  L=R/'.worktrees/live';assert git('rev-parse','HEAD',cwd=L).decode().strip()==base
+  for p in sorted((L/'knowledge').rglob('*')):
+   n=p.relative_to(L)
+   if not p.is_file() or p.is_symlink() or 'builders' in n.parts:continue
+   raw=p.read_bytes();t=W/n;t.parent.mkdir(parents=True,exist_ok=True);t.write_bytes(raw);knowledge.append(dict(path=str(n),sha256=sha(raw),bytes=len(raw)))
+  assert all(sha((L/x['path']).read_bytes())==x['sha256'] for x in knowledge)
+ git('add','--sparse','--',*[x['path'] for x in knowledge],cwd=W)
+else:
+ assert git('rev-parse', S+':learner/lib/herdr.ts').decode().strip()==rows[0]['blob']
+fixture='paper/materials/issue29-brain-speed/results.jsonl'
+raw=git('show',base+':'+fixture);target=W/fixture;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
+(W/'.cache').mkdir(exist_ok=True)
+assert not git('diff','--name-only',cwd=W).strip()
+# This private check anchor makes git ls-tree HEAD reflect the exact tested manifest, including the new regression test.
+tree=git('write-tree',cwd=W).decode().strip();anchor=git('commit-tree',tree,'-p',base,data=b'Private issue36 wrapper dependency check anchor\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\nAgent: codex@xdwin1\n').decode().strip()
+branch=git('symbolic-ref','HEAD',cwd=W).decode().strip();git('update-ref',branch,anchor,base,cwd=W)
+binding=W/'ops/instance-binding.json'
+if binding.exists():
+ (B/(phase+'-inherited-binding.json')).write_bytes(binding.read_bytes());binding.unlink()
+preserved={}
+prior=json.loads((R/'.artifacts/issue36-semantic-review-20261023-1340/assembly.json').read_text())['preserved']
+for n in set(prior)|{'ops/learner_tui.py','learner/lib/herdr.ts','learner/lib/launcher.ts'}:
+ if n in P:continue
+ blob=git('rev-parse',base+':'+n).decode().strip();assert git('rev-parse',anchor+':'+n).decode().strip()==blob;preserved[n]=blob
+A=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),source=S,source_parent=OLD,source_commits=[S],live_base=base if phase=='combination' else None,base=base,worktree=str(W),tree=tree,anchor=anchor,anchor_merge_allowed=False,paths=rows,knowledge_count=len(knowledge),knowledge_manifest=knowledge,preserved=preserved,full_started=False,production_written=False)
+(B/('assembly.json' if phase=='combination' else 'main-assembly.json')).write_text(json.dumps(A,indent=2)+'\n');print(json.dumps({k:v for k,v in A.items() if k not in ['knowledge_manifest','preserved']}),flush=True)

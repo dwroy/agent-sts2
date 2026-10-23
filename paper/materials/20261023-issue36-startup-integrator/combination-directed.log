@@ -1,0 +1,37 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator36-startup-live-20261023-2003/agent
+
+ ✓ tests/learner-herdr.test.ts (79 tests) 4863ms
+     ✓ retains an owned TUI that does not exit after verified keys, without force killing it  634ms
+ ✓ tests/learner-tui-reconciliation.test.ts (52 tests) 26ms
+ ✓ tests/learner-herdr-ownership.test.ts (4 tests) 297ms
+ ✓ tests/learner-native-prelude.test.ts (65 tests) 19ms
+ ✓ tests/learner-empty-fix.test.ts (20 tests) 7757ms
+     ✓ does not accept an empty report when Git evidence is new-output  318ms
+     ✓ does not accept an empty report when Git evidence is unshipped  346ms
+     ✓ does not accept an empty report when Git evidence is not-ancestor  372ms
+     ✓ does not accept an empty report when Git evidence is status-error  359ms
+     ✓ does not accept an empty report when Git evidence is missing-head  358ms
+     ✓ does not accept an empty report when Git evidence is timeout  344ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"fixes":[{"commit":"dddddddddddddddddddddddddddddddddddddddd"}]}  352ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"commit":"dddddddddddddddddddddddddddddddddddddddd"}  317ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"fixes":null}  365ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"base":"main"}  348ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":1,"vitest":0,"cases":2068}}  332ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":1,"cases":2068}}  365ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":0,"cases":0}}  370ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":null}  390ms
+     ✓ does not treat experience-update as an empty fix  344ms
+     ✓ does not treat strategy-proposal as an empty fix  369ms
+     ✓ does not accept a failed learner or evidence from a different worktree  736ms
+     ✓ still schedules and runs full checks for a real merge, preserving full-suite failure reporting  857ms
+ ✓ tests/learner-herdr-launcher.test.ts (5 tests) 361ms
+ ✓ tests/learner-herdr-receipts.test.ts (1 test) 5865ms
+   ✓ gates interactive learner retirement and launch identity on fixed persisted receipts  5862ms
+
+ Test Files  7 passed (7)
+      Tests  226 passed (226)
+   Start at  20:05:22
+   Duration  22.80s (transform 1.23s, setup 907ms, import 1.58s, tests 19.19s, environment 1ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/issue36-startup-integrator-20261023-2003/combination-vitest.json

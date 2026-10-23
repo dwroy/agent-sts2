@@ -126,9 +126,18 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem",
 }
 
 describe("learner interactive command policy", () => {
+  it.each([undefined, "", "dumb", " DUMB "])("replaces noninteractive TERM=%s only in the isolated TUI environment", (term) => {
+    const env = { PATH: "/fixed/bin", ...(term === undefined ? {} : { TERM: term }) };
+    expect(learnerTuiEnv(env)).toEqual({ PATH: "/fixed/bin", TERM: "xterm-256color" });
+    expect(env.TERM).toBe(term);
+  });
+  it("preserves an explicitly usable terminal", () => {
+    expect(learnerTuiEnv({ TERM: "screen-256color", COLORTERM: "truecolor" }))
+      .toEqual({ TERM: "screen-256color", COLORTERM: "truecolor" });
+  });
   it("does not persist arbitrary inherited environment or proxy credentials in the pane launch script", () => {
     expect(learnerTuiEnv({ CODEX_HOME: "/fixed/account", PATH: "/fixed/bin", MY_AUTH_HEADER: "private", SOMETHING: "opaque-secret" }))
-      .toEqual({ CODEX_HOME: "/fixed/account", PATH: "/fixed/bin" });
+      .toEqual({ CODEX_HOME: "/fixed/account", PATH: "/fixed/bin", TERM: "xterm-256color" });
     expect(() => learnerTuiEnv({ HTTPS_PROXY: "https://user:private@proxy.example" })).toThrow("credential-bearing proxy");
   });
   it("preserves profile, model, effort, disabled features and explicit thread without exec-only options", () => {
@@ -139,6 +148,39 @@ describe("learner interactive command policy", () => {
     expect(args).toContain('default_permissions="learner"'); expect(args.some((arg) => arg.startsWith("permissions.learner.filesystem"))).toBe(true);
     const thread = "019a1000-1234-7123-8123-123456789abc";
     expect(learnerInteractiveArgs({ ...f.opts.request, resumeThread: thread })).toEqual(["resume", ...args, thread]);
+  });
+});
+
+describe("startup readiness and queued inputs", () => {
+  const queue = "header\n\u001b[1mQueued follow-up inputs\u001b[0m\n  pending task\n› \u001b[2mAsk Codex to do anything\u001b[0m";
+  it("does not propagate the observed TERM=dumb startup confirmation into the pane", async () => {
+    const f = fixture(); f.opts.env.TERM = "dumb"; const h = f.opts.h!;
+    f.opts.h = async (args) => {
+      if (args[0] === "pane" && args[1] === "run") {
+        const script = readFileSync(join(f.root, "tui.sh"), "utf8");
+        expect(script).toContain("TERM=xterm-256color"); expect(script).not.toContain("TERM=dumb");
+      }
+      return h(args);
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true });
+    expect(f.opts.env.TERM).toBe("dumb"); expect(f.prompts()).toBe(1);
+  });
+  it.each(["initial", "before-name", "before-prompt", "after-binding"])("retains queued inputs at %s without another prompt or retirement", async (phase) => {
+    const f = fixture(); const h = f.opts.h!; let reads = 0; const screens: string[][] = [];
+    f.opts.h = async (args) => {
+      if (args[0] === "pane" && args[1] === "read") {
+        screens.push(args);
+        reads++;
+        if (phase === "initial" || phase === "before-name" && reads >= 2 ||
+            phase === "before-prompt" && reads >= 3 || phase === "after-binding" && f.prompts()) return ok({}, queue);
+      }
+      return h(args);
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(phase === "after-binding" ? 1 : 0);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).retirement_authorized).toBe(false);
+    expect(screens.length).toBeGreaterThan(0); expect(screens.every((args) => args.includes("visible"))).toBe(true);
   });
 });
 
@@ -230,11 +272,11 @@ describe("bounded native learner names", () => {
 });
 
 describe("delayed native acceptance after prompt delivery", () => {
-  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa", exitSignalDelayMs = 0) {
+  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" | "queue" = "paste", neighbour = "aaa", exitSignalDelayMs = 0) {
     const f = fixture("bootstrap", undefined, exitSignalDelayMs); const h = f.opts.h!;
     let clock = Date.now(), sentAt: number | undefined, sent: string[] | undefined, meta = "", promptCalls = 0;
     f.opts.now = () => clock;
-    f.opts.timeoutMs = 200_000;
+    f.opts.timeoutMs = 800_000;
     f.opts.pause = async () => {
       if (f.stopping()) {
         await f.waitForExit();
@@ -243,6 +285,16 @@ describe("delayed native acceptance after prompt delivery", () => {
       }
       clock += 10_000;
       await new Promise((done) => setTimeout(done, 2));
+      if (sent) {
+        expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+        expect(promptCalls).toBe(1);
+        if (clock - sentAt! > 120_000) {
+          expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({
+            state: "awaiting-native", submitted: true, bindings: [], retirement_authorized: false,
+            native_acceptance_warn_at_ms: sentAt! + 120_000, native_acceptance_deadline_ms: sentAt! + 600_000,
+          });
+        }
+      }
       if (sent && delayMs !== undefined && clock - sentAt! >= delayMs) {
         writeFileSync(f.file, meta);
         const args = sent; sent = undefined;
@@ -259,7 +311,9 @@ describe("delayed native acceptance after prompt delivery", () => {
           row("event_msg", { type: "user_message", message: args[3] })].map((r) => JSON.stringify(r) + "\n").join(""));
         return ok(); // Submission receipt precedes native acceptance, as in 151302-s2.
       }
-      if (sent && args[0] === "pane" && args[1] === "read") return ok({}, screen === "empty"
+      if (sent && args[0] === "pane" && args[1] === "read") return ok({}, screen === "queue"
+        ? "header\n\u001b[1m↳ Queued follow-up inputs\u001b[0m\n  original task pending\n› \u001b[2mAsk Codex to do anything\u001b[0m"
+        : screen === "empty"
         ? "header\n› \u001b[2mAsk Codex to do anything\u001b[0m"
         : `header\n› ${screen === "human" ? "Human draft not sent" : sent[3]}`);
       const response = await h(args);
@@ -271,13 +325,15 @@ describe("delayed native acceptance after prompt delivery", () => {
     return { ...f, promptCalls: () => promptCalls, elapsed: () => clock - sentAt! };
   }
 
-  it.each(["aaa", "zzz"])("waits for the original 35s-delayed turn with a concurrent %s session", async (neighbour) => {
-    const f = delayed(35_000, "paste", neighbour);
+  it.each(["aaa", "zzz"].flatMap((neighbour) => [35_000, 450_000].map((delay) => ({ neighbour, delay }))))(
+    "waits for the original $delay-ms-delayed turn with a concurrent $neighbour session", async ({ neighbour, delay }) => {
+    const f = delayed(delay, delay > 120_000 ? "queue" : "paste", neighbour);
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);
     expect(receipt.rollout).toBe(f.file); expect(receipt.retirement_authorized).toBe(true);
-    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual([]);
+    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual(delay > 120_000
+      ? ["learner native acceptance delayed; observing original session until deadline; no task replay"] : []);
     expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
   });
 
@@ -299,11 +355,11 @@ describe("delayed native acceptance after prompt delivery", () => {
     expect(f.promptCalls()).toBe(1);
   });
 
-  it.each(["paste", "human", "empty"] as const)("bounds missing acceptance with %s visible and never sends keys or replays", async (screen) => {
+  it.each(["paste", "human", "empty", "queue"] as const)("bounds missing acceptance with %s visible and never sends keys or replays", async (screen) => {
     const f = delayed(undefined, screen);
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
-    expect(f.elapsed()).toBe(120_000); expect(f.promptCalls()).toBe(1);
-    expect(f.notices).toEqual(["learner native acceptance timed out; keep original session; no task replay"]);
+    expect(f.elapsed()).toBe(600_000); expect(f.promptCalls()).toBe(1);
+    expect(f.notices).toEqual(["learner native acceptance delayed; observing original session until deadline; no task replay"]);
     expect(f.calls.some((c) => c[1] === "send-keys" || c[1] === "close")).toBe(false);
     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
     expect(receipt.bindings).toEqual([]); expect(receipt.retirement_authorized).toBe(false);
@@ -319,18 +375,37 @@ describe("delayed native acceptance after prompt delivery", () => {
     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false); expect(f.promptCalls()).toBe(1);
   });
 
-  it.each(["lease", "pane"])("keeps the %s guard while waiting for native acceptance", async (kind) => {
-    const f = delayed(35_000); const h = f.opts.h!;
-    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !(f.elapsed() >= 20_000) };
+  it("keeps the caller's shorter deadline while acceptance is pending", async () => {
+    const f = delayed(undefined, "queue"); f.opts.timeoutMs = 90_000;
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.elapsed()).toBe(90_000); expect(f.promptCalls()).toBe(1);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+  });
+
+  it("resolves an uncertain submission only from its original delayed native prompt", async () => {
+    const f = delayed(450_000, "queue"); const h = f.opts.h!;
     f.opts.h = async (args) => {
       const response = await h(args);
-      if (kind === "pane" && f.elapsed() >= 20_000 && args[0] === "pane" && args[1] === "get") {
+      return args[0] === "agent" && args[1] === "prompt" ? fail() : response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    expect(f.promptCalls()).toBe(1);
+    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toHaveLength(1);
+  });
+
+  it.each(["lease", "pane"].flatMap((kind) => [20_000, 180_000].map((at) => ({ kind, at })) ))(
+    "keeps the $kind guard at $at ms while waiting for native acceptance", async ({ kind, at }) => {
+    const f = delayed(450_000); const h = f.opts.h!;
+    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !(f.elapsed() >= at) };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (kind === "pane" && f.elapsed() >= at && args[0] === "pane" && args[1] === "get") {
         return ok({ pane: { ...response.result?.pane as object, terminal_id: "foreign-terminal" } });
       }
       return response;
     };
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
-    expect(f.elapsed()).toBe(20_000); expect(f.promptCalls()).toBe(1);
+    expect(f.elapsed()).toBe(at); expect(f.promptCalls()).toBe(1);
     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toEqual([]);
     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
   });

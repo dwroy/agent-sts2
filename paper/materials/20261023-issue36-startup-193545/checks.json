@@ -1,0 +1,46 @@
+{
+  "tsc": {
+    "exit": 0,
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+  },
+  "directed": {
+    "exit": 0,
+    "files": 5,
+    "cases": 205,
+    "command": "node node_modules/vitest/vitest.mjs run tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr-launcher.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism"
+  },
+  "baseline": {
+    "source": "61d63376f41e2f8da5727c4a275ad5aade4598a0:learner/lib/herdr.ts",
+    "exit": 1,
+    "failed": 11,
+    "skipped": 68,
+    "filter": "replaces noninteractive|startup readiness and queued inputs|450000-ms-delayed"
+  },
+  "synthetic_delayed_submission_ms": 450000,
+  "warning_after_ms": 120000,
+  "acceptance_timeout_ms": 600000,
+  "full": false,
+  "models_started": 0,
+  "logs": {
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "directed.log": {
+      "bytes": 264,
+      "sha256": "02ee1a1d39afeac774e3d717f1429d207e98dfef17647a46699c5c539f81d515"
+    },
+    "baseline.log": {
+      "bytes": 7945,
+      "sha256": "b3f336346ec922459535416079095dbc216a0317c6882adb58a38c873592cba4"
+    },
+    "replay-old-experience-update.log": {
+      "bytes": 90,
+      "sha256": "d887c4ab33d70c90ffcad003809ff31941d16a98cd55fb6859a9d42329e3acdd"
+    },
+    "replay-old-fix-batch.log": {
+      "bytes": 90,
+      "sha256": "d887c4ab33d70c90ffcad003809ff31941d16a98cd55fb6859a9d42329e3acdd"
+    }
+  }
+}

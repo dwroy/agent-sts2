@@ -1,0 +1,84 @@
+from pathlib import Path
+import fcntl,hashlib,json,os,subprocess
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent;M=R/'paper/materials/20261023-issue36-startup-integrator'
+def git(*args,data=None,env=None):return subprocess.check_output(['git',*args],cwd=R,input=data,env=env,stderr=subprocess.PIPE)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+C=json.loads((B/'combination-checks.json').read_text());A=json.loads((B/'assembly.json').read_text());T=json.loads((B/'main-checks.json').read_text());MA=json.loads((B/'main-assembly.json').read_text())
+assert C['state']=='passed' and not C['full_started'] and C['inputs_unchanged']
+assert T['state']=='passed' and T['inputs_unchanged']
+assert (M/'provenance.json').exists() and not (B/'product-integration.json').exists()
+green=True
+at=subprocess.check_output(['date','-Iseconds'],text=True).strip();v=C['vitest']
+line=(f'\n{at} [watcher] #36来源60300e8bf启动TERM及迟到受理有界监督两叶准入：隔离TUI补TERM，visible队列禁新prompt/continuation/退场；120秒告警、600秒观察上限并保留更短任务截止，完整prompt SHA/marker/cwd/turn绑定，不重发/补旧binding。live0f5dfa4726f2组合tree{C["tree"]} tsc0/7文件226过，main{MA["base"]}组合tree{T["tree"]} tsc0/7文件229过，2550/2632输入SHA不变；main两处测试夹具冲突保留真实child退出等待与三回归，runtime源码两树同blob。469最新知识保留，递归349源码/1656引用/20动态加载核同、stdio块不变。开发11条旧源码首败及5原日志/10冻结输入SHA核同，原193545是ops停未提交TERM实例后新PID新marker恢复，不将7.5分钟当旧PID排队，450秒仅合成回归；19:52原fix已canonical failed/rc0照留。按主管仅定向+组合自查不另full，精确两叶合main交原ops沿最新live/数据发布，不热切模型或改生产；自然绑定/迟到监督/收尾与后批仍待验，151302-s2/科学父/27原CLI ACK阻塞及46原24h窗不变，后42工具余项→35→50→28→37→20父功能。材料paper/materials/20261023-issue36-startup-integrator/。\n').encode()
+
+files={str(p.relative_to(R)):p.read_bytes() for p in M.rglob('*') if p.is_file()};product={};originals={};written={};appended={};fd=None;guard=None;updated=False;backed=False
+dev_names=git('diff','--name-only',A['source_parent'],A['source'],'--','paper/materials/20261023-issue36-startup-193545/').decode().splitlines()
+assert len(dev_names)==3
+for name in dev_names:
+ raw=git('show',A['source']+':'+name)
+ if (R/name).exists():assert (R/name).read_bytes()==raw,name
+ else:
+  (R/name).parent.mkdir(parents=True,exist_ok=True);(R/name).write_bytes(raw)
+ files[name]=raw
+lock=(R/'ops/live-merge.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+try:
+ assert git('branch','--show-current').strip()==b'main' and not git('diff','--cached','--name-only').strip()
+ parent=git('rev-parse','HEAD').decode().strip()
+ if green:
+  assert not git('diff','--name-only',MA['base'],parent,'--','agent','learner','knowledge','tools','.agents','eval','ops',':(exclude)ops/inbox-dev.md',':(exclude)ops/codex-ops/inbox-claude.md').strip(),'main runtime changed after compatibility checks'
+  for row in MA['paths']:
+   name=row['path'];p=R/name;probe=subprocess.run(['git','rev-parse',parent+':'+name],cwd=R,capture_output=True)
+   assert (probe.stdout.decode().strip() if probe.returncode==0 else None)==row['preimage'],name
+   assert not p.is_symlink()
+   originals[name]=p.read_bytes() if p.exists() else None
+   assert (originals[name]==git('show',parent+':'+name) if row['preimage'] else originals[name] is None),'dirty product '+name
+   raw=git('cat-file','blob',row['blob']);assert sha(raw)==row['sha256'];product[name]=raw;files[name]=raw
+ records=['paper/materials/decision-log.md','handoff/integrator-20261022-codex3.md']
+ for name in records:
+  originals[name]=(R/name).read_bytes();base=git('show',parent+':'+name);assert line.strip() not in base
+  files[name]=base+(b'' if base.endswith(b'\n') else b'\n')+line
+ scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner'],input=line+b'\n'+b'\n'.join(raw for name,raw in files.items() if name not in records and not name.endswith('.gz')),capture_output=True,env={**os.environ,'GOMAXPROCS':'1'});(B/'integration-scan.log').write_bytes(scan.stdout+scan.stderr);assert scan.returncode==0
+ binding=R/'ops/instance-binding.json';binding_before=dict(sha256=sha(binding.read_bytes()),mode=binding.stat().st_mode&0o777)
+ p=subprocess.run(['python3','-B','ops/instance_binding_backup.py','backup','--root',str(R)],cwd=R,capture_output=True);(B/'main-binding-backup.json').write_bytes(p.stdout);assert p.returncode==0;backed=True
+ index=Path(git('rev-parse','--path-format=absolute','--git-path','index').decode().strip());candidate_guard=Path(str(index)+'.lock');fd=os.open(candidate_guard,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600);guard=candidate_guard
+ private=B/'product-integration.index';assert not private.exists();private.write_bytes(index.read_bytes());env={**os.environ,'GIT_INDEX_FILE':str(private)}
+ assert git('write-tree',env=env).strip()==git('rev-parse',parent+'^{tree}').strip()
+ modes={x['path']:x['mode'] for x in MA['paths']}
+ for name,raw in files.items():
+  blob=git('hash-object','-w','--stdin',data=raw).decode().strip();git('update-index','--add','--cacheinfo',f'{modes.get(name,"100644")},{blob},{name}',env=env)
+ tree=git('write-tree',env=env).decode().strip();expected_changes={name for name,raw in files.items() if subprocess.run(['git','cat-file','-e',parent+':'+name],cwd=R,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode or git('show',parent+':'+name)!=raw};assert set(git('diff','--name-only',parent,tree).decode().splitlines())==expected_changes
+ title='Bound delayed native supervision and repair learner TUI TERM (#36)'
+ commit=git('commit-tree',tree,'-p',parent,data=(title+'\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\nAgent: codex@xdwin1\n').encode()).decode().strip()
+ for name,raw in originals.items():assert ((R/name).read_bytes() if (R/name).exists() else None)==raw,name
+ for name,raw in product.items():
+  p=R/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(raw);written[name]=raw
+ for name in records:
+  with (R/name).open('ab') as h:h.write(line);h.flush();os.fsync(h.fileno())
+  appended[name]=line
+ git('update-ref','refs/heads/main',commit,parent);updated=True
+ with os.fdopen(fd,'wb') as h:fd=None;h.write(private.read_bytes());h.flush();os.fsync(h.fileno())
+ os.replace(guard,index);guard=None
+ assert not git('diff','--cached','--name-only').strip()
+ for row in MA['paths']:
+  if green:assert git('rev-parse',commit+':'+row['path']).decode().strip()==row['blob']
+ receipt=dict(commit=commit,parent=parent,tree=tree,paths=list(files),product_paths=list(product),verdict=C['state'],combination_tree=A['tree'],full_started=False,main_compatibility_tree=T['tree'],unrelated_dirty_records_preserved=True,live_written=False,issue_closed=False)
+ (B/'product-integration.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt),flush=True)
+except BaseException:
+ if not updated:
+  for name,add in appended.items():
+   p=R/name
+   if p.read_bytes()==originals[name]+add:p.write_bytes(originals[name])
+  for name,raw in written.items():
+   p=R/name
+   if p.exists() and p.read_bytes()==raw:
+    if originals[name] is None:p.unlink()
+    else:p.write_bytes(originals[name])
+ raise
+finally:
+ if fd is not None:os.close(fd)
+ if guard is not None and guard.exists():guard.unlink()
+ if backed:
+  for action in ['restore','verify']:
+   p=subprocess.run(['python3','-B','ops/instance_binding_backup.py',action,'--root',str(R)],cwd=R,capture_output=True);(B/f'main-binding-{action}.json').write_bytes(p.stdout);assert p.returncode==0
+  assert dict(sha256=sha(binding.read_bytes()),mode=binding.stat().st_mode&0o777)==binding_before
+ lock.close()
