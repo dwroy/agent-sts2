@@ -261,9 +261,17 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         return (isinstance(source,str) and re.fullmatch('[0-9a-f]{7,40}',source)
                 and subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,target],
                     stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0)
+    # Link repairs may preserve waiting dispositions without publishing any source.
+    # Keep the same registration/report proofs and independently verify the clean base.
+    waiting_repair = (bool(batch.get('proposal_repair')) and all(row['state']=='waiting' for row in rows)
+                      and fixes==[] and report.get('merged') is None
+                      and all(report.get(key) is None for key in ('commit','source_commit','published_commit')))
+    unchanged = no_change(report,batch,root) if waiting_repair else None
+    if waiting_repair and not unchanged:
+        raise ValueError('waiting link repair lacks a verified unchanged source base')
     merged=report.get('merged')
     live = Path(os.environ.get('STS2_LIVE', str(project/'.worktrees/live')))
-    if not ancestor(merged,'HEAD',live):
+    if not waiting_repair and not ancestor(merged,'HEAD',live):
         raise ValueError('unassigned report lacks an actual live merge')
     publication = {}
     if descriptive:
@@ -283,6 +291,10 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         if hashlib.sha256(original.read_bytes()).hexdigest()!=item.get('proposal_sha256'):
             raise ValueError('unassigned proposal source fingerprint changed')
         commit=row.get('commit')
+        if waiting_repair:
+            if commit is not None:
+                raise ValueError('waiting link repair cannot claim a source commit')
+            continue
         if row['state'] not in ('implemented','duplicate'):
             raise ValueError('unassigned resolution requires a published source disposition')
         if descriptive:
@@ -296,6 +308,7 @@ def unassigned_proof(report,batch,root,items,rows,lib):
             raise ValueError('unassigned disposition conflicts with an existing resolution')
     return {'resolution_report':str(path),'resolution_report_sha256':hashlib.sha256(raw).hexdigest(),
             'resolution_batch':batch.get('key'),
+            **({'resolution_no_change_base': unchanged['base']} if unchanged else {}),
             **({'resolution_publication': publication} if publication else {})}
 
 

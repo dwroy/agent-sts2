@@ -192,6 +192,103 @@ class Resolution(unittest.TestCase):
         self.resolve()
         self.assertEqual(proposals.fold(self.queue)[IDENT]['reason'], self.report['proposal_results'][0]['reason'])
 
+    def waiting_repair(self):
+        # Batch 20261023-204301 only repaired links; it did not publish source.
+        (self.tree / '.gitignore').write_text('learner/runs/\n')
+        self.git(self.tree, 'add', '.gitignore')
+        self.git(self.tree, 'commit', '-qm', 'Ignore fixed report artifacts')
+        self.batch['proposal_repair'] = 'original-experience-batch'
+        self.report.update(base=self.git(self.tree, 'rev-parse', 'HEAD'), fixes=[], merged=None,
+                           source_commit=None, tests={'tsc': None, 'vitest': None, 'cases': None})
+        self.report['proposal_results'] = [{'id': IDENT, 'state': 'waiting',
+                                           'reason': '原经验尚未发布，保留原失败与消费者待验。'}]
+        self.save_report()
+
+    def test_waiting_link_repair_completes_without_live_merge_or_recursive_repair(self):
+        self.waiting_repair()
+        other = 'silent-proposal-second'
+        proposals.append(self.queue, {**self.item, 'id': other, 'state': 'waiting'})
+        self.report['code_proposals'].append(other)
+        self.report['proposal_results'].append({**self.report['proposal_results'][0], 'id': other})
+        self.save_report()
+        self.assertIsNotNone(dispatch.no_change(self.report, self.batch, str(self.root)))
+        before_live = self.git(self.live, 'rev-parse', 'HEAD')
+        events, notices = [], []
+        with patch.object(checks, 'read_report', return_value=self.report), \
+                patch.object(checks, 'proposal_tools', return_value=dispatch):
+            checks.finish_write_batch('fixed', self.batch, 0, str(self.root), str(self.root),
+                                      lambda kind, msg: events.append(kind), notices.append, run_checks=False)
+        self.assertEqual(self.batch['state'], 'done')
+        self.assertEqual(self.batch['proposal_audit_errors'], [])
+        self.assertNotIn('proposal_repair_needed', self.batch)
+        self.assertNotIn('checks_pending', self.batch)
+        self.assertIsNone(self.batch['merged'])
+        self.assertEqual(events, ['strategy-done'])
+        self.assertEqual(notices, [])
+        for item in proposals.fold(self.queue).values():
+            self.assertEqual(item['state'], 'waiting')
+            self.assertIsNone(item['commit'])
+            self.assertEqual(item['resolution_no_change_base'], self.report['base'])
+            self.assertEqual(item['resolution_report_sha256'], hashlib.sha256(self.report_path.read_bytes()).hexdigest())
+            self.assertEqual((item['seen_runs'], item['batch']), (7, 'active-dispatched-batch'))
+        self.assertEqual(self.git(self.live, 'rev-parse', 'HEAD'), before_live)
+
+    def test_waiting_link_repair_rejects_unknown_or_changed_registration_atomically(self):
+        self.waiting_repair()
+        for changes in ({'character': 'other'}, {'source_task': 'unknown'}, {'ledger': []},
+                        {'runs': ['OTHER0000001']}, {'proposal_sha256': 'f' * 64}, {'id': 'unknown'}):
+            with self.subTest(changes=changes):
+                self.queue.write_text(json.dumps({**self.item, **changes}) + '\n')
+                before = self.queue.read_bytes()
+                with self.assertRaises(ValueError): self.resolve()
+                self.assertEqual(self.queue.read_bytes(), before)
+
+    def test_waiting_link_repair_rejects_changed_report_dirty_source_and_false_claims(self):
+        self.waiting_repair()
+        good = copy.deepcopy(self.report)
+        for scenario in ('base', 'dirty', 'head', 'saved_report', 'report_path', 'character', 'runs',
+                         'row_commit', 'source_commit', 'published_commit', 'commit', 'missing_repair', 'mixed'):
+            with self.subTest(scenario=scenario):
+                self.report = copy.deepcopy(good)
+                self.batch['proposal_repair'] = 'original-experience-batch'
+                self.git(self.tree, 'reset', '--hard', good['base'])
+                if scenario == 'base': self.report['base'] = self.base
+                if scenario == 'dirty': (self.tree / 'fixed.txt').write_text('dirty source')
+                if scenario == 'head': self.git(self.tree, 'commit', '--allow-empty', '-qm', 'Later source')
+                if scenario == 'report_path': self.report['report'] = str(self.root / 'report.md')
+                if scenario == 'character': self.report['character'] = 'other'
+                if scenario == 'runs': self.report['runs'] = ['OTHER0000001']
+                if scenario == 'row_commit': self.report['proposal_results'][0]['commit'] = self.source
+                if scenario in ('source_commit', 'published_commit', 'commit'): self.report[scenario] = self.source
+                if scenario == 'missing_repair': self.batch.pop('proposal_repair')
+                if scenario == 'mixed':
+                    other = 'silent-proposal-second'
+                    self.report['code_proposals'].append(other)
+                    self.report['proposal_results'].append({'id': other, 'state': 'implemented',
+                                                           'commit': self.source, 'reason': 'False publication claim.'})
+                self.save_report()
+                if scenario == 'saved_report': self.report['base'] = self.base
+                before = self.queue.read_bytes()
+                with self.assertRaises(ValueError): self.resolve()
+                self.assertEqual(self.queue.read_bytes(), before)
+
+    def test_waiting_link_repair_preserves_previously_published_resolution(self):
+        self.resolve()
+        before = self.queue.read_bytes()
+        self.waiting_repair()
+        self.resolve()
+        self.assertEqual(self.queue.read_bytes(), before)
+
+    def test_no_source_repair_cannot_claim_implemented_or_duplicate_without_live_ancestry(self):
+        self.waiting_repair()
+        for state in ('implemented', 'duplicate'):
+            with self.subTest(state=state):
+                self.report['proposal_results'][0].update(state=state, commit=self.report['base'])
+                self.save_report()
+                before = self.queue.read_bytes()
+                with self.assertRaises(ValueError): self.resolve()
+                self.assertEqual(self.queue.read_bytes(), before)
+
     def narrow_publication(self):
         # Reproduce 20261018-011241: prose fixes, source_commit and a different live commit.
         self.git(self.live, 'reset', '--hard', self.base)

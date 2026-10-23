@@ -129,7 +129,7 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
  */
 export function initCommand(request: OpsRequest, prompt: string, bin: string): CommandLine {
   const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
-    effort: request.effort ?? "high", serviceTier: "fast" }, "", bin);
+    effort: request.effort ?? "high", serviceTier: "ultrafast" }, "", bin);
   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
   if (request.opsExecution === "host") {
     if (request.profile !== OPS_PROFILE) throw new Error("host execution is restricted to the main ops role");

@@ -11,3 +11,5 @@ Roy 于 2026-10-11 要求所有 Codex 默认统一为 `gpt-6-astra` / `xhigh` / 
 正在进行的调用正常完成；新对局进程、新 learner 批次和 ops 下次启动/resume 加载新默认。当前已启动的进程不会因磁盘配置修改而自动切换。实际生效边界以 run-config、模型回报和上线回执为准，配置记录不冒充 512k 服务端实测。
 
 2026-10-23 Roy 更新：ops 自身初始化、exec resume 与 herdr resume 的启动参数改为 `service_tier="fast"`，默认推理保持 `high`；大脑、学习和开发会话沿各自现状。仅通过启动参数 `-c` 设置，不使用 `/fast` 写共享配置。下一自然启动/resume 采用，当前运行档位须另核原生回执。回退仅恢复 `ops/codex/lib.ts` 的原 `serviceTier` 参数。
+
+2026-10-23 晚 Roy 临时提速：当前核验6、发布/验收8（不计#46/#27），仅ops启动/resume的专用 `-c service_tier="ultrafast"`，推理仍high；当前事务结束且空闲时由原启动器自然resume，不热切在途。积压降到4以下时退回Fast。此项不写任何config.toml、不使用/fast，不改大脑、学习或开发的服务档。
