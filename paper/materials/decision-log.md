@@ -6207,3 +6207,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T16:29:39+08:00 [watcher] #27沿16:13原通知链实读15条异议，独立核67原件字节窗、逐条message/ops-forwarded原回执、原CLI及received-1520真实回执SHA，全部核同；向Roy保留输入剥离/牌身份/净损出口、独立施放分母、机制和#14局部策略路径边界；外部合同已验证进展不代自然消费，拿取频率/调整后跨零区间不推出固定收益，总受伤p90非安全HP线。原冻结rc1与后续575项0问题分列，原科学父/自然采用/收益待验。正式ACK仍原CLI兼容pending，ACK写入0、不代其他角色、不重复原CLI拒绝、不另派模型/实验/full。16:13快照不代16:17:38后实际live59a1dc，未改发布队列。实际核收paper/materials/20261023-issue27-watcher-receipt/received-1613.json。
 
 - 2026-10-23T16:34:23+08:00 [ops] 36两旧失败通知核实际两叶发布已恢复不重跑；48/50学习首批冻结Boss/精英6旧条目及原分账/10局核窗合同，0已处理/244剩余，现缺后置派发绑定交开发集成，未占正常槽/起模型或关科学父。原件paper/materials/20261023-issue48-first-batch-ops/dispatch-plan.json。
+
+2026-10-23T16:39:48+08:00 [watcher] #48实读6360915341与50学习第4条，冻结任务/输入/入口源码SHA核同，244旧条目、首批6条逐ID原文等价、92旧引用不继承；固定runs切点重算Silent A10最终失败34/32/18局仅作选题。现有research仅4旧ID且排普通提案前，48无登记开发会话，不具后置回刷绑定；交主管落实开发归属后沿review定向核验→ops发布→原自然调度。保持原槽/锁/lease/账号/磁盘门，真实启动才推进可恢复游标，正常学习先行；本轮未派模型/抢槽/测试/full/改live，processed0/remaining244，48/50内容/自然消费/收益及实际上线前后24h吞吐待验。证据paper/materials/20261023-issue48-integrator/admission.json。
