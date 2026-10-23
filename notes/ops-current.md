@@ -1,7 +1,16 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T06:00:03+08:00
+issue: 46
+updated: 2026-10-24T06:10:30+08:00
 
+进行中的事: #46已精确发布五叶，原上线时间T=2026-10-23 13:46:30；当前处于实际24小时观察窗口。原完整检查6333过/2跳及上线读回保留，原前24小时106份成功分配基线SHA已核同，本轮不重算或生成截断窗口比较。调度规则仍以原发布及04:04门读回为依据：新增10局或6小时启轮，每轮最多2批，单项新局门保持。
+
+在等谁: 等北京时间2026-10-24 13:46:30完整观察门，以及原调度器积累的真实回执；尚不能验收节省或关闭#46。#51外部优先、停派、重试和正常工作量必须分账；静态68/日估计不是收益。并行#28唯一full仍在运行，等待原worker回调。
+
+下一步: 到门后的原自然唤醒才执行已部署报告器，固定[T,T+24h)且要求complete=true，核全部任务类别、实际局量、pending/repair/专项/续跑/retry、waiting积压与轮次水印，再评估分配变化。保留legacy/restore和未触发分支限制；不新增模型、计时器、手动tick或提前发布验收结论。
+
+原件: paper/materials/20261024-issue46-gate-readback-ops/receipt.json；paper/materials/20261023-issue46-publication-ops/{publication,allocation-baseline-original-24h}.json；#46评论6373683201。
+
+并行事项与未完成清单（保留前一检查点）:
 进行中的事: #51首两批外部学习已启用，顺序为双Boss issue51-dual-boss-001→各幕Boss issue51-act-boss-002；四份任务/输入清单按冻结字节与SHA核同。#52四脚本宿主部署及原窗口释放已核，033643已发布R424并完成18项消费者/准入释放，对局已恢复。#28接原窗口，净树c3ba93abc61b在05:57:35进入唯一full；生产/v6工具tsc均0，冻结2139输入/469知识/1417依赖，尚无完整退出结论。
 
 在等谁: #51等原调度器自然tick，在正常任务优先、原两槽和写者租约门下形成首批真实native/产物；当前learn.json未见external_source批次，启用不等于已派发或入库。#28等原worker304616/birth21695846检查回调，不再等旧知识锁。
@@ -10,7 +19,7 @@ updated: 2026-10-24T06:00:03+08:00
 
 原件: notes/strategy-external-silent.json；paper/materials/20261024-issue28-r424-ops/check-state.json；paper/materials/20261024-r424-received-ops/receipt.json。
 
-其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，当前对局视图同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、244/首6冻结校验/未见native消费，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。16通知原文/flags/32投递核同，旧watcher实际接收/提醒存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
+其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、244/首6冻结校验/未见native消费，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。16通知原文/flags/32投递核同，旧watcher实际接收/提醒存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
