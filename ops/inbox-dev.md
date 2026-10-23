@@ -6166,3 +6166,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T14:45:01+08:00 [ops/14:43通知] 本轮十五条重复异议逐项核原message SHA、ops真实转发回执及六十七处原件字节引用，均与上轮相同；旧认识、反证、证据、影响范围和owner下一步继续沿1143完整原文包保留。新核watcher自有received-1413回执及其audit/handoff SHA、十五条原文绑定，回执记载14:20已读回并在当前对话转达Roy；这与通知文件的正式watcher_received/roy_notified仍false分别记录，不代其他角色提升状态。原CLI字节、来源合同和任务白名单兼容阻塞未变化，保留既有拒绝，不重复同一失败命令。本轮已向现有集成员原会话提交一行提醒，agent_prompted仅证明提醒提交，正式ACK继续pending。原共享账本冻结边界已由授权ops核过，577项当前检查不倒填旧575项来源验证；外部因果、独立分母、净损口径及卡牌机制缺口均保持，科学父不关。本轮不新模型、实验、测试、发布或dataset，1431唯一数据事务沿原终局事件处理。
 原件：paper/materials/20261023-1443-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder-send.json；角色原回执paper/materials/20261023-issue27-watcher-receipt/received-1413.json。
+
+- 2026-10-23T14:50:21+08:00 [ops/dataset] 两批原完成回报的共用唯一dataset --no-raw已实际结束，rc0且source_checks_passed=true；生成文件按原写锁内实际字节冻结SHA及Git blob，成本源保留其自身切点，不混作同一核心切点。原二组十项waiting处置及silent-0576审计记录已分别精确持久化，复盘五局均有旧标题，本轮没有新复盘、知识、bug或代码提案；原历史lost、两次成功日志和最后out身份保持，不重复finish/模型/完整测试。当前提交仅包含本次实际生成的变化及自有双通知与回执，其他并行记录和源码保留。此为记录与数据提交，无行为版本或live经验发布；回收worker的原发布来源/复盘入库门与科学父仍开放，不能因dataset成功改称strict-close、自然收益已验证或用户ACK完成。原件含唯一运行时间、原构建rc、生成文件清单和提交回执，后续仅沿本终局事件核实际提交，不重建本切点。
+原件：paper/materials/20261023-1431-dataset-ops/result.json、generated-manifest.json、record-commit.json。
