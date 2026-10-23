@@ -1,0 +1,1018 @@
+diff --git a/agent/src/brain/brain.ts b/agent/src/brain/brain.ts
+index dfffaf21c0f4d6455c95fd67fed873a73bce6730..181b22d1281f865a38acbcd7d74347c77a1eba3b 100644
+--- a/agent/src/brain/brain.ts
++++ b/agent/src/brain/brain.ts
+@@ -45,10 +45,13 @@ import { systemRules } from "./llm/deepseek.js";
+ import { memoryWithoutLessons } from "./knowledge.js";
+ import { isConstructionQuestion } from "../memory/construction-log.js";
+ import { attachOpenBook } from "../knowledge/open-book.js";
++import { knowledgeCharacter } from "../knowledge/files.js";
++import { attachQueryGuidance } from "./tools/query-guidance.js";
+ 
+ /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
+ export function agentSystemPrompt(): string {
+-  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。`;
++  const guidance = knowledgeCharacter() === "silent" ? "\n拿牌、商店、休息、事件和幕初路线题作答前先查本题相关策略（kb_strategies query=\"*\"）与 rk（reflex knowledge，小脑记忆，kb_reflex query=\"*\"或Boss/精英/卡牌ID）；战斗备战题先查本幕 Boss / 精英及当前敌人的策略与rk。经验另用kb_experience查询。题面线索只有检索候选数量和身份，不代表已查询、predicate成立或Jev采用；只读查询不会启用关闭的战斗条目。空库或错误不反复查询，调用/耗时预算用完立即用已有信息作答。" : "";
++  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}`;
+ }
+ 
+ /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
+@@ -332,7 +335,7 @@ export class Brain {
+       };
+       return { ...base, system: agentSystemPrompt(),
+         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
+-        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: base.payload } } : {}),
++        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
+         knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
+     }
+     const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
+@@ -357,6 +360,7 @@ export class Brain {
+    * with v3's prompt (no prefix), the reason in that row's knowledge note (brain.jsonl).
+    */
+   private async decide(req: BrainRequest): Promise<BrainAnswer> {
++    req = await attachQueryGuidance(req);
+     try {
+       return await this.router.decide(req);
+     } catch (error) {
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index f502841e49b33629f8749e965b896485bcf3181c..9495e46421c15bcb6ce8638ec11211b4ebe6e757 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -55,6 +55,7 @@ import type { BrainConfig } from "../core/config.js";
+ import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
+ import { BrainBlockedError, BrainWait } from "./wait.js";
+ import { isContextOverflow } from "./knowledge.js";
++import { queryAudit } from "./tools/query-guidance.js";
+ 
+ /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
+ export function labelPrefix(label: string): string {
+@@ -172,6 +173,7 @@ export interface BrainLogRow {
+   tools: string[];
+   tool_calls: BrainAnswer["toolCalls"];
+   agent?: BrainAnswer["agent"];
++  query_audit?: ReturnType<typeof queryAudit>;
+   answer: unknown;
+   problems: string[];
+   reasks: number;
+@@ -753,6 +755,7 @@ export class BrainRouter {
+       payload: req.payload,
+       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
+       tool_calls: result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : []),
++      ...(req.knowledge?.mode === "tools" ? { query_audit: queryAudit(result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : [])) } : {}),
+       ...(result?.agent ? { agent: result.agent } : error && typeof error === "object" && "brainAgent" in error ? { agent: error.brainAgent as BrainAnswer["agent"] } : {}),
+       answer: result?.answer ?? null,
+       accepted: result !== null && !BrainRouter.unusable(req, result),
+diff --git a/agent/src/brain/tools/agent-knowledge.ts b/agent/src/brain/tools/agent-knowledge.ts
+index 6e65bd891e5fae4ef0cf9cb9a3bc61309e891738..903c8dac877b30cce9f0191e9df1fcde7253adbd 100644
+--- a/agent/src/brain/tools/agent-knowledge.ts
++++ b/agent/src/brain/tools/agent-knowledge.ts
+@@ -1,14 +1,14 @@
+ /** Production knowledge surface: fixed files and selectors, no logs, SQL, paths or network. */
+ import { createHash } from "node:crypto";
+-import { readFileSync, statSync } from "node:fs";
+-import { knowledgeCharacter, knowledgeFile } from "../../knowledge/files.js";
++import { knowledgeCharacter } from "../../knowledge/files.js";
+ import { loadExperience } from "../../knowledge/experience.js";
+ import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../knowledge/query-sources.js";
+ import { KNOWLEDGE_FILES } from "../../knowledge/render/data.js";
+ import { OLD_SOURCES, OLD_SOURCE_KEYS, type OldSource } from "../../knowledge/render/old-knowledge.js";
+ import { appliesAt, themeOf } from "../../knowledge/render/experience-text.js";
+ import { loadOpenBook } from "../../knowledge/open-book.js";
+-import { parseStrategyLibrary, retrieveStrategies } from "../../knowledge/strategy-entries.js";
++import { selectRelevantExperience, strategyMatches } from "./query-guidance.js";
++import { reflexKnowledgeTool } from "./reflex-knowledge.js";
+ import { externalStatsTools } from "./external-stats-tools.js";
+ import { knowledgeTools } from "./kb-tools.js";
+ import { validateInput } from "./validate.js";
+@@ -22,19 +22,15 @@ const LIMIT = 12;
+ function envelope(entries: unknown, sources: unknown[], extra: Record<string, unknown> = {}): ToolResult {
+   return { text: JSON.stringify({ schema: "brain-knowledge-result-v1", sources, entries, ...extra }) };
+ }
+-function read(path: string): { value: Record<string, unknown>; sha256: string } {
+-  if (statSync(path).size > 10_000_000) throw new Error("knowledge file exceeds 10 MB");
+-  const text = readFileSync(path, "utf8"), value: unknown = JSON.parse(text);
+-  if (!object(value)) throw new Error("knowledge file is not an object");
+-  return { value, sha256: sha(text) };
+-}
+ function bounded(rows: unknown[], sources: unknown[], extra: Record<string, unknown> = {}): ToolResult {
+   const kept: unknown[] = [];
+   for (const row of rows.slice(0, LIMIT)) {
+     if (Buffer.byteLength(envelope([...kept, row], sources, extra).text) > MAX_BYTES) break;
+     kept.push(row);
+   }
+-  return envelope(kept, sources, { ...extra, omitted: rows.length - kept.length });
++  const result = envelope(kept, sources, { ...extra, omitted: rows.length - kept.length });
++  if (Buffer.byteLength(result.text) > MAX_BYTES) return { ...envelope([], [], { error: "来源元数据超过24KB，请用条目 id 缩小查询" }), isError: true };
++  return result;
+ }
+ function queryTool(name: string, description: string, lookup: (query: string, ctx: ToolContext, category?: string) => ToolResult, category?: readonly string[]): ToolDef {
+   const schema = { type: "object" as const, properties: { query: { type: "string" as const }, ...(category ? { category: { type: "string" as const, enum: [...category] } } : {}) }, required: ["query"], additionalProperties: false };
+@@ -63,30 +59,36 @@ function sourceFiles(tool: string, input: Record<string, unknown>): string[] {
+ }
+ 
+ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
+-  const own = knowledgeTools().filter(t => ["kb_monster", "kb_encounter", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_experience"].includes(t.name)).map((tool): ToolDef => ({
+-    ...tool,
+-    async run(input, ctx) {
+-      if (validateInput(tool.inputSchema, input).length) return tool.run(input, ctx);
+-      let selected: unknown = null;
+-      const audit = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => {
+-        // These selectors use the renderer's file constants; dynamic fact loaders add their actual dependencies.
+-        sourceFiles(tool.name, input).forEach(recordKnowledgeQuerySource);
+-        if (tool.name === "kb_experience") {
+-          if (![input["theme"], input["id"], input["keyword"]].some(Boolean)) return { text: "请提供 theme、id 或 keyword；其他参数不接受。", isError: true };
+-          selected = loadExperience(ctx.knowledgeDir).filter(e => appliesAt(e, ctx.ascension)
+-            && (!input["theme"] || themeOf(e.scope) === input["theme"])
+-            && (!input["id"] || e.id === input["id"])
+-            && (!input["keyword"] || JSON.stringify(e).includes(String(input["keyword"]))));
+-          return { text: JSON.stringify(selected) };
+-        }
+-        return tool.run(input, ctx);
+-      });
+-      const result = audit.result, sources = audit.sources;
+-      if (Array.isArray(selected)) for (const entry of selected) if (object(entry) && typeof entry["source"] === "string" && entry["source"].startsWith("external:")) sources.push({ source: entry["source"], character: knowledgeCharacter(), representation: "entry", entry_id: entry["id"], version: String(entry["version"] ?? "unknown"), sha256: sha(JSON.stringify(entry)) });
+-      if (Buffer.byteLength(result.text) > MAX_BYTES) return { ...envelope([], sources, { error: "结果超过24KB，请缩小关键词/进阶/幕范围后查询" }), isError: true };
+-      return { ...envelope(selected ?? result.text, sources, { evidence_scope: "自有知识；条目内来源/反证保持原样；其他角色来源不计本角色验证" }), ...(result.isError ? { isError: true } : {}) };
+-    },
+-  }));
++  const own = knowledgeTools().filter(t => ["kb_monster", "kb_encounter", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_experience"].includes(t.name)).map((original): ToolDef => {
++    const tool = original.name === "kb_experience" && knowledgeCharacter() === "silent" ? { ...original,
++      description: `${original.description} 本工具查经验，reflex knowledge（rk）请用kb_reflex；relevant=true可取本题相关经验（最多12条，保留来源、置信度、支持与反证），也可按id定查。`,
++      inputSchema: { ...original.inputSchema, properties: { ...original.inputSchema.properties, relevant: { type: "boolean" as const, description: "按本题状态匹配经验；可与原有筛选条件同时使用" } } } } : original;
++    return {
++      ...tool,
++      async run(input, ctx) {
++        if (validateInput(tool.inputSchema, input).length) return tool.run(input, ctx);
++        let selected: unknown = null;
++        const audit = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => {
++          // These selectors use the renderer's file constants; dynamic fact loaders add their actual dependencies.
++          sourceFiles(tool.name, input).forEach(recordKnowledgeQuerySource);
++          if (tool.name === "kb_experience") {
++            if (![input["theme"], input["id"], input["keyword"], input["relevant"]].some(Boolean)) return { text: "请提供 theme、id、keyword 或 relevant=true。", isError: true };
++            selected = (input["relevant"] === true ? selectRelevantExperience(ctx) : loadExperience(ctx.knowledgeDir)).filter(e => appliesAt(e, ctx.ascension)
++              && (!input["theme"] || themeOf(e.scope) === input["theme"])
++              && (!input["id"] || e.id === input["id"])
++              && (!input["keyword"] || JSON.stringify(e).includes(String(input["keyword"]))));
++            return { text: JSON.stringify(selected) };
++          }
++          return tool.run(input, ctx);
++        });
++        const result = audit.result, sources: unknown[] = audit.sources;
++        if (Array.isArray(selected)) for (const entry of selected) if (object(entry) && typeof entry["source"] === "string" && entry["source"].startsWith("external:")) sources.push({ source: entry["source"], character: knowledgeCharacter(), representation: "entry", entry_id: entry["id"], version: String(entry["version"] ?? "unknown"), sha256: sha(JSON.stringify(entry)) });
++        if (input["relevant"] === true && Array.isArray(selected)) return bounded(selected, sources, { evidence_scope: "本角色与已发布公共经验；保留条目置信度、来源和反证，其他角色来源不计本角色验证" });
++        if (Buffer.byteLength(result.text) > MAX_BYTES) return { ...envelope([], sources, { error: "结果超过24KB，请缩小关键词/进阶/幕范围后查询" }), isError: true };
++        return { ...envelope(selected ?? result.text, sources, { evidence_scope: "自有知识；条目内来源/反证保持原样；其他角色来源不计本角色验证" }), ...(result.isError ? { isError: true } : {}) };
++      },
++    };
++  });
+   return [...own,
+     queryTool("kb_open_book", "查公开开卷机械资料：query 为卡牌/遗物/怪物/事件 ID、中文名或关键词；category 可限类别。返回外部来源、版本、SHA、许可；当前 mod 状态优先，资料不证明模拟支持。最多12项，可细化关键词。", (query, ctx, category) => {
+       const library = loadOpenBook(ctx.knowledgeDir);
+@@ -95,14 +97,12 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
+       const sources = library.sources.map(s => ({ ...s, ...(object(s["sources"]) ? { sources: Object.fromEntries(Object.entries(s["sources"]).filter(([key]) => provenance.has(key))) } : {}) }));
+       return bounded(rows, sources, { source: "external:spire-codex", game_version: "v0.111.0", character_scope: "公共机械资料，不是本角色对局验证" });
+     }, ["cards", "relics", "monsters", "events"]),
+-    queryTool("kb_strategies", "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。", (query, ctx) => {
+-      if (knowledgeCharacter() !== "silent") return envelope([], [], { status: "empty" });
+-      let data: ReturnType<typeof read>;
+-      try { data = read(knowledgeFile(ctx.knowledgeDir, "strategy-entries.json")); } catch { return envelope([], [], { status: "missing" }); }
+-      const library = parseStrategyLibrary(data.value);
+-      const rows = retrieveStrategies(library, ctx.label ?? "", ctx.payload).filter(e => query === "*" || `${e.id} ${e.strategy}`.includes(query));
+-      return bounded(rows, rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null })), { library_sha256: data.sha256 });
++    queryTool("kb_strategies", knowledgeCharacter() !== "silent" ? "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。" : "构筑、幕初路线与备战题作答前查本角色已发布策略库（按本题状态匹配触发条件），query=* 查本题匹配项，也可用条目 id /关键词。空库返回空，保留自有/外部来源、置信度、证据和限制。", (query, ctx) => {
++      const data = strategyMatches(ctx);
++      const rows = data.entries.filter(e => query === "*" || `${e.id} ${e.strategy}`.includes(query));
++      return bounded(rows, [...data.sources, ...rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null }))], { status: data.status, ...(data.library_sha256 ? { library_sha256: data.library_sha256 } : {}) });
+     }),
++    ...(knowledgeCharacter() === "silent" ? [reflexKnowledgeTool()] : []),
+     ...externalStatsTools(),
+   ];
+ }
+diff --git a/agent/src/brain/tools/query-guidance.ts b/agent/src/brain/tools/query-guidance.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b7cf7e193bf01c7fdd17ed28007c25e42a24ee15
+--- /dev/null
++++ b/agent/src/brain/tools/query-guidance.ts
+@@ -0,0 +1,130 @@
++/** Query cues contain identities only; all lesson/strategy content stays behind read-only tools. */
++import { readFileSync, statSync } from "node:fs";
++import { createHash } from "node:crypto";
++import { knowledgeCharacter, knowledgeFile } from "../../knowledge/files.js";
++import { loadExperience, offeredOn, relevance, type SliceInput } from "../../knowledge/experience.js";
++import { actThreatIds } from "../../knowledge/monster-db.js";
++import { parseStrategyLibrary, questionTypes, retrieveStrategies, STRATEGY_LIMITS } from "../../knowledge/strategy-entries.js";
++import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../knowledge/query-sources.js";
++import type { GameState } from "../../hand/mod/schema.js";
++import type { BrainRequest, ToolCallRecord } from "../types.js";
++import type { ToolContext } from "./types.js";
++import { reflexMatches } from "./reflex-knowledge.js";
++
++const record = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
++const CUE_LIMIT = 6;
++const identity = (v: string) => Array.from(v).slice(0, 100).join("");
++
++function questionFacts(ctx: ToolContext): Record<string, unknown> {
++  const p = record(ctx.payload), rawRun = record(record(ctx.state)["run"]);
++  const contexts = [record(p["facts"]), p, record(p["run_state"]), record(p["run_plan_task"]), record(p["run_brief"])];
++  const get = (key: string) => contexts.map(c => c[key]).find(v => v !== undefined && v !== null);
++  return { ...record(p["facts"]),
++    act: get("act") ?? ctx.act ?? (rawRun["act_id"] === undefined ? undefined : Number(rawRun["act_id"]) + 1),
++    act_boss: get("act_boss") ?? get("boss") ?? rawRun["boss_id"],
++    floor: get("floor") ?? rawRun["floor"] };
++}
++
++/** The same selector powers both the cue and kb_strategies. Missing and invalid libraries stay explicit. */
++export function strategyMatches(ctx: ToolContext) {
++  if (knowledgeCharacter() !== "silent") return { entries: [], sources: [], status: "empty" };
++  const path = knowledgeFile(ctx.knowledgeDir, "strategy-entries.json");
++  let raw: string;
++  try {
++    if (statSync(path).size > STRATEGY_LIMITS.fileBytes) return { entries: [], sources: [], status: "invalid" };
++    raw = readFileSync(path, "utf8");
++  } catch { return { entries: [], sources: [], status: "missing" }; }
++  const library_sha256 = createHash("sha256").update(raw).digest("hex");
++  const sources = [{ source: "own", file: "strategy-entries.json", character: knowledgeCharacter(), library_sha256 }];
++  try {
++    const library = parseStrategyLibrary(JSON.parse(raw));
++    return { entries: retrieveStrategies(library, ctx.label ?? "", { ...record(ctx.payload), facts: questionFacts(ctx) }), sources, status: "ok", library_sha256 };
++  } catch { return { entries: [], sources, status: "invalid", library_sha256 }; }
++}
++
++/** Reuse the published experience relevance rules; never infer a new gameplay rule from a cue. */
++export function selectRelevantExperience(ctx: ToolContext) {
++  recordKnowledgeQuerySource("experience.json");
++  recordKnowledgeQuerySource("shared-experience.json");
++  const raw = record(ctx.state), p = record(ctx.payload), facts = questionFacts(ctx);
++  const act = Number(facts["act"]);
++  const offered = offeredOn({ raw } as GameState, ctx.options);
++  // Payloads also contain explicit offered/deck entities in display lines rather than raw screen objects.
++  const text = JSON.stringify([ctx.payload, ctx.options]);
++  const ids = [...new Set(text.match(/[A-Z][A-Z0-9_]+/g) ?? [])];
++  for (const key of ["cards", "relics", "potions", "events"] as const) offered[key] = [...new Set([...offered[key], ...ids])];
++  offered.text += `\n${text}`;
++  const enemies = [p["enemies"], record(raw["combat"])["enemies"]].flatMap(v => Array.isArray(v) ? v : [])
++    .filter(e => record(e)["is_alive"] !== false).map(e => String(record(e)["enemy_id"] ?? "")).filter(Boolean);
++  const input: SliceInput = { label: ctx.label ?? "", act, asc: ctx.ascension,
++    bossId: String(facts["act_boss"] ?? "") || null,
++    offered, enemies, threats: act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [] };
++  return loadExperience(ctx.knowledgeDir).map(entry => ({ entry, tier: relevance(entry, input) }))
++    .filter((v): v is { entry: typeof v.entry; tier: number } => v.tier !== null)
++    .sort((a, b) => a.tier - b.tier || a.entry.id.localeCompare(b.entry.id)).map(v => v.entry);
++}
++
++export async function experienceMatches(ctx: ToolContext) {
++  return withKnowledgeQuerySources(ctx.knowledgeDir, async () => selectRelevantExperience(ctx));
++}
++
++export function guidanceKind(label: string, payload: unknown): string | null {
++  if (label === "fight-plan") return "fight_plan";
++  if (label === "map/act-start") return "act_plan";
++  const types = questionTypes(label, payload);
++  return types.includes("act_plan") ? "act_plan" : types[0] ?? null;
++}
++
++export async function attachQueryGuidance(req: BrainRequest): Promise<BrainRequest> {
++  if (knowledgeCharacter() !== "silent" || req.knowledge?.mode !== "tools" || !req.toolContext) return req;
++  const kind = guidanceKind(req.label, req.payload);
++  if (!kind) return req;
++  const ctx = { ...req.toolContext, options: req.options };
++  const strategies = strategyMatches(ctx);
++  let experience: Record<string, unknown>;
++  try {
++    const { result, sources } = await experienceMatches(ctx);
++    const missing = sources.filter(s => ["experience.json", "shared-experience.json"].includes(String(s["file"]))).every(s => s["status"]);
++    experience = { status: missing ? "missing" : "ok", count: missing ? null : result.length, entries: result.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(e.name ? { title: identity(e.name) } : {}), scope: identity(e.scope) })),
++      omitted: Math.max(0, result.length - CUE_LIMIT) };
++  } catch { experience = { status: "unavailable", count: null, entries: [] }; }
++  const reflex = reflexMatches(ctx);
++  const p = record(ctx.payload), raw = record(ctx.state);
++  const enemies = [p["enemies"], record(raw["combat"])["enemies"]].flatMap(v => Array.isArray(v) ? v : [])
++    .map(e => record(e)["enemy_id"]).filter((id): id is string => typeof id === "string");
++  const act = Number(questionFacts(ctx)["act"]);
++  const threats = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [])
++    .catch(() => ({ result: [] as string[], sources: [] }));
++  const entities = [...new Set([questionFacts(ctx)["act_boss"], ...enemies, ...threats.result].filter((id): id is string => typeof id === "string" && !!id))];
++  const cues = { schema: "brain-query-cues-v2", question_type: kind,
++    strategies: { status: strategies.status, count: strategies.status === "invalid" || strategies.status === "missing" ? null : strategies.entries.length,
++      entries: strategies.entries.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(typeof record(e)["title"] === "string" ? { title: identity(String(record(e)["title"])) } : {}) })),
++      omitted: Math.max(0, strategies.entries.length - CUE_LIMIT), tool: "kb_strategies", input: { query: "*" } },
++    rk: { status: reflex.status, count: reflex.status === "loaded" ? reflex.entries.length : null,
++      entries: reflex.entries.slice(0, CUE_LIMIT).map(e => ({ id: e.id, applies_to: e.applies_to })), omitted: Math.max(0, reflex.entries.length - CUE_LIMIT),
++      tool: "kb_reflex", input: { query: "*" },
++      entity_queries: entities.slice(0, CUE_LIMIT).map(id => ({ entity: identity(id), count: reflex.status === "loaded" ? reflex.entries.filter(e => JSON.stringify(e).toLowerCase().includes(id.toLowerCase())).length : null, input: { query: id } })) },
++    experience: { ...experience, tool: "kb_experience", input: { relevant: true } } };
++  return { ...req, question: `${req.question}\n\n作答前先查本题相关策略与 rk（reflex knowledge，小脑记忆）；备战题优先本幕 Boss / 精英及当前敌人。以下仅为检索候选线索，不是正文或predicate成立证明。先调用 kb_strategies 和 kb_reflex，经验另用kb_experience。rk实体计数只是条目文本提及数，不代表当前条件命中或Jev采用；不启用关闭的出牌条目。按返回的来源、可信度及反证判断；空结果/错误或查询预算结束后用已有信息作答，不重试刷空库。\n${JSON.stringify(cues)}` };
++}
++
++/** Only successful, actually returned entries count as hits; cues and model prose never count. */
++export function queryAudit(calls: ToolCallRecord[]) {
++  const summarize = (name: string) => {
++    const selected = calls.filter(c => c.name === name);
++    const ids = new Set<string>();
++    let hitCalls = 0, unknownHitCalls = 0;
++    for (const call of selected) {
++      if (call.isError) continue;
++      try {
++        const entries = record(JSON.parse(call.output))["entries"];
++        if (!Array.isArray(entries)) { unknownHitCalls += 1; continue; }
++        const found = Array.isArray(entries) ? entries.flatMap(e => typeof record(e)["id"] === "string" ? [String(record(e)["id"])] : []) : [];
++        if (found.length) hitCalls += 1;
++        found.forEach(id => ids.add(id));
++      } catch { unknownHitCalls += 1; }
++    }
++    return { queried: selected.length > 0, calls: selected.length, hit_calls: hitCalls, unknown_hit_calls: unknownHitCalls, hit_ids: [...ids].sort() };
++  };
++  return { schema: "brain-query-audit-v2", strategies: summarize("kb_strategies"), rk: summarize("kb_reflex"), experience: summarize("kb_experience") };
++}
+diff --git a/agent/src/brain/tools/reflex-knowledge.ts b/agent/src/brain/tools/reflex-knowledge.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..afa0c1652cac6e126c27e340ed5408e152ddf13d
+--- /dev/null
++++ b/agent/src/brain/tools/reflex-knowledge.ts
+@@ -0,0 +1,63 @@
++/** Planning-only access to published reflex knowledge. Does not enable or invoke a Jev consumer. */
++import { createHash } from "node:crypto";
++import { readFileSync } from "node:fs";
++import { basename } from "node:path";
++import { knowledgeCharacter } from "../../knowledge/files.js";
++import { loadV6Knowledge } from "../../v6/knowledge.js";
++import type { ReflexEntry } from "../../v6/formats.js";
++import { validateInput } from "./validate.js";
++import type { ToolContext, ToolDef } from "./types.js";
++
++const APPLIES_TO = ["combat_line", "card_pick", "potion", "rest", "shop"] as const;
++const MAX_BYTES = 24_000;
++const LIMIT = 12;
++type Source = { source: string; character: string; file: string; version: string; sha256: string };
++type Filter = { query: string; applies_to?: string };
++const sha = (s: string) => createHash("sha256").update(s).digest("hex");
++
++/** Hash the very bytes parsed by the existing strict loader, including reference-validation inputs. */
++export function reflexMatches(ctx: ToolContext, filter: Filter = { query: "*" }) {
++  const character = knowledgeCharacter(), sources: Source[] = [];
++  const knowledge = loadV6Knowledge(ctx.knowledgeDir, character, path => {
++    const raw = readFileSync(path, "utf8");
++    const source = { source: "own", character, file: basename(path), version: "unknown", sha256: sha(raw) };
++    sources.push(source);
++    const parsed = JSON.parse(raw) as Record<string, unknown>;
++    source.version = String(parsed["version"] ?? parsed["schema"] ?? "unknown");
++    return raw;
++  });
++  const library = knowledge.reflex;
++  const entries = library.status === "loaded" ? library.value.filter(e => e.scope.character === character && e.scope.ascensions.includes(ctx.ascension)
++    && (!filter.applies_to || e.applies_to === filter.applies_to)
++    && (filter.query === "*" || JSON.stringify(e).toLowerCase().includes(filter.query.toLowerCase()))) : [];
++  // A textual lookup does not establish that a predicate holds for an option or future combat state.
++  return { status: library.status, entries, sources,
++    ...(library.status !== "loaded" ? { issues: library.issues ?? [], reason: library.message } : {}) };
++}
++
++export function reflexKnowledgeTool(): ToolDef {
++  const inputSchema: ToolDef["inputSchema"] = { type: "object", properties: {
++    query: { type: "string", description: "reflex条目ID、Boss/精英/卡牌ID等关键词；*查当前角色/进阶的全部检索候选" },
++    applies_to: { type: "string", enum: [...APPLIES_TO], description: "可选：限制原条目用途，不改变条目条件" },
++  }, required: ["query"], additionalProperties: false };
++  return { name: "kb_reflex", description: "查真实 rk（reflex knowledge，小脑记忆 reflex.json），与经验库 kb_experience 独立。构筑/幕初路线/备战题先查相关rk：query=* 或条目/Boss/精英/卡牌ID，可用 applies_to 缩小范围。返回原条件、signal、可信度、证据、source_experience及来源版本/SHA；只是检索候选，不证明predicate已满足，不启用或调用Jev出牌条目。最多12条/24KB，空库/错误不反复查。", inputSchema,
++    run(input, ctx) {
++      const problems = validateInput(inputSchema, input);
++      if (problems.length) return { text: problems.join("; "), isError: true };
++      const query = String(input["query"]).trim();
++      if (!query || query.length > 200) return { text: "query must contain 1–200 characters", isError: true };
++      const data = reflexMatches(ctx, { query, ...(typeof input["applies_to"] === "string" ? { applies_to: input["applies_to"] } : {}) });
++      const envelope = (entries: ReflexEntry[]) => JSON.stringify({ schema: "brain-reflex-result-v1", status: data.status,
++        sources: data.sources, entries, omitted: data.entries.length - entries.length,
++        predicate_evaluation: "not_evaluated", evidence_scope: "本角色已发布reflex条目；source_experience是来源关联，不是reflex命中ID；只读检索不代表Jev采用或条件成立",
++        ...(data.status !== "loaded" ? { issues: data.issues, reason: data.reason } : {}) });
++      const entries: ReflexEntry[] = [];
++      for (const entry of data.entries.slice(0, LIMIT)) {
++        if (Buffer.byteLength(envelope([...entries, entry])) > MAX_BYTES) break;
++        entries.push(entry);
++      }
++      const text = envelope(entries);
++      if (Buffer.byteLength(text) > MAX_BYTES) return { text: JSON.stringify({ schema: "brain-reflex-result-v1", entries: [], sources: [], error: "reflex来源元数据超过24KB，请缩小查询" }), isError: true };
++      return { text, ...(data.status === "invalid" ? { isError: true } : {}) };
++    } };
++}
+diff --git a/agent/src/brain/tools/types.ts b/agent/src/brain/tools/types.ts
+index 566d0ac461e22d40072c1e05df28e94d69b97e77..86e0c69a3ad0cbf805a0dd587b1f9de3e9100407 100644
+--- a/agent/src/brain/tools/types.ts
++++ b/agent/src/brain/tools/types.ts
+@@ -32,6 +32,8 @@ export interface ToolContext {
+   /** Current question for state-filtered strategy retrieval; never a model-selected path. */
+   label?: string;
+   payload?: unknown;
++  /** Displayed option facts for context-matched experience queries. */
++  options?: Record<string, string | null>;
+   /** Current act (1-3) when known. */
+   act?: number;
+   /** Directory holding monster-db.json, experience.json, room-costs.json, outcome-stats.json, ... */
+diff --git a/agent/src/knowledge/strategy-entries.ts b/agent/src/knowledge/strategy-entries.ts
+index ef48c2716c6f0960456214319681daf3e2032040..7bd4bf3d6478f344c04da3844815f010ef8447d5 100644
+--- a/agent/src/knowledge/strategy-entries.ts
++++ b/agent/src/knowledge/strategy-entries.ts
+@@ -3,7 +3,7 @@ import { readFileSync, statSync } from "node:fs";
+ import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
+ import type { BrainRequest } from "../brain/types.js";
+ 
+-export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan"] as const;
++export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan", "fight_plan"] as const;
+ export type QuestionType = typeof QUESTION_TYPES[number];
+ type Range = { min?: number; max?: number };
+ export interface OwnStrategyEvidence { type?: "own"; run: string; floor: number; ref?: string; role?: "support" | "contradict" | "repeat" }
+@@ -171,7 +171,8 @@ export function questionTypes(label: string, payload: unknown): QuestionType[] {
+   else if (label.startsWith("event/")) result.push("event");
+   else if (label.startsWith("rest/")) result.push("rest");
+   else if (label.startsWith("shop/")) result.push("shop");
+-  if (label === "event/act-plan" || label === "run-plan" && ["start", "act"].includes(String((object(p["run_state"]) ? p["run_state"] : p)["trigger"])) || ["start", "act"].includes(String(plan["trigger"]))) result.push("act_plan");
++  else if (label === "fight-plan") result.push("fight_plan");
++  if (label === "event/act-plan" || label === "map/act-start" || label === "run-plan" && ["start", "act"].includes(String((object(p["run_state"]) ? p["run_state"] : p)["trigger"])) || ["start", "act"].includes(String(plan["trigger"]))) result.push("act_plan");
+   return result;
+ }
+ function within(value: number | undefined, r: Range | undefined): boolean {
+diff --git a/agent/src/v6/knowledge.ts b/agent/src/v6/knowledge.ts
+index 60cf36c583b1a10103db88d621370eeb5c80109a..299848370c7c5b5001294066110206675c497197 100644
+--- a/agent/src/v6/knowledge.ts
++++ b/agent/src/v6/knowledge.ts
+@@ -24,7 +24,8 @@ export interface V6Knowledge {
+   reflex: KnowledgeResult<ReflexEntry[]>;
+ }
+ /** No global/default character, common fallback, directory creation, cache or knowledge synthesis. */
+-export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined): V6Knowledge {
++export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined,
++  readText: (path: string) => string = path => readFileSync(path, "utf8")): V6Knowledge {
+   const parsed = validate(characterSchema, characterKey(rawCharacter));
+   const character = parsed.ok ? parsed.value : null;
+   function load<T>(name: string, parse: (v: unknown) => Result<T>): KnowledgeResult<T> {
+@@ -36,7 +37,7 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
+       const rel = relative(root, resolved);
+       if (rel.startsWith("..") || isAbsolute(rel)) return { status: "invalid", message: "知识文件越出角色目录", path };
+       if (!statSync(resolved).isFile() || statSync(resolved).size > 8 * 1024 * 1024) return { status: "invalid", message: "知识文件不是有效大小的普通文件", path };
+-      const data: unknown = JSON.parse(readFileSync(resolved, "utf8"));
++      const data: unknown = JSON.parse(readText(resolved));
+       const result = parse(data);
+       if (!result.ok) return { status: "invalid", message: "知识格式校验失败", path, issues: result.issues };
+       return { status: "loaded", path, value: result.value };
+diff --git a/agent/tests/brain-agent-mode.test.ts b/agent/tests/brain-agent-mode.test.ts
+index 37493c8ef1c73eafccedbfd1e60e23af9032c9f3..320c99f9eda502d5fe42c81bb032a203909402c8 100644
+--- a/agent/tests/brain-agent-mode.test.ts
++++ b/agent/tests/brain-agent-mode.test.ts
+@@ -37,7 +37,7 @@ it("exposes only fixed knowledge selectors, keeps external provenance, and retur
+   writeFileSync(join(dir, "common/open-book.json"), JSON.stringify({ schema: "open-book-v1", sources: source, entries: [{ kind: "cards", id: "FIXTURE", name: "fixture", aliases: [], source: source.source, game_version: source.game_version, provenance: [], facts: { fixture: true } }] }));
+   const ctx = { ascension: 10, knowledgeDir: dir, logsDir: "/forbidden", payload: { exact: "question state" } };
+   const tools = buildKnowledgeTools(ctx), host = new ToolHost(tools, ctx);
+-  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
++  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "kb_reflex", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
+   const result = await host.call("kb_open_book", { query: "FIXTURE", category: "cards" });
+   expect(JSON.parse(result.text)).toMatchObject({ entries: [{ id: "FIXTURE", source: source.source, game_version: "v0.111.0" }], sources: [source] });
+   expect(JSON.parse((await host.call("kb_open_book", { query: "FIXTURE" })).text).entries).toHaveLength(1);
+diff --git a/agent/tests/brain-query-guidance.test.ts b/agent/tests/brain-query-guidance.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3ab5490c3705e16d6c4dac33d08c2b6ae5fba25c
+--- /dev/null
++++ b/agent/tests/brain-query-guidance.test.ts
+@@ -0,0 +1,160 @@
++/** Fixed format fixtures only; no game advice, live writes, model calls or network service. */
++import { createHash } from "node:crypto";
++import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { dirname, join } from "node:path";
++import { tmpdir } from "node:os";
++import { afterEach, expect, it } from "vitest";
++import { attachQueryGuidance, queryAudit, strategyMatches } from "../src/brain/tools/query-guidance.js";
++import { buildKnowledgeTools } from "../src/brain/tools/agent-knowledge.js";
++import { ToolHost } from "../src/brain/tools/mcp-server.js";
++import { agentSystemPrompt, createBrain } from "../src/brain/brain.js";
++import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
++import { loadConfig } from "../src/core/config.js";
++import { knowledgeFile, setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { pickSpec } from "../src/brain/specs.js";
++import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
++import type { ToolContext } from "../src/brain/tools/types.js";
++import { compareBrainQueryReports } from "../tools/brain-agent-report.js";
++
++const dirs: string[] = [];
++afterEach(() => { dirs.splice(0).forEach(d => rmSync(d, { recursive: true, force: true })); setKnowledgeCharacter(null); });
++const hash = (s: string) => createHash("sha256").update(s).digest("hex");
++const lesson = (id: string, scope: string, extra = {}) => ({ id, scope, asc: [10, 10], name: "格式夹具标题", lesson: "RK_BODY_FIXTURE_ONLY", evidence: ["FIXTURE00001"], n_support: 1, n_contradict: 1, confidence: "low", last_seen: "2026-10-23", status: "active", ...extra });
++function fixture(label = "reward/card") {
++  setKnowledgeCharacter("silent");
++  const dir = mkdtempSync(join(tmpdir(), "query-guidance-")); dirs.push(dir);
++  const write = (name: string, value: unknown) => { const p = knowledgeFile(dir, name); mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, JSON.stringify(value)); };
++  write("experience.json", { version: "rk-fixture-v1", entries: [lesson("rk-card", "card:FIXTURE_CARD"), lesson("rk-boss", "boss:FIXTURE_BOSS"), lesson("rk-elite", "elite:FIXTURE_ELITE"), lesson("rk-other", "boss:OTHER_BOSS"), lesson("rk-retired", "general:deck", { status: "retired" }), lesson("rk-asc", "general:deck", { asc: [0, 9] })] });
++  write("monster-db.json", { version: "monster-fixture", monsters: {}, encounters: { FIXTURE_ELITE: { acts: { "1": 1 }, rooms: { elite: 1 } } } });
++  write("monster-records.json", { version: "records-fixture", encounters: {} });
++  const strategy = { id: "strategy-fixture", title: "格式策略标题", version: "fixture-v1", trigger: { question_types: ["card_reward", "shop", "rest", "event", "act_plan", "fight_plan"], acts: [1], bosses: ["FIXTURE_BOSS"] }, strategy: "STRATEGY_BODY_FIXTURE_ONLY", source: "own", evidence: [{ run: "FIXTURE00001", floor: 1 }], confidence: .4 };
++  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [strategy] });
++  const payload = { facts: { act: 1, act_boss: "FIXTURE_BOSS" }, enemies: [{ enemy_id: "FIXTURE_ELITE" }] };
++  const ctx: ToolContext = { label, ascension: 10, act: 1, knowledgeDir: dir, logsDir: "/forbidden", payload, options: { a: "FIXTURE_CARD", b: null } };
++  const req: BrainRequest = { label, system: agentSystemPrompt(), question: "fixed question", payload, options: ctx.options, toolContext: ctx, tools: buildKnowledgeTools(ctx), spec: pickSpec(label, { a: null }), knowledge: { mode: "tools" } };
++  return { dir, write, ctx, req, strategy };
++}
++const answer = (): BrainAnswer => ({ engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 10, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] });
++
++it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s gives bounded identities and real call arguments without inline content", async label => {
++  const { req, ctx } = fixture(label), before = JSON.stringify(req.payload);
++  const result = await attachQueryGuidance(req);
++  expect(result.question).toContain('"query":"*"'); expect(result.question).toContain('"relevant":true');
++  expect(result.question).toContain('"count":1'); expect(result.question).toContain("strategy-fixture");
++  expect(result.question).toContain("格式策略标题"); expect(result.question).toContain("rk-boss");
++  expect(result.question).not.toContain("STRATEGY_BODY"); expect(result.question).not.toContain("RK_BODY");
++  expect(result.question).not.toContain("rk-retired"); expect(result.question).not.toContain("rk-asc"); expect(result.question).not.toContain("rk-other");
++  expect(result.payload).toBe(req.payload); expect(JSON.stringify(req.payload)).toBe(before);
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
++  const strategies = JSON.parse((await host.call("kb_strategies", { query: "*" })).text);
++  const rk = JSON.parse((await host.call("kb_experience", { relevant: true })).text);
++  expect(strategies.entries.map((e: any) => e.id)).toEqual(["strategy-fixture"]);
++  expect(rk.entries.map((e: any) => e.id)).toContain("rk-boss");
++  expect(rk.entries[0]).toMatchObject({ confidence: "low", n_support: 1, n_contradict: 1, evidence: ["FIXTURE00001"] });
++  expect(rk.sources).toContainEqual(expect.objectContaining({ file: "experience.json", version: "rk-fixture-v1", sha256: hash(readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json"), "utf8")) }));
++  expect(queryAudit(host.calls)).toMatchObject({ strategies: { queried: true, hit_ids: ["strategy-fixture"] }, experience: { queried: true, hit_ids: expect.arrayContaining(["rk-boss"]) }, rk: { queried: false, hit_ids: [] } });
++});
++
++it("keeps Ironclad and non-target/legacy requests unchanged", async () => {
++  const { req } = fixture("combat/plan"); expect(await attachQueryGuidance(req)).toBe(req);
++  expect(await attachQueryGuidance({ ...req, label: "reward/card", knowledge: { mode: "off" } })).toMatchObject({ question: req.question });
++  setKnowledgeCharacter("ironclad");
++  const before = agentSystemPrompt(); expect(before).not.toContain("rk");
++  expect(await attachQueryGuidance({ ...req, label: "reward/card" })).toMatchObject({ question: req.question });
++  expect(buildKnowledgeTools(req.toolContext!).find(t => t.name === "kb_experience")!.inputSchema.properties).not.toHaveProperty("relevant");
++});
++
++it("keeps tools read-only, reflects library changes and fails closed on bad libraries", async () => {
++  const { req, ctx, write, strategy } = fixture();
++  const initial = readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json"), "utf8");
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
++  expect((await host.call("kb_experience", { relevant: true, path: "../../.env" })).isError).toBe(true);
++  expect((await host.call("kb_strategies", { query: "*", write: true })).isError).toBe(true);
++  await host.call("kb_experience", { relevant: true });
++  expect(readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json"), "utf8")).toBe(initial);
++  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [] });
++  expect(strategyMatches(ctx).entries).toEqual([]); expect((await attachQueryGuidance(req)).question).toContain('"count":0');
++  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, confidence: 2 }] });
++  expect(strategyMatches(ctx)).toMatchObject({ status: "invalid", entries: [] });
++  expect((await attachQueryGuidance(req)).question).toContain('"status":"invalid","count":null');
++  rmSync(knowledgeFile(ctx.knowledgeDir, "strategy-entries.json"));
++  expect(strategyMatches(ctx).status).toBe("missing");
++});
++
++it("uses the live act/boss fallback for fight-plan cues and queries while preserving explicit question facts", async () => {
++  const { ctx, req } = fixture("fight-plan");
++  const live = { ...ctx, payload: { enemies: [{ enemy_id: "FIXTURE_ELITE" }] }, state: { run: { act_id: 0, boss_id: "FIXTURE_BOSS" } } };
++  expect(strategyMatches(live).entries).toHaveLength(1);
++  expect((await attachQueryGuidance({ ...req, payload: live.payload, toolContext: live })).question).toContain("strategy-fixture");
++  expect(strategyMatches({ ...live, payload: { facts: { act_boss: "OTHER_BOSS" } } }).entries).toEqual([]);
++});
++
++it("bounds cue identities, returns full ids in queries and permits a narrower id lookup", async () => {
++  const { req, ctx, write } = fixture();
++  write("experience.json", { version: "many", entries: Array.from({ length: 30 }, (_, i) => lesson(`rk-${String(i).padStart(2, "0")}`, "general:deck")) });
++  const clue = await attachQueryGuidance(req);
++  expect(clue.question).toContain('"count":30'); expect(clue.question).toContain('"omitted":24');
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
++  const broad = JSON.parse((await host.call("kb_experience", { relevant: true })).text);
++  expect(broad.entries).toHaveLength(12); expect(broad.omitted).toBe(18);
++  const narrow = JSON.parse((await host.call("kb_experience", { id: "rk-29" })).text);
++  expect(narrow.entries.map((e: any) => e.id)).toEqual(["rk-29"]);
++});
++
++it("retains public lesson conditions and source roles without reading another character's private file", async () => {
++  const { ctx, write } = fixture();
++  const path = join(ctx.knowledgeDir, "characters/ironclad/experience.json"); mkdirSync(dirname(path), { recursive: true });
++  writeFileSync(path, JSON.stringify({ entries: [lesson("foreign-private", "boss:FIXTURE_BOSS")] }));
++  write("shared-experience.json", { version: "shared-fixture", entries: [lesson("common-rk-fixture", "boss:FIXTURE_BOSS", {
++    shared: { independent_of_character: true, reason: "格式通用性夹具", conditions: "格式条件夹具", sources: [{ character: "ironclad", run_id: "FIXTURE00001", experience_id: "original-fixture", evidence_path: "fixed/fixture.json", evidence_sha256: "a".repeat(64) }] }
++  })] });
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
++  const result = JSON.parse((await host.call("kb_experience", { relevant: true })).text);
++  expect(result.entries.map((e: any) => e.id)).not.toContain("foreign-private");
++  expect(result.entries.find((e: any) => e.id === "common-rk-fixture").shared).toMatchObject({ conditions: "格式条件夹具", sources: [{ character: "ironclad", experience_id: "original-fixture" }] });
++  expect(result.sources).toContainEqual(expect.objectContaining({ file: "shared-experience.json", version: "shared-fixture", sha256: expect.stringMatching(/^[a-f0-9]{64}$/) }));
++});
++
++it("bounds an oversized strategy provenance envelope without dropping evidence from a returned entry", async () => {
++  const { ctx, write, strategy } = fixture();
++  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, evidence: [{ run: "FIXTURE00001", floor: 1, ref: "fixed".repeat(6000) }] }] });
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
++  const result = await host.call("kb_strategies", { query: "*" });
++  expect(result.isError).toBe(true); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
++  expect(JSON.parse(result.text).entries).toEqual([]);
++});
++
++it("routes production guidance and records actual query identities in brain logs", async () => {
++  const { ctx, req } = fixture();
++  const brain = createBrain(loadConfig({ BRAIN_LOG: "off" }), null); brain.setToolContext(ctx);
++  let seen: BrainRequest | undefined;
++  brain.router.decide = async r => { seen = r; return answer(); };
++  await brain.choose(req.payload as any, "fixed question", { a: "FIXTURE_CARD" }, { label: "reward/card" });
++  expect(seen!.question).toContain("brain-query-cues-v2");
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
++  await host.call("kb_strategies", { query: "*" }); await host.call("kb_experience", { relevant: true });
++  const logs: BrainLogRow[] = [];
++  const router = new BrainRouter({ config: { ...loadConfig({ BRAIN_LOG: "off" }).brain, engine: "deepseek", fallback: null }, knowledgeAgent: true,
++    log: r => logs.push(r), engine: () => ({ name: "deepseek", model: "fixed", decide: async () => ({ ...answer(), toolCalls: host.calls }) }) });
++  await router.decide(req);
++  expect(logs[0]!.query_audit).toMatchObject({ strategies: { queried: true, hit_ids: ["strategy-fixture"] }, experience: { queried: true, hit_ids: expect.arrayContaining(["rk-card"]) }, rk: { queried: false, hit_ids: [] } });
++  const failed = new BrainRouter({ config: { ...loadConfig({ BRAIN_LOG: "off" }).brain, engine: "deepseek", fallback: null }, knowledgeAgent: true,
++    log: r => logs.push(r), engine: () => ({ name: "deepseek", model: "fixed", decide: async () => { throw Object.assign(new Error("fixture transport failure"), { brainToolCalls: host.calls }); } }) });
++  await expect(failed.decide(req)).rejects.toThrow("fixture transport failure");
++  expect(logs.at(-1)!.query_audit).toEqual(logs[0]!.query_audit);
++});
++
++it("separates calls, errors, empty results and identities from tool-looking prose", () => {
++  const call = (output: string, isError = false) => ({ name: "kb_experience", input: {}, output, ms: 1, isError });
++  const audit = queryAudit([call('{"entries":[{"id":"one"}]}'), call('{"entries":[]}'), call('{"entries":[{"id":"error-id"}]}', true), call('kb_strategies {"id":"prose"}')]);
++  expect(audit).toEqual({ schema: "brain-query-audit-v2", rk: { queried: false, calls: 0, hit_calls: 0, unknown_hit_calls: 0, hit_ids: [] }, strategies: { queried: false, calls: 0, hit_calls: 0, unknown_hit_calls: 0, hit_ids: [] }, experience: { queried: true, calls: 4, hit_calls: 1, unknown_hit_calls: 1, hit_ids: ["one"] } });
++});
++
++it("compares natural before/after cohorts by engine and disjoint question type without inventing missing cells", () => {
++  const row = { engine: "codex", label: "event/act-plan", payload: {}, run_id: "before", question_id: "one", knowledge: { mode: "tools" }, tool_calls: [], latency_ms: 100 };
++  const compared = compareBrainQueryReports([row], [{ ...row, run_id: "after", latency_ms: 200, tool_calls: [{ name: "kb_strategies", output: '{"entries":[{"id":"fixture"}]}', ms: 1 }] }]);
++  expect(compared.baseline_matches_18_runs).toBe(false);
++  expect(compared.current.query_groups[0]).toMatchObject({ question_type: "act_plan", questions: 1, strategies: { query_rate: 1, hit_rate: 1 }, rk: { query_rate: 0, hit_rate: null } });
++  expect(compared.changes[0]).toMatchObject({ strategies_query_rate_delta: 1, calls_mean_delta: 1, latency_ms_mean_delta: 100 });
++  expect(compareBrainQueryReports([], [row]).changes[0]!.latency_ms_mean_delta).toBeNull();
++});
+diff --git a/agent/tests/brain-reflex-knowledge.test.ts b/agent/tests/brain-reflex-knowledge.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b0ec6d01351ab50f9df61efaaf67983e0bb87f2
+--- /dev/null
++++ b/agent/tests/brain-reflex-knowledge.test.ts
+@@ -0,0 +1,201 @@
++/** Synthetic reflex format fixtures; this lookup never sends entries to Jev. */
++import { createHash } from "node:crypto";
++import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
++import { dirname, join } from "node:path";
++import { tmpdir } from "node:os";
++import { afterEach, expect, it, vi } from "vitest";
++import { buildKnowledgeTools } from "../src/brain/tools/agent-knowledge.js";
++import { attachQueryGuidance, queryAudit } from "../src/brain/tools/query-guidance.js";
++import { ToolHost } from "../src/brain/tools/mcp-server.js";
++import { KnowledgeMcp } from "../src/brain/tools/knowledge-mcp.js";
++import { KnowledgeAgent } from "../src/brain/engines/knowledge-agent.js";
++import { setKnowledgeCharacter, knowledgeFile } from "../src/knowledge/files.js";
++import { reflex, vocab } from "./v6-fixtures.js";
++import { loadConfig } from "../src/core/config.js";
++import { pickSpec } from "../src/brain/specs.js";
++import { compareBrainQueryReports } from "../tools/brain-agent-report.js";
++import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
++import { loadV6Knowledge } from "../src/v6/knowledge.js";
++import { loadCombatEntries } from "../src/reflex/jev/combat-entries.js";
++import { fixedState } from "./v6-combat-fixtures.js";
++import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
++
++const dirs: string[] = [];
++const close: Array<() => Promise<void>> = [];
++afterEach(async () => { for (const fn of close.splice(0)) await fn(); dirs.splice(0).forEach(d => rmSync(d, { recursive: true, force: true })); setKnowledgeCharacter(null); vi.unstubAllEnvs(); });
++const sha = (s: string) => createHash("sha256").update(s).digest("hex");
++function fixture() {
++  setKnowledgeCharacter("silent");
++  const dir = mkdtempSync(join(tmpdir(), "brain-rk-")); dirs.push(dir);
++  const write = (name: string, value: unknown) => { const path = knowledgeFile(dir, name); mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, JSON.stringify(value)); };
++  const { directions: _unused, ...base } = reflex;
++  const entry = { ...base, id: "real-rk-fixture", applies_to: "combat_line", scope: { character: "silent", ascensions: [10] }, confidence: .25,
++    predicate: { op: "eq", field: "enemy.id", value: "FIXTURE_BOSS" }, label_en: "Reflex content fixture only" };
++  const library = { schema: "reflex-file-v1", character: "silent", entries: [entry] };
++  write("reflex.json", library);
++  const ctx = { label: "reward/card", ascension: 10, act: 1, knowledgeDir: dir, logsDir: "/forbidden", payload: { facts: { act: 1, act_boss: "FIXTURE_BOSS" } } };
++  const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, true);
++  const req: BrainRequest = { label: ctx.label, system: "fixed", question: "fixed", payload: ctx.payload, toolContext: ctx, tools: buildKnowledgeTools(ctx), knowledge: { mode: "tools" }, spec: pickSpec(ctx.label, { a: null }) };
++  return { dir, ctx, host, write, entry, library, req };
++}
++
++it("queries actual reflex.json entries and never labels experience queries as rk", async () => {
++  const { host } = fixture();
++  const result = await host.call("kb_reflex", { query: "*" });
++  expect(result.isError).not.toBe(true);
++  expect(JSON.parse(result.text)).toMatchObject({ status: "loaded", entries: [{ id: "real-rk-fixture", confidence: .25, source_experience: ["TEST_EXPERIENCE"] }] });
++  const experience = { name: "kb_experience", input: {}, output: '{"entries":[{"id":"experience-only"}]}', ms: 1 };
++  expect(queryAudit([experience])).toMatchObject({ rk: { queried: false, hit_ids: [] }, experience: { queried: true, hit_ids: ["experience-only"] } });
++  expect(queryAudit(host.calls).rk).toMatchObject({ queried: true, hit_ids: ["real-rk-fixture"] });
++});
++
++it("gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability", async () => {
++  const { req } = fixture();
++  const cue = await attachQueryGuidance(req);
++  expect(cue.question).toContain('"tool":"kb_reflex"');
++  expect(cue.question).toContain("real-rk-fixture");
++  expect(cue.question).not.toContain("Reflex content fixture only");
++  expect(cue.question).not.toContain('"signal"');
++  expect(cue.question).not.toContain('"predicate"');
++  expect(cue.question).toContain("检索候选");
++});
++
++it("retains rk cues even when the optional act-threat database is malformed", async () => {
++  const { req, write } = fixture();
++  write("monster-db.json", { monsters: {}, encounters: { INVALID_FIXTURE: null } });
++  expect((await attachQueryGuidance(req)).question).toContain("real-rk-fixture");
++});
++
++it("retains exact file and entry versions, confidence, evidence and source-experience links without writing", async () => {
++  const { ctx, host, entry, dir, library } = fixture();
++  const path = knowledgeFile(dir, "reflex.json"), before = readFileSync(path, "utf8");
++  const result = await host.call("kb_reflex", { query: "FIXTURE_BOSS", applies_to: "combat_line" });
++  expect(JSON.parse(result.text)).toMatchObject({ entries: [entry], predicate_evaluation: "not_evaluated",
++    sources: [{ source: "own", character: "silent", file: "reflex.json", version: "reflex-file-v1", sha256: sha(before) }] });
++  expect(host.calls[0]).toMatchObject({ output: result.text, outputBytes: Buffer.byteLength(result.text), sources: [expect.objectContaining({ sha256: sha(before) })] });
++  expect(readFileSync(path, "utf8")).toBe(before);
++  // The optional audited reader is equivalent to the existing loader and never changes a consumer's defaults.
++  expect(loadV6Knowledge(dir, "silent", p => readFileSync(p, "utf8"))).toEqual(loadV6Knowledge(dir, "silent"));
++  expect(library.entries).toEqual([entry]); expect(ctx.ascension).toBe(10);
++});
++
++it("distinguishes missing, empty, no match, unsupported ascension and malformed reflex knowledge", async () => {
++  const { host, write, dir, entry, library } = fixture();
++  expect(JSON.parse((await host.call("kb_reflex", { query: "not-present" })).text)).toMatchObject({ status: "loaded", entries: [] });
++  expect(JSON.parse((await host.call("kb_reflex", { query: "*", applies_to: "rest" })).text).entries).toEqual([]);
++  write("reflex.json", { ...library, entries: [{ ...entry, scope: { character: "silent", ascensions: [9] } }] });
++  expect(JSON.parse((await host.call("kb_reflex", { query: "*" })).text)).toMatchObject({ status: "loaded", entries: [] });
++  write("reflex.json", { ...library, entries: [] });
++  expect(JSON.parse((await host.call("kb_reflex", { query: "*" })).text)).toMatchObject({ status: "loaded", entries: [] });
++  rmSync(knowledgeFile(dir, "reflex.json"));
++  write("experience.json", { version: "fixture", entries: [{ id: "not-reflex" }] });
++  writeFileSync(join(dir, "characters/silent/reflex.json"), "{");
++  expect((await host.call("kb_reflex", { query: "*" })).isError).toBe(true);
++  rmSync(knowledgeFile(dir, "reflex.json"));
++  const missing = await host.call("kb_reflex", { query: "*" });
++  expect(missing.isError).not.toBe(true); expect(JSON.parse(missing.text)).toMatchObject({ status: "missing", entries: [] });
++});
++
++it("keeps strict reference validation and includes the actual vocabulary input SHA", async () => {
++  const { host, write, library, entry, dir } = fixture();
++  write("reflex.json", { ...library, entries: [{ ...entry, signal: { kind: "tag", value: "TEST_TAG", unit: "label" } }] });
++  expect((await host.call("kb_reflex", { query: "*" })).isError).toBe(true);
++  write("reflex-vocab.json", vocab);
++  const result = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
++  expect(result.entries[0]).toMatchObject({ id: entry.id, signal: { kind: "tag", value: "TEST_TAG" }, confidence: .25 });
++  expect(result.sources).toContainEqual(expect.objectContaining({ file: "reflex-vocab.json", sha256: sha(readFileSync(knowledgeFile(dir, "reflex-vocab.json"), "utf8")) }));
++  for (const changed of [ { ...entry, directions: ["UNKNOWN_DIRECTION"] }, { ...entry, predicate: { op: "exists", field: "raw.secret" } } ]) {
++    write("reflex.json", { ...library, entries: [changed] });
++    const bad = await host.call("kb_reflex", { query: "*" });
++    expect(bad.isError).toBe(true); expect(JSON.parse(bad.text).entries).toEqual([]);
++  }
++});
++
++it("rejects cross-role headers, scopes, duplicates, traversal inputs and symlink escapes", async () => {
++  const { host, write, library, entry, dir } = fixture();
++  for (const value of [ { ...library, character: "ironclad" }, { ...library, entries: [{ ...entry, scope: { character: "ironclad", ascensions: [10] } }] }, { ...library, entries: [entry, entry] } ]) {
++    write("reflex.json", value); expect((await host.call("kb_reflex", { query: "*" })).isError).toBe(true);
++  }
++  for (const input of [{ query: "*", path: "../reflex.json" }, { query: "*", character: "ironclad" }, { query: "*", applies_to: "shell" }, { query: "" }, { query: "*", write: true }]) expect((await host.call("kb_reflex", input)).isError).toBe(true);
++  write("reflex.json", library);
++  const foreign = join(dir, "characters/ironclad/reflex.json"); mkdirSync(dirname(foreign), { recursive: true }); writeFileSync(foreign, JSON.stringify(library));
++  rmSync(knowledgeFile(dir, "reflex.json")); symlinkSync(foreign, knowledgeFile(dir, "reflex.json"));
++  const escaped = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
++  expect(escaped).toMatchObject({ status: "invalid", entries: [] }); expect(escaped.sources).not.toContainEqual(expect.objectContaining({ file: "reflex.json" }));
++});
++
++it("reloads changed reflex bytes and keeps all other roles' existing tool surface unchanged", async () => {
++  const { ctx, host, write, entry, library } = fixture();
++  const first = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
++  write("reflex.json", { ...library, entries: [{ ...entry, id: "changed-reflex", version: 2, confidence: .1 }] });
++  const second = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
++  expect(second.entries[0]).toMatchObject({ id: "changed-reflex", version: 2, confidence: .1 });
++  expect(second.sources[0].sha256).not.toBe(first.sources[0].sha256);
++  for (const role of ["ironclad", "regent", "defect", "necrobinder"]) { setKnowledgeCharacter(role); expect(buildKnowledgeTools(ctx).map(t => t.name)).not.toContain("kb_reflex"); }
++});
++
++it("bounds returned entries and cue identities while keeping text-filtered Boss hints consistent", async () => {
++  const { req, host, write, entry, library } = fixture();
++  write("reflex.json", { ...library, entries: Array.from({ length: 30 }, (_, i) => ({ ...entry, id: `reflex-${i}` })) });
++  const cue = await attachQueryGuidance(req), body = JSON.parse(cue.question.split("\n").at(-1)!);
++  expect(body.rk).toMatchObject({ count: 30, omitted: 24, tool: "kb_reflex", input: { query: "*" }, entity_queries: [expect.objectContaining({ entity: "FIXTURE_BOSS", count: 30 })] });
++  expect(body.rk.entries).toHaveLength(6);
++  const broad = await host.call("kb_reflex", { query: "*" }); expect(Buffer.byteLength(broad.text)).toBeLessThanOrEqual(24_000);
++  expect(JSON.parse(broad.text)).toMatchObject({ omitted: 18 }); expect(JSON.parse(broad.text).entries).toHaveLength(12);
++});
++
++it("serves rk through the production MCP with the same provenance and unchanged combat-off consumer", async () => {
++  const { ctx, dir, entry } = fixture();
++  vi.stubEnv("V6_COMBAT_ENTRIES", "off");
++  const mcp = new KnowledgeMcp(); close.push(() => mcp.close());
++  const host = mcp.begin(buildKnowledgeTools(ctx), ctx, 8, Infinity, () => {}), url = await mcp.start();
++  const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "kb_reflex", arguments: { query: "*" } } }) });
++  const body = await response.json() as any;
++  expect(JSON.parse(body.result.content[0].text)).toMatchObject({ entries: [entry], predicate_evaluation: "not_evaluated" });
++  expect(queryAudit(host.calls).rk.hit_ids).toEqual([entry.id]);
++  expect(process.env["V6_COMBAT_ENTRIES"]).toBe("off"); expect(loadCombatEntries(fixedState(), dir, { V6_COMBAT_ENTRIES: "off" })).toBeNull();
++});
++
++it("uses the same engine's answer reserve after a real rk lookup consumes the call allowance", async () => {
++  const { ctx, req, entry } = fixture();
++  const config = loadConfig({ BRAIN_LOG: "off" }).brain; config.agent = { ...config.agent, maxToolCalls: 1, codexTotalMs: 2000, codexAnswerMs: 1000 };
++  let final: BrainRequest | undefined;
++  const answer: BrainAnswer = { engine: "codex", model: "fixed", answer: { choice: "a" }, problems: [], attempts: 1, toolCalls: [], latencyMs: 0, usage: { inputTokens: 1, outputTokens: 1 } };
++  const engine = new KnowledgeAgent("codex", "fixed", config, url => ({ name: "codex", model: "fixed", decide: async (request, signal) => {
++    if (!url) { final = request; return answer; }
++    await fetch(url, { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "kb_reflex", arguments: { query: "*" } } }) });
++    await new Promise<void>(resolve => { if (signal?.aborted) resolve(); else signal?.addEventListener("abort", () => resolve(), { once: true }); });
++    throw new Error("query allowance exhausted");
++  } })); close.push(() => engine.close());
++  const result = await engine.decide({ ...await attachQueryGuidance(req), toolContext: ctx });
++  expect(result.agent?.fallback).toBe("calls"); expect(final!.tools).toEqual([]); expect(final!.question).toContain(entry.id);
++  expect(queryAudit(result.toolCalls).rk.hit_ids).toEqual([entry.id]);
++});
++
++it("recomputes historical rk rates only from kb_reflex and keeps experience in a separate denominator", () => {
++  const before = { engine: "codex", label: "reward/card", knowledge: { mode: "tools" }, run_id: "before", tools: ["kb_experience"],
++    query_audit: { rk: { queried: true, hit_ids: ["wrong-old-alias"] } }, tool_calls: [{ name: "kb_experience", output: '{"entries":[{"id":"experience-only"}]}', ms: 1 }] };
++  const after = { ...before, run_id: "after", tools: ["kb_reflex", "kb_experience"], tool_calls: [{ name: "kb_reflex", output: '{"entries":[{"id":"real-rk"}]}', ms: 1 }] };
++  const compared = compareBrainQueryReports([before], [after]);
++  expect(compared.baseline.query_groups[0]).toMatchObject({ rk: { query_rate: 0, hit_ids: [] }, experience: { query_rate: 1 }, rk_available_questions: 0 });
++  expect(compared.current.query_groups[0]).toMatchObject({ rk: { query_rate: 1, hit_ids: ["real-rk"] }, experience: { query_rate: 0 }, rk_available_questions: 1 });
++  expect(compared.changes[0].rk_query_rate_delta).toBe(1);
++});
++
++it("persists actual reflex IDs and its exact sources in the brain log on success and failure", async () => {
++  const { req, host, entry } = fixture();
++  await host.call("kb_reflex", { query: "*" });
++  const logs: BrainLogRow[] = [];
++  let fail = false;
++  const cfg = loadConfig({ BRAIN_LOG: "off" }).brain;
++  const router = new BrainRouter({ config: { ...cfg, engine: "deepseek", fallback: null }, knowledgeAgent: true, log: row => logs.push(row),
++    engine: () => ({ name: "deepseek", model: "fixed", decide: async () => {
++      if (fail) throw Object.assign(new Error("fixture failure"), { brainToolCalls: host.calls });
++      return { engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixed" }, problems: [], attempts: 1, toolCalls: host.calls, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 } };
++    } }) });
++  await router.decide(req); fail = true; await expect(router.decide(req)).rejects.toThrow("fixture failure");
++  for (const row of logs) {
++    expect(row.query_audit).toMatchObject({ schema: "brain-query-audit-v2", rk: { queried: true, hit_ids: [entry.id] }, experience: { queried: false, hit_ids: [] } });
++    expect(row.tool_calls[0]).toMatchObject({ name: "kb_reflex", sources: [expect.objectContaining({ file: "reflex.json", sha256: expect.stringMatching(/^[a-f0-9]{64}$/) })] });
++  }
++});
+diff --git a/agent/tools/brain-agent-report.ts b/agent/tools/brain-agent-report.ts
+index fc33df3dcd747c92b18b0f7bf910b559232f2b25..1cee241b627d0b859f3ff20c24e7fea2199a3863 100644
+--- a/agent/tools/brain-agent-report.ts
++++ b/agent/tools/brain-agent-report.ts
+@@ -1,6 +1,7 @@
+ /** Natural-run acceptance from existing brain JSONL; never schedules games or calls models. */
+ import { readFileSync } from "node:fs";
+ import { pathToFileURL } from "node:url";
++import { guidanceKind, queryAudit } from "../src/brain/tools/query-guidance.js";
+ type Row = Record<string, any>;
+ const p95 = (xs: number[]) => xs.length ? [...xs].sort((a, b) => a - b)[Math.ceil(xs.length * .95) - 1] : null;
+ const mean = (xs: number[]) => xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
+@@ -27,13 +28,58 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
+       source_tags: [...new Set(selected.flatMap(r => (r.tool_calls ?? []).flatMap((c: Row) => (c.sources ?? []).map((s: Row) => s.source ?? "unknown"))))].sort(),
+     };
+   });
++  const queryGroups = [...new Set(data.map(r => `${r.engine}/${guidanceKind(r.label ?? "", r.payload) ?? "other"}`))].sort().map(key => {
++    const selected = data.filter(r => `${r.engine}/${guidanceKind(r.label ?? "", r.payload) ?? "other"}` === key);
++    const audit = selected.map(r => queryAudit(r.tool_calls ?? []));
++    const summarize = (kind: "strategies" | "rk" | "experience") => {
++      const rows = audit.map(a => a[kind]);
++      const calls = rows.reduce((n, r) => n + r.calls, 0);
++      const hits = rows.reduce((n, r) => n + r.hit_calls, 0);
++      const unknown = rows.reduce((n, r) => n + r.unknown_hit_calls, 0);
++      return { queried_questions: rows.filter(r => r.queried).length, query_rate: rows.filter(r => r.queried).length / selected.length,
++        calls, hit_calls: hits, unknown_hit_calls: unknown, hit_rate: calls && !unknown ? hits / calls : null,
++        hit_ids: [...new Set(rows.flatMap(r => r.hit_ids))].sort() };
++    };
++    const calls = selected.map(r => (r.tool_calls ?? []).length);
++    const latency = selected.flatMap(r => typeof r.latency_ms === "number" ? [r.latency_ms] : []);
++    return { engine: selected[0]!.engine, question_type: key.slice(key.indexOf("/") + 1), questions: selected.length,
++      strategies: summarize("strategies"), rk: summarize("rk"), experience: summarize("experience"),
++      rk_available_questions: selected.filter(r => Array.isArray(r.tools) && r.tools.includes("kb_reflex")).length, calls_mean: mean(calls), calls_p95: p95(calls),
++      latency_ms_mean: mean(latency), latency_ms_p95: p95(latency) };
++  });
+   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
+     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
+     inline_knowledge_rows: data.filter(r => r.payload?.open_book || r.payload?.strategy_entries || r.knowledge?.mode === "full").length,
+-    groups, limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。无工具调用是观测，不自动判错；无对照局，不推断因果增加耗时或收益。零题不构成验收。" };
++    groups, query_groups: queryGroups, rk_definition: "reflex.json via kb_reflex; kb_experience is experience, never rk", limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。" };
++}
++export function compareBrainQueryReports(before: Row[], after: Row[], beforeRunIds: string[] = [], afterRunIds: string[] = []) {
++  const baseline = brainAgentReport(before, beforeRunIds), current = brainAgentReport(after, afterRunIds);
++  return { schema: "brain-query-comparison-v1", baseline, current,
++    baseline_run_count: baseline.run_ids.length, expected_baseline_runs: 18,
++    baseline_matches_18_runs: baseline.run_ids.length === 18,
++    changes: current.query_groups.map(group => {
++      const old = baseline.query_groups.find(g => g.engine === group.engine && g.question_type === group.question_type);
++      return { engine: group.engine, question_type: group.question_type,
++        strategies_query_rate_delta: old ? group.strategies.query_rate - old.strategies.query_rate : null,
++        rk_query_rate_delta: old ? group.rk.query_rate - old.rk.query_rate : null,
++        calls_mean_delta: old && group.calls_mean !== null && old.calls_mean !== null ? group.calls_mean - old.calls_mean : null,
++        latency_ms_mean_delta: old && group.latency_ms_mean !== null && old.latency_ms_mean !== null ? group.latency_ms_mean - old.latency_ms_mean : null };
++    }), limitation: "上线前18局与上线后首批自然局须由调用者明确冻结原日志和局号；缺失题型变化为null，不补零，不追加实验局。" };
+ }
+ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+-  const path = process.argv[2]; if (!path) throw new Error("usage: brain-agent-report.ts <brain.jsonl> [run-id ...]");
++  const path = process.argv[2]; if (!path) throw new Error("usage: brain-agent-report.ts <brain.jsonl> [run-id ...] [--baseline <before.jsonl> --baseline-run <run-id> ...]");
+   const rows = readFileSync(path, "utf8").split("\n").filter(Boolean).map(line => JSON.parse(line));
+-  process.stdout.write(JSON.stringify(brainAgentReport(rows, process.argv.slice(3)), null, 2) + "\n");
++  const runIds: string[] = [], beforeRunIds: string[] = [];
++  let baselinePath: string | undefined;
++  const args = process.argv.slice(3);
++  for (let i = 0; i < args.length; i += 1) {
++    const arg = args[i]!;
++    if (arg === "--baseline" || arg === "--baseline-run") {
++      const value = args[++i]; if (!value || value.startsWith("--")) throw new Error(`missing value for ${arg}`);
++      if (arg === "--baseline") baselinePath = value; else beforeRunIds.push(value);
++    } else if (arg.startsWith("--")) throw new Error(`unknown option ${arg}`);
++    else runIds.push(arg);
++  }
++  const report = baselinePath ? compareBrainQueryReports(readFileSync(baselinePath, "utf8").split("\n").filter(Boolean).map(line => JSON.parse(line)), rows, beforeRunIds, runIds) : brainAgentReport(rows, runIds);
++  process.stdout.write(JSON.stringify(report, null, 2) + "\n");
+ }
+diff --git a/docs/brain-agent-mode.md b/docs/brain-agent-mode.md
+index 42c2e0b459cd459da43c8fd6bbd3868f34414a79..1d1eaa1034b2255c77d7558bc7ea401fe6f9da45 100644
+--- a/docs/brain-agent-mode.md
++++ b/docs/brain-agent-mode.md
+@@ -31,7 +31,7 @@ Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产
+ 
+ ## 工具与隔离
+ 
+-生产14个工具固定为 `kb_monster`、`kb_encounter`、`kb_experience`、`kb_stats`、`kb_old_knowledge`、`kb_potion`、`kb_open_book`、`kb_strategies`，以及 #26 的 `external_stats_card/skip/deck_size/encounter/clusters/cooccurrence` 六个工具。不含日志 SQL、对局原日志读取、模拟、任意路径、shell、文件写入或联网搜索。输入按 JSON Schema 校验，只读固定的已发布知识及既有开卷汇总；公共外部数据不计成本角色实盘验证。
++生产原14个工具为 `kb_monster`、`kb_encounter`、`kb_experience`、`kb_stats`、`kb_old_knowledge`、`kb_potion`、`kb_open_book`、`kb_strategies`，以及 #26 的 `external_stats_card/skip/deck_size/encounter/clusters/cooccurrence` 六个工具。#49 为 Silent 增加 `kb_reflex`，共15项；其他角色仍为原14项。不含日志 SQL、对局原日志读取、模拟、任意路径、shell、文件写入或联网搜索。输入按 JSON Schema 校验，只读固定的已发布知识及既有开卷汇总；公共外部数据不计成本角色实盘验证。
+ 
+ Codex 保留空 cwd、project docs/hooks/apps/skills/multi-agent/shell/网络搜索禁用、无代码执行和 apply_patch 的模型目录配置；会话通过客户端 `gkb` 命名空间桥转发到本进程 MCP；不加载原生 MCP 配置，避免自动附加三个通用资源工具。知识模式不降到旧 exec。dsh 对继承配置中的每个顶层插件先禁用，再插入必要内核、Nova 凭据引用、只读知识 MCP 和流式观察器，不继承 bash、文件、Web、子 agent、通用 MCP 资源工具或其他用户工具。临时配置不含密钥，原生 dsh 会话保留在本仓库忽略的数据目录。
+ 
+@@ -39,6 +39,22 @@ Codex 保留空 cwd、project docs/hooks/apps/skills/multi-agent/shell/网络搜
+ 
+ 策略库复用 #16 已发布的 `strategy-entries.json` 及题型/状态触发器，不存在或为空时返回空。外部统计直接挂载 #26 的 `externalStatsTools()`，只读 `ctx.knowledgeDir/external/sts2fun/silent-a10.json` 的 #24 聚合，SHA固定在原模块；输入版本默认 `v0.111`。仅 Silent A10 适用，其他角色/进阶不回退；缺失、损坏 SHA、未知 ID 和不支持版本返回明确“无数据”的错误文本。每条保留 `external:sts2fun`、版本、分母、下载日期、原库/数据/来源 SHA、局限及16KB分页上限；流派和共现保留原模块的非因果/不能作方向依据说明，不混入自有统计。工具在对局控制器进程内执行，dsh/Codex 子进程不加载知识，因此角色身份不依赖继承 CHARACTER。
+ 
++### 查询引导（#49）
++
++Roy/主管 2026-10-23 最新裁定（issue评论6361846602）：rk 指 **reflex knowledge**，即 `reflex.json` 条目（v6-plan §5），不是 experience/shared-experience 的别名。此前开发6290300d8的解释已撤回，原提交、交付报告和失败证据保留为历史；本节为修正后的合同。
++
++Silent 的拿牌、商店、休息、事件、幕初路线和 fight-plan 题，基础指令与题面要求作答前先查询 `kb_strategies {"query":"*"}` 与 `kb_reflex {"query":"*"}`；可按线索里的 Boss/精英/卡牌/条目 ID 缩小 rk 查询。经验继续由独立的 `kb_experience` 查询，`relevant=true` 只表示本题相关经验。Ironclad 的基础指令和原工具表/schema 保持原样。
++
++题面末尾 `brain-query-cues-v2` 分列 strategies、rk、experience，只含候选数量、最多六条身份/已有策略标题、经验 scope、工具名和参数。rk 只给真实 reflex ID/applies_to，不给 label_en、predicate、signal、证据或可信度正文；另列本幕 Boss、当前敌人与已发布幕威胁的文本提及数量及查询参数。这个数量是检索候选数，不证明 predicate 已成立、预测下一个精英、Jev 采用或收益。缺失/损坏库数量为 null，合法空库为0；文件变化后重新读取，不编造条目。
++
++`kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。原始条目完整返回：版本、predicate、signal、confidence、evidence、source_experience 均保留；后者为来源经验关联，不是 reflex 命中 ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。
++
++检索不执行 predicate，不把未知战斗/选项状态当作满足条件；返回明确 `predicate_evaluation=not_evaluated`。`V6_COMBAT_ENTRIES=off` 关闭的是 Jev 执行消费，rk 仍可供大脑只读规划，查询不会打开它、修改知识或发送条目给 Jev。缺库/空库/无命中返回明确空结果，坏库/坏引用返回工具错误；正文最多12条/24KB，省略数单列，不截断证据，元数据本身超限则报错。
++
++`kb_experience relevant=true` 仍按既有 relevance 和进阶有效性查询经验，最多12条/24KB；保留原置信度、支持/反例、来源、证据与文件版本/SHA，可结合 theme/id/keyword 筛选。策略触发题型包含 fight_plan，旧策略不自动外推。新增查询工具后仍为原8次调用及查询/作答预算，无新增重问、强制查询闸或跨引擎兜底；错误/空结果或预算耗尽后用已有信息作答。
++
++工具模式 brain 日志使用 `query_audit.schema=brain-query-audit-v2`，strategies 只计 kb_strategies，rk 只计 kb_reflex，experience 只计 kb_experience；分别记录 queried/calls/hit_calls/unknown_hit_calls/hit_ids，成功与失败题均从实际 tool_calls 重建。错误、空结果、线索及模型文字不算命中，未知输出不补零。完整参数、来源、返回字节和耗时仍留在 tool_calls。
++
+ ## 上线与读回
+ 
+ 开发树不动 live/STOP。集成员联合检查后，由 ops 在自然开局边界选择引擎、显式核对旧环境中的 `BRAIN_ENGINE/BRAIN_CODEX_EFFORT/BRAIN_RUN_CONFIG`，防止历史显式值被误当成新默认。ops 核实际源码、分配行为 release_id，按原流程记录上线与通知。Codex 强度以原生 turn_context 回执为准；dsh 请求设置与原生会话分别留证，不把命令行意图当服务端已生效。
+@@ -51,7 +67,7 @@ nice -n 19 node --import tsx tools/dsh-knowledge-preflight.ts
+ nice -n 19 node --import tsx tools/codex-knowledge-preflight.ts
+ ```
+ 
+-dsh 预检启动真实内核并以同一14项知识 MCP 核工具清单，替换任务 runner，绝不提交用户题。Codex 预检使用临时独立 home 和只连接本机、拒绝推理的 Responses fixture，核实际序列化工具清单，不使用生产账号。
++dsh 预检启动真实内核并以同一按角色工具清单（Silent为15项）的知识 MCP 核工具清单，替换任务 runner，绝不提交用户题。Codex 预检使用临时独立 home 和只连接本机、拒绝推理的 Responses fixture，核实际序列化工具清单，不使用生产账号。
+ 
+ 首批自然局沿原日志读回：
+ 
+@@ -59,6 +75,15 @@ dsh 预检启动真实内核并以同一14项知识 MCP 核工具清单，替换
+ nice -n 19 node --import tsx tools/brain-agent-report.ts <brain.jsonl> <run-id> ...
+ ```
+ 
++#49 的 `query_groups` 按引擎及互斥题型分别列策略/rk/经验查询率、每题调用次数均值/p95、工具命中率、实际命中ID及每题耗时均值/p95；幕初事件只进 act_plan 分母。命中率为非空ID返回次数/该工具调用次数（含错误），没有调用或存在未知历史输出时为 null。`rk_available_questions` 另列该窗口实际公布 kb_reflex 的题数。历史日志按原 tool_calls 重建，kb_experience 绝不追认为 rk，即使旧 query_audit 曾误标；前18局没有 rk 工具时明确显示可用题数为0。冻结上线前18个自然局号与上线后首批自然局号后比较：
++
++```bash
++nice -n 19 node --import tsx tools/brain-agent-report.ts <after.jsonl> <after-run-id> ... \
++  --baseline <before.jsonl> --baseline-run <before-run-id> --baseline-run <before-run-id-2>
++```
++
++`--baseline-run` 重复18次；报告会核实际有工具模式记录的基线局数是否为18。未指定局号时读取该文件全部工具模式题，调用者须先冻结正确窗口。比较保留两个窗口完整分母与指标，缺少题型的差值为 null。发布与首批自然读回由集成员/ops 完成，不为本功能追加实验局，不将前后差异当因果收益。
++
+ 分别报告完成率、原生工具调用率/次数、工具执行耗时、查询阶段耗时、总耗时、调用/时间/卡住后作答比例。另列“有思考但无原生工具调用”和“把工具调用写进文字 JSON”的观测；前者不自动判失败，后者只匹配工具调用文字，不把正常答案 JSON 算失败。自然题的 `knowledge.mode=tools`、无前缀预算导致的开卷遗漏、来源标记与完整工具返回均须核实。零题或仅离线预检不构成自然局验收。
+ 
+ 接口参考：[官方 Codex App Server 文档](https://developers.openai.com/codex/app-server/)。实际 CLI、dsh 的已安装协议和固定夹具另行验证；没有外部游戏知识变更。
+diff --git a/docs/brain-strategies.md b/docs/brain-strategies.md
+index 2e7467e3fc3b4a84306ba7f171261229e20038f5..54905ed4b72bce06f8f83ab8dee5c716d0b683bd 100644
+--- a/docs/brain-strategies.md
++++ b/docs/brain-strategies.md
+@@ -15,7 +15,7 @@
+ | 字段 | 含义 |
+ | --- | --- |
+ | id / version | 库内唯一稳定编号 / 学习者维护的条目版本（非行为 release_id） |
+-| trigger.question_types | card_reward、event、rest、shop、act_plan 的非空数组；任一命中 |
++| trigger.question_types | card_reward、event、rest、shop、act_plan、fight_plan 的非空数组；任一命中（fight_plan 为 #49 备战查询入口，旧条目不自动扩用） |
+ | trigger.acts / floor / bosses | 幕号数组、全局楼层闭区间、当前幕 Boss 原始 ID 数组；不同字段全部满足 |
+ | trigger.hp_ratio | 当前 HP / 最大 HP，闭区间 0–1 |
+ | trigger.deck_size | 当前牌组张数闭区间 |
+@@ -50,12 +50,13 @@
+ 
+ ## 检索和 prompt
+ 
+-五类大脑请求在 `Brain.request` 中统一处理，发生在 full knowledge prefix 构建之前，因此普通调用、full prefix 和上下文溢出回退都带同一检索结果。模型及工具路由不变。
++历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式只给查询线索，正文由 `kb_strategies` 返回，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
+ 
+ - reward/card → card_reward；event/* → event；rest/* → rest；shop/* → shop。
+ - event/act-plan 同时匹配 event 和 act_plan。
++- map/act-start 匹配 act_plan；fight-plan 匹配 fight_plan，供已明确声明该触发题型的条目查询。
+ - run-plan 的 run_state.trigger 为 start/act，或任意题携带 run_plan_task.trigger=start/act 时，也匹配 act_plan。hp_drop/age 的独立重规划不计幕初规划。
+-- 只读取静默角色文件。其他角色及无规划任务的战斗题不会读取它。
++- 只读取静默角色文件。其他角色及无规划任务的普通战斗题不会读取它；独立 fight-plan 备战题有专用触发类型。
+ - 上下文取 facts → payload 根 → run_state → run_plan_task → run_brief，数值幕号兼容旧字符串。HP 允许尾随百分比。
+ - 排序：触发字段数＋指定牌条件数更多优先，再按 confidence 降序、id 升序。同一条即使匹配多个题型也只注入一次。
+ - 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源、派生分账及局限。装不下的条目跳过，不截断证据。
+diff --git a/knowledge/schemas/brain-strategies-v1.schema.json b/knowledge/schemas/brain-strategies-v1.schema.json
+index a8fa4e5f4a1e67dae15d37f7a99d08341d0afe1a..f6ca2b8314da689c297759d1954f43a6c4aab476 100644
+--- a/knowledge/schemas/brain-strategies-v1.schema.json
++++ b/knowledge/schemas/brain-strategies-v1.schema.json
+@@ -55,7 +55,8 @@
+                     "event",
+                     "rest",
+                     "shop",
+-                    "act_plan"
++                    "act_plan",
++                    "fight_plan"
+                   ]
+                 }
+               },

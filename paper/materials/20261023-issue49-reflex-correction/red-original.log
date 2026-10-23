@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-49-brain-query-guidance/agent
+
+ ❯ tests/brain-reflex-knowledge.test.ts (2 tests | 2 failed) 20ms
+   × queries actual reflex.json entries and never labels experience queries as rk 10ms
+   × gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-reflex-knowledge.test.ts > queries actual reflex.json entries and never labels experience queries as rk
+AssertionError: expected true not to be true // Object.is equality
+ ❯ tests/brain-reflex-knowledge.test.ts:41:30
+     39|   const { host } = fixture();
+     40|   const result = await host.call("kb_reflex", { query: "*" });
+     41|   expect(result.isError).not.toBe(true);
+       |                              ^
+     42|   expect(JSON.parse(result.text)).toMatchObject({ status: "loaded", en…
+     43|   const experience = { name: "kb_experience", input: {}, output: '{"en…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/brain-reflex-knowledge.test.ts > gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability
+AssertionError: expected 'fixed\n\n作答前先查本题相关策略与 rk（经验库）；备战题优先本幕…' to contain '"tool":"kb_reflex"'
+
+- Expected
++ Received
+
+- "tool":"kb_reflex"
++ fixed
++
++ 作答前先查本题相关策略与 rk（经验库）；备战题优先本幕 Boss / 精英及当前敌人。以下仅为可查线索，不是策略正文。先调用 kb_strategies 和 kb_experience，按返回的来源、可信度及反证判断；空结果/错误或查询预算结束后用已有信息作答，不重试刷空库。
++ {"schema":"brain-query-cues-v1","question_type":"card_reward","strategies":{"status":"missing","count":null,"entries":[],"omitted":0,"tool":"kb_strategies","input":{"query":"*"}},"rk":{"status":"missing","count":null,"entries":[],"omitted":0,"tool":"kb_experience","input":{"relevant":true}}}
+
+ ❯ tests/brain-reflex-knowledge.test.ts:51:24
+     49|   const { req } = fixture();
+     50|   const cue = await attachQueryGuidance(req);
+     51|   expect(cue.question).toContain('"tool":"kb_reflex"');
+       |                        ^
+     52|   expect(cue.question).toContain("real-rk-fixture");
+     53|   expect(cue.question).not.toContain("Reflex content fixture only");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:29:55
+   Duration  1.77s (transform 1.24s, setup 744ms, import 743ms, tests 20ms, environment 0ms)
+

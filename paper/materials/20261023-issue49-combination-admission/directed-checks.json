@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-23T17:54:56+08:00",
+  "state": "passed",
+  "base": "2faa7ead017b977051b317355e352aa229b1344d",
+  "tree": "a70c1cbc697ee4d21bbbc50d848945241918040c",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator49-combination-20261023-1756",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T17:54:56+08:00",
+      "exit_code": 0,
+      "seconds": 1.02
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/brain-reflex-knowledge.test.ts",
+        "tests/brain-query-guidance.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/brain-agent-report.test.ts",
+        "tests/brain-agent-provenance.test.ts",
+        "tests/strategy-entries.test.ts",
+        "tests/external-strategy-evidence.test.ts",
+        "tests/v6-infrastructure.test.ts",
+        "tests/v6-formats.test.ts",
+        "tests/v6-combat-entries.test.ts",
+        "tests/reward-external-stats.test.ts",
+        "tests/silent-reward-addition.test.ts",
+        "tests/reward-special.test.ts",
+        "tests/v6-card-reward-scope.test.ts",
+        "tests/v6-card-pick.test.ts",
+        "tests/brain-live.test.ts",
+        "tests/brain-agent-codex.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue49-combination-1756/directed-vitest.json"
+      ],
+      "started_at": "2026-10-23T17:54:57+08:00",
+      "exit_code": 0,
+      "seconds": 16.652
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2632,
+  "vitest": {
+    "files": 17,
+    "passed": 260,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T17:55:14+08:00"
+}
