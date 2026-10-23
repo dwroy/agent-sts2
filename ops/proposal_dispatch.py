@@ -1,5 +1,6 @@
 """Mechanical proposal consumption, audit links, and no-change dispositions."""
 import importlib.util
+import datetime as dt
 import hashlib
 import json
 import os
@@ -12,6 +13,49 @@ import time
 RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*.json','agent/tsconfig*.json',
     'agent/vitest*','learner/*.ts','learner/*.py','learner/lib','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
     'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
+
+WAITING_RUNS = 10
+WAITING_SECONDS = 6 * 3600
+WAITING_SLOTS = 2
+
+
+def waiting_round(state, character, count, stamp, now):
+    """Batch repeat reviews before allocating trees; the caller holds learn.lock."""
+    previous = state.get('proposal_rechecks', {}).get(character)
+    if previous is None:
+        return True
+    if (not isinstance(previous, dict) or previous.get('schema') != 1
+            or type(previous.get('finished_runs')) is not int
+            or not isinstance(previous.get('at'), (int, float))
+            or not isinstance(previous.get('round'), str)
+            or not isinstance(previous.get('batches'), list)):
+        raise ValueError('invalid proposal recheck watermark; preserve original state')
+    # Counter or clock rollback must not reopen an already consumed round.
+    if count < previous['finished_runs'] or now < previous['at']:
+        return False
+    if previous['round'] == stamp.removesuffix('-s2'):
+        return len(previous['batches']) < WAITING_SLOTS
+    return count >= previous['finished_runs'] + WAITING_RUNS or now >= previous['at'] + WAITING_SECONDS
+
+
+def record_waiting_round(state, character, count, stamp, now, batch_id):
+    rounds = state.setdefault('proposal_rechecks', {})
+    identity = stamp.removesuffix('-s2')
+    previous = rounds.get(character)
+    if previous is None or previous['round'] != identity:
+        rounds[character] = {'schema': 1, 'round': identity, 'at': now,
+                             'finished_runs': count, 'batches': [batch_id]}
+    else:
+        previous['batches'].append(batch_id)
+
+
+def waiting_age(proposal):
+    """Oldest dispositions go first, so a stable queue prefix cannot starve others."""
+    try:
+        value = dt.datetime.fromisoformat(proposal.get('ts', ''))
+        return value.timestamp() if value.tzinfo is not None else 0
+    except (TypeError, ValueError, OverflowError):
+        return 0
 
 
 def library(scripts):
@@ -63,15 +107,28 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
             claimed.update(batch['proposal_ids'])
         else:
             batch.update(state='lost',retry_at=time.time()+3600)
-    ready=[p for p in items.values() if p.get('character')==character and p.get('target_task')=='strategy-proposal'
-           and p['id'] not in claimed
-           and (p.get('state')=='pending' or p.get('state')=='waiting' and count>p.get('seen_runs',count))]
+    candidates=[p for p in items.values() if p.get('character')==character
+                and p.get('target_task')=='strategy-proposal' and p['id'] not in claimed]
+    # New proposals and link repairs keep their existing prompt, priority and retry rules.
+    # Never mix them with a repeat-review round or share a writer checkout.
+    ready=[p for p in candidates if p.get('state')=='pending']
+    repeat = not ready
+    now = time.time()
+    if repeat:
+        ready=sorted((p for p in candidates if p.get('state')=='waiting' and count>p.get('seen_runs',count)),
+                     key=lambda p: (waiting_age(p), p['id']))
+        if ready and not waiting_round(state,character,count,stamp,now):
+            return None
     if not ready: return None
     ids=[p['id'] for p in ready[:10]]
     runs=list(dict.fromkeys(r for p in ready[:10] for r in p['runs']))[:10]
     key='code-proposals:'+','.join(ids)+':'+str(count)
     result=dispatch_write(state,root,scripts,'strategy-proposal',character,runs,key,'proposal',alive,stamp)
-    if result: state['batches'][result[0]]['proposal_ids']=ids
+    if result:
+        state['batches'][result[0]]['proposal_ids']=ids
+        if repeat:
+            record_waiting_round(state,character,count,stamp,now,result[0])
+            state['batches'][result[0]]['proposal_recheck_round']=stamp.removesuffix('-s2')
     return result
 
 
