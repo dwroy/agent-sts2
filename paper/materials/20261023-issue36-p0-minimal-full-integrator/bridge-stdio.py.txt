@@ -1,0 +1,44 @@
+from pathlib import Path
+import hashlib,json,os,shutil,subprocess
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent
+def git(*args,cwd=R):return subprocess.check_output(['git',*args],cwd=cwd)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+assert not (B/'full').exists(),'The unique full must not have started'
+P=json.loads((R/'paper/materials/20261023-learner-stdio-log-ops/prepared.json').read_text())
+wrapper='ops/codex-ops-learner.sh';test='agent/tests/learner-stdio-view.test.ts'
+raws={x['path']:git('cat-file','blob',x['blob']) for x in P['paths']}
+for row in P['paths']:assert sha(raws[row['path']])==row['sha256']
+original=git('show',P['base']+':'+wrapper)
+anchor=b'out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"\n'
+start=raws[wrapper].index(anchor)+len(anchor);end=raws[wrapper].index(b'export PATH=',start)
+block=raws[wrapper][start:end]
+assert block.startswith(b'# The command-host pane') and len(block.splitlines())==9
+assert original.count(anchor)==1 and original.replace(anchor,anchor+block,1)==raws[wrapper]
+save=B/'pre-stdio-bridge';assert not save.exists();save.mkdir()
+for name in ['assembly.json','source.patch','main-assembly.json','main-checks.json','main-inputs-before.json','main-inputs-after.json','main-tsc.log','main-directed.log','main-vitest.json','main-python-tui.log','main-syntax.log','check-main.py']:
+ shutil.copy2(B/name,save/name)
+receipt=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),comment=6357245522,full_started=False,candidate=P,bridge_block_sha256=sha(block),trees={})
+for prefix in ['', 'main-']:
+ path=B/(prefix+'assembly.json');A=json.loads(path.read_text());W=Path(A['worktree'])
+ assert git('write-tree',cwd=W).decode().strip()==A['tree'] and not git('diff','--name-only',cwd=W).strip()
+ before=(W/wrapper).read_bytes();assert before.count(anchor)==1 and block not in before
+ after=before.replace(anchor,anchor+block,1);(W/wrapper).write_bytes(after)
+ assert after.replace(block,b'',1)==before
+ assert not (W/test).exists();(W/test).write_bytes(raws[test])
+ git('add','--sparse','--',wrapper,test,cwd=W)
+ blob=git('rev-parse',':'+wrapper,cwd=W).decode().strip()
+ row=next(x for x in A['paths'] if x['path']==wrapper)
+ row.update(sha256=sha(after))
+ if prefix:row.update(blob=blob)
+ else:row.update(tested_blob=blob,bytes=len(after))
+ new=dict(path=test,sha256=sha(raws[test]))
+ if prefix:new.update(preimage=None,blob=P['paths'][1]['blob'],mode='100644')
+ else:new.update(base=None,tested_blob=P['paths'][1]['blob'],bytes=len(raws[test]))
+ A['paths'].append(new);assert len(A['paths'])==15
+ A['tree']=git('write-tree',cwd=W).decode().strip();A['stdio_log_comment']=6357245522;A['stdio_log_bridge']=receipt['bridge_block_sha256']
+ path.write_text(json.dumps(A,ensure_ascii=False,indent=2)+'\n');receipt['trees'][prefix or 'live']=A['tree']
+ if not prefix:(B/'source.patch').write_bytes(git('diff','--binary','--full-index',A['live_base'],'--',*[x['path'] for x in A['paths']],cwd=W))
+for name in ['main-checks.json','main-inputs-before.json','main-inputs-after.json','main-tsc.log','main-directed.log','main-vitest.json','main-python-tui.log','main-syntax.log']:(B/name).unlink()
+p=B/'check-main.py';text=p.read_text();assert "'brain-view']" in text;p.write_text(text.replace("'brain-view']","'brain-view','learner-stdio-view']"))
+(B/'stdio-bridge.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(dict(paths=15,trees=receipt['trees'],full_started=False)),flush=True)

@@ -1,0 +1,44 @@
+from pathlib import Path
+import os,json,hashlib,subprocess,time,fcntl,signal
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent;W=R/'.worktrees/integrator36-p0-minimal-20261023-1153';L=R/'.worktrees/live';OLD=R/'.artifacts/issue36-p0-review-20261023-1059'
+BASE='f3fb25b73be7f170f46b240353995b9fe73596a6'
+def git(*a,cwd=W):return subprocess.check_output(['git',*a],cwd=cwd,stderr=subprocess.PIPE)
+def sha(x):return hashlib.sha256(x).hexdigest()
+def put(n,x):(B/n).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+assert git('rev-parse','HEAD').decode().strip()==BASE
+assert not git('diff','--name-only').strip() and not git('diff','--cached','--name-only').strip()
+knowledge=[]
+with (R/'ops/knowledge-refresh.lock').open('a') as k,(R/'ops/live-merge.lock').open('a') as l:
+ deadline=time.monotonic()+1800
+ print('Waiting for the existing knowledge refresh to release its lock; no production action.',flush=True)
+ signal.alarm(1800)
+ while True:
+  try:
+   fcntl.flock(k,fcntl.LOCK_SH);fcntl.flock(l,fcntl.LOCK_SH|fcntl.LOCK_NB);break
+  except BlockingIOError:
+   fcntl.flock(k,fcntl.LOCK_UN);fcntl.flock(l,fcntl.LOCK_UN)
+   if time.monotonic()>=deadline:raise
+   time.sleep(2)
+ signal.alarm(0)
+ assert git('rev-parse','HEAD',cwd=L).decode().strip()==BASE
+ for p in sorted((L/'knowledge').rglob('*')):
+  n=p.relative_to(L)
+  if not p.is_file() or p.is_symlink() or 'builders' in n.parts:continue
+  raw=p.read_bytes();f=W/n;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(raw);knowledge.append(dict(path=str(n),sha256=sha(raw),bytes=len(raw)))
+ assert all(sha((L/x['path']).read_bytes())==x['sha256'] for x in knowledge)
+ assert git('rev-parse','HEAD',cwd=L).decode().strip()==BASE
+fixed='paper/materials/issue29-brain-speed/results.jsonl';raw=git('show','b84d95c5185941eec143cbcf2966d5770309cca5',cwd=R);f=W/fixed;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(raw)
+git('add','--sparse','--',*[x['path'] for x in knowledge]);bt=git('write-tree').decode().strip()
+state=json.loads((B/'baseline-check.json').read_text());assert state['inputs_unchanged'] and state['base']==BASE
+# Install only the reviewed P0 delta, retaining the accepted stdio fallback merged earlier.
+old=json.loads((OLD/'assembly.json').read_text());names=json.loads((OLD/'paths-36.json').read_text());rows=[]
+for n in names:
+ row=next(x for x in old['paths'] if x['path']==n);raw=git('cat-file','blob',row['tested_blob'],cwd=R);assert sha(raw)==row['sha256'];f=W/n;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(raw);rows.append(row)
+git('add','--sparse','--',*names)
+assert not git('diff','--name-only').strip()
+for n in ['.agents/board.yaml','ops/learner_tabs.py','ops/issue_session_support.py']:
+ assert not (W/n).exists(),n
+assert b'learner_tui=off' in (W/'docs/codex-ops.md').read_bytes()
+assert b'CODEX_OPS_LEARNER_TUI' in (W/'ops/learner_jobs.py').read_bytes()
+A=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),live_base=BASE,main_base=git('rev-parse','main',cwd=R).decode().strip(),source='0933ea0ef60304bfe4634d4bfb4ad35e32015f09',source_base='c8ff9caf5edefd3c21e73b60386202a3d90920ed',supervisor_comment=6356904617,worktree=str(W),tree=git('write-tree').decode().strip(),paths=rows,knowledge_manifest=knowledge,knowledge_count=len(knowledge),fixed_input=old['fixed_input'],issue20_included=False,runtime_dependencies=[],baseline_check=state,production_written=False)
+put('assembly.json',A);(B/'source.patch').write_bytes(git('diff','--binary','--full-index',BASE,'--',*names));print(json.dumps(dict(tree=A['tree'],paths=len(rows),knowledge=len(knowledge))),flush=True)

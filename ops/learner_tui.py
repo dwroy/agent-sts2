@@ -6,6 +6,30 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import datetime as dt
+import tempfile
+import fcntl
+import time
+
+
+def persist(path, value):
+    """Publish only flushed, complete JSON and persist the directory entry as well."""
+    path = Path(path)
+    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=path.name + ".", delete=False) as target:
+        temporary = Path(target.name)
+        try:
+            json.dump(value, target, ensure_ascii=False)
+            target.write("\n")
+            target.flush()
+            os.fsync(target.fileno())
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
+    fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def digest(path):
@@ -159,7 +183,11 @@ def verify(path, output):
             raise ValueError("native agent name is not bound to the original pane/label/cwd")
     result = receipt.get("result", {})
     if receipt.get("state") == "not-started" and result.get("code") == 3 and receipt.get("models_started") == 0:
-        digest(output)
+        if (receipt.get("submitted") or receipt.get("bindings") or receipt.get("submissions") or receipt.get("pid")
+                or any(receipt.get(key) or result.get(key) for key in ("session", "turn", "rollout"))):
+            raise ValueError("not-started receipt contains model activity")
+        receipt["output"] = {"path": str(output), "sha256": digest(output)}
+        persist(path, receipt)
         return receipt
     artifacts = receipt.get("artifacts", {})
     if (receipt.get("state") != "session-ended" or receipt.get("retirement_authorized") is not True
@@ -180,10 +208,142 @@ def verify(path, output):
         raise ValueError("original batch output is missing")
     receipt["output"] = {"path": str(output), "sha256": digest(output)}
     artifacts["out_pending_wrapper_flush"] = False
-    Path(path).write_text(json.dumps(receipt) + "\n")
-    with open(path) as source:
-        os.fsync(source.fileno())
+    persist(path, receipt)
     return receipt
+
+
+def verified_code(path, output, launcher_rc):
+    receipt = verify(path, output)
+    code = receipt["result"]["code"]
+    # The interactive launcher's error summary maps a preflight refusal to 1.
+    if int(launcher_rc) != code and not (receipt["state"] == "not-started" and code == 3 and int(launcher_rc) == 1):
+        raise ValueError("launcher exit differs from the original transport result")
+    return code
+
+
+def finished(state, batch, path, output, launcher_rc, supervisor):
+    """Record the original finish transaction; tab retirement belongs to the #20 adapter."""
+    code = verified_code(path, output, launcher_rc)
+    receipt = json.loads(Path(path).read_text())
+    value = json.loads(Path(state).read_text())["batches"][batch]
+    supervisor = int(supervisor)
+    label = "learner-" + batch + ("-postmortem" if value.get("task", "postmortem") == "postmortem" else "")
+    fields = Path(f"/proc/{supervisor}/stat").read_text().rsplit(")", 1)[1].split()
+    if (value.get("pid") != supervisor or supervisor != os.getppid() or supervisor <= 1 or fields[0] in ("Z", "X")
+            or value.get("state") not in ("done", "failed", "rejected") or not value.get("finished")
+            or value.get("rc") != code or code == 75
+            or (code == 0 and value.get("state") != "done")
+            or value.get("pane") != receipt.get("pane") or not receipt.get("pane")
+            or receipt.get("label") != label
+            or Path(value.get("worktree", Path(state).parents[2])).resolve() != Path(receipt.get("cwd", "")).resolve()):
+        raise ValueError("original terminal batch or supervisor authority is missing")
+    receipt["wrapper"] = {"version": 1, "batch": batch, "state": value["state"], "rc": code,
+        "launcher_rc": int(launcher_rc), "finished": value["finished"],
+        "supervisor": {"pid": supervisor, "birth": fields[19]},
+        "batch_sha256": hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()}
+    persist(path, receipt)
+
+
+def attention(directory, batch, stage):
+    """One durable exception notification per wrapper/stage, independent of an ops model turn."""
+    if not re.fullmatch(r"[a-z0-9-]+", batch) or stage not in ("verify", "finish", "seal", "registration"):
+        raise ValueError("invalid wrapper attention identity")
+    directory = Path(directory)
+    record = directory / "learner" / f"{batch}.wrapper-attention-{stage}.json"
+    queue = directory / "queue"
+    queue.mkdir(parents=True, exist_ok=True)
+    record.parent.mkdir(parents=True, exist_ok=True)
+    if record.exists():
+        return
+    # Persist the notification before its deduplication receipt; an interrupted enqueue is retried.
+    # Keep the existing queue reader's <epoch-ns>-<kind>.md grammar, including after a retry.
+    existing = list(queue.glob(f"*-wrapper-{batch}-{stage}-learner-tui-attention.md"))
+    message = existing[0] if existing else queue / f"{time.time_ns()}-wrapper-{batch}-{stage}-learner-tui-attention.md"
+    if not message.exists():
+        with message.open("w") as target:
+            target.write(f"学习批次 {batch} wrapper {stage} 核验未通过；保留原回执、批次与 pane，交原 ops 核验，不另开模型、不自行关 tab。\n")
+            target.flush()
+            os.fsync(target.fileno())
+        fd = os.open(queue, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    persist(record, {"batch": batch, "stage": stage, "at": dt.datetime.now().astimezone().isoformat(),
+                     "notification": str(message)})
+
+
+REGISTRATION_FIELDS = ("pid", "pane", "started", "task", "character", "worktree", "key", "runs",
+                       "learner_task", "feature_request", "research_request", "implementation_request")
+
+
+def apply_deferrals(state, directory):
+    """Replay a durable hold after lock contention, before a dead supervisor can become a retry."""
+    changed = False
+    for path in (Path(directory) / "learner").glob("*.verification-deferred.json"):
+        record = json.loads(path.read_text())
+        batch = state.get("batches", {}).get(record.get("batch"))
+        registration = record.get("registration")
+        if (not batch or not isinstance(registration, dict) or batch.get("state") != "running"
+                or batch.get("pid") != record.get("supervisor", {}).get("pid")
+                or any(batch.get(key) != registration.get(key) for key in REGISTRATION_FIELDS)):
+            continue
+        batch.update(state="awaiting_review", review_required="tui-verification-timeout",
+                     deferred_at=record["at"], verification_deferred=str(path))
+        changed = True
+    return changed
+
+
+def defer(state, batch, path, output, launcher_rc, supervisor):
+    """Release only our scheduler lease; preserve the native receipt, model and original demand."""
+    state = Path(state)
+    directory = state.parent
+    supervisor = int(supervisor)
+    if supervisor != os.getppid() or supervisor <= 1 or not re.fullmatch(r"[a-z0-9-]+", batch):
+        raise ValueError("deferral does not belong to the invoking supervisor")
+    fields = Path(f"/proc/{supervisor}/stat").read_text().rsplit(")", 1)[1].split()
+    try:
+        current = json.loads(state.read_text())
+    except (OSError, ValueError):
+        current = {}
+    original = current.get("batches", {}).get(batch, {})
+    record_path = directory / "learner" / f"{batch}.verification-deferred.json"
+    if record_path.exists():
+        record = json.loads(record_path.read_text())
+        if record.get("supervisor") != {"pid": supervisor, "birth": fields[19]}:
+            raise ValueError("deferral belongs to another supervisor")
+    else:
+        record = {"schema": "learner-verification-deferred-v1", "batch": batch,
+            "at": dt.datetime.now().astimezone().isoformat(), "reason": "tui-verification-timeout",
+            "supervisor": {"pid": supervisor, "birth": fields[19]}, "launcher_rc": int(launcher_rc),
+            "receipt": str(path), "output": str(output), "finish_authorized": False,
+            "retirement_authorized": False, "automatic_replay_authorized": False,
+            "registration": {key: original.get(key) for key in REGISTRATION_FIELDS}}
+        persist(record_path, record)
+    # Journal first: the next original scheduler tick applies the hold if its lock is busy now.
+    until = time.monotonic() + 2
+    with (directory / "learn.lock").open("a") as lock:
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                latest = json.loads(state.read_text())
+                if apply_deferrals(latest, directory):
+                    persist(state, latest)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= until:
+                    break
+                time.sleep(0.05)
+    if not record.get("inbox_notice"):
+        # Mark the append uncertain first; a crash must not produce repeated supervisor notifications.
+        record["inbox_notice"] = "sending"
+        persist(record_path, record)
+        with (directory / "inbox-claude.md").open("a") as inbox:
+            inbox.write(f"- {record['at']} [dev #36 wrapper] 学习批次 {batch} 回执核验超时，监督退出、原批次待核；原产物/回执/pane保留，不自动重派原任务、不认完成，见 learner/{record_path.name}。\n")
+            inbox.flush()
+            os.fsync(inbox.fileno())
+        record["inbox_notice"] = "written"
+        persist(record_path, record)
 
 
 def close(root, state, batch, path, output):
@@ -208,12 +368,20 @@ def main(argv):
     try:
         if argv[0] == "verify" and len(argv) == 3:
             verify(*argv[1:])
+        elif argv[0] == "verified-code" and len(argv) == 4:
+            print(verified_code(*argv[1:]))
+        elif argv[0] == "finished" and len(argv) == 7:
+            finished(*argv[1:])
+        elif argv[0] == "attention" and len(argv) == 4:
+            attention(*argv[1:])
+        elif argv[0] == "defer" and len(argv) == 7:
+            defer(*argv[1:])
         elif argv[0] == "close" and len(argv) == 6:
             close(*argv[1:])
         else:
             return 2
         return 0
-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
+    except (OSError, ValueError, KeyError, TypeError, IndexError, subprocess.SubprocessError):
         sys.stderr.write("learner TUI receipt/retirement gate deferred; preserve original batch and pane\n")
         return 75
 

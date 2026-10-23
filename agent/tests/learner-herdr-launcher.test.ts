@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const transport = vi.hoisted(() => vi.fn());
 vi.mock("../../learner/lib/herdr.js", () => ({ runLearnerTui: transport }));
 import { main } from "../../learner/lib/launcher.js";
+import { readQueue } from "../../ops/codex/lib.js";
 
 const roots: string[] = [];
 afterEach(() => { transport.mockReset(); for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
@@ -73,5 +74,21 @@ describe("hosted learner launcher", () => {
     expect(await f.run()).toBe(75);
     expect(f.out.join("")).toContain("retirement-unverified");
     expect(JSON.parse(readFileSync(f.receipt, "utf8")).state).toBe("needs-attention");
+  });
+  it("queues attention with the existing reader's alphabetic event-kind grammar", async () => {
+    const f = fixture();
+    transport.mockImplementation(async (o) => {
+      o.attention("fixed ownership failure");
+      const result = { code: 75, reason: "retirement-unverified", message: "", stopped: false };
+      writeFileSync(o.receipt, JSON.stringify({ state: "needs-attention", result })); return result;
+    });
+    expect(await f.run()).toBe(75);
+    const directory = join(f.root, "ops/codex-ops/queue");
+    writeFileSync(join(directory, "123-1aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-learner-tui-attention.md"), "old unparseable fixture");
+    const events = readQueue(directory);
+    expect(events).toHaveLength(1);
+    expect(events[0]!.kind).toMatch(/^learner-tui-attention-/);
+    expect(events[0]!.text).toContain("fixed ownership failure");
+    expect(events[0]!.text).toContain("20261022-120000");
   });
 });

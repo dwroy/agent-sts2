@@ -315,12 +315,14 @@ describe("interactive batch lifecycle", () => {
     const config = '[mcp_servers.unapproved]\ncommand="/fixed/forbidden"\n';
     writeFileSync(path, config);
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 3, reason: "inherited-tui-config-not-isolated" });
-    expect(f.calls).toEqual([]); expect(readFileSync(path, "utf8")).toBe(config);
+    expect(f.calls).toEqual([["pane", "get", f.opts.pane]]); expect(readFileSync(path, "utf8")).toBe(config);
+    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({ pane: f.opts.pane, label: f.opts.label,
+      cwd: f.root, identity: { pane_id: f.opts.pane }, submitted: false, bindings: [], retirement_authorized: false });
   });
   it("classifies unsafe persisted environment before any model/terminal start", async () => {
     const f = fixture(); f.opts.env.HTTPS_PROXY = "https://user:private@proxy.example";
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 3, reason: "unsafe-tui-environment" });
-    expect(f.calls).toEqual([]);
+    expect(f.calls).toEqual([["pane", "get", f.opts.pane]]);
     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({ state: "not-started", models_started: 0 });
   });
   it("runs one interactive TUI, sends the original task, persists native completion and retires only its own PID", async () => {
@@ -328,6 +330,7 @@ describe("interactive batch lifecycle", () => {
     const result = await runLearnerTui(f.opts);
     expect(result).toMatchObject({ code: 0, stopped: true, turn: "turn-1", message: "已保存批次报告" });
     expect(result.usage).toMatchObject({ input_tokens: 100 });
+    expect(f.notices).toEqual([]);
     expect(f.prompts()).toBe(1);
     expect(f.calls.find((c) => c[1] === "prompt")![3]).toContain(f.opts.prompt);
     expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
@@ -339,9 +342,33 @@ describe("interactive batch lifecycle", () => {
     const f = fixture("late-complete"); expect((await runLearnerTui(f.opts)).code).toBe(0);
     expect(f.calls.filter((c) => c[1] === "get" && c[0] === "agent").length).toBeGreaterThan(2);
   });
+  it.each([false, true])("checks the original host/tab when pane.label is absent (foreign title: %s)", async (foreign) => {
+    const f = fixture(); const h = f.opts.h!;
+    mkdirSync(join(f.root, "ops/codex-ops"), { recursive: true });
+    writeFileSync(join(f.root, "ops/codex-ops/herdr.json"), JSON.stringify({ workspace_id: "w1", panes: {
+      [f.opts.label]: { pane_id: f.opts.pane, title: "学习大脑 · 原批" },
+    } }));
+    f.opts.h = async (args) => {
+      if (args[0] === "tab" && args[1] === "list") return ok({ tabs: [{ tab_id: f.pane.tab_id, pane_count: 1,
+        label: foreign ? "人工改名" : "学习大脑 · 原批" }] });
+      const result = await h(args);
+      if (args[0] === "pane" && args[1] === "get") {
+        const pane = { ...(result.result!.pane as Record<string, unknown>), workspace_id: "w1" };
+        delete pane.label; return ok({ pane });
+      }
+      return result;
+    };
+    const result = await runLearnerTui(f.opts);
+    expect(result.code).toBe(foreign ? 3 : 0);
+    expect(f.prompts()).toBe(foreign ? 0 : 1);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    if (!foreign) expect(receipt.identity).toMatchObject({ pane_id: f.opts.pane, workspace_id: "w1" });
+    expect(receipt.identity?.label).toBeUndefined();
+  });
   it.each(["timeout"])("does not declare %s complete", async (kind) => {
     const f = fixture(kind); const result = await runLearnerTui(f.opts);
     expect(result.code).toBe(124); expect(result.stopped).toBe(true);
+    expect(f.notices).toHaveLength(1);
   });
   it.each(["lease-lost", "working-after-complete"])("retains %s rather than interrupting an unverified foreground", async (kind) => {
     const f = fixture(kind); const result = await runLearnerTui(f.opts);

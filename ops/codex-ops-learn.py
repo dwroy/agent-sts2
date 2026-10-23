@@ -42,6 +42,7 @@ import learner_retention  # noqa: E402
 import ordinary_close  # noqa: E402
 import ops_current  # noqa: E402
 import disk_admission  # noqa: E402
+from learner_tui import apply_deferrals  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -80,6 +81,7 @@ def load_state():
     state.setdefault("batches", {})
     state.setdefault("runs", {})
     state.setdefault("ascension", {})
+    apply_deferrals(state, DIR)
     return state
 
 
@@ -245,11 +247,13 @@ def check_postmortems(state, character):
         return None
     have = postmortem_ids()
     now = time.time()
+    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
+            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
     todo = []
     retry_ready = False
     for row in finished_runs(character):
         run = row["run_id"]
-        if run in have or run in todo:
+        if run in have or run in todo or run in held:
             continue
         info = state["runs"].get(run)
         if info:
@@ -336,6 +340,11 @@ def cmd_dispatch(args):
         print(f"runs 要 1–{BATCH_MAX} 个 12 位局号，逗号分隔")
         return 2
     state = load_state()
+    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
+            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
+    if set(runs) & held:
+        print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
+        return 1
     busy = running_batch(state)
     if busy:
         save_state(state)

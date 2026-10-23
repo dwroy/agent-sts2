@@ -141,3 +141,7 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T11:53:52+08:00 [watcher] #36 P0首次含#20组合e9e3009f9281唯一full首败：tsc0/653文件6326过+2skip/2败，2548输入SHA同；brain-view旧错误文案与新running-panes冲突，ordinary-close-isolation原15秒超时复现，失败树6b1671d5及全原件保留。主管6356904617裁决实际live最小P0不带#20、先无新增#36同基线判旧超时、再仅一次full；本提交仅记录，无源码合并或发布。材料paper/materials/20261023-issue36-p0-full-failure/；后续.artifacts/issue36-p0-minimal-20261023-1153。
 
 2026-10-23T11:53:52+08:00 [watcher] #27 11:15与11:43原链15异议原文/发送凭证及67证据窗SHA均实读核同并转Roy，记录paper/materials/20261023-issue27-watcher-receipt/received.json及received-1143.json，GH6356605943/6356888587；正式ACK仍受原CLI白名单阻塞，不写通知JSON、不代其他角色ACK、不扩样本/因果或关闭科学父。
+
+2026-10-23T12:46:52+08:00 [watcher] #36最小P0按主管6356904617以实际R417/f3fb25b73+已审绑定+0933ea0ef，不含#20/新运行依赖，含Roy日志追加6357245522桥接块与固定4例（新增夹具首败75保留，仅补verified-code/seal固定stub后复核）；469知识，tree9642c7c38992唯一完整tsc0/6332过+2skip/0败，2540输入SHA同；无新增36原live源码ordinary-close基线单跑12.8秒通过，不称稳定，旧含20失败全原件保留。main兼容tsc0/11文件213过及Python/shell过，无重复full。精确15叶源码/测试/文档合main交ops发布；发布前off，发布后下一自然学习调度on，首自然批绑定/完成/300s降级/槽位/后批待ops核验，#20整体不作开启前置；未动live/模型/对局/旧75，父36和27正式CLI ACK/科学父保留。后续46→47视图→26提示→42余项→35→28→37（37→20）；材料paper/materials/20261023-issue36-p0-minimal-full-integrator/。
+
+2026-10-23T12:46:52+08:00 [watcher] #27 12:42原链15异议/发送凭证和67证据窗SHA及原CLI SHA实核一致，已本轮告知Roy；实读回执paper/materials/20261023-issue27-watcher-receipt/received-1242.json，正式角色ACK仍pending兼容，不代ACK、不重放原CLI、不关闭科学父。
