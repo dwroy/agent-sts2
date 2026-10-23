@@ -6218,3 +6218,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T16:59:58+08:00 [ops/#47发布] 47九叶已于2026-10-23T16:58:40+08:00精确发布live2faa7ead017b，锁内核九叶前像及最新469知识、347依赖、2343消费者输入，25份原检查归档SHA核同；按原差量三方组装，保留live viewer的Board兼容门和额外标题用例、36/46及221份原脏知识，不整树重入数据。复用main/live各tsc0、71项及更新知识36项定向；实际255catalog来源/三角色查询/244经验读取沿集成员原回执，未重full或模型，原失败保留。旧单行直播改默认详细题面、公开摘要或缺失提示、脱敏工具参数/返回/来源版本/耗时与完整答案；题面16KiB、工具各4KiB首尾截断，64MiB双份滚动。实例绑定核验通过，原控制器PID及birth未变，不热切在途。展示回退为下一自然启动compact，源码只撤九叶，不加行为号。下一自然拿牌题原tab与compact验收仍pending；20独立学习tab子类交原集成员随后定向，父仍37后，36/46及科学父开放。
 原件：paper/materials/20261023-issue47-publication-ops/publication.json、preflight.json、natural-acceptance.json。
+
+- 2026-10-23T17:09:06+08:00 [ops/#47自然验收接续] 47再次接续已核最新issue评论与原发布回执，实际live2faa7ead017b九叶blob/SHA保持，无重复发布。原autoplay1248445/birth9590346、play1398321/birth16847206与16:58发布后相同；当前ZF8PX27B46H5最新run-config为16:26，早于发布。现有brain-view的pane w1H:pBA、tab w1H:tB7及标题已向herdr实际读回，脱敏stream固定前缀SHA与run-config原行offset/bytes/SHA落盘，未抄录题面或外部标识。当前流中详细题目和检索标记为零，只能说明仍非新版自然验收，不能当新功能失败或以旧compact记录充当回退成功。17:06调度索引已自然刷新，按新SHA核读，原16:46边界保留。下一自然控制器及原tab拿牌题需逐项读回题面、公开摘要或缺失提示、工具参数/返回/来源版本/耗时和答案，compact回退仍pending。不改运行环境、不热切在途、不重full/模型或额外开局；原20子类接续、36/46及科学父保持。
+原件：paper/materials/20261023-issue47-natural-followup-ops/readback.json；原发布paper/materials/20261023-issue47-publication-ops/publication.json。

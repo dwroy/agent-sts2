@@ -6220,3 +6220,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T16:53:56+08:00 [watcher] #47保留live59a1dc上469份知识（较原候选62份更新），九叶与347依赖核同；刷新候选树5545e8eb后4文件36定向全过，255 catalog来源SHA及三角色实际只读消费者/原兼容字节/244经验读取通过，复用原tsc及直播检查，不新full。154301原0579三叶1794ba1c及20份引用SHA核同；原9过/负控3败和full45失败无终局均保留，11/17仅当前攻击分量非实扣/胜率，待原宿主组合窗口，不抢队列。27的1646原15异议与67证据及CLI核同、已接1613自身回执，正式ACK仍pending、不代确认。证据paper/materials/20261023-1637-ops/integrator-received.json及paper/materials/20261023-issue27-watcher-receipt/received-1646.json。
 
 - 2026-10-23T16:59:58+08:00 [ops] #47九叶精确发布live2faa7ead017b，469知识/347依赖保留、原控制器未重启，复用定向无新full；自然拿牌题/compact pending，#20学习tab子类随后交原集成员定向，父仍37后，不加行为号。原件paper/materials/20261023-issue47-publication-ops/publication.json。
+
+- 2026-10-23T17:09:06+08:00 [ops] #47九叶已发布保持，原controller/birth和发布前ZF8局仍在，原tab身份核同，详细/compact自然验收pending；不重发布/full/模型/热切或关父要求。原件paper/materials/20261023-issue47-natural-followup-ops/readback.json。
