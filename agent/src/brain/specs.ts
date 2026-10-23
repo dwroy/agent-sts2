@@ -18,6 +18,7 @@ import { directionPlanSpec } from "../v6/direction-plan.js";
 import { directionRideTask } from "../v6/direction-rides.js";
 import type { AnswerSpec } from "./types.js";
 import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
+import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems } from "../memory/endgame-plan.js";
 
 type Json = Record<string, unknown>;
 
@@ -153,6 +154,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
   // due for the next question; strategy/run-plan-merge.ts).
   if (carriesRunPlan(st)) properties["run_plan"] = runPlanField(st);
+  if (endgameRequired(st)) required.push("run_plan");
   return {
     label,
     kind: "pick",
@@ -265,7 +267,8 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
 export function stableSchema(spec: AnswerSpec): JsonSchema {
   if (spec.kind === "pick") {
     const run = spec.schema.properties?.["run_plan"];
-    const base = run?.properties?.["construction"] || run?.properties?.["v6"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } }
+    const base = run?.properties?.["construction"] || run?.properties?.["v6"] || run?.properties?.["endgame"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run },
+      required: spec.schema.required?.includes("run_plan") ? [...STABLE_PICK_SCHEMA.required!, "run_plan"] : STABLE_PICK_SCHEMA.required }
       : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
     const direction = spec.schema.properties?.["v6"];
     const riding = direction ? { ...base, properties: { ...base.properties, v6: direction } } : base;
@@ -413,8 +416,10 @@ function runPlanSchema(construction = false): JsonSchema {
 /** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
 const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
 function runPlanField(state: unknown): JsonSchema {
-  return withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
+  const schema = withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
     ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
+  return endgameRequired(state) ? { ...schema, properties: { ...schema.properties, endgame: ENDGAME_PLAN_SCHEMA },
+    required: [...(schema.required ?? []), "endgame"] } : schema;
 }
 
 /** Optional direction updates never invalidate the original V5 answer or cause a re-ask. */
@@ -435,7 +440,8 @@ export function carriesRunPlan(state: unknown): boolean {
  * run_plan field; its checks are its own (a missing or unusable run plan is never a problem: it stays due).
  */
 export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec {
-  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) } } };
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) },
+    ...(endgameRequired(state) ? { required: [...(spec.schema.required ?? []), "run_plan"] } : {}) } };
 }
 
 /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
@@ -448,7 +454,8 @@ export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
     schema: withDirectionRideField({ label, kind: "plan", schema: runPlanSchema(constructionContext(state) !== null), validate: () => [] }, state).schema,
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
-      return isRunPlanReply(answer) ? constructionProblems(answer, state) : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
+      return isRunPlanReply(answer) ? [...constructionProblems(answer, state), ...(endgameRequired(state)
+        ? endgameProblems(answer["endgame"], endgameCheckpointRequired(state)) : [])] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
     },
   };
 }

@@ -44,6 +44,7 @@ import { computeMemoOptions } from "../sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "../memory/run-plan.js";
 import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "../memory/run-plan-merge.js";
+import { endgameScope, endgameQuestion, endgameTask, endgameProblems, endgameCheckpointRequired } from "../memory/endgame-plan.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -833,10 +834,13 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
-    if (v6Config().mode !== "off" && !state.in_combat && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId)) {
-      screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
+    const endgamePlanning = brain?.router.knowledgeAgent === true && endgameScope(state);
+    const runPlanFloor = endgamePlanning ? state.run?.floor ?? 0 : Infinity;
+    if ((v6Config().mode !== "off" || endgamePlanning) && !state.in_combat
+      && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId || endgamePlanning && screenMemory.runPlan.floor > (state.run?.floor ?? 0))) {
+      screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId, runPlanFloor);
     }
-    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+    if (!endgamePlanning && !planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;
@@ -859,7 +863,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       }
     }
     if (config.runPlan === "v1") {
-      if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]));
+      if (screenMemory.runPlan === undefined && str(state.raw["run_id"])) screenMemory.runPlan = loadRunPlan(config.runPlanLog, str(state.raw["run_id"]), runPlanFloor);
       const line = screenMemory.runPlan && screenMemory.runPlan.runId === str(state.raw["run_id"]) ? runPlanLine(screenMemory.runPlan) : null;
       if (line) env.brief.plan = line;
     }
@@ -1155,13 +1159,15 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
         // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of
         // its own call. Anything wrong in building it: the question goes as without it, the plan stays due.
-        if (runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
+        const endgameUpdate = endgamePlanning && endgameQuestion(state, decision.label);
+        if (endgameUpdate || runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
           try {
             const runId = str(state.raw["run_id"]);
-            const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId) : null;
-            const trigger = runId ? runPlanDueAtQuestion(screenMemory, state, plan) : null;
+            const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId, runPlanFloor) : null;
+            const trigger = runId ? endgameUpdate ? runPlanTrigger(plan, state) ?? "review" : runPlanDueAtQuestion(screenMemory, state, plan) : null;
             if (trigger) {
-              const task = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
+              const context = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
+              const task = endgameUpdate ? { ...context, ...endgameTask(state, decision.label), due_because: "每道构筑题更新本局核心、缺口与终局计划" } : context;
               const carried = withRunPlanTask({ ...decision, deepseek: spec }, task);
               const carriedQuestion = carried.questions[spec.question];
               if (carriedQuestion?.type === "choice") {
@@ -1172,7 +1178,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
               }
             }
           } catch (error) {
-            if (brain.router.codexOnly) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
+            if (brain.router.codexOnly || endgameUpdate) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
             onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
           }
         }
@@ -1251,6 +1257,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
           };
           if ("missing" in found) return fail("missing", found.missing);
+          if (endgameUpdate) {
+            const problems = endgameProblems(found.plan["endgame"], endgameCheckpointRequired(ask.state));
+            if (problems.length) return fail("invalid", problems.join("; "));
+          }
           try {
             const plan = parseRunPlan(found.plan, state, knowledge, ride.trigger);
             acceptDirectionRide(env, plan, found.plan, directionRide, ask.label, config.runPlanLog);

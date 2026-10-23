@@ -30,6 +30,7 @@ import type { GameState } from "../hand/mod/schema.js";
 import type { AskDecision, ScreenMemory } from "./types.js";
 import { asArray, asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { fightPlanInput } from "./fight-plan.js";
+import { ENDGAME_PLAN_NOTE, ENDGAME_OBJECTIVE } from "./endgame-plan.js";
 import { actOf, constructionPlanContext, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
 
 /**
@@ -59,10 +60,12 @@ export const RUN_PLAN_MERGE_NOTE = [
 /** The fields of runPlanInput a question's facts (strategy/build-facts.ts) already carry. */
 const IN_FACTS = ["act", "floor", "ascension", "hp", "gold", "act_boss", "act_boss_clock", "deck_size", "deck_profile", "deck", "relics", "potions", "potion_slots"] as const;
 
-/** The run plan in force for this run: the screen memory's, else the last one logged (a restart). */
-export function currentRunPlan(memory: ScreenMemory, logFile: string, runId: string): RunPlan | null {
-  if (!memory.runPlan || memory.runPlan.runId !== runId) memory.runPlan = loadRunPlan(logFile, runId);
-  return memory.runPlan && memory.runPlan.runId === runId ? memory.runPlan : null;
+/** The plan in this run and floor window, including every cache miss and rollback read. */
+export function currentRunPlan(memory: ScreenMemory, logFile: string, runId: string, throughFloor = Infinity): RunPlan | null {
+  const usable = (plan: RunPlan | null | undefined): plan is RunPlan => Boolean(plan && plan.runId === runId
+    && (throughFloor === Infinity || plan.floor <= throughFloor));
+  if (!usable(memory.runPlan)) memory.runPlan = loadRunPlan(logFile, runId, throughFloor);
+  return usable(memory.runPlan) ? memory.runPlan : null;
 }
 
 /** Whether every node the map offers is the act boss (the map before the boss fight). */
@@ -155,7 +158,9 @@ export function withRunPlanTask(decision: AskDecision & { deepseek: NonNullable<
   return {
     ...decision,
     state: { ...decision.state, [RUN_PLAN_TASK_KEY]: task },
-    questions: { ...decision.questions, [key]: { ...question, instructions: `${question.instructions} ${RUN_PLAN_MERGE_NOTE}` } },
+    questions: { ...decision.questions, [key]: { ...question, instructions: `${question.instructions} ${task["endgame_plan_required"] === true
+      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} 在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`
+      : RUN_PLAN_MERGE_NOTE}` } },
   };
 }
 
