@@ -6155,3 +6155,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:29:59+08:00 [ops/#36] 原134302自然终局核绑定/真实failed-rc0/lease释放，seal因缺learner_tabs.py阻断；恢复旧二组及复盘原finish、保历史lost与两候选，原7冻结重排全部唯一登记。未重full/dataset/失败任务，36/46科学父开放。原件paper/materials/20261023-1419-ops/receipt.json。
 
 - 2026-10-23T14:35:37+08:00 [ops] 原124241二组/124301完成事件复核不重finish，577账本0问题，精确持久化silent-0576审计一条；为两批共用唯一dataset事务，待真实rc/生成物提交，回收与科学父门保留。原件paper/materials/20261023-1431-ops/。
+
+- 2026-10-23T14:45:01+08:00 [ops] 核14:43原15异议/67引用同，新增核watcher received-1413实际读回转达回执并提交原会话提醒；正式ACK保原CLI兼容阻塞、不代填，科学父开放。原件paper/materials/20261023-1443-ops/notices-audit.json。

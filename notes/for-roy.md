@@ -4854,3 +4854,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T14:35:37+08:00 [ops/14:31] 本轮两事件均为上轮补登记后发出的原完成回报，原输出/报告SHA与done/rc0核同，未重复finish。策略二组十项仍waiting，十条处置已在dd669提交；本轮只取其尚未提交的silent-0576一条审计记录，其他并行账本与提案保持。复盘五局均已有标题而跳过，新增知识、复盘、bug和提案为零，lessons无本批增量，不整文件夹带并行记录。当前账本独立检查577项0问题。事件引用较早124312成功日志，最终out对应131255终局，两份历史均保留，不改写原生身份。为两批准备共用唯一dataset --no-raw事务，沿原写锁运行，结束后冻结实际生成文件SHA/blob并受控提交；失败按阶段发回原事件，不重跑学习或完整检查。回收已实际deferred：二组受发布来源门、复盘受入库门阻挡；完成登记不代表strict-close、live经验或科学父完成。
 原件：paper/materials/20261023-1431-ops/review.json、dataset-request.json；上轮paper/materials/20261023-1419-ops/recovered-finish.json。
+
+- 2026-10-23T14:45:01+08:00 [ops/14:43通知] 本轮十五条重复异议逐项核原message SHA、ops真实转发回执及六十七处原件字节引用，均与上轮相同；旧认识、反证、证据、影响范围和owner下一步继续沿1143完整原文包保留。新核watcher自有received-1413回执及其audit/handoff SHA、十五条原文绑定，回执记载14:20已读回并在当前对话转达Roy；这与通知文件的正式watcher_received/roy_notified仍false分别记录，不代其他角色提升状态。原CLI字节、来源合同和任务白名单兼容阻塞未变化，保留既有拒绝，不重复同一失败命令。本轮已向现有集成员原会话提交一行提醒，agent_prompted仅证明提醒提交，正式ACK继续pending。原共享账本冻结边界已由授权ops核过，577项当前检查不倒填旧575项来源验证；外部因果、独立分母、净损口径及卡牌机制缺口均保持，科学父不关。本轮不新模型、实验、测试、发布或dataset，1431唯一数据事务沿原终局事件处理。
+原件：paper/materials/20261023-1443-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder-send.json；角色原回执paper/materials/20261023-issue27-watcher-receipt/received-1413.json。
