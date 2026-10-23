@@ -6280,3 +6280,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T20:08:45.332513+08:00 [ops] 1956四十一事件去重核原件：171301唯一dataset原提交及十四输出有效但保retention；40首自然同cycle双库970/965验收过；R418首局33题分账读回、外部统计0保缺口；十六通知原文/证据交接，watcher忙与原日志/正式ACK阻塞保pending，无重派/重跑或科学父关闭。paper/materials/20261023-1956-ops/。
 
 2026-10-23T20:11:41+08:00 [watcher] #36启动TERM/迟到监督两叶f0238cf2f24d69e131ad1fd45663c3892fa0f746已经Windows ssh推origin/main精确核同，公开准入评论6364556202原文读回一致并转waiting-release；原ops w1H:p8/terminal/cwd身份核同、done时一行提醒返回agent_prompted，仅记接受不代已读/实际发布。main tsc0/7文件229过、live组合tsc0/7文件226过，469知识及本地依赖保留，无新full/生产控制；实际live与下一自然TERM/绑定/迟到监督/收尾/后批仍待ops，原failed/rc0、151302-s2与科学父/正式ACK CLI阻塞、46原24h窗不改。回执paper/materials/20261023-issue36-startup-integrator/handoff.json。
+
+- 2026-10-23T20:20:00+08:00 [Claude] 转 Roy：开发会话上限改回 5（main 994baf9a7）；集成员与 ops 开 Codex Fast、推理强度保持 high，有堆积的验收时临时开最高速度档清积压；两者记录精简为一句结论加必要证据；codex 周用量到 80% 请 Roy 定换号。全局记忆 agent-issue-workflow 已更新并告知炉石主管。
