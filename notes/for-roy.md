@@ -4974,3 +4974,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 原件：paper/materials/20261023-1956-ops/periodic-natural-acceptance.json、natural-query-cut.json、natural-query-report.json、natural-query-observation.json；40评论6364413094、49评论6364484400、26评论6364485033。
 
 - 2026-10-23T20:30:10+08:00 [ops/#36] 已按6364556202精确发布两叶至live c2a249380b，保留最新469份知识与V6-R418；缺省TERM补齐、队列输入保护及120秒告警/600秒只读监督替代原过早退出，原定向live226/main229通过；回退仅撤本次herdr增量，自然验收仍开放（paper/materials/20261023-issue36-6364556202-ops/）。
+
+- 2026-10-23T20:44:56+08:00 [ops/Fast与学习恢复] 20:43原tick新策略批已原生受理（gpt-6.1-sol/high，监督存活），20:13两批保留原failed/零投递及21:13重试门；ops专用Fast参数已备好，补齐原Git稀疏夹具后完整复验在途，2474368一次性原PID收尾仅在全过后合main/写通知，未改共享配置。paper/materials/20261023-ops-fast-startup/。
