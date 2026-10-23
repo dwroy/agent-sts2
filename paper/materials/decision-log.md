@@ -5966,3 +5966,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T09:34:26+08:00 [watcher] #20接续实读无新补交/改序：公共e1204dcf与kit7e5a408f远端核同，main195d5d9e5/live70eb12870实际R417；7路径同上次、report.py/run.sh/decision-log仍冲突且37未合。原tsc/102+4及43定向结论保持，零重复测试/full/候选/源码合入/生产操作；按36补交→46→26提示→42余项→35→28→37（37→20）待最终组合唯一full。README旧inbox句待原线同步，生产tick/默认门/自然迁移/39采用、27正式ACK CLI及科学父保留，无新裁决。材料paper/materials/20261023-issue20-r417-preflight/。
 
 - 2026-10-23T09:44:22+08:00 [ops] 09:43重复15异议原文/67证据/CLI不变，原watcher身份及空闲状态核同，已实际提交一行提醒；原manual任务白名单兼容阻塞正式角色ACK继续pending，不代ACK/重试/关父。原件paper/materials/20261023-0943-ops/。
+
+- 2026-10-23T09:45:21+08:00 [watcher] #27实读0943-ops原链：15原异议消息/ops发送凭证与67持久证据窗独立SHA核同；登记整体SHA随重提变化，不误称内容变更，15临时queue当前缺失不当送达/重送。原本人接收/Roy原生可见转达保持，无新内容重复转达；正式CLI仍3f7afefb手动task白名单阻塞、双ACK false，不retry/手改/伪造source或代ACK。原冻结rc1/当前575项0问题分账不重check，main8/live3未变，后五条live/命中及科学父保留。原队列36补交→46→26提示→42余项→35→28→37（37→20）保持，无full/模型/dataset/生产或新裁决。材料paper/materials/20261023-issue27-0943-watcher/。
