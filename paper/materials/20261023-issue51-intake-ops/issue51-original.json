@@ -1,0 +1,38 @@
+{
+  "body": "[Claude] 转 Roy：外部玩家对局学习入库——sts2.fun Silent A10 提炼进知识库、策略库与 rk（Roy 10-23 晚定，优先）\n\n## 起因\n\n#24 已下载 sts2.fun 公共对局库（47 万局；Silent A10 有效 22,812 局、胜率 25.6%，其中 v0.111 为 1,739 局），产出了拿牌率、流派、战斗掉血等聚合表（`knowledge/external/sts2fun/silent-a10.json`），#26 做成了 6 个查询工具，#42 定了外部证据合同。但这些人类对局还没有被“学”成可直接用于决策的文字策略或 rk：策略库只有 3 条，大脑查策略 88% 返回空（#49 读回）。Roy：外部数据尤其重要，尽快提炼。\n\n## Roy 的决定\n\n1. 外部对局尽快学习，提炼进**知识库、策略库和 rk**。\n2. 这条学习线可以用 **ultrafast** 档（只走启动参数 `-c service_tier=ultrafast`，不写 config）；额度规则照旧：codex3 周用量 >70% 退回 fast、>85% 退回 default 并提醒 Roy。\n3. 优先级：排在正常复盘/修 bug 之后、自动策略提案与 #48 旧经验回刷之前；不卡正常流水线。\n\n## 分批（每批独立上线，先做死得最多处）\n\n1. **双 Boss 达标线**（与 #50 第 4 条合并）：到达 F48 的人类局里，赢下 F49 与输掉的对比——进 F48 的血量、药水、牌组规模与核心牌、能力牌数量、伤害与防御来源。\n2. **各幕 Boss**：第一幕（同族等）、第二幕（贪食者等）、第三幕各 Boss，赢家与输家牌组在该幕末的差异。\n3. **拿牌分歧**：#24 里我们与人类拿取率分歧最大的牌，写成“情境 → 拿/不拿”的策略条目。\n4. **休息、商店、事件、路线**：赢家在这些节点的选择分布。\n5. **rk（Jev 出牌用）**：按遭遇的人类掉血/回合基线，写成 #28 格式的按怪物打法条目，过 #28 的回放门槛。\n6. **知识库**：缺的聚合表补进 `knowledge/external/sts2fun/`（如各幕末赢家牌组快照）。\n\n## 要求\n\n- 条目格式沿 #27（策略）、#28（rk）、#42（外部证据合同）：`source: external:sts2fun`、版本、下载日与 SHA、样本数与分母、队列（v0.111 与 v0.107–0.110 分开）、`design=observational`、局限（自愿上传偏差、玩家水平混杂）。\n- 玩家标识与敏感字段一律不读、不入库（同 #24）。\n- 同情境合并，不按单局堆条目；与自有证据冲突时并列写明，不覆盖。\n- 流水线：并入 #48 的统一提炼流水线，作为“外部来源”一条线；需要的代码改动（来源类型、任务模板、ultrafast 参数）由 #48 开发会话做，交集成员定向核验。\n\n## 验收\n\n- [ ] 第 1 批（双 Boss）与第 2 批（各幕 Boss）条目上线，带样本与来源。\n- [ ] 上线后读回：大脑 kb_strategies 非空命中率、引用外部条目的题数；不做 A/B。\n- [ ] 学习线吞吐与额度：每批耗时、ultrafast 实际用量；正常复盘/修 bug 的派发间隔不下降。\n",
+  "comments": [],
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvLcQ",
+      "name": "owner:learner",
+      "description": "learner batch (game knowledge from runs only)",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNTA",
+      "name": "P1",
+      "description": "high",
+      "color": "d93f0b"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPDw",
+      "name": "type:research",
+      "description": "analysis or experiment, no production change",
+      "color": "7057ff"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPuQ",
+      "name": "status:ready",
+      "description": "can start now",
+      "color": "0e8a16"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvSCw",
+      "name": "area:learning",
+      "description": "learning loop and refresh",
+      "color": "bfd4f2"
+    }
+  ],
+  "number": 51,
+  "title": "外部玩家对局学习入库：sts2.fun 提炼进知识库、策略库与 rk"
+}
