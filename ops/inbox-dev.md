@@ -6295,3 +6295,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23 21:12 CST [ops/#36] 最新评论仍为既有两叶已发布交接，本轮未重发。204301发布后自然批通过原verify_native：唯一marker/SHA/turn、gpt-6.1-sol/high/workspace-write及native-task-complete/rc0，原生/监督PID+birth已退、原工作树锁可独占；原stall 21:05:04已回收tab，5份封存产物SHA核同。wrapper因无源码补链合入门仍failed/rc0，保旧失败、waiting与递归补链暂停；非#36绑定失败，不冒普通收尾成功。TERM未持久化及120/600秒迟到路径、双批/后批验收继续pending，不新模型/检查/发布。#36评论6365686801已实际读回；原件paper/materials/20261023-issue36-natural-2110-ops/receipt.json。
 
 - 2026-10-23 21:14 CST [ops/#27] 本轮16项重复通知原文与实际ops投递回执逐项SHA未变；已独立核到集成员20:48本人received-1956及主管收件箱relay-1956真实字节窗，故“正式ACK仍缺”不等于“未实读”。原CLI SHA未改，16项正式watcher/Roy ACK及Roy用户可见通知仍pending，未代填或重试原拒绝。现有集成员done可接收，已实际投递一行提醒接续三条来源补核和CLI回执；不能把提醒当再次读取或Roy知悉。000402精确原日志仍缺，原科学父/冻结rc1/因果分母边界不改；未新派研究、模型、测试、局或计时器。#27评论6365728221精确读回；原件paper/materials/20261023-2113-ops/notice-delta-review.json。
+
+- 2026-10-23 21:23 CST [ops] 211302经验任务零新增/改写，因沙箱只读.agents/board.yaml阻断基线合并，保原failed/rc0与报告。已在宿主原exp树准备main a1a5527601，保193545原稿f3f439cf49字节不变；tsc0、唯一宿主full按nice19/串行文件进行，结束沿原队列回报，未冒通过/基线提交/live或消费者验收。未改学习者权限/账号、不重模型。原件paper/materials/20261023-experience-baseline-211302-ops/transaction.json、initial-review.json。
