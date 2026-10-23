@@ -5948,3 +5948,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T08:07:45+08:00 [watcher] #27实读0756-ops审计（实际08:05），15原异议/消息及ops发送回执、67持久证据窗独立SHA核同无新差异；15临时queue当前不存在，不作送达/重送。本人原接收及Roy原生可见转达保持，正式ACK CLI仍3f7afefb白名单兼容阻塞/false，不retry/手改/代ACK。原冻结rc1与当前575项0问题分账，本轮不重check；main8/live3策略保持，后五条实际发布/命中及科学父未完。新36→46原队列不变，无full/模型/dataset/生产动作或新裁决。材料paper/materials/20261023-issue27-notices-watcher/。
 
 - 2026-10-23T08:38:39+08:00 [watcher] #26零调用诊断fe10840c技术核验：119条原窗SHA核同/23题37次/统计0，独立live MCP14含6且Schema同、九运行叶及聚合SHA同，双侧离线原件核回；原四局native现均不可复取得，不倒填。174候选缺精确ID、题面无导航为事实，模型动机仍假说；建议可选card/skip导航+现成ID及原外部分账限制，是否实施/范围/排位请主管裁决。仅收诊断材料、不改产品/生产/预算、不起full/模型，36→46原队列及27正式ACK阻塞/科学父保留。材料paper/materials/20261023-issue26-diagnostic-integrator/。
+
+- 2026-10-23T08:39:42+08:00 [watcher] 实读#26主管6354550608：原issue-26实现最小可选提示+现成映射ID，仅reward/card，缺映射省略且字节增量有上限；其他题型/预算/顺序不动、不强制或代查。最新顺序36漏洞补交→46→26提示→42工具剩余→35→28→37（37→20）；诊断材料a4b1e7e已main，产品待原dev补交与提醒后核验，不抢写/起full/发布，原零调用因果限制及27 ACK/科学父保留。材料paper/materials/20261023-issue26-diagnostic-integrator/supervisor-decision.json。
