@@ -1,0 +1,52 @@
+--- a/agent/tests/learner-herdr.test.ts
++++ b/agent/tests/learner-herdr.test.ts
+@@ -19,7 +19,7 @@
+ const ok = (result: Record<string, unknown> = {}, stdout = ""): HerdrResult => ({ ok: true, code: 0, result, stdout, stderr: "" });
+ const fail = (): HerdrResult => ({ ok: false, code: 1, error: "transport_uncertain", stdout: "", stderr: "" });
+ 
+-function fixture(kind = "success", label = "learner-20261022-120000-postmortem") {
++function fixture(kind = "success", label = "learner-20261022-120000-postmortem", exitSignalDelayMs = 0) {
+   const root = mkdtempSync(join(tmpdir(), "learner-tui-")); roots.push(root);
+   const home = join(root, "home");
+   const date = new Date();
+@@ -98,7 +98,11 @@
+       }
+       if (group === "agent" && action === "send-keys") {
+         stopping = true;
+-        if (args[3] === "ctrl+c" && child && live) child.kill("SIGTERM");
++        if (args[3] === "ctrl+c" && child && live) {
++          const owned = child;
++          if (exitSignalDelayMs) setTimeout(() => owned.kill("SIGTERM"), exitSignalDelayMs);
++          else owned.kill("SIGTERM");
++        }
+         return ok();
+       }
+       throw new Error(`unexpected fake call ${args.join(" ")}`);
+@@ -214,8 +218,8 @@
+ });
+ 
+ describe("delayed native acceptance after prompt delivery", () => {
+-  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa") {
+-    const f = fixture("bootstrap"); const h = f.opts.h!;
++  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa", exitSignalDelayMs = 0) {
++    const f = fixture("bootstrap", undefined, exitSignalDelayMs); const h = f.opts.h!;
+     let clock = Date.now(), sentAt: number | undefined, sent: string[] | undefined, meta = "", promptCalls = 0;
+     f.opts.now = () => clock;
+     f.opts.timeoutMs = 200_000;
+@@ -252,6 +256,16 @@
+ 
+   it.each(["aaa", "zzz"])("waits for the original 35s-delayed turn with a concurrent %s session", async (neighbour) => {
+     const f = delayed(35_000, "paste", neighbour);
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);
++    expect(receipt.rollout).toBe(f.file); expect(receipt.retirement_authorized).toBe(true);
++    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual([]);
++    expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
++  });
++
++  it.each(["aaa", "zzz"])("waits for real exit after delayed acceptance and a 250ms signal delay (%s)", async (neighbour) => {
++    const f = delayed(35_000, "paste", neighbour, 250);
+     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);

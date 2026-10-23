@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-48-backfill-entry/agent
+
+ ❯ tests/learner-herdr.test.ts (64 tests | 2 failed | 62 skipped) 103ms
+     × waits for real exit after delayed acceptance and a 250ms signal delay (aaa) 63ms
+     × waits for real exit after delayed acceptance and a 250ms signal delay (zzz) 39ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for real exit after delayed acceptance and a 250ms signal delay (aaa)
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for real exit after delayed acceptance and a 250ms signal delay (zzz)
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(1) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
+-   "stopped": true,
++   "code": 75,
++   "stopped": false,
+    "turn": "turn-1",
+  }
+
+ ❯ tests/learner-herdr.test.ts:269:41
+    267|   it.each(["aaa", "zzz"])("waits for real exit after delayed acceptanc…
+    268|     const f = delayed(35_000, "paste", neighbour, 250);
+    269|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopp…
+       |                                         ^
+    270|     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    271|     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_pr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 62 skipped (64)
+   Start at  17:37:19
+   Duration  1.40s (transform 947ms, setup 318ms, import 828ms, tests 103ms, environment 0ms)
+
