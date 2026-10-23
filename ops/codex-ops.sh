@@ -244,6 +244,20 @@ case "$cmd" in
         # Repair only the read-only log viewer at the existing cadence; never signal the controller.
         nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "${CODEX_OPS_LOGS:-$LOGS}" --state-dir "$DIR" ensure > /dev/null 2>&1 &
         tick_stall
+        # Learner tabs are a project reclamation class, independent of model wakes and board/GitHub availability.
+        if [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
+          learner_tabs_rc=0
+          nice -n 19 timeout 90s python3 "$OPS/learner_tabs.py" tick --root "$ROOT" --state-dir "$DIR" >> "$DIR/learner-tabs.log" 2>&1 || learner_tabs_rc=$?
+          if [ "$learner_tabs_rc" -ne 0 ]; then
+            log "learner tab reclamation failed (see learner-tabs.log)"
+            # A killed worker cannot append its own exception notice. Keep one timeout notice per episode.
+            if { [ "$learner_tabs_rc" -eq 124 ] || [ "$learner_tabs_rc" -eq 137 ]; } && [ ! -e "$DIR/learner-tabs-timeout-notified" ]; then
+              printf '%s\n' "$(date '+%H:%M') [board] #20 学习tab回收超时，现场保留；请ops核learner-tabs.log及原动作回执。" >> "$DIR/inbox-claude.md" && touch "$DIR/learner-tabs-timeout-notified"
+            fi
+          else
+            rm -f "$DIR/learner-tabs-timeout-notified"
+          fi
+        fi
         # Read-only module checks share the existing cadence; no extra daemon or game action.
         nice -n 19 timeout 30s python3 "$OPS/module_health.py" --root "$ROOT" --directory "$DIR" >> "$DIR/module-health.log" 2>&1 || log "module health check failed (see module-health.log)"
         ;;

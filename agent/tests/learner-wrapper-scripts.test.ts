@@ -25,9 +25,23 @@ describe("learner wrapper published script closure", () => {
   it("ships every literal repo script referenced by the wrapper, including both task routes", () => {
     const required = scripts(wrapper);
     expect(required).toEqual(expect.arrayContaining(["ops/paths.sh", "ops/learner_tui.py", "ops/learner_entry.py",
-      "ops/codex-learner.sh", "ops/codex-fast.sh", "ops/codex-ops-learn.py", "learner/run.ts"]));
+      "ops/codex-learner.sh", "ops/codex-fast.sh", "ops/codex-ops-learn.py", "ops/learner_tabs.py", "learner/run.ts"]));
     expect(missing(wrapper, published)).toEqual([]);
     for (const path of required) expect(statSync(resolve(root, path)).isFile(), path).toBe(true);
+  });
+
+  it("publishes the paired wrapper seal and stall recycler with its project scripts", () => {
+    const scheduler = readFileSync(resolve(root, "ops/codex-ops.sh"), "utf8");
+    expect(wrapper).toMatch(/\$OPS\/learner_tabs\.py" seal --root/);
+    expect(scheduler).toMatch(/\$OPS\/learner_tabs\.py" tick --root/);
+    expect(missing(wrapper, published)).toEqual([]);
+    for (const path of ["ops/learner_tabs.py", "ops/learner_tui.py", "ops/issue_session.py", "ops/issue_session_support.py"]) {
+      expect(published.has(path), path).toBe(true);
+      expect(statSync(resolve(root, path)).isFile(), path).toBe(true);
+    }
+    const incomplete = new Set(published);
+    incomplete.delete("ops/learner_tabs.py");
+    expect(missing(wrapper, incomplete)).toEqual(["ops/learner_tabs.py"]);
   });
 
   it("rejects the exact old unpublished seal reference and any omitted required script", () => {
