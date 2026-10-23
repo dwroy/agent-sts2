@@ -1,6 +1,7 @@
 /** Natural-run acceptance from existing brain JSONL; never schedules games or calls models. */
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
+import { guidanceKind, queryAudit } from "../src/brain/tools/query-guidance.js";
 type Row = Record<string, any>;
 const p95 = (xs: number[]) => xs.length ? [...xs].sort((a, b) => a - b)[Math.ceil(xs.length * .95) - 1] : null;
 const mean = (xs: number[]) => xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
@@ -27,13 +28,58 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
       source_tags: [...new Set(selected.flatMap(r => (r.tool_calls ?? []).flatMap((c: Row) => (c.sources ?? []).map((s: Row) => s.source ?? "unknown"))))].sort(),
     };
   });
+  const queryGroups = [...new Set(data.map(r => `${r.engine}/${guidanceKind(r.label ?? "", r.payload) ?? "other"}`))].sort().map(key => {
+    const selected = data.filter(r => `${r.engine}/${guidanceKind(r.label ?? "", r.payload) ?? "other"}` === key);
+    const audit = selected.map(r => queryAudit(r.tool_calls ?? []));
+    const summarize = (kind: "strategies" | "rk" | "experience") => {
+      const rows = audit.map(a => a[kind]);
+      const calls = rows.reduce((n, r) => n + r.calls, 0);
+      const hits = rows.reduce((n, r) => n + r.hit_calls, 0);
+      const unknown = rows.reduce((n, r) => n + r.unknown_hit_calls, 0);
+      return { queried_questions: rows.filter(r => r.queried).length, query_rate: rows.filter(r => r.queried).length / selected.length,
+        calls, hit_calls: hits, unknown_hit_calls: unknown, hit_rate: calls && !unknown ? hits / calls : null,
+        hit_ids: [...new Set(rows.flatMap(r => r.hit_ids))].sort() };
+    };
+    const calls = selected.map(r => (r.tool_calls ?? []).length);
+    const latency = selected.flatMap(r => typeof r.latency_ms === "number" ? [r.latency_ms] : []);
+    return { engine: selected[0]!.engine, question_type: key.slice(key.indexOf("/") + 1), questions: selected.length,
+      strategies: summarize("strategies"), rk: summarize("rk"), experience: summarize("experience"),
+      rk_available_questions: selected.filter(r => Array.isArray(r.tools) && r.tools.includes("kb_reflex")).length, calls_mean: mean(calls), calls_p95: p95(calls),
+      latency_ms_mean: mean(latency), latency_ms_p95: p95(latency) };
+  });
   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
     inline_knowledge_rows: data.filter(r => r.payload?.open_book || r.payload?.strategy_entries || r.knowledge?.mode === "full").length,
-    groups, limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。无工具调用是观测，不自动判错；无对照局，不推断因果增加耗时或收益。零题不构成验收。" };
+    groups, query_groups: queryGroups, rk_definition: "reflex.json via kb_reflex; kb_experience is experience, never rk", limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。" };
+}
+export function compareBrainQueryReports(before: Row[], after: Row[], beforeRunIds: string[] = [], afterRunIds: string[] = []) {
+  const baseline = brainAgentReport(before, beforeRunIds), current = brainAgentReport(after, afterRunIds);
+  return { schema: "brain-query-comparison-v1", baseline, current,
+    baseline_run_count: baseline.run_ids.length, expected_baseline_runs: 18,
+    baseline_matches_18_runs: baseline.run_ids.length === 18,
+    changes: current.query_groups.map(group => {
+      const old = baseline.query_groups.find(g => g.engine === group.engine && g.question_type === group.question_type);
+      return { engine: group.engine, question_type: group.question_type,
+        strategies_query_rate_delta: old ? group.strategies.query_rate - old.strategies.query_rate : null,
+        rk_query_rate_delta: old ? group.rk.query_rate - old.rk.query_rate : null,
+        calls_mean_delta: old && group.calls_mean !== null && old.calls_mean !== null ? group.calls_mean - old.calls_mean : null,
+        latency_ms_mean_delta: old && group.latency_ms_mean !== null && old.latency_ms_mean !== null ? group.latency_ms_mean - old.latency_ms_mean : null };
+    }), limitation: "上线前18局与上线后首批自然局须由调用者明确冻结原日志和局号；缺失题型变化为null，不补零，不追加实验局。" };
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const path = process.argv[2]; if (!path) throw new Error("usage: brain-agent-report.ts <brain.jsonl> [run-id ...]");
+  const path = process.argv[2]; if (!path) throw new Error("usage: brain-agent-report.ts <brain.jsonl> [run-id ...] [--baseline <before.jsonl> --baseline-run <run-id> ...]");
   const rows = readFileSync(path, "utf8").split("\n").filter(Boolean).map(line => JSON.parse(line));
-  process.stdout.write(JSON.stringify(brainAgentReport(rows, process.argv.slice(3)), null, 2) + "\n");
+  const runIds: string[] = [], beforeRunIds: string[] = [];
+  let baselinePath: string | undefined;
+  const args = process.argv.slice(3);
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i]!;
+    if (arg === "--baseline" || arg === "--baseline-run") {
+      const value = args[++i]; if (!value || value.startsWith("--")) throw new Error(`missing value for ${arg}`);
+      if (arg === "--baseline") baselinePath = value; else beforeRunIds.push(value);
+    } else if (arg.startsWith("--")) throw new Error(`unknown option ${arg}`);
+    else runIds.push(arg);
+  }
+  const report = baselinePath ? compareBrainQueryReports(readFileSync(baselinePath, "utf8").split("\n").filter(Boolean).map(line => JSON.parse(line)), rows, beforeRunIds, runIds) : brainAgentReport(rows, runIds);
+  process.stdout.write(JSON.stringify(report, null, 2) + "\n");
 }

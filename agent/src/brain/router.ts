@@ -55,6 +55,7 @@ import type { BrainConfig } from "../core/config.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
 import { BrainBlockedError, BrainWait } from "./wait.js";
 import { isContextOverflow } from "./knowledge.js";
+import { queryAudit } from "./tools/query-guidance.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
 export function labelPrefix(label: string): string {
@@ -172,6 +173,7 @@ export interface BrainLogRow {
   tools: string[];
   tool_calls: BrainAnswer["toolCalls"];
   agent?: BrainAnswer["agent"];
+  query_audit?: ReturnType<typeof queryAudit>;
   answer: unknown;
   problems: string[];
   reasks: number;
@@ -753,6 +755,7 @@ export class BrainRouter {
       payload: req.payload,
       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
       tool_calls: result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : []),
+      ...(req.knowledge?.mode === "tools" ? { query_audit: queryAudit(result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : [])) } : {}),
       ...(result?.agent ? { agent: result.agent } : error && typeof error === "object" && "brainAgent" in error ? { agent: error.brainAgent as BrainAnswer["agent"] } : {}),
       answer: result?.answer ?? null,
       accepted: result !== null && !BrainRouter.unusable(req, result),
