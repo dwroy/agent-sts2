@@ -6321,3 +6321,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T23:14:09+08:00 [ops] 23:13十六通知原文/ops送达证据均核同；原集成员received-2039及转主管514字节窗口仍匹配，不能写成无人接收。正式watcher/Roy ACK仍pending：CLI兼容哈希未变、000402原wrapper缺失；保原拒绝，不代角色登记或称Roy已知。当前原集成员working，后续由原会话依已有回执补正式链，不另起会话或重复实验。证据paper/materials/20261023-2313-ops/unchanged-notices.json。
 
 - 2026-10-23T23:17:07+08:00 [ops] codex1仅预检：两home登录/模型目录可见（gpt-6.1-sol high，brain兼容xhigh），auth均指向本人登录、无全局指令，learner key隔离8项通过；但learner config含service_tier，隔离配置守卫不通过，当前未就绪。未改配置/选择器、未建换号事务或drain、未发模型题；90%触发前先处理该隔离项并复核。原件paper/materials/20261023-codex1-readiness-ops/preflight.json。
+
+- 2026-10-23T23:27:21+08:00 [ops] 231302空fix无新增源码/提交，工作树干净；tsc0、定向6文件23项通过，Python18/3分列，初次EROFS保留。原empty-fix核验因main基线与live源码有差异返回None，保持failed/rc0，不重full/空合并/假seal；gzip与waiting补链为main祖先但不是live祖先，其余原候选沿原宿主链。原件paper/materials/20261023-2326-ops/receipt.json。
