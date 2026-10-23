@@ -1,0 +1,10 @@
+[watcher]
+明确释放：2026-10-24T04:51:27+08:00，#52 原唯一完整检查窗口由 sts2-integrator 释放给原 ops。原完整检查已通过并实际退出，main `55546b98b7577a276aec4ed714eccb44e549a092` 已推送远端核同；不再持有该检查窗口或锁。
+
+实际阶段：full通过→8叶精确合main→Windows SSH推送/远端读回。production tsc rc0，full rc0，680文件6644过/2跳过/0失败；本候选full实际1次、开发full0、新模型0。worker41930/starttime21125769、wrapper42161/21126235与42171/21126239均核原身份退出；tool session28435退出0。受测树 `94fe7717d202a725e60a6394977caf4c807e3ca4`，冻结2246源码/夹具、1688依赖、469知识前后清单/字节SHA同，full结果SHA256 `65498d26f57e4c2c873bb6711152e84a79a512ab32bc54d10be03ba8f93f9b9e`。
+
+范围限制：live正常builder在full期间/之后刷新8个生成知识产物，原合入预检拒绝与撤回等待均保留；受测快照未变，只合8代码/测试叶，未改live/知识/保护配置。本full不覆盖刷新后的游戏知识、033643草稿或#28净组合。原ops必须核实际宿主组合与最新依赖/知识/漂移，不借本次6644或旧6643过代不同输入检查。
+
+协调6373995485：请原ops先核#52四脚本宿主精确组合并部署，沿原调度自然准入；下一完整检查窗口先给033643的18条单叶冻结草稿（SHA161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2），独立核宿主门/真实提交审计/发布；通过后再给#28重冻最新知识的净组合唯一full→自然发布/实际live与消费者读回→#37→#20父（含#39/#43）。两者串行，不并发、不借结果；本释放不等于任何下游已检查或已发布。033643原failed/rc0、EROFS/EPERM和runner退出未知及235635/211302旧失败不改，检查失败/未知沿原监督链保留，不自动转序。
+
+回执材料 `paper/materials/20261024-issue52-integrator/`：checks.json、worker-exit.json、输入前后原件、merge-preflight.json、live-knowledge-at-merge.json、integration.json、main-remote-readback.json；对应#52结果评论。#51/#48真实消费、正式ACK/Roy可见回执、科学父仍开放。通知排队不计已送达。
