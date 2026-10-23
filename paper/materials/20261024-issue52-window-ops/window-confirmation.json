@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-24T03:46:35+08:00",
+  "phase": "reserved-for-issue52-candidate-review-and-freeze",
+  "next_issue": 52,
+  "check_owner": "sts2-integrator",
+  "ops_role": "Hold issue28 full at0; independently verify actual release receipt before starting next exact-net check",
+  "issue52_delivery_candidate": "not provided in this intake; original code owner delivers first",
+  "start_gate": [
+    "original integrator candidate review passed",
+    "exact source/dependencies/knowledge and fixed fixtures frozen",
+    "one original worker only; no parallel full"
+  ],
+  "release_gate": "Original integrator writes actual stage/result,worker PID/birth,input before/after and explicit release in #51; ops reads originals. Failure/unknown stays blocked, no automatic issue28 start.",
+  "following_order": [
+    28,
+    37,
+    "20 parent including39/43"
+  ],
+  "issue28_frozen": {
+    "path": "paper/materials/20261024-issue52-window-ops/issue28-frozen.json",
+    "bytes": 1622,
+    "sha256": "260e9584ca14d8f3b11c26400cea50046e9bd08fae2cb3bc447286c90fd8db33"
+  },
+  "new_full_started_by_ops": 0,
+  "models_started_by_ops": 0,
+  "kernel_locks_held_for_reservation": [],
+  "production_state_or_flags_modified": false,
+  "no_new_timer_or_worker": true
+}

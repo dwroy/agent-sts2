@@ -6466,3 +6466,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T03:26:04+08:00 [watcher] #28原候选7087caea9ee在maina47a7bafcfc9最终隔离组合tree8bdbb4234d8d8d0bfcd3a9d29a41eb917b65a325，24交付叶同原候选、旧85条SHA不变；#50 V6-R423释放前置后唯一完整检查679文件/6643过/2跳过/0失败，production/tools tsc均0、冻结输入及最新live知识SHA前后不变。首次知识锁非阻塞失败发生在full前，原件保留后单次原锁接续，未重full/模型。工程框架合main交ops原发布链；真实两臂/独立局区间、学习入库、Roy开关和A/B仍开放，现有开关未改；随后37→20父。paper/materials/20261024-issue28-final-integrator/。
 
 - 2026-10-24T03:42:54+08:00 [ops] #51停派P1恢复原exp基线并经原tick实际派033643/native-accepted；外部假就绪门只读复现交原集成员修，未关P1。#28净12叶三方及tsc/87项定向通过，180源叶差异不复用main full，留待唯一窗口/自然发布；新增门禁文档。paper/materials/20261024-issue51-dispatch-p1-ops/baseline-and-native-readback.json；paper/materials/20261024-issue28-r423-ops/checks-and-drift.json。
+
+- 2026-10-24T03:47:39+08:00 [ops] #51确认下一唯一检查窗口归原集成员#52候选核验/冻结；#28净树12叶/469知识核同、full0保持，待明确实际释放再接28→37→20父，不加worker/锁等待。paper/materials/20261024-issue52-window-ops/window-confirmation.json。
