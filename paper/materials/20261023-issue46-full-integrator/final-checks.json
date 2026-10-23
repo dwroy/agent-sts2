@@ -1,0 +1,67 @@
+{
+  "state": "passed",
+  "at": "2026-10-23T13:16:34+08:00",
+  "runner_pid": 505814,
+  "runner_birth": "15712404",
+  "nice": 19,
+  "tree": "e635daf2aade3d64b2fd891443845ca2c8ba69e7",
+  "base": "c707d5c903c03de3bc8d8cb2864f643b59b254a6",
+  "source": "a213612c65d6262bf4e90ab968b22cb305bed156",
+  "supervisor_comment": 6353937742,
+  "full_started": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T13:16:34+08:00",
+      "pid": 505889,
+      "exit_code": 0,
+      "seconds": 1.16
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue46-final-20261023-1318/full/vitest.json"
+      ],
+      "started_at": "2026-10-23T13:16:35+08:00",
+      "pid": 505968,
+      "exit_code": 0,
+      "seconds": 1390.589
+    }
+  ],
+  "K_or_L_held_during_checks": false,
+  "new_model_API_game_actions": 0,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator46-final-20261023-1318",
+  "existing_sandbox_selftests": [],
+  "input_count": 2543,
+  "knowledge_count": 469,
+  "inputs_unchanged": true,
+  "vitest": {
+    "files": 655,
+    "passed": 6333,
+    "failed": 0,
+    "pending": 2,
+    "success": true
+  },
+  "ended_at": "2026-10-23T13:39:46+08:00"
+}
