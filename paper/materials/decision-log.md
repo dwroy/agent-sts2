@@ -6468,3 +6468,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T03:42:54+08:00 [ops] #51停派P1恢复原exp基线并经原tick实际派033643/native-accepted；外部假就绪门只读复现交原集成员修，未关P1。#28净12叶三方及tsc/87项定向通过，180源叶差异不复用main full，留待唯一窗口/自然发布；新增门禁文档。paper/materials/20261024-issue51-dispatch-p1-ops/baseline-and-native-readback.json；paper/materials/20261024-issue28-r423-ops/checks-and-drift.json。
 
 - 2026-10-24T03:47:39+08:00 [ops] #51确认下一唯一检查窗口归原集成员#52候选核验/冻结；#28净树12叶/469知识核同、full0保持，待明确实际释放再接28→37→20父，不加worker/锁等待。paper/materials/20261024-issue52-window-ops/window-confirmation.json。
+
+- 2026-10-24T03:58:06+08:00 [ops] #28候选既有85库生产加载与基线等价，full0等52实际释放；#50单自然结束局20计划/19后继及F15/F16检查点核同，F21失败未达F48/F49，不推收益/关父。paper/materials/20261024-issue28-r423-ops/candidate-library-preflight-0352.json；paper/materials/20261024-issue50-first-ended-ops/readback.json。

@@ -1,12 +1,12 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T03:47:39+08:00
+issue: 28
+updated: 2026-10-24T03:58:32+08:00
 
-进行中的事: 本轮已在#51确认下一唯一检查窗口归原集成员#52，先交付候选核验/冻结；#28 b30925f净12叶/469知识再次核同、full0，回执paper/materials/20261024-issue52-window-ops/。停派P1已查：原exp11个失败合并残留使available=false，普通经验尝试保优先门，外部持续None。宿主原锁/无属主门下逐字归档残留并合已测main，基线c0a9d7c7650f、树等main95ef、原经验SHA ed9a7749保持、tsc0；运行源码同原28已测源，仅ops收件箱记录差异，222知识基线差异另列，不冒完整输入等价。原tick实际派033643经验批4047049/w1H:pD5，原TUI native-accepted；235635/211302旧failed/0不改。#51首两外部计划仍ready但未派：当前真实普通经验在跑，且另有不可派旧标记会继续误挡，P1未关。6373258583；原件paper/materials/20261024-issue51-dispatch-p1-ops/；门判断写docs/learning-dispatch-gates.md。
+进行中的事: #28净候选b30925f714d0保12产品叶，已三方组装、生产/v6工具tsc0、7文件87过；源图与main原受测树差180叶，不复用main6643 full，新full仍0、未发live。新增生产loadV6Knowledge前置：候选与基线代码读同冻结知识，85条reflex/4cores/vocab loaded、规范化结果及SHA完全同，legacy directions同missing；不是新live或自然消费。6373499031；paper/materials/20261024-issue28-r423-ops/candidate-library-preflight-0352.json。按积压接#50首结束自然局W546CNAWY3RG：20题20计划落盘、19后继逐字读回含跨幕；F15/F16两检查点请求/非空答/落盘/后继均同，实际live报告器核同。1独立局，旧5题为子集；F21失败未达F48/F49，无楼层回退，其他幕/SL重启/终局与学习仍开放。6373546002；paper/materials/20261024-issue50-first-ended-ops/readback.json。
 
-在等谁: #52交付候选尚未随本次任务提供，等原代码owner交付及原集成员核/冻结/唯一full；当前预留不占内核发布锁。原集成员已收#51 P1一行提醒，修shared.priority_hold对缺校准专树的due标记、无A11结束局却queued审核的假就绪判断；隔离只读副本两者均hold，去除两标记才false，实际state未删/改需求。保原正常复盘/修复优先和两策略槽，等原owner修及唯一检查窗口。#28 main c1f7e7570b67原full679文件6643过/2skip、两tsc0已核；R423净12叶三方成功但源图差180叶，原main full不能冒净组合绿。净树生产/v6工具tsc0、7文件87过，尚无新full/live发布。误选广域tools配置的历史错误、原固定fixture在R423缺失而从c1核SHA实体化均单列保留。6373280137；原件paper/materials/20261024-issue28-r423-ops/。
+在等谁: #52仍ready、未收到交付候选或释放；原集成员sts2-integrator已实际接收唯一检查窗口，回执paper/materials/20261024-issue52-window-integrator/window-acceptance.json为release=false、candidate/worker=null、full0，原ops窗口与28冻结SHA核同。必须先52候选核验→精确来源/传递依赖/夹具/知识冻结→单受监督full，再明确实际释放，失败/未知不转28；预留不占发布锁，无额外worker/计时器。#51普通经验已通过原tick恢复033643/4047049/w1H:pD5/native-accepted，原exp基线c0a9d7c7650f，11失败残留归档、旧经验SHA保持，235635/211302 failed/0不改；外部首两计划仍未实际派发，等52修缺校准树due和无A11结束证据queued的假就绪门，保正常优先/两槽/原需求。
 
-下一步: 以原集成员在#51写明#52实际阶段/检查结果/输入前后/worker身份和明确释放为门，ops核原件后才接#28；失败或未知不自动转序，不并发/重复full。原集成员先协调P1可派性修复/唯一检查，原tick真实派首个冻结外部计划后核batch/来源/原生线程/tier，未派不称启用成功；新普通033643结束沿原验收，不手开/重派模型。P1实际检查释放后，核#28精确R423净12叶完整窗口→原自然边界→绑定/最新知识/实际消费者/统一编号，随后37→20父；不把main整树裸发live，不改Jev开关，不做真实两臂或A/B，不关科学父。#36原两tab封存/原调度器01:55:03关闭，234301五局dataset bcce9fdf502e已核，不重dataset/finish；scratch仍等tested live经验，下一正常双批验收开放（6373280884）。50首自然5计划落盘/4后继读回已核，幕末/F48-F49/SL重启/学习收益待验；35学习消费、49rk非空场景待验；48原后置回刷保正常优先。23近24h16回收路径/111分配、plan0，保留门不松；46完整窗10-24 13:46:30、48至18:19:29；20最终kit观察至10-25 00:15:05、/new不启。27原watcher01:49实际接收已核，formal ACK兼容/Roy可见回执仍缺，状态不变不再写主管收件箱，只状态变化/需Roy裁决一行，细节issue。ops Fast实际请求回执待核，不热切。
+下一步: 收到原集成员在#51的52实际阶段、worker PID/birth、退出/全结果、输入前后与明确释放后，ops核原件；再核28源树、依赖及最新live知识漂移，保当前冻结原件，接唯一净组合full→原自然边界→精确发布/绑定/实际新live消费者/编号，随后37→20父（含39/43）。不重复或并发full，不整main裸发live、不改Jev开关、不造两臂/A-B/收益或关科学父。033643结束沿原正常验收，外部首派核来源/线程/tier。#36两原tab已原调度器01:55:03关闭，234301 dataset bcce9fdf502e已核，不重dataset/finish，scratch仍等tested live经验；正常双批验收开放。35学习消费、49rk非空自然场景待验，库加载不代采用；48回刷沿正常/外部优先。23近24h16回收路径/111分配/plan0保原门；46整窗10-24 13:46:30、48至18:19:29；20最终kit观察至10-25 00:15:05、/new不启。27原watcher01:49实际接收核过，formal ACK兼容/Roy可见回执缺，状态不变不再写主管收件箱，只状态变化/需Roy裁决一行，细节issue。ops Fast实际请求回执待核，不热切。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
