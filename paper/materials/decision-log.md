@@ -6213,3 +6213,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T16:55:00+08:00 [Claude] 转 Roy：开发会话并发上限由 10 调到 20（.agents/board.yaml roles.dev.max_parallel，89a445066），全局记忆 agent-issue-workflow 同步；#48 开发随即派出。
 
 - 2026-10-23T16:44:49+08:00 [ops] 冻结154301原0579三叶候选及9过/负控3败，完整45失败无终局且当前无进程，保failed/rc0；核当前live可应用不代组合绿，原宿主窗口待协调，11/17仅当前攻击分量非实扣HP，不重模型/合入或关科学父。原件paper/materials/20261023-1637-ops/。
+
+- 2026-10-23T16:53:37+08:00 [ops] 核16:46原15异议/15事件/67引用同及watcher1613自有转达回执，已实际提醒原会话；正式角色ACK仍因原CLI兼容pending，不代理、不重试同拒绝，不新模型/实验或关科学父。原件paper/materials/20261023-1646-ops/notices-audit.json。
