@@ -5057,3 +5057,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T02:11:28+08:00 [ops/dataset] 原234301五局复盘的受控dataset --no-raw已实际结束、rc0且source_checks_passed=true；源生成字节在原写锁内冻结SHA与Git blob，成本来源保持自身切点。原五节复盘、30条账本追加与五条待实现提案已按学习者原字节持久化；无纯bug及新经验实现。此前查询不支持的--help误启动生成器，已在load_decisions阶段以自有PID SIGINT中断，旧表与raw未更新，保留中断和previous历史副本，不冒称成功。本受控事务只执行一次正确--no-raw调用，不自动重试；不重模型、finish、full或游戏，不增加行为版本。原两批恢复及tab回收与科学父分账。
 原件：paper/materials/20261024-postmortem-234301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-24T02:19:22+08:00 [ops] #50原唯一full3778404尚无终局通过回执；已冻结源十叶、原发布函数及辅助模块SHA，部署一次性续接3864243/birth20395536（6371748530），登记时仅等原检查PID/birth终局，未提前写准入门。续接独立核原full JSON/2142输入及469知识SHA；通过后核最新live、操作者旗标、原autoplay/唯一play与控制台前缀，才挡下一局并等原对局自然终局；沿原K/L锁精确发布、核消费者、登记编号及释放自有门。失败或现场改变保存实际阶段并发原ops事件，不重full/模型/对局，不发游戏信号/按键。计划/检查点/F48-F49和学习父仍开放，235635基线保持待50门后接续。原件paper/materials/20261024-issue50-r422-ops/continuation-prepared.json、continuation-launch.json、continuation-review.json。
