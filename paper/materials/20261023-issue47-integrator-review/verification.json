@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-23T12:53:54.847812+08:00",
+  "source": "68f7db42820e60ff3fb68645f70ea9cc33e651c2",
+  "base": "8a241eb7b3f72d6d6f4c996030e5917ef90b1194",
+  "main": "d5e10110b8d00216a86a3d24d59683ff36c704fe",
+  "live": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+  "inputs": {
+    "agent/src/brain/live-view.ts": {
+      "sha256": "e44e4f48aca592321933c571f24f876994b169a89a97447eb2c43fca31dc3e50",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "agent/src/brain/engines/codex-session.ts": {
+      "sha256": "f2f5df4d682baddfd3c17ba083f94812c1b1dcf7d052fcef17f542fefc61b05c",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "agent/src/brain/engines/knowledge-agent.ts": {
+      "sha256": "93f1421192a74b92f805f5edcb301f8cb6bdaf89eb0d9d2b3c9c82ba04ef88b5",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "agent/src/brain/tools/mcp-server.ts": {
+      "sha256": "e530062b82f2f42d68ab13d14133df6b1b83d223dfe1a1c0dfcd432959c8b40c",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "ops/brain_view.py": {
+      "sha256": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "agent/tests/brain-live.test.ts": {
+      "sha256": "c2b8796abd40e3ee4118fc600dae224e8d7b6ae21ee1258acc236b441d2e675b",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "agent/tests/brain-agent-codex.test.ts": {
+      "sha256": "e43cfc4d5a9edf96e9fcfb7bf756908ede6f821e597a713b095775263ed8f9a5",
+      "matches_receipt": true,
+      "matches_git": true
+    },
+    "ops/tests/test_brain_view.py": {
+      "sha256": "abdba7eed2ad0e00093bcba0ef8cb6276bc47927b52157b9af4e4da1c88f7075",
+      "matches_receipt": true,
+      "matches_git": true
+    }
+  },
+  "developer_logs": {
+    ".artifacts/issue47/directed-final/tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue47/directed-final/vitest.log": {
+      "bytes": 249,
+      "sha256": "47bf22bf0ce00eb89c1fc9f614973f949161991cd7290a1e777e701af565a9bc"
+    },
+    ".artifacts/issue47/sandbox-tests.log": {
+      "bytes": 76,
+      "sha256": "8974590d3532e107914b6ba4b99073d3606f7b61937480b47cd57bb7aa5930ed"
+    },
+    ".artifacts/issue47/sandbox-interrupted.json": {
+      "bytes": 411,
+      "sha256": "dc62d4db05f5d13e6f89e178af8f81594d165668d5db7317a845fed3d53fe2d5"
+    }
+  },
+  "developer_directed": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/brain-live.test.ts tests/brain-agent-mode.test.ts tests/brain-agent-codex.test.ts tests/brain-agent-loop.test.ts tests/brain-router.test.ts tests/mcp-server.test.ts tests/brain-view.test.ts --pool=threads --maxWorkers=1",
+    "cwd": "agent",
+    "exit_code": 0,
+    "test_files_passed": 7,
+    "tests_passed": 71,
+    "failed": 0,
+    "python_viewer_tests": 16,
+    "python_count_note": "Included by brain-view.test.ts; do not add to 71 as independent Vitest cases"
+  },
+  "developer_tsc": {
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "exit_code": 0
+  },
+  "integrator_tests_run": false,
+  "full_not_run": true,
+  "queue": [
+    "36 actual publication",
+    "46",
+    "47"
+  ],
+  "natural_acceptance_open": true,
+  "product_paths": [
+    "agent/src/brain/engines/codex-session.ts",
+    "agent/src/brain/engines/knowledge-agent.ts",
+    "agent/src/brain/live-view.ts",
+    "agent/src/brain/tools/mcp-server.ts",
+    "agent/tests/brain-agent-codex.test.ts",
+    "agent/tests/brain-live.test.ts",
+    "docs/codex-ops.md",
+    "ops/brain_view.py",
+    "ops/tests/test_brain_view.py"
+  ],
+  "preflight": {
+    "main": "d5e10110b8d00216a86a3d24d59683ff36c704fe",
+    "patch_check_exit": 0,
+    "note": "Read-only exact source delta applicability; not a final combination or full result",
+    "stderr": ""
+  },
+  "remote_source": {
+    "available": false,
+    "observation": "GitHub commit lookup returned HTTP 422; origin issue-47-task ref was absent. Local source object and original branch verified; no remote verification claimed."
+  },
+  "review": "Technical source review passed; final-combination full and natural acceptance pending",
+  "integrator_repeated_tests": false
+}

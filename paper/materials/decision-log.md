@@ -6117,3 +6117,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T12:46:52+08:00 [watcher] #36最小P0按主管6356904617以实际R417/f3fb25b73+已审绑定+0933ea0ef，不含#20/新运行依赖，含Roy日志追加6357245522桥接块与固定4例（新增夹具首败75保留，仅补verified-code/seal固定stub后复核）；469知识，tree9642c7c38992唯一完整tsc0/6332过+2skip/0败，2540输入SHA同；无新增36原live源码ordinary-close基线单跑12.8秒通过，不称稳定，旧含20失败全原件保留。main兼容tsc0/11文件213过及Python/shell过，无重复full。精确15叶源码/测试/文档合main交ops发布；发布前off，发布后下一自然学习调度on，首自然批绑定/完成/300s降级/槽位/后批待ops核验，#20整体不作开启前置；未动live/模型/对局/旧75，父36和27正式CLI ACK/科学父保留。后续46→47视图→26提示→42余项→35→28→37（37→20）；材料paper/materials/20261023-issue36-p0-minimal-full-integrator/。
 
 2026-10-23T12:46:52+08:00 [watcher] #27 12:42原链15异议/发送凭证和67证据窗SHA及原CLI SHA实核一致，已本轮告知Roy；实读回执paper/materials/20261023-issue27-watcher-receipt/received-1242.json，正式角色ACK仍pending兼容，不代ACK、不重放原CLI、不关闭科学父。
+
+2026-10-23T12:55:48+08:00 [watcher] #47来源68f7db4282技术审查通过：9产品/测试/文档叶，8输入与Git/验证清单同、4日志字节/SHA同；复用开发tsc0及7文件71项（含Python16包装，不相加），本轮未重跑测试/full；差量对main d5e10110b只读apply-check0。来源仅本地核，远端未见；原143和开发首败保留。最终组合仍按36实际发布→46→47视图→26提示→42余项→35→28→37（37→20），保届时live知识/数据和36绑定/日志；未合47源码/未动live，自然拿牌题原tab验收及27正式ACK CLI阻塞保持开放。材料paper/materials/20261023-issue47-integrator-review/。
