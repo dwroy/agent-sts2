@@ -18,6 +18,7 @@ import { fightPlanInput } from "../memory/fight-plan.js";
 import { actOf } from "../memory/run-plan.js";
 import { lizardTailResourceState } from "../memory/relic-resources.js";
 import { deckBudgetFacts } from "../memory/run-constraints.js";
+import { ENDGAME_OBJECTIVE, endgameScope } from "../memory/endgame-plan.js";
 
 /** Act boss floors (acts are 17, 16 and 15 floors). */
 const BOSS_FLOORS = [17, 33, 48];
@@ -77,11 +78,13 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
           boss_prep: plan.bossPrep,
           summary: plan.summary,
           ...(plan.construction ? { construction: plan.construction } : {}),
+          ...(plan.endgame ? { endgame: plan.endgame } : {}),
         }
       : null,
     ...extra,
     ...deckBudgetFacts(state),
   };
+  if (endgameScope(state)) facts["endgame_objective"] = ENDGAME_OBJECTIVE;
   const continuation = doubleBossPreparation(state);
   const tail = lizardTailResourceState(state, env.screenMemory);
   if (tail) facts["relic_resources"] = [tail];

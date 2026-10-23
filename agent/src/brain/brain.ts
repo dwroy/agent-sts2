@@ -47,11 +47,13 @@ import { isConstructionQuestion } from "../memory/construction-log.js";
 import { attachOpenBook } from "../knowledge/open-book.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { attachQueryGuidance } from "./tools/query-guidance.js";
+import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope } from "../memory/endgame-plan.js";
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
-export function agentSystemPrompt(): string {
+export function agentSystemPrompt(state?: unknown): string {
   const guidance = knowledgeCharacter() === "silent" ? "\n构筑、幕初路线和备战题按题面非空线索与需要查询策略/rk；匹配数为0、缺失或错误时跳过，不为查工具而查。构筑rk只读构筑相关摘要；经验另用kb_experience。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
-  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}`;
+  const endgame = endgameRawScope(state) ? `\n${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE}` : "";
+  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${endgame}`;
 }
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
@@ -333,7 +335,7 @@ export class Brain {
         if (!isObject(v)) return v;
         return Object.fromEntries(Object.entries(v).filter(([k]) => !["open_book", "strategy_entries"].includes(k)).map(([k, value]) => [k, strip(value)]));
       };
-      return { ...base, system: agentSystemPrompt(),
+      return { ...base, system: agentSystemPrompt(this.context?.state),
         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
         ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
         knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
