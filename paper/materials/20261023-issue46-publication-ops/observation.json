@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-23T13:46:33+08:00",
+  "phase": "await-original-next-natural-tick-and-T-plus-24h",
+  "published_live": "b0c3f412133b03698d19d85b9b3a1d414ff13629",
+  "source_main": "c8fe60d92a91d9328e5c93b90c8f4403094b7b67",
+  "T": "2026-10-23T13:46:30+08:00",
+  "until": "2026-10-24T05:46:30+00:00",
+  "time_window": "[T,T+24h)",
+  "policy": {
+    "waiting_finished_runs_delta": 10,
+    "waiting_interval_seconds": 21600,
+    "max_batches_per_round": 2,
+    "max_proposals_per_batch": 10,
+    "per_item_new_run_required": true,
+    "pending_repair_explicit_resume_unaffected": true
+  },
+  "deployed_reporter_readback": {
+    "path": "ops/worktree_allocation_report.py",
+    "sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a",
+    "baseline_complete": true,
+    "baseline_allocated": 106,
+    "baseline_by_category": {
+      "fix-batch": 11,
+      "integrator": 31,
+      "issue": 7,
+      "ops": 9,
+      "strategy-proposal": 48
+    },
+    "baseline_invalid_receipts": []
+  },
+  "initial_watermarks": {},
+  "run_id_count_at_T_readback": 956,
+  "running_batches_at_readback": {
+    "20261023-124241-strategy-proposal": {
+      "task": "strategy-proposal",
+      "state": "running",
+      "pid": 328703,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241",
+      "proposal_recheck_round": null
+    },
+    "20261023-134302-strategy-proposal": {
+      "task": "strategy-proposal",
+      "state": "running",
+      "pid": 585801,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-134302",
+      "proposal_recheck_round": null
+    }
+  },
+  "acceptance_required": [
+    "all allocator receipt categories in the half-open window",
+    "actual runs and pending/repair/specialist/continuation/retry volumes",
+    "waiting backlog and round watermarks",
+    "legacy/restored trees separate from receipted new allocation",
+    "no loss of normal work misreported as disk savings"
+  ],
+  "static_estimate_is_not_observed_benefit": true,
+  "new_timer_model_dispatch": false,
+  "issue_closed": false,
+  "rollback": "Only revert ops/proposal_dispatch.py scheduling delta; preserve round/batch/ledger/failure records and isolated trees."
+}
