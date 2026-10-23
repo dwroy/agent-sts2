@@ -1,0 +1,20 @@
+{
+  "issue": 20,
+  "at": "2026-10-23T23:58:07+08:00",
+  "supersedes_kit": "8940977373e028664dae5fbcf3fea870c8950500",
+  "kit": "50565fd0c43918681defae48aa89a82c4258c4d3",
+  "project_source": "da1e3bd51ce95f5ca343783afa51950ca70b879d",
+  "change": "Shadow verdict also retains unknown notification receipts, idle/cooldown windows and absent notification intent; actual send guards were already present.",
+  "targeted_command": "nice -n 19 python3 -B -m unittest test_conversation test_polling test_watchdog test_board test_outcomes test_release_order test_project_contract",
+  "targeted_tests": 124,
+  "exit": 0,
+  "log": "kit-directed-final.log",
+  "log_sha256": "e7c05fc8a58e3a7883fc196483a75badbfad1c2cad9aa15f67d0d42662518d98",
+  "unchanged_public_checks": "checks.json; production TS/control/generator source unchanged",
+  "full_suite_run": false,
+  "real_new": 0,
+  "source_sha256": {
+    "conversation.py": "d2ddc2faddac4c684a62bbf109ef32c6fd40b44b4a515b96c82a4d25db0e5437",
+    "test_conversation.py": "1a95be3cc4946aeb66ffecad6141c0b2bf4ada58e613ca6b686c0f452a1e7167"
+  }
+}
