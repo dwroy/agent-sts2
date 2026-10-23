@@ -1,0 +1,89 @@
+{
+  "at": "2026-10-24T07:20:18+08:00",
+  "event": {
+    "path": "ops/codex-ops/queue/1792797061680623739-manual.md",
+    "bytes": 131,
+    "sha256": "9a4af27016b258f7a28ef817aa6715426b93428ced461c5fc915e8cfae0cffcc"
+  },
+  "window_authorization": {
+    "path": "paper/materials/20261024-experience-061302-check-ops/window-acceptance.json",
+    "bytes": 1971,
+    "sha256": "d8b126e8793af09d8c2c9ebce5ed521c1f8ab6032e25e39017bcf01fe88e24c2"
+  },
+  "prior_issue_reply": {
+    "path": "paper/materials/20261024-0710-51-callbacks-ops/comment37.json",
+    "bytes": 1651,
+    "sha256": "0a58c17d77acf960d41c837653a12dc418c4a4d55baddd3254fc309d8107a1aa"
+  },
+  "check_state": {
+    "at": "2026-10-24T07:13:33+08:00",
+    "phase": "unique-experience-live-net-full-running",
+    "worker_pid": 556166,
+    "worker_birth": "22173759",
+    "batch": "20261024-061302-experience-update",
+    "new_full_runs": 1,
+    "new_model_game": 0,
+    "published": false,
+    "source_commit": null,
+    "preserve_original_failed_rc0": true,
+    "prepared_tree": "ff32f36912bbfff50ef27ce4780d8555b3dd2956",
+    "knowledge_files": 469,
+    "input_files": 2139,
+    "dependency_files": 1417,
+    "tsc_rc": 0
+  },
+  "check_state_ref": {
+    "path": "paper/materials/20261024-experience-061302-check-ops/check-state.json",
+    "bytes": 483,
+    "sha256": "2d0efa39da8c23a08b7460b6cb9b3b8df64573dc0c62c4136670eb3bead2ad18"
+  },
+  "actual_process_tree": {
+    "pid": 556166,
+    "exists": true,
+    "birth": "22173759",
+    "state": "S",
+    "comm": "python3",
+    "children": [
+      {
+        "pid": 557458,
+        "exists": true,
+        "birth": "22174309",
+        "state": "S",
+        "comm": "node",
+        "children": [
+          {
+            "pid": 557466,
+            "exists": true,
+            "birth": "22174313",
+            "state": "S",
+            "comm": "node",
+            "children": [
+              {
+                "pid": 584972,
+                "exists": true,
+                "birth": "22212176",
+                "state": "R",
+                "comm": "node",
+                "children": [
+                  {
+                    "pid": 586272,
+                    "exists": true,
+                    "birth": "22213900",
+                    "state": "Z",
+                    "comm": "esbuild",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "window_owner": "original ops 061302 supplement",
+  "released_to_issue37": false,
+  "issue37_new_full_runs": 0,
+  "new_checks_models_games_this_wake": 0,
+  "scientific_parents": "open"
+}

@@ -1,8 +1,8 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T07:16:45+08:00
+issue: 37
+updated: 2026-10-24T07:20:18+08:00
 
-进行中的事: #51原两回调已核，源795d32b0/main c7adca66/07:04:28宿主部署、三脚本实际导入及只读策略保持，原唯一full680文件6644过/2skip/tsc0，2246输入/1688依赖/469知识受测副本与前后SHA核同不重跑。部署后首原tick071301优先派PM552590五局（DDR9U5D07U49,0LH6KZ26VXJR,QVDR4R3UWKXU,5ZT1SKS66C1N,BKK8KAR3E83C），external_alternation_hold=true，外部/回刷null；PM优先符合原指示，不当外部native或收益。
+进行中的事: #37本轮原排位6376551030已接，07:20核061302原监督556166/birth22173759与full1仍在途、tsc0；#37 full0，窗口尚未交回。本轮无新检查/模型；本次回执paper/materials/20261024-0720-37-window-ops/receipt.json。#51原两回调已核，源795d32b0/main c7adca66/07:04:28宿主部署、三脚本实际导入及只读策略保持，原唯一full680文件6644过/2skip/tsc0，2246输入/1688依赖/469知识受测副本与前后SHA核同不重跑。部署后首原tick071301优先派PM552590五局（DDR9U5D07U49,0LH6KZ26VXJR,QVDR4R3UWKXU,5ZT1SKS66C1N,BKK8KAR3E83C），external_alternation_hold=true，外部/回刷null；PM优先符合原指示，不当外部native或收益。
 
 在等谁: #51等原自然tick/资源槽真正派外部首双Boss、次各幕Boss及原生高档/沙箱/冻结来源读回，不能强派或用登记代采用。另已接原集成员6376551030明确窗口：061302原十四补证草稿由监督556166/birth22173759于07:13启动R425单经验叶净full；树ff32f36912bb，生产tsc0，2139输入/469知识/1417依赖及183当前宿主源码冻结，full1在途，原exp HEAD23f810480与草稿SHA6034dc5b同。候选14项真实传统/脑工具读回已过，仅前置；无提交/发布或旧failed/rc0改写。
 
