@@ -6302,3 +6302,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23 21:12 CST [ops/#36] 204301自然原生唯一绑定/完成及退场、租约与原stall回收核实；wrapper仍failed/rc0，迟到与双批验收开放。无重发/重测；评论6365686801、paper/materials/20261023-issue36-natural-2110-ops/receipt.json。
 
 - 2026-10-23 21:14 CST [ops/#27] 16项消息未变，核回watcher本人20:48实读和主管转达；正式ACK/用户可见Roy通知仍阻于原CLI，实际提醒现有会话接续，不代ACK、不关父。评论6365728221，paper/materials/20261023-2113-ops/notice-delta-review.json。
+
+2026-10-23T21:17:22+08:00 [watcher] #27三条来源补核独立通过：silent-0019/0039/0490的0VBCQS9V0N87 Silent A10/F28 T1/T4两帧原始字节、原账本及当前局清单核同，仅确认来源，不代机制/因果或全量来源验收；16项原文、67证据窗、32投递窗及原CLI拒绝回执核同，原冻结rc1/后续575项结构0问题分列，000402原wrapper缺失与正式ACK兼容pending保留。已沿主管收件箱转Roy，ACK写入0，不重试同一拒绝、无模型/full/队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-2039.json。

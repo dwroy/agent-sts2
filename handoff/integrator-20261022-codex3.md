@@ -216,3 +216,5 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 2026-10-23T20:48:24+08:00 [watcher] #27核收19:56原链16项：旧15项/67证据窗及32双收件箱原文核同；新增000402原wrapper日志缺失，注册/输入SHA核同，211项旧归档不含该文件，原batch/thread/source与失败保留，找回精确日志后才验原launch/thread，否则blocked。已沿主管收件箱转Roy；原科学父、冻结rc1与后续575项0问题分列，正式ACK仍原CLI兼容pending，ACK写入0，无新模型/full或队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-1956.json。
 
 2026-10-23T20:52:25+08:00 [watcher] #20旧学习tab恢复封存八批实际回收独立核收通过：宿主三叶与a3b15e510fe9精确一致，8份seal/40份原件/8份尾日志SHA及原stall done事件核同，当前8个tab消失且host键移除，原learn绑定及终态未改；pC5缺原supervisor birth、pCC awaiting_review继续保留，不代checkout回收或科学完成。父#20仍在#37后开放；复用原定向检查，本次无代码变更/重跑测试/full/生产写入。证据paper/materials/20261023-issue20-recovery-acceptance/receipt.json。
+
+2026-10-23T21:17:22+08:00 [watcher] #27三条来源补核独立通过：silent-0019/0039/0490的0VBCQS9V0N87 Silent A10/F28 T1/T4两帧原始字节、原账本及当前局清单核同，仅确认来源，不代机制/因果或全量来源验收；16项原文、67证据窗、32投递窗及原CLI拒绝回执核同，原冻结rc1/后续575项结构0问题分列，000402原wrapper缺失与正式ACK兼容pending保留。已沿主管收件箱转Roy，ACK写入0，不重试同一拒绝、无模型/full/队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-2039.json。
