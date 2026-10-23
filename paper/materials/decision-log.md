@@ -6121,3 +6121,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T12:55:48+08:00 [watcher] #47来源68f7db4282技术审查通过：9产品/测试/文档叶，8输入与Git/验证清单同、4日志字节/SHA同；复用开发tsc0及7文件71项（含Python16包装，不相加），本轮未重跑测试/full；差量对main d5e10110b只读apply-check0。来源仅本地核，远端未见；原143和开发首败保留。最终组合仍按36实际发布→46→47视图→26提示→42余项→35→28→37（37→20），保届时live知识/数据和36绑定/日志；未合47源码/未动live，自然拿牌题原tab验收及27正式ACK CLI阻塞保持开放。材料paper/materials/20261023-issue47-integrator-review/。
 
 - 2026-10-23T13:02:52+08:00 [ops/#36] 原6332过/2skip及main15叶核同；发布45秒知识锁首败未写live/off保留，原生一次有界K→L发布接续已启动，终局自动回原队列；不重full/模型/实验局，不称等待已发布。原件paper/materials/20261023-issue36-p0-publication-intake-ops/receipt.json、../20261023-issue36-p0-publication-ops/continuation.json。
+
+- 2026-10-23T13:09:16+08:00 [ops] 两批普通策略收尾人工核验：仅共享main #36源码漂移；20项waiting/无合入；沿用原唯一dataset核心表，成本输出被并行刷新后原件封存待核，保留attention/父要求，不重跑。原件paper/materials/20261023-1306-ops/review.json。
