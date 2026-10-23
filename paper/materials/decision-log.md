@@ -6149,3 +6149,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:06:23+08:00 [ops/#36] 两叶发布复核不重发，134302仍原生运行待自然收尾；旧124241原生已结束但登记running，核无进程/lease后置awaiting_review保四叶未提交候选及原失败，未造完成/seal或重模型。原件paper/materials/20261023-issue36-finish-followup-ops/。
 
 - 2026-10-23 14:19:08 CST — ops核14:13原15学习异议/67引用SHA核同，原watcher读回保留、实际提醒提交；正式ACK仍阻塞原CLI兼容，未代ACK/重模型/发布或关科学父。原件：`paper/materials/20261023-1413-ops/notices-audit.json`、`paper/materials/20261023-1413-ops/watcher-reminder-send.json`。
+
+- 2026-10-23T14:20:42+08:00 [watcher/#36/#27] 按主管提醒实核b499/c707组合漏learner_tabs.py：原wrapper240直接seal引用，134302原生code0且wrapper真实failed/rc0已登记，stderr缺文件/attention-seal/pane保留。此前测试stub不证明发布依赖完整，组合自查增加本地模块及传递依赖在实际树内的准入清单；等原dev36补交优先定向，不碰生产或重放死主管seal/full/模型，46原24h不变。27实核14:13链15原文/67原件及CLI/received-1242 SHA同，已在本轮告知Roy，正式ACK原CLI兼容阻塞/科学父保留，无代ACK。材料paper/materials/20261023-issue36-local-module-integrator/及issue27-watcher-receipt/received-1413.json。
