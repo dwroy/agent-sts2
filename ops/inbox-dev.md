@@ -6251,3 +6251,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T18:19:29+08:00 [ops/#48来源启用] 已沿#48原交接独立核main a163d8897d的16叶、47项运行依赖及首批冻结来源，复用集成员2625输入前后同SHA、tsc零、wrapper17项和定向11文件163项通过，不重复full。采用宿主main原codex-ops.sh学习tick，未将16叶裸拷game live。旧来源enabled=false，现于2026-10-23T18:19:29+08:00持原learn.lock仅切为true并读回；原每轮先派正常复盘、经验、策略提案、修复及重任务/升阶审计，再评估回刷，原槽位、账号、lease和磁盘门保持。首批仍六条，总库244条，尚无原生启动，cursor与processed均零、remaining244；注册和开关不算提炼完成。已冻结实际T前24小时原登记切点，并明确登记时间不代原生启动或吞吐验收；T后24小时、真实产物、策略/rk上线与消费者收益均pending，48/50科学父不关。回退仅在原锁内关enabled，保留计划、进度及在途批次，不热停或重派。
 原件：paper/materials/20261023-issue48-activation-ops/admission.json、activation.json、throughput-baseline.json、natural-entry-observation.json；原准入paper/materials/20261023-issue48-sync-admission/main-assembly.json。
+
+- 2026-10-23T18:36:33+08:00 [ops/dataset] 171301四局真实复盘的唯一dataset --no-raw已实际结束，rc0且source_checks_passed=true；实际生成字节在原写锁内冻结SHA与Git blob，成本来源保留自身切点。四节复盘、28条本批账本追加及四条pending提案已由先行受控记录提交精确持久化，没有新增经验ID；斗篷生成误记抽牌仅旧0461再次复现，沿原f4eb策略链去重，未另派学习或改变机制。当前提交只含实际生成物、自有双通知与回执，并行源码和记录保持；不重模型、full、finish或旧任务，无行为版本或live经验发布。原171301回收请求此前因postmortem not settled保留，后续由原回收器核真实入库和提交门，不因dataset成功代称已回收。174301空修复failed/rc0及原候选链保留，十五条异议正式角色ACK仍pending，科学父不因数据事务结束而关闭。后续只沿本终局事件核实际生成物和提交，不再重建本切点。
+原件：paper/materials/20261023-1804-dataset-ops/result.json、generated-manifest.json、record-commit.json。
