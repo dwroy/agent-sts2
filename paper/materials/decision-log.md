@@ -6131,3 +6131,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T13:17:33+08:00 [ops] KUHYZ A10无SL通关48分23秒/下局A10；15通知核67证据、正式ACK仍阻塞；121302五局复盘记录受控入库，dataset前源码漂移停点保留不重跑；36首on批131316原生绑定已核，余四项pending。原件paper/materials/20261023-1313-ops/。
 
 2026-10-23T13:18:22+08:00 [watcher] 实读#36 ops6357912956：live c707d5c903c0的15叶同main d5e10110b及受测9642c7c；hosting on实读SHA核同，原6332pass+2skip复用，无重跑，首自然五项仍pending。#46按6353937742在实际c707上组装e635daf2，469知识、36全部15叶保留；13:16:35开启唯一单worker/nice19完整检查，tsc0，结果待回。#27 13:13审计15原文/67证据/CLI及received-1242 SHA核同，正式ACK兼容阻塞、科学父保留，未写ACK；原异议已在对话告知Roy。未改live/STOP/共享配置或在途任务。
+
+- 2026-10-23T13:21:30+08:00 [ops/#36] 首on批131316原生完成/绑定/摘要SHA核过，未触发300s核验降级；空fix测试null导致failed/rc0，wrapper finish语义守卫拒绝封印，原pane/失败保留；监督退出且lease释放，后批待自然tick，不重full/模型/改源码/伪造done。原件paper/materials/20261023-1318-ops/receipt.json。
