@@ -6297,3 +6297,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23 21:14 CST [ops/#27] 本轮16项重复通知原文与实际ops投递回执逐项SHA未变；已独立核到集成员20:48本人received-1956及主管收件箱relay-1956真实字节窗，故“正式ACK仍缺”不等于“未实读”。原CLI SHA未改，16项正式watcher/Roy ACK及Roy用户可见通知仍pending，未代填或重试原拒绝。现有集成员done可接收，已实际投递一行提醒接续三条来源补核和CLI回执；不能把提醒当再次读取或Roy知悉。000402精确原日志仍缺，原科学父/冻结rc1/因果分母边界不改；未新派研究、模型、测试、局或计时器。#27评论6365728221精确读回；原件paper/materials/20261023-2113-ops/notice-delta-review.json。
 
 - 2026-10-23 21:23 CST [ops] 211302经验任务零新增/改写，因沙箱只读.agents/board.yaml阻断基线合并，保原failed/rc0与报告。已在宿主原exp树准备main a1a5527601，保193545原稿f3f439cf49字节不变；tsc0、唯一宿主full按nice19/串行文件进行，结束沿原队列回报，未冒通过/基线提交/live或消费者验收。未改学习者权限/账号、不重模型。原件paper/materials/20261023-experience-baseline-211302-ops/transaction.json、initial-review.json。
+
+- 2026-10-23 21:44 CST [ops/#27] 16项原文/实际ops投递回执未变；新核集成员本人received-2039及relay-2039原字节窗，确认三条来源补核也已实读并转主管。原提醒已在#27评论6365792729获本人回应，本轮无新payload不重复发送；不把转主管等同Roy用户可见通知。CLI和原rc2拒绝字节未变，16项正式watcher/Roy ACK仍pending兼容修复，不代填、不重复失败CLI或关科学父；000402精确wrapper日志仍缺，原来源/因果/分母/冻结rc1边界保留。未新模型、实验、full或对局。原件paper/materials/20261023-2143-ops/receipt-review.json。
