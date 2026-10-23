@@ -6338,3 +6338,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:03:55+08:00 [ops] 23:01两事件去重核实：main86b3b1721b实际八叶与full6513过原件SHA一致，ops ultrafast原生采用待空闲resume；224301经验blocked/零修改/failed-rc0保留，宿主基线恢复接#35唯一full返回后，不重复检查或模型。原件paper/materials/20261023-2301-ops/receipt.json。
 
 - 2026-10-23T23:05:17+08:00 [ops] 221930四叶候选保留未发布/完整检查不全，原输入及13过/撤修4败已核，排原宿主检查窗口；交接生成覆盖报#20。paper/materials/20261023-2304-ops/candidate-receipt.json。
+
+- 2026-10-23T23:15:00+08:00 [Claude] 转 Roy：外部玩家对局（sts2.fun）尽快学习提炼进知识库、策略库与 rk，开 #51 优先（正常复盘/修复之后、自动提案与旧经验回刷之前），该学习线可用 ultrafast（只走启动参数，额度 >70% 退 fast）；同意 #49 小修正（0 匹配不引导查询、构筑题 rk 只给构筑摘要、外部统计给线索）。
