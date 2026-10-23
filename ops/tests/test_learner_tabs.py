@@ -329,6 +329,224 @@ class LearnerTabs(unittest.TestCase):
             with self.subTest(state=state):
                 self.worker.board.protect(dict(self.row,state=state,label=self.label))
 
+    def recovery_fixture(self, state='done'):
+        self.started(state=state)
+        output=self.files/(self.batch+'.out')
+        self.receipt['output']=dict(path=str(output),sha256=tabs.sha(output))
+        self.receipt['wrapper']=dict(version=1,batch=self.batch,state=self.row['state'],rc=self.row['rc'],
+            launcher_rc=0,finished=self.row['finished'],supervisor=dict(pid=222,birth='12345'),
+            batch_sha256=hashlib.sha256(json.dumps(self.row,sort_keys=True,separators=(',',':')).encode()).hexdigest())
+        self.write_receipt(); self.births.pop(222,None)
+        self.births[os.getpid()]='67890'
+        evidence=self.root/'paper/materials/recovery-review.json'
+        evidence.parent.mkdir(parents=True,exist_ok=True); evidence.write_text('{"review":"fixed evidence"}\n')
+        return evidence
+
+    def test_ops_recovery_seals_only_then_original_tick_reclaims(self):
+        evidence=self.recovery_fixture()
+        originals={path:path.read_bytes() for path in self.files.iterdir()}
+        state=(self.directory/'learn.json').read_bytes()
+        host=(self.directory/'herdr.json').read_bytes()
+        with self.assertRaisesRegex(ValueError,'registered supervisor'):
+            self.worker.seal(self.batch)
+        self.assertEqual(self.worker.recover_seal(self.batch,evidence)['state'],'sealed')
+        self.assertTrue(self.present); self.assertFalse(any(c[:2]==('tab','close') for c in self.calls))
+        proofpath=self.files/(self.label+'.tab-retirement.json'); proof=tabs.load(proofpath)
+        self.assertEqual(proof['authority'],'ops-recovery')
+        self.assertEqual((proof['owner_pid'],proof['owner_birth']),(222,'12345'))
+        self.assertEqual(proof['recovery']['operator_pid'],os.getpid())
+        self.assertEqual(proof['recovery']['operator_birth'],'67890')
+        self.assertEqual(proof['recovery']['evidence']['sha256'],tabs.sha(evidence))
+        before=proofpath.read_bytes()
+        self.worker.recover_seal(self.batch,evidence)
+        self.assertEqual(proofpath.read_bytes(),before)
+        self.assertEqual(originals,{path:path.read_bytes() for path in originals})
+        self.assertEqual(host,(self.directory/'herdr.json').read_bytes())
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        event=self.worker.data['events'][self.batch]
+        tail=self.root/event['tail']
+        self.assertIn(tabs.sha(tail),tail.name); self.assertEqual(event['phase'],'done')
+        self.assertNotIn(self.label,tabs.load(self.directory/'herdr.json')['panes'])
+        self.assertEqual(state,(self.directory/'learn.json').read_bytes())
+        self.assertEqual(originals,{path:path.read_bytes() for path in originals})
+        self.assertTrue(self.tree.is_dir()); self.assertFalse(self.worker.inbox.exists())
+
+    def test_recovery_cli_defaults_read_only_and_apply_never_closes(self):
+        import contextlib,io
+        evidence=self.recovery_fixture()
+        argv=['recover-seal','--root',str(self.root),'--batch',self.batch,'--evidence',str(evidence.relative_to(self.root))]
+        original={path:path.read_bytes() for path in self.root.rglob('*') if path.is_file()}
+        with patch.object(tabs.issue_session,'herdr',side_effect=self.herdr), contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(tabs.main(argv),0)
+        self.assertEqual(json.loads(output.getvalue())['state'],'eligible')
+        self.assertEqual(original,{path:path.read_bytes() for path in self.root.rglob('*') if path.is_file()})
+        with patch.object(tabs.issue_session,'herdr',side_effect=self.herdr), contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(tabs.main(argv+['--apply']),0)
+        self.assertEqual(json.loads(output.getvalue())['state'],'sealed')
+        self.assertTrue(self.present); self.assertFalse(any(c[:2]==('tab','close') for c in self.calls))
+
+    def test_recovery_failed_rc_zero_remains_failed_after_original_tick(self):
+        evidence=self.recovery_fixture(state='failed')
+        self.worker.recover_seal(self.batch,evidence)
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        row=tabs.load(self.directory/'learn.json')['batches'][self.batch]
+        self.assertEqual((row['state'],row['rc']),('failed',0))
+
+    def test_recovery_cli_lock_queue_retention_and_real_failure(self):
+        import contextlib,fcntl,io
+        evidence=self.recovery_fixture()
+        argv=['recover-seal','--root',str(self.root),'--batch',self.batch,'--evidence',str(evidence),'--apply']
+        for name in ('learn.lock','herdr.json.lock','learner-tabs.lock'):
+            with (self.directory/name).open('a') as lock, contextlib.redirect_stdout(io.StringIO()) as output:
+                fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                self.assertEqual(tabs.main(argv),0)
+            self.assertEqual(json.loads(output.getvalue())['state'],'queued')
+        self.assertEqual(self.calls,[]); self.assertFalse(self.worker.inbox.exists())
+        self.receipt['wrapper']['supervisor'].pop('birth'); self.write_receipt()
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(tabs.main(argv),0)
+        self.assertEqual(json.loads(output.getvalue())['state'],'retained')
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+        for error in (OSError('fixed I/O failure'),json.JSONDecodeError('bad receipt','broken',0)):
+            with patch.object(tabs.LearnerTabs,'recover_seal',side_effect=error), contextlib.redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(tabs.main(argv),1)
+            self.assertEqual(json.loads(output.getvalue())['state'],'failed')
+        self.assertEqual(len(self.worker.inbox.read_text().splitlines()),1)
+
+    def test_recovery_missing_old_wrapper_or_supervisor_birth_retains(self):
+        evidence=self.recovery_fixture()
+        wrapper=copy.deepcopy(self.receipt['wrapper'])
+        for bad in ('missing-wrapper','missing-birth','wrong-pid','wrong-hash'):
+            self.receipt['wrapper']=copy.deepcopy(wrapper)
+            if bad=='missing-wrapper': self.receipt.pop('wrapper')
+            if bad=='missing-birth': self.receipt['wrapper']['supervisor'].pop('birth')
+            if bad=='wrong-pid': self.receipt['wrapper']['supervisor']['pid']=999
+            if bad=='wrong-hash': self.receipt['wrapper']['batch_sha256']='0'*64
+            self.write_receipt()
+            with self.subTest(bad=bad), self.assertRaisesRegex(ValueError,'original wrapper'):
+                self.worker.recover_seal(self.batch,evidence)
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovery_rejects_live_reused_pids_and_nonterminal_batches(self):
+        evidence=self.recovery_fixture()
+        for pid,value in ((222,'12345'),(222,'reused'),(444,'native-birth'),(444,'reused')):
+            self.births[pid]=value
+            with self.subTest(pid=pid,value=value), self.assertRaises(ValueError):
+                self.worker.recover_seal(self.batch,evidence)
+            self.births.pop(pid)
+        for state in ('running','awaiting_review'):
+            self.row['state']=state; self.write_state(); self.calls=[]
+            with self.subTest(state=state), self.assertRaisesRegex(ValueError,'safely terminal'):
+                self.worker.recover_seal(self.batch,evidence)
+            self.assertFalse(any(c[:2]==('pane','get') for c in self.calls))
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovery_rechecks_original_output_and_whole_batch(self):
+        evidence=self.recovery_fixture()
+        self.row['checks']='changed after original wrapper'; self.write_state()
+        with self.assertRaisesRegex(ValueError,'wrapper'):
+            self.worker.recover_seal(self.batch,evidence)
+        self.row.pop('checks'); self.write_state()
+        (self.files/(self.batch+'.out')).write_text('changed output\n')
+        with self.assertRaisesRegex(ValueError,'output proof'):
+            self.worker.recover_seal(self.batch,evidence)
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovery_preserves_native_authority_identity_and_empty_input_gates(self):
+        evidence=self.recovery_fixture()
+        original=copy.deepcopy(self.receipt)
+        for bad in ('authority','native-end','summary','identity','input','background','permanent-pane','live-cwd'):
+            self.receipt=copy.deepcopy(original); self.write_receipt()
+            native=self.files/'native.jsonl'; native_before=native.read_bytes()
+            log=self.files/'launch.jsonl'; log_before=log.read_bytes()
+            if bad=='authority': self.receipt['retirement_authorized']=False; self.write_receipt()
+            if bad=='native-end': native.write_text('\n'.join(native.read_text().splitlines()[:-1])+'\n')
+            if bad=='summary': log.write_text('changed\n')
+            if bad=='identity': self.pane['terminal_id']='other'
+            if bad=='input': self.screen=b'dw@host:~/fixture$ human draft'
+            if bad=='background': self.info['foreground_process_group_id']=777
+            if bad=='permanent-pane':
+                self.row['pane']='w1H:p8'; self.host['panes'][self.label]['pane_id']='w1H:p8'; self.write_state()
+            if bad=='live-cwd': self.row['worktree']=str(self.root/'.worktrees/live'); self.write_state()
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.worker.recover_seal(self.batch,evidence)
+            native.write_bytes(native_before); log.write_bytes(log_before)
+            self.pane['terminal_id']='terminal-1'; self.screen=b'dw@host:~/fixture$ '
+            self.info['foreground_process_group_id']=333
+            self.row.update(pane='wR:p1',worktree=str(self.tree)); self.host['panes'][self.label]['pane_id']='wR:p1'; self.write_state()
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovery_never_resolves_sending_or_done_events(self):
+        evidence=self.recovery_fixture()
+        for phase in ('sending','done'):
+            self.worker.data['events'][self.batch]=dict(phase=phase,pane=self.row['pane'],tab=self.pane['tab_id'])
+            with self.subTest(phase=phase), self.assertRaisesRegex(ValueError,'uncertain'):
+                self.worker.recover_seal(self.batch,evidence)
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovery_rechecks_changes_before_seal_and_never_overwrites(self):
+        evidence=self.recovery_fixture()
+        original_idle=self.worker.idle
+        original_row=copy.deepcopy(self.row); original_host=copy.deepcopy(self.host)
+        stderr=self.files/(self.batch+'.err'); stderr_before=stderr.read_bytes()
+        for bad in ('evidence','batch','host','pane','artifact'):
+            def changed(*args):
+                result=original_idle(*args)
+                if bad=='evidence': evidence.write_text('changed during verification\n')
+                if bad=='batch': self.row['checks']='new result'; self.write_state()
+                if bad=='host': self.host['panes'][self.label]['title']='changed'; self.write_state()
+                if bad=='pane': self.pane['revision']+=1
+                if bad=='artifact': stderr.write_text('changed during verification\n')
+                return result
+            with self.subTest(bad=bad), patch.object(self.worker,'idle',side_effect=changed), self.assertRaisesRegex(ValueError,'changed'):
+                self.worker.recover_seal(self.batch,evidence)
+            self.row=copy.deepcopy(original_row); self.host=copy.deepcopy(original_host); self.write_state()
+            self.pane['revision']=1; stderr.write_bytes(stderr_before)
+            evidence.write_text('{"review":"fixed evidence"}\n')
+        proofpath=self.files/(self.label+'.tab-retirement.json')
+        self.assertFalse(proofpath.exists())
+        self.worker.recover_seal(self.batch,evidence); before=proofpath.read_bytes()
+        self.pane['revision']+=1
+        with self.assertRaisesRegex(ValueError,'seal changed'):
+            self.worker.recover_seal(self.batch,evidence)
+        self.assertEqual(proofpath.read_bytes(),before)
+
+    def test_recovery_cannot_replace_original_supervisor_seal(self):
+        evidence=self.recovery_fixture(); self.births[222]='12345'
+        self.worker.seal(self.batch); self.births.pop(222)
+        proofpath=self.files/(self.label+'.tab-retirement.json'); before=proofpath.read_bytes()
+        with self.assertRaisesRegex(ValueError,'seal changed'):
+            self.worker.recover_seal(self.batch,evidence)
+        self.assertEqual(before,proofpath.read_bytes())
+
+    def test_recovery_evidence_symlink_missing_and_sensitive_paths_rejected(self):
+        evidence=self.recovery_fixture()
+        link=evidence.with_name('link.json'); link.symlink_to(evidence)
+        sensitive=self.root/'.env'; sensitive.write_text('fixed harmless fixture\n')
+        for path in (link,sensitive,evidence.with_name('missing.json')):
+            with self.subTest(path=path.name), self.assertRaises((ValueError,FileNotFoundError)):
+                self.worker.recover_seal(self.batch,path)
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_recovered_seal_tick_rechecks_evidence_and_provenance(self):
+        evidence=self.recovery_fixture(); self.worker.recover_seal(self.batch,evidence)
+        proofpath=self.files/(self.label+'.tab-retirement.json'); original=proofpath.read_bytes()
+        for bad in ('evidence','operator','wrapper','input','supervisor-reused','native-reused'):
+            proofpath.write_bytes(original)
+            before=evidence.read_bytes(); receipt_before=copy.deepcopy(self.receipt)
+            if bad=='evidence': evidence.write_text('changed review\n')
+            if bad=='operator':
+                proof=tabs.load(proofpath); proof['recovery'].pop('operator_birth'); tabs.atomic(proofpath,proof)
+            if bad=='wrapper': self.receipt['wrapper']['supervisor']['birth']='99999'; self.write_receipt()
+            if bad=='input': self.screen=b'dw@host:~/fixture$ human draft'
+            if bad=='supervisor-reused': self.births[222]='reused'
+            if bad=='native-reused': self.births[444]='reused'
+            with self.subTest(bad=bad):
+                self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+            self.receipt=receipt_before; self.write_receipt(); evidence.write_bytes(before)
+            self.screen=b'dw@host:~/fixture$ '; self.births.pop(222,None); self.births.pop(444,None)
+        self.assertFalse(any(c[:2]==('tab','close') for c in self.calls))
+
 
 class PostmortemContract(LearnerTabs):
     # The scheduler batch key is timestamp-only; only its host label/receipts carry this suffix.

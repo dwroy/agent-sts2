@@ -1,0 +1,69 @@
+{
+  "issue": 20,
+  "request": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6361965194",
+  "base": "0c85d6d9a526264631461fe8cf8221ace499b695",
+  "code_commit": "baa313f74ad514eac5794db5f42ebf144ba2b532",
+  "code_tree": "c34e23b3d01daf3fefcf6203c20371054cfac798",
+  "source_sha256": {
+    "ops/learner_tabs.py": "9e7f72275b68a3774fba5a1cefc96a003cc8f31a01564cde09ba18fae1d67883",
+    "ops/tests/test_learner_tabs.py": "844b6a4a657838c0fc15887a34f9b16436aa8416f9edfeadc1e028685579866c",
+    "docs/learner-tab-reclamation.md": "e80dd59fb1eebc39c74fbf433fd54304c3633a74d08164f3501ce7e5a9de31c1",
+    "paper/materials/decision-log.md": "31fdda3bdcde51678446f1d83f125705c95d4e2fa11222f7f61862ea2c1f639a"
+  },
+  "checks": [
+    {
+      "name": "production-tsc",
+      "cwd": "agent",
+      "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "learner-tabs",
+      "cwd": ".",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_learner_tabs.py",
+      "exit": 0,
+      "tests": 81,
+      "log": "learner-tabs.log",
+      "log_sha256": "2e618cd11d8bd00138535e7812bd12d7549d08cd6757e5ebf6051bc92093135e"
+    },
+    {
+      "name": "wrapper-completion",
+      "cwd": ".",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_learner_wrapper_completion.py",
+      "exit": 0,
+      "tests": 17,
+      "log": "wrapper-completion.log",
+      "log_sha256": "79d312777379e890dfd69cc7fb75008c67b76d82a175255faffbada9658042ee"
+    },
+    {
+      "name": "native-tui",
+      "cwd": ".",
+      "command": "nice -n 19 python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py",
+      "exit": 0,
+      "tests": 26,
+      "log": "native-tui.log",
+      "log_sha256": "1a9166e60f4b95009a8fb95c192dea3aef827fdc31a4bea8b146852d1a3f60fa"
+    },
+    {
+      "name": "vitest-directed",
+      "cwd": "agent",
+      "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 node node_modules/vitest/vitest.mjs run tests/learner-tabs.test.ts tests/learner-wrapper-scripts.test.ts --pool=threads --maxWorkers=1 --fileParallelism=false",
+      "exit": 0,
+      "files": 2,
+      "tests": 4,
+      "log": "vitest.log.gz",
+      "uncompressed_sha256": "20453dfcef9d59243d29374001cf8622938ce7cc76a9eae2898b81b8d561fe44",
+      "log_sha256": "b6e408750c163c512a39583c87c10c6616e9288497aa3d709560845a52c7b26a"
+    }
+  ],
+  "full_suite_run": false,
+  "live_start_affected": false,
+  "real_recovery_seals_written": 0,
+  "real_tabs_closed": 0,
+  "real_state_modified": false,
+  "workers": 1,
+  "nice": 19,
+  "review_status": "requested; integration and explicit ops recovery pending"
+}

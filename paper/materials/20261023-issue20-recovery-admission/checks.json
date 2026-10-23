@@ -1,0 +1,127 @@
+{
+  "state": "passed",
+  "base": "d203fe8edc435a211d9ea81d61303e0a7d120bc3",
+  "tree": "523dfcb6a95a434cedb9fbaf4546aee13e091a7a",
+  "checks": [
+    {
+      "name": "tsc",
+      "cwd": "agent",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T19:29:45+08:00",
+      "finished_at": "2026-10-23T19:29:46+08:00",
+      "exit": 0,
+      "log": "tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "learner-tabs",
+      "cwd": ".",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_learner_tabs.py"
+      ],
+      "started_at": "2026-10-23T19:29:46+08:00",
+      "finished_at": "2026-10-23T19:29:47+08:00",
+      "exit": 0,
+      "log": "learner-tabs.log",
+      "log_sha256": "770f5c47ab42254b1964837c9694071c85614bea6daf0363ba02777e0447c8ff"
+    },
+    {
+      "name": "wrapper-completion",
+      "cwd": ".",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_learner_wrapper_completion.py"
+      ],
+      "started_at": "2026-10-23T19:29:47+08:00",
+      "finished_at": "2026-10-23T19:29:51+08:00",
+      "exit": 0,
+      "log": "wrapper-completion.log",
+      "log_sha256": "05314f1bd2739588de217c958095026c2eaabd766b0ed7e6e74ce773c8d72aa8"
+    },
+    {
+      "name": "native-tui",
+      "cwd": ".",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_learner_tui.py"
+      ],
+      "started_at": "2026-10-23T19:29:51+08:00",
+      "finished_at": "2026-10-23T19:29:51+08:00",
+      "exit": 0,
+      "log": "native-tui.log",
+      "log_sha256": "1230101f77fac901f5d9a5dd270f3600cd939607ad169ad9311736255cf25613"
+    },
+    {
+      "name": "vitest-directed",
+      "cwd": "agent",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-tabs.test.ts",
+        "tests/learner-wrapper-scripts.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--fileParallelism=false"
+      ],
+      "started_at": "2026-10-23T19:29:51+08:00",
+      "finished_at": "2026-10-23T19:29:57+08:00",
+      "exit": 0,
+      "log": "vitest-directed.log",
+      "log_sha256": "e333d2fa692610453f279c08a5e3bbee2799d7db61e1f2e4c0dbad0c0b1839cb"
+    }
+  ],
+  "input_count": 2633,
+  "inputs_unchanged": true,
+  "local_modules": 4,
+  "full_suite_run": false,
+  "production_recover_seals": 0,
+  "production_ticks": 0,
+  "production_tabs_closed": 0,
+  "live_written": false,
+  "workers": 1,
+  "nice": 19
+}

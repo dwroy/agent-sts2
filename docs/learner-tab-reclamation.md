@@ -22,7 +22,23 @@ seal 只封存回执，不关 tab、不发模型提示、不改 learn.json 的�
 
 零模型失败只接受 not-started、models_started=0、code3、未 submitted/无 bindings 或 submissions、原身份齐全；允许原 launcher 明确的 code3→learn.rc1 失败映射，或 rc3，绝不写成成功。out 可为空，out/err 必须存在。未知失败、缺身份或没有原终态保留，不靠空 bash 猜完成。取消同样须原回合终结和本批处置权。
 
-seal 生成 `learner/LABEL.tab-retirement.json`（schema `learner-tab-retirement-v1`）：root/state_file/batch、原批次 binding、owner PID/birth、authority=batch、原 label/cwd、pane/tab/workspace/terminal、shell PID/birth、tab 标题与 pane activity revision、每份原件 path/SHA。回执原子落盘；重封存只允许字节意义相同的身份/证据，不覆盖旧证明。新增回执由本 helper 生成，wrapper 无需手拼 schema。#36 wrapper 变更及其真实终态/回执合同是采用前置；旧在途回执不改写，历史 tab 缺封存证明仍保留并报主管，不能从冻结测试推断历史已回收。
+seal 生成 `learner/LABEL.tab-retirement.json`（schema `learner-tab-retirement-v1`）：root/state_file/batch、原批次 binding、owner PID/birth、authority=batch、原 label/cwd、pane/tab/workspace/terminal、shell PID/birth、tab 标题与 pane activity revision、每份原件 path/SHA。回执原子落盘；重封存只允许字节意义相同的身份/证据，不覆盖旧证明。新增回执由本 helper 生成，wrapper 无需手拼 schema。#36 wrapper 变更及其真实终态/回执合同是采用前置；旧在途回执不改写。历史 tab 缺封存证明默认保留并报主管；仅下述显式 ops 恢复入口可为证据齐全的旧终态补封存，不能从冻结测试推断历史已回收。
+
+## 旧终态的显式 ops 恢复封存
+
+依据 [#20 6361965194](https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6361965194)，原 supervisor 已退出时由 ops 逐批调用，不自动扫描补 seal。先只读检查，再显式 `--apply` 仅封存；两种调用都不关 tab、不改原 TUI/learn.json/产物或 checkout：
+
+```bash
+nice -n 19 python3 ops/learner_tabs.py recover-seal --root "$ROOT" --state-dir "$DIR" \
+  --batch "$batch" --evidence paper/materials/20261023-issue20-old-tabs-ops/old-tabs-review.json
+# 实际恢复时使用同一命令并追加 --apply；之后仍等原 stall tick。
+```
+
+`--evidence` 必须是本仓库内现存、非软链接、非凭据的本地核验文件。恢复重新核当前状态，不用该文件中的旧快照代替现场。除共享原 seal 的所有处置权、原生绑定/末回合、summary/exit、产物 SHA、身份、前后台空闲及空输入门外，还要求原 TUI 的 `wrapper.version=1`、batch/state/rc/finished、supervisor PID/原始 birth、完整 canonical 批次 SHA 全部匹配，且原 supervisor 和 native PID 当前均不存在（PID 复用同样保留）。输出也须匹配原 TUI 的 output path/SHA；session 未结束、无 wrapper birth 的旧回执和任何 sending/done 事件均拒绝恢复。锁内封存前再核完整批次、host、原件 SHA、证据文件与当前 pane/input。
+
+恢复证明沿原 schema 单列 `authority=ops-recovery`，`owner_pid/owner_birth` 保留原 wrapper 身份；`recovery` 记录 version、实际执行者 PID/birth、本地证据 path/SHA，`sealed_at` 是本次恢复时间。不冒原 supervisor 调用、不覆写旧证明；重复恢复仍须核当前门，完全一致才幂等返回。原 tick 接受这类证明时再次核 provenance、wrapper 完整批次摘要、原输出和证据 SHA、两个旧 PID 均不存在，并在关闭前复核。
+
+默认只读不建锁/回执/通知；符合门返回 eligible。`--apply` 沿原 learn→host→learner-tabs 三锁串行，锁忙 queued/0；证据缺失或安全门未过 retained/0，真实 I/O/格式异常沿原 failed/收件箱路径。`--apply` 与 `--dry-run` 不能并用。pC5 缺 wrapper supervisor birth 继续保留；pCC 的 awaiting_review/在跑原生进程不变；sending 不确定须原 ops 对账，不能通过恢复入口解开。实际首个自然封存→关闭只证明 tab 与槽位链，不代批次成功、checkout 回收或父功能验收。
 
 ## 原 tick 回收
 
