@@ -6354,3 +6354,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:17:07+08:00 [ops] 按预授权仅做codex1就绪预检：登录/目录/key8通过，learner继承service_tier阻塞隔离；保原配置账号及所有准入，未prepare/drain/切换。paper/materials/20261023-codex1-readiness-ops/preflight.json。
 
 - 2026-10-23T23:17:21+08:00 [watcher] #27接续23:13原链：16项原文/67证据窗/32投递窗与CLI拒绝核同，实际核收并沿主管收件箱转达Roy；正式ACK仍pending兼容，原rc2及000402日志缺失保留，无新模型/实验/full，科学父未关。paper/materials/20261023-issue27-watcher-receipt/received-2313.json。
+
+- 2026-10-23T23:17:55+08:00 [watcher] 遵Claude最新#27通知规则：状态不变不再写主管收件箱；仅需Roy裁决或状态变化时写一行，细节留原issue。已发生投递/原拒绝保留，正式ACK与科学父状态不变。
