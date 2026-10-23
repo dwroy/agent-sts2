@@ -5942,3 +5942,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T07:59:49+08:00 [watcher] 实读主管6353937742：顺序36漏洞补交→46→42工具余项→35→28→37（37→20）。36于实际R417精确组装三枚9叶/treebabced606/469知识，恢复原固定Git输入b84d95c；准入核原ops磁盘80策略full3628287/birth13697121仍跑，36在测试前退出/full_started=false/零步骤/锁释放，无并跑或后台等待；先核原ops终态及实际live，必要时重建36后唯一full，再main/ops发布，之后46。46审查通过而功能未合，24h实际验收、四已消费任务不重派及27 CLI阻塞保留。材料paper/materials/20261023-issue36-priority-admission/。
 
 - 2026-10-23T08:02:52+08:00 [ops] Roy 10-23磁盘准入100→80 GiB、60不变；账号小配置自主处理且事后双通知写入常驻清单。tsc/full 6291/0/2，main e972b5f824f21671976acd042e9ddff0f14456e1、live 70eb1287042d80bf6f253b4dce66ac888a5f4868，运维变更沿用V6-R417；#45原worker首轮回收旧树1棵，余保留门不关闭；最新队列36补交→46→42余项→35→28→37→20。原件paper/materials/20261023-roy-disk80-ops/、20261023-issue45-ops/。
+
+- 2026-10-23T08:06:08+08:00 [ops] 07:56重复15件异议原文与67证据窗口无变化；原watcher身份核实后一行提醒实际提交，正式角色ACK因原manual任务白名单继续pending；不代ACK/不重失败CLI、不关闭科学父。原件paper/materials/20261023-0756-ops/notices-audit.json、watcher-reminder-send.json。

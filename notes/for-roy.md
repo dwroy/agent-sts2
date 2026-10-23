@@ -4765,3 +4765,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T08:02:52+08:00 [ops] Roy 10-23指令已落实：新学习/工作准入水位由100改为80 GiB（含80即暂停），下一局60、Regent 200/48小时不变。同步修正读取器原100硬编码，主目录与live实际读取80/60及各16项Python检查通过；tsc及完整回归6291过、0败、2跳过，首次仅包装数量断言失败原件保留。codex3 learner删除service_tier维持，本轮未读取或修改账号配置；“可回退小改动自主处理、事后通知Roy及主管”已写入常驻短清单。#45首轮原worker回收旧树1棵，回执218292224字节；31份dirty差异已归档，其余身份/验收/收尾门仍保留，未关闭父任务。发布顺序#36补交→#46→#42余项→#35→#28→#37→#20。仅运维5文件，沿用V6-R417；回退可恢复本次policy及读取器原件，不回退service_tier删除。证据：paper/materials/20261023-roy-disk80-ops/publication.json、actual-consumers.json；paper/materials/20261023-issue45-ops/settlement-register.json。
+
+
+- 2026-10-23T08:06:08+08:00 [ops] 处理07:56十五件重复异议：逐条核原文SHA、67份原始证据/收件箱窗口及通知CLI，均与06:43一致。原ops_forwarded真实写入、watcher接收与Roy可见转达证据保留；原watcher身份核实且空闲，已实际提交一行提醒，提交不代已读或角色ACK。正式watcher_received/roy_notified仍受原手动任务白名单限制，十五条继续pending，不重复同一失败CLI、不代其他角色登记。D1牌堆提取、D2配对增量、D3退出HP口径及EXPOSE/钢铁风暴/SPORE_MIND限制原样保留；#27拿牌因果、外部分母、单战支持边界不升级为收益或shipped。三条并行账本已由原ops当前授权清单核回，原学习者冻结check rc1保留，现有结构/局号check rc0不代逐帧来源验证。本轮仅核验与转达，无新学习/full/dataset/发布/对局操作，不关闭科学父；阻塞沿原通知链处理。原件paper/materials/20261023-0756-ops/notices-audit.json、watcher-reminder-send.json；原账本核验paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json。
