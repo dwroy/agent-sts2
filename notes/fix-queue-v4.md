@@ -1568,3 +1568,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-23T13:09:16+08:00 [ops] 非阻塞原件可恢复性：110001策略报告核七份旧提案Markdown缺失，预期SHA见本批proposal-original-readback.json；复用原ID查原owner/保留归档，不以另一提案或摘要替代、不派新模型。原报告paper/materials/20261023-1306-ops/20261023-110001-strategy-proposal-report.md；本轮不删除相关研究工作树。
 
 - 2026-10-23T14:29:59+08:00 [ops/#36 原闭环] 原134302自动完成及finished守卫已过，但wrapper无条件调用尚未发布的ops/learner_tabs.py，main/live均不存在，实际seal ENOENT；非游戏纯工程缺口，交原#36 owner与#20适配器边界定向处理。保failed/rc0、原native/wrapper SHA、attention和pane，不向已退出监督补seal、不另派学习模型。原件paper/materials/20261023-1419-ops/natural-acceptance.json。
+
+- 2026-10-23T15:18:44+08:00 [ops 原silent-0328/167b20链补证，非新派单] 141301三叶候选未提交：原11项定向过/有效负控2败9过/tsc0，原full日志45失败但缺rc文件且宿主已无本树进程；两个单例EPERM仅解释各自，不重任务/改排除名单或强合live知识。沿原候选/集成检查窗口核精确三叶及旧20261020重叠候选，保留原ID、证据/科学父。原件paper/materials/20261023-1509-ops/candidate-141301.json。

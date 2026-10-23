@@ -6181,3 +6181,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T15:06:51+08:00 [ops/15:03终局对账] 原两批共用唯一dataset于14:38:02启动、14:50:21实际rc0结束，提交5446aafc已核为当前main祖先；14个实际生成文件的原提交blob、字节与SHA逐项吻合，全部提交路径核同且无源码，源检查true、原扫描clean。核心数据和成本源各保自身切点，不倒填成同一覆盖；本轮未重dataset、finish或学习。原两批虽均done/rc0，回收仍实际deferred：二组发布来源叶不符，复盘有共享在途owner，保留原门而不强退场。144302报告无新增修复或提交，27项仅是既有修复复核；隔离树在声明基线干净，tests=null/null/0，原empty-fix验证无通过凭据，因此保持原failed/rc0，不伪造no_changes、合入或测试结果。其原生/finished回执SHA与前轮自然核验相同，回收因scratch报告路径未绑定继续保留。旧ENOBUFS、账本及H1候选沿原owner，不另派模型或重复实现，36自然派发、20回收、46原24h及科学父仍开放。
 原件paper/materials/20261023-1503-ops/dataset-verification.json、fix-144302.json；原构建paper/materials/20261023-1431-dataset-ops/result.json、record-commit.json。
+
+- 2026-10-23T15:18:44+08:00 [ops/15:09策略及续派] 141301原生code0结束，原batch及wrapper均真实failed/rc0，原监督/native已退、lease空闲。三文件蜡烛条件参考候选保持暂存未提交，原定向11过、有效负控2败9过、tsc0；完整日志45失败而无退出码，当前宿主无本树测试进程，不能续称仍在运行、伪造终态或把两例EPERM外推全部失败。原知识冲突/锁忙与patch、源码blob/SHA保留，待原集成检查链，不整枝覆盖live。本轮精确持久化原0328两条受阻审计，579项账本检查0问题，不标implemented/shipped或新版本。另核下一普通调度：151302主组实际绑定1/high/workspace-write；二组submitted但绑定0、无session/rollout、retirement-unverified/75，原herdr agent仍working，保现场交36，不称零模型、送达或已退出，不重开模型。前轮dataset提交和144302记录已完成，本轮不重dataset/full/测试，候选、36身份阻塞、20回收、46原窗口及科学父分账保留。
+原件paper/materials/20261023-1509-ops/candidate-141301.json、record-review.json、issue36-next-normal-dispatch.json。

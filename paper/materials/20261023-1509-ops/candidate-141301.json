@@ -1,0 +1,216 @@
+{
+  "at": "2026-10-23T15:18:44+08:00",
+  "batch": "20261023-141301-strategy-proposal",
+  "phase": "original-uncommitted-candidate-retained-full-terminal-unverified",
+  "actual_batch_state": "failed/rc0",
+  "base": "9870929cc25b6aa385b11c1ece95dade34940eda",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301",
+  "source_commit": null,
+  "source_files": [
+    {
+      "path": "agent/src/hand/screens/rest.ts",
+      "blob": "de520866492758011bbf793ced9e7e5576834ebf",
+      "mode": "100644",
+      "bytes": 36597,
+      "sha256": "169626daf73b6add093dc9fe366183bbada010fb7385e66ec495abe3d6e68b7f"
+    },
+    {
+      "path": "agent/tests/silent-candle-positive-charge-evidence.json",
+      "blob": "127b9d7e9d7c648ae4216e487558f862c6b0c0aa",
+      "mode": "100644",
+      "bytes": 46554,
+      "sha256": "f29350f14ebc14111d62180fb2803f650cc93b5dbdfe8792b9b0da490fe9b7d6"
+    },
+    {
+      "path": "agent/tests/silent-candle-rest.test.ts",
+      "blob": "22c1203b408c3cb8b7b0d579200294eac4e5843e",
+      "mode": "100644",
+      "bytes": 9176,
+      "sha256": "47703b6e703cf6ae6ea87fc7b34ab3642f12d86016689ba9c63c794cadd126b4"
+    }
+  ],
+  "exact_staged_patch": {
+    "path": ".artifacts/ops-1509-20261023/candidate-exact-staged.patch",
+    "sha256": "27edfd89c020a5fb6e49536b0b7cf86942e26f6c82632c6dc763ff4c3628ab3d",
+    "bytes": 55589
+  },
+  "original_patch": {
+    "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/candidate.patch",
+    "bytes": 55403,
+    "sha256": "2133dd501b4b26fd7db0ad5019a0eeb0e80f8fdec3064c66a4d51cf23263fbf6"
+  },
+  "original_report": {
+    "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/report.md",
+    "bytes": 10257,
+    "sha256": "e8b9f340ac4ba6ea872a4ad2d60934a84107e92ca72d832aae849ef2343777ed"
+  },
+  "original_validation": {
+    "source_commit": null,
+    "merged": null,
+    "sandbox": {
+      "command": "SANDBOX_WORKERS=1 bash tools/test-sandbox.sh --configLoader native",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/agent",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/sandbox-test.log",
+      "exit_file": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/sandbox-test.rc",
+      "tool_session_id": 97238,
+      "terminal_exit": null,
+      "still_running_at_checkpoint": true,
+      "observed_failed_cases": 45,
+      "failed_file_headers": [
+        [
+          " ❯ tests/brain-agent-mode.test.ts",
+          "15",
+          "8"
+        ],
+        [
+          " ❯ tests/ops-mod-state.test.ts",
+          "37",
+          "37"
+        ]
+      ],
+      "complete_suite_passed": false
+    },
+    "fixed_cases": {
+      "negative_exit": 1,
+      "negative_failed": 2,
+      "negative_passed": 9,
+      "positive_exit": 0,
+      "positive_passed": 11
+    },
+    "diagnoses": [
+      "listen EPERM: operation not permitted 127.0.0.1",
+      "spawnSync bash EPERM"
+    ],
+    "gitleaks_exit": 0,
+    "commit_gate_passed": false,
+    "followup": "运维在宿主核此工作树检查进程及终态，保留原失败；仅原三文件候选，勿整枝覆盖live刷新。未提交/未上线/未分配release_id。"
+  },
+  "original_full_current": {
+    "rc_file_exists": false,
+    "terminal_rc": null,
+    "worktree_test_processes": [],
+    "reported_failure_lower_bound": 45,
+    "scope": "Two original single-case EPERM diagnoses only; not proof all failures have that cause. No source commit or full pass claimed."
+  },
+  "supervisor_and_native_stopped": true,
+  "lease_free": true,
+  "native_receipt": {
+    "path": "ops/codex-ops/learner/learner-20261023-141301-strategy-proposal.tui.json",
+    "bytes": 6926,
+    "sha256": "923dea3458fcf31a4826606d6ae6c5b5375a864fd4a38250e443b48621934fbc"
+  },
+  "native_wrapper": {
+    "version": 1,
+    "batch": "20261023-141301-strategy-proposal",
+    "state": "failed",
+    "rc": 0,
+    "launcher_rc": 0,
+    "finished": "2026-10-23 15:09",
+    "supervisor": {
+      "pid": 679327,
+      "birth": "16051243"
+    },
+    "batch_sha256": "8ec1fcdd86b240d22c6f1c54eb8bca2239ee44dc021c1a81cdc22d04cd27932d"
+  },
+  "native_accepted_bindings": 1,
+  "merged": null,
+  "release_id": null,
+  "knowledge_conflict_original": "v6-history three-way conflict and lock busy retained from original read-only preflight; not current live/source replay authorization",
+  "retention": {
+    "batch": "20261023-141301-strategy-proposal",
+    "task": "strategy-proposal",
+    "character": "silent",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301",
+    "schema": "learner-cleanup-request-v1",
+    "requested_at": "2026-10-23T15:09:46+08:00",
+    "requested_by": "learner-wrapper",
+    "state": "deferred",
+    "admission_required": true,
+    "model_finished_does_not_prove_ingestion": true,
+    "last_result": {
+      "state": "deferred",
+      "reason": "no verified ingestion or settled outcome"
+    },
+    "updated_at": "2026-10-23T15:16:58+08:00"
+  },
+  "original_evidence": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/validation-receipt.json",
+      "bytes": 1510,
+      "sha256": "f30201d8b503b48f60c1143acdb64fde765a428ad328261c12bcd870e73cea7d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/candidate.patch",
+      "bytes": 55403,
+      "sha256": "2133dd501b4b26fd7db0ad5019a0eeb0e80f8fdec3064c66a4d51cf23263fbf6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/rest-before.txt",
+      "bytes": 35921,
+      "sha256": "0f8ad04a5e9682d8bbe2331352a314511ee5c1984994a1dc427581adc113ed52"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/test-summary.json",
+      "bytes": 48,
+      "sha256": "48e2b11b8e94552110ed208e5c03112f35cc664d0ff5cba6474cc234bba89055"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/positive-test.log",
+      "bytes": 272,
+      "sha256": "4c6819da53ecb10d4c99f87dbb8d9d6aed09005031958ce42de86d34a948cdb9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/negative-valid-test.log",
+      "bytes": 1792,
+      "sha256": "ff5d807eb92c744250e5fb0d33d143a4dea937836a3f6f487c2ef64a2e6413a4"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/failed-case-diagnosis.log",
+      "bytes": 784,
+      "sha256": "cea516e730644ff3b2688a271dd44652496b20c8c269b8e650bb2fb11a2e7f9b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/failed-case-diagnosis.rc",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/http-failed-case-diagnosis.log",
+      "bytes": 1148,
+      "sha256": "5c001d13f83d24219a0ea525bcae9888d32161b27494fb5e4d40a6d6616d331b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/http-failed-case-diagnosis.rc",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/sandbox-test.log",
+      "bytes": 3814,
+      "sha256": "30831d0eda39f6f780d124aa60b8733688c5e58ba2429e0dc8c1787c41d5a9ba"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/merge-preflight.json",
+      "bytes": 661,
+      "sha256": "434bae162272d6573bcf55c5dbf93e28cf5f54388a97d09653fdc321e42deb96"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/knowledge-merge-preview.json",
+      "bytes": 820,
+      "sha256": "07687a274dc1418799fbd18f73af28fe7ab53db8b53fe585b5825990f8aeebb7"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/locked-merge-preflight.json",
+      "bytes": 184,
+      "sha256": "afcb122e5af455ae544a5931770d9dda11c122ae2c083add75b191549703e67d"
+    }
+  ],
+  "parent_ids": [
+    "silent-0328",
+    "silent-proposal-167b20d3b7105257"
+  ],
+  "previous_20261020_candidate": "retained original overlapping scope, not a new independent denominator or duplicate task",
+  "next_step": "Original integration/check owner reconciles this exact three-leaf candidate, original incomplete/failing sandbox result and latest knowledge before source submission/publication. No new learner, changed exclusion list, blanket sandbox dismissal or whole-branch live merge.",
+  "new_tests_models_dataset_or_task_replays": 0,
+  "scientific_parents_closed": false
+}
