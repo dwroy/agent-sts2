@@ -6137,3 +6137,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T13:41:21+08:00 [watcher] #46在实际V6-R417/c707d5c903c0上精确5叶，treee635daf2aade3d64b2fd891443845ca2c8ba69e7唯一完整tsc0/655文件6333过+2skip/0败，2543输入SHA同、469知识及36已发15叶保留；main兼容tsc0/6定向文件16项，无重复full。仅5受测叶合main交ops精确发布，T+24h由原ops核实际分配/局量/积压等，静态68/日非实测收益，父46保持开放。主管本轮裁定46在途照常发布，36收尾合同补丁后接仅定向+组合自查（超出本full覆盖再议）；首on批原生绑定/完成/无超时/lease释放实核，空fix原failed/rc0与wrapper finish冲突、pane及失败保留，未改done/tests/seal，后批自然派发待核。GH36 6358077224/6358115660；27原15异议/67证据及CLI正式ACK阻塞/科学父保留；后47→26→42余→35→28→37（37→20）。未改live/STOP/TUI/模型或在途任务；材料paper/materials/20261023-issue46-full-integrator/。
 
 - 2026-10-23T13:47:58+08:00 [ops/#46] 精确5叶发布live b0c3f412133b03698d19d85b9b3a1d414ff13629，T=2026-10-23T13:46:30+08:00；保最新知识/36/TUI/80/60/V6-R417，唯一full6333过2skip沿用，不重full/模型。waiting聚合10局或6小时/每轮2批/每批10项；T+24h实际验收开放，36收尾补丁随后定向。原件paper/materials/20261023-issue46-publication-ops/publication.json。
+
+- 2026-10-23T13:52:24+08:00 [ops/#46] 重提醒对账：actual live b0c3f412133b0五叶核同、无新交接；T+24h为10-24 13:46:30未到，保原自然验收/开放父，不重发或重full/模型。原件paper/materials/20261023-issue46-followup-ops/receipt.json。
