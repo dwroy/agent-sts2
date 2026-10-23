@@ -4816,3 +4816,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T12:25:47+08:00 [ops] 121225-fix已按原报告完成无新增产出核验：工作树HEAD950e323e、干净且已在main；无新源码、测试、提交、提案或合入。本批tsc/vitest未运行，cases=0按原值保留，不能借用110800候选8过/完整130，也不把空修复当本批修复上线。原调度failed/rc0与retry_at保留，仅写ops_review；自动空修复门要求真实检查及源码与live一致，本批未满足，无源码可代提交，不重模型/full/dataset。ENOBUFS两叶、H1六叶、账本四叶沿原owner补验，ACK身份、Jev预算、通知恢复与策略机制专项保原链；报告无新纯bug，不重复加队列或改游戏知识。当前两条策略实际PID仍活，最后014302二组冻结重排保持pending，7批仍6次唯一启动/1待槽，不把空闲fix槽当策略槽，不重放已登记批次。#36继续沿原唯一full及日志桥接事务，TUI仍off，未新发布或关闭科学父。原件paper/materials/20261023-1223-fix-ops/receipt.json；原报告learner/runs/20261023-121231-7f200ce9-5118-4017-a4ec-aa0e00c6cfee-fix-batch/report.md。
+
+
+- 2026-10-23T12:45:35+08:00 [ops] 已处理12:42十五件重复学习通知：逐项原文指纹、67份原证据及通知CLI与11:43一致，原ops_forwarded实际写入回执核同有效。既有watcher会话身份/可提交通道已核，已实际发送一行提醒并保存真实提交回执；提醒提交不算已读或Roy已知，十五条watcher_received/roy_notified继续pending。原手动task白名单及输入来源合同兼容未变，保留此前CLI拒绝，不重复相同失败调用、不代其他角色ACK。完整问题、旧观点差异、证据和下一步沿本轮交接索引交原watcher；三条并行账本沿06:43授权局清单核验，保学习者冻结check原rc1，结构/当前清单检查不代逐帧来源验证。牌堆保真、配对增量、退出HP口径，独立施放分母与机制缺口，外部因果/样本/分账限制均沿原owner，合同进展不代live、自然命中或收益。仅核验、提醒及双记录，无新增模型、full、dataset、源码或发布，不关闭科学父。原件paper/materials/20261023-1242-ops/notices-audit.json、learning-notice-handoff.json、watcher-reminder-send.json。
