@@ -47,7 +47,8 @@ def start_learner(argv, root, scripts, state_dir, label):
             if PASS_ENV.match(name) and not SECRET_NAME.search(name):
                 envs += ["--env", f"{name}={launch_env[name]}"]
         try:
-            if not os.environ.get("LEARNER_CMD"):
+            if (not os.environ.get("LEARNER_CMD")
+                    and hosting(state_dir, "learner_tui", "CODEX_OPS_LEARNER_TUI", "on") != "off"):
                 result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "open-pane", label],
                                         cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
                 pane = result.stdout.strip()

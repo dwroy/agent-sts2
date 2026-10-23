@@ -78,3 +78,34 @@ print(json.dumps({"a":a,"b":b,"blocked":blocked,"calls":calls}))
     expect(rules["/fixture/.git/config"]).toBe("read");
   });
 });
+
+
+describe("learner TUI fallback policy", () => {
+  it("routes real learners through the original herdr command host while preserving other settings", () => {
+    const script = `
+import importlib.util, json, tempfile, os, subprocess
+from pathlib import Path
+from unittest.mock import patch
+s=importlib.util.spec_from_file_location("jobs","../ops/learner_jobs.py")
+m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+results=[]
+with tempfile.TemporaryDirectory() as d:
+ Path(d,"hosting").write_text("learners=herdr\\nlearner_tui=off\\nbrain_view=herdr\\n")
+ def run(argv,**kw):
+  results.append(argv);return subprocess.CompletedProcess(argv,0,"w1:p2 123\\n","")
+ with patch.dict(os.environ,{},clear=True),patch.object(m.subprocess,"run",side_effect=run),patch.object(m.subprocess,"Popen",side_effect=AssertionError("unexpected detached or interactive launch")):
+  pid,pane=m.start_learner(["bash","/scripts/codex-ops-learner.sh","batch"],"/root","/scripts",d,"learner-batch")
+  assert m.hosting(d,"brain_view","CODEX_OPS_BRAIN_VIEW","off")=="herdr"
+ print(json.dumps({"pid":pid,"pane":pane,"calls":results}))
+`;
+    const result = spawnSync("python3", ["-B", "-c", script], { encoding: "utf8", timeout: 5000 });
+    expect(result.status, result.stderr).toBe(0);
+    const value = JSON.parse(result.stdout);
+    expect(value.pid).toBe(123);
+    expect(value.pane).toBe("w1:p2");
+    expect(value.calls).toHaveLength(1);
+    expect(value.calls[0].slice(2, 4)).toEqual(["run", "learner-batch"]);
+    expect(value.calls[0]).toContain("--close-on-exit");
+    expect(value.calls[0]).not.toContain("open-pane");
+  });
+});
