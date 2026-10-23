@@ -6398,3 +6398,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:38:02+08:00 [ops] V6-R421 #42工具两叶自然发布及实际读回，保最新知识、#35未混入；复用唯一full6420过/2skip，不重full/模型，外部自然采用待核。paper/materials/20261024-issue42-publication-ops/publication.json。
 
 - 2026-10-24T00:43:29+08:00 [ops] 已核R421实际live cd8769fca4aa、两叶/15类消费者一致、518知识保留及准入释放，原循环自然续局。#35已按R421重组净12叶，暂等原refresh_driver3516077释放知识锁后由单一worker3525747冻结输入/完整检查；尚未开full，旧丢失结果不改。原件paper/materials/20261024-issue42-publication-ops/completion-readback.json、paper/materials/20261024-issue35-r421-ops/source-preassembly.json。
+
+- 2026-10-24T00:45:03+08:00 [ops] 本轮16项重复学习通知原文未变，32处原投递及watcher原读取/转达回执均核同；CLI来源兼容仍原SHA/原rc2，正式ACK与Roy已读继续pending，不重复提醒正在工作的既有watcher或代填确认。000402原wrapper仍缺。原件paper/materials/20261024-0043-notices-ops/receipt.json。
