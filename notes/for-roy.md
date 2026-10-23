@@ -4924,3 +4924,15 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T17:36:20+08:00 [ops/#20旧tab核验] 20十个旧tab已逐项核原批次：除pCC外九批均终态rc0，原supervisor与native已退，原生绑定/末回合、learner summary、out/err/日志及rollout SHA通过，原pane身份、空闲前后台和空输入均核同。pCC仍awaiting_review、原native同birth存活，原空绑定/75/告警保留，不封存/补finish/退场。现seal仅允许父PID等于仍存活的原supervisor，九批监督均已退，CLI无ops恢复入口；不伪造PID/birth或改旧回执，旧tab暂保留，完整清单交原20开发补显式授权恢复路径，仍由tick关闭。pC5旧原件缺wrapper supervisor_birth须保留缺项，不补造；恢复时需重核当前处置权及空输入，不能只用本轮快照。新171303已17:30原tick实际reclaimed，尾日志SHA、tab消失及host登记移除核同；原failed/rc0与checkout保留门不变，仅首自然封存关闭链成立。未手工关tab、重派学习或改live，20父/36/47/46及科学父开放。
 原件：paper/materials/20261023-issue20-old-tabs-ops/old-tabs-review.json；封存入口ops/learner_tabs.py:192；原回收journal ops/codex-ops/learner-tabs.json。
+
+### 2026-10-23 18:04 CST — 151302二组授权停止与full窗口
+
+按主管本次明确裁定，先核原生PID1034144及birth=16412055、pane pCC和原批次身份，保存160行pane尾日志、工作树HEAD、完整暂存与工作区补丁及四叶草稿，并复制原out/err/TUI和学习事件流，各文件登记SHA。随后仅向原会话与其已核实后代发送SIGTERM，20个有效原PID均退出，两组sandbox Vitest的1110112/1110120及1176792/1176800已消失；未用进程名批杀。停止后再次核原PID树无存活成员，pane和工作树仍在，原学习登记仍为awaiting_review，未认完成、补绑定、封存、finish或另派模型。已向原集成员会话实际提交一行提醒，告知该批对#49+#26排他full窗口的占用解除；发送回执不代已读或Roy确认。原未完成源码与科学父保留，后续核验沿原批次继续。
+
+原件：paper/materials/20261023-151302-orphan-stop-ops/result.json；.artifacts/ops-151302-orphan-stop-20261023/preservation.json、signal-actions.json、process-tree-after-term.json、integrator-notification.json。
+
+### 2026-10-23 18:04 CST — 主日志库补齐与周期候选
+
+主检出日志库按本次指示直接以nice19执行原sync.py，rc0、60.92秒，原runs_raw由857增至962，新增105条已结束记录；读回runs视图967局、finished962，最新已结束17:10:13.671 CST。此前17:41:19.854来自未过滤finished的max(ended)，本记录更正口径。根因是每局原刷新已同步独立live库，而主库未被同一步骤覆盖，并非周期同步完全不存在。四叶候选已在独立工作树补上原refresh_driver对ops-root库的显式同步，两库均no-wait、锁忙跳过，共享库去重，无新daemon或模型。修前反例保留；修后Python15项、tsc及Vitest两文件14项通过。因代码提交须完整检查、且#49+#26窗口优先，候选尚未提交发布，已冻结SHA与补丁交原集成员排原完整检查队列；实际主库周期生效和下一自然周期仍pending，原日志与两库保留。
+
+原件：paper/materials/20261023-logdb-sync-ops/sync-result.json、periodic-handoff.json、issue40-readback.json；.artifacts/ops-logdb-sync-20261023/periodic-source.patch、periodic-directed.json。

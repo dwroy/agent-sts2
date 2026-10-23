@@ -1,0 +1,167 @@
+{
+  "at": "2026-10-23T17:49:10+08:00",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "data/logdb-venv/bin/python",
+    "agent/tools/logdb/sync.py"
+  ],
+  "exit_code": 0,
+  "reset": false,
+  "seconds": 60.92,
+  "main_runs_raw_before": 857,
+  "main_runs_raw_after": 962,
+  "added_ended_run_records": 105,
+  "readback_sql": "SELECT count(*) AS runs, count(*) FILTER (WHERE finished) AS finished_runs, max(ended) FILTER (WHERE finished) AS latest_finished_ended FROM runs",
+  "readback": {
+    "columns": [
+      "runs",
+      "finished_runs",
+      "latest_finished_ended"
+    ],
+    "types": [
+      "BIGINT",
+      "BIGINT",
+      "TIMESTAMP"
+    ],
+    "rows": [
+      [
+        967,
+        962,
+        "2026-10-23T09:10:13.671000"
+      ]
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "ms": 1310
+  },
+  "manifest_updated": "2026-10-23T17:42:34+0800",
+  "manifest_before_sha256": "2fabe41b483cfa0ea50a87e365d3b8dbc02fb7800b73571de79a313540dce857",
+  "manifest_after_sha256": "e5e443df437e7dad6c6fc1af5befe2110a614b901630de573ee8be1cf6647e29",
+  "source_offsets_and_counts_monotone": [
+    {
+      "source": "brain",
+      "before_offset": 1099010798,
+      "after_offset": 1497890075,
+      "before_rows": 16932,
+      "after_rows": 20113,
+      "bad_before": 2,
+      "bad_after": 2
+    },
+    {
+      "source": "decisions",
+      "before_offset": 2840031892,
+      "after_offset": 4327203653,
+      "before_rows": 443211,
+      "after_rows": 500775,
+      "bad_before": 2,
+      "bad_after": 2
+    },
+    {
+      "source": "deepseek-reasoning",
+      "before_offset": 377746518,
+      "after_offset": 377746518,
+      "before_rows": 13468,
+      "after_rows": 13468,
+      "bad_before": 0,
+      "bad_after": 0
+    },
+    {
+      "source": "run-config",
+      "before_offset": 2212136,
+      "after_offset": 2992679,
+      "before_rows": 509,
+      "after_rows": 636,
+      "bad_before": 0,
+      "bad_after": 0
+    },
+    {
+      "source": "run-plans",
+      "before_offset": 9826073,
+      "after_offset": 11611714,
+      "before_rows": 4488,
+      "after_rows": 8637,
+      "bad_before": 0,
+      "bad_after": 0
+    },
+    {
+      "source": "runs",
+      "before_offset": 385576,
+      "after_offset": 441391,
+      "before_rows": 857,
+      "after_rows": 962,
+      "bad_before": 0,
+      "bad_after": 0
+    },
+    {
+      "source": "sl-attempts",
+      "before_offset": 49549912,
+      "after_offset": 58799596,
+      "before_rows": 2625,
+      "after_rows": 3081,
+      "bad_before": 0,
+      "bad_after": 0
+    },
+    {
+      "source": "states",
+      "before_offset": 14650063018,
+      "after_offset": 16594658352,
+      "before_rows": 458636,
+      "after_rows": 519645,
+      "bad_before": 2,
+      "bad_after": 2
+    }
+  ],
+  "sync_stats": {
+    "brain": {
+      "bytes": 398879277,
+      "rows": 3181,
+      "seconds": 1.91
+    },
+    "decisions": {
+      "bytes": 1487171761,
+      "rows": 57564,
+      "seconds": 15.79
+    },
+    "run-config": {
+      "bytes": 780543,
+      "rows": 127,
+      "seconds": 0.07
+    },
+    "run-plans": {
+      "bytes": 1785641,
+      "rows": 4149,
+      "seconds": 0.06
+    },
+    "runs": {
+      "bytes": 55815,
+      "rows": 105,
+      "seconds": 0.02
+    },
+    "seconds": 60.92,
+    "sl-attempts": {
+      "bytes": 9249684,
+      "rows": 456,
+      "seconds": 0.12
+    },
+    "states": {
+      "bytes": 1944595334,
+      "rows": 61009,
+      "seconds": 13.86
+    }
+  },
+  "component_usage_sources_updated": 656,
+  "stdout": {
+    "path": ".artifacts/ops-logdb-sync-20261023/sync.stdout",
+    "sha256": "194547936884b50af9d8fc6088e38d63b629850f24298ac178e18c0cd6b8fb4f"
+  },
+  "stderr": {
+    "path": ".artifacts/ops-logdb-sync-20261023/sync.stderr",
+    "sha256": "2d7825f45714b7eef1ccb7b1b457590e30fe3275c2c4a5fad5cbaa60700e1932"
+  },
+  "periodic_source_status": "existing per-run refresh sync updates separate game-live database; main no-sync consumer db still needs canonical periodic hook",
+  "original_live_and_main_DB_retained": true,
+  "raw_logs_or_knowledge_changed": false,
+  "new_model_or_game": false
+}
