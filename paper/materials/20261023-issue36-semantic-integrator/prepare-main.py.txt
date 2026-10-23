@@ -1,0 +1,36 @@
+from pathlib import Path
+import hashlib, json, subprocess
+
+R = Path('/home/dw/Projects/agent-sts2')
+B = Path(__file__).resolve().parent
+W = R / '.worktrees/integrator36-semantic-main-20261023-1340'
+A = json.loads((B / 'assembly.json').read_text())
+C = json.loads((B / 'combination-checks.json').read_text())
+assert C['state'] == 'passed' and C['inputs_unchanged']
+
+def git(*args, cwd=R, data=None):
+    return subprocess.check_output(['git', *args], cwd=cwd, input=data)
+
+base = git('rev-parse', 'HEAD').decode().strip()
+assert not W.exists()
+with (B / 'main-allocation.log').open('xb') as out:
+    subprocess.run(['nice', '-n', '19', 'python3', '-B', 'ops/worktree_checkout.py',
+                    str(R), str(W), base, '--require-node'], cwd=R,
+                   stdout=out, stderr=subprocess.STDOUT, check=True)
+subprocess.run(['git', 'apply', '--3way', '--index', str(B / 'source.patch')],
+               cwd=W, check=True, capture_output=True)
+rows = []
+for item in A['paths']:
+    name = item['path']
+    raw = (W / name).read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == item['sha256'], name
+    probe = subprocess.run(['git', 'rev-parse', base + ':' + name], cwd=R, capture_output=True)
+    blob = git('rev-parse', ':' + name, cwd=W).decode().strip()
+    assert blob == item['blob']
+    mode = git('ls-files', '-s', '--', name, cwd=W).decode().split()[0]
+    rows.append(dict(path=name, blob=blob, mode=mode, sha256=item['sha256'],
+                     preimage=probe.stdout.decode().strip() if probe.returncode == 0 else None))
+result = dict(base=base, tree=git('write-tree', cwd=W).decode().strip(),
+              worktree=str(W), paths=rows, full_repeated=False)
+(B / 'main-assembly.json').write_text(json.dumps(result, indent=2) + '\n')
+print(json.dumps(result), flush=True)

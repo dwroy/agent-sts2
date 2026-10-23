@@ -232,11 +232,11 @@ def finished(state, batch, path, output, launcher_rc, supervisor):
     if (value.get("pid") != supervisor or supervisor != os.getppid() or supervisor <= 1 or fields[0] in ("Z", "X")
             or value.get("state") not in ("done", "failed", "rejected") or not value.get("finished")
             or value.get("rc") != code or code == 75
-            or (code == 0 and value.get("state") != "done")
             or value.get("pane") != receipt.get("pane") or not receipt.get("pane")
             or receipt.get("label") != label
             or Path(value.get("worktree", Path(state).parents[2])).resolve() != Path(receipt.get("cwd", "")).resolve()):
         raise ValueError("original terminal batch or supervisor authority is missing")
+    # Native rc describes transport completion; the finish audit owns semantic done/failed/rejected.
     receipt["wrapper"] = {"version": 1, "batch": batch, "state": value["state"], "rc": code,
         "launcher_rc": int(launcher_rc), "finished": value["finished"],
         "supervisor": {"pid": supervisor, "birth": fields[19]},

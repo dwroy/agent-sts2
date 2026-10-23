@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-23T13:51:38+08:00",
+  "state": "passed",
+  "base": "d4892fd7e2c694cb6f704b5725f1750abc9a8428",
+  "tree": "02ffcf6b52140b9401ed8d63928c7438b8e82ff0",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-semantic-main-20261023-1340",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T13:51:39+08:00",
+      "exit_code": 0,
+      "seconds": 1.043
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-empty-fix.test.ts",
+        "tests/proposal-recheck.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-semantic-review-20261023-1340/main-vitest.json"
+      ],
+      "started_at": "2026-10-23T13:51:40+08:00",
+      "exit_code": 0,
+      "seconds": 9.92
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2618,
+  "vitest": {
+    "files": 3,
+    "passed": 22,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T13:51:50+08:00"
+}
