@@ -184,6 +184,31 @@ describe("startup readiness and queued inputs", () => {
   });
 });
 
+describe("midnight TUI completion", () => {
+  it("persists a native environment proof and retires the original completed TUI without another prompt", async () => {
+    const f = fixture("bootstrap"), h = f.opts.h!;
+    const pause = f.opts.pause!;
+    f.opts.pause = async (ms) => { if (f.stopping()) await f.waitForExit(); await pause(ms); };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[0] === "pane" && args[1] === "run") rmSync(f.file);
+      if (args[0] === "agent" && args[1] === "prompt") {
+        const rows = JSON.parse(readFileSync(new URL("./fixtures/learner-midnight.json", import.meta.url), "utf8")
+          .replaceAll("/fixture/learner", f.root)).rows;
+        rows[4].payload.content[0].text = args[3];
+        writeFileSync(f.file, rows.map((r) => JSON.stringify(r) + "\n").join(""));
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, reason: "native-task-complete" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ native_environment_version: 1, retirement_authorized: true });
+    expect(receipt.native_environment_updates).toHaveLength(1); expect(receipt.bindings).toHaveLength(1);
+    expect(receipt.native_environment_updates[0]).toMatchObject({ cwd: f.root, current_date: "2026-10-24", turn_id: "fixture-turn" });
+    expect(f.prompts()).toBe(1); expect(f.notices).toEqual([]);
+  });
+});
+
 describe("bounded native learner names", () => {
   const labels = [
     "learner-20261023-021302-strategy-proposal",
