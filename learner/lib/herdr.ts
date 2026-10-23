@@ -11,6 +11,10 @@ import type { StartupLease } from "./startup-recovery.js";
 
 type Row = { type?: string; payload?: Record<string, unknown> };
 const TRANSIENT = /at capacity|rate.?limit|stream disconnected|reconnecting|error sending request/i;
+const ACCEPTANCE_WARN_MS = 120_000;
+const ACCEPTANCE_TIMEOUT_MS = 600_000;
+const queuedInputs = (screen: string): boolean => /^[^\w\n]*Queued follow-up inputs\b/m.test(screen.replace(/\u001b\[[0-9;]*m/g, ""));
+const emptyComposer = (screen: string): boolean => composerState(screen) === "empty" && !queuedInputs(screen);
 const sleep = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 const textOf = (row: Row): string => {
   const p = row.payload ?? {};
@@ -191,6 +195,9 @@ export function learnerTuiEnv(env: Record<string, string>): Record<string, strin
     "CODEX_OPS_ROOT", "CODEX_OPS_DIR", "LEARNER_BASE_REF", "LEARNER_BATCH_ID", "LEARNER_STATE_FILE", "LEARNER_CODEX_HOME",
     "CHARACTER", "TARGET_ASCENSION", "WSL_INTEROP", "WSL_DISTRO_NAME", "SYSTEMROOT", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS", "REQUESTS_CA_BUNDLE"];
   const out = Object.fromEntries(names.filter((key) => env[key] !== undefined).map((key) => [key, env[key]!]));
+  // Herdr provides an ANSI terminal even when a noninteractive dispatcher inherits TERM=dumb.
+  // Prevent Codex's pre-TUI confirmation; never answer a startup dialog with task input.
+  if (!out.TERM?.trim() || out.TERM.trim().toLowerCase() === "dumb") out.TERM = "xterm-256color";
   for (const key of ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"]) {
     if (!env[key]) continue;
     const url = new URL(env[key]);
@@ -279,6 +286,7 @@ export interface TuiResult {
 /** Never retry a start or an uncertain prompt. Every retry continues the same live native session. */
 export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
+  const readScreen = () => h(["pane", "read", o.pane, "--source", "visible", "--format", "ansi"]);
   let originalHostTitle: string | undefined;
   const paneSnapshot = async (): Promise<Record<string, unknown> | undefined> => {
     const info = await h(["pane", "get", o.pane]);
@@ -352,6 +360,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let ownerBirth: string | undefined;
   let submitted = false;
   let submittedAt: number | undefined;
+  let delayedMarker: string | undefined;
   let pendingMarker = marker;
   let cancelled = false;
   let uncertain = false;
@@ -377,7 +386,8 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       agent_name: agentName, agent_name_version: 1,
       native_context_version: 1, native_preludes: native.preludes,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
-      native_acceptance_deadline_ms: submittedAt === undefined ? undefined : submittedAt + 120_000,
+      native_acceptance_warn_at_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_WARN_MS,
+      native_acceptance_deadline_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_TIMEOUT_MS,
       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
   };
@@ -418,13 +428,13 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
     const p = info.result?.process_info as Record<string, unknown> | undefined;
     const agentInfo = await h(["agent", "get", o.pane]);
     const agent = agentInfo.result?.agent as Record<string, unknown> | undefined;
-    const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+    const screen = await readScreen();
     readNative();
     return info.ok && p?.foreground_process_group_id === pid && birth(pid) === ownerBirth &&
       agentInfo.ok && agent?.agent === "codex" && agent.pane_id === o.pane && agent.foreground_cwd === o.request.cwd &&
       (agent.name === agentName || (allowUnnamed && [undefined, ""].includes(agent.name as string | undefined))) &&
       ["idle", "done"].includes(String(agent.agent_status)) &&
-      screen.ok && composerState(screen.stdout) === "empty" && !native.foreignActivity &&
+      screen.ok && emptyComposer(screen.stdout) && !native.foreignActivity &&
       (!bound || (native.accepted && !native.hasPending() && native.currentTurn === native.turn)) &&
       (!rollout || readers.get(rollout)!.reader.settled(rollout)) && !!o.lease?.current();
   };
@@ -447,8 +457,8 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       const agentResult = await h(["agent", "get", o.pane]);
       const agent = agentResult.result?.agent as Record<string, unknown> | undefined;
       const status = String(agent?.agent_status ?? "unknown");
-      const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
-      const idle = agent?.agent === "codex" && ["idle", "done"].includes(status) && screen.ok && composerState(screen.stdout) === "empty";
+      const screen = await readScreen();
+      const idle = agent?.agent === "codex" && ["idle", "done"].includes(status) && screen.ok && emptyComposer(screen.stdout);
       if (!submitted && !uncertain && idle && pid && ownerBirth && birth(pid) === ownerBirth &&
           [undefined, "", agentName].includes(agent?.name as string | undefined) &&
           (agent?.foreground_cwd === undefined || agent.foreground_cwd === o.request.cwd)) {
@@ -458,9 +468,9 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         if (!named.ok) { uncertain = true; attention("learner TUI name receipt uncertain; no task replay"); }
         else {
           if (!(await promptAllowed(false))) { ownershipLost = true; attention("learner prompt authority changed; keep original session"); break; }
+          submittedAt = now();
           save("submitting", { prompt_sha256: createHash("sha256").update(prompt).digest("hex") });
           submitted = true;
-          submittedAt = now();
           const sent = await h(["agent", "prompt", o.pane, sentPrompt]);
           if (!sent.ok) { uncertain = true; attention("learner prompt receipt uncertain; verify native acceptance before any continuation"); }
           save(sent.ok ? "submitted" : "uncertain");
@@ -470,9 +480,9 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       // Submission and native polling can change the TUI within this iteration. Re-read readiness before any decision.
       const currentAgent = await h(["agent", "get", o.pane]);
       const current = currentAgent.result?.agent as Record<string, unknown> | undefined;
-      const currentScreen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+      const currentScreen = await readScreen();
       const finalIdle = current?.agent === "codex" && ["idle", "done"].includes(String(current.agent_status)) &&
-        currentScreen.ok && composerState(currentScreen.stdout) === "empty";
+        currentScreen.ok && emptyComposer(currentScreen.stdout);
       const caughtUp = !!rollout && readers.get(rollout)!.reader.settled(rollout);
       if (native.accepted && native.progress !== progress) { retries = 0; progress = native.progress; retryAt = undefined; alerted = false; }
       if (!o.lease?.current()) { ownershipLost = true; uncertain = true; attention("learner lease changed; completion and automatic continuation disabled"); break; }
@@ -482,9 +492,17 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       // Prompt delivery can return while its paste is still visible and before the native file exists.
       // Observe only: a screen/API receipt cannot bind a turn or authorize any replay or disposal.
       const awaitingNative = submitted && (!native.accepted || native.bindings.at(-1)?.marker !== pendingMarker);
-      if (awaitingNative && submittedAt !== undefined && now() - submittedAt >= 120_000) {
+      if (awaitingNative && submittedAt !== undefined && now() - submittedAt >= ACCEPTANCE_WARN_MS && delayedMarker !== pendingMarker) {
+        delayedMarker = pendingMarker;
+        save("awaiting-native");
+        attention("learner native acceptance delayed; observing original session until deadline; no task replay");
+      }
+      if (awaitingNative && submittedAt !== undefined && now() - submittedAt >= ACCEPTANCE_TIMEOUT_MS) {
         uncertain = true; result.reason = "native-acceptance-timeout";
         attention("learner native acceptance timed out; keep original session; no task replay"); break;
+      }
+      if (!awaitingNative && currentScreen.ok && queuedInputs(currentScreen.stdout)) {
+        ownershipLost = true; attention("queued follow-up inputs; keep original session and supervision"); break;
       }
       if (!awaitingNative && currentScreen.ok && composerState(currentScreen.stdout) === "text") {
         ownershipLost = true; attention("unsent human draft; keep original session and supervision"); break;
@@ -549,12 +567,12 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         if (!agentInfo.ok || agent?.agent !== "codex" || agent.pane_id !== o.pane || agent.foreground_cwd !== o.request.cwd ||
             (submitted ? agent.name !== agentName : ![undefined, "", agentName].includes(agent.name as string | undefined)) ||
             !["idle", "done", ...(submitted && native.open ? ["working"] : [])].includes(String(agent.agent_status))) return "denied";
-        const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+        const screen = await readScreen();
         readNative();
         if (native.foreignActivity || (submitted && (!native.accepted || native.hasPending() || native.currentTurn !== native.turn)) ||
             (rollout && !readers.get(rollout)!.reader.settled(rollout)) || ownershipLost || uncertain || !o.lease?.current()) return "denied";
         if (!screen.ok && birth(pid) === undefined) return "exited";
-        if (!screen.ok || composerState(screen.stdout) !== "empty") return "denied";
+        if (!screen.ok || !emptyComposer(screen.stdout)) return "denied";
         const finalBirth = birth(pid);
         return finalBirth === ownerBirth ? "owned" : finalBirth === undefined ? "exited" : "denied";
       } catch { return "denied"; }

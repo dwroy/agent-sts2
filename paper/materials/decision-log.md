@@ -5773,3 +5773,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:28:55+08:00 [dev #36] 接6358830755固定夹具边界，常规wrapper夹具去除learner_tabs stub，与实际发布缺模块状态一致；仅保留独立误调用陷阱负例，不模拟seal成功。更新后定向3文件23过，实际发布组合17项再过，生产差量不变，不做full/生产操作。材料仍paper/materials/20261023-issue36-wrapper-script-closure/。
 
 - 2026-10-23T15:40:27+08:00 [dev #36] 151302-s2监督因屏幕text在原生任务消息时间戳前32秒退出；两批原件离线解析均唯一绑定，交叉配对拒绝，未发现并发串绑。未确认提交改为只读观察最多120秒，原生完整SHA仍唯一授权，期间不重发/按键/退场；原300秒wrapper降级、真实草稿与ownership门禁保留。旧源新增6反例全失败，补丁tsc0、定向4文件183过，不跑full/模型，不改原rc75/awaiting_review/live。材料paper/materials/20261023-issue36-delayed-native-151302/。
+
+- 2026-10-23T19:54:56+08:00 [dev #36] 193545原件核为TERM=dumb启动确认/submitted=false，19:43是ops沿原批换PID恢复，现两新监督存活且绑定；不把7.5分钟混作旧实例延迟接受。仅TUI隔离环境补可用TERM，visible屏幕Queued标题阻止新输入/退场；通用未确认提交120秒告警后继续只读观察，600秒硬截止覆盖450秒固定回归，较短任务截止优先，原SHA/marker/cwd/turn及300秒verify/defer/lease门保持。旧源11新例失败；tsc0、定向5文件205过；不重跑模型/改原回执/生产，交集成员。材料paper/materials/20261023-issue36-startup-193545/。

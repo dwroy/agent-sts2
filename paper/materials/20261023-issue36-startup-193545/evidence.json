@@ -1,0 +1,308 @@
+{
+  "ops_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6364152025",
+  "frozen_inputs": {
+    "before-experience-update.json": {
+      "source": ".artifacts/ops-1926-followup-20261023/before-term-retry-learner-20261023-193545-experience-update.tui.json",
+      "bytes": 1381,
+      "sha256": "570c96441fa7d6f2b5f38b40fd8588bd133181e1fa96dac2b0e00992b541676c"
+    },
+    "startup-experience-update.ansi": {
+      "source": ".artifacts/ops-1926-followup-20261023/20261023-193545-experience-update-before-term-pane.txt",
+      "bytes": 314,
+      "sha256": "47f8fd249567a1fdb5de54a7bd1c7f54ca185913f6ff4e4d6f9b91b77d82c744"
+    },
+    "current-experience-update.json": {
+      "source": "ops/codex-ops/learner/learner-20261023-193545-experience-update.tui.json",
+      "bytes": 1718,
+      "sha256": "ed4285d62d16f99e48e679ce350d71d381323c021a69144bdeab478e0dfa9442"
+    },
+    "native-experience-update.jsonl": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T19-43-10-01a16892-7417-76c2-99ed-4c82c7b28971.jsonl",
+      "bytes": 975775,
+      "sha256": "cf55bbf06a3ee385bb23f8ba8806694f9f61f5caf11c425aa16fd8babef6aa5b"
+    },
+    "before-fix-batch.json": {
+      "source": ".artifacts/ops-1926-followup-20261023/before-term-retry-learner-20261023-193545-fix-batch.tui.json",
+      "bytes": 1386,
+      "sha256": "b59bc5d604049462c6e6890b23154c3544651ff9a71d51f488187e62860fb6e1"
+    },
+    "startup-fix-batch.ansi": {
+      "source": ".artifacts/ops-1926-followup-20261023/20261023-193545-fix-batch-before-term-pane.txt",
+      "bytes": 306,
+      "sha256": "3c42cff5bf6786baaaa8abfd707ef40ac0b5bdc05a48273fb59db961abbcc47c"
+    },
+    "current-fix-batch.json": {
+      "source": "ops/codex-ops/learner/learner-20261023-193545-fix-batch.tui.json",
+      "bytes": 1760,
+      "sha256": "2082a9166d0a98699dbdcfa39a08b939325941e1bf634f25ecf3d393e1ee3f31"
+    },
+    "native-fix-batch.jsonl": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T19-43-10-01a16892-720c-7232-aff3-93784e2ec132.jsonl",
+      "bytes": 1062595,
+      "sha256": "544d3e3b4d7ad6c6eed3e2f0b9ec3bf7243328afa542ed3b26b91e25a024cd7c"
+    },
+    "current-native-supervision.json": {
+      "source": "paper/materials/20261023-1926-ops/current-native-supervision.json",
+      "bytes": 8807,
+      "sha256": "1d256fcf7b546e0a86dd5d6bd5a549d193e9be27bf91ed715f82747c91e87fae"
+    },
+    "startup-environment-recovery.json": {
+      "source": "paper/materials/20261023-1926-ops/startup-environment-recovery.json",
+      "bytes": 3153,
+      "sha256": "71c0aba2e6a57a8ee1177c9ab65754bc3d6b21c44ce0112770cf2376ae4890de"
+    }
+  },
+  "supervision_observation": {
+    "at": "2026-10-23T19:47:15.284976+08:00",
+    "processes": [
+      {
+        "batch": "20261023-193545-experience-update",
+        "supervisor_process": {
+          "pid": 2123767,
+          "birth": "18031520",
+          "state": "S",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        },
+        "native_process": {
+          "pid": 2124394,
+          "birth": "18031903",
+          "state": "S",
+          "cwd": ".worktrees/exp"
+        }
+      },
+      {
+        "batch": "20261023-193545-fix-batch",
+        "supervisor_process": {
+          "pid": 2123771,
+          "birth": "18031521",
+          "state": "S",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        },
+        "native_process": {
+          "pid": 2124414,
+          "birth": "18031904",
+          "state": "S",
+          "cwd": ".worktrees/codex-fix-silent-20261023-193545"
+        }
+      }
+    ]
+  },
+  "batches": {
+    "experience-update": {
+      "before": {
+        "state": "needs-attention",
+        "pid": 2088293,
+        "birth": "17989092",
+        "submitted": false,
+        "session": null,
+        "bindings": [],
+        "submissions": [
+          {
+            "marker": "[learner-batch:6022ba15-c7d9-4e29-a7b7-497407d4ac54]",
+            "prompt_sha256": "38e2011d6357ae004401dd6d91014641e0e48e202fce562ef23575ec09719488"
+          }
+        ],
+        "result": {
+          "code": 75,
+          "reason": "retirement-unverified",
+          "message": "",
+          "stopped": false
+        }
+      },
+      "recovered": {
+        "state": "native-accepted",
+        "pid": 2124394,
+        "birth": "18031903",
+        "submitted": true,
+        "session": "01a16892-7417-76c2-99ed-4c82c7b28971",
+        "bindings": [
+          {
+            "turn_id": "01a16893-4dab-7a43-b23d-6ca89fce2574",
+            "marker": "[learner-batch:2e8a22eb-8731-4cfb-97c5-d56b65231797]",
+            "prompt_sha256": "27563b5dee50c0b572b05e5e42786759f587c36168e8e2cc7addc6abf3d7cd7a"
+          }
+        ],
+        "submissions": [
+          {
+            "marker": "[learner-batch:2e8a22eb-8731-4cfb-97c5-d56b65231797]",
+            "prompt_sha256": "27563b5dee50c0b572b05e5e42786759f587c36168e8e2cc7addc6abf3d7cd7a"
+          }
+        ]
+      },
+      "native_timeline": [
+        {
+          "kind": "session_meta",
+          "created_at": "2026-10-23T11:43:10.898Z",
+          "row_timestamp": "2026-10-23T11:44:06.638Z",
+          "session": "01a16892-7417-76c2-99ed-4c82c7b28971",
+          "cli_version": "0.164.0"
+        },
+        {
+          "kind": "task_started",
+          "timestamp": "2026-10-23T11:44:06.638Z",
+          "turn": "01a16893-4dab-7a43-b23d-6ca89fce2574"
+        },
+        {
+          "kind": "turn_context",
+          "timestamp": "2026-10-23T11:44:08.302Z",
+          "turn": "01a16893-4dab-7a43-b23d-6ca89fce2574",
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        {
+          "kind": "exact-dispatched-prompt",
+          "timestamp": "2026-10-23T11:44:08.312Z",
+          "prompt_sha256": "27563b5dee50c0b572b05e5e42786759f587c36168e8e2cc7addc6abf3d7cd7a"
+        }
+      ],
+      "new_receipt_replay": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "native-accepted",
+        "observed": {
+          "session": "01a16892-7417-76c2-99ed-4c82c7b28971",
+          "cwd": ".worktrees/exp",
+          "turn": "01a16893-4dab-7a43-b23d-6ca89fce2574",
+          "accepted": true,
+          "foreign_activity": false,
+          "complete": false,
+          "open": true,
+          "bindings": [
+            {
+              "turn_id": "01a16893-4dab-7a43-b23d-6ca89fce2574",
+              "marker": "[learner-batch:2e8a22eb-8731-4cfb-97c5-d56b65231797]",
+              "prompt_sha256": "27563b5dee50c0b572b05e5e42786759f587c36168e8e2cc7addc6abf3d7cd7a"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a16893-4dab-7a43-b23d-6ca89fce2574",
+              "cwd": ".worktrees/exp",
+              "sha256": "384f96b81d970c797bc97bd89c5a6e999c7857a8c555aad958617eeec044db62"
+            }
+          ]
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "ed4285d62d16f99e48e679ce350d71d381323c021a69144bdeab478e0dfa9442",
+        "native_snapshot_sha256": "cf55bbf06a3ee385bb23f8ba8806694f9f61f5caf11c425aa16fd8babef6aa5b",
+        "native_snapshot_bytes": 975775,
+        "trailing_partial_bytes": 0
+      },
+      "old_receipt_new_native_exit": 75
+    },
+    "fix-batch": {
+      "before": {
+        "state": "needs-attention",
+        "pid": 2088297,
+        "birth": "17989092",
+        "submitted": false,
+        "session": null,
+        "bindings": [],
+        "submissions": [
+          {
+            "marker": "[learner-batch:d9cbf595-6086-4392-b46f-338039732499]",
+            "prompt_sha256": "87e1225dcf5301f93f4800cc0c5e48aa85bfb006a587c5e8884ddf9e7cb58414"
+          }
+        ],
+        "result": {
+          "code": 75,
+          "reason": "retirement-unverified",
+          "message": "",
+          "stopped": false
+        }
+      },
+      "recovered": {
+        "state": "native-accepted",
+        "pid": 2124414,
+        "birth": "18031904",
+        "submitted": true,
+        "session": "01a16892-720c-7232-aff3-93784e2ec132",
+        "bindings": [
+          {
+            "turn_id": "01a16893-523b-72b0-9227-bbb44686feef",
+            "marker": "[learner-batch:ac3139a5-7494-44d4-912c-df1628f4ad14]",
+            "prompt_sha256": "24c9ab2ed83d6de71e57555b143414fef6b0b693c9a5e8d19227fd46f76848db"
+          }
+        ],
+        "submissions": [
+          {
+            "marker": "[learner-batch:ac3139a5-7494-44d4-912c-df1628f4ad14]",
+            "prompt_sha256": "24c9ab2ed83d6de71e57555b143414fef6b0b693c9a5e8d19227fd46f76848db"
+          }
+        ]
+      },
+      "native_timeline": [
+        {
+          "kind": "session_meta",
+          "created_at": "2026-10-23T11:43:10.359Z",
+          "row_timestamp": "2026-10-23T11:44:07.797Z",
+          "session": "01a16892-720c-7232-aff3-93784e2ec132",
+          "cli_version": "0.164.0"
+        },
+        {
+          "kind": "task_started",
+          "timestamp": "2026-10-23T11:44:07.798Z",
+          "turn": "01a16893-523b-72b0-9227-bbb44686feef"
+        },
+        {
+          "kind": "turn_context",
+          "timestamp": "2026-10-23T11:44:09.198Z",
+          "turn": "01a16893-523b-72b0-9227-bbb44686feef",
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        {
+          "kind": "exact-dispatched-prompt",
+          "timestamp": "2026-10-23T11:44:09.205Z",
+          "prompt_sha256": "24c9ab2ed83d6de71e57555b143414fef6b0b693c9a5e8d19227fd46f76848db"
+        }
+      ],
+      "new_receipt_replay": {
+        "schema": "learner-tui-native-reconciliation-v1",
+        "original_state": "native-accepted",
+        "observed": {
+          "session": "01a16892-720c-7232-aff3-93784e2ec132",
+          "cwd": ".worktrees/codex-fix-silent-20261023-193545",
+          "turn": "01a16893-523b-72b0-9227-bbb44686feef",
+          "accepted": true,
+          "foreign_activity": false,
+          "complete": false,
+          "open": true,
+          "bindings": [
+            {
+              "turn_id": "01a16893-523b-72b0-9227-bbb44686feef",
+              "marker": "[learner-batch:ac3139a5-7494-44d4-912c-df1628f4ad14]",
+              "prompt_sha256": "24c9ab2ed83d6de71e57555b143414fef6b0b693c9a5e8d19227fd46f76848db"
+            }
+          ],
+          "native_context_version": 1,
+          "native_preludes": [
+            {
+              "turn_id": "01a16893-523b-72b0-9227-bbb44686feef",
+              "cwd": ".worktrees/codex-fix-silent-20261023-193545",
+              "sha256": "9ad4ddd67246feb6ce9e8cb191a7497255ea1480a9f7429eb0215d1c6a6274ed"
+            }
+          ]
+        },
+        "original_receipt_modified": false,
+        "prompt_send_authorized": false,
+        "retirement_authorized": false,
+        "finish_authorized": false,
+        "pane_pid_lease_revalidated": false,
+        "original_receipt_sha256": "2082a9166d0a98699dbdcfa39a08b939325941e1bf634f25ecf3d393e1ee3f31",
+        "native_snapshot_sha256": "544d3e3b4d7ad6c6eed3e2f0b9ec3bf7243328afa542ed3b26b91e25a024cd7c",
+        "native_snapshot_bytes": 1062595,
+        "trailing_partial_bytes": 0
+      },
+      "old_receipt_new_native_exit": 75
+    }
+  },
+  "original_receipts_modified": false,
+  "live_operations": false,
+  "models_started": 0,
+  "ops_decision": "continue the two supervised recovered tasks; no dev control action"
+}
