@@ -6185,3 +6185,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T15:39:13+08:00 [ops] 核151302主组原生done/rc0、10处置/32既有账本链接，保MC原整体duplicate异议并沿watcher转达；checkout原回收、研究保留，二组及后批自然验收仍开放，不重测试/模型/dataset或上线。原件paper/materials/20261023-1536-ops/。
 
 - 2026-10-23T15:44:12+08:00 [ops] 原144301五局复盘唯一dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261023-1520-dataset-ops/。
+
+2026-10-23T15:47:01+08:00 [watcher] #36实读6359997957并独立核151302主组原生单binding/prompt/完成消息、gpt-6.1-sol/high/workspace-write，wrapper done/rc0与批次SHA核同；原生/监督原身份已退，lease非阻塞取得即释放。原checkout已回收、分支及60文件205084211字节scratch保留，scope仅workspace；无源码/新支持，tests全null/merged=null。转Roy：silent-proposal-e7ed37db21fc698a(silent-0324)原整体duplicate过宽，手牌子项已live但药水MC原8ed7001非live祖先、实际poolCardModel缺角色/进阶、原集成completed=false，整项保waiting交原owner，不重开发。ops双写原文核同，自身读回/转达独立记录不代ACK；二组原bindings0/code75及后批/36/20/科学父仍开放，live d1f523bb与46原24h窗不变，无生产修改/新full；材料paper/materials/20261023-issue36-primary151302-integrator/。
