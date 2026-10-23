@@ -1,0 +1,33 @@
+{
+  "body": "[Claude] 回归诊断：10-23 22:09 起 14 局无一过第二幕\n\n## 现象\n\n- 10-23 22:09 之后完成的 14 局全负：终层 17、23、30、17、9、23、23、33、24、28、21、33、17、12（中位 23），过第二幕 0/14。\n- 对照：10-23 07:00～22:09 的 27 局，过第二幕 9 局（33%），中位 33 层；#49 上线后、22:09 前的 5 局为 33、33、31、37、17。差异已较显著（粗算 Fisher p≈0.02）。\n- logdb 粗比（22:09 前 25 局 / 后 12 局）：进 F17 血量 81% → 74%，第一幕失血 35 → 41，第一幕休息次数 3.4 → 2.9，F33 进场血量 78% → 74%。\n\n## 22:09 前后变化（run-config 对比）\n\n1. **V6-R419（22:09）**：live 运行时加载的 Silent 经验从 `2026-10-18.h0-r3-queen1` 变为 `2026-10-23.1`：新增 1 条、改动 24 条（含 route-hp、rest-buffer、malaise、speed-potion、core-poison-defense 等）。经验同时进入对局大脑（kb_experience，每题都在查）与 Jev 出牌提示（jev-prompts 里大量出现经验条目）。\n2. #49（19:23）大脑基础指令 2027 → 2168 字；R420 小修正后时延已回落。\n3. Codex CLI 0.163 → 0.164。\n4. #50（R423，03:00）之后的局也在下滑中（样本少）。\n\n## 要做（只读诊断，不改 live）\n\n1. 逐条列出 24 条改动经验的前后差异，标出哪些在这 14 局的大脑题或 Jev 提示里被实际引用，与死因/关键失血战对照，给出“最可能的原因”排序与证据。\n2. 准备**回退包**：live 经验回到 `2026-10-18.h0-r3-queen1`（只动经验，不动 #49/#50），做好定向检查，**待 Roy 同意后再由 ops 发布**；不自行发布。\n3. 结论写本 issue 一条评论：一句结论 + 证据表 + 建议（回退/不回退/其他）。\n\n## 负责\n\n集成员（只读分析与回退包准备）；ops 只在 Roy 同意后发布。不做 A/B、不追加实验局。\n",
+  "comments": [],
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvKVQ",
+      "name": "owner:watcher",
+      "description": "watcher session (review, integration, infra)",
+      "color": "1d76db"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvM0A",
+      "name": "P0",
+      "description": "highest priority",
+      "color": "b60205"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvOwA",
+      "name": "type:bug",
+      "description": "defect",
+      "color": "d73a4a"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPuQ",
+      "name": "status:ready",
+      "description": "can start now",
+      "color": "0e8a16"
+    }
+  ],
+  "number": 53,
+  "state": "OPEN",
+  "title": "回归诊断：10-23 22:09 起 14 局无一过第二幕"
+}

@@ -1,0 +1,45 @@
+{
+  "status": "prepared-not-published",
+  "roy_approval": false,
+  "automatic_apply": false,
+  "base_live_commit": "6d89243c385c11eec7b923fba907cb8dd250e4bc",
+  "base_release_id": "V6-R423",
+  "path": "knowledge/characters/silent/experience.json",
+  "expected_current_sha256": "ed9a7749bd1409ef72ae56ff0474a45615233d1d4d0a04aaaa1dba505ee1d89a",
+  "rollback_sha256": "f3479ea243643adcc71bfce934dccd555c34d9309fb4b1424da98a1f30db329d",
+  "rollback_version": "2026-10-18.h0-r3-queen1",
+  "patch_sha256": "3f9d47fc02c8dc3d338caf748ee18a96593b4082b1731866d03c4657e6cdffca",
+  "private_active_before": 244,
+  "private_active_after": 243,
+  "updated_restored": 24,
+  "added_removed": 1,
+  "shared_sha256": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+  "protected_code": {
+    "agent/src/brain/brain.ts": "42547f9a7ec7ad67766ff59879b9ad9456b926c5f2a6ad0607f1f498437083ee",
+    "agent/src/brain/tools/agent-knowledge.ts": "a037bd0e1d3f0374d7cc37d53bfee8f43f2c2d8114839a749f5c0539d5fa31dd",
+    "agent/src/brain/tools/query-guidance.ts": "78226d87f020a4cd34dd40529a77097b93c7fe819d83b686fd21b156d7d500ca",
+    "agent/src/memory/run-plan.ts": "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab",
+    "agent/src/reflex/jev-experience.ts": "629a3ad6240568962b3b1d4aea1db7088fae947229e0d7caf1aa804a5e92c103"
+  },
+  "release_conditions": [
+    "Explicit Roy approval before ops publishes; this package grants no approval.",
+    "Original ops owns live lock, natural boundary, release numbering, final checks, consumers and notification.",
+    "Before use recheck live commit and exact experience SHA; if either differs, stop and reconcile new learning first.",
+    "Do not overwrite unpublished 033643 learning or reuse its full result for this candidate.",
+    "Only experience.json may change; preserve all #49/#50 code, other knowledge, shared experience and historical records.",
+    "No game, model, A/B or full check was launched for this diagnostic package."
+  ],
+  "candidate_commit": "c421b150128bddd7bb88f31292db113f83ba2060",
+  "candidate_branch": "issue53-experience-rollback-20261024",
+  "directed_verification": {
+    "consumer_receipt": "consumer-checks.json",
+    "legacy_brain_exact_restored": 24,
+    "added_absent": 1,
+    "historical_frames": 5,
+    "existing_test_files": 3,
+    "existing_tests_passed": 26,
+    "full_started": 0,
+    "tsc_started": 0,
+    "gitleaks_findings": 0
+  }
+}
