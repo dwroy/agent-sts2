@@ -1559,3 +1559,6 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
   - 2026-10-23T01:49:18+08:00 [ops/#36接续] 014302主/s2同一隔离拒绝models0原件保留；仅清理已由原CLI显式覆盖的本地learner service_tier，修改前备份learner-config-backups/20261023-0143/config-before.toml，其他配置/实际服务档/权限不变；四cwd原隔离预检现通过。配置阻塞已修，不据此称自然TUI/36发布完成，原批不即时重派/回收。原件 paper/materials/20261023-0143-ops/receipt.json；36评论6347387540。
 
 - [ ] 2026-10-23T02:22:05+08:00 [ops/#36] 原生agent名长度适配：021302主策略TUI已起但完整稳定label41字符被herdr rename以invalid_agent_name(1–32)拒绝，任务未投递，75/stopped=false且原监督/pB7保留。已交原dev36旧会话，独立短agent名与稳定pane label/批次/租约持久绑定，保一次性marker/native接受/人工草稿/退场保护，补真实长度负例和主s2/fix/复盘标签测试。原43叶full不代新修复full；不另起模型/重放/回收原TUI，受控接续另核。原件 paper/materials/20261023-0215-ops/receipt.json；评论6348039423。
+
+
+- [ ] 2026-10-23T09:30:26+08:00 [ops/#33] **infra-run-config-git-status-enobufs-20261023（非阻塞溯源缺口）**：R417首批8局的16条run-config均原样记录git status failed: spawnSync git ENOBUFS，code.commit/code/dirty/branch为null；前次06:21已发现，此次补全分母，不当新游戏故障。当前实际live58叶/统一R417与绑定由独立证据核对，不能反填旧config或据请求配置宣称原生证明。入口agent/src/eye/run-config.ts codeInfo单次execFileSync git status失败后清空全部code字段；具体输出/资源根因待原工程链用固定数据核实，不预断为maxBuffer问题。沿原修复队列补可靠HEAD/branch与有界dirty溯源及失败负例，保原错误，不伪造成功/版本、不热切在途进程、不另开模型或实验局。本轮仅记录。原件paper/materials/20261023-issue33-natural-followup-ops/config-audit.json、byte-refs.json、actual-source-verification.json；#33评论6355179196。
