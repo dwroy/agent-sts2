@@ -63,7 +63,8 @@ class CompletionGate(unittest.TestCase):
     def test_name_contract_matches_typescript_with_non_ascii_cwd(self):
         self.value.update(label="learner-20261023-021302-strategy-proposal", pane="w1:p2", cwd="/fixture/中文",
                           agent_name="learner-8f55a5ad47c4b2bb40b86574", agent_name_version=1,
-                          state="not-started", models_started=0, result={"code": 3})
+                          state="not-started", models_started=0, result={"code": 3}, submitted=False, bindings=[], submissions=[])
+        self.value.pop("pid")
         self.save()
         self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
 

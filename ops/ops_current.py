@@ -111,7 +111,7 @@ def generate(root, directory):
                     context_artifact(task["receipt"])
         active = {k: {name: v.get(name) for name in ("task", "learner_task", "character", "state", "pid", "worktree", "feature_request", "research_request", "resume_thread", "checks_pending") if v.get(name) is not None}
                   for k, v in state.get("batches", {}).items()
-                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery") or v.get("checks_pending")}
+                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery", "awaiting_review") or v.get("checks_pending")}
         lost = {k: v for k, v in state.get("batches", {}).items() if v.get("state") == "lost"}
         requests = {k: {name: v.get(name) for name in ("state", "revision", "owner", "batch", "checkpoint", "next") if v.get(name) is not None}
                     for k, v in state.get("learning_requests", {}).items() if v.get("state") != "completed"}

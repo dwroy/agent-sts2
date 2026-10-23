@@ -169,7 +169,7 @@ def dispatch_candidates(state, evidence, root, scripts, alive, stamp, start, now
                    and b["boss_sim"]["boss"] == e["boss"] and b["boss_sim"]["mode"] == e["mode"]
                    and (not cool or b.get("started_epoch", 0) > cool["at"])]
         if history:
-            if any(b.get("state") in ("done", "rejected") for _, b in history):
+            if any(b.get("state") in ("done", "rejected", "awaiting_review") for _, b in history):
                 continue
             if max(b.get("retry_at", 0) for _, b in history) > now:
                 continue
