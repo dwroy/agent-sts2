@@ -5083,3 +5083,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-24T04:06:04+08:00 [ops/#46] 接原停点核实：实际发布T仍10-23 13:46:30，完整半开窗终点10-24 13:46:30，当前未到门，不跑截断窗口的分配比较/趋势或提前判节省。live五交付叶同b0c3f412；宿主proposal_dispatch后继d23925417f有差量，但四个轮次/派发函数AST同原版，10局或6小时/每轮2批合同保持。当前无waiting round水印，不称自然分支已消费。原基线106及回执SHA核同、未重跑；到门后只核完整24h且complete=true，全任务类别/实际工作量/积压/补链专题续跑重试分账，#51停派不当效率收益，legacy/restore及静态68估计不混算。无新full/模型/局/人工tick/计时器，不重发或关父；原自然唤醒到门再接。原件paper/materials/20261024-issue46-gate-readback-ops/receipt.json，含精确后续命令及源证据。
 
 - 2026-10-24T04:23:04.233236+08:00 [ops] 033643未入库：18条草稿已冻结，缺宿主完整检查/真实提交；原failed/rc0不改，等原集成员释放#52唯一窗口后协调。详见paper/materials/20261024-experience-033643-ops/receipt.json。
+
+- 2026-10-24T04:56:22+08:00 [ops/dataset] 原041301四局复盘的唯一受控dataset --no-raw已实际结束、rc0且source_checks_passed=true；实际生成字节在原写锁内冻结SHA与Git blob，成本来源保持自身切点。四节复盘、27条账本追加及三条pending提案已由d8a9839baf06先持久化；0581新非阻塞预算截断和0461旧修饰复现已入原队列，未由ops补游戏知识、实现代码或新建重复模型。本事务仅一次原build_locked调用，不自动重试；无新full、模型、finish、实验或游戏，不增加行为版本。实际dataset完成只说明论文数据生成及源检查通过，不代表策略提案实现、经验草稿提交/上线、自然采用或胜率收益。当前033643经验仍保原failed/rc0和冻结草稿，原两批旧失败不改；原严格回收及科学父保持。
+原件：paper/materials/20261024-postmortem-041301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
