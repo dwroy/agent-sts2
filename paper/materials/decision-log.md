@@ -6428,3 +6428,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:41:05+08:00 [ops] #36两批只读预检rc0、旧75及原binding不变；精确11叶live组合tsc0/TS149过，Python16中10导入错误（live缺issue_session及辅助依赖），已在6371020986交原集成员补核并实际提醒。未发布、未apply/按键/模型/full；#50十叶来源已核，等P0后接唯一full。#49完整自然读回6370983482交主管，记录3df5ed64ba14；#35已为R422。原件paper/materials/20261024-issue36-midnight-publication-ops/report.md。
 
 - 2026-10-24T01:42:16+08:00 [ops] #35事件已按原件核销发布环节：R422/live67799b6d7826，净12叶、518知识保持、15类现有库消费者ok、自有准入释放；原唯一full6429过/2skip不重跑。首自然FU9SGZ3WF6QJ冻结前缀15题均带构筑记录，12题含选择且逐题匹配前序落盘，最新10条；学习者消费及SL/重启、收益仍开放。已发读回6371055049，原模板错误已更正。#50来源就绪但等P0 #36原集成员补核live恢复依赖；不重模型、不按键。证据paper/materials/20261024-issue35-terminal-event-ops/natural-readback.json。
+
+- 2026-10-24T01:45:45+08:00 [ops] 01:43的16条异议/阻塞原文未变，32处实际投递、原watcher接收及转主管窗口已核；原CLI身份兼容拒绝及000402缺失原wrapper保持。已发并读回6371115739，实际提醒原sts2-integrator“#27 轮到你”；不代watcher/Roy ACK，不把排队、主管收件或旧转达当Roy已知。正式ACK兼容和Roy可见回执仍pending，科学父不关闭。发布积压已查，P0 #36依赖闭包未补交，#50及后续顺序继续等前置；未开模型/full/局。原件paper/materials/20261024-0143-notices-ops/receipt.json。
