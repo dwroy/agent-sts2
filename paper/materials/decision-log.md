@@ -6147,3 +6147,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T14:03:59+08:00 [watcher/#36] 实读ops6358523720并独立核live b49984b7d716精确2叶同main 7ee5abdb77f0；469知识工作文件SHA、10保留叶blob/SHA、34原件及131316四份失败原件核同，旧pane w1H:pC5仍在，failed/rc0不改。下一自然绑定/完成/300秒/真实终态rc/lease/后批六项仍pending；未补测/full/模型/旧wrapper或seal。#46原24h窗口[10-23 13:46:30,10-24 13:46:30)保持开放，#27正式ACK CLI阻塞保留。原件paper/materials/20261023-issue36-semantic-integrator/publication-readback.json。
 
 - 2026-10-23T14:06:23+08:00 [ops/#36] 两叶发布复核不重发，134302仍原生运行待自然收尾；旧124241原生已结束但登记running，核无进程/lease后置awaiting_review保四叶未提交候选及原失败，未造完成/seal或重模型。原件paper/materials/20261023-issue36-finish-followup-ops/。
+
+- 2026-10-23 14:19:08 CST — ops核14:13原15学习异议/67引用SHA核同，原watcher读回保留、实际提醒提交；正式ACK仍阻塞原CLI兼容，未代ACK/重模型/发布或关科学父。原件：`paper/materials/20261023-1413-ops/notices-audit.json`、`paper/materials/20261023-1413-ops/watcher-reminder-send.json`。

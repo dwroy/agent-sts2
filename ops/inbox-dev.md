@@ -6150,3 +6150,10 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-23T13:58:47+08:00 [ops/#36] 收尾合同精确两叶已发live b49984b7d716，T=2026-10-23T13:57:07+08:00，来源main7ee5abdb77f0；核34原件SHA，沿用组合85项/main22项及tsc0、2542/2618输入核同，不重full/模型。旧code0必须done改为保真实done/failed/rejected与rc一致，主管PID/birth、原生绑定/日志/摘要/输出、75和回收权限仍守；空fix验收、wrapper、300秒、可选seal不改。原K→L保469最新知识、46五叶、TUI on/80/60/绑定/V6-R417，无新游戏号。旧131316仍failed/rc0及attention/pane，未补tests/no_changes或死主管seal。已登记下一原自然收尾核验：绑定/完成/核验降级/真实wrapper终态/lease/后批；不强派或热切，不关36/科学父。回退仅撤learner_tui本守卫差量，保数据/失败/46；46原10-23 13:46:30起24h验收继续，不重置T。原件paper/materials/20261023-issue36-finish-publication-ops/publication.json、natural-acceptance.json。
 
 - 2026-10-23T14:06:23+08:00 [ops/#36] 复核#36提醒：实际live仍b49984b7d716，两叶内容核同，最新issue为既有发布回执6358523720，无新增补丁。134302原生state=native-accepted、binding1及监督/原生进程仍在，未发生可验收的发布后自然收尾，wrapper/lease/后批验证继续pending。另核切换前124241旧stdio批：原生13:47:33 code0结束，监督及其工作树进程均不在、原租约空闲，但登记仍running；原报告为blocked，四叶候选已暂存未提交，8项定向过，整套检查仍无终局且原日志有失败、live预检15冲突。已保存原行/报告/补丁SHA与候选清单，将该原需求置awaiting_review防重派，未补finished/done/seal或回放模型，也不计新补丁验收；候选与原科学父保留，待原ops精确集成验收。未重发源码/full/dataset，未关tab，TUI仍on、46原24h窗口开放。原件paper/materials/20261023-issue36-finish-followup-ops/receipt.json、old-stdio-candidate.json。
+
+
+### 2026-10-23 14:19:08 CST — 14:13学习异议通知复核
+
+本轮15条重复学习异议已逐项核对原message SHA、ops真实转发回执及67处原件引用，均与13:13核查一致；原文的旧认识、反证、证据、影响范围与owner下一步沿1143完整包保留。共享账本冻结清单差异沿原0643核对，不扩大本批输入；外部相关性、独立分母、净损口径、状态保真和卡牌机制缺口保持，不将合同进展写成收益或科学父完成。原watcher自有1242读回与对话转达回执仍可核验，但通知文件watcher_received/roy_notified仍false；CLI来源合同/任务白名单及原拒绝均未变化，本轮不重复同一失败命令、不代填其他角色ACK。已向现有sts2-integrator原会话实际提交一行提醒，agent_prompted只证明提交，正式确认继续pending，阻塞为原CLI兼容。未重模型、实验、测试、dataset或发布；最新live、TUI及36/46未完成验收保持。
+
+原件：`paper/materials/20261023-1413-ops/notices-audit.json`、`paper/materials/20261023-1413-ops/learning-notice-handoff.json`；真实提醒提交：`paper/materials/20261023-1413-ops/watcher-reminder-send.json`。
