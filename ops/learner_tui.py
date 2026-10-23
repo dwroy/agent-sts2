@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -33,6 +34,24 @@ def prompt_hash(text):
     return hashlib.sha256(text.replace("\r\n", "\n").rstrip().encode()).hexdigest()
 
 
+def bootstrap_context(row, cwd):
+    """Only the observed two-part Codex bootstrap item; task/user events are never context."""
+    p = row.get("payload", {})
+    parts = p.get("content")
+    if (row.get("type") != "response_item" or p.get("type") != "message" or p.get("role") != "user"
+            or not isinstance(parts, list) or len(parts) != 2
+            or any(not isinstance(part, dict) or part.get("type") != "input_text"
+                   or not isinstance(part.get("text"), str) for part in parts)):
+        return False
+    instructions, environment = (part["text"].replace("\r\n", "\n") for part in parts)
+    match = re.match(r"^<environment_context>\n[ \t]*<cwd>([^<\n]+)</cwd>\n", environment)
+    return (instructions.startswith(f"# AGENTS.md instructions for {cwd}\n\n<INSTRUCTIONS>\n")
+            and instructions.endswith("\n</INSTRUCTIONS>") and instructions.count("</INSTRUCTIONS>") == 1
+            and environment.startswith("<environment_context>\n") and environment.endswith("\n</environment_context>")
+            and environment.count("<environment_context>") == 1 and environment.count("<cwd>") == 1
+            and match is not None and match[1] == cwd)
+
+
 def verify_native(receipt):
     """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
     result = receipt["result"]
@@ -57,6 +76,9 @@ def verify_native(receipt):
     accepted = False
     seen = []
     used = set()
+    preludes = []
+    pending_prelude = None
+    context_seen = False
     with open(result["rollout"]) as source:
         for line in source:
             if not line.endswith("\n"):
@@ -68,6 +90,9 @@ def verify_native(receipt):
                 if meta != result.get("session") or cwd != receipt.get("cwd"):
                     raise ValueError("native session identity changed")
             if row.get("type") == "event_msg" and payload.get("type") == "task_started":
+                if pending_prelude:
+                    raise ValueError("bootstrap context never received its matching turn_context")
+                context_seen = False
                 current = payload.get("turn_id")
                 # An explicitly resumed session can have earlier history before this dispatch.
                 active = active or current == bindings[0]["turn_id"]
@@ -78,12 +103,31 @@ def verify_native(receipt):
                 complete, accepted = None, False
             if not active:
                 continue
+            # The active dispatch boundary was established above; older resume history stays outside it.
+            if (not accepted
+                    and row.get("type") == "response_item"
+                    and (re.search(r"_call(?:_output)?$", str(payload.get("type"))) or payload.get("type") == "reasoning"
+                         or (payload.get("type") == "message" and payload.get("role") == "assistant"))):
+                raise ValueError("native activity precedes the dispatched prompt")
+            if row.get("type") == "turn_context":
+                if payload.get("turn_id") != current or payload.get("cwd") != cwd:
+                    raise ValueError("native turn context identity changed")
+                context_seen = True
+                if pending_prelude:
+                    preludes.append(pending_prelude)
+                    pending_prelude = None
             user = None
             if row.get("type") == "event_msg" and payload.get("type") == "user_message":
                 user = payload.get("message", "")
             if row.get("type") == "response_item" and payload.get("type") == "message" and payload.get("role") == "user":
                 user = "\n".join(str(part.get("text", "")) for part in payload.get("content", []))
             if user is not None:
+                if (meta and cwd and len(seen) == 1 and not accepted and not used and not preludes
+                        and not pending_prelude and not context_seen and bootstrap_context(row, cwd)):
+                    pending_prelude = {"turn_id": current, "cwd": cwd, "sha256": prompt_hash(user)}
+                    continue
+                if pending_prelude:
+                    raise ValueError("dispatched prompt precedes bootstrap turn_context")
                 binding = turns.get(current, {})
                 marker = user.replace("\r\n", "\n").split("\n")[0]
                 if marker != binding.get("marker") or prompt_hash(user) != binding.get("prompt_sha256"):
@@ -99,6 +143,8 @@ def verify_native(receipt):
             or current != result.get("turn") or seen != [item["turn_id"] for item in bindings]
             or len(used) != len(submissions)):
         raise ValueError("final native turn is not bound to this dispatch")
+    if pending_prelude or (preludes and receipt.get("native_context_version") != 1) or receipt.get("native_preludes", []) != preludes:
+        raise ValueError("native bootstrap proof differs from the original dispatch")
     if result.get("code") == 0 and (not complete or complete != result.get("message")):
         raise ValueError("matching native task completion is missing")
 

@@ -46,11 +46,25 @@ export class NativeRows {
 
 export interface PromptProof { marker: string; prompt_sha256?: string }
 export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
+export interface NativePreludeProof { turn_id: string; cwd: string; sha256: string }
 const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
 
 /** Herdr names are limited to 32 ASCII characters; labels and scheduler keys remain complete. */
 export function learnerAgentName(label: string, pane: string, cwd: string): string {
   return `learner-${createHash("sha256").update(JSON.stringify([label, pane, resolve(cwd)])).digest("hex").slice(0, 24)}`;
+}
+
+/** Codex 0.163 bootstrap is one two-part user item before turn_context, never an event user message. */
+function bootstrapContext(row: Row, cwd: string): boolean {
+  const p = row.payload;
+  if (row.type !== "response_item" || p?.type !== "message" || p.role !== "user" || !Array.isArray(p.content) || p.content.length !== 2) return false;
+  if (!p.content.every((part) => part?.type === "input_text" && typeof part.text === "string")) return false;
+  const [instructions, environment] = p.content.map((part) => (part.text as string).replace(/\r\n/g, "\n"));
+  return instructions!.startsWith(`# AGENTS.md instructions for ${cwd}\n\n<INSTRUCTIONS>\n`) &&
+    instructions!.endsWith("\n</INSTRUCTIONS>") && instructions!.split("</INSTRUCTIONS>").length === 2 &&
+    environment!.startsWith("<environment_context>\n") && environment!.endsWith("\n</environment_context>") &&
+    environment!.split("<environment_context>").length === 2 && environment!.split("<cwd>").length === 2 &&
+    /^<environment_context>\n[ \t]*<cwd>([^<\n]+)<\/cwd>\n/.exec(environment!)?.[1] === cwd;
 }
 
 /** Each turn needs its own one-use, explicitly sent prompt proof; authorization never carries across turns. */
@@ -70,14 +84,22 @@ export class NativeBatch {
   usage?: Record<string, unknown>;
   readonly submissions: PromptProof[] = [];
   readonly bindings: TurnBinding[] = [];
+  readonly preludes: NativePreludeProof[] = [];
+  private pendingPrelude?: NativePreludeProof;
+  private contextSeen = false;
   private pending = new Map<string, PromptProof>();
   private seenTurns = new Set<string>();
   hasPending(): boolean { return this.pending.size > 0; }
   private usageByTurn = new Map<string, Record<string, unknown>>();
   constructor(readonly marker: string) { this.expectPrompt(marker); }
   expectPrompt(marker: string, text?: string): void {
+    this.expectProof({ marker, ...(text === undefined ? {} : { prompt_sha256: promptHash(text) }) });
+  }
+  expectProof(value: PromptProof): void {
+    const { marker } = value;
+    if (value.prompt_sha256 !== undefined && !/^[a-f0-9]{64}$/.test(value.prompt_sha256)) throw new Error("invalid learner prompt hash");
     if (this.bindings.some((binding) => binding.marker === marker)) throw new Error("cannot resend a consumed learner marker");
-    const proof = { marker, ...(text === undefined ? {} : { prompt_sha256: promptHash(text) }) };
+    const proof = { ...value };
     const old = this.submissions.findIndex((item) => item.marker === marker);
     if (old >= 0) this.submissions[old] = proof; else this.submissions.push(proof);
     this.pending.set(marker, proof);
@@ -101,22 +123,42 @@ export class NativeBatch {
       if (!this.currentTurn || this.seenTurns.has(this.currentTurn) || !this.hasPending()) this.foreignActivity = true;
       this.seenTurns.add(this.currentTurn);
       this.open = true; this.accepted = false;
+      if (this.pendingPrelude) this.foreignActivity = true;
+      this.contextSeen = false;
       this.complete = false; this.aborted = false; this.message = ""; this.error = ""; this.usage = undefined;
+    }
+    if (row.type === "turn_context") {
+      if (!this.currentTurn || p.turn_id !== this.currentTurn || !this.cwd || p.cwd !== this.cwd) this.foreignActivity = true;
+      this.contextSeen = true;
+      if (this.pendingPrelude) {
+        if (!this.foreignActivity) this.preludes.push(this.pendingPrelude);
+        this.pendingPrelude = undefined;
+      }
     }
     const user = textOf(row);
     if ((row.type === "event_msg" && p.type === "user_message") ||
         (row.type === "response_item" && p.type === "message" && p.role === "user")) {
+      if (!this.foreignActivity && this.session && this.cwd && this.currentTurn && this.seenTurns.size === 1 &&
+          !this.bindings.length && !this.preludes.length && !this.pendingPrelude && !this.contextSeen && bootstrapContext(row, this.cwd)) {
+        this.pendingPrelude = { turn_id: this.currentTurn, cwd: this.cwd, sha256: promptHash(user) };
+        return; // Staged context alone never accepts a task; the matching turn_context must precede the exact prompt.
+      }
       const marker = user.replace(/\r\n/g, "\n").split("\n")[0]!;
       const hash = promptHash(user);
       const existing = this.bindings.find((binding) => binding.turn_id === this.currentTurn);
       const expected = this.pending.get(marker);
-      if (existing?.marker === marker && existing.prompt_sha256 === hash) {
+      if (this.pendingPrelude) { this.accepted = false; this.foreignActivity = true; }
+      else if (existing?.marker === marker && existing.prompt_sha256 === hash) {
         this.accepted = !this.foreignActivity; // duplicate event_msg / response_item for the same native message
       } else if (!existing && this.currentTurn && expected && (!expected.prompt_sha256 || expected.prompt_sha256 === hash)) {
         this.turn = this.currentTurn; this.accepted = !this.foreignActivity;
         this.bindings.push({ turn_id: this.turn, marker, prompt_sha256: hash }); this.pending.delete(marker);
       } else { this.accepted = false; this.foreignActivity = true; }
     }
+    // Cover the entire active turn before its dispatched prompt, including before any bootstrap item.
+    if (this.currentTurn && !this.accepted &&
+        row.type === "response_item" && (/_call(?:_output)?$/.test(String(p.type)) || p.type === "reasoning" ||
+          (p.type === "message" && p.role === "assistant"))) this.foreignActivity = true;
     if (!this.accepted || this.currentTurn !== this.turn || this.foreignActivity) {
       if (row.type === "event_msg" && ["task_complete", "turn_aborted"].includes(String(p.type)) && p.turn_id === this.currentTurn) {
         this.open = false; this.foreignActivity = true;
@@ -253,6 +295,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   const started = now();
   const marker = `[learner-batch:${randomUUID()}]`;
   const native = new NativeBatch(marker);
+  if (o.request.resumeThread) { native.session = o.request.resumeThread; native.cwd = o.request.cwd; }
   const before = new Set(candidates(o.codexHome, started - 2000));
   const readers = new Map<string, { reader: NativeRows; batch: NativeBatch }>();
   let rollout = o.request.resumeThread ? findRollout(o.codexHome, o.request.resumeThread) : undefined;
@@ -283,6 +326,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let ownershipLost = false;
   let continuation = 0;
   let retirementAuthorized = false;
+  let persistedBindings = 0;
   let alerted = false;
   let retries = 0;
   let progress = 0;
@@ -300,6 +344,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   const save = (state: string, extra: Record<string, unknown> = {}): void => {
     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
       agent_name: agentName, agent_name_version: 1,
+      native_context_version: 1, native_preludes: native.preludes,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
@@ -327,6 +372,10 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         if (file === rollout) {
           o.log(row as Record<string, unknown>);
           if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
+          if (native.accepted && !native.foreignActivity && native.bindings.length > persistedBindings) {
+            persistedBindings = native.bindings.length;
+            save("native-accepted"); // Persist consumption while the original task is still running, not only at retirement.
+          }
         }
       }
     }

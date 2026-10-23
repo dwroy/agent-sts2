@@ -77,7 +77,13 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
         prompts++;
         const text = args[3]!;
         const turn = `turn-${prompts}`;
-        write(row("event_msg", { type: "task_started", turn_id: turn }), row("event_msg", { type: "user_message", message: text }));
+        write(row("event_msg", { type: "task_started", turn_id: turn }));
+        if (kind === "bootstrap") write(row("response_item", { type: "message", role: "user", content: [
+          { type: "input_text", text: `# AGENTS.md instructions for ${root}\n\n<INSTRUCTIONS>\nFixed instructions.\n</INSTRUCTIONS>` },
+          { type: "input_text", text: `<environment_context>\n  <cwd>${root}</cwd>\n  <shell>bash</shell>\n</environment_context>` },
+        ] }), row("turn_context", { turn_id: turn, cwd: root }));
+        write(kind === "bootstrap" ? row("response_item", { type: "message", role: "user", content: [{ type: "input_text", text }] })
+          : row("event_msg", { type: "user_message", message: text }));
         if (kind === "capacity" || (kind === "retry-success" || kind === "stale-open-error") && prompts === 1) {
           write(row("event_msg", { type: "error", turn_id: turn, message: "at capacity" }));
           if (kind !== "stale-open-error") write(row("event_msg", { type: "task_complete", turn_id: turn }));
@@ -268,6 +274,41 @@ describe("native batch authority", () => {
 });
 
 describe("interactive batch lifecycle", () => {
+  it("keeps pre-dispatch resume history outside the active parser window", async () => {
+    const f = fixture("bootstrap");
+    const session = "019a1000-1234-7123-8123-123456789abc";
+    f.opts.request.resumeThread = session;
+    writeFileSync(f.file, [row("session_meta", { id: session, cwd: f.root }),
+      row("event_msg", { type: "task_started", turn_id: "historical" }),
+      row("response_item", { type: "function_call", name: "historical-tool" }),
+      row("response_item", { type: "local_shell_call", call_id: "historical-shell" }),
+      row("response_item", { type: "message", role: "assistant", content: [{ type: "output_text", text: "Historical answer" }] }),
+      row("event_msg", { type: "task_complete", turn_id: "historical", last_agent_message: "Historical answer" }),
+    ].map((r) => JSON.stringify(r) + "\n").join(""));
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, session, turn: "turn-1" });
+    expect(f.prompts()).toBe(1);
+    expect(f.events.some((event) => (event.payload as Record<string, unknown>)?.name === "historical-tool")).toBe(false);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.bindings).toHaveLength(1); expect(receipt.bindings[0].turn_id).toBe("turn-1");
+  });
+  it("persists bootstrap proof without interrupting the original native task or weakening retirement", async () => {
+    const f = fixture("bootstrap");
+    const log = f.opts.log; let running: Record<string, unknown> | undefined;
+    f.opts.log = (event) => {
+      log(event);
+      if (event.type === "token_usage_record") running = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    expect(running).toMatchObject({ state: "native-accepted", session: "019a1000-1234-7123-8123-123456789abc",
+      turn: "turn-1", submitted: true, retirement_authorized: false });
+    expect(running?.bindings).toHaveLength(1); expect(running?.native_preludes).toHaveLength(1);
+    expect(f.prompts()).toBe(1);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ native_context_version: 1, retirement_authorized: true, submitted: true });
+    expect(receipt.native_preludes).toHaveLength(1); expect(receipt.bindings).toHaveLength(1);
+    expect(receipt.native_preludes[0]).toMatchObject({ turn_id: "turn-1", cwd: f.root });
+    expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
+  });
   it("refuses inherited MCP/config context before launching the TUI, without changing the account", async () => {
     const f = fixture();
     const path = join(f.opts.codexHome, "config.toml");
