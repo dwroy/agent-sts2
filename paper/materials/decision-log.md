@@ -6344,3 +6344,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T23:10:55+08:00 [ops] #51优先外部Boss两批计划已冻结并交#48原开发，待外部来源/模板/按额度CLI档位入口；无新模型/原始玩家读取/伪造本系统局号。paper/materials/20261023-issue51-intake-ops/launch-plan.json。
 
 - 2026-10-23T23:11:39+08:00 [watcher] 优先核#20/#50：#20已in-progress无新子项交付；#50十产品叶在main 8678e21c0e09预览同已审，复用原定向不另起full。#35原PID3144467消失且无full结果，等ops对账；#42父合同已关闭但额外候选056a4f7保留，#49新小修正待原开发。未合产品/未改live，证据paper/materials/20261023-integrator-priority-readback/review.json。
+
+- 2026-10-23T23:20:00+08:00 [Claude] 转 Roy：codex3 周用量到 90% 时自动换到 codex1（预先授权，不再等 Roy 定时机），主管巡检发现后唤醒 ops 按 docs/llm-handoff.md 执行，做完告知 Roy；换号后速度档按新号用量重新套用（>70% 最高 fast）。
