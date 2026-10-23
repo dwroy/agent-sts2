@@ -1,0 +1,148 @@
+{
+  "at": "2026-10-22T11:42:01+08:00",
+  "state": "engineering-targeted-passed-full-window-pending",
+  "source": "83ea9419187924c3a66b355b14f4b3664651844e",
+  "base_main": "733d74d08570c91d9f9334cd69960241d888b88a",
+  "main_merged": false,
+  "live_changed": false,
+  "production_tsc": {
+    "name": "production-tsc",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "./node_modules/.bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.38,
+    "log": ".artifacts/integrator-28-20261022/production-tsc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tools_tsc": {
+    "name": "tools-tsc",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "./node_modules/.bin/tsc",
+      "-p",
+      "tools/v6/tsconfig.json",
+      "--noEmit"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 9.15,
+    "log": ".artifacts/integrator-28-20261022/tools-tsc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "targeted_initial": {
+    "files": 7,
+    "tests_passed": 86,
+    "tests_failed": 1,
+    "cause": "new CLI test assumes ignored .cache parent already exists"
+  },
+  "targeted_fixed": {
+    "files": 7,
+    "tests_passed": 87,
+    "tests_failed": 0,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "./node_modules/.bin/vitest",
+      "run",
+      "--maxWorkers",
+      "1",
+      "--no-file-parallelism",
+      "--pool",
+      "forks",
+      "tests/combat-entry-replay.test.ts",
+      "tests/v6-combat-entries.test.ts",
+      "tests/v6-formats.test.ts",
+      "tests/v6-draft.test.ts",
+      "tests/v6-off-equivalence.test.ts",
+      "tests/v6-combat-planner.test.ts",
+      "tests/jev-decision-projection.test.ts"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 13.05,
+    "log": ".artifacts/integrator-28-20261022/targeted-vitest-fixed.log",
+    "sha256": "b8e3ef1be9afd1f61f90480d13779a1cded40bce5bec6e217d698a86098c6ffb"
+  },
+  "fix": "new CLI test creates its .cache parent; no runtime change",
+  "full_vitest": "pending: original ops #33/#35 publication queue has priority per Roy #20 comment 6331712579",
+  "source_exact_paths": [
+    "agent/src/reflex/jev/combat-entries.ts",
+    "agent/src/reflex/jev/combat-entry-replay.ts",
+    "agent/src/v6/draft.ts",
+    "agent/src/v6/formats.ts",
+    "agent/tools/v6/capture-combat-entry-replay.ts",
+    "agent/tools/v6/combat-entry-replay.ts",
+    "docs/README.md",
+    "docs/jev-encounter-reflex.md",
+    "docs/v6-plan.md",
+    "knowledge/builders/validate-v6.ts",
+    "learner/tasks/jev-encounter-reflex.md",
+    "paper/materials/20261022-issue28-combat-entries/issue28-external-cli-final.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-final-targeted-2.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-final-targeted.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-targeted-2.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-targeted-final.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-targeted.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-tools-tsc-final.log",
+    "paper/materials/20261022-issue28-combat-entries/issue28-tsc-final.log",
+    "paper/materials/20261022-issue28-combat-entries/receipt.json",
+    "paper/materials/20261022-issue28-combat-entries/report.md"
+  ],
+  "integrator_adjusted_paths": [
+    "agent/tests/combat-entry-replay.test.ts"
+  ],
+  "decision_log_resolution": "preserve current main history; source decision rows remain in source ancestry",
+  "developer_log_sha_verified": 8,
+  "legacy_entries": {
+    "count": 85,
+    "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+    "bytes_unchanged": true
+  },
+  "real_jev_calls": 0,
+  "game_actions": 0,
+  "new_learned_entries": 0,
+  "improvement_interval": null,
+  "switch_decision": "unchanged; no enable authorization",
+  "AB_result": null,
+  "scientific_acceptance": false,
+  "frozen_inputs_after_targeted": {
+    "path": ".artifacts/integrator-28-20261022/inputs-after-targeted.json",
+    "sha256": "2401c184d172c73cd8c0a84744d399b20a7e4addeffed9f53a5342b6a484878c",
+    "count": 1802,
+    "pre_run_capture": false
+  },
+  "logs": [
+    {
+      "original": ".artifacts/integrator-28-20261022/production-tsc.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_copy": "paper/materials/20261022-issue28-integrator-review/production-tsc.log",
+      "public_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".artifacts/integrator-28-20261022/tools-tsc.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_copy": "paper/materials/20261022-issue28-integrator-review/tools-tsc.log",
+      "public_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".artifacts/integrator-28-20261022/targeted-vitest.log",
+      "original_sha256": "396810ba70dd025204339bf3e85a1b021fea4e1bc6af46931164d10d92608315",
+      "public_copy": "paper/materials/20261022-issue28-integrator-review/targeted-vitest.log",
+      "public_sha256": "f8e5017f1880bc2ef66d177d4d9c8a479fe726c594aca7f39a7d0b7cbeff0fb8"
+    },
+    {
+      "original": ".artifacts/integrator-28-20261022/targeted-vitest-fixed.log",
+      "original_sha256": "b8e3ef1be9afd1f61f90480d13779a1cded40bce5bec6e217d698a86098c6ffb",
+      "public_copy": "paper/materials/20261022-issue28-integrator-review/targeted-vitest-fixed.log",
+      "public_sha256": "20028c1428abc4e17f7c13e636d503421fd689c5a65b2fb47aa079f9002af98a"
+    }
+  ]
+}
