@@ -1,6 +1,6 @@
 state: clear-ok
-issue: 43
-updated_at: 2026-10-24T01:06:59+08:00
+issue: 36
+updated_at: 2026-10-24T01:30:05+08:00
 
 # 集成员当前交接
 
@@ -8,9 +8,9 @@ updated_at: 2026-10-24T01:06:59+08:00
 
 ## 本轮接续
 
-进行中的事: #43接续核六个发布检查叶同已审380083709/e1204dcf，main/live均缺；19份原证据SHA全同，原2109输入前后核同，原30项及真实.mts一过一败/模拟exact与data拒绝回执保持。材料paper/materials/20261024-issue43-evidence-readback/；本轮未重测、未合产品。
-在等谁: 原ops #35 R421唯一full仍在途，worker3525747实际birth19828947吻合，未发布。#43无新补交，依主管随#20最终组合核收；#20新版kit一天观察最早10-25 00:15:05，入口一小时到01:07:46由原ops核。
-下一步: 35实际发布→50→28→37→20父及39/43。最终组合保#43六叶并绑定实际输入/唯一full，ops核自然部署与#39启动读回；不把模拟full算绿，不单独关闭43。
+进行中的事: #36午夜补交8ce3dd6cb已按增量定向核验合main产品2e65a488ef3c，11叶保#51环境过滤/完整登记字段/child退出测试。tsc0、10文件280过，Python核心wrapper59过+登记2过；真实两批TS/Python证明核同、旧75及binding1保持。材料paper/materials/20261024-issue36-midnight-integrator/；未碰生产恢复/live。
+在等谁: 原ops按最新live/知识精确发布36后，重新预检并核fresh身份接原两批恢复监督；旧75归档、新producer epoch，仍走verify→finish→finished及20 seal门。#35唯一full6429过/2跳过，当前checks-passed-await-natural-publication，未发布；其他review无新补交。
+下一步: 先等原ops36实际发布/两批真实恢复与后续自然双批验收；原顺序35实际发布→50→28→37→20父及39/43。#20首小时延迟尚待分列冷却/受阻，最终kit一天窗最早10-25 00:15:05；不自开/new，不重跑full或代关父要求。
 
 ## 当前任务与顺序
 
@@ -19,6 +19,8 @@ updated_at: 2026-10-24T01:06:59+08:00
 - 当前 #20 为 `status:review`，独立分钟子项已核但父仍待依赖；其余积压 #50、#28、#37、#39、#43 均有依赖。已完成的独立核验见 `paper/materials/20261023-review-backlog/review.json` 与本轮读回；不重复旧测试或提前关闭。
 
 ## 已完成与接续位置
+
+- 2026-10-24T01:30:05+08:00 #36午夜增量独立定向核验合main2e65a488ef3c；11叶及main前/后像见assembly。真实终局窗口SHA核同、各binding1，TS/Python证明一致，旧75仍拒finish；tsc0/280TS/Python59+2。原导入路径错误保留，生产发布/恢复/自然验收待原ops。详见paper/materials/20261024-issue36-midnight-integrator/。
 
 - 2026-10-24T00:57:46+08:00 #39补查当前main新增4个BRAIN_LIVE_*消费者，原分类全覆盖；原交付清单核同，六关键叶同已审。预览6冲突、尚非最终组合，原23项不重跑，等发布依赖。详见paper/materials/20261024-issue39-consumer-preflight/。
 
@@ -45,6 +47,8 @@ updated_at: 2026-10-24T01:06:59+08:00
 
 ## 当前基线与完整检查
 
+- 最新#35读回：原6429过/2跳过，phase=checks-passed-await-natural-publication，result SHA4908b67f196bca3393c03ab722c07b712d06536d5129b7b511f2681f5071c3e4；01:15原ops事件核同仍等自然发布。下面“在途/丢失”等保留为历史，不覆盖此最新读回。当前live仍cd8769fca4aa/V6-R421，本轮36未发布。
+
 - 历史#49产品受测基线 main `50722d45459f6136c2871aecc3904cd2dc5099dd`，受测树 `8d09a0cf2890fe0dd6847917b887116fd1561c0b`；前述 #42 候选基线较旧。
 - 较早 ops 唯一 full 已完成：tsc0、6513过/2跳过，`paper/materials/20261023-fix-211302-ultrafast-ops/transaction.json` 阶段 `main-published-notified-await-idle-native-resume`，原 failed/rc0 保留。不是 #42/#20 未合源码的 full。下一窗口先重读事务和进程实际状态，不能因旧 PID 存在推定仍在测试。
 - #35旧R419唯一full：原ops已核lost-no-final-result，PID/子进程、tool session均无，未留full JSON或退出码；原件paper/materials/20261023-r420-natural-ops/issue35-loss-receipt.json，旧running不改写。新R420净12叶树438155cb0cc73dc9b90cdeb6275c1f74a6beebd7已准备，未full、未发布；必须单独受监督核验，不借旧结果背书。
@@ -61,4 +65,4 @@ updated_at: 2026-10-24T01:06:59+08:00
 - #27 正式角色 ACK 仍受原 CLI 来源兼容阻塞；23:13核收16项原文（含000402原日志缺失）、67引用及32投递窗，原rc2拒绝保留；实读/转达不等于正式ACK，科学父保留。#46原24h窗口、#47自然验收等仍由原角色沿原 issue 读回。
 - 全部历史与详细审查见 `handoff/integrator-20261022-codex3.md`；重启先读本文件、AGENTS/架构/工作流，再读对应 issue 最新评论。摘要与原件冲突时查原件，不自行消除待办。
 
-当前等待：本轮重新核6个review项均无新补交；原ops #35在R421净12叶树31a3ff5d唯一full在途，待实际发布，之后依次50/28/37/20父；#20最终kit已部署，按版本分段核一小时/一天真实观察。所有依赖及科学父保持，不重复full。
+当前等待：原ops36精确发布与两批真实恢复；35唯一full已过、待自然发布后继续50/28/37/20父及39/43。20首小时延迟分列与最终kit一天窗仍待原ops，不代验收、不重复full。

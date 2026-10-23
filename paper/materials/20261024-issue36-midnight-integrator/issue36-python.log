@@ -1,0 +1,17 @@
+...........................................................E
+======================================================================
+ERROR: test_learner_registration_barrier (unittest.loader._FailedTest.test_learner_registration_barrier)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_learner_registration_barrier
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/home/dw/Projects/agent-sts2/.worktrees/integrator36-midnight-20261024/ops/tests/test_learner_registration_barrier.py", line 9, in <module>
+    import test_learner_launch_failures as fixtures
+ModuleNotFoundError: No module named 'test_learner_launch_failures'
+
+
+----------------------------------------------------------------------
+Ran 60 tests in 4.829s
+
+FAILED (errors=1)

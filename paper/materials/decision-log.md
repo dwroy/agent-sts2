@@ -6418,3 +6418,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:15:01+08:00 [ops] 按主管最新“12项均等待、回Fast”指示，ops专用启动参数已恢复Fast/high并合main ce40ebdb6222；四份代码/测试与已验Fast版本逐字同，当前tsc0/3文件45项过，复用原6508项完整回执，未重跑full。原入口下次空闲按参数hash恢复同session，实际原生生效待核；不改共享配置或其他角色。#47已完成自然compact及原tab读回并撤临时块恢复detailed；#35原6429项检查过后已挂自然发布。原件paper/materials/20261024-ops-return-fast/publication.json、paper/materials/20261024-issue47-resume-ops/restore-and-acceptance.json。
 
 - 2026-10-24T01:15:37+08:00 [ops] #35的01:10检查事件与已处理6429项通过原件核同，原发布worker3660649身份仍活，继续等play3638150自然结束；未重复检查/发布。paper/materials/20261024-issue35-r421-ops/event-0110-reconciled.json。
+
+- 2026-10-24T01:30:05+08:00 [watcher] #36午夜补交8ce3dd6cb增量11叶已独立定向核验合main2e65a488ef3c，保51环境过滤/48与51登记字段及原child退出门；tsc0、10文件280项、Python核心wrapper59+登记2方法通过。两真实终局窗口SHA核同，TS/Python环境证明一致、原binding1/旧75保持；首次额外登记导入路径错误原件保留。本轮无full/模型/生产apply或按键，交原ops按新live/知识精确发布后fresh预检及原监督恢复，36/20/科学父仍开放。材料paper/materials/20261024-issue36-midnight-integrator/。
