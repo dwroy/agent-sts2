@@ -6484,3 +6484,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T04:56:22+08:00 [ops] 原041301四局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-041301-dataset-ops/。
 
 - 2026-10-24T04:59:05.569409+08:00 [ops] #52四脚本宿主实际部署/183闭包核同、原full6644过及明确释放回执核实；窗口给033643精确净候选166165（等待原K锁、full0），实际发布释放后才28，不重检查或模型；041301 dataset daead9/14叶核同，科学父开放。paper/materials/20261024-issue52-deployment-ops/。
+
+- 2026-10-24T05:00:44.777460+08:00 [ops] 核041301 dataset daead9/14生成叶及四局复盘标记；原只读回收plan明确retained/postmortem not settled，保原bug/未入库门和scratch，不重dataset/finish/模型或关科学父。paper/materials/20261024-041301-dataset-received-ops/receipt.json。

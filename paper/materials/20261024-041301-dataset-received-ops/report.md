@@ -1,0 +1,3 @@
+2026-10-24T05:00:44.777460+08:00
+
+核原041301受控dataset一次执行rc0、源检查true及主目录提交daead9cdc782为当前main祖先，14实际生成叶逐Git blob/字节/SHA核同，四局has_postmortem均1；成本原件沿其自身切点，不冒称同一统计窗口。原回收请求仍pending_verification。本轮按原CLI只读plan精确指定041301，实际rc1、retained/postmortem not settled；原因是原复盘回报仍含0581预算截断和0461旧修饰复现，未解决bug，尚未通过其后已完整检查的live经验入库门。保留scratch、共享主检出、原done/rc0和三条pending提案，不清原bugs、不手删、重finish或借其他批次检查。下一步等原策略/经验链实际实现入库及消费者，再由原调度器依原retention门重试；dataset完成与科学父/自然收益分别核。本轮未重dataset/模型/full或游戏。原件paper/materials/20261024-041301-dataset-received-ops/receipt.json。
