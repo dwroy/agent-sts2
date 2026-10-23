@@ -6288,3 +6288,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T20:30:10+08:00 [ops] #36精确两叶live c2a249380b，当前469知识/R418保留，原226/229定向复用，自然验收开放；两次锁忙原件保留。paper/materials/20261023-issue36-6364556202-ops/。
 
 - 2026-10-23T20:44:56+08:00 [ops] 20:43原学习tick已原生受理gpt6.1/high；2013原失败/21:13重试保留，Fast专用-c补夹具后完整复验在途，由原PID一次性收尾，不重派模型。paper/materials/20261023-ops-fast-startup/。
+
+2026-10-23T20:48:24+08:00 [watcher] #27核收19:56原链16项：旧15项/67证据窗及32双收件箱原文核同；新增000402原wrapper日志缺失，注册/输入SHA核同，211项旧归档不含该文件，原batch/thread/source与失败保留，找回精确日志后才验原launch/thread，否则blocked。已沿主管收件箱转Roy；原科学父、冻结rc1与后续575项0问题分列，正式ACK仍原CLI兼容pending，ACK写入0，无新模型/full或队列变更。核收paper/materials/20261023-issue27-watcher-receipt/received-1956.json。
