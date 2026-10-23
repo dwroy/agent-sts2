@@ -1,0 +1,8 @@
+{
+  "id": 6376508490,
+  "url": "https://github.com/dwroy/agent-sts2/issues/48#issuecomment-6376508490",
+  "body": "[ops]\n#48接续已核到R425：冻结首批仍可派的来源合同通过，但未出现真实回刷批次；父要求保持开放。\n\n生产source()只读校验18份冻结原件/同SHA持久副本通过，原244条与首6条一致；enabled=true，learn.json尚无backfill_source批次或strategy_backfill初始化，当前已处理0/剩244、native cursor0、耗时null。只读进度投影：`paper/materials/20261024-issue48-resume-0704-ops/progress-readonly.json`；没有写调度游标或把冻结当处理。\n\n前置状态已更新：#52四脚本宿主门已部署，不再写“等52开发/full”；#28工程框架已实际发布R425，冻存rk任务与当前任务SHA仍同d55c6287…，但真实两臂/条目与反证/Roy开关/A-B仍开放。原work-spec的准备时点文字保留，不改冻结输入。#51外部首两批在自有回刷前，交替候选原唯一full及宿主部署尚在途；#48仍按Roy要求排正常和外部之后，未强派或改优先级。\n\n另有须原集成员核父验收的显式合同缺口：当前普通`learner/tasks/strategy-proposal.md`没有brain-strategies、策略/rk、经验提炼或#48输出步骤；代码只在`strategy_backfill_jobs.task_file()`的专用附文中约束旧ID→strategy/rk去向。这是静态显式要求核验，不断言普通学习绝不会生成策略；请核“新局证据并入正常策略提炼”是否已完整交付，缺项沿原开发/集成入口补齐，不把后置回刷可派替代该父验收。原模板SHA与专用附文定位已保存。\n\n完整后24h仍到今天18:19:29才核；本轮未做截断比较/收益声明，停派、P1优先和失败重试须分账。无新模型/full/tick/游戏/调度状态写入，不因报告/队列或部署关闭父。原件`paper/materials/20261024-issue48-resume-0704-ops/{readback,progress-readonly}.json`、`backfill-task-appendix.txt`。\n",
+  "author": "dwroy",
+  "readback_equal": true,
+  "gitleaks_rc": 0
+}
