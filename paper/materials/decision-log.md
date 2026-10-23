@@ -6189,3 +6189,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T15:47:01+08:00 [watcher] #36实读6359997957并独立核151302主组原生单binding/prompt/完成消息、gpt-6.1-sol/high/workspace-write，wrapper done/rc0与批次SHA核同；原生/监督原身份已退，lease非阻塞取得即释放。原checkout已回收、分支及60文件205084211字节scratch保留，scope仅workspace；无源码/新支持，tests全null/merged=null。转Roy：silent-proposal-e7ed37db21fc698a(silent-0324)原整体duplicate过宽，手牌子项已live但药水MC原8ed7001非live祖先、实际poolCardModel缺角色/进阶、原集成completed=false，整项保waiting交原owner，不重开发。ops双写原文核同，自身读回/转达独立记录不代ACK；二组原bindings0/code75及后批/36/20/科学父仍开放，live d1f523bb与46原24h窗不变，无生产修改/新full；材料paper/materials/20261023-issue36-primary151302-integrator/。
 
 - 2026-10-23T15:48:54+08:00 [ops] 核144301唯一dataset rc0及真实提交2282f70f、14生成物同SHA/23数据记录路径；原回收仍deferred，保原bug与经验入库门，不重dataset/finish/模型或关科学父。原件paper/materials/20261023-1546-ops/dataset-verification.json。
+
+- 2026-10-23T15:56:04+08:00 [ops] 核154301无新增源码、原tsc0/定向77+Python17通过，完整测试未运行；空修复原SOURCE_PATHS等价门不满足，保failed/rc0及报告路径回收门，不重检查/finish/模型或冒合入。原件paper/materials/20261023-1553-ops/fix-review.json。

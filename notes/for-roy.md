@@ -4888,3 +4888,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-23T15:48:54+08:00 [ops/15:46] 144301五局复盘的唯一dataset已核实际运行15:32:36至15:44:12，退出0、attempts=1、source_checks_passed=true；提交2282f70f已是当前main祖先，23项变化中14个实际生成物的Git blob、字节数和SHA逐一与原锁内清单相符，均无生产源码。本批原五节复盘、33条账本追加、五条提案的先行记录提交仍在历史中，工作副本并行记录保持；成本源保留自身冻结切点，不混称同一核心切点。原dataset worker已退出，本轮只核证，不重dataset、finish、模型、full或生成新的行为版本。原144301回收请求仍deferred且无归档完成回执，本次只读准入核得postmortem not settled；原报告感染棱柱技能污染漏算bug仍保留，不能为回收清空bugs或把数据生成替代受测live经验入库。后续由原调度器按原门重试，不新派清理会话、不强删主检出或研究scratch。科学父、消费者、异议角色确认与151302二组现场均独立保留。
 原件：paper/materials/20261023-1546-ops/dataset-verification.json；原提交与清单paper/materials/20261023-1520-dataset-ops/record-commit.json、generated-manifest.json。
+
+- 2026-10-23T15:56:04+08:00 [ops/15:53] 154301普通修复批原生正常结束，绑定一条及gpt-6.1-sol/high、workspace-write已核，supervisor与原生PID均退出、租约释放。本批工作树干净且HEAD等于原基线225d3aa，无新增源码、修复、提交或live合入；20项只是核回基线已有祖先。原tsc退出0，Vitest仅两文件77例、Python11加6例通过，完整沙箱套件未运行，不把定向绿冒作完整检查。本次沿原空修复核验器只读复核仍返回None：基线与当前live在SOURCE_PATHS下有实际差异，故保留注册和wrapper的failed/rc0，不伪造no_changes或重finish来改状态。回收请求仍deferred，原因是报告位于主检出learner/runs而批次登记工作树为独立fix树；原报告、日志和工作树均保留，原调度器按原门接续，不搬移身份或强删。ENOBUFS、账本状态、监控/旧夹具及游戏策略项各有原owner/候选，继续保留，不重复实现；无新增Roy决策、bug或行为版本，科学父与原失败不关闭。
+原件：paper/materials/20261023-1553-ops/fix-review.json；原报告learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/report.md。
