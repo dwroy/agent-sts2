@@ -1,0 +1,20 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-50-task/agent
+
+ ✓ tests/paths.test.ts > the project root > is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them 3ms
+ ✓ tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays 3ms
+ ✓ tests/paths.test.ts > the project root > the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root 1ms
+ ✓ tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd 8ms
+ ✓ tests/paths.test.ts > paths from the environment > an absolute one is used as given 1ms
+ ✓ tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them) 1ms
+ ✓ tests/paths.test.ts > the knowledge files > every data file is where its loader looks: common/ or characters/<character>/ 3ms
+ ✓ tests/paths.test.ts > the knowledge files > nothing in the data directories is outside that map (a file a loader would not find) 2ms
+ ✓ tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt 80ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the MCP server runs this package's tsx on its own source 1ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the log database's query script is in agent/tools/logdb 0ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  17:29:02
+   Duration  4.69s (transform 3.68s, setup 361ms, import 4.07s, tests 108ms, environment 0ms)
+

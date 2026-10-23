@@ -1,0 +1,87 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator50-preflight-20261023-1940/agent
+
+ ❯ tests/endgame-plan.test.ts (20 tests | 4 failed) 2415ms
+   × codex, F1: construction answers update the next question, survive restart and keep #35 / #49 737ms
+   × codex, F31: construction answers update the next question, survive restart and keep #35 / #49 550ms
+   × deepseek, F1: construction answers update the next question, survive restart and keep #35 / #49 554ms
+   × deepseek, F31: construction answers update the next question, survive restart and keep #35 / #49 527ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 138ms
+     × all resolve 136ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tests/v6-build-core.test.ts: ../../.cache/",
++   "agent/tests/v6-infrastructure.test.ts: ../../.cache/",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex, F1: construction answers update the next question, survive restart and keep #35 / #49
+ FAIL  tests/endgame-plan.test.ts > deepseek, F1: construction answers update the next question, survive restart and keep #35 / #49
+AssertionError: expected 'Which of these card rewards should I …' to contain 'brain-query-cues-v1'
+
+- Expected
++ Received
+
+- brain-query-cues-v1
++ Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. 若需真人样本背景，可任选 external_stats_card 按候选 id 与当前幕 act 查 Silent A10（v0.111）的拿取率与胜率关联，或 external_stats_skip 查本幕跳过率；结果仅为观察统计、非因果，与题内自有 outcome_stats 分账。 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若本题更新run_plan，必须给construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。 本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。 每道构筑题在同一答案的 run_plan.endgame 更新本局核心、缺口、成长性输出、可持续防御、两战资源和终局怎么赢；这是本局假设，不是知识规则。查相关策略与 rk 后说明依据、可信度和未知；达标线只能引用已发布条目，不自行补伤害/防御/血量门槛。endgame_checkpoint 仅在题面给出时作答，否则写空字符串。保留原方向及转向条件的语义，选择可以改变计划。 在同一 JSON 中给 run_plan，原计划字段格式：{"archetype": "<the deck direction, max 12 words>", "want": [card ids to pick when offered, most important first, max 6], "avoid": [card ids not to take, max 6], "remove": [card ids in the deck to remove first, max 3], "block_target": <number of block cards the deck should hold by the act boss>, "elites": "seek" | "normal" | "avoid", "rest": "heal" | "smith" | "auto", "boss_prep": "<max 30 words: what to have ready for the act boss>", "summary": "<max 40 words: the plan in plain words>"}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。
++
++ 作答前先查本题相关策略与 rk（reflex knowledge，小脑记忆）；备战题优先本幕 Boss / 精英及当前敌人。以下仅为检索候选线索，不是正文或predicate成立证明。先调用 kb_strategies 和 kb_reflex，经验另用kb_experience。rk实体计数只是条目文本提及数，不代表当前条件命中或Jev采用；不启用关闭的出牌条目。按返回的来源、可信度及反证判断；空结果/错误或查询预算结束后用已有信息作答，不重试刷空库。
++ {"schema":"brain-query-cues-v2","question_type":"act_plan","strategies":{"status":"ok","count":1,"entries":[{"id":"silent-brain-act1-blade-dance-choice-context"}],"omitted":0,"tool":"kb_strategies","input":{"query":"*"}},"rk":{"status":"loaded","count":84,"entries":[{"id":"silent-r2-card-shockwave","applies_to":"combat_line"},{"id":"silent-r2-card-well-laid-plans","applies_to":"combat_line"},{"id":"silent-r2-card-piercing-wail","applies_to":"combat_line"},{"id":"silent-r2-card-malaise","applies_to":"combat_line"},{"id":"silent-r2-card-shadowmeld","applies_to":"combat_line"},{"id":"silent-r2-card-rolling-boulder","applies_to":"combat_line"}],"omitted":78,"tool":"kb_reflex","input":{"query":"*"},"entity_queries":[{"entity":"SLIME_BOSS","count":0,"input":{"query":"SLIME_BOSS"}},{"entity":"BYGONE_EFFIGY","count":0,"input":{"query":"BYGONE_EFFIGY"}},{"entity":"BYRDONIS","count":0,"input":{"query":"BYRDONIS"}},{"entity":"PHANTASMAL_GARDENER","count":0,"input":{"query":"PHANTASMAL_GARDENER"}},{"entity":"PHROG_PARASITE","count":0,"input":{"query":"PHROG_PARASITE"}},{"entity":"SKULKING_COLONY","count":0,"input":{"query":"SKULKING_COLONY"}}]},"experience":{"status":"ok","count":39,"entries":[{"id":"silent-accelerant-triggers","title":"触媒","scope":"card:ACCELERANT"},{"id":"silent-accuracy-shiv-scaling","title":"精准","scope":"card:ACCURACY"},{"id":"silent-afterimage-per-card-block","title":"余像","scope":"card:AFTERIMAGE"},{"id":"silent-bouncing-flask-poison","title":"弹跳药瓶","scope":"card:BOUNCING_FLASK"},{"id":"silent-calculated-gamble-upgraded-hand-reset","title":"计算下注","scope":"card:CALCULATED_GAMBLE"},{"id":"silent-corrosive-wave-draw-poison","title":"腐蚀波","scope":"card:CORROSIVE_WAVE"}],"omitted":33,"tool":"kb_experience","input":{"relevant":true}}}
+
+ ❯ tests/endgame-plan.test.ts:139:35
+    137|     expect(requests[0]!.system).toContain(ENDGAME_OBJECTIVE);
+    138|     expect(requests[0]!.question).toContain("run_plan.endgame");
+    139|     expect(requests[0]!.question).toContain("brain-query-cues-v1");
+       |                                   ^
+    140|     expect(requests[0]!.question).not.toContain("calibrated on logged …
+    141|     expect((requests[1]!.memory as any).construction_log).toContain("格…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex, F31: construction answers update the next question, survive restart and keep #35 / #49
+ FAIL  tests/endgame-plan.test.ts > deepseek, F31: construction answers update the next question, survive restart and keep #35 / #49
+AssertionError: expected 'Which of these card rewards should I …' to contain 'brain-query-cues-v1'
+
+- Expected
++ Received
+
+- brain-query-cues-v1
++ Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. 若需真人样本背景，可任选 external_stats_card 按候选 id 与当前幕 act 查 Silent A10（v0.111）的拿取率与胜率关联，或 external_stats_skip 查本幕跳过率；结果仅为观察统计、非因果，与题内自有 outcome_stats 分账。 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若本题更新run_plan，必须给construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。 本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。 每道构筑题在同一答案的 run_plan.endgame 更新本局核心、缺口、成长性输出、可持续防御、两战资源和终局怎么赢；这是本局假设，不是知识规则。查相关策略与 rk 后说明依据、可信度和未知；达标线只能引用已发布条目，不自行补伤害/防御/血量门槛。endgame_checkpoint 仅在题面给出时作答，否则写空字符串。保留原方向及转向条件的语义，选择可以改变计划。 在同一 JSON 中给 run_plan，原计划字段格式：{"archetype": "<the deck direction, max 12 words>", "want": [card ids to pick when offered, most important first, max 6], "avoid": [card ids not to take, max 6], "remove": [card ids in the deck to remove first, max 3], "block_target": <number of block cards the deck should hold by the act boss>, "elites": "seek" | "normal" | "avoid", "rest": "heal" | "smith" | "auto", "boss_prep": "<max 30 words: what to have ready for the act boss>", "summary": "<max 40 words: the plan in plain words>"}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。
++
++ 作答前先查本题相关策略与 rk（reflex knowledge，小脑记忆）；备战题优先本幕 Boss / 精英及当前敌人。以下仅为检索候选线索，不是正文或predicate成立证明。先调用 kb_strategies 和 kb_reflex，经验另用kb_experience。rk实体计数只是条目文本提及数，不代表当前条件命中或Jev采用；不启用关闭的出牌条目。按返回的来源、可信度及反证判断；空结果/错误或查询预算结束后用已有信息作答，不重试刷空库。
++ {"schema":"brain-query-cues-v2","question_type":"act_plan","strategies":{"status":"ok","count":1,"entries":[{"id":"silent-brain-act2-reward-skip-comparison"}],"omitted":0,"tool":"kb_strategies","input":{"query":"*"}},"rk":{"status":"loaded","count":84,"entries":[{"id":"silent-r2-card-shockwave","applies_to":"combat_line"},{"id":"silent-r2-card-well-laid-plans","applies_to":"combat_line"},{"id":"silent-r2-card-piercing-wail","applies_to":"combat_line"},{"id":"silent-r2-card-malaise","applies_to":"combat_line"},{"id":"silent-r2-card-shadowmeld","applies_to":"combat_line"},{"id":"silent-r2-card-rolling-boulder","applies_to":"combat_line"}],"omitted":78,"tool":"kb_reflex","input":{"query":"*"},"entity_queries":[{"entity":"SLIME_BOSS","count":0,"input":{"query":"SLIME_BOSS"}},{"entity":"DECIMILLIPEDE_SEGMENT_BACK","count":0,"input":{"query":"DECIMILLIPEDE_SEGMENT_BACK"}},{"entity":"DECIMILLIPEDE_SEGMENT_FRONT","count":0,"input":{"query":"DECIMILLIPEDE_SEGMENT_FRONT"}},{"entity":"DECIMILLIPEDE_SEGMENT_MIDDLE","count":0,"input":{"query":"DECIMILLIPEDE_SEGMENT_MIDDLE"}},{"entity":"ENTOMANCER","count":1,"input":{"query":"ENTOMANCER"}},{"entity":"INFESTED_PRISM","count":0,"input":{"query":"INFESTED_PRISM"}}]},"experience":{"status":"ok","count":44,"entries":[{"id":"silent-accelerant-triggers","title":"触媒","scope":"card:ACCELERANT"},{"id":"silent-accuracy-shiv-scaling","title":"精准","scope":"card:ACCURACY"},{"id":"silent-afterimage-per-card-block","title":"余像","scope":"card:AFTERIMAGE"},{"id":"silent-bouncing-flask-poison","title":"弹跳药瓶","scope":"card:BOUNCING_FLASK"},{"id":"silent-calculated-gamble-upgraded-hand-reset","title":"计算下注","scope":"card:CALCULATED_GAMBLE"},{"id":"silent-corrosive-wave-draw-poison","title":"腐蚀波","scope":"card:CORROSIVE_WAVE"}],"omitted":38,"tool":"kb_experience","input":{"relevant":true}}}
+
+ ❯ tests/endgame-plan.test.ts:139:35
+    137|     expect(requests[0]!.system).toContain(ENDGAME_OBJECTIVE);
+    138|     expect(requests[0]!.question).toContain("run_plan.endgame");
+    139|     expect(requests[0]!.question).toContain("brain-query-cues-v1");
+       |                                   ^
+    140|     expect(requests[0]!.question).not.toContain("calibrated on logged …
+    141|     expect((requests[1]!.memory as any).construction_log).toContain("格…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  2 failed | 8 passed (10)
+      Tests  5 failed | 104 passed (109)
+   Start at  19:40:25
+   Duration  15.79s (transform 2.12s, setup 729ms, import 3.59s, tests 10.16s, environment 1ms)
+
