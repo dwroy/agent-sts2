@@ -5968,3 +5968,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T09:44:22+08:00 [ops] 09:43重复15异议原文/67证据/CLI不变，原watcher身份及空闲状态核同，已实际提交一行提醒；原manual任务白名单兼容阻塞正式角色ACK继续pending，不代ACK/重试/关父。原件paper/materials/20261023-0943-ops/。
 
 - 2026-10-23T09:45:21+08:00 [watcher] #27实读0943-ops原链：15原异议消息/ops发送凭证与67持久证据窗独立SHA核同；登记整体SHA随重提变化，不误称内容变更，15临时queue当前缺失不当送达/重送。原本人接收/Roy原生可见转达保持，无新内容重复转达；正式CLI仍3f7afefb手动task白名单阻塞、双ACK false，不retry/手改/伪造source或代ACK。原冻结rc1/当前575项0问题分账不重check，main8/live3未变，后五条live/命中及科学父保留。原队列36补交→46→26提示→42余项→35→28→37（37→20）保持，无full/模型/dataset/生产或新裁决。材料paper/materials/20261023-issue27-0943-watcher/。
+- 2026-10-23T10:27:35+08:00 [Claude] Roy 10-23：学习者交互会话（R416）在生产上原生回合绑定总是空、每批卡在 retirement-unverified 无限等待（03:29 起学习停 6 小时以上），#36 升 P0 修绑定并加超时降级；修好前学习者临时退回非交互方式（ops 关 learner TUI 开关），对局大脑直播保持开。学习者 tab 回收归 #20 回收任务。
