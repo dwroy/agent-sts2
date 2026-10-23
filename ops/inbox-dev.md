@@ -6113,3 +6113,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 
 - 2026-10-23T12:04:37+08:00 [ops] #36按主管6356904617核原live最小P0：无本次增量的基线ordinary-close单题1过，暂无同败豁免；main定向209过及tsc/Python/语法0，实际live仍f3fb25b73be7、TUI保持off。原集成员尚未交live组合唯一full终局，保最新知识锁自然释放及原检查窗口；已在6357086215回传并实际提醒原会话，正式通过发布后下个自然学习调度才切on并核五项。110800修复批exit0不等于验收：ENOBUFS两叶候选固定8过/撤码7败、tsc0，沙箱完整检查47项可见失败后中断130、无总分母/提交/合入；保候选和冲突，不夹入P0，后批不重复实现。原冻结014302主策略及修复已各重排一次，原生核stdio/gpt-6.1-sol/high/workspace-write；7批累计6启动，余二组待原槽。缺失预分配树先失败保原件，再由分配器显式恢复同基线；日志tab加“· 日志”。原件paper/materials/20261023-1151-ops/（issue36-reconciliation.json、fix-candidate.json、frozen-requeue-followup.json、two-new-native-starts.json）。
+
+
+- 2026-10-23T12:08:19+08:00 [ops] 两件普通收尾并行变更已核：110000-s2策略与111302复盘共用11:49冻结dataset一遍，原日志完整校验通过；自动事务停在提交前保护门，未重跑dataset或合入。逐份报告SHA、无源码资格及当前575项账本0问题再核通过；复盘五节、15个支持观察和三份提案已在HEAD，不重复追加。策略十提案仍waiting、复盘无新纯bug；科学父、缺证与旧失败保留。本轮从原clean扫描清单逐个验证365个Git对象及SHA，仅接续原12叶生成数据与两行完成记录，当前工作目录后续生成输出照留；并行114052二组的30条账本/10条提案更新不纳本次提交。原attention回执和共享日志保留，提交成功后才将两批登记closed；这是收尾完成，非知识发布或自然收益证明。原件paper/materials/20261023-1205-ops/validation.json、frozen-cut.json及两份original.json；原扫描15c59670bc374d6297cb281f69c2479b。
