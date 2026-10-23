@@ -5297,13 +5297,19 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20T20:02:19.040969+08:00 ops：W4 31a三测试与W8 2a1一叶齐，差旧900仅四测试，最新live64/458知识锁内重冻tree496948c2/2379输入SHA17053663；19:59:55唯一单worker实际tsc0/full在跑，未main/live发布或开局，绿后原授权执行/再败保STOP。原件 paper/materials/20261020-five-item-repaired-start-ops/receipt.json。
 
+- 2026-10-20 20:12:46 CST watcher：实读修后五项19:59启动原件，五份固定文件SHA及tree900→496恰四测试正式后像核同，84源/458知识/2379输入；仅保存快照tsc0，未查动态full/status/log/进程，不认完整绿。STOP与原五项原子发布/读回/核号双通知门槛保持，旧失败保留，无新检查或模型。原件 paper/materials/20261020-2012-watcher-freeze-readback/receipt.json。
+
 - 2026-10-20T20:27:27.377859+08:00 ops：修后五项tsc0/full1仅batch-c:443原15秒超时，623文件622过1败/5908过1败2跳，原四修复通过；tree4969/2379输入SHA1705核同/PID退出，已投原watcher转Claude，保STOP不发布/部分开局或重未变full。原件 paper/materials/20261020-2024-ops/receipt.json。
+
+- 2026-10-20 20:30:53+08:00 watcher：实际读核修后五项终局receipt/full SHA，tsc0/full1仅batch-c:443原15秒超时（23054ms），623文件622过1败/5908过1败2跳；四修复已过、根因未定，保STOP不重跑/部分发布。原Claude项目入口未找到，独立实收/决定pending；回执 paper/materials/20261020-2030-watcher-full-blocker/receipt.json。
 
 - 2026-10-20 20:34:56 CST V6-W8：按Claude20:3x在自有树对live64与五项tree4969交替各3次单例batch-c:443，nice19/ionice3/单worker/原15s全部rc0；live1.719/1.733/1.695s、候选1.708/1.744/1.979s，中位+1.45%；候选2379输入SHA17053663前后核同。未复现候选回归，支持宿主负载偶发超时；直调planCombatTurn不走idleCombat，原瞬时CPU未采样。原full1保留、不冒完整绿；未改代码/阈值/live/STOP或起full。材料 paper/materials/2026-10-20-v6-batch-c-timeout/report.md。
 
 - 2026-10-20T20:39:08.686250+08:00 ops：W8 78e479/32a913仅25材料/24清单逐Git SHA核同，六单例0/候选原2379输入SHA1705保持，按指定口径偶发宿主负载/调度、历史争用源未知；原full1及STOP保持，不运eeaa验证父或重full。原件 paper/materials/20261020-W8-timeout-materials-ops/receipt.json。
 
 - 2026-10-20 20:52:45 CST [Claude/Roy，五项包复验与旧字段] Roy 同意 Claude 建议：1) batch-c.test.ts:443 超时经 v6-w8 定向对比（候选与 live 中位差 +1.45%）判为宿主负载偶发，对同一冻结候选（tree 496948c2）在低负载下重跑一次完整检查（期间不派新学习批次、不跑 paper_dataset 等重任务），通过即上线五项并移除 STOP，再失败保持 STOP 报 Claude/Roy；2) expected_win 旧兼容字段（P·W_k+(1−P)·W_0，来自 79dc02307；去 W_0 的 P·W_k 在暂缓的 303bbb1ac）这次不动——已核实不进入任何 Jev/大脑决策、仅审计日志——待 V6 稳定后随 projection→build evaluation 改名一起删除字段及其测试断言。
+
+- 2026-10-20T20:54:40+08:00 watcher：实读Claude20:5x/Roy低负载同一tree4969/2379输入SHA1705一次完整复验授权，已核20:52:45原记录；沿原ops通道绑定来源并去重，CLI rc=0仅投递，native接管/短清单待原回执。旧full1/expected_win保留，watcher未启检查/API/play。原件 paper/materials/20261020-205x-watcher-low-load-recheck/receipt.json。
 
 - 2026-10-20T21:10:03.838203+08:00 ops：Roy20:5x B明示同tree4969/2379输入SHA1705一次低负载full，原两批自然结束/load1=2.33/CPU7.76%后21:02:55实际tsc0/full在跑；原准入标记与收尾/dataset/snapshot锁隔离新重任务，旧兼容字段本次保留/稳定后随改名删，STOP至绿后实际读回核号双通知。原件 paper/materials/20261020-low-load-once-ops/receipt.json。
 
@@ -5322,16 +5328,18 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 22:36:30 CST [Claude/Roy，V6 推进计划] Roy 授权 Claude 按实际情况制定并推动 V6 完成。docs/v6-plan.md 新增第 12 节：P0 Jev 接管奖励选牌（R404 Boss 信息丢失修复 903fbfabb 上线并按真实循环验收）、P1 大脑请求回 V5 节奏核验、P2 满槽奖励药水交 Jev、P3 构筑用对照式小脑经验与学习者 r4、P4 学习闭环增量刷新、P5 十局指标报告；范围限于已批准设计，对局持续运行，修复在开局边界上线，异常由 ops 回退。
 
 - 2026-10-20T22:39:54+08:00 W4W6：按Claude22:4x/P0授权，正式903fbfabb五源窄合main e7e2b011731c3fd913f13f4179b4fba4632c9e2a，a8ed08484材料重放66781bcf32b92e895bee16a07aa133a0fb89db24；逐SHA/blob同原tsc0/96定向/gitleaks0输入，保根并行记录、不运base/805/知识。已CLI送ops/watcher（不代原生ACK），接续原22:35精确live组合tree66dc/2380输入c2a78559单点full，未读终局、不另起检查。绿后原ops开局边界发布；首局奖励Jev≥90%、交脑近0、准备≤5s、无新增错误/兜底，P0稳定2自然局前不做P2。当前live/actor/STOP未动。原件paper/materials/2026-10-20-v6-r404-card-provider-wiring/checks/main-integration.json。
+
 2026-10-20T22:41:32+08:00 已核W4正式五叶及原检查材料，原5红和96定向过保留；实际main源码e7e2b0117、54叶材料66781bcf3与正式映射同，旧手抄错误长后缀未作运输依据。live R404上仅五叶/498知识冻结tree66dc、2380输入c2a78559，22:35唯一runner1111701已tsc0/full在途，main接源不改固定输入，不另起owner或第二轮full。新实读Roy授权Claude主导第12节：持续对局不挂STOP，修复测过在开局边界发布/核号双通知，首局错误/卡住/明显兜底退上一live并inbox；P0优先。学习派发照常，重任务guard1117921已持三原锁，P0退出自动释放，不启dataset。P1按W8新报尚未验成：两局独立ask0但方向未初始化，10次T4被体积保护裁掉、未存v6；保owner报告，不据0调用认通过。P0稳定2自然局后才开P2，P3待正式模板，旧expected_win删除等暂缓；当前live/actor/开关不动，Regent暂停。 原件：paper/materials/20261020-R404-wiring-joint-ops/receipt.json；docs/v6-plan.md第12节。
+
 | 2026-10-20 22:40 | V6-W8 P1：R404 Y427/5ZEP 冻结核验独立方向请求均0，但 RUN_PLAN=off 导致初始方向未产出；10次T4搭车实际全因方向段体积保护仅剩unknown_reason，存储更新0，P1未通过；原件/边界见 paper/materials/2026-10-20-v6-r404-direction-verification/；仅记录，未改live。 |
 
 2026-10-20T22:47:12+08:00 已实读221302-s2策略批自动收尾拒绝原件及报告，原SHA核同，WT仍在260ad020基线严格干净，无新增源码或合入；十项提案全waiting，测试三字段null。与此前204302不同，本批唯一dataset已22:30启动并自然完成；原日志全部不变量通过且key scan CLEAN，按原代码仅rc0后才进入再次validate，随后因P0五叶进入main拒绝提交，原回执未写dataset_rc字段，保控制流推断及日志证据，不伪造显式回执。proof前无执行源漂移、其后仅P0正式五叶，属于并行源变化，不归学习失败或产品回归。本轮不补dataset/合入，不接纳并行生成文件或改原attention。保十项/科学父及两份提案原文SHA与登记SHA不符缺口，原文/证据/下一步经既有watcher接续，未称Roy已知或代ACK。P0原tree66dc/2380输入单点full不查进度、不改输入、不叠检查；当前R404对局/STOP不动，Regent暂停。 原件：paper/materials/20261020-2239-ops/receipt.json；ops/codex-ops/ordinary-close/20261020-221302-s2-strategy-proposal.json。
 
 2026-10-20T23:02:39+08:00 原ops已核P0五叶联合终局tsc0/full1，固定tree66dc/2380输入c2a78559前后及当前逐SHA同，22:56:25自然结束；623文件618过5败、5737项过2败2跳。四个已知PID及WT残留node均核退出，原live锁与三重重任务锁已释放，不以事件排队代窗口释放。静态核两类测试接线缺口：新多帧fixture放旧logged-states逐JSON扫描目录，缺单state字段；真实loop测试导入fixture-http却未运输该测试辅助，check-imports同败。原loop测试未加载，不能称功能通过，也不据此改生产公式或归宿主偶发。原5红/96定向及本次full1全保留，失败细节已投原W4与watcher沿Claude接续，未冒对方实收；同一P0优先，不另派模型/重跑未变源full、不删用例或抬阈值。本轮候选不发布、不分号，保持R404当前对局/live/actor/开关/STOP，学习派发照常，原父与ACK不代办；P2继续待P0实际发布稳定2自然局，Regent暂停。 原件：paper/materials/20261020-2300-ops/receipt.json；.artifacts/ops-r404-wiring-joint-20261020/host-status.json。
 
-| 2026-10-20 23:03 | V6-W8 P3：对照式 card_pick/reflex-entry-v1 最小追加与 R4 模板正式源 ab1f25618；只在 V6_REFLEX=on 发送匹配牌组/候选且区间不含0的观察差值，可信度由局聚类误差计算；tsc0、6文件103例过、题面6895字节、gitleaks0，完整检查待ops单点窗口，未合main/live、未派批、未改正式知识。材料 paper/materials/2026-10-20-v6-reflex-card-pick/。 |
-
 2026-10-20T23:09:04+08:00 W4W6：沿原P0/ops23:00联合full1修测试运输：源码75eee88db窄合main538294bf9，多帧R404夹具原字节移出旧单帧glob，补目录契约；显式运输原live缺少的fixture-http及固定测试，原战斗用例/两运行时/门槛/公式不变。原full1及新增契约红灯保留；本轮tsc0、7文件207定向过/99.90s、源码gitleaks0，无full/API/模型/play，未动live/actor/开关/STOP。精确补丁从原66dc私有index核至5cff，四后像和必要依赖见paper/materials/2026-10-20-v6-r404-card-provider-wiring/test-packaging-r1.md；交ops原单点实际live组合全检/自然边界发布，不冒联合绿；P0稳定两自然局前不做P2，P3挂点未动。
+
+| 2026-10-20 23:03 | V6-W8 P3：对照式 card_pick/reflex-entry-v1 最小追加与 R4 模板正式源 ab1f25618；只在 V6_REFLEX=on 发送匹配牌组/候选且区间不含0的观察差值，可信度由局聚类误差计算；tsc0、6文件103例过、题面6895字节、gitleaks0，完整检查待ops单点窗口，未合main/live、未派批、未改正式知识。材料 paper/materials/2026-10-20-v6-reflex-card-pick/。 |
 
 | 2026-10-20 23:18:20 CST | ops收221302策略attention（dataset前拒、十waiting/0536proposed）并转历史源码限定更正；P0包装修正接最新live固定treea8dc/2382输入SHA81707ffc，23:12 tsc0/full在途；P3十一源核同排后，R4原生Sol6.1/high一次启动scratch/pending，P4未live缺口保留。无发布/开reflex/actor变化；原件paper/materials/20261020-2303-ops/receipt.json。 |
 
@@ -5358,6 +5366,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 00:12:17 CST 原ops：RBME旧V5模块监测对四个已completed V6奖励仍要求boss_sim；独立A/B四题已计算，原告警复算同，样本100/300门及负控不变，沿既有监测/P0各自链去重、不常规报Roy。原P3 11源机械接R406/498知识，00:09:33 tsc0/full1395025在途，旧中断保留、REFLEX off/P4后排；无新学习/模型/dataset或对局操作。原件paper/materials/20261021-0007-ops/receipt.json。
 
 - 2026-10-21 00:31:30 CST 原ops：R4 watcher本人实际接收并原生向Roy可见转达四异议，receipt324cb75c/三来源/四原生副本SHA核同；原notice false字节保留，仅manual CLI角色登记桥pending，不代ACK/正式知识或科学父验收。W4两模型叶修复仅owner进展/非formalready或窗口请求；未查询P3/改R406 CARD brain/REFLEX off/Regent。原件paper/materials/20261021-0030-r4-watcher-ops/receipt.json。
+- 2026-10-21 00:31:43 CST watcher：R4原report及两份完整notice逐字/SHA核读，四项限定已向Roy用户可见转达；3估计CI跨0、缺真实source_experience全拒导出/draft0、85正式及前三轮268仍combat_line、来源/分母未知保留，不续批/模拟/启REFLEX/关科学父。原生接收/转达证据已冻结paper/materials/20261021-r4-notice-watcher/receipt.json；00:29:27沿原ops w1H:p8投递CLI0，仅投递不冒ops原生已读，R4角色CLI兼容仍pending。W4候选元数据修复两叶留原owner，R406 CARD=brain不动，不查询P3在途检查。
 
 - 2026-10-21 00:43:01 CST [Claude，P0 缺陷定位] R406（4528a751f，V6_CARD_DECIDER 临时 brain）已于 00:05 生效。RBMEQGXPE9Z2（R405 Jev 拿牌）同样 F8 死于花园幽灵鳗。v6-w4w6 定位为代码缺陷：新增候选牌以 {card_id,upgraded,index} 身份占位进入模拟，offHandCardModel 把非空占位当牌面、绕过牌库回退，费用与效果为空（源自 79dc02307 的 v6ProjectionStart）；修复 70f3ec976 用可见奖励牌面/已发布牌面补全，未建模的可打出牌标 unmodelled 计为未知，并以两局真实战斗→奖励帧走生产 runLoop 回归（修前三牌 1 组，修后 3 组）。100% 死亡率为‘当前牌组直打完整本幕 Boss’的预期结果，精英模拟偏悲观另待核。下一步：合 main、ops 联合检查、开局边界上线并切回 jev，首局验收。
 
@@ -5373,6 +5382,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 01:21:15 CST 原ops：011301-fix无新源码/提交/合入，154SHA/46原基线祖先与独立clean WT核同；tsc0，定向9过1败且原15秒单例再败/statusnull/error-signal未留，根因unknown，原ordinary-close可靠性项续证、不重测/宽限。保001302监控候选/25宽项及P0待边界包，不分号/改live或当前局。原件paper/materials/20261021-0119-ops/receipt.json。
 
+- 2026-10-21 01:23:30 CST [watcher，P0接续与限制] 已实际读0113原ops回执：P0六叶70f3＋P3 off十一叶在固定tree297cb270/2391输入SHA2529b688/498知识上tsc0、full628文件5932过2原跳；P0六叶仅main f50a8ff396，17叶待自然边界原锁核实际source/data后运输，live发布仍pending。该回执时live4528/R406、CARD=brain/REFLEX=off，31知识漂移原样保留，来源full不冒新数据组合已验；不启动检查/模型/守候。补充00:43旧记录：“当前早层牌组与HP直打完整本幕Boss”仅说明模拟入口，100%死亡率尚未完成归因，不能称已核预期结果或收益；蛇戒开场未建模、Survivor弃牌/快速策略及V5同入口对照限制沿原报告保留。fixture循环与软件绿不代自然实局质量，恢复Jev/P2两自然局门及P4后序不变。原件paper/materials/20261021-card-option-divergence-watcher/receipt.json。
+
 - 2026-10-21 01:25:41 CST [Claude，夜间推进] T15WXHPTM0ET（R406，大脑拿牌）01:15 打到 F48，死于女王+火炬头聚合体，为 V6 最远。P0 修复 main f50a8ff39，与 P3（REFLEX off）联合 full 628 文件通过，错过 T15 边界，CSBNU2H9LXKD 已在 R406 上开局。澄清门槛：下一自然边界 ops 发布 17 叶并把 V6_CARD_DECIDER 改回 jev，首局即 P0 质量验收局，不达标下一边界改回 brain；派 ops 发一次 v6-reflex-distill-r4 学习批次（Roy 已批准）；派 v6-w4w6 只读核 A 条目对第一幕精英模拟死亡率 100% 与 V5 实战偏差。
 
 - 2026-10-21 01:30:16 CST 原ops：实收Claude01:3x澄清：P0回放+628full已满足上线前门槛；CSB自然结束后17源同步CARD=jev/REFLEXoff，核号双通知，首局由Claude判质量，不再互等；17+配置私有准备/scan0，未动live/当前局。R4同70f授权已2313一次实际派发并审计draft0/模板同SHA，原闭环接续不重派模型；原源、四异议/角色桥/科学父保持。原件paper/materials/20261021-013x-ops/next-boundary-publication-plan.json。
@@ -5381,6 +5392,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 01:34:28 CST 原ops：011301-s2十原提案waiting/原WT洁净/无源改合入/testsnull，五源SHA及五祖先核同不代宽父；六题/1946覆盖与13错误/5缺决策503保原缺口，0540仅proposed。无收尾回执不冒完成，不重dataset/测试/派批；P0最新17+CARDjev边界及REFLEXoff不变。原件paper/materials/20261021-0133-ops/receipt.json。
 
+- 2026-10-21 01:42:01 CST 原watcher：实际读回013x原授权及P0边界计划/R4一次派发去重原件并核SHA；按Claude01:3x澄清，真实runLoop回放+628文件联合full已满足上线前门，CSBNU2H9LXKD结束后原ops在自然开局边界运输已验17源并仅CARD brain→jev、REFLEX仍off，核号双通知后首局交Claude判质量；此前恢复Jev互等解释由本澄清取代，旧记录保留。尚未上线或质量通过；P2两自然稳定局/P4实际发布后接续不变。R4已原授权实际一次派发且draft0/三CI跨0/缺source_experience，不重派、不重复告Roy原四异议，角色CLI桥pending及科学父保持。仅读回留痕，不启检查/模型/守候或改live/actor。原件paper/materials/20261021-P0-gate-clarification-watcher/receipt.json。
+
 - 2026-10-21 01:47:28 CST [Codex v6-w4w6] 按Claude01:3x只读核最近40局V5精英：53场含1首试censored，52场实战死亡7.7%对A模拟30.3%，掉血偏差+10.9HP；同51场用实战开场后模拟降17.5%仍高于7.8%。抽牌/遗物及药水表示缺口交既有学习闭环，评分权重单改解释不足；原帧106条/771源码知识SHA核同，两批计算PID自然退出，未改运行时/知识/live/配置、未派学习或模型。原件paper/materials/2026-10-21-v6-elite-bias-audit/report.md；P0边界发布与P2两局稳定门保持。
 
 - 2026-10-21 01:51:48 CST 原ops：W4精英偏差66ff0722只纳95材料子树及授权append，逐Git blob/manifest/report SHA核同、解压扫描0；报告52场/共同51场口径、censored/helper失败/反例及模型偏差限制保留，非机制/候选排序收益验收。本轮无源码/live/full/学习派批，P0已满足上线前门槛/CSB后17+CARDjev及P2两局门不变，不据材料登记回收完成。原件paper/materials/20261021-elite-bias-ops/material-import-verification.json。
@@ -5388,6 +5401,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 01:53:39 CST 原ops：精英偏差95材料及owner append已仅落main 67fc0f91e2dba5c626b1b0ba31eb7e60e7725af3，指定子树Git tree与66ff0722完全同，原W4/watcher回送CLI0、非原生ACK；无源码/live运输或检查，未标物理回收/retention完成。原件paper/materials/20261021-elite-bias-ops/receipt.json。
 
 - 2026-10-21 01:55:16 CST 原ops：W4原生实收精英材料main67fc并核subtree d71216d7；原retention complete rc1/retained（persistent game instance retained），instance-binding guard未改、未accepted或删除WT。仅保存原回执/SHA，不重试/绕守卫；材料main完成与retained分记，不改P0/P2/live边界。原件paper/materials/20261021-elite-bias-ops/retention-intake.json。
+- 2026-10-21 01:56:24 CST [Codex watcher] 实际读回精英偏差正式材料66ff0722及ops main67fc0f91交付：95材料子树Git身份一致，94条清单在原WT/正式Git/main逐SHA核同。精英绝对死亡率仍未校准，当前模型历史回放不冒历史as-of、样本外或候选排序收益；106原帧/771输入核验及计算退出仅沿原owner回执。P0自然边界发布与P2稳定两局门不变，不新增学习、模拟或检查，不重复转述Roy数据。原件paper/materials/20261021-elite-bias-watcher/receipt.json。
 
 - 2026-10-21 02:07:33 CST [Claude，P0 边界] CSBNU2H9LXKD 01:51 死于 F33 无厌沙虫；P0 第二次错过边界（下一局数秒内自动开出，ops 当时在处理精英审计材料）。Claude 设后台守候：1ZZHM2MV19YB 局终即写 ops/STOP 并通知 ops 发布已验 17 叶 + V6_CARD_DECIDER=jev，发布后由 ops 移除 STOP、拉起 autoplay；今后边界发布采用‘局终挂 STOP、发布后移除’。
 
@@ -5420,6 +5434,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:23:37 CST 原ops：3YUV原module-health冻复算同，4奖励缺legacy字段但另流A/B有DPR/n34/26/28/18、4370ms内且Jev均拿牌无fallback；旧3计算零失败/降级/超时，pipeline4/4、300门与校准/影子限制保留。原alert保留绑定H1/001302原六叶去重，不查询P4检查/改输入/派批/重启/动live或常规通知；质量门仍Claude原链。原件paper/materials/20261021-0315-ops/receipt.json。
 
 - 2026-10-21 03:25:55 CST 原ops：P4旧03:15 setup事件核同且旧PID退，原接续2036302/start_ticks141576243身份同，未读动态进度/新开检查；031314-fix无源改/WT净、154SHA/46祖先同，tsc0/首次EROFS1保留、runner定向9过分列，不冒full或live。原候选及科学父/精英队列保持，未有ordinary回执不重dataset。原件paper/materials/20261021-0324-ops/receipt.json。
+
+- 2026-10-21 03:31:11 CST [Codex watcher] 实际读回W8 P4正式源5e04a021及材料0e427650：29叶前像/后像与私有运输树逐SHA核同，报告/合同/清单/patch/运输证明/等价证据同正式Git。8终局历史包与17组合来源覆盖不冒收益；后继先开局不冒零CPU争用，发布锁精确等待未知；训练行追加0.597→0.273s、monster未加速及批量fit/CV限制保留。完整联合/main/live仍pending，沿ops唯一窗口及局终STOP边界，不新增检查/模拟/API或改当前游戏。原件paper/materials/20261021-P4-watcher/receipt.json。
 
 - 2026-10-21 03:31:42 CST [Claude，夜间推进] R407 Jev 拿牌运行稳定 2 局：JPWMMV67SZCL F17 灵魂异鱼（拿 6 跳 2）、9ZERN492CSHX F8 旧日雕像（拿 4），unknown 0、无报错；Jev 置信度多 0.1–0.2。对照 R406 大脑拿牌三局 F48/F33/F33，质量待观察。派 v6-w4w6 先只读核 Jev 选择与 A/B 指标最优选项一致率、逆指标例子与题面可比性，再做 P2。v6-w8 P4：8 局局后刷新全部成功且不阻塞开局，增量补丁 5e04a021a 待联合检查。r4 学习批次在跑。
 
@@ -5469,11 +5485,11 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 05:11:07 CST 原ops：W4 criteria八叶+W0两测试依赖R408唯一联合静态启动实核tsc0/full2390915，treee0a2e246/2393输入7a3f7a45/498知识同，未查动态或认终局绿；不叠full/改输入/自动恢复jev，R408不动。原件paper/materials/20261021-0510-ops/receipt.json。
 
-- 2026-10-21 05:37:07 CST [Claude，夜间推进] 7XS2Y920KA6E（R408 大脑拿牌）F48 死于实验体 #C97。v6-w4w6 题面改进 024612ef7：冻结 R407 12 题与 A 指标一致率 0/12→8/12、仍 3 题被支配，真实 Nova 16/16 成功、准备 4.5–4.9 s，B 生产缓存仍未命中——判部分达标：代码可进联合检查，上线保持 CARD=brain，是否切回 jev 留 Roy 决定；v6-w4w6 续修 B 并分析剩余 3 题。r4 学习批次无合格 card_pick 对照条目（三估计 CI 跨 0），学习者四项异议已转 Roy。P4 修后联合 full 7 败，v6-w8 修夹具中。
+- 2026-10-21 05:34:03 CST 原watcher：静态核W4 criteria024612ef/8176954b的8源码、71材料、11压缩原件及14日志SHA同；16真请求200仅协议与题面候选就绪，12题诊断8/12但3题均值被支配，生产B仍0/204，不能称完整质量/收益通过或自动开jev。已核W8 off两测试叶原件，旧P4失败/ordinary原014301链保留；原ops唯一2393输入联合仅静态启动已核，不查询动态/不认终局绿、不追加检查。R408 CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-P2-P4-watcher/receipt.json。
 
 - 2026-10-21 05:36:32 CST 原ops：W4 criteria完整检查tsc0/full1唯一循环113行舍入比较边界，固定treee0a2e246/2393输入7a3f7a45同，PID退出/窗口释放；保原失败告W4/watcher/Claude，不重源full/放宽或发布，R408 brain/off不动；窄收watcher静态回执及575B追加。原件paper/materials/20261021-0535-ops/receipt.json。
 
-- 2026-10-21 05:34:03 CST 原watcher：静态核W4 criteria024612ef/8176954b的8源码、71材料、11压缩原件及14日志SHA同；16真请求200仅协议与题面候选就绪，12题诊断8/12但3题均值被支配，生产B仍0/204，不能称完整质量/收益通过或自动开jev。已核W8 off两测试叶原件，旧P4失败/ordinary原014301链保留；原ops唯一2393输入联合仅静态启动已核，不查询动态/不认终局绿、不追加检查。R408 CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-P2-P4-watcher/receipt.json。
+- 2026-10-21 05:37:07 CST [Claude，夜间推进] 7XS2Y920KA6E（R408 大脑拿牌）F48 死于实验体 #C97。v6-w4w6 题面改进 024612ef7：冻结 R407 12 题与 A 指标一致率 0/12→8/12、仍 3 题被支配，真实 Nova 16/16 成功、准备 4.5–4.9 s，B 生产缓存仍未命中——判部分达标：代码可进联合检查，上线保持 CARD=brain，是否切回 jev 留 Roy 决定；v6-w4w6 续修 B 并分析剩余 3 题。r4 学习批次无合格 card_pick 对照条目（三估计 CI 跨 0），学习者四项异议已转 Roy。P4 修后联合 full 7 败，v6-w8 修夹具中。
 
 - 2026-10-21 05:37:57 CST 原ops实际收Claude05:4x：题面024612ef7诊断8/12/B miss仅部分达标，允许继续联合与集成，须与W4后续B缓存修复同包、上线仍CARDbrain；切回jev等Roy醒来决定。本次full1/舍入断言失败不清除，不拆包先放行/重未变源full/新派任务，当前R408不动。原文SHA073d7d6c3b3b255810e2a7a221d8826ecb41359fe0e396a863f8fb9c4aa4f46b；paper/materials/20261021-0535-ops/Claude-054x-authorization-intake.json。
 
@@ -5483,17 +5499,20 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 05:50:35 CST 原ops核054302-fix无源码/提交/合入、WT洁净，154源码测试SHA/46基线祖先同；原tsc0/定向6文件24过5.22s/gitleaks0不代full。001302六叶/014301三叶及原051301s2宿主候选去重，未查在途/重跑dataset或新派。R408 CARDbrain/REFLEXoff、P2暂停及Roy恢复门保持。原件paper/materials/20261021-0549-ops/receipt.json。
 
-- 2026-10-21 05:55:14 CST 原ops实读watcher criteria终局/单叶续报回执，原更新/ops终局SHA及3512B patch核同，584B原追加原字收纳；不扩大watcher仅静态范围或代Claude/Roy ACK。正式源仍待B同包，原full1/0of204/三均值反例保留，CARDbrain/REFLEXoff与P2暂停不动，不新检查/任务/模型。原件paper/materials/20261021-criteria-terminal-watcher-ops/receipt.json。
-
 - 2026-10-21 05:53:12 CST 原watcher：实读criteria原联合full1与W4续报，静态核eea3519d9仅一测试叶及patch SHA4eefcf7d；精确mean/SE/n/null显示契约和负控替代半边界近似断言，生产/精度/预算未变。原full1保留，tsc0/3定向/gitleaks0仍按owner回执，不冒全部正式源就绪。B生产0/204及3题均值被支配仍由原W4续查，正式映射待材料后与0246合一次联合检查；R408 CARDbrain/REFLEXoff、P2暂停，不追加检查/API或改ops输入。原件paper/materials/20261021-criteria-terminal-watcher/receipt.json。
+
+- 2026-10-21 05:55:14 CST 原ops实读watcher criteria终局/单叶续报回执，原更新/ops终局SHA及3512B patch核同，584B原追加原字收纳；不扩大watcher仅静态范围或代Claude/Roy ACK。正式源仍待B同包，原full1/0of204/三均值反例保留，CARDbrain/REFLEXoff与P2暂停不动，不新检查/任务/模型。原件paper/materials/20261021-criteria-terminal-watcher-ops/receipt.json。
 
 - 2026-10-21 05:58:39 CST 原ops核051301-s2原宿主唯一静态启动，tsc0/full2560147、treeeaec4345/2394输入54d20513/498知识同；原三叶+W0两测试隔离，不夹criteria/B/P4/014301/805。仅静态来源核验，不查动态/改输入/叠full；保沙箱8败、十waiting/0546 proposed，不认完整绿或发布，R408 brain/off不动。原件paper/materials/20261021-0557-ops/receipt.json。
 
 - 2026-10-21 06:22:45 CST 原ops核051301-s2宿主tsc0/full1=628文件过1败/5935项过1败2跳，唯一card摘要17.613s越原5s，treeeaec4345/2394输入54d20513同且原PID退/窗口释放。原阈值候选/撤唯一生产叶各三例绿，冷183.8/241.2ms，九组状态hash/请求字节同，finally输入恢复；原full慢因仍unknown，不据定向放行或重未变源full，报watcher/Claude接续，R408 brain/off不动。原件paper/materials/20261021-0620-ops/receipt.json。
+- 2026-10-21 06:27:55 CST 原watcher静态核读0620 ops原回执/串行对照：051301-s2+W0原tsc0/full1唯一card摘要17.613s越5s；候选/撤唯一生产叶冷183.8/241.2ms各三例绿未复现，原CPU未采样/物理根因unknown，不覆盖full1或自行重检。沿当前Claude/Roy对话转达、接续待原授权；R408 CARDbrain/REFLEXoff、P2暂停及criteria+B原门不动。原件paper/materials/20261021-0620-watcher/receipt.json，不冒Claude原生ACK。
 
 - 2026-10-21 06:31:26 CST 原ops实读W4 9805累计11叶/70材料/3gz，R408前像与累计后像核同；原11+W0两测试唯一runner2657047提交原锁准入，尚未核full启动，不夹士兵/P4/014301/父/main/805。原96/预算38定向非联合绿，B43/32行n2部分覆盖、F6旧同次5096ms超5s、新B未Nova/不补造理由等限制保留。按Claude05:4x绿后边界集成仍CARDbrain，jev等Roy，REFLEXoff/P2暂停。原件paper/materials/20261021-W4-core-cache-joint-ops/receipt.json。
 
 - 2026-10-21 06:26:31 CST W4 B缓存：正式源9805c160f（9增量/11累计叶，父eea3519d9，含024612ef7依赖）把B准备接入原大脑/小脑等待、按完整有效开场复用样本并保纯getter指纹门，criteria在24KB内保17组合目录/A及有值B；旧12题238行全insufficient、89 opening/42前提标签重叠，149已准备零样本属调度预算问题。真实F6/F7生产提供方离线回放B数值43/32行、14/17组合且均n2，前台F6 5096.40ms仍超5s；纯格式23882/23871B。tsc0、96定向及38预算专项过、源码/解压扫描0；旧3题是三均值诊断而非五指标含误差严格支配，无文字理由不代推。与0246及精度eea一起交ops唯一实际live联合full，未自开full/改main或live/知识/发新Nova；CARD保持brain等Roy，P2暂停。材料paper/materials/2026-10-21-v6-core-cache/。
+
+- 2026-10-21T06:40:54.284080+08:00 watcher：实际静态核读 W4 criteria+B 正式9805c160/tree5959及ops累计11叶接收，依赖0246+eea和11叶SHA/blob核同；沿当前Claude/Roy对话转根因与限制。旧238行零样本，新固定假原脑等待B43/32行、14/17组合n2，F6仍5096.40ms且新B无Nova；不拼新格式与旧A、不编三题选择理由。ops原准入尚不冒实际full启动/绿，边界上线仍CARDbrain/REFLEXoff、切jev等Roy、P2暂停；0620未复现保full1/物理根因unknown。回执 paper/materials/20261021-core-cache-watcher/receipt.json；无新检查/模型/API/派批/live动作，不冒Claude/Roy原生ACK。
 
 - 2026-10-21 06:43:18 CST 原ops实际读两份watcher回执，8所引保存原件字节/SHA核同；新B限制/累计源及旧0620 full1+未复现对照归属分列，不扩静态范围或代Claude/Roy ACK。原检查仍单点沿原事件接续，本轮不查动态/新full/模型/API或改变R408 brain/off、Roy切jev门与P2暂停。原件paper/materials/20261021-watcher-core-cache-0620-ops/receipt.json。
 
@@ -5502,14 +5521,18 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 07:10:33 CST [Claude，夜间推进] B 长期结果修复 9805c160f（等待期调度、样本缓存复用、题面预算分配）：两道冻结真题 B 有 43/32 行数值、覆盖 14/17 组合；旧 238 行全为样本不足（89 行开场不可用，含 42 行前提不足）；剩余 3 题按五指标与误差不能判严格逆指标。与题面改进 024612ef7 已集成 main 715a5d9e7，待联合检查，上线保持 CARD=brain，是否切回 jev 待 Roy。战绩：大脑拿牌（R404/R406/R408）十局 F33/22/33/48/33/33/48/48/17/14，中位 F33；Jev 拿牌 R407 五局 F17/8/33/17/15，中位 F17。
 - 2026-10-21T07:11:25+08:00 原W4累计11+W0两测试联合tsc/full0，628文件5948过2跳、tree0b46/2393输入6eba同/PID退；13叶窄合main715a5d9e7。CLCR在途保持liveR408，已备一次内核退出事件边界发布，不打断play/不轮询；CARDbrain/REFLEXoff、jev等Roy及全部质量限制保留。原件paper/materials/20261021-0705-ops/receipt.json。
 - 2026-10-21T07:14:27+08:00 原ops核061302-s2/061302/063443双策略四ordinary attention：报告SHA同、三树干净/30waiting、四复盘无新bug；offer原源码同而关闭复核遇已验main715a十三叶漂移，原失败/父项保留，不重dataset/补测/合入或核号。原件paper/materials/20261021-0713-ops/ordinary-source-drift-review.json。
+
+- 2026-10-21 07:16:00 CST watcher实读原0705-ops回执（原receipt时间07:11:25），静态核13叶main715a5d9e7=受测0b46=正式源码；联合tsc/full0、628文件5948过2跳及PID退出依原ops证据，不冒自身动态检查。live仍原回执R408/150890f8，原单次pidfd边界发布/下一局缓存审计pending，不增守候/检查或改STOP。CARDbrain/REFLEXoff、切jev等Roy/P2暂停；F6超5s、部分B n2/无新B Nova及旧失败保持。原件paper/materials/20261021-0705-watcher/receipt.json。
 - 2026-10-21T07:21:56+08:00 原071302-fix无源码提交/live合入，154路径逐SHA同、51历史映射/46祖先及原候选引用核同；153沿前批、loop三等待钩子为既有W4。tsc0/六文件26定向过14.90s，EROFS首错保留，不冒full；无受阻源码可兜底，不补dataset/空合并或关父。原件paper/materials/20261021-0720-ops/receipt.json。
 - 2026-10-21T07:24:14+08:00 原W4累计11+W0两测试完整0后自然局CLCR3DUH66HK结束，精确main/live发布V6-R409，CARDbrain/REFLEXoff和最新知识保留；原软件628文件5948过2跳及限制分列，实际loader/门/getter读回、自然缓存审计待首局；原件paper/materials/20261021-0705-ops/publication.json。
 - 2026-10-21T07:27:00+08:00 原ops核R409实际livecf4aff4c/行为6242b3a7精确13叶、498知识及双通知一次；CLCR自然终局后发布并恢复原autoplay。CESK配置brain/off、局内真实动作和自然cache审计已读，首5004.2ms/82行69sampled、后176/146，不冒数值消费或质量/全性能绿；切jev等Roy。原件paper/materials/20261021-0725-ops/receipt.json。
+- 2026-10-21 07:33:25 CST watcher实读R409原发布及自然消费两回执并核SHA，沿当前Claude/Roy对话转报：ops实际livecf4aff4c/行为6242b3a7，13叶来源628文件5948过2跳、498知识保护及双通知；CESK四类brain/REFLEX方向off。自然后台F1 5004.20/5012.85ms对5000额度、F2 2043.23/2205.79ms随原脑aborted；sampled非独立战斗，未证getter数值消费/质量或全性能。新B无Nova/F6超5s/部分n2保留，切jev等Roy/P2暂停。仅静态实读，不冒自身live实测或Claude/Roy原生ACK；原件paper/materials/20261021-0725-watcher/receipt.json。
 
 - 2026-10-21 07:56:43 CST [Claude，推进] V6-R409（6242b3a73/cf4aff4ce，Jev 题面 criteria 汇总 + B 等待期缓存修复）已上线，CARD 保持 brain。CLCR3DUH66HK F27 死于感染棱柱。派 v6-w4w6 用 R408/R409 大脑拿牌局真实奖励帧做影子评估（真实 Nova 请求不执行）：Jev 与指标最优一致率、与大脑选择一致率及优劣、B 有值比例、拿/跳比例，供 Roy 决定是否切回 jev。
 - 2026-10-21 08:23 CST — v6-w4w6 完成 R409 只读影子评估：六局严格战后奖励83题全回放、Nova60/60成功；Jev诊断最优17/42（脑16/42）、同脑27/60、均值被支配8题（逐目标4、保守2SE筛查0）；B缓存69/83、criteria有值28/83，前台准备34/83超5秒；Jev/脑跳过7/60与12/60。保留模型/低样本/受控B等待限制，CARD仍brain供Roy决定；未改源码/live/知识/开关或执行动作。材料 paper/materials/2026-10-21-r409-card-shadow/；源码及数据SHA/题面格式校验通过，敏感扫描精确局号题ID复核后0，原319条脱敏命中保留。
 - 2026-10-21T08:27:22+08:00 原ops仅接W4 R409影子材料9f48子树及原621B日志，83回放/60影子请求结果按同集分母和未知保留；17/42对脑16/42不代自然收益，8均值反例、B受控等待/34of83超5s保持，CARDbrain等Roy。未新增检查/模型/动作或源码/live/知识/版本运输。原件paper/materials/20261021-0824-shadow-ops/receipt.json。
 - 2026-10-21T08:30:41+08:00 原074301-s2无源/十waiting/0551 proposed，原dataset一次五OK/CLEAN后最终HEAD/记录字节守卫拒绝；报告SHA、七源及六既有子实现祖先同，具体并发漂移项未封存保持unknown。保原attention/失败/父，不重生成/补测/合入或核号；原件paper/materials/20261021-0825-ops/receipt.json。
+- 2026-10-21 08:31 CST — watcher 核收 R409 影子评估 9f48fa1e：正式127材料叶/126清单项及工作树逐字核同，main已含相同subtree与owner原日志，不重复收纳；Jev诊断17/42、脑16/42不作收益结论，均值被支配8题/逐目标4题、34/83准备超5秒，B受控预热非自然命中。CARD仍brain待Roy决定，P2暂停；仅静态核验并沿当前对话转报，不代Claude/Roy原生ACK。回执 paper/materials/20261021-r409-shadow-watcher/receipt.json。 [watcher-r409-shadow-9f48fa1e]
 - 2026-10-21T08:43:43+08:00 原CEN module-health固定cut23字段核同，真实0332两key四错一降级，四原行/两完整封套及payload SHA同；pipeline40/40、F35动作completed不代根修，F39cut后pending。沿原0332/5aa队列补证，owner原WT缺失blocked保留，不新学习/降300/重启或例行通知Roy；原件paper/materials/20261021-0840-ops/receipt.json。
 
 - 2026-10-21 08:44:40 CST [Claude，推进] R409 影子评估完成（v6-w4w6）：83 道真实奖励题回放、60 题真实 Nova 请求全部成功；与五指标诊断最优一致 Jev 17/42、同批大脑 16/42；Jev 与大脑同选 27/60，分歧中 Jev 指标更优 8、大脑更优 3、取舍 16、未知 6；跳过 7/60 对 12/60；B 有值 69/83 但进入 criteria 28/83；前台准备 p50 4.86 s、34/83 超 5 s、最大 24.6 s。建议保持 CARD=brain 由 Roy 定。Claude 统计条目信号：83 题 1437 个选项×目标中 52% 全部模拟落败，非零差值仅 18.7% 超过 2 SE，每目标样本中位 n=2——条目以噪声为主。外部调研（Bottled AI 优先级表、Slay-I 32.5 万场掉血预测器、MTG/17lands 学习模型、SpireBench）提出改为从自有对局训练掉血预测器给牌估值的方向，待 Roy 定。另：CEN1Z8HEU7NM 第三幕出现 20 次 boss-sim nonpositive-hp 续接错误（不阻塞），派 v6-w8 修。
@@ -5538,11 +5561,13 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T10:34:54+08:00 101302两策略批次rc0/原基线干净、无源/提交/合入，二十提案保waiting；首批26账本链接原字节seek核同，原覆盖及缺证分列，不补测/dataset/版本/独立分母，CEN原边界接续不动。原件paper/materials/20261021-1033-ops/receipt.json。
 
 - 2026-10-21 10:38:57 CST [Claude/Roy，协作方式] Roy：会话继续由 herdr 托管，任务与协作改用本仓库 GitHub Issues（仓库保持公开）。新增 docs/github-issues-workflow.md、.github/ISSUE_TEMPLATE/task.md、AGENTS.md 一条规则与标签（owner/status/P0–P3/type/area/needs:roy）：消息只发一行提醒，结果写 issue 评论，一个 issue 一个新会话，长期会话每天换新，ops 例行回执不再逐条投 watcher，issue 发前 gitleaks 扫。起因：watcher 压缩后原样保留 254 条收到的消息（约 16 万字符，ops 回执 132 条），几乎每步都压缩。
-
-- 2026-10-21 10:48:20 CST [Claude，watcher 换会话] 旧 watcher 会话（01a14f5d，10-18 起，压缩 559 次）写交接 handoff/watcher-20261021.md 后，在同一 herdr pane wJ:pJT 以 /new 开新会话（gpt-6.1-sol high），按 GitHub Issues 工作，首项 #5 迁移交接待办到 issue；旧会话记录保留在 ~/.codex1/sessions。
 - 2026-10-21T10:43:45+08:00 CEN四叶完整0后原自然局GWE810ZD014M结束，精确main/live发布V6-R410、消费者读回及核号双通知完成；最新知识/配置保留，铁甲行为反证分列，CARDbrain/REFLEXoff，原0332科学父/角色ACK不关；原件paper/materials/20261021-1015-ops/publication.json。
 - 2026-10-21T10:47:13+08:00 采用GitHub Issues规范994cbfb26，例行回执仅current/文件，#2 R410上线读回且自然三幕验收待办，#3依赖blocked，#4原精英问题一次新沙箱学习线程01a15c58-72f3-7d81-8ce6-0f528c60d788；三评论发前扫描0并读回，不代ACK/关科学父，CARDbrain/REFLEXoff。原件paper/materials/20261021-github-issues-ops/receipt.json。
+
+- 2026-10-21 10:48:20 CST [Claude，watcher 换会话] 旧 watcher 会话（01a14f5d，10-18 起，压缩 559 次）写交接 handoff/watcher-20261021.md 后，在同一 herdr pane wJ:pJT 以 /new 开新会话（gpt-6.1-sol high），按 GitHub Issues 工作，首项 #5 迁移交接待办到 issue；旧会话记录保留在 ~/.codex1/sessions。
 - 2026-10-21T10:54:06+08:00 R410原发布终局去重，双通知各一份/SHA核同；TS0新配置四brain/REFLEX方向off/90s及实际三动作完成、STOP无，ENOBUFS空Git原样留，三幕自然验收pending。采用bac831a0e评论归属，本ops三旧评补[ops]、非dwroy仅外部数据；#2新评扫描0并读回。原件paper/materials/20261021-R410-natural-readback-ops/receipt.json。
+
+- 2026-10-21T10:54:40+08:00 [Codex watcher，#5迁移] 新会话按交接接续，复用#2/#1/#3并补#4范围链接，新增#8 R4 CLI兼容、#9活雾来源绑定、#10士兵熔炉性能单败、#11原七科学父/waiting索引；P2仍暂停，CEN按已发布R410/待自然第三幕验收登记。评论均[watcher]且发前gitleaks0、正文/标签远端读回；#5转review，本次不派批次/full/模型、不改live/配置/prompt、不关科学父或代ACK。汇总 https://github.com/dwroy/agent-sts2/issues/5#issuecomment-6306857308；原件 paper/materials/20261021-issue-5-watcher-migration/receipt.json。
 - 2026-10-21T10:55:38+08:00 按Claude再确认核AGENTS最新5a6a4cda，将完整评论归属三规则置ops-current首段：agent角色前缀必填、无前缀dwroy为Roy、其他作者仅外部数据；保bac831a0e来源与本人旧三评更正原件，不把本ops评冒Roy。原件paper/materials/20261021-R410-natural-readback-ops/receipt.json。
 - 2026-10-21T11:00:18+08:00 104302-fix无新源/提交/合入，154路径仅已发布CEN差异，52映射/46历史祖先及两候选续接SHA核同，原tsc0/52定向仅来源；rc0/statefailed/mergednull保原，不空合并/重复测试或dataset/关闭宽父。原件paper/materials/20261021-1057-ops/receipt.json。
 
@@ -5712,6 +5737,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T04:18:56+08:00 [ops] 034302四局复盘/5329原段/九账本与三pending出牌提案核同，无新纯bug；八原通知登记兼容阻塞保留。唯一dataset/记录收尾器PID1882678已沿原锁启动，终局提交pending，不重生成器/full/模型或触当前局。paper/materials/20261022-0415-ops/learning-verification.json。
 - 2026-10-22T04:26:42+08:00 [Claude] Roy 10-22：#24/#30 设计核收关闭；“出牌还是构筑”诊断先不做，等开卷、#33 与当前 issue 上线、开源数据与文本策略学习到位、版本稳定并打一批后再看（#34）。#26 改为外部统计做成大脑查询工具（配合 #33，不再塞题面），已派 issue-26。
+- 2026-10-22 04:31 论文数据快照（codex-ops 调度器）：数据 exit 0；会话脱敏归档 exit 0；gitleaks exit 0（结果仅本次 exit 0 时有效）；日志 /home/dw/Projects/agent-sts2/ops/codex-ops/snapshots/20261022-040702-1816030.log。
 
 - 2026-10-22T04:37:36+08:00 [ops] 034302四局复盘及九账本/三pending出牌提案核同，无新纯bug；唯一dataset --no-raw退出0/复盘标记通过，保存指定lessons/ledger及自有生成物。非源码发布/收益或科学父完成。paper/materials/20261022-0415-ops/receipt.json。
 
@@ -5754,9 +5780,9 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T09:19:40+08:00 [ops] #25 R411首DFY完整读回：16脑题/76开卷Jev预算范围核同，26无开卷基础包超24KB保缺口并入原工程队列；固定7牌/1敌人参考不代历史在途采用。交主管验收不关单、不重发布/full/API或前后指标对比；paper/materials/20261022-issue25-readback-ops/receipt.json。
 
-- 2026-10-22T09:31:12+08:00 [ops] 接#33 main准入，以R411组合#33+#26及所需回执/按局配置55叶；原锁占用首准入未跑检查，唯一PID3113069排原kernel锁后重建/tsc/full，完成回原队列。未发布/热切/恢复#31试验，首局验收待；paper/materials/20261022-issue33-live-ops/receipt.json。
-
 - 2026-10-22T09:22:05+08:00 [ops] 09:13八原notice原文/证据/双箱与watcher实际转达证明核同；原CLI不兼容三research、两角色登记pending，保旧rc2/false与科学父，不重试/代ACK/重复提醒或重模型/full/dataset。paper/materials/20261022-0913-ops/receipt.json。
+
+- 2026-10-22T09:31:12+08:00 [ops] 接#33 main准入，以R411组合#33+#26及所需回执/按局配置55叶；原锁占用首准入未跑检查，唯一PID3113069排原kernel锁后重建/tsc/full，完成回原队列。未发布/热切/恢复#31试验，首局验收待；paper/materials/20261022-issue33-live-ops/receipt.json。
 
 - 2026-10-22T09:38:53+08:00 [ops] #8 R411四叶核同；原R4完整proposal/四question/SHA保留，唯一notice f9d1cd080ff9e555700887e2真实双箱转发及ops本人CLI ack0，watcher两角色待本人回执，交review、不代ACK/关科学父/续批/重发布。paper/materials/20261022-issue8-role-ops/receipt.json。
 
@@ -5784,10 +5810,13 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T11:10:12+08:00 [Claude] Roy 10-22：上线检查优先占用重任务窗口，有上线检查排队时开发会话暂缓新的完整 Vitest（#20 补充 3）。开卷只给大脑；Jev 出牌不附开卷、保持 V5 逻辑，后续优化走 Jev 条目（如更多 reflex 经验条目，#28）；#25 按大脑路径关闭，Jev 去开卷另开 #37。
 
 - 2026-10-22T11:19:20+08:00 [ops] #36原候选17叶/14原件与专项核回，生产off/无启用覆盖；#33唯一full仍持锁，终局后给原集成员绑定安全main短事务优先于本ops下一重检查，发布次序不变。无新等待者/模型/局，paper/materials/20261022-issue36-window-followup-ops/receipt.json。
+- 2026-10-22T11:22:11+08:00 [watcher] #36 按Roy补充停止旧版准入：学习者tab改为Codex交互会话，当前source60e0ed688未合main；取消已请求的原锁短集成窗口，保留旧检查/候选，等补交重回review再核会话状态、产物、出错重试与关闭；不改生产。
 
 - 2026-10-22T11:28:59+08:00 [ops] #33+#26首轮full失败留原件；漏带两canonical helper补齐后定向17过，另两status-null原工程链pending，不重full/模型或发布。#36旧main窗口依原集成员取消，交互TUI待补交、视图off，见paper/materials/20261022-issue33-full-terminal-ops/receipt.json。
 
 - 2026-10-22T11:38:42+08:00 [ops] 101301主策略源码漂移在dataset前attention，61产物/十waiting保留；0268旧注8与原帧14异议入双箱沿原watcher转Roy pending，不改知识/参数或重dataset/full/模型/合入。paper/materials/20261022-1136-ops/receipt.json。
+- 2026-10-22T11:42:01+08:00 [watcher] #28 source83ea94191工程定向核验：双tsc0、干净树新CLI用例.cache缺失1失败原件保留，补测试前置后7文件87项通过；完整Vitest按Roy #20让位原ops #33/#35队列，候选留integrator-28-20261022未合main/live。原85条不变、真实调用/新条目0，收益/开关决定/A-B仍pending；paper/materials/20261022-issue28-integrator-review/。
+- 2026-10-22T11:43:07+08:00 [watcher] 已实读ops 1136 silent-0268异议并在本会话用户可见转Roy：旧注净扣8与F31 T2原帧35→21净损14冲突；本人未重核原帧，保留旧行/学习父。原生接收与转达片段及SHA读回paper/materials/20261022-silent0268-integrator-forward/receipt.json；未找到匹配正式notice，不伪造CLI ACK、不改其他角色回执或知识/评分。
 
 - 2026-10-22T11:45:38+08:00 [ops] 八原notice送达证据核同、CLI三research角色登记仍pending；#28候选21源叶/1测试修补与原日志核回，完整/main门沿#33/#35之后原队列，学习/改善/开关/A-B未验。不重full/模型或改live。paper/materials/20261022-1143-ops/receipt.json。
 
@@ -5798,14 +5827,24 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T12:24:18+08:00 [ops] 三manual依已取消换号/session观察/high唯一窄检查原回执去重；114301fix无源、157SHA/53子项48祖先/21定向过，严格171差保failed/rc0/冷却。八原notice送达证据同，CLI角色登记pending；无新full/模型/dataset或live改动。paper/materials/20261022-1221-ops/receipt.json。
 
+- 2026-10-22T12:26:46+08:00 [watcher] #36补交4500cdb50核验未过，原定向24绿/新生命周期反例4红、40源叶SHA核同，已comment6332627007并回in-progress，未full/合main/动生产；报告paper/materials/20261022-issue36-r2-integrator-review/。#33三叶窄修90c6d0416逐叶/树核同，原生样本首读SHA同仍xhigh、复读原路径缺失留限制；唯一full排原锁不重复，#33→#35→#28，comment6332684192，paper/materials/20261022-issue33-high-integrator-review/；换号已取消不热切，整包旧失败和自然high验收保留。
+
+- 2026-10-22T12:38:56+08:00 [watcher] #37 source9e8f900dd独立核两个Jev文件精确回到#25前；tsc0/6文件96定向过，开发655文件6175过2跳过及18日志SHA/2635输入核同但不代集成员full。候选78b24c442806干净，保持review，原#33→#35→#28后待完整窗口；未建新full/机器队列进程或合main/live/放行生产。结论6332839173，paper/materials/20261022-issue37-integrator-review/；后续仍原锁绑定门和自然首局无open_book/无调用错误读回。
+
 - 2026-10-22T13:01:28+08:00 [ops] #23接08:33停点，114实际去重回收/105成功+1失败分配与归档/绑定核同；近期34新建对11回收，原只读plan0eligible保原门。原采样空间净减38.85GiB未过，部署满24h17:57/原采样满24h18:13分列，保持pending不重部署或扩删。paper/materials/20261022-issue23-continue-ops/receipt.json。
 
 - 2026-10-22T13:14:14+08:00 [ops] 八原notice原文/双箱/角色转达证据核同，三research原CLI不兼容及角色登记pending保留；不重发/代ACK或关科学父，无新full/dataset/模型/局/live改动。paper/materials/20261022-1313-ops/notices-readback.json。
 
+- 2026-10-22T13:21:40+08:00 [watcher] #37接续：隔离候选152a5cc4ddb3无冲突刷新main9226972ed记录，13源叶等来源；实证#33检查持live锁等知识锁、原刷新持知识锁等live锁，开#38并向原ops一行提醒实送达。原定向tsc0/96过保留；未full/合main/live/发信号，等原窗口解阻。证据paper/materials/20261022-issue37-window-blocker/及20261022-issue37-integrator-review/continuation-1319.json。
+
 - 2026-10-22 13:29 [ops] #38仅取消未检查的本方锁等待；知识刷新自然完成，4项锁回归通过，原#33唯一接续无持锁经pidfd待#20后入场，保留#33→#35→#28→#37与R411/待验；131302 fix无源码核验后保留failed/rc0/retry，不重复full/model/dataset。证据paper/materials/20261022-issue38-ops/及20261022-1319-ops/。
 
 - 2026-10-22 13:39 [ops] 五批普通收尾parallel-record attention核验：341产物/50 waiting/五proof源码差0，共享dataset已执行不重跑；原扫描后六记录不同，现有输出副本保留，不收编并行记录，不改原失败/父项或冒closed。paper/materials/20261022-1336-ops/。
+
+- 2026-10-22 13:52 [watcher] #20 fdab9aeb9启动隔离核验不通过：原10过，新增3项1失败2错误，SIM/S父行为覆盖穿透且显式发布被拒；退回in-progress，开#39，报告6d512e54f已推核同，原开发一行提醒agent_prompted。#37→#20顺序已登记，未full/合main/动生产；候选自身合并已abort且干净。结论https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6333797029；paper/materials/20261022-issue20-integrator-review/。
 - 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。
+
+- 2026-10-22T14:04:26+08:00 [watcher] #36 386c8b224原四反例修复核过；来源8文件146过、main组合12文件193过/tsc0/Python31过，46输入及10原日志SHA核同。候选1b0aeb68f已推送，保持review待33→35→28→37后完整检查与自然验收，未合main/live、未启brain_view。
 
 - 2026-10-22 14:08 [ops] #36 R3隔离候选1b0aeb68f接收核46输入/10原日志；review及最终full/自然验收pending，原顺序#33→#35→#28→#37→#36，brain_view off/旧准入停用，不另建等待或重full/model。paper/materials/20261022-issue36-r3-ops/。
 
@@ -5817,14 +5856,28 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
 
+- 2026-10-22 14:50:46 CST [watcher] #20/#39 补交459366bac独立原回归21过，源/组合tsc0，组合14文件162过，327源码/285键清单和7输入SHA核同；报告候选572a18e5a已推核回，隔离树干净。发前发现主管补充需求4多项目兼容，#20现in-progress，等原开发新公共+私有kit补交；不恢复review/不full/不合main-live/不安装，#39保留。评论6334646495/6334646985均[watcher]且发前gitleaks0、远端核回。材料paper/materials/20261022-issue20-r2-integrator-review/；#37→#20原顺序保留，原#33 runner7161本轮仍等K锁、未持锁且full未开始，不新增排队或信号。
+
+- 2026-10-22 15:11 [watcher] #20 补充4 bfcb85bd0/kit ba7a9c39d 独立87+62+21+3与tsc通过；原组合161/162，诊断4与162通过仍保留失败，开#41（https://github.com/dwroy/agent-sts2/issues/41）；未main/live、未安装kit，原#33等知识锁/#37→#20最终full待，材料paper/materials/20261022-issue20-r3-integrator-review/。
+
 - 2026-10-22 15:13 [ops] 144301无源限定报告核61产物/十A10/两主题待证；baseline已核存在且零源差，报告完成JSON缺失，原failed/rc0/16:03冷却保持。0101旧first_run快照与Oct5更正分列；不改历史/补测试/空合入/重dataset。paper/materials/20261022-1506-ops/。
 
+- 2026-10-22 15:15 [watcher] #20补充4核验材料5c2358558已推送核回；结论#20/6335023268、冲突#37/6335023852、测试缺口#41/6335033090逐字回读；保留review未准入main/live，原开发仅一行提醒agent_prompted未冒领接收。
+
 - 2026-10-22 15:15 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:43一致；原CLI三研究ACK支持阻塞与正式pending保留，不重发/代填/重试或关父。paper/materials/20261022-1515-ops/notices-readback.json。
+
+- 2026-10-22 15:20 [watcher] #39复核启动6文件在459/bfcb/5c候选字节一致，消费者327源码285键清单重算同且未分类0；沿用原21项通过证据，不重复full，#41+最终组合full及main集成未闭环保留review。评论6335126978发前gitleaks0且作者/正文实核；main/live未动，摘要paper/materials/20261022-issue39-integrator-recheck/review.json。
+
+- 2026-10-22 15:37:04 CST [watcher] #40源8f09核验21源SHA、tsc/11文件55/Python12+54及CLI/精确#20适配器2项通过，候选c255682f531已冻结push核远端，仅账本冲突保留双方。原#38/#33窗口内核等锁/full未开始，未另起full/waiter，#40继续review/未main-live；#20 report合入及生产队列/自然读回待。#40评论6335386710/#38评论6335387389均gitleaks0且作者正文实核；ops单行agent_prompted不作阅读ACK。材料paper/materials/20261022-issue40-integrator-review/。
+
+- 2026-10-22T15:50:16.738293+08:00 [watcher] #41 c6428609c独立红测原8终局断言复现2/8；与#20候选5c及main23a隔离组合tsc0、20文件211过，候选23829290ab4f49b825dad49b69107ef1d3695669已WindowsSSH推送核回/干净。#41/6335610109、#20/6335620995、#37/6335621695评论gitleaks0且作者正文逐字核同；旧失败和唯一历史归因未知保留，#37→#20及最终full未完成，未main/live/生产改动。材料paper/materials/20261022-issue41-integrator-review/。
 
 - 2026-10-22T15:52:01+08:00 ops：#38仅取消未执行检查的自有7161，原90c候选统一K→O→D→T→L/测试前释K，4固定回归0；唯一523632仍等K/fullfalse、待真实入口。#40源/候选21双SHA/8原件核同，review保#20/#41门及原33→35→28→37→36顺序，未发布/新full/模型/实验；见 paper/materials/20261022-issue38-window-ops/receipt.json。
 
 - 2026-10-22T15:54:06+08:00 ops：15:43八notice完整原文/证据/双箱/ops回执及既有watcher实读转达证明核同；原CLI SHA3f7afefb仍不兼容三research，原rc2/两角色正式ACK pending保留，不代ACK/重复发送/重试/关闭科学父；无新模型/full/dataset/游戏动作，见paper/materials/20261022-1543-ops/notices-readback.json。
 - 2026-10-22T15:55:01+08:00 [Claude] Roy 10-22（本人确认）：派单器每个项目各起一个实例，不再共用；重任务排队改为机器级跨派单器申领（共享目录锁文件、进程持有自动释放、跨项目同一优先级、任一项目对局在跑时 1 位否则 2 位），协议放上游 dwroy/agent-board-kit，由 #20 实现。
+
+- 2026-10-22T15:57:54+08:00 [watcher] #20按Roy新跨派单器申领架构等补交，停旧版准入/合入；本角色无在跑#20 full、不新开。旧5c/含旧20的238仅留证，不借#41夹带旧架构；原失败保留。评论6335757215 gitleaks0且作者正文核同，main/live/安装/pin/heavy未动，详handoff/integrator-20261021.md最新停点。
 
 - 2026-10-22T16:04:58+08:00 ops：#33 high窄15:56真实锁准入后rebuild rc2（ops错用窄树不存在的整包#26生成器），封存原失败/2475输入、full未始；四处缺失核验后不适用聚合预检，同90c唯一589590/start8071265接续首次tsc/full，16:03持K等O；#38进入证据交核收，liveR411/自然high/整包旧失败与后续顺序不变。原件paper/materials/20261022-1601-ops/receipt.json。
 
@@ -5833,15 +5886,37 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T16:15:43+08:00 ops：Roy91%触发原换号约定，新codex3-20261022-1610两home本地预检/key隔离0，唯一609806 draining/自有LLM_DRAIN+PAUSE；旧1146取消及其他STOP/PAUSE保留，34进程条目尚在途/选择器codex1不冒complete；本ops ready_to_drain后空闲，原开发集成员不热切、原high首次full保留，见paper/materials/20261022-codex3-switch-1610/receipt.json。
 - 2026-10-22T17:38:31+08:00 [Claude] Roy 10-22：对局与知识刷新先暂停，让机器给检查；完整检查顺序 #33 high → #40 → #35 → #28 → #37 → #36；codex3 换号完成后不恢复开局，等 #33 high 与 #40 上线后在自然边界恢复。
 
+- 2026-10-22T17:43:22+08:00 [watcher] 按Roy/主管6337610752开无对局双任务窗口，排序33high→40→35→28→37→36。#40候选31265530a（main274+40+源41、无旧20）首次full运行，rebuild/tsc0、2588冻结输入，nice19单worker；#33原full0不重跑。评论6337704203发前gitleaks0且核回；不动main/live/STOP/生产队列。
+
 - 2026-10-22T17:47:01+08:00 ops：Roy17:2x独立STOP/roy-check-window-pause保换号后不开局；生产刷新已17:16:29自然完成，暂停新调度/人工刷新。high首次tsc/full0/6007+2skip、输入同，未发布；新完整序33high→40→35→28→37→36，无局2重位/33与40可并行，原集成员提醒已送。codex3继续draining、两项live及自然边界才解除Roy暂停并首局合核high/增量，见paper/materials/20261022-roy-check-window-ops/receipt.json。
 
+- 2026-10-22T14:23:04+08:00 [dev #40] 基于main d3b2a7474完成局间刷新增量/短锁开发：fight-value续接原reducer稳定rows与EOF尾段，card-upgrades持续聚合，共享索引代号跨步骤失效；每角色默认10新结束局训练、失败留旧完整模型，统一driver在锁前对接#20 other队列、发布候选后短持live锁并分别记耗时。冻结72行原训练器2trees的rows/model/gates逐字节同全量；铁甲计算/公式等价但统一训练时点也降频（#40授权），严格前缀SHA/怪物回放仍有线性成本。交review，#20 report同文件与避免嵌套入队交集成员，完整检查/精确发布/自然耗时与读回待原角色；未改main/live/STOP或游戏知识、不编号/关父项。材料paper/materials/20261022-issue40-incremental-refresh/。
+- 2026-10-22 15:33:01 CST [watcher] #40 源8f09b842628在隔离树与main 23a6a0e20试合并，仅记录冲突已保留双方；21源SHA、tsc、11文件55定向、Python12+54及实际CLI/精确#20适配器2项通过，首轮夹具失败保留。候选冻结待原#38/#33完整窗口，未合main/live、未启heavy；#20 report碰撞及精确部署/自然读回仍开放。证据paper/materials/20261022-issue40-integrator-review/review.json。
+- 2026-10-22T15:33:08+08:00 [dev #41] 固定F2输入/虚拟时间复现仅固定engine时钟仍有2/8终局：继承L2求解预算耗尽时8采样/6capped/2终局；仅修测试固定ledger/runtime/求解时钟，保原两组8终局与精度断言，另验采样截止2样本/6missing。tsc0、定向9文件76过；历史当刻归因限制及原失败保留，最终组合full沿#37→#20原窗口待验，不改生产/main/live/STOP。材料 paper/materials/20261022-issue41-card-clock/。
+
 - 2026-10-22T18:09:49+08:00 ops：主管裁决/P0阻断>20分钟无人推进/停局且常备授权无法恢复，向主inbox-claude追加HH:MM [ops] #N一句话，细节issue；ops-current两模板及context已常驻，原4格式检查/实际及回退输出核同，仅静态文案。已实际追加一条#40停局提醒，接收裁决未冒确认；见paper/materials/20261022-claude-escalation-rule-ops/actual-inbox-append.json。
+
+- 2026-10-22T18:11:18+08:00 [watcher] #40 首次唯一完整检查通过（external rebuild/tsc/full0，655文件6177过2跳0败，2588输入SHA前后同，nice19/单worker）；源40及源41测试已合main692242e71，完成材料cbbcfd7c4，Windows SSH推送及远端main/审核分支SHA核同。绑定备份/恢复SHA与644权限核同，并行脏记录保留。#40已转waiting-release开放，#41交主管验收关闭；评论https://github.com/dwroy/agent-sts2/issues/40#issuecomment-6338211717 与 https://github.com/dwroy/agent-sts2/issues/41#issuecomment-6338212529 均发前gitleaks0、作者正文读回核同。ops w1H:p8 working，未手工打断/冒充提醒ACK；待按原提醒队列处理。保持Roy暂停直到33high与40实际live及自然边界，首局high/增量/模型读回及冷暖/训练/锁耗时待ops；#20新架构仍off待补交，未夹带旧20或发布live。证据paper/materials/20261022-issue40-full-integrator/。
 
 - 2026-10-22T18:30:11+08:00 ops：Roy18:09回复授权联合high/40发布及开发集成员排空例外；原绿核同，27叶9e53精确live新组合唯一821586首tsc0/full在途，通过后原短锁/绑定/版本/双通知及Roy暂停释放。5角色边界回归0，27登记旧引擎保留排除，唯一同事务826698只等ops工作/空闲，不热切别人；新ops核实际发布及目标UUID后原broker恢复，首局high/增量待。原件paper/materials/20261022-high40-release-ops/receipt.json。
 
 - 2026-10-22T18:38:21+08:00 ops：按Roy更正，开发由主管现在原pane换codex3重启，集成员当前一步后同样处理；不等其全部任务/旧号耗尽。原事务实读无开发集成员等待项，仅ops821586检查和本轮收尾；原826698不重启。两home/新ops验证及联合发布后恢复授权保留。原文/回执paper/materials/20261022-high40-release-ops/drain-correction-receipt.json。
 - 2026-10-22T18:40:25+08:00 [Claude] Roy 10-22：换号排空不等所有工作完成，常驻会话直接重启交接。codex1→codex3：9 个开发会话与集成员已在原 pane 以 codex3 重启并按 issue/交接文件接续（集成员交接 9bef1ea75），ops 由换号事务自行重启。
+
+- 2026-10-22T18:44:19+08:00 ops：codex3新UUID/原生gpt-6.1-sol high宿主接管已核，原控制器verifying、自有两旗未动；high窄修绿与high+#40组合full1分账，未发布，保Roy STOP/liveR411及全部父/异议/中断。原issue已评论，主管收件箱提醒；只接管不重检查/模型/局/刷新。原件paper/materials/20261022-codex3-takeover-ops/receipt.json。
+
+- 2026-10-22T18:51:48+08:00 ops：codex3控制面complete/仅自有两旗已释，Roy STOP与high40原失败保；旧末局报告/退出核同。原#27同一未启动任务52冻结/434局及空槽核后沿唯一入口接codex3，原生high/原沙箱消费已核，brain消费及学习父仍pending。无新发布/full/对局/刷新/推送。原件paper/materials/20261022-codex3-resumed-ops/receipt.json。
+
+- 2026-10-22T19:00:34+08:00 ops：接#40并核最新462知识/三测试兼容精确输入；原错误快照full由原集成员中断143保留，最新唯一907918检查tsc0/full在途，ops未重复。liveR411/Roy暂停/原发布及科学父门不动，#35后续依赖冲突保。实际issue评论6339107473；原件paper/materials/20261022-high40-ops-intake/receipt.json。
+
+- 2026-10-22T19:21:02+08:00 ops：#27原三条内容main e446及证据/固定消费者已核，live/自然/父及retention pending；三新问题经原通知双箱/集成员单行提交，严格CLI rc2保。旧八异议原实际转达SHA核同，未重发/代ACK；当前liveR411/Roy暂停/原high40事务不动。原件paper/materials/20261022-1913-ops/receipt.json。
 - 2026-10-22T19:21:35+08:00 [Claude] 主管定范围（依 Roy 已定的外部数据方向）：策略库新增“外部聚合”证据类型，不要求局号层数、与自有证据分账、只有外部证据的条目可信度设上限（#42）；#27 首批三条照原流程，第二批等 #42 合入后派。
+
+- 2026-10-22T19:24:21+08:00 ops：#27三通知watcher本人实读/Roy可见原生转达SHA核同，正式CLI ACK兼容仍pending，不代填/重发。主管6339505812的#42合入后第二批条件待办已留源，当前不派；首批实际发布/自然/父及Roy暂停门保。原件paper/materials/20261022-1921-ops/receipt.json。
+
+- 2026-10-22T19:36:45+08:00 ops：#27三条数据独立发布V6-R412，行为312d9bf510f02cc6539e30addfcb1492705de934/liveb9c9fdfdc3a8eb823ba274fa2b5022f38e85a1aa；原source60295/main e446，own三局各n1/SL单列，原空库新增备战限定，账本0568–0570已CLI shipped。实际live兼容/五题读回0、旧知识/绑定/runtime及Roy暂停保，#33/#40未发布、自然命中/父pending；根双通知已写，#40后续须以实际新live保本批数据，不重旧源full。原件paper/materials/20261022-issue27-publication-ops/publication.json。
+
+- 2026-10-22 19:46:31 CST 运维 codex：仅处理191302-s2策略批终局，原exit0、十项提案全部waiting；已核十份原提案SHA、12份封存对象（215034055字节）和3472个原始引用，811组问题与决策ID一致。完整语义阅读仍仅4/811题，机械覆盖不代策略验收。XP2首试/重试T3分母8/24、T1分母4/24的勘误与10月13日通知3174f39bde24776ac71966c2相同，已核原ops、watcher、Roy可见转达三阶段回执及证据SHA，关联旧通知，不重发、不代ACK或推断Roy同意。原报告含questions，原自动收尾守卫拒绝；无ordinary-close成功回执、dataset或记录提交，账务保持pending。原retention已回收检出并保留56份scratch及分支，不再操作。无源码、合入、版本或补测，live V6-R412、Roy STOP及科学父要求保持。原件paper/materials/20261022-1944-s2-ops/receipt.json、old-notice-deduplication.json。
 - 2026-10-22T19:47:06+08:00 [Claude] Roy 10-22：#40 组合在 R412 上只做 tsc、策略库/catalog 消费者定向测试与知识快照核同，复用 bb1c16 完整检查结果（R412 只改数据）；新规矩：同一时间只能一个发布在途、不插队，组合组装走自查清单（#20）。
 
 - 2026-10-22T19:53:48+08:00 [watcher] codex3 high+#40组合交原ops：bb1c16唯一完整tsc/full0，637文件6010过2跳0败、2488输入/462知识前后同；按主管#40/6339963519复用，在新R412实际live b9c9fdf上重建326d5636f974c57b1a594ae78d75d68feaba838c（tree4fd9abc0，29源码路径），仅跑tsc+3文件14项策略/catalog/增量定向及真实兼容消费者/driver catalog隔离步骤全过；2489输入前后同，差异仅R412三数据路径，463知识实际live/快照/候选核同，Windows SSH推送核SHA。旧失败/143中断原件保留。集成员仅材料合main，不改生产；ops沿原发布门并按主管指令发布后解除检查窗暂停、首局读high/增量；#27已R412，三异议已转Roy但正式CLI兼容阻塞/自然采用/科学父仍保。#35依赖、28→37→36及watchdog修补回main待办保留。证据paper/materials/20261022-high40-integrator-compat/。
@@ -5853,7 +5928,11 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T20:29:09+08:00 [watcher] #20三批补交d9c4849b/kit26130354独立核验：49清单SHA同，kit113/公共64/启动23/双项目资源回放1/定向4文件20项及tsc绿、1969枚举输入前后同/#41完整时钟blob保留；新固定负例发现未跟踪.mts变化令真实单消费者过→败但inventory不变，mock full状态机仍exact-reuse零命令，已开#43交主管排期，当前源码不准入main/live。无完整检查、未派活/部署/动STOP，原#37→#20与发布队列、#40R412原full复用及ops回执待办保留。证据paper/materials/20261022-issue20-integrator-r4/。
 
 - 2026-10-22T20:42:18+08:00 [watcher] #42源2c2d9f1a基于mainc4ed1b2c0独立核验：27非日志叶核同、2594枚举输入前后同，tsc0/无过滤8文件71项定向/独立Python3例绿；临时CLI→真实检索/题面/工具0自有局与13307外部分母、1966B，正式知识未改。唯一decision-log追加冲突保双方，候选暂存未提交；未full/复用/合源码main/live，仍review，交主管定完整检查排位后沿原唯一窗口接续，#27研究taskCLI兼容/科学父保留。材料paper/materials/20261022-issue42-integrator-review/。
+
+- 2026-10-22 20:49:31 CST [ops] R413启动配置原件核回：live run.sh缺显式session且默认xhigh，但当前ROOT原启动器已请求session/high，8FP19V1W4SRQ首session因config.toml: service_tier隔离拒绝才沿原exec；不把缺变量当唯一根因或改写历史已生效记录。单功能隔离树仅改原一行，默认high并显式session，不带试验调度；bash语法、tsc和三文件47项固定回归通过，初次相对路径命令错误保留。完整检查未起、源码未提交/live未发布；依新授权先让#42占局中唯一重位，配置完整验收与R413运行登记排队，当前局/账号配置不热切。新序42→35→28→37→36，37→20保；#27第二批须42实际上线及合同消费核后沿原请求冻结外部聚合证据再派，不仅合main就派。#33已公开实读回填，现有集成员单行提醒已提交，不冒ACK。原件paper/materials/20261022-R413-session-config-ops/receipt.json（含补丁、检查、授权与评论引用）。
 - 2026-10-22T21:15:01+08:00 [Claude] 主管裁决：#42 拆分，学习侧合同先发（解 #27 第二批），工具消费者叶等 #33；下一个发布是 #33+#26 完整 agent 模式（含 session 启动补丁）。顺序：#42 学习侧 → #33+#26 → #42 剩余 → #35 → #28 → #37 → #36（#37→#20）。
+
+- 2026-10-22T21:19:44+08:00 [ops] 按主管6341672283及本轮原文更新原队列：42学习侧→完整33+26（含R413 session/high启动补丁）→42工具剩余→35→28→37→36，37→20保；一发布在途、局中一重位。42先发外部证据合同/账本校验/协议任务及旧检索兼容，三类工具依赖叶后发；干净切分、精确树及必要完整检查由原集成员交回，ops不猜叶、不重起或停止在途full。学习侧实际live且账本/检索消费核后即沿原27请求冻结外部聚合新输入派第二批，不等工具余项、不据合main提前派。R413已备单叶随完整33+26统一组装，不另排full或热切当前局；原service_tier隔离失败与原生session待验保持。#42结果评论实际发布读回，现有集成员单行提醒仅已提交，不代ACK。此轮无新学习/源码发布或科学父完成。原件paper/materials/20261022-2115-split-order-ops/receipt.json（授权、拆分边界、评论与提醒原件在内）。
 
 - 2026-10-22T20:25:10+08:00 [dev #42] 策略新增external_aggregate严格合同/账本CLI与分账题面，纯外部confidence≤0.49、反证保留conflict；#24固定临时登记→检索→题面/工具贯通，tsc0/定向48+2/Python3+4绿，候选交review与集成员full，未改live/STOP或正式知识。报告paper/materials/20261022-issue42-external-evidence/report.md。
 
@@ -5861,29 +5940,46 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T22:02:32+08:00 [watcher] #20/#43补交380083709（kit26130354不变）独立定向复核通过：tsc0、Python30过、2109枚举输入SHA同；真实.mts消费者过→败保留，新门首次模块在场即拒绝，exact/data均拒绝且零新增模拟命令/合成原回执不变。无真实full/新等位者/源码main-live/生产变更；#43随#20核收不早关，#37→#20及唯一组合窗口、默认关闭门/ops自然迁移和CLI/科学父保留。材料paper/materials/20261022-issue20-integrator-r5/。
 
+- 2026-10-22T22:12:12+08:00 [ops] #42学习侧R413精确组合首检查在途（tsc0/full未终局，tree d9aff6d056，1697483/start10243378）；#40 evidence_identity生产回归原件核同，热修排当前发布之后、当前局不停；未发布/未派27。原件 paper/materials/20261022-issue42-learning-live-ops/launch-readback.json；paper/materials/20261022-issue40-refresh-regression-ops/receipt.json。
+
+- 2026-10-22T22:17:03+08:00 [ops] 214302-s2/211302-s2各十waiting、无源码合入；211302原source-drift attention保留，214302仅report-only回收不代账务完成；不重dataset/测试/合入或关科学父。原件 paper/materials/20261022-2205-strategy-ops/receipt.json。
+
+- 2026-10-22T22:18:48+08:00 [ops] 214302主策略批十项waiting、无源码合入；固定材料/历史账本/原report-only回收核实，生产测试null、普通账务pending，不重dataset或关科学父。原件 paper/materials/20261022-2217-strategy-ops/receipt.json。
+
+2026-10-22T22:19:33+08:00 [ops] 本轮账本计数更正：原学习报告正文称17条，linked-ledger-readback.json实际只有16个唯一ID，本轮已逐ID核的也是16条且均为历史shipped；前条通知沿用17的表述不作为验收事实。原报告保留，差异已记回执，不补造第17条，不改变十项waiting或父要求。 原件 paper/materials/20261022-2217-strategy-ops/receipt.json。
+
 - 2026-10-22T22:40:25+08:00 [ops上线/V6-R414] #42学习侧15叶实际livefdae435795f41d771da6df3457eb890e50d8ffeb，行为507b00eda13efe65fc14da5cab00ed25cc2ad1e7；原R413精确树tsc0/full6051过2跳/Python3过，2498输入不变。旧合同只接自有局号/楼层；新合同允许标来源/版本/数据SHA/筛选/分母/观察性局限的external_aggregate，外部与自有分账、冲突保留、纯外部可信度封顶，兼容旧检索。保463最新知识（44刷新数据叶定向兼容另核）、旧三策略/账号/绑定/运行配置，工具余项和33/26未发，当前局未热切。预期解除外部证据表达阻塞，不称策略收益。回退只15源码叶至0073e0edd，保后续知识/日志；实际live消费者和27第二批另核，不关整项/科学父或代ACK。原件paper/materials/20261022-issue42-learning-live-ops/publication.json。
+
 - 2026-10-22T22:50:43+08:00 [ops] V6-R414学习侧15叶实际livefdae435795/行为507b00eda，原full6051+2skip/tsc/Python0、最新知识/绑定及实际消费者通过；#27第二批65冻结/446局准备就绪，原两槽占用、模型前止、同批pending；#40原P1随后，整项/自然/科学父不闭。原件 paper/materials/20261022-issue42-learning-live-ops/receipt.json；paper/materials/20261022-issue27-batch2-ops/receipt.json。
+
+- 2026-10-22T23:11:13+08:00 [ops] 原kit CLI将42:status:ready:33943334009显式resolve done（主管6344092778手工补发/register证据）；仅结清一次spawn不关#42，journal其他字段/事件保留，无外部动作。原件 paper/materials/20261022-issue20-journal-resolve-ops/receipt.json。
 - 2026-10-22T23:11:55+08:00 [Claude] Roy 10-22：对局大脑尽快恢复 session（根因 codex3 brain config.toml 的 service_tier 被 session 隔离检查拒绝，授权 ops 备份后删该行，下一局生效）；#36（学习者交互会话 + 大脑直播）提前到 #40 热修之后发布。顺序：#40 热修 → #36 → #33+#26 → #42 剩余 → #35 → #28 → #37（#37→#20）。
+
+- 2026-10-22T23:17:30+08:00 [ops] Roy窄授权：备份codex3 brain隔离config后仅删service_tier一行，实际纯隔离检查[]，不热切/不代原生成功；下一自然局验session/high。#36提前紧接#40热修，后原33+26/42余项/35/28/37，37→20保、44交付按窗口；live启动补丁未发。原件 paper/materials/20261022-codex3-brain-session-config-ops/receipt.json。
 
 - 2026-10-22T23:35:57+08:00 [watcher] #40生产导入热修源3ae67358仅8f09b8426后差量：未修入口独立复现ModuleNotFoundError、修后新进程冷/追加/暖与缺模块反例2过；树01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8首次full1败原件保留/旧测试空表已开#44交原issue41，按主管6344141656同树绿即发裁决、原树一次完整复验tsc/full0（656文件6219过2跳0败）及Python2过，2596枚举输入前后同。合main交原ops在42学习V6-R414后精确热修，保最新知识；首轮20–40分钟/约10GiB仅规划，生产失败原件与自然刷新/训练/消费者验收开放，未碰生产。证据paper/materials/20261022-issue40-hotfix-full-integrator/。
 
+- 2026-10-22T23:50:04+08:00 [ops] 231302-s2十waiting/无源码，24历史shipped被补链降级已核，CLI更正需保真实上线时间、原fix队列pending；原完成事件下同一27第二批准入且原生codex3/high/原沙箱已证。#33备份路径已补、新自然局session/high已核，原件归档限制保留；不关科学父。原件 paper/materials/20261022-2336-strategy-ops/receipt.json。
+
 - 2026-10-23T00:02:34+08:00 [ops] 231301四局复盘/12支持11旧ID/四pending提案核同；5802原段校验。两主策略attention保留，共享原dataset五检查成功产物复用且不重跑；记录限已审前缀，排除#27在途5条，24状态勘误和11通知角色ACK仍pending，不关科学父。原件 paper/materials/20261022-2350-ops/receipt.json。
 
-- 2026-10-23T00:11:56+08:00 [ops] #27第二批五外部观察策略已核源f96a13606/main3f6421432、65输入/93叶/23表段及原自测；live R414旧三条保持，按不插队门排40/36之后。当前账本575/0与学习者冻结清单rc1分列，四新增问题双箱待角色ACK，父/自然命中/发布未完。原件 paper/materials/20261023-issue27-batch2-terminal-ops/receipt.json。
-
-- 2026-10-23T00:37:24+08:00 [ops上线/V6-R415] #40导入热修三叶实际livec5b4a8a588dadccb59b218d97993de5a55371979，行为aba355a162e189847d214f049db92d3dc49c1a27；旧入口新进程无法导入evidence_identity，新入口显式加入learner路径。原main full6219过2跳且首败保留，本live精确组合只称tsc0/Python2过/包装器2过（含12+2 Python项），不重full。保持463最新知识、catalog/三策略、旧完整模型、绑定/账号/启动配置，未夹带36/44/33/26/27第二批，当前局未热切。实际live新进程--help及模型/策略/catalog读取通过；预期恢复下一自然fight刷新，实耗时/RSS/rows与训练、实际新模型SHA及追加/暖缓存仍pending，不手动刷新或启局。回退仅三叶到R414并保后续数据/日志，入口回退将恢复已知导入失败。原件paper/materials/20261023-issue40-hotfix-publication-ops/publication.json、actual-live-consumers.json。
-
 - 2026-10-23T00:09:10+08:00 [watcher] #36实际R414精确R3唯一full失败：tsc0，644文件642过2败/6103项过2败2跳；2509枚举输入及受测树dbf16fff0546aece14b637acb809d641f0023570前后同。Boss-home旧pane123 mock不适配R3 open-pane/Popen；另#44同症状F2 table undefined复现，根因未定。保留完整原件paper/materials/20261022-issue36-r414-integrator/full-failed/，未重跑/合main/交发布，main兼容定向未执行；释放full窗口，请主管裁决修复归属及下次full，不自行改序，保新知识/CLI/自然验收。
+
+- 2026-10-23T00:11:56+08:00 [ops] #27第二批五外部观察策略已核源f96a13606/main3f6421432、65输入/93叶/23表段及原自测；live R414旧三条保持，按不插队门排40/36之后。当前账本575/0与学习者冻结清单rc1分列，四新增问题双箱待角色ACK，父/自然命中/发布未完。原件 paper/materials/20261023-issue27-batch2-terminal-ops/receipt.json。
 
 - 2026-10-23T00:16:13+08:00 [watcher] #27第二批四份通知本人实读并向Roy逐项转达：external_aggregate固定验证进展、拿牌频率非因果、gross_damage非安全线、冻结/当前清单分账；原生可见回执paper/materials/20261023-issue27-batch2-watcher/read-and-relay.json，issue6345569158。五条已main但未live，排原在途发布之后；正式ACK原CLI不兼容保留，未重试/代填、未关父或续批。
 
 - 2026-10-23T00:24:49+08:00 [watcher] #36按主管6345466773将原dev仅测试夹具f0a967266与#44仅测试110cbd8e接实际R414，树6b8d15d12d6acf96cfbe9b4359878e142c5685f3；12测试前像/交付SHA核同，原R3运行代码不变，468最新知识冻结、相对失败树56知识数据刷新。tsc/19文件214定向/Python boss6、view15+1skip、TUI18及shell4过；00:21:46唯一full单fork/nice19已起，未终局不交发布。原失败35be70748与原件保留，main只准备兼容候选、无第二full。公开窗口评论6345696220；材料paper/materials/20261023-issue36-44-r414-integrator/。
+
+- 2026-10-23T00:37:24+08:00 [ops上线/V6-R415] #40导入热修三叶实际livec5b4a8a588dadccb59b218d97993de5a55371979，行为aba355a162e189847d214f049db92d3dc49c1a27；旧入口新进程无法导入evidence_identity，新入口显式加入learner路径。原main full6219过2跳且首败保留，本live精确组合只称tsc0/Python2过/包装器2过（含12+2 Python项），不重full。保持463最新知识、catalog/三策略、旧完整模型、绑定/账号/启动配置，未夹带36/44/33/26/27第二批，当前局未热切。实际live新进程--help及模型/策略/catalog读取通过；预期恢复下一自然fight刷新，实耗时/RSS/rows与训练、实际新模型SHA及追加/暖缓存仍pending，不手动刷新或启局。回退仅三叶到R414并保后续数据/日志，入口回退将恢复已知导入失败。原件paper/materials/20261023-issue40-hotfix-publication-ops/publication.json、actual-live-consumers.json。
 
 - 2026-10-23T00:47:29+08:00 [watcher] #40实发V6-R415 c5b4a8a588dadccb59b218d97993de5a55371979已独立锁内读回，三叶与#36+#44在途full树6b8d15d12d6acf96cfbe9b4359878e142c5685f3同；468知识9份自然变化另记r415-readback.json，原full不重启/不改输入。后续保新live与数据/编号，40自然刷新训练/模型消费者、27实际发布及CLI兼容仍待；issue回执6346182481。
 
 - 2026-10-23T00:53:21+08:00 [watcher] #36按主管6345466773合测试夹具f0a967266及#44测试110cbd8e，实际R414树6b8d15d12d6acf96cfbe9b4359878e142c5685f3唯一tsc/full0（644文件/6109过2跳0败），2509输入同；main仅兼容定向23文件/308项及Python/shell过。旧失败35be70748/原件不变，精确补丁/前像/延期消费者见paper/materials/20261023-issue36-44-r414-integrator/delivery.json；合main交原ops保最新live知识按原序发布，未动生产/分号，36自然TUI及session/40刷新训练/27实际发布与CLI/科学父待验。
 
 - 2026-10-23T00:56:32+08:00 [watcher] #36+#44已合main 3597a44fcc4cf9ed4c9360b48a8e36d8682ffe3f并WindowsSSH核同；唯一R414 full644文件6109过2跳/2509输入同，main定向23文件308过。#36回执6346343896已waiting-release交ops接实际R415保最新数据（9份自然差异）与编号；#44回执6346344607技术核验交主管核收。唯一full结束；后续33+26→42余项→35→28→37（37→20）待提醒。36自然TUI/session/learner、40自然刷新训练/消费者、27实际发布/自然采用与正式ACK CLI阻塞/科学父仍开放。
+
+- 2026-10-23T01:19:45+08:00 [ops] #36/44原full6109过2跳、43叶同源候选已核；因codex3 learner配置service_tier隔离拒绝暂缓发布，brain既有删行授权不外推；R415/hosting/当前局保持，原件 paper/materials/20261023-issue36-publication-ops/receipt.json。
 
 - 2026-10-23T01:23:42+08:00 [ops] 011301复盘/011302双策略原三批均TUI配置隔离预检code3、调度failed，零模型/无完整回报；五局原重试与十五通知正式ACK阻塞保留，36原件/评论6346893335已补交；不跑dataset、不补绿或关父。原件 paper/materials/20261023-0113-ops/receipt.json。
 
@@ -5897,20 +5993,29 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-23T02:42:06+08:00 [watcher] #36主管6348418482已裁决原021302-strategy-proposal恢复归ops：零模型/未投递，短名修复实际发布后按原保留门结束原pane/lease，保日志/回执/工作树并用同冻结输入重排一次正常启动，记“未启动、已重排”，不补接管入口、不以发布代旧批完成；当前唯一full照常，原02:37待裁决项据此结清。
 
+- 2026-10-23T02:46:30+08:00 [ops] #36依主管6348418482：原021302未投递批由ops在短名修复实际发布后按保留门结束原pane/lease，同冻结输入仅正常重排一次；现保存四份输入SHA/十局清单，requeues=0、pane/lease保留，不补接管入口、不记完成失败、不重复full/模型；paper/materials/20261023-0237-ops/receipt.json。
+
+- 2026-10-23T02:50:30+08:00 [ops] #36复盘024302命名attention：原任务未投递、原TUI idle无name，完整label34>32，旧源码直传label；保原pane/lease/code75，不重送/另开模型/回收/dataset，不扩大021302重排授权；已在#36评论6348674924回读，paper/materials/20261023-0248-ops/receipt.json。
+
+- 2026-10-23T02:55:07+08:00 [ops] #36主管6348723657通用授权：未投递/零模型/75同因批发布后各冻结输入重排一次；现四批原件绑定、重排0，原learn.lock内临时ACCOUNT_DRAIN仅新学习准入，实际dispatch门75且learn.json不变，不动对局/账号/在途pane，paper/materials/20261023-0252-ops/receipt.json。
+
 - 2026-10-23T02:56:01+08:00 [watcher] #36主管6348723657将发布后恢复扩为通用规则：短名修复实际上线前同命名路径卡住且未投递/零模型/退出75的学习批（含021302策略、024302复盘及后续同类）均归ops保原件、按保留规则结束pane/lease、同批冻结输入正常重排一次；实际重排后才记未启动已重排，不记完成/失败，不补接管。ops可暂停学习准入至发布，不动对局；02:52逐批范围请示已获裁决，唯一full继续。
 
 - 2026-10-23T03:01:51+08:00 [watcher] #36短名修复6ec71c313在实际R415树5de70841f44d1e75c265014aa23a65442c86a7c9唯一tsc/full0（644文件/6123过2跳0败），2509输入同；main仅五叶差量/兼容定向12文件161过，保当前消费者与数据；精确43叶交付paper/materials/20261023-issue36-name-r415-integrator/delivery.json，交ops按6348723657通用规则发布后各自冻结输入重排一次同类未投递/零模型/75旧批，仅实际重排后记未启动已重排；可暂停学习准入不动对局，旧批未完成/不补接管。未改生产/分号，旧失败/旧绿保留，36自然验收/40训练/27 CLI与科学父待验。
 
 - 2026-10-23T03:02:58+08:00 [watcher] #36短名修复6ec71c313已合main cd53a8956e092cb4ed2b470705f26d061df6e653并WindowsSSH核同；实际R415唯一full644文件6123过2跳0败/2509输入同；main仅5叶差量、定向12文件161过，无第二full。36回执6348915803已waiting-release，交ops精确43叶并保最新知识/策略/编号；6348723657通用恢复归ops实际发布后各冻结输入重排一次同类未投递/零模型/75学习批，实际重排后才记未启动已重排，不补接管；可暂停学习准入不动对局。唯一full已释放，后续33+26→42余项→35→28→37（37→20）待提醒；36自然验收、40训练/消费者、27 CLI与科学父开放，原失败/旧绿保留。
 
-- 2026-10-23T03:42:46+08:00 [watcher] #20新tick分类补交e1204dcf/kit7e5a408f已独立tsc0、六模块102项及4项适配器/故障边界全过，kit15源核同；原“尚无补交”据此更新，生产真实tick尚待。当前main9a6f34525预检仍冲突report.py/run.sh/decision-log，37未合，故保37→20及最终唯一full，不组装/合源码/抢窗口；README旧排队inbox句仅说明一致性待同步。材料paper/materials/20261023-issue20-tick-integrator/；42原uncertain已结清不重派、43随20核收、默认关闭/自然采用及27 CLI/科学父保留；最新R416知识与数据后续保留，无生产变更/新裁决。
+- 2026-10-23T03:12:34+08:00 [ops] #36新短名精确43叶/原full6123过2跳与2509输入已核；K原自然刷新占用，首次拒绝及45s到期保留，同原发布事务单次内核锁边界接续、终局发原队列，无新full/模型/轮询；四批未重排/自有学习hold保留，paper/materials/20261023-issue36-name-publication-ops/intake.json。
 
 
 2026-10-23T03:23:35+08:00 [ops上线/V6-R416] V6-R416已核实际live 3849fcb8a35940315422f64b16fbc104a6cb8b8b，行为4363590a9；#36精确43叶含短名修复，统一main/live编号核同。旧学习者把完整标签作原生名、超32字符会未投递返回75；新规则以完整label/pane/cwd的SHA绑定32字符原生名，保留原标识、租约、空输入/回合/产物及退场守卫；并发布交互学习TUI与只读脱敏大脑视图。证据为原唯一full6123通过/2跳/零失败、2509固定输入及真实live模型/三策略/catalog读取；468份最新知识和实例绑定保留，未夹带完整33/26或27第二批数据。预期恢复长标签正常投递并提供可观察视图，不宣称自然采用或收益；当前局未热切，session/high/直播及四批恢复分别读回。回退仅43源码叶至c5b4a8a，保后续知识、账号和日志。原件：paper/materials/20261023-issue36-name-publication-ops/publication.json、actual-live-consumers.json。
 
 - 2026-10-23T03:39:58+08:00 [ops] #36/R416已核实际发布和双通知，brain-view启用；四原批冻结输入等价、各正常重排一次并解除自有学习hold。ops子进程TERM=dumb误传已在同新批内保负面原件/修终端元数据；四原生线程gpt-6.1-sol/high实收，自动parser因AGENTS/user前缀foreignActivity可复现，保75与在途模型，不重送/回收，交原dev36修与对账；paper/materials/20261023-issue36-recovery-ops/receipt.json。
 
+- 2026-10-23T03:42:46+08:00 [watcher] #20新tick分类补交e1204dcf/kit7e5a408f已独立tsc0、六模块102项及4项适配器/故障边界全过，kit15源核同；原“尚无补交”据此更新，生产真实tick尚待。当前main9a6f34525预检仍冲突report.py/run.sh/decision-log，37未合，故保37→20及最终唯一full，不组装/合源码/抢窗口；README旧排队inbox句仅说明一致性待同步。材料paper/materials/20261023-issue20-tick-integrator/；42原uncertain已结清不重派、43随20核收、默认关闭/自然采用及27 CLI/科学父保留；最新R416知识与数据后续保留，无生产变更/新裁决。
+
 - 2026-10-23T04:11:47+08:00 [watcher] #36补交6a5d049f0+76b41d6d7独立tsc0/9文件112项/2597输入核同，四份冻结原会话CLI及Python纯重建均核同、18原件不变；新增P1固定反例证实前缀之前的助手/工具活动被TS/Python/只读对账漏过，退回原dev36修整个未绑定窗口，材料paper/materials/20261023-issue36-native-context-integrator/。未合源码/未抢或跑full/未改live；R416实际发布及四旧批各重排一次事实保留，四已消费模型不重送，原75/监督/产物退场门及自然验收保持。原完整33+26→42余项→35→28→37、37→20及27 CLI/科学父保留，无新裁决。
+- 2026-10-23 04:27 论文数据快照（codex-ops 调度器）：数据 exit 0；会话脱敏归档 exit 0；gitleaks exit 0（结果仅本次 exit 0 时有效）；日志 /home/dw/Projects/agent-sts2/ops/codex-ops/snapshots/20261023-040701-2956619.log。
 
 - 2026-10-23T04:30:10+08:00 [ops] #23首24h回收120/分配125，可持续未通过；累计137/180，原约25h磁盘净减49.10GiB（3.5h采样缺口保留），当前plan0eligible、原worker限4仍工作，保留原门/未完成父及失败并交主管接续补证，不重部署或扩删。paper/materials/20261023-issue23-sustainability-ops/receipt.json。
 
@@ -5920,9 +6025,15 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-23T05:20:30+08:00 [ops] #33完整包+#26基于实际R416准备58叶880785ea，原协议五冲突与#36延后流式桥按既有合同合并，session/high启动补登并排除取消试验；tsc预检0。首次原K门45秒超时未开始步骤，保留失败；唯一3177145/birth12846695以内核pidfd等3145627原刷新自然退出后首次检查，等待无锁/模型/轮询，不发号或热切。paper/materials/20261023-issue33-r416-ops/receipt.json。
 
+- 2026-10-23T05:24:31+08:00 [ops] #33同58叶880785ea原快照门两次零步骤超时保留；四原锁实际释放后非阻塞准入，原Git固定历史夹具恢复，3187624/birth12872792首次检查实际运行，468知识/2534输入、重建/shell/tsc0、定向已开始；full及发布待原终局，不重模型/试验局。paper/materials/20261023-issue33-r416-ops/actual-check-start.json。
+
+- 2026-10-23T05:27:30+08:00 [ops] #33精确R416树880785ea/58叶首次actual full3195596（控制3195551）已核原生PID/birth/nice19、2534输入；定向177过1败及同源导入单项1过分账，原失败不改写。完整终局/原生工具面/实际发布与自然消费待原链，无模型/实验局或重复full。paper/materials/20261023-issue33-r416-ops/first-full-start-readback.json。
+
 - 2026-10-23T05:48:09+08:00 [watcher] #20接续实读无新补交/裁决，远端e1204dcf/kit7e5a408f未变；main619fd06b3/实际R416，相关7路径存在性及blob同上次，预检仍report.py/run.sh/decision-log冲突且37未合。原tsc/102+4及43定向结论保持，当前33+26原full先行，20保37→20/最终组合唯一full，不重复测试/候选/合源码/部署；README旧排队inbox句待原线同步，真实tick/默认门/采用、27 CLI与科学父保留，无新裁决。材料paper/materials/20261023-issue20-r416-preflight/。
 
 - 2026-10-23T06:02:21+08:00 [ops] #33精确58叶R416组合原full6205过2跳/2534不变及原生离线Codex14/最终0/dsh14、实际候选查询审计已核；3313811/birth13099456 nice19待原play自然终局，独有LLM_DRAIN只挡新准入，后沿K→L保最新知识/绑定/发号双通知并释放自身旗，原autoplay正常恢复待终局。当前未发布，无模型/热切/重full，科学父保持。paper/materials/20261023-issue33-publication-ops/receipt.json。
+
+- 2026-10-23T06:15:37+08:00 [ops] V6-R417实际发布#33完整agent/#26/原session-high补登，58叶c60de438383f；原full6205过2跳、2534输入、离线14/0/14及实际live查询/来源/模型策略catalog、绑定同SHA已核，保最新知识与宽main后续源。只在原局自然终局后部署，无热切/新模型/试验局；自然消费及科学父待。paper/materials/20261023-issue33-publication-ops/publication.json。
 
 - 2026-10-23T06:23:28+08:00 [watcher] #36接续无新补交/裁决，远端c8ff9caf5不变；33+26已实际R417 e925357a，当前main323d98b1。九叶前像逐blob同原审查/基线，保原tsc0/205项/2597输入结论；R417原6205full不覆盖36三枚新补丁。原队列42余项→35→28→37及37→20不变，36不自行插队，待最终精确组合唯一full/合入；本轮仅记录、不碰生产/重送已消费模型，75/身份产物退场、自然验收、学习科学父/27 CLI保留，无新裁决。材料paper/materials/20261023-issue36-r417-preflight/。
 
@@ -5980,3 +6091,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 2026-10-23T11:14:54+08:00 [ops] 对账11:06旧#36事务失败与后续原ops恢复：off/herdr/brain_view实际读取一致，三暂停标记均无；4已启动中复盘done(rc0)、其余3原PID/birth在跑，另3冻结待槽，无重派/full/模型/局/ACK/父关闭。保留旧失败原件；见paper/materials/20261023-1106-ops/receipt.json。
 
 2026-10-23T11:23:22+08:00 [ops] 11:15复盘无新增、唯一dataset在途；15异议/67证据及CLI不变，提醒原watcher但正式ACK仍pending；3日志tab仅显示后缀已核，4冻结已启/3待槽。记录Roy条件：P0 0933ea0ef full及实际发布后下一自然边界才on，当前off、#20回收不阻塞。见paper/materials/20261023-1115-ops/receipt.json。
+
+2026-10-23T11:31:59+08:00 [ops] 复盘批次20261023-110000正常退出、5局均已有复盘而跳过，新增知识/账本/bug/代码提案均0；独立账本575项0问题，唯一paper_dataset --no-raw rc0；原科学父及通知ACK保持，见paper/materials/20261023-1115-ops/postmortem-close.json。
