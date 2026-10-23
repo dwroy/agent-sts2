@@ -1,0 +1,108 @@
+{
+  "at": "2026-10-23T17:25:28+08:00",
+  "state": "failed",
+  "base": "f55ef40ffcebd1804e4c8f40fd6ac8563208c656",
+  "tree": "1aa9dc94d0f67b30f273b4377b8330f0060ee786",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator48-main-20261023-1720",
+  "steps": [
+    {
+      "name": "bash-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops-learner.sh"
+      ],
+      "started_at": "2026-10-23T17:25:28+08:00",
+      "exit_code": 0,
+      "seconds": 0.013
+    },
+    {
+      "name": "scheduler-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops.sh"
+      ],
+      "started_at": "2026-10-23T17:25:28+08:00",
+      "exit_code": 0,
+      "seconds": 0.013
+    },
+    {
+      "name": "wrapper",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "../ops/tests",
+        "-p",
+        "test_learner_wrapper_completion.py"
+      ],
+      "started_at": "2026-10-23T17:25:28+08:00",
+      "exit_code": 0,
+      "seconds": 7.308
+    },
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T17:25:35+08:00",
+      "exit_code": 0,
+      "seconds": 6.706
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/strategy-backfill.test.ts",
+        "tests/learner-startup-recovery.test.ts",
+        "tests/learner-wrapper-scripts.test.ts",
+        "tests/learner-tabs.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-jobs.test.ts",
+        "tests/learner-strategy.test.ts",
+        "tests/learner-tui-reconciliation.test.ts",
+        "tests/strategy-research.test.ts",
+        "tests/learning-requests.test.ts",
+        "tests/ordinary-close-isolation.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue48-review-1720/directed-vitest.json"
+      ],
+      "started_at": "2026-10-23T17:25:42+08:00",
+      "exit_code": 1,
+      "seconds": 39.279
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "reason": "directed failed; retain first failure",
+  "ended_at": "2026-10-23T17:26:21+08:00"
+}

@@ -1,0 +1,141 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator48-main-20261023-1720/agent
+
+ ❯ tests/learner-herdr.test.ts (62 tests | 1 failed) 5679ms
+     ✓ does not persist arbitrary inherited environment or proxy credentials in the pane launch script 6ms
+     ✓ preserves profile, model, effort, disabled features and explicit thread without exec-only options 16ms
+     ✓ reproduces the observed CLI name limit without touching the original pane 10ms
+     ✓ is deterministic and distinguishes the full label, pane and cwd without truncating their suffixes 3ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-strategy-proposal through completion and retirement 69ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-s2-strategy-proposal through completion and retirement 61ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-fix-batch through completion and retirement 50ms
+     ✓ persists and reads back a bounded name for learner-20261023-021301-postmortem through completion and retirement 63ms
+     ✓ retains the unsubmitted TUI when naming is not-applied 39ms
+     ✓ retains the unsubmitted TUI when naming is uncertain 193ms
+     ✓ retains the unsubmitted TUI when naming is foreign 173ms
+     ✓ does not rename or submit after pre-naming lease changes 35ms
+     ✓ does not rename or submit after pre-naming draft changes 34ms
+     ✓ does not rename or submit after pre-naming foreground changes 34ms
+     ✓ does not rename or submit after pre-naming cwd changes 203ms
+     ✓ checks the same bound name before continuation and every retirement key 63ms
+     × waits for the original 35s-delayed turn with a concurrent aaa session 88ms
+     ✓ waits for the original 35s-delayed turn with a concurrent zzz session 70ms
+     ✓ bounds missing acceptance with paste visible and never sends keys or replays 80ms
+     ✓ bounds missing acceptance with human visible and never sends keys or replays 75ms
+     ✓ bounds missing acceptance with empty visible and never sends keys or replays 87ms
+     ✓ still refuses a real draft after delayed native acceptance 75ms
+     ✓ keeps the lease guard while waiting for native acceptance 59ms
+     ✓ keeps the pane guard while waiting for native acceptance 83ms
+     ✓ ignores idle screens and unrelated/old completions, and requires a matching accepted native turn 1ms
+     ✓ counts each native turn's last usage snapshot once across continuations 1ms
+     ✓ rejects replay instead of carrying native authorization forward 0ms
+     ✓ rejects wrong-body instead of carrying native authorization forward 0ms
+     ✓ rejects prefix instead of carrying native authorization forward 0ms
+     ✓ accepts duplicate native representations only within their explicitly bound turn 0ms
+     ✓ keeps partial native UTF-8 rows intact and fails closed on truncation 9ms
+     ✓ keeps pre-dispatch resume history outside the active parser window 65ms
+     ✓ persists bootstrap proof without interrupting the original native task or weakening retirement 71ms
+     ✓ refuses inherited MCP/config context before launching the TUI, without changing the account 15ms
+     ✓ classifies unsafe persisted environment before any model/terminal start 11ms
+     ✓ runs one interactive TUI, sends the original task, persists native completion and retires only its own PID 55ms
+     ✓ waits for the native task_complete even when the screen is idle 71ms
+     ✓ checks the original host/tab when pane.label is absent (foreign title: false) 63ms
+     ✓ checks the original host/tab when pane.label is absent (foreign title: true) 15ms
+     ✓ does not declare timeout complete 190ms
+     ✓ retains lease-lost rather than interrupting an unverified foreground 46ms
+     ✓ retains working-after-complete rather than interrupting an unverified foreground 190ms
+     ✓ retains a timed-out batch after draft appears 44ms
+     ✓ retains a timed-out batch after unknown appears 184ms
+     ✓ retains a timed-out batch after foreign-cwd appears 195ms
+     ✓ retains a timed-out batch after foreign-foreground appears 192ms
+     ✓ retains a timed-out batch after foreign-turn appears 46ms
+     ✓ stops retirement if draft changes after Esc 184ms
+     ✓ stops retirement if lease changes after Esc 204ms
+     ✓ stops retirement if uncertain-key changes after Esc 185ms
+     ✓ preserves human input on the cancelled exit path 52ms
+     ✓ preserves human input on the native-error exit path 53ms
+     ✓ preserves human input on the transport-error exit path 56ms
+     ✓ retains an owned TUI that does not exit after verified keys, without force killing it  795ms
+     ✓ waits read-only when the exact PID has exited but foreground metadata still names it 198ms
+     ✓ waits for a split native acceptance row without treating task_started alone as a human turn 72ms
+     ✓ accepts a matching native user message as evidence when the submission receipt is uncertain 58ms
+     ✓ retries a capacity error by continuing the same native session 78ms
+     ✓ continues a known error-idle TUI even when the failed native task_started has no end record 73ms
+     ✓ uses ten-minute backoff and caps three error continuations without progress  303ms
+     ✓ preserves an uncertain start without submitting or starting another model 177ms
+     ✓ keeps a changed pane and forbids finish/reclamation when retirement cannot be verified 49ms
+ ✓ tests/learner-startup-recovery.test.ts (26 tests) 1922ms
+     ✓ caps persistent pre-session failures at two additional attempts  540ms
+ ✓ tests/learner-tui-reconciliation.test.ts (52 tests) 40ms
+ ✓ tests/learner-jobs.test.ts (4 tests) 1154ms
+     ✓ an open fix queue launches one fix job, and a busy worktree launches none  414ms
+     ✓ one pending run launches experience-update; busy, completed and early retries do not launch it again  462ms
+ ✓ tests/learner-strategy.test.ts (2 tests) 328ms
+     ✓ dispatches ten postmortems and an ascension change once, retaining a busy strategy trigger  318ms
+ ✓ tests/learner-wrapper-scripts.test.ts (3 tests) 15ms
+ ✓ tests/learning-requests.test.ts (2 tests) 643ms
+   ✓ learning requirements survive report completion, interruptions and disagreements  630ms
+ ❯ tests/ordinary-close-isolation.test.ts (1 test | 1 failed) 15022ms
+   × isolates failed candidates and revalidates preserved preflight failures before one dataset commit 15019ms
+ ✓ tests/learner-tabs.test.ts (1 test) 2055ms
+   ✓ reclaims only verified terminal learner tabs with the current native verifier  2054ms
+ ✓ tests/strategy-research.test.ts (1 test) 1452ms
+   ✓ manual research requires its bound request, frozen evidence and a clean report-only tree  1451ms
+ ✓ tests/strategy-backfill.test.ts (1 test) 341ms
+   ✓ admits frozen backfill only after normal work and consumes actual native starts once  340ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for the original 35s-delayed turn with a concurrent aaa session
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(1) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
+-   "stopped": true,
++   "code": 75,
++   "stopped": false,
+    "turn": "turn-1",
+  }
+
+ ❯ tests/learner-herdr.test.ts:255:41
+    253|   it.each(["aaa", "zzz"])("waits for the original 35s-delayed turn wit…
+    254|     const f = delayed(35_000, "paste", neighbour);
+    255|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopp…
+       |                                         ^
+    256|     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    257|     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_pr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ordinary-close-isolation.test.ts > isolates failed candidates and revalidates preserved preflight failures before one dataset commit
+AssertionError: fatal: bad object 0000000000000000000000000000000000000000
+fatal: bad object 0000000000000000000000000000000000000000
+...: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/ordinary-close-isolation.test.ts:14:56
+     12|     encoding: "utf8", timeout: 15_000,
+     13|   });
+     14|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     15|   expect(result.stderr).toContain("Ran 6 tests");
+     16|   expect(result.stderr).toContain("OK");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  2 failed | 153 passed (155)
+   Start at  17:25:43
+   Duration  38.13s (transform 3.74s, setup 2.34s, import 4.80s, tests 28.65s, environment 2ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/issue48-review-1720/directed-vitest.json

@@ -1,0 +1,102 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator48-main-20261023-1720/agent
+
+ ❯ tests/learner-herdr.test.ts (62 tests | 2 failed) 4992ms
+     ✓ does not persist arbitrary inherited environment or proxy credentials in the pane launch script 5ms
+     ✓ preserves profile, model, effort, disabled features and explicit thread without exec-only options 12ms
+     ✓ reproduces the observed CLI name limit without touching the original pane 8ms
+     ✓ is deterministic and distinguishes the full label, pane and cwd without truncating their suffixes 4ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-strategy-proposal through completion and retirement 55ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-s2-strategy-proposal through completion and retirement 38ms
+     ✓ persists and reads back a bounded name for learner-20261023-021302-fix-batch through completion and retirement 41ms
+     ✓ persists and reads back a bounded name for learner-20261023-021301-postmortem through completion and retirement 40ms
+     ✓ retains the unsubmitted TUI when naming is not-applied 30ms
+     ✓ retains the unsubmitted TUI when naming is uncertain 183ms
+     ✓ retains the unsubmitted TUI when naming is foreign 171ms
+     ✓ does not rename or submit after pre-naming lease changes 28ms
+     ✓ does not rename or submit after pre-naming draft changes 28ms
+     ✓ does not rename or submit after pre-naming foreground changes 27ms
+     ✓ does not rename or submit after pre-naming cwd changes 173ms
+     ✓ checks the same bound name before continuation and every retirement key 44ms
+     × waits for the original 35s-delayed turn with a concurrent aaa session 87ms
+     × waits for the original 35s-delayed turn with a concurrent zzz session 70ms
+     ✓ bounds missing acceptance with paste visible and never sends keys or replays 71ms
+     ✓ bounds missing acceptance with human visible and never sends keys or replays 66ms
+     ✓ bounds missing acceptance with empty visible and never sends keys or replays 70ms
+     ✓ still refuses a real draft after delayed native acceptance 56ms
+     ✓ keeps the lease guard while waiting for native acceptance 47ms
+     ✓ keeps the pane guard while waiting for native acceptance 55ms
+     ✓ ignores idle screens and unrelated/old completions, and requires a matching accepted native turn 1ms
+     ✓ counts each native turn's last usage snapshot once across continuations 1ms
+     ✓ rejects replay instead of carrying native authorization forward 1ms
+     ✓ rejects wrong-body instead of carrying native authorization forward 0ms
+     ✓ rejects prefix instead of carrying native authorization forward 0ms
+     ✓ accepts duplicate native representations only within their explicitly bound turn 1ms
+     ✓ keeps partial native UTF-8 rows intact and fails closed on truncation 11ms
+     ✓ keeps pre-dispatch resume history outside the active parser window 50ms
+     ✓ persists bootstrap proof without interrupting the original native task or weakening retirement 45ms
+     ✓ refuses inherited MCP/config context before launching the TUI, without changing the account 11ms
+     ✓ classifies unsafe persisted environment before any model/terminal start 9ms
+     ✓ runs one interactive TUI, sends the original task, persists native completion and retires only its own PID 44ms
+     ✓ waits for the native task_complete even when the screen is idle 37ms
+     ✓ checks the original host/tab when pane.label is absent (foreign title: false) 27ms
+     ✓ checks the original host/tab when pane.label is absent (foreign title: true) 8ms
+     ✓ does not declare timeout complete 174ms
+     ✓ retains lease-lost rather than interrupting an unverified foreground 44ms
+     ✓ retains working-after-complete rather than interrupting an unverified foreground 175ms
+     ✓ retains a timed-out batch after draft appears 41ms
+     ✓ retains a timed-out batch after unknown appears 182ms
+     ✓ retains a timed-out batch after foreign-cwd appears 194ms
+     ✓ retains a timed-out batch after foreign-foreground appears 183ms
+     ✓ retains a timed-out batch after foreign-turn appears 62ms
+     ✓ stops retirement if draft changes after Esc 204ms
+     ✓ stops retirement if lease changes after Esc 180ms
+     ✓ stops retirement if uncertain-key changes after Esc 191ms
+     ✓ preserves human input on the cancelled exit path 46ms
+     ✓ preserves human input on the native-error exit path 44ms
+     ✓ preserves human input on the transport-error exit path 35ms
+     ✓ retains an owned TUI that does not exit after verified keys, without force killing it  744ms
+     ✓ waits read-only when the exact PID has exited but foreground metadata still names it 177ms
+     ✓ waits for a split native acceptance row without treating task_started alone as a human turn 53ms
+     ✓ accepts a matching native user message as evidence when the submission receipt is uncertain 43ms
+     ✓ retries a capacity error by continuing the same native session 62ms
+     ✓ continues a known error-idle TUI even when the failed native task_started has no end record 66ms
+     ✓ uses ten-minute backoff and caps three error continuations without progress 218ms
+     ✓ preserves an uncertain start without submitting or starting another model 167ms
+     ✓ keeps a changed pane and forbids finish/reclamation when retirement cannot be verified 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for the original 35s-delayed turn with a concurrent aaa session
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for the original 35s-delayed turn with a concurrent zzz session
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(1) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
+-   "stopped": true,
++   "code": 75,
++   "stopped": false,
+    "turn": "turn-1",
+  }
+
+ ❯ tests/learner-herdr.test.ts:255:41
+    253|   it.each(["aaa", "zzz"])("waits for the original 35s-delayed turn wit…
+    254|     const f = delayed(35_000, "paste", neighbour);
+    255|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopp…
+       |                                         ^
+    256|     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    257|     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_pr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 60 passed (62)
+   Start at  17:32:25
+   Duration  7.68s (transform 1.99s, setup 666ms, import 1.74s, tests 4.99s, environment 0ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/issue48-review-1720/herdr-unchanged-r2.json
