@@ -5032,3 +5032,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 - 2026-10-24T00:16:54+08:00 [ops] #36两批同turn原生完成已核，原reconcile仍75/foreign，退场授权仍false；原流程finish/seal被挡，保留原PID/会话/旧75，等原#36严格校验与恢复入口再收尾。新证据paper/materials/20261024-midnight-native-ops/terminal-readback.json，评论6369442769。
 
 - 2026-10-24T00:31:58+08:00 [ops] #42工具两叶净组合唯一full已实际通过：660文件6420过/2skip/零失败、tsc0；原固定外部证据消费者通过，实际库15类读回无错误但无外部条目，自然采用待核。已沿原play3457576挂自然边界发布，阶段waiting-original-natural-terminal；只持自有下一局准入，不停本局，不重跑full、不带#35。原件paper/materials/20261024-issue42-publication-ops/check-acceptance.json、publication-state.json。
+
+- 2026-10-24T00:38:02+08:00 [ops/V6-R421] #42留存工具余项两叶已自然边界发布（514f95a19f09），原唯一full660文件/6420过/2skip/零失败；实际15类题面消费者读回一致，最新518知识未改。外部来源列表补来源/版本/SHA/独立分母；当前已发布库外部匹配0，自然采用另待，不代关科学父。回退仅两叶前像、保新知识；#35尚未混入。原件paper/materials/20261024-issue42-publication-ops/publication.json。
+
+- 2026-10-24T00:43:29+08:00 [ops] 已核R421实际live cd8769fca4aa、两叶/15类消费者一致、518知识保留及准入释放，原循环自然续局。#35已按R421重组净12叶，暂等原refresh_driver3516077释放知识锁后由单一worker3525747冻结输入/完整检查；尚未开full，旧丢失结果不改。原件paper/materials/20261024-issue42-publication-ops/completion-readback.json、paper/materials/20261024-issue35-r421-ops/source-preassembly.json。

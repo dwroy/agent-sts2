@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-24T00:42:07+08:00",
+  "attempt": "snapshot preflight",
+  "result": "knowledge lock unavailable after original 30s bound; no full started",
+  "holders": [
+    {
+      "pid": 3516077,
+      "birth": "19801617",
+      "state": "S",
+      "command": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "scripts": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh_driver.py"
+      ],
+      "wait_channel": "do_wait"
+    },
+    {
+      "pid": 3516081,
+      "birth": "19801674",
+      "state": "S",
+      "command": "flock",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "scripts": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/ops/refresh-costs.py"
+      ],
+      "wait_channel": "locks_lock_inode_wait"
+    },
+    {
+      "pid": 3516089,
+      "birth": "19801817",
+      "state": "S",
+      "command": "flock",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "scripts": [
+        "/home/dw/Projects/agent-sts2/ops/global_build_funnel.py"
+      ],
+      "wait_channel": "locks_lock_inode_wait"
+    }
+  ]
+}

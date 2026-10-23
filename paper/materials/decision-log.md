@@ -6394,3 +6394,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T00:23:39+08:00 [watcher] #37续核R420：main aec606583、live902206965，来源/远端9e8f900dd与三关键叶自R418未变；只读预览326cc2c4e18f，两Jev运行叶同pre25，冲突仅共享测试/账本，保41/44完整时钟预算及双方记录。复用历史96项/tsc0，不代当前组合；42唯一full原PID3432945仍在途未发布，35→50→28→37→20父原序保持，未新full/合产品/动生产。20最终kit已部署，真实观察原链待核。材料paper/materials/20261024-issue37-r420-preflight/，原失败及27拒绝原件保留。
 
 - 2026-10-24T00:31:58+08:00 [ops] #42净两叶完整660文件/6420过/2skip通过，沿原play挂自然发布；现有库无外部条目，固定证据与自然消费分账。paper/materials/20261024-issue42-publication-ops/check-acceptance.json。
+
+- 2026-10-24T00:38:02+08:00 [ops] V6-R421 #42工具两叶自然发布及实际读回，保最新知识、#35未混入；复用唯一full6420过/2skip，不重full/模型，外部自然采用待核。paper/materials/20261024-issue42-publication-ops/publication.json。
+
+- 2026-10-24T00:43:29+08:00 [ops] 已核R421实际live cd8769fca4aa、两叶/15类消费者一致、518知识保留及准入释放，原循环自然续局。#35已按R421重组净12叶，暂等原refresh_driver3516077释放知识锁后由单一worker3525747冻结输入/完整检查；尚未开full，旧丢失结果不改。原件paper/materials/20261024-issue42-publication-ops/completion-readback.json、paper/materials/20261024-issue35-r421-ops/source-preassembly.json。
