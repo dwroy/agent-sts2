@@ -6416,3 +6416,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T01:06:59+08:00 [watcher] #43接续核六叶同已审380083709/e1204dcf且main/live均缺；19份原证据SHA全同，原2109输入前后核同。原30项定向与真实.mts一过一败、模拟exact/data拒绝回执仍可追溯，本轮不重测或合产品。原ops35唯一full在途，birth实际吻合；依35→50→28→37→20父及39/43顺序，随20最终组合核收。原件paper/materials/20261024-issue43-evidence-readback/。
 
 - 2026-10-24T01:15:01+08:00 [ops] 按主管最新“12项均等待、回Fast”指示，ops专用启动参数已恢复Fast/high并合main ce40ebdb6222；四份代码/测试与已验Fast版本逐字同，当前tsc0/3文件45项过，复用原6508项完整回执，未重跑full。原入口下次空闲按参数hash恢复同session，实际原生生效待核；不改共享配置或其他角色。#47已完成自然compact及原tab读回并撤临时块恢复detailed；#35原6429项检查过后已挂自然发布。原件paper/materials/20261024-ops-return-fast/publication.json、paper/materials/20261024-issue47-resume-ops/restore-and-acceptance.json。
+
+- 2026-10-24T01:15:37+08:00 [ops] #35的01:10检查事件与已处理6429项通过原件核同，原发布worker3660649身份仍活，继续等play3638150自然结束；未重复检查/发布。paper/materials/20261024-issue35-r421-ops/event-0110-reconciled.json。
