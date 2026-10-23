@@ -213,6 +213,90 @@ describe("bounded native learner names", () => {
   });
 });
 
+describe("delayed native acceptance after prompt delivery", () => {
+  function delayed(delayMs: number | undefined, screen: "paste" | "human" | "empty" = "paste", neighbour = "aaa") {
+    const f = fixture("bootstrap"); const h = f.opts.h!;
+    let clock = Date.now(), sentAt: number | undefined, sent: string[] | undefined, meta = "", promptCalls = 0;
+    f.opts.now = () => clock;
+    f.opts.timeoutMs = 200_000;
+    f.opts.pause = async () => {
+      clock += 10_000;
+      await new Promise((done) => setTimeout(done, 2));
+      if (sent && delayMs !== undefined && clock - sentAt! >= delayMs) {
+        writeFileSync(f.file, meta);
+        const args = sent; sent = undefined;
+        await h(args); // The original prompt appears once, in its original native session.
+      }
+    };
+    f.opts.h = async (args) => {
+      if (args[0] === "agent" && args[1] === "prompt") {
+        promptCalls++; sent = args; sentAt = clock;
+        // Concurrent dispatch has a different cwd/session even if a prompt proof is copied into its file.
+        const other = join(f.root, "home", "sessions", ...f.file.split("/").slice(-4, -1), `${neighbour}.jsonl`);
+        writeFileSync(other, [row("session_meta", { id: "neighbour", cwd: `${f.root}/other` }),
+          row("event_msg", { type: "task_started", turn_id: "other" }),
+          row("event_msg", { type: "user_message", message: args[3] })].map((r) => JSON.stringify(r) + "\n").join(""));
+        return ok(); // Submission receipt precedes native acceptance, as in 151302-s2.
+      }
+      if (sent && args[0] === "pane" && args[1] === "read") return ok({}, screen === "empty"
+        ? "header\n› \u001b[2mAsk Codex to do anything\u001b[0m"
+        : `header\n› ${screen === "human" ? "Human draft not sent" : sent[3]}`);
+      const response = await h(args);
+      if (args[0] === "pane" && args[1] === "run") {
+        meta = readFileSync(f.file, "utf8"); rmSync(f.file); // No native file until the delayed first turn.
+      }
+      return response;
+    };
+    return { ...f, promptCalls: () => promptCalls, elapsed: () => clock - sentAt! };
+  }
+
+  it.each(["aaa", "zzz"])("waits for the original 35s-delayed turn with a concurrent %s session", async (neighbour) => {
+    const f = delayed(35_000, "paste", neighbour);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.bindings).toHaveLength(1); expect(receipt.native_preludes).toHaveLength(1);
+    expect(receipt.rollout).toBe(f.file); expect(receipt.retirement_authorized).toBe(true);
+    expect(f.promptCalls()).toBe(1); expect(f.notices).toEqual([]);
+    expect(f.events.filter((e) => e.type === "thread.started")).toHaveLength(1);
+  });
+
+  it.each(["paste", "human", "empty"] as const)("bounds missing acceptance with %s visible and never sends keys or replays", async (screen) => {
+    const f = delayed(undefined, screen);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.elapsed()).toBe(120_000); expect(f.promptCalls()).toBe(1);
+    expect(f.notices).toEqual(["learner native acceptance timed out; keep original session; no task replay"]);
+    expect(f.calls.some((c) => c[1] === "send-keys" || c[1] === "close")).toBe(false);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.bindings).toEqual([]); expect(receipt.retirement_authorized).toBe(false);
+  });
+
+  it("still refuses a real draft after delayed native acceptance", async () => {
+    const f = delayed(35_000); const h = f.opts.h!;
+    f.opts.h = async (args) => f.prompts() && args[0] === "pane" && args[1] === "read"
+      ? ok({}, "header\n› Human draft not sent") : h(args);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toHaveLength(1);
+    expect(f.notices).toEqual(["unsent human draft; keep original session and supervision"]);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false); expect(f.promptCalls()).toBe(1);
+  });
+
+  it.each(["lease", "pane"])("keeps the %s guard while waiting for native acceptance", async (kind) => {
+    const f = delayed(35_000); const h = f.opts.h!;
+    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !(f.elapsed() >= 20_000) };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (kind === "pane" && f.elapsed() >= 20_000 && args[0] === "pane" && args[1] === "get") {
+        return ok({ pane: { ...response.result?.pane as object, terminal_id: "foreign-terminal" } });
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.elapsed()).toBe(20_000); expect(f.promptCalls()).toBe(1);
+    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toEqual([]);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+  });
+});
+
 describe("native batch authority", () => {
   it("ignores idle screens and unrelated/old completions, and requires a matching accepted native turn", () => {
     const old = new NativeBatch("our-marker");
