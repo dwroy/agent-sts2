@@ -137,3 +137,7 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 - 2026-10-23T09:45:21+08:00 [watcher] #27实读0943-ops原链：15原异议消息/ops发送凭证与67持久证据窗独立SHA核同；登记整体SHA随重提变化，不误称内容变更，15临时queue当前缺失不当送达/重送。原本人接收/Roy原生可见转达保持，无新内容重复转达；正式CLI仍3f7afefb手动task白名单阻塞、双ACK false，不retry/手改/伪造source或代ACK。原冻结rc1/当前575项0问题分账不重check，main8/live3未变，后五条live/命中及科学父保留。原队列36补交→46→26提示→42余项→35→28→37（37→20）保持，无full/模型/dataset/生产或新裁决。材料paper/materials/20261023-issue27-0943-watcher/。
 
 - 2026-10-23T10:54:03+08:00 [watcher] #36原已审三补丁6a5d049f+76b41d6d+c8ff9caf九叶最终组合：实际R417/70eb12870保留磁盘80五叶及469知识，treee083c31ce06b唯一完整tsc0/6324过+2skip/0败，2538输入前后SHA同；main兼容tsc0/九文件205过及Python通过，不重复full。精确八源码/测试叶加三方合并docs合main交ops，保留6356069735回退段落，未碰live/学习开关/模型、未重派四批，原07:56准入退出保留。主管6355920170新增P0超时降级、终态seal/#20回收及自然学习槽位/后批仍待；临时非交互由ops维护，不能据本轮关闭P0或恢复交互。原后续46→47视图→26提示→42余项→35→28→37（37→20）、27正式ACK CLI阻塞及科学父保留。材料paper/materials/20261023-issue36-unbound-full-integrator/。
+
+2026-10-23T11:53:52+08:00 [watcher] #36 P0首次含#20组合e9e3009f9281唯一full首败：tsc0/653文件6326过+2skip/2败，2548输入SHA同；brain-view旧错误文案与新running-panes冲突，ordinary-close-isolation原15秒超时复现，失败树6b1671d5及全原件保留。主管6356904617裁决实际live最小P0不带#20、先无新增#36同基线判旧超时、再仅一次full；本提交仅记录，无源码合并或发布。材料paper/materials/20261023-issue36-p0-full-failure/；后续.artifacts/issue36-p0-minimal-20261023-1153。
+
+2026-10-23T11:53:52+08:00 [watcher] #27 11:15与11:43原链15异议原文/发送凭证及67证据窗SHA均实读核同并转Roy，记录paper/materials/20261023-issue27-watcher-receipt/received.json及received-1143.json，GH6356605943/6356888587；正式ACK仍受原CLI白名单阻塞，不写通知JSON、不代其他角色ACK、不扩样本/因果或关闭科学父。
