@@ -9,6 +9,8 @@ from pathlib import Path
 import re
 import subprocess
 
+ACCOUNT_CONFIG_RULE = "Roy 2026-10-23：codex3 learner 删除 service_tier 保持现状；账号配置等可回退小改动 ops 可自行处理，做完须写 notes/for-roy.md 并向 ops/codex-ops/inbox-claude.md 追加一行，由主管转达 Roy；不读凭据、不扩大权限。"
+
 
 def stamp():
     return subprocess.check_output(["date", "-Is"], text=True).strip()
@@ -51,10 +53,10 @@ def bounded_checklist(text, current, receipt, receipt_sha):
              "首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。",
              "模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。",
              "只处理原事件，不新增轮询/模型/局/计时器；STOP、恢复开局及角色授权必须按 restoration_context 原文核实，regent 保持暂停。",
-             "不读凭据/.env/游戏二进制，不改共享配置/账号/ops prompt，不推送。",
+             "不读凭据/.env/游戏二进制，不改 ops prompt，不推送。", ACCOUNT_CONFIG_RULE,
              "H0/0332 等科学边界、精确宿主树、发布/兼容与 retention 沿原报告核实；索引不代验收、shipped、覆盖率或消费。",
              "严格普通无源码成功仍须原调度器账本检查、唯一 dataset、受控记录提交及 ordinary-close 回执；异常/异议/缺证/人工决定正常唤醒。",
-             "普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。"]
+             "普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。\n主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。"]
     return "\n".join(lines) + "\n"
 
 
@@ -175,7 +177,7 @@ def generate(root, directory):
                   if context else "授权：Roy 2026-10-18 16:13；只处理原事件，不轮询、不新增模型/局/计时器，regent 保持暂停。"),
                  "模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。",
                  f"账号选择：{home}；原 ops：{identity.get('pane', '未知')} / {identity.get('session', '未知')}；执行模式：{execution}；辅助/学习者沙箱保持。",
-                 "不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。", f"main {main_head}", f"live {live_head}；登记 release {current['release']}（登记值不代表新树检查绿或实际采用）。",
+                 "不读凭据/.env/游戏二进制；不推送。", ACCOUNT_CONFIG_RULE, f"main {main_head}", f"live {live_head}；登记 release {current['release']}（登记值不代表新树检查绿或实际采用）。",
                  "首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。",
                  f"在途批次 {len(active)}（完整 owner/租约与路径见 current.json）："]
         for key, row in list(active.items())[-8:]:
@@ -205,7 +207,7 @@ def generate(root, directory):
                       "current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。",
                       "H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。",
                       "严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。",
-                      "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。"])
+                      "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。\n主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。"])
         text = bounded_checklist("\n".join(lines) + "\n", current, receipt, receipt_sha)
         if len(text.encode()) > 12288:
             raise ValueError("ops-current exceeds 12KB; retain previous checklist and inspect current.json")
