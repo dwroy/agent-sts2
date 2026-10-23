@@ -6470,3 +6470,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T03:47:39+08:00 [ops] #51确认下一唯一检查窗口归原集成员#52候选核验/冻结；#28净树12叶/469知识核同、full0保持，待明确实际释放再接28→37→20父，不加worker/锁等待。paper/materials/20261024-issue52-window-ops/window-confirmation.json。
 
 - 2026-10-24T03:58:06+08:00 [ops] #28候选既有85库生产加载与基线等价，full0等52实际释放；#50单自然结束局20计划/19后继及F15/F16检查点核同，F21失败未达F48/F49，不推收益/关父。paper/materials/20261024-issue28-r423-ops/candidate-library-preflight-0352.json；paper/materials/20261024-issue50-first-ended-ops/readback.json。
+
+- 2026-10-24T04:15:02+08:00 [dev #52] 原#48/#51会话交付P1门修1fd887cfc：校准共享原feature树/重试判定，进阶审计共享目标已结束证据/重试/树判定，既有审计锁只读探测；缺树/缺证旧标记不再误挡两个来源，原请求/身份/失败/证据、普通writer等待、活动/launching、其他学习要求、锁与两槽保持。tsc及12定向文件82项通过，新Python7项/前后16格复现通过，无full/模型/对局或生产写入；交集成员核候选并沿原唯一窗口协调，原ops宿主发布，#51/#48科学父与#28后续次序不变。paper/materials/20261024-issue52-priority-dev/receipt.json。
