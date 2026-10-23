@@ -12,33 +12,6 @@ import { novaJevFetch } from "./nova.js";
 
 import { readAnswers, type AnswerSet } from "./answers.js";
 import type { QuestionSet } from "./questions.js";
-import { attachOpenBook } from "../../knowledge/open-book.js";
-import { projectCombatDecision } from "./combat-entry-projection.js";
-
-const preparedRequests = new WeakMap<object, WeakSet<object>>();
-/** Projected/compacted logged requests are already final, including deliberate omission at the byte limit. */
-export function markJevOpenBookPrepared(state: unknown, questions: QuestionSet): void {
-  if (state === null || typeof state !== "object") return;
-  let requests = preparedRequests.get(state);
-  if (!requests) { requests = new WeakSet(); preparedRequests.set(state, requests); }
-  requests.add(questions);
-}
-
-/** Shared by direct calls and the logged path, before projection/compaction, so audit equals wire. */
-export function prepareJevOpenBook(state: unknown, questions: QuestionSet, projectForBudget = false): unknown {
-  const board = state !== null && typeof state === "object" ? state as Record<string, unknown> : {};
-  if (preparedRequests.get(board)?.has(questions)) return state;
-  if ((board["open_book"] as Record<string, unknown> | undefined)?.["schema"] === "open-book-context-v1") return state;
-  const brief = board["run_brief"] as Record<string, unknown> | undefined;
-  // Leave 1 KB for model/transport fields within the existing 24 KB request budget.
-  const baseBytes = (projectForBudget ? projectCombatDecision(state, questions)?.contract.projectedBytes : undefined)
-    ?? Buffer.byteLength(JSON.stringify({ state, questions }));
-  const enriched = attachOpenBook({ questions, board: state }, {
-    character: typeof brief?.["character"] === "string" ? brief["character"] : undefined,
-    maxBytes: Math.max(0, 23_000 - baseBytes),
-  });
-  return enriched && typeof enriched === "object" && "open_book" in enriched ? { ...board, open_book: enriched.open_book } : state;
-}
 
 export type JevFailureKind = "auth" | "permission" | "validation" | "rate_limit" | "server" | "connection" | "unknown";
 
@@ -257,7 +230,6 @@ export class JevClient {
   }
 
   private async askBounded(state: unknown, questions: QuestionSet, timeoutMs?: number, signal?: AbortSignal): Promise<JevAskResult> {
-    state = prepareJevOpenBook(state, questions);
     interface RawResult {
       answers?: unknown;
       model?: string;

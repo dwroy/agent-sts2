@@ -1,0 +1,211 @@
+{
+  "schema": "issue37-development-verification-v1",
+  "base": "aca65750cc75be8f6782477eb06ad64f053e84f5",
+  "tsc_exit_code": 0,
+  "tsc_command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "-p",
+    "tsconfig.json",
+    "--noEmit"
+  ],
+  "vitest_command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--pool=forks",
+    "--maxWorkers=1",
+    "--no-file-parallelism"
+  ],
+  "nice": 19,
+  "checks": [
+    {
+      "name": "targeted",
+      "exit_code": 0,
+      "files": 6,
+      "passed": 82,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "failures": []
+    },
+    {
+      "name": "full_initial",
+      "exit_code": 1,
+      "files": 655,
+      "passed": 6173,
+      "failed": 2,
+      "skipped": 2,
+      "success": false,
+      "failures": [
+        {
+          "file": "agent/tests/v6-card-option-loop.test.ts",
+          "tests": [
+            "keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator",
+            "keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unmodified_targeted_recheck",
+      "exit_code": 0,
+      "files": 1,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "failures": []
+    },
+    {
+      "name": "base_reproduction",
+      "exit_code": 1,
+      "files": 1,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0,
+      "success": false,
+      "failures": [
+        {
+          "file": "agent/tests/v6-card-option-loop.test.ts",
+          "tests": [
+            "keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "test_clock_fix_and_budget",
+      "exit_code": 0,
+      "files": 2,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "failures": []
+    },
+    {
+      "name": "full_final",
+      "exit_code": 0,
+      "files": 655,
+      "passed": 6175,
+      "failed": 0,
+      "skipped": 2,
+      "success": true,
+      "failures": []
+    }
+  ],
+  "final_input_count": 2635,
+  "final_inputs_unchanged": true,
+  "logs": [
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-base.log",
+      "bytes": 1745,
+      "sha256": "d045dba62e9965a6e254d9cebaa57ee431431c503416121e06ab2dae219fa41e",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-base.result.json.log",
+      "bytes": 2349,
+      "sha256": "d8fbd5a6aba96fbf467e623d0b3637196838f4be3b56a27677dc477e6d80001e",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-fixed.log",
+      "bytes": 906,
+      "sha256": "fcfc4945bdc01287171dbde5f8a63f698a2a9aa65e5f0e83355153b19f958d11",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-fixed.result.json.log",
+      "bytes": 8590,
+      "sha256": "3b368180fc9ad814c64162be002e4677111b5bd6c47bd075ab40a4743894b562",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-recheck-1.log",
+      "bytes": 855,
+      "sha256": "54818d940768b9c6273a7329b7d40b618d1df48bb4bc0c0e07cb40db793ea85d",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/card-option-recheck-1.result.json.log",
+      "bytes": 2066,
+      "sha256": "03181255621c118437dd969aeba5f9f0100ed488c362eaf6fa583fc54533a33c",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1-start.json.log",
+      "bytes": 168,
+      "sha256": "9bd6287ff58f451904439af3383d2d64044db4b859e3642c3913ae8cc06ca9d9",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1.log",
+      "bytes": 86708,
+      "sha256": "f7e1f567b4d4c681b97b61c3893a8ec6e545746d98f19020156aef8771ef24a2",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-1.result.json.log",
+      "bytes": 2396598,
+      "sha256": "4fd342f81897129492c171b1f340c3e5aedbd4e57492d74cf82c89fa9bdfea1e",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2-start.json.log",
+      "bytes": 117,
+      "sha256": "138a53c6da5a901e9d3768a780d05e916c3ad3fa5161092b4a9ffd531534c41b",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2.log",
+      "bytes": 81256,
+      "sha256": "4f302eee6911886d7bf59613a12266aa767d2b9022f3a33a5dbfa420ebb79fe9",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/full-2.result.json.log",
+      "bytes": 2396125,
+      "sha256": "d7c8e38f5ea5b2cb037ecf3afdcc578f4a0be52dd0ec82ea747d66fc4e90c061",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/inputs-before-2.json.log",
+      "bytes": 387521,
+      "sha256": "bb4e46181a42c7ee2625199335be7c6c66fc7135cb33c0040a9f12c70cf497b4",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/inputs-before.json.log",
+      "bytes": 387521,
+      "sha256": "1d74c2cb4f4b26e44ab992ca0ca798c534e9561a86b38d7b1f06c82a43d7359a",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/targeted.log",
+      "bytes": 901,
+      "sha256": "e90fc844d8bfd95ca67b1d2c80dfecb8667c3910fe88938fb6cb5dbc1cd234af",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/targeted.result.json.log",
+      "bytes": 26623,
+      "sha256": "6757225ffab9c7133de4d03a03ff8b9f257badfad486414c3ef1cc797db51834",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/tsc-2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storage": "local original; retained in source worktree"
+    },
+    {
+      "path": "paper/materials/20261022-issue37-jev-no-open-book/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storage": "local original; retained in source worktree"
+    }
+  ],
+  "production_readback": "pending integrator admission and ops natural-boundary release; no live/STOP/game operations"
+}

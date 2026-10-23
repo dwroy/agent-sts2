@@ -1,6 +1,6 @@
 # 开卷机械资料（#25）
 
-本地库提供 v0.111.0 卡牌、遗物、怪物、事件的静态资料。大脑和 Jev 只按当前题目取相关条目，决策中不联网。当前接入 Silent；Ironclad 的题面、模拟序列化与评分保持原样。
+本地库提供 v0.111.0 卡牌、遗物、怪物、事件的静态资料。大脑按当前题目取相关条目，决策中不联网。当前接入 Silent；Ironclad 的题面、模拟序列化与评分保持原样。Roy 2026-10-22 在 #37 指定开卷只给大脑，Jev 出牌请求不附开卷。
 
 ## 来源与许可
 
@@ -20,7 +20,7 @@
 
 共 595 牌、298 遗物、115 怪物、66 事件。其他角色池只在跨池获得等条件下参考，不计入 Silent 经验分母。版本不为 v0.111.0 的条目拒绝加载；未知版本不能由 mod_version 推断。
 
-调用 `externalReference(kind, id, character, directory?)` 可按精确 ID 读全部条目，`externalCardReference` 是卡牌快捷接口。`attachOpenBook({options, question, payload}, options?)` 在 Brain request 组装时调用，也识别实际选项里的 JSON 字符串及拿牌摘要的 `card` 名称与 `text`。优先处理选项和题干，再处理牌组等背景；跳过有歧义的名称，ASCII 名称要求完整词边界。已有明确 ID 时不以名称猜测替代。遍历限制 120,000 字符、16 层；匹配未覆盖的描述保留原样。
+调用 `externalReference(kind, id, character, directory?)` 可按精确 ID 读全部条目，`externalCardReference` 是卡牌快捷接口。生产大脑经 #33 的 `kb_open_book` 工具按需查询，见 [知识工具模式](brain-agent-mode.md)。历史适配器的 `attachOpenBook({options, question, payload}, options?)` 在 Brain request 组装时调用，也识别实际选项里的 JSON 字符串及拿牌摘要的 `card` 名称与 `text`。优先处理选项和题干，再处理牌组等背景；跳过有歧义的名称，ASCII 名称要求完整词边界。已有明确 ID 时不以名称猜测替代。遍历限制 120,000 字符、16 层；匹配未覆盖的描述保留原样。
 
 `open_book` 含相关完整条目、所需来源、冲突、缺项和 `omitted`。附加总量（含替换描述的增量）上限 18,000 UTF-8 bytes；按整条加入，放不下就省略并计数，避免截断 JSON。单个很大的事件也可能被省略，仍可按 ID 查本地文件。上限约束新增部分，不压缩或丢弃原题。资料按文件 inode/size/mtime 缓存，缺失文件或原子替换后的文件在下一次查阅时重读。
 
@@ -30,7 +30,7 @@
 
 `modelHandCard(...).externalReference` 与 `enemySims(...)[i].externalReference` 提供同一离线条目的数值；字段不可枚举，不进入现有模型 JSON、指纹或求解器克隆。机制支持仍由原模型判定：查到资料不会把 `known=false` 改为 true，也不改变评分。#13 可通过上述接口读取静态事实，再按学习协议建立机制实现与回放证据。
 
-Jev 的 direct 和 logged 入口共用 `prepareJevOpenBook`，先附同源资料，再进行原投影/压缩；实际发送、题面日志和投影 hash/字节口径一致。Jev 的 board 动态字段保持不变。重复准备同一题不重复附加。Jev 在原 24 KB 请求预算内加入资料：按实际投影后的基础题面预留空间，并留 1 KB 给 model 等传输字段；空间不足时整条省略。logged 路径的投影或无损压缩重试在 SDK 入口不再补第二次，防止日志与实际请求不一致。
+Jev 的 direct 和 logged 入口已删除 #25 的开卷准备调用及配套去重代码，恢复 #25 之前的 V5 请求路径。原投影、无损压缩和重试继续使用原状态与问题，实际发送、题面日志和投影 hash/字节口径一致；不增加开关，不改 REFLEX 开关。Jev 后续出牌优化走 #28 的经验条目。
 
 外部条目没有本系统局号、胜率、角色验证分母或实战结论，不修改文字策略库、学习账本，也不把静态数据当作支持某种打法的证据。
 
