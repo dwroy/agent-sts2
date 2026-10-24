@@ -147,17 +147,21 @@ def allocation_base(root, directory, tree):
     return record["base"]
 
 
-def source_admission(root, directory, tree, head):
+def source_admission(root, directory, tree, head, *, allow_leaf=False):
     """A main-only report may retire; executable task deltas still require real live publication."""
-    if not retention.ancestor(root, head):
+    in_main = retention.ancestor(root, head)
+    if not in_main and not allow_leaf:
         raise ValueError("workspace source unpublished in main")
     branch = git(tree, "symbolic-ref", "HEAD").decode().strip()
     if not branch.startswith("refs/heads/") or git(root, "rev-parse", branch).decode().strip() != head:
         raise ValueError("source branch reference not preserved")
     live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
     live_commit = git(live, "rev-parse", "HEAD").decode().strip()
-    return acceptance(root, tree, head, git(root, "rev-parse", "HEAD").decode().strip(),
-                      live_commit, allocation_base(root, directory, tree))
+    proof = acceptance(root, tree, head, git(root, "rev-parse", "HEAD").decode().strip(),
+                       live_commit, allocation_base(root, directory, tree))
+    if not in_main and not proof["live_required"]:
+        raise ValueError("workspace source unpublished in main")
+    return proof
 
 
 def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None):
@@ -291,7 +295,12 @@ def admission(root, directory, tree):
             base = p["base"]
         source_proof = acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base)
     elif (directory / "retention/allocations" / (tree.name + ".json")).exists() and tree.name.startswith("ops-"):
-        raise ValueError("allocated ops workspace needs explicit completion acceptance")
+        # An untouched allocation is not completion. A changed source must independently
+        # satisfy the existing real main/live publication and original baseline checks.
+        base = allocation_base(root, directory, tree)
+        if head == base:
+            raise ValueError("allocated ops workspace needs explicit completion acceptance")
+        source_proof = source_admission(root, directory, tree, head, allow_leaf=True)
     elif tree.name.startswith("ops-"):
         if time.time() - (tree / ".git").stat().st_mtime < 3600:
             raise ValueError("recent unregistered ops allocation retained")

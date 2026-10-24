@@ -196,6 +196,27 @@ class Storage(unittest.TestCase):
             self.compress()
         self.assertTrue(source.exists())
 
+    def test_original_output_can_bind_missing_batch_report_without_finishing_task(self):
+        source=self.copies(); self.batch.pop('report')
+        storage.retention.atomic(self.directory/'learn.json',self.state)
+        output=self.directory/'learner'/ (self.batch_id+'.out'); output.parent.mkdir()
+        output.write_text('```json\n'+json.dumps(dict(task='strategy-proposal',report=str(self.scratch/'report.md')))+'\n```\n')
+        before=(self.directory/'learn.json').read_bytes()
+        self.assertEqual(self.compress()['state'],'source_copies_compressed')
+        self.assertFalse(source.exists()); self.assertEqual(before,(self.directory/'learn.json').read_bytes())
+        self.assertTrue((self.scratch/'report.md').exists()); self.assertTrue(self.event.exists())
+
+    def test_output_report_cannot_override_wrong_launcher_binding(self):
+        self.copies(); self.batch.pop('report')
+        storage.retention.atomic(self.directory/'learn.json',self.state)
+        output=self.directory/'learner'/(self.batch_id+'.out'); output.parent.mkdir()
+        output.write_text('```json\n'+json.dumps(dict(task='strategy-proposal',report=str(self.scratch/'report.md')))+'\n```\n')
+        value=json.loads(self.event.read_text()); value['cwd']=str(self.root)
+        self.event.write_text(json.dumps(value)+'\n')
+        with self.assertRaisesRegex(ValueError,'binding'):
+            self.compress()
+        self.assertTrue((self.scratch/'.source-checkout').exists())
+
     def test_interrupted_removal_reuses_verified_archive(self):
         source = self.copies()
         unlink = Path.unlink

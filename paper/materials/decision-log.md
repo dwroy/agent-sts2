@@ -6552,3 +6552,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T09:32:56+08:00 [ops] 核091302 fix无源但139路径漂移空修复门拒绝/failed-rc0及root-scratch归属deferred；strategy两提案18账本补链、R424实际18项同，pending保持/无新发布，原checkout已回收、scratch保留。full0/STOP不变。paper/materials/20261024-091302-callbacks-ops/verification.json。
 
 - 2026-10-24T09:43:11+08:00 [ops] #23继续核收：累计155历史回收/311分配，近24h16历史（15当前物理/分支）/123；disk净减107.15GiB，可持续仍失败，原worker/保护/STOP保持，不提前验#46。paper/materials/20261024-issue23-resume-0936-ops/audit.json。
+
+- 2026-10-24T10:21:46+08:00 [dev #20] 按Roy/Claude评论6378554518独立补交回收常见情况自理：原五分钟tick缺文件前两轮静默queued、连续第三轮起本地retained报告；终态原scheduler结束行/完整批次/退出进程/原生与产物/空输入齐全则自动补scheduler-recovery封存，历史birth缺失不伪造。绑定失败且原生仍活或证据矛盾才请求ops，原uncertain和真实异常兜底保留；追加只读24h提醒/自动关tab/介入请求统计。原分配ops树变更后可据真实main/live逐叶自动结算，初始基线与未发布报告保留；原out+launcher可补证明过程副本归属，不改批次结果。当前main946dcfb39基线；tsc0，定向四文件分组通过（Python101/18/20，包装不重复累加），原失败保留；发前gitleaks，无full/模型/真实回收/live/STOP动作，影响live启动否。证据paper/materials/20261024-issue20-reclaim-self-service/；交集成员，部署后实际一天验收待原ops。

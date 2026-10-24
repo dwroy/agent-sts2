@@ -24,7 +24,7 @@ nice -n 19 python3 ops/learner_retention.py restore --batch <准确批次号>
 
 ## 运维、开发工作树和可重建缓存
 
-同一回收进程会使用每轮剩余名额回收已发布且无活动进程的独立运维和开发工作树，总上限仍为四个（即使传入更大的 limit 也截到四个）。旧 `ops-*` 工作树须干净、至少闲置一小时、HEAD 已进入本实例 main 且来源分支引用仍在，没有原请求或学习 owner 占用。任务相对原分配基线的可执行代码和知识改动仍须实际进入 live；纯报告、研究、文档不要求整个 HEAD 进入 live。无原分配回执时保守使用 source 与 live 的共同祖先，不能因 source 已在 main 就把待发源码当成空改动。新分配的运维工作树不能以初始 HEAD 已存在于 main 为由删除，必须取得下面的完成回执。live、exp、角色常驻实例、运行中、未提交、未发布、被锁定或有未完成要求的工作树始终保留。
+同一回收进程会使用每轮剩余名额回收已发布且无活动进程的独立运维和开发工作树，总上限仍为四个（即使传入更大的 limit 也截到四个）。旧 `ops-*` 工作树须干净、至少闲置一小时、HEAD 已进入本实例 main 且来源分支引用仍在，没有原请求或学习 owner 占用。任务相对原分配基线的可执行代码和知识改动仍须实际进入 live；纯报告、研究、文档不要求整个 HEAD 进入 live。无原分配回执时保守使用 source 与 live 的共同祖先，不能因 source 已在 main 就把待发源码当成空改动。新分配的运维工作树不能以初始 HEAD 已存在于 main 为由删除。Roy 10-24（#20）授权回收任务自理：仅当 HEAD 已不同于原分配基线、源码实际满足原 main/live 发布门及 owner/进程/干净/归档等检查时，回收器自行结算，证据进入原归档 proof；其余情况仍需下面的完成回执或继续保留。live、exp、角色常驻实例、运行中、未提交、未发布、被锁定或有未完成要求的工作树始终保留。
 
 开发或运维完成一个功能时，先跑项目要求的检查并实际合入 main；要部署的源码还须合入 live，然后登记原源码和实际 main/live 提交。live SHA 对纯材料也记录为运行上下文，但不要求包含该材料提交。程序逐项比对原源码与发布树的执行代码、校验文件和知识叶子的 Git 对象，允许保留来源分支的精确叶子集成；发布提交是原源码的后代时，允许后续发布继续演进。原请求的未完成范围不能被这个工作树回执关闭。登记后原调度 tick 自动清理，手动 sweep 也经过同一门禁：
 
@@ -78,7 +78,7 @@ python3 ops/worktree_storage.py materialize --root "$PWD" --workspace <原工作
 
 materialize 只接受精确的普通 Git 文件，校验实际 HEAD 与 blob；已有展开输入和修改保持不变。每棵树干净的历史输入缓存上限 256 MiB，空闲后原 worker 再回收；修改过的证据不受缓存额度限制，不会被删除。原学习 wrapper 从实例根运行当前 launcher，传给原工作树的 cwd、任务、模型、账号、线程和基线保持原绑定，因此旧 exp 等常驻树也收到新存储规则。全量仓库 tar 与展开 checkout 不作为新的对照输入：记录 Git SHA、`git diff --binary`、固定输入清单及测试输出即可，按所需路径恢复。
 
-旧 `.source-checkout`、`.before-checkout` 和 `source-archive.tar` 可单独压缩归档。先核原 batch、报告路径与 learner_launch 的 cwd/task/scratch，完整 gzip 归档逐文件 SHA 和归档读回通过后，才删除对应的过程副本。原报告、jsonl/out/err/log、其他冻结证据均留在原路径；已知 node_modules 软链接也留在原路径。凭据、陌生软链接、嵌套 Git 和未知 owner 保留。归档在原 `ops/codex-ops/retention/storage/source-copies/`，不因任务失败丢弃。
+旧 `.source-checkout`、`.before-checkout` 和 `source-archive.tar` 可单独压缩归档。先核原 batch、报告路径与 learner_launch 的 cwd/task/scratch，完整 gzip 归档逐文件 SHA 和归档读回通过后，才删除对应的过程副本。原报告、jsonl/out/err/log、其他冻结证据均留在原路径；已知 node_modules 软链接也留在原路径。缺少 batch.report 时可从原 BATCH.out 的最终任务回报恢复 scratch 路径，仍须原 learner_launch 的 cwd/task/params.scratch 三者一致；不修改批次结果。凭据、陌生软链接、嵌套 Git 和未知 owner 保留。归档在原 `ops/codex-ops/retention/storage/source-copies/`，不因任务失败丢弃。
 
 ```bash
 nice -n 19 python3 ops/worktree_storage.py compress --root "$PWD" \
