@@ -324,12 +324,14 @@ def cmd_tick(args):
                    f"原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
         inbox(message)
         enqueue("disk-capacity", message)
-    batch = check_postmortems(state, character)
+    import strategy_external_jobs
+    external_pending = character == "silent" and strategy_external_jobs.ready(state, ROOT)
+    batch = None if external_pending else check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    # #51 shares one alternating admission across ordinary writers and audits.
-    report["ascension_audit"] = (None if report["write_jobs"].get("external_alternation_hold")
+    # Pending external work precedes new postmortems, writers and audits.
+    report["ascension_audit"] = (None if report["write_jobs"].get("external_priority_hold") or report["write_jobs"].get("external_alternation_hold")
                                  else check_ascension_audits(state, character))
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])

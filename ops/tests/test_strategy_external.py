@@ -190,31 +190,27 @@ class External(unittest.TestCase):
         plan["input_manifest"] = self.ref("frozen/second-manifest.json", manifest)
         self.config["plans"].append(plan); self.save_config()
 
-    def test_registered_batches_alternate_across_ticks_and_restart(self):
+    def test_pending_external_batches_precede_normal_work_across_restart(self):
         self.second_plan(); lanes = []
-        self.state["batches"]["20251231-235959-experience-update"] = {
-            "task":"experience-update", "character":"silent", "pid":9, "state":"done"}
         def writer(*args, **kwargs):
             if kwargs.get("external_source"):
                 lanes.append("external"); return self.writer(*args, **kwargs)
-            lanes.append("normal"); bid = args[9] + "-" + args[3]
-            self.state["batches"][bid] = {"task":args[3], "character":args[4], "pid":11, "state":"running"}
-            return bid, 11
+            lanes.append("normal"); return ("ordinary", 11)
         first = self.tick(STAMP, writer)
         self.assertTrue(first["strategy_external"]); self.assertIsNone(first["experience"])
         occupied = self.tick("20260101-000002", writer, alive=lambda pid: pid == 10)
         self.assertIsNone(occupied["experience"]); self.assertEqual(lanes, ["external"])
         self.state["batches"][BID]["state"] = "done"
-        normal = self.tick("20260101-000002", writer)
-        self.assertTrue(normal["experience"]); self.assertIsNone(normal["strategy_external"])
-        waiting = self.tick("20260101-000003", writer, alive=lambda pid: pid == 11)
-        self.assertIsNone(waiting["strategy_external"]); self.assertEqual(lanes, ["external", "normal"])
-        self.state["batches"]["20260101-000002-experience-update"]["state"] = "done"
-        # A process restart does not reset the registered launch order.
         self.state = json.loads(json.dumps(self.state))
-        third = self.tick("20260101-000004", writer)
-        self.assertTrue(third["strategy_external"]); self.assertIsNone(third["experience"])
-        self.assertEqual(lanes, ["external", "normal", "external"])
+        second = self.tick("20260101-000003", writer)
+        self.assertTrue(second["strategy_external"]); self.assertIsNone(second["experience"])
+        self.assertTrue(second["external_priority_hold"])
+        self.assertEqual(lanes, ["external", "external"])
+        second_id = second["strategy_external"][0]
+        self.state["batches"][second_id]["state"] = "done"
+        normal = self.tick("20260101-000004", writer)
+        self.assertTrue(normal["experience"]); self.assertIsNone(normal["strategy_external"])
+        self.assertEqual(lanes, ["external", "external", "normal"])
         self.assertEqual(self.state["strategy_external"]["cursor"], 0)
 
     def test_no_launchable_normal_work_allows_next_external_without_losing_demand(self):
@@ -224,7 +220,7 @@ class External(unittest.TestCase):
             if kwargs.get("external_source"): return self.writer(*args, **kwargs)
             attempted.append(args[3]); return None
         result = self.tick("20260101-000002", writer)
-        self.assertEqual(attempted, ["experience-update"])
+        self.assertEqual(attempted, [])
         self.assertTrue(result["strategy_external"])
         self.assertIsNone(result["experience"])
         self.assertEqual(len(self.state["batches"]), 2)
@@ -243,7 +239,10 @@ class External(unittest.TestCase):
         self.state["batches"]["original"] = {"task":"postmortem", "state":"running", "pid":99, "character":"silent"}
         self.assertIsNone(self.tick(STAMP, never, alive=lambda pid: pid == 99)["strategy_external"])
         self.state["batches"] = {}; self.state["postmortem_wait"] = {"silent":{"since":1}}
-        self.assertIsNone(self.tick(STAMP, never)["strategy_external"])
+        result = self.tick(STAMP, self.writer)
+        self.assertTrue(result["strategy_external"])
+        self.assertIn("silent", self.state["postmortem_wait"])
+        self.state["batches"] = {}
         self.state.pop("postmortem_wait")
         import ascension_audit as audit
         request = {"character":"silent", "level":11, "state":"queued"}
@@ -264,18 +263,18 @@ class External(unittest.TestCase):
         self.assertTrue(external.external_turn(self.state, "silent"))
 
 
-    def test_normal_turn_leaves_runnable_audit_to_original_later_tick_stage(self):
+    def test_pending_audit_without_active_lease_yields_to_external(self):
         import ascension_audit as audit
         self.second_plan(); self.registered(); self.state["batches"][BID]["state"] = "done"
         def unavailable(*args, **kwargs):
-            self.assertFalse(kwargs.get("external_source")); return None
+            self.assertTrue(kwargs.get("external_source")); return None
         with patch.object(audit, "priority_pending", return_value=True):
             result = self.tick("20260101-000002", unavailable)
         self.assertIsNone(result["strategy_external"])
-        self.assertFalse(result.get("external_alternation_hold"))
+        self.assertTrue(result.get("external_priority_hold"))
 
 
-    def test_original_tick_keeps_postmortem_first_and_shares_the_audit_admission(self):
+    def test_original_tick_gives_external_priority_over_postmortems_and_audits(self):
         import contextlib
         import importlib.util
         import io
@@ -284,18 +283,18 @@ class External(unittest.TestCase):
         module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
         for held in (True, False):
             calls = []
-            result = {"external_alternation_hold":True} if held else {}
+            result = {"external_priority_hold":True} if held else {}
             def postmortem(*args): calls.append("postmortem"); return ("fixed-postmortem", 90)
             def writes(*args): calls.append("writes"); return result
             with patch.object(module, "ROOT", str(self.root)), patch.object(module, "DIR", str(self.directory)), \
                     patch.object(module, "load_state", return_value={"batches":{}}), patch.object(module, "save_state"), \
                     patch.object(module, "check_victories", return_value=[]), patch.object(module, "check_ascension", return_value=[]), \
                     patch.object(module.disk_admission, "snapshot", return_value={}), patch.object(module, "check_pending", return_value=None), \
-                    patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
+                    patch.object(external, "ready", return_value=held), patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
                     patch.object(module, "check_ascension_audits", return_value=("audit", 91)) as audit, \
                     patch.object(shared, "dispatch", return_value=None), patch.object(module.learner_retention, "kick", return_value={}):
                 with contextlib.redirect_stdout(io.StringIO()): module.cmd_tick(SimpleNamespace(character="silent"))
-            self.assertEqual(calls, ["postmortem", "writes"])
+            self.assertEqual(calls, ["writes"] if held else ["postmortem", "writes"])
             self.assertEqual(audit.call_count, 0 if held else 1)
 
 

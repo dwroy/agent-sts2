@@ -26,7 +26,9 @@
 
 ## 顺序、身份与恢复
 
-仍由原 learn tick、learn.lock、disk admission、账户/工作树lease和两个原 writer 槽派发。正常复盘、经验更新、修bug、已登记学习要求与原先批准的冻结研究/重任务先行；外部来源在自动提案/自动策略及 #48 旧经验回刷之前。没有可派外部来源时旧顺序保持。正常来源已准备好但写槽等待时，外部来源不能越过。
+仍由原 learn tick、learn.lock、disk admission、账户/工作树lease和两个原 writer 槽派发。Roy 2026-10-24 晨更新（#51 6377338624）：有可派外部单元时，先派外部，再派自有经验更新、复盘和修复，不再交替。仅尚未启动的普通任务让位；既有运行任务与真实 writer/audit 租约不被抢占，普通待办不清空。外部未启用、没有可派输入或角色不符时，原正常流水线保持。第1/2/5项各自冻结成批，缺字段只限制对应特征/子项，不整批等待；实际候选、发布、消费者与科学父分开。
+
+`external_priority_hold` 表示本次新派发让位；旧字段 `external_alternation_hold` 作为原消费者的兼容别名保留，不再表示交替。
 
 批次使用真实 `strategy-proposal` ID、`reason=external`、`external_source` 与不可变 `external_binding`；单独 `strategy_external` 与 `strategy-external-progress.json` 记录。登记/请求档位不推进游标，只有核实同一批次、原账号原生会话/首次提示、高推理和 workspace-write 上下文后，才首次消费各 unit_id。重启tick不重复消费；未核启动、丢失进程、失败、waiting均保留。显式新generation还须核原会话退出或宿主零模型证据，单凭PID死亡不能重派。自动启动前失败重试仍沿原有限恢复，不扩展槽或重绑线程。
 

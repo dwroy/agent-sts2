@@ -355,15 +355,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
-    if external_ready and (external_jobs.external_turn(state, character) or external_jobs.alternating_hold(
-            state, root, character, alive, {"postmortem_wait": state.get("postmortem_wait", {}).get(character)})):
-        # Roy/Claude #51: at most one ordinary launch between external units.
-        # Postmortems run first in the original tick and retain their admission.
-        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
-            {"postmortem_wait": state.get("postmortem_wait", {}).get(character)}, alternating=True)
+    if external_ready:
+        # Roy #51: pending external units precede all ordinary learning demand.
+        # Active batches and the original audit/writer leases remain authoritative.
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp,
+                                          dispatch_write, {}, alternating=True)
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
-                "external_alternation_hold": True,
+                "external_priority_hold": True, "external_alternation_hold": True,
                 "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
     attempted = []
     ordinary_claimed = [False]
