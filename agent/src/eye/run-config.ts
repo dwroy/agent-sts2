@@ -47,6 +47,7 @@ import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
 import { PROJECT_ROOT } from "../core/paths.js";
 import { characterKey, knowledgeFile } from "../knowledge/files.js";
+import { runtimeKnowledgeIdentity } from "../knowledge/runtime-paths.js";
 import { ascensionMode, resolveTargetAscension } from "../memory/ascension-target.js";
 import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
 import { constructionMode } from "../construction/adapter.js";
@@ -151,6 +152,8 @@ export interface RunConfigRow {
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
+    runtime_version?: string;
+    runtime_binding?: string;
     prefix: "off" | "full";
     /** The ascension the prompt was rendered for (the run's). */
     ascension: number | null;
@@ -403,6 +406,8 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
     system_sha: null,
     system_chars: null,
     experience_version: experienceVersion(knowledgeDir),
+    ...(runtimeKnowledgeIdentity() ? { runtime_version: runtimeKnowledgeIdentity()!.version } : {}),
+    ...(runtimeKnowledgeIdentity() && process.env["STS2_KNOWLEDGE_RUN_KEY"] ? { runtime_binding: process.env["STS2_KNOWLEDGE_RUN_KEY"] } : {}),
   };
   if (!brain) return { ...out, error: "no brain (no DeepSeek client): no system prompt is sent" };
   if (prefix !== "full") {
@@ -556,7 +561,8 @@ export function runConfigRow(
     ...setup,
     // The prompt's setup, not its sizes, a load error's wording, or the hashes of the knowledge data rendered into it
     // (prefix_sha, system_sha: the data is refreshed between runs and re-rendered mid-run; brain.jsonl has each call's).
-    knowledge: { prefix: knowledge.prefix, experience_version: knowledge.experience_version },
+    knowledge: { prefix: knowledge.prefix, experience_version: knowledge.experience_version,
+      ...(knowledge.runtime_version ? { runtime_version: knowledge.runtime_version } : {}) },
   };
   return {
     ts: now.toISOString(),

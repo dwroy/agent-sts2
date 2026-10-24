@@ -60,7 +60,8 @@ if [ -f "$OPS/brain_view.py" ]; then
   nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "$LOGS" ensure > /dev/null 2>&1 < /dev/null &
 fi
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
-screen=$(curl -s -m 5 "$mod_url/state" | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
+state_hint=$(curl -s -m 5 "$mod_url/state" | python3 -c 'import json,sys; d=json.load(sys.stdin)["data"]; print(d["screen"], d.get("run_id", ""))' 2>/dev/null)
+read -r screen observed_run_id <<< "$state_hint"
 if [ "$screen" = "GAME_OVER" ]; then
   curl -s -m 10 -X POST "$mod_url/action" -H 'content-type: application/json' -d '{"action":"return_to_main_menu"}' >/dev/null
   sleep 3
@@ -97,4 +98,11 @@ case "$arm" in
   ds) export ARM=ds-only DEEPSEEK_MAX_CALLS=400 ;;
 esac
 [ -n "$arm" ] && echo "ablation arm: $arm" >> "$out"
+if [ -n "${STS2_KNOWLEDGE_RUNTIME:-}" ]; then
+  knowledge_run_key=$(nice -n 19 python3 "$OPS/knowledge_runtime.py" run-key --screen "$screen" \
+    --run-id "${observed_run_id:-}" --session "$ts-$sha" --config-log "$LOGS/run-config.jsonl") || exit 78
+  exec node --import tsx "$ROOT/agent/tools/knowledge-runtime.ts" launch --runtime "$STS2_KNOWLEDGE_RUNTIME" \
+    --run "$knowledge_run_key" --code "$(git rev-parse HEAD)" -- \
+    node --import tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1
+fi
 exec npx tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1

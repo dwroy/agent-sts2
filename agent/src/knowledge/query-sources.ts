@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { readCompatibleKnowledgeText } from "./catalog.js";
 import { knowledgeCharacter, knowledgeFile } from "./files.js";
+import { runtimeKnowledgeIdentity, runtimeKnowledgeRoot } from "./runtime-paths.js";
 
 type Row = Record<string, unknown>;
 const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
@@ -20,6 +21,11 @@ function input(query: Query, name: string): Input {
   if (hit) return hit;
   const path = knowledgeFile(query.dir, name, query.character);
   const source: Row = { source: "own", character: query.character, file: name, path: relative(query.dir, path).split("\\").join("/") };
+  const snapshot = runtimeKnowledgeRoot(query.dir);
+  if (snapshot !== query.dir && path.startsWith(snapshot + "/")) {
+    source["knowledge_version"] = runtimeKnowledgeIdentity()?.version;
+    source["path"] = relative(snapshot, path).split("\\").join("/");
+  }
   const result: Input = { source };
   try {
     let text: string, bytes: string | Buffer;

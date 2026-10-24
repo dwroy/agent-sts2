@@ -16,6 +16,7 @@
 import { join } from "node:path";
 
 import { KNOWLEDGE_DIR } from "../core/paths.js";
+import { runtimeKnowledgeFile } from "./runtime-paths.js";
 
 export { KNOWLEDGE_DIR };
 
@@ -101,5 +102,5 @@ export function knowledgeSubdir(name: string, dir: string = KNOWLEDGE_DIR, chara
 
 /** The path of the knowledge file `name` (a bare file name: "room-costs.json") inside `dir` (the project's by default). */
 export function knowledgeFile(dir: string, name: string, character: string = knowledgeCharacter()): string {
-  return join(knowledgeSubdir(name, dir, character), name);
+  return runtimeKnowledgeFile(dir, COMMON_FILES.has(name) ? join("common", name) : join("characters", character, name));
 }
