@@ -1,5 +1,16 @@
 state: clear-ok
 issue: 27
+updated_at: 2026-10-25T07:14:27+08:00
+
+进行中的事：07:13重复唤醒只读复核完成：#27无新评论，#61仍owner:claude/status:blocked且评论0，已进入主管board-digest（不代主管实收）。CLI3f7afefb与五组20份来源引用SHA未变，16条原文/ops/本角色冻结receipt/evidence及正式ops16/watcher0/roy0核同；16事件原文逐条读回，queue/delivered位置不代ACK。本角色无在途检查/模型/游戏/full/发布，未重复旧rc2、公开评论或原ops提醒。新增核验paper/materials/20261025-issue27-compat-escalation/verification-0713.json、recheck-0713.json。
+
+在等谁：主管在#61指定原CLI开发归属/优先级，原source owner核准五组尤其#4候选；#61尚无实际来源/代码/固定验收/部署交付。000402两原路径仍缺、原注册父blocked，等原wrapper/archive owner找回SHA b1be2be174208edcafe23f3e0e47f4236560577c2752b6a02f88bd094755a765同字节原日志，不走无父历史兼容。
+
+下一步：仅在#61新来源核准/兼容交付到达后核验并沿原同ID真实receipt经CLI逐条watcher_received→独立读回→roy_notified；无新证据不重复必败ACK或同一主管收件箱。review43/39/36/20无新交付，原Roy/运行门保持；#60R448兼容/自然发布与#58运行验收沿原ops，#20/#36开发停止现场/父/树/证据/账号线程保留。详细兼容合同和#27原公开回执6390507786沿前检查点。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
+issue: 27
 updated_at: 2026-10-25T06:47:35+08:00
 
 进行中的事：本轮可做核验与缺陷登记已完成。16条notice/完整原文/原ops及本角色冻结真实receipt/evidence SHA核同；五组20份来源引用SHA、CLI3f7afefb未变。已建#61交主管owner:claude/status:blocked，正文/标签远端逐字读回；#27评论6390507786逐字读回，原ops一行提醒agent_prompted仅传输非实收/ACK。16事件实际在delivered，原文不变，目录位置不代阶段。正式ops16/watcher0/roy0，生产ACK0；无在途本角色检查/模型/游戏/full/发布。材料paper/materials/20261025-issue27-compat-escalation/。
