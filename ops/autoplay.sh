@@ -50,7 +50,9 @@ mkdir -p "$NOTES"
 restarts=0
 while [ ! -f "$OPS/STOP" ]; do
   # A borrowed play must finish and report once; new play waits for the handoff.
-  [ -z "${WAIT_PID:-}" ] && [ -f "$OPS/codex-ops/LLM_DRAIN" ] && break
+  if [ -z "${WAIT_PID:-}" ]; then
+    nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" check-game >/dev/null || break
+  fi
   if [ -n "${WAIT_PID:-}" ]; then
     while kill -0 "$WAIT_PID" 2>/dev/null; do sleep 5; done
     WAIT_PID=""
@@ -102,4 +104,4 @@ while [ ! -f "$OPS/STOP" ]; do
     sleep "$delay"
   fi
 done
-echo "$(date '+%F %T') admission held (STOP, LLM_DRAIN or capacity), exiting" >> "$OPS/autoplay.log"
+echo "$(date '+%F %T') admission held (STOP, global/publication gate or capacity), exiting" >> "$OPS/autoplay.log"

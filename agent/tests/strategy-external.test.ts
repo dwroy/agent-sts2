@@ -49,7 +49,8 @@ function fixture() {
   writeFileSync(task, readFileSync(resolve("../learner/tasks/strategy-external.md"), "utf8") + `\n${source} ${"b".repeat(64)}\n`);
   const stateFile = join(root, "ops/state/learn.json");
   const registration = { state: "running", pid: process.pid, worktree: cwd, task: "strategy-proposal", character: "silent", reason: "external", runs: [],
-    external_source: source, external_binding: { plan_id: source, request_id: "github-issue-51-external-boss-learning-20261023", retry_generation: 0 }, key: `strategy-external:${source}:0` };
+    external_source: source, external_binding: { plan_id: source, request_id: "github-issue-51-external-boss-learning-20261023", retry_generation: 0, dispatch_base: "a".repeat(40) },
+    candidate_mode: { schema: "candidate-only-v1", merge: "no", dispatch_base: "a".repeat(40), worktree: cwd }, key: `strategy-external:${source}:0` };
   const save = (value = registration) => writeFileSync(stateFile, JSON.stringify({ batches: { [batch]: value } })); save();
   const native = join(root, "native");
   writeFileSync(native, '#!/usr/bin/python3\nimport json,os,sys\nfrom pathlib import Path\nPath(os.environ["CODEX_OPS_ROOT"],"observed.json").write_text(json.dumps({"args":sys.argv[1:],"tier":os.environ.get("LEARNER_EXTERNAL_SERVICE_TIER"),"source":os.environ.get("LEARNER_EXTERNAL_SOURCE"),"home":os.environ.get("CODEX_HOME")}))\nsys.stdin.read()\nprint(json.dumps({"type":"thread.started","thread_id":"11111111-2222-3333-4444-555555555555"}))\nprint(json.dumps({"type":"turn.completed","usage":{"input_tokens":10,"output_tokens":2}}))\n', { mode: 0o755 });
@@ -69,8 +70,8 @@ function fixture() {
     return selected;
   };
   return { root, cwd, batch, env, errors, registration, save, quota,
-    run: (tier = "ultrafast") => main(
-      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, "--service-tier", tier], {
+    run: (tier = "ultrafast", extra: string[] = []) => main(
+      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, "--service-tier", tier, ...extra], {
         projectRoot: root, env, tasksDir: join(root, "tasks"), runsDir: join(root, "runs"), secretFiles: [], now: () => now,
         checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined,
         readExternalUsage: async () => { throw new Error("must reuse the unified snapshot"); },
@@ -91,6 +92,7 @@ it.each([[20, "ultrafast"], [70, "ultrafast"], [75, "fast"], [89, "fast"]])(
     const receipt = JSON.parse(readFileSync(join(f.root, `ops/state/learner/${f.batch}.external-launch.json`), "utf8"));
     expect(receipt.external_tier).toMatchObject({ effective: expected, observed_service_tier: null });
     expect(receipt.source).toBe(f.env.LEARNER_EXTERNAL_SOURCE);
+    expect(receipt.candidate_mode).toEqual(f.registration.candidate_mode);
     const log = readFileSync(receipt.log, "utf8");
     expect(log).not.toContain("private diagnostics");
     expect(log.trim().split("\n").map((line) => JSON.parse(line)).find((row) => row.type === "learner_summary").summary.tokens).toMatchObject({ input: 10, output: 2 });
@@ -118,6 +120,19 @@ it("unknown, exhausted, stale or replaced snapshots retain the lease without lau
   const replaced = fixture(); replaced.save({ ...replaced.registration, state: "done" });
   expect(await replaced.run()).toBe(2);
   expect(() => parseArgs(["--engine", "codex", "--task", "x", "--cwd", "/x", "--service-tier", "priority"])).toThrow();
+});
+
+it("refuses a candidate whose immutable launch binding permits live merging", async () => {
+  const f = fixture(); f.quota(20);
+  const path = f.env.LEARNER_STATE_FILE;
+  const state = JSON.parse(readFileSync(path, "utf8"));
+  state.batches[f.batch].candidate_mode.merge = "live";
+  writeFileSync(path, JSON.stringify(state));
+  expect(await f.run()).toBe(2);
+  expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
+  const override = fixture(); override.quota(20);
+  expect(await override.run("ultrafast", ["--set", "merge=live"])).toBe(2);
+  expect(readdirSync(join(override.root, "ops/state/learner"))).toEqual([]);
 });
 
 it("a refreshed common snapshot within the same tier does not strand a registered checkout", async () => {

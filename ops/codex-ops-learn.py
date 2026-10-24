@@ -43,6 +43,7 @@ import ordinary_close  # noqa: E402
 import ops_current  # noqa: E402
 import external_learning_policy
 import disk_admission  # noqa: E402
+import publication_gate  # noqa: E402
 from learner_tui import apply_deferrals  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
@@ -317,6 +318,12 @@ def check_pending(state, character):
 def cmd_tick(args):
     state = load_state()
     character = args.character
+    if publication_gate.candidates_only(ROOT, DIR):
+        # Completion accounting remains independent; only frozen candidates may start.
+        report = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        save_state(state)
+        print(json.dumps({"candidate_only": True, "write_jobs": report}, ensure_ascii=False))
+        return 0
     report = {"victory": check_victories(character), "ascension": check_ascension(state, character)}
     capacity = disk_admission.snapshot(ROOT, DIR, record=True)
     report["disk_capacity"] = capacity
@@ -396,7 +403,7 @@ def ledger_lines(runs):
 
 def account_draining():
     """A manual account handoff blocks new work, never completion records or checks."""
-    return any(os.path.isfile(os.path.join(DIR, name)) for name in ("LLM_DRAIN", "ACCOUNT_DRAIN"))
+    return publication_gate.learners_held(ROOT, DIR)
 
 
 def cmd_finish(args):
@@ -415,7 +422,7 @@ def cmd_finish(args):
     if batch.get("task") == "ascension-audit":
         ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
                               proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
-        if not account_draining():
+        if not account_draining() and not publication_gate.candidates_only(ROOT, DIR):
             check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         save_state(state)
         return 0
@@ -441,7 +448,7 @@ def cmd_finish(args):
             strategy_backfill_jobs.reconcile(state, DIR)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
-        if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)
+        if (not account_draining() and not publication_gate.candidates_only(ROOT, DIR) and disk_admission.jobs_allowed(ROOT, DIR)
                 and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch")):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
@@ -499,7 +506,8 @@ def cmd_finish(args):
         enqueue("learner-done", "\n".join(lines))
     if not account_draining():
         check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-        check_ascension_audits(state, batch.get("character", args.character))
+        if not publication_gate.candidates_only(ROOT, DIR):
+            check_ascension_audits(state, batch.get("character", args.character))
     save_state(state)
     print("\n".join(lines))
     return 0
@@ -670,6 +678,9 @@ def main():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
             return 75
+        if publication_gate.candidates_only(ROOT, DIR) and args.command in ("dispatch", "write", "boss-check"):
+            print(json.dumps({"dispatched": None, "reason": "publication_candidate_only", "command": args.command}))
+            return 75
         if args.command in ("dispatch", "write", "boss-check") and not disk_admission.jobs_allowed(ROOT, DIR):
             print(json.dumps({"dispatched": None, "reason": "disk_capacity_hold", "command": args.command}))
             return 75
@@ -677,7 +688,7 @@ def main():
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
     if checks_pending:
         cmd_recheck(args)
-    if args.command in ("finish", "tick"):
+    if args.command in ("finish", "tick") and not publication_gate.candidates_only(ROOT, DIR):
         ordinary_close.close_pending(ROOT, DIR, enqueue)
         # Missing fixture roots cannot produce a checklist; never hide a real generation failure.
         if os.path.isdir(os.path.join(ROOT, ".git")) and os.path.isdir(os.path.join(ROOT, ".worktrees/live")):

@@ -29,7 +29,7 @@ import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js"
 import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { readCodexUsage, type CodexUsage } from "../../agent/src/brain/engines/codex-usage.js";
-import { externalRegistration, registeredExternalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
+import { candidateMode, externalRegistration, registeredExternalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
@@ -428,7 +428,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     }, deps.env);
     if (options.serviceTier || deps.env.LEARNER_EXTERNAL_SOURCE) {
       const lease = captureStartupLease(deps.env, deps.projectRoot, cwd);
-      if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || !externalRegistration(deps.env, lease, spec.name)) {
+      if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || rendered.values.merge !== "no" || !externalRegistration(deps.env, lease, spec.name)) {
         throw new LearnerUsageError("外部档位参数必须绑定原外部批次租约，不能用于普通任务或另开续跑");
       }
       request.serviceTier = options.dryRun ? "default" : options.serviceTier ?? "ultrafast";
@@ -496,7 +496,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     if (!selected) return unavailable("外部学习统一额度快照缺失、已过期、账号不符或达到90%；保留原租约，不启动模型\n");
     externalDecision = selected;
     const lease = captureStartupLease(deps.env, deps.projectRoot, request.cwd);
-    if (!externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约，不启动模型\n");
+    if (prepared.values.merge !== "no" || !externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约或候选模式，不启动模型\n");
     request.serviceTier = externalDecision.effective;
     command = engineCommand(request, prompt, binary);
   }
@@ -507,7 +507,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
   log({
     type: "learner_launch",
-    ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision } : {}),
+    ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
     ts: started.toISOString(),
     engine: request.engine,
     task: prepared.taskName,
@@ -535,7 +535,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const kind = externalDecision ? "external" : "backfill";
     const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.${kind}-launch.json`);
     writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: externalDecision ? deps.env.LEARNER_EXTERNAL_SOURCE : deps.env.LEARNER_BACKFILL_SOURCE,
-      ...(externalDecision ? { external_tier: externalDecision } : {}),
+      ...(externalDecision ? { external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
       cwd: request.cwd, log: logPath, codex_home: learnerCodexHome(deps.env),
       input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
       command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });

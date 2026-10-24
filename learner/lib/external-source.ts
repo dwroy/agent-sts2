@@ -16,13 +16,23 @@ export function externalRegistration(env: NodeJS.ProcessEnv, lease: StartupLease
   if (!source || !/^[a-z0-9][a-z0-9._-]{0,119}$/.test(source) || !lease?.current() || task !== "strategy-proposal") return false;
   try {
     const batch = JSON.parse(readFileSync(env.LEARNER_STATE_FILE!, "utf8")).batches[lease.batch];
+    const candidate = batch.candidate_mode;
     return batch.task === task && batch.character === "silent" && batch.reason === "external"
       && batch.external_source === source && batch.external_binding?.plan_id === source
       && batch.external_binding?.request_id === "github-issue-51-external-boss-learning-20261023"
       && batch.key === `strategy-external:${source}:${batch.external_binding.retry_generation}`
       && Array.isArray(batch.runs) && batch.runs.length === 0
+      && candidate?.schema === "candidate-only-v1" && candidate.merge === "no"
+      && /^[0-9a-f]{40}$/.test(candidate.dispatch_base)
+      && candidate.dispatch_base === batch.external_binding.dispatch_base && candidate.worktree === batch.worktree
+      && batch.worktree === join(env.CODEX_OPS_ROOT ?? "", ".worktrees", `codex-strategy-silent-${lease.batch.replace(/-strategy-proposal$/, "")}`)
       && !["backfill_source", "research_request", "implementation_request", "proposal_ids", "proposal_repair"].some((key) => key in batch);
   } catch { return false; }
+}
+
+export function candidateMode(env: NodeJS.ProcessEnv): Record<string, string> | undefined {
+  try { return JSON.parse(readFileSync(env.LEARNER_STATE_FILE!, "utf8")).batches[env.LEARNER_BATCH_ID!].candidate_mode; }
+  catch { return undefined; }
 }
 export function externalTier(usage: CodexUsage | null, now: Date, requested: ExternalTier = "ultrafast"): ExternalTierDecision {
   const observed = usage ? Date.parse(usage.readAt) : NaN;

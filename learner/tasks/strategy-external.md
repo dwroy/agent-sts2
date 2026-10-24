@@ -6,9 +6,12 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 800
 default.batch: manual
+default.merge: no
 ---
 
 # 外部来源专线
+
+启动模式 merge={{merge}}，必须为 no；candidate_mode 绑定独立工作树及 dispatch_base，发布等待也不授权写 main/live 或忽略层 open-book。
 
 本批角色 {{character}}，真实调度ID {{batch}}，工作树 {{worktree}}，项目根 {{project_root}}，临时产出 {{scratch}}。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
 

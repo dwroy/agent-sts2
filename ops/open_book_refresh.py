@@ -7,6 +7,9 @@ import json
 from pathlib import Path
 import os
 import re
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import publication_gate
 
 
 def playing():
@@ -23,6 +26,17 @@ def playing():
 
 
 def tick(root):
+    dest = publication_gate.directory(root)
+    if publication_gate.global_hold(dest) or publication_gate.candidates_only(root, dest):
+        return {'status': 'deferred-admission'}
+    try:
+        with publication_gate.overlay_writing(root, dest):
+            return refresh(root)
+    except (BlockingIOError, ValueError):
+        return {'status': 'deferred-admission'}
+
+
+def refresh(root):
     directory = root / 'data/external/open-book'
     pending = directory / 'pending'
     if not pending.exists():

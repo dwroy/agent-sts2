@@ -1,0 +1,262 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-57-release-admission-gate/agent
+
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":307.01474799995776,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":259.55076999997254,"added_prompt_bytes":1591}
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 0.857s
+
+OK
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
+ ❯ tests/learner-stdio-view.test.ts (4 tests | 4 failed) 10418ms
+   × streams both log files before the registered command exits: learner-20260101-000001 5085ms
+   × streams both log files before the registered command exits: learner-20260101-000001-postmortem 5036ms
+   × leaves other hosts and native TUI displays alone: {"label":"ops","tui":false} 149ms
+   × leaves other hosts and native TUI displays alone: {"label":"learner-20260101-000001-postmortem","tui":true} 146ms
+ ❯ tests/learner-wrapper-scripts.test.ts (3 tests | 3 failed) 15ms
+     × ships every literal repo script referenced by the wrapper, including both task routes 11ms
+     × publishes the paired wrapper seal and stall recycler with its project scripts 2ms
+     × rejects the exact old unpublished seal reference and any omitted required script 1ms
+ ❯ tests/strategy-concurrency.test.ts (2 tests | 1 failed) 388ms
+     × claims disjoint inputs, retains active ownership and bootstraps the second slot 384ms
+ ❯ tests/strategy-implementation-continuation.test.ts (1 test | 1 failed) 1400ms
+   × resumes the frozen implementation once while preserving waiting proposals and bounded failure history 1399ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 175ms
+     × all resolve 174ms
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.394s
+
+OK
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tools/issue29-deepseek-stream.test.ts: ../../paper/materials/issue29-brain-speed/results.jsonl",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/learner-stdio-view.test.ts > streams both log files before the registered command exits: learner-20260101-000001
+Error: no live output: ==> /home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-08ce8t/ops/state/learner/20260101-000001.out <==
+
+==> /home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-08ce8t/ops/state/learner/20260101-000001.err <==
+python3: can't open file '/home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-08ce8t/ops/publication_gate.py': [Errno 2] No such file or directory
+ 
+ ❯ Timeout._onTimeout tests/learner-stdio-view.test.ts:51:47
+     49|     if (live) {
+     50|       await new Promise<void>((done, fail) => {
+     51|         const timeout = setTimeout(() => fail(new Error(`no live outpu…
+       |                                               ^
+     52|         child.stdout.on("data", (chunk) => {
+     53|           output += chunk.toString();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/learner-stdio-view.test.ts > streams both log files before the registered command exits: learner-20260101-000001-postmortem
+Error: no live output: ==> /home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-qlyyHs/ops/state/learner/20260101-000001.out <==
+
+==> /home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-qlyyHs/ops/state/learner/20260101-000001.err <==
+python3: can't open file '/home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/learner-stdio-view-qlyyHs/ops/publication_gate.py': [Errno 2] No such file or directory
+ 
+ ❯ Timeout._onTimeout tests/learner-stdio-view.test.ts:51:47
+     49|     if (live) {
+     50|       await new Promise<void>((done, fail) => {
+     51|         const timeout = setTimeout(() => fail(new Error(`no live outpu…
+       |                                               ^
+     52|         child.stdout.on("data", (chunk) => {
+     53|           output += chunk.toString();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/learner-stdio-view.test.ts > leaves other hosts and native TUI displays alone: {"label":"ops","tui":false}
+ FAIL  tests/learner-stdio-view.test.ts > leaves other hosts and native TUI displays alone: {"label":"learner-20260101-000001-postmortem","tui":true}
+AssertionError: expected 1 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 1
+
+ ❯ exercise tests/learner-stdio-view.test.ts:66:26
+     64|     child.stdin.end("release\n");
+     65|     const [code] = await closed;
+     66|     expect(code, errors).toBe(7);
+       |                          ^
+     67|     expect(readFileSync(join(directory, "learner", `${batch}.out`), "u…
+     68|     expect(readFileSync(join(directory, "learner", `${batch}.err`), "u…
+ ❯ tests/learner-stdio-view.test.ts:19:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > ships every literal repo script referenced by the wrapper, including both task routes
+AssertionError: expected [ 'ops/codex-fast.sh', …(13) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "ops/paths.sh",
+-   "ops/learner_tui.py",
+-   "ops/learner_entry.py",
+-   "ops/codex-learner.sh",
++ [
+    "ops/codex-fast.sh",
++   "ops/codex-learner.sh",
+    "ops/codex-ops-learn.py",
++   "ops/codex-ops.sh",
++   "ops/learner_entry.py",
++   "ops/learner_retention.py",
+    "ops/learner_tabs.py",
+-   "learner/run.ts",
++   "ops/learner_tui.py",
++   "ops/paths.sh",
++   "ops/publication_gate.py",
++   "ops/strategy_external_jobs.py",
++   "ops/strategy_implementation_jobs.py",
++   "ops/strategy_research_jobs.py",
++   "ops/worktree_checkout.py",
+  ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:27:22
+     25|
+     26| describe("learner wrapper published script closure", () => {
+     27|   it("ships every literal repo script referenced by the wrapper, inclu…
+       |                      ^
+     28|     const required = scripts(wrapper);
+     29|     expect(required).toEqual(expect.arrayContaining(["ops/paths.sh", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > publishes the paired wrapper seal and stall recycler with its project scripts
+AssertionError: expected [ 'ops/publication_gate.py' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "ops/publication_gate.py",
++ ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:37:41
+     35|   it("publishes the paired wrapper seal and stall recycler with its pr…
+     36|     const scheduler = readFileSync(resolve(root, "ops/codex-ops.sh"), …
+     37|     expect(wrapper).toMatch(/\$OPS\/learner_tabs\.py" seal --root/);
+       |                                         ^
+     38|     expect(scheduler).toMatch(/\$OPS\/learner_tabs\.py" tick --root/);
+     39|     expect(missing(wrapper, published)).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > rejects the exact old unpublished seal reference and any omitted required script
+AssertionError: expected [ 'ops/learner_tabs.py', …(1) ] to deeply equal [ 'ops/learner_tabs.py' ]
+
+- Expected
++ Received
+
+  [
+    "ops/learner_tabs.py",
++   "ops/publication_gate.py",
+  ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:50:91
+     49|   it("rejects the exact old unpublished seal reference and any omitted…
+     50|     const withoutRecycler = new Set(published);
+     51|     withoutRecycler.delete("ops/learner_tabs.py");
+       |                                           ^
+     52|     expect(missing(`${wrapper}\npython3 "$OPS/learner_tabs.py" seal\n`…
+     53|     for (const path of scripts(wrapper)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/strategy-concurrency.test.ts > two proposal workers > claims disjoint inputs, retains active ownership and bootstraps the second slot
+AssertionError: ....F.
+======================================================================
+FAIL: test_second_slot_wrapper_links_existing_python_environment (__main__.StrategyConcurrency.test_second_slot_wrapper_links_existing_python_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-57-release-admission-gate/agent/../ops/tests/test_strategy_concurrency.py", line 126, in test_second_slot_wrapper_links_existing_python_environment
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.246s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-concurrency.test.ts:9:42
+      7|   it("claims disjoint inputs, retains active ownership and bootstraps …
+      8|     const result = spawnSync("python3", ["-B", "../ops/tests/test_stra…
+      9|     expect(result.status, result.stderr).toBe(0);
+       |                                          ^
+     10|     expect(result.stderr).toContain("Ran 6 tests");
+     11|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/strategy-implementation-continuation.test.ts > resumes the frozen implementation once while preserving waiting proposals and bounded failure history
+AssertionError: ...F...
+======================================================================
+FAIL: test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher (__main__.Continuation.test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-57-release-admission-gate/agent/../ops/tests/test_strategy_implementation_continuation.py", line 201, in test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher
+    self.assertEqual(result.returncode, 0, result.stderr + (errors.read_text() if errors.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : python3: can't open file '/home/dw/Projects/agent-sts2/.cache/t/s-G3mcNN/tmpbv27rb2c/ops/publication_gate.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.239s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-implementation-continuation.test.ts:11:56
+      9|     encoding: "utf8", timeout: 60_000,
+     10|   });
+     11|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     12|   expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
+     13| }, 65_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+
+ Test Files  5 failed | 627 passed (632)
+      Tests  10 failed | 5836 passed (5846)
+   Start at  21:38:15
+   Duration  1414.14s (transform 17.43s, setup 37.48s, import 126.43s, tests 1154.87s, environment 75ms)
+

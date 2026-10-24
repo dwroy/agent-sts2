@@ -41,6 +41,13 @@ case "$action" in
     fi ;;
 esac
 case "$action" in
+  autoplay-start)
+    nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" --state-dir "$DIR" check-game >/dev/null || {
+      echo "game admission held; autoplay deferred"
+      exit 75
+    } ;;
+esac
+case "$action" in
   autoplay-start|autoplay-reload|ops-assist|codex-brain-cache-probe)
     if [ -f "$DIR/LLM_DRAIN" ]; then
       echo "LLM drain: new work deferred"
