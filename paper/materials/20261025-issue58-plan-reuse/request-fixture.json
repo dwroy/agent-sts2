@@ -1,0 +1,153 @@
+{
+  "label": "reward/card",
+  "system_sha256": "fe559c9619636ff8dbf9eb9adb2aa6cd393cfd1d7b4595932e45a9d592344522",
+  "system_chars": 6502,
+  "question": "格式题：已有计划继续使用，仅在判断改线预期有利于胜率时给局部更新。\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n{\"schema\":\"brain-query-cues-v3\",\"question_type\":\"card_reward\",\"experience\":{\"status\":\"missing\",\"count\":null,\"entries\":[],\"omitted\":0}}",
+  "payload": {
+    "facts": {
+      "act": 1,
+      "your_run_plan": {
+        "archetype": "格式方向",
+        "summary": "格式计划",
+        "endgame": {
+          "core": "格式核心",
+          "gaps": "未知",
+          "scaling_damage": "未知",
+          "sustainable_defense": "未知",
+          "resources": "未知",
+          "win_condition": "未知",
+          "checkpoint": ""
+        }
+      }
+    },
+    "run_plan_task": {
+      "endgame_objective": "格式终局目标",
+      "endgame_plan_required": false,
+      "plan_reuse": true
+    }
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "choice": {
+        "type": "string",
+        "description": "one option key exactly as given",
+        "enum": [
+          "a"
+        ]
+      },
+      "reason": {
+        "type": "string",
+        "description": "一句中文构筑理由，不超过20字"
+      },
+      "run_plan": {
+        "type": "object",
+        "properties": {
+          "archetype": {
+            "type": "string",
+            "description": "the deck direction, max 12 words"
+          },
+          "want": {
+            "type": "array",
+            "description": "card ids to pick when offered, most important first, max 6",
+            "items": {
+              "type": "string"
+            }
+          },
+          "avoid": {
+            "type": "array",
+            "description": "card ids not to take, max 6",
+            "items": {
+              "type": "string"
+            }
+          },
+          "remove": {
+            "type": "array",
+            "description": "card ids in the deck to remove first, max 3",
+            "items": {
+              "type": "string"
+            }
+          },
+          "block_target": {
+            "type": "integer",
+            "description": "number of block cards the deck should hold by the act boss (0-20)"
+          },
+          "elites": {
+            "type": "string",
+            "enum": [
+              "seek",
+              "normal",
+              "avoid"
+            ]
+          },
+          "rest": {
+            "type": "string",
+            "enum": [
+              "heal",
+              "smith",
+              "auto"
+            ]
+          },
+          "boss_prep": {
+            "type": "string",
+            "description": "max 30 words: what to have ready for the act boss"
+          },
+          "summary": {
+            "type": "string",
+            "description": "max 40 words: the plan in plain words"
+          },
+          "change_reason": {
+            "type": "string",
+            "description": "结合当前情况说明旧/新取舍与预期胜率收益；仅改线时给出，不编数字"
+          },
+          "endgame": {
+            "type": "object",
+            "description": "本局终局假设；每项1句，最多240 Unicode字符，缺证明确写未知。",
+            "properties": {
+              "core": {
+                "type": "string",
+                "description": "core：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "gaps": {
+                "type": "string",
+                "description": "gaps：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "scaling_damage": {
+                "type": "string",
+                "description": "scaling_damage：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "sustainable_defense": {
+                "type": "string",
+                "description": "sustainable_defense：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "resources": {
+                "type": "string",
+                "description": "resources：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "win_condition": {
+                "type": "string",
+                "description": "win_condition：本局假设及依据，最多240字符；复用时只给实际变更字段"
+              },
+              "checkpoint": {
+                "type": "string",
+                "description": "只在 endgame_checkpoint 给出时回答幕末检查；复用时其余题可省略"
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        "required": [],
+        "additionalProperties": false,
+        "description": "可选：只更新受影响字段；省略或null沿用当前计划。实际改线须说明预期收益。"
+      }
+    },
+    "required": [
+      "choice",
+      "reason"
+    ],
+    "additionalProperties": false
+  },
+  "reused_answer_problems": [],
+  "limitation": "Actual production builder, fixed engine and format-only state. No model, game, natural acceptance or content quality claim."
+}

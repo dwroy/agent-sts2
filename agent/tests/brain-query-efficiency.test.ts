@@ -34,11 +34,13 @@ function fixture(label = "reward/card") {
   return { dir, write, ctx, req, combat, construction, library, cues, host, copyStats };
 }
 
-it("omits strategy and rk cues entirely in both instruction layers", async () => {
+it("keeps query cues optional while the system describes registered strategy and rk tools", async () => {
   const { req, cues } = fixture();
   const result = await attachQueryGuidance(req), body = await cues();
   expect(body).not.toHaveProperty("strategies"); expect(body).not.toHaveProperty("rk");
-  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.system).toContain("kb_strategies"); expect(result.system).toContain("kb_reflex");
+  expect(result.system).not.toContain("查相关策略与 rk 后");
   expect(result.question).not.toContain("先调用"); expect(result.system).not.toContain("先查");
 });
 

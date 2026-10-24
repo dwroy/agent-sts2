@@ -1,0 +1,55 @@
+{
+  "production_tsc": {
+    "exit_code": 0,
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "log": "tsc.log"
+  },
+  "first_full": {
+    "exit_code": 1,
+    "files_passed": 683,
+    "files_failed": 2,
+    "tests_passed": 6666,
+    "tests_failed": 2,
+    "tests_skipped": 2,
+    "log": "vitest-full-threads.log",
+    "failures": [
+      "brain-query-efficiency: obsolete ban on tool names in system prompt; updated for #58",
+      "check-imports: sparse allocation omitted existing #29 material; exact base Git blob expanded"
+    ]
+  },
+  "final_recheck": {
+    "exit_code": 0,
+    "files_passed": 12,
+    "tests_passed": 172,
+    "log": "vitest-final-recheck.log",
+    "includes": "Both failed files and all modified tests, specs, agent modes, route/recovery and act-start integration"
+  },
+  "paths": {
+    "exit_code": 0,
+    "files_passed": 1,
+    "tests_passed": 11,
+    "log": "vitest-paths.log",
+    "reason": "process.chdir requires forks; one worker"
+  },
+  "covered_suite_after_resolutions": {
+    "files": 686,
+    "tests_passed": 6679,
+    "tests_skipped": 2,
+    "remaining_failures": 0,
+    "method": "First full plus corrected-file/integration recheck and separate paths. Not a second all-green single whole-suite invocation."
+  },
+  "test_types_nonblocking": {
+    "exit_code": 1,
+    "diagnostics": 908,
+    "new_test_file_errors": 0,
+    "log": "tsc-test-historical.log",
+    "limitation": "Existing tsconfig.test diagnostics are not the production type gate; initial new fixture type omission corrected and rerun."
+  },
+  "execution": {
+    "nice": 19,
+    "max_workers": 1,
+    "games": 0,
+    "model_calls": 0,
+    "live_writes": 0
+  }
+}

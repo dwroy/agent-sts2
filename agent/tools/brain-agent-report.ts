@@ -2,7 +2,8 @@
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { guidanceKind, queryAudit } from "../src/brain/tools/query-guidance.js";
-import { endgameRequired, endgameCheckpointRequired, endgameProblems, parseEndgamePlan } from "../src/memory/endgame-plan.js";
+import { endgameRequired, endgamePlanningTask, endgameReuse, endgameCheckpointRequired, endgameProblems, parseEndgamePlan } from "../src/memory/endgame-plan.js";
+import { runPlanUpdateProblems } from "../src/memory/run-plan-update.js";
 type Row = Record<string, any>;
 const p95 = (xs: number[]) => xs.length ? [...xs].sort((a, b) => a - b)[Math.ceil(xs.length * .95) - 1] : null;
 const mean = (xs: number[]) => xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
@@ -66,21 +67,36 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
       questions_detail: selected.map((r, i) => ({ question_id: r.question_id ?? null, engine: r.engine, label: r.label,
         hit_ids: audits[i]!.hit_ids, latency_ms: typeof r.latency_ms === "number" ? r.latency_ms : null })) };
   });
-  const endgame = data.filter(r => endgameRequired(r.payload));
+  const endgame = data.filter(r => endgameRequired(r.payload) || endgamePlanningTask(r.payload));
   const endgameGroups = [...new Set(endgame.map(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}`))].sort().map(key => {
     const selected = endgame.filter(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}` === key);
     const checkpoints = selected.filter(r => endgameCheckpointRequired(r.payload));
     const nonempty = selected.filter(r => parseEndgamePlan(r.payload?.facts?.your_run_plan?.endgame ?? r.payload?.run_plan_task?.previous_plan?.endgame));
-    const accepted = selected.filter(r => r.accepted === true && endgameProblems(r.answer?.run_plan?.endgame, endgameCheckpointRequired(r.payload)).length === 0);
+    const accepted = selected.filter(r => r.accepted === true && (endgameReuse(r.payload)
+      ? runPlanUpdateProblems(r.answer?.run_plan, r.payload).length === 0
+      : endgameProblems(r.answer?.run_plan?.endgame, endgameCheckpointRequired(r.payload)).length === 0));
+    const updates = accepted.filter(r => r.answer?.run_plan && Object.keys(r.answer.run_plan).some(k => k !== "change_reason" && r.answer.run_plan[k] != null));
     return { engine: selected[0]!.engine, act: key.slice(key.indexOf("/") + 1), questions: selected.length,
       prior_plan_nonempty: nonempty.length, prior_plan_nonempty_rate: nonempty.length / selected.length,
-      accepted_plan_updates: accepted.length, accepted_plan_update_rate: accepted.length / selected.length,
-      checkpoints_requested: checkpoints.length, checkpoints_answered: checkpoints.filter(r => accepted.includes(r)).length,
+      accepted_plan_updates: updates.length, accepted_plan_update_rate: updates.length / selected.length,
+      reuse_offered: selected.filter(r => endgameReuse(r.payload)).length,
+      reuse_without_plan_output: accepted.filter(r => endgameReuse(r.payload) && r.answer?.run_plan == null).length,
+      checkpoints_requested: checkpoints.length, checkpoints_answered: checkpoints.filter(r => accepted.includes(r) && typeof r.answer?.run_plan?.endgame?.checkpoint === "string" && r.answer.run_plan.endgame.checkpoint.trim()).length,
       question_ids: selected.map(r => r.question_id ?? null) };
   });
   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
-    endgame_groups: endgameGroups, strategy_runs: strategyRuns,
-    endgame_limitation: "仅统计显式 endgame_plan_required 题，按引擎/幕分账；首次无旧计划属正常，不计作更新失败。非空不证明内容成立，accepted不证明落盘或实际采用；需核run-plans与下一题。未发给大脑的代码/Jev动作不在分母。F48/F49到达与首试/SL结果须沿同角色/进阶/脑来源的原对局日志另核；空样本不构成验收。",
+    endgame_groups: endgameGroups,
+    planning_questions: endgame.map(r => ({ run_id: r.run_id, question_id: r.question_id ?? null, engine: r.engine, label: r.label,
+      accepted: r.accepted ?? null, reuse_offered: endgameReuse(r.payload),
+      plan_output: r.answer?.run_plan ?? null, change_reason: r.answer?.run_plan?.change_reason ?? null,
+      route: r.answer?.route ?? null, route_reason: r.answer?.route_reason ?? (r.label?.startsWith("map/") ? r.answer?.reason ?? null : null),
+      route_calculation: (r.payload?.route_review ?? r.payload?.route_map ?? r.payload?.act_route)?.route_calculation ?? null,
+      tools: (r.tool_calls ?? []).map((c: Row) => ({ name: c.name, ms: c.ms ?? null })),
+      answer_json_chars: r.answer == null ? null : Array.from(JSON.stringify(r.answer)).length,
+      raw_output_chars: typeof r.raw === "string" ? Array.from(r.raw).length : null,
+      output_tokens: r.usage?.outputTokens ?? null, question_latency_ms: r.latency_ms ?? null })),
+    strategy_runs: strategyRuns,
+    endgame_limitation: "统计显式 endgame 规划题（含旧必填与新复用），按引擎/幕分账；首次无旧计划属正常；复用且无计划输出不计更新。planning_questions列实际查库、变更理由、投影复用/依赖失效、答案JSON长度、原文长度与整题耗时；旧记录缺字段为null。非空不证明内容成立，accepted不证明落盘或实际采用；需核run-plans与下一题。未发给大脑的代码/Jev动作不在分母。F48/F49到达与首试/SL结果须沿同角色/进阶/脑来源的原对局日志另核；空样本不构成验收。",
     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
     inline_knowledge_rows: data.filter(r => r.payload?.open_book || r.payload?.strategy_entries || r.knowledge?.mode === "full").length,
     groups, query_groups: queryGroups, rk_definition: "reflex.json via kb_reflex; kb_experience is experience, never rk", limitation: "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。" };

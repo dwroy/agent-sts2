@@ -3,6 +3,7 @@ import { observeBrain } from "../live-view.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import type { BrainConfig } from "../../core/config.js";
 import { KnowledgeMcp } from "../tools/knowledge-mcp.js";
+import { withoutToolCapabilities } from "../tools/capabilities.js";
 
 export class KnowledgeAgent implements BrainEngine {
   private readonly mcp = new KnowledgeMcp();
@@ -26,7 +27,7 @@ export class KnowledgeAgent implements BrainEngine {
       if (this.querying && "close" in this.querying) await (this.querying as BrainEngine & { close(): Promise<void> }).close();
       this.querying = null;
       this.answering ??= this.factory();
-      try { return await this.answering.decide({ ...req, tools: [] }, signal); }
+      try { return await this.answering.decide({ ...req, tools: [], system: withoutToolCapabilities(req.system, req.tools ?? []) }, signal); }
       finally { if ("close" in this.answering) await (this.answering as BrainEngine & { close(): Promise<void> }).close(); this.answering = null; }
     }
     const key = req.questionId ?? "standalone";
@@ -72,7 +73,7 @@ export class KnowledgeAgent implements BrainEngine {
         this.answering ??= this.factory();
         const remaining = Math.max(1, total - (Date.now() - started));
         // Rebuild the same question with the exact recorded tool returns; no new lookup can happen in this phase.
-        const finalReq: BrainRequest = { ...req, tools: [], timeoutMs: remaining,
+        const finalReq: BrainRequest = { ...req, tools: [], system: withoutToolCapabilities(req.system, req.tools ?? []), timeoutMs: remaining,
           question: `${req.question}\n\n知识查询阶段已结束（${fallback}）。使用原题状态和以下已取得的工具资料直接作答；缺失资料保持未知，不再查工具。\n${JSON.stringify(calls.map(c => ({ name: c.name, input: c.input, output: c.output, isError: c.isError ?? false })))}` };
         observeBrain(req.observe, { kind: "prompt", request: finalReq, phase: "查询阶段结束，使用已取得资料作答" });
         answer = await this.answering.decide(finalReq, signal);

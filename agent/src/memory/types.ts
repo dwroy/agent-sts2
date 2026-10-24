@@ -375,6 +375,7 @@ export interface ScreenMemory {
   runPlanPending?: import("./run-plan-merge.js").RunPlanPending;
   /** The brain's route for the current act (BUILD_DECIDER=deepseek); code follows it node by node. */
   routePlan?: import("../hand/screens/route-plan.js").RoutePlan;
+  routeCalculations?: { run: string; cache: import("../hand/screens/route-plan.js").RouteCalculationCache };
   /** "runId:act:floor" whose route-plan question failed: that floor's map moves use code's greedy baseline. */
   routePlanFailed?: string;
   /**

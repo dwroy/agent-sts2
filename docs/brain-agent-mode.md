@@ -93,3 +93,15 @@ nice -n 19 node --import tsx tools/brain-agent-report.ts <after.jsonl> <after-ru
 接口参考：[官方 Codex App Server 文档](https://developers.openai.com/codex/app-server/)。实际 CLI、dsh 的已安装协议和固定夹具另行验证；没有外部游戏知识变更。
 
 小修正的自然验收须另冻结发布后首批窗口，继续分列查询率、命中率及 latency_ms_median/mean/p95，与原18局口径比较。约14秒中位数为目标，固定测试不证明时延或命中率收益；不追加实验局。
+
+## 工具能力与计划复用（#58）
+
+生产系统提示按**本次请求实际注册**的 `ToolDef.name/description/inputSchema` 生成工具定义、主要输入与用途；Silent 为15项，其余角色按实际清单。用途写在原 ToolDef.description，MCP 与提示共用，不维护另一份工具能力表。机械资料、经验、策略/rk及统计分别帮助启动与过渡、本幕Boss、最终双Boss、路线及拿/删/升级/商店决策；工具本身不新增模拟或预测能力。查询由大脑按需选择，没有“查策略/rk后才能答”的固定前置条件。
+
+Silent A10 的终局目标继续从第一幕面向 F48→F49 连胜。初次建立完整 `run_plan`（含 endgame）；后续已有计划时，省略或 `null` 的 `run_plan` 沿用原计划，不要求每题声明保持/更新。确需调整时，在同题给受影响字段及 `change_reason`，说明当前事实、相较旧计划的取舍和预期胜率收益，缺证可写未知，不编造百分比。`endgame` 可仅更新一项，其他策略、方向权重及终局字段保留。重复相同字段按复用处理；幕末只须在 `run_plan.endgame.checkpoint` 回答准备程度，不强制换路线或重写全套计划。
+
+爬楼继续使用原 `RoutePlan`、代码逐节点执行和合法性检查。普通复核题可省略 route 或给 `keep`，重复相同节点序列也复用原计划；真实改线才给合法新节点序列及 `route_reason`，结合当前情况说明取舍和预期收益。初始路线、路线失效、幕初随机结果的一次复核沿原入口处理；两类路线分别调整。非目标角色/进阶保留原控制与日志语义。
+
+Silent A10 的 `routeBlockState` 按实际依赖分别缓存 `plan_facts`、`next_rest` 和初始 `candidate_routes`。地图/当前位置/可达性/飞行靴、剩余节点与房间代价参与键，HP/maxHP、连续战斗数、休息选项及文字说明按各自消费者参与；金币、牌组等仍随当前事实更新，经 `routeCosts` 实际改变的回血/房间模型也会失效。仅休息选项变化不重算无关的 next_rest；重复题且依赖未变不再计算同一整段投影/枚举替代线。缓存不落盘，冷启动重新核算当前数值；不拿原计划投影冒充当前HP。缓存数据复制后交题面，不能被消费者修改污染。
+
+沿原自然局读取 `brain.jsonl` 和 `run-plans.jsonl`，报告 `planning_questions` 列实际查库、路线/构筑变更理由、`route_calculation` 复用/失效原因、答案JSON字符数、原文字符数、输出token及整题耗时。`run_plan_merge`/`plan_update` 记录 reused/updated/checkpoint 与变更字段；合法执行仍核 decisions 的 route_review、route-change及后继读回。报告的 accepted 只证明接口接受，不能代实际落盘/采用或决策质量；缺字段/空样本保持未知。ops 在自然发布边界核实际提示SHA/工具清单与消费者、恢复后，继续观察自然决策质量与原 #50 达标线/终局效果；不为本项增开局或以查询次数下降单独验收。

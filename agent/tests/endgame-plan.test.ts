@@ -121,7 +121,7 @@ it("restores an available past plan after rollback and preserves the legacy unbo
 for (const engine of ["codex", "deepseek"] as const) for (const start of [
   { floor: 1, act: 1, recovery: "normal" }, { floor: 31, act: 2, recovery: "normal" },
   { floor: 1, act: 1, recovery: "future-only" }, { floor: 9, act: 1, recovery: "rollback" },
-  { floor: 1, act: 1, recovery: "other-run" },
+  { floor: 1, act: 1, recovery: "other-run" }, { floor: 5, act: 1, recovery: "reuse" },
 ]) {
   it(`${engine}, F${start.floor}, ${start.recovery}: construction answers update the next question, survive restart and keep #35 / #49`, async () => {
     setKnowledgeCharacter("silent");
@@ -157,10 +157,13 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
         requests.push(req);
         const checkpoint = (req.payload as any).run_plan_task?.endgame_checkpoint ? "幕末格式判断：核心和缺口待证，两战资源未知" : "";
         const answer = { choice: Object.keys(req.options ?? {})[0], reason: "格式构筑理由", run_plan: { ...plan(requests.length, checkpoint),
+          ...((req.payload as any).run_plan_task?.plan_reuse ? { change_reason: "格式新证据下调整核心，预期改善本局胜率，效果未知" } : {}),
           ...(req.spec.schema.properties?.["run_plan"]?.properties?.["construction"] ? { construction: {
             primary: "uncommitted", alternatives: [], checkpoint: start.floor + sent + 1, reason: "格式方向依据待证", pivot_if: "出现新证据再改" } } : {}) } };
+        if (start.recovery === "reuse" && requests.length === 2) delete (answer as any).run_plan;
         expect(req.spec.validate(answer)).toEqual([]);
-        expect(req.spec.validate({ choice: answer.choice, reason: "缺计划" }).join()).toContain("run_plan");
+        if ((req.payload as any).run_plan_task?.endgame_plan_required || checkpoint) expect(req.spec.validate({ choice: answer.choice, reason: "缺计划" }).join()).toContain("run_plan");
+        else expect(req.spec.validate({ choice: answer.choice, reason: "复用" })).toEqual([]);
         return { engine, model: "fixed", answer, problems: [], attempts: 1, latencyMs: 1,
           usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
       });
@@ -186,7 +189,8 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
       }
     }
     expect(requests[0]!.system).toContain("匹配数为0、缺失或错误时跳过");
-    expect(requests[0]!.system).not.toMatch(/kb_strategies|kb_reflex|构筑rk/);
+    expect(requests[0]!.system).toContain("kb_strategies");
+    expect(requests[0]!.system).toContain("kb_reflex");
     expect(requests[0]!.system).toContain("经验用kb_experience");
     expect(requests[0]!.question).not.toContain("calibrated on logged A8");
     expect((requests[1]!.memory as any).construction_log).toContain("格式构筑理由");
@@ -197,13 +201,14 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
     if (start.recovery === "rollback") {
       expect((requests[2]!.payload as any).facts.your_run_plan).toBeNull();
       expect((requests[2]!.payload as any).run_plan_task.current_plan).toBeNull();
-    } else expect((requests[2]!.payload as any).facts.your_run_plan.endgame.core).toBe("格式核心2");
+    } else expect((requests[2]!.payload as any).facts.your_run_plan.endgame.core).toBe(start.recovery === "reuse" ? "格式核心1" : "格式核心2");
     expect(sent).toBe(3); expect(requests).toHaveLength(3);
     // The existing Silent construction shadow still runs once per card question; no combat is played.
     expect(jevAsk).toHaveBeenCalledTimes(3);
     expect(jevAsk.mock.calls.every(args => (args[0] as any).direction === "uncommitted")).toBe(true);
     const stored = readFileSync(cfg.runPlanLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
-    expect(stored.filter(r => r.merged_into && r.plan?.endgame).map(r => r.plan.endgame.core)).toEqual(["格式核心1", "格式核心2", "格式核心3"]);
+    expect(stored.filter(r => r.merged_into && r.plan?.endgame).map(r => r.plan.endgame.core)).toEqual(["格式核心1", start.recovery === "reuse" ? "格式核心1" : "格式核心2", "格式核心3"]);
+    if (start.recovery === "reuse") expect(stored.find(r => r.plan_update)?.plan_update).toMatchObject({ outcome: "reused", changed_fields: [] });
     expect(stored.filter(r => r.plan?.endgame?.checkpoint)).toHaveLength(start.floor === 31 ? 2 : 0);
   });
 }
