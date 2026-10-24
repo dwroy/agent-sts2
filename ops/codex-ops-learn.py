@@ -40,6 +40,7 @@ import proposal_dispatch  # noqa: E402
 import core_build_jobs  # noqa: E402
 import learner_retention  # noqa: E402
 import ordinary_close  # noqa: E402
+import learner_registration  # noqa: E402
 import ops_current  # noqa: E402
 import external_learning_policy
 import disk_admission  # noqa: E402
@@ -91,14 +92,24 @@ def save_state(state):
     tmp = STATE + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(state, handle, ensure_ascii=False, indent=1)
+        handle.flush()
+        os.fsync(handle.fileno())
     os.replace(tmp, STATE)
+    descriptor = os.open(DIR, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+    learner_registration.published(state)
 
 
 @contextmanager
 def state_lock():
     with open(os.path.join(DIR, "learn.lock"), "a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        yield
+        import strategy_external_jobs
+        with learner_registration.transaction(DIR, save_state), strategy_external_jobs.validation_window():
+            yield
 
 
 def enqueue(kind, text):
@@ -181,6 +192,7 @@ def dispatch(state, runs, character, reason):
         info["attempts"] = info.get("attempts", 0) + 1
         info["batch"] = batch_id
         info.pop("retry_at", None)
+    learner_registration.checkpoint(state)
     return batch_id, pid
 
 
@@ -315,6 +327,12 @@ def check_pending(state, character):
 
 
 def cmd_tick(args):
+    import strategy_external_jobs
+    with strategy_external_jobs.validation_window():
+        return _cmd_tick(args)
+
+
+def _cmd_tick(args):
     state = load_state()
     character = args.character
     report = {"victory": check_victories(character), "ascension": check_ascension(state, character)}

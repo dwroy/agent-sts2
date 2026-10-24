@@ -104,3 +104,7 @@ Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）�
 
 
 #56 退回修正：道位释放还须核原 owner 的 `shared.retired`。即使原批是 done/failed 且 wrapper PID 已退，不同 plan、不同 unit ID 也不能跳过原生退役/原 learner 日志证明；不明时保留该道及其 worker 名额，仍按额度上限调度其他空道，自有槽独立。not-started 原证明或已核原生终态到齐后，下一自然派发可释放原道；不重置原状态、失败、租约，也不把已核退役历史永久计入占用。该检查同时适用原 external dispatch 和底层 writer 准入。
+
+#56 注册超时修正：新调度在原全局 `learn.lock` 事务中为每个新 wrapper 预持独立 batch 发布锁；完整 batch（含原 supervisor PID、external binding/lane/policy）原子写入并 fsync 后，才释放该批屏障。启动准备与 learner_entry 等待该批屏障，仍核原保存的 PID/batch 租约；不必等待父 tick 后续来源校验结束。全局锁继续串行化派发/finish，超时仍120秒，旧/手动 wrapper 未携带受约束新屏障时仍走原全局路径。外部来源按空道惰性选择，一次原事务内复用已校验源，仅缓存冻结 metadata；依赖文件身份变化即重验，下一事务或独立 wrapper prepare 不复用缓存。
+
+注册修正必须完整安装父 tick/learner_jobs、`learner_registration.py`、wrapper 与外部来源模块；不得只换 wrapper 后给原在途行添加屏障或元数据。先由 ops 待原自然事务退锁并核旧 wrapper 的零模型启动证明，再沿原失败/租约/世代续接，不重放旧产物或强 tick。#56 主管6385018900的23:30前合入门保持；未能完成时，原 ops 按其裁决回退到 #56 之前的调度恢复原两槽，知识、原 owner、失败和证据原样保留。恢复数量和时刻均须实际读回，不以源代码安装代自然验收。

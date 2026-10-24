@@ -309,7 +309,7 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     const logs = join(root, "logs");
     const stateDir = join(root, "ops", "codex-ops");
     mkdirSync(logs);
-    for (const file of ["herdr-host.sh", "herdr-exec.sh", "herdr_titles.py", "brain_view.py", "learner_jobs.py", "external_learning_policy.py"]) {
+    for (const file of ["herdr-host.sh", "herdr-exec.sh", "herdr_titles.py", "brain_view.py", "learner_jobs.py", "external_learning_policy.py", "learner_registration.py"]) {
       copyFileSync(join(REPO, "ops", file), join(root, "ops", file));
     }
     const runFile = join(logs, "run-config.jsonl");
