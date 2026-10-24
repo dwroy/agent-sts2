@@ -1,0 +1,93 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-first-boss-power-hp-review",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "fight_plan",
+          "act_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 15,
+          "max": 17
+        }
+      },
+      "strategy": "首Boss备战时先核当前HP、实际已持牌文、费用和可用药，不用已有Power牌数量代替资源复核。A10重载且预判必死证据层，首记录T1牌组含Power时，HP不高于最大HP一半组10/25过首Boss，高于一半202/226，差-49.38点；首次截止代理7/25对183/226。32/70的08A0GEAL8KQ5过关、41/70且两张Power的01H1533KSS5C失败，均保留。\n范围：Silent/A10/版本unknown首Boss；首记录帧非原子入场，半血仅观察分箱而非安全线。无重试证据的低HP且有Power组为0，不外推。Power类型非机制/成型证明，未来SL不作触发。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "08A0GEAL8KQ5",
+          "floor": 17,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/08A0GEAL8KQ5; states off=10450024276 bytes=28716 sha256=c5bf7209ab3f17137943973db418ce242cd4485ef4aacebbb8b923107b300228",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0NMF36KX3F7Y",
+          "floor": 17,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/0NMF36KX3F7Y; states off=14119770553 bytes=30102 sha256=af0e40e40a7405191c26b9c65e5c7c4e25bedc90d8ea7eaa041080087949eabf",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0B2567HG3T4D",
+          "floor": 17,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/0B2567HG3T4D; states off=10510641674 bytes=26655 sha256=ee0b01370881be606883c68b55dd4740e1f413d6703269921c02ee404a05c1a3",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "01H1533KSS5C",
+          "floor": 17,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/01H1533KSS5C; states off=8370921904 bytes=26037 sha256=ac79d855e42cebb3b648d93740735f4fb178a714c7a04bed54f48892c53c978d",
+          "role": "contradict"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.3,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "game_version": "unknown",
+      "design": "observational",
+      "collected_at": "2026-10-24 (own bounded read; original per-row ts retained)",
+      "input_manifest_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+      "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+      "evidence_detail_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/evidence-preboss.json",
+      "consumer_contract": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/contracts/docs/strategy-context-retrieval.md",
+        "publication": "pending",
+        "consumer_readback": "pending",
+        "natural_adoption": "pending",
+        "trigger_limits": "支持题型/幕/楼层；真实战斗序号、早期奖励前缀与Power类型计数不在trigger白名单，正文先核情境，不明即不适用。楼层只收窄检索，不代真实战斗序号；不读终局、胜负或未来SL作触发。",
+        "kb_strategies": "正式库才消费；scratch未接入，不声称线上命中。",
+        "rk": "没有原Plan/逐候选完整结果/留出两臂；本批无rk条目或回放。"
+      },
+      "limitations": [
+        "自有游戏版本unknown，未冒作外部v0.111；Silent其他进阶单列，主结论仅A10。",
+        "机会数、独立局数、最终过首Boss与首次预判必死截止代理分别统计；无重试证据不证明完全未SL。",
+        "观察性关联；牌组、备选、路线、HP、遗物、代码年代、引擎与重试选择混杂；未估因果增益。",
+        "统计按稳定情境和真实局号去重；不同表/分层/机会的重叠局号不相加。",
+        "来源SHA、offset/bytes/原流截止在raw-read-references.json；程序覆盖不等于模型逐局通读。"
+      ],
+      "effect": null,
+      "minimum_viable_deck": null,
+      "safe_hp_threshold": null,
+      "own_support_runs": [
+        "08A0GEAL8KQ5",
+        "0NMF36KX3F7Y"
+      ],
+      "own_counterexample_runs": [
+        "01H1533KSS5C",
+        "0B2567HG3T4D"
+      ]
+    }
+  ]
+}

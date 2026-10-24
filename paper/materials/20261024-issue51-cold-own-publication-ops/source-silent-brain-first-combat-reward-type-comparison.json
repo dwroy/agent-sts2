@@ -1,0 +1,124 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-first-combat-reward-type-comparison",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 2,
+          "max": 2
+        }
+      },
+      "strategy": "确认是首场真实战斗后的卡奖且有Attack选项时，将能补当前用途的攻击牌列入比较，同时按牌文核Skill/Power能做什么，不能把类型当伤害或防御标签。A10无重试证据拿Attack为43/65过首Boss、其他14/33（+23.73点）；有重载且有预判必死证据层152/194对65/78（-4.98点），方向反转。\n范围：Silent/A10/版本unknown/首战实际奖励；98与272局分层机会各一题，不能按未来SL选择策略。观察关联，不保证拿Attack更好；不是首战或无法核战序时不适用。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "08A0GEAL8KQ5",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/08A0GEAL8KQ5; decisions off=883616104 bytes=9319 sha256=b35ecef0ad9c2755084dddf6afcae2fc4514c74e61b4e63ea7fb9913b6ccffd0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "01H1533KSS5C",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/01H1533KSS5C; decisions off=667644779 bytes=9419 sha256=ab03d108c2ab789b374e877da126ecf61abe02ce457360434b891abd91193415",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0B2567HG3T4D",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0B2567HG3T4D; decisions off=890434862 bytes=9375 sha256=6ea70bb063d987021ca035845c5974db6cf8fd2f0beb2a1b426684ed24d43833",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "173ARCPHRVSS",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/173ARCPHRVSS; decisions off=3088933481 bytes=5397 sha256=d6e2c9f220fdd935591f39405f53cc021b697e02c3918dc8c9d0ead2e510d0a9",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "0DJ6GFZZ0TG9",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0DJ6GFZZ0TG9; decisions off=810472124 bytes=9674 sha256=88df3e687d173298ca6253740f709c0ab3e8dfb39a441d100efdcb50b5e9b10e",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "2GFAPDBDNSCR",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/2GFAPDBDNSCR; decisions off=3095939018 bytes=5474 sha256=ce79f0086b23b62e40c0692bd4abb6df7e9f39e655c000c761216c219825d11e",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0YQJ9D1MC4NK",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0YQJ9D1MC4NK; decisions off=1976223069 bytes=188842 sha256=168126d97bc888cb83a202c89458820c09ba84e54a4a32187259793eca0cc792",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "177AS39M1UPW",
+          "floor": 2,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/177AS39M1UPW; decisions off=978116476 bytes=10438 sha256=201d261def8352b3982f7c1ba09fd67eb24c17c61c11e5a288191b4e496efc8d",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "game_version": "unknown",
+      "design": "observational",
+      "collected_at": "2026-10-24 (own bounded read; original per-row ts retained)",
+      "input_manifest_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+      "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+      "evidence_detail_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/evidence-first_reward.json",
+      "consumer_contract": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/contracts/docs/strategy-context-retrieval.md",
+        "publication": "pending",
+        "consumer_readback": "pending",
+        "natural_adoption": "pending",
+        "trigger_limits": "支持题型/幕/楼层；真实战斗序号、早期奖励前缀与Power类型计数不在trigger白名单，正文先核情境，不明即不适用。楼层只收窄检索，不代真实战斗序号；不读终局、胜负或未来SL作触发。",
+        "kb_strategies": "正式库才消费；scratch未接入，不声称线上命中。",
+        "rk": "没有原Plan/逐候选完整结果/留出两臂；本批无rk条目或回放。"
+      },
+      "limitations": [
+        "自有游戏版本unknown，未冒作外部v0.111；Silent其他进阶单列，主结论仅A10。",
+        "机会数、独立局数、最终过首Boss与首次预判必死截止代理分别统计；无重试证据不证明完全未SL。",
+        "观察性关联；牌组、备选、路线、HP、遗物、代码年代、引擎与重试选择混杂；未估因果增益。",
+        "统计按稳定情境和真实局号去重；不同表/分层/机会的重叠局号不相加。",
+        "来源SHA、offset/bytes/原流截止在raw-read-references.json；程序覆盖不等于模型逐局通读。"
+      ],
+      "effect": null,
+      "minimum_viable_deck": null,
+      "safe_hp_threshold": null,
+      "own_support_runs": [
+        "01H1533KSS5C",
+        "08A0GEAL8KQ5",
+        "0DJ6GFZZ0TG9",
+        "0YQJ9D1MC4NK",
+        "177AS39M1UPW",
+        "2GFAPDBDNSCR"
+      ],
+      "own_counterexample_runs": [
+        "0B2567HG3T4D",
+        "173ARCPHRVSS"
+      ]
+    }
+  ]
+}

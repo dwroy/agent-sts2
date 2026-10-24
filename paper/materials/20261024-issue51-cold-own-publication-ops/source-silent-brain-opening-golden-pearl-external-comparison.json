@@ -1,0 +1,273 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-opening-golden-pearl-external-comparison",
+      "version": "2026-10-24.2",
+      "trigger": {
+        "question_types": [
+          "event",
+          "act_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      "strategy": "开局实际提供GOLDEN_PEARL时，把已确认的150金币与其他选项的当下资源逐项比较，不把外部整局关联当首Boss收益。自有42次选择后记录均+150金币且HP不变；A10无重试证据选组4/9过首Boss、同台未选1/2（差-5.56点），整局均0胜。外部v0.111.0为34/111对24/110整局胜（+8.81点）；旧v0.108.0差-7.53点，机制对照未知。\n范围：仅Silent开局该原ID；自有版本unknown/A10结局，其他进阶不外推。备选、路线和版本混杂，不作固定必选或因果收益。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; chosen"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.3063063063063063,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 111
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/chosen",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; offered_not_chosen"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.21818181818181817,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 110
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/offered_not_chosen",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.108.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.108.0; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=0; mechanism equivalence unknown"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.3333333333333333,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 42
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.108-8.json",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.108.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.108.0; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=1; mechanism equivalence unknown"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.25806451612903225,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 31
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.108-9.json",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.110.1",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.110.1; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=0; mechanism equivalence unknown"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.25806451612903225,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 31
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.110-75.json",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.110.1",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.110.1; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=1; mechanism equivalence unknown"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_rate",
+            "value": 0.2,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 20
+          },
+          "design": "observational",
+          "limitations": [
+            "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+            "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.110-76.json",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "1269Y20SKHUM",
+          "floor": 1,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/1269Y20SKHUM; decisions off=1257997032 bytes=45324 sha256=01ab4f2f02a035f0b8281c3ff9e43c2b2186fdaa8d1c05e5ba4b64d76afcae00",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "6D0M76419BU7",
+          "floor": 1,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/6D0M76419BU7; decisions off=970687522 bytes=7472 sha256=e720b07c2f11e1c5bc3cc17ae4b948ada777fbf51ed1cd8d662587067e45a9d5",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0VBCQS9V0N87",
+          "floor": 1,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/0VBCQS9V0N87; decisions off=3855401058 bytes=91171 sha256=54e3cab456021b1c6682a9c1703c526dc5904f65b843534127b5012ef31d81bc",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "36GZSS70H7XK",
+          "floor": 1,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/36GZSS70H7XK; decisions off=4031219960 bytes=50746 sha256=88903cacc002854102878a5c5d065b461a0230ab56af92cb81932bacfd949fc2",
+          "role": "contradict"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.25,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "game_version": "unknown (own); external builds separate",
+      "design": "observational",
+      "collected_at": "2026-10-24 (own bounded read); external downloaded 2026-10-21",
+      "input_manifest_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+      "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+      "evidence_detail_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/evidence-golden.json",
+      "consumer_contract": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/contracts/docs/strategy-context-retrieval.md",
+        "publication": "pending",
+        "consumer_readback": "pending",
+        "natural_adoption": "pending",
+        "trigger_limits": "支持题型/幕/楼层；真实战斗序号、早期奖励前缀与Power类型计数不在trigger白名单，正文先核情境，不明即不适用。楼层只收窄检索，不代真实战斗序号；不读终局、胜负或未来SL作触发。",
+        "kb_strategies": "正式库才消费；scratch未接入，不声称线上命中。",
+        "rk": "没有原Plan/逐候选完整结果/留出两臂；本批无rk条目或回放。"
+      },
+      "limitations": [
+        "自有游戏版本unknown，未冒作外部v0.111；Silent其他进阶单列，主结论仅A10。",
+        "机会数、独立局数、最终过首Boss与首次预判必死截止代理分别统计；无重试证据不证明完全未SL。",
+        "观察性关联；牌组、备选、路线、HP、遗物、代码年代、引擎与重试选择混杂；未估因果增益。",
+        "统计按稳定情境和真实局号去重；不同表/分层/机会的重叠局号不相加。",
+        "来源SHA、offset/bytes/原流截止在raw-read-references.json；程序覆盖不等于模型逐局通读。"
+      ],
+      "effect": null,
+      "minimum_viable_deck": null,
+      "safe_hp_threshold": null,
+      "own_support_runs": [
+        "1269Y20SKHUM",
+        "6D0M76419BU7"
+      ],
+      "own_counterexample_runs": [
+        "0VBCQS9V0N87",
+        "36GZSS70H7XK"
+      ]
+    }
+  ]
+}

@@ -6657,3 +6657,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T16:27:43+08:00 [watcher] #20历史采用门核验退回评论6381989248逐字读回，status:in-progress远端核同；原dev pane/tab/terminal/cwd与登记吻合，单行提醒仅agent_prompted，不代已读修复。记录4191c5a35经Windows SSH推送远端核同，产品未合未部署、三树保留。review队列36自然监督/54原链科学父/39与43父+Roy无新增可执行交付，等dev补分叉通道可靠分配边界和回归后重审；唯一full因反例中止rc143/锁释原件保留。材料paper/materials/20261024-issue20-history-integrator/handoff.json。
 
 - 2026-10-24T16:31:18+08:00 [ops] V6-R431原124312冷启动一策略独立发布/live37，一ID生产工具过、612账本0问题；R430八自然ID检索命中（1局/9题/10查询）不代收益，161310原native保留。预写元数据失败及格式拒绝留档，科学父开放。paper/materials/20261024-issue51-cold-prefix-publication-ops/。
+
+- 2026-10-24T16:43:59+08:00 [ops] #51 V6-R432：161310四新/Golden一更live37→41，5实际工具读回、616账本0；新毒刀整局及后续7独立单元按6382043016原锁排队，原processed/held/科学父及37失败保持；无新full/模型/局。原件paper/materials/20261024-issue51-cold-own-publication-ops/、paper/materials/20261024-issue51-next-units-ops/。

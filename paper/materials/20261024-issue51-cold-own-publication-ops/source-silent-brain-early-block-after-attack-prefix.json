@@ -1,0 +1,108 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-early-block-after-attack-prefix",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 3,
+          "max": 8
+        }
+      },
+      "strategy": "确认第2～3场真实战斗奖励、此前早期卡奖已拿Attack且本题提供写明获得格挡的牌时，不因已补攻击就自动补任意格挡；比较当前牌组、费用、牌文和备选。每局首个合格机会：A10无重试证据取格挡文本牌6/18过首Boss、其他29/46（-29.71点）；重载且预判必死层48/58对110/142（+5.29点）。\n范围：Silent/A10/版本unknown；此前已拿Attack只是奖励前缀代理，非完整输出能力。格挡文本代理也含Attack，非全部防御。分层反向、无因果拿牌顺序；历史不明时不适用。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0PH64C4AWAX9",
+          "floor": 3,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/0PH64C4AWAX9; decisions off=870731268 bytes=9549 sha256=4c8cebcde265b07fff2489be099a937e94471523d4fa90e6e6a0c81f97c0554e",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "01H1533KSS5C",
+          "floor": 5,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/01H1533KSS5C; decisions off=667859087 bytes=9226 sha256=e413aa278dca45a4144689ed04ba862a782a42e619552bd38e7632ca90056d13",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "08A0GEAL8KQ5",
+          "floor": 6,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/08A0GEAL8KQ5; decisions off=883836183 bytes=8120 sha256=d8f4a77bd64961d0a4071a3f84713bf6b739f6c9537cf3f237b860a8596a7b8e",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "0NMF36KX3F7Y",
+          "floor": 3,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/0NMF36KX3F7Y; decisions off=2385641047 bytes=169852 sha256=41f61edb4b1f2f281c43d2ce485589ec18228afb71f2ba4d5805461a9bf7e770",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 3,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/2K4H3JEJHRSB; decisions off=669410417 bytes=9324 sha256=4b96c7af39b44f9af7d9335b6894469de8dd0e176f079d2f865c9e4fe0fcf81b",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "4YPGHGJD393H",
+          "floor": 4,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/4YPGHGJD393H; decisions off=1283500589 bytes=94849 sha256=5b369f83ad645a1ec210d0489c628fe5abc93dc1a8b2b8d70da674d31eb2bb24",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "game_version": "unknown",
+      "design": "observational",
+      "collected_at": "2026-10-24 (own bounded read; original per-row ts retained)",
+      "input_manifest_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+      "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+      "evidence_detail_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/evidence-later_block.json",
+      "consumer_contract": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/contracts/docs/strategy-context-retrieval.md",
+        "publication": "pending",
+        "consumer_readback": "pending",
+        "natural_adoption": "pending",
+        "trigger_limits": "支持题型/幕/楼层；真实战斗序号、早期奖励前缀与Power类型计数不在trigger白名单，正文先核情境，不明即不适用。楼层只收窄检索，不代真实战斗序号；不读终局、胜负或未来SL作触发。",
+        "kb_strategies": "正式库才消费；scratch未接入，不声称线上命中。",
+        "rk": "没有原Plan/逐候选完整结果/留出两臂；本批无rk条目或回放。"
+      },
+      "limitations": [
+        "自有游戏版本unknown，未冒作外部v0.111；Silent其他进阶单列，主结论仅A10。",
+        "机会数、独立局数、最终过首Boss与首次预判必死截止代理分别统计；无重试证据不证明完全未SL。",
+        "观察性关联；牌组、备选、路线、HP、遗物、代码年代、引擎与重试选择混杂；未估因果增益。",
+        "统计按稳定情境和真实局号去重；不同表/分层/机会的重叠局号不相加。",
+        "来源SHA、offset/bytes/原流截止在raw-read-references.json；程序覆盖不等于模型逐局通读。"
+      ],
+      "effect": null,
+      "minimum_viable_deck": null,
+      "safe_hp_threshold": null,
+      "own_support_runs": [
+        "01H1533KSS5C",
+        "0PH64C4AWAX9",
+        "2K4H3JEJHRSB",
+        "4YPGHGJD393H"
+      ],
+      "own_counterexample_runs": [
+        "08A0GEAL8KQ5",
+        "0NMF36KX3F7Y"
+      ]
+    }
+  ]
+}

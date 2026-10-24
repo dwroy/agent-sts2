@@ -6609,3 +6609,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T16:31:18+08:00 [ops/V6-R431] 续接51：R430已在真实Silent A10局4CR2N26QAJAV的冻结9题中自然查询策略10次、0错误，返回8个本批ID；输出正文/证据/版本及当时库SHA核同，仍仅检索观察，不算8次执行或收益。161310自有冷启动单元已在原线程自然启动，high/原沙箱前缀核同，不热切或重派。另把原124312已核冷启动文字独立发布V6-R431，T16:29:12，live36→37/main40→41；旧无该ID策略入口，新为首幕实际含GOLDEN_PEARL时的条件比较提醒，证据v0.111.0整局胜34/111对24/110，旧两版本反向保留。账本0612，纯外部/0自有、confidence0.25/conflict；不是必选或首Boss因果收益。生产工具该ID读回过，R430十条与其他知识/脏目录保留，612账本0问题。起初外部账本误带asc被拒、依赖缺件的首次发布均证实预写；修正只用filters后原续接成功，失败原件不改。回退仅此ID及目录行；描述知识/rk消费者、自然采用和科学父另验，本轮无新模型/游戏/full。
 原件paper/materials/20261024-issue51-cold-prefix-publication-ops/{publication,actual-live-consumers,final-readback,rule-change-notice}.json；paper/materials/20261024-issue51-natural-cold-resume-ops/r430-natural-readback.json。
+
+### 2026-10-24T16:43:59+08:00 [ops] #51 V6-R432 五情境独立发布
+161310补证实为5条（4新1更），不同于旧124312的1条。旧祝福仅外部比较，现原ID增加自有选择/资源证据；新增首战牌型、已有Attack后补挡、前三奖励skip及首Boss前Power/HP四种条件提醒。自有SL分层反向、版本unknown及外部旧版本反例保持，不据此定拿牌排序或安全线。source6e3976ca/行为0f999aa6/live9dee1cfc，T16:40:40，live37→41；5生产工具逐ID读回、616账本0问题，铁甲等价。预期是可检索情境，采用/收益仍待；回退仅撤4新ID并还原Golden旧版及目录该行。新毒/刀整局→商店→单牌穿插→遗物→事件→遭遇已按原锁冻结排队，冷/休不重跑，未强派模型/full/局。逐项旧新/证据/回退见paper/materials/20261024-issue51-cold-own-publication-ops/rule-changes.json；排单见paper/materials/20261024-issue51-next-units-ops/activation.json。

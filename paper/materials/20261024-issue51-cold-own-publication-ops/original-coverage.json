@@ -1,0 +1,138 @@
+{
+  "program": {
+    "allowed_runs": 506,
+    "ascension_attempt_strata": [
+      {
+        "ascension": 0,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 7
+      },
+      {
+        "ascension": 1,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 3
+      },
+      {
+        "ascension": 2,
+        "attempt_scope": "no_retry_evidence",
+        "n": 1
+      },
+      {
+        "ascension": 2,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 1
+      },
+      {
+        "ascension": 3,
+        "attempt_scope": "no_retry_evidence",
+        "n": 1
+      },
+      {
+        "ascension": 4,
+        "attempt_scope": "no_retry_evidence",
+        "n": 2
+      },
+      {
+        "ascension": 4,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 2
+      },
+      {
+        "ascension": 5,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 1
+      },
+      {
+        "ascension": 6,
+        "attempt_scope": "no_retry_evidence",
+        "n": 5
+      },
+      {
+        "ascension": 6,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 6
+      },
+      {
+        "ascension": 7,
+        "attempt_scope": "no_retry_evidence",
+        "n": 1
+      },
+      {
+        "ascension": 7,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 6
+      },
+      {
+        "ascension": 8,
+        "attempt_scope": "no_retry_evidence",
+        "n": 1
+      },
+      {
+        "ascension": 9,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 3
+      },
+      {
+        "ascension": 10,
+        "attempt_scope": "no_retry_evidence",
+        "n": 123
+      },
+      {
+        "ascension": 10,
+        "attempt_scope": "retry_or_predicted_death",
+        "n": 343
+      }
+    ],
+    "frames_filtered": 321328,
+    "act1_fights": 4017,
+    "early_decision_candidates": 2533,
+    "opening_choices_with_actual_options": 505,
+    "opening_options_missing_runs": [
+      "D2JR3FN0VYH5"
+    ],
+    "early_reward_opportunities": 1510,
+    "choose_card": 1471,
+    "skip": 39,
+    "skip_independent_runs": 35,
+    "first_boss_first_recorded_frames": 450,
+    "first_boss_frames_missing": 56,
+    "unique_raw_windows_verified": 4998,
+    "raw_bytes_verified": 208766705
+  },
+  "model_read": {
+    "review_case_records": 28,
+    "distinct_own_runs": 18,
+    "own_run_ids": [
+      "01H1533KSS5C",
+      "08A0GEAL8KQ5",
+      "0B2567HG3T4D",
+      "0DJ6GFZZ0TG9",
+      "0NMF36KX3F7Y",
+      "0PH64C4AWAX9",
+      "0VBCQS9V0N87",
+      "0YQJ9D1MC4NK",
+      "1269Y20SKHUM",
+      "1303HVDLVMGR",
+      "173ARCPHRVSS",
+      "177AS39M1UPW",
+      "2GFAPDBDNSCR",
+      "2K4H3JEJHRSB",
+      "36GZSS70H7XK",
+      "4AA19CXDKQK6",
+      "4YPGHGJD393H",
+      "6D0M76419BU7"
+    ],
+    "scope": "16 opening/reward excerpts + 4 full first-boss deck inventories, plus 8 no-retry reward excerpts; actual options, chosen action and before/after inventory; statistical summaries and all primary strata read",
+    "whole_own_games_four_sections_completed": 0,
+    "external_representative_pairs": 1,
+    "external_representative_examples": 2,
+    "external_nodes_complete": 98,
+    "external_reader": "eval/sts2fun_build_view.py manifest SHA-verified one pair/page; pair v0.111 cluster0 offset0, no archetype semantic claim",
+    "external_ancient_pages": "GOLDEN_PEARL: v0.111 offsets10/11; v0.108 offsets8/9; v0.110 offsets7/75/76; original each build denominator retained",
+    "not_read": "没有模型逐行通读321328帧或506局全历史；未读114代表的四section；其他外部代表未读；不称完整流派剧本。"
+  },
+  "source_policy": "memory-only DuckDB threads<=2, explicit frozen read_parquet file list, filter allowed506 run IDs before aggregation; never init/sync source logdb; raw seek only bounded referenced rows <=original cut and SHA256 each row",
+  "source_denominators_pooled": false,
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

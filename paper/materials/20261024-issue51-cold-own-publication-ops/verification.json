@@ -1,0 +1,429 @@
+{
+  "state": "done",
+  "rc": 0,
+  "source_changed": false,
+  "original_batch": "20261024-161310-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "code_proposals": [],
+    "implementation_domains": [],
+    "proposal_results": [],
+    "batch": "20261024-161310-strategy-proposal",
+    "base": "66a67f2bc8fa808414ffa2f61bd775a57d1bc2ad",
+    "runs": [],
+    "fixes": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/report.md",
+    "external_source": "issue51-decision-cold-start-own-20261024-002",
+    "input_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+    "reason": "完成5个独立冷启动情境：4条新策略、1条原ID更新；另逐字节复用1条旧知识，不计新增情境。自有与外部分账，配额达标；正式发布、生产读回、自然采用和科学验收均pending。",
+    "own_support_runs": [
+      "01H1533KSS5C",
+      "08A0GEAL8KQ5",
+      "0DJ6GFZZ0TG9",
+      "0NMF36KX3F7Y",
+      "0PH64C4AWAX9",
+      "0VBCQS9V0N87",
+      "0YQJ9D1MC4NK",
+      "1269Y20SKHUM",
+      "1303HVDLVMGR",
+      "177AS39M1UPW",
+      "2GFAPDBDNSCR",
+      "2K4H3JEJHRSB",
+      "4AA19CXDKQK6",
+      "4YPGHGJD393H",
+      "6D0M76419BU7"
+    ],
+    "decision_output_counts": {
+      "new": 4,
+      "update": 1,
+      "reuse": 1,
+      "unique_contexts": 5,
+      "target_min5": 5,
+      "target_max10": 10,
+      "under3_report_required": false,
+      "target_met": true,
+      "quota_gap": 0,
+      "strategy_candidates": 5,
+      "knowledge_reused": 1,
+      "rk_candidates": 0,
+      "comparison_groups_ge100_both_arms": 1,
+      "new_external_comparisons_ge100_both_arms": 0,
+      "threshold_scope": "仅保留原v0.111.0 GOLDEN_PEARL 111/110局比较；自有不强套100门槛，所有稀疏分层明列。",
+      "predecessor_new_count": 2,
+      "consecutive_zero_new_batches": 0,
+      "scientific_acceptance": "pending",
+      "remaining_gaps": [
+        "精确战序/早期奖励前缀/Power类型数不在现行trigger白名单，需按正文核当前情境；不明不适用。",
+        "自有版本unknown；外部机制版本对照未知；观察性混杂、首次预判必死代理与真实首试仍有差别。",
+        "1局开局完整选项、56局首Boss前帧缺口保留；没有最低可行牌组或安全资源阈值。",
+        "knowledge正式消费者、rk原Plan/候选结果/回放缺口；正式发布、生产工具读回、自然采用与收益均未完成。"
+      ]
+    },
+    "external_results": [
+      {
+        "id": "decision-cold-start-own-fallback-002",
+        "state": "processed",
+        "destinations": [
+          {
+            "kind": "strategy",
+            "id": "silent-brain-opening-golden-pearl-external-comparison",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-opening-golden-pearl-external-comparison.json"
+          },
+          {
+            "kind": "strategy",
+            "id": "silent-brain-first-combat-reward-type-comparison",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-combat-reward-type-comparison.json"
+          },
+          {
+            "kind": "strategy",
+            "id": "silent-brain-early-block-after-attack-prefix",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-early-block-after-attack-prefix.json"
+          },
+          {
+            "kind": "strategy",
+            "id": "silent-brain-first-three-combat-skip-check",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-three-combat-skip-check.json"
+          },
+          {
+            "kind": "strategy",
+            "id": "silent-brain-first-boss-power-hp-review",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-boss-power-hp-review.json"
+          },
+          {
+            "kind": "knowledge",
+            "id": "silent-external-cold-start-ancient-build-associations",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-external-cold-start-ancient-build-associations.json"
+          }
+        ],
+        "reason": "完成5个独立冷启动情境：4条新策略、1条原ID更新；另逐字节复用1条旧知识，不计新增情境。自有与外部分账，配额达标；正式发布、生产读回、自然采用和科学验收均pending。"
+      }
+    ],
+    "subitem_dispositions": [
+      {
+        "id": "opening_blessing",
+        "disposition": "updated-and-reused",
+        "destinations": [
+          "silent-brain-opening-golden-pearl-external-comparison",
+          "silent-external-cold-start-ancient-build-associations"
+        ],
+        "reason": "GOLDEN_PEARL复用原策略ID更新，增加真实开局备选/选择/资源前后与自有分层；旧分组描述知识逐字节保留。1局开局完整选项仍缺，跨版本机制等价未知。"
+      },
+      {
+        "id": "first_three_fights_card_types",
+        "disposition": "new-candidates-with-proxy-limits",
+        "destinations": [
+          "silent-brain-first-combat-reward-type-comparison",
+          "silent-brain-early-block-after-attack-prefix"
+        ],
+        "reason": "1510卡奖以原状态card_type/牌文和后继牌组核实；首战牌型与第2～3战已有Attack后补格挡是两个不同决策情境。前缀/格挡正则均明标代理，分层方向反转；无统一固定拿牌顺序。"
+      },
+      {
+        "id": "skip_and_act1_boss_result",
+        "disposition": "new-candidate-with-observational-limits",
+        "destinations": [
+          "silent-brain-first-three-combat-skip-check"
+        ],
+        "reason": "39次真实skip/35独立局；三次奖励齐全主比较按独立局去重，A10无重试与重试层分别保留。未据负关联禁止跳过或声称因果收益；动机未知。"
+      },
+      {
+        "id": "pre_act1_boss_deck",
+        "disposition": "new-candidate-with-resource-proxy-limits",
+        "destinations": [
+          "silent-brain-first-boss-power-hp-review"
+        ],
+        "reason": "450首Boss首记录T1牌组与HP，不包含Boss后奖励；56局无首Boss帧不补造。Power类型与HP观察分箱分层，无最低可行牌组/安全HP线；首帧不是原子入场。"
+      }
+    ],
+    "publication_counts": {
+      "formal": 0,
+      "production_consumer_readback": 0,
+      "natural_adoption": 0,
+      "benefit_verified": 0
+    },
+    "scientific_parent_closed": false
+  },
+  "original_batch_not_rewritten": true,
+  "program_coverage_not_model_read": true,
+  "own_selected_raw_refs_verified": [
+    {
+      "stream": "decisions",
+      "offset": 1257997032,
+      "bytes": 45324,
+      "sha256": "01ab4f2f02a035f0b8281c3ff9e43c2b2186fdaa8d1c05e5ba4b64d76afcae00",
+      "run": "1269Y20SKHUM"
+    },
+    {
+      "stream": "decisions",
+      "offset": 970687522,
+      "bytes": 7472,
+      "sha256": "e720b07c2f11e1c5bc3cc17ae4b948ada777fbf51ed1cd8d662587067e45a9d5",
+      "run": "6D0M76419BU7"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3855401058,
+      "bytes": 91171,
+      "sha256": "54e3cab456021b1c6682a9c1703c526dc5904f65b843534127b5012ef31d81bc",
+      "run": "0VBCQS9V0N87"
+    },
+    {
+      "stream": "decisions",
+      "offset": 4031219960,
+      "bytes": 50746,
+      "sha256": "88903cacc002854102878a5c5d065b461a0230ab56af92cb81932bacfd949fc2",
+      "run": "36GZSS70H7XK"
+    },
+    {
+      "stream": "decisions",
+      "offset": 883616104,
+      "bytes": 9319,
+      "sha256": "b35ecef0ad9c2755084dddf6afcae2fc4514c74e61b4e63ea7fb9913b6ccffd0",
+      "run": "08A0GEAL8KQ5"
+    },
+    {
+      "stream": "decisions",
+      "offset": 667644779,
+      "bytes": 9419,
+      "sha256": "ab03d108c2ab789b374e877da126ecf61abe02ce457360434b891abd91193415",
+      "run": "01H1533KSS5C"
+    },
+    {
+      "stream": "decisions",
+      "offset": 890434862,
+      "bytes": 9375,
+      "sha256": "6ea70bb063d987021ca035845c5974db6cf8fd2f0beb2a1b426684ed24d43833",
+      "run": "0B2567HG3T4D"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3088933481,
+      "bytes": 5397,
+      "sha256": "d6e2c9f220fdd935591f39405f53cc021b697e02c3918dc8c9d0ead2e510d0a9",
+      "run": "173ARCPHRVSS"
+    },
+    {
+      "stream": "decisions",
+      "offset": 810472124,
+      "bytes": 9674,
+      "sha256": "88df3e687d173298ca6253740f709c0ab3e8dfb39a441d100efdcb50b5e9b10e",
+      "run": "0DJ6GFZZ0TG9"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3095939018,
+      "bytes": 5474,
+      "sha256": "ce79f0086b23b62e40c0692bd4abb6df7e9f39e655c000c761216c219825d11e",
+      "run": "2GFAPDBDNSCR"
+    },
+    {
+      "stream": "decisions",
+      "offset": 1976223069,
+      "bytes": 188842,
+      "sha256": "168126d97bc888cb83a202c89458820c09ba84e54a4a32187259793eca0cc792",
+      "run": "0YQJ9D1MC4NK"
+    },
+    {
+      "stream": "decisions",
+      "offset": 978116476,
+      "bytes": 10438,
+      "sha256": "201d261def8352b3982f7c1ba09fd67eb24c17c61c11e5a288191b4e496efc8d",
+      "run": "177AS39M1UPW"
+    },
+    {
+      "stream": "decisions",
+      "offset": 870731268,
+      "bytes": 9549,
+      "sha256": "4c8cebcde265b07fff2489be099a937e94471523d4fa90e6e6a0c81f97c0554e",
+      "run": "0PH64C4AWAX9"
+    },
+    {
+      "stream": "decisions",
+      "offset": 667859087,
+      "bytes": 9226,
+      "sha256": "e413aa278dca45a4144689ed04ba862a782a42e619552bd38e7632ca90056d13",
+      "run": "01H1533KSS5C"
+    },
+    {
+      "stream": "decisions",
+      "offset": 883836183,
+      "bytes": 8120,
+      "sha256": "d8f4a77bd64961d0a4071a3f84713bf6b739f6c9537cf3f237b860a8596a7b8e",
+      "run": "08A0GEAL8KQ5"
+    },
+    {
+      "stream": "decisions",
+      "offset": 2385641047,
+      "bytes": 169852,
+      "sha256": "41f61edb4b1f2f281c43d2ce485589ec18228afb71f2ba4d5805461a9bf7e770",
+      "run": "0NMF36KX3F7Y"
+    },
+    {
+      "stream": "decisions",
+      "offset": 669410417,
+      "bytes": 9324,
+      "sha256": "4b96c7af39b44f9af7d9335b6894469de8dd0e176f079d2f865c9e4fe0fcf81b",
+      "run": "2K4H3JEJHRSB"
+    },
+    {
+      "stream": "decisions",
+      "offset": 1283500589,
+      "bytes": 94849,
+      "sha256": "5b369f83ad645a1ec210d0489c628fe5abc93dc1a8b2b8d70da674d31eb2bb24",
+      "run": "4YPGHGJD393H"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3855909319,
+      "bytes": 156636,
+      "sha256": "031486f6d63baa084d5ff8903c8197284d9e8dc5536ac8170bc4754501478640",
+      "run": "0VBCQS9V0N87"
+    },
+    {
+      "stream": "decisions",
+      "offset": 4110365799,
+      "bytes": 180435,
+      "sha256": "ffdb4ef73c5275ca5190cb804062d1a1952976e7c1ac5658a92e6098b41ec20e",
+      "run": "1303HVDLVMGR"
+    },
+    {
+      "stream": "decisions",
+      "offset": 883616104,
+      "bytes": 9319,
+      "sha256": "b35ecef0ad9c2755084dddf6afcae2fc4514c74e61b4e63ea7fb9913b6ccffd0",
+      "run": "08A0GEAL8KQ5"
+    },
+    {
+      "stream": "decisions",
+      "offset": 667644779,
+      "bytes": 9419,
+      "sha256": "ab03d108c2ab789b374e877da126ecf61abe02ce457360434b891abd91193415",
+      "run": "01H1533KSS5C"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3297473879,
+      "bytes": 179161,
+      "sha256": "722e0880a9638b9d7bb978f2dcc3858e2d1af909fcc32042910245e86f6dee76",
+      "run": "4AA19CXDKQK6"
+    },
+    {
+      "stream": "decisions",
+      "offset": 3096440353,
+      "bytes": 5413,
+      "sha256": "746567d51f5c97bf18e1c8b86093dcd2cddc07b28a8f13e13f2489d4bbac01d5",
+      "run": "2GFAPDBDNSCR"
+    },
+    {
+      "stream": "states",
+      "offset": 10450024276,
+      "bytes": 28716,
+      "sha256": "c5bf7209ab3f17137943973db418ce242cd4485ef4aacebbb8b923107b300228",
+      "run": "08A0GEAL8KQ5"
+    },
+    {
+      "stream": "states",
+      "offset": 14119770553,
+      "bytes": 30102,
+      "sha256": "af0e40e40a7405191c26b9c65e5c7c4e25bedc90d8ea7eaa041080087949eabf",
+      "run": "0NMF36KX3F7Y"
+    },
+    {
+      "stream": "states",
+      "offset": 10510641674,
+      "bytes": 26655,
+      "sha256": "ee0b01370881be606883c68b55dd4740e1f413d6703269921c02ee404a05c1a3",
+      "run": "0B2567HG3T4D"
+    },
+    {
+      "stream": "states",
+      "offset": 8370921904,
+      "bytes": 26037,
+      "sha256": "ac79d855e42cebb3b648d93740735f4fb178a714c7a04bed54f48892c53c978d",
+      "run": "01H1533KSS5C"
+    }
+  ],
+  "all_4998_raw_refs_ops_reread": false,
+  "original_manifest": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/report.md",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-report.md",
+      "bytes": 16809,
+      "sha256": "8bbf16c45ad4eafeefde9316fa555bd5bee21bfbf384d824169f91a86706a87b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/result.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-result.json",
+      "bytes": 7132,
+      "sha256": "1847c03cf88e42bd8ce671c4d2af0b3c8f98827d8289ab6e2c5996c685af2d40"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/final-integrity.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-final-integrity.json",
+      "bytes": 365,
+      "sha256": "ddb42c82837a6ba54b62256002b1e5cac0075ff9614fc6ea147544faf7184192"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/coverage.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-coverage.json",
+      "bytes": 3974,
+      "sha256": "82b95003cb34547ceb4263d565f78f2522e611420586bbbe61bab787f5ad1417"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/evidence-audit.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-evidence-audit.json",
+      "bytes": 2979,
+      "sha256": "1e168666a603f849373c38c05f82f0c97870926396ed4f3ec93e78ef151ad3df"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/per-context-mapping.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-per-context-mapping.json",
+      "bytes": 4630,
+      "sha256": "c4df62b33886159173204af6dfdc537902d45000ab52c1f62b8906bdc8126764"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/contract-overlap-audit.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-contract-overlap-audit.json",
+      "bytes": 2888,
+      "sha256": "cefaba094eb675cf67b27da9129ec62b49372fd2a506a356cb6a6fb805406c8f"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/decision-exclusions.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-decision-exclusions.json",
+      "bytes": 4613,
+      "sha256": "c09488e9202cd8268d1c522bc02864a5c187e1ac65dad62f43aa7a63919248b1"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidate-format-validation.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-candidate-format-validation.json",
+      "bytes": 4308,
+      "sha256": "f33678c2f4144dd2d19a3c2aba82928a3c5f0364c9f58b6838933f3171a9d53c"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/source-ledger.jsonl",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-source-ledger.jsonl",
+      "bytes": 4405,
+      "sha256": "673386186571937038103ca19608c16c04ad031ea4c40d6d2c3659a84773e446"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-review-cases.json",
+      "bytes": 199427,
+      "sha256": "4dc1d531b0ab568c9288c6514bfd294efe7f657d0c9c6ac6699921a5dda2c88e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/raw-read-references.json",
+      "archive": "paper/materials/20261024-issue51-cold-own-publication-ops/original-raw-read-references.json",
+      "bytes": 1114443,
+      "sha256": "abaa55c59f6767fefecf20812f33d48d5401b86678fc1cf957c8b9ac9ce01afd"
+    }
+  ],
+  "reused_knowledge_not_new_context": true,
+  "scientific_parent_open": true
+}

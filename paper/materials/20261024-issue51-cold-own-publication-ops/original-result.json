@@ -1,0 +1,146 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "proposal_results": [],
+  "batch": "20261024-161310-strategy-proposal",
+  "base": "66a67f2bc8fa808414ffa2f61bd775a57d1bc2ad",
+  "runs": [],
+  "fixes": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/report.md",
+  "external_source": "issue51-decision-cold-start-own-20261024-002",
+  "input_sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f",
+  "reason": "完成5个独立冷启动情境：4条新策略、1条原ID更新；另逐字节复用1条旧知识，不计新增情境。自有与外部分账，配额达标；正式发布、生产读回、自然采用和科学验收均pending。",
+  "own_support_runs": [
+    "01H1533KSS5C",
+    "08A0GEAL8KQ5",
+    "0DJ6GFZZ0TG9",
+    "0NMF36KX3F7Y",
+    "0PH64C4AWAX9",
+    "0VBCQS9V0N87",
+    "0YQJ9D1MC4NK",
+    "1269Y20SKHUM",
+    "1303HVDLVMGR",
+    "177AS39M1UPW",
+    "2GFAPDBDNSCR",
+    "2K4H3JEJHRSB",
+    "4AA19CXDKQK6",
+    "4YPGHGJD393H",
+    "6D0M76419BU7"
+  ],
+  "decision_output_counts": {
+    "new": 4,
+    "update": 1,
+    "reuse": 1,
+    "unique_contexts": 5,
+    "target_min5": 5,
+    "target_max10": 10,
+    "under3_report_required": false,
+    "target_met": true,
+    "quota_gap": 0,
+    "strategy_candidates": 5,
+    "knowledge_reused": 1,
+    "rk_candidates": 0,
+    "comparison_groups_ge100_both_arms": 1,
+    "new_external_comparisons_ge100_both_arms": 0,
+    "threshold_scope": "仅保留原v0.111.0 GOLDEN_PEARL 111/110局比较；自有不强套100门槛，所有稀疏分层明列。",
+    "predecessor_new_count": 2,
+    "consecutive_zero_new_batches": 0,
+    "scientific_acceptance": "pending",
+    "remaining_gaps": [
+      "精确战序/早期奖励前缀/Power类型数不在现行trigger白名单，需按正文核当前情境；不明不适用。",
+      "自有版本unknown；外部机制版本对照未知；观察性混杂、首次预判必死代理与真实首试仍有差别。",
+      "1局开局完整选项、56局首Boss前帧缺口保留；没有最低可行牌组或安全资源阈值。",
+      "knowledge正式消费者、rk原Plan/候选结果/回放缺口；正式发布、生产工具读回、自然采用与收益均未完成。"
+    ]
+  },
+  "external_results": [
+    {
+      "id": "decision-cold-start-own-fallback-002",
+      "state": "processed",
+      "destinations": [
+        {
+          "kind": "strategy",
+          "id": "silent-brain-opening-golden-pearl-external-comparison",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-opening-golden-pearl-external-comparison.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-first-combat-reward-type-comparison",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-combat-reward-type-comparison.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-early-block-after-attack-prefix",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-early-block-after-attack-prefix.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-first-three-combat-skip-check",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-three-combat-skip-check.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-first-boss-power-hp-review",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-brain-first-boss-power-hp-review.json"
+        },
+        {
+          "kind": "knowledge",
+          "id": "silent-external-cold-start-ancient-build-associations",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/candidates/silent-external-cold-start-ancient-build-associations.json"
+        }
+      ],
+      "reason": "完成5个独立冷启动情境：4条新策略、1条原ID更新；另逐字节复用1条旧知识，不计新增情境。自有与外部分账，配额达标；正式发布、生产读回、自然采用和科学验收均pending。"
+    }
+  ],
+  "subitem_dispositions": [
+    {
+      "id": "opening_blessing",
+      "disposition": "updated-and-reused",
+      "destinations": [
+        "silent-brain-opening-golden-pearl-external-comparison",
+        "silent-external-cold-start-ancient-build-associations"
+      ],
+      "reason": "GOLDEN_PEARL复用原策略ID更新，增加真实开局备选/选择/资源前后与自有分层；旧分组描述知识逐字节保留。1局开局完整选项仍缺，跨版本机制等价未知。"
+    },
+    {
+      "id": "first_three_fights_card_types",
+      "disposition": "new-candidates-with-proxy-limits",
+      "destinations": [
+        "silent-brain-first-combat-reward-type-comparison",
+        "silent-brain-early-block-after-attack-prefix"
+      ],
+      "reason": "1510卡奖以原状态card_type/牌文和后继牌组核实；首战牌型与第2～3战已有Attack后补格挡是两个不同决策情境。前缀/格挡正则均明标代理，分层方向反转；无统一固定拿牌顺序。"
+    },
+    {
+      "id": "skip_and_act1_boss_result",
+      "disposition": "new-candidate-with-observational-limits",
+      "destinations": [
+        "silent-brain-first-three-combat-skip-check"
+      ],
+      "reason": "39次真实skip/35独立局；三次奖励齐全主比较按独立局去重，A10无重试与重试层分别保留。未据负关联禁止跳过或声称因果收益；动机未知。"
+    },
+    {
+      "id": "pre_act1_boss_deck",
+      "disposition": "new-candidate-with-resource-proxy-limits",
+      "destinations": [
+        "silent-brain-first-boss-power-hp-review"
+      ],
+      "reason": "450首Boss首记录T1牌组与HP，不包含Boss后奖励；56局无首Boss帧不补造。Power类型与HP观察分箱分层，无最低可行牌组/安全HP线；首帧不是原子入场。"
+    }
+  ],
+  "publication_counts": {
+    "formal": 0,
+    "production_consumer_readback": 0,
+    "natural_adoption": 0,
+    "benefit_verified": 0
+  },
+  "scientific_parent_closed": false
+}

@@ -1,0 +1,708 @@
+{
+  "passed": true,
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "library_sha256": "a84cfaf729e4ac6c9e7efe7dc2f61b178d0507042315becb40949afd9e7aea1a",
+  "library_entries": 41,
+  "fixed_production_id_queries": 5,
+  "rows": [
+    {
+      "id": "silent-brain-opening-golden-pearl-external-comparison",
+      "version": "2026-10-24.2",
+      "label": "event/choose",
+      "act": 1,
+      "source": "mixed",
+      "evidence_status": "conflict",
+      "confidence": 0.25,
+      "evidence_summary": {
+        "own_runs": 4,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 111
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 110
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.108.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 42
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.108.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 31
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.110.1",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 31
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.110.1",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_upload_rate",
+            "denominator": {
+              "unit": "runs",
+              "n": 20
+            }
+          }
+        ]
+      },
+      "bytes": 13925,
+      "entry": {
+        "id": "silent-brain-opening-golden-pearl-external-comparison",
+        "version": "2026-10-24.2",
+        "trigger": {
+          "question_types": [
+            "event",
+            "act_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "floor": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        "strategy": "开局实际提供GOLDEN_PEARL时，把已确认的150金币与其他选项的当下资源逐项比较，不把外部整局关联当首Boss收益。自有42次选择后记录均+150金币且HP不变；A10无重试证据选组4/9过首Boss、同台未选1/2（差-5.56点），整局均0胜。外部v0.111.0为34/111对24/110整局胜（+8.81点）；旧v0.108.0差-7.53点，机制对照未知。\n范围：仅Silent开局该原ID；自有版本unknown/A10结局，其他进阶不外推。备选、路线和版本混杂，不作固定必选或因果收益。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; chosen"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.3063063063063063,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 111
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/chosen",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; offered_not_chosen"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.21818181818181817,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 110
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/offered_not_chosen",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.108.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.108.0; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=0; mechanism equivalence unknown"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.3333333333333333,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 42
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.108-8.json",
+            "role": "contradict"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.108.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.108.0; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=1; mechanism equivalence unknown"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.25806451612903225,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 31
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.108-9.json",
+            "role": "contradict"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.110.1",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.110.1; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=0; mechanism equivalence unknown"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.25806451612903225,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 31
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.110-75.json",
+            "role": "contradict"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.110.1",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "Silent A10; single-player valid non-abandoned no modifiers; build=v0.110.1; act1 EVENT.NEOW; GOLDEN_PEARL; was_chosen=1; mechanism equivalence unknown"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 20
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/external-golden-v0.110-76.json",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "1269Y20SKHUM",
+            "floor": 1,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/1269Y20SKHUM; decisions off=1257997032 bytes=45324 sha256=01ab4f2f02a035f0b8281c3ff9e43c2b2186fdaa8d1c05e5ba4b64d76afcae00",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "6D0M76419BU7",
+            "floor": 1,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/6D0M76419BU7; decisions off=970687522 bytes=7472 sha256=e720b07c2f11e1c5bc3cc17ae4b948ada777fbf51ed1cd8d662587067e45a9d5",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0VBCQS9V0N87",
+            "floor": 1,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/0VBCQS9V0N87; decisions off=3855401058 bytes=91171 sha256=54e3cab456021b1c6682a9c1703c526dc5904f65b843534127b5012ef31d81bc",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "36GZSS70H7XK",
+            "floor": 1,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#golden/36GZSS70H7XK; decisions off=4031219960 bytes=50746 sha256=88903cacc002854102878a5c5d065b461a0230ab56af92cb81932bacfd949fc2",
+            "role": "contradict"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "evidence_summary": {
+          "own_runs": 4,
+          "own_support_runs": 2,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 111
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 110
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.108.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 42
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.108.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 31
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.110.1",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 31
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.110.1",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_upload_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 20
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-first-combat-reward-type-comparison",
+      "version": "2026-10-24.1",
+      "label": "reward/card",
+      "act": 1,
+      "source": "own",
+      "evidence_status": "conflict",
+      "confidence": 0.3,
+      "evidence_summary": {
+        "own_runs": 8,
+        "own_support_runs": 6,
+        "external": []
+      },
+      "bytes": 4537,
+      "entry": {
+        "id": "silent-brain-first-combat-reward-type-comparison",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ],
+          "floor": {
+            "min": 2,
+            "max": 2
+          }
+        },
+        "strategy": "确认是首场真实战斗后的卡奖且有Attack选项时，将能补当前用途的攻击牌列入比较，同时按牌文核Skill/Power能做什么，不能把类型当伤害或防御标签。A10无重试证据拿Attack为43/65过首Boss、其他14/33（+23.73点）；有重载且有预判必死证据层152/194对65/78（-4.98点），方向反转。\n范围：Silent/A10/版本unknown/首战实际奖励；98与272局分层机会各一题，不能按未来SL选择策略。观察关联，不保证拿Attack更好；不是首战或无法核战序时不适用。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "08A0GEAL8KQ5",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/08A0GEAL8KQ5; decisions off=883616104 bytes=9319 sha256=b35ecef0ad9c2755084dddf6afcae2fc4514c74e61b4e63ea7fb9913b6ccffd0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "01H1533KSS5C",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/01H1533KSS5C; decisions off=667644779 bytes=9419 sha256=ab03d108c2ab789b374e877da126ecf61abe02ce457360434b891abd91193415",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0B2567HG3T4D",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0B2567HG3T4D; decisions off=890434862 bytes=9375 sha256=6ea70bb063d987021ca035845c5974db6cf8fd2f0beb2a1b426684ed24d43833",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "173ARCPHRVSS",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/173ARCPHRVSS; decisions off=3088933481 bytes=5397 sha256=d6e2c9f220fdd935591f39405f53cc021b697e02c3918dc8c9d0ead2e510d0a9",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "0DJ6GFZZ0TG9",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0DJ6GFZZ0TG9; decisions off=810472124 bytes=9674 sha256=88df3e687d173298ca6253740f709c0ab3e8dfb39a441d100efdcb50b5e9b10e",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "2GFAPDBDNSCR",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/2GFAPDBDNSCR; decisions off=3095939018 bytes=5474 sha256=ce79f0086b23b62e40c0692bd4abb6df7e9f39e655c000c761216c219825d11e",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0YQJ9D1MC4NK",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/0YQJ9D1MC4NK; decisions off=1976223069 bytes=188842 sha256=168126d97bc888cb83a202c89458820c09ba84e54a4a32187259793eca0cc792",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "177AS39M1UPW",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#first_reward/177AS39M1UPW; decisions off=978116476 bytes=10438 sha256=201d261def8352b3982f7c1ba09fd67eb24c17c61c11e5a288191b4e496efc8d",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.3,
+        "evidence_status": "conflict"
+      },
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-early-block-after-attack-prefix",
+      "version": "2026-10-24.1",
+      "label": "reward/card",
+      "act": 1,
+      "source": "own",
+      "evidence_status": "conflict",
+      "confidence": 0.3,
+      "evidence_summary": {
+        "own_runs": 6,
+        "own_support_runs": 4,
+        "external": []
+      },
+      "bytes": 3763,
+      "entry": {
+        "id": "silent-brain-early-block-after-attack-prefix",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ],
+          "floor": {
+            "min": 3,
+            "max": 8
+          }
+        },
+        "strategy": "确认第2～3场真实战斗奖励、此前早期卡奖已拿Attack且本题提供写明获得格挡的牌时，不因已补攻击就自动补任意格挡；比较当前牌组、费用、牌文和备选。每局首个合格机会：A10无重试证据取格挡文本牌6/18过首Boss、其他29/46（-29.71点）；重载且预判必死层48/58对110/142（+5.29点）。\n范围：Silent/A10/版本unknown；此前已拿Attack只是奖励前缀代理，非完整输出能力。格挡文本代理也含Attack，非全部防御。分层反向、无因果拿牌顺序；历史不明时不适用。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0PH64C4AWAX9",
+            "floor": 3,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/0PH64C4AWAX9; decisions off=870731268 bytes=9549 sha256=4c8cebcde265b07fff2489be099a937e94471523d4fa90e6e6a0c81f97c0554e",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "01H1533KSS5C",
+            "floor": 5,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/01H1533KSS5C; decisions off=667859087 bytes=9226 sha256=e413aa278dca45a4144689ed04ba862a782a42e619552bd38e7632ca90056d13",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "08A0GEAL8KQ5",
+            "floor": 6,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/08A0GEAL8KQ5; decisions off=883836183 bytes=8120 sha256=d8f4a77bd64961d0a4071a3f84713bf6b739f6c9537cf3f237b860a8596a7b8e",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "0NMF36KX3F7Y",
+            "floor": 3,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/0NMF36KX3F7Y; decisions off=2385641047 bytes=169852 sha256=41f61edb4b1f2f281c43d2ce485589ec18228afb71f2ba4d5805461a9bf7e770",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "2K4H3JEJHRSB",
+            "floor": 3,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/2K4H3JEJHRSB; decisions off=669410417 bytes=9324 sha256=4b96c7af39b44f9af7d9335b6894469de8dd0e176f079d2f865c9e4fe0fcf81b",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "4YPGHGJD393H",
+            "floor": 4,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/4YPGHGJD393H; decisions off=1283500589 bytes=94849 sha256=5b369f83ad645a1ec210d0489c628fe5abc93dc1a8b2b8d70da674d31eb2bb24",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.3,
+        "evidence_status": "conflict"
+      },
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-first-three-combat-skip-check",
+      "version": "2026-10-24.1",
+      "label": "reward/card",
+      "act": 1,
+      "source": "own",
+      "evidence_status": "unassessed",
+      "confidence": 0.3,
+      "evidence_summary": {
+        "own_runs": 6,
+        "own_support_runs": 4,
+        "external": []
+      },
+      "bytes": 3754,
+      "entry": {
+        "id": "silent-brain-first-three-combat-skip-check",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ],
+          "floor": {
+            "min": 2,
+            "max": 8
+          }
+        },
+        "strategy": "前三场真实战斗卡奖考虑跳过时，写明放弃本题三张牌后仍能保留哪些现有用途，别将早期跳过直接当安全默认。三次奖励均有记录的A10局，无重试证据有跳过7/15过首Boss、无跳过58/104（-9.10点）；重载且预判必死层14/19对256/318（-6.82点）。本角色各进阶合计已核39次跳过/1510次机会，35个独立局；有成功反例，不据此禁止跳过。\n范围：仅Silent前三战/版本unknown，主关联A10。三次齐全是事后统计纳入条件，不能作当前触发；牌组、备选和后续路线混杂，非跳过的因果损失。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0VBCQS9V0N87",
+            "floor": 3,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/0VBCQS9V0N87; decisions off=3855909319 bytes=156636 sha256=031486f6d63baa084d5ff8903c8197284d9e8dc5536ac8170bc4754501478640",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "1303HVDLVMGR",
+            "floor": 5,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/1303HVDLVMGR; decisions off=4110365799 bytes=180435 sha256=ffdb4ef73c5275ca5190cb804062d1a1952976e7c1ac5658a92e6098b41ec20e",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "08A0GEAL8KQ5",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/08A0GEAL8KQ5; decisions off=883616104 bytes=9319 sha256=b35ecef0ad9c2755084dddf6afcae2fc4514c74e61b4e63ea7fb9913b6ccffd0",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "01H1533KSS5C",
+            "floor": 2,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/01H1533KSS5C; decisions off=667644779 bytes=9419 sha256=ab03d108c2ab789b374e877da126ecf61abe02ce457360434b891abd91193415",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "4AA19CXDKQK6",
+            "floor": 5,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/4AA19CXDKQK6; decisions off=3297473879 bytes=179161 sha256=722e0880a9638b9d7bb978f2dcc3858e2d1af909fcc32042910245e86f6dee76",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "2GFAPDBDNSCR",
+            "floor": 4,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#skip/2GFAPDBDNSCR; decisions off=3096440353 bytes=5413 sha256=746567d51f5c97bf18e1c8b86093dcd2cddc07b28a8f13e13f2489d4bbac01d5",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-first-boss-power-hp-review",
+      "version": "2026-10-24.1",
+      "label": "fight-plan",
+      "act": 1,
+      "source": "own",
+      "evidence_status": "unassessed",
+      "confidence": 0.3,
+      "evidence_summary": {
+        "own_runs": 4,
+        "own_support_runs": 2,
+        "external": []
+      },
+      "bytes": 3038,
+      "entry": {
+        "id": "silent-brain-first-boss-power-hp-review",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "fight_plan",
+            "act_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "floor": {
+            "min": 15,
+            "max": 17
+          }
+        },
+        "strategy": "首Boss备战时先核当前HP、实际已持牌文、费用和可用药，不用已有Power牌数量代替资源复核。A10重载且预判必死证据层，首记录T1牌组含Power时，HP不高于最大HP一半组10/25过首Boss，高于一半202/226，差-49.38点；首次截止代理7/25对183/226。32/70的08A0GEAL8KQ5过关、41/70且两张Power的01H1533KSS5C失败，均保留。\n范围：Silent/A10/版本unknown首Boss；首记录帧非原子入场，半血仅观察分箱而非安全线。无重试证据的低HP且有Power组为0，不外推。Power类型非机制/成型证明，未来SL不作触发。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "08A0GEAL8KQ5",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/08A0GEAL8KQ5; states off=10450024276 bytes=28716 sha256=c5bf7209ab3f17137943973db418ce242cd4485ef4aacebbb8b923107b300228",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0NMF36KX3F7Y",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/0NMF36KX3F7Y; states off=14119770553 bytes=30102 sha256=af0e40e40a7405191c26b9c65e5c7c4e25bedc90d8ea7eaa041080087949eabf",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0B2567HG3T4D",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/0B2567HG3T4D; states off=10510641674 bytes=26655 sha256=ee0b01370881be606883c68b55dd4740e1f413d6703269921c02ee404a05c1a3",
+            "role": "contradict"
+          },
+          {
+            "type": "own",
+            "run": "01H1533KSS5C",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#preboss_power_lowhp/01H1533KSS5C; states off=8370921904 bytes=26037 sha256=ac79d855e42cebb3b648d93740735f4fb178a714c7a04bed54f48892c53c978d",
+            "role": "contradict"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "actual_production_tool_call": true
+    }
+  ],
+  "other_role_equivalent": true,
+  "natural_brain_queries": 0,
+  "new_full_model_game": 0
+}

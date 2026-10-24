@@ -1,0 +1,4071 @@
+{
+  "id": "silent-external-cold-start-ancient-build-associations",
+  "version": "2026-10-24.1",
+  "kind": "knowledge",
+  "source": "external:sts2fun",
+  "character": "silent",
+  "ascension": 10,
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "natural_adoption": "pending",
+  "runs": [],
+  "own_support_runs": [],
+  "design": "observational",
+  "provenance": {
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "downloaded_at": "2026-10-21",
+    "faq": "https://sts2.fun/faq",
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "url": "https://sts2.fun/static/sts2_public.db.zst"
+  },
+  "input_manifest_sha256": "d97152b0440e2abab398dcfa9412d0084f2be3cc012dc16f922205bb209ee109",
+  "input_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+  "collected_at": "2026-10-21",
+  "claim": "第一幕祝福代理的版本内整局胜率关联有正有负：v0.107.1合格组差-12.07至+15.76个百分点，v0.111.0 GOLDEN_PEARL为+8.81个百分点；6个各臂至少100上传局的比较组，不能合成统一跨版本排名。",
+  "applicability": "仅表中原ID/原build、Silent A10、第一幕EVENT.NEOW；同台备选与起始资源未控制，勿外推当前版本旧ID收益。",
+  "comparisons": [
+    {
+      "TextKey": "CURSED_PEARL",
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "chosen_wins": 37,
+      "chosen_n": 112,
+      "offered_not_chosen_wins": 19,
+      "offered_not_chosen_n": 110,
+      "difference_pp": 15.762987012987011,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    },
+    {
+      "TextKey": "KALEIDOSCOPE",
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "chosen_wins": 22,
+      "chosen_n": 143,
+      "offered_not_chosen_wins": 28,
+      "offered_not_chosen_n": 102,
+      "difference_pp": -12.06636500754148,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    },
+    {
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "chosen_wins": 25,
+      "chosen_n": 101,
+      "offered_not_chosen_wins": 29,
+      "offered_not_chosen_n": 133,
+      "difference_pp": 2.9479639693292645,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    },
+    {
+      "TextKey": "NEOWS_BONES",
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "chosen_wins": 10,
+      "chosen_n": 108,
+      "offered_not_chosen_wins": 26,
+      "offered_not_chosen_n": 124,
+      "difference_pp": -11.708482676224612,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    },
+    {
+      "TextKey": "SILVER_CRUCIBLE",
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "chosen_wins": 33,
+      "chosen_n": 136,
+      "offered_not_chosen_wins": 37,
+      "offered_not_chosen_n": 132,
+      "difference_pp": -3.7655971479500865,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    },
+    {
+      "TextKey": "GOLDEN_PEARL",
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "chosen_wins": 34,
+      "chosen_n": 111,
+      "offered_not_chosen_wins": 24,
+      "offered_not_chosen_n": 110,
+      "difference_pp": 8.812448812448812,
+      "denominator_unit": "distinct_uploaded_runs_per_arm",
+      "proxy": "act1 ancient opening proxy",
+      "causal": false,
+      "scope": "silent/A10/single-player/valid/non-abandoned/no modifiers/EVENT.NEOW; exact build only"
+    }
+  ],
+  "all_same_item_build_cells": [
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 69,
+        "field": "ancient_choice",
+        "item_occurrences": 69,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 69
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 69
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 69,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 23,
+        "whole_run_win_rate_descriptive": 0.3333333333333333,
+        "whole_run_winning_uploads": 23
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 57,
+        "field": "ancient_choice",
+        "item_occurrences": 57,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 57
+        },
+        "node_end_hp": {
+          "mean": 56.19298245614035,
+          "missing_n": 0,
+          "n": 57
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 57,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 15,
+        "whole_run_win_rate_descriptive": 0.2631578947368421,
+        "whole_run_winning_uploads": 15
+      },
+      "both_ge100": false,
+      "difference_pp": 7.017543859649122
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 60,
+        "field": "ancient_choice",
+        "item_occurrences": 60,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 60
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 60
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 60,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 17,
+        "whole_run_win_rate_descriptive": 0.2833333333333333,
+        "whole_run_winning_uploads": 17
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 70,
+        "field": "ancient_choice",
+        "item_occurrences": 70,
+        "node_end_gold": {
+          "mean": 90.55714285714286,
+          "missing_n": 0,
+          "n": 70
+        },
+        "node_end_hp": {
+          "mean": 54.785714285714285,
+          "missing_n": 0,
+          "n": 70
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 70,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 14,
+        "whole_run_win_rate_descriptive": 0.2,
+        "whole_run_winning_uploads": 14
+      },
+      "both_ge100": false,
+      "difference_pp": 8.333333333333332
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 62,
+        "field": "ancient_choice",
+        "item_occurrences": 62,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 62
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 62
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 62,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.16129032258064516,
+        "whole_run_winning_uploads": 10
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 62,
+        "field": "ancient_choice",
+        "item_occurrences": 62,
+        "node_end_gold": {
+          "mean": 127.54838709677419,
+          "missing_n": 0,
+          "n": 62
+        },
+        "node_end_hp": {
+          "mean": 53.935483870967744,
+          "missing_n": 0,
+          "n": 62
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 62,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 18,
+        "whole_run_win_rate_descriptive": 0.2903225806451613,
+        "whole_run_winning_uploads": 18
+      },
+      "both_ge100": false,
+      "difference_pp": -12.903225806451616
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 68,
+        "field": "ancient_choice",
+        "item_occurrences": 68,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 68
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 68
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 68,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 15,
+        "whole_run_win_rate_descriptive": 0.22058823529411764,
+        "whole_run_winning_uploads": 15
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 80,
+        "field": "ancient_choice",
+        "item_occurrences": 80,
+        "node_end_gold": {
+          "mean": 122.025,
+          "missing_n": 0,
+          "n": 80
+        },
+        "node_end_hp": {
+          "mean": 55.6,
+          "missing_n": 0,
+          "n": 80
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 80,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 26,
+        "whole_run_win_rate_descriptive": 0.325,
+        "whole_run_winning_uploads": 26
+      },
+      "both_ge100": false,
+      "difference_pp": -10.441176470588237
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 51,
+        "field": "ancient_choice",
+        "item_occurrences": 51,
+        "node_end_gold": {
+          "mean": 111.82352941176471,
+          "missing_n": 0,
+          "n": 51
+        },
+        "node_end_hp": {
+          "mean": 54.568627450980394,
+          "missing_n": 0,
+          "n": 51
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 51,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 9,
+        "whole_run_win_rate_descriptive": 0.17647058823529413,
+        "whole_run_winning_uploads": 9
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 79,
+        "field": "ancient_choice",
+        "item_occurrences": 79,
+        "node_end_gold": {
+          "mean": 119.88607594936708,
+          "missing_n": 0,
+          "n": 79
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 79
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 79,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 21,
+        "whole_run_win_rate_descriptive": 0.26582278481012656,
+        "whole_run_winning_uploads": 21
+      },
+      "both_ge100": false,
+      "difference_pp": -8.935219657483243
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.0",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 74,
+        "field": "ancient_choice",
+        "item_occurrences": 74,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 74
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 74
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 74,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 26,
+        "whole_run_win_rate_descriptive": 0.35135135135135137,
+        "whole_run_winning_uploads": 26
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.0",
+        "distinct_uploaded_runs": 71,
+        "field": "ancient_choice",
+        "item_occurrences": 71,
+        "node_end_gold": {
+          "mean": 115.90140845070422,
+          "missing_n": 0,
+          "n": 71
+        },
+        "node_end_hp": {
+          "mean": 56.15492957746479,
+          "missing_n": 0,
+          "n": 71
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 71,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 15,
+        "whole_run_win_rate_descriptive": 0.2112676056338028,
+        "whole_run_winning_uploads": 15
+      },
+      "both_ge100": false,
+      "difference_pp": 14.008374571754857
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 112,
+        "field": "ancient_choice",
+        "item_occurrences": 112,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 112
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 112
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 112,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 37,
+        "whole_run_win_rate_descriptive": 0.33035714285714285,
+        "whole_run_winning_uploads": 37
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 110,
+        "field": "ancient_choice",
+        "item_occurrences": 110,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 110
+        },
+        "node_end_hp": {
+          "mean": 56.4,
+          "missing_n": 0,
+          "n": 110
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 110,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 19,
+        "whole_run_win_rate_descriptive": 0.17272727272727273,
+        "whole_run_winning_uploads": 19
+      },
+      "both_ge100": true,
+      "difference_pp": 15.762987012987011
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 82,
+        "field": "ancient_choice",
+        "item_occurrences": 82,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 82
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 82
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 82,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 23,
+        "whole_run_win_rate_descriptive": 0.2804878048780488,
+        "whole_run_winning_uploads": 23
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 126,
+        "field": "ancient_choice",
+        "item_occurrences": 126,
+        "node_end_gold": {
+          "mean": 90.14285714285714,
+          "missing_n": 0,
+          "n": 126
+        },
+        "node_end_hp": {
+          "mean": 55.53968253968254,
+          "missing_n": 0,
+          "n": 126
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 126,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 31,
+        "whole_run_win_rate_descriptive": 0.24603174603174602,
+        "whole_run_winning_uploads": 31
+      },
+      "both_ge100": false,
+      "difference_pp": 3.445605884630279
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 143,
+        "field": "ancient_choice",
+        "item_occurrences": 143,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 143
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 143
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 143,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 22,
+        "whole_run_win_rate_descriptive": 0.15384615384615385,
+        "whole_run_winning_uploads": 22
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 102,
+        "field": "ancient_choice",
+        "item_occurrences": 102,
+        "node_end_gold": {
+          "mean": 127.55882352941177,
+          "missing_n": 0,
+          "n": 102
+        },
+        "node_end_hp": {
+          "mean": 55.48039215686274,
+          "missing_n": 0,
+          "n": 102
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 102,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 28,
+        "whole_run_win_rate_descriptive": 0.27450980392156865,
+        "whole_run_winning_uploads": 28
+      },
+      "both_ge100": true,
+      "difference_pp": -12.06636500754148
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 101,
+        "field": "ancient_choice",
+        "item_occurrences": 101,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 101
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 101
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 101,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 25,
+        "whole_run_win_rate_descriptive": 0.24752475247524752,
+        "whole_run_winning_uploads": 25
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 133,
+        "field": "ancient_choice",
+        "item_occurrences": 133,
+        "node_end_gold": {
+          "mean": 116.796992481203,
+          "missing_n": 0,
+          "n": 133
+        },
+        "node_end_hp": {
+          "mean": 55.17293233082707,
+          "missing_n": 0,
+          "n": 133
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 133,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 29,
+        "whole_run_win_rate_descriptive": 0.21804511278195488,
+        "whole_run_winning_uploads": 29
+      },
+      "both_ge100": true,
+      "difference_pp": 2.9479639693292645
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 108,
+        "field": "ancient_choice",
+        "item_occurrences": 108,
+        "node_end_gold": {
+          "mean": 137.13888888888889,
+          "missing_n": 0,
+          "n": 108
+        },
+        "node_end_hp": {
+          "mean": 55.925925925925924,
+          "missing_n": 0,
+          "n": 108
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 108,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.09259259259259259,
+        "whole_run_winning_uploads": 10
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 124,
+        "field": "ancient_choice",
+        "item_occurrences": 124,
+        "node_end_gold": {
+          "mean": 108.6774193548387,
+          "missing_n": 0,
+          "n": 124
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 124
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 124,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 26,
+        "whole_run_win_rate_descriptive": 0.20967741935483872,
+        "whole_run_winning_uploads": 26
+      },
+      "both_ge100": true,
+      "difference_pp": -11.708482676224612
+    },
+    {
+      "version": "v0.107",
+      "build_id": "v0.107.1",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 136,
+        "field": "ancient_choice",
+        "item_occurrences": 136,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 136
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 136
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 136,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 33,
+        "whole_run_win_rate_descriptive": 0.2426470588235294,
+        "whole_run_winning_uploads": 33
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.107.1",
+        "distinct_uploaded_runs": 132,
+        "field": "ancient_choice",
+        "item_occurrences": 132,
+        "node_end_gold": {
+          "mean": 116.04545454545455,
+          "missing_n": 0,
+          "n": 132
+        },
+        "node_end_hp": {
+          "mean": 56.166666666666664,
+          "missing_n": 0,
+          "n": 132
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 132,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.107",
+        "whole_run_win_occurrences": 37,
+        "whole_run_win_rate_descriptive": 0.2803030303030303,
+        "whole_run_winning_uploads": 37
+      },
+      "both_ge100": true,
+      "difference_pp": -3.7655971479500865
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 43,
+        "field": "ancient_choice",
+        "item_occurrences": 43,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 43
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 43
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 43,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.23255813953488372,
+        "whole_run_winning_uploads": 10
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 29,
+        "field": "ancient_choice",
+        "item_occurrences": 29,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 29
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 29
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 29,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.27586206896551724,
+        "whole_run_winning_uploads": 8
+      },
+      "both_ge100": false,
+      "difference_pp": -4.330392943063352
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 31,
+        "field": "ancient_choice",
+        "item_occurrences": 31,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 31
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 31
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 31,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.25806451612903225,
+        "whole_run_winning_uploads": 8
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 42,
+        "field": "ancient_choice",
+        "item_occurrences": 42,
+        "node_end_gold": {
+          "mean": 80.14285714285714,
+          "missing_n": 0,
+          "n": 42
+        },
+        "node_end_hp": {
+          "mean": 54.595238095238095,
+          "missing_n": 0,
+          "n": 42
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 42,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 14,
+        "whole_run_win_rate_descriptive": 0.3333333333333333,
+        "whole_run_winning_uploads": 14
+      },
+      "both_ge100": false,
+      "difference_pp": -7.526881720430106
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 53,
+        "field": "ancient_choice",
+        "item_occurrences": 53,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 53
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 53
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 53,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 15,
+        "whole_run_win_rate_descriptive": 0.2830188679245283,
+        "whole_run_winning_uploads": 15
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 49,
+        "field": "ancient_choice",
+        "item_occurrences": 49,
+        "node_end_gold": {
+          "mean": 123.9795918367347,
+          "missing_n": 0,
+          "n": 49
+        },
+        "node_end_hp": {
+          "mean": 55.142857142857146,
+          "missing_n": 0,
+          "n": 49
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 49,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 14,
+        "whole_run_win_rate_descriptive": 0.2857142857142857,
+        "whole_run_winning_uploads": 14
+      },
+      "both_ge100": false,
+      "difference_pp": -0.2695417789757404
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 39,
+        "field": "ancient_choice",
+        "item_occurrences": 39,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 39
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 39
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 39,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 11,
+        "whole_run_win_rate_descriptive": 0.28205128205128205,
+        "whole_run_winning_uploads": 11
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 45,
+        "field": "ancient_choice",
+        "item_occurrences": 45,
+        "node_end_gold": {
+          "mean": 119.13333333333334,
+          "missing_n": 0,
+          "n": 45
+        },
+        "node_end_hp": {
+          "mean": 55.44444444444444,
+          "missing_n": 0,
+          "n": 45
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 45,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 13,
+        "whole_run_win_rate_descriptive": 0.28888888888888886,
+        "whole_run_winning_uploads": 13
+      },
+      "both_ge100": false,
+      "difference_pp": -0.6837606837606813
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 45,
+        "field": "ancient_choice",
+        "item_occurrences": 45,
+        "node_end_gold": {
+          "mean": 96.6,
+          "missing_n": 0,
+          "n": 45
+        },
+        "node_end_hp": {
+          "mean": 56.4,
+          "missing_n": 0,
+          "n": 45
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 45,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 11,
+        "whole_run_win_rate_descriptive": 0.24444444444444444,
+        "whole_run_winning_uploads": 11
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 38,
+        "field": "ancient_choice",
+        "item_occurrences": 38,
+        "node_end_gold": {
+          "mean": 118.73684210526316,
+          "missing_n": 0,
+          "n": 38
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 38
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 38,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 15,
+        "whole_run_win_rate_descriptive": 0.39473684210526316,
+        "whole_run_winning_uploads": 15
+      },
+      "both_ge100": false,
+      "difference_pp": -15.029239766081872
+    },
+    {
+      "version": "v0.108",
+      "build_id": "v0.108.0",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 55,
+        "field": "ancient_choice",
+        "item_occurrences": 55,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 55
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 55
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 55,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 17,
+        "whole_run_win_rate_descriptive": 0.3090909090909091,
+        "whole_run_winning_uploads": 17
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.108.0",
+        "distinct_uploaded_runs": 34,
+        "field": "ancient_choice",
+        "item_occurrences": 34,
+        "node_end_gold": {
+          "mean": 125.47058823529412,
+          "missing_n": 0,
+          "n": 34
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 34
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 34,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.108",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.17647058823529413,
+        "whole_run_winning_uploads": 6
+      },
+      "both_ge100": false,
+      "difference_pp": 13.262032085561495
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 33,
+        "field": "ancient_choice",
+        "item_occurrences": 33,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 33
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 33
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 33,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.24242424242424243,
+        "whole_run_winning_uploads": 8
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 21,
+        "field": "ancient_choice",
+        "item_occurrences": 21,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 21
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 21
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 21,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.2857142857142857,
+        "whole_run_winning_uploads": 6
+      },
+      "both_ge100": false,
+      "difference_pp": -4.329004329004327
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 28,
+        "field": "ancient_choice",
+        "item_occurrences": 28,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 28
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 28
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 28,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 11,
+        "whole_run_win_rate_descriptive": 0.39285714285714285,
+        "whole_run_winning_uploads": 11
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 41,
+        "field": "ancient_choice",
+        "item_occurrences": 41,
+        "node_end_gold": {
+          "mean": 97.82926829268293,
+          "missing_n": 0,
+          "n": 41
+        },
+        "node_end_hp": {
+          "mean": 54.4390243902439,
+          "missing_n": 0,
+          "n": 41
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 41,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.24390243902439024,
+        "whole_run_winning_uploads": 10
+      },
+      "both_ge100": false,
+      "difference_pp": 14.895470383275262
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 18,
+        "field": "ancient_choice",
+        "item_occurrences": 18,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 18
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 18
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 18,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 7,
+        "whole_run_win_rate_descriptive": 0.3888888888888889,
+        "whole_run_winning_uploads": 7
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 33,
+        "field": "ancient_choice",
+        "item_occurrences": 33,
+        "node_end_gold": {
+          "mean": 164.1818181818182,
+          "missing_n": 0,
+          "n": 33
+        },
+        "node_end_hp": {
+          "mean": 55.515151515151516,
+          "missing_n": 0,
+          "n": 33
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 33,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.24242424242424243,
+        "whole_run_winning_uploads": 8
+      },
+      "both_ge100": false,
+      "difference_pp": 14.646464646464647
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 25,
+        "field": "ancient_choice",
+        "item_occurrences": 25,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 25
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 25
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 25,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.24,
+        "whole_run_winning_uploads": 6
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 34,
+        "field": "ancient_choice",
+        "item_occurrences": 34,
+        "node_end_gold": {
+          "mean": 133.85294117647058,
+          "missing_n": 0,
+          "n": 34
+        },
+        "node_end_hp": {
+          "mean": 56.294117647058826,
+          "missing_n": 0,
+          "n": 34
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 34,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.29411764705882354,
+        "whole_run_winning_uploads": 10
+      },
+      "both_ge100": false,
+      "difference_pp": -5.411764705882355
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 24,
+        "field": "ancient_choice",
+        "item_occurrences": 24,
+        "node_end_gold": {
+          "mean": 159.375,
+          "missing_n": 0,
+          "n": 24
+        },
+        "node_end_hp": {
+          "mean": 54.5,
+          "missing_n": 0,
+          "n": 24
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 24,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.3333333333333333,
+        "whole_run_winning_uploads": 8
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 30,
+        "field": "ancient_choice",
+        "item_occurrences": 30,
+        "node_end_gold": {
+          "mean": 134.0,
+          "missing_n": 0,
+          "n": 30
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 30
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 30,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 12,
+        "whole_run_win_rate_descriptive": 0.4,
+        "whole_run_winning_uploads": 12
+      },
+      "both_ge100": false,
+      "difference_pp": -6.6666666666666705
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.0",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 27,
+        "field": "ancient_choice",
+        "item_occurrences": 27,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 27
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 27
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 27,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.2222222222222222,
+        "whole_run_winning_uploads": 6
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.0",
+        "distinct_uploaded_runs": 21,
+        "field": "ancient_choice",
+        "item_occurrences": 21,
+        "node_end_gold": {
+          "mean": 113.28571428571429,
+          "missing_n": 0,
+          "n": 21
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 21
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 21,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.19047619047619047,
+        "whole_run_winning_uploads": 4
+      },
+      "both_ge100": false,
+      "difference_pp": 3.1746031746031744
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 7,
+        "field": "ancient_choice",
+        "item_occurrences": 7,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 7
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 7
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 7,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 2,
+        "whole_run_win_rate_descriptive": 0.2857142857142857,
+        "whole_run_winning_uploads": 2
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 8,
+        "field": "ancient_choice",
+        "item_occurrences": 8,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 8
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 8
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 8,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 3,
+        "whole_run_win_rate_descriptive": 0.375,
+        "whole_run_winning_uploads": 3
+      },
+      "both_ge100": false,
+      "difference_pp": -8.92857142857143
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 4,
+        "field": "ancient_choice",
+        "item_occurrences": 4,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 4
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 4
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 4,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 3,
+        "whole_run_win_rate_descriptive": 0.75,
+        "whole_run_winning_uploads": 3
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 7,
+        "field": "ancient_choice",
+        "item_occurrences": 7,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 7
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 7
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 7,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.5714285714285714,
+        "whole_run_winning_uploads": 4
+      },
+      "both_ge100": false,
+      "difference_pp": 17.85714285714286
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 11,
+        "field": "ancient_choice",
+        "item_occurrences": 11,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 11
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 11
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 11,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.5454545454545454,
+        "whole_run_winning_uploads": 6
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 10,
+        "field": "ancient_choice",
+        "item_occurrences": 10,
+        "node_end_gold": {
+          "mean": 79.2,
+          "missing_n": 0,
+          "n": 10
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 10
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 10,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 1,
+        "whole_run_win_rate_descriptive": 0.1,
+        "whole_run_winning_uploads": 1
+      },
+      "both_ge100": false,
+      "difference_pp": 44.54545454545455
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 11,
+        "field": "ancient_choice",
+        "item_occurrences": 11,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 11
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 11
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 11,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.36363636363636365,
+        "whole_run_winning_uploads": 4
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 8,
+        "field": "ancient_choice",
+        "item_occurrences": 8,
+        "node_end_gold": {
+          "mean": 105.375,
+          "missing_n": 0,
+          "n": 8
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 8
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 8,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.5,
+        "whole_run_winning_uploads": 4
+      },
+      "both_ge100": false,
+      "difference_pp": -13.636363636363635
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 4,
+        "field": "ancient_choice",
+        "item_occurrences": 4,
+        "node_end_gold": {
+          "mean": 74.25,
+          "missing_n": 0,
+          "n": 4
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 4
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 4,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 1,
+        "whole_run_win_rate_descriptive": 0.25,
+        "whole_run_winning_uploads": 1
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 3,
+        "field": "ancient_choice",
+        "item_occurrences": 3,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 3
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 3
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 3,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 1,
+        "whole_run_win_rate_descriptive": 0.3333333333333333,
+        "whole_run_winning_uploads": 1
+      },
+      "both_ge100": false,
+      "difference_pp": -8.333333333333332
+    },
+    {
+      "version": "v0.109",
+      "build_id": "v0.109.1",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 9,
+        "field": "ancient_choice",
+        "item_occurrences": 9,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 9
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 9
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 9,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 3,
+        "whole_run_win_rate_descriptive": 0.3333333333333333,
+        "whole_run_winning_uploads": 3
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.109.1",
+        "distinct_uploaded_runs": 5,
+        "field": "ancient_choice",
+        "item_occurrences": 5,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 5
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 5
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 5,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.109",
+        "whole_run_win_occurrences": 1,
+        "whole_run_win_rate_descriptive": 0.2,
+        "whole_run_winning_uploads": 1
+      },
+      "both_ge100": false,
+      "difference_pp": 13.33333333333333
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 2,
+        "field": "ancient_choice",
+        "item_occurrences": 2,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 2
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 2
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 2,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "offered_not_chosen": null,
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": null,
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 1,
+        "field": "ancient_choice",
+        "item_occurrences": 1,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 1,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 1,
+        "field": "ancient_choice",
+        "item_occurrences": 1,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 1,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "offered_not_chosen": null,
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": null,
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 1,
+        "field": "ancient_choice",
+        "item_occurrences": 1,
+        "node_end_gold": {
+          "mean": 0.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 1,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 2,
+        "field": "ancient_choice",
+        "item_occurrences": 2,
+        "node_end_gold": {
+          "mean": 49.5,
+          "missing_n": 0,
+          "n": 2
+        },
+        "node_end_hp": {
+          "mean": 48.0,
+          "missing_n": 0,
+          "n": 2
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 2,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "offered_not_chosen": null,
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.0",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.0",
+        "distinct_uploaded_runs": 1,
+        "field": "ancient_choice",
+        "item_occurrences": 1,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 1
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 1,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 0,
+        "whole_run_win_rate_descriptive": 0.0,
+        "whole_run_winning_uploads": 0
+      },
+      "offered_not_chosen": null,
+      "both_ge100": false,
+      "difference_pp": null
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 31,
+        "field": "ancient_choice",
+        "item_occurrences": 31,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 31
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 31
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 31,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.1935483870967742,
+        "whole_run_winning_uploads": 6
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 23,
+        "field": "ancient_choice",
+        "item_occurrences": 23,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 23
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 23
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 23,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.17391304347826086,
+        "whole_run_winning_uploads": 4
+      },
+      "both_ge100": false,
+      "difference_pp": 1.9635343618513323
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 20,
+        "field": "ancient_choice",
+        "item_occurrences": 20,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 20
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 20
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 20,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.2,
+        "whole_run_winning_uploads": 4
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 31,
+        "field": "ancient_choice",
+        "item_occurrences": 31,
+        "node_end_gold": {
+          "mean": 100.16129032258064,
+          "missing_n": 0,
+          "n": 31
+        },
+        "node_end_hp": {
+          "mean": 54.45161290322581,
+          "missing_n": 0,
+          "n": 31
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 31,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 8,
+        "whole_run_win_rate_descriptive": 0.25806451612903225,
+        "whole_run_winning_uploads": 8
+      },
+      "both_ge100": false,
+      "difference_pp": -5.806451612903224
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 25,
+        "field": "ancient_choice",
+        "item_occurrences": 25,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 25
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 25
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 25,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.24,
+        "whole_run_winning_uploads": 6
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 25,
+        "field": "ancient_choice",
+        "item_occurrences": 25,
+        "node_end_gold": {
+          "mean": 123.12,
+          "missing_n": 0,
+          "n": 25
+        },
+        "node_end_hp": {
+          "mean": 54.72,
+          "missing_n": 0,
+          "n": 25
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 25,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 10,
+        "whole_run_win_rate_descriptive": 0.4,
+        "whole_run_winning_uploads": 10
+      },
+      "both_ge100": false,
+      "difference_pp": -16.000000000000004
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 24,
+        "field": "ancient_choice",
+        "item_occurrences": 24,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 24
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 24
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 24,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 5,
+        "whole_run_win_rate_descriptive": 0.20833333333333334,
+        "whole_run_winning_uploads": 5
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 28,
+        "field": "ancient_choice",
+        "item_occurrences": 28,
+        "node_end_gold": {
+          "mean": 129.42857142857142,
+          "missing_n": 0,
+          "n": 28
+        },
+        "node_end_hp": {
+          "mean": 54.857142857142854,
+          "missing_n": 0,
+          "n": 28
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 28,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 6,
+        "whole_run_win_rate_descriptive": 0.21428571428571427,
+        "whole_run_winning_uploads": 6
+      },
+      "both_ge100": false,
+      "difference_pp": -0.5952380952380931
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 19,
+        "field": "ancient_choice",
+        "item_occurrences": 19,
+        "node_end_gold": {
+          "mean": 126.3157894736842,
+          "missing_n": 0,
+          "n": 19
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 19
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 19,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 2,
+        "whole_run_win_rate_descriptive": 0.10526315789473684,
+        "whole_run_winning_uploads": 2
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 16,
+        "field": "ancient_choice",
+        "item_occurrences": 16,
+        "node_end_gold": {
+          "mean": 117.75,
+          "missing_n": 0,
+          "n": 16
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 16
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 16,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 5,
+        "whole_run_win_rate_descriptive": 0.3125,
+        "whole_run_winning_uploads": 5
+      },
+      "both_ge100": false,
+      "difference_pp": -20.723684210526315
+    },
+    {
+      "version": "v0.110",
+      "build_id": "v0.110.1",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 15,
+        "field": "ancient_choice",
+        "item_occurrences": 15,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 15
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 15
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 15,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 7,
+        "whole_run_win_rate_descriptive": 0.4666666666666667,
+        "whole_run_winning_uploads": 7
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.110.1",
+        "distinct_uploaded_runs": 16,
+        "field": "ancient_choice",
+        "item_occurrences": 16,
+        "node_end_gold": {
+          "mean": 108.375,
+          "missing_n": 0,
+          "n": 16
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 16
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 16,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.110",
+        "whole_run_win_occurrences": 4,
+        "whole_run_win_rate_descriptive": 0.25,
+        "whole_run_winning_uploads": 4
+      },
+      "both_ge100": false,
+      "difference_pp": 21.666666666666668
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "CURSED_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 132,
+        "field": "ancient_choice",
+        "item_occurrences": 132,
+        "node_end_gold": {
+          "mean": 432.0,
+          "missing_n": 0,
+          "n": 132
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 132
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 132,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 42,
+        "whole_run_win_rate_descriptive": 0.3181818181818182,
+        "whole_run_winning_uploads": 42
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 46,
+        "field": "ancient_choice",
+        "item_occurrences": 46,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 46
+        },
+        "node_end_hp": {
+          "mean": 56.23913043478261,
+          "missing_n": 0,
+          "n": 46
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 46,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "CURSED_PEARL",
+          "title": {
+            "key": "CURSED_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 9,
+        "whole_run_win_rate_descriptive": 0.1956521739130435,
+        "whole_run_winning_uploads": 9
+      },
+      "both_ge100": false,
+      "difference_pp": 12.252964426877469
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "GOLDEN_PEARL",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 111,
+        "field": "ancient_choice",
+        "item_occurrences": 111,
+        "node_end_gold": {
+          "mean": 249.0,
+          "missing_n": 0,
+          "n": 111
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 111
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 111,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 34,
+        "whole_run_win_rate_descriptive": 0.3063063063063063,
+        "whole_run_winning_uploads": 34
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 110,
+        "field": "ancient_choice",
+        "item_occurrences": 110,
+        "node_end_gold": {
+          "mean": 87.57272727272728,
+          "missing_n": 0,
+          "n": 110
+        },
+        "node_end_hp": {
+          "mean": 55.8,
+          "missing_n": 0,
+          "n": 110
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 110,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "GOLDEN_PEARL",
+          "title": {
+            "key": "GOLDEN_PEARL.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 24,
+        "whole_run_win_rate_descriptive": 0.21818181818181817,
+        "whole_run_winning_uploads": 24
+      },
+      "both_ge100": true,
+      "difference_pp": 8.812448812448812
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "KALEIDOSCOPE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 90,
+        "field": "ancient_choice",
+        "item_occurrences": 90,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 90
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 90
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 90,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 25,
+        "whole_run_win_rate_descriptive": 0.2777777777777778,
+        "whole_run_winning_uploads": 25
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 125,
+        "field": "ancient_choice",
+        "item_occurrences": 125,
+        "node_end_gold": {
+          "mean": 137.016,
+          "missing_n": 0,
+          "n": 125
+        },
+        "node_end_hp": {
+          "mean": 56.104,
+          "missing_n": 0,
+          "n": 125
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 125,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "KALEIDOSCOPE",
+          "title": {
+            "key": "KALEIDOSCOPE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 37,
+        "whole_run_win_rate_descriptive": 0.296,
+        "whole_run_winning_uploads": 37
+      },
+      "both_ge100": false,
+      "difference_pp": -1.8222222222222195
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "LEAD_PAPERWEIGHT",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 94,
+        "field": "ancient_choice",
+        "item_occurrences": 94,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 94
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 94
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 94,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 24,
+        "whole_run_win_rate_descriptive": 0.2553191489361702,
+        "whole_run_winning_uploads": 24
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 130,
+        "field": "ancient_choice",
+        "item_occurrences": 130,
+        "node_end_gold": {
+          "mean": 156.9923076923077,
+          "missing_n": 0,
+          "n": 130
+        },
+        "node_end_hp": {
+          "mean": 55.45384615384615,
+          "missing_n": 0,
+          "n": 130
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 130,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "LEAD_PAPERWEIGHT",
+          "title": {
+            "key": "LEAD_PAPERWEIGHT.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 33,
+        "whole_run_win_rate_descriptive": 0.25384615384615383,
+        "whole_run_winning_uploads": 33
+      },
+      "both_ge100": false,
+      "difference_pp": 0.14729950900163602
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "NEOWS_BONES",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 66,
+        "field": "ancient_choice",
+        "item_occurrences": 66,
+        "node_end_gold": {
+          "mean": 136.13636363636363,
+          "missing_n": 0,
+          "n": 66
+        },
+        "node_end_hp": {
+          "mean": 55.621212121212125,
+          "missing_n": 0,
+          "n": 66
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 66,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 17,
+        "whole_run_win_rate_descriptive": 0.25757575757575757,
+        "whole_run_winning_uploads": 17
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 95,
+        "field": "ancient_choice",
+        "item_occurrences": 95,
+        "node_end_gold": {
+          "mean": 113.21052631578948,
+          "missing_n": 0,
+          "n": 95
+        },
+        "node_end_hp": {
+          "mean": 56.11578947368421,
+          "missing_n": 0,
+          "n": 95
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 95,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "NEOWS_BONES",
+          "title": {
+            "key": "NEOWS_BONES.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 26,
+        "whole_run_win_rate_descriptive": 0.2736842105263158,
+        "whole_run_winning_uploads": 26
+      },
+      "both_ge100": false,
+      "difference_pp": -1.6108452950558239
+    },
+    {
+      "version": "v0.111",
+      "build_id": "v0.111.0",
+      "TextKey": "SILVER_CRUCIBLE",
+      "chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 93,
+        "field": "ancient_choice",
+        "item_occurrences": 93,
+        "node_end_gold": {
+          "mean": 99.0,
+          "missing_n": 0,
+          "n": 93
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 93
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 93,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 1
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 25,
+        "whole_run_win_rate_descriptive": 0.26881720430107525,
+        "whole_run_winning_uploads": 25
+      },
+      "offered_not_chosen": {
+        "act": 1,
+        "build_id": "v0.111.0",
+        "distinct_uploaded_runs": 70,
+        "field": "ancient_choice",
+        "item_occurrences": 70,
+        "node_end_gold": {
+          "mean": 116.14285714285714,
+          "missing_n": 0,
+          "n": 70
+        },
+        "node_end_hp": {
+          "mean": 56.0,
+          "missing_n": 0,
+          "n": 70
+        },
+        "previous_node_end_hp_proxy": {
+          "mean": null,
+          "missing_n": 70,
+          "n": 0
+        },
+        "rooms": [
+          {
+            "id": "EVENT.NEOW",
+            "kind": "event"
+          }
+        ],
+        "value": {
+          "TextKey": "SILVER_CRUCIBLE",
+          "title": {
+            "key": "SILVER_CRUCIBLE.title",
+            "table": "relics"
+          },
+          "was_chosen": 0
+        },
+        "version": "v0.111",
+        "whole_run_win_occurrences": 20,
+        "whole_run_win_rate_descriptive": 0.2857142857142857,
+        "whole_run_winning_uploads": 20
+      },
+      "both_ge100": false,
+      "difference_pp": -1.6897081413210446
+    }
+  ],
+  "limitations": [
+    "第一幕EVENT.NEOW的ancient选择仅是开局祝福代理，未核每局实际首节点与完整初始快照。",
+    "整局终局胜率观察关联；不是第一幕Boss通过率、因果收益、最优排序或固定选择命令。",
+    "各臂按distinct_uploaded_runs计数，未读取玩家标识；玩家数、组间重叠与独立性未知，不把不同选项/臂加总成独立局。",
+    "自选上传、玩家水平、起始牌组、备选组合及后续路线/选择混杂；不按节点末HP/金币做决策前调整，未做多重比较校正。",
+    "历史版本机制对照未知，版本/build分列；同item跨版本反向结果保留。没有本系统实盘支持或自然采用证据。"
+  ],
+  "interval": null,
+  "mechanism_version_equivalence": "unknown",
+  "independent_sample_count": null,
+  "independent_sample_count_reason": "保留每臂去重上传局分母；跨臂/跨item并集与独立玩家数不可计算。",
+  "evidence_file": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-124312/learner/runs/20261024-124411-8d06fb87-5615-4697-95e0-977b5c6c5801-strategy-proposal/scratch/ancient-act1-comparisons.json",
+  "consumer_contract": "descriptive knowledge candidate only; no automatic StrategyEntry or RK loading",
+  "confidence": 0.25
+}

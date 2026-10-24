@@ -1,18 +1,18 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T16:34:57+08:00
+updated: 2026-10-24T16:43:59+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#51新增独立V6-R431/T16:29:12，live37/main41，原124312 GOLDEN_PEARL条件文字已实际工具读回；源8593f329/行为e2363e1c/live3b66c308。纯外部confidence0.25/conflict，账本0612；R430十条、其他知识及脏目录保持。原元数据拒绝/预写失败留档，续接已成功，锁释。paper/materials/20261024-issue51-cold-prefix-publication-ops/。
-在等谁：R430在真实A10局4CR2N26QAJAV冻结9题/10策略查询/0错误，新增8ID自然检索命中，非执行/收益。等原161310冷启动补证终态（原high/沙箱native已核、未重派）及学习owner各消费者/收益证据；R431自然查询未验。paper/materials/20261024-issue51-natural-cold-resume-ops/。
-下一步：原done事件核新候选，按整批或2小时先到独立数据发布，不捆代码/不加计时器；按ID/版本/库SHA分开自然检索、采用、收益。原124312描述知识消费者仍待，不硬转rk；37八失败/原main绿及091302源null保留，不重full/模型/局。
+进行中的事：#51 V6-R432/T16:40:40已发161310五情境（4新1更），live41/main45；源6e3976ca/行为0f999aa6/live9dee1cfc。Golden旧ID新增自有证据，四新为早期奖励/skip/首Boss资源复核，5实际工具读回、616账本0、铁甲0条；原R430十条/其他知识/脏目录与控制标记保留，锁释。28原字节窗口核同；程序506与模型28案例18局分账，分层反向/unknown/代理限制不改。paper/materials/20261024-issue51-cold-own-publication-ops/。
+在等谁：6382043016新冻7单元已一次原锁排队，毒整局→刀整局→商店→单牌穿插→遗物→事件→遭遇；#54三包132叶/506名单/11片/六切点及7正式renderer通过，原processed/held/失败/进度原样。等原调度自然native与候选，不强派；冷启动/休息不原样重跑。paper/materials/20261024-issue51-next-units-ops/。
+下一步：原新候选满批或2h先到独立发布，不捆代码/加计时器；R432固定查询不代自然采用收益，描述知识仍复用非第6情境/rk。R430已1真实A10局4CR2N26QAJAV九题十查/八新ID自然命中，R431/R432自然仍待。原37八失败/旧main绿与091302源null独立保留，不重full/模型/局。paper/materials/20261024-issue51-natural-cold-resume-ops/。
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
 #51两批144312/154311的R430策略十ID已发布并固定读回，4新6更/四经验消费者另验，原件和反证保留；131301数据集938ba222/14叶原rc0、回收deferred。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 
-#51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
+#51三原决策及三自有补证结果保持，旧1/2/2与新5/5/5逐批计数；新1613105为4新1更。原两代输入、零产/配额记录保留，不回写旧报告。paper/materials/20261024-issue51-own-fallback-ops/及各strategy原件。
 
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
@@ -23,7 +23,7 @@ updated: 2026-10-24T16:34:57+08:00
 
 #27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，旧30/26为历史数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
 
-#37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430/R431策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
+#37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430/R431/R432策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
 
 131302 fix failed/rc0/deferred保留：tsc0/31定向、6未选；与live175源路径异，empty guard未过。两个131302补链各done，0293 waiting；各14where-only/1处置、s2原文58/本批69核同，不重复科学分母，14正式经验增量未入；061302缺源commit/101315旧失败及回收门保留。非48/51新单元。原件paper/materials/20261024-fix-131302-ops/、20261024-strategy-131302-s2-ops/、20261024-strategy-131302-ops/。
 
@@ -46,7 +46,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue51-cold-prefix-publication-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue51-cold-own-publication-ops/handoff-before.md；未清未完成项。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
