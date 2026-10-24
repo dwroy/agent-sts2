@@ -28589,7 +28589,7 @@
     {
       "schema": "reflex-entry-v1",
       "id": "silent-rk-lane-b-discard-payload",
-      "version": 1,
+      "version": 2,
       "applies_to": "card_pick",
       "predicate": {
         "op": "or",
@@ -28603,6 +28603,36 @@
             "op": "eq",
             "field": "card.id",
             "value": "CALCULATED_GAMBLE"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "STORM_OF_STEEL"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MEMENTO_MORI"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
           }
         ]
       },
@@ -28611,7 +28641,7 @@
         "value": "silent-rk-lane-b-discard-payload-tag",
         "unit": "label"
       },
-      "label_en": "Different discard payloads require different hand budgets",
+      "label_en": "Compare discard payloads with cards surrendered and payoff timing",
       "evidence": {
         "observations": [
           {
@@ -28621,9 +28651,25 @@
           {
             "run_id": "NB8KCF6HRGVF",
             "floor": 7
+          },
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 17
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 33
+          },
+          {
+            "run_id": "MGA0CZDDKC0P",
+            "floor": 8
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 35
           }
         ],
-        "n_support": 2,
+        "n_support": 5,
         "n_contradict": 0
       },
       "confidence": 0.25,
@@ -28663,6 +28709,32 @@
             "players": null,
             "selection": "cards_gained取得牌次代理305/186；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
           }
+        },
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
         }
       ]
     },
@@ -28842,7 +28914,7 @@
     {
       "schema": "reflex-entry-v1",
       "id": "silent-rk-b002-skill-discount-and-draw-lock",
-      "version": 1,
+      "version": 2,
       "applies_to": "card_pick",
       "predicate": {
         "op": "or",
@@ -28856,6 +28928,36 @@
             "op": "eq",
             "field": "card.id",
             "value": "BULLET_TIME"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "HEADBUTT"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "BATTLE_TRANCE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
           }
         ]
       },
@@ -28864,7 +28966,7 @@
         "value": "silent-rk-b002-skill-discount-and-draw-lock-tag",
         "unit": "label"
       },
-      "label_en": "Separate one skill discount from hand-wide discount",
+      "label_en": "Compare draw order and draw locks with the actual cost reduction",
       "evidence": {
         "observations": [
           {
@@ -28882,9 +28984,21 @@
           {
             "run_id": "QNTW139MGECA",
             "floor": 5
+          },
+          {
+            "run_id": "8AGEGLG40SV3",
+            "floor": 22
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 23
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 22
           }
         ],
-        "n_support": 3,
+        "n_support": 5,
         "n_contradict": 0
       },
       "confidence": 0.25,
@@ -28924,6 +29038,32 @@
           },
           "url": "https://sts2.fun/static/sts2_public.db.zst",
           "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        },
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
         }
       ]
     },
@@ -29031,7 +29171,7 @@
     {
       "schema": "reflex-entry-v1",
       "id": "silent-rk-b002-explicit-keyword-resource-boundary",
-      "version": 1,
+      "version": 2,
       "applies_to": "card_pick",
       "predicate": {
         "op": "or",
@@ -29050,6 +29190,36 @@
             "op": "eq",
             "field": "card.id",
             "value": "HAND_TRICK"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MASTER_PLANNER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ARMAMENTS"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
           }
         ]
       },
@@ -29058,7 +29228,7 @@
         "value": "silent-rk-b002-explicit-keyword-resource-boundary-tag",
         "unit": "label"
       },
-      "label_en": "Keep keyword meaning unresolved while comparing printed resources",
+      "label_en": "Separate the unresolved keyword from a printed hand-card upgrade",
       "evidence": {
         "observations": [
           {
@@ -29084,9 +29254,25 @@
           {
             "run_id": "VLZ6CCT8AQ0A",
             "floor": 36
+          },
+          {
+            "run_id": "4ANT8D00TP72",
+            "floor": 33
+          },
+          {
+            "run_id": "L9SGRBB5R698",
+            "floor": 14
+          },
+          {
+            "run_id": "7X58G3LSHZ3U",
+            "floor": 23
+          },
+          {
+            "run_id": "KYJMB7ELM6FN",
+            "floor": 22
           }
         ],
-        "n_support": 5,
+        "n_support": 9,
         "n_contradict": 0
       },
       "confidence": 0.25,
@@ -29126,6 +29312,32 @@
           },
           "url": "https://sts2.fun/static/sts2_public.db.zst",
           "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        },
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
         }
       ]
     },
@@ -30112,6 +30324,1681 @@
           }
         }
       ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-insatiable-bite-block-and-weaken",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "THE_INSATIABLE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "LUNGING_BITE_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NEUTRALIZE"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NEUTRALIZE"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare block and weakening in the observed lunging bite window",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-15278671601-36754.json",
+          "sha256": "86fd538111ee25f688ba26e738f19b2e2602613656563ff06f8882d1c19b1d37",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 338,
+            "players": null,
+            "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-insatiable-salivate-escape",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "THE_INSATIABLE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SALIVATE_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FRANTIC_ESCAPE"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DASH"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FRANTIC_ESCAPE"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-insatiable-salivate-escape-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare escape expenditure during the observed salivate window",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-15278880042-36110.json",
+          "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 338,
+            "players": null,
+            "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-matriarch-sleep-setup",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "LAGAVULIN_MATRIARCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SLEEP_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FOOTWORK"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FOOTWORK"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-matriarch-sleep-setup-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare Fumes and Footwork setup while the matriarch is asleep",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-11045122245-29534.json",
+          "sha256": "7808d4de9ef72f471b05b2e36db48d7c3b86094fa5378da1b5fe2332e5af989c",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 257,
+            "players": null,
+            "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-matriarch-reduced-stats-block",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "LAGAVULIN_MATRIARCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SLASH_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "or",
+            "args": [
+              {
+                "op": "ne",
+                "field": "player.powers.STRENGTH_POWER",
+                "value": 0
+              },
+              {
+                "op": "ne",
+                "field": "player.powers.DEXTERITY_POWER",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+        "unit": "label"
+      },
+      "label_en": "Recount current block after observed strength and dexterity changes",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-11045734263-29769.json",
+          "sha256": "3295ee882a79fa0f899cae10409f924c19d2935ba33bc5862b8e46f1f3607e2e",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 257,
+            "players": null,
+            "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-ceremonial-plow-weaken-block",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "CEREMONIAL_BEAST"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "PLOW_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SUCKER_PUNCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SUCKER_PUNCH"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare weakening plus block in the observed ceremonial plow",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-16466713684-30860.json",
+          "sha256": "bfb6bcb1931b4b3241d8e009d69b789e8cab7f48679ed2f58be7c28383dd2c1e",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 251,
+            "players": null,
+            "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "CEREMONIAL_BEAST"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "BEAST_CRY_MOVE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.intent_type",
+                  "value": "Debuff"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEADLY_POISON"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "TORIC_TOUGHNESS"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEADLY_POISON"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare output and delayed defense during the observed beast cry",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221312/scratch/raw/states-8720066049-32539.json",
+          "sha256": "a58c1dd0e2c88b3d2ac61ec9b7b2669ec23371844960bd9715b7f4f89245d0ef",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 251,
+            "players": null,
+            "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-skill-count-price",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "PINPOINT"
+          },
+          {
+            "op": "eq",
+            "field": "card.upgraded",
+            "value": false
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-skill-count-price-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 4
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 12
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Compare printed cost with skills actually playable this turn"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-weak-target-amplification",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "TRACKING"
+          },
+          {
+            "op": "eq",
+            "field": "card.upgraded",
+            "value": false
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-weak-target-amplification-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "MCT1GPTL8D35",
+            "floor": 17
+          },
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 17
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Check Weak availability before crediting the attack damage increase"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-card-count-trigger",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "STRANGLE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "PANACHE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-card-count-trigger-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "UJ0K3G10609Y",
+            "floor": 37
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 19
+          },
+          {
+            "run_id": "L6745E2ND5CT",
+            "floor": 45
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate a marked target trigger from a five-card threshold"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-defense-activation",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ANTICIPATE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ULTIMATE_DEFEND"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SHRUG_IT_OFF"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "UNMOVABLE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-defense-activation-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "MCCK2602T1SR",
+            "floor": 5
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 29
+          },
+          {
+            "run_id": "L6745E2ND5CT",
+            "floor": 37
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 22
+          },
+          {
+            "run_id": "P2M3DFJ4DEZ3",
+            "floor": 29
+          }
+        ],
+        "n_support": 5,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 5,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Distinguish temporary Dexterity direct block and the first block trigger"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-next-turn-copy-or-attack",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "NIGHTMARE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SHADOW_STEP"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-next-turn-copy-or-attack-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 33
+          },
+          {
+            "run_id": "L704TLETMZBM",
+            "floor": 44
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 17
+          }
+        ],
+        "n_support": 4,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Keep next-turn copies separate from discarded-hand attack setup"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-draw-event-window",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SPEEDSTER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "CORROSIVE_WAVE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-draw-event-window-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "E5L15SK6ZHZB",
+            "floor": 35
+          },
+          {
+            "run_id": "MGA0CZDDKC0P",
+            "floor": 13
+          },
+          {
+            "run_id": "D4LJ9QMGFB8Q",
+            "floor": 17
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 17
+          }
+        ],
+        "n_support": 4,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate turn-time draw damage from post-play same-turn poison"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-draw-count-versus-empty-pile",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MURDER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "GRAND_FINALE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-draw-count-versus-empty-pile-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "JQPT83P8KDSZ",
+            "floor": 17
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 25
+          },
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate fight-long draw count from an empty draw-pile requirement"
     }
   ]
 }
