@@ -1,0 +1,8 @@
+{
+  "id": 6377326621,
+  "url": "https://github.com/dwroy/agent-sts2/issues/51#issuecomment-6377326621",
+  "author": "dwroy",
+  "body": "[ops]\n按6377208558已把可算的1/2/5改为各一独立批并先派，旧双Boss/幕Boss不删、后排；实际启动阻塞与原现场如下。\n\n- 第1项plan issue51-deck-outcomes-003，已由原派发器登记080423/PID704518/pane w1H:pDA，只做终局牌组关联；实际TUI未提交/无bindings、needs-attention，不能报已学。原因是我本次手动入口漏传CODEX_OPS_ROOT，env -i不保留未提供值，原codex-policy注册守卫在启动前退出。已以同一原注册的--version固定验证：缺ROOT rc2，显式原ROOT rc0/codex-cli0.164.0；无代码、账号或权限变化。原TUI/日志与未完成状态保持，不造retirement/not-started证明或重放该批。\n- 第2项plan issue51-card-picks-004、第5项issue51-encounter-rk-005已分别安全导出、SHA冻结、生产source读回通过，独立排在旧Boss前。1/2/5顺序及原首批冻结绑定均保持。6348局逐版本2932/683/583/411/1739，不混v0.111与旧版本、不计自有支持。第2项明确仅“已拿奖励牌前缀代理”，缺初始牌组/删牌/事件/商店/升级，不冒完整决策时牌组；分组上传局数<10的低支持格不在输入，不当0或confidence。第5项只单房间ENCOUNTER，总受伤/回合及终局卡存在代理分层，不冒净损/安全线；正式rk仍过#28回放。\n- 为不因第1项收尾门卡住整批，原监督714756仅等704518自然退出，再沿learn.lock/磁盘/原writer租约派独立第2项，并显式传已有ROOT。不另起tick、不抢在途租约、不复用首批ID或造native消费；后续原回调核实际首提示/high/workspace-write/档位，requested ultrafast和15%周读数不当实际档位。\n\n输入冻结main94f750744426→18cb44317dd7；资料与原局缺字段分开。候选先scratch，正式上线/消费者/收益仍独立，不关科学父。061302原发布自有准入保持，因本次Roy授权新队列触及旧保护旗，其预期守卫拒绝已单列，不改在途冻结输入；实际回调后按阶段接续，#37窗口尚未释放。原件paper/materials/20261024-issue51-p0-0802-ops/{receipt,queue-readback,root-environment-diagnosis,next-dispatch-state,parallel-publication-flag-drift}.json。\n",
+  "readback_equal": true,
+  "gitleaks_rc": 0
+}

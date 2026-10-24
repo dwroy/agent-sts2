@@ -1,14 +1,14 @@
 state: in-flight
-issue: 37
-updated: 2026-10-24T07:41:19+08:00
+issue: 51
+updated: 2026-10-24T08:10:27+08:00
 
-进行中的事: 原窗口6376551030的061302精确R425单经验叶唯一宿主检查通过，666文件6536过/2跳/tsc0；监督556166已退出，2139输入/469知识/1417依赖/183宿主逐项SHA同，净树ff32f36912bb。沿原exp实际源2c4c541fb929（叶SHA6034dc5b）及0293提案审计通过；原failed/rc0、报告null源及EPERM/EROFS/retry未知不改。
+进行中的事: Roy晨间6377208558优先1/2/5独立批已安全导出/冻结（五版本6348局、no identifiers）；main94f750→18cb4431。原首批080423/PID704518/pDA已登记，但TUI未提交/无bindings，needs-attention：本次手动入口漏传既有CODEX_OPS_ROOT，原包装注册守卫在native前退出。固定--version补原ROOT为0/缺ROOT为2，无源码/权限/账号更改，原失败现场保持，不造not-started或首次消费。第2/5独立manifest准备完，旧Boss后排，缺字段只标代理/跳子项。
 
-在等谁: 原自然发布监督660420/birth22339983于07:41接play602792/birth22247889及原循环302180，自有准入仅等原pidfd自然终局，未写live。十四项候选传统/脑工具读回通过，边界实际14项消费者/编号/双通知/准入释放待原回调；#37继续full0，窗口尚未交回。
+在等谁: 监督714756/birth22512794仅等原704518/birth22480883自然退出、原租约释放，再沿原派发器接独立第2项card-picks-004并显式给原ROOT，不重放首批。真实首次native/high/沙箱/档位及来源仍待；requested ultrafast不冒原生档位。看paper/materials/20261024-issue51-p0-0802-ops/next-dispatch-state.json原回调；不另起等待模型/tick。
 
-下一步: 核paper/materials/20261024-experience-061302-publication-ops/publication-state.json及原终局/消费者/准入释放，真实退出后在37明确交回。集成员再重冻最新live知识/依赖，对候选657293922065做唯一full，保41/44时钟预算/afterEach与双方账本；37自然发布/首局Jev无open_book与脑工具读回→20父（39/43）。不重full/模型、不关科学父；本轮原件20261024-0740-061302-check-received-ops/receipt.json。
+下一步: 核续派实际批次/原生日志并登记首次消费；首批未提交的收尾/恢复范围仍交原36/51 owner，原TUI/监督/空闲输入/处置权门不跳过。第2/5各自观察性候选、独立发布/消费者；第2奖励前缀是代理、低支持格省略不当0；第5终局卡分层也是代理，rk须#28回放，科学父开放。原件20261024-issue51-p0-0802-ops/receipt.json、root-environment-diagnosis.json、queue-readback.json。
 
-并行#51: 源795d32b0/main c7adca66/07:04:28宿主部署已核，唯一full680文件6644过/2跳保持。首原tick071301按要求优先派五局复盘，external_alternation_hold=true，外部/回刷null；首双Boss、次各幕Boss的真实native/来源/high与沙箱待自然门，不强派。原件20261024-0710-51-callbacks-ops/。
+并行061302/#37: 原R425净唯一full6536过/2跳/tsc0，源2c4c541fb929与0293审计通过；原发布660420/birth22339983仍原终局监督。Roy授权改外部队列导致旧protected-flags的queue SHA漂移，原输入未改；保parallel-publication-flag-drift.json，等原自然边界实际守卫回调后接续，不重full/改旧失败。#37仍full0、未释放；真实退出后明确交回集成员，再冻结最新知识做37唯一full→自然发布/首局读回→20父。
 
 并行#36: 05:28已核033643/041301/051302自然封存关tab，不代入库；五旧现场缺wrapper/native绑定/策略恢复范围仍待原36/20 owner，缺证不强关。原件20261024-issue36-handoff-0735-ops/。
 
