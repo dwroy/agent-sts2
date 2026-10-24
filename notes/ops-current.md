@@ -1,21 +1,21 @@
 state: in-flight
-issue: 58
-updated: 2026-10-25T02:20:31+08:00
+issue: 59
+updated: 2026-10-25T02:31:42+08:00
 
-进行中的事：R447/R448已发；0219延迟回调6原件SHA核同去重、原worker退场/准入释放。RR2原autoplay1931419/play1931962身份核同；58自然运行未验。
-在等谁：RR2首题usage88%≥80%门拦下，15工具已组装但accepted=false/native空；请求high与brain xhigh要求分列，ENOBUFS commit=null保留，不热切/改阈值/换号。
-下一步：沿原运行owner核用量门/下自然启动xhigh合同，再核58原计划落盘/后继消费与计算复用；60下一自然批，原失败/科学父/候选保留，不重full/模型或热迁移。
+进行中的事：59责任表已更新；57新发布门必要运行有实据，56当前自有1/外部1、后续完成6外部/2自有8局分账；四已释放项保持。
+在等谁：60新28780925b原唯一full2026370/birth29104679终态与集成员核回；58原RR2用量门及下一自然xhigh合同待原runtime，原运行保留。
+下一步：56/57实据交主管及原释放执行者，仍按原四停止分工；60复用原full后接自然发布/迁移与三端controlSHA、原batch恢复验证，不夹135夹具，不热切RR2/重检查。
 
-#59：28/35/48/50已可恢复停会话，20/36由集成员停并交ops接runtime；原父/树/日志/恢复入口保留，见paper/materials/20261025-issue59-ops/handoff-table.json。56参数/实际tier分账、57自然窗及58/60必要运行未验，不代关闭。
+#59：28/35/48/50已可恢复停、20/36沿原集成员回执；原树/线程/恢复入口和父保持。责任表paper/materials/20261025-issue59-ops/handoff-table.json已补56/57/58/60；57必要门运行实据、56剩余运行事实见paper/materials/20261025-issue59-runtime-0223-ops/。56/57待主管/原执行者完成释放前身份/空闲核查，本ops未扩大四停止范围。
 
-#58/60：58已精确22叶R448/live d0d9da100，原full6618/0/2/tsc0复用、source/知识/catalog/开关读回过；465验证快照差异及60未混入。C5先R447/c32ff342、116策略/165rk、14账本/7+7+7过，原75保留，两准入释放。实际发布及RR2自然首题usage门、请求high/原生未证、ENOBUFS边界见paper/materials/20261025-c5-r447-r448-close-ops/。完整原scope/科学父见本轮handoff-before.md；自然计划/计算验收未过，未释放58开发。60源5d7bc13c3仍下一批，迁移冻结/回退/环境单入口沿issue58-60-runtime-intake-ops/runtime-acceptance-and-migration.md；实际pre60须含R447/R448，runtime未建。
+#58/60：58精确22叶R448/d0d9da100、full6618/0/2复用，C5先R447/116策略165rk/14账本/7+7+7，准入释放；RR2首题usage门/high请求/native空及ENOBUFS原件见issue59-runtime-0223-ops/handoff-before.md与c5-r447-r448-close-ops/，未代运行验收或释放58。60已换review源28780925b（原5d7保留），唯一full由原集成员2026370/birth29104679执行，anchor4e435fa1/tree8998bfe7，25叶/2788输入/1417依赖，见issue60-wiring-composition-integrator/。新统一入口CODEX_OPS_DIR/knowledge-runtime.json及原batch持久选择/新进程恢复原实例合同已接；三端实际SHA、迁移/真实候选tools/自然消费待原终态与自然窗，runtime控制/DB未建，旧在途不热分类；135统计测试夹具不迁移。
 
 #50三幕后继旧窗口/达标线/冷恢复/终局父保持；原完整回执与排除口径见paper/materials/20261025-wake-0104-ops/handoff-before.md#50本轮已结及issue6384464793，未新增发布/改策略。
 
 #35原R422/041301与自然跨层/冷恢复/溢出/收益待办、ENOBUFS/null/R419失败保持，沿paper/materials/20261025-issue58-source-ready-ops/handoff-before.md原段与issue35-checkpoint-1648-ops接续。
 
 #51现R447已116策略/165描述rk，C5七对2新5更、14投影读回过；原R446/更早所有knowledge/rk与反证/失败保持。原文/来源分母、正式knowledge/完整剧本/Plan、自然采用/收益及科学父仍待，不借固定tool读回关父。
-#56按6386401629启动参数过、actual tier未知单列；C011301原生high/原沙箱rc0、5对3新2补充和composer告警原件见paper/materials/20261025-strategy-011301-ops/。D014301原生rc0、5新文字/5不可加载事件rk，95局106机会/外部51cell分账、双百例比较0、watcher实收/转Roy6387679266已核、非Roy ACK；452原日志窗口SHA核同，见paper/materials/20261025-strategy-014301-ops/。两批均候选非发布/收益，挂就绪58/60后，原吞吐窗不重置，C5结后回56收敛。
+#56按6386401629参数过、actual tier未知非阻塞；当前1自有/1外部、原窗口后6外部批/2自有8局，旧窗不重置，见issue59-runtime-0223-ops/issue56-original-boundary-and-units.json。C011301候选5对3新2补充与composer历史、D014301五新文字/五不可加载rk及原反证/6387679266转Roy实据均保留，详本轮handoff-before.md原段；正式发布/自然收益未代过，候选接60后。
 
 #0104：D六事件文字/六不可加载rk、C3五情境3新2更，一对与C5同ID不得覆反证，串行挂在就绪源码58/60后。001311五复盘18更新/两提案，dataset1次rc0因并行C5的0764/5反证attention；已有blob/own-append，后续只受控记录，不重生成/finish。通知6387142273/主管C5实收6387024406不代Roy/ACK，原件paper/materials/20261025-wake-0104-ops/。
 
@@ -60,17 +60,17 @@ Roy P0原autoplay自09:56:33已恢复，首BP9/live02eb468f8；手动Z2KBGZQMSRV
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-25T02:19:24+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 1ea996be89ff3306879de47bd7fca208a60a653b208c536fbcd6411653810c6d
-main ac79322a1f1bbd7922bbe848652b9c950ff7f2d9
+生成：2026-10-25T02:31:46+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 42a5249620f735ca2ca02a804f4090c3c8830c835cd2e784c4f947887075df8a
+main 4c285c8d7b481db47d1338f3d644cdfbf9fe953d
 live d0d9da10063c623f3036a6910e83f4ae3c30c06e；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
 - identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。
-- active_batches：在途 3；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
+- active_batches：在途 2；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 2；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
 - not_marked_completed_transactions：未标 completed 296；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
