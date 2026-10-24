@@ -6595,3 +6595,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T12:35:25+08:00 [ops] #46续核原106基线SHA与四调度AST，完整24h门仍为13:46:30；无轮次水印，不提前生成比较/声称节省，待原自然唤醒按精确窗口与全工作量验收。无报告器/full/模型/游戏/计时器。原件paper/materials/20261024-issue46-gate-1233-ops/。
 
 - 2026-10-24T12:54:59+08:00 [ops] #48冻结并在原尾队列登记一个A10整局分组六ID单元，source/正式renderer夹具/gitleaks0；旧首六held、244仍0/244，普通首native待。原priority_hold/37窗不变，不启动模型/full/tick；准备页数上限旧rc1留档。原件paper/materials/20261024-issue48-whole-run-ops/。
+
+- 2026-10-24T12:59:02+08:00 [ops] 124312冷启动外部单元done/rc0，160产物/143页/四代表172节点原生读回核同；新增1策略+1描述知识，三子项partial-waiting。正式发布/消费者0，等37释窗及独立知识消费者门；保旧失败/原retention，不补测/finish/模型，科学父保持。原件paper/materials/20261024-strategy-124312-ops/。

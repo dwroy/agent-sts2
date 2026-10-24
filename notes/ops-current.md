@@ -1,14 +1,16 @@
 state: in-flight
-issue: 48
-updated: 2026-10-24T12:54:59+08:00
+issue: 51
+updated: 2026-10-24T12:59:02+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#48已冻结整局分组首单元issue48-whole-run-cluster6-a10-001并入原尾队列；9R916WW0V65N/A10/簇6仅元数据分组，六旧ID原文、外部有界统计/代表对与自有整局投影已核SHA，source/正式渲染夹具/gitleaks0。旧首六/18输入held，244仍0/244，未派模型。原件paper/materials/20261024-issue48-whole-run-ops/。
-在等谁：原调度在普通/外部/已有重任务之后自然有空位，再由学习者核流派语义及六ID去向；普通MD首个新native T/映射仍null，后续三批均外部，旧104301failed/rc0保留。37原唯一full/发布窗未交回；46完整门13:46:30、48原观察门18:19:29不提前。
-下一步：自然派发后核真实native绑定/模型high与沙箱、实际整局覆盖/候选/逐IDwaiting；fixture不代采用。科学父/完整剧本消费者分门，候选正式发布待原窗。46到门才执行原精确24h报告命令，对照106完整基线与工作量/分支/积压，暂停/低产不冒节省；无轮询/新计时器/full/模型/游戏。
+进行中的事：#51冷启动124312已核done/rc0，160产物/143有界页/原native首提示12:44:41/high/沙箱及原退场封存一致。新增1开局策略+1描述知识，6组合不是6策略；发布/生产消费者/自然采用0。原checkout已回收，分支/scratch保留。paper/materials/20261024-strategy-124312-ops/verification.json、publication-queue.json。
+在等谁：37最新原回执6379307722仍持唯一full/发布窗，尚未交回；释放后ops沿原正式源/账本/锁/编号接用药、休息、开局三个独立策略。描述知识/旧008剧本待原51 owner消费者合同，不硬转StrategyEntry/rk或拖住策略。三个冷启动子项partial-waiting，科学父不关。
+下一步：释窗后按精确候选SHA增量发布并核实际工具，保最新知识；4条外部代表172节点原生完整输出已核，自有完整局0，不冒完整三输入剧本。34/111对24/110是整局上传关联，旧版本反向保留，不代首Boss通过/因果。无补测/finish/清理/模型/tick；46完整门13:46:30、48原观察门18:19:29不提前。
 
-#51休息/路线121311保留：done/rc0，98产物/原生12:14:42/high/输入4b9303…aaee核同、tier未知；新1休息策略+1描述知识、正式发布0。策略同用药待37释窗后独立入库，路线消费者合同另验，不拖整批；20配额投影仅2投影98节点模型通读，上传重叠/HP代理/删失保留。checkout已回收、scratch/分支保留，冷启动124312仅元数据done/rc0，终态待核。paper/materials/20261024-strategy-121311-ops/。
+#51休息/路线121311：98产物/high/输入4b9303…aaee核同，1休息策略+1描述知识发布0，独立门等37/消费者合同；24比较18组两臂≥100不计策略，1254/1458上传重叠、HP代理保留；20配额883节点保存，模型仅2投影98节点读，其他18未读。原checkout回收、scratch/分支保留。paper/materials/20261024-strategy-121311-ops/。
+
+#48整局首单元issue48-whole-run-cluster6-a10-001已原尾队列登记，六旧ID及9R916WW0V65N/A10/统计簇6仅元数据分组；source/正式渲染夹具过，未派模型、0/244。旧首六/18输入held，普通MD首native仍待，外部批次不借验收。paper/materials/20261024-issue48-whole-run-ops/。
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
 
@@ -30,7 +32,7 @@ updated: 2026-10-24T12:54:59+08:00
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
-#54冻结原builds-v1 ac5f0d…852、decision-fields e9d1e6…78f、own-stat a078c5…e64及132叶保持；Z2/KF9排除、无BP9，版本unknown/SL/代理/缺帧限制不变。用药114313及休息路线121311已自然产候选，冷启动124312元数据done、终态待核；旧刀009/Boss不派。postmortem/experience整局模板T10:03:15，普通模板host09f3/首新native待；无热切/权限变更。
+#54冻结原builds-v1 ac5f0d…852、decision-fields e9d1e6…78f、own-stat a078c5…e64及132叶保持；Z2/KF9排除、无BP9，版本unknown/SL/代理/缺帧限制不变。用药114313及休息路线121311已自然产候选，冷启动124312已核2候选、正式发布0；旧刀009/Boss不派。postmortem/experience整局模板T10:03:15，普通模板host09f3/首新native待；无热切/权限变更。
 
 37原revision2的2263输入/1688依赖/469知识核同仍按失败保留；6379266602同窗，revision3冻结/续验由原owner。
 
