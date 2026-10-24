@@ -1,0 +1,23 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+import {endgameRequired,endgameCheckpointRequired,endgameProblems,parseEndgamePlan} from '../../.worktrees/live/agent/src/memory/endgame-plan.ts';
+import {brainAgentReport} from '../../.worktrees/live/agent/tools/brain-agent-report.ts';
+const root=process.cwd(),A=resolve(root,'.artifacts/ops-issue50-resume-1834-20261024'),M=resolve(root,'paper/materials/20261024-issue50-resume-1834-ops');
+const read=(name:string)=>readFileSync(resolve(A,name),'utf8').trim().split('\n').filter(Boolean).map(x=>JSON.parse(x));
+const rows=read('brain.jsonl'),plans=read('run-plans.jsonl'),ends=read('runs.jsonl'),configs=read('run-config.jsonl'),refs=JSON.parse(readFileSync(resolve(M,'raw-refs.json'),'utf8'));
+const groups=[];
+for(const end of ends){const run=end.run_id;const selected=rows.filter(r=>r.run_id===run&&r.knowledge?.mode==='tools'&&endgameRequired(r.payload));const persisted=plans.filter(p=>p.run===run&&p.plan?.endgame);const c=configs.filter(c=>(c.run_id??c.run)===run);assert(c.every(c=>c.character==='SILENT'&&c.ascension===10));const qs=[];let previous:any=null;const anomalies=[];
+ for(let i=0;i<selected.length;i++){const r=selected[i],p=r.payload,requested=endgameCheckpointRequired(p),normalized=parseEndgamePlan(r.answer?.run_plan?.endgame);const floor=Number(p.facts?.floor??p.run_plan_task?.floor??r.answer?.run_plan?.floor),act=p.facts?.act??p.run_plan_task?.act;const nextTs=selected[i+1]?.ts??end.ended;const candidates=persisted.filter(e=>e.floor===floor&&e.ts>=r.ts&&e.ts<nextTs&&JSON.stringify(e.plan.endgame)===JSON.stringify(normalized));const actualPrev=p.facts?.your_run_plan?.endgame??p.run_plan_task?.previous_plan?.endgame??null;const previousObject=p.facts?.your_run_plan??p.run_plan_task?.previous_plan??null;
+ const accepted=r.accepted===true&&endgameProblems(r.answer?.run_plan?.endgame,requested).length===0;const matched=candidates.length===1;const rollback=i>0&&floor<qs[i-1].floor;let previousMatches:boolean|null=null;
+ if(i>0){previousMatches=JSON.stringify(actualPrev)===JSON.stringify(previous);if(!previousMatches)anomalies.push({question_id:r.question_id,kind:'previous_endgame_differs_from_last_accepted',floor,previous_floor:qs[i-1].floor,rollback});}
+ if(!accepted||!matched)anomalies.push({question_id:r.question_id,kind:!accepted?'answer_not_accepted':'plan_log_not_uniquely_matched',matches:candidates.length});
+ if(r.ts>end.ended)anomalies.push({question_id:r.question_id,kind:'after_canonical_end'});
+ const brainRef=refs.brain[run][rows.filter(x=>x.run_id===run).indexOf(r)];const planRef=matched?refs['run-plans'][plans.indexOf(candidates[0])]:null;if(planRef)assert.equal(planRef.run,run);
+ qs.push({question_id:r.question_id,ts:r.ts,engine:r.engine,effort_logged:r.effort,model:r.model,label:r.label,floor,act,accepted,checkpoint_requested:requested,checkpoint_answered:requested&&Boolean(normalized?.checkpoint),plan_matches:candidates.length,plan_log_ts:matched?candidates[0].ts:null,plan_endgame_sha256:normalized?createHash('sha256').update(JSON.stringify(normalized)).digest('hex'):null,prior_plan_nonempty:Boolean(parseEndgamePlan(actualPrev)),prior_plan_matches_last_accepted:previousMatches,prior_plan_floor:previousObject?.floor??null,rollback,brain_ref:brainRef,plan_ref:planRef});if(matched)previous=candidates[0].plan.endgame;
+ }
+ groups.push({run,canonical_end:end,questions:qs.length,accepted_and_logged:qs.filter(q=>q.accepted&&q.plan_matches===1).length,next_question_matches:qs.filter(q=>q.prior_plan_matches_last_accepted===true).length,checkpoints:qs.filter(q=>q.checkpoint_requested).map(q=>({question_id:q.question_id,act:q.act,floor:q.floor,answered:q.checkpoint_answered,logged:q.plan_matches===1})),floor_rollbacks:qs.filter(q=>q.rollback).length,question_prefixes:[...new Set(qs.map(q=>q.question_id?.replace(/-\d+$/,'')))],config_processes:c.map(c=>({ts:c.ts,restart:c.restart,process:c.process,code:c.code})),F48_questions:qs.filter(q=>q.floor===48).length,F49_questions:qs.filter(q=>q.floor===49).length,anomalies,question_rows:qs});
+}
+writeFileSync(resolve(M,'natural-plan-readback.json'),JSON.stringify({groups,limitations:['Natural observations only; log acceptance/readback does not prove decision benefit.','Same-floor SL/cold restart require their own original event binding.','code.commit null/ENOBUFS preserved; no backfill.'],new_models_full_games:0},null,2)+'\n');
+const report=brainAgentReport(rows,ends.map(e=>e.run_id));writeFileSync(resolve(M,'actual-live-reporter.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(groups.map(({question_rows,config_processes,...g})=>g)));

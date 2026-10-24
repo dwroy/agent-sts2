@@ -1,18 +1,16 @@
 state: clear-ok
-issue: 51
-updated: 2026-10-24T18:28:23+08:00
+issue: 50
+updated: 2026-10-24T18:44:50+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：ops写事务已结；A/C学习者独立在途，不因clear-ok重派/回收。R434/T18:12:30实发6对，47策略/91rk、12账本shipped/626检查0；固定6文字/6rk摘要/6全条过，原锁35.58s已释。描述tag不进比较建议，剧本/第7对、自然采用/收益/科学父仍待。paper/materials/20261024-issue51-r434-return-ops/。
-在等谁：6382974399/6382976033四类别+自有1槽须P0，能力/源码改点已6383016491回主管；A181311与C182343实际native均核独立线程/工作树、高/原沙箱。C仅原writer手动新派1次；两道fast请求/tier未知，不冒ultrafast，未扩2槽。B20～25已重冻、旧单牌held；D商店→遗物→事件。等待主管P0开发实现4道/独立自有槽和额度/磁盘门。
-下一步：沿A/C原自然回报与P0交付核实际宿主/首native；≤70%ultrafast、>70%fast两道、90%原授权codex1、磁盘≤80停新派。旧8叶3:1部署授权已被覆盖，源稿原样归档；原冻结full6600/0/2仅该旧组合，不代新合同/新知识。无ops写锁，不/new/停模型/重full。原件paper/materials/20261024-issue51-four-lanes-ops/；本回执6383094504。
+进行中的事：#50本轮写事务已结，clear-ok；R423原首W54620/19保持。本轮三自然晚层局143接受落盘/140后继、三幕18检查点（15后继、3末F47无下一题），BP9/P4在F48败，4CR过48败49。25SL/14重载只得BP9F24独立后继窗口1；冷进程重启/跨层回退仍无样本，ENOBUFS-null不补戳。
+在等谁：BP9/P4原复盘已读取#50计划字段，但达标线正式策略/live/消费者待原学习及51 owner；4CR学习消费未证。原科学父/收益保持，不借R434描述tag代验。#51 A/C原模型独立在途，四道新P0 #56主管已建（18:30决定记录）；不扩权限/重派，不部署旧3:1。
+下一步：沿自然日志补冷重启/回退；沿原学习流水线核外部赢家与自有胜/晚败的达标线条目及实际读回，无需等候或新full/模型/局/发布。issue50评论6383251914已真实POST/GET核同。原件paper/materials/20261024-issue50-resume-1834-ops/verification.json及learning-consumption.json；
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51历史/范围：R430一真实局八ID自然命中非收益；R431/R432/R434自然采用/收益待。506/28窗口/18局反向分层及原反证守界，冷/休不重跑；满批或2h先到串行发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/与four-lanes-ops/。
-
-#50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
+#51并行保持：R434/T18:12:30实发6对，47策略/91rk、12shipped/626检查0、锁35.58s已释；描述tag比较建议0，剧本/第7对/自然采用收益待。新6382974399/6382976033要求4类别+独立自有1槽，当前仅2策略槽/外部单道，P0点6383016491交主管。A181311/C182343独立native/high/原沙箱已核，仅手动新增C1；fast请求/实际tier未知。B20～25已冻、旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权换codex1、磁盘≤80停新派仍待代码。旧8叶3:1部署授权取消，源稿/旧full保留；A/C独立在途不重派/回收，R430八ID自然命中非收益，旧005/008不改。506/28窗口/18局反向分层守界，满批或2h先到串行发布，无新计时器。paper/materials/20261024-issue51-four-lanes-ops/及issue51-r434-return-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
