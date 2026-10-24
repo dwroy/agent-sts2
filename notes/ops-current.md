@@ -1,8 +1,8 @@
 state: in-flight
 issue: 58
-updated: 2026-10-25T02:17:29+08:00
+updated: 2026-10-25T02:20:31+08:00
 
-进行中的事：C5原FIFO单次续接已R447；58精确22叶已R448，知识/开关核同、准入均释放。broker已恢复RR2VYNL5FUUU，自然首题尚无模型受理。
+进行中的事：R447/R448已发；0219延迟回调6原件SHA核同去重、原worker退场/准入释放。RR2原autoplay1931419/play1931962身份核同；58自然运行未验。
 在等谁：RR2首题usage88%≥80%门拦下，15工具已组装但accepted=false/native空；请求high与brain xhigh要求分列，ENOBUFS commit=null保留，不热切/改阈值/换号。
 下一步：沿原运行owner核用量门/下自然启动xhigh合同，再核58原计划落盘/后继消费与计算复用；60下一自然批，原失败/科学父/候选保留，不重full/模型或热迁移。
 
@@ -60,8 +60,8 @@ Roy P0原autoplay自09:56:33已恢复，首BP9/live02eb468f8；手动Z2KBGZQMSRV
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-25T02:13:53+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 1928cebac6b551227c427b26d797d473b516db4664c283e89f421641236a4a99
-main 8b949d199aeac240a8ce16ae9f732558a936cd4d
+生成：2026-10-25T02:19:24+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 1ea996be89ff3306879de47bd7fca208a60a653b208c536fbcd6411653810c6d
+main ac79322a1f1bbd7922bbe848652b9c950ff7f2d9
 live d0d9da10063c623f3036a6910e83f4ae3c30c06e；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
@@ -70,8 +70,8 @@ live d0d9da10063c623f3036a6910e83f4ae3c30c06e；登记 release 见 current.json.
 - active_batches：在途 3；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 3；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
-- not_marked_completed_transactions：未标 completed 295；保留未知/失败与原件引用，不推定活进程或成功。
+- queued_events：队列 2；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- not_marked_completed_transactions：未标 completed 296；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。

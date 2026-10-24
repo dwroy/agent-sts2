@@ -6916,3 +6916,9 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 刷新释放后仅原FIFO单续，旧75保留。R447的7+7+7查询/14账本过，116策略/165rk；2新5更、confidence0.25与两冲突保留，固定读回不代自然收益。随后58实际R448精确22叶上线，原full6618/0/2/tsc0复用，最新知识/catalog/开关不变，未夹60；两准入均已释放。已沿原broker恢复autoplay，首自然局RR2VYNL5FUUU/F1，15项工具已组装。但首题用量门报7日88%≥80%，accepted=false、无原生请求回执；请求high（旧UVEX亦high），与大脑xhigh要求分列，不能称实际档位。ENOBUFS commit=null保留，源码以live/22叶核。未调阈值/换号或热切在途；计划落盘/后继读回/计算复用及自然采用仍阻塞。回退仅本次前像，保后续知识/历史/父。
 
 证据：paper/materials/20261025-c5-r447-r448-close-ops/。
+
+### 2026-10-25T02:20:31+08:00 [ops] R447/R448延迟回调去重
+
+02:19两条manual返回已核：C5与58各自worker-state、publication-state、publication共6份原件SHA，均与ac79322a受控结算清单一致。C5实际R447、58实际R448及其生产/源码读回已登记；两个原发布worker均已退出，准入marker不存在。broker先前恢复的autoplay1931419/birth29014192和play1931962/birth29014885身份仍一致，首局RR2VYNL5FUUU，不因重复返回再启动一套。未重复write/登记版本、原报告、full或模型。运行验收沿原首题证据保持：15工具仅组装，用量88%≥80%拒绝、无native回执；请求high与大脑xhigh要求、ENOBUFS commit=null分列。未见6387835622之后的新运行裁决，不改阈值/换号或热切在途。已刷新短清单；原失败、候选串行队列及60下一自然批保留，计划落盘/后继消费/计算复用和科学父仍待，不把延迟回执当自然采用或收益。
+
+证据：paper/materials/20261025-callback-dedup-0219-ops/。
