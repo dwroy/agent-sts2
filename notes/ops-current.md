@@ -1,12 +1,12 @@
 state: in-flight
-issue: 23
-updated: 2026-10-24T15:46:07+08:00
+issue: 50
+updated: 2026-10-24T15:58:37+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#23原回收代码已发布，可持续验收仍未通过。09:39原核验155回收/311分配、近24h16/123/空间-107.15GiB、旧plan0 eligible均为历史观测，本轮未重测。#46完整窗现已交：116对106/+9.43%，策略减少但ops/集成增，waiting自然消费及因果节省未证，不关闭23。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
-在等谁：等#45及各原owner按真实发布/身份/研究/收尾证据结算保护项，等原限4回收器后续真实回执；旧10个ops待验只是09:42快照，现值未知。#20三宿主叶T14:49:42至明日同刻的自然入口/完整24h窗独立待验；不把46窗已满当23/20通过。
-下一步：沿原归档SHA、保留分支、不在册/物理路径及磁盘样本核增量，分配/对局/积压/手动停局分账；保留同路径恢复与分支推进旧差异及未知/失败。仅维护交接，不apply/删除/强派模型或新full；37原实际检查、48尾队列/18:19门及所有科学父保持。
+进行中的事：#50工程已发布V6-R423，15固定消费者/自有准入释放原件保持，原登记提交仍为当前live祖先。首自然结束局W546CNAWY3RG/Silent A10已核20题落盘、19后继、F15/F16两检查点；41原窗口SHA本轮核同。早期五题只是子集，独立局仍1，F21失败/未达F48-F49，原ENOBUFS/null不补写。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
+在等谁：等原自然对局的第二/三幕检查点、SL/进程重启及F48/F49；等#48/#51原学习owner真实入库、消费者及终局收益证据。工程/字段可用、计划成功读回、批次结束均不代机制校准、学习效果或收益，科学父保留。
+下一步：原自然事件后按局号/题号/版本/offset-SHA核请求→回答→落盘→下一题读回，检查点/跨幕/SL重启分别计数；发布与自然消费、终局收益分账。旧ready/预写锁失败仅历史，不重启旧publisher，不新开局/模型/模拟/full；37原在途检查保持。
 
 #51 144312五情境4新1更已核，11片/11原帧、原生退场及格式过；5条待原发布，383支持局非通读，换购25/桥接48局，不冒收益。原checkout已回收、待证scratch/分支留。131301原dataset938ba222/14叶再核，回收deferred不变。paper/materials/20261024-strategy-144312-ops/。
 
@@ -25,7 +25,7 @@ updated: 2026-10-24T15:46:07+08:00
 
 131302 fix failed/rc0/deferred保留：tsc0/31定向、6未选；与live175源路径异，empty guard未过。两个131302补链各done，0293 waiting；各14where-only/1处置、s2原文58/本批69核同，不重复科学分母，14正式经验增量未入；061302缺源commit/101315旧失败及回收门保留。非48/51新单元。原件paper/materials/20261024-fix-131302-ops/、20261024-strategy-131302-s2-ops/、20261024-strategy-131302-ops/。
 
-其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。50 R423已发布且首自然5题更新/落盘/后4题读回核过，15固定消费者与准入释放原件在paper/materials/20261024-issue50-r422-ops/；后两幕/检查点/F48-F49/SL重启/学习/收益待，不重发布。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
+其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
 
 094803毒008已核done/rc0、91页/20轨迹/713节点、原native退场及106份原字节归档；1份knowledge剧本候选，非正式StrategyEntry/rk，发布/消费者/自然采用0，branch/scratch保留。只读原外部双输入，不能因54新三manifest冻结而倒补已读；完整剧本消费者合同待51 owner核，27/27未达100、BH0、机制/安全HP未知与原科学父保持。paper/materials/20261024-strategy-094803-ops/。
 
@@ -44,11 +44,13 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue23-checkpoint-1544-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue50-checkpoint-1549-ops/handoff-before.md；未清未完成项。
 
 46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
 
 #46完整窗116对106/+9.43%已交、waiting自然消费/节省未证；20三叶T14:49:42至次日同刻待24h，36旧三75监督保留；55工程已关、科学父仍开。
+
+#23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
