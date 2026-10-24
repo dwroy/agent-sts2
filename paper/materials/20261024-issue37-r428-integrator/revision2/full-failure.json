@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-24T11:24:47+08:00",
+  "original_json_path": ".artifacts/integrator37-r428-20261024/full.json",
+  "original_sha256": "7c462b009f857032f80a118e36b8e9d8b79ae0ff62059096c985bc3fac3ad595",
+  "passed": 6651,
+  "failed": 1,
+  "skipped": 2,
+  "files": 682,
+  "duration_ms": 1388796.3459472656,
+  "failures": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [],
+          "fullName": "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure",
+          "status": "failed",
+          "title": "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure",
+          "duration": 1616.788908,
+          "failureMessages": [
+            "AssertionError: expected '................\\n-------------------…' to contain 'Ran 15 tests'\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator37-r428-20261024-1055/agent/tests/learner-launch-failures.test.ts:9:25\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ],
+          "meta": {},
+          "tags": []
+        }
+      ],
+      "startTime": 1792812100945,
+      "endTime": 1792812102561.7888,
+      "status": "failed",
+      "message": "",
+      "name": "/home/dw/Projects/agent-sts2/.worktrees/integrator37-r428-20261024-1055/agent/tests/learner-launch-failures.test.ts"
+    }
+  ],
+  "failure_origin_commit": "61596985b57d0457e8e646ca54e81915db712518",
+  "actual_python_test_count": 16,
+  "main_merged": false,
+  "live_written": false
+}
