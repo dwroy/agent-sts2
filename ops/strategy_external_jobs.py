@@ -1,4 +1,7 @@
 """Four independent external study lanes on the original registered writer path."""
+from contextlib import contextmanager
+from contextvars import ContextVar
+import copy
 from datetime import datetime, timedelta
 import json
 import os
@@ -10,6 +13,7 @@ import time
 
 import strategy_backfill_jobs as shared
 import external_learning_policy as policy
+import learner_registration
 from strategy_research_jobs import atomic_json
 
 QUEUE = "notes/strategy-external-silent.json"
@@ -17,6 +21,39 @@ REQUEST = "github-issue-51-external-boss-learning-20261023"
 VERSIONS = {"v0.107", "v0.108", "v0.109", "v0.110", "v0.111"}
 TOPICS = {"dual-boss", "act-boss", "card-picks", "map-resources", "encounter-rk", "knowledge"}
 FORBIDDEN = re.compile(r"^(player(_?id|_?name)?|user(_?id|_?name)?|steam(_?id)?|ip(_?address)?|email|auth|token)$", re.I)
+
+
+_validation = ContextVar("external_source_validation", default=None)
+
+
+@contextmanager
+def validation_window():
+    if _validation.get() is not None:
+        yield
+        return
+    token = _validation.set({})
+    try:
+        yield
+    finally:
+        _validation.reset(token)
+
+
+def signatures(root, refs):
+    return [(st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+            for ref in refs for st in [Path(root, ref["path"]).stat()]]
+
+
+def source(root, plan):
+    cache = _validation.get()
+    key = (str(Path(root).resolve()), json.dumps(plan, sort_keys=True))
+    if cache is not None and key in cache:
+        binding, spec, refs, identity = cache[key]
+        if signatures(root, refs) == identity:
+            return copy.deepcopy(binding), spec
+    binding, spec, refs = read_source(root, plan)
+    if cache is not None:
+        cache[key] = (copy.deepcopy(binding), spec, refs, signatures(root, refs))
+    return binding, spec
 
 
 def queue(root):
@@ -46,7 +83,7 @@ def safe_aggregate(value):
             safe_aggregate(item)
 
 
-def source(root, plan):
+def read_source(root, plan):
     manifest = json.loads(shared.artifact(root, plan["input_manifest"]))
     spec = shared.artifact(root, plan["work_spec"])
     if (manifest.get("request_id") != REQUEST or manifest.get("batch_plan_id") != plan["plan_id"]
@@ -89,10 +126,12 @@ def source(root, plan):
         raise ValueError("external batch requires frozen publication contracts")
     return {"request_id": REQUEST, "plan_id": plan["plan_id"], "source": "external:sts2fun",
             "input_manifest": plan["input_manifest"], "work_spec": plan["work_spec"], "topic": manifest["topic"], "provenance": provenance,
-            "entry_ids": ids, "all_entry_ids": ids, "dispatch_runs": [], "cohorts": cohorts}, spec
+            "entry_ids": ids, "all_entry_ids": ids, "dispatch_runs": [], "cohorts": cohorts}, spec, (
+                [plan["input_manifest"], plan["work_spec"]] + manifest["contracts"]
+                + [ref for cohort in cohorts for ref in cohort["aggregates"]])
 
 
-def candidates(state, root, configured):
+def candidates(state, root, configured, excluded_lanes=()):
     for plan in configured["plans"]:
         try:
             generation = plan.get("retry_generation", 0)
@@ -100,6 +139,8 @@ def candidates(state, root, configured):
                 raise ValueError("invalid external retry generation")
             prior = [b for b in state["batches"].values() if b.get("external_source") == plan["plan_id"]]
             if prior and (len(prior) >= 3 or generation <= max(b["external_binding"]["retry_generation"] for b in prior)):
+                continue
+            if plan.get("lane") in excluded_lanes:
                 continue
             binding, _ = source(root, plan)
             lane(plan, binding)
@@ -203,6 +244,11 @@ def next_stamp(state, stamp):
 
 
 def dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
+    with validation_window():
+        return _dispatch_lanes(state, root, scripts, character, alive, stamp, writer)
+
+
+def _dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
     results = []
     for _ in range(4):
         result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
@@ -230,12 +276,11 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
         occupied = occupied_lanes(state, configured, root, alive)
         if len(active_external(state, alive, directory)) >= selected["workers"]:
             return None
-        pending = list(candidates(state, root, configured))
         last = {value: max((bid for bid, batch in state["batches"].items()
                            if batch.get("external_lane") == value), default="") for value in "ABCD"}
         # In the two-worker tier, untouched/oldest lanes get the next released slot.
-        pending.sort(key=lambda item: last[lane(*item)])
-        for plan, binding in pending:
+        configured = {**configured, "plans": sorted(configured["plans"], key=lambda plan: last.get(plan.get("lane"), ""))}
+        for plan, binding in candidates(state, root, configured, occupied):
             try:
                 selected_lane = lane(plan, binding)
                 if selected_lane in occupied:
@@ -270,6 +315,7 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
                     state["batches"][result[0]].update(external_binding={**binding, "retry_generation": generation, "dispatch_base": base},
                                                      external_registered_at=time.time(), external_lane=selected_lane,
                                                      external_policy=selected)
+                    learner_registration.checkpoint(state)
                     return result
             except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError, subprocess.SubprocessError) as error:
                 state["strategy_external_error"] = {"at": time.time(), "reason": str(error), "plan": plan["plan_id"]}
