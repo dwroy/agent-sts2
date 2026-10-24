@@ -1,0 +1,132 @@
+{
+  "source_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6378554785",
+  "baseline": "8ce3dd6cbfaec3a3bc98c14f95e08f93672616b1",
+  "main_observed": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "cases": [
+    {
+      "batch": "20261024-080423-strategy-proposal",
+      "original_receipt_sha256": "b575b935e8f827410373baa0ba43f3ca04e23f473f763f707c6309cf67a7b814",
+      "source_log_sha256": "8b7313d2e6d2b1038311f57441115f383286ac6e32206ed4dbc0afc57554d0a3",
+      "launcher_exit_at": "2026-10-24T00:06:59.779Z",
+      "wall_ms": 120686,
+      "native_bound_turns": 0,
+      "submitted": false,
+      "birth_captured": false,
+      "original_result_code": 75,
+      "original_reason": "retirement-unverified",
+      "wrapper_deferred_at": "2026-10-24T08:11:59.904531+08:00",
+      "deferred_source_sha256": "478d5d430985d3274d1d1edb549990afee343cfadb7586213749e961e2c21a78",
+      "source_receipt": "ops/codex-ops/learner/learner-20261024-080423-strategy-proposal.tui.json"
+    },
+    {
+      "batch": "20261024-083104-strategy-proposal",
+      "original_receipt_sha256": "fd74deee8bf301c2881fc0e8636b00041fb7e019eb70a81da874ed99c561211a",
+      "source_log_sha256": "a21c7726e19ca1248c748ec6b27e4684d4cf7bdc2709fb9e39f7168834f41a18",
+      "launcher_exit_at": "2026-10-24T00:35:29.839Z",
+      "wall_ms": 254166,
+      "native_bound_turns": 1,
+      "submitted": true,
+      "birth_captured": true,
+      "original_result_code": 75,
+      "original_reason": "retirement-unverified",
+      "wrapper_deferred_at": "2026-10-24T08:40:29.775867+08:00",
+      "deferred_source_sha256": "8d219c503a11e0dbd2379589372f0c89b97cccf517e287207b5896ff785f7da9",
+      "source_receipt": "ops/codex-ops/learner/learner-20261024-083104-strategy-proposal.tui.json"
+    },
+    {
+      "batch": "20261024-084301-strategy-proposal",
+      "original_receipt_sha256": "f380ecbac26e3aef315e44f5d8b555f1bf8845a93208cdae5ed2d16c81a41a4c",
+      "source_log_sha256": "280bb5117bf12d66e1080e3965bafb2368973b1cb99665e5d105e04d9b4fed52",
+      "launcher_exit_at": "2026-10-24T00:45:12.622Z",
+      "wall_ms": 120927,
+      "native_bound_turns": 0,
+      "submitted": false,
+      "birth_captured": false,
+      "original_result_code": 75,
+      "original_reason": "retirement-unverified",
+      "wrapper_deferred_at": "2026-10-24T08:50:12.527883+08:00",
+      "deferred_source_sha256": "bc42f0eb2d4dfa70c0d1b0027a93ebe27a67d03f9aba571ecf7747dcdcef1fbc",
+      "source_receipt": "ops/codex-ops/learner/learner-20261024-084301-strategy-proposal.tui.json"
+    }
+  ],
+  "readonly_replay": [
+    {
+      "batch": "learner-20261024-083104-strategy-proposal",
+      "original_sha256": "fd74deee8bf301c2881fc0e8636b00041fb7e019eb70a81da874ed99c561211a",
+      "blocked": true,
+      "native_sha256": "699e8f3c2cd2715f59dac1d3eeb1917e13a965a022f0e8b6212c4fab41f89ca9",
+      "native_events": [
+        {
+          "timestamp": "2026-10-24T00:31:42.723Z",
+          "type": "task_started",
+          "turn_id": "01a16b52-107a-7e60-be89-f71b412b7897"
+        },
+        {
+          "timestamp": "2026-10-24T00:39:10.513Z",
+          "type": "task_complete",
+          "turn_id": "01a16b52-107a-7e60-be89-f71b412b7897"
+        }
+      ],
+      "reconcile_rc": 0
+    },
+    {
+      "batch": "learner-20261024-084301-strategy-proposal",
+      "original_sha256": "f380ecbac26e3aef315e44f5d8b555f1bf8845a93208cdae5ed2d16c81a41a4c",
+      "blocked": true
+    },
+    {
+      "batch": "learner-20261024-080423-strategy-proposal",
+      "original_sha256": "b575b935e8f827410373baa0ba43f3ca04e23f473f763f707c6309cf67a7b814",
+      "blocked": true
+    }
+  ],
+  "reconciliation": {
+    "schema": "learner-tui-native-reconciliation-v1",
+    "original_state": "needs-attention",
+    "original_result_code": 75,
+    "observed": {
+      "session": "01a16b51-ab99-76e3-a352-3c1349e3efd0",
+      "cwd": ".worktrees/codex-strategy-silent-20261024-083104",
+      "turn": "01a16b52-107a-7e60-be89-f71b412b7897",
+      "accepted": true,
+      "foreign_activity": false,
+      "complete": true,
+      "open": false,
+      "successful": true,
+      "bindings": [
+        {
+          "turn_id": "01a16b52-107a-7e60-be89-f71b412b7897",
+          "marker": "[learner-batch:db548524-1c18-42c8-9b59-ea6dc400a946]",
+          "prompt_sha256": "ce836b28a79cc0afeafdb8d76bdd5ecbd4734007d440c7997f0c3e25e315fab8"
+        }
+      ],
+      "native_context_version": 1,
+      "native_preludes": [
+        {
+          "turn_id": "01a16b52-107a-7e60-be89-f71b412b7897",
+          "cwd": ".worktrees/codex-strategy-silent-20261024-083104",
+          "sha256": "94e86260ab851b4c0691525a2b97586aadfafe0eccd41f555abca145445a8a24"
+        }
+      ],
+      "native_environment_version": 1,
+      "native_environment_updates": []
+    },
+    "original_receipt_modified": false,
+    "prompt_send_authorized": false,
+    "retirement_authorized": false,
+    "finish_authorized": false,
+    "pane_pid_lease_revalidated": false,
+    "original_receipt_sha256": "fd74deee8bf301c2881fc0e8636b00041fb7e019eb70a81da874ed99c561211a",
+    "native_snapshot_sha256": "699e8f3c2cd2715f59dac1d3eeb1917e13a965a022f0e8b6212c4fab41f89ca9",
+    "native_snapshot_bytes": 1041839,
+    "trailing_partial_bytes": 0
+  },
+  "midnight_prior_evidence": "paper/materials/20261024-issue36-midnight/evidence.json",
+  "midnight_recovered_ops_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6371374921",
+  "root_export_fix": "61596985b57d0457e8e646ca54e81915db712518",
+  "limitations": [
+    "No incident-time ANSI screen was retained for 083104; a false draft cannot be proved from its later empty composer.",
+    "No live control, models, finish, replay, recovery or tab actions executed.",
+    "Original retained strategy receipts remain rc75; no strategy recovery/task relabeling authorization is fabricated."
+  ]
+}

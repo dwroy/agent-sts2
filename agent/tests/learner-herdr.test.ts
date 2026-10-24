@@ -396,7 +396,7 @@ describe("delayed native acceptance after prompt delivery", () => {
       ? ok({}, "header\n› Human draft not sent") : h(args);
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toHaveLength(1);
-    expect(f.notices).toEqual(["unsent human draft; keep original session and supervision"]);
+    expect(f.notices).toEqual(["learner composer contains text; observing original session without control until it clears or the input-hold deadline"]);
     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false); expect(f.promptCalls()).toBe(1);
   });
 
@@ -432,6 +432,72 @@ describe("delayed native acceptance after prompt delivery", () => {
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
     expect(f.elapsed()).toBe(at); expect(f.promptCalls()).toBe(1);
     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8")).bindings).toEqual([]);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+  });
+});
+
+describe("retained input supervision and exit diagnostics", () => {
+  it.each(["running", "completed"])("observes %s native activity through transient text without submitting or controlling it", async (state) => {
+    const f = fixture(state === "running" ? "late-complete" : "success"); const h = f.opts.h!;
+    let reads = 0, held = false;
+    f.opts.h = async (args) => {
+      const reply = await h(args);
+      if (f.prompts() && args[1] === "read" && reads++ < 4) { held = true; return ok({}, "header\n› transient transcript prompt"); }
+      if (held && args[1] === "send-keys") expect(reads).toBeGreaterThanOrEqual(4);
+      return reply;
+    };
+    const pause = f.opts.pause!;
+    f.opts.pause = async (ms) => { await pause(ms); if (f.stopping()) await f.waitForExit(); };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true });
+    expect(f.prompts()).toBe(1);
+    expect(f.events.some((e) => e.type === "learner_tui_input_hold")).toBe(true);
+    expect(f.events.some((e) => e.type === "learner_tui_input_resumed")).toBe(true);
+  });
+
+  it("refuses a new native human turn while observing text even if the composer clears", async () => {
+    const f = fixture("late-complete"); const h = f.opts.h!; let reads = 0;
+    f.opts.h = async (args) => {
+      const reply = await h(args);
+      if (f.prompts() && args[1] === "read") {
+        if (++reads === 3) appendFileSync(f.file, JSON.stringify(row("event_msg", { type: "task_started", turn_id: "human" })) + "\n");
+        if (reads < 3) return ok({}, "header\n› Human draft");
+      }
+      return reply;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false, failure_reason: "foreign-native-activity" });
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+    expect(f.prompts()).toBe(1);
+  });
+
+  it("bounds persistent input and records its original cause without authorizing retirement", async () => {
+    const f = fixture(); const h = f.opts.h!; const pause = f.opts.pause!;
+    f.opts.timeoutMs = 1_000_000;
+    f.opts.pause = async (ms) => { await pause(ms); await pause(ms); };
+    f.opts.h = async (args) => f.prompts() && args[1] === "read" ? ok({}, "header\n› Human draft") : h(args);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false, failure_reason: "pending-input-timeout" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.input_hold.deadline_ms - receipt.input_hold.since_ms).toBe(120_000);
+    expect(receipt.input_hold.screen_sha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(receipt.retirement_authorized).toBe(false);
+    expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+  });
+
+  it("preserves a pre-submission process disappearance as failure instead of waiting for startup or claiming zero models", async () => {
+    const f = fixture(); const h = f.opts.h!; let polls = 0;
+    f.opts.h = async (args) => {
+      const reply = await h(args);
+      if (args[0] === "pane" && args[1] === "run") {
+        process.kill(Number(readFileSync(join(f.root, "tui.pid"), "utf8")), "SIGTERM");
+        await f.waitForExit();
+      }
+      if (args[1] === "get") polls++;
+      return reply;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false, failure_reason: "startup-process-unavailable" });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt.state).toBe("needs-attention"); expect(receipt.submitted).toBe(false);
+    expect(receipt.models_started).toBeUndefined(); expect(receipt.bindings).toEqual([]);
+    expect(polls).toBeLessThan(5); expect(f.prompts()).toBe(0);
     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
   });
 });

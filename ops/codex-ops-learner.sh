@@ -212,6 +212,13 @@ if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
     fi
     if rc="$(nice -n 19 timeout --kill-after=1s "${remaining}s" python3 "$OPS/learner_tui.py" verified-code "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" 2>> "$err")"; then break; fi
     wrapper_attention verify
+    # A finalized rc75 receipt cannot acquire retirement proof by waiting for its stopped producer.
+    remaining=$((verify_deadline - SECONDS))
+    if [ "$remaining" -gt 0 ] && nice -n 19 timeout --kill-after=1s "${remaining}s" python3 "$OPS/learner_tui.py" verification-blocked "$LEARNER_TUI_RECEIPT" "$launcher_rc" 2>> "$err"; then
+      nice -n 19 python3 "$OPS/learner_tui.py" defer "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" --terminal-unverified 2>> "$err" \
+        || echo "$(date '+%F %T') [dev #36 wrapper] $batch terminal receipt deferral failed; preserve original batch/pane" >> "$DIR/inbox-claude.md"
+      exit 75
+    fi
     remaining=$((verify_deadline - SECONDS))
     if [ "$remaining" -gt 0 ]; then
       if [ "$remaining" -gt 30 ]; then remaining=30; fi
