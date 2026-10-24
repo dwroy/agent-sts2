@@ -1,0 +1,1 @@
+- 2026-10-24T10:53:31+08:00 [watcher] #36 source6905591f0c三运行增量精确组装合main 293ef1bdff78，保51外部环境/ROOT/注册/seal及48模板；tsc0、280TS/96Python定向过，2830受测输入同，三真实75回执只读识别/原件SHA同。初轮Python夹具导入路径错误及两处已核测试文件SHA扫描误报均保留分账。full0，交原ops核宿主实际部署/自然回执，完整检查纳37→20原窗口；旧失败及策略恢复权限不改。材料paper/materials/20261024-issue36-finish-integrator/。

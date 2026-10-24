@@ -1,0 +1,17 @@
+..............................................................E................
+======================================================================
+ERROR: test_strategy_external (unittest.loader._FailedTest.test_strategy_external)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_strategy_external
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/home/dw/Projects/agent-sts2/.worktrees/integrator36-finish-20261024-1051/ops/tests/test_strategy_external.py", line 21, in <module>
+    import test_strategy_backfill as fixture
+ModuleNotFoundError: No module named 'test_strategy_backfill'
+
+
+----------------------------------------------------------------------
+Ran 79 tests in 9.565s
+
+FAILED (errors=1)

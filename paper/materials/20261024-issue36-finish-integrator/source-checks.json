@@ -1,0 +1,61 @@
+{
+  "tsc": {
+    "exit": 0,
+    "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+  },
+  "typescript": {
+    "exit": 0,
+    "files": 7,
+    "cases": 280,
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-native-environment.test.ts tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr-launcher.test.ts tests/learner-tui-observation.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism"
+  },
+  "python": {
+    "exit": 0,
+    "methods": 62,
+    "command": "nice -n 19 python3 -B -m unittest ops.tests.test_learner_tui ops.tests.test_learner_tui_recovery ops.tests.test_learner_environment ops.tests.test_learner_wrapper_completion"
+  },
+  "baseline": {
+    "typescript_failed": 5,
+    "python_failures": 1,
+    "python_errors": 1
+  },
+  "full": false,
+  "models": 0,
+  "production_actions": 0,
+  "logs": {
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "directed.log": {
+      "bytes": 266,
+      "sha256": "69329a4ec251073808d9d60554c3051fafaea296b9336d8901307a1062a3140a"
+    },
+    "python.log": {
+      "bytes": 161,
+      "sha256": "708c659a91b506ff12958f2104aa6c6d8a088d710dd58ecaa17a94af61822833"
+    },
+    "baseline-ts.log": {
+      "bytes": 5604,
+      "sha256": "50f3e32654f32e701cd23edd8f6bea69ceac7585d3916c8dd12c812a1e130f5c"
+    },
+    "baseline-python.log": {
+      "bytes": 1616,
+      "sha256": "63d5c929c1168e4643298a80e1a4fbf08f0b6cdd67e4bde1e9f60740362108e9"
+    }
+  },
+  "runtime_leaves": {
+    "learner/lib/herdr.ts": {
+      "sha256": "afad1eda1f3134f3bf93bfb31df24ddadc12b002231df8e5d587d889b67ff918",
+      "base_sha256": "fee7bcb20fabcd3b49e0491bb07c69e4b388c40391a593e2ae09e679554fed9e"
+    },
+    "ops/learner_tui.py": {
+      "sha256": "c8684d8ec2d9f3fd5be5e3257a4e192cda9a1a56887636d4934c0df6f14470c7",
+      "base_sha256": "bcdd1faae7145fd13033bf91f04bb9c9ece8207bd876c1334ab282db53b26ea6"
+    },
+    "ops/codex-ops-learner.sh": {
+      "sha256": "24a0483fcd2ec9abdd3648ab8348575aa9ea7fb28085b83364cdfde330e9e1af",
+      "base_sha256": "bb24ea693683f98ae271f9979a69fe7cb3f5e15aa99ea8d632854b232bda8047"
+    }
+  }
+}
