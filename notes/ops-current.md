@@ -1,12 +1,12 @@
 state: in-flight
-issue: 55
-updated: 2026-10-24T14:35:34+08:00
+issue: 36
+updated: 2026-10-24T14:51:20+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#55原唯一full667文件6545过/2跳/0败、两tsc0，2142输入/469知识/1417依赖核同；精确12叶树f097264c9c17，26库候选工具22匹配/8页原字段核同。原检查锁1531.511秒已释放；首次发布learn锁写前失败归档，续接2311814/birth24530788已登记play2194413/birth24414207自然边界，当前未发布。paper/materials/20261024-issue55-publication-ops/。
-在等谁：#55仅等原play PID自然终态，原事务自有LLM_DRAIN已登记、未持发布锁；不发信号/按键/游戏请求。随后ops按原锁精确发布/编号/消费者/绑定/最新知识读回再释自有准入，测试几何不部署；20源f5f390c141三生产叶按6380255093在55实际发布后部署记T/24h。37新隔离full已接、55原事务优先；旧失败/科学父保留，ops不另full。
-下一步：按最新Claude P0先#55上线+大脑外部条目命中读回，之后回#36；20后55部署/24h待办保留。原PID/准入核同，R428的14:04脑题24KB错只作发布前反例。完成事件核真实T/十二叶/消费者/绑定/知识/准入，再核新自然题外部ID/证据和工具ms/整题时延；合同paper/materials/20261024-issue55-natural-priority-ops/。不轮询/强查。
+进行中的事：#55已实际V6-R429/T14:40:19/live ee0680a9b，十二叶/登记/绑定/知识/自有准入释放核过；新局4374764UVEXD自然3题4查（2空2命中）0错/5外部ID及原版本证据读回，ENOBUFS/commit=null不补戳。原autoplay自行续跑不重启，固定模型未部署，旧探针计数0另证纠正为23外部来源。原件paper/materials/20261024-issue55-published-ops/。现回#36，三宿主叶核同，旧三75仍缺退场合同。
+在等谁：#36原080423/083104/084301均needs-attention、retirement=false/无seal，待原恢复/人工草稿合同，不重finish/重派/强关；新监督自然异常回执待。131301五局记录684747828已持久化，无新bug，原唯一dataset2481624/birth24904189于14:48:32原锁执行，终态回执待。#37 revision5原唯一full仍归集成员，不另full或借旧失败；科学父开放。
+下一步：接#36原75监督恢复，等131301数据集结果再核实际生成/提交/回收门，不重dataset/finish。#20三宿主叶无字节差量同批重装T14:49:42，次日14:49:42沿原report核[T,T+24h)实际提醒/关闭读回/介入，独立failure/uncertain及人工证据分账；不强tick/设新计时器。55逐局去重/工具ms与整题时延继续分账，首命中不代收益或科学父完成；46完整门已到、48门18:19:29保持。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
@@ -39,11 +39,11 @@ updated: 2026-10-24T14:35:34+08:00
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
-未完成清单：#37旧独占等待已撤销，revision5/旧失败及39/43父保留，55唯一full/P0先行，20部署在后；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18/244别名及旧plan held；新整局六ID单元已尾队列登记，实际进度0/244。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35终态学习/同战SL已核，重启跨层/溢出自然待、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
+未完成：#36旧三批及五旧tab缺回执继续保留，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证/codex1不切；其余父与自然验收逐项见上，未清待办。
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue37-revision5-handoff-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue55-published-ops/handoff-before.md；未清未完成项。
 
 46原完整基线/命令/AST：paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
 

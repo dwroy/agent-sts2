@@ -6629,3 +6629,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T14:35:34+08:00 [ops] #37 revision4 full6660/1败/2跳原SHA核同，旧20测试合同最小修正/34定向过；revision5原2420020独占隔离full1、只持检查锁，55原自然发布优先。ops不另full/发布，原failed/source=null保留。paper/materials/20261024-issue37-revision5-handoff-ops/verification.json。
 
 - 2026-10-24T14:48:06+08:00 [ops] 131301五局复盘5节/15账本/2pending提案受控记录，原native/交付/终态核同、605账本0问题，无新bug；9候选及科学父开放，接唯一原dataset --no-raw，不重finish/模型/full。paper/materials/20261024-postmortem-131301-ops/。
+
+- 2026-10-24T14:40:28+08:00 [ops] V6-R429 #55精确12叶自然发布/编号/26条实际库工具读回通过；唯一full6545过/2跳原件保留，测试几何不部署，原失败/自然采用及科学父开放。原件paper/materials/20261024-issue55-publication-ops/publication.json。
+
+- 2026-10-24T14:51:20+08:00 [ops] V6-R429实际发布/自有准入释放及4374764UVEXD自然策略4查0错/5外部ID读回核同，原commit=null保留；131301记录684747828/唯一dataset2481624在途，回36原三75保护，20三叶无差量重装T14:49:42/24h待验。paper/materials/20261024-issue55-published-ops/。
