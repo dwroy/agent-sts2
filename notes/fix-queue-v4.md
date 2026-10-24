@@ -1586,3 +1586,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-24T09:03:40+08:00 [ops] ops-external-report-contract-20261024（待原#51模板/启动合同owner）：085327 rc0原生最终JSON、result.json和调度report一致，但report.md缺task JSON代码块，触发strategy_backfill_jobs.report_proof的严格一致性守卫。未来strategy-external任务须明确把同一规范JSON写入report.md代码块并输出同一对象；保留旧失败/科学waiting/原文件，不弱化校验或借新结果覆盖旧批。081200/082457报告差异另保原件；本批精确证据paper/materials/20261024-085327-strategy-result-ops/report-contract-diagnosis.json。纯格式合同修正，不涉及游戏知识或实验，不代证据补足；本轮未改代码/模板。
 
 - 2026-10-24T09:11:53+08:00 [ops] ops-external-report-contract-20261024进展：已在strategy-external模板明确将同一规范JSON写report.md末尾代码块并输出同一对象；源b6399f1d/main6b013cb4，实际090927任务已核含该条款。原校验器及085327等旧failed/rc0/原报告不改；是否解决须等新批真实report_proof，不提前关闭格式项。paper/materials/20261024-issue51-card-proxy-ops/actual-task-input.json。
+
+- 2026-10-24T09:29:34+08:00 [ops/#51] 外部策略数据量增加后，kb_strategies宽泛*的来源metadata先于裁剪超过24KB，现返回要求精确ID；23精确ID实读通过。保留现有边界，不在full0窗口改运行代码；请原工具owner按来源/条目一致的有界封包补修并独立验证，不截断证据。paper/materials/20261024-090927-strategy-result-ops/actual-live-consumers.json。

@@ -1,0 +1,561 @@
+{
+  "at": "2026-10-24T09:28:43+08:00",
+  "T": "2026-10-24T09:28:01+08:00",
+  "release_id": "V6-R428",
+  "behavior": {
+    "parent": "0f760a5c5b34014e60eb0be43ec50f790486604d",
+    "commit": "ed1b07bf6e70953c18e8c26c002241153bba6bde",
+    "tree": "81d2769bde36f834e5e8f9a3ef3d7f3cc6fb2d5d",
+    "paths": [
+      "knowledge/characters/silent/strategy-entries.json",
+      "knowledge/catalog.json"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/14d81407381640139a4b7a8cb0dd73a9/manifest.json",
+      "manifest_sha256": "d6d34b1e8102a555142d014e5469d190048daa6ccadf6ed8be659e5afe109565",
+      "scanned_leaves": 2,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "main": {
+    "parent": "fd006bb1236940c7d30c00f823ed489a0937f9e0",
+    "commit": "36c5a23816301c293721bc5078bca466b94d54ce",
+    "tree": "b53f2f7a343a01d94b718a60afbb3277e57504b9",
+    "paths": [
+      "knowledge/characters/silent/strategy-entries.json",
+      "knowledge/catalog.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-dispositions.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-preserved-prior-evidence.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-counts.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-completion-check.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-validation.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-report.md",
+      "paper/materials/20261024-090927-strategy-result-ops/source-result.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-supervisor-notice.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-input-ledger.json",
+      "paper/materials/20261024-090927-strategy-result-ops/source-source-diff.patch",
+      "paper/materials/20261024-090927-strategy-result-ops/source-head.txt",
+      "paper/materials/20261024-090927-strategy-result-ops/live-prior-entries.json",
+      "paper/materials/20261024-090927-strategy-result-ops/main-prior-entries.json"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/8d601d916aa74f78a53217288604e200/manifest.json",
+      "manifest_sha256": "73c0c839ff68a0394b30b5c639ef0c11621460afd43583741db7d90e12a05570",
+      "scanned_leaves": 0,
+      "reused_clean_leaves": 17,
+      "full_copy_bytes": 0
+    }
+  },
+  "registrations": {
+    "live": {
+      "parent": "ed1b07bf6e70953c18e8c26c002241153bba6bde",
+      "commit": "02eb468f8728b47ccbc22f39f14e5b2db1580971",
+      "tree": "a7174e2ee8dd8ffc9678a0927a78464d9337c78a",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/3c3ac91c1b594c1da44ba6e74ebfe8c9/manifest.json",
+        "manifest_sha256": "ddbb026c23991e8f35c977e8bbf5ef8a5c869f54a04b343493386125afa8cd68",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "36c5a23816301c293721bc5078bca466b94d54ce",
+      "commit": "d7c17b3e1f7487b6e000fa88512ecb0becad8c49",
+      "tree": "aa740e1f5a1098a01887a127fe2e8a867274545a",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/0440812beb3f4c66babd98191adf69e5/manifest.json",
+        "manifest_sha256": "b26655ebaf70d9a9bd9ac19f19927d28d0344fec2921e87805f45f818b301ebd",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "actual_live_consumers": {
+    "passed": true,
+    "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+    "library_sha256": "4a98084278ddbecf6fa5ca21ef97932c1fa391a75d79a81e2e5ff6e374228847",
+    "library_entries": 26,
+    "entries": [
+      {
+        "id": "silent-brain-accuracy-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 140
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 163
+          }
+        ],
+        "bytes": 10650
+      },
+      {
+        "id": "silent-brain-poisoned-stab-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 141
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 869
+          }
+        ],
+        "bytes": 10702
+      },
+      {
+        "id": "silent-brain-infinite-blades-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 234
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 299
+          }
+        ],
+        "bytes": 10722
+      },
+      {
+        "id": "silent-brain-bubble-bubble-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 133
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 537
+          }
+        ],
+        "bytes": 10702
+      },
+      {
+        "id": "silent-brain-malaise-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 116
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 169
+          }
+        ],
+        "bytes": 10793
+      },
+      {
+        "id": "silent-brain-phantom-blades-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 209
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 287
+          }
+        ],
+        "bytes": 10712
+      },
+      {
+        "id": "silent-brain-blade-of-ink-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 193
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 159
+          }
+        ],
+        "bytes": 10846
+      },
+      {
+        "id": "silent-brain-blur-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 139
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 255
+          }
+        ],
+        "bytes": 10601
+      },
+      {
+        "id": "silent-brain-bouncing-flask-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 121
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 245
+          }
+        ],
+        "bytes": 10709
+      },
+      {
+        "id": "silent-brain-knife-trap-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 117
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 219
+          }
+        ],
+        "bytes": 10836
+      },
+      {
+        "id": "silent-brain-haze-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 205
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 523
+          }
+        ],
+        "bytes": 10602
+      },
+      {
+        "id": "silent-brain-leading-strike-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 567
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 699
+          }
+        ],
+        "bytes": 10715
+      },
+      {
+        "id": "silent-brain-noxious-fumes-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 245
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 206
+          }
+        ],
+        "bytes": 10700
+      },
+      {
+        "id": "silent-brain-well-laid-plans-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 404
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 472
+          }
+        ],
+        "bytes": 10722
+      },
+      {
+        "id": "silent-brain-act1-deadly-poison-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 257
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 949
+          }
+        ],
+        "bytes": 10694
+      },
+      {
+        "id": "silent-brain-accelerant-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 119
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 452
+          }
+        ],
+        "bytes": 10820
+      },
+      {
+        "id": "silent-brain-burst-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 103
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 228
+          }
+        ],
+        "bytes": 10771
+      },
+      {
+        "id": "silent-brain-sucker-punch-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 246
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 1724
+          }
+        ],
+        "bytes": 10697
+      },
+      {
+        "id": "silent-brain-abrasive-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 209
+          },
+          {
+            "version": "v0.107",
+            "unit": "offers",
+            "n": 165
+          }
+        ],
+        "bytes": 10804
+      },
+      {
+        "id": "silent-brain-backflip-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 126
+          },
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 138
+          }
+        ],
+        "bytes": 10566
+      },
+      {
+        "id": "silent-brain-dagger-spray-external-prefix-context",
+        "version": "2.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 262
+          },
+          {
+            "version": "v0.111",
+            "unit": "offers",
+            "n": 860
+          }
+        ],
+        "bytes": 10689
+      },
+      {
+        "id": "silent-brain-act1-blade-dance-choice-context",
+        "version": "1.1.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 88
+          },
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 91
+          }
+        ],
+        "bytes": 6427
+      },
+      {
+        "id": "silent-brain-act1-footwork-prefix-context",
+        "version": "1.0.0",
+        "exact_strategy_trigger_confidence": true,
+        "own_runs": 0,
+        "evidence": [
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 40
+          },
+          {
+            "version": "v0.111",
+            "unit": "runs",
+            "n": 19
+          }
+        ],
+        "bytes": 6376
+      }
+    ],
+    "fixed_production_id_queries": 23,
+    "wildcard": {
+      "is_error": true,
+      "error": "来源元数据超过24KB，请用条目 id 缩小查询",
+      "entries": [],
+      "bytes": 131
+    },
+    "other_role_equivalent": true,
+    "natural_brain_queries": 0,
+    "full_model_game": 0
+  },
+  "live_entries_before": 6,
+  "live_entries_after": 26,
+  "main_entries_before": 10,
+  "main_entries_after": 30,
+  "new_ids": 20,
+  "updated_ids": 1,
+  "original081200_ids_retained": 3,
+  "fixed_production_id_queries": 23,
+  "wildcard": {
+    "is_error": true,
+    "error": "来源元数据超过24KB，请用条目 id 缩小查询",
+    "entries": [],
+    "bytes": 131
+  },
+  "primary_evidence_units": {
+    "offers": 20,
+    "runs": 1
+  },
+  "natural_brain_queries": 0,
+  "new_full_model_game_tick": 0,
+  "scientific_parent_closed": false,
+  "STOP_and_other_knowledge_preserved": true
+}
