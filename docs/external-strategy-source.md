@@ -36,7 +36,7 @@
 
 ## 启动档位与回执
 
-只对已绑定的 Silent 外部批次，宿主传 `--service-tier ultrafast`。启动器对原选定 learner Codex home 做一次有界 `account/rateLimits/read`，不使用无账户绑定的 ops 缓存；取所有有效周窗口的最大用量：严格 >70% 降 fast，严格 >85% 降 default 并追加 notes/for-roy 与原 ops queue 提醒；缺失/过期/失效读数请求 default 并报原 ops 核验。70与85这两个端点不提前降档。
+只对已绑定的 Silent 外部批次，宿主传 `--service-tier fast`（Roy 2026-10-24 P0 6377773695：先恢复产出；ultrafast 暂停，原因另核）。启动器对原选定 learner Codex home 做一次有界 `account/rateLimits/read`，不使用无账户绑定的 ops 缓存；取所有有效周窗口的最大用量：严格 >70% 降 fast，严格 >85% 降 default 并追加 notes/for-roy 与原 ops queue 提醒；缺失/过期/失效读数请求 default 并报原 ops 核验。70与85这两个端点不提前降档。
 
 请求经过 stdio/TUI 与原生包装器，只以 `-c service_tier="..."` 参数传入；包装器另核原外部登记。无新共用config、账号、服务档或权限。普通任务清除继承的外部标记，继续原 default 策略。读取额度期间失去原租约则不启动。
 

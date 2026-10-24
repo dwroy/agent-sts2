@@ -333,9 +333,10 @@ class External(unittest.TestCase):
                "LEARNER_STATE_FILE": str(self.directory / "learn.json"), "LEARNER_BATCH_ID": BID,
                "LEARNER_EXTERNAL_SOURCE": PLAN, "LEARNER_EXTERNAL_SERVICE_TIER": "ultrafast"}
         wrapper = ["bash", str(REPO / "ops/codex-learner.sh"), "exec", "-c", 'service_tier="default"', "-"]
-        result = subprocess.run(wrapper, cwd=self.tree, env=env, capture_output=True, text=True, timeout=5)
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('service_tier="ultrafast"', json.loads(result.stdout))
+        for tier in ("fast", "ultrafast", "default"):
+            result = subprocess.run(wrapper, cwd=self.tree, env={**env, "LEARNER_EXTERNAL_SERVICE_TIER": tier}, capture_output=True, text=True, timeout=5)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('service_tier="' + tier + '"', json.loads(result.stdout))
         batch.update(reason="tick"); (self.directory / "learn.json").write_text(json.dumps(self.state))
         self.assertNotEqual(subprocess.run(wrapper, cwd=self.tree, env=env, capture_output=True, timeout=5).returncode, 0)
 

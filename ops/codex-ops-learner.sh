@@ -7,6 +7,8 @@
 set -u
 . "$(dirname "$0")/paths.sh"
 ROOT="${CODEX_OPS_ROOT:-$ROOT}"
+# Preserve the selected root through the native env whitelist and registration guard.
+export CODEX_OPS_ROOT="$ROOT"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 batch="$1"; runs="$2"; character="${3:-silent}"
 task="${4:-postmortem}"; worktree="${5:-$ROOT}"
@@ -228,7 +230,7 @@ else
   if [ -n "$backfill_source" ]; then
     if [ "$source_kind" = external ]; then
       export LEARNER_EXTERNAL_SOURCE="$backfill_source"
-      args+=(--service-tier ultrafast)
+      args+=(--service-tier fast)
     else
       export LEARNER_BACKFILL_SOURCE="$backfill_source"
     fi
