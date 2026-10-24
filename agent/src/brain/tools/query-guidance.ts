@@ -5,6 +5,7 @@ import { knowledgeCharacter, knowledgeFile } from "../../knowledge/files.js";
 import { loadExperience, offeredOn, relevance, type SliceInput } from "../../knowledge/experience.js";
 import { actThreatIds } from "../../knowledge/monster-db.js";
 import { parseStrategyLibrary, questionTypes, retrieveStrategies, STRATEGY_LIMITS } from "../../knowledge/strategy-entries.js";
+import { matchStrategyArchetype } from "../../knowledge/strategy-archetypes.js";
 import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../knowledge/query-sources.js";
 import type { GameState } from "../../hand/mod/schema.js";
 import type { BrainRequest, ToolCallRecord } from "../types.js";
@@ -22,7 +23,9 @@ function questionFacts(ctx: ToolContext): Record<string, unknown> {
   return { ...record(p["facts"]),
     act: get("act") ?? ctx.act ?? (rawRun["act_id"] === undefined ? undefined : Number(rawRun["act_id"]) + 1),
     act_boss: get("act_boss") ?? get("boss") ?? rawRun["boss_id"],
-    floor: get("floor") ?? rawRun["floor"] };
+    floor: get("floor") ?? rawRun["floor"],
+    deck: get("deck") ?? rawRun["deck"],
+    deck_size: get("deck_size") ?? (Array.isArray(rawRun["deck"]) ? rawRun["deck"].length : undefined) };
 }
 
 /** Read-only kb_strategies selector. Missing and invalid libraries stay explicit. */
@@ -38,7 +41,8 @@ export function strategyMatches(ctx: ToolContext) {
   const sources = [{ source: "own", file: "strategy-entries.json", character: knowledgeCharacter(), library_sha256 }];
   try {
     const library = parseStrategyLibrary(JSON.parse(raw));
-    return { entries: retrieveStrategies(library, ctx.label ?? "", { ...record(ctx.payload), facts: questionFacts(ctx) }), sources, status: "ok", library_sha256 };
+    const archetype = library.entries.some(e => e.trigger.archetype) ? matchStrategyArchetype(ctx) : undefined;
+    return { entries: retrieveStrategies(library, ctx.label ?? "", { ...record(ctx.payload), facts: questionFacts(ctx) }, archetype?.match), sources, status: "ok", library_sha256, archetype };
   } catch { return { entries: [], sources, status: "invalid", library_sha256 }; }
 }
 
@@ -88,10 +92,12 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
       omitted: Math.max(0, result.length - CUE_LIMIT) };
   } catch { experience = { status: "unavailable", count: null, entries: [] }; }
   const external = externalStatsQueryHints(ctx);
+  const strategyCount = strategyMatches(ctx).entries.length;
+  const strategyHint = strategyCount > 0 ? `\n本题有 ${strategyCount} 条相关策略/剧本可查。` : "";
   const cues = { schema: "brain-query-cues-v3", question_type: kind,
     experience: { ...experience, ...(typeof experience["count"] === "number" && experience["count"] > 0 ? { tool: "kb_experience", input: { relevant: true } } : {}) },
     ...(external ? { external_stats: external } : {}) };
-  return { ...req, question: `${req.question}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
+  return { ...req, question: `${req.question}${strategyHint}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
 }
 
 /** Only successful, actually returned entries count as hits; cues and model prose never count. */

@@ -25,3 +25,16 @@ it("reports observed latency medians separately and keeps missing medians unknow
   expect(compareBrainQueryReports(rows, [{ ...base, latency_ms: 30 }]).changes[0].latency_ms_median_delta).toBe(10);
   expect(compareBrainQueryReports([], rows).changes[0].latency_ms_median_delta).toBeNull();
 });
+
+it("reports per-run actual strategy IDs and question latency without counting cues, errors or repeated IDs twice", () => {
+  const base = { run_id: "FIXTURE", question_id: "one", label: "reward/card", engine: "codex", knowledge: { mode: "tools" }, latency_ms: 100,
+    tool_calls: [{ name: "kb_strategies", ms: 4, output: '{"entries":[{"id":"fixture-a"}]}' }] };
+  const other = { ...base, question_id: "two", latency_ms: 200, tool_calls: [
+    ...base.tool_calls, { name: "kb_strategies", ms: 8, output: '{"entries":[{"id":"fixture-b"}]}' },
+    { name: "kb_strategies", ms: 10, output: '{"entries":[{"id":"error-id"}]}', isError: true }] };
+  const result = brainAgentReport([base, base, other, { ...base, run_id: "EMPTY", tool_calls: [] }]);
+  expect(result.strategy_runs.find(r => r.run_id === "FIXTURE")).toMatchObject({ questions: 2, queried_questions: 2, hit_questions: 2,
+    calls: 4, hit_entry_count: 2, hit_ids: ["fixture-a", "fixture-b"], tool_execution_ms_median: 6, question_latency_ms_median: 150,
+    questions_detail: [{ question_id: "one", hit_ids: ["fixture-a"] }, { question_id: "two", hit_ids: ["fixture-a", "fixture-b"] }] });
+  expect(result.strategy_runs.find(r => r.run_id === "EMPTY")).toMatchObject({ hit_entry_count: 0, hit_ids: [], tool_execution_ms_median: null });
+});

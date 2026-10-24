@@ -45,6 +45,8 @@ Roy/主管 2026-10-23 最新裁定（issue评论6361846602）：rk 指 **reflex 
 
 Roy 2026-10-24 晨裁定（评论6377338293）：先关闭策略/rk查询引导，等 #51 外部条目入库后再议开启。Silent 的系统提示和题面不再附策略/rk的匹配数量、身份、工具参数或查询引导；`kb_strategies`、`kb_reflex` 仍注册，大脑可自行调用，工具只读合同、调用/耗时预算与实际调用审计保留。R419经验暂不回退；Ironclad 的基础指令和原工具表/schema 保持原样。此前10-23晚按非空匹配给线索的R420合同作为历史保留，由本次裁定取代。
 
+#55 后续授权的候选扩展：Silent 仅在当前策略匹配数>0时给一句“本题有 N 条相关策略/剧本可查。”，不恢复强制查询或 rk 提示。`kb_strategies` 默认前三条、按页保留完整证据，并支持 #54 几何的显式模型/版本/簇绑定段落；详见[情境检索与剧本发布合同](strategy-context-retrieval.md)。源码交付不代表已上线；集成员/ops沿原发布链核实际版本、自然局每题命中ID与每局耗时。未正式发布的 #51 scratch 候选不在查询范围。
+
 题面末尾 `brain-query-cues-v3` 保留独立的 experience 及适用时的 external_stats，不再包含 strategies/rk。经验线索只含候选数量、最多六条身份/已有标题、scope及非空时的 `kb_experience relevant=true` 参数；缺失库数量为null，合法空库为0。经验正文仍由工具返回，不把相关性当作条件已成立或Jev采用。
 
 `kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。构筑题按用途筛选：拿牌仅card_pick，商店为shop/card_pick/potion，休息仅rest，事件与幕初规划为四种构筑用途，均排除combat_line（显式请求也不能绕过）。返回一句话摘要（原label_en）、ID/版本/用途、原confidence/evidence/source_experience，不返回原始predicate或signal JSON；摘要省略条件并不意味着无条件适用。fight-plan仍返回完整原条目，其他角色不变。source_experience为来源经验关联，不是reflex命中ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。

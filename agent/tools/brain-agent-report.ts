@@ -51,6 +51,21 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
       rk_available_questions: selected.filter(r => Array.isArray(r.tools) && r.tools.includes("kb_reflex")).length, calls_mean: mean(calls), calls_p95: p95(calls),
       latency_ms_mean: mean(latency), latency_ms_median: median(latency), latency_ms_p95: p95(latency) };
   });
+  const strategyRuns = [...new Set(data.map(r => r.run_id))].sort().map(run_id => {
+    const selected = data.filter(r => r.run_id === run_id);
+    const audits = selected.map(r => queryAudit(r.tool_calls ?? []).strategies);
+    const ids = [...new Set(audits.flatMap(a => a.hit_ids))].sort();
+    const calls = selected.flatMap(r => r.tool_calls ?? []).filter(c => c.name === "kb_strategies");
+    const latency = selected.flatMap(r => typeof r.latency_ms === "number" && Number.isFinite(r.latency_ms) ? [r.latency_ms] : []);
+    const execution = calls.flatMap(c => typeof c.ms === "number" && Number.isFinite(c.ms) ? [c.ms] : []);
+    return { run_id, questions: selected.length, queried_questions: audits.filter(a => a.queried).length,
+      hit_questions: audits.filter(a => a.hit_ids.length > 0).length, calls: calls.length,
+      hit_entry_count: ids.length, hit_ids: ids,
+      tool_execution_ms_median: median(execution), tool_execution_ms_p95: p95(execution),
+      question_latency_ms_median: median(latency), question_latency_ms_p95: p95(latency),
+      questions_detail: selected.map((r, i) => ({ question_id: r.question_id ?? null, engine: r.engine, label: r.label,
+        hit_ids: audits[i]!.hit_ids, latency_ms: typeof r.latency_ms === "number" ? r.latency_ms : null })) };
+  });
   const endgame = data.filter(r => endgameRequired(r.payload));
   const endgameGroups = [...new Set(endgame.map(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}`))].sort().map(key => {
     const selected = endgame.filter(r => `${r.engine}/${r.payload?.facts?.act ?? r.payload?.run_plan_task?.act ?? "unknown"}` === key);
@@ -64,7 +79,7 @@ export function brainAgentReport(rows: Row[], runIds: string[] = []) {
       question_ids: selected.map(r => r.question_id ?? null) };
   });
   return { schema: "brain-agent-acceptance-v1", questions: data.length, run_ids: [...new Set(data.map(r => r.run_id))].sort(),
-    endgame_groups: endgameGroups,
+    endgame_groups: endgameGroups, strategy_runs: strategyRuns,
     endgame_limitation: "仅统计显式 endgame_plan_required 题，按引擎/幕分账；首次无旧计划属正常，不计作更新失败。非空不证明内容成立，accepted不证明落盘或实际采用；需核run-plans与下一题。未发给大脑的代码/Jev动作不在分母。F48/F49到达与首试/SL结果须沿同角色/进阶/脑来源的原对局日志另核；空样本不构成验收。",
     prefix_budget_open_book_omissions: data.filter(r => /open.book.*(?:budget|预算)|(?:budget|预算).*open.book/i.test(JSON.stringify(r.notes ?? []))).length,
     inline_knowledge_rows: data.filter(r => r.payload?.open_book || r.payload?.strategy_entries || r.knowledge?.mode === "full").length,
