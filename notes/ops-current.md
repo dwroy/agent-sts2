@@ -1,12 +1,14 @@
 state: in-flight
 issue: 37
-updated: 2026-10-24T15:27:04+08:00
+updated: 2026-10-24T15:30:34+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
 进行中的事：#37原main070cac9b full6661/0败/2跳、两tsc0/Python157及实际R429九叶两tsc0/57定向分账；15非目标运行差异/72知识保持。已在写源前终止自有临时发布2585296，R429/九叶前像未变、自有准入释，未打断对局。唯一实际运行组合full worker2593100/birth25094291已登记，15:24核持integrator-full-check锁、等原知识刷新锁，full0；无生产发布锁。原件paper/materials/20261024-issue37-actual-full-ops/。
 在等谁：原刷新owner2589445自然释放后冻结实际知识/宿主运行输入，执行一次本实际组合完整检查；原main full不重跑、不借57定向代full、不动其他锁。主库固定知识/宿主测试夹具仅验证、不发布；091302 source=null及净12经验不夹。原临时publisher已撤销不可重启，原play/autoplay无信号。
 下一步：完整检查终态由原worker排事件，通过后新建严格绑定本输入的自然发布事务，核九叶/最新知识/编号/绑定/工具/准入释放，首新局Jev另验。#46完整窗116对106/+9.43%已交、自然waiting消费/节省未证；131301数据集938ba222原rc0/14叶核同，回收因未入受测live经验deferred。20三叶T14:49:42至次日同刻/36旧三75保留；55工程已关，科学父保持，48门18:19:29。
+
+#51 144312五情境4新1更已核，11片/11原帧、原生退场及格式过；5条待原发布，383支持局非通读，换购25/桥接48局，不冒收益。原checkout已回收、待证scratch/分支留。131301原dataset938ba222/14叶再核，回收deferred不变。paper/materials/20261024-strategy-144312-ops/。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
@@ -43,7 +45,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue37-r429-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-strategy-144312-ops/handoff-before.md；未清未完成项。
 
 46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
 

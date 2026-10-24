@@ -5237,3 +5237,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T15:27:04+08:00 [ops] 纠正37发布门：原main full6661过及实际R429两tsc0/57定向只能分别证明原受测树与定向兼容，不能代替有15处运行差异/72叶知识更新的实际组合完整检查。已在任何生产源码写入前终止自有临时发布worker2585296，并核R429/九叶前像未变、自有准入释放；原对局/学习/autoplay无信号。现由唯一实际运行组合检查worker2593100/birth25094291占原完整检查窗，15:24宿主核其持检查锁、等原刷新owner2589445自然释放知识锁，full尚0；无持生产发布锁。冻结最新实际知识及宿主代码后只跑这次独立full，主库固定测试夹具不发布，091302未审净12经验不夹入。通过后才创建新自然发布事务、核实际编号/工具及首新局Jev；旧结果、source=null、失败与科学父保留。原main检查不重跑、不强制释放他人锁。
 原件paper/materials/20261024-issue37-publication-ops/required-full-gate-correction.json；paper/materials/20261024-issue37-actual-full-ops/launch-observation.json、check-state.json。
+
+- 2026-10-24T15:30:34+08:00 [ops] 本轮核131301原dataset938ba222实际祖先与14生成叶提交对象/SHA，rc0及唯一尝试保持；回收仍因未入受测live经验deferred，未重dataset/finish。144312原批done/rc0/无源码，out、result、report、原生终态及退场seal核同；11冻结分片、11选定原始帧与506白名单边界通过。交付5情境：新增4、旧持药ID更新1，四own一mixed/unassessed，自有383个A10支持局不当通读局；当前live解析器5条格式过，非生产工具读回。三机制后继各百局以上，商店191机会局/25换购确认局、Boss桥接48局分账；无因果收益、安全HP或最优留瓶数。原学习checkout已由原回收器收走、分支和待证scratch保留，未再回收。五候选逐项SHA登记原发布队列，正式入库/消费者/自然采用均0；沿37实际组合检查后的原发布通道核源、账本、精确入库与工具，独立rk缺口不挡文字策略，科学父保留。未开模型、游戏或新full。
+原件paper/materials/20261024-strategy-144312-ops/verification.json、publication-queue.json、postmortem131301-dataset-event-readback.json。
