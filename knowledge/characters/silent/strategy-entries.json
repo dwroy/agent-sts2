@@ -3182,11 +3182,11 @@
           2
         ]
       },
-      "strategy": "BACKFLIP的拿牌观察关联偏正：v0.111拿56/126、不拿58/138最终胜，差+2.42个百分点；样本单位为独立上传局（两臂可重叠）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2、已拿奖励前缀含LEADING_STRIKE（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬和灵动步法时，后空翻可同时补格挡与抽牌，仍比较备选和跳过。本系统A10、版本unknown的0CLP16ZR4ZZC在F13的1次机会选择了它；牌文1费/5格挡/抽2。F6XY4QJMS5RC也拿后空翻却F33败，不能承诺通关或稀释收益。",
+      "strategy": "BACKFLIP的拿牌观察关联偏正：v0.111拿56/126、不拿58/138最终胜，差+2.42个百分点；样本单位为独立上传局（两臂可重叠）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2、已拿奖励前缀含LEADING_STRIKE（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬和灵动步法时，后空翻可同时补格挡与抽牌，仍比较备选和跳过。本系统A10、版本unknown的0CLP16ZR4ZZC在F13的1次机会选择了它；牌文1费/5格挡/抽2。F6XY4QJMS5RC也拿后空翻却F33败，不能承诺通关或稀释收益。\n新增混合路线窗口：已持刀源与华丽收场、面对后空翻/斗篷+/匕首雨时，比较补挡过牌与继续产刀群伤。HLAW F24一次机会选1费5挡抽2的后空翻，后续精英65→36（1局），非拿后即安全或独立因果收益。",
       "source": "mixed",
       "confidence": 0.25,
       "evidence_status": "unassessed",
-      "version": "2.1.0",
+      "version": "2.1.0-r56",
       "evidence": [
         {
           "type": "external_aggregate",
@@ -3265,6 +3265,46 @@
           "run": "0CLP16ZR4ZZC",
           "floor": 13,
           "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=13"
+        },
+        {
+          "type": "own",
+          "run": "HLAWCGM3KHVB",
+          "floor": 24,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/HLAWCGM3KHVB-q119.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
         }
       ],
       "evidence_detail_ref": {
@@ -3298,7 +3338,9 @@
       },
       "formal_publication": "pending",
       "consumer_readback": "pending",
-      "playbook_parent": "silent-external-poison-build-playbook-c1"
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G5",
+      "disposition": "update"
     },
     {
       "id": "silent-brain-dagger-spray-external-prefix-context",
@@ -4191,7 +4233,7 @@
     },
     {
       "id": "silent-brain-early-block-after-attack-prefix",
-      "version": "2026-10-24.1",
+      "version": "2026-10-24.1-r56",
       "trigger": {
         "question_types": [
           "card_reward"
@@ -4204,7 +4246,7 @@
           "max": 8
         }
       },
-      "strategy": "确认第2～3场真实战斗奖励、此前早期卡奖已拿Attack且本题提供写明获得格挡的牌时，不因已补攻击就自动补任意格挡；比较当前牌组、费用、牌文和备选。每局首个合格机会：A10无重试证据取格挡文本牌6/18过首Boss、其他29/46（-29.71点）；重载且预判必死层48/58对110/142（+5.29点）。\n范围：Silent/A10/版本unknown；此前已拿Attack只是奖励前缀代理，非完整输出能力。格挡文本代理也含Attack，非全部防御。分层反向、无因果拿牌顺序；历史不明时不适用。",
+      "strategy": "确认第2～3场真实战斗奖励、此前早期卡奖已拿Attack且本题提供写明获得格挡的牌时，不因已补攻击就自动补任意格挡；比较当前牌组、费用、牌文和备选。每局首个合格机会：A10无重试证据取格挡文本牌6/18过首Boss、其他29/46（-29.71点）；重载且预判必死层48/58对110/142（+5.29点）。\n范围：Silent/A10/版本unknown；此前已拿Attack只是奖励前缀代理，非完整输出能力。格挡文本代理也含Attack，非全部防御。分层反向、无因果拿牌顺序；历史不明时不适用。\n新增混合路线窗口：已有猎杀者/回响斩击时，冲刺可按同张牌即时伤挡比较，不把又拿一张攻击视为纯输出扩张。HLAW F6一次机会，牌文2费10伤10挡；次战仍41→26（1局），持有不证明已覆盖防御。",
       "evidence": [
         {
           "type": "own",
@@ -4247,11 +4289,56 @@
           "floor": 4,
           "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-161310/learner/runs/20261024-161406-30519cee-4072-4a48-9dcd-3d909aba5f47-strategy-proposal/scratch/review-cases.json#later_block/4YPGHGJD393H; decisions off=1283500589 bytes=94849 sha256=5b369f83ad645a1ec210d0489c628fe5abc93dc1a8b2b8d70da674d31eb2bb24",
           "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "HLAWCGM3KHVB",
+          "floor": 6,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/HLAWCGM3KHVB-q25.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
         }
       ],
-      "source": "own",
+      "source": "mixed",
       "confidence": 0.3,
-      "evidence_status": "conflict"
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G3",
+      "disposition": "update"
     },
     {
       "id": "silent-brain-first-three-combat-skip-check",
@@ -4487,7 +4574,7 @@
     },
     {
       "id": "silent-brain-blade-flexible-formation-review",
-      "version": "1.0.0",
+      "version": "1.0.0-r56",
       "trigger": {
         "question_types": [
           "act_plan",
@@ -4499,7 +4586,7 @@
           3
         ]
       },
-      "strategy": "已有刀源时，按当前已持牌分别比较增伤、群伤、防护与过牌，不以刀扇＋精准＋刀舞齐全作成型或安全前提。外部v0.111终局还原一致赢家中，仅25/101观察到这三牌齐全，76/101未观察到；首幕齐全7/101。自有A10无重试证据0/4齐全，重试层1/3到F45齐全而仍败，不能把缺三牌当败因。\n范围：Silent A10；外部还原与自有首次观察均为时序代理，非固定拿牌排序。自有版本unknown，旧版本机制未知另账。",
+      "strategy": "已有刀源时，按当前已持牌分别比较增伤、群伤、防护与过牌，不以刀扇＋精准＋刀舞齐全作成型或安全前提。外部v0.111终局还原一致赢家中，仅25/101观察到这三牌齐全，76/101未观察到；首幕齐全7/101。自有A10无重试证据0/4齐全，重试层1/3到F45齐全而仍败，不能把缺三牌当败因。\n范围：Silent A10；外部还原与自有首次观察均为时序代理，非固定拿牌排序。自有版本unknown，旧版本机制未知另账。\n新增混合路线窗口：已有刀源、再遇蛇咬/匕首雨等签名牌时，可保留跳过并按当前缺口比较，别为凑三牌而收牌。HLAW F27/F30两机会均跳，F33胜80→71但最终仍败（1局）；外部v0.111簇4仅11/68还原赢家观察齐全匕首雨/扫腿/蛇咬，其余57不齐全。",
       "evidence": [
         {
           "type": "external_aggregate",
@@ -4538,6 +4625,46 @@
           "run": "9R916WW0V65N",
           "floor": 45,
           "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/evidence-statistics.json#formation"
+        },
+        {
+          "type": "own",
+          "run": "HLAWCGM3KHVB",
+          "floor": 27,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/HLAWCGM3KHVB-q137.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
         }
       ],
       "source": "mixed",
@@ -4550,7 +4677,10 @@
       "knowledge_disposition": "new",
       "existing_experience_ids": [
         "silent-core-shiv-defense-observation"
-      ]
+      ],
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G6",
+      "disposition": "update"
     },
     {
       "id": "silent-fan-of-knives-capacity",
@@ -8176,6 +8306,237 @@
       "knowledge_candidate_id": "silent-b002-conditional-extra-reward",
       "candidate_kind": "descriptive decision comparison; no causal ranking",
       "publication_eligibility": "numeric comparisons waiting: both groups need >=100 independent runs; scratch only"
+    },
+    {
+      "id": "silent-brain-mixed-costly-poison-before-rest-review",
+      "version": "2026-10-24-r56",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "LEG_SWEEP",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "PREDATOR",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有扫腿与猎杀者、近期连续失血且火前仍有战斗时，蛇咬应与本题后空翻/投掷匕首的即时用途比较，不以补齐毒方向为由固定拿。蛇咬2费7毒且保留，后空翻1费5挡抽2；177AS39M1UPW F4的1次机会选蛇咬，下一战28→0（1局），不能归因为该牌。\n范围：Silent A10；自有版本unknown，火前资源/牌文为当前信息；没有安全HP或因果拿牌结论。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "177AS39M1UPW",
+          "floor": 4,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/177AS39M1UPW-q21.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G1",
+      "disposition": "new"
+    },
+    {
+      "id": "silent-brain-mixed-immediate-aoe-review",
+      "version": "2026-10-24-r56",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "PREDATOR",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "BLADE_DANCE",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有猎杀者和刀源时，可将回响斩击的即时群伤与新增毒源/过牌逐项比较，按眼前多敌缺口决定，不追终局三牌签名。牌文1费全体10伤、击杀后重复；HLAW F5一次选择后，F6三敌战40→41且3回合结束（1局，净变化含回复），非该牌单独收益。\n范围：Silent A10、自有版本unknown；外部v0.111还原赢家三牌齐全仅11/68，终局簇不作触发。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "HLAWCGM3KHVB",
+          "floor": 5,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/HLAWCGM3KHVB-q20.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G2",
+      "disposition": "new"
+    },
+    {
+      "id": "silent-grand-finale-empty-draw",
+      "version": "2026-10-24-r56",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "BLADE_DANCE",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "ECHOING_SLASH",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "混合牌组拿到华丽收场的0费群伤选项时，先核空抽牌堆条件及现有过牌，不把60伤无条件算作本轮产出。HLAW F14拿、F16升级，F17仍77→9（1局/1次拿牌），不能归因或反推必不该拿；普通牌文明确抽牌堆无牌才可打。\n范围：Silent A10、自有版本unknown；是原empty-draw知识的拿牌情境补充，未核此战施放次数，不作保证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "HLAWCGM3KHVB",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/raw/HLAWCGM3KHVB-q62.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+          },
+          "statistic": {
+            "name": "observed_three_card_bundle",
+            "value": 11,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 68
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+            "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+            "各版本机改对照未知，逐版保留，不合并。",
+            "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+            "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+            "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+          ],
+          "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-route-c4-r56",
+      "context_id": "G4",
+      "disposition": "update"
     }
   ]
 }

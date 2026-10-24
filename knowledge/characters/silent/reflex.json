@@ -29620,6 +29620,498 @@
           "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
         }
       ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g1",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "SNAKEBITE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "LEG_SWEEP"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "PREDATOR"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g1-review",
+        "unit": "label"
+      },
+      "label_en": "Review immediate needs before adding retained poison",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "177AS39M1UPW",
+            "floor": 4
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-mixed-costly-poison-before-rest-review"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G1.json",
+          "sha256": "e153c6e9f7eb10313b78eb71be64d8d2b477c807e5a9f630576f934b4e143e3f",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g2",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "ECHOING_SLASH"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "PREDATOR"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BLADE_DANCE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g2-review",
+        "unit": "label"
+      },
+      "label_en": "Compare immediate area damage with existing attack sources",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HLAWCGM3KHVB",
+            "floor": 5
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-mixed-immediate-aoe-review"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G2.json",
+          "sha256": "3a8a7ba5af08542f27c16a2dcb9310a7635a1f156ddb45070dcda2e897e04fb8",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g3",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DASH"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "PREDATOR"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ECHOING_SLASH"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g3-review",
+        "unit": "label"
+      },
+      "label_en": "Compare immediate attack and block together",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HLAWCGM3KHVB",
+            "floor": 6
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-early-block-after-attack-prefix"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G3.json",
+          "sha256": "d4256b898d720fb1cc2f24d627379a73ae5b9a4dd0b1a42e088c94392fd469c5",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g4",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "GRAND_FINALE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BLADE_DANCE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ECHOING_SLASH"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g4-review",
+        "unit": "label"
+      },
+      "label_en": "Check empty draw pile before valuing Finale",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HLAWCGM3KHVB",
+            "floor": 14
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-grand-finale-empty-draw"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G4.json",
+          "sha256": "60e06f46a49649f35b2f3f05506a4a1b6b67f7dc32c1bbe7ccfc737f9c336340",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g5",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BACKFLIP"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BLADE_DANCE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "GRAND_FINALE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g5-review",
+        "unit": "label"
+      },
+      "label_en": "Compare block and draw after attack supply exists",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HLAWCGM3KHVB",
+            "floor": 24
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-backflip-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G5.json",
+          "sha256": "551d59a0bc03dbad3aa0d0c54a4b4eb887e53d69751c2f97b9ca73430864d99f",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-mixed-c4-g6",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "SNAKEBITE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BLADE_DANCE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "INFINITE_BLADES"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-mixed-c4-g6-review",
+        "unit": "label"
+      },
+      "label_en": "Review unmet needs before taking a signature card",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HLAWCGM3KHVB",
+            "floor": 27
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-blade-flexible-formation-review"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c4-ops/original/scratch/evidence/G6.json",
+          "sha256": "b1509ccae14bafff4eb286add2b9805232dc361075de27ab1c1a6cfa051e3c5d",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；单局具体选牌情境和牌文，非收益；外部方向证据另账见该文件。"
+          }
+        }
+      ]
     }
   ]
 }
