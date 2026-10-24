@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-24T14:06:02+08:00",
+  "publication_state": {
+    "at": "2026-10-24T13:46:19+08:00",
+    "phase": "waiting-original-natural-terminal",
+    "issue": 55,
+    "worker_pid": 2311814,
+    "worker_birth": "24530788",
+    "published": false,
+    "new_full_model_or_game": 0,
+    "held_locks": [],
+    "boundary": {
+      "at": "2026-10-24T13:46:19+08:00",
+      "play_pid": 2194413,
+      "play_birth": "24414207",
+      "play_cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "autoplay_pid": 1245890,
+      "autoplay_birth": "23151982",
+      "console_path": "logs/console/20261024-132647-02eb468f8+dirty.log",
+      "prefix_bytes": 146742,
+      "prefix_sha256": "0657b925ee05a4f68e597df6ecb9f7adcb05c10c560eafb843e05c7b5431ecff",
+      "wait": "original PID/birth pidfd natural terminal only; no signals, keys or game requests"
+    }
+  },
+  "processes": [
+    {
+      "pid": 2311814,
+      "birth": "24530788",
+      "state": "S",
+      "wchan": "poll_schedule_timeout.constprop.0",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 2194413,
+      "birth": "24414207",
+      "state": "S",
+      "wchan": "do_epoll_wait",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+    },
+    {
+      "pid": 1245890,
+      "birth": "23151982",
+      "state": "S",
+      "wchan": "do_wait",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "own_admission_verified": true,
+  "actual_live": "02eb468f8728b47ccbc22f39f14e5b2db1580971",
+  "phase": "same-original-natural-boundary-still-live",
+  "no_new_worker_test_model_game_or_signal": true
+}

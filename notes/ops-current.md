@@ -1,12 +1,12 @@
 state: in-flight
 issue: 55
-updated: 2026-10-24T13:47:02+08:00
+updated: 2026-10-24T14:06:02+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
 进行中的事：#55原唯一full667文件6545过/2跳/0败、两tsc0，2142输入/469知识/1417依赖核同；精确12叶树f097264c9c17，26库候选工具22匹配/8页原字段核同。原检查锁1531.511秒已释放；首次发布learn锁写前失败归档，续接2311814/birth24530788已登记play2194413/birth24414207自然边界，当前未发布。paper/materials/20261024-issue55-publication-ops/。
 在等谁：#55仅等原play PID自然终态，原事务自有LLM_DRAIN已登记、未持发布锁；不发信号/按键/游戏请求。随后ops按原锁精确发布/编号/消费者/绑定/最新知识读回再释自有准入，测试几何不部署；20源f5f390c141三生产叶按6380255093在55实际发布后部署记T/24h。37独占等待已撤6380220657，原失败/科学父保留，不另full。
-下一步：只在原事务返回事件核实际阶段、入库/绑定/准入释放，勿把首次learn锁失败事件当续接终态；若原autoplay自然退出且自有准入释放，原broker恢复。#23等#45原owner结算，#46完整门13:46:30已到，下次自然唤醒核原完整窗；09:39为旧核数。51三506单元等真实native/5～10情境及消费者；48门18:19:29不提前，不轮询。
+下一步：按最新Claude P0先#55上线+大脑外部条目命中读回，之后回#36；20后55部署/24h待办保留。原PID/准入核同，R428的14:04脑题24KB错只作发布前反例。完成事件核真实T/十二叶/消费者/绑定/知识/准入，再核新自然题外部ID/证据和工具ms/整题时延；合同paper/materials/20261024-issue55-natural-priority-ops/。不轮询/强查。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
@@ -43,7 +43,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue55-publication-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue55-natural-priority-ops/handoff-before.md；未清未完成项。
 
 46原完整基线/命令/AST：paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
 
