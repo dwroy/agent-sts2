@@ -1,0 +1,146 @@
+{
+  "at": "2026-10-24T17:18:24+08:00",
+  "scope": "independent temporary Git fixtures only; no production complete/reclaim/plan",
+  "source": "403577593891669cd201355b3899a0104d03ed3f",
+  "cases": [
+    {
+      "kind": "exact-leaf",
+      "old_live_before_allocation": "e921090cda3f7bdcbd3690b5234883eae922b86e",
+      "allocation_base": "337438968b0f52dc95b68154685bf2f773a4139e",
+      "source": "7dcb26542946bb446b4216d51a33c168874e6d67",
+      "main_adoption": "0a157fd6e1e7b9c8015dea91bd04d560ceb55da2",
+      "main": "7cf5987eb21897a55a225cab4c94ae73983327c1",
+      "live_without_adoption": "de0bb5c8be15e00e0f85ec7bbe436ef1f1e06d87",
+      "rejected_source_actual": "accepted",
+      "rejected_source_witness": {
+        "path": "agent/src/example.ts",
+        "publication": "de0bb5c8be15e00e0f85ec7bbe436ef1f1e06d87",
+        "commit": "e921090cda3f7bdcbd3690b5234883eae922b86e",
+        "kind": "historical-leaf",
+        "source_leaf": "100644 blob a4490bae539e90617017584607f86795f0854783\tagent/src/example.ts"
+      },
+      "repaired_source_actual": "retained",
+      "repaired_source_reason": "source leaf not in recorded publication: agent/src/example.ts",
+      "new_live_baseline": "d55798ee62850db4f6f4ae7f17c28c6a710e1f44",
+      "new_live_adoption": "a7d207e842f739421dcdd7aa6cf86f90ee9f1ef4",
+      "new_live_after_evolution": "39da97dc9e64c66da3fceaa41ff5ecac6cb87fc6",
+      "repaired_positive": {
+        "source": "7dcb26542946bb446b4216d51a33c168874e6d67",
+        "base": "337438968b0f52dc95b68154685bf2f773a4139e",
+        "main_commit": "7cf5987eb21897a55a225cab4c94ae73983327c1",
+        "live_commit": "39da97dc9e64c66da3fceaa41ff5ecac6cb87fc6",
+        "verified_source_paths": [
+          "agent/src/example.ts"
+        ],
+        "live_required": true,
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "publication_witnesses": [
+          {
+            "path": "agent/src/example.ts",
+            "publication": "7cf5987eb21897a55a225cab4c94ae73983327c1",
+            "commit": "0a157fd6e1e7b9c8015dea91bd04d560ceb55da2",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob a4490bae539e90617017584607f86795f0854783\tagent/src/example.ts",
+            "boundary": "337438968b0f52dc95b68154685bf2f773a4139e",
+            "channel": "main"
+          },
+          {
+            "path": "agent/src/example.ts",
+            "publication": "39da97dc9e64c66da3fceaa41ff5ecac6cb87fc6",
+            "commit": "a7d207e842f739421dcdd7aa6cf86f90ee9f1ef4",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob a4490bae539e90617017584607f86795f0854783\tagent/src/example.ts",
+            "boundary": "e921090cda3f7bdcbd3690b5234883eae922b86e",
+            "channel": "live"
+          }
+        ]
+      },
+      "allocation_sha256": "588763321898bf96891d9b25931740fdfd674a22baea232fdf6ef5278b52e3e1",
+      "allocation_unchanged": true,
+      "git_dates": "all same 2035 date; order proof is not timestamps",
+      "commit_dates_epoch": {
+        "e921090cda3f7bdcbd3690b5234883eae922b86e": "2051222400|2051222400",
+        "337438968b0f52dc95b68154685bf2f773a4139e": "2051222400|2051222400",
+        "7dcb26542946bb446b4216d51a33c168874e6d67": "2051222400|2051222400",
+        "0a157fd6e1e7b9c8015dea91bd04d560ceb55da2": "2051222400|2051222400",
+        "7cf5987eb21897a55a225cab4c94ae73983327c1": "2051222400|2051222400",
+        "de0bb5c8be15e00e0f85ec7bbe436ef1f1e06d87": "2051222400|2051222400",
+        "d55798ee62850db4f6f4ae7f17c28c6a710e1f44": "2051222400|2051222400",
+        "a7d207e842f739421dcdd7aa6cf86f90ee9f1ef4": "2051222400|2051222400",
+        "39da97dc9e64c66da3fceaa41ff5ecac6cb87fc6": "2051222400|2051222400"
+      }
+    },
+    {
+      "kind": "compatible-complete-patch",
+      "old_live_before_allocation": "2ec5c258e64138e2f5aec6358e24af203b2b95f1",
+      "allocation_base": "bdbd8a87a728cc6784e7296a919d14f95b1ade63",
+      "source": "126b62c63b2f07951ab6f4705814f3dd65dcd76f",
+      "main_adoption": "69a1a118b3aa32c2dda33ec00c7cee538f9faacf",
+      "main": "4bafb53125754fe3347e6cf21aa38eb283e27184",
+      "live_without_adoption": "5f9e089585c4e5a831886bf5f082f1381c7a3ba9",
+      "rejected_source_actual": "accepted",
+      "rejected_source_witness": {
+        "path": "ops/fixture.py",
+        "publication": "5f9e089585c4e5a831886bf5f082f1381c7a3ba9",
+        "commit": "2ec5c258e64138e2f5aec6358e24af203b2b95f1",
+        "parent": "3934f5071beffde71fdca9462ba94df6cac7c177",
+        "kind": "verbatim-leaf-patch",
+        "patch_id": "737baf50949c079bc417b92166587a9bedf139e8",
+        "source_leaf": "100644 blob 90aa01df934555a2a45c0c0dfc0d071bcaf0fb37\tops/fixture.py"
+      },
+      "repaired_source_actual": "retained",
+      "repaired_source_reason": "source leaf not in recorded publication: ops/fixture.py",
+      "new_live_baseline": "a0295113aece1c00f0106e171fe9326a70a6fc69",
+      "new_live_adoption": "14d37cc4ec8473add5bdb62ad860503e5786a9fc",
+      "new_live_after_evolution": "8c9d7ecbbe29752c4c042feeda17e625bcd3f438",
+      "repaired_positive": {
+        "source": "126b62c63b2f07951ab6f4705814f3dd65dcd76f",
+        "base": "bdbd8a87a728cc6784e7296a919d14f95b1ade63",
+        "main_commit": "4bafb53125754fe3347e6cf21aa38eb283e27184",
+        "live_commit": "8c9d7ecbbe29752c4c042feeda17e625bcd3f438",
+        "verified_source_paths": [
+          "ops/fixture.py"
+        ],
+        "live_required": true,
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "publication_witnesses": [
+          {
+            "path": "ops/fixture.py",
+            "publication": "4bafb53125754fe3347e6cf21aa38eb283e27184",
+            "commit": "69a1a118b3aa32c2dda33ec00c7cee538f9faacf",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 90aa01df934555a2a45c0c0dfc0d071bcaf0fb37\tops/fixture.py",
+            "boundary": "bdbd8a87a728cc6784e7296a919d14f95b1ade63",
+            "channel": "main"
+          },
+          {
+            "path": "ops/fixture.py",
+            "publication": "8c9d7ecbbe29752c4c042feeda17e625bcd3f438",
+            "commit": "14d37cc4ec8473add5bdb62ad860503e5786a9fc",
+            "parent": "a0295113aece1c00f0106e171fe9326a70a6fc69",
+            "kind": "verbatim-leaf-patch",
+            "patch_id": "737baf50949c079bc417b92166587a9bedf139e8",
+            "source_leaf": "100644 blob 90aa01df934555a2a45c0c0dfc0d071bcaf0fb37\tops/fixture.py",
+            "boundary": "2ec5c258e64138e2f5aec6358e24af203b2b95f1",
+            "channel": "live"
+          }
+        ]
+      },
+      "allocation_sha256": "67278b0b0d8659a2f40c577e2983243c10dd0dea96472f7df38dba7c9aab31fd",
+      "allocation_unchanged": true,
+      "git_dates": "all same 2035 date; order proof is not timestamps",
+      "commit_dates_epoch": {
+        "2ec5c258e64138e2f5aec6358e24af203b2b95f1": "2051222400|2051222400",
+        "bdbd8a87a728cc6784e7296a919d14f95b1ade63": "2051222400|2051222400",
+        "126b62c63b2f07951ab6f4705814f3dd65dcd76f": "2051222400|2051222400",
+        "69a1a118b3aa32c2dda33ec00c7cee538f9faacf": "2051222400|2051222400",
+        "4bafb53125754fe3347e6cf21aa38eb283e27184": "2051222400|2051222400",
+        "5f9e089585c4e5a831886bf5f082f1381c7a3ba9": "2051222400|2051222400",
+        "a0295113aece1c00f0106e171fe9326a70a6fc69": "2051222400|2051222400",
+        "14d37cc4ec8473add5bdb62ad860503e5786a9fc": "2051222400|2051222400",
+        "8c9d7ecbbe29752c4c042feeda17e625bcd3f438": "2051222400|2051222400"
+      }
+    }
+  ],
+  "production_writes": 0
+}

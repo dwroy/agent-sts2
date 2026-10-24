@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-24T17:18:54+08:00",
+  "scope": "temporary fixtures only; zero production operations",
+  "runs": [
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples.py",
+      "sha256": "6fb06ccaa680cc022bf18ecc1e81e60ac1bc5f4726a07a894b66b644c216d0e2",
+      "bytes": 5603
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples.log",
+      "sha256": "e742927f953a7dd733efd6fb585bcd861aadb14d70fb28bcab60aead78978f70",
+      "bytes": 387
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-date-diagnostic.py",
+      "sha256": "17c76c056e75925f0f7a9642d22a4e177bdb3d114ded2e285e1f54b629051405",
+      "bytes": 5691
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-date-diagnostic.log",
+      "sha256": "dcea92eb58fc7cce52b9ad937725701bfcaec8cc4731edbfbfa775937506bcd9",
+      "bytes": 449
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-v2.py",
+      "sha256": "76c1331e658305de37a3571b15432577684c02ea6a1f49e247d670e9ee8f956e",
+      "bytes": 5823
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-v2.log",
+      "sha256": "bac08075f9502333417a11eba26e6e34706f3eae540bc68102808e7784e81fef",
+      "bytes": 1121
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-v3.py",
+      "sha256": "870820d6097163ed9400bc283f545d48a608071d3e6b4c058e31796be8ca7e88",
+      "bytes": 6005
+    },
+    {
+      "path": ".artifacts/integrator20-channel-boundaries-20261024/independent-counterexamples-v3.log",
+      "sha256": "3bc01a7ac8b29ecf3019d8cf8cc61fbc1b8548f5d9af7c494470c4a0b4212417",
+      "bytes": 123
+    }
+  ],
+  "first_failure": "Harness compared ISO UTC spelling +00:00 with actual Git spelling Z. Equivalent date; no product assertion failed in first case.",
+  "second_failure": "Harness positive patch used 3->2 instead of original 0->2; correctly rejected by repaired product.",
+  "final_run": "v3 checks every relevant author/committer epoch equals 2051222400; restores baseline before exact complete-patch positive; 2 old false positives reproduced, 2 repaired negatives retained, 2 genuine postallocation positives accepted. Allocation bytes unchanged.",
+  "originals_preserved": true
+}
