@@ -1,17 +1,17 @@
 state: clear-ok
-issue: 56
-updated: 2026-10-24T23:42:50+08:00
+issue: 51
+updated: 2026-10-24T23:50:18+08:00
 
-进行中的事：214311旧回调核同已结，无未完成写事务；not-started/原stderr/封存摘要及五局retry_at=0保持，文案问题已记fix。
-在等谁：原自然复盘覆盖五局及在途收敛；原生tier/五槽/吞吐、16通知下游ACK仍待。
-下一步：沿新自然事件核产物/配额；A/C/D库存不足2即补，B最后24结束停道。不重dataset/finish/旧批。原件paper/materials/20261024-214311-not-started-return-ops/。
+进行中的事：233358末24卡done/rc0、全skip/0候选已核归档，原通知#51评论6386237038精确读回；B世代/在途0已停，无未完成写事务。
+在等谁：B unit waiting留新证据；A/C/D自然学习，原生tier/五槽/吞吐与16通知下游ACK仍待。
+下一步：A/C/D各备2，不足即补；B不重派旧卡/不扩切点，0候选不造发布。原214311五局按原自然复盘。不重模型/full/tick。原件paper/materials/20261024-card-final24-ops/。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
 #51保持：R446已114策略160rk，C7五对2新3更新/10投影核同，R445等旧原件保留；两条描述confidence.25→.30按原稿保留，旧证据/conflict不改，watcher原会话已agent_prompted转Roy，非ACK。历批正式knowledge消费者、正文自动门/完整剧本/Plan、自然收益及科学父待。C182343用户可见6383409246非本人ACK，不代旧notice。
-#56 f62310叶22:58:04/本轮SHA核同，首原生T23:14:30/high原沙箱。214311依6385924090 not-started封存/finish一次，五局冷却释放等自然复盘。A/B新2原生接受，76%请求fast/tier=null；旧4自有在途未热切，五槽/单自有及吞吐待。新8plan，未派A/C/D各2、B最后24在跑后停；原窗不重置/原6补丁前完成分账。paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json，issue6386142224；#57独立。
+#56 f62310叶22:58:04/本轮SHA核同，首原生T23:14:30/high原沙箱。214311依6385924090 not-started封存/finish一次，五局冷却释放等自然复盘。A/B新2原生接受，76%请求fast/tier=null；旧4自有在途未热切，五槽/单自有及吞吐待。新8plan，未派A/C/D各2、B末24已done/候选0且停派；原窗不重置/原6补丁前完成分账。paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json，issue6386142224；#57独立。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
@@ -54,14 +54,14 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-24T23:41:19+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 15a12aade14b2bbfe1da2c6dfe3fb670fb6cd73ecc5e3b9faa9921daef16b0d8
-main 4a271d88383936cdb1f08d26ba7670fb12931dea
+生成：2026-10-24T23:44:30+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 cc17f658f0db1d65d2e6395a1db69ac3beb0014f66e1a82fd2eb6fcb88ef0c2c
+main d98f3c6ca075f81fed0fa405e357be67f386d2c7
 live 487ce58924ff9e511cfbf76bfaad73608d310de3；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
 - identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。
-- active_batches：在途 6；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
+- active_batches：在途 4；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
 - queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。

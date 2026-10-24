@@ -5456,3 +5456,7 @@ f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装
 
 ### 2026-10-24T23:42:50+08:00 [ops] 214311旧回调核同，not-started保持
 23:41事件是上一轮214311原finish旧回调。已核6385924090裁决、not-started回执及wrapper摘要，原stderr不变、stdout空、模型0、处置主管已退出；state保留failed/rc3，原因是注册锁前置超时，不指认新的key/引擎自检故障。五局当前retry_at均0、attempt均1，交下一自然复盘，不重放旧批；“一小时后重派”是解除冷却前生成的旧快照，不能覆盖现状。无新增复盘、经验/账本或提案，不重复dataset/finish/模型/tick/full，不纳并行改动。通用exit3文案未区分not-started的显示问题已追加原fix队列；保原错误、失败记录和科学父。上一轮#56/#51真实评论回执沿用，不重复发信或代角色ACK。原件paper/materials/20261024-214311-not-started-return-ops/verification.json。
+
+
+### 2026-10-24T23:50:18+08:00 [ops] #51末24卡零新增已转达，B停派
+233358已核done/rc0及原生退场，result/report/stdout/末回合一致，source_commit/merged=null。末24卡全skip，新策略/rk/knowledge和正式发布/读回/采用/收益均0；312统计行、24原始窗口SHA/切点核同。外部取得次数代理1～11、最大单cell上传1～8，自有持有代理每牌1～3局；不足原任务100/比较组，0情境未达5～10目标，4条旧战斗rk只索引。学习者不足3条原通知已投#51评论6386237038并精确读回，不代主管已读/Roy ACK。B四计划世代均消费、四原owner已退，可派/在途0；按素材穷尽停道，不抬世代或扩切点，A/C/D各备2。归档而不重模型/finish/tick/full、不造版本；unit waiting、原两小时窗及科学父保持。原件paper/materials/20261024-card-final24-ops/verification.json。

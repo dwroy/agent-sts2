@@ -1,8 +1,8 @@
 state: clear-ok
-issue: 56
-updated: 2026-10-24T23:42:50+08:00
+issue: 51
+updated: 2026-10-24T23:50:18+08:00
 
-进行中的事：214311旧回调核同已结，无未完成写事务；not-started/原stderr/封存摘要及五局retry_at=0保持，文案问题已记fix。
-在等谁：原自然复盘覆盖五局及在途收敛；原生tier/五槽/吞吐、16通知下游ACK仍待。
-下一步：沿新自然事件核产物/配额；A/C/D库存不足2即补，B最后24结束停道。不重dataset/finish/旧批。原件paper/materials/20261024-214311-not-started-return-ops/。
+进行中的事：233358末24卡done/rc0、全skip/0候选已核归档，原通知#51评论6386237038精确读回；B世代/在途0已停，无未完成写事务。
+在等谁：B unit waiting留新证据；A/C/D自然学习，原生tier/五槽/吞吐与16通知下游ACK仍待。
+下一步：A/C/D各备2，不足即补；B不重派旧卡/不扩切点，0候选不造发布。原214311五局按原自然复盘。不重模型/full/tick。原件paper/materials/20261024-card-final24-ops/。
 
