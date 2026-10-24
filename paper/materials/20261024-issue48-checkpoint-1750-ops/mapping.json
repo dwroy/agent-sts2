@@ -1,0 +1,1149 @@
+{
+  "schema": "experience-strategy-rk-map-v1",
+  "batch": "20261024-164315-strategy-proposal",
+  "character": "silent",
+  "checked_experience_ids": [
+    "silent-belt-buckle-empty-slots-dexterity",
+    "silent-core-poison-defense-observation",
+    "silent-core-shiv-defense-observation",
+    "silent-giant-explosion-window",
+    "silent-kaiser-crab-facing-sl",
+    "silent-kin-poison-sl-observation",
+    "silent-knowledge-demon-healing-sl-observation",
+    "silent-poison-potion-observed-application",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-survivor-neutralize-discard"
+  ],
+  "ledger_ids": [
+    "silent-0017",
+    "silent-0019",
+    "silent-0020",
+    "silent-0102",
+    "silent-0119",
+    "silent-0278",
+    "silent-0352",
+    "silent-0354",
+    "silent-0418",
+    "silent-0568",
+    "silent-0570",
+    "silent-0618"
+  ],
+  "counts": {
+    "new": 1,
+    "waiting": 4,
+    "reuse": 6,
+    "not_applicable": 1
+  },
+  "entries": [
+    {
+      "id": "poison-footwork-resource-review",
+      "experience_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020",
+        "silent-0618"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-poison-footwork-realization-review"
+      },
+      "disposition": "new",
+      "candidate_file": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/brain-strategy-candidates.json",
+      "json_pointer": "/entries/0",
+      "reason": "原P经验保留；新增可查询的局部大脑候选，未新增固定数值或必选规则。",
+      "counterevidence_and_limits": [
+        "两个独立A10局；同一局SL不增加分母，首试与最终结果分列。",
+        "非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。",
+        "两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。",
+        "本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。",
+        "精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "incomplete-or-late-poison-playbook",
+      "experience_ids": [
+        "silent-core-poison-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-core-poison-defense-observation"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "逐局持牌和转向核查保存在主线；部分只有施毒，部分晚到触媒/防御，不能并入新候选的三牌触发分母。",
+      "counterevidence_and_limits": [
+        "缺本批绑定且实读的外部统计/同流派代表完整局；不称完整剧本或人类偏离已核。",
+        "EQL在F30后才见蜃景，BP在F28才见触媒；没有以终局回填早期。"
+      ],
+      "independent_own_runs": 7,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "mixed-transition",
+      "experience_ids": [
+        "silent-core-shiv-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0354"
+      ],
+      "source_refs": [
+        {
+          "run_id": "XC9AHZH3CZVK",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535436,
+            "offset": 17092578065,
+            "bytes": 13876,
+            "sha256": "2bbb2e50a229707ddeeb587fb0fb93f9cbc2301e9d09a21649232e6e5381f998"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535578,
+            "offset": 17096007250,
+            "bytes": 24233,
+            "sha256": "a3b190715655e17ff94686d55c931a08fe94d3cd3a134c81cfaec4a745deae54"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/XC9AHZH3CZVK"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-core-shiv-defense-observation"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "刀舞、蛇咬、单步法的未定过渡；完整刀或毒防签名未观察到。",
+      "counterevidence_and_limits": [
+        "未到Boss，缺完整核心和外部同前缀可比组，不能用F7死亡编造拿牌优先级。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "route-resource-chain",
+      "experience_ids": [
+        "silent-route-hp-observation"
+      ],
+      "ledger_ids": [
+        "silent-0019"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        },
+        {
+          "run_id": "XC9AHZH3CZVK",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535436,
+            "offset": 17092578065,
+            "bytes": 13876,
+            "sha256": "2bbb2e50a229707ddeeb587fb0fb93f9cbc2301e9d09a21649232e6e5381f998"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535578,
+            "offset": 17096007250,
+            "bytes": 24233,
+            "sha256": "a3b190715655e17ff94686d55c931a08fe94d3cd3a134c81cfaec4a745deae54"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/XC9AHZH3CZVK"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-route-hp-observation"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用赢战消耗带入后战的观察；保留原ID及旧分母。",
+      "counterevidence_and_limits": [
+        "改路反事实未知；未观察到的营火不能预支，净掉血不是毛伤害。"
+      ],
+      "independent_own_runs": 10,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "rest-realization",
+      "experience_ids": [
+        "silent-rest-buffer-observation"
+      ],
+      "ledger_ids": [
+        "silent-0020"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-rest-buffer-observation"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用实际休息收益与下一战资源分账；未因终败把回血判作错误。",
+      "counterevidence_and_limits": [
+        "未控休息/锻造整战因果，不产生固定血线。"
+      ],
+      "independent_own_runs": 9,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "crab-budget",
+      "experience_ids": [
+        "silent-kaiser-crab-facing-sl"
+      ],
+      "ledger_ids": [
+        "silent-0570"
+      ],
+      "source_refs": [
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-crab-surviving-part-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "demon-budget",
+      "experience_ids": [
+        "silent-knowledge-demon-healing-sl-observation"
+      ],
+      "ledger_ids": [
+        "silent-0102"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-knowledge-demon-external-tail-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "kin-budget",
+      "experience_ids": [
+        "silent-kin-poison-sl-observation"
+      ],
+      "ledger_ids": [
+        "silent-0568"
+      ],
+      "source_refs": [
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-kin-priest-exit-window"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "subject-budget",
+      "experience_ids": [
+        "silent-core-poison-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-test-subject-external-tail-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "giant-playbook",
+      "experience_ids": [
+        "silent-giant-explosion-window"
+      ],
+      "ledger_ids": [
+        "silent-0017"
+      ],
+      "source_refs": [
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-giant-explosion-window"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用本体与后场的原观察，但本局末试死于本体；本批不另造完整剧本。",
+      "counterevidence_and_limits": [
+        "缺同场获胜替线/外部完整对照，不能推出固定提速或清体时点。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "discard-rk",
+      "experience_ids": [
+        "silent-survivor-neutralize-discard"
+      ],
+      "ledger_ids": [
+        "silent-0418"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        }
+      ],
+      "target": {
+        "kind": "rk",
+        "id": null
+      },
+      "disposition": "not_applicable",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "本题是CARD_SELECTION弃牌，#28的Boss/精英combat_line回放不能据此直接表达弃牌剧本；复用原经验链。",
+      "counterevidence_and_limits": [
+        "保留生存者的整战反事实未执行；重算已实际发生，不判新纯bug。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "belt-potion-rk",
+      "experience_ids": [
+        "silent-belt-buckle-empty-slots-dexterity",
+        "silent-poison-potion-observed-application"
+      ],
+      "ledger_ids": [
+        "silent-0119",
+        "silent-0278"
+      ],
+      "source_refs": [
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "rk",
+        "id": null
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "最后一瓶饮后敏捷+2、旧12挡不追补；只复用机制，不将时序改成硬策略。",
+      "counterevidence_and_limits": [
+        "无#28原始候选Plan capture、配对完整结果、预注册留出回放及改善区间；不启开关、不调模型。",
+        "本局普通蛞蝓不在本批Boss/精英回放范围；未执行提前喝药整战效果未知。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    }
+  ],
+  "unread_scope": [
+    "原244旧经验不回刷；未读其他角色知识。",
+    "未读取新的外部原库；未声明外部统计/代表完整局三输入验收。",
+    "1179题只有3个完整请求人工核读，其余逐题原因见question-coverage.json。"
+  ],
+  "formal_publication": false,
+  "consumer_readback": null,
+  "natural_benefit": null
+}

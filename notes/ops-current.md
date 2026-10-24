@@ -1,16 +1,16 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T17:44:16+08:00
+updated: 2026-10-24T17:51:37+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#51/6382572399提速八叶候选已冻，tsc0/Python22/TS15过，source_commit=null、full0/未部署，待原集成员唯一完整窗口；不冒ultrafast/3插1生效。7个未启动单元T17:40:44已重冻排队，毒/刀/遭遇文字＋rk同产，旧输入/在途/进度不改；17:40额度47%，原生档位仍null。
+进行中的事：本轮#48首普通提示/映射已核（见下）；#51/6382572399提速八叶候选已冻，tsc0/Python22/TS15过，source_commit=null、full0/未部署，待原集成员唯一完整窗口；不冒ultrafast/3插1生效。7个未启动单元T17:40:44已重冻排队，毒/刀/遭遇文字＋rk同产，旧输入/在途/进度不改；17:40额度47%，原生档位仍null。
 在等谁：原sts2-integrator核精确补丁/完整检查→合源/宿主部署，随后原自然tick及native；源工作树未结，不清会话。旧005 failed/rc0因报告差异保持；毒008一描述候选、发布/消费者0，不硬转rk。原件paper/materials/20261024-issue51-speed-ops/。
 下一步：沿原窗口接实际终态/源提交、宿主导入和自然档位/3插1回执，科学父不关，不另full/模型/强制tick。R433四条/45库及其他知识保持，原自然采用/收益和16通知角色ACK仍待；164302唯一dataset rc0/14叶提交2fbf8be6已核，回收/科学父仍待。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51并行保持：R432/T16:40:40已发161310五情境4新1更，live41/main45、5工具读回/616账本0，源6e3976ca/行为0f999aa6/live9dee1cfc，锁释；其他知识/脏目录/控制标记不变。原7新单元毒→刀→商店→单牌→遗物→事件→遭遇已冻结排队，等原调度native；冷/休不重跑、满批或2h独立发布、不加计时器。R430一真实局八新ID自然命中，R431/R432自然/采用/收益仍待；28窗口、506与28案例18局/反向分层等完整边界见paper/materials/20261024-issue51-cold-own-publication-ops/、20261024-issue51-next-units-ops/及本轮handoff-before.md。
+#51并行：R432五情境已发布/固定读回，source6e3976ca/live9dee1cfc，其他知识/脏目录/控制标记保持；自然采用/收益待。R430一真实局八ID命中非收益，R431/R432仍待。七新单元17:40:44已重冻同产，506/28窗口/18局反向分层守界；冷/休不重跑，满批或2h独立发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/及20261024-issue51-speed-ops/。
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
@@ -36,11 +36,11 @@ updated: 2026-10-24T17:44:16+08:00
 
 091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，37代码九叶待实际完整检查后接自然发布，本经验待真源审计，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#48仍待：整局首单元issue48-whole-run-cluster6-a10-001/9R916WW0V65N/A10/簇6仅定位，原队列不变、旧首六/18输入held、0/244；等原优先级自然派发及学习者核语义/逐ID产物。普通MD09f3a443b/宿主4af34c5e已核，首新ordinary native T/映射仍null，外部/补链不借验；18:19:29完整门不重置，实际策略/rk/剧本发布与消费分账。paper/materials/20261024-issue48-checkpoint-1534-ops/readback.json。
+#48新进展：普通164315 done/rc0，原native提示T16:44:14.992绑定1.4新段（prompt85c91f9e/high/原沙箱）；映射12情境/11经验ID：1新6复用4等待1不适用，rk0。候选silent-brain-poison-footwork-realization-review/0618，报告与输出同；main/live无该ID，正式发布/消费者/采用待，三输入与#28门不借验。后置首单元issue48-whole-run-cluster6-a10-001/9R916WW0V65N/A10/簇6仅定位，旧held/队列SHA400b46b2不变，仍未派、0/244。等原优先级自然派发及候选发布/读回，18:19:29完整门不重置，不强派。paper/materials/20261024-issue48-checkpoint-1750-ops/readback.json。
 
 #51原R428的090927/081200去重23ID读回、宽查询fix和正式经验.1边界保持；原main4条已R433发。paper/materials/20261024-090927-strategy-result-ops/。
 
-#54原三manifest/132叶与原008双输入边界保持，版本unknown/SL/代理及Z2/KF9排除不变。新506补证仅换当前物理分片pin并守原名单/切点，无BP9/新局。postmortem/experience模板T10:03:15，普通MD09f3首native仍待。paper/materials/20261024-input-format-r2-ops/。
+#54原三manifest/132叶与原008双输入边界保持，版本unknown/SL/代理及Z2/KF9排除不变。新506补证仅换当前物理分片pin并守原名单/切点，无BP9/新局。postmortem/experience模板T10:03:15，普通MD09f3首native已16:44:14.992核同，完整产物/发布另验。paper/materials/20261024-input-format-r2-ops/。
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 

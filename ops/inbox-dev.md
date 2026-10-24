@@ -6635,3 +6635,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 ### 2026-10-24T17:44:16+08:00 [ops] 164302 dataset返回与原回收门核验
 已核本批四局原唯一dataset实际rc0、构建1次、14生成叶，提交2fbf8be663a3cabe2ac1b23e5b506b334da118ef为当前main祖先；14个提交blob逐一与冻结清单核同，沿用上一轮已核的同提交原字节SHA，不借其他批次结果。原锁前失败/构建0与唯一续接回执分别保留，不改旧阶段。原复盘仍done/rc0，四节、13账本及两提案记录不重复追加；显示bug和7份剧本/rk候选不冒已修或正式入库。本轮只读调用原准入门，实际仍返回postmortem not settled；原请求deferred及其字节未变。dataset与记录提交不能替代本角色已完整检查的live经验入库、候选消费者或科学父验收；现场继续由原调度回收门保留，未手动完成、删除或启动清理。未重dataset/finish/模型/full。三份交接同步，#51八叶源修改仍in-flight/51等待原集成员唯一完整窗口，不因本回执清除。原件paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json；原result/generated-manifest/record-commit保持。
+
+### 2026-10-24T17:52:07+08:00 [ops] #48 当前交接与首普通产物
+已把进行中、等待对象和下一步写回三份交接，原#51八叶源码待原集成员完整检查/部署，仍in-flight/51。#48新增核实：普通164315批done/rc0；16:44:14.992原native提示SHA与TUI绑定同，实际含1.4新段和映射文件要求，gpt-6.1-sol/high/原沙箱不变。首映射12情境涉及11经验ID，1新6复用4等待1不适用、rk0；候选silent-0618，报告JSON与原输出同，当前main/live无该候选ID，正式发布和消费者仍待。原普通闭环记录已closed/dataset0，仅核原回执不重做。后置原首单元仍未派，队列/旧held不改，0/244与18:19:29原完整观察门保持。下一步等原自然优先级派发，逐项核候选缺口、真实发布/消费者与采用；不把映射/普通产物计旧回刷或收益。模型/full/游戏/强制tick均0，父要求保持。#48评论6382765291已逐字读回；原件paper/materials/20261024-issue48-checkpoint-1750-ops/readback.json。
