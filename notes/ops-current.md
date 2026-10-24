@@ -1,10 +1,10 @@
 state: in-flight
 issue: 27
-updated: 2026-10-24T17:10:54+08:00
+updated: 2026-10-24T17:17:44+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#27原二批剩余4外部条目已独立发V6-R433/T17:06:31，live41→45/main45不变。源3f642143/行为2b08241e/livebf2df1cf，4原CSV片段核同、4实际工具/12负例/两角色隔离通过，原0571/72/74/75 shipped，发布check617项0；后续并行折叠不冒同次全验。刀刃1.1.0、其他知识/脏目录及R430–R432保持；17:10返回核同，原锁释。原件paper/materials/20261024-issue27-b2-publication-ops/。
+进行中的事：#27 V6-R433/T17:06:31补齐原二批4条，live45/main45；源3f642143/行为2b08241e/livebf2df1cf，4实际工具/12负例/两角色隔离过，原0571/72/74/75 shipped，发布check617项0且并行后增另记。17:10重复返回核同，原锁释；刀刃1.1.0/R430–R432/其他知识及脏目录保留。paper/materials/20261024-issue27-b2-publication-ops/。
 在等谁：等原自动对局自然相关问题/工具返回，由ops按ID/version/source/evidence与库SHA核；无额外审批。外部0自有/低可信、跳过频率非收益/配额、gross p90非净损/安全线及SL/截断等边界保持；科学父不关。16通知原owner仍需解来源兼容/000402日志，角色ACK及Roy可见仍待。
 下一步：沿自然事件冻结实际查询字节，固定工具不代采用/收益；只回退本次4ID及目录行可撤本发布，不重发/模型/full/开局。原二批冻结check rc1、false flags、旧反证/报告不回写，#37后续组合保留R430–R433。
 
@@ -14,14 +14,16 @@ updated: 2026-10-24T17:10:54+08:00
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
-#51原144312/154311的R430十ID固定读回，4新6更/四经验消费者另验。131301数据集938ba222/14叶原rc0、回收deferred；原件paper/materials/20261024-issue51-ten-candidates-publication-ops/。
+164302复盘4节/13账本/2提案核同，1显示bug非阻塞；7候选/科学父保持。dataset原锁单次no-raw待回调，回收未闭。paper/materials/20261024-postmortem-164302-ops/及对应dataset-ops/。
 
-#51旧三决策1/2/2与新补证5/5/5逐批保持；161310为4新1更，不回写旧零产/配额。原输入见paper/materials/20261024-issue51-own-fallback-ops/及strategy原件。
+131301数据集938ba222/14叶rc0、回收deferred；R430十ID/四经验消费者缺口保持。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
+
+#51旧两代候选/零产计数不回写，见paper/materials/20261024-issue51-own-fallback-ops/及strategy原件。
 
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
 
-#51用药/休息/冷启动候选原科学边界：终局持药447/1247对166/492仅代理；HEAL/SMITH1254/1458重叠/前节点HP代理；祝福34/111对24/110仅整局关联/旧版本反向。描述知识消费者待原owner，不硬转rk/StrategyEntry。原件paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
+#51三原候选仍仅代理/外部关联，旧版本反向及描述知识消费者缺口保持，不硬转rk/StrategyEntry。paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
 #37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430–R433策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
 
@@ -48,7 +50,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue27-r433-return-ops/handoff-before.md；未清待办。
+本轮前完整交接见paper/materials/20261024-postmortem-164302-ops/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。

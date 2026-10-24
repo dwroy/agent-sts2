@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-24T17:16:12+08:00",
+  "batch": "20261024-164302",
+  "runs": [
+    "06BV1PZWV14R",
+    "160G2YS143YB",
+    "4374764UVEXD",
+    "P4ZBYNW92PPK"
+  ],
+  "state": "done",
+  "rc": 0,
+  "lesson_sections": 4,
+  "uncommitted_lesson_sections": 4,
+  "ledger_rows_selected": 13,
+  "ledger_unique_ids": 6,
+  "uncommitted_ledger_rows": 13,
+  "proposal_rows": 2,
+  "uncommitted_proposal_rows": 2,
+  "proposal_ids": [
+    "silent-proposal-06e99bfade96b76b",
+    "silent-proposal-4976c043ffdcd610"
+  ],
+  "bugs": [
+    {
+      "run": "P4ZBYNW92PPK",
+      "where": "agent/src/knowledge/relic-values.ts:44",
+      "what": "fillRelicText将显式数字1与energyPrefix:energyIcons(1)图标计数再次渲染为1点能量，给Jev的带刺手甲费用文本变成11；原遗物加1费、实测毒雾/步法手牌均2费。格式bug，不证明影响胜负。",
+      "new": true
+    }
+  ],
+  "fix_queue_change": true,
+  "candidate_count": 7,
+  "three_input_playbooks_complete": false,
+  "artifact_hashes_verified": 4,
+  "native_terminal_and_seal_verified": true,
+  "ledger_check_rc": 0,
+  "ledger_check_output": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 618 item(s), 0 problem(s)\n",
+  "dataset": "single original build pending; do not duplicate",
+  "retention": "original request pending_verification; actual ingestion/closure not claimed",
+  "scientific_parents_open": true,
+  "new_full_models_game": 0
+}

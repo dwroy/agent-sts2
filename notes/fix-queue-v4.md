@@ -1594,3 +1594,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-24T11:06:17+08:00 [ops/postmortem 101301，非阻塞] EQLB6SK9W9H7 A10/F31：agent/src/hand/screens/shop.ts:48 开店前自动丢弃仍合法可用的污浊药水，移除保留/使用比较；d513351/s532909→532910 实际金币89→89。复用账本silent-0604及已有提案silent-proposal-3477e3a0ce08a7c6，交原策略学习链，不重复派提案；不强制兑换、不补未知金额或胜负收益。当局源码戳ENOBUFS未知，现存分支只作定位。证据：learner/runs/20261024-101320-cf99629d-d335-4914-8d46-c886cdcfa3fa-postmortem/shop-foul-bug-evidence.json。
 
 - 2026-10-24T11:21:39+08:00 [ops/104301候选续接] silent-0581/原silent-proposal-146784d761377d66已有三叶候选，未提交/未发布：原版负控1败3过、候选定向2文件9过；原full只见11失败且无终态退出码，22处整分支合并冲突保持。按最新live精确集成须待37原唯一窗实际释放，勿重复派提案或借其full。CLI注册仍pending，学习者报告waiting不冒正式处置。原件paper/materials/20261024-strategy-104301-ops/verification.json、commit-candidate.patch。
+
+- 2026-10-24T17:16:12+08:00 [ops/postmortem 164302，非阻塞] P4ZBYNW92PPK A10：agent/src/knowledge/relic-values.ts:44 将显式数字1与energyPrefix:energyIcons(1)再次拼接，带刺手甲费用文字显示“增加11点能量”；原固定复现成立，实际费用/胜负影响另账。复用silent-0617、silent-proposal-4976c043ffdcd610原链，不重复登记/派模型；只修显示边界，不按渲染错误改机制。历史源码/release未知，现live复现不回填旧局版本，原tsx IPC EPERM保留。证据：learner/runs/20261024-164319-824e21ec-27a8-4473-98cd-03d4077a0d50-postmortem/relic-render-repro.json、bugs.json。

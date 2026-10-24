@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-24T17:16:12+08:00",
+  "report_md_has_machine_json": false,
+  "result_json": {
+    "task": "postmortem",
+    "appended": [
+      "06BV1PZWV14R",
+      "P4ZBYNW92PPK",
+      "4374764UVEXD",
+      "160G2YS143YB"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "P4ZBYNW92PPK",
+        "where": "agent/src/knowledge/relic-values.ts:44",
+        "what": "fillRelicText将显式数字1与energyPrefix:energyIcons(1)图标计数再次渲染为1点能量，给Jev的带刺手甲费用文本变成11；原遗物加1费、实测毒雾/步法手牌均2费。格式bug，不证明影响胜负。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0617"
+      ],
+      "updated": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020",
+        "silent-0354",
+        "silent-0353"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-06e99bfade96b76b",
+      "silent-proposal-4976c043ffdcd610"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-164319-824e21ec-27a8-4473-98cd-03d4077a0d50-postmortem/report.md"
+  },
+  "preserved_out_json": {
+    "task": "postmortem",
+    "appended": [
+      "06BV1PZWV14R",
+      "P4ZBYNW92PPK",
+      "4374764UVEXD",
+      "160G2YS143YB"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "P4ZBYNW92PPK",
+        "where": "agent/src/knowledge/relic-values.ts:44",
+        "what": "能量图标与显式数字重复，使带刺手甲加1费显示为11；已复现，胜负影响未证。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0617"
+      ],
+      "updated": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020",
+        "silent-0354",
+        "silent-0353"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-06e99bfade96b76b",
+      "silent-proposal-4976c043ffdcd610"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-164319-824e21ec-27a8-4473-98cd-03d4077a0d50-postmortem/report.md"
+  },
+  "only_bug_what_text_differs": true,
+  "originals_not_rewritten": true,
+  "basis": "same bug run/location/new flag, fixed repro and actual records are verified separately; report is prose, final wrapper JSON is the scheduler completion source"
+}

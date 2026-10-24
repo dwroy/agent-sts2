@@ -1,0 +1,18 @@
+[
+  {
+    "run": "P4ZBYNW92PPK",
+    "where": "agent/src/knowledge/relic-values.ts:44",
+    "what": "fillRelicText将显式数字1与energyPrefix:energyIcons(1)图标计数再次渲染为1点能量，给Jev的带刺手甲费用文本变成11；原遗物加1费、实测毒雾/步法手牌均2费。格式bug，不证明影响胜负。",
+    "new": true,
+    "live_reference_commit": "9dee1cfc4e32dc90ae3390861278c08357c8c021",
+    "repro": "relic-render-repro.json",
+    "evidence": {
+      "request_id": "f85a9ec2-1189-4dcc-b0c7-a44fb846f1f2",
+      "hand_cost_states": [
+        536786,
+        536796
+      ],
+      "formatting_vs_mechanics": "raw description explicit1+icon; hand2; rendered11"
+    }
+  }
+]

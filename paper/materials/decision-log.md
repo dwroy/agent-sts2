@@ -6671,3 +6671,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T17:08:28+08:00 [ops] #27原二批4外部条目V6-R433/T17:06:31上线，live41→45、4实际工具/12负例/两角色隔离过，原4账本ID shipped；保刀刃1.1.0/R430–R432/旧冻结rc1，ACK/自然采用/收益与科学父待，无full/模型/局。原件paper/materials/20261024-issue27-b2-publication-ops/。
 
 - 2026-10-24T17:10:54+08:00 [ops] #27 R433同一事务重复返回核同：45条库/四ID/原工具与登记一致，原producer终态/自有锁释；无重发/重复通知/新full模型局，旧失败/ACK及自然采用收益父保持。原件paper/materials/20261024-issue27-r433-return-ops/。
+
+- 2026-10-24T17:17:44+08:00 [ops] 164302四局复盘4节/13账本/2原提案受控记录；新0617显示bug入非阻塞队列，不改机制/凑收益。7候选/原报告差异保持，接唯一dataset --no-raw，回收及科学父开放。paper/materials/20261024-postmortem-164302-ops/。
