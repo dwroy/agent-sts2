@@ -1,0 +1,100 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator56-r2-20261024-2026/agent
+
+ ✓ tests/run-plan-merge.test.ts (19 tests) 6149ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  786ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  618ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1191ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  664ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  589ms
+     ✓ the run start rides on the run's first question (no plan yet)  526ms
+     ✓ the real client reads the run plan from the answer, or from its own object after it  1178ms
+ ✓ tests/brain-claude.test.ts (15 tests) 2905ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2034ms
+ ✓ tests/ops-herdr.test.ts (28 tests) 41857ms
+     ✓ new learner tabs follow the live ops pane when workspace labels are duplicated  1216ms
+     ✓ shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit  5651ms
+     ✓ shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit  5632ms
+     ✓ run, reuse, busy, status, stop; only its own labels  2081ms
+     ✓ --close-on-exit: the pane closes when the job ends and its last lines are kept  3232ms
+     ✓ brain viewer follows fixed logs across runs, reuses its tab and restarts independently  4393ms
+     ✓ starts the TUI once, prompts, reads the turn's answer and tokens from the session file  820ms
+     ✓ other arguments (a new key file, another effort): the idle TUI is restarted  1261ms
+     ✓ waits for both shell exit and registry retirement before starting the replacement  1801ms
+     ✓ retries a short name-release race only after rechecking that the pane and name are free  1691ms
+     ✓ defers a persistent name conflict without duplicate prompts or another stop  1300ms
+     ✓ defers a competing name conflict without duplicate prompts or another stop  1146ms
+     ✓ defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent  2227ms
+     ✓ a turn that does not end in time is interrupted with esc (124); the TUI stays  5425ms
+     ✓ a startup dialog (agent_not_ready) defers without answering it  398ms
+     ✓ a post-mortem batch runs in its own pane, reports as before, and the pane closes  3111ms
+     ✓ herdr unavailable: the batch starts with setsid as before  370ms
+ ✓ tests/worktree-retention.test.ts (1 test) 11080ms
+   ✓ retires only verified workspaces and recovers preserved artifacts after interruptions  11079ms
+ ✓ tests/strategy-research-scheduling.test.ts (10 tests) 5441ms
+   ✓ frozen research group 1 takes the next slot and starts only after its actual registration is saved  384ms
+   ✓ frozen research group 2 takes the next slot and starts only after its actual registration is saved  435ms
+   ✓ frozen research group 3 takes the next slot and starts only after its actual registration is saved  316ms
+   ✓ frozen research group 4 takes the next slot and starts only after its actual registration is saved  401ms
+   ✓ frozen research group 5 takes the next slot and starts only after its actual registration is saved  418ms
+   ✓ frozen research group 6 takes the next slot and starts only after its actual registration is saved  492ms
+   ✓ frozen research group 7 takes the next slot and starts only after its actual registration is saved  340ms
+   ✓ frozen research group 8 takes the next slot and starts only after its actual registration is saved  412ms
+   ✓ frozen research group 9 takes the next slot and starts only after its actual registration is saved  1350ms
+   ✓ frozen research group 10 takes the next slot and starts only after its actual registration is saved  891ms
+ ✓ tests/reclaim-gates.test.ts (1 test) 5320ms
+   ✓ protects real runtime identities while retiring inherited bindings and main-only reports  5318ms
+ ✓ tests/learner-tabs.test.ts (1 test) 4589ms
+   ✓ reclaims only verified terminal learner tabs with the current native verifier  4588ms
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 0.745s
+
+OK
+ ✓ tests/strategy-external.test.ts (16 tests) 1502ms
+   ✓ external admission, source proof, original writer gates and retirement use fixed aggregates  898ms
+ ✓ tests/shared-tools.test.ts (2 tests) 1012ms
+   ✓ attaches only matching pinned tools and retains all private/foreign copies  1003ms
+ ✓ tests/brain-view.test.ts (1 test) 378ms
+   ✓ renders and follows fixed brain logs with redaction, title protection and isolated lifecycle  377ms
+ ✓ tests/strategy-concurrency.test.ts (2 tests) 339ms
+     ✓ claims disjoint inputs, retains active ownership and bootstraps the second slot  335ms
+ ✓ tests/agent-board-poll.test.ts (1 test) 279ms
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 201ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 144ms
+     × all resolve 143ms
+ ✓ tests/paths.test.ts (11 tests) 66ms
+ ✓ tests/subscription-usage.test.ts (5 tests) 9ms
+ ✓ tests/learner-wrapper-scripts.test.ts (3 tests) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tests/v6-formation-table.test.ts: ../src/sim/v6-formation-table.js",
++   "agent/tests/v6-target-values.test.ts: ../src/v6/target-values.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 16 passed (17)
+      Tests  1 failed | 159 passed (160)
+   Start at  20:35:14
+   Duration  88.65s (transform 2.67s, setup 1.21s, import 4.26s, tests 81.28s, environment 2ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/integrator56-r2-20261024-2026/directed.json

@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, expect, it } from "vitest";
 import { externalTier } from "../../learner/lib/external-source.js";
+import { quotaSnapshot } from "../../ops/subscription-usage.js";
 import { main, parseArgs } from "../../learner/lib/launcher.js";
 import { learnerTuiEnv } from "../../learner/lib/herdr.js";
 import { childEnv } from "../../learner/lib/engines.js";
@@ -22,7 +24,7 @@ it("external admission, source proof, original writer gates and retirement use f
   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_external.py"], { encoding: "utf8", timeout: 15_000 })).toBe("");
 });
 
-it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85.01, "default"], [100, "default"]])(
+it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85.01, "fast"], [100, "default"]])(
   "applies strict weekly boundary %s -> %s", (percent, expected) => {
     const decision = externalTier(usage(Number(percent)), now);
     expect(decision.effective).toBe(expected);
@@ -54,25 +56,34 @@ function fixture() {
   const env = { HOME: root, PATH: "/usr/bin:/bin", LEARNER_CODEX_BIN: native, LEARNER_CODEX_HOME: join(root, "selected-account"),
     LEARNER_STATE_FILE: stateFile, LEARNER_BATCH_ID: batch, LEARNER_EXTERNAL_SOURCE: source, CODEX_OPS_ROOT: root };
   const errors: string[] = [];
-  return { root, cwd, batch, env, errors, registration, save,
-    run: (read: (bin: string, home: string, env: Record<string, string>) => Promise<CodexUsage>, extra = ["--service-tier", "ultrafast"]) => main(
-      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, ...extra], {
+  const quota = (percent: number | null) => {
+    const sample = quotaSnapshot(percent === null ? null : usage(percent), now);
+    const digest = createHash("sha256").update(env.LEARNER_CODEX_HOME).digest("hex");
+    writeFileSync(join(root, "ops/state/subscription-usage.json"), JSON.stringify({ ...sample, account_home_sha256: digest }));
+    const selected = percent !== null && percent > 70 ? "fast" : "ultrafast";
+    const external_policy = { schema: "external-learning-policy-v1", account_home_sha256: digest,
+      weekly_used_percent: percent, sample_observed_at: sample.sample_observed_at,
+      service_tier: selected, workers: percent === null || percent >= 90 ? 0 : percent > 70 ? 2 : 4,
+      reason: percent === null ? "weekly_unknown" : percent >= 90 ? "switch_codex1" : percent > 70 ? "weekly_over_70" : "weekly_within_70" };
+    writeFileSync(stateFile, JSON.stringify({ batches: { [batch]: { ...registration, external_policy } } }));
+    return selected;
+  };
+  return { root, cwd, batch, env, errors, registration, save, quota,
+    run: (tier = "ultrafast") => main(
+      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, "--service-tier", tier], {
         projectRoot: root, env, tasksDir: join(root, "tasks"), runsDir: join(root, "runs"), secretFiles: [], now: () => now,
-        checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined, readExternalUsage: read,
+        checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined,
+        readExternalUsage: async () => { throw new Error("must reuse the unified snapshot"); },
         out: () => undefined, err: (message) => errors.push(message),
       }),
   };
 }
 
-it.each([[20, "ultrafast"], [75, "fast"], [90, "default"], [null, "default"]])(
+it.each([[20, "ultrafast"], [70, "ultrafast"], [75, "fast"], [89, "fast"]])(
   "launches only the selected account with quota %s and tier %s via CLI", async (percent, expected) => {
     const f = fixture();
-    const code = await f.run(async (bin, home, env) => {
-      expect(bin).toBe(f.env.LEARNER_CODEX_BIN); expect(home).toBe(f.env.LEARNER_CODEX_HOME);
-      expect(env.CODEX_HOME).toBe(home); expect(env.LEARNER_EXTERNAL_SERVICE_TIER).toBeUndefined();
-      if (percent === null) throw new Error("synthetic private diagnostics must not be persisted");
-      return usage(Number(percent));
-    });
+    f.quota(Number(percent));
+    const code = await f.run(String(expected));
     expect(code, f.errors.join("\n")).toBe(0);
     const observed = JSON.parse(readFileSync(join(f.root, "observed.json"), "utf8"));
     expect(observed).toMatchObject({ tier: expected, source: f.env.LEARNER_EXTERNAL_SOURCE, home: f.env.LEARNER_CODEX_HOME });
@@ -83,19 +94,42 @@ it.each([[20, "ultrafast"], [75, "fast"], [90, "default"], [null, "default"]])(
     const log = readFileSync(receipt.log, "utf8");
     expect(log).not.toContain("private diagnostics");
     expect(log.trim().split("\n").map((line) => JSON.parse(line)).find((row) => row.type === "learner_summary").summary.tokens).toMatchObject({ input: 10, output: 2 });
-    if (percent === 90 || percent === null) {
-      expect(readdirSync(join(f.root, "ops/state/queue"))).toHaveLength(1);
-      if (percent === 90) expect(readFileSync(join(f.root, "notes/for-roy.md"), "utf8")).toContain("提醒 Roy");
-    }
+
   });
 
-it("ordinary/spoofed leases cannot opt in; quota read cannot outlive registration", async () => {
+it("unknown, exhausted, stale or replaced snapshots retain the lease without launching", async () => {
+  for (const percent of [null, 90, 100]) {
+    const f = fixture(); f.quota(percent);
+    expect(await f.run(percent === null ? "ultrafast" : "fast")).toBe(3);
+    expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
+  }
+  for (const mutate of [
+    (sample: Record<string, unknown>) => { sample.account_home_sha256 = "other-account"; },
+    (sample: Record<string, unknown>) => { sample.sample_observed_at = "2025-12-31T23:00:00Z"; },
+    (sample: Record<string, unknown>) => { sample.windows = []; },
+  ]) {
+    const f = fixture(); f.quota(20);
+    const path = join(f.root, "ops/state/subscription-usage.json");
+    const sample = JSON.parse(readFileSync(path, "utf8")); mutate(sample); writeFileSync(path, JSON.stringify(sample));
+    expect(await f.run()).toBe(3);
+  }
   const ordinary = fixture(); ordinary.save({ ...ordinary.registration, reason: "tick" });
-  expect(await ordinary.run(async () => { throw new Error("must not read quota"); })).toBe(2);
-  const replaced = fixture();
-  expect(await replaced.run(async () => { replaced.save({ ...replaced.registration, state: "done" }); return usage(1); })).toBe(3);
-  expect(readdirSync(join(replaced.root, "ops/state/learner"))).toEqual([]);
+  expect(await ordinary.run()).toBe(2);
+  const replaced = fixture(); replaced.save({ ...replaced.registration, state: "done" });
+  expect(await replaced.run()).toBe(2);
   expect(() => parseArgs(["--engine", "codex", "--task", "x", "--cwd", "/x", "--service-tier", "priority"])).toThrow();
+});
+
+it("a refreshed common snapshot within the same tier does not strand a registered checkout", async () => {
+  const f = fixture(); f.quota(20);
+  const path = join(f.root, "ops/state/subscription-usage.json");
+  const sample = JSON.parse(readFileSync(path, "utf8"));
+  sample.sample_observed_at = "2025-12-31T23:59:59Z";
+  sample.windows[0].used_percent = 21;
+  writeFileSync(path, JSON.stringify(sample));
+  expect(await f.run()).toBe(0);
+  const receipt = JSON.parse(readFileSync(join(f.root, `ops/state/learner/${f.batch}.external-launch.json`), "utf8"));
+  expect(receipt.external_tier.weekly_used_percent).toBe(21);
 });
 
 it("TUI preserves only constrained source opt-in and ordinary child env drops inherited scope", () => {

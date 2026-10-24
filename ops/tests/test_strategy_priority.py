@@ -76,7 +76,7 @@ class DeferredPriority(unittest.TestCase):
                     self.assertIsNone(case.dispatch(stamp='20260101-000002'))
                     self.assertEqual(len(case.calls), 1)
 
-    def test_runnable_audit_blocks_both_sources_and_original_request_dispatches(self):
+    def test_runnable_audit_blocks_backfill_but_external_has_its_own_lane(self):
         for kind in ('backfill', 'external'):
             with self.subTest(kind=kind), source_fixture(kind) as case:
                 original = request(); case.state['ascension_audits'] = {original['key']: original}
@@ -87,7 +87,10 @@ class DeferredPriority(unittest.TestCase):
                 rows = ended(case)
                 lock = case.directory/'learner/ascension-audit-silent-a11.lock'
                 lock_before = lock.stat()
-                self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
+                self.assertTrue(hold(case))
+                result = case.dispatch()
+                if kind == 'external': self.assertIsNotNone(result)
+                else: self.assertIsNone(result)
                 self.assertEqual(original, before)
                 self.assertEqual((lock.stat().st_ino, lock.stat().st_mtime_ns), (lock_before.st_ino, lock_before.st_mtime_ns))
                 result = audit.dispatch(case.state, str(case.root), str(REPO/'ops'), 'silent', rows, lambda p: False,
@@ -97,14 +100,17 @@ class DeferredPriority(unittest.TestCase):
                 self.assertEqual(original['anchor_run'], before['anchor_run'])
                 self.assertEqual(original['attempts'], 1)
 
-    def test_runnable_calibration_preempts_both_sources(self):
+    def test_calibration_preempts_backfill_but_external_remains_independent(self):
         for kind in ('backfill', 'external'):
             with self.subTest(kind=kind), source_fixture(kind) as case:
                 case.state['calibration_ready'] = {'silent': 'fixed-calibration'}
                 (case.root/'.worktrees/silent-boss-calibration').mkdir(parents=True)
                 with patch.object(jobs, 'available_worktree', return_value=True):
-                    self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
-                self.assertEqual(case.calls, [])
+                    self.assertTrue(hold(case))
+                    result = case.dispatch()
+                    if kind == 'external': self.assertIsNotNone(result)
+                    else: self.assertIsNone(result)
+                self.assertEqual(len(case.calls), 1 if kind == 'external' else 0)
 
     def test_audit_backoff_exhaustion_and_tree_gates_match_dispatch(self):
         for mode in ('backoff', 'exhausted', 'dirty', 'occupied', 'wrong-level', 'wrong-character', 'invalid-run'):
@@ -134,7 +140,9 @@ class DeferredPriority(unittest.TestCase):
             lock = case.directory/'learner/ascension-audit-silent-a11.lock'; lock.touch()
             with lock.open('r') as original:
                 fcntl.flock(original, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
+                self.assertTrue(hold(case))
+                self.assertIsNotNone(case.dispatch())
+                self.assertTrue(jobs.external_learning_policy.own_busy(case.state, lambda pid: False, case.directory))
             self.assertFalse(hold(case))
             for status in ('running', 'launching'):
                 req['state'] = status; self.assertTrue(hold(case))
@@ -181,8 +189,8 @@ class DeferredPriority(unittest.TestCase):
                 case.state['batches'] = {}
             with patch.object(jobs, 'available_worktree', return_value=False): self.assertFalse(hold(case))
 
-    def test_normal_wait_and_other_pending_learning_requests_remain_prioritized(self):
-        with source_fixture('external') as case:
+    def test_normal_wait_and_other_pending_learning_requests_still_hold_backfill(self):
+        with source_fixture('backfill') as case:
             for normal in ({'backfill_hold':True},{'experience':True},{'fixes':True},{'disk_capacity_hold':True}):
                 self.assertTrue(hold(case, normal)); self.assertIsNone(case.dispatch(normal))
             for status in ('pending','running'):

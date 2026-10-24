@@ -33,10 +33,11 @@ export function quotaSnapshot(usage: CodexUsage | null, capturedAt: Date) {
   };
 }
 
-export async function sampleQuota(path: string, read: () => Promise<CodexUsage>, now = () => new Date()): Promise<void> {
+export async function sampleQuota(path: string, read: () => Promise<CodexUsage>, now = () => new Date()) {
   let usage: CodexUsage | null = null;
   try { usage = await read(); } catch { /* Archive only a fixed failure code, never subprocess diagnostics. */ }
   const snapshot = quotaSnapshot(usage, now());
   mkdirSync(dirname(path), { recursive: true });
   appendFileSync(path, JSON.stringify(snapshot) + "\n");
+  return snapshot;
 }

@@ -1,0 +1,13 @@
+# #56 补交独立核验
+
+核验时间：2026-10-24T21:14:16+08:00。累计源55754e1c4276094bc78856adf05427ac8ce12008（包含原dfd847f8），隔离树以实际V6-R440 34d179bd88dccd8d9d10b138db21e11abd184afc、当前宿主7d50fd2d097abcb1fe9818c137928d1778f8c854和自然刷新结束后的知识为基线。冻结anchor a9c7b252477cdcd163988ae5edd1c009db619a8c，tree e222234b4082ea7ac616759f20bc29724160d62a。
+
+原脚本仅改隔离树路径后重跑：failed/rc1、done/rc0的原生无末回合仍被原shared.retired拒绝，新writer调用均为零，原批字段不变。独立正控追加匹配原生task_complete/turn_aborted、summary/output与原身份回执后，真实退役门接受，下一不同plan/不重叠ID的A批才启动；没有mock退役结论。其他空道B、自有槽继续及降档保留未知owner名额也独立通过。固定回归另覆盖not-started、原租约/审计/retention、额度档、磁盘门和启动/原生档位分账。
+
+生产tsc与tools/v6 tsc均退出0；Python issue_session 62项、策略109项通过。定向17文件160项通过；唯一完整Vitest 673文件、6601过、0败、2历史跳过。单worker/forks/nice19，无强制模型、游戏、tick、finish或回收。2764输入、1417依赖、tree、索引全条目及标志前后同；索引原字节相同为False，原始字节另留档，事前语义守卫未变。独立核原worker退、原检查锁可获取。完整JSON SHA256 485c5ef09c4b2c5179134ae4376a93851f744c31af4c7970df8f10b4915d486b。
+
+实际知识469叶冻结；最初R438冻结后运维自然完成R439与R440知识发布；独立核九产品叶未变，沿原知识刷新/发布锁以最终实际R440重冻，R438原件保留。另136份main固定测试数据仅供检查，不部署。首次定向脚本把单独外部20项误断言为策略组合109项而中止；当次issue_session62项和外部20项均绿、未起Vitest，保留原脚本/状态/日志，独立核原worker退出及锁释放后修正为test_strategy*.py组合，不改产品或测试断言。原验证组装只选宿主相关测试，却已复制全部main固定helper，造成run-plan实HTTP旧调用方与新固定HTTPhelper混用及旧ENOENT夹具不兼容；当次17文件158过/2败、原SHA/终态及独立退出核验保留。配套测试与夹具重冻，候选15覆盖叶全部重放且SHA未变；配套测试重冻后定向159过/1败，导入检查准确指出main新增两V6测试依赖尚未在live的实验模块；恢复原实际game/current-host测试profile，仅保留两份已核的main配套调用方修复（brain-claude/run-plan-merge）；未发布V6/main新eval回归不混入本次实际组合，再纳入最终实际R440知识完成最终定向与唯一full，不改产品或放宽测试。首次反例导入发生在当前宿主模块尚未装配时而失败、两次知识刷新锁非阻塞申请失败均留原件，不算产品通过或失败；随后等待原自然刷新，另一次发布锁忙在改树之前退出，独立核进程退/锁释/once不存在后沿原锁序重试重组，不修改生产输入。隔离.cache按既有导入检查目录前提准备，未改候选/测试断言。额外broad tools旧非绿记录不冒通过。
+
+精确集成计划14叶，保留已合main的external-strategy-evidence相同叶及#20文档，未将开发旧队列覆盖当前原plan。新external_learning_policy、strategy_external_jobs、writer、launcher、wrapper、sampler作为完整组合交原ops核实际加载；源目录是生产宿主，源码安装时间另记integration-commit.json，不能用本角色未强制tick冒自然加载已验。保R434–R440及全部后续知识，不写live知识，不含旧#51三比一八叶或091302 source=null/failed/净12/.2。
+
+保持开放：原ops补当前队列逐plan lane映射（含手动A/C、新plan，保输入/世代）、实际部署T/源码身份、自然四外部加自有五独立批次、原生ultrafast读回及[T,T+2h)四个完成单元；90%只去重请求原ops换号事务，在途不打断。主管在合入后沿原授权恢复开发并发上限5。固定检查不代自然产出、真实换号、学习与科学父；#36旧三75恢复合同、#20真实24h/kit/39/43、#27正式ACK沿原owner。
