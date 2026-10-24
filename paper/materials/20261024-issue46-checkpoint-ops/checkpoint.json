@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-24T10:27:39+08:00",
+  "issue": 46,
+  "action": "checkpoint update only",
+  "deadline": "2026-10-24T13:46:30+08:00",
+  "deadline_reached": false,
+  "baseline_allocated": 106,
+  "original_gate_receipt": {
+    "path": "paper/materials/20261024-issue46-gate-readback-ops/receipt.json",
+    "sha256": "cf925a8c9d17fb41b458037b9db1c81601040f8744c11e93ef45a62c2969fd0d"
+  },
+  "publication_and_baseline_refs_verified": true,
+  "future_command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_allocation_report.py",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--since",
+    "2026-10-23T13:46:30+08:00",
+    "--until",
+    "2026-10-24T13:46:30+08:00"
+  ],
+  "acceptance_conditions": [
+    "wall clock at or after deadline",
+    "full exact24h half-open window only; complete=true required",
+    "all task categories/workload/backlog/cooldown/queued and failures separately reported",
+    "restore/legacy excluded and static68 estimate not actual savings",
+    "learning stalls and priority holds never counted as efficiency gains"
+  ],
+  "new_allocation_comparison_full_model_game_timer": 0,
+  "other_pending_preserved": true
+}
