@@ -40,6 +40,7 @@ class LearnerTabs(unittest.TestCase):
         (self.files / (self.batch + ".err")).write_text("fixed failure\n")
         for obj, name, kwargs in [
             (tabs, "birth", dict(side_effect=lambda pid:self.births.get(pid))),
+            (tabs, "require_host_process_view", dict()),
             (tabs.os, "getppid", dict(return_value=222)),
             (tabs.issue_session, "process_children", dict(return_value=set())),
             (tabs.issue_session, "idle_codex_helpers", dict(return_value=set())),
@@ -158,7 +159,10 @@ class LearnerTabs(unittest.TestCase):
                 self.present=True; self.screen=b"dw@host:~/fixture$ "; self.tab["pane_count"]=1
                 self.tab["label"]="学习大脑 · fixture"; self.info["foreground_process_group_id"]=333
                 proofpath.write_bytes(original); proof=tabs.load(proofpath)
-                if bad=="missing": proofpath.unlink()
+                if bad=="missing":
+                    proofpath.unlink()
+                    self.assertEqual(self.tick()[0]["state"], "queued")
+                    self.assertEqual(self.tick()[0]["state"], "queued")
                 if bad=="authority": proof["authority"]="human"; tabs.atomic(proofpath,proof)
                 if bad=="binding": proof["binding"]["pid"]=123; tabs.atomic(proofpath,proof)
                 if bad=="terminal": proof["identity"]["terminal_id"]="foreign"; tabs.atomic(proofpath,proof)
@@ -169,8 +173,8 @@ class LearnerTabs(unittest.TestCase):
                 if bad=="revision": self.pane["revision"]=2
                 if bad=="unknown-title": self.tab["label"]="学习大脑 · foreign"
                 self.assertEqual(self.tick()[0]["state"],"retained"); self.assertTrue(self.present)
-                count=len(self.worker.inbox.read_text().splitlines())
-                self.tick(); self.assertEqual(len(self.worker.inbox.read_text().splitlines()),count)
+                count=len(self.worker.inbox.read_text().splitlines()) if self.worker.inbox.exists() else 0
+                self.tick(); self.assertEqual(len(self.worker.inbox.read_text().splitlines()) if self.worker.inbox.exists() else 0,count)
                 (self.files/(self.batch+".err")).write_text("fixed failure\n")
         self.assertFalse(any(c[:2]==("tab","close") for c in self.calls))
 
@@ -206,10 +210,10 @@ class LearnerTabs(unittest.TestCase):
         self.assertEqual(self.tick()[0]["state"],"reclaimed")
         self.assertEqual(tabs.load(self.directory/"learn.json")["batches"][self.batch]["state"],"failed")
 
-    def test_unknown_unregistered_learning_tab_is_retained_and_reported(self):
+    def test_unknown_unregistered_inactive_learning_tab_is_retained_locally(self):
         tabs.atomic(self.directory/"learn.json",dict(batches={}))
         self.assertEqual(self.tick()[0]["state"],"retained")
-        self.assertTrue(self.worker.inbox.exists()); self.assertTrue(self.present)
+        self.assertFalse(self.worker.inbox.exists()); self.assertTrue(self.present)
 
     def test_shell_input_parser_rejects_drafts_and_unknown_prompts(self):
         for value in ("dw@host:~/repo$ ","$ ","# ","\x1b[32mdw@host:~/repo\x1b[0m$ "):
@@ -240,7 +244,7 @@ class LearnerTabs(unittest.TestCase):
     def test_missing_receipt_dry_run_preserves_every_file(self):
         before={str(p.relative_to(self.root)):p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
         self.worker.dry=True
-        self.assertEqual(self.tick()[0]['state'],'retained')
+        self.assertEqual(self.tick()[0]['state'],'queued')
         after={str(p.relative_to(self.root)):p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
         self.assertEqual(before,after); self.assertTrue(self.present)
 
@@ -314,7 +318,7 @@ class LearnerTabs(unittest.TestCase):
         original={path:path.read_bytes() for path in self.files.iterdir()}
         state=(self.directory/'learn.json').read_bytes()
         self.assertEqual(self.tick()[0]['state'],'retained')
-        self.assertTrue(self.present); self.assertTrue(self.worker.inbox.exists())
+        self.assertTrue(self.present); self.assertFalse(self.worker.inbox.exists())
         self.assertFalse(any(c[:2] in (('tab','close'),('pane','get')) for c in self.calls))
         self.assertEqual(state,(self.directory/'learn.json').read_bytes())
         self.assertEqual(original,{path:path.read_bytes() for path in original})
@@ -341,6 +345,105 @@ class LearnerTabs(unittest.TestCase):
         evidence=self.root/'paper/materials/recovery-review.json'
         evidence.parent.mkdir(parents=True,exist_ok=True); evidence.write_text('{"review":"fixed evidence"}\n')
         return evidence
+
+    def scheduler_finish(self):
+        (self.directory/'scheduler.log').write_text(f'2026-10-23 03:46:00 learner batch {self.batch} (fixed) exit {self.row["rc"]}\n')
+
+    def test_three_missing_ticks_are_local_and_persist_across_worker_restarts(self):
+        self.births.pop(222)
+        for n in range(1, 5):
+            self.worker=tabs.LearnerTabs(self.root,self.directory,herdr=self.herdr)
+            result=self.tick()[0]
+            self.assertEqual(result['ticks'], n)
+            self.assertEqual(result['state'], 'queued' if n < 3 else 'retained')
+            self.assertFalse(self.worker.inbox.exists()); self.assertTrue(self.present)
+        self.scheduler_finish()
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        self.assertNotIn(self.batch,self.worker.data['retries'])
+
+    def test_automatic_recovery_uses_original_evidence_without_ops_or_historical_birth(self):
+        self.recovery_fixture(); self.receipt.pop('wrapper'); self.write_receipt(); self.scheduler_finish()
+        original=(self.directory/'learn.json').read_bytes()
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        proof=tabs.load(self.files/(self.label+'.tab-retirement.json'))
+        self.assertEqual(proof['authority'],'scheduler-recovery'); self.assertIsNone(proof['owner_birth'])
+        self.assertEqual(original,(self.directory/'learn.json').read_bytes())
+        self.assertFalse(self.worker.inbox.exists()); self.assertTrue(self.tree.is_dir())
+
+    def test_automatic_recovery_dry_run_checks_without_seal_close_or_journal(self):
+        self.recovery_fixture(); self.scheduler_finish(); self.worker.dry=True
+        before={p:p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        self.assertEqual(self.tick()[0]['state'],'eligible')
+        self.assertEqual(before,{p:p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+        self.assertTrue(self.present)
+
+    def test_automatic_recovery_missing_legacy_birth_uses_absence_not_invented_birth(self):
+        self.recovery_fixture(); self.receipt['wrapper']['supervisor'].pop('birth')
+        self.write_receipt(); self.scheduler_finish()
+        self.assertEqual(self.tick()[0]['state'],'reclaimed')
+        proof=tabs.load(self.files/(self.label+'.tab-retirement.json'))
+        self.assertIsNone(proof['owner_birth']); self.assertFalse(self.worker.inbox.exists())
+
+    def test_automatic_recovery_requires_unique_matching_scheduler_and_absent_processes(self):
+        self.recovery_fixture(); self.scheduler_finish()
+        path=self.directory/'scheduler.log'; original=path.read_bytes()
+        for data in (original.replace(b'exit 0',b'exit 1'),original+original):
+            path.write_bytes(data)
+            self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+            self.assertEqual(len(self.worker.inbox.read_text().splitlines()),1)
+        path.write_bytes(original); self.births[222]='reused'
+        self.assertEqual(self.tick()[0]['state'],'queued'); self.assertTrue(self.present)
+        self.births.pop(222); self.births[444]='reused'
+        self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+        self.assertEqual(len(self.worker.inbox.read_text().splitlines()),1)
+
+    def test_binding_failure_with_live_native_is_reported_once(self):
+        self.started(live=True); tabs.atomic(self.directory/'learn.json',dict(batches={}))
+        self.assertEqual(self.tick()[0]['state'],'retained')
+        self.assertEqual(self.tick()[0]['state'],'retained')
+        self.assertEqual(len(self.worker.inbox.read_text().splitlines()),1); self.assertTrue(self.present)
+
+    def test_automatic_recovery_rechecks_scheduler_before_close(self):
+        self.recovery_fixture(); self.scheduler_finish()
+        original=self.worker.herdr
+        def changed(*args):
+            result=original(*args)
+            if args[:2]==('pane','get') and (self.files/(self.label+'.tab-retirement.json')).exists():
+                (self.directory/'scheduler.log').write_text('changed\n')
+            return result
+        self.worker.herdr=changed
+        self.assertEqual(self.tick()[0]['state'],'queued'); self.assertTrue(self.present)
+        self.assertFalse(any(c[:2]==('tab','close') for c in self.calls))
+
+    def test_automatic_recovery_preserves_host_native_artifact_and_input_gates(self):
+        self.recovery_fixture(); self.scheduler_finish()
+        with patch.object(tabs,'require_host_process_view',side_effect=ValueError('host process visibility required')):
+            self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+        self.screen=b'dw@host:~/fixture$ unfinished command'
+        self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+        self.screen=b'dw@host:~/fixture$ '
+        native=self.files/'native.jsonl'; before=native.read_bytes()
+        native.write_bytes(b'\n'.join(before.splitlines()[:-1])+b'\n')
+        self.assertEqual(self.tick()[0]['state'],'retained'); self.assertTrue(self.present)
+        self.assertFalse((self.files/(self.label+'.tab-retirement.json')).exists())
+
+    def test_missing_sequence_resets_after_expected_retention_gate(self):
+        self.births.pop(222); self.assertEqual(self.tick()[0]['ticks'],1)
+        self.births[222]='owner-birth'; self.assertEqual(self.tick()[0]['state'],'queued')
+        self.births.pop(222); self.assertEqual(self.tick()[0]['ticks'],1)
+
+    def test_day_accounting_is_read_only_and_excludes_window_end(self):
+        self.seal()
+        with patch.object(tabs,'stamp',return_value='2026-10-24T12:00:00+08:00'):
+            self.tick(); self.worker.warn('wR:p2','fixed contradiction')
+        self.worker.warn('wR:p2','fixed contradiction')
+        self.worker.data['activity'].append(dict(at='2026-10-25T00:00:00+08:00',kind='closed',key='future'))
+        self.worker.save()
+        start='2000-01-01T00:00:00+00:00'; end='2026-10-25T00:00:00+08:00'
+        before=self.worker.path.read_bytes(); report=self.worker.report(start,end)
+        self.assertEqual(report['automatic_tabs_closed'],1)
+        self.assertEqual(report['inbox_reminders'],1); self.assertEqual(report['cases_needing_ops'],1)
+        self.assertEqual(before,self.worker.path.read_bytes())
 
     def test_ops_recovery_seals_only_then_original_tick_reclaims(self):
         evidence=self.recovery_fixture()
