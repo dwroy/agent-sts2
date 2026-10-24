@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/integrator20-publication-history-20261024/check-once.py", line 27, in <module>
+    after=inputs();da=dependencies();(M/'inputs-after.json').write_bytes(raw(after));(M/'dependencies-after.json').write_bytes(raw(da));s.update(inputs_unchanged=before==after,dependencies_unchanged=deps==da,tree_unchanged=git('write-tree')==p['tree']);save();assert q.returncode==0,'full failed';assert all(s[k] for k in ('inputs_unchanged','dependencies_unchanged','tree_unchanged'));s.update(phase='passed-await-integration');save()
+                                                                                                                                                                                                                                                                           ^^^^^^^^^^^^^^^
+AssertionError: full failed

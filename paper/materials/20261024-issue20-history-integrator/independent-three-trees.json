@@ -1,0 +1,239 @@
+{
+  "kind": "read-only acceptance, not complete/reclaim/delete admission",
+  "main": "42656aaf5b86c856dc97228703b414f54955229a",
+  "live": "3fd7675b004dc295532204b72c31930e4b01dca7",
+  "cases": [
+    {
+      "issue": 47,
+      "tree": "/home/dw/Projects/agent-sts2/.worktrees/issue-47-task",
+      "source": "68f7db42820e60ff3fb68645f70ea9cc33e651c2",
+      "base": "8a241eb7b3f72d6d6f4c996030e5917ef90b1194",
+      "allocation_sha256": "18e5b3d78989138ff2dacf26147c59838ac50c5cff6a0f8b846ce577872fa8ae",
+      "original": "source leaf not in recorded publication: ops/tests/test_brain_view.py",
+      "candidate": {
+        "source": "68f7db42820e60ff3fb68645f70ea9cc33e651c2",
+        "base": "8a241eb7b3f72d6d6f4c996030e5917ef90b1194",
+        "main_commit": "42656aaf5b86c856dc97228703b414f54955229a",
+        "live_commit": "3fd7675b004dc295532204b72c31930e4b01dca7",
+        "verified_source_paths": [
+          "agent/src/brain/engines/codex-session.ts",
+          "agent/src/brain/engines/knowledge-agent.ts",
+          "agent/src/brain/live-view.ts",
+          "agent/src/brain/tools/mcp-server.ts",
+          "agent/tests/brain-agent-codex.test.ts",
+          "agent/tests/brain-live.test.ts",
+          "ops/brain_view.py",
+          "ops/tests/test_brain_view.py"
+        ],
+        "live_required": true,
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "publication_witnesses": [
+          {
+            "path": "ops/tests/test_brain_view.py",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "2faa7ead017b977051b317355e352aa229b1344d",
+            "parent": "59a1dc80367762a19d29d85a3258aac57a91f54f",
+            "kind": "verbatim-leaf-patch",
+            "patch_id": "c7f872f53970031f026abe88b57aa5c4481ec6f6",
+            "source_leaf": "100644 blob ed4c7688faa03f6ba0397a2c0d8a5a91fb9ac7e4\tops/tests/test_brain_view.py"
+          }
+        ]
+      }
+    },
+    {
+      "issue": 46,
+      "tree": "/home/dw/Projects/agent-sts2/.worktrees/issue-46-task",
+      "source": "a213612c65d6262bf4e90ab968b22cb305bed156",
+      "base": "2c23c7197d71d37ac5b330a0f4d844d1b14abc11",
+      "allocation_sha256": "db02a52580933c66e0292a2471ba09c69e9a552ef7c0f5ba3fae47aaeb30e507",
+      "original": "source leaf not in recorded publication: ops/proposal_dispatch.py",
+      "candidate": {
+        "source": "a213612c65d6262bf4e90ab968b22cb305bed156",
+        "base": "2c23c7197d71d37ac5b330a0f4d844d1b14abc11",
+        "main_commit": "42656aaf5b86c856dc97228703b414f54955229a",
+        "live_commit": "3fd7675b004dc295532204b72c31930e4b01dca7",
+        "verified_source_paths": [
+          "agent/tests/proposal-recheck.test.ts",
+          "ops/proposal_dispatch.py",
+          "ops/tests/test_proposal_recheck.py",
+          "ops/worktree_allocation_report.py"
+        ],
+        "live_required": true,
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "publication_witnesses": [
+          {
+            "path": "ops/proposal_dispatch.py",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "c8fe60d92a91d9328e5c93b90c8f4403094b7b67",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 3eebc4e205a76db8cfe584bc636f5ceac1880999\tops/proposal_dispatch.py"
+          }
+        ]
+      }
+    },
+    {
+      "issue": 49,
+      "tree": "/home/dw/Projects/agent-sts2/.worktrees/issue-49-brain-query-guidance",
+      "source": "00a2660f1d7b6b7bbbc6360c88c74f6a3ce0d1ae",
+      "base": "b4e84251b8985a83a3202591dfe31ec58cfbc7e8",
+      "allocation_sha256": "1741b77a79ea6a3c034cefa79c95dfb49d27537a9b49b037d39110d3179b373d",
+      "original": "source leaf not in recorded publication: agent/src/brain/brain.ts",
+      "candidate": {
+        "source": "00a2660f1d7b6b7bbbc6360c88c74f6a3ce0d1ae",
+        "base": "b4e84251b8985a83a3202591dfe31ec58cfbc7e8",
+        "main_commit": "42656aaf5b86c856dc97228703b414f54955229a",
+        "live_commit": "3fd7675b004dc295532204b72c31930e4b01dca7",
+        "verified_source_paths": [
+          "agent/src/brain/brain.ts",
+          "agent/src/brain/router.ts",
+          "agent/src/brain/tools/agent-knowledge.ts",
+          "agent/src/brain/tools/external-stats-tools.ts",
+          "agent/src/brain/tools/query-guidance.ts",
+          "agent/src/brain/tools/reflex-knowledge.ts",
+          "agent/src/brain/tools/types.ts",
+          "agent/src/knowledge/strategy-entries.ts",
+          "agent/src/v6/knowledge.ts",
+          "agent/tests/brain-agent-mode.test.ts",
+          "agent/tests/brain-agent-report.test.ts",
+          "agent/tests/brain-query-efficiency.test.ts",
+          "agent/tests/brain-query-guidance.test.ts",
+          "agent/tests/brain-reflex-knowledge.test.ts",
+          "agent/tools/brain-agent-report.ts"
+        ],
+        "live_required": true,
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "publication_witnesses": [
+          {
+            "path": "agent/src/brain/brain.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob e4e9b2db8cb2be9ca2c477770ab7e11ff3a01ee3\tagent/src/brain/brain.ts"
+          },
+          {
+            "path": "agent/src/brain/brain.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "ce3caf630d989a2597f1450dab66ec62f8dcf2b7",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob e4e9b2db8cb2be9ca2c477770ab7e11ff3a01ee3\tagent/src/brain/brain.ts"
+          },
+          {
+            "path": "agent/src/brain/tools/agent-knowledge.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob ccd23595b9c13f9a76459cdf8d9fe22035f0df87\tagent/src/brain/tools/agent-knowledge.ts"
+          },
+          {
+            "path": "agent/src/brain/tools/agent-knowledge.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob ccd23595b9c13f9a76459cdf8d9fe22035f0df87\tagent/src/brain/tools/agent-knowledge.ts"
+          },
+          {
+            "path": "agent/src/brain/tools/query-guidance.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 28236ed65b68a58a7d73e09398c43ac360888f64\tagent/src/brain/tools/query-guidance.ts"
+          },
+          {
+            "path": "agent/src/brain/tools/query-guidance.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 28236ed65b68a58a7d73e09398c43ac360888f64\tagent/src/brain/tools/query-guidance.ts"
+          },
+          {
+            "path": "agent/src/knowledge/strategy-entries.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "178326b91e424408ba113a7ba06f9434e1fdd32b",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 7bd4bf3d6478f344c04da3844815f010ef8447d5\tagent/src/knowledge/strategy-entries.ts"
+          },
+          {
+            "path": "agent/src/knowledge/strategy-entries.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "3db681b6330f50b66e21c28a9ce7a19f154274ab",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 7bd4bf3d6478f344c04da3844815f010ef8447d5\tagent/src/knowledge/strategy-entries.ts"
+          },
+          {
+            "path": "agent/tests/brain-agent-report.test.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob af8b1981df6470c64dda8f20a4b0da4550be88d4\tagent/tests/brain-agent-report.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-agent-report.test.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob af8b1981df6470c64dda8f20a4b0da4550be88d4\tagent/tests/brain-agent-report.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-query-efficiency.test.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 8da5c224693d331d58a02b6778b3ef93627dc345\tagent/tests/brain-query-efficiency.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-query-efficiency.test.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 8da5c224693d331d58a02b6778b3ef93627dc345\tagent/tests/brain-query-efficiency.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-query-guidance.test.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 15636a2d680bab4b6309efb17a0402e5d960e929\tagent/tests/brain-query-guidance.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-query-guidance.test.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 15636a2d680bab4b6309efb17a0402e5d960e929\tagent/tests/brain-query-guidance.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-reflex-knowledge.test.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob fb808e1649143ebf805774eb0070478cee738f5d\tagent/tests/brain-reflex-knowledge.test.ts"
+          },
+          {
+            "path": "agent/tests/brain-reflex-knowledge.test.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob fb808e1649143ebf805774eb0070478cee738f5d\tagent/tests/brain-reflex-knowledge.test.ts"
+          },
+          {
+            "path": "agent/tools/brain-agent-report.ts",
+            "publication": "42656aaf5b86c856dc97228703b414f54955229a",
+            "commit": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 4d84a0d71a9eb811ee191e786706f80b6709ec88\tagent/tools/brain-agent-report.ts"
+          },
+          {
+            "path": "agent/tools/brain-agent-report.ts",
+            "publication": "3fd7675b004dc295532204b72c31930e4b01dca7",
+            "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+            "kind": "historical-leaf",
+            "source_leaf": "100644 blob 4d84a0d71a9eb811ee191e786706f80b6709ec88\tagent/tools/brain-agent-report.ts"
+          }
+        ]
+      }
+    }
+  ],
+  "main_after": "42656aaf5b86c856dc97228703b414f54955229a",
+  "live_after": "3fd7675b004dc295532204b72c31930e4b01dca7",
+  "pins_unchanged": true
+}

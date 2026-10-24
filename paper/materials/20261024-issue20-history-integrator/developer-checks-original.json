@@ -1,0 +1,92 @@
+{
+  "issue": 20,
+  "directive": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6381379788",
+  "base": "3d04b1d726f3f15ece3a7708dddebcb91ad6f092",
+  "source": "23b336a011bbdc4d26a6bd1224b9fe70c3652984",
+  "changed_files": [
+    "agent/tests/worktree-retention.test.ts",
+    "docs/learner-retention.md",
+    "ops/tests/test_worktree_retention.py",
+    "ops/worktree_retention.py",
+    "paper/materials/decision-log.md"
+  ],
+  "input_sha256": {
+    "agent/tests/worktree-retention.test.ts": "eb3746940cc09a90eddb67508a5cc34c3311f92d9bd028b804d09ec86ba59332",
+    "docs/learner-retention.md": "62c92dad6b21d18a3e0131f64f3fab58d3f3eb38555387cbaf85810dcae5ed17",
+    "ops/tests/test_worktree_retention.py": "7cbe309f5caddd84711273b6c31f89fe0656a5afd54b44c772b2a539ae8f8215",
+    "ops/worktree_retention.py": "a058e73e9699fd11df5e682802fb63fdf7ed7ecfcfe281484d0afb65deac8ec2",
+    "paper/materials/decision-log.md": "0e8c431ed9a3efaf538b7b05852bef1a1406ac79d8912318b19041e57b9ba6f6"
+  },
+  "checks": [
+    {
+      "name": "production tsc",
+      "rc": 0,
+      "log": "tsc.log"
+    },
+    {
+      "name": "directed Vitest",
+      "rc": 0,
+      "files": 2,
+      "wrapper_cases": 2,
+      "python_cases": {
+        "worktree_retention": 24,
+        "reclaim_gates": 16
+      },
+      "log": "directed.log.gz"
+    },
+    {
+      "name": "fixed Python worktree suite",
+      "rc": 0,
+      "cases": 24,
+      "log": "python-worktree.log",
+      "note": "same cases as the Vitest wrapper, not extra independent cases"
+    },
+    {
+      "name": "read-only actual publication proofs",
+      "rc": 0,
+      "issues": [
+        47,
+        46,
+        49
+      ],
+      "log": "actual-publication-proof.json",
+      "scope": "publication only; no deletion admission or real reclamation"
+    },
+    {
+      "name": "gitleaks source patch",
+      "rc": 0,
+      "log": "gitleaks-source.log"
+    },
+    {
+      "name": "gitleaks materials patch",
+      "rc": 0,
+      "log": "gitleaks-materials.log"
+    }
+  ],
+  "logs_sha256": {
+    "directed.log": "c1998d73497a024b227265f5dcd1ba528964a412a96199ebb12afda658057140",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-results.json": "24976c28ba1296820fc3c254edf1104fb907e6181070d0ee186d0b3920eec3a4",
+    "directed.log.gz": "e210c49e658a7335244f620899ded59f8bd1de9edb13eaaf64564613366ef8c8",
+    "python-worktree.log": "bca02186d10d141356b5235a278c3872505edeef88bc23f305e3eeb2df4ab4b5",
+    "actual-publication-proof.json": "359a3eed977ace80c4371b399e535d969b639ea330ca481325a483498252f2d8",
+    "gitleaks-source.log": "4e6bd9592671bb2ba574327219a4190b7f6d4b43f48a0d416c11b04f3656e0c8",
+    "gitleaks-materials.log": "44abe4fa5185b89a885fdb3694ebabd44877e43d8a3b0af15cee8bc5e570c17c"
+  },
+  "compressed_logs": {
+    "directed.log": {
+      "artifact": "directed.log.gz",
+      "uncompressed_sha256": "c1998d73497a024b227265f5dcd1ba528964a412a96199ebb12afda658057140",
+      "compressed_sha256": "e210c49e658a7335244f620899ded59f8bd1de9edb13eaaf64564613366ef8c8"
+    }
+  },
+  "limits": {
+    "nice": 19,
+    "workers": 1,
+    "full_suite": false,
+    "models": 0,
+    "real_reclamation": 0,
+    "live_or_stop_changes": false
+  },
+  "affects_live_launch": false
+}

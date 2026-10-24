@@ -1,0 +1,39 @@
+{
+  "kind": "fixed temporary repository only; no production changes",
+  "scenario": "diverged live contains matching leaf only before task allocation; new task adopted only main",
+  "base": "3447408d64d60781b263eae14571b4b85d950af7",
+  "source": "272cbc3c9f22979b4c26ebf052af2d0db955d5a9",
+  "old_live_before_allocation": "fd1f64b65ee511a9e2b5fe6bbefda00251a9c794",
+  "main_adoption": "9e0c3a3a06a687ec93af5d5cf6b740b8658b7fff",
+  "main": "eeb93bcb1cd1defc53b46e51be38bbcfb3558f7c",
+  "live": "6608d0bf24e5af83edbf162068630a9c4b1a8889",
+  "expected": "retain: no post-allocation live adoption witness",
+  "actual": "accepted",
+  "proof": {
+    "source": "272cbc3c9f22979b4c26ebf052af2d0db955d5a9",
+    "base": "3447408d64d60781b263eae14571b4b85d950af7",
+    "main_commit": "eeb93bcb1cd1defc53b46e51be38bbcfb3558f7c",
+    "live_commit": "6608d0bf24e5af83edbf162068630a9c4b1a8889",
+    "verified_source_paths": [
+      "agent/src/example.ts"
+    ],
+    "live_required": true,
+    "scope": "workspace-only; no parent request or gameplay claim closed",
+    "publication_witnesses": [
+      {
+        "path": "agent/src/example.ts",
+        "publication": "eeb93bcb1cd1defc53b46e51be38bbcfb3558f7c",
+        "commit": "9e0c3a3a06a687ec93af5d5cf6b740b8658b7fff",
+        "kind": "historical-leaf",
+        "source_leaf": "100644 blob a4490bae539e90617017584607f86795f0854783\tagent/src/example.ts"
+      },
+      {
+        "path": "agent/src/example.ts",
+        "publication": "6608d0bf24e5af83edbf162068630a9c4b1a8889",
+        "commit": "fd1f64b65ee511a9e2b5fe6bbefda00251a9c794",
+        "kind": "historical-leaf",
+        "source_leaf": "100644 blob a4490bae539e90617017584607f86795f0854783\tagent/src/example.ts"
+      }
+    ]
+  }
+}
