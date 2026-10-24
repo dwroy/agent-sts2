@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301
+
+ ❯ agent/tests/silent-root-budget-fallback.test.ts (4 tests | 1 failed) 142ms
+   × offers the four observed legal Shivs through the existing card layer after a root-only timeout 116ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  agent/tests/silent-root-budget-fallback.test.ts > offers the four observed legal Shivs through the existing card layer after a root-only timeout
+AssertionError: expected 'act' to be 'ask' // Object.is equality
+
+Expected: "ask"
+Received: "act"
+
+ ❯ agent/tests/silent-root-budget-fallback.test.ts:27:22
+     25|   expect(solved?.plans).toHaveLength(1);
+     26|   expect(solved?.plans[0]?.steps).toEqual([]);
+     27|   expect(next?.kind).toBe("ask");
+       |                      ^
+     28|   if (next?.kind !== "ask") throw Error("the unsearched legal cards mu…
+     29|   expect(next.label).toBe("combat/play");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  10:49:19
+   Duration  2.93s (transform 2.16s, setup 0ms, import 2.67s, tests 142ms, environment 0ms)
+

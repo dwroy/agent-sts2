@@ -1,0 +1,22 @@
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index 88b6e9afd..91a10dad6 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -3388,9 +3388,15 @@ function planTurn(env: DecisionEnv): Decision | null {
+     });
+   const best = solved.plans[0];
+   if (!best) return planCombatPerCard(env);
+-  if (currentDecisionBudget() && solved.timedOut && best.outcome.dies) {
++  // W546CNAWY3RG F21 attempt 4 T4, silent-0581: the clock cut the search before any card was tried.
++  // A surviving root is not the only legal line; reuse the existing per-card choices and gates.
++  const rootOnlyTimeout = character.toLowerCase() === "silent" && ascension === 10
++    && solved.truncated && solved.nodes === 1 && solved.plans.length === 1 && best.steps.length === 0;
++  if (currentDecisionBudget() && solved.timedOut && (best.outcome.dies || rootOnlyTimeout)) {
+     // A deadline is no proof that every legal continuation dies. Keep the existing per-card/SL gates.
+-    currentDecisionBudget()!.useFallback("partial_solver_existing_card_layer_no_death_proof");
++    currentDecisionBudget()!.useFallback(best.outcome.dies
++      ? "partial_solver_existing_card_layer_no_death_proof"
++      : "partial_solver_root_only_existing_card_layer");
+     return planCombatPerCard(env);
+   }
+ 

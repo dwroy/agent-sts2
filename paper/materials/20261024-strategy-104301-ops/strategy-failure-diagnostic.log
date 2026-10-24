@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/agent
+
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.505s
+
+OK
+ ❯ tests/strategy-external.test.ts (15 tests | 1 failed) 1269ms
+   × external admission, source proof, original writer gates and retirement use fixed aggregates 638ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-external.test.ts > external admission, source proof, original writer gates and retirement use fixed aggregates
+Error: spawnSync nice EPERM
+ ❯ tests/strategy-external.test.ts:22:10
+     20|
+     21| it("external admission, source proof, original writer gates and retire…
+     22|   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/te…
+       |          ^
+     23| });
+     24|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  11:08:24
+   Duration  3.05s (transform 1.34s, setup 409ms, import 1.21s, tests 1.27s, environment 0ms)
+

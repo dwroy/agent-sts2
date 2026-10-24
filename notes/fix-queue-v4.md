@@ -1592,3 +1592,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
   - 2026-10-24T11:01:12+08:00 [ops] 上述1595封包缺陷已有101315两叶未提交候选，净tree 1a1d9dbea1daf87597c30056cf71f69c6a71db91；host定向2文件43过，原沙箱完整130/124与58项可见失败保持，待原37当前冻结实际退出后的窗口，不重复实现或借本full。原工作树/root scratch保留，未标已修/上线。paper/materials/20261024-fix-101315-ops/verification.json。
 
 - 2026-10-24T11:06:17+08:00 [ops/postmortem 101301，非阻塞] EQLB6SK9W9H7 A10/F31：agent/src/hand/screens/shop.ts:48 开店前自动丢弃仍合法可用的污浊药水，移除保留/使用比较；d513351/s532909→532910 实际金币89→89。复用账本silent-0604及已有提案silent-proposal-3477e3a0ce08a7c6，交原策略学习链，不重复派提案；不强制兑换、不补未知金额或胜负收益。当局源码戳ENOBUFS未知，现存分支只作定位。证据：learner/runs/20261024-101320-cf99629d-d335-4914-8d46-c886cdcfa3fa-postmortem/shop-foul-bug-evidence.json。
+
+- 2026-10-24T11:21:39+08:00 [ops/104301候选续接] silent-0581/原silent-proposal-146784d761377d66已有三叶候选，未提交/未发布：原版负控1败3过、候选定向2文件9过；原full只见11失败且无终态退出码，22处整分支合并冲突保持。按最新live精确集成须待37原唯一窗实际释放，勿重复派提案或借其full。CLI注册仍pending，学习者报告waiting不冒正式处置。原件paper/materials/20261024-strategy-104301-ops/verification.json、commit-candidate.patch。

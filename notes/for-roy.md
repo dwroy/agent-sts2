@@ -5176,3 +5176,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T11:18:10+08:00 [ops/dataset] 101301两局复盘的唯一受控dataset --no-raw已实际结束、rc0且source_checks_passed=true；实际生成字节已在原写锁内冻结SHA与Git blob，成本来源保持自身切点。两节复盘、9条账本追加及2条原pending提案已由上游受控记录提交持久化；0604商店前自动弃可用药水的非阻塞问题已入原fix队列并关联已有3477提案，不另派重复模型或由ops制定游戏知识。本事务只运行一次原build_locked，不自动重试；没有新增full、学习模型、finish、实验或游戏，不分配行为版本。5项整局/流派剧本与rk候选仅本批自有完整局，人类可比偏离、三输入完整性、正式发布和消费者仍待；论文数据完成不代表策略实现、自然采用或收益。37原净组合唯一完整检查按原归属推进，源commit=null及全部旧failed/rc0/EPERM/EROFS/retry未知保留，严格回收与科学父保持。
 原件：paper/materials/20261024-postmortem-101301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-24T11:21:39+08:00 [ops] 101301两局复盘唯一dataset已实际rc0、源检查通过，6ec09732e为main祖先；14个生成叶的提交字节、Git blob与SHA逐项核同，runs表两局has_postmortem=1。原回收plan本次遇锁忙保留，原report含0604未决缺陷及后续tested-live经验门未绕过，不重dataset/finish。104301原failed/rc0与blocked报告核同：0581三叶候选未提交/live，负控1败3过、原定向9过、tsc0；原full终态缺失，已见11失败，EPERM及另项未定断言分账保留，整分支预演22冲突。原native已退场，现场及dirty树保留；注册提案仍pending，报告waiting不代正式登记。该10:43旧提示不计48新模板采用。37唯一冻结不纳入此候选，待原owner释窗再协调精确集成；本轮不新增检查、模型或游戏，科学父保持。
+原件：paper/materials/20261024-101301-dataset-received-ops/receipt.json；paper/materials/20261024-strategy-104301-ops/verification.json、report.md。

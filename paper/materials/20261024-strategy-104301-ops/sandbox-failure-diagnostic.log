@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/agent
+
+ ❯ tests/brain-agent-mode.test.ts (15 tests | 8 failed) 95ms
+   × serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 8ms
+   × mounts all six #26 tools through the same MCP and retains controller role/ascension identity 3ms
+   × uses the same engine and exact acquired results to answer after calls limit 4ms
+   × uses the same engine and exact acquired results to answer after time limit 1ms
+   × honors a configured answer reserve larger than half the question budget 1ms
+   × runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 41ms
+   × does not renew the tool allowance when the same question recovers after an engine error 5ms
+   × a previous question's delayed limit callback cannot cancel the next question 2ms
+ ❯ tests/brain-reflex-knowledge.test.ts (13 tests | 2 failed) 112ms
+   × serves rk through the production MCP with the same provenance and unchanged combat-off consumer 13ms
+   × uses the same engine's answer reserve after a real rk lookup consumes the call allowance 9ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-agent-mode.test.ts > serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text
+ FAIL  tests/brain-agent-mode.test.ts > mounts all six #26 tools through the same MCP and retains controller role/ascension identity
+ FAIL  tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after calls limit
+ FAIL  tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after time limit
+ FAIL  tests/brain-agent-mode.test.ts > honors a configured answer reserve larger than half the question budget
+ FAIL  tests/brain-agent-mode.test.ts > a previous question's delayed limit callback cannot cancel the next question
+ FAIL  tests/brain-reflex-knowledge.test.ts > serves rk through the production MCP with the same provenance and unchanged combat-off consumer
+ FAIL  tests/brain-reflex-knowledge.test.ts > uses the same engine's answer reserve after a real rk lookup consumes the call allowance
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/brain-agent-mode.test.ts > runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key
+Error: unsupported dsh composition; admission held
+ ❯ dshEntryIds src/brain/engines/dsh.ts:20:82
+     18| export function dshEntryIds(composed: string): string[] {
+     19|   const heads = composed.split(/\r?\n/).filter(l => l.startsWith("- ")…
+     20|   if (!heads.length || heads.some(l => !/^- id: [a-zA-Z0-9_-]+$/.test(…
+       |                                                                                  ^
+     21|   const ids = heads.map(l => l.slice(6));
+     22|   if (new Set(ids).size !== ids.length) throw new Error("duplicate dsh…
+ ❯ DshEngine.decide src/brain/engines/dsh.ts:82:19
+ ❯ tests/brain-agent-mode.test.ts:153:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/brain-agent-mode.test.ts > does not renew the tool allowance when the same question recovers after an engine error
+AssertionError: expected [Function] to throw error including 'fixed service failure' but got 'listen EPERM: operation not permitted…'
+
+Expected: "fixed service failure"
+Received: "listen EPERM: operation not permitted 127.0.0.1"
+
+ ❯ tests/brain-agent-mode.test.ts:169:35
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  10 failed | 18 passed (28)
+   Start at  11:04:08
+   Duration  2.01s (transform 1.10s, setup 371ms, import 1.17s, tests 207ms, environment 0ms)
+

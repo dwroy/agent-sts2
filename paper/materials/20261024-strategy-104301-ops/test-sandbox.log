@@ -1,0 +1,24 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/agent
+
+ ❯ tests/brain-agent-mode.test.ts (15 tests | 8 failed) 106ms
+   × serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 7ms
+   × mounts all six #26 tools through the same MCP and retains controller role/ascension identity 3ms
+   × uses the same engine and exact acquired results to answer after calls limit 4ms
+   × uses the same engine and exact acquired results to answer after time limit 1ms
+   × honors a configured answer reserve larger than half the question budget 1ms
+   × runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 56ms
+   × does not renew the tool allowance when the same question recovers after an engine error 5ms
+   × a previous question's delayed limit callback cannot cancel the next question 1ms
+ ❯ tests/brain-reflex-knowledge.test.ts (13 tests | 2 failed) 125ms
+   × serves rk through the production MCP with the same provenance and unchanged combat-off consumer 16ms
+   × uses the same engine's answer reserve after a real rk lookup consumes the call allowance 9ms
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":210.36331499996595,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":167.43948399997316,"added_prompt_bytes":1591}
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.422s
+
+OK
+ ❯ tests/strategy-external.test.ts (15 tests | 1 failed) 1187ms
+   × external admission, source proof, original writer gates and retirement use fixed aggregates 554ms

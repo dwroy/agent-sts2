@@ -1,0 +1,36 @@
+已保存 silent-0581 修复候选，定向测试 9/9 通过。未提交、未上线：完整检查仍在途，已观察到 11 项失败；live 合并预演有 22 处冲突。候选、原始证据及处置见[报告](learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/report.md)。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261024-104301-strategy-proposal",
+  "status": "blocked",
+  "base": "01f574021dc4507c45da69302d02c466db05820b",
+  "runs": ["H5BVXA9SQWTY","FU9SGZ3WF6QJ","CS8BJ1J3LRCV","927J08F25QUX","W546CNAWY3RG","DDR9U5D07U49","0LH6KZ26VXJR","QVDR4R3UWKXU","5ZT1SKS66C1N","BKK8KAR3E83C"],
+  "fixes": [],
+  "skipped": ["完整检查尚未退出且已观察到失败；main/live 合并预演冲突，按任务停线。"],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": null, "cases": 0},
+  "code_proposals": ["silent-proposal-146784d761377d66"],
+  "implementation_domains": ["combat", "structure"],
+  "proposal_results": [{
+    "id": "silent-proposal-146784d761377d66",
+    "state": "waiting",
+    "reason": "三叶候选已保存，尚无源码提交或 live 祖先；完整检查在途且已有失败，合并预演22处冲突，待原ops接续核验。"
+  }],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a16bca-7268-7af3-bcdb-26acb03f40a4
+轮数：1；工具调用：无
+token：输入 187.5k、输出 53.8k（其中推理 25.9k）、cache 读 16141.7k、cache 写 0（命中 98.9%）
+成本：未提供
+耗时：2162.5 s（墙钟）
+时间：首个事件 2161.0 s、模型首个输出 2161.0 s、首次工具 —、末次工具结束 —；工具内共 0.0 s，其余（模型生成、推理、网络）1.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301）；模型的工具调用 exec×64 wait×27；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T10-43-12-01a16bca-7268-7af3-bcdb-26acb03f40a4.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal.jsonl
