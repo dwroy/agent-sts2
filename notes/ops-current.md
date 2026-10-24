@@ -1,12 +1,12 @@
 state: clear-ok
 issue: 51
-updated: 2026-10-24T21:08:34+08:00
+updated: 2026-10-24T21:09:48+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：204311已发V6-R441，6新事件文字、75策略115rk、6投影shipped/678检查0；6正/6非事件负/2角色读回核同，锁25.20s释、worker退出。
-在等谁：6rk缺event/身份合同、6自定义knowledge正式经验消费者、自然采用收益与科学父；正文事件条件不代自动身份/进阶门，不扩schema。
-下一步：clear-ok/51，原56四道/档位/排单另验，不重发/full/模型/强tick。保R440/0618 proposed/0672 shipped、R438九叶及后来知识。原件paper/materials/20261024-issue51-event-publication-ops/verification.json；issue6384587555，48/50/20原父保持。
+进行中的事：R441原回调去重核收，8份原件同f3e72f8a、main/live六ID/单次编号核同；原6正6非事件负2角色读回、6shipped/678检查0保持，锁25.20s释/worker退出。
+在等谁：6rk event/身份合同、6自定义knowledge正式经验消费者、自然采用收益/科学父；正文身份/进阶范围不代自动触发门。
+下一步：clear-ok/51，不重发/full/模型/强tick，保R440/0618 proposed/0672 shipped及R438/后来知识。原件paper/materials/20261024-issue51-r441-return-ops/verification.json；原issue6384587555，48/50/20与56/drain另issue保持。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
