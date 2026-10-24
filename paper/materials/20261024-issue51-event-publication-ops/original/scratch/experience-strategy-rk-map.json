@@ -1,0 +1,188 @@
+[
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "ROOM_FULL_OF_CHEESE",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-cheese-visible-hp-versus-card-pool",
+    "knowledge_id": "silent-event-cheese-visible-hp-versus-card-pool",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/cheese-visible-hp-versus-card-pool-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/0",
+    "rk_id": "silent-rk-event-cheese-visible-hp-versus-card-pool",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/cheese-visible-hp-versus-card-pool-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/cheese-visible-hp-versus-card-pool-evidence.json",
+      "sha256": "842f87ed1945e713dfcb38b1b14678a3126885132dfdc0905ecb17adc6fce091"
+    },
+    "limits": [
+      "v0.111.0幕2 GORGE为31/81、SEARCH为13/28整局胜，GORGE低8.16点；幕1相反。v0.107.0幕1也反向。未追踪芝士后续回本，不能从节点奖励推整局价值。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  },
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "SLIPPERY_BRIDGE",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-bridge-reprice-each-reroll",
+    "knowledge_id": "silent-event-bridge-reprice-each-reroll",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/bridge-reprice-each-reroll-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/1",
+    "rk_id": "silent-rk-event-bridge-reprice-each-reroll",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/bridge-reprice-each-reroll-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/bridge-reprice-each-reroll-evidence.json",
+      "sha256": "ede884500857c8920a4504f904bdec9af5ed8536a4f6aa2e5927e6c36dab3a10"
+    },
+    "limits": [
+      "同局先重掷后跨越，两个标题组明显重叠；不是独立治疗/对照。A10有6次文本HP价与下一帧净减不一致，保留原价和原帧，原因未知；事件完成帧包含后续重掷，不能归给某一次动作。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  },
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "BRAIN_LEECH",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-brain-leech-priced-reward-type",
+    "knowledge_id": "silent-event-brain-leech-priced-reward-type",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/brain-leech-priced-reward-type-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/2",
+    "rk_id": "silent-rk-event-brain-leech-priced-reward-type",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/brain-leech-priced-reward-type-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/brain-leech-priced-reward-type-evidence.json",
+      "sha256": "7f7f4a30e7f31b7d19cc28f2c29fbcec6c04fcc61708d3d73ae6f612a065a6a1"
+    },
+    "limits": [
+      "自有付血RIP执行数为0，不能估计本系统两分支收益差。v0.111.0幕2分享17/41对扯下20/46，方向相反；v0.108.0幕1也反向。奖励实际牌在选择事件分支时尚未知。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  },
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "SUNKEN_STATUE",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-statue-current-gold-quote",
+    "knowledge_id": "silent-event-statue-current-gold-quote",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/statue-current-gold-quote-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/3",
+    "rk_id": "silent-rk-event-statue-current-gold-quote",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/statue-current-gold-quote-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/statue-current-gold-quote-evidence.json",
+      "sha256": "5c2804cc2ebc8a8a7920d96dfe0c1b2885769ea80632c564432b220de3473ed0"
+    },
+    "limits": [
+      "CA5KE8GFJ9X2 F12当前3HP，潜水7HP的will_kill_player=true；拿剑不是与可支付潜水的同起点对照。v0.108.0幕1潜水高4.79点，反于v0.111.0；剑后续兑现未知。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  },
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "THIS_OR_THAT",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-this-or-that-curse-versus-hp-gold",
+    "knowledge_id": "silent-event-this-or-that-curse-versus-hp-gold",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/this-or-that-curse-versus-hp-gold-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/4",
+    "rk_id": "silent-rk-event-this-or-that-curse-versus-hp-gold",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/this-or-that-curse-versus-hp-gold-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/this-or-that-curse-versus-hp-gold-evidence.json",
+      "sha256": "e0932af5dff23795853592b630e0e2181659555e7e8bbcb3e65a2e56f6260add"
+    },
+    "limits": [
+      "ORNATE的89个A10窗口中，6次HP净增、2次金币净增，伴随所得遗物，不能定义为永远HP/金币零变。v0.111.0幕2与3中ORNATE整局胜率均低于PLAIN，且PLAIN仅11/12局。随机结果在原选择时不可用。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  },
+  {
+    "unit_id": "external-decision-event-001",
+    "event_id": "THE_LANTERN_KEY",
+    "experience_ids": [],
+    "ledger_ids": [],
+    "disposition": "new",
+    "strategy_id": "silent-brain-event-lantern-visible-gold-versus-fight",
+    "knowledge_id": "silent-event-lantern-visible-gold-versus-fight",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/strategy-candidates.json",
+    "knowledge_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/lantern-visible-gold-versus-fight-knowledge-candidate.json",
+    "strategy_json_pointer": "/entries/5",
+    "rk_id": "silent-rk-event-lantern-visible-gold-versus-fight",
+    "rk_disposition": "waiting",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/lantern-visible-gold-versus-fight-rk-candidate.json",
+    "source_refs": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/lantern-visible-gold-versus-fight-evidence.json",
+      "sha256": "19da459090f33df195b3909e51a47fed0648b2d63fa6470a0432ca7d197910ce"
+    },
+    "limits": [
+      "自有KEEP_THE_KEY执行数为0，不知道自有战斗损耗或钥匙兑现；3次文本100但后继金币+125，同持BOWLER_HAT只属共现，不据此补机制。外部KEEP与FIGHT两标题同30局，不可相加为60。",
+      "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+      "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+      "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+      "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+      "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+      "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+      "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+      "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+    ],
+    "reason": "六种事件身份/资源交易不同，合并每事件的重复观察与多个统计行，不拆泛句计数；未命中既有正式情境。"
+  }
+]

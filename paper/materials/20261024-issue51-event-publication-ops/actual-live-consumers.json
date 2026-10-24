@@ -1,0 +1,997 @@
+{
+  "passed": true,
+  "content_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "library_sha256": "e64b89141d73600ea600de7b88c07fdc27815f9e8db02f8c419f3ec9477e93e6",
+  "library_entries": 75,
+  "fixed_production_id_queries": 6,
+  "non_event_negative_queries": 6,
+  "other_role_negative_queries": 2,
+  "rows": [
+    {
+      "id": "silent-brain-event-cheese-visible-hp-versus-card-pool",
+      "event_id": "ROOM_FULL_OF_CHEESE",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-ROOM_FULL_OF_CHEESE-states.json",
+        "bytes": 17990,
+        "sha256": "202fb495fd638fbca9152dd1e7882ebaaa14c4601e2249e5320612a99a81ec68"
+      },
+      "bytes": 5619,
+      "entry": {
+        "id": "silent-brain-event-cheese-visible-hp-versus-card-pool",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "仅当前事件ROOM_FULL_OF_CHEESE且文本仍为八选二/付14血时，比较真实牌池与即时血价，不预支天选芝士未来回本。自有A10/版本unknown：71局选择大快朵颐，完成后各加2牌、HP不变；40局翻找各减14HP并获CHOSEN_CHEESE。\n范围：幕1/2；外部v0.111.0一幕GORGE为62/191、SEARCH为18/71整局胜，二幕方向相反。自选与路线混杂，无因果收益或安全血线；当前牌池未展示时不能先指定所得牌。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "2K4H3JEJHRSB",
+            "floor": 11,
+            "ref": "logs/decisions.jsonl@669798807+6364 sha256=3d968d1e1647c14e7b553e2632b7258b43ad81dbe5ce88b93714fad159117e5a",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "HD6BM39PYL21",
+            "floor": 3,
+            "ref": "logs/decisions.jsonl@4239462582+70116 sha256=3d46629df8351926322a137eac9bb6f7829b92a353c939570d2aebe80d24907f",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.ROOM_FULL_OF_CHEESE\",\"kind\":\"event\"}]; chosen=ROOM_FULL_OF_CHEESE.pages.INITIAL.options.GORGE.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.32460732984293195,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 191
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70039; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.ROOM_FULL_OF_CHEESE\",\"kind\":\"event\"}]; chosen=ROOM_FULL_OF_CHEESE.pages.INITIAL.options.SEARCH.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.2535211267605634,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 71
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70040; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "ROOM_FULL_OF_CHEESE",
+        "evidence_summary": {
+          "own_runs": 2,
+          "own_support_runs": 2,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 191
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 71
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 191
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 71
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    },
+    {
+      "id": "silent-brain-event-bridge-reprice-each-reroll",
+      "event_id": "SLIPPERY_BRIDGE",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-SLIPPERY_BRIDGE-states.json",
+        "bytes": 17104,
+        "sha256": "dde76e6835d68c840f3ce3f890528fe6a61611f513cc448171c9de5271e9dc0a"
+      },
+      "bytes": 5588,
+      "entry": {
+        "id": "silent-brain-event-bridge-reprice-each-reroll",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strategy": "仅当前事件SLIPPERY_BRIDGE时，每次重掷后重新比较所指移除牌与新血价，并累计已付成本。自有A10/版本unknown：74局178次选择，其中63局共104次重掷，文本价3至7HP，后继净减2至7HP；74次跨越各移除1牌、即时HP不变。\n范围：幕1/2/3；不把重掷数当独立局，也不保证下一次抽中可舍弃牌。外部v0.111.0一幕节点净减代理约5至7HP，涵盖整段，不能当单次费用；文本与实测不一致的记录保留。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "54G5683J0E5S",
+            "floor": 21,
+            "ref": "logs/decisions.jsonl@866834115+6063 sha256=f811755d6fa5ecb6395e4a3d1c800dc96d9d106692f0885e04d450a011ea4edd",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "54G5683J0E5S",
+            "floor": 21,
+            "ref": "logs/decisions.jsonl@866840178+6128 sha256=447b6b29c44de90cb0b42f3f032375352d338c4caf291e6efd9cbeea47e9bab1",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.SLIPPERY_BRIDGE\",\"kind\":\"event\"}]; chosen=SLIPPERY_BRIDGE.pages.INITIAL.options.OVERCOME.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.20967741935483872,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 62
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70089; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.SLIPPERY_BRIDGE\",\"kind\":\"event\"}]; chosen=SLIPPERY_BRIDGE.pages.INITIAL.options.HOLD_ON_0.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.1896551724137931,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 58
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70088; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "SLIPPERY_BRIDGE",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 62
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 58
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 1,
+        "own_support_runs": 1,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 62
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 58
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    },
+    {
+      "id": "silent-brain-event-brain-leech-priced-reward-type",
+      "event_id": "BRAIN_LEECH",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-BRAIN_LEECH-states.json",
+        "bytes": 20506,
+        "sha256": "2a41fb7fab2a9eba8b35901c273dfdf6b37cf6511dd99b7e1a206f64a1460ac1"
+      },
+      "bytes": 5367,
+      "entry": {
+        "id": "silent-brain-event-brain-leech-priced-reward-type",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "仅当前事件BRAIN_LEECH且提供五选一与付5HP无色奖励时，按当前缺口比较奖励类型与血价，别由无色标签直接判优。自有A10/版本unknown的88局均选分享知识，完成后各加1牌且HP/金币不变，未观察付血分支后果。\n范围：幕1/2；外部v0.111.0一幕分享为44/137、扯下为39/140整局胜（+4.26点），v0.108.0反向（-6.43点），机制对照未知；不作固定选项或因果收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 5,
+            "ref": "logs/decisions.jsonl@3348399918+78886 sha256=dcd82dabd36d386db25691715034c887a3e8f5a8322b0f37aa3c3aaf60c2d075",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.BRAIN_LEECH\",\"kind\":\"event\"}]; chosen=BRAIN_LEECH.pages.INITIAL.options.SHARE_KNOWLEDGE.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.32116788321167883,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 137
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/69408; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.BRAIN_LEECH\",\"kind\":\"event\"}]; chosen=BRAIN_LEECH.pages.INITIAL.options.RIP.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.2785714285714286,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 140
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/69407; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "BRAIN_LEECH",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 137
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 140
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 1,
+        "own_support_runs": 1,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 137
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 140
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    },
+    {
+      "id": "silent-brain-event-statue-current-gold-quote",
+      "event_id": "SUNKEN_STATUE",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-SUNKEN_STATUE-states.json",
+        "bytes": 17093,
+        "sha256": "6d5b2db76966efb48b977c2af4f70b04bbe1263b5f15ad8845cec0a26015bece"
+      },
+      "bytes": 5565,
+      "entry": {
+        "id": "silent-brain-event-statue-current-gold-quote",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "仅当前事件SUNKEN_STATUE时，用本次显示的金币、支付后HP与石剑选项比较，别固定按115金币，也别预支未来精英奖励。自有A10/版本unknown：50局潜水各减7HP并得101至121金币，逐次等于报价；6局拿剑即时HP/金币不变且获SWORD_OF_STONE。\n范围：第一幕；外部v0.111.0潜水17/77、拿剑44/139整局胜，v0.108.0方向相反。路线/牌组自选混杂；未核石剑后续兑现，不给固定拿法或安全HP线。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "02HB4L0C3C67",
+            "floor": 8,
+            "ref": "logs/decisions.jsonl@648558235+5419 sha256=11be478d4b9ccef723750212a33c5989e6676a60ec96eff980e44d6986a6fc45",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "CA5KE8GFJ9X2",
+            "floor": 12,
+            "ref": "logs/decisions.jsonl@672874148+1410 sha256=9e371373a459a5ff1c93a4edbdd114470d430c038350f53bf435fc68fa218b92",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.SUNKEN_STATUE\",\"kind\":\"event\"}]; chosen=SUNKEN_STATUE.pages.INITIAL.options.DIVE_INTO_WATER.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.22077922077922077,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 77
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70092; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.SUNKEN_STATUE\",\"kind\":\"event\"}]; chosen=SUNKEN_STATUE.pages.INITIAL.options.GRAB_SWORD.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.31654676258992803,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 139
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70093; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "SUNKEN_STATUE",
+        "evidence_summary": {
+          "own_runs": 2,
+          "own_support_runs": 2,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 77
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 139
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 77
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 139
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    },
+    {
+      "id": "silent-brain-event-this-or-that-curse-versus-hp-gold",
+      "event_id": "THIS_OR_THAT",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-THIS_OR_THAT-states.json",
+        "bytes": 25094,
+        "sha256": "04412d4e8e5ec788c92b3e4763faa3617bd65696a98d6c34bcd922ee49e40ff2"
+      },
+      "bytes": 5592,
+      "entry": {
+        "id": "silent-brain-event-this-or-that-curse-versus-hp-gold",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strategy": "仅当前事件THIS_OR_THAT时，把明示的加笨拙代价与随机遗物、以及本次付血金币替代逐项比较，别按“这个/那个”的名字或未来遗物定优劣。自有A10/版本unknown：89局ORNATE各加1张CLUMSY及1件遗物，另5局PLAIN各减6HP并得58至65金币。\n范围：幕1/2/3；ORNATE另有8局HP/金币同步变化，原因未核。外部v0.111.0一幕ORNATE为64/209、PLAIN为5/20整局胜，二三幕反向；小组稀疏、混杂，不作必拿或因果承诺。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "4AA19CXDKQK6",
+            "floor": 4,
+            "ref": "logs/decisions.jsonl@3297142976+95912 sha256=5c9a6638da7b5ecd3d367ef6f1c48f38cba7672cd1b4dde4b1fea7a2e2017c66",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0QDRNCRMC8BU",
+            "floor": 42,
+            "ref": "logs/decisions.jsonl@2549802367+131578 sha256=55b857f643c0c55314fa83d14d2cce3742a15d6e211ee7a6b4c54abf719a6bc7",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.THIS_OR_THAT\",\"kind\":\"event\"}]; chosen=THIS_OR_THAT.pages.INITIAL.options.ORNATE.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.3062200956937799,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 209
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70250; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=1; rooms=[{\"id\":\"EVENT.THIS_OR_THAT\",\"kind\":\"event\"}]; chosen=THIS_OR_THAT.pages.INITIAL.options.PLAIN.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.25,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 20
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/70251; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "THIS_OR_THAT",
+        "evidence_summary": {
+          "own_runs": 2,
+          "own_support_runs": 2,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 209
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 20
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 209
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 20
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    },
+    {
+      "id": "silent-brain-event-lantern-visible-gold-versus-fight",
+      "event_id": "THE_LANTERN_KEY",
+      "source": {
+        "path": "paper/materials/20261024-issue51-event-publication-ops/original/scratch/sample-THE_LANTERN_KEY-states.json",
+        "bytes": 29084,
+        "sha256": "519cf23049fca6510e9b4ed9aefc2d1ffc1c159757af4da8181cf8f094ddfe20"
+      },
+      "bytes": 5713,
+      "entry": {
+        "id": "silent-brain-event-lantern-visible-gold-versus-fight",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "event"
+          ],
+          "acts": [
+            2
+          ]
+        },
+        "strategy": "仅当前事件THE_LANTERN_KEY时，把交还钥匙的眼前金币与留下钥匙明确需要的额外战斗分开比较；敌人/奖励未核时保留未知。自有A10/版本unknown：43局均交还、HP不变，40局得100金币，3局净增125；未观察留钥匙执行后果。\n范围：第二幕；外部v0.111.0交还43/102、留钥匙16/30整局胜，战斗节点前后HP差约-8.47只是代理。自选幸存混杂，不能由赢家关联固定留钥匙，也不把文本100当所有后继净变化。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "2K4H3JEJHRSB",
+            "floor": 20,
+            "ref": "logs/decisions.jsonl@670237627+5675 sha256=60a7a3234a6eeb47f3c6090fc9c1eb3f900668dd4d8f699c9009c47ccb939b08",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "A4VWQKBVBBMP",
+            "floor": 20,
+            "ref": "logs/decisions.jsonl@1200485746+15458 sha256=f351ad4addfc782699a96cd0143e0660e7e37428524248edf02805334990145e",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=2; rooms=[{\"id\":\"EVENT.THE_LANTERN_KEY\",\"kind\":\"event\"}]; chosen=THE_LANTERN_KEY.pages.INITIAL.options.RETURN_THE_KEY.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.4215686274509804,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 102
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/76917; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; act=2; rooms=[{\"id\":\"EVENT.THE_LANTERN_KEY\",\"kind\":\"event\"},{\"id\":\"ENCOUNTER.MYSTERIOUS_KNIGHT_EVENT_ENCOUNTER\",\"kind\":\"monster\"}]; chosen=THE_LANTERN_KEY.pages.INITIAL.options.KEEP_THE_KEY.title"
+            },
+            "statistic": {
+              "name": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "value": 0.5333333333333333,
+              "unit": "probability"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 30
+            },
+            "design": "observational",
+            "limitations": [
+              "上传自选/玩家独立数未知；非因果。",
+              "缺即时费用及完整备选；资源差仅代理。",
+              "牌组/路线/生存混杂；同局多标题分母不累加。"
+            ],
+            "license": "Dataset redistribution license not found; attribution and aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/rows/76895; sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.35,
+        "evidence_status": "unassessed",
+        "event_identity_guard_in_body": "THE_LANTERN_KEY",
+        "evidence_summary": {
+          "own_runs": 2,
+          "own_support_runs": 2,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 102
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+              "denominator": {
+                "unit": "runs",
+                "n": 30
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 102
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "whole_run_winning_uploads_per_distinct_uploaded_run",
+            "denominator": {
+              "unit": "runs",
+              "n": 30
+            }
+          }
+        ]
+      },
+      "actual_production_tool": true,
+      "event_identity_automatic_gate": false,
+      "event_guard_is_learner_body_condition": true,
+      "non_event_negative": true,
+      "executable_comparison": false
+    }
+  ],
+  "automatic_event_identity_and_ascension_gate": false,
+  "body_scope_and_sparse_mechanism_limitations_preserved": true,
+  "rk_entries_added": 0,
+  "rk_contract_waiting": 6,
+  "custom_experience_consumers": "pending6",
+  "new_executable_comparisons": 0,
+  "natural_brain_queries": 0,
+  "new_full_models_games_ticks": 0
+}

@@ -1,18 +1,18 @@
 state: clear-ok
-issue: 48
-updated: 2026-10-24T20:58:41+08:00
+issue: 51
+updated: 2026-10-24T21:08:34+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：R440原回调已去重核收，7份原件同e70ccdc8、main/live单策略及单次编号核同；2正3负/2角色原读回保持，锁13.51s释/worker退出，未重发。
-在等谁：48旧244/rk/新普通24h/自然收益，50双Boss阈值与胜局口径/冷重启及科学父；0618 proposed整条不改，0672仅检索投影shipped。
-下一步：clear-ok/48，沿原自然流水线，不重full/模型/强tick。原件paper/materials/20261024-issue48-r440-return-ops/verification.json；原核收issue6384480021，20原24h/kit与56/drain另issue保持。
+进行中的事：204311已发V6-R441，6新事件文字、75策略115rk、6投影shipped/678检查0；6正/6非事件负/2角色读回核同，锁25.20s释、worker退出。
+在等谁：6rk缺event/身份合同、6自定义knowledge正式经验消费者、自然采用收益与科学父；正文事件条件不代自动身份/进阶门，不扩schema。
+下一步：clear-ok/51，原56四道/档位/排单另验，不重发/full/模型/强tick。保R440/0618 proposed/0672 shipped、R438九叶及后来知识。原件paper/materials/20261024-issue51-event-publication-ops/verification.json；issue6384587555，48/50/20原父保持。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51保持：截至R437为61策略/109rk，R439为68/115，普通R440见48段；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
+#51保持：R440为69策略115rk，事件R441见首段；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
 新6382974399/6382976033四类别+独立自有1槽待56；当前原2策略槽/外部自动单道不冒四道。A/C/D原high/沙箱/tier未知，手动仅C1；B20～25已冻/旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权codex1、磁盘≤80停新派待代码，不热切/扩权限。旧8叶3:1源稿/旧full保留而部署授权取消。A/C/D已done按原retention门；506/28窗口/18局反向分层守界，满批或2h先到串行发布，不开计时器。原件paper/materials/20261024-issue51-four-lanes-ops/及issue51-shop-paired-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。

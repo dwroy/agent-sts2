@@ -6738,3 +6738,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T20:57:27+08:00 [ops] V6-R440原48单策略实发/登记/读回核收：69策略115rk，2正3负/2角色读回，0618 proposed整条保持/0672查询投影shipped，锁13.51s已释，R439/R438及其他知识不改；旧244/rk/自然收益/科学父待，clear-ok/50。原件paper/materials/20261024-issue50-resume-2047-ops/issue48-publication-return.json；issue6384480021。
 
 - 2026-10-24T20:58:41+08:00 [ops] R440回调去重核7份原件/祖先/单策略/单次编号，原2正3负/2角色读回保持，锁13.51s释、worker退出；0618 proposed不改/0672检索投影shipped，未重发/full/模型，旧244/rk/科学父待，clear-ok/48。原件paper/materials/20261024-issue48-r440-return-ops/verification.json。
+
+- 2026-10-24T21:08:34+08:00 [ops] V6-R441实发204311六事件文字：75策略115rk，6正/6非事件负/2角色读回、6shipped/678检查0，锁25.20s释；R440/R438及其他知识保持。六rk/正式经验消费者与自然收益/科学父待，原null不改，无新full/模型/局，clear-ok/51。原件paper/materials/20261024-issue51-event-publication-ops/verification.json；issue6384587555。

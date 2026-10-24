@@ -1,0 +1,67 @@
+{
+  "id": "silent-event-statue-current-gold-quote",
+  "source": "mixed",
+  "disposition": "new",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "direction": "沉没雕像按本次金币报价和即时掉血比较石剑，不把一局115金币写成固定收益。",
+  "magnitude_and_sample": "A10自有56局56次：50次潜水均净失7HP、金币净增101至121且逐次等于当前报价；6次拿剑HP/金币不变并新增SWORD_OF_STONE。",
+  "applicability": "仅当前原ID为SUNKEN_STATUE且显示具体金币/HP代价与石剑选项；Silent A10、幕1，自有版本unknown。",
+  "strategy_id": "silent-brain-event-statue-current-gold-quote",
+  "rk_candidate_id": "silent-rk-event-statue-current-gold-quote",
+  "evidence": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/statue-current-gold-quote-evidence.json",
+    "sha256": "5c2804cc2ebc8a8a7920d96dfe0c1b2885769ea80632c564432b220de3473ed0"
+  },
+  "game_versions": {
+    "own": "unknown",
+    "external": [
+      "v0.107.0",
+      "v0.107.1",
+      "v0.108.0",
+      "v0.109.0",
+      "v0.109.1",
+      "v0.110.0",
+      "v0.110.1",
+      "v0.111.0"
+    ]
+  },
+  "collected_at": {
+    "external": "2026-10-21",
+    "own": "2026-10-24"
+  },
+  "input_sha256": "1d2d96a88fbc1544014215800da56bd392476559e1826de03e42708243e95c1c",
+  "external_input_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+  "external_primary": {
+    "event_id": "SUNKEN_STATUE",
+    "version": "v0.111",
+    "build_id": "v0.111.0",
+    "act": 1,
+    "choice_a": "DIVE_INTO_WATER",
+    "choice_b": "GRAB_SWORD",
+    "a_runs": 77,
+    "a_wins": 17,
+    "b_runs": 139,
+    "b_wins": 44,
+    "a_minus_b_pp": -9.576754181070726,
+    "both_at_least100": false,
+    "independent_players": null,
+    "pairwise_overlap": "known overlapping choices within same event for bridge; otherwise unknown",
+    "a_original_row": 70092,
+    "b_original_row": 70093
+  },
+  "counterexamples_and_gaps": [
+    "CA5KE8GFJ9X2 F12当前3HP，潜水7HP的will_kill_player=true；拿剑不是与可支付潜水的同起点对照。v0.108.0幕1潜水高4.79点，反于v0.111.0；剑后续兑现未知。",
+    "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+    "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+    "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+    "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+    "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+    "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+    "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+    "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+  ],
+  "causal_effect": null,
+  "safe_hp_threshold": null,
+  "fixed_option_ranking": null
+}

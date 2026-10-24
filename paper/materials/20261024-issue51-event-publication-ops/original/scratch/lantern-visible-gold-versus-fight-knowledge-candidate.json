@@ -1,0 +1,67 @@
+{
+  "id": "silent-event-lantern-visible-gold-versus-fight",
+  "source": "mixed",
+  "disposition": "new",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "direction": "灯火钥匙区分眼前金币与明确额外战斗，未核敌人与奖励时不把留下钥匙当免费收益。",
+  "magnitude_and_sample": "A10自有43局43次交还，HP不变，40次金币+100、3次+125；留钥匙实选0次，备选仅明确需要战斗。",
+  "applicability": "仅当前原ID为THE_LANTERN_KEY且文本仍为100金币/战斗留钥匙；Silent A10、幕2，自有版本unknown。",
+  "strategy_id": "silent-brain-event-lantern-visible-gold-versus-fight",
+  "rk_candidate_id": "silent-rk-event-lantern-visible-gold-versus-fight",
+  "evidence": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/lantern-visible-gold-versus-fight-evidence.json",
+    "sha256": "19da459090f33df195b3909e51a47fed0648b2d63fa6470a0432ca7d197910ce"
+  },
+  "game_versions": {
+    "own": "unknown",
+    "external": [
+      "v0.107.0",
+      "v0.107.1",
+      "v0.108.0",
+      "v0.109.0",
+      "v0.109.1",
+      "v0.110.0",
+      "v0.110.1",
+      "v0.111.0"
+    ]
+  },
+  "collected_at": {
+    "external": "2026-10-21",
+    "own": "2026-10-24"
+  },
+  "input_sha256": "1d2d96a88fbc1544014215800da56bd392476559e1826de03e42708243e95c1c",
+  "external_input_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+  "external_primary": {
+    "event_id": "THE_LANTERN_KEY",
+    "version": "v0.111",
+    "build_id": "v0.111.0",
+    "act": 2,
+    "choice_a": "RETURN_THE_KEY",
+    "choice_b": "KEEP_THE_KEY",
+    "a_runs": 102,
+    "a_wins": 43,
+    "b_runs": 30,
+    "b_wins": 16,
+    "a_minus_b_pp": -11.176470588235293,
+    "both_at_least100": false,
+    "independent_players": null,
+    "pairwise_overlap": "known overlapping choices within same event for bridge; otherwise unknown",
+    "a_original_row": 76917,
+    "b_original_row": 76895
+  },
+  "counterexamples_and_gaps": [
+    "自有KEEP_THE_KEY执行数为0，不知道自有战斗损耗或钥匙兑现；3次文本100但后继金币+125，同持BOWLER_HAT只属共现，不据此补机制。外部KEEP与FIGHT两标题同30局，不可相加为60。",
+    "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+    "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+    "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+    "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+    "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+    "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+    "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+    "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+  ],
+  "causal_effect": null,
+  "safe_hp_threshold": null,
+  "fixed_option_ranking": null
+}

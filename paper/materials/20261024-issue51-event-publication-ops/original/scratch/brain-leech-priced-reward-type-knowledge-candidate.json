@@ -1,0 +1,67 @@
+{
+  "id": "silent-event-brain-leech-priced-reward-type",
+  "source": "mixed",
+  "disposition": "new",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "direction": "脑蛭把五选一与付血无色奖励按当前需求比较，不能因无色标签直接付费。",
+  "magnitude_and_sample": "A10自有88局88次分享知识，HP/金币均不变，完成后各+1牌；付血分支实际选择0次，只有明确5HP价的备选文本。",
+  "applicability": "仅当前原ID为BRAIN_LEECH、文本确为5选1与5HP换无色奖励；Silent A10、幕1/2，自有版本unknown。",
+  "strategy_id": "silent-brain-event-brain-leech-priced-reward-type",
+  "rk_candidate_id": "silent-rk-event-brain-leech-priced-reward-type",
+  "evidence": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/brain-leech-priced-reward-type-evidence.json",
+    "sha256": "7f7f4a30e7f31b7d19cc28f2c29fbcec6c04fcc61708d3d73ae6f612a065a6a1"
+  },
+  "game_versions": {
+    "own": "unknown",
+    "external": [
+      "v0.107.0",
+      "v0.107.1",
+      "v0.108.0",
+      "v0.109.0",
+      "v0.109.1",
+      "v0.110.0",
+      "v0.110.1",
+      "v0.111.0"
+    ]
+  },
+  "collected_at": {
+    "external": "2026-10-21",
+    "own": "2026-10-24"
+  },
+  "input_sha256": "1d2d96a88fbc1544014215800da56bd392476559e1826de03e42708243e95c1c",
+  "external_input_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+  "external_primary": {
+    "event_id": "BRAIN_LEECH",
+    "version": "v0.111",
+    "build_id": "v0.111.0",
+    "act": 1,
+    "choice_a": "SHARE_KNOWLEDGE",
+    "choice_b": "RIP",
+    "a_runs": 137,
+    "a_wins": 44,
+    "b_runs": 140,
+    "b_wins": 39,
+    "a_minus_b_pp": 4.2596454640250245,
+    "both_at_least100": true,
+    "independent_players": null,
+    "pairwise_overlap": "known overlapping choices within same event for bridge; otherwise unknown",
+    "a_original_row": 69408,
+    "b_original_row": 69407
+  },
+  "counterexamples_and_gaps": [
+    "自有付血RIP执行数为0，不能估计本系统两分支收益差。v0.111.0幕2分享17/41对扯下20/46，方向相反；v0.108.0幕1也反向。奖励实际牌在选择事件分支时尚未知。",
+    "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+    "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+    "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+    "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+    "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+    "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+    "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+    "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+  ],
+  "causal_effect": null,
+  "safe_hp_threshold": null,
+  "fixed_option_ranking": null
+}
