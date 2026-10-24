@@ -56,7 +56,8 @@ def external_disk_allowed(root):
 
 def four_lane_mode(state, root, alive):
     import strategy_external_jobs
-    return bool(strategy_external_jobs.active_external(state, alive)) or strategy_external_jobs.ready(state, root)
+    directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
+    return bool(strategy_external_jobs.lane_owners(state, alive, directory)) or strategy_external_jobs.ready(state, root)
 
 
 def own_busy(state, alive, directory=None):

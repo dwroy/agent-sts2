@@ -101,3 +101,6 @@ Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）�
 现有五分钟订阅采样同时写 `ops/codex-ops/subscription-usage.json`，账号 home 的 SHA256 只用于绑定；不含凭据。调度器与 wrapper/launcher 共用这份最多十分钟的快照：周用量 ≤70% 为四道 ultrafast，>70% 且 <90% 为两道 fast，≥90% 停止新外部准入并向原 ops 队列去重请求 codex1 换号。#56 评论 6383255912 明确当前没有预检事务 ID，真实预检、drain、换号及验证归 ops，不在开发交付中切账号；不打断在途批次。未知/过期/账号不符也不准入。刷新快照但仍在同档允许已登记 checkout 继续，跨档需保留原注册并走原失败/重试门，不能重写租约。主盘可用空间 ≤80 GiB 拒绝新外部派发，原临时盘及其他容量门继续生效。service tier 仅经启动参数传入，不改共享 config。
 
 每批 `external-launch.json` 初始区分 requested/effective 与尚未知的 observed；只有原生 turn_context 经原绑定核验后，调度器才补写 `observed_service_tier` 和对应只读证据。发布后由 ops 记录 T/源码、自然 tick 的四道+自有槽五个独立批次及实际档位，并在 [T,T+2h) 读回至少四个完成单元。固定测试和启动请求不能代这两项验收；R434 正式策略/rk、旧失败、未完成学习父要求与自然采用/收益保持分账。
+
+
+#56 退回修正：道位释放还须核原 owner 的 `shared.retired`。即使原批是 done/failed 且 wrapper PID 已退，不同 plan、不同 unit ID 也不能跳过原生退役/原 learner 日志证明；不明时保留该道及其 worker 名额，仍按额度上限调度其他空道，自有槽独立。not-started 原证明或已核原生终态到齐后，下一自然派发可释放原道；不重置原状态、失败、租约，也不把已核退役历史永久计入占用。该检查同时适用原 external dispatch 和底层 writer 准入。

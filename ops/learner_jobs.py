@@ -293,7 +293,7 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
             configured = external_jobs.queue(root)
             plan = next(p for p in configured["plans"] if p["plan_id"] == external_source)
             occupied = external_jobs.occupied_lanes(state, configured, root, alive)
-            if (not configured["enabled"] or len(external_jobs.active_external(state, alive)) >= selected["workers"]
+            if (not configured["enabled"] or len(external_jobs.active_external(state, alive, directory)) >= selected["workers"]
                     or external_jobs.lane(plan, external_jobs.source(root, plan)[0]) in occupied):
                 return None
         except (OSError, ValueError, KeyError, TypeError, StopIteration):

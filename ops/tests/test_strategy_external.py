@@ -256,6 +256,71 @@ class External(unittest.TestCase):
         with patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
             return external.dispatch_lanes(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: pid == 10, stamp, self.writer)
 
+    def not_started(self, bid, batch):
+        path = self.directory / "learner" / (bid + ".external-not-started.json")
+        path.write_text(json.dumps({"batch": bid, "source": batch["external_source"],
+                                   "worktree": batch["worktree"], "models_started": 0}))
+
+    def retire_native(self, rc):
+        rollout = self.directory / "external-native.jsonl"
+        rows = [json.loads(line) for line in rollout.read_text().splitlines()]
+        rows.append({"type": "event_msg", "payload": {"type": "task_complete" if rc == 0 else "turn_aborted",
+                     "turn_id": "new-turn", "last_agent_message": "fixed terminal report"}})
+        rollout.write_text("".join(json.dumps(row)+"\n" for row in rows))
+        path = self.directory / "learner" / ("learner-" + BID + ".tui.json")
+        receipt = json.loads(path.read_text())
+        log = self.directory / "learner" / (BID + ".learner.jsonl")
+        log.write_text(json.dumps({"type": "learner_summary", "exit_code": rc,
+                                  "summary": {"sessionId": "new-external"}}) + "\n")
+        receipt.update(state="session-ended", retirement_authorized=True, pid=os.getpid(),
+                       birth="fixed-previous-process-birth", result={"code": rc, "stopped": True,
+                       "session": "new-external", "turn": "new-turn", "rollout": str(rollout),
+                       "message": "fixed terminal report"}, artifacts={"summary": True, "log": str(log),
+                       "sha256": hashlib.sha256(log.read_bytes()).hexdigest()})
+        path.write_text(json.dumps(receipt))
+        (self.directory / "learner" / (BID + ".out")).write_text("fixed terminal report\n")
+
+    def test_different_plan_and_disjoint_ids_require_original_native_retirement(self):
+        for status, rc in (("failed", 1), ("done", 0)):
+            with self.subTest(status=status):
+                self.state = {"batches": {}}; self.calls = []
+                self.four_plans(); self.lanes(); self.native("ultrafast")
+                old = self.state["batches"][BID]; old.update(state=status, rc=rc, pid=None)
+                original = copy.deepcopy(old)
+                with self.assertRaises(ValueError): shared.retired(BID, old, self.directory)
+                self.assertEqual(self.lanes("20260101-000010"), [])
+                self.assertEqual(len(self.calls), 4)
+                self.assertIn("A", external.occupied_lanes(self.state,self.config,str(self.root),lambda pid:pid==10))
+                self.assertEqual(old, original)
+                self.retire_native(rc)
+                shared.retired(BID, old, self.directory)
+                resumed = self.lanes("20260101-000011")
+                self.assertEqual(len(resumed), 1)
+                self.assertEqual(self.state["batches"][resumed[0][0]]["external_source"], "lane-unit-4")
+                self.assertEqual(old, original)
+
+    def test_terminal_unknown_owner_keeps_its_lane_and_other_lanes_and_own_slot_continue(self):
+        self.four_plans(); self.lanes()
+        for bid,batch in self.state["batches"].items():
+            batch.update(state="done",rc=0,pid=None)
+            if bid != BID:self.not_started(bid,batch)
+        before = copy.deepcopy(self.state["batches"])
+        with patch.object(jobs,"available",return_value=True), patch.object(jobs,"start_learner") as start:
+            self.assertIsNone(jobs.dispatch_write(self.state,str(self.root),str(REPO/"ops"),"strategy-proposal",
+                "silent",[],"strategy-external:lane-unit-4:0","external",lambda pid:False,
+                "20260101-000009",external_source="lane-unit-4"))
+            start.assert_not_called()
+        resumed = self.lanes("20260101-000010")
+        self.assertEqual({self.state["batches"][bid]["external_lane"] for bid,_ in resumed},{"B"})
+        self.assertEqual(len(external.active_external(self.state,lambda pid:pid==10)),2)
+        for bid, batch in before.items():self.assertEqual(self.state["batches"][bid],batch)
+        def own_writer(*args,**kwargs):
+            self.assertFalse(kwargs.get("external_source")); return ("ordinary",11)
+        self.assertTrue(self.tick("20260101-000020",own_writer,alive=lambda pid:pid==10)["experience"])
+        # Unknown native ownership also retains its global worker reservation after downgrade.
+        self.quota(75)
+        self.assertEqual(self.lanes("20260101-000030"),[])
+
     def test_four_lanes_independent_single_owner_and_resume_after_restart(self):
         self.four_plans()
         self.assertEqual(len(self.lanes()), 4)
@@ -263,6 +328,7 @@ class External(unittest.TestCase):
         self.assertEqual(self.lanes(), [])
         first = next(iter(self.state["batches"].values()))
         first.update(state="done", pid=None)
+        self.not_started(BID, first)
         self.state = json.loads(json.dumps(self.state))
         self.assertEqual(len(self.lanes("20260101-000010")), 1)
         self.assertEqual([b["external_lane"] for b in self.state["batches"].values()].count("A"), 2)
@@ -298,7 +364,9 @@ class External(unittest.TestCase):
     def test_downgrade_preserves_inflight_and_waits_for_two_worker_capacity(self):
         self.four_plans();self.lanes();self.quota(75)
         self.assertEqual(self.lanes("20260101-000010"),[])
-        for batch in list(self.state["batches"].values())[:3]:batch.update(state="done",pid=None)
+        for bid,batch in list(self.state["batches"].items())[:3]:
+            batch.update(state="done",pid=None)
+            self.not_started(bid,batch)
         self.assertEqual(len(self.lanes("20260101-000010")),1)
         self.assertEqual(len(external.active_external(self.state,lambda pid:pid==10)),2)
 

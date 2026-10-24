@@ -158,15 +158,33 @@ def lane(plan, binding):
     return value
 
 
-def active_external(state, alive):
-    return [old for old in state["batches"].values() if old.get("external_source")
-            and (old.get("state") not in ("done", "failed") or alive(old.get("pid")))]
+def active_external(state, alive, directory=None):
+    """Unverified native owners still reserve worker capacity after wrapper exit."""
+    directory = directory or os.environ.get("CODEX_OPS_DIR") or str(Path(__file__).resolve().parent / "codex-ops")
+    return lane_owners(state, alive, directory)
+
+
+def lane_owners(state, alive, directory):
+    """Only original retirement proof releases a terminal owner's lane."""
+    owners = []
+    for bid, old in state["batches"].items():
+        if not old.get("external_source"):
+            continue
+        if old.get("state") in ("done", "failed") and not alive(old.get("pid")):
+            try:
+                shared.retired(bid, old, directory)
+                continue
+            except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError):
+                pass  # A dead wrapper is not proof that its native session retired.
+        owners.append(old)
+    return owners
 
 
 def occupied_lanes(state, configured, root, alive):
     occupied = set()
     plans = {p["plan_id"]: p for p in configured["plans"]}
-    for old in active_external(state, alive):
+    directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
+    for old in lane_owners(state, alive, directory):
         value = old.get("external_lane")
         if value not in ("A", "B", "C", "D"):
             plan = plans.get(old["external_source"])
@@ -210,7 +228,7 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
         if not configured["enabled"]:
             return None
         occupied = occupied_lanes(state, configured, root, alive)
-        if len(active_external(state, alive)) >= selected["workers"]:
+        if len(active_external(state, alive, directory)) >= selected["workers"]:
             return None
         pending = list(candidates(state, root, configured))
         last = {value: max((bid for bid, batch in state["batches"].items()
