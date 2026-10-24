@@ -1,14 +1,14 @@
 state: in-flight
-issue: 51
-updated: 2026-10-25T01:44:53+08:00
+issue: 58
+updated: 2026-10-25T01:51:48+08:00
 
-进行中的事：011301五对候选已核收排队；保C5 worker1487883/birth28580454无锁自然等待；#58已独立冻结/full，#60下一批迁移准备已接。
-在等谁：UVEX原局terminal/report（01:22实际F17/T9，118动作续进）；集成员58唯一full1704895终态/集成；60下一组合及双端环境入口确认。
-下一步：C5结清后优先就绪58源码，不让D/C3挤占；60下一自然批，原数据/回退已备，不重模型/full/集成或强tick。
+进行中的事：58工程7779695a/唯一full6618/0/2/tsc0已核，22源码包就绪；保C5 worker1487883/birth28580454原无锁自然事务。
+在等谁：C5原UVEX终态/report、实际发布读回与release；58不再等full或60。60下一组合与迁移双端入口待原owner确认。
+下一步：C5结清立即接58下一源码窗口，只写22叶、保最新知识；首新自然局核版本/提示工具/计划及计算复用，60和内容候选随后，不重full/模型/强tick。
 
 #59：28/35/48/50已可恢复停会话，20/36由集成员停并交ops接runtime；原父/树/日志/恢复入口保留，见paper/materials/20261025-issue59-ops/handoff-table.json。56参数/实际tier分账、57自然窗及58/60必要运行未验，不代关闭。
 
-#58/60：已读6387228077/8795、6387275096/6387288956。58源660b2e50c，anchor8a5b8be6/treecfb6ad71/check树integrator58-composition-20261025-0126，22叶/tsc0，唯一full由原集成员核，ops不重跑。60源5d7bc13c3/20叶/最后进阶修正已核，留下一批不合58。原局诊断6387293252；60准备回执6387394548。迁移冻结/单入口/真实候选/backup回退及58运行读回清单见paper/materials/20261025-issue58-60-runtime-intake-ops/runtime-acceptance-and-migration.md。当前live8文档/764而开发main9/765多archetypes，最终C5后只冻实际有效叶；data runtime未建。新局/调度/完成环境变量须同源，入口交60 owner确认，不能只切读端。下一代码回退必须含58/C5；固定probe/绑定不代自然命中/收益，原父保留。
+#58/60：58已按6387524419核main7779695a、anchor8a5b8be6/treecfb6ad71、full6618/0/2/tsc0及原worker退场；22源/合同叶正式、main、宿主、check后像同，16生产差异全在包内，另465验证快照差异不部署。C5后先58不等60；发布/自然运行尚未验，源码包与接续清单见paper/materials/20261025-issue58-source-ready-ops/。60源5d7bc13c3仍下一批；冻结/回退/唯一入口与实际live8文档/764、main多archetypes边界沿paper/materials/20261025-issue58-60-runtime-intake-ops/runtime-acceptance-and-migration.md，最终以C5后实际叶为准，runtime未建。新局/调度/完成环境同源问题交60 owner；实际pre60回退要含58/C5，固定probe/绑定不代自然命中/收益。
 
 #50三幕后继旧窗口/达标线/冷恢复/终局父保持；原完整回执与排除口径见paper/materials/20261025-wake-0104-ops/handoff-before.md#50本轮已结及issue6384464793，未新增发布/改策略。
 

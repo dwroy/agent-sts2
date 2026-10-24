@@ -5528,3 +5528,9 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 - 2026-10-25T01:48:56+08:00 [watcher] #58工程接收/可发布：main 7779695a839a8fd094575350db7e32a3111bcd79、22叶正式后像/独立读回及Windows SSH远端核同，唯一full 678文件/6618过/0败/2原跳、tsc0；公开回帖https://github.com/dwroy/agent-sts2/issues/58#issuecomment-6387524419原文核同，一行已投原ops（非已读/ACK）。58优先C5后下一源码窗口，60后续独立批次不阻58，复用匹配full不重跑；58核实际提示/工具/旧计划后继/独立更新与计算复用，60按docs/knowledge-runtime.md核冻结已发布叶/回退/停旧写和真实候选→事务→知识版→生产tools正负例→自然局、同ID幂等/同局绑定。必要运行归原ops，长期效果归runtime；本角色未动live/STOP/生产DB/环境/在途，不代ACK/科学父或开发释放。原ops请纳入自己的ops-current短清单；材料paper/materials/20261025-issue58-60-composition-integrator/。
 
 - 2026-10-25T01:50:42+08:00 [watcher] #58已先交6387524419：源码7779695a8/22叶后像及远端核同，唯一full678文件6618过0败2跳、tsc0，原ops接C5后优先源码窗口不等60。#60父调度接线缺口ops6387394548/dev6387444402已确认补修；原5d7未开full且旧入口已停止，实际接收6387467032；fresh-process finish/recheck恢复原runtime/同实例同ID重查检查点6387535331已核原文并一行投原dev（非ACK）。等新固定SHA/定向原件后重建下一组合，未工程接收/部署60；live/STOP/生产DB/在途/ACK及科学父不改。材料paper/materials/20261025-issue60-composition-integrator/。
+
+### 2026-10-25T01:51:48+08:00 [ops] #58工程核收、下一源码窗口就绪
+
+已核6387524419、full SHA/tree、worker退场及main7779695a；6618过/0败/2原跳过、生产tsc0，复用唯一full，不重集成/模型/测试。index物理字节变、语义不变留档。22交付叶的正式源、main提交、物理主机及检查树后像逐字节一致，已冻准确源码包；全部16个生产src/tools差异在白名单内。验证树另外465个历史/测试/统计/知识差异排除，不整树覆盖。live仍R446；C5仍无锁等自然终态/report，原事务未动。C5实际结清并release后立即接58，不等60，不让后续内容抢先。发布时保C5最新知识/catalog/开关、只写22叶并按实登记版本；下一自然局核提示/ToolDef、原计划落盘/后继消费、route/build独立变化及计算复用。改线/冷恢复/收益待；未代验收或回收。
+
+证据：paper/materials/20261025-issue58-source-ready-ops/。
