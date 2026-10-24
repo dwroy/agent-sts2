@@ -43,7 +43,8 @@ MARK="agent-sts2 codex-ops"
 mkdir -p "$DIR" "$QUEUE"
 
 log() { echo "$(date '+%F %H:%M') $*" >> "$LOG"; }
-paused() { [ -f "$DIR/PAUSE" ] || [ -f "$DIR/LLM_DRAIN" ]; }
+# Publication admission is independent; ACCOUNT_DRAIN keeps its learner-only scope.
+paused() { [ -e "$DIR/PAUSE" ] || [ -e "$DIR/LLM_DRAIN" ]; }
 
 # enqueue <kind> <text>: one event file, <epoch ns>-<kind>.md (ops/codex/lib.ts readQueue).
 enqueue() {
@@ -229,6 +230,11 @@ case "$cmd" in
   tick)
     job="${1:-}"
     paused && exit 0
+    # A dataset snapshot is a shared writer, not candidate computation.
+    if [ "$job" = snapshot ] && { [ -e "$DIR/PUBLICATION_ADMISSION.json" ] || [ -L "$DIR/PUBLICATION_ADMISSION.json" ]; }; then
+      log "snapshot deferred by publication admission"
+      exit 0
+    fi
     exec 7> "$DIR/tick-$job.lock"
     flock -n 7 || exit 0
     # Sample on the existing five-minute job, under a separate lock and time bound. Never delay a stall check/wake.

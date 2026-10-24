@@ -1,5 +1,7 @@
 # 运维会话跑在 codex 上（调度器 + 一个可续的 codex 会话）
 
+2026-10-24 #57：新代码发布等自然终局时，使用[发布专用开局准入](publication-admission.md)，waiting 仅放行显式 merge=no 的外部冻结候选；发布写入、源快照与开卷忽略层刷新按原锁串行。PAUSE、账号切换和旧 LLM_DRAIN 保持原门，不自动迁移在途事务。源码交付不代首个自然发布窗验收。
+
 2026-10-12 切换复查补强：Herdr 因参数变化重建空闲 ops 时，同时核 shell 已返回和旧 agent 名称已释放；短暂 `agent_name_taken` 仅在再次确认 pane 空闲、名称明确不存在后有界重试（默认10秒）。持续占用、其他会话出现或查询异常均保留事件并返回75，不强杀或重复投递。学习者的 key 隔离预检只对“bubblewrap构建阶段、rg明确ENOENT、探针没有stdout”的瞬态失败重试一次；使用完全相同权限/文件清单和原总超时预算，首次错误写入startupRetry回执。凭据可读、权限拒绝、超时或第二次失败仍拒绝启动，不扩大沙箱权限。
 
 2026-10-12 Roy 授权主 ops 使用宿主权限：`ops/codex-ops/execution-mode` 写 `host` 后，下一次空闲唤醒在原 pane、同一账号/session 以 `--sandbox danger-full-access` 重建 TUI；`approval_policy=never` 保持。缺省或 `sandbox` 保留原隔离。环境 `CODEX_OPS_EXECUTION` 可显式覆盖，非法值拒绝启动。只有主 ops 的 init/resume/Herdr 路径读取此设置；学习者、辅助和游戏大脑不继承权限变更。host 模式不再宣称 OS 阻止读取凭据，仍执行不读取/输出 key、仅修改本仓库的项目规则。原 broker 继续可用。

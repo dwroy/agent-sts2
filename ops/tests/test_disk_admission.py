@@ -164,7 +164,7 @@ class Admission(unittest.TestCase):
     def test_terminal_loop_reports_then_holds_exactly_the_next_run(self):
         ops = self.root / "ops"
         (self.root / "logs/console").mkdir(parents=True)
-        for name in ("autoplay.sh", "paths.sh", "report_log_cache.py"):
+        for name in ("autoplay.sh", "paths.sh", "report_log_cache.py", "publication_gate.py"):
             shutil.copy2(ROOT / "ops" / name, ops / name)
         (self.root / "eval").mkdir()
         shutil.copy2(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")

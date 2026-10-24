@@ -133,7 +133,7 @@ class Protocol(unittest.TestCase):
 
     def test_real_launchers_defer_before_any_game_or_broker_work(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh"):
+        for name in ("paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh", "publication_gate.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         self.tx.begin()
         env = {"PATH": os.environ["PATH"], "HOME": str(self.root)}
@@ -146,7 +146,7 @@ class Protocol(unittest.TestCase):
 
     def test_brain_selector_is_passed_to_next_play(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "run.sh"): shutil.copy(ROOT / "ops" / name, ops / name)
+        for name in ("paths.sh", "run.sh", "publication_gate.py"): shutil.copy(ROOT / "ops" / name, ops / name)
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"
@@ -171,7 +171,7 @@ class Protocol(unittest.TestCase):
 
     def test_drain_during_play_keeps_one_completion_report(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py"):
+        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py", "publication_gate.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         (self.root / "eval").mkdir()
         shutil.copy(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")

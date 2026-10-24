@@ -9,6 +9,7 @@ import sys
 import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import external_learning_policy
+import publication_gate
 import learner_registration
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
@@ -50,6 +51,11 @@ def _start_learner(argv, root, scripts, state_dir, label, barrier=None):
     The supervisor PID remains the scheduler's lease; only verified completion closes the pane.
     Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
+    external = (len(argv) == 9 and argv[0] == "bash" and os.path.basename(argv[1]) == "codex-ops-learner.sh"
+                and argv[5] == "strategy-proposal" and argv[7] == "strategy-proposal"
+                and str(argv[8]).startswith("external:"))
+    if publication_gate.learners_held(root, state_dir) or (publication_gate.candidates_only(root, state_dir) and not external):
+        raise RuntimeError("learner admission held; only registered external candidates may start")
     launch_env = dict(os.environ)
     launch_env.pop("LEARNER_REGISTRATION_GATE", None)
     if barrier is not None:
@@ -292,6 +298,9 @@ def fix_key(root, character):
 
 
 def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None):
+    directory = publication_gate.directory(root)
+    if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
+        return None
     if external_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(external_source, str) or not ID.fullmatch(external_source)
@@ -390,6 +399,8 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     import strategy_external_jobs as external_jobs
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    if publication_gate.learners_held(root, directory):
+        return {"dispatched": None, "admission_hold": True}
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
     four_lane_mode = character == "silent" and (external_ready or bool(external_jobs.active_external(state, alive)))
@@ -400,6 +411,8 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     if not jobs_allowed(root, directory):
         return {"disk_capacity_hold": True, "dispatched": None}
     external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+    if publication_gate.candidates_only(root, directory):
+        return {"candidate_only": True, "strategy_external": external, "backfill_hold": True}
     if four_lane_mode and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,

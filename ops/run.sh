@@ -9,10 +9,10 @@ if [ -f "$ROOT/ops/production-runtime.sh" ]; then
   . "$ROOT/ops/production-runtime.sh" || exit 78
 fi
 # Drain only at admission. Never use STOP, which cancels an in-flight brain request.
-if [ -f "$ROOT/ops/codex-ops/LLM_DRAIN" ]; then
-  echo "LLM drain: next play deferred" >&2
+nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" admit-game --pid "$$" >/dev/null || {
+  echo "game admission held; next play deferred" >&2
   exit 76
-fi
+}
 cd "$LIVE/agent"
 export STS2_WORKSPACE="$ROOT"
 # Selected only by the explicit LLM handoff transaction; existing play keeps its original environment.

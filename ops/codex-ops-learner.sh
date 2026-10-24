@@ -191,6 +191,20 @@ if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
 fi
 # Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
 # LEARNER_CMD overrides the command for fixed tests only.
+learner_merge=live
+[ "$source_kind" != external ] || learner_merge=no
+check_admission=0
+[ "$source_kind" != external ] || check_admission=1
+# Ordinary legacy launches need no new helper when every admission marker is absent.
+for admission_flag in PUBLICATION_ADMISSION.json PAUSE ACCOUNT_DRAIN LLM_DRAIN; do
+  if [ -e "$DIR/$admission_flag" ] || [ -L "$DIR/$admission_flag" ]; then check_admission=1; fi
+done
+if [ "$audit_ready" = 1 ] && [ "$check_admission" = 1 ]; then
+  if ! (flock -w 120 8 && nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" --state-dir "$DIR" \
+    check-learner --batch "$batch" --cwd "$worktree" --merge "$learner_merge") 8> "$registration_lock" >> "$out" 2>> "$err"; then
+    audit_ready=0
+  fi
+fi
 if [ "$audit_ready" != 1 ]; then
   if [ -n "$backfill_source" ]; then
     python3 "$OPS/strategy_${source_kind}_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
@@ -235,6 +249,7 @@ else
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
+  [ "$source_kind" != external ] || args+=(--set merge=no)
   # The launcher may retry only a proven pre-session failure under this same registration.
   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
   unset LEARNER_BACKFILL_SOURCE LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
@@ -248,10 +263,13 @@ else
   fi
   # Wait for this batch publication before either entry point captures the lease.
   # A later source validation in the same tick does not hold this batch barrier.
+  launcher_source="$ROOT"
+  # External candidates import only their immutable source tree during publication.
+  [ "$source_kind" != external ] || launcher_source="$worktree"
   if (flock -w 120 8) 8> "$registration_lock"; then
     # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
     nice -n 19 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
-      -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
+      -- "$ROOT/agent/node_modules/.bin/tsx" "$launcher_source/learner/run.ts" "${args[@]}"
     rc=$?
   else
     echo "learner registration lock wait timed out after 120 seconds; no model started" >> "$err"
