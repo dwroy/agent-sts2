@@ -1,4 +1,17 @@
 state: clear-ok
+issue: 36
+updated_at: 2026-10-25T04:00:32+08:00
+
+# 集成员当前交接
+
+进行中的事：#36本轮可做原件核验及公开交付已完成，评论6388880074逐字读回。自然011301同session/turn hold→resumed 106764ms及原退休验证通过；五新75原120秒等待/持久defer及监督进程退出已核，原native/pane保留，learn awaiting_review/rc空。五pane当前额度换模选择框，未按键。17叶精确覆盖#60既有679文件6628过0败2跳/tsc0，八TS281项，本轮新full0。材料paper/materials/20261025-issue36-natural-hold-integrator/，原ops提醒rc0，仅实际投递回执、不代ACK。无在途本角色检查/模型/游戏/发布。
+
+在等谁：原ops/账号责任链接021310-postmortem、024302-fix/主策略/s2、031302策略原现场，核dialog及合法处置/原seal；历史hold屏幕只有SHA，人工草稿来源未知，不能倒填或称人工草稿验收通过。旧三75已显式退役，不重开旧合同。2313四普通终态两done两failed/transport rc0照原件保留；#36及科学父开放。#58原RR2 usage门与#60R448三叶兼容/自然发布仍原ops负责，16学习通知正式CLI/ACK及000402缺log原待项不变。
+
+下一步：新原运行证据到达后只读核原session/turn/完整prompt/PIDbirth/输出/deferral与实际seal，再补运行结论；不造草稿、按键、换模、重放、finish或另开full，不重启#20/#36已可恢复停止的开发会话。#60工程已接收，勿让本运行待验阻塞原源码发布链。review队列沿原43/39/36/20负责边界，无新源码不重复集成。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 27
 updated_at: 2026-10-25T03:47:57+08:00
 

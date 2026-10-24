@@ -1,0 +1,15 @@
+# #36 自然暂停与有界监督接续核验
+
+核验/记录时间：2026-10-25T04:00:32+08:00。
+
+[watcher] #36 接续新增核收：自然 input_hold→resumed 一批、自然120秒超时→75→wrapper defer 五批已有独立原件；人工草稿身份、异常后的合法处置/原seal仍未完成，不重启已停止开发会话。
+
+1. 20261025-011301-strategy-proposal 原结构化日志实有 input_hold 和 input_resumed，同session/turn，间隔106764ms且在120000ms截止前恢复；独立核完整prompt绑定、原生gpt-6.1-sol/high及task_complete，TUI末消息/输出SHA同、wrapper/learn done/rc0、原PID/birth退出，原 verified_code 通过。此项核收自然有界观察恢复，不能证明历史输入是人工草稿，也不冒后续科学采用/收益。
+2. 021310-postmortem、024302-fix-batch、024302-s2-strategy-proposal、024302-strategy-proposal、031302-strategy-proposal 五批，逐批核同session/turn、完整promptSHA、sol/high原生context、task_complete末消息与TUI一致；每批一个input_hold、无resumed，原deadline均120000ms，至原deferral实际120952–121714ms。原TUI仍needs-attention/code75/retirement_authorized=false，failure_reason=pending-input-timeout；原log SHA及read-only verification_blocked通过。五个原wrapper的PID/birth均退出；持久deferral绑定原注册并禁止finish/retire/automatic_replay，learn均awaiting_review、rc空，原native PID/birth和原pane仍在。核收的是原监督有界退出且保留现场，不是模型已退役、科学完成或已取得seal。
+3. 五个原pane当前只读屏幕都显示“Approaching rate limits / Switch to gpt-6-luna / Keep current model”选择框；历史hold只存screen SHA，不能把当前模态倒填成当时屏幕，也不能称人工草稿验收通过。未按键、未选换模/保留、未改账号/权限；请原ops沿原身份及额度责任链核当前dialog和后续合法处置，保原批/树/回执，不重放或直接finish。
+4. 上次在途231302复盘、231317修复/主策略/二组四批已核普通原生终态、输出和原 verified_code；learn为两done、两failed（修复/主策略），均transport rc0，语义failed照原件保留。原pane缺席只证当前不存在。当前对局大脑原pane标题“对局大脑 · RR2VYNL5FUUU”与run-config原行一致；视图/样本只读、gitleaks0。
+5. 本轮17份TUI及17份原launcher日志共6个hold、1个resumed；范围从20261024-231302起，不含全部屏幕历史。#36全部17运行/测试叶与当前main及#60已结束完整检查输入逐字同，八TS281项通过，复用679文件6628过/0败/2跳及tsc0；原full JSON SHA256 dc8596bddcef8112b5d5522c543e1647896ebf29377d5becbcf8a319d8ea9bd9。本轮新full0，磁盘同SHA不代进程加载，不冒当前整个main/live全绿。
+
+材料 `paper/materials/20261025-issue36-natural-hold-integrator/`：natural-hold-readback（原生字节窗口/注册/deferral）、natural-branch-inventory、current-dialog-readback、full-coverage、game-view。交原ops接五批原现场及人工输入/异常合法处置/seal剩余门；旧三75显式退役及历史缺证结论保持，不重开旧合同。#36保持开放；未改源码/live/STOP/生产DB/在途状态、ACK或科学父。
+
+原结构化日志事件完整保留在inventory；原生context/prompt/terminal只记录字节窗口与SHA，不复制任务和游戏知识全文。当前屏幕经gitleaks0后仅在.artifacts/integrator36-resume-20261025-0402保留，公开材料只保存SHA和选择框存在判据；不推定历史屏幕来源或人工作者。公开投影将原registration.key的修复队列去重SHA字段改名registration_dedup_sha256以避免generic-api-key误报；由ops/learner_jobs.py fix_key确认其SHA来源，原件不变。审计中对postmortem改用原verified_code直接入口，避免用只适用于同名策略TUI的source-specific退休入口；transport rc0与语义failed分账。
