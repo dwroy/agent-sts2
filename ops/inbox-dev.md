@@ -6687,3 +6687,10 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 本轮仅处理182343原自然发布返回。publication-state、publication、实际消费者及既有verification与原受控记录提交f9655811逐字节相同；实际main/live三知识叶与原数据提交同，V6-R436登记对应原behavior，原扫描manifest的SHA及2新扫/2复用/零全拷贝核同。55策略/103rk、六文字与六备战读回/六构筑负例、12投影shipped及原646项检查0结论保持，没有重跑工具或账本检查。原worker的PID/birth已退出，原发布锁39.419秒于18:57:53释放；不据此宣称当前其他事务无锁。R435六组保护原证据、其他知识/开关边界保留。描述性查询不代可执行比较或收益；原完整输入/Plan/矩阵/合法回放及科学父仍开放。原集成员提醒只证agent_prompted，接收与Roy通知pending；未重复发送或代填ACK。交接clear-ok/51，无重发/full/模型/额外局，等原owner与#56后续。
 
 原件：paper/materials/20261024-issue51-r436-return-ops/verification.json；原发布paper/materials/20261024-issue51-encounter-paired-ops/publication.json，issue51评论6383380100。
+
+
+### 2026-10-24T19:08:46+08:00 [ops] #51 D184318商店候选正式数据发布
+
+原批done/rc0、无源码、原source=null及测试null保持。143输入、65产物、4228原字节哈希和原native/high终态核同，实际tier未知。六新商店文字/六描述shop rk满批发布V6-R437，61策略/109rk；六文字、六构筑摘要及六完整条目生产读回、A11/其他角色隔离通过。12投影shipped、658项检查0，锁40.41秒已释；R435/R436、满药栏复用及其他知识/开关保持。六条主证均自有，459统计局与12见证局/14题分列，外部缺金币/价格/货架不标mixed。六粗谓词为真不代动态预算、可删资格/执行或收益。六自定义knowledge仅保候选，正式经验映射/消费者交原学习owner，不造协议。三份大过程投影只保SHA/索引及原路径，不复制或删除，42必要原行持久化。未重模型/full/局，科学父与接收/Roy通知pending；交接clear-ok/51，#56后续另接。
+
+原件：paper/materials/20261024-issue51-shop-paired-ops/verification.json、publication.json、actual-live-consumers.json；issue51评论6383465220。

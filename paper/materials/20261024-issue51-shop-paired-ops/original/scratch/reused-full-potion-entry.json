@@ -1,0 +1,21 @@
+{
+      "id": "silent-brain-potion-full-shop-replacement",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "仅Silent A10、来源游戏版本unknown。商店满栏且货架有当前金币买得起的替代药时，按当前每瓶用途比较保留、可用药先饮、弃药换购；先确认目标库存/价格，再决定腾栏，别把弃药记作喝药。306个已记录机会（191局）中26店发生弃后换购、280店未观察到这种替换；同店可多次，实际27组动作/25局均核新药入栏且金币按价减少。25226ZFLNR1J曾弃掉can_use的AnyTime果汁后买药，但用它与弃它的反事实未知；有害或未知效果不能因可用就喝。满栏时enough_gold曾为false，需同时看实金币、价格与栏位，不只读一个标志。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "25226ZFLNR1J",
+          "floor": 45,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=562765202",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.4
+    }
