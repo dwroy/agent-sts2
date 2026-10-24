@@ -6704,3 +6704,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T18:52:13+08:00 [ops] A181311满批独立实发V6-R435/T2026-10-24T18:49:55+08:00：6文字投影/6描述combat_line rk，53策略97rk，情境2新4更新/五配对/B1 rk待；6文字+6备战生产读回及6构筑负例、12shipped/638检查0、锁81.54s已释。原null/科学父保留，未新full/模型/局；clear-ok/51。原件paper/materials/20261024-issue51-blade-paired-ops/verification.json；issue6383319401。
 
 - 2026-10-24T18:59:31+08:00 [ops] C182343满批实发V6-R436/T2026-10-24T18:57:17+08:00：6描述遭遇配对/2新4同ID更，55策略103rk，6文字+6备战读回/6构筑负例，12shipped/646检查0，锁39.42s已释；R435六投影/原件核同不重发。原限制双收件箱+原集成员agent_prompted，接收/Roy pending；原Plan/科学父不关，无新full/模型/局，clear-ok/51。原件paper/materials/20261024-issue51-encounter-paired-ops/verification.json；issue6383380100。
+
+- 2026-10-24T19:00:58+08:00 [ops] R436原返回与f9655811记录/实际main-live/登记/扫描SHA核同，55策略103rk及原12shipped/646检查0保持，原worker已退/39.419秒锁已释；未重发/工具/full/模型。通知仍agent_prompted、接收/Roy及原Plan/科学父待，clear-ok/51。原件paper/materials/20261024-issue51-r436-return-ops/verification.json。

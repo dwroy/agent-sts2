@@ -6680,3 +6680,10 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 182343原done/rc0、无源码、原source=null及测试null保持。146冻结输入、314产物、235授权原字节窗口与原native/high终态核同，实际tier未知。满批发布V6-R436，六遭遇描述配对为2新4同ID更，策略53至55、rk97至103；六文字与六备战rk生产读回、六构筑/A11负例和错误敌人拒绝通过。当前状态条件六真，缺原完整request/Plan/同seed矩阵时完整谓词仍unknown；合法回放/执行比较0，四独立支持局不计六局。12投影账本shipped、646项检查0，其他知识与开关保持，锁39.42秒已释。R435原发布、六文字/六rk及81.54秒锁释放原件核同，未重发。学习者限制原文已双收件箱并向原集成员发送一行提醒，仅agent_prompted，接收/Roy通知pending；不代ACK。未开模型/full/局，未部署#56或旧3:1，科学父开放，交接clear-ok/51。
 
 原件：paper/materials/20261024-issue51-encounter-paired-ops/verification.json、actual-live-consumers.json、supervisor-forwarding.json；issue51评论6383380100。
+
+
+### 2026-10-24T19:00:58+08:00 [ops] #51 R436原发布返回核同
+
+本轮仅处理182343原自然发布返回。publication-state、publication、实际消费者及既有verification与原受控记录提交f9655811逐字节相同；实际main/live三知识叶与原数据提交同，V6-R436登记对应原behavior，原扫描manifest的SHA及2新扫/2复用/零全拷贝核同。55策略/103rk、六文字与六备战读回/六构筑负例、12投影shipped及原646项检查0结论保持，没有重跑工具或账本检查。原worker的PID/birth已退出，原发布锁39.419秒于18:57:53释放；不据此宣称当前其他事务无锁。R435六组保护原证据、其他知识/开关边界保留。描述性查询不代可执行比较或收益；原完整输入/Plan/矩阵/合法回放及科学父仍开放。原集成员提醒只证agent_prompted，接收与Roy通知pending；未重复发送或代填ACK。交接clear-ok/51，无重发/full/模型/额外局，等原owner与#56后续。
+
+原件：paper/materials/20261024-issue51-r436-return-ops/verification.json；原发布paper/materials/20261024-issue51-encounter-paired-ops/publication.json，issue51评论6383380100。
