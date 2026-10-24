@@ -1,0 +1,560 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-skull-existing-poison",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "SNECKO_SKULL"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-skull-existing-poison",
+        "unit": "label"
+      },
+      "label_en": "Check current poison sources and survival budget before buying Snecko Skull",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "JLN5SK17W4FQ",
+            "floor": 28
+          },
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 44
+          },
+          {
+            "run_id": "DPYF2BAA3DKT",
+            "floor": 37
+          },
+          {
+            "run_id": "GXNKW8X1XYJP",
+            "floor": 27
+          },
+          {
+            "run_id": "NBJBVSBNPYQB",
+            "floor": 30
+          },
+          {
+            "run_id": "32VSST9UX7MN",
+            "floor": 6
+          },
+          {
+            "run_id": "VNSXWCWXR3VW",
+            "floor": 24
+          },
+          {
+            "run_id": "8FP19V1W4SRQ",
+            "floor": 20
+          },
+          {
+            "run_id": "YXY2RL1E83HM",
+            "floor": 43
+          },
+          {
+            "run_id": "C7LERZPCRFZ1",
+            "floor": 37
+          }
+        ],
+        "n_support": 10,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-skull-existing-poison"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/skull-existing-poison-evidence.json",
+          "sha256": "45f54024bed694ee763d350135cc52ff6df3be7f924119415b62af848de7f588",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-fan-current-attack-supply",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "ORNAMENTAL_FAN"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-fan-current-attack-supply",
+        "unit": "label"
+      },
+      "label_en": "Compare attack-dependent Fan defense with immediate defensive purchases",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "G3TD6JEN47KT",
+            "floor": 12
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-fan-current-attack-supply"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/fan-current-attack-supply-evidence.json",
+          "sha256": "bf4012b9bfbf998fb9ae72866ed353bda511fe157f80a0a22f04c0fef206b788",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-chemical-x-owned-target",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "CHEMICAL_X"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-chemical-x-owned-target",
+        "unit": "label"
+      },
+      "label_en": "Separate owned X-card synergy from speculative future X-card acquisition",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0PH64C4AWAX9",
+            "floor": 5
+          },
+          {
+            "run_id": "Q10YYQ5DUPJA",
+            "floor": 37
+          },
+          {
+            "run_id": "U084Q0B4EJSX",
+            "floor": 21
+          },
+          {
+            "run_id": "72RFEYV6WNPA",
+            "floor": 30
+          },
+          {
+            "run_id": "3MPFJ1WYP8JJ",
+            "floor": 21
+          }
+        ],
+        "n_support": 5,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-chemical-x-owned-target"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/chemical-x-owned-target-evidence.json",
+          "sha256": "17505dad9a74243dfa68f4341eb49a5fbe0cb2a33bec6c56bc8921422579b2d2",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 5,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-membership-reprice-current-cart",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "MEMBERSHIP_CARD"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-membership-reprice-current-cart",
+        "unit": "label"
+      },
+      "label_en": "Reprice the actual cart after Membership Card and include its upfront cost",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 3
+          },
+          {
+            "run_id": "TDLBRNA0R05B",
+            "floor": 39
+          },
+          {
+            "run_id": "9Z9H2EXKLF3T",
+            "floor": 37
+          },
+          {
+            "run_id": "ZE2DNC29WWHB",
+            "floor": 22
+          }
+        ],
+        "n_support": 4,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-membership-reprice-current-cart"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/membership-reprice-current-cart-evidence.json",
+          "sha256": "0997b4e861d351db48d71846b7659ced6117359e577d652f38ac72cc042e2e67",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-potion-belt-current-supply",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "POTION_BELT"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-potion-belt-current-supply",
+        "unit": "label"
+      },
+      "label_en": "Compare extra potion capacity with current supply and actual contents",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "VLZ6CCT8AQ0A",
+            "floor": 20
+          },
+          {
+            "run_id": "AR523ATD2G4W",
+            "floor": 21
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-potion-belt-current-supply"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/potion-belt-current-supply-evidence.json",
+          "sha256": "34ed835493cd76c290ad7f61d41af407851250d674f639acf0bf85137be35523",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-relic-whetstone-eligible-attack-pool",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "WHETSTONE"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "player.deck"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-relic-observed-whetstone-eligible-attack-pool",
+        "unit": "label"
+      },
+      "label_en": "Inspect the eligible attack upgrade pool instead of assuming a core upgrade",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "YXY2RL1E83HM",
+            "floor": 28
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-relic-whetstone-eligible-attack-pool"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-191354-f7cb1ebb-a82b-4570-aab5-773f644ce348-strategy-proposal/scratch/whetstone-eligible-attack-pool-evidence.json",
+          "sha256": "dacd989efe1a750791433e21c48334f7dccd944c3d49bd45a938dc028f663d26",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名遗物购买前后；n_support只支持事实/兼容性提醒，不支持因果改善，A10重试分层及反例见来源账本。"
+          }
+        }
+      ]
+    }
+  ]
+}

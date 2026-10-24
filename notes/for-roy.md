@@ -5355,3 +5355,10 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 - 2026-10-24T20:19:26+08:00 [ops/V6-R438] #37新净37+20九产品叶已于自然终局后发布V6-R438，移除Jev旧开卷补入/调用并同步请求日志，保大脑工具/REFLEX开关。证据为原R434冻结唯一full6600过/0败/2跳、两tsc0/Python62/定向114过；不借旧含51八叶结果，不冒当前整树full。全部最新知识、R435–R437及后续数据逐字节保留，固定测试几何与091302源null/净12未夹入，旧failed/rc0不改。20三宿主叶已核源码/缓存及自然分配边界捕获，原14:49:42至次日同刻24h窗/kit不重置；不代所有回收分支通过。预期恢复Jev原请求，不承诺打法收益。回退只撤九叶前像，保后续知识/登记/日志与宿主部署。首新自然局Jev无开卷/调用错误、自然采用/收益及科学父仍待；自有准入释放后如原autoplay自然退出，沿原broker恢复。 原件paper/materials/20261024-issue37-runtime-publication-ops/publication.json。
 
 - 2026-10-24T20:24:54+08:00 [ops/#51] 已核6384124064：自然终局等待可继续派冻结输入、独立工作树且只产候选的外部学习；当前全局LLM_DRAIN同时触发shell paused与Python account_draining，直接绕过一层无效，普通任务还可merge=live。建议独立发布对局门，保持PAUSE/账号排空及未知旧门原语义，实际共享写入/输入快照按短锁串行；不扩56当前评审、槽位、账号或权限，本轮未改生产门。原37九叶已20:19:18发V6-R438，锁9.034秒、20:19:26释准入；518知识/61策略109rk及绑定原样，原自动循环自然续7RDXHY68SMWF。首F2/T1 Jev无open_book字段、配对完成无fallback/调用错误已核，仅此一次；原ENOBUFS/commit=null不倒填，旧失败、20原24h/kit及科学父保持。当前尚无新学习单元实发证据，不报恢复产出。原件paper/materials/20261024-issue51-publication-drain-audit-ops/analysis.md、first-natural-jev.json；原发布paper/materials/20261024-issue37-runtime-publication-ops/publication.json。
+
+
+### 2026-10-24T20:31:16+08:00 [ops] #51 191311遗物候选数据发布
+
+原批done/rc0、无源码及原merged/source=null、测试null不改。143输入/1765原始读取/47产物及native high终态核同，实际tier未知。7文字/6描述shop rk实发V6-R439，68策略115rk；7文字/6构筑摘要/6完整条目生产读回，A11和其他角色隔离通过，13投影shipped/671检查0，非13独立情境。锁34.63秒已释，R438九产品及R435–R437/其他知识开关保持。23购买为21局，另2交换局，全选样终败；1329开店/274目标货架机会及重试层单列，外部119留档/106引用，缺当前构筑/金币/拒选货架，不标mixed/因果。六粗谓词不代兼容/合法或收益；交换rk因合同缺event仍waiting，7自定义knowledge正式经验消费者交原学习owner，不造协议。逐项旧/新/证据台账、预期查询影响与精确回退见rule-change-notice.json。45文件归档、2大过程副本保原SHA/脚本，7必要原状态另存。不重full/模型/finish/强派或回收；drain6384186254与R438首自然Jev回执去重，科学父/20原24h/kit保持。
+
+原件：paper/materials/20261024-issue51-relic-paired-ops/verification.json、publication.json、actual-live-consumers.json、rule-change-notice.json；issue51评论6384235793。
