@@ -1,6 +1,6 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T16:16:51+08:00
+updated: 2026-10-24T16:19:41+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -21,7 +21,7 @@ updated: 2026-10-24T16:16:51+08:00
 
 #51用药/休息/冷启动候选原科学边界：终局持药447/1247对166/492仅代理；HEAL/SMITH1254/1458重叠/前节点HP代理；祝福34/111对24/110仅整局关联/旧版本反向。描述知识消费者待原owner，不硬转rk/StrategyEntry。原件paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
-#27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，main30/live26仅文件数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
+#27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，旧30/26为历史数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
 
 #37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。新R430策略数据须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
 
