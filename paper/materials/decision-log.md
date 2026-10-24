@@ -6536,3 +6536,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T08:49:09+08:00 [ops] V6-R427 #49精确8叶关闭策略/rk查询引导，实际15工具/两工具读回及知识保持；tsc0/123定向/full0按Roy，STOP保持，自然首题待恢复。paper/materials/20261024-issue49-guidance-off-ops/publication.json。
 
 - 2026-10-24T08:50:39+08:00 [ops] 核08:40十四回调；061302原发布受阻已退出并在37正式交回窗口；49实际R427，两个策略TUI恢复缺口交36保现场；Roy STOP与手动局排除保持。paper/materials/20261024-0840-callbacks-ops/receipt.json。
+
+- 2026-10-24T08:55:40+08:00 [ops] #51 P0退fast并导出原绑定ROOT，61定向/tsc0，宿主61596985 T08:53:08；085327原生08:54:49已接受并执行工具，native档位字段unknown，STOP保持。paper/materials/20261024-issue51-fast-recovery-ops/restored-native-progress.json。
