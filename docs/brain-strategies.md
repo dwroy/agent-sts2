@@ -50,7 +50,7 @@
 
 ## 检索和 prompt
 
-历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式只给查询线索，正文由 `kb_strategies` 返回，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
+历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式按Roy 2026-10-24裁定关闭策略查询引导，`kb_strategies` 仍由大脑自行调用以取得正文，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
 
 - reward/card → card_reward；event/* → event；rest/* → rest；shop/* → shop。
 - event/act-plan 同时匹配 event 和 act_plan。

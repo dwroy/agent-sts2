@@ -49,21 +49,23 @@ it("queries actual reflex.json entries and never labels experience queries as rk
   expect(queryAudit(host.calls).rk).toMatchObject({ queried: true, hit_ids: ["real-rk-fixture"] });
 });
 
-it("gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability", async () => {
+it("omits nonempty rk identities and query parameters while keeping the tool available", async () => {
   const { req } = fixture();
   const cue = await attachQueryGuidance(req);
-  expect(cue.question).toContain('"tool":"kb_reflex"');
-  expect(cue.question).toContain("real-rk-fixture");
+  expect(cue.question).not.toContain("kb_reflex");
+  expect(cue.tools!.map(t => t.name)).toContain("kb_reflex");
+  expect(cue.question).not.toContain("real-rk-fixture");
   expect(cue.question).not.toContain("Reflex content fixture only");
   expect(cue.question).not.toContain('"signal"');
   expect(cue.question).not.toContain('"predicate"');
-  expect(cue.question).toContain("检索候选");
+  expect(JSON.parse(cue.question.split("\n").at(-1)!)).not.toHaveProperty("rk");
 });
 
-it("retains rk cues even when the optional act-threat database is malformed", async () => {
-  const { req, write } = fixture();
+it("keeps rk callable without cues when the optional act-threat database is malformed", async () => {
+  const { req, write, host, entry } = fixture();
   write("monster-db.json", { monsters: {}, encounters: { INVALID_FIXTURE: null } });
-  expect((await attachQueryGuidance(req)).question).toContain("real-rk-fixture");
+  expect((await attachQueryGuidance(req)).question).not.toContain("real-rk-fixture");
+  expect(JSON.parse((await host.call("kb_reflex", { query: "*" })).text).entries).toEqual([entry]);
 });
 
 it("retains exact file and entry versions, confidence, evidence and source-experience links without writing", async () => {
@@ -134,12 +136,12 @@ it("reloads changed reflex bytes and keeps all other roles' existing tool surfac
   for (const role of ["ironclad", "regent", "defect", "necrobinder"]) { setKnowledgeCharacter(role); expect(buildKnowledgeTools(ctx).map(t => t.name)).not.toContain("kb_reflex"); }
 });
 
-it("bounds returned entries and cue identities while keeping text-filtered Boss hints consistent", async () => {
+it("bounds voluntarily queried entries without adding identities or Boss query hints", async () => {
   const { req, host, write, entry, library } = fixture();
   write("reflex.json", { ...library, entries: Array.from({ length: 30 }, (_, i) => ({ ...entry, id: `reflex-${i}` })) });
   const cue = await attachQueryGuidance(req), body = JSON.parse(cue.question.split("\n").at(-1)!);
-  expect(body.rk).toMatchObject({ count: 30, omitted: 24, tool: "kb_reflex", input: { query: "*" }, entity_queries: [expect.objectContaining({ entity: "FIXTURE_BOSS", count: 30 })] });
-  expect(body.rk.entries).toHaveLength(6);
+  expect(body).not.toHaveProperty("rk"); expect(cue.question).not.toContain("reflex-0");
+  expect(cue.question).not.toContain("entity_queries");
   const broad = await host.call("kb_reflex", { query: "*" }); expect(Buffer.byteLength(broad.text)).toBeLessThanOrEqual(24_000);
   expect(JSON.parse(broad.text)).toMatchObject({ omitted: 18 }); expect(JSON.parse(broad.text).entries).toHaveLength(12);
 });

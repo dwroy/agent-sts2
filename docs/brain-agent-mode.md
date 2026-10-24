@@ -43,9 +43,9 @@ Codex 保留空 cwd、project docs/hooks/apps/skills/multi-agent/shell/网络搜
 
 Roy/主管 2026-10-23 最新裁定（issue评论6361846602）：rk 指 **reflex knowledge**，即 `reflex.json` 条目（v6-plan §5），不是 experience/shared-experience 的别名。此前开发6290300d8的解释已撤回，原提交、交付报告和失败证据保留为历史；本节为修正后的合同。
 
-Roy 2026-10-23 晚同意的小修正（评论6367991625）：Silent 的拿牌、商店、休息、事件、幕初路线和 fight-plan 题先给实际检索匹配数，只按非空线索和需要查询。策略/rk 数为0或库缺失/错误时不附工具名和调用参数，也不在基础指令、题面或工具说明中无条件要求先查。非空时可按工具参数或线索里的 Boss/精英/卡牌/条目 ID 缩小查询。经验继续由独立的 `kb_experience` 查询，`relevant=true` 只表示本题相关经验。Ironclad 的基础指令和原工具表/schema 保持原样。
+Roy 2026-10-24 晨裁定（评论6377338293）：先关闭策略/rk查询引导，等 #51 外部条目入库后再议开启。Silent 的系统提示和题面不再附策略/rk的匹配数量、身份、工具参数或查询引导；`kb_strategies`、`kb_reflex` 仍注册，大脑可自行调用，工具只读合同、调用/耗时预算与实际调用审计保留。R419经验暂不回退；Ironclad 的基础指令和原工具表/schema 保持原样。此前10-23晚按非空匹配给线索的R420合同作为历史保留，由本次裁定取代。
 
-题面末尾 `brain-query-cues-v3` 分列 strategies、rk、experience，只含候选数量、最多六条身份/已有策略标题、经验 scope、工具名和参数。rk 只给经本题用途筛选后的真实 reflex ID/applies_to，不给 label_en、predicate、signal、证据或可信度正文；另列非零的本幕 Boss、当前敌人与已发布幕威胁文本提及数量及查询参数。这个数量是检索候选数，不证明 predicate 已成立、预测下一个精英、Jev 采用或收益。缺失/损坏库数量为 null，合法空库为0；文件变化后重新读取，不编造条目。
+题面末尾 `brain-query-cues-v3` 保留独立的 experience 及适用时的 external_stats，不再包含 strategies/rk。经验线索只含候选数量、最多六条身份/已有标题、scope及非空时的 `kb_experience relevant=true` 参数；缺失库数量为null，合法空库为0。经验正文仍由工具返回，不把相关性当作条件已成立或Jev采用。
 
 `kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。构筑题按用途筛选：拿牌仅card_pick，商店为shop/card_pick/potion，休息仅rest，事件与幕初规划为四种构筑用途，均排除combat_line（显式请求也不能绕过）。返回一句话摘要（原label_en）、ID/版本/用途、原confidence/evidence/source_experience，不返回原始predicate或signal JSON；摘要省略条件并不意味着无条件适用。fight-plan仍返回完整原条目，其他角色不变。source_experience为来源经验关联，不是reflex命中ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。
 

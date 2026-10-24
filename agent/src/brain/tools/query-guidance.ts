@@ -9,7 +9,6 @@ import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../kno
 import type { GameState } from "../../hand/mod/schema.js";
 import type { BrainRequest, ToolCallRecord } from "../types.js";
 import type { ToolContext } from "./types.js";
-import { reflexMatches } from "./reflex-knowledge.js";
 import { externalStatsQueryHints } from "./external-stats-tools.js";
 
 const record = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
@@ -26,7 +25,7 @@ function questionFacts(ctx: ToolContext): Record<string, unknown> {
     floor: get("floor") ?? rawRun["floor"] };
 }
 
-/** The same selector powers both the cue and kb_strategies. Missing and invalid libraries stay explicit. */
+/** Read-only kb_strategies selector. Missing and invalid libraries stay explicit. */
 export function strategyMatches(ctx: ToolContext) {
   if (knowledgeCharacter() !== "silent") return { entries: [], sources: [], status: "empty" };
   const path = knowledgeFile(ctx.knowledgeDir, "strategy-entries.json");
@@ -81,7 +80,6 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
   const kind = guidanceKind(req.label, req.payload);
   if (!kind) return req;
   const ctx = { ...req.toolContext, options: req.options };
-  const strategies = strategyMatches(ctx);
   let experience: Record<string, unknown>;
   try {
     const { result, sources } = await experienceMatches(ctx);
@@ -89,27 +87,11 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
     experience = { status: missing ? "missing" : "ok", count: missing ? null : result.length, entries: result.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(e.name ? { title: identity(e.name) } : {}), scope: identity(e.scope) })),
       omitted: Math.max(0, result.length - CUE_LIMIT) };
   } catch { experience = { status: "unavailable", count: null, entries: [] }; }
-  const reflex = reflexMatches(ctx);
-  const p = record(ctx.payload), raw = record(ctx.state);
-  const enemies = [p["enemies"], record(raw["combat"])["enemies"]].flatMap(v => Array.isArray(v) ? v : [])
-    .map(e => record(e)["enemy_id"]).filter((id): id is string => typeof id === "string");
-  const act = Number(questionFacts(ctx)["act"]);
-  const threats = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [])
-    .catch(() => ({ result: [] as string[], sources: [] }));
-  const entities = [...new Set([questionFacts(ctx)["act_boss"], ...enemies, ...threats.result].filter((id): id is string => typeof id === "string" && !!id))];
   const external = externalStatsQueryHints(ctx);
   const cues = { schema: "brain-query-cues-v3", question_type: kind,
-    strategies: { status: strategies.status, count: strategies.status === "invalid" || strategies.status === "missing" ? null : strategies.entries.length,
-      entries: strategies.entries.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(typeof record(e)["title"] === "string" ? { title: identity(String(record(e)["title"])) } : {}) })),
-      omitted: Math.max(0, strategies.entries.length - CUE_LIMIT), ...(strategies.entries.length ? { tool: "kb_strategies", input: { query: "*" } } : {}) },
-    rk: { status: reflex.status, count: reflex.status === "loaded" ? reflex.entries.length : null,
-      entries: reflex.entries.slice(0, CUE_LIMIT).map(e => ({ id: e.id, applies_to: e.applies_to })), omitted: Math.max(0, reflex.entries.length - CUE_LIMIT),
-      ...(reflex.entries.length ? { tool: "kb_reflex", input: { query: "*" } } : {}),
-      entity_queries: entities.map(id => ({ entity: identity(id), count: reflex.entries.filter(e => JSON.stringify(e).toLowerCase().includes(id.toLowerCase())).length, input: { query: id } }))
-        .filter(e => e.count > 0).slice(0, CUE_LIMIT) },
     experience: { ...experience, ...(typeof experience["count"] === "number" && experience["count"] > 0 ? { tool: "kb_experience", input: { relevant: true } } : {}) },
     ...(external ? { external_stats: external } : {}) };
-  return { ...req, question: `${req.question}\n\n本题实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。构筑rk为相关摘要，不含combat_line或原始谓词；备战rk仍为检索候选，不证明条件成立或Jev采用。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
+  return { ...req, question: `${req.question}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
 }
 
 /** Only successful, actually returned entries count as hits; cues and model prose never count. */

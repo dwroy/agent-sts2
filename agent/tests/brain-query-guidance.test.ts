@@ -36,12 +36,16 @@ function fixture(label = "reward/card") {
 }
 const answer = (): BrainAnswer => ({ engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 10, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] });
 
-it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s gives bounded identities and real call arguments without inline content", async label => {
+it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s omits strategy/rk guidance even with matches and retains experience cues and voluntary queries", async label => {
   const { req, ctx } = fixture(label), before = JSON.stringify(req.payload);
   const result = await attachQueryGuidance(req);
-  expect(result.question).toContain('"query":"*"'); expect(result.question).toContain('"relevant":true');
-  expect(result.question).toContain('"count":1'); expect(result.question).toContain("strategy-fixture");
-  expect(result.question).toContain("格式策略标题"); expect(result.question).toContain("rk-boss");
+  const cues = JSON.parse(result.question.split("\n").at(-1)!);
+  expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
+  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.tools!.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex"]));
+  expect(result.question).toContain('"relevant":true');
+  expect(result.question).not.toContain("strategy-fixture"); expect(result.question).not.toContain("格式策略标题");
+  expect(result.question).toContain("rk-boss");
   expect(result.question).not.toContain("STRATEGY_BODY"); expect(result.question).not.toContain("RK_BODY");
   expect(result.question).not.toContain("rk-retired"); expect(result.question).not.toContain("rk-asc"); expect(result.question).not.toContain("rk-other");
   expect(result.payload).toBe(req.payload); expect(JSON.stringify(req.payload)).toBe(before);
@@ -73,19 +77,19 @@ it("keeps tools read-only, reflects library changes and fails closed on bad libr
   await host.call("kb_experience", { relevant: true });
   expect(readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json"), "utf8")).toBe(initial);
   write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [] });
-  expect(strategyMatches(ctx).entries).toEqual([]); expect((await attachQueryGuidance(req)).question).toContain('"count":0');
+  expect(strategyMatches(ctx).entries).toEqual([]); expect((await attachQueryGuidance(req)).question).not.toContain('"strategies"');
   write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, confidence: 2 }] });
   expect(strategyMatches(ctx)).toMatchObject({ status: "invalid", entries: [] });
-  expect((await attachQueryGuidance(req)).question).toContain('"status":"invalid","count":null');
+  expect((await attachQueryGuidance(req)).question).not.toContain('"strategies"');
   rmSync(knowledgeFile(ctx.knowledgeDir, "strategy-entries.json"));
   expect(strategyMatches(ctx).status).toBe("missing");
 });
 
-it("uses the live act/boss fallback for fight-plan cues and queries while preserving explicit question facts", async () => {
+it("uses the live act/boss fallback for voluntary fight-plan queries while preserving explicit question facts", async () => {
   const { ctx, req } = fixture("fight-plan");
   const live = { ...ctx, payload: { enemies: [{ enemy_id: "FIXTURE_ELITE" }] }, state: { run: { act_id: 0, boss_id: "FIXTURE_BOSS" } } };
   expect(strategyMatches(live).entries).toHaveLength(1);
-  expect((await attachQueryGuidance({ ...req, payload: live.payload, toolContext: live })).question).toContain("strategy-fixture");
+  expect((await attachQueryGuidance({ ...req, payload: live.payload, toolContext: live })).question).not.toContain("strategy-fixture");
   expect(strategyMatches({ ...live, payload: { facts: { act_boss: "OTHER_BOSS" } } }).entries).toEqual([]);
 });
 
