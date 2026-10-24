@@ -24070,6 +24070,552 @@
       "source_experience": [
         "silent-volley-generated-x-energy"
       ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-defense-draw",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BACKFLIP"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "FOOTWORK"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-defense-draw",
+        "unit": "label"
+      },
+      "label_en": "Consider Backflip for poison defense and draw",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 13
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F13原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-cheap-source",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DEADLY_POISON"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-cheap-source",
+        "unit": "label"
+      },
+      "label_en": "Compare cheap poison with costly retained sources",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 19
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F19原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-amplifier-after-source",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "ACCELERANT"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DEADLY_POISON"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "HAZE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-amplifier-after-source",
+        "unit": "label"
+      },
+      "label_en": "Evaluate Accelerant after observed poison sources",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 21
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F21原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-recurring-group-source",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "NOXIOUS_FUMES"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ACCELERANT"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          },
+          {
+            "op": "not",
+            "arg": {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "NOXIOUS_FUMES"
+              }
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-recurring-group-source",
+        "unit": "label"
+      },
+      "label_en": "Compare recurring group poison with another single source",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 30
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F30原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-flexible-skill-copy",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BURST"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DEADLY_POISON"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-flexible-skill-copy",
+        "unit": "label"
+      },
+      "label_en": "Compare Burst using observed poison and defensive skills",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F33原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-poison-rk-late-mitigation",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "PIERCING_WAIL"
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ACCELERANT"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SNAKEBITE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-poison-tag-late-mitigation",
+        "unit": "label"
+      },
+      "label_en": "Compare temporary mitigation while poison sources develop",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 46
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+          "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F46原题选择可行性及牌文；非收益估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+        }
+      ]
     }
   ]
 }
