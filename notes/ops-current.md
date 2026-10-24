@@ -1,18 +1,20 @@
 state: in-flight
-issue: 28
-updated: 2026-10-24T12:19:35+08:00
+issue: 51
+updated: 2026-10-24T12:27:51+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#28 R425工程发布/绑定/消费者/准入已完成，旧85条SHA保持；现续科学输入准入。原041301四已读局376题内，显式第一二幕Boss/elite153题已逐原ref关联决策/状态；完整Plan及逐候选映射/完整同种子矩阵均0。98题旧非空open_book键/55无键原样保留，不能直接冒合法capture。冻结清单/下一输入合同见paper/materials/20261024-issue28-scientific-readiness-ops/。
-在等谁：原28学习owner产带sources/反证的新reflex稿；原开发/ops提供原始Plan合法capture与完整候选种子结果；原实验owner在看新局前预注册独立留出。四局已读只作探索诊断，不能充确认留出；原37投影修复与唯一full/发布窗仍归其owner，51优先学习不改。
-下一步：沿已冻源SHA/Git blob补缺项，原题含开卷的处理须原生产投影/预注册明示，不无痕改输入。具新条目/合法capture/完整结果和留出后才接原零调用准备与有预算真实两臂、独立局区间；随后Roy开关/A-B分别验。当前off、真实调用/full/局0，父不关，不重R425工程或抢37窗。
+进行中的事：#51休息/路线r2单元121311已自然done/rc0，输入4b9303…aaee/首native12:14:42/high/工作区沙箱核同，tier未知；98产物核同，新1休息策略+1路线描述知识候选，正式发布/消费者/自然采用0。原干净checkout已回收，分支/待发布scratch保留。两类候选分别续接，见paper/materials/20261024-strategy-121311-ops/verification.json、publication-queue.json。
+在等谁：原37owner仍持唯一full/发布窗、尚未收到释放；释放后ops可独立接休息策略及114313用药策略的真源/账本/编号/实际工具读回。路线描述知识/旧008剧本待原51 owner明确实际消费者，不转成StrategyEntry/rk、不拖住可独立策略。冷启动待原自然调度，不强派。
+下一步：原窗释放后按精确候选SHA增量入库，保最新live知识；固定消费者、自然查询与收益分账。1254/1458上传重叠与前节点HP代理、20代表投影配额/死亡删失保留，模型只通读2投影98节点，不能称20整局通读或完整三输入流派剧本。无源码改动不补测试/finish/模型；本单元非48普通模板采用，旧刀009/Boss不续派，科学父开放。
+
+#28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
 
 #35续核保留：四自然终局84快照/100题匹配与12同战SL恢复条目/下一T1牌组均核同；041301原生实际读取四终态19/19/24/21条，合并返回有截断，不冒全历史通读。学习终态消费和同战SL具证，进程重启/跨层/超40自然分支与收益仍待，不造场景。paper/materials/20261024-issue35-natural-learning-ops/。
 
-#51用药候选保留：114313自然done/rc0，冻结f7bf…fc50/首native11:44:48/high/workspace-write/network=false核同，tier未知；1终局持药代理策略/正式发布及自然采用0。81产物、分支与scratch保留，checkout已原回收；候选待37释窗后原源/账本/锁/版本/实际消费者。447/1247对166/492非因果，时机/场间留药/rk/完整剧本仍缺；另两决策仅原自然调度。paper/materials/20261024-strategy-114313-ops/。
+#51用药114313保留：原生11:44:48/high/输入f7bf…fc50及81产物核同，tier未知；1终局持药代理策略待37释窗后正式源/账本/发布/消费者，scratch/分支保留、checkout已回收。447/1247对166/492非因果，时机/留药收益/rk仍缺；正式发布/采用0。paper/materials/20261024-strategy-114313-ops/。
 
-原输入边界：54三manifest/132叶及r2三规格保持；用药114313已原生完成，休息路线/冷启动仍待原自然回执，旧008候选只有原外部双输入。原件paper/materials/20261024-input-format-r2-ops/、20261024-strategy-094803-ops/。
+原输入边界：54三manifest/132叶及r2三规格保持；用药114313、休息路线121311已原生完成，冷启动仍待原自然回执，旧008候选只有原外部双输入。原件paper/materials/20261024-input-format-r2-ops/、20261024-strategy-094803-ops/。
 
 #27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，main30/live26仅文件数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
 
@@ -30,7 +32,7 @@ updated: 2026-10-24T12:19:35+08:00
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
-#54冻结原builds-v1 ac5f0d…852、decision-fields e9d1e6…78f、own-stat a078c5…e64及132叶保持；Z2/KF9排除、无BP9，版本unknown/SL/代理/缺帧限制不变。用药114313已自然完成1候选，另两决策待原回执；旧刀009/Boss不派。postmortem/experience整局模板T10:03:15，普通模板host09f3/首新native待；无热切/权限变更。
+#54冻结原builds-v1 ac5f0d…852、decision-fields e9d1e6…78f、own-stat a078c5…e64及132叶保持；Z2/KF9排除、无BP9，版本unknown/SL/代理/缺帧限制不变。用药114313及休息路线121311已自然产候选，冷启动待原回执；旧刀009/Boss不派。postmortem/experience整局模板T10:03:15，普通模板host09f3/首新native待；无热切/权限变更。
 
 原37历史97490e3854d组合已被revision2/3沿原窗口接续：091302净12/经验SHA32e27b…与source_commit=null合同保持，revision2失败结果/2263源码夹具/1688依赖/469知识前后同均留档；revision3八叶因refresh锁暂未完成新冻结，不代新冻结成功。详6379266602及paper/materials/20261024-issue37-r428-integrator/revision3/。37→20含39/43和科学父保持。
 

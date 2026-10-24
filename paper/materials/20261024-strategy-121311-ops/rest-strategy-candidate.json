@@ -1,0 +1,86 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "version": "2026-10-24-external-rest-route-001",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "第一幕休息题，先用当前真实HP与后继风险比较回血/升级，不因升级组终局胜率较高排掉回血。external:sts2fun v0.111.0/A10：HEAL/SMITH前节点末HP代理均23.75/41.60，差17.85血（2071/2990次）；组内去重上传1254/1458，整局获胜372/465（29.67%/31.89%，差2.23pp）。两组重叠、机会分母未知，不能作同HP对照、回血线或升级收益。适用：仅该版本Silent A10第一幕，两选项当前合法；其他版本和进阶未验证。",
+      "source": "external:sts2fun",
+      "confidence": 0.3,
+      "evidence_status": "unassessed",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=HEAL；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "HEAL whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.2966507177033493,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1254
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/HEAL;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=SMITH；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "SMITH whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.31893004115226337,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1458
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/SMITH;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

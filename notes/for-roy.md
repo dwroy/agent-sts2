@@ -5191,3 +5191,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T12:19:35+08:00 [ops/#28] #28已从原工程停点继续核科学准入：R425行为仍为当前live祖先，原85条SHA与发布读回一致，工程/绑定/准入释放不重做。原041301四个已读局冻结376道Jev题，按显式第一/二幕Boss/elite收全153题，153均精确关联原决策和observed_ts状态；未按输赢挑题。这一切点完整Plan对象、逐候选原Plan映射、同种子完整结果矩阵均0，不能由描述或已走一线HP补反事实。98题带非空旧open_book键、55题无键，原样留档；当前回放拒绝该键，沿原37投影合同接续，不无痕改输入。已冻结旧85/vocab/实际经验Git blob及公开来源SHA，交原28学习/开发owner补新来源条目、合法capture、独立预注册留出和完整结果；四已读局只作诊断/训练。真实两臂/改善区间、Roy开关与A/B继续开放，开关保持off；本轮模型/full/局/回放均0，51优先及37唯一窗未动。
 原件：paper/materials/20261024-issue28-scientific-readiness-ops/verification.json、diagnostic-opportunity-inventory.json、frozen-prerequisite-references.json、next-input-contract.md。
+
+- 2026-10-24T12:27:51+08:00 [ops/#51] 121311休息/路线r2单元已核自然done/rc0，首提示与4b9303输入绑定、原生high及workspace-write/network=false核同，tier缺失不冒fast已生效；98项原产物SHA、报告/result、原processed及退场封存一致。新增1条v0.111.0第一幕休息策略候选和1条路线描述性知识，24比较中18组两侧≥100仅比较数，不计18策略；HEAL/SMITH上传1254/1458重叠，前节点末HP只是代理，不推出固定回血线或升级收益。20配额代表投影883节点均保存/脚本计数，模型仅完整读2投影98节点，另18不冒通读；死亡删失/第二幕反向保留。自有完整局和支持0，源码/正式库/账本未动，tests均null。原checkout已回收而分支/scratch保留。休息策略待37释窗后独立正式发布/消费者，路线知识另待原owner消费者合同，不拖整批；冷启动只沿原自然调度。正式发布/自然采用0，原科学父开放。
+原件：paper/materials/20261024-strategy-121311-ops/verification.json、publication-queue.json、report.md、native-execution-context.json。

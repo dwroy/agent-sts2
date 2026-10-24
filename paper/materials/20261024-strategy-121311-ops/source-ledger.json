@@ -1,0 +1,190 @@
+{
+  "schema": "external-candidate-source-ledger-v1",
+  "batch": "20261024-121311-strategy-proposal",
+  "unit_id": "external-decision-rest-route-001",
+  "source": "external:sts2fun",
+  "collected_at": "2026-10-21",
+  "base": "fba9cd72d0a407edc34442a4cea4c1c0d481e647",
+  "input_manifest_sha256": "4b9303b9ac358c280a576bd495ea2921dfd3733132bd3c5190f7ec061114aaee",
+  "provenance": {
+    "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "downloaded_at": "2026-10-21",
+    "faq": "https://sts2.fun/faq",
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "url": "https://sts2.fun/static/sts2_public.db.zst"
+  },
+  "runs": [],
+  "own_support_runs": [],
+  "own_comparison": "仅核冻结包身份/SHA及506终局114代表的契约；未逐局读自有轨迹，不提供own-only游戏结论。game_version unknown/no_retry_evidence不等无SL；排除Z2/KF9，BP9不在冻结。",
+  "version_policy": {
+    "mechanism_change_comparison": "unknown：未绑定机制变更对照",
+    "pooled_versions": false,
+    "pooled_builds": false,
+    "cohort_uploads": {
+      "v0.107": 2932,
+      "v0.108": 683,
+      "v0.109": 583,
+      "v0.110": 411,
+      "v0.111": 1739
+    },
+    "policy": "按各版本及8build原分母统计，不将未知标成机制未改。仅v0.111.0第一幕策略候选，其他版本/幕为分列附表。"
+  },
+  "entries": [
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "destination": "rest-strategy-candidate.json",
+      "kind": "strategy",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "new": true,
+      "updated": false,
+      "reused": false,
+      "game_version": "v0.111.0",
+      "ascension": 10,
+      "act": 1,
+      "artifact_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "sample_units": {
+        "HEAL": {
+          "distinct_uploaded_runs": 1254,
+          "whole_run_winning_uploads": 372,
+          "choice_occurrences": 2071
+        },
+        "SMITH": {
+          "distinct_uploaded_runs": 1458,
+          "whole_run_winning_uploads": 465,
+          "choice_occurrences": 2990
+        }
+      },
+      "independent_denominator": "组内上传去重；两组可以重叠，不相加；不知独立玩家数。HP均值按选择条目加权，不按上传等权。",
+      "direction_and_magnitude": {
+        "heal_previous_node_end_hp_proxy_mean": 23.754707870593915,
+        "smith_previous_node_end_hp_proxy_mean": 41.603678929765884,
+        "smith_minus_heal_hp_proxy": 17.84897105917197,
+        "smith_minus_heal_upload_win_pp": 2.227932344891409,
+        "interpretation": "仅代理资源差与整局结局观察关联，不是同HP对照或选择收益"
+      },
+      "limitations": [
+        "无选择前真实HP、拒选机会/同状态对照；重复选择加权与生存/上传选择混杂。",
+        "事后整局结局只作标签，不作当前决策触发条件。",
+        "未证明某种选择因果更优；当前合法选项/真实HP须由当前题面提供。"
+      ],
+      "counterexamples": [
+        "v0.110.0第二幕HEAL1/7，SMITH1/8，反向-1.785714pp；小样本保留、版本不混并。",
+        "v0.111第一幕HEAL有372个获胜上传，SMITH有993个非获胜上传，非确定性命令。"
+      ],
+      "evidence_files": [
+        "rest-comparisons.json",
+        "pages/decisions-v0.111-rest_site_choices-0.json"
+      ],
+      "own_support_runs": []
+    },
+    {
+      "id": "silent-external-selected-route-exposure-001",
+      "destination": "route-knowledge-candidate.json",
+      "kind": "knowledge",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "new": true,
+      "updated": false,
+      "reused": false,
+      "game_version": "v0.111",
+      "ascension": 10,
+      "artifact_sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+      "sample": {
+        "uploads": 20,
+        "players": null,
+        "win_uploads": 10,
+        "loss_uploads": 10,
+        "nodes": 883,
+        "selection": "原reader中cluster0全部offset0..9，每页一对，固定胜负配额/前5节点近邻匹配",
+        "sample_independence": "仅匿名内容摘要去重，玩家/SL相关性未知；幕间复用同一上传，不加总"
+      },
+      "counterexamples": [
+        "第二幕赢家2.0个、输家2.1个，方向与第一幕相反。",
+        "第一幕10个输家也全部记录了Boss；到达不等于通过或整局获胜。",
+        "死亡/终止造成更短暴露窗口，不能把累计精英少解释成主动绕路。"
+      ],
+      "limitations": [
+        "簇号仅为固定取样标签，不解释为玩法或决策时触发条件。",
+        "死亡/终止提前结束累计精英暴露；有Boss记录只是到达代理，不是通过。",
+        "没有未走分支、可选路线或拒选机会分母，不能估计绕路效果。",
+        "模型完整逐节点读pair offset=0的两局98节点；另18局785节点仅脚本处理并完整保存，未冒称模型逐节点通读。",
+        "20个配额上传不能代表6348上传总体；该条没有达到100独立上传。",
+        "不估计因果收益；不拿未来精英数量、终局簇或Boss标签作当前触发条件。"
+      ],
+      "evidence_files": [
+        "route-descriptives.json",
+        "low-hp-route-proxy.json",
+        "page-index.json"
+      ],
+      "own_support_runs": []
+    }
+  ],
+  "subitems": [
+    {
+      "id": "rest-smith-recorded-choice",
+      "disposition": "candidate",
+      "target_id": "silent-brain-act1-rest-smith-resource-proxy",
+      "reason": "真实选择字段与逐cell上传去重分母可用；当前第一幕两组均>=100；构成一条策略，不按三幕/旧版本重复拆条。"
+    },
+    {
+      "id": "rest-real-pre-choice-hp",
+      "disposition": "waiting",
+      "target_id": null,
+      "reason": "选择前真实HP不可用；已给previous_node_end_hp_proxy与每项n/missing_n，不能学同HP条件效应/安全回血线。"
+    },
+    {
+      "id": "per-act-elite-exposure",
+      "disposition": "descriptive-candidate",
+      "target_id": "silent-external-selected-route-exposure-001",
+      "reason": "通过一对一页reader保存20局883完整节点，脚本可重算每幕Boss前精英数；胜负配额/死亡删失分列，不外推总体。"
+    },
+    {
+      "id": "low-hp-elite-event-boss-arrival",
+      "disposition": "proxy-descriptive-local-waiting",
+      "target_id": null,
+      "reason": "已算每幕前节点HP比例P25及每上传首个合格转换，9组0..14上传；event非问号、无可选分支与拒选机会，不能识别主动绕路。0组分母不是零风险；保留观察表，不造路线选择策略。"
+    },
+    {
+      "id": "rk",
+      "disposition": "waiting",
+      "target_id": null,
+      "reason": "无冻结的原状态/候选Plan/完整结果矩阵或同资源反事实；仅保留#28来源与两臂回放要求，未造predicate/开关或启模型。"
+    },
+    {
+      "id": "full-archetype-playbook",
+      "disposition": "not_claimed",
+      "target_id": null,
+      "reason": "本任务是决策单元；未核三输入同流派完整自有局与四表偏离，不冒完整流派剧本。"
+    }
+  ],
+  "counts": {
+    "new_candidates": 2,
+    "new_strategy": 1,
+    "new_knowledge": 1,
+    "new_rk": 0,
+    "updated": 0,
+    "reused": 0,
+    "candidate_items_with_both_comparison_groups_ge_100": 1,
+    "rest_comparison_pairs": 24,
+    "rest_comparison_pairs_both_upload_n_ge_100": 18,
+    "route_candidate_ge_100": 0,
+    "formal_publication": 0,
+    "consumer_readback": 0,
+    "natural_adoption": 0,
+    "causal_benefit_verified": 0
+  },
+  "zero_batch_baseline": "冻结规格未给数值基线，保持unknown，不补成0；本批实际新增2，不触发本批零新增停线。",
+  "read_scope": {
+    "availability": "60个field/version查询、96个build/field可用性记录，含bought_cards全缺失",
+    "rest": "5版本130选择cell全部7页；其他字段仅可用性，未读其决策条目",
+    "representatives_script": "固定cluster0/v0.111全部10对20投影883节点，通过原reader的10页；其余140投影未读",
+    "representatives_model_full": "pair offset0两投影98节点完整阅读；另18投影785节点仅脚本统计、未称模型逐节点阅读",
+    "unread": "没有读取其他流派/旧Boss表的游戏结论、原数据库/缓存/玩家标识；没有逐局读自有四表代表局"
+  },
+  "native_effort": "未核原生turn_context/请求回执，不报告服务档位/用量或耗时已生效。",
+  "scientific_parent": "open"
+}
