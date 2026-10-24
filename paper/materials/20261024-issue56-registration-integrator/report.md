@@ -23,3 +23,7 @@ full使用0d4a20c031b3f9663bc15d2b49a5efc019e604f9。正式56800c05仅删除ops/
 #36 A214314/B214315普通自然终态：原session/turn/提示/上下文、task_complete与原TUI结果、产物SHA、native/supervisor退出及原退役合同独立通过；tier=null未知。6385404782已逐字读回，异常75/人工草稿/有界监督仍待原ops。#20真实24h至10-25T14:49:42、kit00:15:05及Roy门未到。
 
 #57 ce3e9b860独立13项通过，但新增准入块固定等待父全局learn.lock，与56逐批放行冲突。真实flock固定复现已退6385470519并改in-progress，一行原pane提醒仅agent_prompted，不冒已读。等原dev在56组合补实际五wrapper/准入回归；57未合/未跑full。原件20261024-integrator-resume-2227/。学习notice17条至少一环未确认，仅清点不代填ACK，#27与学习/科学父保持。
+
+## 实际交付回执
+
+2026-10-24T22:58:56+08:00：main `f6238c41211b3a2734d7f5e9a644d4071216f235` 已经Windows SSH推送并远端核同；宿主配套10叶于2026-10-24T22:58:04+08:00—2026-10-24T22:58:04+08:00持原锁安装/逐项SHA后读回，live前后相同且本角色未写。公开交接6385710329已逐字读回，标签waiting-release，原ops提醒只返回agent_prompted。deployment_verified/natural_invocation_observed均仍false，待原ops自然核收。
