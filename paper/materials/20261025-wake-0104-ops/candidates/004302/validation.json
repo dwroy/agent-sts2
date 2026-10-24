@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "head_unchanged": "ebe5bfc38d80694f6ec5a4f2e0c8ebf0bb2c3bf5",
+  "tracked_worktree_clean": true,
+  "learn_binding_rechecked": true,
+  "manifest_and_work_spec_sha_verified": true,
+  "three_manifest_132_leaf_verification": "input-verification.json",
+  "eleven_frozen_shards": [
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/decisions/part-decisions-000000000000-004423115045.parquet",
+      "bytes": 18794197,
+      "sha256": "a9a9d9cceedeebc1181d4188e7fdddb231172ad93683b2f4b4931c29248ea09c",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/decisions/part-decisions-004423115045-004669723031.parquet",
+      "bytes": 446967,
+      "sha256": "970b0eb62e87f02663e9aaaa5ba88f055000f87952addc680583477c0c339891",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/run_config/part-run-config-000000000000-000003320082.parquet",
+      "bytes": 146463,
+      "sha256": "d3b1e8bca50051627195000c02156b0ce864bef149d3f7843775deb8430821c8",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/run_plans/part-run-plans-000000000000-000013517484.parquet",
+      "bytes": 494682,
+      "sha256": "efdbfc0bc6d09874c1c948825ff9110fdfafd4441a98bf25f953e634f54a307b",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/runs_raw/part-runs-000000000000-000000455331.parquet",
+      "bytes": 51701,
+      "sha256": "021dd8ccd61134ce75706234323c9644aeba902eb7c25419ce9f817379ece0dd",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/sl_attempts/part-sl-attempts-000000000000-000060955074.parquet",
+      "bytes": 570281,
+      "sha256": "b6eda60e28f1fab147d3325bc19020f7b6f8731aae2a108bd2d0df9a2ac326e2",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/sl_attempts/part-sl-attempts-000060955074-000061081667.parquet",
+      "bytes": 7069,
+      "sha256": "38ca9891bee36374714264a4ee8a78194fcabb7614fb497c7f8cce155af11955",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/sl_attempts/part-sl-attempts-000061081667-000061175003.parquet",
+      "bytes": 8101,
+      "sha256": "49445dce17a1670fd988cb682e7be51a190b9ba44a510d5ec8bb2c24bbd83de9",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/sl_attempts/part-sl-attempts-000061175003-000061282656.parquet",
+      "bytes": 7295,
+      "sha256": "d5968fb212f4e94c910d0d2c303496072fcf77c5b90ead51e3cae8aaca121670",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/frames/part-states-000000000000-012306614792.parquet",
+      "bytes": 16799486,
+      "sha256": "78367b7caaedb0a89e984d3fce138b16cdb5ce793e37db357dd73e256eba435c",
+      "verified": true
+    },
+    {
+      "path": "data/external/issue51-own-506-freeze-20261024/frames/part-states-012306614792-017100690756.parquet",
+      "bytes": 6194588,
+      "sha256": "de87b74093dd305c94bf03232cd379770ac50845c3f0536ec57b6d53fc4eeb4d",
+      "verified": true
+    }
+  ],
+  "bounded_raw_row_reads_verified": 794,
+  "report_result_exact_bytes_equal": true,
+  "result_destinations_exist": 12,
+  "production_strategy_parser": "passed",
+  "rk": "6 non-loadable research intents; no schema expansion; consumer/replay pending",
+  "fixed_events_disjoint": true,
+  "source_commit": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "sql_reproduction": {
+    "database": ":memory:",
+    "threads": 2,
+    "files": "Only the explicit verified_read_only_shards paths in own-506-scope.json; no glob.",
+    "allowlist": "CREATE TEMP TABLE allowed(run_id VARCHAR); insert exact 506 scope.runs IDs.",
+    "filter_before_aggregation": "SELECT x.* FROM read_parquet(explicit_table_paths) x JOIN allowed a USING(run_id) WHERE off+len<=original_table_cutoff",
+    "frame_selection": "event_id IN ('OROBAS','ABYSSAL_BATHS','SELF_HELP_BOOK') ORDER BY off",
+    "decision_selection": "label LIKE 'event/%' AND EXISTS (selected frame with same run_id and floor and one of the fixed event IDs); ORDER BY off",
+    "current_state_link": "same run/floor and exact fingerprint, state.ts <= decision.ts; latest matching state offset",
+    "native_transition": "next recorded selected event state at same run/floor, descriptive label only"
+  },
+  "raw_shard_mutation": false,
+  "logdb_init_sync": false,
+  "database_read": false,
+  "gitleaks": {
+    "exit_code": 0,
+    "findings": 0,
+    "scanned_scope": "batch scratch",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  }
+}

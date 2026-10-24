@@ -1,0 +1,94 @@
+{
+  "baseline": {
+    "bytes": 30583666,
+    "sha256": "d45376c7c10481e7724aa59792ee6a4a1aa802b92c943e9971fd59597e143dbb"
+  },
+  "baseline_prefix_unchanged": true,
+  "current_file_bytes": 30622344,
+  "rows": [
+    {
+      "offset": 30604436,
+      "bytes": 4951,
+      "sha256": "01b69816fc695a6fdabd9f9610440783fb727a4e2a94db5ce5a1616d75f1f469",
+      "id": "silent-0764",
+      "op": "add",
+      "by": "ops:issue51-mixed-c5-publication",
+      "role_evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=MIRAGE; selected representative subset, not current state"
+          },
+          "statistic": {
+            "name": "selected_representative_terminal_card_presence_context_only",
+            "value": 0.6,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 5
+          },
+          "design": "observational",
+          "limitations": [
+            "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+            "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+            "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "role": "contradict"
+        }
+      ],
+      "claim": "当前只记录到迷雾这一施毒来源时，蜃景应与切割、独门技术的即时用途比较，先核能否在需要挡的回合建立毒。原文蜃景1费、按全体毒层总和给挡并消耗；切割0费6伤。ATP5MCMJDMQY F3一次机会选切割，蜃景未拿；不能把牌组有迷雾算成战中已有毒。F5两敌战49→46，终局仍败，不证明切割优于蜃景。\n范围：Silent A10、幕1奖励且牌文同；此前快照为牌组代理，版本unknown、1局1机会，无战中起手或伤害反事实。"
+    },
+    {
+      "offset": 30609387,
+      "bytes": 4994,
+      "sha256": "d7623379767183cc7e1f13279cef3abf62b40f3e1486e4ced9672e045c3d07a9",
+      "id": "silent-0765",
+      "op": "add",
+      "by": "ops:issue51-mixed-c5-publication",
+      "role_evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=OUTBREAK; selected representative subset, not current state"
+          },
+          "statistic": {
+            "name": "selected_representative_terminal_card_presence_context_only",
+            "value": 0.4,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 5
+          },
+          "design": "observational",
+          "limitations": [
+            "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+            "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+            "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "role": "contradict"
+        }
+      ],
+      "claim": "已有触媒、致命毒药+、带毒刺击+及偏折+时，毒性爆发+可与涂毒、钢铁风暴+比较直接群体施毒/立即触发与另一种启动代价。原文3费全体12毒并立即触发；涂毒2费须攻击造成未格挡伤害才施1毒。FZT053H9PSC5 F17一次奖励选择前者，F19两敌战60→60、2回合；后续F23仍51→31，不能从赢家或一次零损证明固定优先级。\n范围：Silent A10、幕1末奖励/幕2构筑且现场牌文同；此前牌组为代理、版本unknown、1局1机会；实际出牌次序和单牌贡献未核。"
+    }
+  ]
+}

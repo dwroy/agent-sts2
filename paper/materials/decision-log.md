@@ -6809,3 +6809,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T00:59:14+08:00 [ops] 0043五事件核收：231317两批failed/rc0候选未发、原完整末rc缺失且已失败；004301 C not-started/model0/rc1保原重试；UVEX四原字节核同、300门/告警沿H1原链；A233359七对2新5更/14账本/固定7+7+7通过待57新自然事务。#56按主管6386401629改以真实启动参数验档，fast回执核同；issue51评论6387005047/56评论6387005548读回，不代ACK或收益。原件paper/materials/20261025-wake-0043-ops/与20261025-issue51-mixed-c5-ops/。
 
 - 2026-10-25T01:03:07+08:00 [ops] #51原C5持久worker1487883/birth28580454已按57 begin，原play1198864/1198875与autoplay1245890的pidfd自然等待，无learn/refresh/live锁，无LLM_DRAIN/新模型/full/tick/游戏。七对候选固定读回及14账本check0，尚未发/分配版本；只原worker接写入和release，FIFO有界续接保原once失败。原件paper/materials/20261025-wake-0043-ops/publication-worker-intake.json、20261025-issue51-mixed-c5-ops/。
+
+- 2026-10-25T01:12:10+08:00 [ops] 0104六事件核收：原C5 waiting无锁/主管6387024406实收不代Roy；D六新文字/六不可加载研究rk、A五情境3新2更/一同ID与C5串行保反证。001311原dataset1次rc0后attention，命中并行C5两contradict，原五复盘18更新/两提案留原链；已有生成blob冻结不重dataset/finish/合入。#56参数合同过、实际tier未知，等C5自然收尾核runtime。issue51评论6387142273读回。原件paper/materials/20261025-wake-0104-ops/。

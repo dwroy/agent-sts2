@@ -1,0 +1,267 @@
+{
+  "external_source": "issue51-remaining-events-004-20261024-r56-stock",
+  "source": "external:sts2fun",
+  "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+  "statistics": {
+    "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+    "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+  },
+  "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+  "candidate_scenarios": [
+    {
+      "scenario_id": "bath_initial",
+      "source": "mixed",
+      "versions": {
+        "own": "unknown",
+        "external": [
+          "v0.111.0"
+        ]
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "WYB0NCD6W83J",
+        "0DJ6GFZZ0TG9",
+        "0YQJ9D1MC4NK",
+        "GWE810ZD014M",
+        "HTXMNBS3PPF5",
+        "G2XYF48GKAUW"
+      ],
+      "independent_own_n": 6,
+      "opportunity_n": 6,
+      "opportunity_unit": "native state-to-state event decisions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "两个无重试证据局仍选择投身；全部6局最终失败，不能用回血或换上限推定胜负。外部赢家选择与进入资源混杂。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "scenario_id": "bath_continue",
+      "source": "mixed",
+      "versions": {
+        "own": "unknown",
+        "external": [
+          "v0.111.0"
+        ]
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "0DJ6GFZZ0TG9",
+        "GWE810ZD014M"
+      ],
+      "independent_own_n": 2,
+      "opportunity_n": 7,
+      "opportunity_unit": "native state-to-state event decisions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "0DJ在题面受6伤处退出，GWE先接受受6伤、到受7伤处退出；反对固定沉溺次数。2局均败，不支持长期收益。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "scenario_id": "book_attack",
+      "source": "mixed",
+      "versions": {
+        "own": "unknown",
+        "external": [
+          "v0.111.0"
+        ]
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "T3FW7R2R2306",
+        "Y5H4CFAQ2WTG",
+        "0DJ6GFZZ0TG9",
+        "MR7EBRYRJ5R6",
+        "2Q6ZYZ6JHM0M",
+        "SWXESN56U1QJ"
+      ],
+      "independent_own_n": 6,
+      "opportunity_n": 6,
+      "opportunity_unit": "native state-to-state event decisions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "同样的书本也实选技能和能力；6局支持的是牌文变化，不是攻击附魔压倒其他选项；外部不含被附魔目标。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "scenario_id": "book_skill",
+      "source": "mixed",
+      "versions": {
+        "own": "unknown",
+        "external": [
+          "v0.111.0"
+        ]
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "CRK2HNYKSCZC",
+        "NTMAU4XZ2NN2",
+        "AF76L5UTPP8U"
+      ],
+      "independent_own_n": 3,
+      "opportunity_n": 3,
+      "opportunity_unit": "native state-to-state event decisions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "其他书本机会实选攻击/能力；不能由防御需求直接定固定技能优先级；外部第三幕段落10/14与整本28/49的赢家关联反向。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "scenario_id": "book_power",
+      "source": "mixed",
+      "versions": {
+        "own": "unknown",
+        "external": [
+          "v0.111.0"
+        ]
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "87LCSDR5P3DL",
+        "YLYLZWHA0GKU",
+        "7X0W3U8TVA2A",
+        "456MRNGCPD8E",
+        "PYE4VXNSLGSS",
+        "WG8GK5B9D7YH",
+        "LKC9YXKZWTKR",
+        "YUWMCVH6MFUH",
+        "HLAWCGM3KHVB",
+        "ATP5MCMJDMQY",
+        "9U1E3V6XQAZ9",
+        "MGB1D1T0Y8G0",
+        "4AA19CXDKQK6",
+        "0CLP16ZR4ZZC",
+        "AR523ATD2G4W",
+        "T1XWKCUQW4T3",
+        "YXY2RL1E83HM",
+        "Q3R929GHT14R"
+      ],
+      "independent_own_n": 18,
+      "opportunity_n": 18,
+      "opportunity_unit": "native state-to-state event decisions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "同版本第三幕赢家关联反向；当前目标/到达深度/是否有能力牌造成强选择混杂。能力附魔抽牌已写入牌文，不等于战斗实际抽到/收益。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "scenario_id": "book_power_locked",
+      "source": "own",
+      "versions": {
+        "own": "unknown",
+        "external": []
+      },
+      "collected_at": {
+        "external": "2026-10-21",
+        "own_freeze": "2026-10-24T13:15:42+08:00"
+      },
+      "input_manifest_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+      "statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "own_support_runs": [
+        "Y5H4CFAQ2WTG",
+        "7BNC8QX746YP",
+        "NTMAU4XZ2NN2",
+        "AF76L5UTPP8U",
+        "V3PJA3FV92BG",
+        "A3X30TN54LSH",
+        "CDXCWKNSBN8M"
+      ],
+      "independent_own_n": 7,
+      "opportunity_n": 7,
+      "opportunity_unit": "current locked event questions",
+      "denominator_notes": "每情境独立局去重；跨情境重叠不相加；源聚合行另列原分母。",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "limitations": [
+        "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+        "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+        "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+        "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+        "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+        "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+      ],
+      "counterevidence": "同分层14个初页未锁、第二幕8个和第三幕2个也未锁；不能把早期7例无目标推广为书本总是无能力备选。",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ],
+  "own_evidence_is_external_validation": false,
+  "runs": [],
+  "source_commit": null,
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}
