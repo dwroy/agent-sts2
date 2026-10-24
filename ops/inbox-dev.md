@@ -6529,3 +6529,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T12:27:51+08:00 [ops/#51] 121311休息/路线r2单元已核自然done/rc0，首提示与4b9303输入绑定、原生high及workspace-write/network=false核同，tier缺失不冒fast已生效；98项原产物SHA、报告/result、原processed及退场封存一致。新增1条v0.111.0第一幕休息策略候选和1条路线描述性知识，24比较中18组两侧≥100仅比较数，不计18策略；HEAL/SMITH上传1254/1458重叠，前节点末HP只是代理，不推出固定回血线或升级收益。20配额代表投影883节点均保存/脚本计数，模型仅完整读2投影98节点，另18不冒通读；死亡删失/第二幕反向保留。自有完整局和支持0，源码/正式库/账本未动，tests均null。原checkout已回收而分支/scratch保留。休息策略待37释窗后独立正式发布/消费者，路线知识另待原owner消费者合同，不拖整批；冷启动只沿原自然调度。正式发布/自然采用0，原科学父开放。
 原件：paper/materials/20261024-strategy-121311-ops/verification.json、publication-queue.json、report.md、native-execution-context.json。
+
+- 2026-10-24T12:35:25+08:00 [ops/#46] #46从原24h观察停点继续复核：当前仍早于2026-10-24 13:46:30，原T为10-23 13:46:30，保持精确半开[T,T+24h)，未调用分配报告器或生成截断窗口比较。原完整前24h基线complete=true/成功分配106的SHA核同，未重跑；宿主waiting_round、record_waiting_round、dispatch、dispatch_one四函数AST均等原发布，10新局或6小时、每轮最多2批合同保持。当前proposal_rechecks仍无轮次水印，不能称分支已实际节省。到门后再按原已部署报告器核complete=true、全类别分配、局量、pending/repair/专项/续跑/retry和waiting积压；legacy/restore、静态68/日估计分开，学习停派/51优先占用及Roy手动停局不算效率收益。已保留精确命令和验收条件供原自然唤醒接续，不新增计时器/提醒进程/轮询。未重发源码、改调度、分配版本或启动full/模型/游戏，37唯一窗及46父保持。
+原件：paper/materials/20261024-issue46-gate-1233-ops/receipt.json；paper/materials/20261024-issue46-gate-readback-ops/receipt.json。

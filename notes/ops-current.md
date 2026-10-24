@@ -1,18 +1,20 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T12:27:51+08:00
+issue: 46
+updated: 2026-10-24T12:36:37+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#51休息/路线r2单元121311已自然done/rc0，输入4b9303…aaee/首native12:14:42/high/工作区沙箱核同，tier未知；98产物核同，新1休息策略+1路线描述知识候选，正式发布/消费者/自然采用0。原干净checkout已回收，分支/待发布scratch保留。两类候选分别续接，见paper/materials/20261024-strategy-121311-ops/verification.json、publication-queue.json。
-在等谁：原37owner仍持唯一full/发布窗、尚未收到释放；释放后ops可独立接休息策略及114313用药策略的真源/账本/编号/实际工具读回。路线描述知识/旧008剧本待原51 owner明确实际消费者，不转成StrategyEntry/rk、不拖住可独立策略。冷启动待原自然调度，不强派。
-下一步：原窗释放后按精确候选SHA增量入库，保最新live知识；固定消费者、自然查询与收益分账。1254/1458上传重叠与前节点HP代理、20代表投影配额/死亡删失保留，模型只通读2投影98节点，不能称20整局通读或完整三输入流派剧本。无源码改动不补测试/finish/模型；本单元非48普通模板采用，旧刀009/Boss不续派，科学父开放。
+进行中的事：#46已复核原部署及完整前24h基线106/SHA，宿主四调度函数AST均同原版；proposal_rechecks无轮次水印，不能称自然分支消费或节省。当前早于完整后24h门2026-10-24 13:46:30，未运行分配报告或生成截断比较。精确命令/源叶及基线见paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
+在等谁：原自然唤醒到13:46:30或以后，按半开[10-23 13:46:30,10-24 13:46:30)完整窗口验收；不新设提醒进程/计时器。原owner结算工作量、各类队列/轮次与积压；51优先/停派及Roy手动窗口分账。37仍持唯一full/发布窗，候选待其实际释放。
+下一步：到门才调用已存原报告命令，要求complete=true并核全类别、局量、pending/repair/专项/续跑/retry/waiting积压与分支消费水印；原106同口径，legacy/restore/静态68不混，暂停或低产不冒节省。未到门保父开放，不轮询/改调度/重发源/full/模型/游戏；其他候选沿下文原通道。
+
+#51休息/路线121311保留：done/rc0，98产物/原生12:14:42/high/输入4b9303…aaee核同、tier未知；新1休息策略+1描述知识、正式发布0。策略同用药待37释窗后独立入库，路线消费者合同另验，不拖整批；20配额投影仅2投影98节点模型通读，上传重叠/HP代理/删失保留。checkout已回收、scratch/分支保留，冷启动原自然。paper/materials/20261024-strategy-121311-ops/。
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
 
-#35续核保留：四自然终局84快照/100题匹配与12同战SL恢复条目/下一T1牌组均核同；041301原生实际读取四终态19/19/24/21条，合并返回有截断，不冒全历史通读。学习终态消费和同战SL具证，进程重启/跨层/超40自然分支与收益仍待，不造场景。paper/materials/20261024-issue35-natural-learning-ops/。
+#35已核四自然局84快照/100题一致、12同战SL牌组一致；041301读终态19/19/24/21条，合并输出截断不代全历史。进程重启/跨层/溢出自然及收益待，不造场景。paper/materials/20261024-issue35-natural-learning-ops/。
 
-#51用药114313保留：原生11:44:48/high/输入f7bf…fc50及81产物核同，tier未知；1终局持药代理策略待37释窗后正式源/账本/发布/消费者，scratch/分支保留、checkout已回收。447/1247对166/492非因果，时机/留药收益/rk仍缺；正式发布/采用0。paper/materials/20261024-strategy-114313-ops/。
+#51用药114313已核81产物/原生high、tier未知；1终局持药代理候选待37后正式链。447/1247对166/492非因果，时机/留药/rk缺，发布/采用0；scratch/分支保留、checkout已回收。paper/materials/20261024-strategy-114313-ops/。
 
 原输入边界：54三manifest/132叶及r2三规格保持；用药114313、休息路线121311已原生完成，冷启动仍待原自然回执，旧008候选只有原外部双输入。原件paper/materials/20261024-input-format-r2-ops/、20261024-strategy-094803-ops/。
 
@@ -34,13 +36,13 @@ updated: 2026-10-24T12:27:51+08:00
 
 #54冻结原builds-v1 ac5f0d…852、decision-fields e9d1e6…78f、own-stat a078c5…e64及132叶保持；Z2/KF9排除、无BP9，版本unknown/SL/代理/缺帧限制不变。用药114313及休息路线121311已自然产候选，冷启动待原回执；旧刀009/Boss不派。postmortem/experience整局模板T10:03:15，普通模板host09f3/首新native待；无热切/权限变更。
 
-原37历史97490e3854d组合已被revision2/3沿原窗口接续：091302净12/经验SHA32e27b…与source_commit=null合同保持，revision2失败结果/2263源码夹具/1688依赖/469知识前后同均留档；revision3八叶因refresh锁暂未完成新冻结，不代新冻结成功。详6379266602及paper/materials/20261024-issue37-r428-integrator/revision3/。37→20含39/43和科学父保持。
+原37历次组合/091302净12、source_commit=null及经验SHA32e27b…合同保留；revision2的2263输入/1688依赖/469知识前后同与失败完整原件不覆盖，revision3原11:23冻结EAGAIN不冒新冻结成功。6379266602、paper/materials/20261024-issue37-r428-integrator/revision3/；37→20含39/43及科学父保持。
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
 未完成清单：#37按6379266602同一唯一窗接revision3八叶，原full失败不覆盖，待刷新自然释放再冻续验→20父含39/43，ops full0；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18冻结/244别名保留、旧plan held，未消费。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35终态学习/同战SL已核，重启跨层/溢出自然待、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 
-10:16同16学习通知再次核16原文/32投递/旧watcher实际接收原件；内容不变，15ACK来源合同仍拒绝、000402原wrapper仍缺，正式watcher_received/roy_notified均0继续pending。原sts2-integrator同pane/session一次herdr提醒返回agent_prompted，不能代收到或Roy已知；#27未变不重复主管收件箱，不重拒绝CLI。paper/materials/20261024-1016-notices-ops/verification.json、notice-handoff.json、watcher-reminder.json；旧09:13原件保留。所有科学父、旧failed/rc0/EPERM/EROFS/retry未知及丢失full保持。
+通知pending：10:16核16原文/32投递/旧watcher接收；15来源ACK范围拒绝、000402精确wrapper缺，正式watcher_received/roy_notified均0。原sts2-integrator提醒仅agent_prompted，不代角色/Roy已知，不重复27主管收件箱或旧拒绝CLI。原文/核验/旧67冻结证据见paper/materials/20261024-1016-notices-ops/及旧09:13原件；科学父/旧failed/rc0/EPERM/EROFS/retry未知/lost保持。
 
 完整历史与此轮压缩前交接保留paper/materials/20261024-issue38-lock-timing-ops/handoff-finalization/handoff-before.md，及paper/materials/20261024-090927-strategy-result-ops/handoff-before.md；仅沿当前事件按需核原件，不全文重读。
 
