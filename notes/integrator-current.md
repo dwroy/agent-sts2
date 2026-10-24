@@ -1,4 +1,43 @@
 state: in-flight
+issue: 60
+updated_at: 2026-10-25T02:41:47+08:00
+
+# 集成员当前交接
+
+进行中的事：#60原唯一full仍运行，worker2026370/birth29104679，原2788输入/1417依赖/anchor4e435fa174b88009e2c239067dfc2b138d78fe12冻结不改。材料paper/materials/20261025-issue60-wiring-composition-integrator/，原检查锁仍由worker持有，未重复检查。等待期间#51 021345原文/证据/差异/下一步实收：145原件/8原日志窗口/6旧附件核同，1新4补充/3格式rk2研究稿、质心及版本反向、route-hp同ID排队缺口已实际转Roy并公开6388068959逐字读回，材料paper/materials/20261025-issue51-c0-021345-integrator/。
+
+在等谁：本角色等60唯一full终态，成功后独立核PID退/锁释放/输入依赖/index/tree/result，再精确25叶集成并交原ops。#51原ops保串行队列，route-hp与004756两稿旧附件交原owner内容增量/CAS；3rk仅格式、2事件rk不可加载，正式发布/消费者/自然采用收益及科学父仍待。原ops已一行agent_prompted，Roy已读/ACK未知，未改他角色确认。
+
+下一步：60复用原进程不重开，冻结actual live d0d9da100/R447R448及469物理知识叶，135统计夹具/465验证差异保留且不作生产迁移源。通过后Windows SSH核回并交原ops58之后原发布链，生产控制SHA/迁移/最小自然闭环由ops核；58原RR2不阻，#36原线程账号树证据与#27缺log保留。未改live/STOP/生产DB/控制/在途/其他角色状态。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 60
+updated_at: 2026-10-25T02:29:00+08:00
+
+# 集成员当前交接
+
+进行中的事：#60新来源28780925be9e2ba4029a328920946aac05d9b328已独立核12补丁叶/合同及合并原19叶清单；25最终源码/合同前像在main/发布基线一致。下一实际组合冻结anchor4e435fa174b88009e2c239067dfc2b138d78fe12 / tree8998bfe7737d9a40d057fdd98058302fed7ada00，前像live=d0d9da10063c623f3036a6910e83f4ae3c30c06e（含R447/R448）；唯一本批full已启动，PID2026370/birth29104679、nice10/maxWorkers1，生产tsc0，当前phase=full-running。原#58 full不重跑。位置paper/materials/20261025-issue60-wiring-composition-integrator/，工作树/home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228；2788输入/1417依赖冻结，ops/integrator-full-check.lock在原worker持有。
+
+在等谁：本角色等上述唯一full终态并继续核恢复源码/证据，不再等dev交SHA；不得另开full。全目录严格相等诊断发现原验证基线额外统计夹具，已逐叶核其沿原58输入SHA未变；实际live每叶完全相同，详live-knowledge-boundary.json，验证夹具绝不当生产迁移源。原ops接后续实际发布/迁移/合法候选→工具正负例→自然局，当前58自然首题usage门与原父要求仍开放；不代ACK。旧5d7停止门留历史，新来源使用独立新组合，不在旧树解除门。
+
+下一步：唯一full结束后独立核原PID退出/锁释放、输入依赖/index/tree/result；失败保原件退具体缺陷，通过后原锁顺序精确集成25叶、Windows SSH推送并交原ops。生产库/控制文件/迁移/同局绑定与自然消费均未代验；不动live/STOP/原对局/其他角色状态。#36恢复信息及#51原文转达历史继续保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 60
+updated_at: 2026-10-25T02:25:33+08:00
+
+# 集成员当前交接
+
+进行中的事：本轮先按要求更新#60交接。已完整读到原dev新补交6387895238，固定来源28780925be9e2ba4029a328920946aac05d9b328，原文称包含5d7bc13c3并补父调度/新局统一控制入口、batch持久runtime选择及fresh-process finish/recheck恢复；本角色尚未独立核补丁/原probe/最终输入，不能把开发定向结果当作本角色组合验收。旧5d7预备停止门仍保留，尚未解除；本角色当前无在途full/安装/模型/游戏事务。
+
+在等谁：#60当前不再等原dev交SHA，下一步由本角色先核28780925及补交原件；开发声称生产/runtime类型检查与CLI编译退出0、TS5文件45项/Python19项及bash语法通过、12补丁叶核同，均待独立确认。原dev待本角色实际review反馈，发现具体源码/恢复缺陷沿原开发会话退修。#58已先交6387524419，main7779695a8、22叶后像及唯一full678文件/6618过0败2跳/tsc0的核验历史保留；已读原ops 02:20:31当前清单：其记录C5已R447/c32ff342、58已R448/live d0d9da100，原worker退场/准入释放；RR2首题usage88%≥80%门拦下，accepted=false/native空、请求high与brain xhigh要求分列、ENOBUFS commit=null保留，58自然计划/计算验收未过。本角色本轮仅核到ops该实际记录，未独立复验发布后像/自然运行；#60下一候选须以已含R447/R448的实际live为前像，不能沿旧“仍等C5终态”的摘要推进，不让58等60。生产迁移、合法候选→生产tools正负例→自然局消费、控制SHA/同局绑定、长期采用收益及科学父仍待原ops实际验收。
+
+下一步：先只读核28780925相对5d7的最终差异、12补丁叶及paper/materials/20261025-issue60-runtime-wiring/的checks/source-inputs/recheck-probe原件，重点核新进程无继承环境时A→B、A→disabled、disabled/未捕获→enabled、结果不明同实例同ID回查与拒建缺失原DB。确认后重核届时58实际发布组合/知识数据与原在途边界，重建下一批固定候选，解除旧停止门必须绑定新来源后再开唯一适用full；不复用58结果冒60全绿、不重复已启动检查。组合通过后精确集成并交原ops原发布链，未通过保原件退原dev。#51 014301已转Roy并公开实投6387679266/逐字回读、原ops一行已投，非Roy或他人ACK；#36父/树/证据及原账号线程恢复信息继续保留。未改live/STOP/生产DB/配置/其他角色状态。
+
+本轮进入时检查点（原文保留）：
+state: in-flight
 issue: 51
 updated_at: 2026-10-25T02:04:07+08:00
 

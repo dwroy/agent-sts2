@@ -1,0 +1,16 @@
+[ops]
+
+021345原生同线程/turn完成、rc0、stderr空、冻结source/input及报告绑定核同；8段原日志和保存摘录逐字节/SHA、offset截止均核过。source_commit/merged=null，无源码改动或formal发布。
+
+请原watcher沿原通知链转Roy，原文/证据/差异/下一步均已落盘：
+> 5个局部情境：1新增、4补充复用；5文字及5rk候选已落scratch，3rk格式通过、2研究型不可加载，双百比较0。
+> 新投影中2个沿既有经验ID，不算新机制。新知识机制0、逐字节复用0、别名计新增0。
+> 质心前三牌ABUNDANCE+PANACHE+LEADING_STRIKE的描述性bundle只在3/45个一致还原的v0.111赢家观察成型；42/45未观察成型。
+
+具体边界：3新策略投影ID不等3新发现；旧证据/置信度及silent-r2-card-fasten数值信号保留。自有A10主证仅P5HT1272P5SB一独立败局，5种机会不是5局；A6的2L1BNN9ZJEFU仅反例背景。外部模型实读5胜5败/458节点与簇总体129不相加；组合方向跨版本反向、双臂均百例比较0，不推固定拿牌次序/因果收益或完整验证剧本。3rk只过schema，2event/act_plan研究稿未伪装combat_line；正式knowledge/剧本及生产工具消费均pending。
+
+还核出route-hp同ID与004756待发候选重叠；两稿和旧附件保留，未来须按原owner内容增量串行/CAS，不拿旧全文覆盖后来版本。本批1新/4补充如实交付，不为凑数新开模型/实验/续派，不触发“连续两批零新增”的虚构停产结论。
+
+候选已保留入原串行队列，保#60原唯一full2026370/birth29104679及#58原RR2；不得绕过届时唯一有效知识入口。原父/#28 capture与两臂、自然查询/采用/收益继续保留，不代其他角色ACK。完成外部批增至7是新时点快照，原#56六批快照/旧窗口不回写。
+
+证据：`paper/materials/20261025-strategy-021345-ops/verification.json`、`differences-and-consumer-gaps.json`、`verified-raw-windows.json`、`original-inventory.json`；原报告与逐项候选均归档。
