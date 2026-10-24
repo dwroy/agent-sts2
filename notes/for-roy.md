@@ -5188,3 +5188,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T12:07:17+08:00 [ops/#35] #35续核已从原首局15题推进到041301四个自然终局：原冻结84条构筑快照逐offset/bytes/SHA重读，100道构筑题均accepted且与最近落盘渲染文本一致，理由均≤20Unicode字。12条成功同战SL的construction_restore与最近持久条目一致，恢复牌组的ID/升级多重集均等于下一实际T1状态，重复牌未丢。原041301工具命令及原session83888续取输出证明学习者读取四局终态快照，分别19/19/24/21条、omitted0；合并输出有截断，仅确认终态快照消费，不冒完整历史通读或策略收益。进程重启、跨层回滚、超40条溢出自然分支本窗口未验，固定回归与自然证据分账。R422行为仍为实际live祖先，原run-config ENOBUFS/null不补版本，R419丢失full保留；本轮未新增模型/full/局/重放，未借37唯一窗。学习消费和同战SL子项已有证据，剩余自然分支及父要求保持开放。
 原件：paper/materials/20261024-issue35-natural-learning-ops/verification.json、natural-question-readback.json、natural-sl-readback.json、natural-learner-consumer.json。
+
+- 2026-10-24T12:19:35+08:00 [ops/#28] #28已从原工程停点继续核科学准入：R425行为仍为当前live祖先，原85条SHA与发布读回一致，工程/绑定/准入释放不重做。原041301四个已读局冻结376道Jev题，按显式第一/二幕Boss/elite收全153题，153均精确关联原决策和observed_ts状态；未按输赢挑题。这一切点完整Plan对象、逐候选原Plan映射、同种子完整结果矩阵均0，不能由描述或已走一线HP补反事实。98题带非空旧open_book键、55题无键，原样留档；当前回放拒绝该键，沿原37投影合同接续，不无痕改输入。已冻结旧85/vocab/实际经验Git blob及公开来源SHA，交原28学习/开发owner补新来源条目、合法capture、独立预注册留出和完整结果；四已读局只作诊断/训练。真实两臂/改善区间、Roy开关与A/B继续开放，开关保持off；本轮模型/full/局/回放均0，51优先及37唯一窗未动。
+原件：paper/materials/20261024-issue28-scientific-readiness-ops/verification.json、diagnostic-opportunity-inventory.json、frozen-prerequisite-references.json、next-input-contract.md。

@@ -6587,3 +6587,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T11:56:24+08:00 [ops] 114313外部用药r2自然单元done/rc0，81原产物核同，新增1策略候选/正式发布0；原native high/工作区沙箱核实，tier未证。原checkout已回收而scratch/分支保留，候选待37原窗释放后正式发布/消费者；不补测/finish/模型，科学父开放。原件paper/materials/20261024-strategy-114313-ops/。
 
 - 2026-10-24T12:07:17+08:00 [ops] #35四自然局100/100构筑题匹配快照、12/12同战SL恢复条目/下一T1牌组核同；041301原生实际读取四局终态快照，截断输出不代全历史通读。重启/跨层/溢出自然分支及父继续待，未重full/模型/局。原件paper/materials/20261024-issue35-natural-learning-ops/。
+
+- 2026-10-24T12:19:35+08:00 [ops] #28工程R425/旧85条保持；冻结四已读局153个第一二幕Boss/elite原题诊断机会，完整Plan映射/同种子结果0，98旧开卷字段原样保留。原owner补条目/capture/独立留出后再两臂；真实调用/full/游戏0、off及科学父保持。原件paper/materials/20261024-issue28-scientific-readiness-ops/。
