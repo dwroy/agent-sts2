@@ -5396,3 +5396,7 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 
 ### 2026-10-24T21:55:04+08:00 [ops] #56 原C/D未启动失败已结
 原tick已退、五注册落盘。214312/13原wrapper已退/无TUI，err证注册锁超时；仅调用原not-started及finish75，现failed/rc75并过shared.retired。保原输入/世代、stderr、pane/worktree，A/B注册整行未动。21:53:57 A214314/B214315均已核首次原生接受，请求ultrafast，原生tier仍null，不能冒四外部＋自有已验收。自有214311仍awaiting_review/无TUI；原复盘finish会自动续派，本轮禁新模型故未调用。原跟进事务更新为tick已退/C-D已结、自有补证与56原子注册修复待；无重派/full/强tick或关tab。锁时长未冒精确起止。211311 8+8下一批、原窗/科学父保持。原件paper/materials/20261024-214312-214313-registration-return-ops/。
+
+
+### 2026-10-24T21:57:15+08:00 [ops] #56 C/D结束回调去重
+214312/13均为上一轮not-started/finish75的结束通知。已核failed/rc75及原wrapper退出；stderr和未启动证明与归档字节/SHA一致，shared.retired仍通过。out/TUI缺失、前置注册超时和proposal_audit_errors=[]保留，不记提案缺失、学习产出或live合入。本轮未重复finish、重派、模型/full/tick、回收或改在途行。A/B沿上轮原生接受继续，实际ultrafast未证；自有214311待原监督无自动续派结算，56原子注册/长锁修复、211311 8+8下一批及科学父保持，原窗不重置。交接仍clear-ok。原件paper/materials/20261024-214312-214313-callback-ops/verification.json，原结算1ad6d689。

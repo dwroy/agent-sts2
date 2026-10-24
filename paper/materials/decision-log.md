@@ -6756,3 +6756,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T21:49:29+08:00 [ops] #56 六旧结束回调去重；214311及214312/13在原自然tick长持注册锁下120秒前置超时，无原生回执。PID116632/birth27391130仍持原两锁/注册未落盘，已报原issue修原子注册与长校验锁范围；不改在途行、不signal/finish/重派/full/强tick。原件paper/materials/20261024-214311-registration-ops/。
 
 - 2026-10-24T21:55:04+08:00 [ops] #56核原tick已退/五注册落盘，C214312/D214313以原not-started+finish75结failed/rc75且retired过；A/B在途行不动，两道原生接受但实际tier=null。自有214311保awaiting_review，原复盘finish自动续派与本事件no-new-model冲突，沿原监督待禁止续派结算；原注册故障修复/窗口/科学父保持。原件paper/materials/20261024-214312-214313-registration-return-ops/。
+
+- 2026-10-24T21:57:15+08:00 [ops] #56 214312/13两结束回调已按原failed/rc75、stderr/未启动证明SHA及retired门去重；未重复finish/模型/full/tick/回收或改在途行。原注册故障、自有214311待核、211311 8+8下一批及科学父保持。原件paper/materials/20261024-214312-214313-callback-ops/verification.json。
