@@ -5388,3 +5388,7 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 
 ### 2026-10-24T21:44:45+08:00 [ops] #56 三自有按主管裁决放弃退役
 依6384926225，124241/151302-s2/194330-s2三批于21:42:54记abandoned-unverifiable，rc空/产出0；保原缺证，不冒done或原生验证。原回执、草稿和过程产物逐件SHA归档，tab/worktree未删，自有槽已释放，不重放。21:43:51外部新批次0、在跑0道，实际ultrafast未证；四道各2新单元保留原队列待自然tick。211311的8文字＋8描述rk已登记原下一数据批待办，source_commit仍null、未发live，保rc75和补证failed/rc0及消费者限制。整行租约“只改未启动plan、不补写在途行”已入notes/ops-runtime-notes.md。外部释放窗21:34:30—23:34:30不重置，自有释放T另记；旧窗/科学父保持。原件paper/materials/20261024-211311-own-abandon-ops/。
+
+
+### 2026-10-24T21:49:29+08:00 [ops] #56 自然注册长锁阻塞
+六旧回调已去重，未重复finish。214311原wrapper117156/pEE在注册锁等待120秒后拒绝，stderr明确无模型启动；out/TUI/learn.json注册均缺。21:48:42原自然tick116632/birth27391130仍持learn.lock及tick-learn.lock，214312/pEF、214313/pEG也已记注册超时，214314/pEH仅派发pane。源码在同一全局锁内逐道eager校验全部候选，最后才save_state，导致wrapper先超时；已向原#56交实际复现，需原子注册与长校验锁范围修复，不能冒自然五槽或ultrafast已过。本轮未改在途行/队列/源码，未signal、重派、强tick、full或另开模型。保原tick自然终态后续核注册与无模型证据；211311 8+8下一批pending、旧失败/科学父保持。原件paper/materials/20261024-214311-registration-ops/。

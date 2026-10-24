@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-24T21:48:42+08:00",
+  "phase": "original-natural-tick-held-lock-pre-model-registration-timeout",
+  "natural_tick": {
+    "pid": 116632,
+    "alive": true,
+    "state": "R",
+    "birth": "27391130",
+    "user_ticks": 29101,
+    "system_ticks": 3245,
+    "known_fds": [
+      {
+        "fd": "3",
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learn.lock"
+      },
+      {
+        "fd": "7",
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/tick-learn.lock"
+      }
+    ]
+  },
+  "locks": {
+    "learn.lock": "held",
+    "tick-learn.lock": "held"
+  },
+  "launch_rows": [
+    {
+      "batch": "20261024-214311",
+      "pane": "w1H:pEE",
+      "label": "learner-20261024-214311-postmortem",
+      "registered": false,
+      "tui_exists": false,
+      "output_exists": false,
+      "stderr_sha256": "ecce1ffeeecf301037639f45cabc35565216f0c1d7e38f0bc6d2e336696aa452",
+      "registration_timeout_recorded": true
+    },
+    {
+      "batch": "20261024-214312-strategy-proposal",
+      "pane": "w1H:pEF",
+      "label": "learner-20261024-214312-strategy-proposal",
+      "registered": false,
+      "tui_exists": false,
+      "output_exists": false,
+      "stderr_sha256": "2d0c2e8870ed37c69319e4fe0eae911c02f396a99cbcdd493df5090fbc13aaad",
+      "registration_timeout_recorded": true
+    },
+    {
+      "batch": "20261024-214313-strategy-proposal",
+      "pane": "w1H:pEG",
+      "label": "learner-20261024-214313-strategy-proposal",
+      "registered": false,
+      "tui_exists": false,
+      "output_exists": false,
+      "stderr_sha256": "dc5ffc0bbee334834e9849a428b0d5395b7e7ed338e88bc58986bbe9c9255ca3",
+      "registration_timeout_recorded": true
+    },
+    {
+      "batch": "20261024-214314-strategy-proposal",
+      "pane": "w1H:pEH",
+      "label": "learner-20261024-214314-strategy-proposal",
+      "registered": false,
+      "tui_exists": false,
+      "output_exists": false
+    }
+  ],
+  "postmortem_runs_from_original_argv": [
+    "4CR2N26QAJAV",
+    "Q7HBKHZTSPJ8",
+    "FVWXPGMA2DBQ",
+    "NYX17B18TBWG",
+    "7UEFJY5Z4Y85"
+  ],
+  "causal_source": [
+    "ops/codex-ops-learn.py:main state_lock surrounds handler",
+    "ops/codex-ops-learn.py:cmd_tick saves registration after check_jobs",
+    "ops/strategy_external_jobs.py:dispatch_lanes loops four times",
+    "ops/strategy_external_jobs.py:dispatch eagerly list(candidates) before each writer",
+    "ops/strategy_external_jobs.py:source validates repeated whole aggregates under same lock",
+    "ops/codex-ops-learner.sh:flock -w 120 rejects before learner_entry"
+  ],
+  "no_model_claim_scope": "214311 stderr proves pre-entry timeout; other panes have no accepted native receipt in this snapshot, not a future launch conclusion",
+  "actions": {
+    "signals": 0,
+    "finish_replayed": 0,
+    "new_tick": 0,
+    "model_dispatch": 0,
+    "row_or_policy_mutation": 0,
+    "full_tests": 0
+  },
+  "next": "original tick terminal and saved registrations first; fix durable registration/long-lock ordering on original #56 source path before retrying exactly original demands; retain all old failure and no-native evidence"
+}
