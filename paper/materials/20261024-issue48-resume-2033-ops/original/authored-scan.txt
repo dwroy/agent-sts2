@@ -1,0 +1,1931 @@
+proposal.md
+# 静默普通策略批次：持牌签名与连续战资源分开复核
+
+批次：20261024-164315-strategy-proposal。派发为普通 tick，无 proposal_ids、proposal_repair、research_request 或 implementation_request。只处理本批十个已结束的 Silent A10 局；派发键 A11 不代表本批观察进阶。
+
+## 唯一新增候选
+
+`brain-strategy-candidates.json#/entries/0` 为真正的 `brain-strategies-v1` / StrategyEntry，ID `silent-brain-poison-footwork-realization-review`。触发：第一、二幕，构筑/购物/营火/幕初/备战题，当前牌组同时有原始 ID SNAKEBITE、ACCELERANT、FOOTWORK；不推断替代件等价。
+
+做法是复核实际持牌、实建、最近赢战的净HP/药槽消耗和下一战缺口，不把签名当作已能持续生存。不给新数值、拿牌优先级、必喝药、SL或终局规则。与原 `silent-core-poison-defense-observation`（silent-0352）、路线（silent-0019）和休息（silent-0020）经验合并追溯，原ID与历史分母不动。
+
+- BKK8KAR3E83C：F6已持三牌；F17首试胜77→9，F19赢63→30，F24赢29→13；F33四试均未过知识恶魔，末试T14死亡。首次持牌为 states 原行531183，offset=16955606955，bytes=22798，SHA256=67d3fa79d463f53c53416a582885c0b21669752a65a5b9f8b66d80f6af89a07c。
+- TB5YKELW0355：F14奖励后才持三牌，原行534478，offset=17063075172，bytes=24384，SHA256=ce69a156e9268bd238fd2e9eed854212c0e01665f9768645db8b7f03d23ec58e。F17首试胜61→26；F28赢51→17、F30赢38→18；F32休至36后F33双蟹四试失败，末T7归零。
+- 反证/限制：两局都过第一幕，不能写成“组件齐备必败”。终败也不证明组件或回血是致败原因。各只有一个独立局，SL不增加独立分母；替代拿牌、路线、休息与用药时点没有同起点整战反事实。未验证其他进阶，确切运行源码及游戏版本未知。
+
+窗口、入口/退出及全部原始指纹见 `candidate-source-refs.json` 与 `whole-run-audit.json`。这是自有局部候选；本批没有绑定并实读外部统计和同流派外部代表完整局，不称三输入完整剧本或真人偏离已经验收。候选置信度0.35，observational；旧64/281等分母不继承。
+
+另一个重要限制：两局F32的原计划已经明确写出启动和持续防御缺口（`existing-plans-counterevidence.json`）。因此不能把本候选描述成“纠正了当局误认成型”；新增的是可查询表达，能否新增有效信息和改善选择仍未知。TB原答案引用旧双蟹策略只属于答案自述，不能代替工具查询的原始回执。
+
+## 已有经验及rk去向
+
+`experience-strategy-rk-map.json` 覆盖11个原经验ID与对应账本：1个新增局部候选、6组复用、4组等待、1组不适用；没有正式更新。组数不是独立策略数或局数。原244条不回刷，不删除旧经验。
+
+QVDR弃生存者：完整题已标后继，chosen确为弃牌且completed，后继手牌已失去生存者；重算发生，未看到旧计划被继续执行，因此不是新纯bug。保留分支未实打，不发布“必须保留”规则。它是选择题，不能直接当#28的combat_line遭遇rk。
+
+37U最后毒药：T3先挡到12，再饮最后一瓶，敏捷变2，既有12挡没有追补；结毒后两敌仍17/27血，17HP对30攻死亡。原机制已在silent-0119/0278；不据此确定提前喝药整战能赢。缺原Plan capture、配对结果矩阵、留出回放和改善区间，不造新rk或启开关。
+
+## 验证、发布与回退
+
+无源码或正式知识修改。仅将候选交生产解析器、检索器和请求注入函数做离线固定数据读回，结果见 `candidate-validation.json`；不调用模型或游戏。它不等于正式库固定读回，更不等于自然查询、采用或收益。候选未发布，后续应按现有知识发布与消费者门处理；需要改变动作/数值的主张另有足够证据后再提实现，不能把本候选当已实现代码。
+
+因此 tsc/vitest/撤源码失败及恢复测试均不适用，记null；没有提交、合入、版本或shipped。回退仅需撤下未发布候选，无live回退动作。账本只经根目录ledger CLI以proposed登记，实际ID见 `ledger-add.receipt.txt` 与最终报告；无combat/potion/sl/terminal/structure新规则提案，无新code_proposals ID。
+
+report.md
+# 静默普通策略批次交付报告
+
+本批完成十局整局主线及原始字节核对，保存一个局部大脑策略候选；没有源码、正式经验或正式策略/rk修改，没有合入live、发布号或shipped。候选的固定检索读回通过，不证明当局误判被纠正或未来收益。
+
+## 身份、基线与范围
+
+- 本批为普通自然tick，task=strategy-proposal、character=silent、工作树与十个dispatch_runs精确一致；无proposal_ids/proposal_repair/research_request/implementation_request/backfill_source/external_source。派发原行见dispatch-binding.json。旧deck-size专题仍绑定20261010另一批，不转成当前专题，也不领取旧队列。
+- 开工工作树干净，原HEAD=e8dd51b732e5876b2c0774758633011d74fc87aa；按普通批次要求git merge --no-edit main，快进到本报告base=b6933c7e621aaf75b0c31a912f3178d7607ea82b。后续未提交，结束仍同一HEAD且工作树干净。source-diff.patch为空。
+- runs原行明确为SILENT/A10，十局均ended且victory=false；派发进度键A11不代表本批观察过A11。原始offset/bytes/SHA在run-identity.json。首次手工断言误把SILENT大小写当失配，已保留说明并用大小写归一复核；没有改写原行。
+- 无子agent、网络、模型/MC调用或游戏动作；仅本角色知识与本批原日志。没有读取其他角色知识。模型不会凭牌名或预训练资料补游戏事实。
+
+## 原始证据、冻结切点和覆盖
+
+先运行指定evidence_summary，再运行指定V6/Jev四流及共用全流extract_evidence。两个manifest分别保留，没有覆盖旧截点或把0行初稿当缺流。所有所选state/decision/Jev原行又按offset/bytes seek读取源文件核SHA：4,492 / 4,309 / 1,179行全部相同。另核20条run-config、519条run-plans、37条sl-attempts与220条brain原行；run-plans仅run字段，其他流仅显式身份/精确decision_id，拒收冲突及正文提及。见raw-integrity.json、additional-stream-audit.json。
+
+|提取|流|冻结字节|源前缀SHA256|本批选中|坏行/截断（全冻结流）|
+|---|---|---:|---|---:|---|
+|v6-evidence|v6-build|64753212|1167aaefdcdd28e1e9a16b363c17523a649910782dfb7e44225a578244b195f3|0|0/0|
+|v6-evidence|jev-prompts|3317411550|5f1866a74ded149e7ba9d1dac6368f4c598368f0927664c3a58dc57171e992c3|1179|1/0|
+|v6-evidence|decisions|4764426001|ccda15034d3e0b3ccc9ba01eea57f9da296f7bdb968f0fb0d39e1ff66d2c6b62|4309|2/0|
+|v6-evidence|run-config|3445978|9badf1e15b61f7b5de102903d9172b87841e9bd1889ca9497b67a285b4792353|20|0/0|
+|evidence|states|17194286695|eb290e7bbbf131d0683c13e65bce455b1f97c905f814d7c16421d6ceadbdb07b|4492|2/0|
+|evidence|decisions|4764727071|241f142395ffd92038b41cfdfc63acdfb076ce55c0fca7fa227ad3134419f456|4309|2/0|
+|evidence|sl-attempts|61976074|ba2d7ecc32349db92b679c9e389ec992d94928bb739858e5232d11b1a63319e6|37|0/0|
+|evidence|run-config|3445978|9badf1e15b61f7b5de102903d9172b87841e9bd1889ca9497b67a285b4792353|20|0/0|
+|evidence|run-plans|14386062|58cd13286bcdf1d8d92261bc73785ac93f3d19ffb33b161b18176893bfd9eae2|519|0/0|
+|evidence|brain|1609866781|80047411cd8e55939e2038cfed167341b1763684c2f14851c46ccd78199bc637|220|2/0|
+|evidence|v6-build|64753212|1167aaefdcdd28e1e9a16b363c17523a649910782dfb7e44225a578244b195f3|0|0/0|
+|evidence|jev-prompts|3317411550|5f1866a74ded149e7ba9d1dac6368f4c598368f0927664c3a58dc57171e992c3|1179|1/0|
+
+各选中行自身仍保存source_size/line/offset/bytes/SHA。全流历史states有3746条未知身份；decisions有1934条unknown_identity、1809条unmatched_decision_id，不分给本批。历史坏行同样不算本批缺失或零值。本次冻结均无尾截断；summary与两次提取的不同源增长切点分别保留。对象存储回执的pending_host_seal/deferred_errno=18保留为宿主封存待办，未当作宿主已完成封存。
+
+V6：20条run-config均mode=on/reflex=off/direction_replan=off/delivered=false；v6-build源存在但本批十局均no_match。entries、jev_answer、fallback、unknown的实际次数/意义无法核定，不把无匹配填成0，更不称V6正式发布或采用。run-config源码commit均未知/ENOBUFS，不能拿当前live替代当局SHA。十份游戏大脑native回执与本学习会话档位是不同对象，不冒称已核本会话原生档位。
+
+Jev：1,179行含1,155条answers和24条error，error均human-pace budget exhausted: Jev；与v6-build的jev_answer/fallback分开。每题精确decision_id关联chosen/result/gate_reject/selection_dispatch及同局状态窗，缺字段保留null，完整逐题清单见question-coverage.json。状态自动关联只是显式同局的时间括窗，不是原子动作证明；三个精选窗口另核fingerprint、可见牌/药/能力变化。
+
+|局号|Jev行|answers|error|完整原请求人工核读|其余机器字段/关联|
+|---|---:|---:|---:|---|---:|
+|QVDR4R3UWKXU|20|17|3|d07a54ab-01d4-4a24-9bf3-bb5bb4313fd4|19|
+|5ZT1SKS66C1N|82|81|1|无|82|
+|BKK8KAR3E83C|187|183|4|无|187|
+|Q7SFDZSJLULD|160|159|1|无|160|
+|EQLB6SK9W9H7|134|133|1|无|134|
+|BP9C8K9NSRZ0|216|203|13|无|216|
+|TB5YKELW0355|194|194|0|d6331e4c-37c6-461b-abe4-1c457f678c25|193|
+|GJ81EPE4B8Z2|132|131|1|无|132|
+|37U27AS6JNJ0|30|30|0|03d9b0bb-35af-4ed8-92c6-c8be6b37584c|29|
+|XC9AHZH3CZVK|24|24|0|无|24|
+
+三个完整原请求均含全部候选、外部开卷附件和限制；不是最后五题抽样。其余1176题已完整机械解析/原SHA复验，模型未全文精读，逐题未读原因已保存；不据这些未精读题推出新动作规则。外部附件仅为当时题面的原文，来源URL/版本/SHA/许可保持原行，不拿它的陈述或附带历史统计充本批实盘证据。未读取新的外部原库，也未验收完整人类赢家对照。
+
+## 十局主线（首试、重载与赢战消耗分列）
+
+所有变牌快照、完整已记录幕末牌组/HP/药槽、每场进退状态以及构筑选择原chosen/result，均在whole-run-audit.json；摘要表不能代替该原帧指纹。仅以终局组牌回填早期的做法没有采用。未到幕末/缺退出帧一律null，净HP变化不当敌人毛伤。
+
+|局号|实际过渡/首次核心观察|幕末/Boss与关键赢战|最终后果|
+|---|---|---|---|
+|QVDR4R3UWKXU|施毒起步，F5/F9补毒雾；无触媒/步法防御签名|未到Boss；F4赢50→42，F9赢35→23，F11休至46|F12异鸟首试T4死亡，敌余10|
+|5ZT1SKS66C1N|带毒刺击、投掷匕首与冲刺过渡，F15才见毒雾；未见完整P签名|F11赢58→9、F15赢44→20；F17两试50HP入场|末T10死亡，神官67HP|
+|BKK8KAR3E83C|F4步法/F5蛇咬/F6触媒，三牌持有签名F6；后续双步法/蜃景不倒填早期|F17首试胜77→9；F19赢63→30、F24赢29→13；一幕末9/77及原牌组已记录|F33前三试判死重载，末T14死亡，知识恶魔152HP|
+|Q7SFDZSJLULD|带毒刺击/迷雾过渡，F15蜃景，未见触媒|F6赢47→11、F8赢32→12；F17四试41HP入场，未过一幕|末T10死于巨兽本体，非自爆后场|
+|EQLB6SK9W9H7|F2毒药/F3触媒，F6毒雾；F30后才见蜃景的旧P签名|F17首试胜64→30，一幕末30/70；二幕F27赢70→50、F28赢50→36、F30赢36→12|F33四试33HP入场；末T4死亡，双体118/164HP|
+|BP9C8K9NSRZ0|即时攻击过渡，F12致命毒药，F28触媒/F31毒雾，F34撕咬混合；持续防御完整签名未见|F17首试胜，幕末29/70；F24前三判死、第四赢2HP；F33首试胜，幕末15/70；F46赢65→4、F47休至28|F48前三判死、末T6死亡，阶段敌150HP；F49未到|
+|TB5YKELW0355|F9步法/F11毒雾，F14得触媒后完整持牌签名；能力建立与稳定循环另账|F17首试胜61→26，幕末26/70；F28赢51→17、F30赢38→18，F32休15→36|F33前三判死重载、末T7死亡，双体各80HP|
+|GJ81EPE4B8Z2|F2致命毒药/F6迷雾/F8蛇咬，未见触媒与持续防御签名|F9精英赢55→23、F11赢30→10、F13赢33→14、F15赢23→12；F16休至35|F17四试，末T6死亡；神官98、两信徒9/15HP|
+|37U27AS6JNJ0|F5蛇咬/F6迷雾，F8触媒；空栏腰带条件防守，未见步法签名|F7赢51→24，F8购物后仍24HP；未到营火或Boss|F9首试T3药后仍12挡，17HP对30攻死亡；两敌17/27HP|
+|XC9AHZH3CZVK|蛇咬、F2刀舞、F3单步法的未定混合；完整刀/毒防核心未见|F4赢56→44、F5赢44→35、F6赢35→3；改路线后下一战仍不可绕过，未到火|F7首试T5死亡，潮湿邪教徒34HP；未到Boss|
+
+BKK与TB在F32原计划已经主动写明启动/持续防御缺口，见existing-plans-counterevidence.json。没有证据说大脑当时把持牌误当稳定成型；新候选只是可查询表达，新增信息与实际帮助未知。过去经验里的64、281等旧分母仍是旧冻结研究，不能加成本批支持数或声称本批重验。
+
+## 候选、既有ID与实际处置
+
+唯一新增是brain-strategy-candidates.json#/entries/0，严格现有StrategyEntry；限定A10证据，第一/二幕、三张原ID持牌的构筑/备战场景。置信度0.35，observational，两个独立局；BKK/TB过首Boss反对“签名必败”，最终失败不能证组件或休息选择致败。完整字段、反证、来源与后继见proposal.md/candidate-source-refs.json。
+
+experience-strategy-rk-map.json核11个原经验ID：new=1、update=0、reuse=6、waiting=4、not_applicable=1。这些是映射组数，只有一个新增策略候选，rk新条目0。原经验均保留，旧244不回刷。复用的路线/休息/同族/双蟹/恶魔/实验体入口不新建重复条目，不提升其外部分母或可信度。
+
+不完整/晚到毒组件、XC未定混合、巨兽剧本与腰带rk保留具体缺数据。弃牌是CARD_SELECTION，不能伪装成#28 combat_line；腰带案例还属于普通蛞蝓，不冒本批Boss/精英回放机会。无原始Plan capture、同候选同种子的完整结果矩阵、预注册留出与真实回放改善区间，不开模型/MC/对局或开关。所有等待细节在映射逐项保存。
+
+已有proposal-discard.md和proposal-conditional-poison.md已读，均属原postmortem链，当前batch未领取这些queue ID；没有冒充本批implemented/duplicate。弃后继后确实重算；毒药当步施毒和空栏敏捷不追补旧挡已是原机制，未实打的保牌/提前喝药整战收益仍未知。未新增出牌/药水/SL/终局价值或结构规则，code_proposals=[]、implementation_domains=[]。
+
+本批缺绑定且实读的“外部统计+同流派外部完整代表+可比自有整局”三输入，只交自有局部候选；不称完整流派剧本、真人偏离已验或科学父完成。没有矛盾规则强行合并，没有新异议覆盖历史通知。
+
+## 固定读回、账本与交接
+
+- 根目录ledger CLI add实际返回silent-0618，show读回silent/A10/proposed/learner:strategy-proposal；check为618 item(s), 0 problem(s)。保存ledger-candidate.json、ledger-add.receipt.txt、ledger-readback.json、ledger-check.log；仅追加proposed，无shipped。
+- 生产parseStrategyLibrary、retrieveStrategies、applyStrategyEntries在scratch候选上通过：两个冻结实盘持牌快照正例命中且2445字节封套可装入，三个缺组件负例不命中。candidate-validation.json完整记录5个固定输入及原帧SHA。正例是实盘牌组的离线适配，不是原生大脑请求或正式库live读回；负例终态仅用于合同检查，不当可行动题。
+- 无源码/正式知识变更，无代码提交，无撤源码失败/恢复测试，tsc/vitest/cases均null；固定候选合同检查不改记为全套测试成功。无merge、发布号、自然查询/采用或收益声明。铁甲及其他角色未改。
+- 候选格式/固定检索成立，与内容效果、正式发布、消费者固定读回、自然查询/采用、收益依次分账。原计划已理解缺口，新候选能否新增信息尚未证明，因此本批保留现行live行为。
+- 运维入口：本目录proposal.md、report.md、experience-strategy-rk-map.json及两个evidence-manifest.json；后续沿既有去重/知识发布与消费者门处理，未发布候选撤下即可，无live回滚动作。原队列、科学父和#28均保持。
+- 不推送、不运行play，不改ops prompt、不代其他角色确认。本树保持干净，过程证据交原宿主封存与retention，不自行删树。
+
+最终对象如下；与result.json及最终回复相同。
+
+```json
+{"task":"strategy-proposal","character":"silent","batch":"20261024-164315-strategy-proposal","base":"b6933c7e621aaf75b0c31a912f3178d7607ea82b","runs":["QVDR4R3UWKXU","5ZT1SKS66C1N","BKK8KAR3E83C","Q7SFDZSJLULD","EQLB6SK9W9H7","BP9C8K9NSRZ0","TB5YKELW0355","GJ81EPE4B8Z2","37U27AS6JNJ0","XC9AHZH3CZVK"],"fixes":[],"skipped":["源码及正式知识未改：新候选未证明能增加原计划信息或改善选择。","完整流派剧本等待本批外部统计、代表完整局及可比自有整局三输入。","rk缺原Plan capture、配对完整结果及留出回放；不启开关。"],"merged":null,"tests":{"tsc":null,"vitest":null,"cases":null},"code_proposals":[],"implementation_domains":[],"proposal_results":[],"ledger_ids":["silent-0618"],"candidate_counts":{"new":1,"update":0,"reuse":6,"waiting":4,"not_applicable":1,"rk_new":0},"mapping":"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/experience-strategy-rk-map.json","report":"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/report.md"}
+```
+
+result.json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261024-164315-strategy-proposal",
+  "base": "b6933c7e621aaf75b0c31a912f3178d7607ea82b",
+  "runs": [
+    "QVDR4R3UWKXU",
+    "5ZT1SKS66C1N",
+    "BKK8KAR3E83C",
+    "Q7SFDZSJLULD",
+    "EQLB6SK9W9H7",
+    "BP9C8K9NSRZ0",
+    "TB5YKELW0355",
+    "GJ81EPE4B8Z2",
+    "37U27AS6JNJ0",
+    "XC9AHZH3CZVK"
+  ],
+  "fixes": [],
+  "skipped": [
+    "源码及正式知识未改：新候选未证明能增加原计划信息或改善选择。",
+    "完整流派剧本等待本批外部统计、代表完整局及可比自有整局三输入。",
+    "rk缺原Plan capture、配对完整结果及留出回放；不启开关。"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "proposal_results": [],
+  "ledger_ids": [
+    "silent-0618"
+  ],
+  "candidate_counts": {
+    "new": 1,
+    "update": 0,
+    "reuse": 6,
+    "waiting": 4,
+    "not_applicable": 1,
+    "rk_new": 0
+  },
+  "mapping": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/experience-strategy-rk-map.json",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/report.md"
+}
+
+brain-strategy-candidates.json
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-poison-footwork-realization-review",
+      "version": "2026-10-24.candidate1",
+      "trigger": {
+        "question_types": [
+          "card_reward",
+          "shop",
+          "rest",
+          "act_plan",
+          "fight_plan"
+        ],
+        "acts": [
+          1,
+          2
+        ],
+        "deck_cards": [
+          {
+            "name": "SNAKEBITE",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "ACCELERANT",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "FOOTWORK",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "仅Silent A10观察：同时持有蛇咬、触媒、灵动步法时，补牌、购物、营火与备战仍分开核对持牌、实际建立和可重复生存；沿最近赢战的净HP与药槽变化检查下一场资源，不把签名齐备当作停止补强的依据。BKK在F6齐备，F17胜仍77→9，二幕F19胜63→30，F33四试失败；TB在F14齐备，F17胜61→26，二幕F28胜51→17、F30胜38→18，F32休至36后F33四试失败。两局都过首Boss，反对“组件齐备就必败”；终败也不能证明蛇咬、触媒、步法或休息选择导致失败。只复核眼前缺口，不指定必拿牌、血线、杀序或喝药时点；替代选择的整战收益未知，其他进阶和版本未验证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "BKK8KAR3E83C",
+          "floor": 6,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/candidate-source-refs.json#BKK8KAR3E83C",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "TB5YKELW0355",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/candidate-source-refs.json#TB5YKELW0355",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.35,
+      "design": "observational",
+      "source_experience": [
+        "silent-core-poison-defense-observation",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "source_ledger": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020"
+      ],
+      "limitations": [
+        "两个独立A10局；同一局SL不增加分母，首试与最终结果分列。",
+        "非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。",
+        "两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。",
+        "本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。",
+        "精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。"
+      ],
+      "publication": "scratch_candidate_only"
+    }
+  ]
+}
+
+experience-strategy-rk-map.json
+{
+  "schema": "experience-strategy-rk-map-v1",
+  "batch": "20261024-164315-strategy-proposal",
+  "character": "silent",
+  "checked_experience_ids": [
+    "silent-belt-buckle-empty-slots-dexterity",
+    "silent-core-poison-defense-observation",
+    "silent-core-shiv-defense-observation",
+    "silent-giant-explosion-window",
+    "silent-kaiser-crab-facing-sl",
+    "silent-kin-poison-sl-observation",
+    "silent-knowledge-demon-healing-sl-observation",
+    "silent-poison-potion-observed-application",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-survivor-neutralize-discard"
+  ],
+  "ledger_ids": [
+    "silent-0017",
+    "silent-0019",
+    "silent-0020",
+    "silent-0102",
+    "silent-0119",
+    "silent-0278",
+    "silent-0352",
+    "silent-0354",
+    "silent-0418",
+    "silent-0568",
+    "silent-0570",
+    "silent-0618"
+  ],
+  "counts": {
+    "new": 1,
+    "waiting": 4,
+    "reuse": 6,
+    "not_applicable": 1
+  },
+  "entries": [
+    {
+      "id": "poison-footwork-resource-review",
+      "experience_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020",
+        "silent-0618"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-poison-footwork-realization-review"
+      },
+      "disposition": "new",
+      "candidate_file": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/brain-strategy-candidates.json",
+      "json_pointer": "/entries/0",
+      "reason": "原P经验保留；新增可查询的局部大脑候选，未新增固定数值或必选规则。",
+      "counterevidence_and_limits": [
+        "两个独立A10局；同一局SL不增加分母，首试与最终结果分列。",
+        "非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。",
+        "两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。",
+        "本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。",
+        "精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "incomplete-or-late-poison-playbook",
+      "experience_ids": [
+        "silent-core-poison-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-core-poison-defense-observation"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "逐局持牌和转向核查保存在主线；部分只有施毒，部分晚到触媒/防御，不能并入新候选的三牌触发分母。",
+      "counterevidence_and_limits": [
+        "缺本批绑定且实读的外部统计/同流派代表完整局；不称完整剧本或人类偏离已核。",
+        "EQL在F30后才见蜃景，BP在F28才见触媒；没有以终局回填早期。"
+      ],
+      "independent_own_runs": 7,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "mixed-transition",
+      "experience_ids": [
+        "silent-core-shiv-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0354"
+      ],
+      "source_refs": [
+        {
+          "run_id": "XC9AHZH3CZVK",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535436,
+            "offset": 17092578065,
+            "bytes": 13876,
+            "sha256": "2bbb2e50a229707ddeeb587fb0fb93f9cbc2301e9d09a21649232e6e5381f998"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535578,
+            "offset": 17096007250,
+            "bytes": 24233,
+            "sha256": "a3b190715655e17ff94686d55c931a08fe94d3cd3a134c81cfaec4a745deae54"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/XC9AHZH3CZVK"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-core-shiv-defense-observation"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "刀舞、蛇咬、单步法的未定过渡；完整刀或毒防签名未观察到。",
+      "counterevidence_and_limits": [
+        "未到Boss，缺完整核心和外部同前缀可比组，不能用F7死亡编造拿牌优先级。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "route-resource-chain",
+      "experience_ids": [
+        "silent-route-hp-observation"
+      ],
+      "ledger_ids": [
+        "silent-0019"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        },
+        {
+          "run_id": "XC9AHZH3CZVK",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535436,
+            "offset": 17092578065,
+            "bytes": 13876,
+            "sha256": "2bbb2e50a229707ddeeb587fb0fb93f9cbc2301e9d09a21649232e6e5381f998"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535578,
+            "offset": 17096007250,
+            "bytes": 24233,
+            "sha256": "a3b190715655e17ff94686d55c931a08fe94d3cd3a134c81cfaec4a745deae54"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/XC9AHZH3CZVK"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-route-hp-observation"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用赢战消耗带入后战的观察；保留原ID及旧分母。",
+      "counterevidence_and_limits": [
+        "改路反事实未知；未观察到的营火不能预支，净掉血不是毛伤害。"
+      ],
+      "independent_own_runs": 10,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "rest-realization",
+      "experience_ids": [
+        "silent-rest-buffer-observation"
+      ],
+      "ledger_ids": [
+        "silent-0020"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        },
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        },
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        },
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        },
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-rest-buffer-observation"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用实际休息收益与下一战资源分账；未因终败把回血判作错误。",
+      "counterevidence_and_limits": [
+        "未控休息/锻造整战因果，不产生固定血线。"
+      ],
+      "independent_own_runs": 9,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "crab-budget",
+      "experience_ids": [
+        "silent-kaiser-crab-facing-sl"
+      ],
+      "ledger_ids": [
+        "silent-0570"
+      ],
+      "source_refs": [
+        {
+          "run_id": "EQLB6SK9W9H7",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532397,
+            "offset": 16994813584,
+            "bytes": 13907,
+            "sha256": "3a3c3d403fb73e6611d623db4fbae282ad7d7f503486fffa54ae548b9f17a337"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533044,
+            "offset": 17015112427,
+            "bytes": 38485,
+            "sha256": "515146c12e7c98cc18d9dfb4d87ce5aa1aab8dd12c38c612025463cc07da0dc4"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/EQLB6SK9W9H7"
+        },
+        {
+          "run_id": "TB5YKELW0355",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/TB5YKELW0355"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-crab-surviving-part-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "demon-budget",
+      "experience_ids": [
+        "silent-knowledge-demon-healing-sl-observation"
+      ],
+      "ledger_ids": [
+        "silent-0102"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BKK8KAR3E83C",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531106,
+            "offset": 16953920879,
+            "bytes": 13612,
+            "sha256": "531a8de9c8b16e097341d7cf21797dd906466d2ae7872f631d73c19e4fe26376"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531989,
+            "offset": 16984112620,
+            "bytes": 42993,
+            "sha256": "60124c644da465c61d6d7c62dce4b46f2f48aaada25651e04a9f10c144daa0c5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BKK8KAR3E83C"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-knowledge-demon-external-tail-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "kin-budget",
+      "experience_ids": [
+        "silent-kin-poison-sl-observation"
+      ],
+      "ledger_ids": [
+        "silent-0568"
+      ],
+      "source_refs": [
+        {
+          "run_id": "5ZT1SKS66C1N",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530747,
+            "offset": 16944107763,
+            "bytes": 13656,
+            "sha256": "4d2bac06b2a6f9283769dbcdfe29ebdfc30a3398e1e03903bd5f3bdecf836efe"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531102,
+            "offset": 16953883564,
+            "bytes": 28494,
+            "sha256": "ce319df298ec0ab53d7a0affb8779eb1846eaa6cc13da88069a49f781fa53328"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/5ZT1SKS66C1N"
+        },
+        {
+          "run_id": "GJ81EPE4B8Z2",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/GJ81EPE4B8Z2"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-kin-priest-exit-window"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 2,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "subject-budget",
+      "experience_ids": [
+        "silent-core-poison-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0352"
+      ],
+      "source_refs": [
+        {
+          "run_id": "BP9C8K9NSRZ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/BP9C8K9NSRZ0"
+        }
+      ],
+      "target": {
+        "kind": "strategy",
+        "id": "silent-brain-test-subject-external-tail-budget"
+      },
+      "disposition": "reuse",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。",
+      "counterevidence_and_limits": [
+        "已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。",
+        "双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "giant-playbook",
+      "experience_ids": [
+        "silent-giant-explosion-window"
+      ],
+      "ledger_ids": [
+        "silent-0017"
+      ],
+      "source_refs": [
+        {
+          "run_id": "Q7SFDZSJLULD",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 531993,
+            "offset": 16984164434,
+            "bytes": 13333,
+            "sha256": "07886f69af3e2f400fef9e255b0cb0923f1af9195e0151eb71edbc1d8a7e4f9e"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 532393,
+            "offset": 16994778188,
+            "bytes": 26575,
+            "sha256": "fa77c1edd39cb2b7b14cf535db980a6ba0b4700ae1dcf0b4e7327216ff1a2ca0"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/Q7SFDZSJLULD"
+        }
+      ],
+      "target": {
+        "kind": "playbook",
+        "id": "silent-giant-explosion-window"
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "复用本体与后场的原观察，但本局末试死于本体；本批不另造完整剧本。",
+      "counterevidence_and_limits": [
+        "缺同场获胜替线/外部完整对照，不能推出固定提速或清体时点。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "discard-rk",
+      "experience_ids": [
+        "silent-survivor-neutralize-discard"
+      ],
+      "ledger_ids": [
+        "silent-0418"
+      ],
+      "source_refs": [
+        {
+          "run_id": "QVDR4R3UWKXU",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530614,
+            "offset": 16940912588,
+            "bytes": 13921,
+            "sha256": "ab89d624c65d3ceb9c8ae4946f98da5ff7081fdd0794a3dd9580f10f8154a712"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 530743,
+            "offset": 16944073376,
+            "bytes": 25566,
+            "sha256": "c6b576808a5ffc633d0a6e6b76311537df8eeab5a9dec7fcfa1c0dad6248e1a5"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/QVDR4R3UWKXU"
+        }
+      ],
+      "target": {
+        "kind": "rk",
+        "id": null
+      },
+      "disposition": "not_applicable",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "本题是CARD_SELECTION弃牌，#28的Boss/精英combat_line回放不能据此直接表达弃牌剧本；复用原经验链。",
+      "counterevidence_and_limits": [
+        "保留生存者的整战反事实未执行；重算已实际发生，不判新纯bug。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    },
+    {
+      "id": "belt-potion-rk",
+      "experience_ids": [
+        "silent-belt-buckle-empty-slots-dexterity",
+        "silent-poison-potion-observed-application"
+      ],
+      "ledger_ids": [
+        "silent-0119",
+        "silent-0278"
+      ],
+      "source_refs": [
+        {
+          "run_id": "37U27AS6JNJ0",
+          "first": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          "terminal": {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17194286695,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          },
+          "windows": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/whole-run-audit.json#/37U27AS6JNJ0"
+        }
+      ],
+      "target": {
+        "kind": "rk",
+        "id": null
+      },
+      "disposition": "waiting",
+      "candidate_file": null,
+      "json_pointer": null,
+      "reason": "最后一瓶饮后敏捷+2、旧12挡不追补；只复用机制，不将时序改成硬策略。",
+      "counterevidence_and_limits": [
+        "无#28原始候选Plan capture、配对完整结果、预注册留出回放及改善区间；不启开关、不调模型。",
+        "本局普通蛞蝓不在本批Boss/精英回放范围；未执行提前喝药整战效果未知。"
+      ],
+      "independent_own_runs": 1,
+      "external_runs": null,
+      "old_denominators_inherited": false,
+      "published": false,
+      "consumer_readback": null
+    }
+  ],
+  "unread_scope": [
+    "原244旧经验不回刷；未读其他角色知识。",
+    "未读取新的外部原库；未声明外部统计/代表完整局三输入验收。",
+    "1179题只有3个完整请求人工核读，其余逐题原因见question-coverage.json。"
+  ],
+  "formal_publication": false,
+  "consumer_readback": null,
+  "natural_benefit": null
+}
+
+ledger-candidate.json
+{
+  "character": "silent",
+  "kind": "other",
+  "first_run": "BKK8KAR3E83C",
+  "asc": 10,
+  "claim": "静默A10局部大脑候选：当蛇咬、触媒、灵动步法均已持有，构筑与备战仍分开核对持牌、实建和连续战资源。BKK F6签名后F17胜77→9、F19胜63→30、F33败；TB F14签名后F17胜61→26、F28胜51→17、F30胜38→18、F33败。两局过首Boss是反对组件必败的反证；不证明固定拿牌/血线或替线收益。",
+  "evidence": [
+    {
+      "run": "BKK8KAR3E83C",
+      "floor": 6,
+      "role": "support",
+      "note": "原始offset/bytes/SHA及胜战窗口见candidate-source-refs.json；独立局，不将SL加分母。",
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/candidate-source-refs.json"
+    },
+    {
+      "run": "TB5YKELW0355",
+      "floor": 14,
+      "role": "support",
+      "note": "原始offset/bytes/SHA及胜战窗口见candidate-source-refs.json；独立局，不将SL加分母。",
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/candidate-source-refs.json"
+    }
+  ],
+  "prior": "partly",
+  "prior_note": "复用silent-0352/0019/0020；原经验不删除、不继承旧分母；新增仅scratch可查询候选。",
+  "status": "proposed",
+  "confidence": 0.35,
+  "by": "learner:strategy-proposal",
+  "where": {
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/proposal.md"
+    ],
+    "knowledge": [
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-164315/learner/runs/20261024-164320-66fb402e-038d-49c0-9de2-a071b7b659cc-strategy-proposal/brain-strategy-candidates.json#/entries/0"
+    ]
+  },
+  "note": "普通自然批次20261024-164315；无源码、无正式知识/发布/消费者。缺本批外部三输入与反事实，不关闭科学父。"
+}
+
+audit_batch.py
+import bisect
+import collections
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+RUNS = json.loads((HERE / 'run-identity.json').read_text())['rows']
+IDS = [x['row']['run_id'] for x in RUNS]
+
+
+def write(name, value):
+    (HERE / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def rows(path):
+    with path.open() as handle:
+        for line in handle:
+            yield json.loads(line)
+
+
+def ref(x):
+    return {k: x[k] for k in ('source', 'source_size', 'line', 'offset', 'bytes', 'sha256') if k in x}
+
+
+handles = {}
+verified = collections.Counter()
+
+
+def verify(x):
+    p = x['source']
+    if p not in handles:
+        handles[p] = open(p, 'rb')
+    h = handles[p]
+    h.seek(x['offset'])
+    raw = h.read(x['bytes'])
+    assert hashlib.sha256(raw).hexdigest() == x['sha256'], ref(x)
+    verified[p] += 1
+    return json.loads(raw)
+
+
+states = {r: [] for r in IDS}
+for x in rows(HERE / 'evidence/states.evidence.jsonl'):
+    row = verify(x)
+    s = row['state']
+    r = x['run_id']
+    assert s['run_id'] == r
+    run = s.get('run') or {}
+    combat = s.get('combat') or {}
+    player = combat.get('player') or {}
+    deck = [{k: c.get(k) for k in ('card_id', 'name', 'upgraded', 'energy_cost', 'resolved_rules_text')}
+            for c in run.get('deck', [])]
+    states[r].append(dict(ts=row['ts'], observed_ts=row.get('observed_ts'), ref=ref(x),
+        floor=run.get('floor'), act_id=run.get('act_id'), screen=s.get('screen'),
+        turn=s.get('turn'), in_combat=s.get('in_combat'),
+        hp=run.get('current_hp'), max_hp=run.get('max_hp'), gold=run.get('gold'),
+        deck=deck, potions=run.get('potions'), boss_id=run.get('boss_id'),
+        block=player.get('block'), energy=player.get('energy'), powers=player.get('powers'),
+        enemies=combat.get('enemies', []), hand=combat.get('hand', [])))
+
+decisions = collections.defaultdict(list)
+by_id = collections.defaultdict(list)
+for x in rows(HERE / 'v6-evidence/decisions.evidence.jsonl'):
+    z = verify(x)
+    assert z.get('run_id') == x['run_id']
+    decisions[x['run_id']].append(x)
+    by_id[z.get('decision_id')].append(x)
+
+whole = {}
+for rid, ss in states.items():
+    changes, combats, current = [], [], None
+    previous_deck = None
+    for i, s in enumerate(ss):
+        signature = [(c['card_id'], c['upgraded']) for c in s['deck']]
+        if signature != previous_deck:
+            changes.append(s)
+            previous_deck = signature
+        active = bool(s['in_combat'])
+        restart = (current and (s['floor'] != current['entry']['floor'] or
+                   (isinstance(s['turn'], int) and isinstance(current['last']['turn'], int)
+                    and s['turn'] < current['last']['turn'])))
+        if current and (not active or restart):
+            current['exit'] = s if not restart else None
+            current['boundary'] = 'observed_exit' if not restart else 'turn_reset_no_exit'
+            combats.append(current)
+            current = None
+        if active:
+            if current is None:
+                current = {'entry': s, 'last': s, 'exit': None, 'boundary': 'open'}
+            current['last'] = s
+    if current:
+        combats.append(current)
+    ends = []
+    for floor in (17, 33, 48):
+        candidates = [s for s in ss if s['floor'] == floor and s['screen'] in ('MAP', 'REWARD')]
+        ends.append({'floor': floor, 'snapshot': candidates[-1] if candidates else None,
+                     'limitation': '已记录奖励/地图最后帧；未到达或无退出帧为null，不补完整通关。'})
+    first_p = next((s for s in ss if {'ACCELERANT', 'FOOTWORK', 'NOXIOUS_FUMES'} <=
+                    {c['card_id'] for c in s['deck']}), None)
+    whole[rid] = {'state_count': len(ss), 'first': ss[0] if ss else None,
+        'terminal': ss[-1] if ss else None, 'deck_changes': changes,
+        'first_fumes_accelerant_footwork_holdings': first_p,
+        'holding_signature_is_not_realized_capacity': True,
+        'act_end_snapshots': ends, 'combats': combats,
+        'construction_decisions': [dict(ref=ref(d), **{k: d['row'].get(k) for k in
+            ('ts', 'floor', 'turn', 'decision_id', 'label', 'reason', 'chosen', 'result', 'run_plan')})
+            for d in decisions[rid] if d['row'].get('label', '').startswith(
+                ('reward/card', 'shop/', 'rest/', 'map/route', 'event/'))]}
+write('whole-run-audit.json', whole)
+
+questions, full = [], []
+selected_ids = {'d07a54ab-01d4-4a24-9bf3-bb5bb4313fd4',
+                '03d9b0bb-35af-4ed8-92c6-c8be6b37584c',
+                'd6331e4c-37c6-461b-abe4-1c457f678c25'}
+for x in rows(HERE / 'v6-evidence/jev-prompts.evidence.jsonl'):
+    z = verify(x)
+    rid, did = x['run_id'], z.get('decision_id')
+    ds = by_id.get(did, [])
+    assert ds and all(d['run_id'] == rid for d in ds)
+    ss = states[rid]
+    stamps = [s['ts'] for s in ss]
+    at = bisect.bisect_right(stamps, z['ts'])
+    before = ss[at - 1] if at else None
+    after = ss[at:at + 3]
+    item = dict(run_id=rid, decision_id=did, floor=z.get('floor'), turn=z.get('turn'),
+        label=z.get('label'), ref=ref(x), identity=x.get('identity'),
+        request_present=isinstance(z.get('request'), dict),
+        question_ids=list((z.get('request') or {}).get('questions', {})),
+        answers=z.get('answers'), error=z.get('error'),
+        decisions=[dict(ref=ref(d), **{k: d['row'].get(k) for k in
+                   ('chosen', 'result', 'gate_reject', 'selection_dispatch', 'reason', 'label')}) for d in ds],
+        before_state=ref(before) if before else None,
+        subsequent_states=[ref(s) for s in after],
+        review='full_raw_read' if did in selected_ids else 'machine_join_and_fields_only',
+        unread_reason=None if did in selected_ids else
+            '整局主线与候选无新增逐题规则；完整请求已机械解析，不声称模型通读或验证反事实收益。')
+    questions.append(item)
+    if did in selected_ids:
+        full.append({'jev': x, 'decisions': ds, 'before': before, 'after': after})
+write('question-coverage.json', questions)
+write('selected-raw-cases.json', full)
+stats = {}
+for rid in IDS:
+    qq = [q for q in questions if q['run_id'] == rid]
+    stats[rid] = {'jev_rows': len(qq), 'answers': sum(q['answers'] is not None for q in qq),
+        'errors': sum(q['error'] is not None for q in qq),
+        'fully_read_decision_ids': [q['decision_id'] for q in qq if q['review'] == 'full_raw_read'],
+        'machine_only': sum(q['review'] != 'full_raw_read' for q in qq)}
+write('coverage-counts.json', stats)
+write('raw-integrity.json', {'verified_original_rows': dict(verified),
+    'method': '逐行seek读取原始source的offset/bytes，SHA256完全一致；拒绝身份冲突。',
+    'whole_run_model_read': '模型读结构化主线及所选窗口，未通读所有state或所有题面。'})
+print(json.dumps({'coverage': stats, 'verified': dict(verified)}, ensure_ascii=False))
+
+prepare_delivery.py
+import collections
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+P = Path(__file__).resolve().parent
+ROOT = Path('/home/dw/Projects/agent-sts2')
+TREE = P.parents[2]
+
+
+def write(name, obj):
+    (P / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n')
+
+
+def ref(x):
+    return {k: x[k] for k in ('source', 'source_size', 'line', 'offset', 'bytes', 'sha256') if k in x}
+
+
+def records(name):
+    with (P / ('evidence/' + name + '.evidence.jsonl')).open() as f:
+        for line in f:
+            yield json.loads(line)
+
+
+whole = json.loads((P / 'whole-run-audit.json').read_text())
+runs = list(whole)
+batch = '20261024-164315-strategy-proposal'
+dispatch = json.loads((ROOT / 'ops/codex-ops/learn.json').read_text())['batches'][batch]
+assert dispatch['task'] == 'strategy-proposal' and dispatch['character'] == 'silent'
+assert dispatch['worktree'] == str(TREE) and set(dispatch['runs']) == set(runs)
+assert not any(k in dispatch for k in ('proposal_ids', 'proposal_repair', 'research_request',
+                                     'implementation_request', 'backfill_source', 'external_source'))
+write('dispatch-binding.json', {k: dispatch[k] for k in ('task', 'character', 'runs', 'reason',
+    'worktree', 'ordinary_baseline', 'strategy_progress')})
+
+extra = {}
+raw_handles = {}
+for stream in ('run-config', 'run-plans', 'sl-attempts', 'brain'):
+    selected = []
+    for x in records(stream):
+        if x['source'] not in raw_handles:
+            raw_handles[x['source']] = open(x['source'], 'rb')
+        f = raw_handles[x['source']]
+        f.seek(x['offset'])
+        raw = f.read(x['bytes'])
+        assert hashlib.sha256(raw).hexdigest() == x['sha256']
+        row = json.loads(raw)
+        if stream == 'sl-attempts':
+            item = {k: row.get(k) for k in ('run_id', 'floor', 'encounter', 'attempt', 'result',
+                    'turns', 'end_hp', 'end_block', 'incoming', 'reload', 'give_up_reason')}
+        elif stream == 'run-config':
+            item = {k: row.get(k) for k in ('run_id', 'ascension', 'character', 'code', 'v6',
+                    'brain_native_receipt')}
+        elif stream == 'run-plans':
+            item = row
+        else:
+            item = {'keys': list(row), 'question_id': row.get('question_id'),
+                    'label': row.get('label'), 'status': '原题/回答完整机械解析；非逐题人工精读'}
+        selected.append({'run_id': x['run_id'], 'ref': ref(x), 'row': item})
+    extra[stream] = {'count': len(selected), 'records': selected}
+write('additional-stream-audit.json', extra)
+
+support_refs = []
+signature = {'SNAKEBITE', 'ACCELERANT', 'FOOTWORK'}
+for rid in ('BKK8KAR3E83C', 'TB5YKELW0355'):
+    z = whole[rid]
+    s = next(s for s in z['deck_changes'] if signature <= {c['card_id'] for c in s['deck']})
+    support_refs.append({'run_id': rid, 'kind': '首次持牌签名', 'floor': s['floor'], 'ref': s['ref']})
+    for c in z['combats']:
+        if c['entry']['floor'] in (17, 19, 24, 28, 30, 33) and c['boundary'] == 'observed_exit':
+            support_refs.append({'run_id': rid, 'kind': '实际战斗窗口', 'floor': c['entry']['floor'],
+                'entry': c['entry']['ref'], 'exit': c['exit']['ref'],
+                'hp': [c['entry']['hp'], c['exit']['hp']]})
+write('candidate-source-refs.json', support_refs)
+
+candidate_id = 'silent-brain-poison-footwork-realization-review'
+candidate = {'schema': 'brain-strategies-v1', 'character': 'silent', 'entries': [{
+    'id': candidate_id, 'version': '2026-10-24.candidate1',
+    'trigger': {'question_types': ['card_reward', 'shop', 'rest', 'act_plan', 'fight_plan'],
+        'acts': [1, 2], 'deck_cards': [{'name': c, 'count': {'min': 1}}
+                                      for c in ('SNAKEBITE', 'ACCELERANT', 'FOOTWORK')]},
+    'strategy': '仅Silent A10观察：同时持有蛇咬、触媒、灵动步法时，补牌、购物、营火与备战仍分开核对持牌、实际建立和可重复生存；沿最近赢战的净HP与药槽变化检查下一场资源，不把签名齐备当作停止补强的依据。BKK在F6齐备，F17胜仍77→9，二幕F19胜63→30，F33四试失败；TB在F14齐备，F17胜61→26，二幕F28胜51→17、F30胜38→18，F32休至36后F33四试失败。两局都过首Boss，反对“组件齐备就必败”；终败也不能证明蛇咬、触媒、步法或休息选择导致失败。只复核眼前缺口，不指定必拿牌、血线、杀序或喝药时点；替代选择的整战收益未知，其他进阶和版本未验证。',
+    'evidence': [{'type': 'own', 'run': rid, 'floor': floor,
+        'ref': str(P / 'candidate-source-refs.json') + '#' + rid,
+        'role': 'support'} for rid, floor in [('BKK8KAR3E83C', 6), ('TB5YKELW0355', 14)]],
+    'source': 'own', 'confidence': 0.35,
+    'design': 'observational', 'source_experience': ['silent-core-poison-defense-observation',
+        'silent-route-hp-observation', 'silent-rest-buffer-observation'],
+    'source_ledger': ['silent-0352', 'silent-0019', 'silent-0020'],
+    'limitations': ['两个独立A10局；同一局SL不增加分母，首试与最终结果分列。',
+        '非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。',
+        '两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。',
+        '本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。',
+        '精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。'],
+    'publication': 'scratch_candidate_only'}]}
+write('brain-strategy-candidates.json', candidate)
+
+entries = []
+
+
+def mapping(key, disposition, rr, ee, ll, kind, target, reason, limitations):
+    refs = []
+    for rid in rr:
+        z = whole[rid]
+        refs.append({'run_id': rid, 'first': z['first']['ref'], 'terminal': z['terminal']['ref'],
+                     'windows': str(P / 'whole-run-audit.json') + '#/' + rid})
+    entries.append({'id': key, 'experience_ids': ee, 'ledger_ids': ll, 'source_refs': refs,
+        'target': {'kind': kind, 'id': target}, 'disposition': disposition,
+        'candidate_file': str(P / 'brain-strategy-candidates.json') if disposition == 'new' else None,
+        'json_pointer': '/entries/0' if disposition == 'new' else None,
+        'reason': reason, 'counterevidence_and_limits': limitations,
+        'independent_own_runs': len(rr), 'external_runs': None,
+        'old_denominators_inherited': False, 'published': False, 'consumer_readback': None})
+
+mapping('poison-footwork-resource-review', 'new', ['BKK8KAR3E83C', 'TB5YKELW0355'],
+    candidate['entries'][0]['source_experience'], ['silent-0352', 'silent-0019', 'silent-0020'],
+    'strategy', candidate_id, '原P经验保留；新增可查询的局部大脑候选，未新增固定数值或必选规则。',
+    candidate['entries'][0]['limitations'])
+mapping('incomplete-or-late-poison-playbook', 'waiting',
+    ['QVDR4R3UWKXU', '5ZT1SKS66C1N', 'Q7SFDZSJLULD', 'EQLB6SK9W9H7', 'BP9C8K9NSRZ0', 'GJ81EPE4B8Z2', '37U27AS6JNJ0'],
+    ['silent-core-poison-defense-observation'], ['silent-0352'], 'playbook', 'silent-core-poison-defense-observation',
+    '逐局持牌和转向核查保存在主线；部分只有施毒，部分晚到触媒/防御，不能并入新候选的三牌触发分母。',
+    ['缺本批绑定且实读的外部统计/同流派代表完整局；不称完整剧本或人类偏离已核。',
+     'EQL在F30后才见蜃景，BP在F28才见触媒；没有以终局回填早期。'])
+mapping('mixed-transition', 'waiting', ['XC9AHZH3CZVK'], ['silent-core-shiv-defense-observation'],
+    ['silent-0354'], 'playbook', 'silent-core-shiv-defense-observation',
+    '刀舞、蛇咬、单步法的未定过渡；完整刀或毒防签名未观察到。',
+    ['未到Boss，缺完整核心和外部同前缀可比组，不能用F7死亡编造拿牌优先级。'])
+mapping('route-resource-chain', 'reuse', runs, ['silent-route-hp-observation'], ['silent-0019'],
+    'strategy', 'silent-route-hp-observation', '复用赢战消耗带入后战的观察；保留原ID及旧分母。',
+    ['改路反事实未知；未观察到的营火不能预支，净掉血不是毛伤害。'])
+mapping('rest-realization', 'reuse', [r for r in runs if r != 'XC9AHZH3CZVK'],
+    ['silent-rest-buffer-observation'], ['silent-0020'], 'strategy', 'silent-rest-buffer-observation',
+    '复用实际休息收益与下一战资源分账；未因终败把回血判作错误。', ['未控休息/锻造整战因果，不产生固定血线。'])
+for key, rr, exp, ledger, target in [
+    ('crab-budget', ['EQLB6SK9W9H7', 'TB5YKELW0355'], 'silent-kaiser-crab-facing-sl', 'silent-0570', 'silent-brain-crab-surviving-part-budget'),
+    ('demon-budget', ['BKK8KAR3E83C'], 'silent-knowledge-demon-healing-sl-observation', 'silent-0102', 'silent-brain-knowledge-demon-external-tail-budget'),
+    ('kin-budget', ['5ZT1SKS66C1N', 'GJ81EPE4B8Z2'], 'silent-kin-poison-sl-observation', 'silent-0568', 'silent-brain-kin-priest-exit-window'),
+    ('subject-budget', ['BP9C8K9NSRZ0'], 'silent-core-poison-defense-observation', 'silent-0352', 'silent-brain-test-subject-external-tail-budget')]:
+    mapping(key, 'reuse', rr, [exp], [ledger], 'strategy', target,
+        '只复用已有备战入口，不复制其外部统计或将旧支持数算成本批验证。',
+        ['已有条目正式身份不代表本批已消费；本批未验证其外部原件/效果。',
+         '双蟹两体仍存活的失败不是残敌阶段证据；未执行分支不算收益。'])
+mapping('giant-playbook', 'waiting', ['Q7SFDZSJLULD'], ['silent-giant-explosion-window'],
+    ['silent-0017'], 'playbook', 'silent-giant-explosion-window',
+    '复用本体与后场的原观察，但本局末试死于本体；本批不另造完整剧本。',
+    ['缺同场获胜替线/外部完整对照，不能推出固定提速或清体时点。'])
+mapping('discard-rk', 'not_applicable', ['QVDR4R3UWKXU'], ['silent-survivor-neutralize-discard'],
+    ['silent-0418'], 'rk', None, '本题是CARD_SELECTION弃牌，#28的Boss/精英combat_line回放不能据此直接表达弃牌剧本；复用原经验链。',
+    ['保留生存者的整战反事实未执行；重算已实际发生，不判新纯bug。'])
+mapping('belt-potion-rk', 'waiting', ['37U27AS6JNJ0'],
+    ['silent-belt-buckle-empty-slots-dexterity', 'silent-poison-potion-observed-application'],
+    ['silent-0119', 'silent-0278'], 'rk', None,
+    '最后一瓶饮后敏捷+2、旧12挡不追补；只复用机制，不将时序改成硬策略。',
+    ['无#28原始候选Plan capture、配对完整结果、预注册留出回放及改善区间；不启开关、不调模型。',
+     '本局普通蛞蝓不在本批Boss/精英回放范围；未执行提前喝药整战效果未知。'])
+
+exp = json.loads((TREE / 'knowledge/characters/silent/experience.json').read_text())['entries']
+available = {e['id']: e for e in exp}
+checked = sorted({e for row in entries for e in row['experience_ids']})
+assert set(checked) <= set(available), set(checked) - set(available)
+write('checked-experience-originals.json', {'source': 'knowledge/characters/silent/experience.json',
+    'sha256': hashlib.sha256((TREE / 'knowledge/characters/silent/experience.json').read_bytes()).hexdigest(),
+    'entries': [available[e] for e in checked]})
+write('experience-strategy-rk-map.json', {'schema': 'experience-strategy-rk-map-v1',
+    'batch': batch, 'character': 'silent', 'checked_experience_ids': checked,
+    'ledger_ids': sorted({i for row in entries for i in row['ledger_ids']}),
+    'counts': dict(collections.Counter(e['disposition'] for e in entries)), 'entries': entries,
+    'unread_scope': ['原244旧经验不回刷；未读其他角色知识。',
+        '未读取新的外部原库；未声明外部统计/代表完整局三输入验收。',
+        '1179题只有3个完整请求人工核读，其余逐题原因见question-coverage.json。'],
+    'formal_publication': False, 'consumer_readback': None, 'natural_benefit': None})
+
+write('ledger-candidate.json', {'character': 'silent', 'kind': 'other', 'first_run': 'BKK8KAR3E83C',
+    'asc': 10, 'claim': '静默A10局部大脑候选：当蛇咬、触媒、灵动步法均已持有，构筑与备战仍分开核对持牌、实建和连续战资源。BKK F6签名后F17胜77→9、F19胜63→30、F33败；TB F14签名后F17胜61→26、F28胜51→17、F30胜38→18、F33败。两局过首Boss是反对组件必败的反证；不证明固定拿牌/血线或替线收益。',
+    'evidence': [{'run': rid, 'floor': floor, 'role': 'support',
+        'note': '原始offset/bytes/SHA及胜战窗口见candidate-source-refs.json；独立局，不将SL加分母。',
+        'ref': str(P / 'candidate-source-refs.json')} for rid, floor in [('BKK8KAR3E83C', 6), ('TB5YKELW0355', 14)]],
+    'prior': 'partly', 'prior_note': '复用silent-0352/0019/0020；原经验不删除、不继承旧分母；新增仅scratch可查询候选。',
+    'status': 'proposed', 'confidence': 0.35, 'by': 'learner:strategy-proposal',
+    'where': {'proposal': [str(P / 'proposal.md')],
+              'knowledge': [str(P / 'brain-strategy-candidates.json') + '#/entries/0']},
+    'note': '普通自然批次20261024-164315；无源码、无正式知识/发布/消费者。缺本批外部三输入与反事实，不关闭科学父。'})
+print(json.dumps({'mapping_counts': dict(collections.Counter(e['disposition'] for e in entries)),
+    'candidate': candidate_id, 'checked_experience': checked,
+    'additional_raw_verified': {k: v['count'] for k, v in extra.items()}}, ensure_ascii=False))
+
+write_report.py
+import hashlib
+import json
+import re
+import subprocess
+from pathlib import Path
+
+P = Path(__file__).resolve().parent
+TREE = P.parents[2]
+base = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=TREE, text=True).strip()
+assert base == 'b6933c7e621aaf75b0c31a912f3178d7607ea82b'
+assert subprocess.check_output(['git', 'status', '--porcelain'], cwd=TREE, text=True) == ''
+ledger_id = (P / 'ledger-add.receipt.txt').read_text().strip()
+assert re.fullmatch('silent-[0-9]{4}', ledger_id)
+readback = json.loads((P / 'ledger-readback.json').read_text())
+assert readback['id'] == ledger_id and readback['status'] == 'proposed'
+mapping = json.loads((P / 'experience-strategy-rk-map.json').read_text())
+if ledger_id not in mapping['ledger_ids']:
+    mapping['ledger_ids'].append(ledger_id)
+    mapping['entries'][0]['ledger_ids'].append(ledger_id)
+(P / 'experience-strategy-rk-map.json').write_text(json.dumps(mapping, ensure_ascii=False, indent=2) + '\n')
+whole = json.loads((P / 'whole-run-audit.json').read_text())
+coverage = json.loads((P / 'coverage-counts.json').read_text())
+counts = {k: sum(v[k] for v in coverage.values()) for k in ('jev_rows', 'answers', 'errors', 'machine_only')}
+assert counts == {'jev_rows': 1179, 'answers': 1155, 'errors': 24, 'machine_only': 1176}
+validation = json.loads((P / 'candidate-validation.json').read_text())
+assert len(validation['cases']) == 5 and validation['model_calls'] == 0
+result = {'task': 'strategy-proposal', 'character': 'silent',
+    'batch': '20261024-164315-strategy-proposal', 'base': base, 'runs': list(whole),
+    'fixes': [], 'skipped': ['源码及正式知识未改：新候选未证明能增加原计划信息或改善选择。',
+        '完整流派剧本等待本批外部统计、代表完整局及可比自有整局三输入。',
+        'rk缺原Plan capture、配对完整结果及留出回放；不启开关。'],
+    'merged': None, 'tests': {'tsc': None, 'vitest': None, 'cases': None},
+    'code_proposals': [], 'implementation_domains': [], 'proposal_results': [],
+    'ledger_ids': [ledger_id], 'candidate_counts': {'new': 1, 'update': 0, 'reuse': 6,
+        'waiting': 4, 'not_applicable': 1, 'rk_new': 0},
+    'mapping': str(P / 'experience-strategy-rk-map.json'), 'report': str(P / 'report.md')}
+(P / 'result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+
+lines = ['# 静默普通策略批次交付报告', '',
+    '本批完成十局整局主线及原始字节核对，保存一个局部大脑策略候选；没有源码、正式经验或正式策略/rk修改，没有合入live、发布号或shipped。候选的固定检索读回通过，不证明当局误判被纠正或未来收益。', '',
+    '## 身份、基线与范围', '',
+    '- 本批为普通自然tick，task=strategy-proposal、character=silent、工作树与十个dispatch_runs精确一致；无proposal_ids/proposal_repair/research_request/implementation_request/backfill_source/external_source。派发原行见dispatch-binding.json。旧deck-size专题仍绑定20261010另一批，不转成当前专题，也不领取旧队列。',
+    '- 开工工作树干净，原HEAD=e8dd51b732e5876b2c0774758633011d74fc87aa；按普通批次要求git merge --no-edit main，快进到本报告base=' + base + '。后续未提交，结束仍同一HEAD且工作树干净。source-diff.patch为空。',
+    '- runs原行明确为SILENT/A10，十局均ended且victory=false；派发进度键A11不代表本批观察过A11。原始offset/bytes/SHA在run-identity.json。首次手工断言误把SILENT大小写当失配，已保留说明并用大小写归一复核；没有改写原行。',
+    '- 无子agent、网络、模型/MC调用或游戏动作；仅本角色知识与本批原日志。没有读取其他角色知识。模型不会凭牌名或预训练资料补游戏事实。', '',
+    '## 原始证据、冻结切点和覆盖', '',
+    '先运行指定evidence_summary，再运行指定V6/Jev四流及共用全流extract_evidence。两个manifest分别保留，没有覆盖旧截点或把0行初稿当缺流。所有所选state/decision/Jev原行又按offset/bytes seek读取源文件核SHA：4,492 / 4,309 / 1,179行全部相同。另核20条run-config、519条run-plans、37条sl-attempts与220条brain原行；run-plans仅run字段，其他流仅显式身份/精确decision_id，拒收冲突及正文提及。见raw-integrity.json、additional-stream-audit.json。', '',
+    '|提取|流|冻结字节|源前缀SHA256|本批选中|坏行/截断（全冻结流）|',
+    '|---|---|---:|---|---:|---|']
+for directory in ('v6-evidence', 'evidence'):
+    manifest = json.loads((P / directory / 'evidence-manifest.json').read_text())
+    for m in manifest:
+        lines.append(f"|{directory}|{m['stream']}|{m['source_size']}|{m['source_sha256']}|{sum(v or 0 for v in m['counts'].values())}|{m['invalid_lines']}/{m['incomplete_lines']}|")
+lines += ['',
+    '各选中行自身仍保存source_size/line/offset/bytes/SHA。全流历史states有3746条未知身份；decisions有1934条unknown_identity、1809条unmatched_decision_id，不分给本批。历史坏行同样不算本批缺失或零值。本次冻结均无尾截断；summary与两次提取的不同源增长切点分别保留。对象存储回执的pending_host_seal/deferred_errno=18保留为宿主封存待办，未当作宿主已完成封存。', '',
+    'V6：20条run-config均mode=on/reflex=off/direction_replan=off/delivered=false；v6-build源存在但本批十局均no_match。entries、jev_answer、fallback、unknown的实际次数/意义无法核定，不把无匹配填成0，更不称V6正式发布或采用。run-config源码commit均未知/ENOBUFS，不能拿当前live替代当局SHA。十份游戏大脑native回执与本学习会话档位是不同对象，不冒称已核本会话原生档位。', '',
+    'Jev：1,179行含1,155条answers和24条error，error均human-pace budget exhausted: Jev；与v6-build的jev_answer/fallback分开。每题精确decision_id关联chosen/result/gate_reject/selection_dispatch及同局状态窗，缺字段保留null，完整逐题清单见question-coverage.json。状态自动关联只是显式同局的时间括窗，不是原子动作证明；三个精选窗口另核fingerprint、可见牌/药/能力变化。', '',
+    '|局号|Jev行|answers|error|完整原请求人工核读|其余机器字段/关联|',
+    '|---|---:|---:|---:|---|---:|']
+for rid, c in coverage.items():
+    lines.append(f"|{rid}|{c['jev_rows']}|{c['answers']}|{c['errors']}|{','.join(c['fully_read_decision_ids']) or '无'}|{c['machine_only']}|")
+lines += ['',
+    '三个完整原请求均含全部候选、外部开卷附件和限制；不是最后五题抽样。其余1176题已完整机械解析/原SHA复验，模型未全文精读，逐题未读原因已保存；不据这些未精读题推出新动作规则。外部附件仅为当时题面的原文，来源URL/版本/SHA/许可保持原行，不拿它的陈述或附带历史统计充本批实盘证据。未读取新的外部原库，也未验收完整人类赢家对照。', '',
+    '## 十局主线（首试、重载与赢战消耗分列）', '',
+    '所有变牌快照、完整已记录幕末牌组/HP/药槽、每场进退状态以及构筑选择原chosen/result，均在whole-run-audit.json；摘要表不能代替该原帧指纹。仅以终局组牌回填早期的做法没有采用。未到幕末/缺退出帧一律null，净HP变化不当敌人毛伤。', '',
+    '|局号|实际过渡/首次核心观察|幕末/Boss与关键赢战|最终后果|',
+    '|---|---|---|---|',
+    '|QVDR4R3UWKXU|施毒起步，F5/F9补毒雾；无触媒/步法防御签名|未到Boss；F4赢50→42，F9赢35→23，F11休至46|F12异鸟首试T4死亡，敌余10|',
+    '|5ZT1SKS66C1N|带毒刺击、投掷匕首与冲刺过渡，F15才见毒雾；未见完整P签名|F11赢58→9、F15赢44→20；F17两试50HP入场|末T10死亡，神官67HP|',
+    '|BKK8KAR3E83C|F4步法/F5蛇咬/F6触媒，三牌持有签名F6；后续双步法/蜃景不倒填早期|F17首试胜77→9；F19赢63→30、F24赢29→13；一幕末9/77及原牌组已记录|F33前三试判死重载，末T14死亡，知识恶魔152HP|',
+    '|Q7SFDZSJLULD|带毒刺击/迷雾过渡，F15蜃景，未见触媒|F6赢47→11、F8赢32→12；F17四试41HP入场，未过一幕|末T10死于巨兽本体，非自爆后场|',
+    '|EQLB6SK9W9H7|F2毒药/F3触媒，F6毒雾；F30后才见蜃景的旧P签名|F17首试胜64→30，一幕末30/70；二幕F27赢70→50、F28赢50→36、F30赢36→12|F33四试33HP入场；末T4死亡，双体118/164HP|',
+    '|BP9C8K9NSRZ0|即时攻击过渡，F12致命毒药，F28触媒/F31毒雾，F34撕咬混合；持续防御完整签名未见|F17首试胜，幕末29/70；F24前三判死、第四赢2HP；F33首试胜，幕末15/70；F46赢65→4、F47休至28|F48前三判死、末T6死亡，阶段敌150HP；F49未到|',
+    '|TB5YKELW0355|F9步法/F11毒雾，F14得触媒后完整持牌签名；能力建立与稳定循环另账|F17首试胜61→26，幕末26/70；F28赢51→17、F30赢38→18，F32休15→36|F33前三判死重载、末T7死亡，双体各80HP|',
+    '|GJ81EPE4B8Z2|F2致命毒药/F6迷雾/F8蛇咬，未见触媒与持续防御签名|F9精英赢55→23、F11赢30→10、F13赢33→14、F15赢23→12；F16休至35|F17四试，末T6死亡；神官98、两信徒9/15HP|',
+    '|37U27AS6JNJ0|F5蛇咬/F6迷雾，F8触媒；空栏腰带条件防守，未见步法签名|F7赢51→24，F8购物后仍24HP；未到营火或Boss|F9首试T3药后仍12挡，17HP对30攻死亡；两敌17/27HP|',
+    '|XC9AHZH3CZVK|蛇咬、F2刀舞、F3单步法的未定混合；完整刀/毒防核心未见|F4赢56→44、F5赢44→35、F6赢35→3；改路线后下一战仍不可绕过，未到火|F7首试T5死亡，潮湿邪教徒34HP；未到Boss|', '',
+    'BKK与TB在F32原计划已经主动写明启动/持续防御缺口，见existing-plans-counterevidence.json。没有证据说大脑当时把持牌误当稳定成型；新候选只是可查询表达，新增信息与实际帮助未知。过去经验里的64、281等旧分母仍是旧冻结研究，不能加成本批支持数或声称本批重验。', '',
+    '## 候选、既有ID与实际处置', '',
+    '唯一新增是brain-strategy-candidates.json#/entries/0，严格现有StrategyEntry；限定A10证据，第一/二幕、三张原ID持牌的构筑/备战场景。置信度0.35，observational，两个独立局；BKK/TB过首Boss反对“签名必败”，最终失败不能证组件或休息选择致败。完整字段、反证、来源与后继见proposal.md/candidate-source-refs.json。', '',
+    'experience-strategy-rk-map.json核11个原经验ID：new=1、update=0、reuse=6、waiting=4、not_applicable=1。这些是映射组数，只有一个新增策略候选，rk新条目0。原经验均保留，旧244不回刷。复用的路线/休息/同族/双蟹/恶魔/实验体入口不新建重复条目，不提升其外部分母或可信度。', '',
+    '不完整/晚到毒组件、XC未定混合、巨兽剧本与腰带rk保留具体缺数据。弃牌是CARD_SELECTION，不能伪装成#28 combat_line；腰带案例还属于普通蛞蝓，不冒本批Boss/精英回放机会。无原始Plan capture、同候选同种子的完整结果矩阵、预注册留出与真实回放改善区间，不开模型/MC/对局或开关。所有等待细节在映射逐项保存。', '',
+    '已有proposal-discard.md和proposal-conditional-poison.md已读，均属原postmortem链，当前batch未领取这些queue ID；没有冒充本批implemented/duplicate。弃后继后确实重算；毒药当步施毒和空栏敏捷不追补旧挡已是原机制，未实打的保牌/提前喝药整战收益仍未知。未新增出牌/药水/SL/终局价值或结构规则，code_proposals=[]、implementation_domains=[]。', '',
+    '本批缺绑定且实读的“外部统计+同流派外部完整代表+可比自有整局”三输入，只交自有局部候选；不称完整流派剧本、真人偏离已验或科学父完成。没有矛盾规则强行合并，没有新异议覆盖历史通知。', '',
+    '## 固定读回、账本与交接', '',
+    f'- 根目录ledger CLI add实际返回{ledger_id}，show读回silent/A10/proposed/learner:strategy-proposal；check为618 item(s), 0 problem(s)。保存ledger-candidate.json、ledger-add.receipt.txt、ledger-readback.json、ledger-check.log；仅追加proposed，无shipped。',
+    '- 生产parseStrategyLibrary、retrieveStrategies、applyStrategyEntries在scratch候选上通过：两个冻结实盘持牌快照正例命中且2445字节封套可装入，三个缺组件负例不命中。candidate-validation.json完整记录5个固定输入及原帧SHA。正例是实盘牌组的离线适配，不是原生大脑请求或正式库live读回；负例终态仅用于合同检查，不当可行动题。',
+    '- 无源码/正式知识变更，无代码提交，无撤源码失败/恢复测试，tsc/vitest/cases均null；固定候选合同检查不改记为全套测试成功。无merge、发布号、自然查询/采用或收益声明。铁甲及其他角色未改。',
+    '- 候选格式/固定检索成立，与内容效果、正式发布、消费者固定读回、自然查询/采用、收益依次分账。原计划已理解缺口，新候选能否新增信息尚未证明，因此本批保留现行live行为。',
+    '- 运维入口：本目录proposal.md、report.md、experience-strategy-rk-map.json及两个evidence-manifest.json；后续沿既有去重/知识发布与消费者门处理，未发布候选撤下即可，无live回滚动作。原队列、科学父和#28均保持。',
+    '- 不推送、不运行play，不改ops prompt、不代其他角色确认。本树保持干净，过程证据交原宿主封存与retention，不自行删树。', '',
+    '最终对象如下；与result.json及最终回复相同。', '',
+    '```json', json.dumps(result, ensure_ascii=False, separators=(',', ':')), '```', '']
+(P / 'report.md').write_text('\n'.join(lines))
+print(json.dumps(result, ensure_ascii=False, separators=(',', ':')))
+
+validate-candidate.mjs
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { parseStrategyLibrary, retrieveStrategies, applyStrategyEntries } from '../../../agent/src/knowledge/strategy-entries.ts';
+
+const here = new URL('./', import.meta.url);
+const read = name => JSON.parse(fs.readFileSync(new URL(name, here), 'utf8'));
+const lib = parseStrategyLibrary(read('brain-strategy-candidates.json'));
+const whole = read('whole-run-audit.json');
+const signature = ['SNAKEBITE', 'ACCELERANT', 'FOOTWORK'];
+const rows = [];
+for (const run of ['BKK8KAR3E83C', 'TB5YKELW0355']) {
+  const s = whole[run].deck_changes.find(s => signature.every(id => s.deck.some(c => c.card_id === id)));
+  const label = s.screen === 'SHOP' ? 'shop/plan' : 'reward/card';
+  const payload = { facts: { act: Number(s.act_id) + 1, floor: s.floor, deck: s.deck } };
+  const hits = retrieveStrategies(lib, label, payload);
+  if (hits.length !== 1) throw new Error(`missing candidate: ${run}`);
+  const request = { label, payload };
+  const injected = applyStrategyEntries(request, lib);
+  if (injected.payload.strategy_entries?.entries?.[0]?.id !== lib.entries[0].id) throw new Error('candidate did not fit serialized envelope');
+  rows.push({ run_id: run, source: s.ref, label, matches: hits.map(e => e.id),
+    envelope_bytes: Buffer.byteLength(JSON.stringify(injected.payload.strategy_entries)),
+    scope: '冻结实盘牌组适配为固定检索输入；不是当局原始大脑请求或live读回' });
+}
+for (const run of ['QVDR4R3UWKXU', '37U27AS6JNJ0', 'XC9AHZH3CZVK']) {
+  const s = whole[run].terminal;
+  const payload = { facts: { act: Number(s.act_id) + 1, floor: s.floor, deck: s.deck } };
+  const hits = retrieveStrategies(lib, 'rest/plan', payload);
+  if (hits.length) throw new Error(`incomplete signature matched: ${run}`);
+  rows.push({ run_id: run, source: s.ref, matches: [], scope: '仅缺组件负例；不把终态作为可行动题' });
+}
+const output = { schema: 'candidate-contract-readback-v1', production_parser: true,
+  formal_knowledge_modified: false, published: false, live_consumer_readback: null,
+  model_calls: 0, cases: rows };
+fs.writeFileSync(new URL('candidate-validation.json', here), JSON.stringify(output, null, 2) + '\n');
+console.log(JSON.stringify({ path: fileURLToPath(new URL('candidate-validation.json', here)), cases: rows.length, passed: true }));
+

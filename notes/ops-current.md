@@ -1,12 +1,12 @@
-state: clear-ok
-issue: 51
-updated: 2026-10-24T20:32:53+08:00
+state: in-flight
+issue: 48
+updated: 2026-10-24T20:45:58+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：R439回调去重验收已结，7遗物文字/6描述shop rk、68策略115rk/13shipped/671检查0；原提交及main/live13投影核同，锁34.63s已释、worker退出。
-在等谁：7自定义knowledge正式经验消费者、交换rk合同、自然采用收益及科学父；56四道/发布drain另issue，原null/旧失败保持。
-下一步：clear-ok/51，原D遗物→事件自然接，不重发/full/模型/强tick。R438九叶及旧知识保持，20原24h/kit不重置。原件paper/materials/20261024-issue51-r439-return-ops/verification.json；原发布issue51-relic-paired-ops/，issue6384235793。
+进行中的事：#48普通164315单候选2正3负/2角色读回过，原worker4038655/birth27032382待原刷新锁；未发布末次20:44:22，不持发布锁。0672 accepted查询投影，0618 proposed不改。
+在等谁：原refresh_driver4023913/birth26990639释放knowledge-refresh.lock，原worker自动回manual；不要重启publish.once。候选保护R439/68策略115rk及后来知识，原模型/full/局0。
+下一步：核原publication-state最终阶段/实库/编号/读回，in-flight/48不清。旧24h注册窗已完整，普通策略5→3/复盘12→9，回刷0/244、外部与停派混杂不代不降吞吐；新MD至明16:44才满24h。原件paper/materials/20261024-issue48-resume-2033-ops/，issue6384374841；20原24h/kit/科学父保持。
 
 #50本轮已结：三自然晚层局143落盘/140后继、18检查点/15后继；F48三/F49一/0胜只为选样，原首W546/ENOBUFS-null不改。BP9/P4学习读取已核，冷重启/回退及达标线正式入库待，issue6383251914；paper/materials/20261024-issue50-resume-1834-ops/。
 
@@ -37,7 +37,7 @@ updated: 2026-10-24T20:32:53+08:00
 
 091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，37代码九叶待实际完整检查后接自然发布，本经验待真源审计，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#48新进展：普通164315 done/rc0，原native提示T16:44:14.992绑定1.4新段（prompt85c91f9e/high/原沙箱）；映射12情境/11经验ID：1新6复用4等待1不适用，rk0。候选silent-brain-poison-footwork-realization-review/0618，报告与输出同；main/live无该ID，正式发布/消费者/采用待，三输入与#28门不借验。后置首单元issue48-whole-run-cluster6-a10-001/9R916WW0V65N/A10/簇6仅定位，旧held/队列SHA400b46b2不变，仍未派、0/244。等原优先级自然派发及候选发布/读回，18:19:29完整门不重置，不强派。paper/materials/20261024-issue48-checkpoint-1750-ops/readback.json。
+#48首普通1.4消费T16:44:14.992/high/原沙箱已核，164315 done/rc0，12映射/11经验ID：1新6复用4等待1NA，rk0。局部0618/poison-footwork候选单数据发布原worker待锁见首段；原报告base/调度base、三输入缺口、#28回放/科学父保持。后置首组9R916/A10/簇6仅定位，queue400b46b2/source只读校验过，旧held/244逐值不变，仍未派0/244。旧入口24h已实核但因无回刷暴露/政策混杂不通过不降吞吐验收，新普通窗另记不重置旧T。原件paper/materials/20261024-issue48-resume-2033-ops/。
 
 #51原R428的090927/081200去重23ID读回、宽查询fix和正式经验.1边界保持；原main4条已R433发。paper/materials/20261024-090927-strategy-result-ops/。
 

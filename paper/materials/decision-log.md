@@ -6730,3 +6730,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T20:31:16+08:00 [ops] 191311实发V6-R439/T2026-10-24T20:29:27+08:00：7遗物文字/6描述rk，68策略115rk，7文字/6摘要/6完整读回、13shipped/671检查0，锁34.63s已释；R438九叶及其他知识保持。7正式经验消费者/交换rk/自然采用收益及科学父待，原null保持；drain/R438回执去重，clear-ok/51。原件paper/materials/20261024-issue51-relic-paired-ops/verification.json；issue6384235793。
 
 - 2026-10-24T20:32:53+08:00 [ops] R439回调去重核8份原件/祖先及13投影/单次编号，原7文字6rk读回、13shipped/671检查0保持，锁34.63s已释；不重发/full/模型，正式经验消费者/交换rk/科学父待，clear-ok/51。原件paper/materials/20261024-issue51-r439-return-ops/verification.json。
+
+- 2026-10-24T20:45:58+08:00 [ops] #48首普通候选固定2正3负/2角色读回过，0672查询投影accepted/0618 proposed保持；原发布worker4038655待刷新锁，未发布末次20:44:22，不重启。旧24h注册窗已核但回刷0/244且政策混杂，不降吞吐未通过，新普通MD窗另记；in-flight/48。原件paper/materials/20261024-issue48-resume-2033-ops/。

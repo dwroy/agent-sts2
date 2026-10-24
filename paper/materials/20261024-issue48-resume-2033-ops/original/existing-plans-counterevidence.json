@@ -1,0 +1,122 @@
+[
+  {
+    "run_id": "BKK8KAR3E83C",
+    "ref": {
+      "source": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "source_size": 14386062,
+      "line": 9523,
+      "offset": 12458138,
+      "bytes": 5661,
+      "sha256": "d1fdd9ce312befef536b97313be498c01c14d7cce1c59257f8c1c233cc2aed1a"
+    },
+    "plan": {
+      "runId": "BKK8KAR3E83C",
+      "act": 2,
+      "floor": 32,
+      "hpPct": 0.4025974025974026,
+      "trigger": "review",
+      "archetype": "施毒触媒配双步法，恢复血量保护启动",
+      "want": [
+        "NOXIOUS_FUMES",
+        "DEADLY_POISON",
+        "ADRENALINE",
+        "AFTERIMAGE",
+        "BACKFLIP",
+        "CORROSIVE_WAVE"
+      ],
+      "avoid": [
+        "STRIKE_SILENT",
+        "PHANTOM_BLADES",
+        "ACCURACY"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 10,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "治疗至54血；安全建立步法与触媒，持续补毒和虚弱，尖啸留给多段攻击，避免为铺能力放弃必要格挡。",
+      "summary": "本火治疗，先保过王；维持毒防方向，后续补施毒效率、费用和核心升级，收集两场终局战可用药水。",
+      "endgame": {
+        "core": "维持P并保留D分支，已有施毒、触媒与双步法，核心部分成型；本次治疗保护启动，不提升核心强度。",
+        "gaps": "仍缺高效持续施毒、稳定费用和核心升级，攻防组件同时兑现及完整循环表现未知。",
+        "scaling_damage": "蛇咬和两张带毒刺击积毒，触媒增加中毒结算，实际长战成长效率仍需验证。",
+        "sustainable_defense": "双步法强化重复挡牌，中和、一拳和扫腿提供虚弱，尖啸与蜃景仅作有限补充，启动费用仍紧。",
+        "resources": "选择兑现后为54/77血、182金币、无药水且三个药水栏空置，不能预支幕间回复或终局两王之间的回血。",
+        "win_condition": "两战分别建立步法与触媒，以持续施毒、重复格挡和虚弱压低战损，并按两场合计消耗准备血量与药水。",
+        "checkpoint": "幕末判断部分成型：毒与触媒提供成长输出，双步法挡牌提供持续防御，本幕以54血入王、虚弱护启动、尖啸应对多段攻击；仍缺施毒效率、费用及升级，当前无药，F48至F49无回血连胜所需资源和低战损能力尚未证实。"
+      },
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "S",
+          "R"
+        ],
+        "checkpoint": 34,
+        "reason": "策略与rk零匹配；自有经验2026-10-24.1高可信支持只计已抵达营火的回复，但不证明治疗优于锻造。此处31血、无药且强制接王，选择确定回复23血。低可信模拟治疗完整DPR15.86、配对差+0.43±0.33；升级步法15.63、+0.20±0.18，不能仅据DPR排序。两者均50次零胜，终止掉血不能衡量保血效果；步法/触媒记录覆盖分别16/50与23/50，首次施放仅为条件子集，不能证明启动改善。S无排序资格，完整核心及连续两王表现未知。",
+        "pivot_if": "施毒与触媒稳定启动且防守跟上则继续P；双步法配高效挡牌而毒启动不足时转D；小刀供给、增益和防守同时出现重评S；获得绷带或铜钹及抽弃支持时重评R。"
+      }
+    },
+    "limitation": "原答案自述已有缺口，不证明kb查询或策略因果收益。"
+  },
+  {
+    "run_id": "TB5YKELW0355",
+    "ref": {
+      "source": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "source_size": 14386062,
+      "line": 9860,
+      "offset": 13300782,
+      "bytes": 5471,
+      "sha256": "bfbf9c7473d65ef19a56f9d1d10ba1daa7746de9e6a3d2b24acfa3badb5bb73f"
+    },
+    "plan": {
+      "runId": "TB5YKELW0355",
+      "act": 2,
+      "floor": 32,
+      "hpPct": 0.21428571428571427,
+      "trigger": "review",
+      "archetype": "触媒毒伤成长，步法暗影持续防御",
+      "want": [
+        "BACKFLIP",
+        "FOOTWORK",
+        "LEG_SWEEP",
+        "CORROSIVE_WAVE",
+        "AFTERIMAGE",
+        "BOUNCING_FLASK"
+      ],
+      "avoid": [
+        "PHANTOM_BLADES"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 10,
+      "elites": "avoid",
+      "rest": "heal",
+      "bossPrep": "36血进场，保留供能金币；部署步法与毒伤，毒药水争取减员，暗影和尖啸守高压回合，兼顾残敌阶段。",
+      "summary": "本火回血，不赌15血锻造；保留毒伤方向，后续补重复抽牌、高效施毒与持续格挡，不能把退掉一侧当作整战已稳。",
+      "endgame": {
+        "core": "P组件已具备但实战仅部分成型：毒雾+、蛇咬与触媒负责毒伤，步法+、暗影+及残影+支持防御，回血不代表核心兑现。",
+        "gaps": "仍缺重复抽牌、可靠启动、高效补毒和稳定防守循环，具名核心完整施放覆盖及连续两战表现未知。",
+        "scaling_damage": "毒雾+持续积毒、蛇咬集中施毒、触媒增加结算次数，但双体与残敌阶段的实际击杀速度未知。",
+        "sustainable_defense": "步法强化格挡、暗影放大并由残影保留余挡，虚弱与尖啸补关键减伤，但近期连续失血表明持续覆盖尚未证明。",
+        "resources": "本次回血后36/70生命、231金币及一瓶毒药水，黄金印供能数值未知，F48至F49无恢复两战所需总血药与金币仍未知。",
+        "win_condition": "每场重新部署毒伤与步法，以可重复防御争取结算并完成残敌阶段，同时为第二场保留实际所需血药和供能资金。",
+        "checkpoint": "幕末判断为部分成型：已有毒伤成长和防御组件，缺可靠抽牌与持续覆盖；本幕36血进场，以毒药水协助减员、暗影和尖啸守高压并处理残敌；仅一瓶药且无可靠整战胜局模拟，F48至F49无恢复连胜所需血药及稳定攻防仍未证。"
+      },
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "S",
+          "R"
+        ],
+        "checkpoint": 34,
+        "reason": "现有毒雾+、触媒、蛇咬与步法+支持P，但启动及完整防守循环未证；先回血满足生存约束。自有策略silent-brain-crab-surviving-part-budget（v1.0.0，置信0.65，单局观察）提示保留残敌阶段预算；rk无匹配，低可信模拟不用于S排序，完整核心表现未知。",
+        "pivot_if": "获得第二张步法且持续输出可靠则评估D；继续补P的抽牌、施毒与防御；获得小刀供给配增益则评估S并解除幻影之刃暂避；获得弃牌收益遗物再评估R；血药或金币不足继续避险。"
+      }
+    },
+    "limitation": "原答案自述已有缺口，不证明kb查询或策略因果收益。"
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-24T20:44:22+08:00",
+  "actual_stage": {
+    "at": "2026-10-24T20:43:15+08:00",
+    "phase": "waiting-original-publication-lock",
+    "worker_pid": 4038655,
+    "worker_birth": "27032382",
+    "published": false,
+    "new_full_model_game_tick": 0,
+    "held_locks": [],
+    "waiting_lock": "ops/knowledge-refresh.lock"
+  },
+  "knowledge_lock_owner_and_waiters": [
+    {
+      "pid": 4023913,
+      "birth": "26990639",
+      "waiting": false,
+      "script_path": "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh_driver.py",
+      "script_within_repository": true,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 4024193,
+      "birth": "26990701",
+      "waiting": true,
+      "script_path": null,
+      "script_within_repository": false,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 4024677,
+      "birth": "26990854",
+      "waiting": true,
+      "script_path": null,
+      "script_within_repository": false,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 4031398,
+      "birth": "27011399",
+      "waiting": true,
+      "script_path": ".artifacts/integrator56-r2-20261024-2026/refreeze-knowledge-final.py",
+      "script_within_repository": false,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 4038655,
+      "birth": "27032382",
+      "waiting": true,
+      "script_path": ".artifacts/ops-issue48-resume-2033-20261024/publish.py",
+      "script_within_repository": false,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "no_signal_or_lock_bypass": true,
+  "resume": "original worker continues; final phase enqueues original manual event; do not relaunch publish.once or repeat checks/model",
+  "exec_session_for_original_worker": 60831
+}
