@@ -1,5 +1,35 @@
 state: in-flight
 issue: 60
+updated_at: 2026-10-25T03:31:18+08:00
+
+# 集成员当前交接
+
+进行中的事：#60正式7af8ef5a7修正组合full终态通过，679文件/6628过/0败/2原跳、tsc0；PID2306324已退/锁可取，2788输入/1417依赖/index/tree/result独立核同。原25生产叶未变，仅两fixture三处真实解析器补拷；原失败full保持。准备精确27叶及29正式材料集成，材料paper/materials/20261025-issue60-fixture-composition-integrator/。
+
+在等谁：本角色核main/live实际前像和知识SHA后，原锁内安装、独立后像读回、Windows SSH推送核远端，再交原ops58之后原发布链。迁移只取切点真实已发布叶，135统计夹具/465验证快照差异不作生产源。生产控制SHA/原batch恢复/合法候选→tools正负例→自然局仍待ops实际验收。
+
+下一步：锁忙即退，不持锁等待；成功后公开结果并实投原ops，投递不代已读/ACK。#58原RR2不阻，#36/#20原恢复身份树证据、#51原文/反证转Roy和#27缺log/ACK保持。未改live/STOP/生产DB/控制/在途或其他角色声明。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 60
+updated_at: 2026-10-25T03:29:29+08:00
+
+# 集成员当前交接
+
+进行中的事：#60补交7af8ef5a733cd5ad6b005e544663e2a4f08bc5f0已逐叶核同，25原生产/合同叶字节未变，仅两fixture三处补拷真实knowledge_runtime_env.py，原解析/断言不变；开发Py16+13/TS4/tsc原件及29正式材料SHA已核。新实际组合anchor=caa480132a67dc94b24be231d889cf37aa7b67d1 / tree=7371b47fd0bbe94d4e21236e4b8b37331e14ced0，2788输入仅这两叶不同，1417依赖冻结；新组合唯一full已启动，位置paper/materials/20261025-issue60-fixture-composition-integrator/full-state.json及full.log，工作树/home/dw/Projects/agent-sts2/.worktrees/integrator60-fixture-composition-20261025-0306。原28780925b失败full/错误/纠正记录保留，不改绿、不重58。
+
+在等谁：本角色等新组合唯一full终态；通过后独立核PID退出/锁释放、全部输入依赖/index/tree/result，按原锁顺序精确27叶及29正式材料集成main、Windows SSH核远端，再交原ops58之后发布链。冻结前像main=f117620781b6e8abd8e1a02ecac2be205a01c372、实际live=d0d9da10063c623f3036a6910e83f4ae3c30c06e；生产控制SHA/迁移/原batch恢复/合法候选→tools正负例→自然局仍归ops，不代验。
+
+下一步：只观察原worker，禁止再调check-full.py查询。失败保原件退具体缺陷；通过后复核实际live及知识边界未漂移才安装。135统计夹具/465验证差异不作生产迁移源。58原RR2继续；#51 021345转Roy6388068959已核回、1新4补充/3格式rk2及版本反向/route-hp两稿保留，真实Roy ACK未知。#36/#20原可恢复停止/身份树证据、#27 CLI身份/000402缺log及他角色ACK保持。未改live/STOP/生产DB/控制/在途/其他角色声明。
+
+
+
+最新检查观察：2026-10-25T03:29:29+08:00，原worker2306324/birth29329246仍full-running，已输出610文件通过；这不是完整终态。本角色只读观察，未另开检查/安装/发布。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 60
 updated_at: 2026-10-25T02:57:55+08:00
 
 # 集成员当前交接

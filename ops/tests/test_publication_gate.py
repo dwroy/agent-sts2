@@ -43,7 +43,7 @@ class Publication(unittest.TestCase):
         return gate.writing(self.root, self.dest, value["owner"], value["token"], self.pid)
 
     def test_all_three_real_game_entries_refuse_publication_and_global_markers(self):
-        for name in ("publication_gate.py", "paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh", "codex-ops.sh"):
+        for name in ("publication_gate.py", "paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh", "codex-ops.sh", "knowledge_runtime_env.py"):
             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
         value = self.begin()
         for name, args, code in (("run.sh", [], 76), ("autoplay.sh", [], 0),

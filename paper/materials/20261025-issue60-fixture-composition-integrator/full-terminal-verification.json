@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-25T03:31:14+08:00",
+  "worker_pid": 2306324,
+  "worker_birth": "29329246",
+  "current_birth": null,
+  "original_worker_exited": true,
+  "original_check_lock_available": true,
+  "inputs_rehash_count": 2788,
+  "inputs_unchanged": true,
+  "dependencies_rehash_count": 1417,
+  "dependencies_unchanged": true,
+  "index_entries_sha256": "35e4d91a9689d827706a2a64691f6de4da0fc39ded2b3090a503390adc72ff4d",
+  "index_flags_sha256": "dbeed8327b858fcd04f3f9c58f5aed9565c23fd572a1a6545f799bdc9ec27cca",
+  "tree": "7371b47fd0bbe94d4e21236e4b8b37331e14ced0",
+  "result_sha256": "dc8596bddcef8112b5d5522c543e1647896ebf29377d5becbcf8a319d8ea9bd9",
+  "files": 679,
+  "passed": 6628,
+  "failed": 0,
+  "skipped": 2,
+  "tsc_rc": 0,
+  "wrapper_results": [
+    {
+      "name": "account-drain.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "validates drain lifecycle: test_account_drain.py",
+          "status": "passed"
+        },
+        {
+          "name": "validates drain lifecycle: test_llm_handoff.py",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "external-build-stats.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "reconstructs and validates external build statistics with deterministic private-field exclusion",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "own-build-stats.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "keeps own evidence separate and verifies allowlisted external decision fields",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "publication-admission.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "publication waiting isolates candidate learning, game admission and publication writers",
+          "status": "passed"
+        },
+        {
+          "name": "composes real publication admission with the per-batch registration barrier",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "check_lock_released": true,
+  "new_full_runs": 1,
+  "model_calls": 0,
+  "production_operations": 0
+}

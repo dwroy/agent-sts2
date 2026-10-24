@@ -1,0 +1,34 @@
+{
+  "compiled_cli_sha256": "62cd0f86f2f6b29e6ebe67ae25763311206b2b133626b2aec7d1dbba0a2ca823",
+  "cases": [
+    {
+      "current_control": "B",
+      "same_original_version": true,
+      "callbacks": [
+        "recheck",
+        "finish"
+      ],
+      "notification_count_after_two_callbacks": 1
+    },
+    {
+      "current_control": "disabled",
+      "same_original_version": true,
+      "callbacks": [
+        "finish",
+        "recheck"
+      ],
+      "notification_count_after_two_callbacks": 1
+    }
+  ],
+  "all_complete_calls_use_A": true,
+  "release_counts": {
+    "A": 2,
+    "B": 1
+  },
+  "lost_result_was_committed": true,
+  "production_database_opened": false,
+  "git_identity": "fixed fixture; Git calls stubbed",
+  "publisher_and_sqlite": "actual compiled CLI in separate Node processes",
+  "fresh_python_recovery_invocation": true,
+  "distinct_python_process": true
+}

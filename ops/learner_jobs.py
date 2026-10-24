@@ -378,10 +378,13 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         argv += [task, implementation_request]
     from ordinary_close import baseline
     ordinary_baseline = baseline(root, state_dir)
+    from knowledge_runtime_env import capture
+    knowledge_runtime = capture(root, state_dir)
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
-                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
+                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline,
+                                 "knowledge_runtime": knowledge_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     if external_source:

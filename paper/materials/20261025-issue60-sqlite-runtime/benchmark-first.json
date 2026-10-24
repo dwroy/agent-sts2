@@ -1,0 +1,132 @@
+{
+  "boundary": "SQLite query + row materialization; tools timed separately; excludes LLM/network",
+  "cold": "new SQLite connection, OS page cache uncontrolled",
+  "concurrency": "two WAL connections, reader inside uncommitted writer; one process; no CPU-parallel writer claim",
+  "migration_ms": 1750.1378809999999,
+  "migration": {
+    "documents": 9,
+    "bytes": 10156395,
+    "entries": 765,
+    "exact_bytes": true,
+    "files": {
+      "common/shared-experience.json": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+      "external/sts2fun/builds-v1/archetypes.json": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c",
+      "characters/ironclad/experience.json": "0049b5295a42b787d9b8cba9eeb81e42e9c2e20bbf92d08e458f4832a02fa63e",
+      "characters/regent/experience.json": "d1c4807e4221f61406393dac65800c60d893879af1b4937511a523e54a54381e",
+      "characters/silent/experience.json": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2",
+      "characters/silent/strategy-entries.json": "303120262ed547827b2fe4c717e8114aca76358c5beb188899e9c8491f5a36b8",
+      "characters/silent/reflex.json": "7af201275dd2115daf91e2dc63f930ab0be40bcf52a65f583133942c120316cf",
+      "characters/silent/reflex-vocab.json": "6047a92d919a9fea568ee8d336fbfdf78b1e1669054a1b81f11f413228df45e6",
+      "characters/silent/build-cores.json": "51c757a11ded9db2619466104f284a7d8a2490e10a621e0b367640e82a81df36"
+    }
+  },
+  "real_hot": [
+    {
+      "query": {
+        "kind": "experience",
+        "text": "路线"
+      },
+      "n": 100,
+      "p50_ms": 0.8661950000000616,
+      "p95_ms": 1.4264530000000377,
+      "max_ms": 2.8257920000000922
+    },
+    {
+      "query": {
+        "kind": "experience",
+        "category": "general"
+      },
+      "n": 100,
+      "p50_ms": 0.671650000000227,
+      "p95_ms": 0.9899260000001959,
+      "max_ms": 22.276298999999653
+    },
+    {
+      "query": {
+        "kind": "strategy-entries",
+        "text": "启动"
+      },
+      "n": 100,
+      "p50_ms": 1.202940000000126,
+      "p95_ms": 1.9422379999996338,
+      "max_ms": 2.101912000000084
+    },
+    {
+      "query": {
+        "kind": "strategy-entries",
+        "entity": "BACKFLIP"
+      },
+      "n": 100,
+      "p50_ms": 0.48473399999966205,
+      "p95_ms": 0.7879849999999351,
+      "max_ms": 3.237935000000107
+    },
+    {
+      "query": {
+        "kind": "reflex",
+        "text": "boss"
+      },
+      "n": 100,
+      "p50_ms": 2.821997999999894,
+      "p95_ms": 3.533958999999868,
+      "max_ms": 4.020720999999867
+    },
+    {
+      "query": {
+        "kind": "reflex",
+        "text": "TEST_NO_MATCH"
+      },
+      "n": 100,
+      "p50_ms": 0.31532700000025216,
+      "p95_ms": 0.5369179999997868,
+      "max_ms": 0.871309999999994
+    }
+  ],
+  "real_connection_cold": {
+    "n": 30,
+    "p50_ms": 1.7132010000000264,
+    "p95_ms": 2.265609999999924,
+    "max_ms": 2.4899199999999837
+  },
+  "read_during_writer": {
+    "n": 100,
+    "p50_ms": 1.3234499999998661,
+    "p95_ms": 2.081062999999631,
+    "max_ms": 2.5416470000000118
+  },
+  "snapshot_tools": {
+    "kb_strategies": {
+      "n": 40,
+      "p50_ms": 5.37887099999989,
+      "p95_ms": 8.81992900000023,
+      "max_ms": 14.444370000000163
+    },
+    "kb_reflex": {
+      "n": 40,
+      "p50_ms": 176.7893949999998,
+      "p95_ms": 287.06030399999963,
+      "max_ms": 296.5023770000007
+    }
+  },
+  "extended": {
+    "entries": 10000,
+    "hot_two_character": {
+      "n": 100,
+      "p50_ms": 32.100328000000445,
+      "p95_ms": 39.75094800000079,
+      "max_ms": 81.3463789999987
+    },
+    "hot_trigram": {
+      "n": 100,
+      "p50_ms": 37.2403630000008,
+      "p95_ms": 44.67491699999664,
+      "max_ms": 52.03097300000081
+    },
+    "indexed_alias": {
+      "n": 100,
+      "p50_ms": 25.82846299999801,
+      "p95_ms": 31.97563899999659,
+      "max_ms": 36.35004299999855
+    }
+  }
+}

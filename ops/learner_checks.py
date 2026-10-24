@@ -98,6 +98,9 @@ def verify_empty_fix(report, batch, root):
 
 def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, run_checks=True):
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+    from knowledge_runtime import complete as complete_knowledge
+    if complete_knowledge(batch_id, batch, report, rc, root, enqueue, inbox):
+        return
     merged = report.get("merged")
     live = live_dir(root)
     verified = False
@@ -295,6 +298,10 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
         spec.loader.exec_module(module)
         return module.run(batch_id, batch, root, out_dir, continuation, enqueue, inbox)
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+    if report.get("knowledge_candidate"):
+        from knowledge_runtime import complete as complete_knowledge
+        complete_knowledge(batch_id, batch, report, batch.get("rc", 1), root, enqueue, inbox)
+        return 0 if batch.get("state") == "done" else 1
     report_proof = None
     if not report:
         report, report_proof = preserved_calibration_report(batch_id, batch, root)

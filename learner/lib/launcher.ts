@@ -386,8 +386,9 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     // Parallel workers can launch the same task within one second, including manual runs without a lease.
     const stem = `${stamp(deps.now())}-${randomUUID()}-${spec.name}`;
     // No-change strategy reports must belong to the batch's worktree; event logs remain centralized.
-    const scratch = spec.name === "strategy-proposal" ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
-    if (spec.name === "strategy-proposal") {
+    const localScratch = spec.name === "strategy-proposal" || !!deps.env.STS2_KNOWLEDGE_RUNTIME && spec.name === "experience-update";
+    const scratch = localScratch ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
+    if (localScratch) {
       for (const dir of [join(cwd, "learner"), join(cwd, "learner", "runs")]) {
         if (existsSync(dir) && !inside(realpathSync(cwd), realpathSync(dir))) {
           throw new LearnerUsageError(`策略任务临时目录 ${dir} 不在工作树 ${cwd} 里`);
@@ -408,6 +409,9 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       sets.code_dir = resolve(deps.env.STS2_LIVE);
     }
     checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
+    const runtimeInstructions = deps.env.STS2_KNOWLEDGE_RUNTIME
+      ? (await import("./knowledge-runtime.js")).runtimeLearningInstructions(deps.env, spec.name, character, scratch, deps.projectRoot) : "";
+    if (runtimeInstructions && spec.defaults.merge !== undefined) sets.merge = "no";
     const rendered = renderTask(spec, sets, builtins);
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
     const effort = options.effort ?? spec.efforts[options.engine] ?? engineDefaults(options.engine).effort;
@@ -437,7 +441,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const storageRules = existsSync(join(deps.projectRoot, "ops/worktree_storage.py"))
       ? `\n\n工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 ${join(deps.projectRoot, "ops/worktree_storage.py")} materialize --root ${deps.projectRoot} --workspace ${cwd.split("/").at(-1)} --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。`
       : "";
-    prepared = { request, prompt: rendered.prompt + storageRules, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch };
+    prepared = { request, prompt: rendered.prompt + storageRules + runtimeInstructions, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch };
   } catch (error) {
     if (error instanceof LearnerUsageError) {
       deps.err(`${error.message}\n${USAGE}\n`);
@@ -507,6 +511,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
   log({
     type: "learner_launch",
+    ...(deps.env.STS2_KNOWLEDGE_RUNTIME ? { knowledge_runtime: { directory: deps.env.STS2_KNOWLEDGE_RUNTIME,
+      control_sha256: /^[a-f0-9]{64}$/.test(deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 ?? "") ? deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 : null } } : {}),
     ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
     ts: started.toISOString(),
     engine: request.engine,
