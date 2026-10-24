@@ -177,7 +177,8 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
     expect((requests[0]!.payload as any).run_plan_task.current_plan).toBeNull();
     const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
     expect(cues.schema).toBe("brain-query-cues-v3");
-    for (const [key, tool] of [["strategies", "kb_strategies"], ["rk", "kb_reflex"], ["experience", "kb_experience"]]) {
+    expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
+    for (const [key, tool] of [["experience", "kb_experience"]]) {
       if (typeof cues[key].count === "number" && cues[key].count > 0) expect(cues[key].tool).toBe(tool);
       else {
         expect(cues[key].tool).toBeUndefined();
@@ -185,12 +186,12 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
       }
     }
     expect(requests[0]!.system).toContain("匹配数为0、缺失或错误时跳过");
-    expect(requests[0]!.system).toContain("构筑rk只读构筑相关摘要");
-    expect(requests[0]!.system).toContain("经验另用kb_experience");
+    expect(requests[0]!.system).not.toMatch(/kb_strategies|kb_reflex|构筑rk/);
+    expect(requests[0]!.system).toContain("经验用kb_experience");
     expect(requests[0]!.question).not.toContain("calibrated on logged A8");
     expect((requests[1]!.memory as any).construction_log).toContain("格式构筑理由");
     expect(requests[1]!.tools).toHaveLength(15);
-    expect(requests[1]!.tools?.map(t => t.name)).toEqual(expect.arrayContaining(["kb_reflex", "kb_experience"]));
+    expect(requests[1]!.tools?.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex", "kb_experience"]));
     if (start.recovery === "rollback") current = board(2);
     expect((await playFixed(1)).acts).toBe(1);
     if (start.recovery === "rollback") {

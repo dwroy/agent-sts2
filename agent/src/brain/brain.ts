@@ -51,7 +51,7 @@ import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope } from "../memory
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
 export function agentSystemPrompt(state?: unknown): string {
-  const guidance = knowledgeCharacter() === "silent" ? "\n构筑、幕初路线和备战题按题面非空线索与需要查询策略/rk；匹配数为0、缺失或错误时跳过，不为查工具而查。构筑rk只读构筑相关摘要；经验另用kb_experience。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
+  const guidance = knowledgeCharacter() === "silent" ? "\n经验用kb_experience按题面非空线索与需要查询；匹配数为0、缺失或错误时跳过，不为查工具而查。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
   const endgame = endgameRawScope(state) ? `\n${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE}` : "";
   return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${endgame}`;
 }

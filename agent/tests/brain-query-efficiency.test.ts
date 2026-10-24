@@ -34,18 +34,17 @@ function fixture(label = "reward/card") {
   return { dir, write, ctx, req, combat, construction, library, cues, host, copyStats };
 }
 
-it("empty matching cues do not encourage strategy or rk queries in either instruction layer", async () => {
+it("omits strategy and rk cues entirely in both instruction layers", async () => {
   const { req, cues } = fixture();
   const result = await attachQueryGuidance(req), body = await cues();
-  expect(body.strategies).toMatchObject({ count: 0 }); expect(body.rk).toMatchObject({ count: 0 });
-  for (const cue of [body.strategies, body.rk]) { expect(cue).not.toHaveProperty("tool"); expect(cue).not.toHaveProperty("input"); }
+  expect(body).not.toHaveProperty("strategies"); expect(body).not.toHaveProperty("rk");
+  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
   expect(result.question).not.toContain("先调用"); expect(result.system).not.toContain("先查");
 });
 
 it("construction lookup excludes combat lines even if requested and returns summaries without predicate JSON", async () => {
   const { host, combat, construction, library, cues } = fixture(); library(combat, construction);
-  const body = await cues(); expect(body.rk.count).toBe(1); expect(body.rk.entries.map((e: any) => e.id)).toEqual([construction.id]);
-  expect(body.rk.tool).toBe("kb_reflex"); expect(body.strategies).not.toHaveProperty("tool");
+  const body = await cues(); expect(body).not.toHaveProperty("rk"); expect(body).not.toHaveProperty("strategies");
   const result = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
   expect(result.entries).toHaveLength(1); expect(result.entries[0]).toMatchObject({ id: construction.id, summary: construction.label_en, confidence: construction.confidence, source_experience: construction.source_experience });
   expect(result.entries[0]).not.toHaveProperty("predicate"); expect(result.entries[0]).not.toHaveProperty("signal");
@@ -53,8 +52,9 @@ it("construction lookup excludes combat lines even if requested and returns summ
 });
 
 it.each(["event/plan", "rest/plan", "shop/plan", "event/act-plan"])("%s filters combat knowledge while fight-plan preserves its existing full result", async label => {
-  const { combat, construction, library, cues, ctx } = fixture(label); library(combat, construction);
-  expect((await cues()).rk.entries.map((e: any) => e.id)).not.toContain(combat.id);
+  const { combat, construction, library, cues, ctx, host: constructionHost } = fixture(label); library(combat, construction);
+  expect(await cues()).not.toHaveProperty("rk");
+  expect(JSON.parse((await constructionHost.call("kb_reflex", { query: "*" })).text).entries.map((e: any) => e.id)).not.toContain(combat.id);
   const fightCtx = { ...ctx, label: "fight-plan", payload: { ...ctx.payload, run_plan_task: { trigger: "act" } } };
   const host = new ToolHost(buildKnowledgeTools(fightCtx), fightCtx);
   const result = JSON.parse((await host.call("kb_reflex", { query: combat.id })).text);
