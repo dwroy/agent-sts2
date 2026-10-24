@@ -146,20 +146,6 @@
       }
     },
     {
-      "plan_id": "issue51-single-card-followup-003-20261024",
-      "retry_generation": 0,
-      "work_spec": {
-        "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-single-card-followup-003-20261024.md",
-        "bytes": 4693,
-        "sha256": "10255388a77e642bd442a2c144978b43ff9fa9d18d841c1df6894254600f0633"
-      },
-      "input_manifest": {
-        "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-single-card-followup-003-20261024.json",
-        "bytes": 14138,
-        "sha256": "4680f51e31d59ac416c13c8953f15934a5063ae00566fe9d62c97da871ef479b"
-      }
-    },
-    {
       "plan_id": "issue51-decision-relic-001-20261024",
       "retry_generation": 0,
       "work_spec": {
@@ -191,19 +177,35 @@
       "plan_id": "issue51-decision-encounter-001-20261024",
       "retry_generation": 0,
       "work_spec": {
-        "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-decision-encounter-001-20261024.md",
-        "bytes": 5584,
-        "sha256": "7e7fd2925c8ac105ebc6366d25b9290b71267362da4a38abccc990c6a2dd5ad9"
+        "path": "paper/materials/20261024-issue51-four-lanes-ops/inputs/issue51-decision-encounter-001-20261024.md",
+        "bytes": 7022,
+        "sha256": "d3d74f523d41168b083dda8d127a9c3e16ade264dcec2ef3ceafdd78aa6001a9"
       },
       "input_manifest": {
-        "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-decision-encounter-001-20261024.json",
-        "bytes": 14131,
-        "sha256": "45dd1420a082ee9cac316c592e57334b9bae8971e3d5db0a9ef8fa82293746c3"
-      }
+        "path": "paper/materials/20261024-issue51-four-lanes-ops/inputs/issue51-decision-encounter-001-20261024.json",
+        "bytes": 14357,
+        "sha256": "3195a6d5e9df24fd242b8603c867730e0b29fa1b85cefa3e4c5021e58eb1ec81"
+      },
+      "external_lane": "C"
+    },
+    {
+      "plan_id": "issue51-single-card-lane-b-001-20261024",
+      "retry_generation": 0,
+      "work_spec": {
+        "path": "paper/materials/20261024-issue51-four-lanes-ops/inputs/issue51-single-card-lane-b-001-20261024.md",
+        "bytes": 5420,
+        "sha256": "4edd81635666908bdaa83c7d39afe9fdbf4bebf23a14206fa952287a3984c360"
+      },
+      "input_manifest": {
+        "path": "paper/materials/20261024-issue51-four-lanes-ops/inputs/issue51-single-card-lane-b-001-20261024.json",
+        "bytes": 14358,
+        "sha256": "6866fd337da77e3ff6c643ec2a2c9711c6210f0bec86975991d0c6dd3d5afa6d"
+      },
+      "external_lane": "B"
     }
   ],
-  "phase": "continuous-external-with-at-most-one-own-after-three",
-  "authority_comment": 6382572399,
+  "phase": "four-category-lanes-contract-pending-P0-host-support",
+  "authority_comment": 6382976033,
   "archetype_playbooks": "issue54 frozen, original slots only",
   "retired_plan_ids": [
     "issue51-deck-outcomes-003",
@@ -249,6 +251,27 @@
         6378493412
       ],
       "reason": "Unstarted blade playbook must be re-frozen with external stats, external full timelines and same-archetype own full runs after prioritized decision units1/2/3; preserve old frozen input and zero prior dispatch."
+    },
+    {
+      "plan": {
+        "plan_id": "issue51-single-card-followup-003-20261024",
+        "retry_generation": 0,
+        "work_spec": {
+          "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-single-card-followup-003-20261024.md",
+          "bytes": 4693,
+          "sha256": "10255388a77e642bd442a2c144978b43ff9fa9d18d841c1df6894254600f0633"
+        },
+        "input_manifest": {
+          "path": "paper/materials/20261024-issue51-speed-ops/inputs/issue51-single-card-followup-003-20261024.json",
+          "bytes": 14138,
+          "sha256": "4680f51e31d59ac416c13c8953f15934a5063ae00566fe9d62c97da871ef479b"
+        }
+      },
+      "authority_comments": [
+        6382974399,
+        6382976033
+      ],
+      "reason": "Unstarted single-card unit superseded by laneB20-25; original frozen input retained, no model/retry"
     }
   ],
   "decision_learning_order": [
@@ -316,5 +339,25 @@
     "old_card_line_hold_preserved": true
   },
   "no_cold_rest_repetition": true,
-  "paired_rk_strategy_authority": 6382572399
+  "paired_rk_strategy_authority": 6382572399,
+  "parallel_lanes_authority": 6382974399,
+  "lane_assignments": {
+    "A": [
+      "issue51-whole-run-blade-003-20261024"
+    ],
+    "B": [
+      "issue51-single-card-lane-b-001-20261024"
+    ],
+    "C": [
+      "issue51-decision-encounter-001-20261024"
+    ],
+    "D": [
+      "issue51-decision-shop-001-20261024",
+      "issue51-decision-relic-001-20261024",
+      "issue51-decision-event-001-20261024"
+    ]
+  },
+  "host_capacity_known": 2,
+  "automatic_four_lane_claim": false,
+  "independent_own_slot_pending": true
 }

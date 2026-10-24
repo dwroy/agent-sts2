@@ -1,16 +1,16 @@
-state: in-flight
+state: clear-ok
 issue: 51
-updated: 2026-10-24T18:09:26+08:00
+updated: 2026-10-24T18:28:23+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#51原174311 done/rc0，201产物/64原窗口/原生high核同；7文字3新4更、rk6描述tag/1缺副本数谓词。6可消费对（文字2新4更+rk6）组合工具/旧85过，唯一发布worker3367426/26092500等knowledge-refresh.lock，未写live；原锁3361736；不重派。账本8新accepted/4待更、626检查0。
-在等谁：等原锁自然释放→同一publisher回调，再核实际阶段/版本、kb_strategies+kb_reflex及账本；6标签不进入比较建议，剧本/第7对待补证。原生tier未知，fast请求/额度47%，未报ultrafast。原件paper/materials/20261024-issue51-poison-paired-ops/。
-下一步：按原回调接实际发布/生产读回，固定查询不代自然采用/收益；不另full/模型/tick。原#51八叶tsc0/Python22/TS15、source_commit=null/未部署，仍等集成员唯一完整窗；不得借本数据发布证明代码或3插1生效。R433/其他知识、005原失败/008原输入、16通知ACK和科学父保留，源与数据事务未结不清会话。
+进行中的事：ops写事务已结；A/C学习者独立在途，不因clear-ok重派/回收。R434/T18:12:30实发6对，47策略/91rk、12账本shipped/626检查0；固定6文字/6rk摘要/6全条过，原锁35.58s已释。描述tag不进比较建议，剧本/第7对、自然采用/收益/科学父仍待。paper/materials/20261024-issue51-r434-return-ops/。
+在等谁：6382974399/6382976033四类别+自有1槽须P0，能力/源码改点已6383016491回主管；A181311与C182343实际native均核独立线程/工作树、高/原沙箱。C仅原writer手动新派1次；两道fast请求/tier未知，不冒ultrafast，未扩2槽。B20～25已重冻、旧单牌held；D商店→遗物→事件。等待主管P0开发实现4道/独立自有槽和额度/磁盘门。
+下一步：沿A/C原自然回报与P0交付核实际宿主/首native；≤70%ultrafast、>70%fast两道、90%原授权codex1、磁盘≤80停新派。旧8叶3:1部署授权已被覆盖，源稿原样归档；原冻结full6600/0/2仅该旧组合，不代新合同/新知识。无ops写锁，不/new/停模型/重full。原件paper/materials/20261024-issue51-four-lanes-ops/；本回执6383094504。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51并行：R432五情境已发布/固定读回，source6e3976ca/live9dee1cfc，其他知识/脏目录/控制标记保持；自然采用/收益待。R430一真实局八ID命中非收益，R431/R432仍待。七新单元17:40:44重冻；首毒174311已done，余6等自然派发，506/28窗口/18局反向分层守界；冷/休不重跑，满批或2h独立发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/及20261024-issue51-speed-ops/。
+#51历史/范围：R430一真实局八ID自然命中非收益；R431/R432/R434自然采用/收益待。506/28窗口/18局反向分层及原反证守界，冷/休不重跑；满批或2h先到串行发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/与four-lanes-ops/。
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
@@ -24,7 +24,7 @@ updated: 2026-10-24T18:09:26+08:00
 
 #51三原候选仍仅代理/外部关联，旧版本反向及描述知识消费者缺口保持，不硬转rk/StrategyEntry。paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
-#37最新实际R433重冻唯一full于17:33:49止：两tsc0、673文件6585过/13败/2跳，输入/依赖/tree同、index不同，原锁释放、未发布；原owner待分类，勿另full。旧main6661/0/2和原profile6562/8/2各保留；091302 source=null/净12/.2排除、R430–R433知识及九产品叶边界不变。paper/materials/20261024-issue37-runtime-rework-integrator/full-state.json。
+#37新37/20/51冻结R433组合full18:14:31终态：6600过/0败/2跳，两tsc0、原worker3312093已退/锁释；勿另full。旧13败/profile8败/main6661原件各保留。旧8叶3:1因新令不部署；原owner核源交付与R434/其他知识漂移、九产品叶及首自然Jev，091302 source=null/净12/.2排除不夹。paper/materials/20261024-issue37-20-51-runtime-integrator/full-state.json。
 
 131302 fix及两补链：原failed/rc0/tsc0/31定向、175源差/empty guard未过；两补链done/0293 waiting，各14where-only/1处置未重复分母；14正式经验未入，061302缺源/101315旧失败保持。paper/materials/20261024-fix-131302-ops/及strategy-131302{,-s2}-ops/。
 
@@ -44,7 +44,7 @@ updated: 2026-10-24T18:09:26+08:00
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
-未完成：#36旧三批及五旧tab缺回执继续保留，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证/codex1不切；其余父与自然验收逐项见上，未清待办。
+未完成：#36旧三批及五旧tab缺回执继续保留，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证；ops账号不切、外部≥90依新授权；其余父与自然验收逐项见上，未清待办。
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 

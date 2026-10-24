@@ -1,8 +1,8 @@
-state: in-flight
+state: clear-ok
 issue: 51
-updated: 2026-10-24T18:09:26+08:00
+updated: 2026-10-24T18:28:23+08:00
 
-进行中的事：174311产物核毕；6对文字/rk描述候选组合工具通过，唯一publisher3367426/26092500阻塞原knowledge-refresh.lock，未写live。8新账本accepted、4原修订目标，未报shipped。
-在等谁：原锁owner3361736自然释放及同一publisher终态回调；随后核真实发布/工具/账本。原#51八叶源补丁source_commit=null，仍等原集成员唯一完整窗/宿主部署。
-下一步：沿paper/materials/20261024-issue51-poison-paired-ops/publication-state.json实际阶段接，不重发/模型/full/tick。6 rk仅描述tag，比较建议0；1副本谓词/完整剧本/科学父保持。实际原生tier未知，只有fast请求。
-#48首普通native/映射与后置0/244保持；164302 dataset2fbf8be6已核，回收deferred/原门不改。源与数据事务尚未结，不清会话。
+进行中的事：本轮ops写事务已结。R434实际6对/47策略/91rk、12账本shipped及释放核同。A181311/C182343各自native/high/原沙箱核同，两个独立原模型继续运行；不因本声明重派/回收。
+在等谁：主管按6383016491派P0，实现四外部道+自有独立1槽及最新额度/磁盘/账号合同。现有2槽只手动补C1次；两道请求fast、实际tier未知，不冒ultrafast/自动四道已启。
+下一步：沿原A/C完成事件与P0源码/宿主回执续接，B20～25新冻/旧单牌held、D顺序保持。旧8叶3:1已被新授权覆盖，只保留归档源稿和原full6600/0/2，不部署/不重full。无待完成的ops写操作，clear-ok；未执行/new。
+完整剧本/第7对、R434自然采用/收益、#48/16通知/回收/科学父仍待，见notes/ops-current.md及paper/materials/20261024-issue51-four-lanes-ops/。
