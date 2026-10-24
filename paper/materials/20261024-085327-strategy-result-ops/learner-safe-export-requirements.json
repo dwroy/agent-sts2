@@ -1,0 +1,136 @@
+{
+  "scope": "原宿主/原请求后续接入；本批没有执行导出、联网或读取原数据库。",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "plan_id": "issue51-act-boss-002",
+  "common": [
+    {
+      "id": "result-semantics",
+      "request": "提供冻结、可审计的outcome计算规则和交叉计数：version/build_id、act_index、完整boss_id、outcome_label × has_later_record × terminal_point × end_hp_zero × run_win；明确null/矛盾记录及排除数。SQL本身未定义这些派生标签，不能仅用整局win代单战胜。"
+    },
+    {
+      "id": "independent-denominators",
+      "request": "每个组输出boss_record_n、distinct_uploaded_runs、missing_n、duplicate_boss_visits_n、组间同局重叠计数；允许只给安全聚合计数，无需局号或玩家标识。独立玩家数与玩家簇不确定度仅在宿主可安全计算时聚合给出，否则明确unknown。"
+    },
+    {
+      "id": "pre-boss-snapshot",
+      "request": "仅由数据实际记录的Boss战前快照输出版本/幕/完整boss_id/已核floor（或missing）/snapshot_timing/entry_hp/entry_max_hp、deck_present/potions_present及缺失数。牌组按card_id/upgrade/count聚合，药水按id/count聚合；按相同快照时点与结果分组。没有的列交不可用回执，不用previous_point_end_hp或terminal_deck补造。"
+    },
+    {
+      "id": "cost-semantics",
+      "request": "单房间逐战聚合gross_damage、healing、entry/end_hp与可核净损；多房间保留房间顺序和无法拆分标志，不把节点总损分给个别Boss；输出各指标独立有效n/缺失数。"
+    },
+    {
+      "id": "mechanisms",
+      "request": "在本任务允许证据范围内，补已记录且版本化的卡牌/能力机制（来源/SHA/有效版本）和攻防贡献安全聚合；只有card_id时保持unknown，不从名称或预训练推断流派、输出、防御或核心牌。"
+    },
+    {
+      "id": "snapshot-validity",
+      "request": "terminal牌组/药水补原字段present/empty/missing计数及snapshot timing，不将SQL聚合空数组等同真实空牌组；分清死亡终局、胜利终局、幕后奖励后牌组。"
+    },
+    {
+      "id": "privacy-and-license",
+      "request": "只交脱敏聚合、查询/导出版本及SHA和许可说明。禁止玩家标识、逐玩家/逐局明细、原DB或新下载。"
+    }
+  ],
+  "per_unit": {
+    "external-act1-boss": [
+      {
+        "id": "result-semantics",
+        "request": "提供冻结、可审计的outcome计算规则和交叉计数：version/build_id、act_index、完整boss_id、outcome_label × has_later_record × terminal_point × end_hp_zero × run_win；明确null/矛盾记录及排除数。SQL本身未定义这些派生标签，不能仅用整局win代单战胜。"
+      },
+      {
+        "id": "independent-denominators",
+        "request": "每个组输出boss_record_n、distinct_uploaded_runs、missing_n、duplicate_boss_visits_n、组间同局重叠计数；允许只给安全聚合计数，无需局号或玩家标识。独立玩家数与玩家簇不确定度仅在宿主可安全计算时聚合给出，否则明确unknown。"
+      },
+      {
+        "id": "pre-boss-snapshot",
+        "request": "仅由数据实际记录的Boss战前快照输出版本/幕/完整boss_id/已核floor（或missing）/snapshot_timing/entry_hp/entry_max_hp、deck_present/potions_present及缺失数。牌组按card_id/upgrade/count聚合，药水按id/count聚合；按相同快照时点与结果分组。没有的列交不可用回执，不用previous_point_end_hp或terminal_deck补造。"
+      },
+      {
+        "id": "cost-semantics",
+        "request": "单房间逐战聚合gross_damage、healing、entry/end_hp与可核净损；多房间保留房间顺序和无法拆分标志，不把节点总损分给个别Boss；输出各指标独立有效n/缺失数。"
+      },
+      {
+        "id": "mechanisms",
+        "request": "在本任务允许证据范围内，补已记录且版本化的卡牌/能力机制（来源/SHA/有效版本）和攻防贡献安全聚合；只有card_id时保持unknown，不从名称或预训练推断流派、输出、防御或核心牌。"
+      },
+      {
+        "id": "snapshot-validity",
+        "request": "terminal牌组/药水补原字段present/empty/missing计数及snapshot timing，不将SQL聚合空数组等同真实空牌组；分清死亡终局、胜利终局、幕后奖励后牌组。"
+      },
+      {
+        "id": "privacy-and-license",
+        "request": "只交脱敏聚合、查询/导出版本及SHA和许可说明。禁止玩家标识、逐玩家/逐局明细、原DB或新下载。"
+      }
+    ],
+    "external-act2-boss": [
+      {
+        "id": "result-semantics",
+        "request": "提供冻结、可审计的outcome计算规则和交叉计数：version/build_id、act_index、完整boss_id、outcome_label × has_later_record × terminal_point × end_hp_zero × run_win；明确null/矛盾记录及排除数。SQL本身未定义这些派生标签，不能仅用整局win代单战胜。"
+      },
+      {
+        "id": "independent-denominators",
+        "request": "每个组输出boss_record_n、distinct_uploaded_runs、missing_n、duplicate_boss_visits_n、组间同局重叠计数；允许只给安全聚合计数，无需局号或玩家标识。独立玩家数与玩家簇不确定度仅在宿主可安全计算时聚合给出，否则明确unknown。"
+      },
+      {
+        "id": "pre-boss-snapshot",
+        "request": "仅由数据实际记录的Boss战前快照输出版本/幕/完整boss_id/已核floor（或missing）/snapshot_timing/entry_hp/entry_max_hp、deck_present/potions_present及缺失数。牌组按card_id/upgrade/count聚合，药水按id/count聚合；按相同快照时点与结果分组。没有的列交不可用回执，不用previous_point_end_hp或terminal_deck补造。"
+      },
+      {
+        "id": "cost-semantics",
+        "request": "单房间逐战聚合gross_damage、healing、entry/end_hp与可核净损；多房间保留房间顺序和无法拆分标志，不把节点总损分给个别Boss；输出各指标独立有效n/缺失数。"
+      },
+      {
+        "id": "mechanisms",
+        "request": "在本任务允许证据范围内，补已记录且版本化的卡牌/能力机制（来源/SHA/有效版本）和攻防贡献安全聚合；只有card_id时保持unknown，不从名称或预训练推断流派、输出、防御或核心牌。"
+      },
+      {
+        "id": "snapshot-validity",
+        "request": "terminal牌组/药水补原字段present/empty/missing计数及snapshot timing，不将SQL聚合空数组等同真实空牌组；分清死亡终局、胜利终局、幕后奖励后牌组。"
+      },
+      {
+        "id": "privacy-and-license",
+        "request": "只交脱敏聚合、查询/导出版本及SHA和许可说明。禁止玩家标识、逐玩家/逐局明细、原DB或新下载。"
+      }
+    ],
+    "external-act3-boss": [
+      {
+        "id": "result-semantics",
+        "request": "提供冻结、可审计的outcome计算规则和交叉计数：version/build_id、act_index、完整boss_id、outcome_label × has_later_record × terminal_point × end_hp_zero × run_win；明确null/矛盾记录及排除数。SQL本身未定义这些派生标签，不能仅用整局win代单战胜。"
+      },
+      {
+        "id": "independent-denominators",
+        "request": "每个组输出boss_record_n、distinct_uploaded_runs、missing_n、duplicate_boss_visits_n、组间同局重叠计数；允许只给安全聚合计数，无需局号或玩家标识。独立玩家数与玩家簇不确定度仅在宿主可安全计算时聚合给出，否则明确unknown。"
+      },
+      {
+        "id": "pre-boss-snapshot",
+        "request": "仅由数据实际记录的Boss战前快照输出版本/幕/完整boss_id/已核floor（或missing）/snapshot_timing/entry_hp/entry_max_hp、deck_present/potions_present及缺失数。牌组按card_id/upgrade/count聚合，药水按id/count聚合；按相同快照时点与结果分组。没有的列交不可用回执，不用previous_point_end_hp或terminal_deck补造。"
+      },
+      {
+        "id": "cost-semantics",
+        "request": "单房间逐战聚合gross_damage、healing、entry/end_hp与可核净损；多房间保留房间顺序和无法拆分标志，不把节点总损分给个别Boss；输出各指标独立有效n/缺失数。"
+      },
+      {
+        "id": "mechanisms",
+        "request": "在本任务允许证据范围内，补已记录且版本化的卡牌/能力机制（来源/SHA/有效版本）和攻防贡献安全聚合；只有card_id时保持unknown，不从名称或预训练推断流派、输出、防御或核心牌。"
+      },
+      {
+        "id": "snapshot-validity",
+        "request": "terminal牌组/药水补原字段present/empty/missing计数及snapshot timing，不将SQL聚合空数组等同真实空牌组；分清死亡终局、胜利终局、幕后奖励后牌组。"
+      },
+      {
+        "id": "privacy-and-license",
+        "request": "只交脱敏聚合、查询/导出版本及SHA和许可说明。禁止玩家标识、逐玩家/逐局明细、原DB或新下载。"
+      },
+      {
+        "id": "issue50-fourth-requirement",
+        "request": "沿#50第4条及首批原三个unit：按version/build、act_index=2、完整有序Boss路径、boss_position/room_index/point_index、已核floor或缺失、各场结果来源分组。分别输出第一场前资源、两场之间资源、各场后资源；同一Boss死亡组按位置拆分。给配对路径独立上传局n与首/次场删失数，不能把访问序号当F48/F49或把terminal_run_loss直接称输第二场。",
+        "reuse_units": [
+          "external-dual-boss-mapping",
+          "external-dual-boss-entry-resources",
+          "external-dual-boss-deck-and-output"
+        ]
+      }
+    ]
+  }
+}
