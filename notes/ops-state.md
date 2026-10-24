@@ -1,4 +1,4 @@
 state: in-flight
-issue: 36
-updated: 2026-10-24T10:34:29+08:00
-101315二组已核，三提案实际waiting；第一组failed/rc0及retention deferred保留，经验原源/检查发布待接；其他待办见ops-current。
+issue: 48
+updated: 2026-10-24T10:47:14+08:00
+#54三输入/3单元已接原队列待自然native；#48一MD候选待集成员，旧计划held、0/244，实际发布/24h及其他父保持。
