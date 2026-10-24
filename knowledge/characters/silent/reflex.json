@@ -32241,6 +32241,476 @@
           }
         }
       ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c7-c7-1",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "CALCULATED_GAMBLE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "FLICK_FLACK"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c7-c7-1-review",
+        "unit": "label"
+      },
+      "label_en": "Compare whole-hand exchange with keeping usable attack and defense",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-discard-exchange-after-flick-flack"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c7-ops/original/223228/scratch/decision-evidence.json",
+          "sha256": "d22d360945d9843124f1af240762faee4d35f54c08bd7f254baf6d685352af7a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名当前选项/牌组代理/已执行选择；标签为描述性核对提醒，不是因果效应。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 62,
+            "players": null,
+            "selection": "簇7赢家还原范围；三牌齐备25/62仅事后描述，不是标签有效样本"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c7-c7-2",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BACKFLIP"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "FLICK_FLACK"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CALCULATED_GAMBLE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c7-c7-2-review",
+        "unit": "label"
+      },
+      "label_en": "Compare another draw card against the remaining damage and defense needs",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 4
+          },
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 5
+          },
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 9
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-backflip-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c7-ops/original/223228/scratch/decision-evidence.json",
+          "sha256": "d22d360945d9843124f1af240762faee4d35f54c08bd7f254baf6d685352af7a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名当前选项/牌组代理/已执行选择；标签为描述性核对提醒，不是因果效应。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 62,
+            "players": null,
+            "selection": "簇7赢家还原范围；三牌齐备25/62仅事后描述，不是标签有效样本"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c7-c7-3",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "SUCKER_PUNCH"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BACKFLIP"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CALCULATED_GAMBLE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c7-c7-3-review",
+        "unit": "label"
+      },
+      "label_en": "Compare immediate attack and Weak with another draw or random attack",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 6
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-sucker-punch-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c7-ops/original/223228/scratch/decision-evidence.json",
+          "sha256": "d22d360945d9843124f1af240762faee4d35f54c08bd7f254baf6d685352af7a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名当前选项/牌组代理/已执行选择；标签为描述性核对提醒，不是因果效应。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 62,
+            "players": null,
+            "selection": "簇7赢家还原范围；三牌齐备25/62仅事后描述，不是标签有效样本"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c7-c7-4",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "SKEWER"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BACKFLIP"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CALCULATED_GAMBLE"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c7-c7-4-review",
+        "unit": "label"
+      },
+      "label_en": "Keep Skewer X unresolved and compare actual alternatives",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 8
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-discard-skewer-versus-shiv-support"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c7-ops/original/223228/scratch/decision-evidence.json",
+          "sha256": "d22d360945d9843124f1af240762faee4d35f54c08bd7f254baf6d685352af7a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名当前选项/牌组代理/已执行选择；标签为描述性核对提醒，不是因果效应。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 62,
+            "players": null,
+            "selection": "簇7赢家还原范围；三牌齐备25/62仅事后描述，不是标签有效样本"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c7-c7-5",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "FOOTWORK"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BACKFLIP"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c7-c7-5-review",
+        "unit": "label"
+      },
+      "label_en": "Separate owning Footwork from surviving its deployment",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "4YPGHGJD393H",
+            "floor": 11
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-act1-footwork-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-mixed-c7-ops/original/223228/scratch/decision-evidence.json",
+          "sha256": "d22d360945d9843124f1af240762faee4d35f54c08bd7f254baf6d685352af7a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "具名当前选项/牌组代理/已执行选择；标签为描述性核对提醒，不是因果效应。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 62,
+            "players": null,
+            "selection": "簇7赢家还原范围；三牌齐备25/62仅事后描述，不是标签有效样本"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
     }
   ]
 }
