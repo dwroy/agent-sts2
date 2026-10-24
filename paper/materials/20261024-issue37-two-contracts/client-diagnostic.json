@@ -1,0 +1,58 @@
+{
+  "stats": {
+    "decisions": 0,
+    "jevCalls": 0,
+    "deepseekCalls": 0,
+    "deepseekTokens": 0,
+    "claudeCalls": 0,
+    "debounced": 0,
+    "staleSkips": 0,
+    "fallbacks": 0,
+    "acts": 0,
+    "waits": 0,
+    "unsupported": 0,
+    "errors": 3,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "runs": [],
+    "runsCompleted": 0,
+    "stoppedBecause": "circuit breaker: 3 consecutive failures",
+    "elapsedMs": 295,
+    "logPath": "/home/dw/Projects/agent-sts2/.worktrees/issue-37-jev-no-open-book/.artifacts/issue37-two-contracts/profile/.cache/t/s-Gy7YpV/run-plan-merge-dozBU3/decisions.jsonl",
+    "brainPausedMs": 0,
+    "activeElapsedMs": 295
+  },
+  "records": [],
+  "runPlans": [
+    {
+      "ts": "2026-10-02T00:00:00.000Z",
+      "run": "U6RUE7LBUFJF",
+      "floor": 9,
+      "trigger": "review",
+      "plan": {
+        "runId": "U6RUE7LBUFJF",
+        "act": 1,
+        "floor": 9,
+        "hpPct": 0.5,
+        "trigger": "review",
+        "archetype": "old archetype",
+        "want": [
+          "INFLAME"
+        ],
+        "avoid": [],
+        "remove": [],
+        "blockTarget": 5,
+        "elites": "normal",
+        "rest": "auto",
+        "bossPrep": "old boss prep",
+        "summary": "old summary"
+      }
+    }
+  ],
+  "notes": [
+    "state read failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:58200/state: unregistered fixture origin: http://127.0.0.1:58200",
+    "state read failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:58200/state: unregistered fixture origin: http://127.0.0.1:58200",
+    "state read failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:58200/state: unregistered fixture origin: http://127.0.0.1:58200"
+  ],
+  "bodies": []
+}

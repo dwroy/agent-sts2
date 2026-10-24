@@ -6657,3 +6657,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T12:21:05+08:00 [dev #37] 删除Jev开卷交付最终验证：tsc0，单fork完整655文件/6175过/2既有skip，2635输入SHA前后一致；两生产文件仍与#25前09b7aa19b5相同，旧失败/基线复现及测试时钟修复分列保留。交集成员review及ops自然边界发布/首局无开卷无调用错误读回，不改live/STOP或分配发布号。材料paper/materials/20261022-issue37-jev-no-open-book/verification.json。
 
 - 2026-10-24T16:30:12+08:00 [dev #37] 实际profile八败已按2760冻结输入/1417依赖在隔离副本同名复现；缺board配置三包装、缺helper一导入、宿主覆盖与游戏HEAD错配三闭包、长TMPDIR截断一测试分别修正后8定向全过/Python123过/开发与profile三tsc0。仅修验证装配配方和受控缺失程序测试路径，九产品叶及原owner输入SHA不变，未full/动live；原失败/main绿分账保留，交集成员保R430知识重冻后唯一完整检查与自然验收。材料paper/materials/20261024-issue37-profile-rework/。
+
+- 2026-10-24T17:42:42+08:00 [dev #37] 按6382635563原2763输入/1417依赖复现两败：published外部条目误套own字节合同，及旧socket Mod测试与内存fetch助手混用致三次状态读失败/零请求。固定自有/外部/混合证据合同、共用封闭fixture工厂，保deepseekCalls=1/实际请求与计划合并并增零errors/单body断言；forks两文件30过、独立threads外部43过，tsc0。原13败中的11池错误分账，原owner输入/知识不变，本轮full0/取锁0，交review且窗口仍20；材料paper/materials/20261024-issue37-two-contracts/。

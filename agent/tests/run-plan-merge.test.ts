@@ -29,11 +29,10 @@ import { RUN_PLAN_MERGE_FLOORS, RUN_PLAN_MERGE_NOTE, runPlanAtMap, runPlanDueAtQ
 import { RUN_PLAN_TASK, type RunPlan } from "../src/memory/run-plan.js";
 import type { JsonValue } from "../src/core/util/json.js";
 import { loggedKnowledge } from "./logged.js";
-import { ask, board, decide, DIR, env, scriptedDeepSeek, setupOneshotTests, stubJev, type Raw } from "./oneshot-support.js";
+import { ask, board, decide, DIR, env, scriptedDeepSeek, setupOneshotTests, startTestServer, stubJev, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";
 import { baseState, mainMenuPayload, runPayload } from "./scenarios.js";
 import { envelope, sendJson, type TestServer } from "./support.js";
-import { startFixtureServer as startTestServer } from "./fixture-http.js";
 
 setupOneshotTests();
 
@@ -478,6 +477,8 @@ describe("act start in the loop: the Ancient's question carries the act's run pl
       seedPlans(dir, [act1Plan()]);
       const { client, bodies } = await scriptedDeepSeek([{ content, reasoning: "Decisive: o0." }]);
       const { stats, records, runPlans } = await play(dir, actStart(), client);
+      expect(stats.errors).toBe(0);
+      expect(bodies).toHaveLength(1);
       expect(stats.deepseekCalls).toBe(1);
       expect(records.find((r) => r["label"] === "event/act-plan")).toMatchObject({ deepseek: { choice: "o0", route }, run_plan_merge: { outcome: "stored" } });
       expect(runPlans.at(-1)).toMatchObject({ trigger: "act", merged_into: "event/act-plan", plan: { archetype: NEW_PLAN.archetype } });

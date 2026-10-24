@@ -29,6 +29,9 @@ import { loggedKnowledge } from "./logged.js";
 import { envelope, sendJson, type TestServer } from "./support.js";
 import { startFixtureServer as startTestServer } from "./fixture-http.js";
 
+// A scripted mod and scriptedDeepSeek must share this closed fixture registry.
+export { startTestServer };
+
 export type Raw = Record<string, unknown>;
 
 export const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states", "oneshot");
