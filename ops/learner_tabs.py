@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """STS2 learner tab reclamation. Never finish a batch or delete its checkout."""
 import argparse
+import datetime as dt
 import hashlib
 import importlib.util
 import json
@@ -11,7 +12,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from issue_session_support import atomic, load, locks, safe_path, secret_name, stamp, Board
+from issue_session_support import atomic, load, locks, safe_path, secret_name, stamp, Board, require_host_process_view
 import issue_session
 
 SCHEMA = "learner-tab-retirement-v1"
@@ -81,6 +82,10 @@ class LearnerTabs:
         if (any(not isinstance(v, dict) or v.get("phase") not in ("pending", "sending", "done") for v in self.data["events"].values())
                 or any(v not in ("sending", "done") for v in self.data["notices"].values())):
             raise ValueError("invalid learner tab action receipt")
+        self.data.setdefault("retries", {})
+        self.data.setdefault("activity", [])
+        if not isinstance(self.data["retries"], dict) or not isinstance(self.data["activity"], list):
+            raise ValueError("invalid learner tab retry accounting")
 
     def save(self):
         if not self.dry:
@@ -95,8 +100,88 @@ class LearnerTabs:
                 identity = pane if re.fullmatch(r"w[A-Za-z0-9]+:[pt][A-Za-z0-9]+", pane) else "未知身份"
                 handle.write(f"{stamp()[11:16]} [board] #20 学习tab {identity} 回收保留：{reason}；请ops核原批次与learner-tabs.json。\n")
                 handle.flush(); os.fsync(handle.fileno())
-            self.data["notices"][key] = "done"; self.save()
+            self.data["notices"][key] = "done"
+            self.record("needs_ops", key)
         return dict(pane=pane, state="retained", reason=reason)
+
+    def record(self, kind, key):
+        if not self.dry and not any(r.get("kind") == kind and r.get("key") == key for r in self.data["activity"]):
+            self.data["activity"].append(dict(at=stamp(), kind=kind, key=key))
+            self.save()
+
+    def report(self, since, until):
+        start, end = (dt.datetime.fromisoformat(value) for value in (since, until))
+        if start.tzinfo is None or end.tzinfo is None or start >= end:
+            raise ValueError("report requires an ordered timezone-aware window")
+        rows = [r for r in self.data["activity"] if start <= dt.datetime.fromisoformat(r["at"]) < end]
+        return dict(since=since, until=until, inbox_reminders=sum(r["kind"] == "needs_ops" for r in rows),
+                    automatic_tabs_closed=sum(r["kind"] == "closed" for r in rows),
+                    cases_needing_ops=sum(r["kind"] == "needs_ops" for r in rows),
+                    overdue_missing=sum(n >= 3 for n in self.data["retries"].values()),
+                    uncertain_inbox_deliveries=sum(v == "sending" for v in self.data["notices"].values()),
+                    scope="requests for ops intervention, not proof of human handling; legacy actions excluded")
+
+    def defer(self, pane, key):
+        count = self.data["retries"].get(key, 0) + 1
+        if not self.dry:
+            self.data["retries"][key] = count
+            self.save()
+        return dict(pane=pane, state="queued" if count < 3 else "retained", ticks=count,
+                    reason="回执或产物待齐" if count < 3 else "连续三轮仍缺证；保留并在本地回收报告列出")
+
+    def scheduler_end(self, batch, row):
+        path = safe_path(self.root, self.directory / "scheduler.log")
+        pattern = re.compile(rb"[0-9-]{10} [0-9:]{8} learner batch " + batch.encode()
+                             + rb" \([^\r\n]*\) exit ([0-9]+)\n")
+        matches = []
+        with path.open("rb") as source:
+            for line in source:
+                match = pattern.fullmatch(line)
+                if match:
+                    matches.append((int(match[1]), hashlib.sha256(line).hexdigest()))
+        if not matches:
+            raise FileNotFoundError("scheduler finish evidence pending")
+        if len(matches) != 1 or matches[0][0] != row["rc"]:
+            raise ValueError("scheduler finish evidence contradicts batch")
+        return dict(path=str(path.relative_to(self.root)), line_sha256=matches[0][1],
+                    batch_sha256=hashlib.sha256(json.dumps(row, sort_keys=True, separators=(",", ":")).encode()).hexdigest())
+
+    def automatic_owner(self, batch, row, receipt):
+        # A scheduler recovery proves absence, never invents a historical PID birth.
+        require_host_process_view()
+        if birth(row["pid"]) is not None:
+            raise ValueError("supervisor still retiring")
+        unstarted = receipt.get("state") == "not-started" and receipt.get("models_started") == 0
+        if unstarted and (receipt.get("pid") or any(receipt.get(k) or receipt.get("result", {}).get(k) for k in ("session", "turn", "rollout"))):
+            raise ValueError("unstarted batch contradicts native activity")
+        if not unstarted and (receipt.get("state") != "session-ended" or birth(receipt["pid"]) is not None):
+            raise ValueError("terminal batch contradicts native process")
+        output = safe_path(self.root, self.directory / "learner" / (batch + ".out"))
+        expected_output = receipt.get("output")
+        if expected_output and expected_output != dict(path=str(output), sha256=sha(output)):
+            raise ValueError("original output proof changed")
+        if receipt.get("wrapper"):
+            self.wrapper_owner(batch, row, receipt, require_birth=False)
+        event = self.data["events"].get(batch)
+        if event and event.get("phase") != "pending":
+            raise ValueError("tab close acknowledgement uncertain; reconcile explicitly")
+        return self.scheduler_end(batch, row)
+
+    def automatic_seal(self, batch):
+        row, host = self.current(batch)
+        receipt = load(self.receipt_path(batch, ".tui.json", row))
+        evidence = self.automatic_owner(batch, row, receipt)
+        proof = self.seal_proof(batch, row, host, None)
+        proof.update(authority="scheduler-recovery", scheduler=evidence)
+        row2, host2 = self.current(batch)
+        if (row2 != row or host2 != host
+                or self.automatic_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2))) != evidence
+                or self.idle(self.pane(row2, host2, proof["label"]), proof) != proof["identity"]
+                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}) != proof["files"]):
+            raise ValueError("automatic recovery evidence changed")
+        if not self.dry:
+            self.store_seal(batch, row, proof)
+        return proof
 
     def receipt_path(self, batch, suffix, row=None):
         row = load(self.state)["batches"][batch] if row is None else row
@@ -196,7 +281,7 @@ class LearnerTabs:
         proof = self.seal_proof(batch, row, host, birth(row["pid"]))
         return self.store_seal(batch, row, proof)
 
-    def recovery_owner(self, batch, row, receipt):
+    def wrapper_owner(self, batch, row, receipt, *, require_birth=True):
         """Require the original wrapper's persisted identity, never a replacement PID."""
         wrapper = receipt.get("wrapper") or {}
         supervisor = wrapper.get("supervisor") or {}
@@ -206,8 +291,13 @@ class LearnerTabs:
                 or wrapper.get("batch") != batch or wrapper.get("state") != row["state"]
                 or wrapper.get("rc") != row["rc"] or wrapper.get("finished") != row["finished"]
                 or wrapper.get("batch_sha256") != expected or supervisor.get("pid") != row["pid"]
-                or not isinstance(owner_birth, str) or not re.fullmatch(r"[0-9]+", owner_birth)):
+                or (require_birth and owner_birth is None)
+                or (owner_birth is not None and (not isinstance(owner_birth, str) or not re.fullmatch(r"[0-9]+", owner_birth)))):
             raise ValueError("original wrapper supervisor proof missing or changed")
+        return owner_birth
+
+    def recovery_owner(self, batch, row, receipt):
+        owner_birth = self.wrapper_owner(batch, row, receipt)
         if birth(row["pid"]) is not None:
             raise ValueError("recovery requires the original supervisor PID to be absent")
         if receipt.get("state") != "session-ended" or birth(receipt["pid"]) is not None:
@@ -352,15 +442,19 @@ class LearnerTabs:
     def reclaim(self, batch, pane_id):
         row, host = self.current(batch)
         label = batch_label(batch, row)
-        proof = load(self.receipt_path(batch, ".tab-retirement.json", row))
+        destination = self.receipt_path(batch, ".tab-retirement.json", row)
+        proof = load(destination) if destination.exists() else self.automatic_seal(batch)
         if (proof.get("schema") != SCHEMA or proof.get("root") != str(self.root)
                 or proof.get("state_file") != str(self.state) or proof.get("batch") != batch
-                or proof.get("binding") != binding(row) or proof.get("authority") not in ("batch", "ops-recovery") or proof.get("label") != label
-                or proof.get("owner_pid") != row["pid"] or not proof.get("owner_birth") or row["pane"] != pane_id):
+                or proof.get("binding") != binding(row) or proof.get("authority") not in ("batch", "ops-recovery", "scheduler-recovery") or proof.get("label") != label
+                or proof.get("owner_pid") != row["pid"]
+                or (not proof.get("owner_birth") and proof.get("authority") != "scheduler-recovery") or row["pane"] != pane_id):
             raise ValueError("retirement receipt or ownership differs")
-        if birth(proof["owner_pid"]) == proof["owner_birth"]:
+        if proof["owner_birth"] is not None and birth(proof["owner_pid"]) == proof["owner_birth"]:
             return dict(pane=pane_id, state="queued", reason="supervisor still retiring")
         receipt = load(self.receipt_path(batch, ".tui.json", row))
+        if proof["authority"] == "scheduler-recovery" and self.automatic_owner(batch, row, receipt) != proof.get("scheduler"):
+            raise ValueError("automatic recovery evidence changed")
         if proof["authority"] == "ops-recovery":
             recovery = proof.get("recovery") or {}
             self.check_recovery_operator(recovery)
@@ -406,6 +500,9 @@ class LearnerTabs:
             if (row2 != row or self.recovery_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2))) != proof["owner_birth"]
                     or self.files({"evidence": self.root / recovery_evidence["path"]})["evidence"] != recovery_evidence):
                 raise ValueError("ops recovery authority changed before close")
+        if proof["authority"] == "scheduler-recovery" and self.automatic_owner(
+                batch, row2, load(self.receipt_path(batch, ".tui.json", row2))) != proof.get("scheduler"):
+            raise ValueError("automatic recovery evidence changed before close")
         self.data["events"][batch] = dict(phase="sending", pane=pane_id, tab=pane["tab_id"], tail=str(tail_path.relative_to(self.root)))
         self.save()
         self.herdr("tab", "close", pane["tab_id"])
@@ -415,7 +512,8 @@ class LearnerTabs:
         del host["panes"][label]
         atomic(self.host, host)
         self.data["events"][batch].update(phase="done", state="reclaimed", closed_at=stamp())
-        self.save()
+        self.data["retries"].pop(batch, None)
+        self.record("closed", batch)
         return dict(pane=pane_id, state="reclaimed", worktree="original retention worker")
 
     def tick(self):
@@ -437,31 +535,63 @@ class LearnerTabs:
                 pane_id = owned[0].get("pane_id", "") if len(owned) == 1 else tab.get("tab_id", "")
                 owners = [(b, r) for b, r in batches.items() if r.get("pane") == pane_id]
                 if len(owners) == 1 and owners[0][1].get("state") == "running":
+                    if not self.dry:
+                        self.data["retries"].pop(owners[0][0], None); self.save()
                     results.append(dict(pane=pane_id, state="running")); continue
                 try:
                     if len(owned) != 1 or len(owners) != 1:
                         raise ValueError("learner identity or registration missing")
                     results.append(self.reclaim(owners[0][0], pane_id))
+                    if not self.dry:
+                        self.data["retries"].pop(owners[0][0], None); self.save()
                 except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError, subprocess.SubprocessError) as error:
-                    reason = "回执/身份/产物/处置权核验未通过"
-                    if isinstance(error, FileNotFoundError): reason = "回执或产物缺失"
-                    elif isinstance(error, ValueError) and str(error) in ("learner composer is not empty", "shell input readiness is unverified"):
-                        reason = "发现人工输入或输入状态不明"
-                    elif isinstance(error, ValueError) and str(error) == "tab close acknowledgement uncertain; reconcile explicitly":
-                        reason = "关tab回执不确定，禁止自动重关"
-                    results.append(self.warn(pane_id, reason))
+                    key = owners[0][0] if len(owners) == 1 else pane_id
+                    text = str(error)
+                    identity = ("identity", "binding", "bound to", "registration", "title", "other panes", "protected board role")
+                    if isinstance(error, FileNotFoundError):
+                        results.append(self.defer(pane_id, key)); continue
+                    if not self.dry:
+                        self.data["retries"].pop(key, None); self.save()
+                    if text == "supervisor still retiring":
+                        results.append(dict(pane=pane_id, state="queued", reason=text)); continue
+                    # Busy panes, pending ownership and unknown input are expected retention gates.
+                    expected = ("not safely terminal", "host process visibility", "active command", "background work",
+                                "extra foreground", "composer", "input readiness", "unowned agent", "active or replaced")
+                    if any(value in text for value in expected):
+                        results.append(dict(pane=pane_id, state="retained", reason="原保留门未齐；本地记录并下轮重试")); continue
+                    if any(value in text for value in identity) and not self.live_native(owners, owned):
+                        results.append(dict(pane=pane_id, state="retained", reason="绑定证据不足且未见活原生进程；保留本地待核")); continue
+                    results.append(self.warn(pane_id, "绑定失败且原生仍活，或回执/进程/产物存在矛盾"))
         return dict(state="ok", results=results)
+
+    def live_native(self, owners, panes):
+        if len(owners) == 1:
+            try:
+                receipt = load(self.receipt_path(owners[0][0], ".tui.json", owners[0][1]))
+                if type(receipt.get("pid")) is int and birth(receipt["pid"]) is not None:
+                    return True
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+        for pane in panes:
+            if pane.get("agent") == "codex":
+                info = self.herdr("pane", "process-info", "--pane", pane["pane_id"])["process_info"]
+                pid = info.get("foreground_process_group_id")
+                if type(pid) is int and pid != info.get("shell_pid") and birth(pid) is not None:
+                    return True
+        return False
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("tick", "seal", "recover-seal"))
+    parser.add_argument("command", choices=("tick", "seal", "recover-seal", "report"))
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--state-dir", type=Path)
     parser.add_argument("--batch")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--evidence", type=Path, help="existing local review file inside this repository (recover-seal only)")
     parser.add_argument("--apply", action="store_true", help="persist an ops recovery seal; never close a tab")
+    parser.add_argument("--since", help="inclusive ISO timestamp with timezone (report only)")
+    parser.add_argument("--until", help="exclusive ISO timestamp with timezone (report only)")
     args = parser.parse_args(argv)
     if args.apply and (args.command != "recover-seal" or args.dry_run):
         parser.error("--apply is exclusive to recover-seal and cannot be combined with --dry-run")
@@ -469,12 +599,16 @@ def main(argv=None):
         parser.error("recover-seal requires --batch and --evidence")
     if args.evidence and args.command != "recover-seal":
         parser.error("--evidence is exclusive to recover-seal")
-    args.dry_run = args.dry_run or (args.command == "recover-seal" and not args.apply)
+    if (args.command == "report") != bool(args.since and args.until) or (args.command != "report" and (args.since or args.until)):
+        parser.error("report requires --since and --until; other commands do not accept them")
+    args.dry_run = args.dry_run or args.command == "report" or (args.command == "recover-seal" and not args.apply)
     root = args.root.resolve()
     directory = safe_path(root, args.state_dir or root / "ops/codex-ops")
     stage = "configuration"
     try:
         tab = LearnerTabs(root, directory, dry=args.dry_run)
+        if args.command == "report":
+            print(json.dumps(tab.report(args.since, args.until), ensure_ascii=False)); return 0
         if args.dry_run and args.command == "seal":
             raise ValueError("seal cannot run in dry mode")
         stage = "lock"

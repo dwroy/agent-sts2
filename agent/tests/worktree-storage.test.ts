@@ -11,7 +11,7 @@ it("evicts only idle Git copies and restores SHA verified original inputs withou
     encoding: "utf8", timeout: 60_000,
   });
   expect(result.status, result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 18 tests");
+  expect(result.stderr).toContain("Ran 20 tests");
 }, 65_000);
 
 it("grants exact Git metadata for both the independent instance and learner workspace", () => {
