@@ -1,6 +1,6 @@
 state: in-flight
 issue: 27
-updated: 2026-10-24T17:20:48+08:00
+updated: 2026-10-24T17:22:20+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -14,7 +14,7 @@ updated: 2026-10-24T17:20:48+08:00
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
-164302复盘4节/13账本/2提案及1非阻塞显示bug已提交9f6fa4fa；7候选/科学父保持。首dataset取锁前失败/build0，等原策略3138135锁；唯一续接3147286/25814489只构建一次，回收待。paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json。
+164302复盘4节/13账本/2提案及1非阻塞显示bug已提交9f6fa4fa；7候选/科学父保持。17:21旧回调已核/首build0，等3138135原锁；唯一续接3147286/25814489只构建一次，回收待。paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json。
 
 131301数据集938ba222/14叶rc0、回收deferred；R430十ID/四经验消费者缺口保持。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 
@@ -50,7 +50,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-postmortem-164302-followup-ops/handoff-before.md；未清待办。
+本轮前完整交接见paper/materials/20261024-postmortem-164302-prelock-return-ops/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。

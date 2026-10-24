@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-24T17:22:20+08:00",
+  "event_is_original_prelock_failure_return": true,
+  "first_actual_builds": 0,
+  "first_failure_unchanged": {
+    "at": "2026-10-24T17:18:20+08:00",
+    "phase": "registered-before-lock",
+    "error_type": "BlockingIOError",
+    "attempts": 1,
+    "retry_performed": false,
+    "original_stage_retained": true,
+    "next": "original ops inspect local worker log and frozen receipts; no duplicate build"
+  },
+  "existing_single_resume_pid": 3147286,
+  "existing_resume_birth": "25814489",
+  "existing_resume_phase": "waiting-original-paper-dataset-lock",
+  "kernel_wait_verified": true,
+  "kernel_lock_rows": [
+    "120: FLOCK  ADVISORY  WRITE 3138135 08:30:4157958 0 EOF",
+    "120: -> FLOCK  ADVISORY  WRITE 3147286 08:30:4157958 0 EOF"
+  ],
+  "no_actual_build_result": true,
+  "records_commit": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
+  "continuation_commit": "0ed4acd1ffa2ba25d4fb51045c8ee58654c438c9",
+  "new_dataset_or_learning_or_full_or_game": 0,
+  "new_notifications": 0,
+  "no_pending_or_batch_or_retention_write": true,
+  "refs": [
+    {
+      "path": "paper/materials/20261024-postmortem-164302-dataset-ops/failure.json",
+      "bytes": 283,
+      "sha256": "5ae98e4b05c4098c4867f7766a6f8e7f40147d5bbdc13384c1d4cc108726bed7"
+    },
+    {
+      "path": "paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json",
+      "bytes": 1096,
+      "sha256": "5fd5c9d27e4f2c4dc544726990311e9317abddffd09adafa88df432029f84019"
+    },
+    {
+      "path": "paper/materials/20261024-postmortem-164302-dataset-ops/launch.json",
+      "bytes": 853,
+      "sha256": "62d96cf07fccf76bac31d09a2f53c6e1bd7b3032429f625472e61e9ddbfc2631"
+    },
+    {
+      "path": "paper/materials/20261024-postmortem-164302-ops/record-commit.json",
+      "bytes": 1958,
+      "sha256": "8efcc4e554f95c2c8af4897453b4b2bcf53b9ab64c92aee2be4f9935322b0340"
+    },
+    {
+      "path": "paper/materials/20261024-postmortem-164302-followup-ops/record-commit.json",
+      "bytes": 1030,
+      "sha256": "037da0d4b79667ebd3589f9a362b3216725f3aff6b3fca88426427f0237e33e9"
+    }
+  ]
+}

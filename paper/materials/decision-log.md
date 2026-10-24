@@ -6675,3 +6675,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T17:17:44+08:00 [ops] 164302四局复盘4节/13账本/2原提案受控记录；新0617显示bug入非阻塞队列，不改机制/凑收益。7候选/原报告差异保持，接唯一dataset --no-raw，回收及科学父开放。paper/materials/20261024-postmortem-164302-ops/。
 
 - 2026-10-24T17:20:48+08:00 [ops] 164302记录9f6fa4fa已持久化；dataset首次取锁前受3138135普通策略原构建阻塞/build0，原失败保留，唯一3147286续接等原锁后仅一次build，不借其他批结果或重finish/模型/full。paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json。
+
+- 2026-10-24T17:22:20+08:00 [ops] 164302旧registered-before-lock失败回调核同，首实际build0；唯一3147286/25814489仍在3138135原dataset内核锁后等待，无结果，不重开dataset/模型/full或重复通知。9f6fa4fa记录/0ed4acd1续接及回收科学门保持。paper/materials/20261024-postmortem-164302-prelock-return-ops/。
