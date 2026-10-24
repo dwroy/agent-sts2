@@ -5416,3 +5416,14 @@ A221314原无已接受turn/候选，旧rc75和运输submitted=true归档，新�
 
 ### 2026-10-24T22:49:05+08:00 [ops] V6-R445 删牌细化5对已发布
 221313原done/rc0保留，3新情境/2同ID更新，库112策略155rk；10投影复用4旧ID/新增0750～0755六投影，shipped/check0，不计10发现。5策略/5商店摘要rk/5完整rk及题型/A11/跨角色负例真实读回过，13819原窗口SHA核同。2旧ID保原证据/置信度/冲突，新旧谓词、证据、影响/回退见rule-change-notice.json：仅描述标签，服务已用/可用、跨字段预算/历史报价未成自动门，5正式knowledge消费者及自然收益/科学父待。初发写前锁忙原错留档，锁释放/输入核同后续接；持锁32.387秒已释，worker退。A退役/R444回调只去重，未重finish/派发/full/模型/游戏/tick。原窗核完5单元非五槽同时运行，56自有结算/长锁待。原件paper/materials/20261024-issue51-removal-detail-ops/。
+
+
+## 2026-10-24T23:04:45+08:00 [watcher] #51 C7 / V6-R446 confidence原文核验，转Roy（不代ACK）
+
+核 ops 原评论6385736803、watcher-roy-handoff.json、学习者223228原 report / strategy-candidates / evidence-ledger，再与发布前像、源3f7310a5、行为df8c9029和实际live487ce589逐项对比：backflip、sucker-punch的confidence确由学习者0.25赋为0.30；footwork仍0.30。五个原候选仅归档引用路径转换后与源/行为/live完全相同，三项更新的全部旧evidence和evidence_detail_ref均原样保留。这是学习者描述性赋值，不能解读为校准结果、自然采用或收益提高。
+
+须补充精确差异：backflip顶层evidence_status由unassessed→conflict，sucker-punch由conflict→unassessed；后者旧conflict仍完整保留于evidence_detail_ref.evidence_status，不能把“旧conflict保留”说成顶层状态未变。footwork顶层新增conflict。原账本的4YPG/CLA89局部失败和外部反向组合反证保留。sucker-punch顶层状态变化的依据留给原学习者/ops说明，本角色未修改游戏知识或自行解释消除冲突。
+
+已在本会话明确向Roy转达上述差异，并追加本角色通知到notes/for-roy.md及ops/inbox-dev.md；记录不代表Roy已读或ACK。原watcher-roy-handoff及学习通知ACK均未改。1完整剧本消费者、5原card_pick捕获/结果回放、自然采用/独立收益及科学父仍开放；固定查询读回不代这些验收。本轮仅核原文与发布一致性，无新full/模型/游戏/tick或行为发布。
+
+证据：paper/materials/20261024-issue51-c7-confidence-integrator/verification.json（逐项旧/新confidence、顶层与附件状态、原证据保留检查、原件SHA）；原通知/回退沿20261024-issue51-mixed-c7-ops/rule-change-notice.json。

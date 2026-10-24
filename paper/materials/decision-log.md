@@ -6770,3 +6770,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T22:49:05+08:00 [ops] V6-R445 实发221313删牌5对（3新2更新），112策略155rk/10投影shipped/check0，生产读回5对过，T2026-10-24T22:47:16+08:00/live09291d100，锁32.387秒已释/worker退；原证据与R444知识/开关保留。A退役/R444回调去重，full/模型/tick0；5知识消费者/动态正文条件/自然收益/科学父待，原窗核完5单元非五槽验收。原件paper/materials/20261024-issue51-removal-detail-ops/。
 
 - 2026-10-24T22:57:55+08:00 [watcher] #56 P0注册屏障修复56800c05经独立2项真实wrapper固定回归、生产tsc0及唯一full676文件6604过0败2历史跳核验，原PID/锁/2762输入1417依赖/tree/index/result终态核同；正式仅测试尾空格差AST同。持原tick/learn/发布锁精确10叶合main并安装宿主源码，实际提交/区间/后像另见20261024-issue56-registration-integrator/integration-commit；不冒自然加载。23:30兜底/原产出窗保留，五槽/tier/补丁自然效果交ops；原窗5完成单元独立核同。36普通A/B核收6385404782；57单项13过但全局锁组合复现退6385470519，20真实时间/Roy门及学习科学父保持。无新模型/游戏/强tick/finish/在途行或live修改。
+
+- 2026-10-24T23:04:45+08:00 [watcher] #51 C7/R446原文及源/行为/live独立核同：backflip与sucker-punch confidence0.25→0.30均为学习者新赋值，footwork0.30不变，非收益校准；全部旧证据/附件原样保留。精确差异backflip顶层unassessed→conflict、sucker-punch顶层conflict→unassessed但旧附件conflict仍在，已在会话及双收件箱转Roy，后者依据留原学习者/ops说明；不改原handoff/ACK，不代自然收益或科学父验收。1剧本/5原回放等仍待，材料20261024-issue51-c7-confidence-integrator；本轮纯记录无新full/模型/游戏/tick/行为发布。
