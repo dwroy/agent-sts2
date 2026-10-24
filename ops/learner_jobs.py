@@ -10,6 +10,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import external_learning_policy
 import publication_gate
+import learner_registration
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -32,6 +33,18 @@ def hosting(state_dir, key, env_name, default):
 
 
 def start_learner(argv, root, scripts, state_dir, label):
+    barrier = learner_registration.reserve(state_dir, label)
+    try:
+        result = _start_learner(argv, root, scripts, state_dir, label, barrier)
+        if barrier is not None:
+            barrier["pid"] = result[0]
+        return result
+    except BaseException:
+        learner_registration.abort(barrier)
+        raise
+
+
+def _start_learner(argv, root, scripts, state_dir, label, barrier=None):
     """Start a learner batch in the background; returns (pid, pane id or None).
 
     Hosted Codex batches have a detached supervisor and a dedicated interactive pane.
@@ -44,6 +57,9 @@ def start_learner(argv, root, scripts, state_dir, label):
     if publication_gate.learners_held(root, state_dir) or (publication_gate.candidates_only(root, state_dir) and not external):
         raise RuntimeError("learner admission held; only registered external candidates may start")
     launch_env = dict(os.environ)
+    launch_env.pop("LEARNER_REGISTRATION_GATE", None)
+    if barrier is not None:
+        launch_env["LEARNER_REGISTRATION_GATE"] = barrier["path"]
     for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE", "LEARNER_EXTERNAL_SOURCE", "LEARNER_EXTERNAL_SERVICE_TIER"):
         launch_env.pop(name, None)
     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
@@ -452,6 +468,7 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
               "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
               "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    learner_registration.checkpoint(state)
     return result
 
 

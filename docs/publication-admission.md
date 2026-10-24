@@ -8,6 +8,8 @@ waiting 阶段只放行现有外部冻结候选链；普通复盘、经验、修
 
 每个新外部批次在 learn.json 固定 `candidate_mode={schema:candidate-only-v1,merge:no,dispatch_base,worktree}`。wrapper 校验原绑定及实际 HEAD，显式传 merge=no，使用该固定工作树的 launcher 源码；launcher 拒绝覆盖成 live，把模式同时写入 learner_launch 和 external-launch 回执。原权限不变。旧外部批次缺模式时不能在发布等待中冒充候选，不补写其历史。输入仍按原 manifest/SHA 校验，输出仍在独立 worktree/scratch；报告 merged=null 不等于正式入库。
 
+#56 注册组合依赖为冻结 `0d4a20c031b3f9663bc15d2b49a5efc019e604f9`：父事务在完整行（包括 candidate_mode）原子替换并 fsync 文件与目录后释放该 batch 屏障。ready、prepare、check-learner 和 entry 均使用同一个经路径校验的 registration_lock，不再重新等待父 learn.lock；没有批屏障的旧手动入口保持原全局屏障。新准入块不能写死全局锁，也不能通过加超时或跳过绑定校验处理。子进程读完整已发布行，原 entry/launcher 继续核原 PID/租约；后续批次的保存不改先前行。
+
 finish 始终沿原流程保存终态、报告和来源处置；后续准入另判。waiting 的后续只可走候选 check_jobs，不派升阶、Boss 或其他 live writer；共享 ordinary_close 延至门释放后原 tick，定时 dataset snapshot 也延期。候选完成不关闭正式发布、消费者和科学父要求。open_book_refresh 会写忽略层，它独立受全局/发布门和写锁约束，不随候选豁免。
 
 ## 原 ops 发布事务如何接入
@@ -23,7 +25,7 @@ finish 始终沿原流程保存终态、报告和来源处置；后续准入另�
 
 交付必须包含 `publication_gate.py` 及引用它的三处开局入口、调度和 wrapper。脚本闭包自测检查 Git 索引中的待交付集合（新文件须先暂存，未跟踪文件不算），同时识别固定工作树的 launcher 路径；这不是实际已发布证明，部署仍核原提交及运行树。
 
-统一锁序为 learn.lock → game-admission.lock（需要时）→ knowledge-refresh.lock → live-merge.lock。全部非阻塞获取；获取失败释放已得锁。外部 dispatch 在原 learn 事务内取得后两锁，重读冻结来源、核 SHA 并记录不可变 main SHA；prepare 同序重核来源。实际 write/overlay I/O 前释放 learn/game 锁，只保留 refresh/live 串行锁。候选 launcher 从固定 tree 加载，发布改主检出时不混读启动代码。其他已在途 writer 继续受原专用锁与原权限约束，本门不接管它们。
+写事务统一锁序为 learn.lock → game-admission.lock（需要时）→ knowledge-refresh.lock → live-merge.lock。全部非阻塞获取；获取失败释放已得锁。外部 dispatch 在原 learn 事务内取得后两锁，重读冻结来源、核 SHA 并记录不可变 main SHA；已 fsync 注册的 wrapper 在本 batch 屏障后，以 refresh→live 两锁非阻塞复核冻结输入，不再取 learn；没有持刷新/发布锁反向等 learn 的路径。实际 write/overlay I/O 前释放 learn/game 锁，只保留 refresh/live 串行锁。候选 launcher 从固定 tree 加载，发布改主检出时不混读启动代码。其他已在途 writer 继续受原专用锁与原权限约束，本门不接管它们。
 
 ## owner 异常与回退
 

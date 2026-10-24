@@ -83,7 +83,8 @@ def locks(paths):
 
 @contextmanager
 def source_locks(root):
-    # Caller owns learn.lock. Refuse contention instead of inverting the order.
+    # Schedulers/writers own learn; durably registered readers own their batch barrier.
+    # The pair never waits, and no caller acquires learn while holding these locks.
     with locks([Path(root, "ops/knowledge-refresh.lock"), Path(root, "ops/live-merge.lock")]):
         yield
 

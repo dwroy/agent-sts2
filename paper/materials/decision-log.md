@@ -6746,3 +6746,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T21:14:26+08:00 [watcher] #56补交55754e1c原退休负控/真实正控通过，实际R440知识+当前宿主冻结anchor a9c7b252；两tsc0/Python62+109/定向160过，唯一full673文件6601过0败2历史跳，独立核进程退/锁释及2764输入1417依赖/tree/索引语义同；精确14源叶集成main交原ops自然加载/五独立批/原生tier/两小时至少4完成单元，保R441及后续知识与当前队列，未写live或强制tick/模型/游戏/回收。原组装失败及索引stat缓存变化原件保留，#36旧三75/#20/#27与科学父保持。材料paper/materials/20261024-issue56-r2-integrator/。
 
 - 2026-10-24T22:23:13+08:00 [dev #57] 发布专用开局门绑定owner/PID-birth/范围/阶段/token，三个入口及候选merge=no/冻结源码、finish分流和非阻塞统一写锁已实现；13生产叶SHA核同，生产tsc0/沙箱633文件5857项过，额外tools基线与本批52诊断全文同。旧失败、夹具兼容与稀疏原件恢复记录保留；未合main/live、未部署或造号，交集成员原完整检查窗及ops首自然发布窗，原科学父/自然采用不关。材料paper/materials/20261024-issue57-release-admission-gate/，接口docs/publication-admission.md。
+
+- 2026-10-24T23:21:17+08:00 [dev #57] 按6385470519退回，在#56冻结0d4a20c注册组合上将准入统一为逐batch屏障，完整行及candidate_mode先fsync后放行；真实wrapper/ready/prepare/准入/lease与全局锁仍持有的四外部+自有组合过，补迟到全局门/模式篡改/异批屏障负控，未加超时或绕校验。生产tsc0/本树沙箱634文件5859项过、14生产SHA核同；与已报f6238宿主Git依赖4 Python AST及wrapper字节核同。原退回/旧失败/52工具同错保留，未合main/live/部署，交集成员重审及ops原自然窗，科学父不关。材料paper/materials/20261024-issue57-registration-composition/。

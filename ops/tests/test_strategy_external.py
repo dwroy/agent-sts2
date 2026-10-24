@@ -211,6 +211,25 @@ class External(unittest.TestCase):
 
 
 
+    def test_one_validation_per_selected_source_per_tick_and_cached_binding_is_not_mutated(self):
+        self.four_plans()
+        with external.validation_window(),patch.object(external,"read_source",wraps=external.read_source) as read:
+            self.assertTrue(external.ready(self.state,self.root))
+            self.assertEqual(len(self.lanes()),4)
+            self.assertEqual(read.call_count,4)
+            binding,_=external.source(self.root,self.config["plans"][0])
+            binding["entry_ids"].clear()
+            self.assertTrue(external.source(self.root,self.config["plans"][0])[0]["entry_ids"])
+            self.assertEqual(read.call_count,4)
+
+    def test_source_cache_is_tick_local_and_changed_frozen_input_is_revalidated(self):
+        with external.validation_window(),patch.object(external,"read_source",wraps=external.read_source) as read:
+            external.source(self.root,self.plan)
+            (self.root/"frozen/aggregate.json").write_text('{"changed":true}')
+            with self.assertRaises(ValueError):external.source(self.root,self.plan)
+            self.assertEqual(read.call_count,2)
+        with self.assertRaises(ValueError):external.source(self.root,self.plan)
+
     def test_frozen_task_preparation_and_changed_input_stop_before_model(self):
         self.registered()
         tasks = self.tree / "learner/tasks"; tasks.mkdir(parents=True)

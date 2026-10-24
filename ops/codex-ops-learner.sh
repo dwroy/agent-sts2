@@ -12,6 +12,12 @@ export CODEX_OPS_ROOT="$ROOT"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 batch="$1"; runs="$2"; character="${3:-silent}"
 task="${4:-postmortem}"; worktree="${5:-$ROOT}"
+registration_lock="$DIR/learn.lock"
+if [ -n "${LEARNER_REGISTRATION_GATE:-}" ]; then
+  registration_directory="$(cd "$DIR" && pwd -P)" || exit 2
+  [ "$LEARNER_REGISTRATION_GATE" = "$registration_directory/learner/registration/$batch.lock" ] || exit 2
+  registration_lock="$LEARNER_REGISTRATION_GATE"
+fi
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 research_request=""
@@ -72,9 +78,10 @@ cd "$ROOT" || exit 1
 audit_ready=1
 research_base=""
 # herdr-exec writes its PID before this gate, allowing start_learner to return.
-# The parent then binds the request and saves the batch under the same learn.lock.
+# The parent publishes this complete batch under learn.lock, then releases its batch barrier.
+# Legacy/manual wrappers retain the original global barrier until coordinated deployment.
 if [ -n "$research_request" ]; then
-  exec 8> "$DIR/learn.lock"
+  exec 8> "$registration_lock"
   if flock -w 120 8; then
     research_base="$(python3 "$OPS/strategy_research_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err")" || audit_ready=0
     flock -u 8
@@ -86,7 +93,7 @@ if [ -n "$research_request" ]; then
   exec 8>&-
 fi
 if [ -n "$backfill_source" ]; then
-  exec 8> "$DIR/learn.lock"
+  exec 8> "$registration_lock"
   if flock -w 120 8; then
     research_base="$(python3 "$OPS/strategy_${source_kind}_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
     if [ "$source_kind" = external ] && [ "$audit_ready" = 1 ]; then
@@ -100,7 +107,7 @@ if [ -n "$backfill_source" ]; then
   exec 8>&-
 fi
 if [ -n "$implementation_request" ]; then
-  exec 8> "$DIR/learn.lock"
+  exec 8> "$registration_lock"
   if flock -w 120 8; then
     research_base="$(python3 "$OPS/strategy_implementation_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err")" || audit_ready=0
     flock -u 8
@@ -161,7 +168,7 @@ fi
 # Prepare the exact task source after the saved registration and tree exist.
 # The launcher records the fully rendered prompt in its normal learner_launch log.
 if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
-  exec 8> "$DIR/learn.lock"
+  exec 8> "$registration_lock"
   if flock -w 120 8; then
     implementation_task_file="$(python3 "$OPS/strategy_implementation_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err")" || audit_ready=0
     flock -u 8
@@ -172,7 +179,7 @@ if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
   exec 8>&-
 fi
 if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
-  exec 8> "$DIR/learn.lock"
+  exec 8> "$registration_lock"
   if flock -w 120 8; then
     backfill_task_file="$(python3 "$OPS/strategy_${source_kind}_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
     flock -u 8
@@ -194,7 +201,7 @@ for admission_flag in PUBLICATION_ADMISSION.json PAUSE ACCOUNT_DRAIN LLM_DRAIN; 
 done
 if [ "$audit_ready" = 1 ] && [ "$check_admission" = 1 ]; then
   if ! (flock -w 120 8 && nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" --state-dir "$DIR" \
-    check-learner --batch "$batch" --cwd "$worktree" --merge "$learner_merge") 8> "$DIR/learn.lock" >> "$out" 2>> "$err"; then
+    check-learner --batch "$batch" --cwd "$worktree" --merge "$learner_merge") 8> "$registration_lock" >> "$out" 2>> "$err"; then
     audit_ready=0
   fi
 fi
@@ -254,12 +261,12 @@ else
       export LEARNER_BACKFILL_SOURCE="$backfill_source"
     fi
   fi
-  # The parent spawns us before saving the registration. Wait for its state transaction
-  # before either entry point captures the lease; release the lock before running a learner.
+  # Wait for this batch publication before either entry point captures the lease.
+  # A later source validation in the same tick does not hold this batch barrier.
   launcher_source="$ROOT"
   # External candidates import only their immutable source tree during publication.
   [ "$source_kind" != external ] || launcher_source="$worktree"
-  if (flock -w 120 8) 8> "$DIR/learn.lock"; then
+  if (flock -w 120 8) 8> "$registration_lock"; then
     # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
     nice -n 19 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
       -- "$ROOT/agent/node_modules/.bin/tsx" "$launcher_source/learner/run.ts" "${args[@]}"
