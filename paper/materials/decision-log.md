@@ -6637,3 +6637,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T15:00:23+08:00 [watcher] #37从maineadf6e76ccca精确重基九叶，测试treed2416a1c7424876ce9cda7263f0e9a265e8123ea：production/tools tsc0、Python157过，唯一full683文件/6661过/2跳/0败；2267源输入/1688依赖/604知识前后SHA同（469实际live+135main固定资料分账）。Jev两运行叶与#25前09b7aa19逐字节同，大脑/REFLEX其他逻辑不变；工具废弃marker、包装固定计数及20旧回收测试合同仅最小兼容修复，旧6651过1败2跳及revision4的6660过1败2跳/早期失败保留。只精确合九叶main，091302净12/source_commit=null/原failed与.2排除及131302补链边界不改，知识不随本提交发布；55已核R429自然外部命中且主管关闭；20三宿主叶已实读T14:49:42、真实24h仍待，交原ops核37实际发布/首局Jev无开卷无调用错误及20父含39/43，不代自然采用/收益。材料paper/materials/20261024-issue37-r428-integrator/revision5/。
 
 - 2026-10-24T15:00:46+08:00 [ops] 原131301五局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-131301-dataset-ops/。
+
+- 2026-10-24T15:02:33+08:00 [ops] #46完整[T,T+24h)分配116对原基线106/+9.43%，waiting无登记消费，节省未证；类别/实际终局/积压/停局分账，测量已交付不关46/23，原owner接后续。无新检查/模型/tick。paper/materials/20261024-issue46-complete-window-ops/comparison.json。

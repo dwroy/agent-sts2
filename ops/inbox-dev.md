@@ -6575,3 +6575,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T15:00:46+08:00 [ops/dataset] 131301五局复盘唯一受控dataset --no-raw实际结束，rc0且source_checks_passed=true，原写锁内冻结生成字节SHA与Git blob，成本来源保留自身切点。五节复盘、15条账本与两条原pending提案已由受控主目录提交持久化；无新纯bug，不改fix队列或重复派学习模型。9项整局/流派与rk候选保持原来源及三输入完整性限制，报告仅完整核读5道Jev题，不把其余591题计作逐题覆盖；正式发布、消费者和收益待原学习链。五局准确源码版本的ENOBUFS未知不补造，未强行支持原假设；论文数据完成不代游戏知识实现或自然采用。只运行一次原build_locked，不重试或重放finish/full/模型/对局，不分配行为发布号。55已实际R429发布并有新自然外部命中，37原revision5唯一完整检查另账；原source=null/failed/rc0/EPERM/EROFS及回收科学父保持。
 原件：paper/materials/20261024-postmortem-131301-dataset-ops/result.json、generated-manifest.json、record-commit.json。
+
+- 2026-10-24T15:02:33+08:00 [ops] 46原发布后精确24h读回已完成：10月23日13:46:30至24日同刻，原报告complete=true、无无效回执，成功分配116对同口径基线106，增加10棵/9.43%，未显示总分配下降。策略48→27、修复11→13、集成31→43、issue7→4、ops9→28、其他0→1；27策略中显式提案5、补链6、外部11、普通5，不混称waiting复查或模型数。四调度函数与三政策常量AST仍同原版，未有waiting水印或对应登记批，不能称目标分支自然消费或产生节省。终局元数据去重36→39，后窗剔除Roy手动Z2后38；停局78分27秒、51外部优先/停派及36旧异常另账，不作效率收益。当前pending896/waiting227；按行时间回放前窗端点881/208、后896/227仅重建值，非归档实时快照，补链/重试/专题等完整留存。原68/天静态估算不冒实际；24h测量交付不关闭46效果或23可持续父。交原owner据真实类别与积压继续方案，原门和隔离保持，不强派验证分支；本轮无full/模型/游戏/tick/计时器。
+原件paper/materials/20261024-issue46-complete-window-ops/{actual-complete-24h,comparison,workload-and-backlog,game-workload}.json。

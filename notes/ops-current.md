@@ -1,12 +1,12 @@
 state: in-flight
-issue: 36
-updated: 2026-10-24T14:51:20+08:00
+issue: 46
+updated: 2026-10-24T15:02:33+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#55已实际V6-R429/T14:40:19/live ee0680a9b，十二叶/登记/绑定/知识/自有准入释放核过；新局4374764UVEXD自然3题4查（2空2命中）0错/5外部ID及原版本证据读回，ENOBUFS/commit=null不补戳。原autoplay自行续跑不重启，固定模型未部署，旧探针计数0另证纠正为23外部来源。原件paper/materials/20261024-issue55-published-ops/。现回#36，三宿主叶核同，旧三75仍缺退场合同。
-在等谁：#36原080423/083104/084301均needs-attention、retirement=false/无seal，待原恢复/人工草稿合同，不重finish/重派/强关；新监督自然异常回执待。131301五局记录684747828已持久化，无新bug，原唯一dataset2481624/birth24904189于14:48:32原锁执行，终态回执待。#37 revision5原唯一full仍归集成员，不另full或借旧失败；科学父开放。
-下一步：接#36原75监督恢复，等131301数据集结果再核实际生成/提交/回收门，不重dataset/finish。#20三宿主叶无字节差量同批重装T14:49:42，次日14:49:42沿原report核[T,T+24h)实际提醒/关闭读回/介入，独立failure/uncertain及人工证据分账；不强tick/设新计时器。55逐局去重/工具ms与整题时延继续分账，首命中不代收益或科学父完成；46完整门已到、48门18:19:29保持。
+进行中的事：#46原完整24h门已读回，分配116对基线106/+9.43%，策略48→27但集成31→43/ops9→28；目标waiting轮无水印/登记批，四函数/三常量AST核同，未证明自然消费或节省。终局36→39（剔手动Z2后38），停局/51优先/异常分账；原件paper/materials/20261024-issue46-complete-window-ops/。#55实际R429/4374764UVEXD首自然5外部ID已核，完整效率/收益仍待。
+在等谁：#46读回交原owner续方案与主管验收，#23可持续仍失败不关；pending/补链/显式/专题/重试原门保留。新报#37 revision5 full6661过/2跳/0败与窗口释放，待原070cac9b交付/72知识漂移和091302源审计核收；ops未另full。#36旧三75无退场合同保留；131301唯一dataset2481624原事务结果待，20三叶T14:49:42/次日同刻24h待验。
+下一步：核#37最新原件后接实际阶段发布/首局Jev读回，保最新知识、旧失败/source=null与科学父；不借旧结果或重复full。46后续等原调度自然触达waiting分支，不清水印/强派；完整读回已交付，不冒性能改善。继续36原75监督恢复、131301数据集终态和20原24h窗；55逐局去重/工具ms与整题时延分账，48门18:19:29保持。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
@@ -43,9 +43,9 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue55-published-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue46-complete-window-ops/handoff-before.md；未清未完成项。
 
-46原完整基线/命令/AST：paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
+46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
