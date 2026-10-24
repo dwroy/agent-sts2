@@ -6508,3 +6508,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T11:06:45+08:00 [ops/postmortem] 101301两局复盘Q7SFDZSJLULD、EQLB6SK9W9H7已核done/rc0，原native退场及封存SHA一致；两节lessons、9条账本追加（7个ID）和2条原提案按实际字节选出，保留并行记录。整局/流派模板已自然产出5项剧本/rk候选，仅本批自有完整局，人类可比偏离、三输入完整性及正式发布/消费者均待，不能计为48新普通模板采用。新非阻塞0604商店前弃仍可用污浊药水已入原fix队列，复用3477提案，不另派或制定用药规则；原帧核回89金不变，兑换金额/收益未知。账本原check已过；本次追加当前只读check回执后沿原paper-dataset写锁注册唯一一次--no-raw，实际结果与受控生成提交由原worker回报，未完成不冒rc0。37原净组合唯一full归属不动，源commit=null及旧失败保留，不新增模型/full/游戏/finish；原严格回收与科学父不关闭。
 原件：paper/materials/20261024-postmortem-101301-ops/records-review.json、report.md；dataset续接见paper/materials/20261024-postmortem-101301-dataset-ops/。
+
+- 2026-10-24T11:18:10+08:00 [ops/dataset] 101301两局复盘的唯一受控dataset --no-raw已实际结束、rc0且source_checks_passed=true；实际生成字节已在原写锁内冻结SHA与Git blob，成本来源保持自身切点。两节复盘、9条账本追加及2条原pending提案已由上游受控记录提交持久化；0604商店前自动弃可用药水的非阻塞问题已入原fix队列并关联已有3477提案，不另派重复模型或由ops制定游戏知识。本事务只运行一次原build_locked，不自动重试；没有新增full、学习模型、finish、实验或游戏，不分配行为版本。5项整局/流派剧本与rk候选仅本批自有完整局，人类可比偏离、三输入完整性、正式发布和消费者仍待；论文数据完成不代表策略实现、自然采用或收益。37原净组合唯一完整检查按原归属推进，源commit=null及全部旧failed/rc0/EPERM/EROFS/retry未知保留，严格回收与科学父保持。
+原件：paper/materials/20261024-postmortem-101301-dataset-ops/result.json、generated-manifest.json、record-commit.json。

@@ -6575,3 +6575,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T11:01:12+08:00 [ops] 101315 fix两叶净树1a1d9dbea1da待后续完整检查，host定向43过/旧full130-124保留；原37唯一冻结6379020119不混工具候选。核36宿主293ef三叶/48模板09f3，首新自然回执待；首派前3规格r2已接回且原数据不变，本轮无新full/模型/游戏。原件 paper/materials/20261024-fix-101315-ops/continuations.json。
 
 - 2026-10-24T11:06:45+08:00 [ops] 101301两局复盘核原件并选两节lessons/9条账本/2提案；0604非阻塞入原fix队列；受控dataset唯一运行待原回执，不重full/finish/模型，37唯一窗及科学父保持。原件paper/materials/20261024-postmortem-101301-ops/。
+
+- 2026-10-24T11:18:10+08:00 [ops] 原101301两局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-101301-dataset-ops/。
