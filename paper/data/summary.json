@@ -1,18 +1,18 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261024T064832749141Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261024T091438748748Z",
   "performance": {
-    "runs": 469,
-    "finished": 467,
+    "runs": 471,
+    "finished": 469,
     "wins": 18,
     "first_try_wins": 9,
     "sl_wins": 9,
-    "win_rate_finished": 0.039,
-    "mean_floor_finished": 30.88,
+    "win_rate_finished": 0.038,
+    "mean_floor_finished": 30.84,
     "median_floor_finished": 33,
-    "reached_act2": 340,
-    "reached_act3": 164,
+    "reached_act2": 343,
+    "reached_act3": 165,
     "run_ids": [
       "7TQFLQBKRE4S",
       "X80AD9MHAKZW",
@@ -482,13 +482,15 @@
       "XC9AHZH3CZVK",
       "06BV1PZWV14R",
       "P4ZBYNW92PPK",
-      "4374764UVEXD"
+      "4374764UVEXD",
+      "160G2YS143YB",
+      "4CR2N26QAJAV"
     ],
-    "raw_runs": 1001,
+    "raw_runs": 1003,
     "raw_wins": 42,
     "raw_cohorts": {
       "codex": {
-        "runs": 469,
+        "runs": 471,
         "wins": 18,
         "run_ids": [
           "7TQFLQBKRE4S",
@@ -959,7 +961,9 @@
           "XC9AHZH3CZVK",
           "06BV1PZWV14R",
           "P4ZBYNW92PPK",
-          "4374764UVEXD"
+          "4374764UVEXD",
+          "160G2YS143YB",
+          "4CR2N26QAJAV"
         ]
       },
       "deepseek": {
@@ -2055,7 +2059,7 @@
   },
   "raw_cohorts": {
     "codex": {
-      "runs": 469,
+      "runs": 471,
       "wins": 18,
       "run_ids": [
         "7TQFLQBKRE4S",
@@ -2526,7 +2530,9 @@
         "XC9AHZH3CZVK",
         "06BV1PZWV14R",
         "P4ZBYNW92PPK",
-        "4374764UVEXD"
+        "4374764UVEXD",
+        "160G2YS143YB",
+        "4CR2N26QAJAV"
       ]
     },
     "deepseek": {
@@ -3085,27 +3091,27 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-24T06:48:32.322Z",
+  "generated_at": "2026-10-24T09:14:38.391Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 4729452357,
+    "decisions.jsonl": 4772782776,
     "deepseek-reasoning.jsonl": 377746518,
-    "runs.jsonl": 458923,
-    "states.jsonl": 17140692696,
+    "runs.jsonl": 460000,
+    "states.jsonl": 17207252606,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 13893903,
-    "brain.jsonl": 1598016181,
-    "sl-attempts.jsonl": 61794373,
-    "run-config.jsonl": 3420800
+    "run-plans.jsonl": 14418436,
+    "brain.jsonl": 1610927748,
+    "sl-attempts.jsonl": 62070578,
+    "run-config.jsonl": 3445978
   },
-  "runs_total": 1001,
+  "runs_total": 1003,
   "runs_by_outcome": {
-    "defeat": 957,
+    "defeat": 959,
     "victory": 42,
     "aborted": 1,
     "in_progress": 1
   },
-  "runs_finished": 999,
-  "runs_in_runs_jsonl": 996,
+  "runs_finished": 1001,
+  "runs_in_runs_jsonl": 998,
   "wins": [
     {
       "run_id": "9VHPE06AC7R8",
@@ -3405,7 +3411,7 @@
   "raw_floor_max_distribution": {
     "3": 1,
     "5": 3,
-    "6": 3,
+    "6": 2,
     "7": 10,
     "8": 16,
     "9": 16,
@@ -3418,8 +3424,8 @@
     "20": 2,
     "21": 11,
     "22": 25,
-    "23": 36,
-    "24": 33,
+    "23": 37,
+    "24": 34,
     "25": 25,
     "27": 17,
     "28": 18,
@@ -3438,7 +3444,7 @@
     "45": 19,
     "46": 6,
     "48": 167,
-    "49": 49
+    "49": 50
   },
   "floor_max_distribution": {
     "ironclad": {
@@ -3450,7 +3456,7 @@
     },
     "silent": {
       "5": 3,
-      "6": 2,
+      "6": 1,
       "7": 2,
       "8": 10,
       "9": 12,
@@ -3463,8 +3469,8 @@
       "20": 1,
       "21": 6,
       "22": 10,
-      "23": 20,
-      "24": 14,
+      "23": 21,
+      "24": 15,
       "25": 9,
       "27": 8,
       "28": 8,
@@ -3483,7 +3489,7 @@
       "45": 10,
       "46": 3,
       "48": 66,
-      "49": 45
+      "49": 46
     }
   },
   "per_ascension": {
@@ -5068,16 +5074,16 @@
       "excluded": {}
     },
     "silent:A10": {
-      "runs": 423,
-      "finished": 422,
+      "runs": 425,
+      "finished": 424,
       "wins": 7,
       "first_try_wins": 3,
       "sl_wins": 4,
       "win_rate_finished": 0.017,
-      "mean_floor_finished": 30.09,
+      "mean_floor_finished": 30.05,
       "median_floor_finished": 31.0,
-      "reached_act2": 300,
-      "reached_act3": 135,
+      "reached_act2": 303,
+      "reached_act3": 136,
       "run_ids": [
         "MGA0CZDDKC0P",
         "25226ZFLNR1J",
@@ -5501,13 +5507,15 @@
         "XC9AHZH3CZVK",
         "06BV1PZWV14R",
         "P4ZBYNW92PPK",
-        "4374764UVEXD"
+        "4374764UVEXD",
+        "160G2YS143YB",
+        "4CR2N26QAJAV"
       ],
-      "raw_runs": 476,
+      "raw_runs": 478,
       "raw_wins": 8,
       "raw_cohorts": {
         "codex": {
-          "runs": 423,
+          "runs": 425,
           "wins": 7,
           "run_ids": [
             "MGA0CZDDKC0P",
@@ -5932,7 +5940,9 @@
             "XC9AHZH3CZVK",
             "06BV1PZWV14R",
             "P4ZBYNW92PPK",
-            "4374764UVEXD"
+            "4374764UVEXD",
+            "160G2YS143YB",
+            "4CR2N26QAJAV"
           ]
         },
         "deepseek": {
@@ -7512,16 +7522,16 @@
       }
     },
     "silent": {
-      "runs": 461,
-      "finished": 460,
+      "runs": 463,
+      "finished": 462,
       "wins": 17,
       "first_try_wins": 9,
       "sl_wins": 8,
       "win_rate_finished": 0.037,
-      "mean_floor_finished": 30.78,
-      "median_floor_finished": 32.0,
-      "reached_act2": 334,
-      "reached_act3": 159,
+      "mean_floor_finished": 30.75,
+      "median_floor_finished": 31.0,
+      "reached_act2": 337,
+      "reached_act3": 160,
       "run_ids": [
         "C48LLXBGKXQ9",
         "Y6GM2CHWJBEY",
@@ -7983,13 +7993,15 @@
         "XC9AHZH3CZVK",
         "06BV1PZWV14R",
         "P4ZBYNW92PPK",
-        "4374764UVEXD"
+        "4374764UVEXD",
+        "160G2YS143YB",
+        "4CR2N26QAJAV"
       ],
-      "raw_runs": 516,
+      "raw_runs": 518,
       "raw_wins": 18,
       "raw_cohorts": {
         "codex": {
-          "runs": 461,
+          "runs": 463,
           "wins": 17,
           "run_ids": [
             "C48LLXBGKXQ9",
@@ -8452,7 +8464,9 @@
             "XC9AHZH3CZVK",
             "06BV1PZWV14R",
             "P4ZBYNW92PPK",
-            "4374764UVEXD"
+            "4374764UVEXD",
+            "160G2YS143YB",
+            "4CR2N26QAJAV"
           ]
         },
         "deepseek": {
@@ -8598,7 +8612,7 @@
     "claude": 6,
     "deepseek_nonthinking": 7,
     "deepseek_thinking": 50,
-    "deepseek_memory": 936
+    "deepseek_memory": 938
   },
   "per_era": {
     "ironclad:no_fallback": {
@@ -9973,16 +9987,16 @@
       "excluded": {}
     },
     "silent:deepseek_memory": {
-      "runs": 461,
-      "finished": 460,
+      "runs": 463,
+      "finished": 462,
       "wins": 17,
       "first_try_wins": 9,
       "sl_wins": 8,
       "win_rate_finished": 0.037,
-      "mean_floor_finished": 30.78,
-      "median_floor_finished": 32.0,
-      "reached_act2": 334,
-      "reached_act3": 159,
+      "mean_floor_finished": 30.75,
+      "median_floor_finished": 31.0,
+      "reached_act2": 337,
+      "reached_act3": 160,
       "run_ids": [
         "C48LLXBGKXQ9",
         "Y6GM2CHWJBEY",
@@ -10444,13 +10458,15 @@
         "XC9AHZH3CZVK",
         "06BV1PZWV14R",
         "P4ZBYNW92PPK",
-        "4374764UVEXD"
+        "4374764UVEXD",
+        "160G2YS143YB",
+        "4CR2N26QAJAV"
       ],
-      "raw_runs": 516,
+      "raw_runs": 518,
       "raw_wins": 18,
       "raw_cohorts": {
         "codex": {
-          "runs": 461,
+          "runs": 463,
           "wins": 17,
           "run_ids": [
             "C48LLXBGKXQ9",
@@ -10913,7 +10929,9 @@
             "XC9AHZH3CZVK",
             "06BV1PZWV14R",
             "P4ZBYNW92PPK",
-            "4374764UVEXD"
+            "4374764UVEXD",
+            "160G2YS143YB",
+            "4CR2N26QAJAV"
           ]
         },
         "deepseek": {
@@ -12163,16 +12181,16 @@
       "excluded": {}
     },
     "silent:after": {
-      "runs": 461,
-      "finished": 460,
+      "runs": 463,
+      "finished": 462,
       "wins": 17,
       "first_try_wins": 9,
       "sl_wins": 8,
       "win_rate_finished": 0.037,
-      "mean_floor_finished": 30.78,
-      "median_floor_finished": 32.0,
-      "reached_act2": 334,
-      "reached_act3": 159,
+      "mean_floor_finished": 30.75,
+      "median_floor_finished": 31.0,
+      "reached_act2": 337,
+      "reached_act3": 160,
       "run_ids": [
         "C48LLXBGKXQ9",
         "Y6GM2CHWJBEY",
@@ -12634,13 +12652,15 @@
         "XC9AHZH3CZVK",
         "06BV1PZWV14R",
         "P4ZBYNW92PPK",
-        "4374764UVEXD"
+        "4374764UVEXD",
+        "160G2YS143YB",
+        "4CR2N26QAJAV"
       ],
-      "raw_runs": 516,
+      "raw_runs": 518,
       "raw_wins": 18,
       "raw_cohorts": {
         "codex": {
-          "runs": 461,
+          "runs": 463,
           "wins": 17,
           "run_ids": [
             "C48LLXBGKXQ9",
@@ -13103,7 +13123,9 @@
             "XC9AHZH3CZVK",
             "06BV1PZWV14R",
             "P4ZBYNW92PPK",
-            "4374764UVEXD"
+            "4374764UVEXD",
+            "160G2YS143YB",
+            "4CR2N26QAJAV"
           ]
         },
         "deepseek": {
@@ -13246,10 +13268,10 @@
   },
   "api": {
     "jev": {
-      "calls": 134936,
-      "in_tokens": 3152505976,
-      "out_tokens": 48682684,
-      "cost_usd": 134.4499,
+      "calls": 135409,
+      "in_tokens": 3161142590,
+      "out_tokens": 48789765,
+      "cost_usd": 134.8172,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -13275,19 +13297,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 149.7157,
+  "api_cost_total_usd": 150.083,
   "decisions": {
-    "play_total": 517307,
-    "attributed_to_runs": 513570,
-    "unattributed_menu_timeline": 3737,
+    "play_total": 519199,
+    "attributed_to_runs": 515456,
+    "unattributed_menu_timeline": 3743,
     "shadow": 20,
     "by_layer": {
-      "code": 255942,
-      "jev": 107193,
+      "code": 256825,
+      "jev": 107581,
       "deepseek": 12400,
       "claude": 186,
-      "code-fallback": 2385,
-      "jev-plan": 112127,
+      "code-fallback": 2401,
+      "jev-plan": 112608,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -13309,12 +13331,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 537004,
-  "console_logs": 1471,
+  "states_lines_scanned": 539075,
+  "console_logs": 1473,
   "commits": {
-    "total": 8763,
+    "total": 8811,
     "ref_snapshot": {
-      "HEAD": "6847478285de0501a64bdeccbc5020b3f23ee18c",
+      "HEAD": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -13590,6 +13612,7 @@
       "refs/heads/codex-fix-silent-20261024-091302": "d6fc64f56c6cd0e2513e3f8a48e4fd171b3d7222",
       "refs/heads/codex-fix-silent-20261024-101315": "d93277a95c4c894ccc946193a399228ed92cdae2",
       "refs/heads/codex-fix-silent-20261024-131302": "e61ce508b68634c5ea63a00b83fcd50b92259389",
+      "refs/heads/codex-fix-silent-20261024-164315": "e8dd51b732e5876b2c0774758633011d74fc87aa",
       "refs/heads/codex-saving-20261018": "63e53c111a9dda1dc2e35b56f81a3107dbe16116",
       "refs/heads/codex-strategy-regent-20261013-163318": "21f1d7a5d59c84dd9de48097f06ea35fe0f21f6f",
       "refs/heads/codex-strategy-regent-20261013-174019": "a7cd765a44f07ea8d07895a8e12eba1b3c837df9",
@@ -14665,6 +14688,9 @@
       "refs/heads/codex-strategy-silent-20261024-131302": "e61ce508b68634c5ea63a00b83fcd50b92259389",
       "refs/heads/codex-strategy-silent-20261024-131302-s2": "e61ce508b68634c5ea63a00b83fcd50b92259389",
       "refs/heads/codex-strategy-silent-20261024-144312": "23d8749bc3998e8bb50b67305ccadae5d6027f8a",
+      "refs/heads/codex-strategy-silent-20261024-154311": "4a38ebf3ebe0e32b8d93ba87b91ca4d899f89b7a",
+      "refs/heads/codex-strategy-silent-20261024-161310": "66a67f2bc8fa808414ffa2f61bd775a57d1bc2ad",
+      "refs/heads/codex-strategy-silent-20261024-164315": "b6933c7e621aaf75b0c31a912f3178d7607ea82b",
       "refs/heads/codex-v5s-p1p2-shadow-20261016": "70c61acfb118ab284bb950b32495177458a76b2d",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/dev-regent-main-sync-20261014": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -14738,7 +14764,9 @@
       "refs/heads/integrator-41-20261022": "23829290ab4f49b825dad49b69107ef1d3695669",
       "refs/heads/integrator-54-20261024": "e4c1ccee1fd10f3a420468f6ec7a082bc5ff81a3",
       "refs/heads/integrator-high40-compat-20261022": "326d5636f974c57b1a594ae78d75d68feaba838c",
+      "refs/heads/integrator20-channel-boundaries-20261024-1712": "cb3157910ba686c2bff3b4ba74aef4acab815b52",
       "refs/heads/integrator20-minute-20261024": "931e1525012be95e0745a714615da9171201cbef",
+      "refs/heads/integrator20-publication-history-20261024-1623": "8f1fe65fcff5e4184b5ed2f8502cdea9888f3ae2",
       "refs/heads/integrator20-r4-20261022": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
       "refs/heads/integrator20-reclaim-20261024-1315": "977f20c70615710fee4a97f99938cc615362cc49",
       "refs/heads/integrator20-recovery-20261023-1926": "01c4e8db251c1c257b9c5207993be7f76f67d491",
@@ -14779,6 +14807,7 @@
       "refs/heads/integrator37-r428-20261024-1055": "fa16f18059918c7fe96e911761966e689d3e678f",
       "refs/heads/integrator37-refreeze-20261024-1408": "915416e9bf46c3fb8eb55eb7aee1c1618467ead1",
       "refs/heads/integrator37-refreeze-20261024-1435": "77ce2ec45819c60fd824468b4bae0ceac9b1de7a",
+      "refs/heads/integrator37-runtime-rework-20261024-1707": "a0736855cb204bf579b264b40441db3936192eee",
       "refs/heads/integrator40-hotfix-20261022": "0a0f0aa87d7011194a8b0fdba2889ca8b91a96ce",
       "refs/heads/integrator40-periodic-20261023-1810": "88f2bd4d433f48bcdc4c137e8f09054bba97a507",
       "refs/heads/integrator42-20261022": "96ce5946aa0a725d48db011f870a78c3a907b6e1",
@@ -14819,6 +14848,8 @@
       "refs/heads/issue-20-dispatch-minute": "62769aecf2a51e78bf52677bc4f28491f37567b8",
       "refs/heads/issue-20-learner-tabs-recovery": "47c68ed44063ba1ad57a8ccc76a4b182a6b6c9a2",
       "refs/heads/issue-20-learner-tabs-release": "d9ff928b7593e704a6310a3a76cad4d3b510f6e7",
+      "refs/heads/issue-20-reclaim-channel-boundaries": "5705255ee0079f36b14dd0fa7bfd55ff19a31f4a",
+      "refs/heads/issue-20-reclaim-publication-history": "6dbdba42258feb69cb0cf881bb3683d6cff2e2d4",
       "refs/heads/issue-20-reclaim-self-service": "795354122866a319e7b11f30836caed429d00167",
       "refs/heads/issue-23-reclaim-gates": "e69b2fed061cff8b539245afe696ccd2003b2e7f",
       "refs/heads/issue-24-sts2fun-stats": "5c214ea64ea846f9e0679af69418799bb624970f",
@@ -14832,7 +14863,7 @@
       "refs/heads/issue-33-brain-agent-mode": "ad5f37ae638153fe966a3b5b2d945eb8fa400717",
       "refs/heads/issue-35-build-log": "0485abd6f4d0ce8edefb9f747744528fadfbd85c",
       "refs/heads/issue-36-visible-brain-tabs": "6905591f0cf8658df4edc1d19e991f9622f1fe7b",
-      "refs/heads/issue-37-jev-no-open-book": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+      "refs/heads/issue-37-jev-no-open-book": "09a08ac2bf5e90337cac68a6bb4f626149b0e358",
       "refs/heads/issue-4-elite-calibration-20261021": "994cbfb26a7fe27ea491f87c6200f8b44a1db8d5",
       "refs/heads/issue-40-task": "3ae67358d0eeab18f329f57368b7d377d20ea1e3",
       "refs/heads/issue-41-task": "c6428609c0f0a2e40ad0660532393c244df5a766",
@@ -14860,9 +14891,9 @@
       "refs/heads/learner-retention-followup-20261013": "afc7e07adfa8571afc78fa5341b3213dbdf2c675",
       "refs/heads/learning-continuity-20261012": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
-      "refs/heads/live": "ee0680a9b0955b5ce5371597bc8411dce4ca0bcb",
+      "refs/heads/live": "bf2df1cf4b583d3ec7bb6ecf924025b99d2987a7",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "6847478285de0501a64bdeccbc5020b3f23ee18c",
+      "refs/heads/main": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15026,6 +15057,7 @@
       "refs/heads/ops-issue35-r421-net-20261024": "cd8769fca4aa2e208591a2db88d405fa3f86457a",
       "refs/heads/ops-issue36-live-20261023": "c5b4a8a588dadccb59b218d97993de5a55371979",
       "refs/heads/ops-issue36-midnight-20261024": "e6debc3a13f4749b98f55822dd856e753c583b52",
+      "refs/heads/ops-issue37-r429-code-net-20261024": "ee0680a9b0955b5ce5371597bc8411dce4ca0bcb",
       "refs/heads/ops-issue40-hotfix-live-20261023": "66fddba80b6e7f783799d173044c5a4fefb4e17f",
       "refs/heads/ops-issue40-live-net-20261023": "4569d11ff35a1d919ca921061e7383b2921db642",
       "refs/heads/ops-issue42-learning-live-20261022": "00b0fcf5b792cb6b805f4d43c08e2c8daf24a659",
@@ -15259,7 +15291,7 @@
       "refs/ops-source-before/manual-notice-ack-20261020-0034": "dc315aee38a2ab63bbfd312a613f46a039422d35",
       "refs/ops-source-before/ordinary-close-20261020-0102": "a1e3401d96393e7377b284d0479e7ec2b756030a",
       "refs/ops/20261012-0809-exp-baseline-before": "c04da0668154abda77278bf614c7e96090297248",
-      "refs/remotes/origin/HEAD": "6c252a95cf494d38c522751b5856d930d669baf4",
+      "refs/remotes/origin/HEAD": "4f08ce35bdf690db1966673dcc47a9106e4cb4d6",
       "refs/remotes/origin/integrator-20-20261022": "6d512e54f5de342c5faf4bf7e2603cbd5d4e8726",
       "refs/remotes/origin/integrator-20-r2-20261022": "572a18e5a10c7288db29e9e4b07370b7e727d4b3",
       "refs/remotes/origin/integrator-20-r3-20261022": "5c235855809dc0178bb69eb458afd8d37357a2be",
@@ -15282,13 +15314,15 @@
       "refs/remotes/origin/issue-20-dispatch-minute": "62769aecf2a51e78bf52677bc4f28491f37567b8",
       "refs/remotes/origin/issue-20-learner-tabs-recovery": "47c68ed44063ba1ad57a8ccc76a4b182a6b6c9a2",
       "refs/remotes/origin/issue-20-learner-tabs-release": "d9ff928b7593e704a6310a3a76cad4d3b510f6e7",
+      "refs/remotes/origin/issue-20-reclaim-channel-boundaries": "5705255ee0079f36b14dd0fa7bfd55ff19a31f4a",
+      "refs/remotes/origin/issue-20-reclaim-publication-history": "6dbdba42258feb69cb0cf881bb3683d6cff2e2d4",
       "refs/remotes/origin/issue-20-reclaim-self-service": "795354122866a319e7b11f30836caed429d00167",
       "refs/remotes/origin/issue-23-reclaim-gates": "e69b2fed061cff8b539245afe696ccd2003b2e7f",
       "refs/remotes/origin/issue-28-task": "83ea9419187924c3a66b355b14f4b3664651844e",
       "refs/remotes/origin/issue-29-brain-engine-speed": "5ea0fa415b47edcc45a5781de93400b1bb4b9392",
       "refs/remotes/origin/issue-33-brain-agent-mode": "ad5f37ae638153fe966a3b5b2d945eb8fa400717",
       "refs/remotes/origin/issue-36-visible-brain-tabs": "6905591f0cf8658df4edc1d19e991f9622f1fe7b",
-      "refs/remotes/origin/issue-37-jev-no-open-book": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+      "refs/remotes/origin/issue-37-jev-no-open-book": "09a08ac2bf5e90337cac68a6bb4f626149b0e358",
       "refs/remotes/origin/issue-40-task": "3ae67358d0eeab18f329f57368b7d377d20ea1e3",
       "refs/remotes/origin/issue-41-task": "c6428609c0f0a2e40ad0660532393c244df5a766",
       "refs/remotes/origin/issue-44-clock": "110cbd8e113cf2dddf526bc196b8ad2e483b2181",
@@ -15301,7 +15335,7 @@
       "refs/remotes/origin/issue-8-r4-notice-ack": "4fc80c385c6f685dcd426087100eb08104faa705",
       "refs/remotes/origin/issue53-experience-rollback-20261024": "c421b150128bddd7bb88f31292db113f83ba2060",
       "refs/remotes/origin/live": "f90ad2f1921f61466004217ed9a1b9698bd85491",
-      "refs/remotes/origin/main": "6c252a95cf494d38c522751b5856d930d669baf4",
+      "refs/remotes/origin/main": "4f08ce35bdf690db1966673dcc47a9106e4cb4d6",
       "refs/remotes/upstream/HEAD": "002e8739dd0f2625fc7bc859ccd4828de88416cf",
       "refs/remotes/upstream/main": "002e8739dd0f2625fc7bc859ccd4828de88416cf",
       "refs/silent-shutdown-20261019/0067156dd470452e5c53267a0dbe45d0c83b597b": "0067156dd470452e5c53267a0dbe45d0c83b597b",
@@ -15749,6 +15783,7 @@
       "refs/storage-cache/5258b357fa65464d94ed6cdec702cc0c": "51f0fc295ca5d2b0f85946ac4a520d898be02568",
       "refs/storage-cache/5563bdb932b6475aa0a492848211a0b2": "45d864004d9391eea6f9a38229d2bedfe97846dc",
       "refs/storage-cache/57233317d04f4dc58376f8743cabdac4": "177a5561c5716735ba983b1f51dc525bbb02ef0d",
+      "refs/storage-cache/57bc0fcdfb484c6da881b7cfdac8b313": "8f1fe65fcff5e4184b5ed2f8502cdea9888f3ae2",
       "refs/storage-cache/58be2463d9e64789abe63dbab49dea20": "3ee649f69260309677ad075cac726d705a66e6ef",
       "refs/storage-cache/590db7d499da4035b15859b2cb06dfd4": "f557a41a3c0dfa3f4e08ed108195448829c8e97d",
       "refs/storage-cache/59ab4252de634dca86175fbba363cd74": "061ee31620c08f452bc1259bca652ad0774d647d",
@@ -15955,6 +15990,7 @@
       "refs/storage-cache/fc3a16d5a5bc45318e6667cf6e385f53": "4b66590e59d6d342a876e65ad430fec62474ee36",
       "refs/storage-cache/fcd43b4f6b8248269b967d5d4ffe91b6": "0a7c61e55afbc5a1ac0e65b76eb12c8798a1292b",
       "refs/storage-cache/fd25d6baf9f2480eb21a292885163937": "9e6dd82a34fb8c14e012be68fd0b632544f1459f",
+      "refs/storage-cache/fdb13cc9ea5049dfbdcf2dc01a4ca33c": "a213612c65d6262bf4e90ab968b22cb305bed156",
       "refs/storage-cache/fdea471980b54386ad92f8f8bce6cd31": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
       "refs/storage-cache/ff021e52caee44d8a0983fd344f5d424": "1220b94361bb5c8fb4961dc2e93424270fe13d95",
       "refs/storage-cache/ff3978142fd04082bce5b76fd04dfcfd": "5940fdd4c7386040f495c68b9e586d2980305fd1",
@@ -16243,6 +16279,7 @@
       "all-tip:d6fc64f56c6cd0e2513e3f8a48e4fd171b3d7222": "d6fc64f56c6cd0e2513e3f8a48e4fd171b3d7222",
       "all-tip:d93277a95c4c894ccc946193a399228ed92cdae2": "d93277a95c4c894ccc946193a399228ed92cdae2",
       "all-tip:e61ce508b68634c5ea63a00b83fcd50b92259389": "e61ce508b68634c5ea63a00b83fcd50b92259389",
+      "all-tip:e8dd51b732e5876b2c0774758633011d74fc87aa": "e8dd51b732e5876b2c0774758633011d74fc87aa",
       "all-tip:63e53c111a9dda1dc2e35b56f81a3107dbe16116": "63e53c111a9dda1dc2e35b56f81a3107dbe16116",
       "all-tip:21f1d7a5d59c84dd9de48097f06ea35fe0f21f6f": "21f1d7a5d59c84dd9de48097f06ea35fe0f21f6f",
       "all-tip:a7cd765a44f07ea8d07895a8e12eba1b3c837df9": "a7cd765a44f07ea8d07895a8e12eba1b3c837df9",
@@ -16773,6 +16810,9 @@
       "all-tip:fba9cd72d0a407edc34442a4cea4c1c0d481e647": "fba9cd72d0a407edc34442a4cea4c1c0d481e647",
       "all-tip:3a0759222655f4cd35e44f1debc2e2bb288fb3f2": "3a0759222655f4cd35e44f1debc2e2bb288fb3f2",
       "all-tip:23d8749bc3998e8bb50b67305ccadae5d6027f8a": "23d8749bc3998e8bb50b67305ccadae5d6027f8a",
+      "all-tip:4a38ebf3ebe0e32b8d93ba87b91ca4d899f89b7a": "4a38ebf3ebe0e32b8d93ba87b91ca4d899f89b7a",
+      "all-tip:66a67f2bc8fa808414ffa2f61bd775a57d1bc2ad": "66a67f2bc8fa808414ffa2f61bd775a57d1bc2ad",
+      "all-tip:b6933c7e621aaf75b0c31a912f3178d7607ea82b": "b6933c7e621aaf75b0c31a912f3178d7607ea82b",
       "all-tip:70c61acfb118ab284bb950b32495177458a76b2d": "70c61acfb118ab284bb950b32495177458a76b2d",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:a5467387402ef61c26d37720c56e72e6e5dbbcfe": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -16842,7 +16882,9 @@
       "all-tip:23829290ab4f49b825dad49b69107ef1d3695669": "23829290ab4f49b825dad49b69107ef1d3695669",
       "all-tip:e4c1ccee1fd10f3a420468f6ec7a082bc5ff81a3": "e4c1ccee1fd10f3a420468f6ec7a082bc5ff81a3",
       "all-tip:326d5636f974c57b1a594ae78d75d68feaba838c": "326d5636f974c57b1a594ae78d75d68feaba838c",
+      "all-tip:cb3157910ba686c2bff3b4ba74aef4acab815b52": "cb3157910ba686c2bff3b4ba74aef4acab815b52",
       "all-tip:931e1525012be95e0745a714615da9171201cbef": "931e1525012be95e0745a714615da9171201cbef",
+      "all-tip:8f1fe65fcff5e4184b5ed2f8502cdea9888f3ae2": "8f1fe65fcff5e4184b5ed2f8502cdea9888f3ae2",
       "all-tip:380083709f49a06871be39b5c7f0c65e3a6ab5ac": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
       "all-tip:977f20c70615710fee4a97f99938cc615362cc49": "977f20c70615710fee4a97f99938cc615362cc49",
       "all-tip:01c4e8db251c1c257b9c5207993be7f76f67d491": "01c4e8db251c1c257b9c5207993be7f76f67d491",
@@ -16881,6 +16923,7 @@
       "all-tip:fa16f18059918c7fe96e911761966e689d3e678f": "fa16f18059918c7fe96e911761966e689d3e678f",
       "all-tip:915416e9bf46c3fb8eb55eb7aee1c1618467ead1": "915416e9bf46c3fb8eb55eb7aee1c1618467ead1",
       "all-tip:77ce2ec45819c60fd824468b4bae0ceac9b1de7a": "77ce2ec45819c60fd824468b4bae0ceac9b1de7a",
+      "all-tip:a0736855cb204bf579b264b40441db3936192eee": "a0736855cb204bf579b264b40441db3936192eee",
       "all-tip:0a0f0aa87d7011194a8b0fdba2889ca8b91a96ce": "0a0f0aa87d7011194a8b0fdba2889ca8b91a96ce",
       "all-tip:88f2bd4d433f48bcdc4c137e8f09054bba97a507": "88f2bd4d433f48bcdc4c137e8f09054bba97a507",
       "all-tip:96ce5946aa0a725d48db011f870a78c3a907b6e1": "96ce5946aa0a725d48db011f870a78c3a907b6e1",
@@ -16921,6 +16964,8 @@
       "all-tip:62769aecf2a51e78bf52677bc4f28491f37567b8": "62769aecf2a51e78bf52677bc4f28491f37567b8",
       "all-tip:47c68ed44063ba1ad57a8ccc76a4b182a6b6c9a2": "47c68ed44063ba1ad57a8ccc76a4b182a6b6c9a2",
       "all-tip:d9ff928b7593e704a6310a3a76cad4d3b510f6e7": "d9ff928b7593e704a6310a3a76cad4d3b510f6e7",
+      "all-tip:5705255ee0079f36b14dd0fa7bfd55ff19a31f4a": "5705255ee0079f36b14dd0fa7bfd55ff19a31f4a",
+      "all-tip:6dbdba42258feb69cb0cf881bb3683d6cff2e2d4": "6dbdba42258feb69cb0cf881bb3683d6cff2e2d4",
       "all-tip:795354122866a319e7b11f30836caed429d00167": "795354122866a319e7b11f30836caed429d00167",
       "all-tip:e69b2fed061cff8b539245afe696ccd2003b2e7f": "e69b2fed061cff8b539245afe696ccd2003b2e7f",
       "all-tip:5c214ea64ea846f9e0679af69418799bb624970f": "5c214ea64ea846f9e0679af69418799bb624970f",
@@ -16934,7 +16979,7 @@
       "all-tip:ad5f37ae638153fe966a3b5b2d945eb8fa400717": "ad5f37ae638153fe966a3b5b2d945eb8fa400717",
       "all-tip:0485abd6f4d0ce8edefb9f747744528fadfbd85c": "0485abd6f4d0ce8edefb9f747744528fadfbd85c",
       "all-tip:6905591f0cf8658df4edc1d19e991f9622f1fe7b": "6905591f0cf8658df4edc1d19e991f9622f1fe7b",
-      "all-tip:9e8f900dde2df7829d73482bc8ac632af7128c65": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+      "all-tip:09a08ac2bf5e90337cac68a6bb4f626149b0e358": "09a08ac2bf5e90337cac68a6bb4f626149b0e358",
       "all-tip:994cbfb26a7fe27ea491f87c6200f8b44a1db8d5": "994cbfb26a7fe27ea491f87c6200f8b44a1db8d5",
       "all-tip:3ae67358d0eeab18f329f57368b7d377d20ea1e3": "3ae67358d0eeab18f329f57368b7d377d20ea1e3",
       "all-tip:c6428609c0f0a2e40ad0660532393c244df5a766": "c6428609c0f0a2e40ad0660532393c244df5a766",
@@ -16960,9 +17005,9 @@
       "all-tip:afc7e07adfa8571afc78fa5341b3213dbdf2c675": "afc7e07adfa8571afc78fa5341b3213dbdf2c675",
       "all-tip:bb25df38fe110eb70268c00aa5414da69aa9afe2": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
-      "all-tip:ee0680a9b0955b5ce5371597bc8411dce4ca0bcb": "ee0680a9b0955b5ce5371597bc8411dce4ca0bcb",
+      "all-tip:bf2df1cf4b583d3ec7bb6ecf924025b99d2987a7": "bf2df1cf4b583d3ec7bb6ecf924025b99d2987a7",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "all-tip:6847478285de0501a64bdeccbc5020b3f23ee18c": "6847478285de0501a64bdeccbc5020b3f23ee18c",
+      "all-tip:9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -17117,6 +17162,7 @@
       "all-tip:902206965e0698253fab1f9a135c9666bdd1ed3b": "902206965e0698253fab1f9a135c9666bdd1ed3b",
       "all-tip:cd8769fca4aa2e208591a2db88d405fa3f86457a": "cd8769fca4aa2e208591a2db88d405fa3f86457a",
       "all-tip:e6debc3a13f4749b98f55822dd856e753c583b52": "e6debc3a13f4749b98f55822dd856e753c583b52",
+      "all-tip:ee0680a9b0955b5ce5371597bc8411dce4ca0bcb": "ee0680a9b0955b5ce5371597bc8411dce4ca0bcb",
       "all-tip:66fddba80b6e7f783799d173044c5a4fefb4e17f": "66fddba80b6e7f783799d173044c5a4fefb4e17f",
       "all-tip:4569d11ff35a1d919ca921061e7383b2921db642": "4569d11ff35a1d919ca921061e7383b2921db642",
       "all-tip:00b0fcf5b792cb6b805f4d43c08e2c8daf24a659": "00b0fcf5b792cb6b805f4d43c08e2c8daf24a659",
@@ -17312,7 +17358,7 @@
       "all-tip:9f4245511181c6228cf63dc44700ea28ccf35730": "9f4245511181c6228cf63dc44700ea28ccf35730",
       "all-tip:dc315aee38a2ab63bbfd312a613f46a039422d35": "dc315aee38a2ab63bbfd312a613f46a039422d35",
       "all-tip:c04da0668154abda77278bf614c7e96090297248": "c04da0668154abda77278bf614c7e96090297248",
-      "all-tip:6c252a95cf494d38c522751b5856d930d669baf4": "6c252a95cf494d38c522751b5856d930d669baf4",
+      "all-tip:4f08ce35bdf690db1966673dcc47a9106e4cb4d6": "4f08ce35bdf690db1966673dcc47a9106e4cb4d6",
       "all-tip:c255682f53107cfbc09fd46e384c031c52812f59": "c255682f53107cfbc09fd46e384c031c52812f59",
       "all-tip:f90ad2f1921f61466004217ed9a1b9698bd85491": "f90ad2f1921f61466004217ed9a1b9698bd85491",
       "all-tip:002e8739dd0f2625fc7bc859ccd4828de88416cf": "002e8739dd0f2625fc7bc859ccd4828de88416cf",
@@ -17360,10 +17406,10 @@
       "all-tip:f761bec50b384df82f515e06ee2effa22ed17588": "f761bec50b384df82f515e06ee2effa22ed17588"
     },
     "upstream": 19,
-    "experiment": 8744
+    "experiment": 8792
   },
   "postmortems": {
-    "runs_with_heading": 972,
+    "runs_with_heading": 976,
     "preloop_listed": 13
   },
   "source_checks_passed": true
