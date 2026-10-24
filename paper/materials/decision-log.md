@@ -6617,3 +6617,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T13:47:02+08:00 [ops] #55唯一full6545过/2跳/0败及两tsc0核同，实际26库分页探针过；原写前learn锁失败保留，原续接2311814登记2194413自然边界，尚未发布，不重full/模型。20后置，科学父/自然采用开放。paper/materials/20261024-issue55-publication-ops/preflight.json、publication-state-at-handoff.json。
 
 - 2026-10-24T14:06:02+08:00 [ops] #55原2311814/2194413自然边界与自有准入实核存活，未发布/R428保持；冻新版本外部条目自然读回合同，旧14:04题24KB错误只作发布前反例。主管P0顺序55上线/命中后回36，20待办保留，不重检查/模型/worker/轮询。paper/materials/20261024-issue55-natural-priority-ops/。
+
+- 2026-10-24T13:25:30+08:00 [watcher] #27 13:13原16通知独立实收：32实际投递窗/32份回执、16本轮事件与2处原主管转达窗逐字节核同；CLI/原rc2/历史实收核同，67冻结证据沿旧核收链保留。15原ACK身份范围拒绝及000402精确原wrapper缺仍pending，正式两角色ACK0/Roy接收未证，不代理、不重试绕门、不重复主管或原通知，科学父不关；记录paper/materials/20261024-1313-notices-integrator/receipt.json，本轮无测试/full/生产写入。
+
+- 2026-10-24T14:09:47+08:00 [watcher] #55原full原始JSON/SHA独立核6545过/2跳/0败、两tsc0、13:43:09释放与worker退场；原事务仍等原局自然终态发布，核收6380722110不代新自然验收。接#37 revision4 main3a30f304重基八叶anchor915416e9bf46，43原件核同；当前469 live知识与main额外135固定数据分账冻结604，净12与catalog唯一行保source_commit=null/原failed边界；production/tools tsc0、Python123过，唯一隔离full14:08:57实际启动尚无终态，专用检查锁不长占发布锁，保55优先通道，未合产品/live。材料paper/materials/20261024-issue37-r428-integrator/revision4/。
