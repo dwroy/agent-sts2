@@ -1,0 +1,66 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    base_branch: 'main',
+    batch: 'ordinary-fixed-batch',
+    character: 'ironclad',
+    character_dir: 'knowledge/characters/ironclad',
+    character_name: '铁甲战士',
++   experience_path: 'knowledge/characters/ironclad/experience.json',
+    logs_dir: '/fixed/project/logs',
+    merge: 'live',
+    merge_dir: '/fixed/project/.worktrees/live',
+    project_root: '/fixed/project',
+    runs: 'FIXED_RUN',
+
+    at assert (/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-normal-integrator/render-check.ts:35:12)
+    at Object.<anonymous> (/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-normal-integrator/render-check.ts:61:60)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object.transformer (/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/register-OY9cqBEN.cjs:9:3619)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:335:3)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:235:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    runs: 'FIXED_RUN',
+    character: 'ironclad',
+    worktree: '/fixed/project/.worktrees/review',
+    logs_dir: '/fixed/project/logs',
+    scratch: '/fixed/project/.worktrees/review/learner/runs/fixed',
+    character_name: '铁甲战士',
+    base_branch: 'main',
+    project_root: '/fixed/project',
+    character_dir: 'knowledge/characters/ironclad',
+    batch: 'ordinary-fixed-batch',
+    experience_path: 'knowledge/characters/ironclad/experience.json',
+    merge: 'live',
+    merge_dir: '/fixed/project/.worktrees/live'
+  },
+  expected: {
+    runs: 'FIXED_RUN',
+    character: 'ironclad',
+    worktree: '/fixed/project/.worktrees/review',
+    logs_dir: '/fixed/project/logs',
+    scratch: '/fixed/project/.worktrees/review/learner/runs/fixed',
+    character_name: '铁甲战士',
+    base_branch: 'main',
+    project_root: '/fixed/project',
+    character_dir: 'knowledge/characters/ironclad',
+    batch: 'ordinary-fixed-batch',
+    merge: 'live',
+    merge_dir: '/fixed/project/.worktrees/live'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.3
