@@ -71,3 +71,5 @@ nice -n 19 python3 -B eval/sts2fun_build_view.py \
 #51 原ops可以冻结这四表与对应代表轨迹作为学习输入。入口代码、统计数据、样本核对通过，不等于构筑剧本已产出、正式策略/rk已发布、消费者已读回或自然收益；科学父保持。无需变更现有 external_stats 查询文件、live 或大脑。
 
 ops 新增语义核查按 `boss-semantics.json` 的8项 availability 回执保留不可用项；`--kind boss-semantics` 可分页读取。160轨迹是#54新授权输入，不冒充旧085327批aggregate-only已经读过的范围；旧批仍由原owner冻结后接续，waiting不伪造完成。
+
+2026-10-24追加：自有四表/完整代表局、独立分母并列与外部`.run`决策字段可用性，见 [追加统计口径](own-build-statistics.md)。原builds-v1与旧批冻结字节不变。
