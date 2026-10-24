@@ -1,0 +1,44 @@
+{
+  "issue": 54,
+  "role": "watcher",
+  "recorded_at": "2026-10-24T09:21:18.440993+08:00",
+  "source_code": "7d756c824858cb6bce9750ba5605fc785f95467b",
+  "source_tip": "8b082b5b6ea7b68e496e42547d851de320e0cdc2",
+  "baseline": "0d60e7be4b614d01e5319f85bbd4c756defce476",
+  "source_leaves_unchanged_before_after": 17,
+  "manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+  "checks": {
+    "tsc_exit": 0,
+    "tsc_command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx --prefix agent tsc -p agent/tsconfig.json --noEmit",
+    "vitest_files": 4,
+    "vitest_passed": 91,
+    "python_fixture_tests_included": 10,
+    "vitest_workers": 1,
+    "file_parallelism": false,
+    "independent_accounting": "sample-verification.json",
+    "all_row_accounting": "assembly.json",
+    "all_pairs_bounded_hash_readback": "bounded-readback.json",
+    "cache_byte_replay_exit": 0,
+    "cache_byte_replay": "reproducibility.txt",
+    "full_started": 0
+  },
+  "scopes": {
+    "game_or_model_starts": 0,
+    "live_or_brain_changes": false,
+    "pipeline_or_cursor_changes": false,
+    "old_085327_scope_expanded": false,
+    "player_identifiers_selected": false,
+    "roy_manual_STOP_untouched": true,
+    "learning_input_freeze": "pending original ops",
+    "formal_strategy_or_rk_publish": "not claimed",
+    "scientific_parent_51_closed": false
+  },
+  "limitations": [
+    "0 BH-significant combinations; associations do not establish causal uplift.",
+    "6291 valid-ID projected terminal reconstructions; intermediate accuracy and initial snapshots remain uncertain.",
+    "Uploaded rows are not independent players.",
+    "Boss outcomes/HP remain proxies; actual entry snapshots, verified floor and historical mechanics unavailable.",
+    "New #54 timelines are separate from original 085327 aggregate-only freeze."
+  ],
+  "dev_receipt": "../20261024-issue54-build-stats-dev/receipt.json"
+}

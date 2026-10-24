@@ -1,0 +1,79 @@
+{
+  "issue": 54,
+  "source_commit": "7d756c824858cb6bce9750ba5605fc785f95467b",
+  "base_commit": "08269ee6fc39cabae776b4f3f06388bc47c79884",
+  "branch": "issue-54-external-build-stats",
+  "recorded_at": "2026-10-24T09:16:54.953027+08:00",
+  "checks": {
+    "tsc": {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0
+    },
+    "directed_vitest": {
+      "files": [
+        "external-build-stats.test.ts",
+        "external-stats-tools.test.ts",
+        "reward-external-stats.test.ts",
+        "external-strategy-evidence.test.ts"
+      ],
+      "files_passed": 4,
+      "tests_passed": 91,
+      "workers": 1,
+      "file_parallelism": false,
+      "receipt": "directed.txt"
+    },
+    "python": {
+      "command": "nice -n 19 python3 -B eval/tests/test_sts2fun_build_stats.py",
+      "passed": 10,
+      "exit_code": 0
+    },
+    "independent_accounting": "sample-verification.json",
+    "deterministic_byte_replay": "reproducibility.txt",
+    "staged_gitleaks": "passed; no leaks"
+  },
+  "artifacts": {
+    "root": "knowledge/external/sts2fun/builds-v1",
+    "manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+    "games": 6348,
+    "clusters": 8,
+    "archetype_cells": 40,
+    "combinations": 29518,
+    "timeline_cells": 40,
+    "boss_cells": 482,
+    "ordered_boss_path_groups": 425,
+    "representative_games": 160,
+    "winner_loser_pairs": 80,
+    "normalized_terminal_strict_n": 6291,
+    "enriched_bh_q05_n": 0
+  },
+  "scope": {
+    "full_tests_started": 0,
+    "model_starts": 0,
+    "game_starts": 0,
+    "live_or_brain_changes": false,
+    "pipeline_or_cursor_changes": false,
+    "player_identifiers_read": false,
+    "old_085327_input_scope_expanded": false,
+    "scientific_parent_closed": false,
+    "integration": "pending integrator"
+  },
+  "boss_semantics": {
+    "request_comment": "https://github.com/dwroy/agent-sts2/issues/54#issuecomment-6377901783",
+    "boss_records": 13518,
+    "known_proxy_n": 13518,
+    "unknown_n": 0,
+    "hp_conflict_n": 0,
+    "duplicate_boss_visit_n": 0,
+    "availability_items": 8,
+    "true_entry_snapshot_and_verified_floor": "unavailable; no new fields exported",
+    "ordered_position": "observed order only; never verified floor"
+  },
+  "limits": [
+    "No BH-significant combinations; no causal uplift claims.",
+    "6291 strict reconstructions compare normalized valid IDs; one invalid terminal card ID was excluded by the pinned projection.",
+    "Native upload rows are not independent players; player clustering unknown.",
+    "New #54 representative traces are distinct from old #51 aggregate-only batch; original ops must freeze inputs before learning resume.",
+    "No learning strategies, live/rk publication or consumer adoption claimed."
+  ]
+}
