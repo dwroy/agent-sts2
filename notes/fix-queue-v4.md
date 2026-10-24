@@ -1588,3 +1588,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-24T09:11:53+08:00 [ops] ops-external-report-contract-20261024进展：已在strategy-external模板明确将同一规范JSON写report.md末尾代码块并输出同一对象；源b6399f1d/main6b013cb4，实际090927任务已核含该条款。原校验器及085327等旧failed/rc0/原报告不改；是否解决须等新批真实report_proof，不提前关闭格式项。paper/materials/20261024-issue51-card-proxy-ops/actual-task-input.json。
 
 - 2026-10-24T09:29:34+08:00 [ops/#51] 外部策略数据量增加后，kb_strategies宽泛*的来源metadata先于裁剪超过24KB，现返回要求精确ID；23精确ID实读通过。保留现有边界，不在full0窗口改运行代码；请原工具owner按来源/条目一致的有界封包补修并独立验证，不截断证据。paper/materials/20261024-090927-strategy-result-ops/actual-live-consumers.json。
+
+  - 2026-10-24T11:01:12+08:00 [ops] 上述1595封包缺陷已有101315两叶未提交候选，净tree 1a1d9dbea1daf87597c30056cf71f69c6a71db91；host定向2文件43过，原沙箱完整130/124与58项可见失败保持，待原37当前冻结实际退出后的窗口，不重复实现或借本full。原工作树/root scratch保留，未标已修/上线。paper/materials/20261024-fix-101315-ops/verification.json。

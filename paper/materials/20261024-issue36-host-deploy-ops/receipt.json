@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-24T10:56:14+08:00",
+  "issue": 36,
+  "main_commit": "293ef1bdff78b9ffadabe7738f916f07ca8ec869",
+  "host_runtime_bytes": [
+    {
+      "path": "learner/lib/herdr.ts",
+      "sha256": "508d1dbd780bae11c7ef624a28f0921626e2fc2ad8447d191329c58ddcffa48e",
+      "main_exact": true,
+      "root_actual": "/home/dw/Projects/agent-sts2/learner/lib/herdr.ts"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "sha256": "b9accdce9e40957130c0ceb3a69fd040dfd1e16c1a6a6e53609211298b2108b3",
+      "main_exact": true,
+      "root_actual": "/home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh"
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "sha256": "c96480ca4679d406157db6b925af5068f02026be783fa3cabc2b2a7d52b08617",
+      "main_exact": true,
+      "root_actual": "/home/dw/Projects/agent-sts2/ops/learner_tui.py"
+    }
+  ],
+  "wrapper_mode": "100644",
+  "root_entry_actual": "original learner_jobs -> ROOT/ops/codex-ops-learner.sh -> ROOT/learner/run.ts + root learner_entry.py; root learner_tui.py import verified",
+  "host_needs_copy_or_restart": false,
+  "natural_effect": "new root supervisors/native launches load current host sources; existing native/tasks/receipts preserved, no hot replacement claim",
+  "first_new_supervisor_T": null,
+  "first_natural_new_behavior_receipt": null,
+  "post_merge_new_supervisor_batches": [],
+  "old_supervisor_boundary": [
+    {
+      "batch": "20261023-124241-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 328703,
+      "pane": "w1H:pC2",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261023-151302-s2-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 1033180,
+      "pane": "w1H:pCC",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261023-174301-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 1694456,
+      "pane": "w1H:pCJ",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261023-175037-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 1755499,
+      "pane": "w1H:pCK",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261023-194330-s2-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 2127287,
+      "pane": "w1H:pCQ",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261024-080423-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 704518,
+      "pane": "w1H:pDA",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261024-083104-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 786147,
+      "pane": "w1H:pDD",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261024-084301-strategy-proposal",
+      "state": "awaiting_review",
+      "supervisor_pid": 835575,
+      "pane": "w1H:pDE",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true
+    },
+    {
+      "batch": "20261024-104301-strategy-proposal",
+      "state": "running",
+      "supervisor_pid": 1542703,
+      "pane": "w1H:pDS",
+      "new_root_bytes_do_not_prove_old_supervisor_reload": true,
+      "birth": "23431310",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "actual_old75_read_only_cases": [
+    {
+      "batch": "20261024-080423-strategy-proposal",
+      "receipt_sha256": "b575b935e8f827410373baa0ba43f3ca04e23f473f763f707c6309cf67a7b814",
+      "log_sha256": "8b7313d2e6d2b1038311f57441115f383286ac6e32206ed4dbc0afc57554d0a3",
+      "terminal_75_hold_only": true,
+      "wrong_launcher_rc_rejected": true,
+      "original_receipt_log_unchanged": true
+    },
+    {
+      "batch": "20261024-083104-strategy-proposal",
+      "receipt_sha256": "fd74deee8bf301c2881fc0e8636b00041fb7e019eb70a81da874ed99c561211a",
+      "log_sha256": "a21c7726e19ca1248c748ec6b27e4684d4cf7bdc2709fb9e39f7168834f41a18",
+      "terminal_75_hold_only": true,
+      "wrong_launcher_rc_rejected": true,
+      "original_receipt_log_unchanged": true
+    },
+    {
+      "batch": "20261024-084301-strategy-proposal",
+      "receipt_sha256": "f380ecbac26e3aef315e44f5d8b555f1bf8845a93208cdae5ed2d16c81a41a4c",
+      "log_sha256": "280bb5117bf12d66e1080e3965bafb2368973b1cb99665e5d105e04d9b4fed52",
+      "terminal_75_hold_only": true,
+      "wrong_launcher_rc_rejected": true,
+      "original_receipt_log_unchanged": true
+    }
+  ],
+  "finish_recover_retire_replay_signals_issued": 0,
+  "full_tests_started": 0,
+  "directed_admission": "original integrator tsc0/280TS/96Python/2830 input SHA; full0 preserved",
+  "original_failures_091302_101315_and_scientific_parents_preserved": true,
+  "next_full": "original37→20 must explicitly cover current #51 six host paths/#54 scripts/this increment; do not borrow old full",
+  "next": "on original natural startup/terminal receipt verify current source boundary and input-hold/bounded75 classification; no forced batch or old75 finish"
+}

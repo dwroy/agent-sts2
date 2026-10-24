@@ -1,0 +1,244 @@
+{
+  "first_attempt_exit": 130,
+  "full_exit": 124,
+  "complete": false,
+  "observed_files": 628,
+  "observed_cases": 5783,
+  "passed": 5725,
+  "failed": 58,
+  "skipped": 0,
+  "failures": [
+    {
+      "test": "× tests/brain-agent-mode.test.ts > serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 9ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > mounts all six #26 tools through the same MCP and retains controller role/ascension identity 4ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after calls limit 4ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after time limit 1ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > honors a configured answer reserve larger than half the question budget 1ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 73ms",
+      "detail": "→ unsupported dsh composition; admission held"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > does not renew the tool allowance when the same question recovers after an engine error 7ms",
+      "detail": "→ expected [Function] to throw error including 'fixed service failure' but got 'listen EPERM: operation not permitted…'"
+    },
+    {
+      "test": "× tests/brain-agent-mode.test.ts > a previous question's delayed limit callback cannot cancel the next question 1ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-reflex-knowledge.test.ts > serves rk through the production MCP with the same provenance and unchanged combat-off consumer 22ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-reflex-knowledge.test.ts > uses the same engine's answer reserve after a real rk lookup consumes the call allowance 13ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/brain-query-guidance.test.ts > bounds an oversized strategy provenance envelope without dropping evidence from a returned entry 15ms",
+      "detail": "→ expected undefined to be true // Object.is equality"
+    },
+    {
+      "test": "× tests/strategy-external.test.ts > external admission, source proof, original writer gates and retirement use fixed aggregates 835ms",
+      "detail": "→ spawnSync nice EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for empty 159ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for invalid JSON 186ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for truncated JSON 185ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for non-object 199ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for unsuccessful 192ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for missing ok 167ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for missing data 183ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for null data 180ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for missing screen 188ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for null screen 168ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for non-string screen 165ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > does not report ready for blank screen 181ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > rejects HTTP 204 even with a valid-looking state body 67ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > rejects HTTP 302 even with a valid-looking state body 64ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > rejects HTTP 404 even with a valid-looking state body 50ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > rejects HTTP 503 even with a valid-looking state body 53ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > rejects curl transport failures even with a complete body 47ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > reports the validated screen from one response without a second read 113ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > launch-game mod readiness > keeps polling until an unsuccessful envelope becomes a valid state 184ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > keeps fixed HTTP responses independent of inherited game instance bindings 112ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves a small COMBAT state envelope 111ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves a small CARD_SELECTION state envelope 103ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves a small MAP state envelope 104ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves the complete ASCII state beyond 20000 characters 99ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves the complete Chinese state beyond 20000 characters 116ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > preserves the complete nested arrays state beyond 20000 characters 111ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"\" 101ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{broken\" 101ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"[]\" 129ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{\\\"ok\\\":false}\" 107ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{\\\"data\\\":{\\\"screen\\\":\\\"CARD_SELECTION\\\",\\\"turn\\\":6}}\" 107ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{\\\"ok\\\":true}\" 100ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{\\\"ok\\\":true,\\\"data\\\":{}}\" 108ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > returns an explicit error for an invalid response \"{\\\"ok\\\":true,\\\"data\\\":{\\\"screen\\\":\\\"COMBAT\\\",\\\"value\\\":NaN}}\" 103ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > does not report success for HTTP 302 58ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > does not report success for HTTP 503 42ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/ops-mod-state.test.ts > mod-state complete response > reports a transport failure without printing a partial state 48ms",
+      "detail": "→ spawnSync bash EPERM"
+    },
+    {
+      "test": "× tests/brain-agent-codex.test.ts > Codex app-server exposes only gkb, keeps all isolation switches and records native effort plus tool results 14ms",
+      "detail": "→ listen EPERM: operation not permitted 127.0.0.1"
+    },
+    {
+      "test": "× tests/temp-lifecycle.test.ts > owned temporary files > defaults to the common repository disk before a child starts and cleans on failure 161ms",
+      "detail": "→ expected false to be true // Object.is equality"
+    },
+    {
+      "test": "× tests/temp-lifecycle.test.ts > owned temporary files > keeps caller-owned child scratch on a successful smoke command 116ms",
+      "detail": "→ spawnSync /home/dw/.local/node/bin/node EPERM"
+    },
+    {
+      "test": "× tests/temp-lifecycle.test.ts > owned temporary files > reports a missing offline executable as a failure 90ms",
+      "detail": "→ expected '' to contain 'ENOENT'"
+    },
+    {
+      "test": "× tests/learner-cherry-pick-recheck.test.ts > rechecks an exact narrow publication without inventing source ancestry or rewriting failures 15051ms",
+      "detail": "→ Test timed out in 15000ms."
+    },
+    {
+      "test": "× tests/brain-decision-dataset.test.ts > checks five-type dataset projection, version timing and first-trajectory outcome censoring 166ms",
+      "detail": "→ expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown"
+    },
+    {
+      "test": "× tests/learner-launch-failures.test.ts > nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure 1908ms",
+      "detail": "→ expected '................\\n-------------------…' to contain 'Ran 15 tests'"
+    },
+    {
+      "test": "× tests/brain-card-distill.test.ts > checks offline dataset dispatch, censoring, run splits and entry leakage boundaries 210ms",
+      "detail": "→ expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown"
+    },
+    {
+      "test": "× tests/check-imports.test.ts > relative imports > all resolve 154ms",
+      "detail": "→ expected [ Array(1) ] to deeply equal []"
+    }
+  ]
+}

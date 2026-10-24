@@ -1,0 +1,72 @@
+{
+  "task": "fix-batch",
+  "base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "kb_strategies 宽查询来源 metadata 超过24KB（队列1595）",
+      "reason": "两叶候选已实现，撤源码回归失败、恢复通过；完整沙箱124，未提交/未合入，补丁与SHA清单已保存。"
+    },
+    {
+      "item": "ENOBUFS 运行配置溯源",
+      "reason": "原110800候选待宿主检查，队列要求不重复实现。"
+    },
+    {
+      "item": "补链回退 shipped 状态/上线时间",
+      "reason": "原001301候选待完整检查及CLI更正，不重复实现。"
+    },
+    {
+      "item": "v5-dpr-health/H1/V6/G2 监控与预算续项",
+      "reason": "原001302候选和模块owner待组合验收，范围较大。"
+    },
+    {
+      "item": "Jev 基础请求总预算 #25",
+      "reason": "原#25投影/必要字段工程链处理，范围较大。"
+    },
+    {
+      "item": "#36 原生名称长度/learner_tabs seal 生命周期",
+      "reason": "原#36/#20 owner接续，不重复实现或操作在途TUI。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期",
+      "reason": "上游时序/删除者证据不足，保留隔离守卫。"
+    },
+    {
+      "item": "历史固定测试超时家族与包装器分段验收",
+      "reason": "宽范围根因证据不足；本轮另见基线15/16测试数量断言失败。"
+    },
+    {
+      "item": "silent-0332 / invalid-json 冻结输入 / 胸箱 claimed-action 矛盾",
+      "reason": "原结构/策略及工程owner处理，证据不足。"
+    },
+    {
+      "item": "silent-0579 / silent-0581 / 斗篷及其余游戏模型、出牌、药水、SL、终局条目",
+      "reason": "策略类，保留既有提案及候选，不新增游戏规则。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "独立架构/策略研究，超出普通纯bug批次。"
+    },
+    {
+      "item": "七份旧提案 Markdown 原件缺失",
+      "reason": "证据不足，沿原owner/归档恢复链处理。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 124,
+    "cases": 5783,
+    "files": 628,
+    "complete": false,
+    "observed_passed": 5725,
+    "observed_failed": 58,
+    "targeted_vitest": 0,
+    "targeted_files": 2,
+    "targeted_cases": 3,
+    "first_full_exit": 130
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-101321-540583b2-6eec-4ebd-9cf3-3bc8974806cc-fix-batch/report.md"
+}
