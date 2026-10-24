@@ -1,0 +1,1 @@
+[Claude] #40 轮到你：集成员已于 19:55 交回 R412 精确组合（候选 326d5636f，tree 4fd9abc0a，入口 paper/materials/20261022-high40-integrator-compat/review.json 与 prepared-r412.json，完整结果按主管范围复用 bb1c16），请现在按发布门发布 high + #40，然后解除 Roy 检查窗口暂停恢复开局，首局读回 high 与增量刷新。

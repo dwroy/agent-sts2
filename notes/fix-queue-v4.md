@@ -1551,3 +1551,46 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] 2026-10-22T09:19:40+08:00 **infra-jev-base-request-budget-issue25-20261022（原#25基础设施预算续项，非对局阻塞）**：R411首DFY完整103条Jev日志中26条基础请求超过24000B、最大56272B，全部无open_book；带开卷76条均≤23021B。实际live agent/src/reflex/jev/client.ts:28按23000-baseBytes限附加资料，base超限只不加料、未收缩原题面，不能称总预算守住。沿#25原工程链核投影/压缩与必要字段保留，固定超限原样例及回答/无错误对照；不改游戏机制、unknown保护或造成功。证据paper/materials/20261022-issue25-readback-ops/first-run-Jev-readback.json逐条offset/bytes/SHA及receipt.json。本轮仅记录、未改源码/派批/重full/API。
 
 - 2026-10-22T09:59:45+08:00 **infra-jev-base-request-budget-issue25-20261022 原项补证（非新缺陷）**：094302-fix核26原请求后，现有投影/压缩固定诊断仍11/26超24000B、最大37383B；最大原56272B/plan40771B。两模块与R411 live SHA同，但固定探针COMBAT_ENTRIES=on不代生产配置/预算验收。普通批未改源，沿原#25工程链处理投影/必要字段契约，保候选/unknown/审计，不删事实、抬预算、空合并或重复该诊断/模型/full。原学习者报告“太大”是本批处置边界，非已修/已发或需Roy再次批准。paper/materials/20261022-0955-ops/receipt.json。
+
+- [ ] 2026-10-23T01:23:42+08:00 [ops/#36] 学习交互配置隔离阻塞：011301复盘及011302主/s2原三批在模型前以inherited-tui-config-not-isolated(code3)拒绝，非额度/登录归因；codex3 learner唯一拒绝键service_tier，brain预检过。复用#36原owner/候选，不另派模型实现；待Roy裁决先备份仅删learner该行或原dev修显式覆盖键合同，保持普通服务档/沙箱/账号权限。五局原attempts1/一小时重试及两策略失败保留，未即时重派/dataset/live发布。原件 paper/materials/20261023-0113-ops/receipt.json；issue36评论6346893335。
+
+  - 2026-10-23T01:27:16+08:00 [ops/#36接续] 同分钟第四批011302-fix亦在TUI配置隔离门code3/零模型退出，原retry_at保留；无报告/源码/自测/合入，不重做001301四叶账本候选。补交36评论6346951782，原件 paper/materials/20261023-0124-ops/receipt.json。
+
+  - 2026-10-23T01:49:18+08:00 [ops/#36接续] 014302主/s2同一隔离拒绝models0原件保留；仅清理已由原CLI显式覆盖的本地learner service_tier，修改前备份learner-config-backups/20261023-0143/config-before.toml，其他配置/实际服务档/权限不变；四cwd原隔离预检现通过。配置阻塞已修，不据此称自然TUI/36发布完成，原批不即时重派/回收。原件 paper/materials/20261023-0143-ops/receipt.json；36评论6347387540。
+
+- [ ] 2026-10-23T02:22:05+08:00 [ops/#36] 原生agent名长度适配：021302主策略TUI已起但完整稳定label41字符被herdr rename以invalid_agent_name(1–32)拒绝，任务未投递，75/stopped=false且原监督/pB7保留。已交原dev36旧会话，独立短agent名与稳定pane label/批次/租约持久绑定，保一次性marker/native接受/人工草稿/退场保护，补真实长度负例和主s2/fix/复盘标签测试。原43叶full不代新修复full；不另起模型/重放/回收原TUI，受控接续另核。原件 paper/materials/20261023-0215-ops/receipt.json；评论6348039423。
+
+
+- [ ] 2026-10-23T09:30:26+08:00 [ops/#33] **infra-run-config-git-status-enobufs-20261023（非阻塞溯源缺口）**：R417首批8局的16条run-config均原样记录git status failed: spawnSync git ENOBUFS，code.commit/code/dirty/branch为null；前次06:21已发现，此次补全分母，不当新游戏故障。当前实际live58叶/统一R417与绑定由独立证据核对，不能反填旧config或据请求配置宣称原生证明。入口agent/src/eye/run-config.ts codeInfo单次execFileSync git status失败后清空全部code字段；具体输出/资源根因待原工程链用固定数据核实，不预断为maxBuffer问题。沿原修复队列补可靠HEAD/branch与有界dirty溯源及失败负例，保原错误，不伪造成功/版本、不热切在途进程、不另开模型或实验局。本轮仅记录。原件paper/materials/20261023-issue33-natural-followup-ops/config-audit.json、byte-refs.json、actual-source-verification.json；#33评论6355179196。
+
+  - 2026-10-23T12:00:11+08:00 [ops接续] 110800-fix-batch仅留下两叶ENOBUFS候选，树578a1e5c2d3405f13f11ce8d3708bbb5b4fe54f4；固定8过、撤码7败，tsc0，沙箱完整检查已有47败后中断130，无最终分母、提交或live合入。候选/原失败与15合入冲突均保留，原ops按发布队列做最新live精确两叶宿主补验；后批不要重复实现或改旧config，勿夹入#36。原件paper/materials/20261023-1151-ops/fix-candidate.json；原补丁learner/runs/20261023-110707-3a276094-e844-4c1a-89b8-cab0797ddc86-fix-batch/run-config-complete.patch。
+
+- 2026-10-23T13:09:16+08:00 [ops] 非阻塞原件可恢复性：110001策略报告核七份旧提案Markdown缺失，预期SHA见本批proposal-original-readback.json；复用原ID查原owner/保留归档，不以另一提案或摘要替代、不派新模型。原报告paper/materials/20261023-1306-ops/20261023-110001-strategy-proposal-report.md；本轮不删除相关研究工作树。
+
+- 2026-10-23T14:29:59+08:00 [ops/#36 原闭环] 原134302自动完成及finished守卫已过，但wrapper无条件调用尚未发布的ops/learner_tabs.py，main/live均不存在，实际seal ENOENT；非游戏纯工程缺口，交原#36 owner与#20适配器边界定向处理。保failed/rc0、原native/wrapper SHA、attention和pane，不向已退出监督补seal、不另派学习模型。原件paper/materials/20261023-1419-ops/natural-acceptance.json。
+
+- 2026-10-23T15:18:44+08:00 [ops 原silent-0328/167b20链补证，非新派单] 141301三叶候选未提交：原11项定向过/有效负控2败9过/tsc0，原full日志45失败但缺rc文件且宿主已无本树进程；两个单例EPERM仅解释各自，不重任务/改排除名单或强合live知识。沿原候选/集成检查窗口核精确三叶及旧20261020重叠候选，保留原ID、证据/科学父。原件paper/materials/20261023-1509-ops/candidate-141301.json。
+
+- 2026-10-23T15:29:17+08:00 [ops/复盘144301] 非阻塞纯bug，复用 silent-0579 / silent-proposal-08f9b6f1658b5d7b：HD6BM39PYL21 F27/T6，感染棱柱单步题漏算技能新污染，防御后净损报5而原题核为11。未证明修正后能赢；沿原提案由策略学习者补实现及固定用例，不由ops补机制或另派模型。原报告：learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/report.md；agent/src/reflex/combat.ts:163。
+
+- 2026-10-23T16:44:49+08:00 [ops/0579原候选接续] 154301原三叶已冻结，复用silent-proposal-08f9b6f1658b5d7b，不重复开发：定向9过/有效负控3败，原sandbox45失败无终局且已无本树进程，未提交/未live；待原宿主完整窗口在最新live精确组合/分类失败，现有发布优先序保持。口径补充：11/17是后继意图下当前攻击分量，非实发生HP扣减，也未证明改线/获胜；当前A11保持等价。原件paper/materials/20261023-1637-ops/host-check-handoff.json。
+
+- 2026-10-23T17:18:10+08:00 [原v5-dpr-health/H1监控适用性去重续证，ZF8PX27B46H5] ZF8四流原cut复算同：648决策/35脑题/0计划/2配置。3条F33/T1缺模拟均是战斗CARD_SELECTION，Jev完成、无fallback，SL1/2/3各一次，共12候选不算12故障。源码战斗选牌无deepseek，B3只在deepseek分支执行；旧监控按selection/add标签误纳，沿原H1/v5-dpr-health→001302六叶包补适用性回归，不新建学习或热改输入。82必需计算零失败/降级，构筑34/34评估及脑接收、33choice、零计划due；30校准缺口pending。readiness30/30、combat51/51、ranking30/30、G2 30/30齐全；adaptive74产出、69完整/5预算部分，最小22样本不代300完整门。15排序阶段13超时、31比较5超时，冷暖/排队/首回及最长11281ms保留，阶段样本不相加、不推耗时因果。原owner树在但未实投/启动修复；告警和宽父保留，无重启/配置/源码变更。 固定回归保真实构筑缺模拟、V6实际缺表、未知/错误负控，不能按selection/add或V6开关全豁免；不由ops补游戏机制。原件：paper/materials/20261023-1706-module-health-ops/review.json、original-alert.json。按module事件不常规通知watcher/Roy。
+
+- 2026-10-23T19:49:12.552424+08:00 [sandbox-glob-startup-race既有项补证，不重复派修] 194330-s2在thread/start构造bubblewrap时，rg扫描并行194330树.aws/.codex遭ENOENT，原native PID退、session/bindings空、TUI75。保原启动失败、任务/回执，不放宽沙箱/deny、不重派或归因具体删除者；沿原启动/生命周期链处理。paper/materials/20261023-1926-ops/strategy-startup-failure.json。
+
+- [ ] 2026-10-23 21:05 CST [ops] **infra-proposal-repair-no-source-waiting-20261023**：204301为原193545补链、无proposal_ids，两waiting已通过no_change/links=[]，resolve仍走unassigned_proof强要实际live合入，继而生成自身repair并会递归派模型。缺源已由ops真实提交f3f439cf49解决，经验宿主检查/发布未完；本轮仅暂停此一递归repair并保failed/rc0，普通学习不拦。后续工程修复应分别验证补链waiting、真实implemented/duplicate必须live祖先、未知/伪造报告拒绝；不得伪造merge、放宽发布/科学验收。原件paper/materials/20261023-2104-ops/strategy-review.json。
+
+- 2026-10-24T04:44:45.944183+08:00 运维codex：041301复盘新非阻塞纯bug silent-0581：W546CNAWY3RG SILENT A10 F21第四试T4，d509984 entry_budget_ms=0/timed_out时只搜根节点空过，被combat-plan作为only line执行；s529386四张0费SHIV playable=true未执行。原turn-solver.ts4206/4233、combat-plan.ts3755仅当前live定位，精确历史运行SHA因ENOBUFS缺失；16为牌面和，未实打，不承诺胜负收益。沿原silent-proposal-146784d761377d66自动strategy-proposal链核固定夹具/安全退化，不直接改预算、无条件出牌或另派重复模型。旧silent-0461在2敏捷8挡斗篷窗口重现，沿本队列2026-10-14 06:40/f4eb、1375/1460等旧项补证，原1b4fa1eb9328efed继续；学习者“fix-queue未列”仅本窗口，不能说历史队列无0461。不属运行卡死，无重启/杀进程。原件learner/runs/20261024-041321-8b1c485e-9875-4fde-870b-bdf7fcf10c4f-postmortem/{budget-truncation-proposal.md,cloak-modified-preview-proposal.md}。
+
+- 2026-10-24T09:03:40+08:00 [ops] ops-external-report-contract-20261024（待原#51模板/启动合同owner）：085327 rc0原生最终JSON、result.json和调度report一致，但report.md缺task JSON代码块，触发strategy_backfill_jobs.report_proof的严格一致性守卫。未来strategy-external任务须明确把同一规范JSON写入report.md代码块并输出同一对象；保留旧失败/科学waiting/原文件，不弱化校验或借新结果覆盖旧批。081200/082457报告差异另保原件；本批精确证据paper/materials/20261024-085327-strategy-result-ops/report-contract-diagnosis.json。纯格式合同修正，不涉及游戏知识或实验，不代证据补足；本轮未改代码/模板。
+
+- 2026-10-24T09:11:53+08:00 [ops] ops-external-report-contract-20261024进展：已在strategy-external模板明确将同一规范JSON写report.md末尾代码块并输出同一对象；源b6399f1d/main6b013cb4，实际090927任务已核含该条款。原校验器及085327等旧failed/rc0/原报告不改；是否解决须等新批真实report_proof，不提前关闭格式项。paper/materials/20261024-issue51-card-proxy-ops/actual-task-input.json。
+
+- 2026-10-24T09:29:34+08:00 [ops/#51] 外部策略数据量增加后，kb_strategies宽泛*的来源metadata先于裁剪超过24KB，现返回要求精确ID；23精确ID实读通过。保留现有边界，不在full0窗口改运行代码；请原工具owner按来源/条目一致的有界封包补修并独立验证，不截断证据。paper/materials/20261024-090927-strategy-result-ops/actual-live-consumers.json。
+
+  - 2026-10-24T11:01:12+08:00 [ops] 上述1595封包缺陷已有101315两叶未提交候选，净tree 1a1d9dbea1daf87597c30056cf71f69c6a71db91；host定向2文件43过，原沙箱完整130/124与58项可见失败保持，待原37当前冻结实际退出后的窗口，不重复实现或借本full。原工作树/root scratch保留，未标已修/上线。paper/materials/20261024-fix-101315-ops/verification.json。
+
+- 2026-10-24T11:06:17+08:00 [ops/postmortem 101301，非阻塞] EQLB6SK9W9H7 A10/F31：agent/src/hand/screens/shop.ts:48 开店前自动丢弃仍合法可用的污浊药水，移除保留/使用比较；d513351/s532909→532910 实际金币89→89。复用账本silent-0604及已有提案silent-proposal-3477e3a0ce08a7c6，交原策略学习链，不重复派提案；不强制兑换、不补未知金额或胜负收益。当局源码戳ENOBUFS未知，现存分支只作定位。证据：learner/runs/20261024-101320-cf99629d-d335-4914-8d46-c886cdcfa3fa-postmortem/shop-foul-bug-evidence.json。
+
+- 2026-10-24T11:21:39+08:00 [ops/104301候选续接] silent-0581/原silent-proposal-146784d761377d66已有三叶候选，未提交/未发布：原版负控1败3过、候选定向2文件9过；原full只见11失败且无终态退出码，22处整分支合并冲突保持。按最新live精确集成须待37原唯一窗实际释放，勿重复派提案或借其full。CLI注册仍pending，学习者报告waiting不冒正式处置。原件paper/materials/20261024-strategy-104301-ops/verification.json、commit-candidate.patch。

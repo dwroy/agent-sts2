@@ -1,0 +1,104 @@
+diff --git a/ops/learner_tui.py b/ops/learner_tui.py
+index 683cfcf6e..9c61b24ef 100644
+--- a/ops/learner_tui.py
++++ b/ops/learner_tui.py
+@@ -232,11 +232,11 @@ def finished(state, batch, path, output, launcher_rc, supervisor):
+     if (value.get("pid") != supervisor or supervisor != os.getppid() or supervisor <= 1 or fields[0] in ("Z", "X")
+             or value.get("state") not in ("done", "failed", "rejected") or not value.get("finished")
+             or value.get("rc") != code or code == 75
+-            or (code == 0 and value.get("state") != "done")
+             or value.get("pane") != receipt.get("pane") or not receipt.get("pane")
+             or receipt.get("label") != label
+             or Path(value.get("worktree", Path(state).parents[2])).resolve() != Path(receipt.get("cwd", "")).resolve()):
+         raise ValueError("original terminal batch or supervisor authority is missing")
++    # Native rc describes transport completion; the finish audit owns semantic done/failed/rejected.
+     receipt["wrapper"] = {"version": 1, "batch": batch, "state": value["state"], "rc": code,
+         "launcher_rc": int(launcher_rc), "finished": value["finished"],
+         "supervisor": {"pid": supervisor, "birth": fields[19]},
+diff --git a/ops/tests/test_learner_wrapper_completion.py b/ops/tests/test_learner_wrapper_completion.py
+index 87eee637b..2392bea4c 100644
+--- a/ops/tests/test_learner_wrapper_completion.py
++++ b/ops/tests/test_learner_wrapper_completion.py
+@@ -114,13 +114,68 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         self.assertEqual(len(self.attention_files()), 1)
+         self.assertRegex(self.attention_files()[0].name, r"^[0-9]+-[a-z][a-z0-9-]*\.md$")
+ 
+-    def test_artifact_audit_failure_retains_pane_and_emits_attention(self):
++    def test_semantic_failure_preserves_failed_rc_zero_and_seals_transport(self):
+         env = self.prepare()
+         result = self.run_wrapper(dict(env, FIXTURE_FINISH_STATE="failed"))
+-        self.assertEqual(result.returncode, 75)
+-        self.assertNotIn("wrapper", json.loads(self.receipt.read_text()))
+-        self.assertFalse((self.root / "seal-args.json").exists())
+-        self.assertEqual(len(self.attention_files()), 1)
++        self.assertEqual(result.returncode, 0)
++        value = json.loads(self.receipt.read_text())
++        self.assertEqual(value["result"]["code"], 0)
++        self.assertEqual(value["wrapper"]["state"], "failed")
++        self.assertEqual(value["wrapper"]["rc"], 0)
++        self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "failed")
++        self.assertTrue((self.root / "seal-args.json").exists())
++        self.assertEqual(self.attention_files(), [])
++
++    def test_empty_fix_audit_stays_failed_while_native_completion_is_recorded(self):
++        self.prepare()
++        tree = self.root / ".worktrees/codex-dev"
++        tree.mkdir(parents=True)
++        self.value["cwd"] = str(tree)
++        self.rows[0]["payload"]["cwd"] = str(tree)
++        report = {"task": "fix-batch", "base": "a" * 40, "fixes": [], "merged": None,
++                  "tests": {"tsc": None, "vitest": None, "cases": 0}, "code_proposals": []}
++        message = json.dumps(report)
++        self.rows[-1]["payload"]["last_agent_message"] = message
++        self.value["result"]["message"] = message
++        self.native.write_text("".join(json.dumps(row) + "\n" for row in self.rows))
++        self.save()
++        output_dir = self.directory / "learner"
++        output = output_dir / (self.batch + ".out")
++        output.write_text(message + "\n")
++        batch = {"task": "fix-batch", "character": "silent", "worktree": str(tree), "pid": os.getpid(),
++                 "pane": self.value["pane"], "finished": "fixed", "proposal_policy": "Roy-2026-10-07-learning"}
++        spec = importlib.util.spec_from_file_location("semantic_checks", REPO / "ops/learner_checks.py")
++        checks = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(checks)
++        events = []
++        # Exercise the real acceptance gate. This empty report must never run replacement checks or Git.
++        with patch.object(checks.subprocess, "run", side_effect=AssertionError("unexpected check or Git invocation")):
++            self.assertIsNone(checks.verify_empty_fix(report, batch, str(self.root)))
++            checks.finish_write_batch(self.batch, batch, 0, str(self.root), str(output_dir),
++                                      lambda *args: events.append(args), lambda _: None, run_checks=False)
++        self.assertEqual((batch["state"], batch["rc"]), ("failed", 0))
++        self.assertNotIn("no_changes", batch)
++        self.assertNotIn("checks", batch)
++        self.assertEqual(batch["report"]["tests"], {"tsc": None, "vitest": None, "cases": 0})
++        state = self.directory / "learn.json"
++        state.write_text(json.dumps({"batches": {self.batch: batch}}))
++        before = state.read_bytes()
++        with patch.object(tui.os, "getppid", return_value=os.getpid()):
++            tui.finished(state, self.batch, self.receipt, output, "0", str(os.getpid()))
++        value = json.loads(self.receipt.read_text())
++        self.assertEqual((value["wrapper"]["state"], value["wrapper"]["rc"]), ("failed", 0))
++        self.assertEqual(state.read_bytes(), before)
++        self.assertEqual(value["result"]["code"], 0)
++        self.assertTrue(events)
++
++    def test_semantic_rejection_can_record_transport_without_changing_audit(self):
++        env = self.prepare()
++        result = self.run_wrapper(dict(env, FIXTURE_FINISH_STATE="rejected"))
++        self.assertEqual(result.returncode, 0)
++        receipt = json.loads(self.receipt.read_text())
++        self.assertEqual((receipt["wrapper"]["state"], receipt["wrapper"]["rc"]), ("rejected", 0))
++        self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "rejected")
++        self.assertTrue((self.root / "seal-args.json").is_file())
+ 
+     def test_seal_failure_keeps_verified_finish_but_reports_retained_handoff(self):
+         env = self.prepare()
+@@ -163,7 +218,7 @@ sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
+         state = self.directory / "learn.json"
+         original = {"pid": os.getpid(), "pane": "w1:p2", "state": "done", "rc": 0,
+                     "finished": "fixed", "worktree": str(self.root), "task": "experience-update"}
+-        for changed in ({"pid": 1}, {"pane": "w1:p3"}, {"state": "failed"}, {"state": "running"},
++        for changed in ({"pid": 1}, {"pane": "w1:p3"}, {"state": "running"}, {"state": "awaiting_review"},
+                         {"finished": None}, {"rc": 75}, {"worktree": "/foreign"}):
+             with self.subTest(changed=changed), patch.object(tui.os, "getppid", return_value=os.getpid()):
+                 state.write_text(json.dumps({"batches": {self.batch: {**original, **changed}}}))

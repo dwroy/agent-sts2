@@ -1,0 +1,31 @@
+from pathlib import Path
+import hashlib,json,os,subprocess,time,sys
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent
+phase=sys.argv[1];assert phase in ('combination','main')
+A=json.loads((B/('assembly.json' if phase=='combination' else 'main-assembly.json')).read_text());W=Path(A['worktree'])
+def git(*a):return subprocess.check_output(['git',*a],cwd=W)
+def now():return subprocess.check_output(['date','-Iseconds'],text=True).strip()
+def manifest():
+ names=git('ls-files','-z','--cached','--others','--exclude-standard','agent','ops','learner','eval','knowledge','tools','.agents').decode().split('\0')
+ return [dict(path=n,sha256=hashlib.sha256((W/n).read_bytes()).hexdigest()) for n in sorted(set(names)) if n and (W/n).is_file() and not (W/n).is_symlink() and not (W/n).name.startswith('.env') and n!='ops/instance-binding.json']
+assert git('write-tree').decode().strip()==A['tree'] and not git('diff','--name-only').strip()
+assert not (B/(phase+'-checks.json')).exists(),'preserve original attempt'
+before=manifest();(B/(phase+'-inputs-before.json')).write_text(json.dumps(before,indent=2)+'\n')
+s=dict(at=now(),state='running',base=A.get('live_base',A.get('base')),tree=A['tree'],worktree=str(W),steps=[],full_started=False,production_written=False)
+def put():(B/(phase+'-checks.json')).write_text(json.dumps(s,ensure_ascii=False,indent=2)+'\n')
+env={**os.environ,'PATH':str(Path.home()/'.local/node/bin')+':'+os.environ['PATH'],'PYTHONDONTWRITEBYTECODE':'1','OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1','MKL_NUM_THREADS':'1'};env.pop('CHARACTER',None)
+files=['learner-herdr','learner-herdr-ownership','learner-native-prelude','learner-tui-reconciliation','learner-herdr-receipts','learner-empty-fix','learner-herdr-launcher']
+commands=[('tsc',['node','node_modules/typescript/bin/tsc','-p','tsconfig.json','--noEmit']),('directed',['node','node_modules/vitest/vitest.mjs','run',*['tests/'+n+'.test.ts' for n in files],'--pool=forks','--maxWorkers=1','--no-file-parallelism','--reporter=default','--reporter=json','--outputFile.json='+str(B/(phase+'-vitest.json'))])]
+put()
+try:
+ for name,args in commands:
+  step=dict(name=name,argv=['nice','-n','19',*args],started_at=now());s['steps'].append(step);start=time.monotonic();put()
+  with (B/(phase+'-'+name+'.log')).open('xb') as out:p=subprocess.run(step['argv'],cwd=W/'agent',env=env,stdout=out,stderr=subprocess.STDOUT)
+  step.update(exit_code=p.returncode,seconds=round(time.monotonic()-start,3));put();assert p.returncode==0,name+' failed; retain first failure'
+ after=manifest();(B/(phase+'-inputs-after.json')).write_text(json.dumps(after,indent=2)+'\n');assert before==after
+ assert git('write-tree').decode().strip()==A['tree'] and not git('diff','--name-only').strip()
+ q=json.loads((B/(phase+'-vitest.json')).read_text());assert q['success']
+ s.update(state='passed',inputs_unchanged=True,input_count=len(before),vitest=dict(files=len(q['testResults']),passed=q['numPassedTests'],failed=q['numFailedTests'],pending=q['numPendingTests']))
+except BaseException as e:s.update(state='failed',reason=str(e));raise
+finally:s['ended_at']=now();put()
+print(json.dumps(s,ensure_ascii=False),flush=True)

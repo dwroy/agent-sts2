@@ -1,0 +1,58 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, subprocess, sys
+R=Path('/home/dw/Projects/agent-sts2'); B=Path(__file__).resolve().parent
+S='68f7db42820e60ff3fb68645f70ea9cc33e651c2'
+P=json.loads((R/'paper/materials/20261023-issue47-integrator-review/verification.json').read_text())['product_paths']
+PRE=['learner/lib/herdr.ts','agent/tests/learner-herdr.test.ts']
+def git(*a,cwd=R,data=None): return subprocess.check_output(['git',*a],cwd=cwd,input=data,stderr=subprocess.PIPE)
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+phase=sys.argv[1]; assert phase in ('combination','main')
+base=git('rev-parse','HEAD',cwd=R/'.worktrees/live' if phase=='combination' else R).decode().strip()
+W=R/('.worktrees/integrator47-'+('live' if phase=='combination' else 'main')+'-20261023-1615')
+assert phase=='combination' and W.exists() and not (B/(phase+'-assembly.json')).exists()
+assert git('rev-parse','HEAD',cwd=W).decode().strip()==base
+patch=git('diff','--binary','--full-index',S+'^',S,'--',*P)
+assert patch==(B/'source.patch').read_bytes()
+assert set(git('diff','--cached','--name-only',cwd=W).decode().splitlines())==set(P+PRE)
+assert not git('diff','--name-only',cwd=W).strip()
+prerequisites=[]
+if phase=='combination':
+ for n in PRE:
+  blob=git('rev-parse','3a101ab5d9814d47f242dcdfd82a9e38794caae3:'+n).decode().strip()
+  raw=git('cat-file','blob',blob)
+  old=git('rev-parse',base+':'+n).decode().strip()
+  (W/n).write_bytes(raw);git('add','--',n,cwd=W)
+  prerequisites.append(dict(path=n,preimage=old,blob=blob,sha256=sha(raw),source='3a101ab5d9814d47f242dcdfd82a9e38794caae3',purpose='pending #36 predecessor, release before #47; not a #47 product leaf'))
+rows=[]
+for n in P:
+ rows.append(dict(path=n,mode=git('ls-files','-s','--',n,cwd=W).decode().split()[0],preimage=git('rev-parse',base+':'+n).decode().strip(),blob=git('rev-parse',':'+n,cwd=W).decode().strip(),source_blob=git('rev-parse',S+':'+n).decode().strip(),sha256=sha((W/n).read_bytes())))
+knowledge=[]
+if phase=='combination':
+ with (R/'ops/knowledge-refresh.lock').open('a') as k,(R/'ops/live-merge.lock').open('a') as l:
+  fcntl.flock(k,fcntl.LOCK_SH|fcntl.LOCK_NB);fcntl.flock(l,fcntl.LOCK_SH|fcntl.LOCK_NB)
+  L=R/'.worktrees/live';assert git('rev-parse','HEAD',cwd=L).decode().strip()==base
+  for p in sorted((L/'knowledge').rglob('*')):
+   n=p.relative_to(L)
+   if not p.is_file() or p.is_symlink() or 'builders' in n.parts:continue
+   raw=p.read_bytes();t=W/n;t.parent.mkdir(parents=True,exist_ok=True);t.write_bytes(raw)
+   knowledge.append(dict(path=str(n),sha256=sha(raw),bytes=len(raw)))
+  assert all(sha((L/x['path']).read_bytes())==x['sha256'] for x in knowledge)
+ git('add','--sparse','--',*[x['path'] for x in knowledge],cwd=W)
+assert not git('diff','--name-only',cwd=W).strip()
+tree=git('write-tree',cwd=W).decode().strip()
+anchor=git('commit-tree',tree,'-p',base,data=b'Private #47 directed admission anchor; do not merge entire tree\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\nAgent: codex@xdwin1\n').decode().strip()
+git('update-ref',git('symbolic-ref','HEAD',cwd=W).decode().strip(),anchor,base,cwd=W)
+binding=W/'ops/instance-binding.json'
+if binding.exists(): (B/(phase+'-inherited-binding.json')).write_bytes(binding.read_bytes());binding.unlink()
+prior=json.loads((R/'.artifacts/issue36-delayed-native-integrator-20261023-1552/assembly.json').read_text())['preserved']
+preserved={}
+for n in sorted(set(prior)|set(PRE)):
+ if n in P:continue
+ actual=git('rev-parse',anchor+':'+n).decode().strip()
+ wanted=git('rev-parse',('3a101ab5d9814d47f242dcdfd82a9e38794caae3' if n in PRE else base)+':'+n).decode().strip()
+ assert actual==wanted,n
+ preserved[n]=actual
+assert '学习者非交互回退' in (W/'docs/codex-ops.md').read_text()
+A=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),phase=phase,source=S,source_parent=git('rev-parse',S+'^').decode().strip(),base=base,worktree=str(W),tree=tree,anchor=anchor,anchor_merge_allowed=False,paths=rows,prerequisites=prerequisites,knowledge_count=len(knowledge),knowledge_manifest=knowledge,preserved=preserved,full_started=False,production_written=False)
+(B/(phase+'-assembly.json')).write_text(json.dumps(A,indent=2)+'\n')
+print(json.dumps({k:v for k,v in A.items() if k not in ('knowledge_manifest','preserved')}),flush=True)

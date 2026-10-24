@@ -1,0 +1,485 @@
+{
+  "observed_at": "2026-10-23T00:36:54.019Z",
+  "isolated_loopback": true,
+  "production_endpoint_contacted": false,
+  "model_or_game_calls": 0,
+  "tools_call_requests": 0,
+  "tools": [
+    {
+      "name": "kb_monster",
+      "description": "查一个怪物在本局进阶的数据：血量、每个招式的伤害×段数、给自己加的能力、给我们上的减益、塞的牌、出现回合和下一招的转移、特殊机制（复活、召唤、喷发、滑溜等），每个数带样本数 n；本进阶没记录的按相邻进阶推算并标「估」。另附它所在遭遇各进阶的战绩。按 id（如 KIN_PRIEST）或中文名（如 同族神官）查。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "怪物 id（KIN_PRIEST）或中文名（同族神官）"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_encounter",
+      "description": "查遭遇和 boss 战的战绩：各进阶的场数、胜率、死亡数、赢局战内掉血中位/p75（boss 另有赢局回合和每回合掉血）。query 可以是遭遇 key（CRUSHER+ROCKET）、boss id（KAISER_CRAB）、或怪物 id/中文名（列出它参与的全部遭遇）；可按幕和房间类型筛选。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "遭遇 key、boss id、怪物 id 或中文名"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "只看这一幕"
+          },
+          "room": {
+            "type": "string",
+            "enum": [
+              "hallway",
+              "elite",
+              "boss",
+              "unknown_room"
+            ],
+            "description": "只看这种房间：hallway 走廊、elite 精英、boss、unknown_room 问号房"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_experience",
+      "description": "查经验库里本局进阶适用的有效条目：结论、支持/反对局数、置信度、典型案例（run id + 复盘标题一句话）。按主题（monster=怪物/boss，deck=构筑，route=路线/休息，shop_event=商店/事件，potion=药水，mechanics=机制/综合）、条目 id 或关键词（在 id、范围、名称、结论里找）查，至少给一个；给了几个就要同时满足。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "monster",
+              "deck",
+              "route",
+              "shop_event",
+              "potion",
+              "mechanics"
+            ],
+            "description": "主题"
+          },
+          "id": {
+            "type": "string",
+            "description": "条目 id（如 vantom-multihit）"
+          },
+          "keyword": {
+            "type": "string",
+            "description": "关键词（中文名、卡牌/怪物 id、boss:VANTOM 之类的范围）"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_stats",
+      "description": "查统计表：room_costs = 各幕各进阶每种房间的掉血（中位/p75/p90、死亡率、n）；fights = 精英和 boss 各进阶的战绩；rest = 休息点回血/锻造按到达血量段的结果（均终层、过本幕 boss 比例）。room_costs 和 fights 可以只看一幕。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string",
+            "enum": [
+              "room_costs",
+              "fights",
+              "rest"
+            ],
+            "description": "表名"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "只看这一幕（rest 表不分幕）"
+          }
+        },
+        "required": [
+          "table"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_old_knowledge",
+      "description": "查旧知识（早期手写，待数据验证；和数据冲突时以数据为准）：guide = 静默猎手攻略，handbook = DeepSeek 经验手册，jev_hints = Jev 战斗提示。给 keyword 只返回含关键词的行（带所在小标题）；不给就返回整份。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "guide",
+              "handbook",
+              "jev_hints"
+            ],
+            "description": "来源；不给则查全部"
+          },
+          "keyword": {
+            "type": "string",
+            "description": "关键词"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_potion",
+      "description": "查药水换算表（本局进阶）：每瓶药留到本幕 boss 战值多少血，以及等价的伤害和格挡（boss 战实测的换算率，带来源和 n）。boss 之前喝掉一瓶药 = 付出它的持有价值。给 id（FIRE_POTION）或中文名（火焰药水）返回这瓶药的效果、日志里出现和喝的次数、各幕的数值、公式和校验；不给返回整张表。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "药水 id 或中文名；不给则返回整张表"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "只看这一幕（给了 id 时）"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_open_book",
+      "description": "查公开开卷机械资料：query 为卡牌/遗物/怪物/事件 ID、中文名或关键词；category 可限类别。返回外部来源、版本、SHA、许可；当前 mod 状态优先，资料不证明模拟支持。最多12项，可细化关键词。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "cards",
+              "relics",
+              "monsters",
+              "events"
+            ]
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_strategies",
+      "description": "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_card",
+      "description": "查卡牌按幕的提供/拿取、拿取率与区间、拿/不拿整局胜率与区间、玩家/幕调整胜率差及重叠覆盖。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "id": {
+            "type": "string",
+            "description": "精确卡牌ID，如SNAKEBITE；可带CARD.，不接受中文猜映射"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_skip",
+      "description": "查按幕保留奖励点的跳过次数、跳过率和玩家簇区间。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_deck_size",
+      "description": "查结束牌组张数分箱与胜率（全体/已到第三幕），有存活偏差，不据此推荐张数。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_encounter",
+      "description": "查遭遇ID的外部总受伤、回合和死亡分布、独立局/玩家数（仅v0.111）。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "id": {
+            "type": "string",
+            "description": "精确遭遇ID，如DECIMILLIPEDE_ELITE；可带ENCOUNTER.，不猜怪物/本系统映射"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_clusters",
+      "description": "查数据产生的簇、标签、评估胜率和区间。现有样本无法区分流派优劣、不作方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "k": {
+            "type": "integer",
+            "enum": [
+              3,
+              4,
+              5
+            ],
+            "description": "聚类数量，默认4"
+          },
+          "seed": {
+            "type": "integer",
+            "enum": [
+              24,
+              240,
+              2400
+            ],
+            "description": "模型初始化，默认24；编号不跨模型对齐"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_cooccurrence",
+      "description": "查常一起出现的卡对及lift/Jaccard，仅为描述，不是收益或方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "card": {
+            "type": "string",
+            "description": "可选卡牌ID，筛选包含该卡的共现对"
+          },
+          "with_card": {
+            "type": "string",
+            "description": "可选另一卡ID，必须同时给card，精确查一对"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "dataset_bytes": 1775714,
+  "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+}

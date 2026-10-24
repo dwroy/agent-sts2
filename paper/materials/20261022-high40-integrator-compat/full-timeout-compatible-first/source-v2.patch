@@ -1,0 +1,3183 @@
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index fd0ef006e..7eca16bcb 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -392,7 +392,7 @@ export class BrainRouter {
+       pace.promoteBrain();
+       return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
+         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
+-          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
++          effort: this.codexOnly || this.engineFor(request.label) === "codex" ? this.deps.config.engines.codex.effort ?? "xhigh" : "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+     }
+     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
+     request.questionId ??= this.nextQuestionId();
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index f9446b0e9..9f4e4cd57 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -490,7 +490,7 @@ export function runConfigRow(
+       strict: config.strictJev,
+       prompt_log: resolveJevPromptLog(config.log),
+     },
+-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
++    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: actualBrain.engine === "codex" ? config.brain.engines.codex.effort ?? "xhigh" : "xhigh", required_full_replaced: true } } : {}),
+     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
+       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
+       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
+diff --git a/agent/tests/component_usage_test.py b/agent/tests/component_usage_test.py
+index b0ce7ec31..ccebe7b51 100644
+--- a/agent/tests/component_usage_test.py
++++ b/agent/tests/component_usage_test.py
+@@ -168,8 +168,11 @@ class Components(unittest.TestCase):
+         with mock.patch.object(report, "ROOT", str(self.root)), mock.patch.object(report, "LIVE", str(REPO)), mock.patch("subprocess.Popen") as popen:
+             report.refresh_costs()
+             args = popen.call_args.args[0]
+-            self.assertEqual(args[:4], ["nice", "-n", "19", "python3"])
++            self.assertEqual(args[:9], ["nice", "-n", "19", "ionice", "-c", "3", "flock",
++                                       str(self.root / "ops/knowledge-refresh.lock"), "python3"])
+             self.assertEqual(args[-4:], ["--root", str(self.root), "--code-root", str(REPO)])
++            for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
++                self.assertEqual(popen.call_args.kwargs["env"][name], "1")
+             self.assertTrue(popen.call_args.kwargs["start_new_session"])
+             popen.return_value.wait.assert_not_called()
+         with (self.root / "ops/cost-refresh.lock").open("a") as lock:
+diff --git a/agent/tests/human-pace-budget.test.ts b/agent/tests/human-pace-budget.test.ts
+index 1adbde511..776105db7 100644
+--- a/agent/tests/human-pace-budget.test.ts
++++ b/agent/tests/human-pace-budget.test.ts
+@@ -142,3 +142,25 @@ it("restores the parent after synchronous and asynchronous observer failures and
+   });
+   expect(budget.record()).toMatchObject({ shared_actual_ms: 10000, independent_actual_ms: 4000, actual_ms: 14000 });
+ });
++
++
++it.each(["high", "xhigh"])("honors configured Codex effort %s while preserving the independent 90-second deadline", async (effort) => {
++  vi.useFakeTimers();
++  const seen: (string | undefined)[] = [];
++  let aborted = 0;
++  const engine: BrainEngine = { name: "codex", model: "fixture-only", decide: async (req, signal) => {
++    seen.push(req.effort);
++    return new Promise((_, reject) => signal?.addEventListener("abort", () => {
++      aborted++; reject(new Error("fixed aborted"));
++    }));
++  } };
++  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: effort, BRAIN_LOG: "off" }).brain,
++    codexOnly: true, engine: () => engine, log: () => {} });
++  const budget = new DecisionBudget("configured-effort-L2", "routine", () => Date.now());
++  const rejection = expect(withDecisionBudget(budget, () => router.decide(request())))
++    .rejects.toBeInstanceOf(DecisionBudgetExpired);
++  await vi.advanceTimersByTimeAsync(90000); await rejection;
++  await vi.advanceTimersByTimeAsync(2000);
++  expect(seen).toEqual([effort]);
++  expect(aborted).toBe(1);
++});
+diff --git a/agent/tests/legacy-refresh-incremental.test.ts b/agent/tests/legacy-refresh-incremental.test.ts
+new file mode 100644
+index 000000000..5ecebcec8
+--- /dev/null
++++ b/agent/tests/legacy-refresh-incremental.test.ts
+@@ -0,0 +1,23 @@
++import { spawn } from "node:child_process";
++import { fileURLToPath } from "node:url";
++import { expect, it } from "vitest";
++
++const root = fileURLToPath(new URL("../../", import.meta.url));
++
++it.each([
++  ["python3", "knowledge/builders/test_refresh_pipeline.py", 12],
++] as const)("keeps cached statistics equivalent to full fixed evidence: %s %s", async (python, file, count) => {
++  const result = await new Promise<{ code: number | null; output: string }>((resolve, reject) => {
++    const child = spawn("nice", ["-n", "19", python, "-B", `${root}${file}`], {
++      cwd: root, env: { ...process.env, OMP_NUM_THREADS: "1", OPENBLAS_NUM_THREADS: "1" },
++      stdio: ["ignore", "pipe", "pipe"],
++    });
++    let output = "";
++    child.stdout.on("data", (data: Buffer) => { output += data.toString(); });
++    child.stderr.on("data", (data: Buffer) => { output += data.toString(); });
++    child.on("error", reject);
++    child.on("close", (code) => resolve({ code, output }));
++  });
++  expect(result.code, result.output).toBe(0);
++  expect(result.output).toContain(`Ran ${count} test`);
++}, 45_000);
+diff --git a/agent/tests/ops-mod-state.test.ts b/agent/tests/ops-mod-state.test.ts
+index d709eb5bc..fe69f44cd 100644
+--- a/agent/tests/ops-mod-state.test.ts
++++ b/agent/tests/ops-mod-state.test.ts
+@@ -61,9 +61,10 @@ sleep() { :; }
+ tasklist() { :; }
+ ${block}
+ `, "mod-test", ops, response, calls, String(http), String(curlExit), next], {
+-    cwd: scratch, encoding: "utf8", timeout: 5000,
++    cwd: scratch, encoding: "utf8", timeout: 10_000,
+     env: { PATH: process.env.PATH ?? "/usr/bin:/bin", TMPDIR: process.env.TMPDIR ?? "/tmp" },
+   });
++  if (result.error) throw result.error;
+   return { ...result, calls: readFileSync(calls, "utf8").trim().split("\n") };
+ }
+ 
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index 993662c5e..ecabd4a4f 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -3,6 +3,8 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
+ import { join } from "node:path";
+ import { tmpdir } from "node:os";
+ import { loadConfig } from "../src/core/config.js";
++import { currentDecisionBudget } from "../src/core/decision-budget.js";
++import { solveTap } from "../src/reflex/turn-solver.js";
+ import { makeKnowledge } from "../src/knowledge/index.js";
+ import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+ import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
+@@ -28,7 +30,10 @@ vi.mock("../src/knowledge/files.js", async original => ({
+ }));
+ setupOneshotTests();
+ const roots: string[] = [];
+-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++afterEach(() => {
++  roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true }));
++  vi.unstubAllEnvs(); vi.restoreAllMocks(); solveTap.onSolve = null; setKnowledgeCharacter(null);
++});
+ const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
+ // Match the documented wire representation exactly, including half-way rounding and nulls.
+ function expectDisplayCell(cell: unknown, estimate: CombatEstimate | null) {
+@@ -76,22 +81,48 @@ function fixture(warmCore = false) {
+       digest: "b".repeat(64), limitations: [], rows: [] }, combo_metrics: [], checkpointFloors: warmCore ? [17, 33] : [17] });
+   writeFileSync(join(own, "v6-history.json"), JSON.stringify(pack));
+   for (const [key, value] of Object.entries({ V6_BUILD: "on", V6_CARD_DECIDER: "jev", V6_DIRECTION_REPLAN: "off",
+-    V6_POTION_DECIDER: "brain", V6_SHOP_DECIDER: "brain", V6_REST_DECIDER: "brain", V6_COMBAT_ENTRIES: "off", BOSS_SIM_BUILD: "off" })) vi.stubEnv(key, value);
++    V6_POTION_DECIDER: "brain", V6_SHOP_DECIDER: "brain", V6_REST_DECIDER: "brain", V6_COMBAT_ENTRIES: "off", BOSS_SIM_BUILD: "off",
++    V6_PICK_MS: "5000" })) vi.stubEnv(key, value);
+   setKnowledgeCharacter("silent"); setCardUpgradesForTests({});
+   const loaded = loadV6Knowledge(root, "silent").cores;
+   expect(loaded, JSON.stringify(loaded)).toMatchObject({ status: "loaded" });
+   return root;
+ }
+ 
+-it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+-  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator", async (run, floor) => {
++it.each([
++  ["T0TP8S9MMU9Q", 2, "fixed clocks"], ["RBMEQGXPE9Z2", 3, "fixed clocks"],
++  ["T0TP8S9MMU9Q", 2, "solver budget exhausted"], ["T0TP8S9MMU9Q", 2, "sampling budget exhausted"],
++] as const)(
++  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator (%s)", async (run, floor, timing) => {
++    // Fix the ledger, runtime preparation and inherited L2 solver clock as well as sample scheduling.
++    // Real timers and HTTP remain active; virtual elapsed time advances only at an explicit sample boundary.
++    let hostNow = 0, samplingNow = 0;
++    vi.spyOn(performance, "now").mockImplementation(() => hostNow);
+     const root = fixture(), knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
+     const combat: Raw = frozen.states[`${run}-f${floor}-COMBAT`], reward: Raw = frozen.states[`${run}-f${floor}-REWARD`];
+     const tables: V6CardResults[] = [], notes: string[] = [], actions: Raw[] = [];
+     const runner = new SerialDeckRunner(), runSamples = vi.spyOn(runner, "run");
++    const budgets: { key: string; remaining: number; now: number }[] = [];
++    const solves: { timedOut: boolean; remaining: number | undefined }[] = [];
++    runSamples.mockImplementation(async request => {
++      const budget = currentDecisionBudget()!;
++      if (request.range!.from === 2 && timing === "solver budget exhausted") hostNow += budget.remaining();
++      budgets.push({ key: budget.key, remaining: budget.remaining(), now: budget.now() });
++      // Opening preparation uses the same tap temporarily; observe only the real serial sample solves.
++      const previous = solveTap.onSolve;
++      solveTap.onSolve = (input, result) => {
++        solves.push({ timedOut: result.timedOut === true, remaining: currentDecisionBudget()?.remaining() });
++        previous?.(input, result);
++      };
++      try {
++        const result = await SerialDeckRunner.prototype.run.call(runner, request);
++        if (timing === "sampling budget exhausted") samplingNow = 5_000;
++        return result;
++      } finally { solveTap.onSolve = previous; }
++    });
+     const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, () => {},
+       v6ProjectionInputs(root, () => "2026-10-20T16:20:00.000Z"), {
+-        engine: new V6CardResultsEngine(runner, () => performance.now(), 8), context: cardResultsContext,
++        engine: new V6CardResultsEngine(runner, () => samplingNow, 8), context: cardResultsContext,
+         record(_env, table) { tables.push(table); },
+       });
+     let polls = 0;
+@@ -134,8 +165,34 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+       const ids = ["card0", "card1", "card2", "skip"];
+       expect(ids.map(id => cardResultKnown(table, id))).toEqual([true, true, true, true]);
+       const rows = ids.map(id => table.immediate.find(r => r.option_id === id && r.target_id === target.id)!);
+-      // Fixed shared samples verify actual results, not just three distinct cache identities.
+-      expect(rows.map(r => r.metrics.death_rate?.n)).toEqual([8, 8, 8, 8]);
++      const diagnostics = JSON.stringify({ timing, budgets, telemetry: table.telemetry,
++        rows: rows.map(r => ({ samples: r.samples, capped: r.capped, missing: r.missing, n: r.metrics.death_rate?.n })) });
++      expect(budgets.length).toBeGreaterThan(0);
++      expect(budgets.every(b => b.key.endsWith(":V6_card_results")), diagnostics).toBe(true);
++      if (timing === "solver budget exhausted") {
++        // Scheduling still produces eight samples. The real inner solver sees an exhausted inherited L2 budget.
++        expect(budgets.map(b => b.remaining), diagnostics).toEqual([5000, 0]);
++        expect(budgets.map(b => b.now), diagnostics).toEqual([0, 5000]);
++        expect(solves.some(s => s.timedOut && s.remaining === 0)).toBe(true);
++        expect(rows.map(r => [r.samples, r.capped, r.time_up, r.missing, r.metrics.death_rate?.n]), diagnostics)
++          .toEqual(Array.from({ length: 4 }, () => [8, 6, 0, 0, 2]));
++        expect(rows.map(r => r.paired_delta.death_rate?.n)).toEqual([2, 2, 2, 2]);
++      } else if (timing === "sampling budget exhausted") {
++        // An outer sampling deadline instead leaves six missing samples, with no capped fake survivals.
++        expect(runSamples).toHaveBeenCalledTimes(1);
++        expect(rows.map(r => [r.samples, r.capped, r.time_up, r.missing, r.metrics.death_rate?.n]), diagnostics)
++          .toEqual(Array.from({ length: 4 }, () => [2, 0, 0, 6, 2]));
++        expect(table.telemetry.pending_work).toBe(true);
++      } else {
++        // Fixed shared samples verify actual terminal results, not just three distinct cache identities.
++        expect(rows.map(r => r.metrics.death_rate?.n), diagnostics).toEqual([8, 8, 8, 8]);
++        expect(rows.every(r => r.samples === 8 && r.capped === 0 && r.time_up === 0 && r.missing === 0)).toBe(true);
++      }
++      if (timing !== "solver budget exhausted") {
++        expect(budgets.every(b => b.remaining === 5000 && b.now === 0), diagnostics).toBe(true);
++        expect(solves.length).toBeGreaterThan(0);
++        expect(solves.every(s => !s.timedOut && s.remaining === 5000)).toBe(true);
++      }
+       expect(new Set(rows.slice(0, 3).map(r => JSON.stringify([r.metrics, r.paired_delta]))).size).toBe(3);
+       const offers = reward["reward"] as { card_options: { card_id: string; energy_cost: number }[] };
+       for (const face of offers.card_options) {
+diff --git a/agent/tests/v6_learning_loop_test.py b/agent/tests/v6_learning_loop_test.py
+index 16de05ee7..c4e940a58 100644
+--- a/agent/tests/v6_learning_loop_test.py
++++ b/agent/tests/v6_learning_loop_test.py
+@@ -132,7 +132,7 @@ class IdentityTest(unittest.TestCase):
+ def fixture(root):
+     b = root / 'knowledge/builders'
+     b.mkdir(parents=True)
+-    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py'):
++    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py', 'refresh_driver.py', 'refresh_publish.py', 'characters.py'):
+         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
+     # Production Node CLI and schemas are used read-only; no copy of a checkout.
+     (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
+@@ -524,7 +524,7 @@ class RefreshTest(unittest.TestCase):
+             # Stub unrelated historical refresh steps; execute the real shell and V6 helper/CLIs.
+             b = root / 'knowledge/builders'
+             for name in ('build-monster-db.py', 'monster-db-check.py', 'build-card-upgrades.py', 'build-outcome-stats.py',
+-                         'build-construction-opportunities.py', 'build-room-costs.py', 'build-boss-damage.py', 'build-catalog.py'):
++                         'build-construction-opportunities.py', 'build-room-costs.py', 'build-boss-damage.py', 'build-catalog.py', 'build-fight-value.py'):
+                 (b / name).write_text('pass\n')
+             potion = b / 'refresh-potion-equivalents.sh'
+             potion.write_text('#!/bin/sh\nexit 0\n')
+@@ -563,6 +563,14 @@ class RefreshTest(unittest.TestCase):
+             self.assertIsNone(result['exit'])
+             self.assertEqual(result['status'], 'background')
+             self.assertFalse(result['admission_wait'])
++            cycles = [json.loads(line) for line in (root/'ops/refresh-timing.jsonl').read_text().splitlines()
++                      if json.loads(line)['schema'] == 'knowledge-refresh-cycle-v1']
++            self.assertEqual(len(cycles), 1)
++            self.assertEqual(cycles[0]['origin_pid'], result['pid'])
++            self.assertTrue(cycles[0]['cycle'])
++            self.assertGreaterEqual(cycles[0]['wall_seconds'], cycles[0]['seconds'])
++            publications = [json.loads(line) for line in (root/'ops/refresh-publication-timing.jsonl').read_text().splitlines()]
++            self.assertEqual({row['cycle'] for row in publications}, {cycles[0]['cycle']})
+             self.assertEqual(json.loads(target.read_bytes())['data']['character'], 'silent')
+             receipts = list((root / 'ops/codex-ops/v6-refresh/silent').glob('*/receipt.json'))
+             self.assertEqual(len(receipts), 1)
+diff --git a/eval/jsonl_cache.py b/eval/jsonl_cache.py
+new file mode 100644
+index 000000000..1bdc65517
+--- /dev/null
++++ b/eval/jsonl_cache.py
+@@ -0,0 +1,110 @@
++"""Disposable append-only cost facts; original byte prefixes remain authoritative."""
++import hashlib
++import json
++from pathlib import Path
++import sqlite3
++
++
++def project(path, row):
++    if path.parent.name == 'runs' and path.parent.parent.name == 'learner':
++        # Cost attribution reads launch and summary receipts, never streamed text.
++        return row if row.get('type') in ('learner_launch', 'learner_summary') else {}
++    if path.name in ('brain.jsonl', 'jev-prompts.jsonl'):
++        keys = ('engine','run_id','question_id','ts','usage','latency_ms','request_id',
++                'decision_id','call','input_tokens','output_tokens','label','accepted','error','problems')
++        result = {k:row[k] for k in keys if k in row}
++        for key in ('input','inputTokens','cacheRead','cached_input_tokens','cachedInputTokens',
++                    'cache_hit_tokens','cacheHitTokens','cache_read_input_tokens','cacheCreation',
++                    'cache_write_input_tokens','cacheWriteInputTokens','cacheWriteTokens',
++                    'cache_creation_input_tokens','output','outputTokens','reasoning',
++                    'reasoning_output_tokens','reasoningOutputTokens','reasoning_tokens','reasoningTokens'):
++            if key in row:
++                result[key] = row[key]
++        if path.name == 'brain.jsonl':
++            answer = row.get('answer')
++            result['answer'] = None if answer is None else {
++                'route':bool(answer.get('route')),
++                'run_plan':{} if isinstance(answer.get('run_plan'),dict) else None
++            } if isinstance(answer, dict) else True
++        return result
++    if path.name.startswith('rollout-'):
++        payload = row.get('payload') or {}
++        if payload.get('type') != 'token_count':
++            return {}
++        return {k:row[k] for k in ('timestamp','ts','payload') if k in row}
++    if isinstance(row.get('message'), dict):
++        return {**{k:row[k] for k in ('type','timestamp','requestId','uuid') if k in row},
++                'message':{k:row['message'][k] for k in ('usage','id') if k in row['message']}}
++    return row
++
++
++class JsonlCache:
++    def __init__(self, directory, revision, projector=None):
++        directory = Path(directory)
++        directory.mkdir(parents=True, exist_ok=True)
++        self.db = sqlite3.connect(directory / 'facts.sqlite', timeout=60)
++        self.db.execute('CREATE TABLE IF NOT EXISTS sources (path TEXT PRIMARY KEY, revision TEXT, end INTEGER, sha TEXT, bad INTEGER)')
++        if 'lines' not in {r[1] for r in self.db.execute('PRAGMA table_info(sources)')}:
++            self.db.execute('ALTER TABLE sources ADD COLUMN lines INTEGER NOT NULL DEFAULT 0')
++        self.db.execute('CREATE TABLE IF NOT EXISTS facts (path TEXT, off INTEGER, body TEXT, sha TEXT, PRIMARY KEY(path,off))')
++        self.revision = revision
++        self.projector = projector or (lambda path, row, ref: project(path, row))
++        self.decoded = self.reused = 0
++
++    def close(self):
++        self.db.close()
++
++    def rows(self, path, limit):
++        name, digest = str(path.resolve()), hashlib.sha256()
++        old = self.db.execute('SELECT revision,end,sha,bad,lines FROM sources WHERE path=?', (name,)).fetchone()
++        start, bad, number = 0, 0, 0
++        with path.open('rb') as source:
++            if old and old[0] == self.revision and old[1] <= limit:
++                left = old[1]
++                while left:
++                    part = source.read(min(left, 4*1024*1024))
++                    if not part:
++                        break
++                    digest.update(part); left -= len(part)
++                if not left and digest.hexdigest() == old[2]:
++                    start, bad, number = old[1], old[3], old[4]
++            if not start:
++                digest = hashlib.sha256()
++            source.seek(start)
++            with self.db:
++                if not start:
++                    self.db.execute('DELETE FROM facts WHERE path=?', (name,))
++                end = start
++                while end < limit:
++                    off = source.tell()
++                    raw = source.readline(limit-off)
++                    if not raw or not raw.endswith(b'\n'):
++                        break
++                    digest.update(raw); end += len(raw); self.decoded += 1; number += 1
++                    try:
++                        row = json.loads(raw)
++                    except (ValueError, UnicodeError):
++                        bad += 1
++                        continue
++                    if not isinstance(row, dict):
++                        continue
++                    ref = dict(offset=off, bytes=len(raw), line=number,
++                               sha256=hashlib.sha256(raw).hexdigest())
++                    body = json.dumps(self.projector(path,row,ref), separators=(',',':'))
++                    self.db.execute('INSERT INTO facts VALUES (?,?,?,?)', (name,off,body,hashlib.sha256(body.encode()).hexdigest()))
++                self.db.execute('INSERT OR REPLACE INTO sources VALUES (?,?,?,?,?,?)',
++                                (name,self.revision,end,digest.hexdigest(),bad,number))
++        result = []
++        for off,body,sha in self.db.execute('SELECT off,body,sha FROM facts WHERE path=? ORDER BY off', (name,)):
++            if hashlib.sha256(body.encode()).hexdigest() != sha:
++                with self.db:
++                    self.db.execute('DELETE FROM sources WHERE path=?', (name,))
++                return self.rows(path,limit)
++            try:
++                result.append(json.loads(body))
++            except ValueError:
++                with self.db:
++                    self.db.execute('DELETE FROM sources WHERE path=?', (name,))
++                return self.rows(path,limit)
++            self.reused += int(off < start)
++        return result, bad
+diff --git a/knowledge/builders/build-boss-damage.py b/knowledge/builders/build-boss-damage.py
+index 831b837c0..8786ee5d3 100644
+--- a/knowledge/builders/build-boss-damage.py
++++ b/knowledge/builders/build-boss-damage.py
+@@ -41,6 +41,7 @@ from pathlib import Path
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from characters import character_dir, character_key, run_character  # noqa: E402
++from refresh_publish import replace as publish_replace
+ 
+ # Boss clock key (strategy/boss-clock.ts BOSSES) -> the enemy ids of its bodies.
+ BOSSES = {
+@@ -72,32 +73,7 @@ def fight_won(run, floor):
+     return last > (floor or 0) or (bool((run or {}).get("victory")) and last == (floor or 0))
+ 
+ 
+-def main() -> None:
+-    parser = argparse.ArgumentParser()
+-    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
+-    parser.add_argument("--fights", default=None)
+-    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+-    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
+-    args = parser.parse_args()
+-    character = character_key(args.character)
+-    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
+-
+-    runs = {}
+-    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
+-        for line in handle:
+-            try:
+-                run = json.loads(line)
+-            except ValueError:
+-                continue
+-            runs[run.get("run_id")] = run
+-    if not any(run_character(run) == character for run in runs.values()):
+-        print(f"no {character} runs; nothing written -> {args.out}")
+-        return
+-
+-    patterns = []
+-    for enemy in BOSS_OF:
+-        patterns += ["-e", f'"enemy_id":"{enemy}"']
+-    grep = subprocess.Popen(["grep", "-F", *patterns, os.path.join(args.logs, "states.jsonl")], stdout=subprocess.PIPE)
++def extract_rows(lines, character):
+     # (run, floor) -> {turn: (hp, shown attack)} from the final attempt's first frame per turn.
+     fights = collections.defaultdict(dict)
+     meta = {}
+@@ -119,7 +95,7 @@ def main() -> None:
+     # (run, floor) -> the Insatiable fight's last frame: (Sandpit, our HP, our block, the attack it shows) (a loss's
+     # death line: NH8A A8 died on HP with the Sandpit at 2 after an Escape over damage; sandpitDeathRecord).
+     sand_last = {}
+-    for line in grep.stdout:
++    for line in lines:
+         try:
+             state = json.loads(line)["state"]
+         except (ValueError, KeyError):
+@@ -200,7 +176,51 @@ def main() -> None:
+                     shown += (intent.get("damage") or 0) * max(1, intent.get("hits") or 1)
+         fights[key][turn] = (hp, shown)
+         meta.setdefault(key, (boss, run.get("ascension")))
+-    grep.wait()
++    return {'fights': fights, 'meta': meta, 'previous_turn': previous_turn, 'giant_kills': giant_kills, 'entry_max': entry_max, 'crab_first': crab_first, 'lag_sleep': lag_sleep, 'queen_track': queen_track, 'sand_last': sand_last}
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
++    parser.add_argument("--fights", default=None)
++    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
++    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
++    args = parser.parse_args()
++    character = character_key(args.character)
++    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
++
++    runs = {}
++    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
++        for line in handle:
++            try:
++                run = json.loads(line)
++            except ValueError:
++                continue
++            runs[run.get("run_id")] = run
++    if not any(run_character(run) == character for run in runs.values()):
++        print(f"no {character} runs; nothing written -> {args.out}")
++        return
++
++    from legacy_incremental import context
++    cache = context(os.path.join(args.logs, 'states.jsonl'))
++    if cache:
++        extracted = cache.boss_rows(os.path.join(args.logs, 'states.jsonl'), character, extract_rows, BOSS_OF)
++    else:
++        patterns = []
++        for enemy in BOSS_OF:
++            patterns += ['-e', f'"enemy_id":"{enemy}"']
++        grep = subprocess.Popen(['grep','-F',*patterns,os.path.join(args.logs,'states.jsonl')], stdout=subprocess.PIPE)
++        extracted = extract_rows(grep.stdout, character)
++        grep.wait()
++    fights = extracted['fights']
++    meta = extracted['meta']
++    previous_turn = extracted['previous_turn']
++    giant_kills = extracted['giant_kills']
++    entry_max = extracted['entry_max']
++    crab_first = extracted['crab_first']
++    lag_sleep = extracted['lag_sleep']
++    queen_track = extracted['queen_track']
++    sand_last = extracted['sand_last']
+ 
+     pooled = collections.defaultdict(lambda: {"shown": 0, "lost": 0, "turns": 0, "fights": 0})
+     rows = []
+@@ -309,7 +329,7 @@ def main() -> None:
+     with open(tmp, "w", encoding="utf8") as handle:
+         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
+         handle.write("\n")
+-    os.replace(tmp, args.out)
++    publish_replace(tmp, args.out)
+     print(f"{len(out)} bosses, {len(rows)} fights -> {args.out}")
+     if args.fights:
+         with open(args.fights, "w", encoding="utf8") as handle:
+diff --git a/knowledge/builders/build-card-upgrades.py b/knowledge/builders/build-card-upgrades.py
+index 912e23473..90e22b96c 100644
+--- a/knowledge/builders/build-card-upgrades.py
++++ b/knowledge/builders/build-card-upgrades.py
+@@ -8,6 +8,7 @@ no rules, values or keyword effects are inferred from those faces.
+ Usage: build-card-upgrades.py [states.jsonl] [--cards ID ...] [--out FILE]
+ --cards updates only those ids in the destination, preserving every other entry.
+ """
++from refresh_publish import write_text
+ import argparse
+ import collections
+ import hashlib
+@@ -57,20 +58,31 @@ def clean_face(card):
+     return {key: card[key] for key in FACE_FIELDS if key in card}
+ 
+ 
+-def build(states, selected=None, audit=None):
++def build(states, selected=None, audit=None, lines=None, accumulator=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(states)
++        if cache:
++            return cache.card_result(states, selected, audit, build, __file__)
+     audit = audit if audit is not None else {}
+     audit["invalid_json"] = []
+     stats = collections.defaultdict(lambda: [collections.defaultdict(collections.Counter),
+                                              collections.defaultdict(collections.Counter)])
+     seen = collections.defaultdict(lambda: [set(), set()])
+     faces = collections.defaultdict(lambda: [{}, {}])
++    if accumulator:
++        stats, seen, faces, previous_gaps = accumulator['value']
++        audit['invalid_json'].extend(previous_gaps)
+     needles = [f'"{card}"'.encode() for card in sorted(selected)] if selected else None
+     with Path(states).open("rb") as source:
+-        while True:
+-            off = source.tell()
+-            line = source.readline()
+-            if not line:
+-                break
++        def raw_rows():
++            while True:
++                off = source.tell()
++                line = source.readline()
++                if not line:
++                    return
++                yield off, line
++        for off, line in (raw_rows() if lines is None else lines):
+             if needles and not any(needle in line for needle in needles):
+                 continue
+             try:
+@@ -113,7 +125,7 @@ def build(states, selected=None, audit=None):
+                     # Frozen extracts retain the original raw source offset and hash.
+                     evidence = row.get("source") or {
+                         "file": "logs/states.jsonl", "off": off,
+-                        "sha256": hashlib.sha256(line).hexdigest(),
++                        "sha256": row.get("_raw_sha256") or hashlib.sha256(line).hexdigest(),
+                         "path": f"state.run.deck[{index}]",
+                     }
+                     profile = {"card": face, "runs": set(), "evidence": {
+@@ -124,6 +136,9 @@ def build(states, selected=None, audit=None):
+                     faces[card_id][side][key] = profile
+                 profile["runs"].add(run_id)
+ 
++    if accumulator is not None:
++        accumulator['value'] = (stats, seen, faces, audit['invalid_json'])
++
+     def mode(counter):
+         return counter.most_common(1)[0][0] if counter else None
+ 
+@@ -173,7 +188,7 @@ def main():
+         for card_id in args.cards:
+             previous.pop(card_id, None)
+         generated = {**previous, **generated}
+-    args.out.write_text(json.dumps(generated, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
++    write_text(args.out, json.dumps(generated, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+     if args.audit:
+         args.audit.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n")
+     if audit["invalid_json"]:
+diff --git a/knowledge/builders/build-catalog.py b/knowledge/builders/build-catalog.py
+index 66afe0eb8..d26804153 100644
+--- a/knowledge/builders/build-catalog.py
++++ b/knowledge/builders/build-catalog.py
+@@ -1,5 +1,6 @@
+ #!/usr/bin/env python3
+ """Mechanically index published layout and mirror enemy data; never infer a game rule."""
++from refresh_publish import publication
+ import argparse
+ import base64
+ import fcntl
+@@ -36,9 +37,7 @@ def checked(root, path):
+     return path
+ 
+ 
+-def atomic(path, raw):
+-    if path.is_file() and path.read_bytes() == raw:
+-        return
++def staged(path, raw):
+     path.parent.mkdir(parents=True, exist_ok=True)
+     fd, name = tempfile.mkstemp(prefix=".catalog-", dir=path.parent)
+     try:
+@@ -47,9 +46,20 @@ def atomic(path, raw):
+             output.flush()
+             os.fsync(output.fileno())
+             os.fchmod(output.fileno(), 0o644)
++        return Path(name)
++    except BaseException:
++        Path(name).unlink(missing_ok=True)
++        raise
++
++
++def atomic(path, raw):
++    if path.is_file() and path.read_bytes() == raw:
++        return
++    name = staged(path, raw)
++    try:
+         os.replace(name, path)
+     finally:
+-        Path(name).unlink(missing_ok=True)
++        name.unlink(missing_ok=True)
+ 
+ 
+ def build(root):
+@@ -129,29 +139,31 @@ def build(root):
+             "generated_files": {name: {"sha256": sha(raw), "bytes": len(raw)} for name, raw in generated.items()},
+             "curated_files_never_overwritten": True, "game_knowledge_added": False,
+             "evidence_policy": "逐条保留原证据；无原局号时明确未知，仅有文件SHA不能补证。"}
+-        # Validate the whole source cut before publishing. Existing legacy files are never rewritten.
+-        for name, raw in originals.items():
+-            if checked(root, root / name).read_bytes() != raw:
+-                raise ValueError("parallel knowledge change; preserve candidate and rebuild")
+-        for name, raw in creates.items():
+-            path = checked(root, root / name)
+-            path.parent.mkdir(parents=True, exist_ok=True)
+-            # A curator that arrived in parallel is retained, not overwritten.
+-            fd, temporary = tempfile.mkstemp(prefix=".curated-stub-", dir=path.parent)
+-            try:
+-                with os.fdopen(fd, "wb") as output:
+-                    output.write(raw)
+-                    output.flush()
+-                    os.fsync(output.fileno())
+-                    os.fchmod(output.fileno(), 0o644)
+-                os.link(temporary, path)
+-            except FileExistsError:
+-                raise ValueError("parallel curated rule retained; rebuild catalogue")
+-            finally:
+-                Path(temporary).unlink(missing_ok=True)
+-        for name, raw in generated.items():
+-            atomic(checked(root, root / name), raw)
+-        atomic(root / "catalog.json", rendered(catalog))
++        # Render and fsync all candidate bytes before taking the publication lock.
++        ready, new_stubs = [], []
++        try:
++            for name, raw in creates.items():
++                path = checked(root, root / name)
++                new_stubs.append((path, staged(path, raw)))
++            for name, raw in [*generated.items(), ("catalog.json", rendered(catalog))]:
++                path = checked(root, root / name)
++                if not path.is_file() or path.read_bytes() != raw:
++                    ready.append((path, staged(path, raw)))
++            with publication():
++                # Revalidate the source cut under the original publication lock.
++                for name, raw in originals.items():
++                    if checked(root, root / name).read_bytes() != raw:
++                        raise ValueError("parallel knowledge change; preserve candidate and rebuild")
++                for path, temporary in new_stubs:
++                    try:
++                        os.link(temporary, checked(root, path))
++                    except FileExistsError:
++                        raise ValueError("parallel curated rule retained; rebuild catalogue")
++                for path, temporary in ready:
++                    os.replace(temporary, checked(root, path))
++        finally:
++            for _path, temporary in [*new_stubs, *ready]:
++                temporary.unlink(missing_ok=True)
+         return {"schema": SCHEMA, "sources": len(sources), "enemies": len(enemy_index),
+                 "generated_files": len(generated), "new_curated_stubs": len(creates),
+                 "original_source_bytes_unchanged": True, "catalog_sha256": sha((root / "catalog.json").read_bytes()),
+diff --git a/knowledge/builders/build-construction-opportunities.py b/knowledge/builders/build-construction-opportunities.py
+index fe05d256a..3ff713dbf 100644
+--- a/knowledge/builders/build-construction-opportunities.py
++++ b/knowledge/builders/build-construction-opportunities.py
+@@ -4,6 +4,7 @@
+ This is an observational supply table, not a learned strategy or a game drop-rate specification.
+ Duplicate room/offer identities are counted once; costs that cannot be read are never filled with zero.
+ """
++from refresh_publish import replace as publish_replace
+ import argparse
+ import bisect
+ from datetime import datetime, timezone
+@@ -40,28 +41,40 @@ def read_json(value):
+         return {}
+ 
+ 
+-def extract(root, logs, character, cutoff=None):
+-    runs = {}
+-    with (logs / 'runs.jsonl').open() as handle:
+-        for line in handle:
+-            row = json.loads(line)
+-            if str(row.get('character', '')).lower() == character:
+-                runs[row['run_id']] = row
+-    catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
+-    names = {c['name']: c['id'] for c in catalog if c.get('name')}
+-    names.update({c['id']: c['id'] for c in catalog})
++def extract(root, logs, character, cutoff=None, prepared=None, lines=None):
++    if prepared is None:
++        from legacy_incremental import context
++        cache = context(logs / "brain.jsonl")
++        if cache:
++            return cache.construction(root, logs, character, cutoff, extract, state_lookup)
++    if prepared is None:
++        runs = {}
++        with (logs / 'runs.jsonl').open() as handle:
++            for line in handle:
++                row = json.loads(line)
++                if str(row.get('character', '')).lower() == character:
++                    runs[row['run_id']] = row
++        catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
++        names = {c['name']: c['id'] for c in catalog if c.get('name')}
++        names.update({c['id']: c['id'] for c in catalog})
++    else:
++        runs, names, frames = prepared
+     rows, seen, visits = [], set(), set()
+     excluded = {'incomplete_offers': 0, 'repeat_shop_visit': 0, 'unknown_upgrade': 0}
+-    frames = state_lookup(root, character)
++    if prepared is None:
++        frames = state_lookup(root, character)
+     source = logs / 'brain.jsonl'
+     limit = source.stat().st_size
+     digest = hashlib.sha256()
+     with source.open('rb') as handle:
+-        while handle.tell() < limit:
+-            offset = handle.tell()
+-            raw = handle.readline()
+-            if not raw.endswith(b'\n') or handle.tell() > limit:
+-                break
++        def original_lines():
++            while handle.tell() < limit:
++                offset = handle.tell()
++                raw = handle.readline()
++                if not raw.endswith(b'\n') or handle.tell() > limit:
++                    return
++                yield offset, raw
++        for offset, raw in (original_lines() if lines is None else lines):
+             digest.update(raw)
+             try:
+                 row = json.loads(raw)
+@@ -157,5 +170,5 @@ if __name__ == '__main__':
+     output.parent.mkdir(parents=True, exist_ok=True)
+     temporary = output.with_suffix('.tmp')
+     temporary.write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
+-    temporary.replace(output)
++    publish_replace(temporary, output)
+     print(json.dumps({'path': str(output), 'opportunities': len(result['rows']), 'digest': result['digest']}))
+diff --git a/knowledge/builders/build-fight-value.py b/knowledge/builders/build-fight-value.py
+index 12c9e042c..dbfee5077 100644
+--- a/knowledge/builders/build-fight-value.py
++++ b/knowledge/builders/build-fight-value.py
+@@ -34,7 +34,8 @@ Usage:
+   python3 knowledge/builders/build-fight-value.py folds --fold-dir DIR        (out-of-fold models + gates for the rollout backtest)
+   python3 knowledge/builders/build-fight-value.py rollout-report --work DIR   (after agent/tools/rollout-backtest.ts; see notes/rollout-backtest.md)
+ `train` also writes knowledge/characters/<id>/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
+-current solver weights, and the win-probability calibration). Rebuild after each run: `python3 knowledge/builders/build-fight-value.py all`.
++current solver weights, and the win-probability calibration). `all` extracts each run and trains every 10 completed
++runs by default (--train-every / FIGHT_VALUE_TRAIN_EVERY); `train` explicitly forces a completed fit.
+ Parsing (fight boundaries, room kind, enemy identity across a fight) is knowledge/builders/build-monster-db.py's.
+ """
+ import argparse
+@@ -48,6 +49,8 @@ import os
+ import random
+ import sys
+ import time
++import tempfile
++import shutil
+ from pathlib import Path
+ 
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+@@ -197,14 +200,23 @@ def extract(states, runs_path, game_path, rows_path, character=None):
+         game = raw.get("collections", raw)
+     bmd.GAME_TYPES.clear()
+     bmd.GAME_TYPES.update({m["id"]: m.get("type") for m in game.get("monsters") or []})
+-    bmd.observe_combat = _observe(bmd.observe_combat)
++    from fight_value_incremental import extract as append_extract
++    from types import SimpleNamespace
++    builder = append_extract(SimpleNamespace(**globals()), states, bmd.load_runs(runs_path), rows_path, character, game)
++    if builder is not None:
++        return builder
++    original_observe = bmd.observe_combat
++    bmd.observe_combat = _observe(original_observe)
+     os.makedirs(os.path.dirname(rows_path), exist_ok=True)
+     tmp = rows_path + ".tmp"
+-    with open(tmp, "w", encoding="utf8") as out:
+-        builder = RowBuilder(bmd.load_runs(runs_path), out, character)
+-        for screen, entry in bmd.iter_entries(states):
+-            builder.feed(screen, entry)
+-        builder.finish()
++    try:
++        with open(tmp, "w", encoding="utf8") as out:
++            builder = RowBuilder(bmd.load_runs(runs_path), out, character)
++            from legacy_incremental import consume_fights
++            consume_fights(bmd, builder, states, extra_code=__file__)
++            builder.finish()
++    finally:
++        bmd.observe_combat = original_observe
+     os.replace(tmp, rows_path)
+     return builder
+ 
+@@ -1567,8 +1579,9 @@ def decision_flags(rows, decisions_path):
+     deciders = collections.Counter()
+     if not decisions_path or not os.path.exists(decisions_path):
+         return flags, deciders
++    from legacy_incremental import choice_lines
+     with open(decisions_path, encoding="utf8") as handle:
+-        for line in handle:
++        for line in choice_lines(decisions_path, handle):
+             if '"combat/plan-choice' not in line:
+                 continue
+             try:
+@@ -1587,6 +1600,15 @@ def decision_flags(rows, decisions_path):
+     return flags, deciders
+ 
+ 
++def training_choices_identity(rows_path, decisions_path):
++    """Ignore appended choices outside the estimator's actual training windows."""
++    rows = [row for row in load_rows(rows_path)
++            if isinstance(row["asc"], int) and row["asc"] >= MIN_ASC
++            and row["kind"] in FIGHT_KINDS]
++    flags, deciders = decision_flags(rows, decisions_path)
++    return [flags, sorted(deciders.items(), key=lambda pair: str(pair[0]))]
++
++
+ def importance(gbm, top=15):
+     total = sum(gbm.gain) or 1
+     pairs = sorted(zip(gbm.names, gbm.gain), key=lambda kv: -kv[1])[:top]
+@@ -1894,7 +1916,11 @@ def main(argv=None):
+     parser.add_argument("--notes", default=None, help="default notes/fight-value-backtest.md (another character: -<id> before .md)")
+     parser.add_argument("--gates", default=None, help="default knowledge/characters/<character>/fight-value-gates.json")
+     parser.add_argument("--trees", type=int, default=150)
++    parser.add_argument("--train-every", type=int, default=os.environ.get('FIGHT_VALUE_TRAIN_EVERY', '10'))
++    parser.add_argument("--idle", action="store_true", help="train pending rows at an ops-verified idle boundary")
+     args = parser.parse_args(argv)
++    if args.train_every < 1:
++        parser.error('--train-every must be positive')
+     character = character_key(args.character)
+     suffix = "" if character == LEGACY else f"-{character}"
+     args.rows = args.rows or DEFAULT_ROWS.replace(".jsonl", f"{suffix}.jsonl")
+@@ -1917,7 +1943,61 @@ def main(argv=None):
+     if args.stage in ("train", "all"):
+         os.makedirs(os.path.dirname(args.notes), exist_ok=True)
+         os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+-        train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
++        from legacy_incremental import context
++        cache = context(args.decisions)
++        from fight_value_incremental import training_due, trained
++        completed = bmd.load_runs(args.runs)
++        # Character-specific denominators; never count another character's run.
++        from characters import run_character
++        completed = {rid: r for rid, r in completed.items() if (run_character(r) or LEGACY) == character}
++        cadence = Path(args.rows).with_suffix('.training.json')
++        outputs = [args.out, args.notes, args.gates]
++        due, policy = training_due(cadence, completed, outputs, args.train_every, args.idle, args.stage == 'train')
++        print('train-policy: ' + json.dumps(policy, sort_keys=True))
++        if not due:
++            print('train: deferred; previous completed model retained')
++            return 0
++        def fit():
++            # Complete all artifacts before touching the previous model. A failed
++            # fit leaves every reader on the last successful generation.
++            from refresh_publish import publication
++            with tempfile.TemporaryDirectory(prefix='.fight-fit-', dir=Path(args.out).parent) as directory:
++                staged = [str(Path(directory) / str(i)) for i in range(3)]
++                train(args.rows, args.decisions, staged[0], staged[1], args.trees, staged[2])
++                ready = []
++                try:
++                    for source, target in zip(staged, outputs):
++                        fd, temporary = tempfile.mkstemp(prefix='.fight-ready-', dir=Path(target).parent)
++                        os.close(fd)
++                        ready.append((temporary, target))
++                        shutil.copyfile(source, temporary)
++                        os.chmod(temporary, 0o644)
++                    with publication():
++                        for temporary, target in ready:
++                            os.replace(temporary, target)
++                finally:
++                    for temporary, _target in ready:
++                        Path(temporary).unlink(missing_ok=True)
++        if cache:
++            cache.ready(args.decisions)
++            def file_sha(path):
++                digest = hashlib.sha256()
++                try:
++                    with open(path, 'rb') as source:
++                        for chunk in iter(lambda: source.read(4 * 1024 * 1024), b''):
++                            digest.update(chunk)
++                except FileNotFoundError:
++                    return None
++                return digest.hexdigest()
++            inputs = [training_choices_identity(args.rows, args.decisions), args.trees,
++                      file_sha(args.rows), file_sha(__file__),
++                      file_sha(os.path.join(ROOT, 'knowledge/common/move-model.json'))]
++            changed = cache.products('fight-value:'+character,inputs,[args.out,args.notes,args.gates],fit)
++            if not changed:
++                print('train: unchanged inputs and verified outputs; reusing completed fit')
++        else:
++            fit()
++        trained(cadence, completed, outputs)
+         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
+     return 0
+ 
+diff --git a/knowledge/builders/build-monster-db.py b/knowledge/builders/build-monster-db.py
+index 60bd97892..202267b74 100644
+--- a/knowledge/builders/build-monster-db.py
++++ b/knowledge/builders/build-monster-db.py
+@@ -44,6 +44,7 @@ from pathlib import Path
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from characters import LEGACY, character_key, run_character  # noqa: E402
++from refresh_publish import replace as publish_replace
+ 
+ 
+ def _default_logs():
+@@ -94,13 +95,13 @@ def pile_statuses(raw, cut):
+     return out
+ 
+ 
+-def iter_entries(path):
++def iter_entries(path, lines=None):
+     """Yield (screen, entry) for every state line worth reading, streaming the file.
+ 
+     A combat state also carries `_piles`, the status cards in its draw/discard/exhaust piles (pile_statuses),
+     read from the agent_view part that is otherwise cut before parsing."""
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             match = SCREEN_RE.search(raw, 0, 20000)
+             if not match or match.group(1) in SKIP_SCREENS:
+                 continue
+@@ -708,13 +709,18 @@ END_TURNS = None
+ END_TURN_RE = re.compile(rb'^\{"ts":"([^"]+)"')
+ 
+ 
+-def load_end_turns(path):
++def load_end_turns(path, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.end_turns(path, lambda rows: load_end_turns(path, rows))
+     """The (run id, frame ts) of every end-turn decision: the frame a decision was made on has the decision's ts."""
+     if not path or not os.path.exists(path):
+         return None
+     out = set()
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             if b'"chosen":{"action":"end_turn"' not in raw:
+                 continue
+             ts = END_TURN_RE.match(raw)
+@@ -1662,8 +1668,8 @@ def build(states, runs_path, game_path, decisions_path=None):
+     STATUS_CARDS.clear()
+     STATUS_CARDS.update(c["id"] for c in game.get("cards") or [] if c.get("type") == "Status")
+     builder = Builder(load_runs(runs_path))
+-    for screen, entry in iter_entries(states):
+-        builder.feed(screen, entry)
++    from legacy_incremental import consume_fights
++    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+     builder.finish()
+     return build_output(builder, game), {c: records_output(builder, c) for c in sorted(builder.by_character)}
+ 
+@@ -1677,7 +1683,7 @@ def write_json(path, data):
+     with open(tmp, "w", encoding="utf8") as handle:
+         json.dump(data, handle, ensure_ascii=False, indent=1, sort_keys=False)
+         handle.write("\n")
+-    os.replace(tmp, path)
++    publish_replace(tmp, path)
+ 
+ 
+ def main(argv=None):
+@@ -1709,7 +1715,7 @@ def main(argv=None):
+         tmp = f"{args.move_model_out}.{os.getpid()}.tmp"
+         with open(tmp, "w", encoding="utf8") as handle:
+             json.dump(move_model_view(db), handle, ensure_ascii=False, indent=1, sort_keys=True)
+-        os.replace(tmp, args.move_model_out)
++        publish_replace(tmp, args.move_model_out)
+     if not args.quiet:
+         meta = db["meta"]["generated_from"]
+         print(f"{len(db['monsters'])} monsters, {meta['fights']} fights (by ascension {meta['fights_by_asc']}) in "
+diff --git a/knowledge/builders/build-outcome-stats.py b/knowledge/builders/build-outcome-stats.py
+index f06a85f24..c4e83fd90 100644
+--- a/knowledge/builders/build-outcome-stats.py
++++ b/knowledge/builders/build-outcome-stats.py
+@@ -41,6 +41,7 @@ from pathlib import Path
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from characters import character_dir, character_key, run_character  # noqa: E402
++from refresh_publish import replace as publish_replace
+ LOW_N = 5
+ # From this ascension up each ascension gets a table of its own (--ascension band, the default): A8, A9, and each
+ # higher one once it has a finished run. Below it nothing is counted (the file was A8 only before 2026-10-04).
+@@ -99,13 +100,18 @@ def read_runs(path, ascension, character=None):
+     return runs
+ 
+ 
+-def read_decisions(path, runs):
++def read_decisions(path, runs, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.outcome_decisions(path, runs, lambda selected, rows: read_decisions(path, selected, rows))
+     """Per run: sorted (ts, floor, hp, max_hp, gold); event choices and rest choices (ts, floor, index)."""
+     marks = collections.defaultdict(list)
+     events = collections.defaultdict(list)
+     rests = collections.defaultdict(list)
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             if b'"play"' not in raw[:200]:
+                 continue
+             try:
+@@ -138,10 +144,10 @@ def read_decisions(path, runs):
+     return marks, events, rests
+ 
+ 
+-def iter_states(path):
++def iter_states(path, lines=None):
+     """Yield (screen, entry) for every non-combat state line of interest, streaming the file."""
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             match = SCREEN_RE.search(raw, 0, 4000)
+             if not match or match.group(1) in SKIP_SCREENS:
+                 continue
+@@ -168,7 +174,12 @@ def act_of(run):
+         return 1
+ 
+ 
+-def read_states(path, runs, table_of):
++def read_states(path, runs, table_of, entries=None):
++    if entries is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.outcome_states(path, runs, table_of, lambda selected, iterator: read_states(path, selected, table_of, iterator), iter_states)
+     """Deck/relic acquisitions, card rewards offered, event and rest screens, highest act per run. Names (cards,
+     relics, events) are kept per table (`table_of`: run id -> table key), each from its own runs' states, as a
+     table's whole file had them before."""
+@@ -180,7 +191,7 @@ def read_states(path, runs, table_of):
+     event_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, event_id, {index: (key, title)})]
+     rest_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, {index: option_id}, hp, max_hp)]
+     names_by_table = collections.defaultdict(lambda: {"card": {}, "relic": {}, "event": {}})
+-    for screen, entry in iter_states(path):
++    for screen, entry in (iter_states(path) if entries is None else entries):
+         state = entry.get("state") or {}
+         run_id = state.get("run_id")
+         if run_id not in runs:
+@@ -597,7 +608,7 @@ def main(argv=None):
+     with open(tmp, "w", encoding="utf8") as handle:
+         json.dump(stats, handle, ensure_ascii=False, indent=1)
+         handle.write("\n")
+-    os.replace(tmp, args.out)
++    publish_replace(tmp, args.out)
+     if not args.quiet:
+         for key, table in stats["by_ascension"].items():
+             print(
+diff --git a/knowledge/builders/build-potion-equivalents.py b/knowledge/builders/build-potion-equivalents.py
+index 5ddedb41c..7b33393bd 100644
+--- a/knowledge/builders/build-potion-equivalents.py
++++ b/knowledge/builders/build-potion-equivalents.py
+@@ -51,6 +51,7 @@ from pathlib import Path
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from characters import LEGACY, NAMES_ZH, character_dir, character_key  # noqa: E402
++from refresh_publish import replace as publish_replace
+ GAME_DATA = os.path.join(ROOT, "data", "game-data.json")
+ POTION_VALUES_TS = os.path.join(ROOT, "agent", "src", "knowledge", "potion-values.ts")
+ CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "reflex", "card-model.ts")
+@@ -637,44 +638,87 @@ def runs_of(character, column="run_id"):
+             f"HAVING lower(coalesce(arg_max(character, off), '{LEGACY}')) = '{character}')")
+ 
+ 
+-def load_logs(con, ascensions, character=None):
++def _run_scope(character, column, run_id=..., run_ids=None):
++    own = runs_of(character, column)
++    if run_ids is not None:
++        quoted = ["'" + str(rid).replace("'", "''") + "'" for rid in run_ids if rid is not None]
++        terms = ([column + " IN (" + ",".join(quoted) + ")"] if quoted else [])
++        if None in run_ids:
++            terms.append(column + " IS NULL")
++        return own + " AND (" + " OR ".join(terms or ["FALSE"]) + ")"
++    if run_id is not ...:
++        own += " AND " + column + (" IS NULL" if run_id is None else " = '" + str(run_id).replace("'", "''") + "'")
++    return own
++
++
++def load_logs(con, ascensions, character=None, run_id=..., cache=None, run_ids=None):
++    if run_id is ... and run_ids is None:
++        from legacy_incremental import context
++        cache = cache or context(os.path.join(os.environ.get("LOGDB_LOGS", os.path.join(ROOT, "logs")), "states.jsonl"))
++        if cache:
++            return cache.potion_logs(con, ascensions, character, load_logs, fetch, runs_of)
+     ascs = ",".join(str(a) for a in sorted(set(ascensions)))
+-    own = runs_of(character)
++    partitioned = run_ids is not None
++    def scope(column="run_id"):
++        return _run_scope(character, column, run_id, run_ids)
++    own = scope()
++    prefix = "run_id AS _cache_run, " if partitioned else ""
+     turns = fetch(con, f"""
+         WITH b AS (
+           SELECT t.*, lead(enemy_hp) OVER (PARTITION BY run_id, fight_no ORDER BY turn) AS next_enemy_hp
+           FROM turns t WHERE room = 'boss' AND ascension IN ({ascs}){own})
+-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
++        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
+                CASE WHEN next_enemy_hp IS NULL THEN NULL ELSE greatest(enemy_hp - next_enemy_hp, 0) END AS dmg,
+                enemy_turn_hp_lost AS loss, intent_damage AS intent, end_block, start_energy AS energy, cards_played AS cards, cards_n
+         FROM b""")
+     fights = fetch(con, f"""
+-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
++        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
+         FROM fights WHERE room = 'boss' AND ascension IN ({ascs}) AND turns IS NOT NULL{own}""")
++    group = "run_id, " if partitioned else ""
+     seen = fetch(con, f"""
+         WITH s AS (SELECT DISTINCT run_id, unnest(potions) AS id FROM frames WHERE potions IS NOT NULL{own})
+-        SELECT id, count(*) AS runs FROM s GROUP BY 1""")
+-    drinks = fetch(con, f"SELECT potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY 1")
++        SELECT {prefix}id, count(*) AS runs FROM s GROUP BY {group}id""")
++    drinks = fetch(con, f"SELECT {prefix}potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY {group}potion_id")
+     boss_drinks = fetch(con, f"""
+-        WITH u AS (SELECT ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
+-        SELECT id, ascension, count(*) AS n FROM u GROUP BY 1, 2""")
++        WITH u AS (SELECT {group}ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
++        SELECT {prefix}id, ascension, count(*) AS n FROM u GROUP BY {group}id, ascension""")
+     entropic = fetch(con, f"""
+-        SELECT avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
+-        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}""")
++        SELECT {prefix}avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
++        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}
++        {"GROUP BY run_id" if partitioned else ""}""")
+     # Every combat question of these ascensions (the Monte Carlo summaries) and the boss drinks (the check).
+     questions = fetch(con, f"""
+         SELECT d.off, d.run_id, d.floor, d.turn, f.act, f.ascension, f.room
+         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor
+-        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
++        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
+     boss_drink_rows = fetch(con, f"""
+         SELECT d.off, d.run_id, d.floor, d.turn, d.label, d.potion_id, f.act, f.ascension
+         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor AND f.room = 'boss'
+-        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
+-    last = fetch(con, f"SELECT max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own}")[0]
++        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
++    last = fetch(con, f"SELECT {prefix}max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own} {"GROUP BY run_id" if partitioned else ""}")
++    if partitioned:
++        # Query each parquet source once when initially filling many run caches.
++        # Every aggregate retains run identity until the unchanged global reducer.
++        parts = {rid: dict(turns=[], fights=[], seen={}, drinks={}, boss_drinks=[],
++                          entropic=dict(slots=None, n=0), questions=[], boss_drink_rows=[],
++                          last_fight='None', all_fights=0) for rid in run_ids}
++        for key, rows in (("turns", turns), ("fights", fights), ("seen", seen), ("drinks", drinks),
++                          ("boss_drinks", boss_drinks), ("entropic", entropic), ("last", last)):
++            for source in rows:
++                row = dict(source)
++                part = parts[row.pop('_cache_run')]
++                if key == 'seen': part[key][row['id']] = row['runs']
++                elif key == 'drinks': part[key][row['id']] = row['n']
++                elif key == 'entropic': part[key] = row
++                elif key == 'last': part.update(last_fight=str(row['last']), all_fights=row['n'])
++                else: part[key].append(row)
++        for key, rows in (("questions", questions), ("boss_drink_rows", boss_drink_rows)):
++            for row in rows: parts[row['run_id']][key].append(row)
++        return parts
+     return {
+         "turns": turns, "fights": fights, "seen": {r["id"]: r["runs"] for r in seen}, "drinks": {r["id"]: r["n"] for r in drinks},
+         "boss_drinks": boss_drinks, "entropic": entropic[0], "questions": questions, "boss_drink_rows": boss_drink_rows,
+-        "last_fight": str(last["last"]), "all_fights": last["n"],
++        "last_fight": str(last[0]["last"]), "all_fights": last[0]["n"],
+     }
+ 
+ 
+@@ -683,26 +727,36 @@ def read_raw(handle, off):
+     return json.loads(handle.readline())
+ 
+ 
+-def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None):
++def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None, run_id=..., run_ids=None):
+     """The potion offers of the logged shop visits from `min_asc` up: [{id, rarity, price, act, asc}], one visit's offers
+     from the first of its SHOP frames (up to SHOP_FRAMES_PER_VISIT) that lists priced potions; and the visits read."""
++    from legacy_incremental import context
++    cache = context(states_handle.name)
++    if cache and run_id is ... and run_ids is None:
++        return cache.potion_shops(con, states_handle, min_asc, character, load_shop_offers, fetch, runs_of)
++    own = _run_scope(character, "si.run_id", run_id, run_ids)
+     visits = fetch(con, f"""
+         SELECT si.run_id, si.floor, any_value(si.act) AS act, any_value(r.ascension) AS asc,
+                list(si.off ORDER BY si.off) AS offs, list(si.len ORDER BY si.off) AS lens
+         FROM state_index si JOIN runs r ON r.run_id = si.run_id
+-        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{runs_of(character, "si.run_id")} GROUP BY 1, 2 ORDER BY 1, 2""")
++        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{own} GROUP BY 1, 2 ORDER BY 1, 2""")
+     offers = []
+     seen = 0
++    parts = {rid: ([], 0) for rid in run_ids} if run_ids is not None else None
+     for visit in visits:
+         for off, length in list(zip(visit["offs"], visit["lens"]))[:SHOP_FRAMES_PER_VISIT]:
+             states_handle.seek(off)
+             state = (json.loads(states_handle.read(length)) or {}).get("state") or {}
+             potions = [p for p in ((state.get("shop") or {}).get("potions") or []) if isinstance(p.get("price"), (int, float)) and p.get("potion_id")]
+             if potions:
++                if parts is not None:
++                    offers, seen = parts[visit['run_id']]
+                 seen += 1
+                 offers.extend({"id": p["potion_id"], "rarity": p.get("rarity"), "price": p["price"], "act": visit["act"], "asc": visit["asc"]} for p in potions)
++                if parts is not None:
++                    parts[visit['run_id']] = offers, seen
+                 break
+-    return offers, seen
++    return parts if parts is not None else (offers, seen)
+ 
+ 
+ def gold_rates(offers, visits, entry, ascensions):
+@@ -978,20 +1032,25 @@ def main(argv=None):
+     solver = solver_models()
+     names = {p["name"]: p["id"] for p in potions}
+     names.update({p["id"]: p["id"] for p in potions})
++    from legacy_incremental import context
++    cache = context(os.path.join(logs_dir, "states.jsonl"))
+     with logsync.read_lock(db, shared=True):
+-        con = logquery.connect(db, threads=2)
++        con = logquery.connect(db, threads=1)
+         has_runs = fetch(con, f"SELECT count(*) AS n FROM (SELECT 1 FROM frames WHERE TRUE{runs_of(character)} LIMIT 1)")[0]["n"]
+-        logs = load_logs(con, ascensions, character) if has_runs else None
++        logs = load_logs(con, ascensions, character, cache=cache) if has_runs else None
+     if logs is None:
+         print(f"no {character} runs in the log database; nothing written -> {args.out}")
+         return 0
+     with open(os.path.join(logs_dir, "decisions.jsonl"), "rb") as handle:
+-        mc = mc_summaries(logs["questions"], handle)
+-        checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
++        if cache:
++            mc, checks = cache.potion_checks(logs, handle, names, mc_summaries, check_column)
++        else:
++            mc = mc_summaries(logs["questions"], handle)
++            checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
+     rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks, character)
+     # The gold rate (THIEF_COST): the logged shop visits' potion offers (states.jsonl by offset, read-only).
+     with logsync.read_lock(db, shared=True):
+-        con = logquery.connect(db, threads=2)
++        con = logquery.connect(db, threads=1)
+         with open(os.path.join(logs_dir, "states.jsonl"), "rb") as handle:
+             offers, shop_visits = load_shop_offers(con, handle, character=character)
+     gold = gold_rates(offers, shop_visits, entry, ascensions)
+@@ -1023,7 +1082,7 @@ def main(argv=None):
+     tmp = args.out + ".tmp"
+     with open(tmp, "w", encoding="utf8") as handle:
+         handle.write(text)
+-    os.replace(tmp, args.out)
++    publish_replace(tmp, args.out)
+     n_checks = sum(len(deltas) for deltas in checks.values())
+     print(f"wrote {args.out}: {len(entry)} potions, rates for {len(out['rates'])} ascensions, {len(logs['fights'])} boss fights, {n_checks} boss drinks with rollout numbers ({len(logs['boss_drink_rows'])} boss drinks)")
+     if gold:
+diff --git a/knowledge/builders/build-room-costs.py b/knowledge/builders/build-room-costs.py
+index 8303f14c8..1fa0b3106 100644
+--- a/knowledge/builders/build-room-costs.py
++++ b/knowledge/builders/build-room-costs.py
+@@ -35,6 +35,7 @@ from pathlib import Path
+ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from characters import character_dir, character_key, run_character  # noqa: E402
++from refresh_publish import replace as publish_replace
+ MAP_MARK = b'"screen":"MAP"'
+ OVER_MARK = b'"screen":"GAME_OVER"'
+ 
+@@ -51,14 +52,19 @@ def quantile(values, p):
+     return xs[i] + (xs[j] - xs[i]) * (k - i)
+ 
+ 
+-def scan(states_path, character=None):
++def scan(states_path, character=None, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(states_path)
++        if cache:
++            return cache.room_scan(states_path, character, lambda rows: scan(states_path, character, rows))
+     """run id -> floor -> {first, last, type, asc, avail} from the MAP frames; run id -> death floor. With `character`,
+     only that character's MAP frames (a death floor is kept for every run: it only counts for a run with frames)."""
+     runs = collections.defaultdict(dict)
+     deaths = {}
+     first_ts = last_ts = None
+     with open(states_path, "rb") as handle:
+-        for line in handle:
++        for line in (handle if lines is None else lines):
+             head = line[:4000]
+             is_map = MAP_MARK in head
+             if not is_map and OVER_MARK not in head:
+@@ -108,14 +114,19 @@ FP_RUN_RE = re.compile(rb'\\"run\\":\\"([A-Z0-9]+)\\"')
+ FP_HP_RE = re.compile(rb'\\"hp\\":(-?\d+)')
+ 
+ 
+-def map_choices(decisions_path, fights=None):
++def map_choices(decisions_path, fights=None, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(decisions_path)
++        if cache:
++            return cache.room_choices(decisions_path, fights, lambda rows, fs: map_choices(decisions_path, fs, rows))
+     """(run id, floor) -> the option index of the last map node chosen on that floor. With `fights` (a dict), also
+     (run id, floor) -> [HP at the first, HP at the last combat decision] for every floor with a fight."""
+     chosen = {}
+     if not os.path.exists(decisions_path):
+         return chosen
+     with open(decisions_path, "rb") as handle:
+-        for line in handle:
++        for line in (handle if lines is None else lines):
+             if fights is not None and b'"screen":"COMBAT"' in line[:400]:
+                 head = line[:3000]
+                 floor, run, hp = FLOOR_RE.search(head), FP_RUN_RE.search(head), FP_HP_RE.search(head)
+@@ -225,7 +236,7 @@ def main():
+     with open(tmp, "w", encoding="utf8") as handle:
+         json.dump(out, handle, indent=1, sort_keys=True)
+         handle.write("\n")
+-    os.replace(tmp, out_path)
++    publish_replace(tmp, out_path)
+     print(f"room costs: {len(runs)} runs -> {out_path} ({time.time() - started:.1f} s)", file=sys.stderr)
+ 
+ 
+diff --git a/knowledge/builders/fight_value_incremental.py b/knowledge/builders/fight_value_incremental.py
+new file mode 100644
+index 000000000..63396dade
+--- /dev/null
++++ b/knowledge/builders/fight_value_incremental.py
+@@ -0,0 +1,137 @@
++"""Resumable original fight reducer; only the provisional EOF suffix is replaced."""
++from collections import Counter, defaultdict
++import hashlib
++import json
++import os
++from pathlib import Path
++import codecs
++
++from incremental_evidence import implementation, token
++from legacy_incremental import context, pack, unpack
++
++
++def digest(path):
++    sha = hashlib.sha256()
++    with Path(path).open('rb') as source:
++        for block in iter(lambda: source.read(1024 * 1024), b''):
++            sha.update(block)
++    return sha.hexdigest()
++
++
++def extract(module, states, runs, rows_path, character, game):
++    cache = context(states)
++    if cache is None:
++        return None
++    stream = cache.ready(states)
++    info = cache.index.metadata(stream)
++    stamp = cache.index.directory / ('fight-rows-' + token(str(Path(rows_path).resolve())) + '.json')
++    identity = token([cache.code, implementation(__file__, module.__file__, module.bmd.__file__), character, game])
++    old, reason = None, 'cold'
++    try:
++        old = json.loads(stamp.read_text())
++        if not isinstance(old, dict):
++            raise ValueError('invalid checkpoint envelope')
++        if old.get('checkpoint_sha256') != token({k:v for k,v in old.items() if k != 'checkpoint_sha256'}):
++            reason = 'damaged_checkpoint'
++        elif old['identity'] != identity:
++            reason = 'implementation_or_scope_changed'
++        elif old['source_generation'] != info['generation']:
++            reason = info['rebuild_reason']
++        elif old['source_size'] > info['source_size']:
++            reason = 'truncated'
++        elif any(runs.get(rid) != value for rid, value in old['runs'].items()):
++            reason = 'completed_run_revised'
++        elif any(rid in runs for rid in old['unresolved_runs']):
++            reason = 'late_run_outcome'
++        elif digest(rows_path) != old['output_sha256']:
++            reason = 'rows_changed'
++        else:
++            reason = None
++    except (OSError, ValueError, KeyError, TypeError):
++        reason = 'missing_or_damaged_checkpoint'
++    if reason:
++        old = None
++    path = Path(rows_path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_name(path.name + f'.{os.getpid()}.tmp')
++    previous_observe = module.bmd.observe_combat
++    module.bmd.observe_combat = module._observe(previous_observe)
++    try:
++        with temporary.open('w', encoding='utf8') as out:
++            if old:
++                # The training table is small; copy its stable prefix, never raw logs.
++                with path.open('rb') as source:
++                    left = old['stable_bytes']
++                    decoder = codecs.getincrementaldecoder('utf8')()
++                    while left:
++                        block = source.read(min(left, 1024 * 1024))
++                        if not block:
++                            raise ValueError('training rows truncated')
++                        out.write(decoder.decode(block))
++                        left -= len(block)
++                    out.write(decoder.decode(b'', final=True))
++            builder = module.RowBuilder(runs, out, character)
++            unresolved = set(old['unresolved_runs']) if old else set()
++            commit = builder.commit
++            def observe_commit(fight):
++                if fight.outcome is None and fight.run_id not in runs:
++                    unresolved.add(fight.run_id)
++                commit(fight)
++            builder.commit = observe_commit
++            if old:
++                builder.open, pending = unpack(old['carry'], module.bmd.Fight)
++                builder.await_map = defaultdict(list, pending)
++                builder.rows, builder.fights = old['rows'], old['fights']
++                builder.by_asc = Counter(dict(unpack(old['by_asc'])))
++            offset = old['source_size'] if old else 0
++            refs = (ref for ref, _rid, _reason in cache.index.references(stream, start_offset=offset))
++            processed = 0
++            # Keep the original cross-run closing order and malformed-line policy.
++            for raw in cache.raw(states, refs):
++                processed += 1
++                for screen, entry in module.bmd.iter_entries(states, [raw]):
++                    builder.feed(screen, entry)
++            out.flush()
++            checkpoint = dict(identity=identity, source_size=info['source_size'], stable_bytes=out.tell(),
++                              source_generation=info['generation'],
++                              carry=pack((builder.open, dict(builder.await_map))), rows=builder.rows,
++                              fights=builder.fights, by_asc=pack(list(builder.by_asc.items())),
++                              runs=runs, unresolved_runs=sorted(unresolved))
++            # finish() materializes the legacy EOF result without mutating the
++            # resumable carry. Next append discards only this provisional suffix.
++            builder.finish()
++        os.replace(temporary, path)
++        checkpoint['output_sha256'] = digest(path)
++        checkpoint['checkpoint_sha256'] = token(checkpoint)
++        checkpoint_path = stamp.with_suffix('.tmp')
++        checkpoint_path.write_text(json.dumps(checkpoint))
++        os.replace(checkpoint_path, stamp)
++        cache.timings.append(dict(name='fight-value:append', processed_frames=processed,
++                                  from_offset=offset, source_size=info['source_size'], rebuild_reason=reason,
++                                  stable_bytes=checkpoint['stable_bytes']))
++        return builder
++    finally:
++        module.bmd.observe_combat = previous_observe
++        temporary.unlink(missing_ok=True)
++
++
++def training_due(stamp, runs, outputs, every=10, idle=False, force=False):
++    """No model mutation until a whole fit succeeds. Count unique completed runs."""
++    if every < 1:
++        raise ValueError('training interval must be positive')
++    try:
++        previous = json.loads(Path(stamp).read_text())
++        intact = previous['outputs'] == {str(p): digest(p) for p in outputs}
++    except (OSError, ValueError, KeyError, TypeError):
++        previous, intact = {}, False
++    pending = sorted(set(runs) - set(previous.get('runs', [])))
++    due = force or not intact or len(pending) >= every or (idle and bool(pending))
++    return due, dict(pending_runs=pending, every=every, idle=idle, previous_complete=intact)
++
++
++def trained(stamp, runs, outputs):
++    path = Path(stamp)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix('.tmp')
++    temporary.write_text(json.dumps(dict(runs=sorted(runs), outputs={str(p): digest(p) for p in outputs})))
++    os.replace(temporary, path)
+diff --git a/knowledge/builders/incremental_evidence.py b/knowledge/builders/incremental_evidence.py
+index cc531a20c..d51016efb 100644
+--- a/knowledge/builders/incremental_evidence.py
++++ b/knowledge/builders/incremental_evidence.py
+@@ -1,7 +1,8 @@
+ """Append-only raw evidence index and content-addressed per-run intermediates.
+ 
+-Old prefixes are byte-hashed, never trusted by mtime. Only new rows are decoded;
+-changed/truncated prefixes rebuild their index. Cached aggregates are disposable.
++Changed sources have their old prefixes byte-hashed. Exact unchanged inode/stat
++tuples reuse that verification; only new rows are decoded. Rotation, truncation
++and changed prefixes rebuild their index. Cached aggregates are disposable.
+ """
+ import gzip
+ import hashlib
+@@ -10,6 +11,7 @@ import os
+ from pathlib import Path
+ import sqlite3
+ import tempfile
++import uuid
+ 
+ from evidence_identity import identities, run_identity
+ 
+@@ -43,7 +45,8 @@ class FrozenLogIndex:
+         self.db.execute('CREATE TABLE IF NOT EXISTS streams (name TEXT PRIMARY KEY, metadata TEXT)')
+         self.db.execute('CREATE TABLE IF NOT EXISTS rows (stream TEXT, offset INTEGER, line INTEGER, bytes INTEGER, sha TEXT, rid TEXT, reason TEXT, PRIMARY KEY(stream, offset))')
+         self.db.execute('CREATE INDEX IF NOT EXISTS run_rows ON rows(stream, rid, offset)')
+-        self.stats = dict(decoded_rows=0, indexed_rows=0, rebuilt_streams=[], cache_hits=0, cache_misses=0)
++        self.stats = dict(decoded_rows=0, indexed_rows=0, rebuilt_streams=[], rebuild_reasons={},
++                          unchanged_streams=[], prefix_bytes_read=0, cache_hits=0, cache_misses=0)
+ 
+     def close(self):
+         self.db.close()
+@@ -57,8 +60,20 @@ class FrozenLogIndex:
+         if type(limit) is not int or limit < 0 or not path.exists() or path.stat().st_size < limit:
+             raise ValueError('incomplete frozen source: ' + str(path))
+         old = self.metadata(stream)
++        stat = path.stat()
++        identity = [stat.st_dev, stat.st_ino]
++        stamp = [*identity, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns]
++        # Within one append cycle all builders share this index. An unchanged
++        # inode/stat tuple reuses the already verified prefix, without rereading it.
++        if old and old.get('generation') and old.get('stat') == stamp and old['source_size'] == limit and old['source'] == str(path):
++            self.stats['unchanged_streams'].append(stream)
++            self.stats['indexed_rows'] += old['rows']
++            return old
+         sha = hashlib.sha256()
+-        reusable = bool(old and old['source'] == str(path) and old['source_size'] <= limit)
++        reusable = bool(old and old['source'] == str(path) and old['source_size'] <= limit
++                        and old.get('identity') == identity and old.get('generation'))
++        reason = 'cold' if old is None else ('rotation_or_identity' if old.get('identity') != identity
++                 or old['source'] != str(path) else 'truncated' if old['source_size'] > limit else 'prefix_changed')
+         if reusable:
+             with path.open('rb') as source:
+                 left = old['source_size']
+@@ -67,13 +82,17 @@ class FrozenLogIndex:
+                     if not data:
+                         raise ValueError('source truncated during prefix check')
+                     sha.update(data)
++                    self.stats['prefix_bytes_read'] += len(data)
+                     left -= len(data)
+             reusable = sha.hexdigest() == old['source_sha256']
+         if not reusable:
+             old, sha = None, hashlib.sha256()
+             self.stats['rebuilt_streams'].append(stream)
++            self.stats['rebuild_reasons'][stream] = reason
+         start = old['source_size'] if old else 0
+-        info = dict(old) if old else dict(source=str(path), rows=0, invalid_lines=0, incomplete_lines=0, gap_refs=[], gap_refs_limit=5)
++        info = dict(old) if old else dict(source=str(path), rows=0, invalid_lines=0, incomplete_lines=0,
++                                         gap_refs=[], gap_refs_limit=5, generation=uuid.uuid4().hex,
++                                         rebuild_reason=reason)
+         number = info['rows']
+         with self.db:
+             if old is None:
+@@ -105,13 +124,18 @@ class FrozenLogIndex:
+                     self.stats['decoded_rows'] += 1
+             for ref in info['gap_refs']:
+                 ref['source_size'] = limit
+-            info.update(source_size=limit, rows=number, status='scanned', source_sha256=sha.hexdigest())
++            after = path.stat()
++            after_stamp = [after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns]
++            info.update(source_size=limit, rows=number, status='scanned', source_sha256=sha.hexdigest(),
++                        identity=identity, stat=stamp if stamp == after_stamp else None)
+             self.db.execute('INSERT OR REPLACE INTO streams VALUES (?,?)', (stream, json.dumps(info)))
+         self.stats['indexed_rows'] += number
+         return info
+ 
+-    def references(self, stream, run_ids=None):
++    def references(self, stream, run_ids=None, start_offset=0):
+         sql, args = 'SELECT offset,line,bytes,sha,rid,reason FROM rows WHERE stream=?', [stream]
++        sql += ' AND offset>=?'
++        args.append(start_offset)
+         if run_ids is not None:
+             if not run_ids:
+                 return
+diff --git a/knowledge/builders/legacy_incremental.py b/knowledge/builders/legacy_incremental.py
+new file mode 100644
+index 000000000..85d876b8e
+--- /dev/null
++++ b/knowledge/builders/legacy_incremental.py
+@@ -0,0 +1,587 @@
++"""Disposable per-run extraction caches for the legacy after-run statistics.
++
++The original reducers still define every statistic. Cache keys include original
++byte identities, implementation and incoming fight state; interleaved runs keep
++cross-run closing order. No pickle, strategy values or inferred evidence.
++"""
++from collections import Counter, defaultdict
++import atexit
++import hashlib
++import gzip
++import json
++import os
++from pathlib import Path
++import sys
++import time
++
++sys.path.insert(0,str(Path(__file__).resolve().parents[2] / "learner"))
++from incremental_evidence import FrozenLogIndex, implementation, token
++
++_CONTEXTS = {}
++
++
++def pack(value):
++    if isinstance(value, Counter):
++        return ['counter', [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, defaultdict):
++        factory = value.default_factory
++        return ['defaultdict', None if factory is None else pack(factory()),
++                [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, dict):
++        return ['dict', [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, (tuple, set, frozenset)):
++        items = [pack(v) for v in value]
++        if not isinstance(value, tuple):
++            items.sort(key=lambda v: json.dumps(v, sort_keys=True))
++        return [type(value).__name__, items]
++    if isinstance(value, list):
++        return ['list', [pack(v) for v in value]]
++    if value is None or isinstance(value, (str, bool, int, float)):
++        return ['value', value]
++    if type(value).__name__ == 'Fight':
++        return ['fight', pack(value.__dict__)]
++    raise TypeError('unsupported intermediate: ' + type(value).__name__)
++
++
++def unpack(value, fight_type=None):
++    kind, *args = value
++    if kind == 'value':
++        return args[0]
++    if kind == 'fight':
++        if fight_type is None:
++            raise ValueError('fight class required')
++        fight = fight_type.__new__(fight_type)
++        fight.__dict__.update(unpack(args[0], fight_type))
++        return fight
++    if kind in ('dict', 'counter', 'defaultdict'):
++        if kind == 'defaultdict':
++            prototype, entries = args
++            out = defaultdict(None if prototype is None else lambda: unpack(prototype, fight_type))
++        else:
++            entries, = args
++            out = Counter() if kind == 'counter' else {}
++        for k, v in entries:
++            out[unpack(k, fight_type)] = unpack(v, fight_type)
++        return out
++    constructors = dict(list=list, tuple=tuple, set=set, frozenset=frozenset)
++    if kind not in constructors:
++        raise ValueError('unsupported intermediate tag')
++    return constructors[kind](unpack(v, fight_type) for v in args[0])
++
++
++def context(path):
++    directory = os.environ.get('STS2_REFRESH_CACHE_DIR')
++    if not directory or not path or not Path(path).is_file():
++        return None
++    logs = Path(path).resolve().parent
++    key = (str(Path(directory).resolve()), str(logs))
++    if key not in _CONTEXTS:
++        _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
++    return _CONTEXTS[key]
++
++
++class RunCache:
++    def __init__(self, directory, logs):
++        self.index = FrozenLogIndex(directory, logs)
++        self.logs = Path(logs)
++        self.started = time.monotonic()
++        self.streams = set()
++        self.timings = []
++        self.extractions = {}
++        self.code = implementation(__file__, Path(__file__).with_name('incremental_evidence.py'),
++                                   Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
++        atexit.register(self.close)
++
++    def close(self):
++        if self.index is None:
++            return
++        row = dict(schema='legacy-refresh-cache-v1', pid=os.getpid(), seconds=time.monotonic()-self.started,
++                   cycle=os.environ.get('STS2_REFRESH_CYCLE'),
++                   sources={s: self.index.metadata(s) for s in sorted(self.streams)},
++                   stats=self.index.stats, phases=self.timings, extractions=self.extractions)
++        with (self.index.directory / 'timing.jsonl').open('a') as out:
++            out.write(json.dumps(row) + '\n')
++        self.index.close()
++        self.index = None
++
++    def ready(self, path):
++        stream = Path(path).stem
++        if stream not in self.streams:
++            started = time.monotonic()
++            # A writer may be appending a row. Freeze only a newline-terminated prefix.
++            with Path(path).open('rb') as source:
++                end = source.seek(0, 2)
++                while end:
++                    source.seek(max(0, end-65536))
++                    data = source.read(end-max(0, end-65536))
++                    newline = data.rfind(b'\n')
++                    if newline >= 0:
++                        end = max(0, end-65536) + newline + 1
++                        break
++                    end = max(0, end-65536)
++            self.index.update(stream, end)
++            self.streams.add(stream)
++            self.timings.append(dict(name='index:'+stream, seconds=time.monotonic()-started,
++                                     bytes=end, rows=self.index.metadata(stream)['rows']))
++        return stream
++
++    def segments(self, path):
++        stream = self.ready(path)
++        previous, refs = object(), []
++        for ref, rid, _reason in self.index.references(stream):
++            if rid != previous and refs:
++                yield previous, refs
++                refs = []
++            previous = rid
++            refs.append(ref)
++        if refs:
++            yield previous, refs
++
++    def groups(self, path, selected=None):
++        stream = self.ready(path)
++        sql = 'SELECT rid,min(offset) FROM rows WHERE stream=? GROUP BY rid ORDER BY min(offset)'
++        for rid, _off in self.index.db.execute(sql, (stream,)):
++            if selected is None or rid in selected:
++                # NULL identities remain separate evidence; never assign them to a run.
++                rows = self.index.db.execute('SELECT offset,line,bytes,sha FROM rows WHERE stream=? AND rid IS ? ORDER BY offset', (stream, rid))
++                info = self.index.metadata(stream)
++                refs = [dict(source=info['source'], offset=o, line=n, bytes=b, sha256=s) for o,n,b,s in rows]
++                yield rid, refs
++
++    def raw(self, path, refs):
++        with Path(path).open('rb') as source:
++            for ref in refs:
++                source.seek(ref['offset'])
++                raw = source.read(ref['bytes'])
++                if hashlib.sha256(raw).hexdigest() != ref['sha256']:
++                    raise ValueError('legacy indexed evidence changed')
++                yield raw
++
++    def cached(self, name, refs, produce, extra=None, code=None):
++        started = time.monotonic()
++        hits = self.index.stats['cache_hits']
++        key = [self.code, code, str(self.logs), extra,
++               [[r['offset'], r['bytes'], r['sha256']] for r in refs]]
++        result = unpack(self.index.cached('legacy:'+name, key, lambda: pack(produce())))
++        phase = self.extractions.setdefault(name,dict(seconds=0,hits=0,misses=0))
++        phase['seconds'] += time.monotonic()-started
++        phase['hits' if self.index.stats['cache_hits']>hits else 'misses'] += 1
++        return result
++
++    def products(self, name, inputs, outputs, produce):
++        """Skip unchanged batch fits; new samples still use the original estimator."""
++        def sha(path):
++            return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++        stamp = self.index.directory / ('product-'+token([name,list(map(str,outputs))])+'.json')
++        key = token([self.code,name,inputs])
++        try:
++            old = json.loads(stamp.read_text())
++            if old['key']==key and old['outputs']==[sha(p) for p in outputs]:
++                return False
++        except (OSError,ValueError,KeyError,TypeError):
++            pass
++        produce()
++        temporary = stamp.with_suffix('.tmp')
++        temporary.write_text(json.dumps(dict(key=key,outputs=[sha(p) for p in outputs])))
++        temporary.replace(stamp)
++        return True
++
++    def end_turns(self, path, extract):
++        result = set()
++        for rid, refs in self.groups(path):
++            part = self.cached('end-turns', refs, lambda: extract(self.raw(path, refs)), code=implementation(Path(__file__).with_name('build-monster-db.py')))
++            result.update(part)
++        return result
++
++    def room_scan(self, path, character, extract):
++        runs, deaths, first, last = {}, {}, None, None
++        # Per-run segments preserve the original first/last timestamp semantics.
++        code = implementation(Path(__file__).with_name('build-room-costs.py'))
++        for rid, refs in self.segments(path):
++            rs, ds, lo, hi = self.cached('room-scan', refs, lambda: extract(self.raw(path, refs)), character, code)
++            for run, floors in rs.items():
++                for floor, mark in floors.items():
++                    old = runs.setdefault(run, {}).setdefault(floor, mark)
++                    old['last'] = mark['last']
++                    old['type'] = mark['type'] or old['type']
++                    old['avail'] = mark['avail'] or old['avail']
++            deaths.update(ds)
++            first = first or lo
++            last = hi or last
++        return runs, deaths, first, last
++
++    def room_choices(self, path, fights, extract):
++        chosen = {}
++        code = implementation(Path(__file__).with_name('build-room-costs.py'))
++        for rid, refs in self.segments(path):
++            def produce():
++                fs = {} if fights is not None else None
++                return extract(self.raw(path, refs), fs), fs
++            cs, fs = self.cached('room-choices', refs, produce, fights is not None, code)
++            chosen.update(cs)
++            if fights is not None:
++                for key, pair in fs.items():
++                    fights.setdefault(key, list(pair))[1] = pair[1]
++        return chosen
++
++    def outcome_decisions(self, path, runs, extract):
++        outputs = [defaultdict(list) for _ in range(3)]
++        code = implementation(Path(__file__).with_name('build-outcome-stats.py'))
++        for rid, refs in self.groups(path, runs):
++            part = self.cached('outcome-decisions', refs, lambda: extract({rid:runs[rid]}, self.raw(path, refs)), [rid,runs[rid]], code)
++            for output, rows in zip(outputs, part):
++                output.update(rows)
++        return tuple(outputs)
++
++    def outcome_states(self, path, runs, table_of, extract, iterator):
++        result = dict(acquired_cards={}, acquired_relics={}, offered={}, max_act={}, event_screens={}, rest_screens={}, names_by_table=defaultdict(lambda:dict(card={},relic={},event={})))
++        names = []
++        code = implementation(Path(__file__).with_name('build-outcome-stats.py'))
++        for rid, refs in self.groups(path, runs):
++            def produce():
++                # Name tie-breaking follows first raw offset, including interleaved runs.
++                origins = {}
++                def entries():
++                    for ref, raw in zip(refs, self.raw(path, refs)):
++                        for screen, row in iterator(path, [raw]):
++                            s = row.get('state') or {}; run = s.get('run') or {}
++                            items = [('card',c.get('card_id')) for c in run.get('deck') or []]
++                            items += [('relic',r.get('relic_id')) for r in run.get('relics') or []]
++                            if screen == 'REWARD':
++                                items += [('card',c.get('card_id')) for c in (s.get('reward') or {}).get('card_options') or []]
++                            if screen == 'EVENT':
++                                items += [('event',(s.get('event') or {}).get('event_id'))]
++                            for key in items:
++                                if key[1]: origins.setdefault(key, ref['offset'])
++                            yield screen, row
++                return extract({rid:runs[rid]}, entries()), origins
++            part, origins = self.cached('outcome-states', refs, produce, [rid,runs[rid],table_of(rid)], code)
++            for key in result:
++                if key != 'names_by_table': result[key].update(part[key])
++            for table, kinds in part['names_by_table'].items():
++                for kind, mapping in kinds.items():
++                    for ident, name in mapping.items():
++                        names.append((origins[(kind,ident)], table, kind, ident, name))
++        for _off, table, kind, ident, name in sorted(names, key=lambda r:r[0]):
++            result['names_by_table'][table][kind].setdefault(ident, name)
++        return result
++
++    def construction(self, root, logs, character, cutoff, extract, lookup):
++        from datetime import datetime, timezone
++        runs = {}
++        for raw in (logs/'runs.jsonl').read_text().splitlines():
++            row = json.loads(raw)
++            if str(row.get('character','')).lower() == character: runs[row['run_id']]=row
++        catalog = json.loads((root/'data/game-data.json').read_text())['collections']['cards']
++        names = {c['name']:c['id'] for c in catalog if c.get('name')}
++        names.update({c['id']:c['id'] for c in catalog})
++        frames = lookup(root,character)
++        self.ready(logs/'states.jsonl')
++        rows, excluded, result = [], Counter(), None
++        code = implementation(Path(__file__).with_name('build-construction-opportunities.py'))
++        for rid,refs in self.groups(logs/'brain.jsonl',runs):
++            own = {key:value for key,value in frames.items() if key[0]==rid}
++            extra = [runs[rid],names,pack(own),self.index.run_signature(rid,['states']),cutoff]
++            def produce():
++                lines = ((ref['offset'],raw) for ref,raw in zip(refs,self.raw(logs/'brain.jsonl',refs)))
++                return extract(root,logs,character,cutoff,({rid:runs[rid]},names,own),lines)
++            result = self.cached('construction',refs,produce,extra,code)
++            rows.extend(result['rows']); excluded.update(result['excluded'])
++        if result is None:
++            result=extract(root,logs,character,cutoff,({},names,{}),iter(()))
++        rows.sort(key=lambda r:r['source']['offset'])
++        meta = self.index.metadata('brain')
++        return dict(result,generated=datetime.now(timezone.utc).isoformat(),rows=rows,excluded=dict(excluded) or result['excluded'],
++                    digest=hashlib.sha256(json.dumps(rows,sort_keys=True).encode()).hexdigest(),
++                    cutoff=cutoff or max((r['ts'] for r in rows),default=''),
++                    source_digest=meta['source_sha256'],source_bytes=meta['source_size'])
++
++    def potion_partitions(self, con, fetch, character=None):
++        # LogDB can lag raw logs. Include compact table watermarks as well as raw
++        # evidence identities, so a later sync cannot reuse an incomplete query.
++        tables = ('frames','turns','fights','decisions','state_index','runs')
++        versions = implementation(*(Path(__file__).resolve().parents[2] / 'agent/tools/logdb' / f
++                                    for f in ('extract.py','sync.py','views.sql')))
++        signatures = defaultdict(dict)
++        for table in tables:
++            for row in fetch(con, 'SELECT run_id, count(*) AS n FROM '+table+' GROUP BY run_id'):
++                signatures[row['run_id']][table] = row['n']
++        for stream in ('states','decisions','runs'):
++            path = self.logs/(stream+'.jsonl')
++            if path.exists():
++                for rid,refs in self.groups(path):
++                    signatures[rid][stream+':raw'] = token([[r['offset'],r['bytes'],r['sha256']] for r in refs])
++        if character:
++            # Resolve ownership once. Repeating runs_of() inside every per-run
++            # query rescans all frames, including runs that cannot contribute.
++            from characters import LEGACY
++            owners = {row['run_id']: row['character'] for row in fetch(con,
++                "SELECT run_id, lower(coalesce(arg_max(character, off), '" + LEGACY +
++                "')) AS character FROM frames WHERE run_id IS NOT NULL GROUP BY run_id")}
++            if character == LEGACY:
++                signatures = {rid:part for rid,part in signatures.items()
++                              if owners.get(rid or '', LEGACY) == LEGACY}
++            else:
++                signatures = {rid:part for rid,part in signatures.items()
++                              if rid is not None and owners.get(rid) == character}
++        return {rid:[versions,part] for rid,part in signatures.items()}
++
++    def potion_cached(self, name, partitions, parameters, code, single, batch):
++        class Missing(Exception):
++            pass
++        result, missing = {}, []
++        def absent():
++            raise Missing()
++        for rid, signature in sorted(partitions.items(), key=lambda r: str(r[0])):
++            try:
++                result[rid] = self.cached(name, [], absent, [rid, signature, *parameters], code)
++            except Missing:
++                # This was a lookup only; count the eventual extraction once.
++                self.index.stats['cache_misses'] -= 1
++                missing.append(rid)
++        if missing:
++            started = time.monotonic()
++            values = batch(missing) if len(missing) > 1 else {missing[0]: single(missing[0])}
++            self.timings.append(dict(name=name+':query', seconds=time.monotonic()-started, runs=len(missing)))
++            for rid in missing:
++                result[rid] = self.cached(name, [], lambda: values[rid],
++                                          [rid, partitions[rid], *parameters], code)
++        return result
++
++    def potion_logs(self, con, ascensions, character, extract, fetch, scope):
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        result = dict(turns=[],fights=[],seen=Counter(),drinks=Counter(),boss_drinks=[],
++                      entropic=dict(slots=None,n=0),questions=[],boss_drink_rows=[],last_fight='None',all_fights=0)
++        boss, weighted = Counter(), []
++        parts = self.potion_cached('potion-logs', self.potion_partitions(con,fetch,character),
++            [list(ascensions),character], code,
++            lambda rid: extract(con,ascensions,None,run_id=rid),
++            lambda ids: extract(con,ascensions,None,run_ids=ids))
++        for rid, part in sorted(parts.items(), key=lambda r: str(r[0])):
++            for key in ('turns','fights','questions','boss_drink_rows'): result[key].extend(part[key])
++            result['seen'].update(part['seen']); result['drinks'].update(part['drinks'])
++            for row in part['boss_drinks']: boss[(row['id'],row['ascension'])] += row['n']
++            if part['entropic']['n']:
++                weighted.append(part['entropic']['slots']*part['entropic']['n'])
++                result['entropic']['n'] += part['entropic']['n']
++            if part['last_fight']!='None':
++                result['last_fight']=max(result['last_fight'].replace('None',''),part['last_fight'])
++            result['all_fights'] += part['all_fights']
++        result['boss_drinks']=[dict(id=pid,ascension=asc,n=n) for (pid,asc),n in boss.items()]
++        if result['entropic']['n']: result['entropic']['slots']=sum(weighted)/result['entropic']['n']
++        for key in ('questions','boss_drink_rows'): result[key].sort(key=lambda r:r['off'])
++        return result
++
++    def potion_checks(self, logs, handle, names, mc_extract, check_extract):
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        questions,drinks=defaultdict(list),defaultdict(list)
++        for row in logs['questions']: questions[row['run_id']].append(row)
++        for row in logs['boss_drink_rows']: drinks[row['run_id']].append(row)
++        parts=[]
++        for rid,refs in self.groups(Path(handle.name),set(questions)|set(drinks)):
++            qs,ds=questions[rid],drinks[rid]
++            def produce():
++                # Keep the original per-observation MC inputs; merge in raw-offset
++                # order before taking means, rather than averaging run averages.
++                observed=[]
++                for q in qs:
++                    handle.seek(q['off']); line=handle.readline()
++                    if b'"random"' not in line: continue
++                    row=json.loads(line)
++                    for entry in (row.get('potions') or {}).get('random') or []:
++                        if isinstance(entry.get('hp_saved_mean'),(int,float)) and isinstance(entry.get('dmg_gained_mean'),(int,float)):
++                            observed.append((q['off'],q['ascension'],entry['potion'],entry['hp_saved_mean'],entry['dmg_gained_mean']))
++                return observed,check_extract(ds,qs,handle,names)
++            parts.append(self.cached('potion-checks',refs,produce,[qs,ds,names],code))
++        samples=defaultdict(lambda:defaultdict(list)); checks=defaultdict(list)
++        for off,asc,pid,hp,dmg in sorted((row for rows,_ in parts for row in rows),key=lambda r:r[0]):
++            samples[asc][pid].append((hp,dmg))
++        for _,part in parts:
++            for key,values in part.items(): checks[key].extend(values)
++        mc={asc:{pid:dict(hp=sum(h for h,_ in values)/len(values),dmg=sum(d for _,d in values)/len(values),n=len(values))
++                 for pid,values in by.items()} for asc,by in samples.items()}
++        return mc,checks
++
++    def potion_shops(self, con, handle, minimum, character, extract, fetch, scope):
++        offers,visits=[],0
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        parts = self.potion_cached('potion-shops', self.potion_partitions(con,fetch,character),
++            [minimum,character], code,
++            lambda rid: extract(con,handle,minimum,None,run_id=rid),
++            lambda ids: extract(con,handle,minimum,None,run_ids=ids))
++        for rid, (rows,n) in sorted(parts.items(), key=lambda r: str(r[0])):
++            offers.extend(rows);visits+=n
++        return offers,visits
++
++    def boss_rows(self, path, character, extract, bosses):
++        result = {}
++        code = implementation(Path(__file__).with_name('build-boss-damage.py'))
++        needles = [f'"enemy_id":"{enemy}"'.encode() for enemy in bosses]
++        for rid, refs in self.groups(path):
++            part = self.cached('boss-rows', refs, lambda: extract((raw for raw in self.raw(path,refs) if any(n in raw for n in needles)),character), character, code)
++            for key, mapping in part.items():
++                result.setdefault(key,{}).update(mapping)
++        return result
++
++    def card_rows(self, path, module):
++        parts = []
++        code = implementation(module.__file__)
++        for rid, refs in self.groups(path):
++            def produce():
++                seen, faces, out = set(), set(), []
++                for ref, raw in zip(refs, self.raw(path, refs)):
++                    try: row = json.loads(raw)
++                    except (ValueError, UnicodeError):
++                        out.append((ref['offset'],raw.decode('utf8',errors='surrogateescape')))
++                        continue
++                    state = row.get('state',row); run = state.get('run') or {}
++                    witnesses = []
++                    for card in module.cards(state):
++                        key = module.canonical({k:v for k,v in card.items() if k!='index'})
++                        if key not in seen:
++                            seen.add(key); witnesses.append(card)
++                    deck = []
++                    if state.get('in_combat') is False and (state.get('run_id') or run.get('run_id')):
++                        for i,card in enumerate(run.get('deck',[])):
++                            face = module.clean_face(card)
++                            key = module.canonical(face) if face else None
++                            if key and key not in faces:
++                                faces.add(key)
++                                while len(deck)<=i: deck.append({})
++                                deck[i]=card
++                    if not witnesses and not deck: continue
++                    reduced = dict(ts=row.get('ts'), _raw_sha256=ref['sha256'],state={
++                        '_cards':witnesses, 'in_combat':state.get('in_combat'), 'run_id':state.get('run_id'),
++                        'run':{**{k:run[k] for k in ('run_id','character_id','ascension','ascension_level','floor') if k in run},'deck':deck}})
++                    if row.get('source'): reduced['source']=row['source']
++                    out.append((ref['offset'], json.dumps(reduced,ensure_ascii=False,separators=(',',':'))+'\n'))
++                return out
++            parts.extend(self.cached('card-witnesses', refs, produce, code=code))
++        for off, raw in sorted(parts, key=lambda p:p[0]):
++            yield off, raw.encode('utf8',errors='surrogateescape')
++
++    def card_result(self, path, selected, audit, reduce, code_path):
++        stream = self.ready(path)
++        info = self.index.metadata(stream)
++        code = token([self.code, implementation(code_path)])
++        stamp = self.index.directory / ('card-aggregate-' + token(selected and sorted(selected)) + '.json.gz')
++        old, reason = None, None
++        try:
++            with gzip.open(stamp, 'rt') as source:
++                old = json.load(source)
++            if not isinstance(old, dict):
++                raise ValueError('invalid card checkpoint envelope')
++            if (old['code'] != code or old['sha256'] != token(old['state'])
++                    or old['offset'] > info['source_size'] or old['generation'] != info['generation']):
++                old, reason = None, 'source_or_implementation_changed'
++        except (OSError, ValueError, KeyError, EOFError, TypeError):
++            old, reason = None, 'cold_or_damaged_cache'
++        offset = old['offset'] if old else 0
++        accumulator = {'value': unpack(old['state'])} if old else {}
++        refs = [ref for ref, _rid, _reason in self.index.references(stream, start_offset=offset)]
++        result = reduce(path, selected, audit,
++                        ((ref['offset'], raw) for ref, raw in zip(refs, self.raw(path, refs))), accumulator)
++        state = pack(accumulator['value'])
++        temporary = stamp.with_suffix('.tmp')
++        with gzip.open(temporary, 'wt') as out:
++            json.dump(dict(code=code, offset=info['source_size'], generation=info['generation'],
++                           state=state, sha256=token(state)), out)
++        os.replace(temporary, stamp)
++        self.timings.append(dict(name='card-upgrades:append', processed_frames=len(refs),
++                                 from_offset=offset, rebuild_reason=reason))
++        return result
++
++
++def merge_stuns(target, source, evidence_limit):
++    for eid, row in source.items():
++        out = target[eid]
++        for key, value in row.items():
++            if isinstance(value, Counter): out[key].update(value)
++            elif isinstance(value, set): out[key].update(value)
++            elif isinstance(value, list):
++                for item in value:
++                    if len(out[key]) < evidence_limit and item not in out[key]: out[key].append(item)
++            else: out[key] += value
++
++
++def consume_fights(module, builder, states, extra_code=None):
++    cache = context(states)
++    if not cache:
++        for screen, entry in module.iter_entries(states): builder.feed(screen, entry)
++        return
++    code = implementation(module.__file__, *([extra_code] if extra_code else []))
++    original_commit = builder.commit
++    mechanics = module.MECHANICS
++    original_frame = mechanics.frame
++    game_identity = token(pack([module.GAME_TYPES,module.GAME_POWER_TYPES,module.STATUS_CARDS,module.TEMPORARY_POWERS]))
++    for rid, refs in cache.segments(states):
++        started = time.monotonic()
++        # A segment can touch its own pending fights and close another open fight.
++        # Unrelated pending runs are immutable until their own next segment or finish.
++        involved = {rid, *builder.open}
++        local_await = {r:fights for r,fights in builder.await_map.items() if r in involved}
++        carry = pack((builder.open,local_await))
++        extra = dict(carry=carry, await_order=list(builder.await_map), runs={r:builder.runs.get(r) for r in involved if r},
++                     end_turns=sorted(t for t in module.END_TURNS or () if t[0] in involved),
++                     checked=module.END_TURNS is not None, ok=mechanics.ok, error=mechanics.error,
++                     game=game_identity)
++        # Commits are replayed by the original reducer, in original order. The only
++        # frame-level global accumulator is stuns; all other frame state is on Fight.
++        identity = [cache.code,code,str(cache.logs),extra,[[r['offset'],r['bytes'],r['sha256']] for r in refs]]
++        produced = False
++        def produce():
++            nonlocal produced
++            produced = True
++            committed = []
++            frames = module.Mechanics(quiet=True)
++            def frame(*args, **kwargs):
++                frames.ok = mechanics.ok
++                frames.frame(*args, **kwargs)
++                if not frames.ok:
++                    mechanics.ok,mechanics.error=frames.ok,frames.error
++            def commit(fight):
++                committed.append(dict(fight=pack(fight),ok=mechanics.ok,error=mechanics.error))
++                original_commit(fight)
++            builder.commit, mechanics.frame = commit, frame
++            try:
++                for screen, entry in module.iter_entries(states, cache.raw(states,refs)):
++                    builder.feed(screen,entry)
++                return dict(committed=committed, carry=pack((builder.open,{r:fights for r,fights in builder.await_map.items() if r in involved})),
++                            await_order=list(builder.await_map), stuns=pack(frames.stuns),ok=mechanics.ok,error=mechanics.error)
++            finally:
++                builder.commit,mechanics.frame=original_commit,original_frame
++        value = cache.index.cached('legacy:fights',identity,produce)
++        builder.open,local_await=unpack(value['carry'],module.Fight)
++        remaining = {r:fights for r,fights in builder.await_map.items() if r not in involved}
++        remaining.update(local_await)
++        builder.await_map = defaultdict(list,((r,remaining[r]) for r in value['await_order']))
++        merge_stuns(mechanics.stuns,unpack(value['stuns']),module.EVIDENCE)
++        if not produced:
++            for item in value['committed']:
++                mechanics.ok,mechanics.error=item['ok'],item['error']
++                original_commit(unpack(item['fight'],module.Fight))
++        mechanics.ok,mechanics.error=value['ok'],value['error']
++        phase = cache.extractions.setdefault('fights', dict(seconds=0,hits=0,misses=0))
++        phase['seconds'] += time.monotonic()-started
++        phase['misses' if produced else 'hits'] += 1
++
++
++def choice_lines(path, fallback):
++    cache=context(path)
++    if not cache:
++        yield from fallback
++        return
++    code=implementation(Path(__file__).with_name('build-fight-value.py'))
++    parts=[]
++    for rid,refs in cache.groups(path):
++        def produce():
++            out=[]
++            for ref,raw in zip(refs,cache.raw(path,refs)):
++                if b'"combat/plan-choice' not in raw: continue
++                try: row=json.loads(raw)
++                except ValueError: continue
++                out.append((ref['offset'],{k:row.get(k) for k in ('ts','turn','decider')}))
++            return out
++        parts.extend(cache.cached('fight-choices',refs,produce,code=code))
++    for _off,row in sorted(parts,key=lambda p:p[0]):
++        yield json.dumps(dict(row,label='combat/plan-choice'))
+diff --git a/knowledge/builders/monster-db-check.py b/knowledge/builders/monster-db-check.py
+index 3b0dba7ce..efea43af9 100644
+--- a/knowledge/builders/monster-db-check.py
++++ b/knowledge/builders/monster-db-check.py
+@@ -8,6 +8,7 @@ file is not in the tree; (c) knowledge/common/move-model.json (moves, average da
+ 
+ Usage: python3 knowledge/builders/monster-db-check.py [--out PATH] [--dossiers PATH | --dossiers-rev REV]
+ """
++from refresh_publish import write_text
+ import argparse
+ import json
+ import os
+@@ -267,8 +268,7 @@ def main():
+     move_rules_section(db, w)
+     death_rules_section(db, w)
+     os.makedirs(os.path.dirname(args.out), exist_ok=True)
+-    with open(args.out, "w", encoding="utf8") as handle:
+-        handle.write("\n".join(out) + "\n")
++    write_text(args.out, "\n".join(out) + "\n")
+     print(f"-> {args.out}")
+ 
+ 
+diff --git a/knowledge/builders/refresh-v6-history.py b/knowledge/builders/refresh-v6-history.py
+index 86d2a8d00..9181e87e7 100644
+--- a/knowledge/builders/refresh-v6-history.py
++++ b/knowledge/builders/refresh-v6-history.py
+@@ -369,8 +369,8 @@ def refresh(root, ops_root, character, run_command=None):
+                     out.flush()
+                     os.fsync(out.fileno())
+                     os.fchmod(out.fileno(), 0o644)
+-                with (ops_root / 'ops/live-merge.lock').open('a') as publication:
+-                    fcntl.flock(publication, fcntl.LOCK_EX)
++                from refresh_publish import publication
++                with publication(ops_root):
+                     if receipt.get('spec_source') and descriptor(spec)['sha256'] != receipt['spec_source']['sha256']:
+                         raise ValueError('formal core changed while computing; retain previous packet')
+                     receipt['previous'] = descriptor(target) if target.exists() else None
+diff --git a/knowledge/builders/refresh.sh b/knowledge/builders/refresh.sh
+index 76223369a..6944c5ee2 100644
+--- a/knowledge/builders/refresh.sh
++++ b/knowledge/builders/refresh.sh
+@@ -1,71 +1,6 @@
+ #!/usr/bin/env bash
+-# The after-run knowledge refresh, one entry for ops (the command list ops/report.py refresh_knowledge ran before the
+-# layout change, same flags): first the character-independent steps, once: the monster DB with the per-fight move model
+-# (and every character's monster records), the monster-DB check note (<workspace>/notes/monster-db-check.md), card
+-# upgrades, the log database sync; then, per character (knowledge/characters/<id>/, multi-character 2026-10-04):
+-# outcome stats, room costs, boss damage, and the potion table when it is stale. The characters are those with a run
+-# in logs/runs.jsonl (a row without one is the Ironclad's), or the one --character names (ops/report.py: the finished
+-# run's). A failing step does not stop the ones after it; only the monster DB's own output is shown (as before).
+-#
+-#   knowledge/builders/refresh.sh [--character ID]                 the refresh
+-#   knowledge/builders/refresh.sh --fight-value [--character ID]   build-fight-value.py all (~5 min a character; ops
+-#                                                                  starts it on its own, in the background, so the
+-#                                                                  next run never waits for it)
+-#
+-# Paths are the project's (docs/layout.md): logs/, data/ (the log database and its venv), knowledge/.
+-set -uo pipefail
+-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"  # the project root
+-B="$ROOT/knowledge/builders"
+-fight_value=0
+-only=""
+-ops_root="$ROOT"
+-while [[ $# -gt 0 ]]; do
+-  case "$1" in
+-    --fight-value) fight_value=1 ;;
+-    --character) only="${2:-}"; shift ;;
+-    --character=*) only="${1#--character=}" ;;
+-    --ops-root) ops_root="${2:?missing ops root}"; shift ;;
+-    *) echo "usage: $0 [--fight-value] [--character ID] [--ops-root ROOT]" >&2; exit 2 ;;
+-  esac
+-  shift
+-done
+-# All statistics run outside admission and outside the live integration lock.
+-mkdir -p "$ops_root/ops"
+-exec 9>"$ops_root/ops/knowledge-refresh.lock"
+-flock 9
+-step() { python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
+-# The characters to refresh: the one asked for (lower-cased: the game's SILENT is knowledge id silent), else every
+-# character with a logged run (knowledge/builders/characters.py).
+-if [[ -n "$only" ]]; then
+-  characters="$(printf '%s' "$only" | tr '[:upper:]' '[:lower:]')"
+-else
+-  characters="$(cd "$B" && python3 -c 'import sys, characters; print(" ".join(characters.characters_with_runs(sys.argv[1])))' "$ROOT/logs/runs.jsonl")"
+-fi
+-if [[ $fight_value -eq 1 ]]; then
+-  for c in $characters; do
+-    step "fight-value:$c" nice -n 19 python3 "$B/build-fight-value.py" all --character "$c"
+-  done
+-  step catalog nice -n 19 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
+-  exit 0
+-fi
+-step monster-db python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
+-step monster-db-check python3 "$B/monster-db-check.py" >/dev/null 2>&1
+-step card-upgrades python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
+-step logdb-sync nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
+-v6_status=0
+-for c in $characters; do
+-  step "outcome:$c" python3 "$B/build-outcome-stats.py" --character "$c" >/dev/null 2>&1
+-  if [[ "$c" == "silent" ]]; then
+-    step "construction-opportunities:$c" nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$B/build-construction-opportunities.py" --character "$c" || echo "construction opportunity refresh failed: $c" >&2
+-  fi
+-  step "room-costs:$c" python3 "$B/build-room-costs.py" --character "$c" >/dev/null 2>&1
+-  step "boss-damage:$c" python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
+-  step "potion-equivalents:$c" "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
+-  if [[ "$c" == "silent" ]]; then
+-    step "v6-history:$c" nice -n 19 python3 "$B/refresh-v6-history.py" --root "$ROOT" --ops-root "$ops_root" --character "$c" || v6_status=1
+-  fi
+-done
+-
+-# Mechanical indexing only; failure remains visible to the existing refresh owner.
+-step catalog nice -n 19 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
+-exit "$v6_status"
++# Keep one after-run entry; heavy admission occurs before worker/publication locks.
++# --all includes fight extraction and cadence-controlled training in one worker.
++set -euo pipefail
++ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
++exec nice -n 19 ionice -c 3 python3 "$ROOT/knowledge/builders/refresh_driver.py" "$@"
+diff --git a/knowledge/builders/refresh_driver.py b/knowledge/builders/refresh_driver.py
+new file mode 100644
+index 000000000..df6fee5a9
+--- /dev/null
++++ b/knowledge/builders/refresh_driver.py
+@@ -0,0 +1,133 @@
++#!/usr/bin/env python3
++"""After-run statistics: heavy admission, worker serialization, short publication."""
++import argparse
++from datetime import datetime, timezone
++import fcntl
++import importlib.util
++import json
++import os
++from pathlib import Path
++import resource
++import subprocess
++import sys
++import time
++import uuid
++
++ROOT = Path(__file__).resolve().parents[2]
++BUILDERS = ROOT / 'knowledge/builders'
++
++
++def queue_command(ops_root, command):
++    """Use #20's exact public adapter when deployed; old installations stay explicit."""
++    adapter = ops_root / 'ops/board_heavy.py'
++    if not adapter.is_file():
++        return command, 'legacy: issue-20 adapter not deployed'
++    sys.path.insert(0, str(ops_root / 'ops'))
++    try:
++        spec = importlib.util.spec_from_file_location('refresh_board_heavy', adapter)
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        queued = module.queued_argv(ops_root, 'other', command)
++        return queued, 'enabled' if queued != command else 'disabled'
++    finally:
++        sys.path.pop(0)
++
++
++def step(ops_root, name, argv):
++    started = time.monotonic()
++    stamp = datetime.now(timezone.utc).isoformat()
++    before = resource.getrusage(resource.RUSAGE_CHILDREN)
++    try:
++        code = subprocess.run([str(a) for a in argv], check=False,
++                              env={**os.environ, 'STS2_REFRESH_STEP': name}).returncode
++    except OSError:
++        code = 127
++        print('knowledge-refresh step could not start: ' + name, file=sys.stderr)
++    after = resource.getrusage(resource.RUSAGE_CHILDREN)
++    row = dict(schema='knowledge-refresh-step-v1', started_at=stamp,
++               ended_at=datetime.now(timezone.utc).isoformat(), name=name,
++               seconds=time.monotonic()-started, worker_pid=os.getpid(),
++               cycle=os.environ.get('STS2_REFRESH_CYCLE'),
++               exit_code=code, nice=os.nice(0),
++               cpu_user_seconds=after.ru_utime-before.ru_utime,
++               cpu_system_seconds=after.ru_stime-before.ru_stime, peak_child_rss_kib=after.ru_maxrss)
++    with (ops_root / 'ops/refresh-timing.jsonl').open('a') as out:
++        out.write(json.dumps(row)+'\n')
++    return code
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--ops-root', type=Path, default=ROOT)
++    p.add_argument('--character')
++    p.add_argument('--fight-value', action='store_true')
++    p.add_argument('--all', action='store_true', help='normal and fight-value in one serialized worker')
++    p.add_argument('--idle', action='store_true', help='ops-verified idle training boundary')
++    p.add_argument('--queue-entered', action='store_true', help=argparse.SUPPRESS)
++    args = p.parse_args()
++    root = args.ops_root.resolve()
++    if args.character and (not args.character.isascii() or not args.character.replace('_', '').isalnum()):
++        p.error('invalid character id')
++    if not args.queue_entered:
++        # The exec/queue boundary can change PID. Keep the report hook's PID
++        # and a cycle identity so natural per-run receipts remain joinable.
++        os.environ['STS2_REFRESH_CYCLE'] = uuid.uuid4().hex
++        os.environ['STS2_REFRESH_ORIGIN_PID'] = str(os.getpid())
++        os.environ['STS2_REFRESH_REQUESTED_MONOTONIC'] = str(time.monotonic())
++        os.environ['STS2_REFRESH_REQUESTED_AT'] = datetime.now(timezone.utc).isoformat()
++        command = [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:], '--queue-entered']
++        queued, status = queue_command(root, command)
++        print('knowledge-refresh heavy queue: ' + status, flush=True)
++        # Exec preserves the original task identity. Admission precedes all locks.
++        os.execv(queued[0], queued)
++    from characters import characters_with_runs
++    characters = [args.character.lower()] if args.character else characters_with_runs(ROOT / 'logs/runs.jsonl')
++    os.environ['STS2_REFRESH_CACHE_DIR'] = str(root / 'ops/legacy-refresh-cache')
++    os.environ['STS2_REFRESH_OPS_ROOT'] = str(root)
++    for key in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS'):
++        os.environ[key] = '1'
++    (root / 'ops').mkdir(parents=True, exist_ok=True)
++    started = time.monotonic()
++    requested = float(os.environ.get('STS2_REFRESH_REQUESTED_MONOTONIC', started))
++    with (root / 'ops/knowledge-refresh.lock').open('a') as worker:
++        fcntl.flock(worker, fcntl.LOCK_EX)
++        acquired = time.monotonic()
++        failed = []
++        def run(name, argv):
++            if step(root, name, argv):
++                failed.append(name)
++        def build(name, *argv):
++            return [sys.executable, BUILDERS / (name + '.py'), *argv]
++        if not args.fight_value or args.all:
++            run('monster-db', build('build-monster-db', '--quiet', '--move-model-out', ROOT / 'knowledge/common/move-model.json'))
++            run('monster-db-check', build('monster-db-check'))
++            run('card-upgrades', build('build-card-upgrades'))
++            run('report-state-index', [sys.executable, ROOT / 'ops/report_log_cache.py', '--warm-states', ROOT / 'logs/states.jsonl'])
++            run('logdb-sync', [ROOT / 'data/logdb-venv/bin/python', ROOT / 'agent/tools/logdb/sync.py'])
++            for c in characters:
++                run('outcome:'+c, build('build-outcome-stats', '--character', c))
++                if c == 'silent':
++                    run('construction-opportunities:'+c, [ROOT / 'data/logdb-venv/bin/python', BUILDERS / 'build-construction-opportunities.py', '--character', c])
++                run('room-costs:'+c, build('build-room-costs', '--character', c))
++                run('boss-damage:'+c, build('build-boss-damage', '--character', c))
++                run('potion-equivalents:'+c, ['bash', BUILDERS / 'refresh-potion-equivalents.sh', '--character', c])
++                if c == 'silent':
++                    run('v6-history:'+c, build('refresh-v6-history', '--root', ROOT, '--ops-root', root, '--character', c))
++        if args.fight_value or args.all:
++            for c in characters:
++                run('fight-value:'+c, build('build-fight-value', 'all', '--character', c, *(['--idle'] if args.idle else [])))
++        run('catalog', build('build-catalog', '--knowledge-root', ROOT / 'knowledge'))
++        held = time.monotonic()-acquired
++    with (root / 'ops/refresh-timing.jsonl').open('a') as out:
++        out.write(json.dumps(dict(schema='knowledge-refresh-cycle-v1', pid=os.getpid(),
++            cycle=os.environ.get('STS2_REFRESH_CYCLE'), characters=characters,
++            origin_pid=int(os.environ.get('STS2_REFRESH_ORIGIN_PID', os.getpid())),
++            requested_at=os.environ.get('STS2_REFRESH_REQUESTED_AT'), queue_wait_seconds=started-requested,
++            wall_seconds=time.monotonic()-requested,
++            ended_at=datetime.now(timezone.utc).isoformat(), seconds=time.monotonic()-started,
++            worker_wait_seconds=acquired-started, worker_held_seconds=held, failed_steps=failed))+'\n')
++    return 1 if failed else 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/knowledge/builders/refresh_publish.py b/knowledge/builders/refresh_publish.py
+new file mode 100644
+index 000000000..59a0f1bd4
+--- /dev/null
++++ b/knowledge/builders/refresh_publish.py
+@@ -0,0 +1,57 @@
++"""Publication lock covers completed-file replacement only, never computation."""
++from contextlib import contextmanager
++from datetime import datetime, timezone
++import fcntl
++import json
++import os
++from pathlib import Path
++import tempfile
++import time
++
++
++@contextmanager
++def publication(ops_root=None):
++    root = ops_root or os.environ.get('STS2_REFRESH_OPS_ROOT')
++    if not root:
++        yield
++        return
++    directory = Path(root) / 'ops'
++    directory.mkdir(parents=True, exist_ok=True)
++    waiting = time.monotonic()
++    acquired = held = None
++    try:
++        with (directory / 'live-merge.lock').open('a') as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX)
++            acquired = time.monotonic()
++            try:
++                yield
++            finally:
++                held = time.monotonic() - acquired
++                fcntl.flock(lock, fcntl.LOCK_UN)
++    finally:
++        if held is not None:
++            with (directory / 'refresh-publication-timing.jsonl').open('a') as out:
++                out.write(json.dumps(dict(schema='knowledge-publication-v1', pid=os.getpid(),
++                    step=os.environ.get('STS2_REFRESH_STEP'),
++                    cycle=os.environ.get('STS2_REFRESH_CYCLE'),
++                    at=datetime.now(timezone.utc).isoformat(), wait_seconds=acquired-waiting,
++                    held_seconds=held)) + '\n')
++
++
++def replace(temporary, target):
++    with publication():
++        os.replace(temporary, target)
++
++
++def write_text(target, text):
++    path = Path(target)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    fd, temporary = tempfile.mkstemp(prefix='.refresh-', dir=path.parent)
++    try:
++        with os.fdopen(fd, 'w', encoding='utf8') as out:
++            out.write(text)
++            out.flush()
++            os.fchmod(out.fileno(), 0o644)
++        replace(temporary, target)
++    finally:
++        Path(temporary).unlink(missing_ok=True)
+diff --git a/knowledge/builders/test_refresh_pipeline.py b/knowledge/builders/test_refresh_pipeline.py
+new file mode 100644
+index 000000000..2baccb33a
+--- /dev/null
++++ b/knowledge/builders/test_refresh_pipeline.py
+@@ -0,0 +1,322 @@
++"""Fixed evidence for append checkpoints, cadence and publication; no live inputs."""
++import fcntl
++import ast
++import importlib.util
++import json
++import os
++import re
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++from types import SimpleNamespace
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++import legacy_incremental as cache
++from fight_value_incremental import training_due, trained
++from incremental_evidence import FrozenLogIndex
++
++
++def load(name):
++    spec = importlib.util.spec_from_file_location(name.replace('-', '_'), HERE / (name + '.py'))
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[spec.name] = module
++    spec.loader.exec_module(module)
++    return module
++
++
++class PipelineTest(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.root = Path(self.temp.name)
++        self.logs = self.root / 'logs'
++        self.logs.mkdir()
++        self.env = patch.dict(os.environ, STS2_REFRESH_CACHE_DIR=str(self.root / 'cache'))
++        self.env.start()
++
++    def fresh(self):
++        for ctx in cache._CONTEXTS.values():
++            ctx.close()
++        cache._CONTEXTS.clear()
++
++    def tearDown(self):
++        self.fresh()
++        self.env.stop()
++        self.temp.cleanup()
++
++    def write(self, name, rows):
++        path = self.logs / (name + '.jsonl')
++        path.write_text(''.join(json.dumps(row, ensure_ascii=False, separators=(',', ':'))+'\n' for row in rows))
++        return path
++
++    def fv_parity(self, states, runs, reason=None):
++        fv = load('build-fight-value')
++        rows, full = self.root / 'rows.jsonl', self.root / 'full.jsonl'
++        with patch.dict(os.environ, STS2_REFRESH_CACHE_DIR=''):
++            expected = fv.extract(str(states), str(runs), None, str(full))
++        self.fresh()
++        actual = fv.extract(str(states), str(runs), None, str(rows))
++        self.assertEqual(rows.read_bytes(), full.read_bytes())
++        self.assertEqual((actual.rows, actual.fights, actual.by_asc),
++                         (expected.rows, expected.fights, expected.by_asc))
++        timing = cache.context(states).timings[-1]
++        if reason is not None:
++            self.assertEqual(timing['rebuild_reason'], reason)
++        return timing
++
++    def test_fight_resume_exact_bytes_across_all_synthetic_boundaries(self):
++        mod = load('build-monster-db')
++        lines = list(mod._synthetic_lines())
++        runs = self.write('runs', [])
++        states = self.logs / 'states.jsonl'
++        # Includes SL resets, pending MAP attribution, interleaving and EOF deaths.
++        for end in [1, 2, 5, 10, len(lines)//2, len(lines)]:
++            states.write_text('\n'.join(lines[:end])+'\n')
++            timing = self.fv_parity(states, runs)
++            if end > 1:
++                self.assertGreater(timing['from_offset'], 0)
++        timing = self.fv_parity(states, runs)
++        self.assertEqual(timing['processed_frames'], 0)
++        self.assertEqual(timing['rebuild_reason'], None)
++
++    def test_late_death_summary_and_revised_summary_match_full(self):
++        mod = load('build-monster-db')
++        lines = list(mod._synthetic_lines())
++        states = self.logs / 'states.jsonl'
++        states.write_text('\n'.join(lines[:5])+'\n')
++        runs = self.write('runs', [])
++        self.fv_parity(states, runs)
++        self.write('runs', [dict(run_id='R1', floor=1, victory=False, death_fight='fixture')])
++        self.fv_parity(states, runs)
++        self.write('runs', [dict(run_id='R1', floor=2, victory=False, death_fight='fixture')])
++        self.fv_parity(states, runs, 'completed_run_revised')
++
++    def test_rotation_truncation_rewrite_and_corrupt_rows_rebuild(self):
++        mod = load('build-monster-db')
++        lines = list(mod._synthetic_lines())
++        states = self.logs / 'states.jsonl'
++        states.write_text('\n'.join(lines)+'\n')
++        runs = self.write('runs', [])
++        self.fv_parity(states, runs)
++        replacement = states.with_suffix('.new')
++        replacement.write_bytes(states.read_bytes())
++        replacement.replace(states)
++        self.fv_parity(states, runs, 'rotation_or_identity')
++        states.write_text('\n'.join(lines[:10])+'\n')
++        self.fv_parity(states, runs, 'truncated')
++        states.write_bytes(states.read_bytes().replace(b'R1', b'Q1'))
++        self.fv_parity(states, runs, 'prefix_changed')
++        (self.root / 'rows.jsonl').write_text('damaged\n')
++        self.fv_parity(states, runs, 'rows_changed')
++
++    def test_card_append_retains_full_counts_order_faces_and_gaps(self):
++        mod = load('build-card-upgrades')
++        rows = [json.loads(line) for line in (HERE.parents[1] / 'agent/tests/card-upgrade-data/logged-faces.jsonl').read_text().splitlines()]
++        path = self.logs / 'states.jsonl'
++        for end in [2, len(rows)//2, len(rows), len(rows)+3]:
++            self.write('states', (rows+rows[:3])[:end])
++            with path.open('a') as out:
++                out.write('bad\n')
++            self.fresh()
++            with patch.dict(os.environ, STS2_REFRESH_CACHE_DIR=''):
++                expected_audit = {}
++                expected = mod.build(path, audit=expected_audit)
++            audit = {}
++            actual = mod.build(path, audit=audit)
++            self.assertEqual(actual, expected)
++            self.assertEqual(audit, expected_audit)
++        # A true append, then an unchanged process restart, decodes no old frames.
++        with path.open('a') as out:
++            out.write(json.dumps(rows[0])+'\n')
++        self.fresh()
++        with patch.dict(os.environ, STS2_REFRESH_CACHE_DIR=''):
++            expected = mod.build(path)
++        self.assertEqual(mod.build(path), expected)
++        self.assertEqual(cache.context(path).timings[-1]['processed_frames'], 1)
++        self.fresh()
++        self.assertEqual(mod.build(path), expected)
++        self.assertEqual(cache.context(path).timings[-1]['processed_frames'], 0)
++
++    def test_index_checks_prefix_once_per_append_cycle_and_records_fallback(self):
++        path = self.write('states', [dict(run_id='A')])
++        index = FrozenLogIndex(self.root/'index', self.logs)
++        index.update('states', path.stat().st_size)
++        index.close()
++        for _ in range(2):
++            index = FrozenLogIndex(self.root/'index', self.logs)
++            index.update('states', path.stat().st_size)
++            self.assertEqual(index.stats['prefix_bytes_read'], 0)
++            self.assertEqual(index.stats['decoded_rows'], 0)
++            self.assertEqual(index.stats['unchanged_streams'], ['states'])
++            index.close()
++        with path.open('a') as out:
++            out.write('{"run_id":"B"}\n')
++        index = FrozenLogIndex(self.root/'index', self.logs)
++        index.update('states', path.stat().st_size)
++        self.assertEqual(index.stats['decoded_rows'], 1)
++        self.assertGreater(index.stats['prefix_bytes_read'], 0)
++        index.close()
++
++    def test_cadence_unique_runs_idle_explicit_force_and_damaged_outputs(self):
++        outputs = [self.root / name for name in ('model', 'gates', 'notes')]
++        for path in outputs:
++            path.write_text('old complete')
++        stamp = self.root/'training.json'
++        self.assertTrue(training_due(stamp, ['A'], outputs)[0])
++        trained(stamp, ['A'], outputs)
++        self.assertFalse(training_due(stamp, ['A']*20+['B'], outputs)[0])
++        self.assertFalse(training_due(stamp, ['A'], outputs, idle=True)[0])
++        self.assertTrue(training_due(stamp, ['A', 'B'], outputs, idle=True)[0])
++        self.assertTrue(training_due(stamp, ['A'], outputs, force=True)[0])
++        self.assertTrue(training_due(stamp, ['A', *map(str, range(10))], outputs)[0])
++        outputs[0].write_text('damaged')
++        self.assertTrue(training_due(stamp, ['A'], outputs)[0])
++
++    def test_failed_fit_does_not_publish_any_partial_artifact_or_cadence(self):
++        fv = load('build-fight-value')
++        rows = self.write('training', [dict(asc=10, kind='boss', t=1, ts0='a', ts1='b', E={'hp':1}, S={'hp':1})])
++        decisions = self.write('decisions', [])
++        runs = self.write('runs', [dict(run_id='A', character='SILENT')])
++        outputs = [self.root / name for name in ('model', 'notes', 'gates')]
++        for path in outputs:
++            path.write_text('old complete')
++        argv = ['train', '--character', 'silent', '--rows', str(rows), '--runs', str(runs),
++                '--decisions', str(decisions), '--out', str(outputs[0]), '--notes', str(outputs[1]), '--gates', str(outputs[2])]
++        def fail(_rows, _decisions, out, notes, *_args):
++            Path(out).write_text('half model')
++            raise RuntimeError('fixed training failure')
++        with patch.object(fv, 'train', side_effect=fail):
++            with self.assertRaisesRegex(RuntimeError, 'fixed training failure'):
++                fv.main(argv)
++        self.assertEqual([p.read_text() for p in outputs], ['old complete']*3)
++        self.assertFalse(rows.with_suffix('.training.json').exists())
++        def complete(_rows, _decisions, out, notes, _trees, gates):
++            for path in (out, notes, gates):
++                Path(path).write_text('new complete')
++        with patch.object(fv, 'train', side_effect=complete):
++            fv.main(argv)
++        self.assertEqual([p.read_text() for p in outputs], ['new complete']*3)
++        self.assertTrue(rows.with_suffix('.training.json').exists())
++
++    def test_publication_compute_unlocked_then_waits_for_original_lock(self):
++        directory = self.root/'ops'; directory.mkdir()
++        marker = self.root/'computed'; target = self.root/'published'; target.write_text('old')
++        script = ('import sys; from pathlib import Path; '
++                  'sys.path.insert(0,sys.argv[1]); from refresh_publish import write_text; '
++                  'Path(sys.argv[2]).write_text("ready"); write_text(sys.argv[3], "new")')
++        with (directory/'live-merge.lock').open('a') as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX)
++            child = subprocess.Popen([sys.executable, '-c', script, str(HERE), str(marker), str(target)],
++                env={**os.environ, 'STS2_REFRESH_OPS_ROOT':str(self.root)})
++            try:
++                with self.assertRaises(subprocess.TimeoutExpired):
++                    child.wait(timeout=.3)
++                self.assertTrue(marker.exists())
++                self.assertEqual(target.read_text(), 'old')
++            finally:
++                fcntl.flock(lock, fcntl.LOCK_UN)
++            self.assertEqual(child.wait(timeout=10), 0)
++        self.assertEqual(target.read_text(), 'new')
++        receipt = json.loads((directory/'refresh-publication-timing.jsonl').read_text())
++        self.assertGreater(receipt['wait_seconds'], 0)
++        self.assertLess(receipt['held_seconds'], receipt['wait_seconds'])
++
++    def test_heavy_adapter_uses_other_role_and_preserves_command(self):
++        driver = load('refresh_driver')
++        command = [sys.executable, 'refresh_driver.py', '--queue-entered']
++        self.assertEqual(driver.queue_command(self.root, command)[0], command)
++        adapter = self.root/'ops/board_heavy.py'; adapter.parent.mkdir()
++        adapter.write_text('def queued_argv(root,role,argv):\n return ["queue",str(root),role,"--",*argv]\n')
++        actual, status = driver.queue_command(self.root, command)
++        self.assertEqual(actual, ['queue',str(self.root),'other','--',*command])
++        self.assertEqual(status, 'enabled')
++
++    def test_real_fit_full_and_incremental_models_and_gates_match_bytes(self):
++        fv = load('build-fight-value')
++        fixture = list(fv.bmd._synthetic_lines())
++        lines = []
++        for batch in range(8):
++            for raw in fixture:
++                row = json.loads(raw)
++                rid = row['state'].get('run_id')
++                if rid:
++                    row['state']['run_id'] = f'{batch}_{rid}'
++                lines.append(row)
++        states = self.write('states', lines[:len(lines)//2])
++        runs, decisions = self.write('runs', []), self.write('decisions', [])
++        self.fv_parity(states, runs)
++        self.write('states', lines)
++        self.fv_parity(states, runs)
++        self.assertGreaterEqual(len((self.root/'rows.jsonl').read_text().splitlines()), 40)
++        for stem, rows in [('incremental', 'rows.jsonl'), ('full', 'full.jsonl')]:
++            fv.train(str(self.root/rows), str(decisions), str(self.root/(stem+'.json')),
++                     str(self.root/(stem+'.md')), 2, str(self.root/(stem+'-gates.json')))
++        for suffix in ('.json', '-gates.json'):
++            self.assertEqual((self.root/('incremental'+suffix)).read_bytes(),
++                             (self.root/('full'+suffix)).read_bytes())
++        def notes(stem):
++            return [line for line in (self.root/(stem+'.md')).read_text().splitlines()
++                    if not line.startswith('- Runtime of this training stage:')]
++        self.assertEqual(notes('incremental'), notes('full'))
++
++    def test_report_uses_deployed_live_entry_and_never_waits_for_refresh(self):
++        tree = ast.parse((HERE.parents[1]/'ops/report.py').read_text())
++        function = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'refresh_knowledge')
++        namespace = dict(os=os, re=re, json=json, ROOT=str(self.root), LIVE=str(self.root))
++        exec(compile(ast.Module(body=[function], type_ignores=[]), '<report-entry>', 'exec'), namespace)
++        (self.root/'ops').mkdir()
++        commands = []
++        def spawn(argv, **_kw):
++            commands.append(argv)
++            return SimpleNamespace(pid=len(commands))
++        with patch.object(subprocess, 'Popen', side_effect=spawn):
++            old = namespace['refresh_knowledge']('silent')
++            self.assertEqual(old['refresh_worker'], 'legacy')
++            self.assertEqual(len(commands), 2)
++            self.assertTrue(all('--all' not in argv for argv in commands))
++            self.assertIn('--fight-value', commands[0])
++            driver = self.root/'knowledge/builders/refresh_driver.py'
++            driver.parent.mkdir(parents=True)
++            driver.write_text('pass')
++            commands.clear()
++            current = namespace['refresh_knowledge']('silent')
++            self.assertEqual(current['refresh_worker'], 'combined')
++            self.assertEqual(len(commands), 1)
++            self.assertIn('--all', commands[0])
++            self.assertEqual(current['fight_value_pid'], current['pid'])
++            self.assertFalse(current['admission_wait'])
++
++    def test_other_builder_reindex_invalidates_both_persisted_aggregates(self):
++        mod = load('build-monster-db')
++        lines = list(mod._synthetic_lines())
++        opening = json.loads(lines[0])
++        opening['state']['run']['deck'] = [dict(card_id='FIXTURE_CARD', upgraded=False, energy_cost=1),
++                                           dict(card_id='FIXTURE_CARD', upgraded=True, energy_cost=0)]
++        lines[0] = json.dumps(opening, separators=(',', ':'))
++        card = load('build-card-upgrades')
++        states = self.logs/'states.jsonl'
++        states.write_text('\n'.join(lines)+'\n')
++        runs = self.write('runs', [])
++        self.fv_parity(states, runs)
++        original_cards = card.build(states)
++        self.fresh()
++        # Rewrite + append: size does not force truncation detection. Another
++        # builder gets there first, so local rebuilt_streams will be empty.
++        states.write_text('\n'.join(lines).replace('R1', 'Q1').replace('"energy_cost":1', '"energy_cost":3')+'\n'+lines[-1]+'\n')
++        cache.context(states).ready(states)
++        self.fresh()
++        self.fv_parity(states, runs, 'prefix_changed')
++        self.assertEqual(cache.context(states).index.stats['rebuilt_streams'], [])
++        with patch.dict(os.environ, STS2_REFRESH_CACHE_DIR=''):
++            expected = card.build(states)
++        self.assertNotEqual(expected, original_cards)
++        self.assertEqual(card.build(states), expected)
++        self.assertEqual(cache.context(states).timings[-1]['from_offset'], 0)
++        self.assertIsNotNone(cache.context(states).timings[-1]['rebuild_reason'])
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/ops/report.py b/ops/report.py
+index 5f1a558d7..5b0520e19 100644
+--- a/ops/report.py
++++ b/ops/report.py
+@@ -15,6 +15,7 @@ import sys
+ 
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from paths import LIVE, ROOT  # noqa: E402
++import report_log_cache  # noqa: E402
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+ from characters import run_character  # noqa: E402
+ DEC = os.path.join(ROOT, "logs/decisions.jsonl")
+@@ -28,6 +29,25 @@ PRICE_PER_M = 0.042  # $ per million tokens (in + out), handoff estimate
+ BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
+ 
+ 
++def run_brain_profile(run_id):
++    """Keep experimental arms visible to learners; never label an unknown/mixed run as baseline."""
++    profiles = []
++    path = os.path.join(ROOT, "logs/run-config.jsonl")
++    if os.path.exists(path):
++        with open(path) as handle:
++            for line in handle:
++                if run_id not in line:
++                    continue
++                row = json.loads(line)
++                if row.get("run_id") == run_id:
++                    profile = row.get("brain", {}).get("run_profile")
++                    if profile not in profiles:
++                        profiles.append(profile)
++    if not any(profiles):
++        return {}
++    return {"brain_run_profile": profiles[0] if len(profiles) == 1 else {"mixed": profiles}}
++
++
+ def is_brain(decider):
+     return bool(BRAIN_DECIDER.match(decider or ""))
+ 
+@@ -54,33 +74,28 @@ def standalone_plan_costs(path, run_id, represented=()):
+     rows = {}
+     unknown = set()
+     if os.path.exists(path):
+-        with open(path, encoding="utf8") as handle:
+-            for line_no, line in enumerate(handle, 1):
+-                try:
+-                    row = json.loads(line)
+-                except json.JSONDecodeError:
+-                    continue
+-                if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
+-                        or row.get("reused") or row.get("merged_into")):
+-                    continue
+-                ident = row.get("question_id")
+-                if not isinstance(ident, str) or not ident:
+-                    unknown.add(f"line:{line_no}:missing-question-id")
+-                    continue
+-                if ident in represented:
+-                    continue
+-                usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
+-                values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
+-                engine = row.get("engine")
+-                if (not isinstance(engine, str) or not is_brain(engine)
+-                        or any(type(value) is not int or value < 0 for value in values)
+-                        or values[2] > values[0]):
+-                    unknown.add(ident)
+-                    continue
+-                entry = (engine, *values)
+-                if ident in rows and rows[ident] != entry:
+-                    unknown.add(ident)
+-                rows[ident] = entry
++        for line_no, row in report_log_cache.plans(path, run_id):
++            if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
++                    or row.get("reused") or row.get("merged_into")):
++                continue
++            ident = row.get("question_id")
++            if not isinstance(ident, str) or not ident:
++                unknown.add(f"line:{line_no}:missing-question-id")
++                continue
++            if ident in represented:
++                continue
++            usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
++            values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
++            engine = row.get("engine")
++            if (not isinstance(engine, str) or not is_brain(engine)
++                    or any(type(value) is not int or value < 0 for value in values)
++                    or values[2] > values[0]):
++                unknown.add(ident)
++                continue
++            entry = (engine, *values)
++            if ident in rows and rows[ident] != entry:
++                unknown.add(ident)
++            rows[ident] = entry
+     valid = {ident: entry for ident, entry in rows.items() if ident not in unknown}
+     return {"calls": len(valid), "input_tokens": sum(entry[1] for entry in valid.values()),
+             "output_tokens": sum(entry[2] for entry in valid.values()),
+@@ -140,19 +155,7 @@ def hp_of(record, states):
+ 
+ def load_run_states(path, run_id, wanted):
+     """Stream one run's frames, including fights with no action decision."""
+-    states = {}
+-    with open(path, encoding="utf8") as handle:
+-        for line in handle:
+-            if line[7:31] not in wanted and run_id not in line:
+-                continue
+-            try:
+-                entry = json.loads(line)
+-            except json.JSONDecodeError:
+-                continue
+-            state = entry.get("state") or {}
+-            if entry.get("ts") in wanted or state.get("run_id") == run_id:
+-                states[entry["ts"]] = state
+-    return states
++    return report_log_cache.states(path, run_id, wanted)
+ 
+ 
+ def fights_of(recs, states, died=False):
+@@ -293,18 +296,12 @@ def decider(record):
+ 
+ def main(*, code=None):
+     """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
+-    decisions = [r for r in load(DEC) if r.get("mode") == "play"]
+-    runs = [run_of(r) for r in decisions]
+-    run_id = sys.argv[1] if len(sys.argv) > 1 else next((r for r in reversed(runs) if r), None)
++    run_id, recs, tail = report_log_cache.decisions(DEC, sys.argv[1] if len(sys.argv) > 1 else None)
+     if not run_id:
+         print("no run found")
+         return
+-    recs = [r for r in decisions if run_of(r) == run_id]
+     # The GAME_OVER record has no run in its fingerprint: attach the one right after the last record.
+     # V4 (2026-09-30) logs it with the run id; then the next GAME_OVER is a later run's, not this one's.
+-    last_ts = recs[-1]["ts"] if recs else ""
+-    own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
+-    tail = [] if own_end else [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
+     # Include the same run's state-only frames: automatic opening deaths have no COMBAT decision.
+     wanted = {r["ts"] for r in tail + recs}
+     states = load_run_states(STATES, run_id, wanted)
+@@ -389,7 +386,10 @@ def main(*, code=None):
+ 
+     out = []
+     title = "胜利" if victory else ("阵亡" if ended else "未结束")
++    profile_note = run_brain_profile(run_id)
+     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
++    if profile_note:
++        out.append("大脑实验分组（与既有基线分账，实际档位须核原生回执）：" + json.dumps(profile_note, ensure_ascii=False))
+     out.append("")
+     brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
+     brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
+@@ -446,6 +446,7 @@ def main(*, code=None):
+                 break
+         with open(RUNS, "a", encoding="utf8") as handle:
+             handle.write(json.dumps({
++                **profile_note,
+                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
+                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
+                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
+@@ -502,18 +503,25 @@ def refresh_knowledge(character=None) -> None:
+     import subprocess
+     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
+     # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
+-    refresh = "bash " + shlex.quote(f"{LIVE}/knowledge/builders/refresh.sh") + " --ops-root " + shlex.quote(ROOT)
++    combined = os.path.isfile(os.path.join(LIVE, "knowledge/builders/refresh_driver.py"))
++    refresh = ["bash", f"{LIVE}/knowledge/builders/refresh.sh", "--ops-root", ROOT]
+     if character and re.fullmatch(r"[a-z0-9_]+", character):
+-        refresh += f" --character {character}"
+-    cmd = refresh
++        refresh += ["--character", character]
+     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
+-    # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
+-    # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
+-    fight = subprocess.Popen(["nice", "-n", "19", "bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
+-                             stdout=log, stderr=log, start_new_session=True)
+-    proc = subprocess.Popen(["nice", "-n", "19", "bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
++    # One queued worker per completed run, including incremental extraction.
++    # Model training is cadence-controlled; admission of the next game never waits.
++    if combined:
++        refresh += ["--all"]
++        fight = None
++    else:
++        # Main can be integrated before the matching live release. Retain the
++        # old argv until live actually contains the combined entry.
++        fight = subprocess.Popen(["nice", "-n", "19", *refresh, "--fight-value"],
++                                 stdout=log, stderr=log, start_new_session=True)
++    proc = subprocess.Popen(["nice", "-n", "19", *refresh], stdout=log, stderr=log, start_new_session=True)
+     result = {"pid": proc.pid, "exit": None, "status": "background", "admission_wait": False,
+-              "fight_value_pid": fight.pid, "fight_value": "background",
++              "fight_value_pid": proc.pid if combined else fight.pid, "fight_value": "background",
++              "refresh_worker": "combined" if combined else "legacy",
+               "history_policy": "last_completed_packet"}
+     # Even legacy REFRESH_WAIT callers must not block the next game (Roy 2026-10-20).
+     if character:
+@@ -532,9 +540,17 @@ def refresh_costs() -> None:
+     """Paper accounting is independent of the next run's knowledge refresh and never waits for it."""
+     import subprocess
+     with open(os.path.join(ROOT, "ops", "cost-refresh.log"), "a") as log:
+-        subprocess.Popen(["nice", "-n", "19", "python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
+-                          "--root", ROOT, "--code-root", LIVE],
+-                         stdout=log, stderr=log, start_new_session=True)
++        background_statistics(["python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
++                               "--root", ROOT, "--code-root", LIVE], log)
++
++
++def background_statistics(command, log):
++    """Share the knowledge worker's CPU slot; admission never acquires this lock."""
++    env = {**os.environ, **dict.fromkeys(("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
++                                        "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"), "1")}
++    return subprocess.Popen(["nice", "-n", "19", "ionice", "-c", "3", "flock",
++                             os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command],
++                            env=env, stdout=log, stderr=log, start_new_session=True)
+ 
+ 
+ def boss_sim_check(character):
+@@ -566,9 +582,8 @@ def global_build_funnel(character):
+         return
+     python = os.path.join(ROOT, 'data/logdb-venv/bin/python')
+     with open(os.path.join(ROOT, 'ops/global-build-funnel.log'), 'a') as log:
+-        subprocess.Popen(['nice', '-n', '19', python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
+-                          '--root', ROOT, '--character', character],
+-                         stdout=log, stderr=log, start_new_session=True)
++        background_statistics([python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
++                               '--root', ROOT, '--character', character], log)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/ops/report_log_cache.py b/ops/report_log_cache.py
+new file mode 100644
+index 000000000..f4f34f6d0
+--- /dev/null
++++ b/ops/report_log_cache.py
+@@ -0,0 +1,150 @@
++"""Append-only report selectors; original rows and line numbers remain authoritative."""
++import hashlib
++import json
++import fcntl
++from pathlib import Path
++import sys
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'eval'))
++from jsonl_cache import JsonlCache
++
++
++def legacy_run(row):
++    try:
++        return json.loads(row['fingerprint']).get('run') or None
++    except Exception:
++        return None
++
++
++def header(path, row, ref):
++    if path.name == 'states.jsonl':
++        return dict(ref=ref, run=(row.get('state') or {}).get('run_id'), ts=row.get('ts'))
++    if path.name == 'decisions.jsonl':
++        return dict(ref=ref, run=legacy_run(row), mode=row.get('mode'),
++                    ts=row.get('ts'), screen=row.get('screen'))
++    return dict(ref=ref, run=row.get('run_id'), label=row.get('label'))
++
++
++def selected_rows(path, choose, directory=None, raw_filter=None):
++    path = Path(path)
++    revision = hashlib.sha256(b''.join(p.read_bytes() for p in (
++        Path(__file__), Path(__file__).with_name('report.py'),
++        Path(__file__).resolve().parents[1] / 'eval/jsonl_cache.py'))).hexdigest()
++    cache = JsonlCache(directory or path.resolve().parents[1] / 'ops/report-log-cache', revision, header)
++    try:
++        rows, _bad = cache.rows(path, path.stat().st_size)
++        refs = choose(rows)
++        with path.open('rb') as source:
++            for ref in refs:
++                source.seek(ref['offset'])
++                raw = source.read(ref['bytes'])
++                if hashlib.sha256(raw).hexdigest() != ref['sha256']:
++                    raise ValueError('report original row changed after selection')
++                if raw_filter and not raw_filter(raw.decode('utf8')):
++                    continue
++                yield ref['line'], json.loads(raw)
++    finally:
++        cache.close()
++
++
++def decisions(path, run_id=None):
++    """Keep the old last-run and first-following-GAME_OVER selection verbatim."""
++    if not Path(path).is_file():
++        return run_id, [], []
++    chosen_run = run_id
++    own_end = False
++
++    def choose(rows):
++        nonlocal chosen_run, own_end
++        rows = [row for row in rows if row.get('mode') == 'play']
++        if chosen_run is None:
++            chosen_run = next((row['run'] for row in reversed(rows) if row['run']), None)
++        if not chosen_run:
++            return []
++        recs = [row for row in rows if row['run'] == chosen_run]
++        own_end = any(row['screen'] == 'GAME_OVER' for row in recs)
++        last_ts = recs[-1]['ts'] if recs else ''
++        tail = [] if own_end else [row for row in rows if row['ts'] > last_ts and row['screen'] == 'GAME_OVER'][:1]
++        return [row['ref'] for row in recs + tail]
++
++    selected = [row for _line, row in selected_rows(path, choose)]
++    recs = [row for row in selected if legacy_run(row) == chosen_run]
++    return chosen_run, recs, ([] if own_end else selected[len(recs):])
++
++
++def last_run(path):
++    """Autoplay used the last truthy fingerprint run across every mode."""
++    result = None
++    def choose(rows):
++        nonlocal result
++        result = next((row['run'] for row in reversed(rows) if row['run']), None)
++        return []
++    list(selected_rows(path, choose))
++    return result
++
++
++def plans(path, run_id):
++    return selected_rows(path, lambda rows: [row['ref'] for row in rows
++                                           if row['run'] == run_id and row['label'] == 'run-plan'])
++
++
++def scan_states(path, run_id, wanted):
++    states = {}
++    with open(path, encoding='utf8') as source:
++        for line in source:
++            if line[7:31] not in wanted and run_id not in line:
++                continue
++            try:
++                row = json.loads(line)
++            except json.JSONDecodeError:
++                continue
++            state = row.get('state') or {}
++            if row.get('ts') in wanted or state.get('run_id') == run_id:
++                states[row['ts']] = state
++    return states
++
++
++def states(path, run_id, wanted):
++    """Use a completed background index; a cold/busy index never delays reporting."""
++    path = Path(path)
++    directory = path.resolve().parents[1] / 'ops/report-state-cache'
++    if not (directory / 'facts.sqlite').is_file():
++        return scan_states(path, run_id, wanted)
++    with (directory / 'worker.lock').open('a') as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            return scan_states(path, run_id, wanted)
++        def choose(rows):
++            return [row['ref'] for row in rows if row['run'] == run_id or row['ts'] in wanted]
++        result = {}
++        for _line, row in selected_rows(path, choose, directory,
++                                       lambda line: line[7:31] in wanted or run_id in line):
++            state = row.get('state') or {}
++            # The original text prefilter is narrower than parsed JSON on unusual
++            # encodings. Check it on the original bytes to preserve that behavior.
++            # Selected rows have already passed their original byte SHA check.
++            if row.get('ts') in wanted or state.get('run_id') == run_id:
++                result[row['ts']] = state
++        return result
++
++
++def warm_states(path):
++    path = Path(path)
++    directory = path.resolve().parents[1] / 'ops/report-state-cache'
++    directory.mkdir(parents=True, exist_ok=True)
++    with (directory / 'worker.lock').open('a') as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            return
++        list(selected_rows(path, lambda rows: [], directory))
++
++
++if __name__ == '__main__':
++    if len(sys.argv) != 3 or sys.argv[1] not in ('--warm-states', '--last-run'):
++        raise SystemExit('usage: report_log_cache.py --warm-states STATES_JSONL | --last-run DECISIONS_JSONL')
++    if sys.argv[1] == '--warm-states':
++        warm_states(sys.argv[2])
++    else:
++        print(last_run(sys.argv[2]) or '')

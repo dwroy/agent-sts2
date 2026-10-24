@@ -1,0 +1,635 @@
+{
+  "20261023-124241-strategy-proposal": {
+    "state_before": "awaiting_review",
+    "pid": 328703,
+    "pane": "w1H:pC2",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241",
+    "supervisor_alive": false,
+    "worktree_processes": [],
+    "lease": {
+      "path": "ops/codex-ops/learner/codex-strategy-silent-20261023-124241.lock",
+      "exclusive_nonblocking_probe": "free"
+    },
+    "native_summary": {
+      "path": "learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal.jsonl",
+      "offset": 2178749,
+      "bytes": 25657,
+      "sha256": "e4dd853b5b1187c490f3d387f7174e3e1745996bac10579fdd1333b5114592b4",
+      "line": 1189
+    },
+    "native_ended_at": "2026-10-23T05:47:33.158Z",
+    "native_rc": 0,
+    "session": "01a16721-a4ee-7f03-97f8-a025babef68e",
+    "model": "gpt-6.1-sol",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261023-124241-strategy-proposal",
+      "status": "blocked",
+      "base": "996801aed46642f12ceb61a023696c4f82dd7240",
+      "runs": [
+        "TXZ6RVMQA09D",
+        "WQZVENQ7DTRP",
+        "02HB4L0C3C67",
+        "4D4J8USKCPAV",
+        "F4QKG4J1AJJZ",
+        "JLN5SK17W4FQ",
+        "LS8035TB32P3",
+        "NB8KCF6HRGVF",
+        "S9UZAK0JP0C0",
+        "SADL3CGYTGSR"
+      ],
+      "fixes": [],
+      "skipped": [
+        "完整沙箱检查仍运行且已出现失败，未达到提交条件",
+        "main/live基线存在15处冲突，停止合入"
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": null,
+        "cases": null
+      },
+      "targeted_tests": {
+        "vitest": 0,
+        "cases": 8,
+        "withdrawn_failed": 2,
+        "withdrawn_passed": 1
+      },
+      "code_proposals": [
+        "silent-proposal-92920295a648b540",
+        "silent-proposal-a327449c331efbc1",
+        "silent-proposal-a099e89437e942bb",
+        "silent-proposal-47910f82a1fdd98f",
+        "silent-proposal-f1374df72d8e6a25",
+        "silent-proposal-38a49e6c97f31eea",
+        "silent-proposal-ef0e38a5dbd3bc07",
+        "silent-proposal-7f820c02d39bfaea",
+        "silent-proposal-04b6b430759815ed",
+        "silent-proposal-9952ee8e8df9a0fe",
+        "silent-proposal-f6672e1b64e4f6b4"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "state": "waiting",
+          "reason": "缺同后抽完整双战获胜对照与连战校准。"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "state": "waiting",
+          "reason": "局部血价及沙坑反例已核，缺完整胜线，不能拟统一交换阈值。"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "state": "waiting",
+          "reason": "已建立保留能力子项完成候选；检查和合入受阻，建立预测及完整联合验收仍未完成。"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "state": "waiting",
+          "reason": "开场死亡已核，缺完整后战胜线、留药及路线对照。"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "state": "waiting",
+          "reason": "资源链已重核，缺同条件早饮或留药的完整后继胜线。"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "state": "waiting",
+          "reason": "已有机制子实现；剩余分源、死亡相位及组合时序未完成联合验证。"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "state": "waiting",
+          "reason": "实际回血链已核，缺同条件休息、锻造及路线对照；109局统计未重算。"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "state": "waiting",
+          "reason": "NHA原流已补提，完整问答未全审，缺击杀与存活推进配对。"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "state": "waiting",
+          "reason": "朝向子实现已有live祖先；油灯及其余公式的完整联合验收未完成。"
+        },
+        {
+          "id": "silent-proposal-9952ee8e8df9a0fe",
+          "state": "waiting",
+          "reason": "NHA资源链已重核，缺受控SL胜线与替代路线对照；110局统计未重算。"
+        }
+      ],
+      "pending_fixes": [
+        {
+          "id": "silent-proposal-f6672e1b64e4f6b4",
+          "ledger": "silent-0577",
+          "commit": null,
+          "patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/retention-candidate.patch"
+        }
+      ],
+      "validation_complete": false,
+      "workspace_state": "retained_with_staged_candidate",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/report.md"
+    },
+    "output": {
+      "path": "ops/codex-ops/learner/20261023-124241-strategy-proposal.out",
+      "bytes": 5129,
+      "sha256": "f18a12bb5421a0a473095b9abe19e01294dc2828cdc43b63402517417fafeaef"
+    },
+    "stderr": {
+      "path": "ops/codex-ops/learner/20261023-124241-strategy-proposal.err",
+      "bytes": 28559,
+      "sha256": "4db1c4f924f2edfa4b1215d8c4884069a17e2f179d106e008909f9b82eb692c1"
+    },
+    "retention_request_exists": false,
+    "ordinary_close_exists": false,
+    "report_ref": {
+      "path": ".worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/report.md",
+      "bytes": 19735,
+      "sha256": "5a0f0cc09b41005f43dd1d12e886e4dd4423db02bb82996e2428e71eaf7fd301"
+    },
+    "head": "996801aed46642f12ceb61a023696c4f82dd7240",
+    "status": "M  agent/src/reflex/rollout-live.ts\nM  agent/src/reflex/rollout.ts\nA  agent/tests/silent-well-laid-plans-evidence.json\nA  agent/tests/silent-well-laid-plans.test.ts\n",
+    "source_files": [
+      {
+        "source_path": "agent/src/reflex/rollout-live.ts",
+        "blob": "db026da778728a5e528b4ddd293974b62fcee0d2",
+        "path": ".worktrees/codex-strategy-silent-20261023-124241/agent/src/reflex/rollout-live.ts",
+        "bytes": 80626,
+        "sha256": "7f06df828fdf07d625ac130ab06ffa2a7b97aa8d7a8e12994ea464636a1d8c01"
+      },
+      {
+        "source_path": "agent/src/reflex/rollout.ts",
+        "blob": "2acc8ec495af0f7319ef756e9e269a69b5a53806",
+        "path": ".worktrees/codex-strategy-silent-20261023-124241/agent/src/reflex/rollout.ts",
+        "bytes": 220396,
+        "sha256": "e9d57541f3839864815bb5f939893aa614533ae750e4a5f2da1999585b212c85"
+      },
+      {
+        "source_path": "agent/tests/silent-well-laid-plans-evidence.json",
+        "blob": "975a062e954990418c265006ced85b532b7877f5",
+        "path": ".worktrees/codex-strategy-silent-20261023-124241/agent/tests/silent-well-laid-plans-evidence.json",
+        "bytes": 158914,
+        "sha256": "bfc03f9ca51ad6733d8ed8d943f2528f8925cefe539aca66ef3fd13faaf9d3b1"
+      },
+      {
+        "source_path": "agent/tests/silent-well-laid-plans.test.ts",
+        "blob": "ba9f3622a81ab4d22deedff2e24d6dafb0c58478",
+        "path": ".worktrees/codex-strategy-silent-20261023-124241/agent/tests/silent-well-laid-plans.test.ts",
+        "bytes": 4491,
+        "sha256": "2241f6cd83977117b1079aa96389268447ccca454af05c697a87fb43a77acd12"
+      }
+    ]
+  },
+  "20261023-124241-s2-strategy-proposal": {
+    "state_before": "lost",
+    "pid": 328896,
+    "pane": "w1H:pC3",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241-s2",
+    "supervisor_alive": false,
+    "worktree_processes": [],
+    "lease": {
+      "path": "ops/codex-ops/learner/codex-strategy-silent-20261023-124241-s2.lock",
+      "exclusive_nonblocking_probe": "free"
+    },
+    "native_summary": {
+      "path": "learner/runs/20261023-130031-8e183d97-be4f-4d1c-aae0-853f669a94ac-strategy-proposal.jsonl",
+      "offset": 2320148,
+      "bytes": 15688,
+      "sha256": "db250cfc301babadf475a7690536a02eadf8f813292b9ea6df3216b40152a75e",
+      "line": 643
+    },
+    "native_ended_at": "2026-10-23T05:20:04.590Z",
+    "native_rc": 0,
+    "session": "01a16721-e23b-7aa2-a0de-2a4af5205add",
+    "model": "gpt-6.1-sol",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261023-124241-s2-strategy-proposal",
+      "base": "996801aed46642f12ceb61a023696c4f82dd7240",
+      "runs": [
+        "P74C04AEPL1F",
+        "G33HU22H2543",
+        "RC61MFQM63Y6",
+        "BTSRF7JL1W1Y"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-47be799a87af03be",
+        "silent-proposal-3a5274da3c42672a",
+        "silent-proposal-bc4b92d590f2c4ce",
+        "silent-proposal-f52fbbab4dccc3b4",
+        "silent-proposal-10f37c0edd3d24a6",
+        "silent-proposal-3f82387e2e179703",
+        "silent-proposal-aee21084c991abd3",
+        "silent-proposal-df37594e9b12debf",
+        "silent-proposal-42e81c83b2e1e56b",
+        "silent-proposal-03754e1265894000"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-47be799a87af03be",
+          "state": "waiting",
+          "reason": "缺四个合法弃牌分支的动态牌面、触发与整线生存校准，保留精确切击线未实打。"
+        },
+        {
+          "id": "silent-proposal-3a5274da3c42672a",
+          "state": "waiting",
+          "reason": "主怪最终归零中间帧缺失，多来源模型与跨战保药完整后继未齐。"
+        },
+        {
+          "id": "silent-proposal-bc4b92d590f2c4ce",
+          "state": "waiting",
+          "reason": "投斧身份子修复已核为live祖先；宽提案的多选弃牌、能力重放和完整后继仍未验证。"
+        },
+        {
+          "id": "silent-proposal-f52fbbab4dccc3b4",
+          "state": "waiting",
+          "reason": "缺同条件替代路线、杀序、保药的完整后继，原112局统计未重算。"
+        },
+        {
+          "id": "silent-proposal-10f37c0edd3d24a6",
+          "state": "waiting",
+          "reason": "缺开场内部时序、满血截断、去组件及改药时点完整对照，全部消费者未完成校准。"
+        },
+        {
+          "id": "silent-proposal-3f82387e2e179703",
+          "state": "waiting",
+          "reason": "已核Jev答案被SL替线及实损4/8、扣敌30/23；推演预算和后继行动不同，缺受控整战及独立留出。"
+        },
+        {
+          "id": "silent-proposal-aee21084c991abd3",
+          "state": "waiting",
+          "reason": "最终线四样本三胜一死，当轮实损7吻合；未隔离确定模型失配，单次死亡不足调权重或焦点。"
+        },
+        {
+          "id": "silent-proposal-df37594e9b12debf",
+          "state": "waiting",
+          "reason": "唯一余牌单弃子修复已核为live祖先；多选、朝向、持牌自损和能力整战血价联合验证未齐。"
+        },
+        {
+          "id": "silent-proposal-42e81c83b2e1e56b",
+          "state": "waiting",
+          "reason": "缺同条件改线、锻造、保药完整后继，原73局营火统计未重算，不改休息或终局阈值。"
+        },
+        {
+          "id": "silent-proposal-03754e1265894000",
+          "state": "waiting",
+          "reason": "缺八组件完整生产回放、首刀独立分源及改药时点完整后继，不外推取整或叠层。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241-s2/learner/runs/20261023-130031-8e183d97-be4f-4d1c-aae0-853f669a94ac-strategy-proposal/report.md"
+    },
+    "output": {
+      "path": "ops/codex-ops/learner/20261023-124241-s2-strategy-proposal.out",
+      "bytes": 4842,
+      "sha256": "eac54696ddebc6ae3d9006afb1504dcfcabf777ac85ca008b85c37a3a7004bb7"
+    },
+    "stderr": {
+      "path": "ops/codex-ops/learner/20261023-124241-s2-strategy-proposal.err",
+      "bytes": 20526,
+      "sha256": "f941f8e08db81e988cddec455af3c54432805c35ec8f5dc8065787cf8313221b"
+    },
+    "retention_request_exists": false,
+    "ordinary_close_exists": false,
+    "report_ref": {
+      "path": ".worktrees/codex-strategy-silent-20261023-124241-s2/learner/runs/20261023-130031-8e183d97-be4f-4d1c-aae0-853f669a94ac-strategy-proposal/report.md",
+      "bytes": 10975,
+      "sha256": "d928d1e4a3cb1fdb1f59ca5a6ed25dfd8943690466e7b21c735925959cd2eac4"
+    },
+    "head": "996801aed46642f12ceb61a023696c4f82dd7240",
+    "status": "",
+    "source_files": []
+  },
+  "20261023-124301": {
+    "state_before": "lost",
+    "pid": 331766,
+    "pane": "w1H:pC4",
+    "worktree": "/home/dw/Projects/agent-sts2",
+    "supervisor_alive": false,
+    "worktree_processes": "shared root; only exact supervisor checked",
+    "lease": null,
+    "native_summary": {
+      "path": "learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem.jsonl",
+      "offset": 1344048,
+      "bytes": 7823,
+      "sha256": "102bd837cce4bd16983f0a1eb56f2983a3e616e43693fadd8f600e5c4d7e7df1",
+      "line": 335
+    },
+    "native_ended_at": "2026-10-23T05:21:44.606Z",
+    "native_rc": 0,
+    "session": "01a1672d-33a7-70e2-9016-fb76f826cefd",
+    "model": "gpt-6.1-sol",
+    "report": {
+      "task": "postmortem",
+      "appended": [],
+      "skipped": [
+        {
+          "run": "4XZHJFMUKDJW",
+          "reason": "notes/lessons.md 已有该局标题，按要求跳过"
+        },
+        {
+          "run": "XU3M3P5CU3X7",
+          "reason": "notes/lessons.md 已有该局标题，按要求跳过"
+        },
+        {
+          "run": "C7LERZPCRFZ1",
+          "reason": "notes/lessons.md 已有该局标题，按要求跳过"
+        },
+        {
+          "run": "VX6RJ608LR5F",
+          "reason": "notes/lessons.md 已有该局标题，按要求跳过"
+        },
+        {
+          "run": "UW7X088RVVLR",
+          "reason": "notes/lessons.md 已有该局标题，按要求跳过"
+        }
+      ],
+      "bugs": [],
+      "ledger": {
+        "added": [],
+        "updated": [],
+        "repeats": [],
+        "check": 0
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem/report.md"
+    },
+    "output": {
+      "path": "ops/codex-ops/learner/20261023-124301.out",
+      "bytes": 2683,
+      "sha256": "921faa40456da81a64bce1b04492c209ea45cea42928a7694fd0f30808e6a89e"
+    },
+    "stderr": {
+      "path": "ops/codex-ops/learner/20261023-124301.err",
+      "bytes": 18757,
+      "sha256": "f8724711c64bab55f5ea30d7544cc27669ac8c7623aeb7cc9b86901861accb9d"
+    },
+    "retention_request_exists": false,
+    "ordinary_close_exists": false,
+    "report_ref": {
+      "path": "learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem/report.md",
+      "bytes": 6896,
+      "sha256": "8d505cad09716e03d295f2659a106cd593b553b435bc34f2db6ed5f18217ca30"
+    }
+  },
+  "20261023-134302-strategy-proposal": {
+    "state_before": "failed",
+    "pid": 585801,
+    "pane": "w1H:pC6",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-134302",
+    "supervisor_alive": false,
+    "worktree_processes": [],
+    "lease": {
+      "path": "ops/codex-ops/learner/codex-strategy-silent-20261023-134302.lock",
+      "exclusive_nonblocking_probe": "free"
+    },
+    "native_summary": {
+      "path": "learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal.jsonl",
+      "offset": 3088505,
+      "bytes": 5921,
+      "sha256": "03041b2511804a3a7bf749a1fc11e837a1b3b449769224bda2e9fa21ad43a8a6",
+      "line": 760
+    },
+    "native_ended_at": "2026-10-23T06:16:23.472Z",
+    "native_rc": 0,
+    "session": "01a16748-e167-79e3-ad07-1a9f2cf8bf9e",
+    "model": "gpt-6.1-sol",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261023-134302-strategy-proposal",
+      "status": "blocked",
+      "base": "c8fe60d92a91d9328e5c93b90c8f4403094b7b67",
+      "runs": [
+        "PBUBM0LRTEDD",
+        "FU8ZUQHBHNV9",
+        "C48LLXBGKXQ9",
+        "456MRNGCPD8E",
+        "3KME36ADUE4U",
+        "ZZMYZ5UBCG72"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "release_id": null,
+      "candidate_commit": null,
+      "uncommitted_candidate": true,
+      "tests": {
+        "tsc": 0,
+        "vitest": null,
+        "cases": 4
+      },
+      "full_check": {
+        "state": "running_with_failures",
+        "exit": null,
+        "observed_failed_tests": 45
+      },
+      "code_proposals": [
+        "silent-proposal-46ebe0b559d993ce",
+        "silent-proposal-f4709125bce8a5e4",
+        "silent-proposal-7d136552bfd11ffc",
+        "silent-proposal-99b8447ae6c785fc",
+        "silent-proposal-08b287bbc75faa7e",
+        "silent-proposal-e7ed37db21fc698a",
+        "silent-proposal-2f91d21607a578e9",
+        "silent-proposal-a25a6110490749de",
+        "silent-proposal-2134613e313fceba",
+        "silent-proposal-c99563720f3efe72"
+      ],
+      "implementation_domains": [
+        "combat"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-46ebe0b559d993ce",
+          "state": "waiting",
+          "reason": "缺同抽序、合法资源变化后的完整两王配对结果，不拟留药价或终局HP权重。"
+        },
+        {
+          "id": "silent-proposal-f4709125bce8a5e4",
+          "state": "duplicate",
+          "commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+          "reason": "已核实际live祖先及现存升级神化、同手升级传播实现。"
+        },
+        {
+          "id": "silent-proposal-7d136552bfd11ffc",
+          "state": "waiting",
+          "reason": "综合机制范围尚未全部验证；脆弱暗影窄子项归本批候选，其余乘区、开场组合及收益仍缺证据。"
+        },
+        {
+          "id": "silent-proposal-99b8447ae6c785fc",
+          "state": "waiting",
+          "reason": "已核真实连王资源端点，缺F48少损或留药后接续F49的受控完整结果。"
+        },
+        {
+          "id": "silent-proposal-08b287bbc75faa7e",
+          "state": "waiting",
+          "reason": "SL尝试同时改变药水、牌序和目标，未隔离胜因；不修改必死定义、次数或权重。"
+        },
+        {
+          "id": "silent-proposal-e7ed37db21fc698a",
+          "state": "duplicate",
+          "commit": "66c22ba7d87b8748690a4183fff838acd346bd3e",
+          "reason": "已核实际live祖先；普通刀刃之舞生成三刀、容量限制及生成后重读已有实现。"
+        },
+        {
+          "id": "silent-proposal-2f91d21607a578e9",
+          "state": "waiting",
+          "reason": "刀刃前置已实现，但尾部估值缺独立A10留出及完整配对结果，不从单局死亡拟参数。"
+        },
+        {
+          "id": "silent-proposal-a25a6110490749de",
+          "state": "waiting",
+          "reason": "现有石虫毒死分支不覆盖丝虫毒死；缺全部可达合法行动及剩余攻击下界证明。"
+        },
+        {
+          "id": "silent-proposal-2134613e313fceba",
+          "state": "waiting",
+          "reason": "已核赢战余血、幽灵到期和抽牌重规划；缺整场替代路线或用药配对，预计省血不能记为实得。"
+        },
+        {
+          "id": "silent-proposal-c99563720f3efe72",
+          "state": "waiting",
+          "reason": "13挡子项候选固定回归通过；整体检查已有失败且合入预检冲突，未提交、未上线，综合父项保持开放。"
+        }
+      ],
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/proposal.md",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/report.md"
+    },
+    "output": {
+      "path": "ops/codex-ops/learner/20261023-134302-strategy-proposal.out",
+      "bytes": 5403,
+      "sha256": "21ca552243f79038acea539973f464f9cfefb45bb6ed97cfc88e844a45f85b2c"
+    },
+    "stderr": {
+      "path": "ops/codex-ops/learner/20261023-134302-strategy-proposal.err",
+      "bytes": 113,
+      "sha256": "6f1f6708cf2cbe0e6a94e52a9bcca0d366a0215f446a84564518abfb1c810f3d"
+    },
+    "retention_request_exists": false,
+    "ordinary_close_exists": false,
+    "report_ref": {
+      "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/report.md",
+      "bytes": 14265,
+      "sha256": "8d9b80e8e03a8440e98be1ea73893ba9991afd87318404e291f8d2638335c60e"
+    },
+    "head": "c8fe60d92a91d9328e5c93b90c8f4403094b7b67",
+    "status": "M  agent/src/reflex/card-model.ts\nM  agent/src/reflex/turn-solver.ts\nA  agent/tests/silent-frail-shadowmeld-evidence.json\nA  agent/tests/silent-frail-shadowmeld.test.ts\n",
+    "source_files": [
+      {
+        "source_path": "agent/src/reflex/card-model.ts",
+        "blob": "ec715b7c3601a1d5fbcdf50ece1a2281093e6986",
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/agent/src/reflex/card-model.ts",
+        "bytes": 132549,
+        "sha256": "8d8fccf14b765c628c34419ad299dd9cfed55a5a30c891dce03ffd269cc7bc78"
+      },
+      {
+        "source_path": "agent/src/reflex/turn-solver.ts",
+        "blob": "20f0e0485cd00dbb29020b3753e702c923ad357f",
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/agent/src/reflex/turn-solver.ts",
+        "bytes": 266791,
+        "sha256": "49bf1933dbc7e08e2eed0b76f6cf359c1f0b8dc2f4a97d6ca90a52ad2abd8d3e"
+      },
+      {
+        "source_path": "agent/tests/silent-frail-shadowmeld-evidence.json",
+        "blob": "ab8c93b62bcf9910861ac7412addf1c6439f28f5",
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/agent/tests/silent-frail-shadowmeld-evidence.json",
+        "bytes": 20140,
+        "sha256": "a8b1a8ca397e1c04f571755b0e36dae144507b1536888e7af614b0e7ebdc2c36"
+      },
+      {
+        "source_path": "agent/tests/silent-frail-shadowmeld.test.ts",
+        "blob": "9294ba64a068796ee06bb6e98691883a3c8b340a",
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/agent/tests/silent-frail-shadowmeld.test.ts",
+        "bytes": 4468,
+        "sha256": "2cf5644bbfb3a26853bff8b3c8e0241c4717c045f26f122c7b93c1d38429bc3a"
+      }
+    ],
+    "candidate_originals": [
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/candidate-manifest.json",
+        "bytes": 1035,
+        "sha256": "6c72f808f146899ff4fa4a9f1bd228608cf3beafbc50ef66153655049f27eb9e"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/merge-preflight.json",
+        "bytes": 152,
+        "sha256": "b9b0d0a220de2e16776165201662eb554d9c1f5f08d6d5c2e3c7a6101df86a43"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/source.patch",
+        "bytes": 29260,
+        "sha256": "07283113f07ef949b7a6008da4576807d09c4a982d935dae242f1b5d165b1785"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/regression-withdrawn.exit",
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/regression-restored.exit",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/regression-restored.log",
+        "bytes": 269,
+        "sha256": "972656bb8c5f6a351f50d0d94727b5d211ed11827dec7abe2e4ba0696bdac569"
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261023-134302/learner/runs/20261023-134308-47fc66a9-1075-478b-9bb1-297b2a03b5c0-strategy-proposal/test-sandbox-source.log",
+        "bytes": 3815,
+        "sha256": "d08e9f407e9a25c41c6b28dcf410c82f7a83dd39efc24e6f6c4f497e1205a5b1"
+      }
+    ],
+    "full_terminal_exit": null,
+    "tui": {
+      "original_receipt": {
+        "path": "ops/codex-ops/learner/learner-20261023-134302-strategy-proposal.tui.json",
+        "bytes": 7881,
+        "sha256": "0e9be403a8b76dbe81e8a9554300d4a455f4119202bb87f97edc6a07fc60b983"
+      },
+      "native_verified_read_only": true,
+      "binding_count": 1,
+      "submission_count": 1,
+      "native_result_code": 0,
+      "state": "session-ended",
+      "retirement_authorized": true,
+      "wrapper": {
+        "version": 1,
+        "batch": "20261023-134302-strategy-proposal",
+        "state": "failed",
+        "rc": 0,
+        "launcher_rc": 0,
+        "finished": "2026-10-23 14:16",
+        "supervisor": {
+          "pid": 585801,
+          "birth": "15871444"
+        },
+        "batch_sha256": "36688df710e3b139cde11f7dc4bf239d9944b48fe3e5574238beff094ab85503"
+      },
+      "native_pid": 586368,
+      "native_stopped": true,
+      "post_exit_verification_seconds_upper_bound": 3,
+      "300s_fallback": "not triggered; finish audit and seal error within 3 seconds of native summary",
+      "seal_failure": "ops/learner_tabs.py absent from root and live; original stderr ENOENT; no substitute seal or pane close"
+    }
+  }
+}

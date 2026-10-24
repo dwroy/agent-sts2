@@ -191,6 +191,49 @@ class WorkspaceRetention(unittest.TestCase):
         self.assertTrue(receipt['failed_checkout_reclaimed'])
         self.assertFalse((new / '.git').exists())
 
+    def test_allocated_ops_tree_settles_only_after_changed_source_reaches_main_and_live(self):
+        tree=self.root/'.worktrees/ops-self-settled'
+        checkout.create(self.root,self.directory,tree,'main')
+        (tree/'agent/src/example.ts').write_text('export const fixed = 20;\n')
+        self.git('add','agent/src/example.ts',tree=tree)
+        self.git('commit','-m','self settled fix',tree=tree)
+        source=self.git('rev-parse','HEAD',tree=tree).strip()
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            resource.reclaim(self.root,self.directory,tree.name,True)
+        self.git('merge','--ff-only',source)
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            resource.reclaim(self.root,self.directory,tree.name,True)
+        self.git('merge','--ff-only',source,tree=self.live)
+        result=resource.reclaim(self.root,self.directory,tree.name,True)
+        self.assertEqual(result['state'],'reclaimed')
+        self.assertFalse((tree/'.git').exists())
+        manifest=resource.retention.load(self.directory/'retention/worktree-archives/ops-self-settled.manifest.json')
+        self.assertTrue(manifest['proof']['source_acceptance']['live_required'])
+
+    def test_allocated_ops_tree_accepts_exact_adopted_leaves_and_retains_source_branch(self):
+        tree=self.root/'.worktrees/ops-leaf-settled'
+        checkout.create(self.root,self.directory,tree,'main')
+        (tree/'agent/src/example.ts').write_text('export const fixed = 21;\n')
+        self.git('add','agent/src/example.ts',tree=tree)
+        self.git('commit','-m','source fix',tree=tree)
+        source=self.git('rev-parse','HEAD',tree=tree).strip()
+        for target in (self.root,self.live):
+            (target/'agent/src/example.ts').write_text('export const fixed = 21;\n')
+            self.git('add','agent/src/example.ts',tree=target)
+            self.git('commit','-m','actual adopted leaf',tree=target)
+        self.assertFalse(resource.retention.ancestor(self.root,source))
+        self.assertEqual(resource.reclaim(self.root,self.directory,tree.name,True)['state'],'reclaimed')
+        self.assertEqual(self.git('rev-parse',tree.name).strip(),source)
+
+    def test_allocated_ops_unpublished_report_is_not_automatically_completed(self):
+        tree=self.root/'.worktrees/ops-unpublished-report'
+        checkout.create(self.root,self.directory,tree,'main')
+        (tree/'README.md').write_text('unfinished unpublished report\n')
+        self.git('add','README.md',tree=tree); self.git('commit','-m','unfinished report',tree=tree)
+        with self.assertRaisesRegex(ValueError,'unpublished in main'):
+            resource.reclaim(self.root,self.directory,tree.name,True)
+        self.assertTrue((tree/'.git').exists())
+
     def test_capacity_failure_leaves_no_checkout_or_allocation_receipt(self):
         new = self.root / '.worktrees/ops-no-capacity'
         with patch.object(checkout, 'require_worktree_capacity', side_effect=OSError('fixed capacity refusal')), \

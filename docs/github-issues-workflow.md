@@ -14,6 +14,8 @@ Roy 2026-10-21 定：会话仍由 herdr 托管，任务与协作改用本仓库 
 6. **验收与关闭。** 开发会话交付后改为 `status:review`；Claude（或 watcher）验收；改变对局行为的由 ops 在开局边界上线后改为 `status:waiting-release`，首局验收通过再关闭。上线仍按原规则：decision-log、`eval/versions.json`、规则变更通知。
 7. **ops 回执。** 例行回执写入 `notes/ops-current.md` 与原有回执文件，不再逐条投递给 watcher；与某个 issue 相关的结论在该 issue 评论一句并给回执路径。
 
+Roy 2026-10-23 常驻规则：每轮结束前先检查本角色积压；集成员查 `status:review`，ops 查 `status:waiting-release` 与验收读回。按发布顺序有下一项可推进就直接继续，不等提醒；全部被挡住时才停止，并在最后一句写明在等谁、等什么。此规则不改变发布依赖、唯一完整检查窗口或角色权限。
+
 ## 生命周期：派发、交付、回收（标准流程）
 
 Roy 2026-10-21 定为标准流程。工具见 #17（`ops/issue_session.py`），落地前按同样步骤手工执行。
@@ -26,6 +28,8 @@ Roy 2026-10-21 定为标准流程。工具见 #17（`ops/issue_session.py`），
 6. **永不回收**：watcher、ops、在跑的学习者与对局相关的 pane；`.worktrees/live`；登记表之外的 tab；未合入的提交、原日志、经验、账本、未完成的学习材料。
 7. **定期清积压**：按 `ops/worktree_retention.py plan` 定期出清单（可回收 / 保留 / 需人工判断），watcher 核对后分批回收（见 #18）。
 8. **长期会话**：watcher 每天换一次新会话，旧会话写交接文件后在同一 pane 开新对话，交接文件用完即删；ops 沿用其调度器既有的接续机制，压缩明显变频繁时同样换新。
+
+学习tab回收为#20独立子类，按Roy/主管新裁决提前单独发布、排#47后定向核验，不等#37/#20父功能或kit安装。当前wrapper在原finish/回执持久化后调用`learner_tabs.py seal`，原stall在drain前调用同一adapter的`tick`；两端脚本与保护规则须同组合发布。Roy 10-24追加常见情况自理：缺证静默重试三轮，证据齐全的终态批次自动补封存；running/awaiting_review及输入不明保留，绑定失败且原生仍活或回执/进程矛盾才写主管收件箱，真实程序异常沿原失败通知。工作树仍走原retention门；接口、统计与发布输入检查见[学习tab回收合同](learner-tab-reclamation.md)及[现场回收](learner-retention.md)。
 
 ### 工具用法与恢复
 
@@ -71,6 +75,8 @@ nice -n 19 python3 ops/issue_session.py register 123 example-fix \
 现有 `codex-ops.sh tick stall|learn|snapshot` 在主检查之后、唤醒队列之前同步核登记表，登记锁防止并发重复操作；沿用既有调度，不加 daemon/cron。`PAUSE`、`LLM_DRAIN` 或 `CODEX_OPS_RETENTION=off` 时不自动回收。每项失败分别写 inbox，其他登记项继续检查；重复原因与带标记的 issue 评论去重。原工作树回收仍由原 retention worker 在既有调度执行，未注册 tab 不触碰。
 
 ### 通用派单器（#20）
+
+Roy 2026-10-23追加独立一分钟入口、两分钟空闲感知、条件请求/额度降频及任务边界 `/new` 先观察一天，见[一分钟入口与任务边界观察](agent-board-minute.md)。实际入口由 ops 的项目控制显式切换，以下原五分钟入口仍为回退路径；源码配置不自动启用新 cron 或清对话。
 
 确定性程序位于私有仓库 [agent-board-kit](https://github.com/dwroy/agent-board-kit)，不调用模型。`.agents/board.yaml` 的 `dispatcher` 配置指定安装位置、同机项目登记表、事件账本、汇总与收件箱；生命周期命令仍调用本项目 `issue_session.py spawn/reclaim`，沿用原发布、进程、归档与保护门禁。不在开发工作树执行生产派发或回收。
 

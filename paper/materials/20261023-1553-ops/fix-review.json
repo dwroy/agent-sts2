@@ -1,0 +1,443 @@
+{
+  "at": "2026-10-23T15:56:04+08:00",
+  "batch": "20261023-154301-fix-batch",
+  "actual_state": "failed/rc0",
+  "original_report": {
+    "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/report.md",
+    "bytes": 8929,
+    "sha256": "1b5e1e52824640da7e0aee9cf6f7364f98513764bde52653d159d938f11dc9b6"
+  },
+  "output": {
+    "path": "ops/codex-ops/learner/20261023-154301-fix-batch.out",
+    "bytes": 3283,
+    "sha256": "4c34cfcafc54ae91e85c216b2ec01d109d26b4e2c92b19b8b27ec47ffc6d9217"
+  },
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-154301",
+  "base": "225d3aa233d0d63df7a4523e2fabbd2c14171c4b",
+  "worktree_clean_and_unchanged": true,
+  "source_fixes_or_commits": 0,
+  "tests_original": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 77,
+    "files": 2,
+    "scope": "targeted-existing-fixes-only",
+    "python": 0,
+    "python_cases": 17,
+    "sandbox_full": null
+  },
+  "original_test_files": {
+    "tsc": {
+      "rc": 0,
+      "rc_file": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/tsc.rc",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/tsc.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "targeted-vitest": {
+      "rc": 0,
+      "rc_file": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/targeted-vitest.rc",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/targeted-vitest.log",
+        "bytes": 149,
+        "sha256": "e498a062d689e5c5e076f601e84c3221bc796957ce76b374eca06013dc57ee03"
+      }
+    },
+    "python-contracts": {
+      "rc": 0,
+      "rc_file": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/python-contracts.rc",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/python-contracts.log",
+        "bytes": 21147,
+        "sha256": "172adcd46162df1c41024cde87181fb842784b45d09c47e77ae8fe64662a78da"
+      }
+    },
+    "python-close": {
+      "rc": 0,
+      "rc_file": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/python-close.rc",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "path": "learner/runs/20261023-154307-35c1e660-bdb0-4743-b78c-264839831e21-fix-batch/python-close.log",
+        "bytes": 223,
+        "sha256": "0ae70e05f3404e36b54fba4b784b577b4cf757202e11e5247f226d4b3138a5ed"
+      }
+    }
+  },
+  "targeted_tests_only": {
+    "vitest_files": 2,
+    "vitest_cases": 77,
+    "python_cases": 17,
+    "full_rc": null
+  },
+  "existing_base_ancestor_fixes_verified": [
+    {
+      "item": "ordinary-unassigned-tick-no-change",
+      "commit": "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+      "base_ancestor": true
+    },
+    {
+      "item": "ordinary-close-candidate-failure-isolation",
+      "commit": "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+      "base_ancestor": true
+    },
+    {
+      "item": "manual-notice-initial-authentication",
+      "commit": "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+      "base_ancestor": true
+    },
+    {
+      "item": "manual-notice-R4-authentication",
+      "commit": "c4cee83a3259b9303004b81dd75919a9b395bdf5",
+      "base_ancestor": true
+    },
+    {
+      "item": "native-agent-name-length",
+      "commit": "cb11e5f5beaf2d9ce1320b4222d435dc9cdf0de1",
+      "base_ancestor": true
+    },
+    {
+      "item": "native-bootstrap-and-completion",
+      "commit": "d5e10110b8d00216a86a3d24d59683ff36c704fe",
+      "base_ancestor": true
+    },
+    {
+      "item": "wrapper-unpublished-seal-dependency",
+      "commit": "25c5a335720d3a9c508f84567420cc41f4541d6d",
+      "base_ancestor": true
+    },
+    {
+      "item": "supported-frozen-V6-stream",
+      "commit": "39258bd0fba27da2ba5f95ef8f18acdd3e1f7896",
+      "base_ancestor": true
+    },
+    {
+      "item": "ledger-forked-publication-prefix",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "base_ancestor": true
+    },
+    {
+      "item": "shared-main-transient-import-recovery",
+      "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+      "base_ancestor": true
+    },
+    {
+      "item": "rollout-best-fixed-fixture",
+      "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "base_ancestor": true
+    },
+    {
+      "item": "ordinary-notice-ack-registry",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "base_ancestor": true
+    },
+    {
+      "item": "state-only-death-fight-attribution",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "base_ancestor": true
+    },
+    {
+      "item": "observed-ascension-not-requested-target",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "base_ancestor": true
+    },
+    {
+      "item": "quota-renewal-credit-baseline",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "base_ancestor": true
+    },
+    {
+      "item": "closed-atomic-paper-archives",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "base_ancestor": true
+    },
+    {
+      "item": "explicit-V6-publication-task-identities",
+      "commit": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+      "base_ancestor": true
+    },
+    {
+      "item": "bounded-hash-linked-ops-checklist",
+      "commit": "c299eaf3e49cc9b9ef7af086d5df2de51d59ed09",
+      "base_ancestor": true
+    },
+    {
+      "item": "descriptive-fixes-shape",
+      "commit": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+      "base_ancestor": true
+    },
+    {
+      "item": "narrow-publication-source-binding",
+      "commit": "e87e6cc08bfb2c90e1961d6783cf0c2a7462aac3",
+      "base_ancestor": true
+    }
+  ],
+  "preserved_candidates": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261023-1151-ops/fix-candidate.json",
+      "bytes": 3109,
+      "sha256": "a23f8c9729a41c20e334b1d3240cbd69629adfe558eed2a03467b9970cbc3462",
+      "batch": "20261023-110800-fix-batch",
+      "state": null
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261023-0042-fix-ops/prepared-host-full.json",
+      "bytes": 4443,
+      "sha256": "4d6f6fedcf00ef4959aa5de3606afceed7a001e0fdbeca5e33ddb1f7c894486c",
+      "batch": "20261023-001301-fix-batch",
+      "state": "host-targeted-passed-await-original-full-slot"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json",
+      "bytes": 1769,
+      "sha256": "23c24c00efe51888dc7399b5cc33d001f848dafa454c35ed2e38e166e4796e37",
+      "batch": "20261021-001302-fix-batch",
+      "state": "original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json",
+      "bytes": 1565,
+      "sha256": "eb50a47579235651e2aa6c32391f403252592b85cdc2efba9c7eac1fd60a970f",
+      "batch": "20261021-014301-fix-batch",
+      "state": "three-uncommitted-test-leaves-frozen-await-post-P0-latest-live-host-full"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261023-1509-ops/candidate-141301.json",
+      "bytes": 10047,
+      "sha256": "78c93fd3bc734130a5033a75cdb1aec57f0601c0846aced27f86960fd9a48bb1",
+      "batch": "20261023-141301-strategy-proposal",
+      "state": "original-uncommitted-candidate-retained-full-terminal-unverified"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "run-config ENOBUFS、账本状态恢复、V6监控及旧测试夹具",
+      "reason": "已有冻结候选及原owner，队列明确禁止后批重复实现，等待原集成验收。"
+    },
+    {
+      "item": "infra-jev-base-request-budget-issue25-20261022",
+      "reason": "太大：须沿原题面字段合同处理，不能截断事实、删除候选或提高预算。"
+    },
+    {
+      "item": "sandbox上游扫描竞态、历史超时/性能、通知及原件恢复余项",
+      "reason": "证据不足；保留原失败、原owner和待办，不冒称根因已修。"
+    },
+    {
+      "item": "游戏模型、出牌、药水、SL、终局、路线及架构专题",
+      "reason": "策略类或独立功能，沿既有提案链处理，普通纯bug批不重复实现。"
+    }
+  ],
+  "native": {
+    "receipt": {
+      "path": "ops/codex-ops/learner/learner-20261023-154301-fix-batch.tui.json",
+      "bytes": 5532,
+      "sha256": "b55e241ebcc61d7b1877062943d04471bc0f77b89365fc240f5dd7d91c2bafda"
+    },
+    "result": {
+      "code": 0,
+      "reason": "native-task-complete",
+      "stopped": true,
+      "session": "01a167b6-bf5c-7ab3-8791-51f1ed82b7be",
+      "turn": "01a167b7-5e82-7e63-b975-4c0c864886a1"
+    },
+    "bindings": [
+      {
+        "turn_id": "01a167b7-5e82-7e63-b975-4c0c864886a1",
+        "marker": "[learner-batch:d477880e-a326-4b7e-b7db-56918eca2e78]",
+        "prompt_sha256": "38afb36c1666ecba21f8868bb0eba2685c29020b40e400b12fe79b69940bb5ac"
+      }
+    ],
+    "turn_contexts": [
+      {
+        "turn_id": "01a167b7-5e82-7e63-b975-4c0c864886a1",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "sandbox_policy": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261023-154301"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        }
+      }
+    ],
+    "original_wrapper": {
+      "version": 1,
+      "batch": "20261023-154301-fix-batch",
+      "state": "failed",
+      "rc": 0,
+      "launcher_rc": 0,
+      "finished": "2026-10-23 15:53",
+      "supervisor": {
+        "pid": 1181273,
+        "birth": "16591324"
+      },
+      "batch_sha256": "3f2da519e35621f5b5fcb868dd8d0b9b5693bd29d65ce102fbf7b6f8ee854d6b"
+    },
+    "supervisor_and_native_stopped": true,
+    "lease_free": true
+  },
+  "original_empty_fix_verifier": null,
+  "empty_fix_rejection_evidence": {
+    "source_equivalence_required_by": "ops/learner_checks.py:verify_empty_fix",
+    "actual_live": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+    "base_vs_live_source_paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/eye/decision-log.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/hand/screens/v6-room-projection.ts",
+      "agent/src/hand/screens/v6-room.ts",
+      "agent/src/memory/construction-log.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/sim/continuous-boss-result.ts",
+      "agent/src/sim/v6-completion.ts",
+      "agent/src/sim/v6-formation-table.ts",
+      "agent/src/sim/v6-precompute.ts",
+      "agent/src/sim/v6-projection-entries.ts",
+      "agent/src/sim/v6-projection.ts",
+      "agent/src/sim/v6-request-factory.ts",
+      "agent/src/sim/v6-supply.ts",
+      "agent/src/sim/v6-table-copy.ts",
+      "agent/src/sim/v6-targets.ts",
+      "agent/src/v6/formats.ts",
+      "agent/src/v6/log.ts",
+      "agent/src/v6/target-values.ts",
+      "agent/tests/brain-card-distill.test.ts",
+      "agent/tests/brain-codex-session.test.ts",
+      "agent/tests/build-decider.test.ts",
+      "agent/tests/construction-log-loop.test.ts",
+      "agent/tests/construction-log.test.ts",
+      "agent/tests/cost_incremental_test.py",
+      "agent/tests/fixture-command.test.ts",
+      "agent/tests/global-build-fixed-inputs.test.ts",
+      "agent/tests/global-build-integration.test.ts",
+      "agent/tests/herdr-workspace-fixture.ts",
+      "agent/tests/human-pace-budget.test.ts",
+      "agent/tests/journal-replay.test.ts",
+      "agent/tests/knowledge-catalog.test.ts",
+      "agent/tests/learner-retention-fixture.test.ts",
+      "agent/tests/learner-retention.test.ts",
+      "agent/tests/legacy-refresh-incremental.test.ts",
+      "agent/tests/loop-consumer-fixed-transport.test.ts",
+      "agent/tests/oneshot-support.ts",
+      "agent/tests/ops-herdr.test.ts",
+      "agent/tests/paper-dataset-publication.test.ts",
+      "agent/tests/report_incremental_test.py",
+      "agent/tests/run-plan-merge.test.ts",
+      "agent/tests/sandbox-entry.test.ts",
+      "agent/tests/shared-tools.test.ts",
+      "agent/tests/silent-double-boss.test.ts",
+      "agent/tests/synthetic-board-fixture.ts",
+      "agent/tests/v6-appearance.test.ts",
+      "agent/tests/v6-chain-log.test.ts",
+      "agent/tests/v6-combo-metrics.test.ts",
+      "agent/tests/v6-combo-simulation.test.ts",
+      "agent/tests/v6-direction-pairs.test.ts",
+      "agent/tests/v6-direction-provider.test.ts",
+      "agent/tests/v6-draft.test.ts",
+      "agent/tests/v6-formation-table.test.ts",
+      "agent/tests/v6-history-pack.test.ts",
+      "agent/tests/v6-history-targets.test.ts",
+      "agent/tests/v6-precompute.test.ts",
+      "agent/tests/v6-projection-entries.test.ts",
+      "agent/tests/v6-projection-fixture.ts",
+      "agent/tests/v6-projection-input.test.ts",
+      "agent/tests/v6-projection-progress.test.ts",
+      "agent/tests/v6-projection.test.ts",
+      "agent/tests/v6-request-factory.test.ts",
+      "agent/tests/v6-room-prompt-budget.test.ts",
+      "agent/tests/v6-room.test.ts",
+      "agent/tests/v6-supply.test.ts",
+      "agent/tests/v6-target-values.test.ts",
+      "agent/tests/v6_learning_loop_test.py",
+      "agent/tools/issue29-availability.py",
+      "agent/tools/issue29-brain-speed-report.py",
+      "agent/tools/issue29-brain-speed-test.py",
+      "agent/tools/issue29-brain-speed.ts",
+      "agent/tools/issue29-deepseek-report.py",
+      "agent/tools/issue29-deepseek-report.test.py",
+      "agent/tools/issue29-deepseek-stream.test.ts",
+      "agent/tools/issue29-deepseek-stream.ts",
+      "agent/tools/issue31-quality-replay.ts",
+      "eval/brain_source.py",
+      "eval/brain_trial.py",
+      "eval/cost.py",
+      "eval/metrics.py",
+      "eval/sts2fun_combat_diagnostic.py",
+      "eval/sts2fun_stats.py",
+      "eval/tests/test_sts2fun_combat_diagnostic.py",
+      "eval/tests/test_sts2fun_stats.py",
+      "knowledge/builders/refresh-step.py",
+      "knowledge/builders/test_legacy_incremental.py",
+      "knowledge/builders/test_potion_incremental.py",
+      "learner/evidence_summary.py",
+      "learner/tasks/postmortem.md",
+      "ops/agent_board.py",
+      "ops/autoplay.sh",
+      "ops/brain_trial.py",
+      "ops/codex-ops.sh",
+      "ops/global_build_funnel.py",
+      "ops/issue_process_cwd.py",
+      "ops/issue_session.py",
+      "ops/issue_session_project.py",
+      "ops/issue_session_support.py",
+      "ops/paper_dataset.py",
+      "ops/run.sh",
+      "ops/shared_tools.py",
+      "ops/tests/test_brain_trial.py",
+      "ops/tests/test_brain_view.py",
+      "ops/tests/test_issue_session.py",
+      "ops/tests/test_llm_handoff.py",
+      "ops/tests/test_paper_dataset_publication.py",
+      "ops/tests/test_shared_tools.py",
+      "ops/worktree_checkout.py"
+    ],
+    "scope": "this is unchanged-fix acceptance transport equivalence, not a new source regression or test failure"
+  },
+  "retention": {
+    "batch": "20261023-154301-fix-batch",
+    "task": "fix-batch",
+    "character": "silent",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-154301",
+    "schema": "learner-cleanup-request-v1",
+    "requested_at": "2026-10-23T15:53:45+08:00",
+    "requested_by": "learner-wrapper",
+    "state": "deferred",
+    "admission_required": true,
+    "model_finished_does_not_prove_ingestion": true,
+    "last_result": {
+      "state": "deferred",
+      "reason": "scratch ownership not bound to original report"
+    },
+    "updated_at": "2026-10-23T15:53:45+08:00"
+  },
+  "retention_request": {
+    "path": "ops/codex-ops/retention/requests/20261023-154301-fix-batch.json",
+    "bytes": 568,
+    "sha256": "481f7ff047eec0a5fb07d4323469246d62bbe3f9f255d21943826fd861a56a32"
+  },
+  "scratch_report_ownership_mismatch_preserved": true,
+  "no_new_model_checks_dataset_finish_or_live": true,
+  "science_and_original_failed_cases_closed": false
+}

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261024-101315/agent
+
+ ❯ tests/strategy-tool-budget.test.ts (2 tests | 1 failed) 30ms
+   × bounds a broad strategy query with the matching complete provenance instead of all omitted sources 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-tool-budget.test.ts > bounds a broad strategy query with the matching complete provenance instead of all omitted sources
+AssertionError: expected true not to be true // Object.is equality
+ ❯ tests/strategy-tool-budget.test.ts:49:30
+     47|   expect(Buffer.byteLength(JSON.stringify(sourcesFor(entries, source))…
+     48|   const result = await host.call("kb_strategies", { query: "*" });
+     49|   expect(result.isError).not.toBe(true);
+       |                              ^
+     50|   expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
+     51|   const parsed = JSON.parse(result.text);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  10:22:27
+   Duration  2.41s (transform 1.77s, setup 690ms, import 1.47s, tests 30ms, environment 0ms)
+

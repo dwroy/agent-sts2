@@ -1,0 +1,41 @@
+{
+  "schema": "ops-high-narrow-harness-correction-v1",
+  "at": "2026-10-22T16:03:02.614764+08:00",
+  "old_controller_exited": true,
+  "original_admitted_at": "2026-10-22T15:56:04+08:00",
+  "knowledge_snapshot_finished_at": "2026-10-22T15:56:04+08:00",
+  "original_rebuild_exit": 2,
+  "product_code_executed_by_failed_rebuild": false,
+  "failure_cause": "Ops harness inherited whole #33+#26 external-aggregate rebuild command although R411+narrow three leaves contains neither builder nor aggregate. Python exited before opening product file. Not sparse-checkout failure.",
+  "absence": [
+    {
+      "ref": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+      "path": "agent/tools/build-external-stats.py",
+      "git_tree_entry_absent": true
+    },
+    {
+      "ref": "90c6d041640b1bec7082635f6344fc69dd260751",
+      "path": "agent/tools/build-external-stats.py",
+      "git_tree_entry_absent": true
+    },
+    {
+      "ref": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "git_tree_entry_absent": true
+    },
+    {
+      "ref": "90c6d041640b1bec7082635f6344fc69dd260751",
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "git_tree_entry_absent": true
+    }
+  ],
+  "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+  "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "staged_tree_unchanged": true,
+  "correction": "Mark external aggregate preflight not applicable only after exact base+candidate Git absence and worktree+live absence; preserve original failure and execute required original tsc + first full. Do not import #26 data/tool or skip an applicable check.",
+  "full_started_before": false,
+  "no_full_repeat": true,
+  "no_model_API_MC_game_actions": 0,
+  "old_guard_files_retained": true,
+  "old_receipt": "paper/materials/20261022-1601-ops/original-checks.json"
+}

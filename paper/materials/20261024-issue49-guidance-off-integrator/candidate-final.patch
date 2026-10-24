@@ -1,0 +1,269 @@
+diff --git a/agent/src/brain/brain.ts b/agent/src/brain/brain.ts
+index 5c78770f0..b3cd650f2 100644
+--- a/agent/src/brain/brain.ts
++++ b/agent/src/brain/brain.ts
+@@ -51,7 +51,7 @@ import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope } from "../memory
+ 
+ /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
+ export function agentSystemPrompt(state?: unknown): string {
+-  const guidance = knowledgeCharacter() === "silent" ? "\n构筑、幕初路线和备战题按题面非空线索与需要查询策略/rk；匹配数为0、缺失或错误时跳过，不为查工具而查。构筑rk只读构筑相关摘要；经验另用kb_experience。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
++  const guidance = knowledgeCharacter() === "silent" ? "\n经验用kb_experience按题面非空线索与需要查询；匹配数为0、缺失或错误时跳过，不为查工具而查。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
+   const endgame = endgameRawScope(state) ? `\n${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE}` : "";
+   return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${endgame}`;
+ }
+diff --git a/agent/src/brain/tools/query-guidance.ts b/agent/src/brain/tools/query-guidance.ts
+index 28236ed65..cd15eb4fc 100644
+--- a/agent/src/brain/tools/query-guidance.ts
++++ b/agent/src/brain/tools/query-guidance.ts
+@@ -9,7 +9,6 @@ import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../kno
+ import type { GameState } from "../../hand/mod/schema.js";
+ import type { BrainRequest, ToolCallRecord } from "../types.js";
+ import type { ToolContext } from "./types.js";
+-import { reflexMatches } from "./reflex-knowledge.js";
+ import { externalStatsQueryHints } from "./external-stats-tools.js";
+ 
+ const record = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
+@@ -26,7 +25,7 @@ function questionFacts(ctx: ToolContext): Record<string, unknown> {
+     floor: get("floor") ?? rawRun["floor"] };
+ }
+ 
+-/** The same selector powers both the cue and kb_strategies. Missing and invalid libraries stay explicit. */
++/** Read-only kb_strategies selector. Missing and invalid libraries stay explicit. */
+ export function strategyMatches(ctx: ToolContext) {
+   if (knowledgeCharacter() !== "silent") return { entries: [], sources: [], status: "empty" };
+   const path = knowledgeFile(ctx.knowledgeDir, "strategy-entries.json");
+@@ -81,7 +80,6 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
+   const kind = guidanceKind(req.label, req.payload);
+   if (!kind) return req;
+   const ctx = { ...req.toolContext, options: req.options };
+-  const strategies = strategyMatches(ctx);
+   let experience: Record<string, unknown>;
+   try {
+     const { result, sources } = await experienceMatches(ctx);
+@@ -89,27 +87,11 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
+     experience = { status: missing ? "missing" : "ok", count: missing ? null : result.length, entries: result.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(e.name ? { title: identity(e.name) } : {}), scope: identity(e.scope) })),
+       omitted: Math.max(0, result.length - CUE_LIMIT) };
+   } catch { experience = { status: "unavailable", count: null, entries: [] }; }
+-  const reflex = reflexMatches(ctx);
+-  const p = record(ctx.payload), raw = record(ctx.state);
+-  const enemies = [p["enemies"], record(raw["combat"])["enemies"]].flatMap(v => Array.isArray(v) ? v : [])
+-    .map(e => record(e)["enemy_id"]).filter((id): id is string => typeof id === "string");
+-  const act = Number(questionFacts(ctx)["act"]);
+-  const threats = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [])
+-    .catch(() => ({ result: [] as string[], sources: [] }));
+-  const entities = [...new Set([questionFacts(ctx)["act_boss"], ...enemies, ...threats.result].filter((id): id is string => typeof id === "string" && !!id))];
+   const external = externalStatsQueryHints(ctx);
+   const cues = { schema: "brain-query-cues-v3", question_type: kind,
+-    strategies: { status: strategies.status, count: strategies.status === "invalid" || strategies.status === "missing" ? null : strategies.entries.length,
+-      entries: strategies.entries.slice(0, CUE_LIMIT).map(e => ({ id: identity(e.id), ...(typeof record(e)["title"] === "string" ? { title: identity(String(record(e)["title"])) } : {}) })),
+-      omitted: Math.max(0, strategies.entries.length - CUE_LIMIT), ...(strategies.entries.length ? { tool: "kb_strategies", input: { query: "*" } } : {}) },
+-    rk: { status: reflex.status, count: reflex.status === "loaded" ? reflex.entries.length : null,
+-      entries: reflex.entries.slice(0, CUE_LIMIT).map(e => ({ id: e.id, applies_to: e.applies_to })), omitted: Math.max(0, reflex.entries.length - CUE_LIMIT),
+-      ...(reflex.entries.length ? { tool: "kb_reflex", input: { query: "*" } } : {}),
+-      entity_queries: entities.map(id => ({ entity: identity(id), count: reflex.entries.filter(e => JSON.stringify(e).toLowerCase().includes(id.toLowerCase())).length, input: { query: id } }))
+-        .filter(e => e.count > 0).slice(0, CUE_LIMIT) },
+     experience: { ...experience, ...(typeof experience["count"] === "number" && experience["count"] > 0 ? { tool: "kb_experience", input: { relevant: true } } : {}) },
+     ...(external ? { external_stats: external } : {}) };
+-  return { ...req, question: `${req.question}\n\n本题实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。构筑rk为相关摘要，不含combat_line或原始谓词；备战rk仍为检索候选，不证明条件成立或Jev采用。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
++  return { ...req, question: `${req.question}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
+ }
+ 
+ /** Only successful, actually returned entries count as hits; cues and model prose never count. */
+diff --git a/agent/tests/brain-query-efficiency.test.ts b/agent/tests/brain-query-efficiency.test.ts
+index 8da5c2246..ecb8157ed 100644
+--- a/agent/tests/brain-query-efficiency.test.ts
++++ b/agent/tests/brain-query-efficiency.test.ts
+@@ -34,18 +34,17 @@ function fixture(label = "reward/card") {
+   return { dir, write, ctx, req, combat, construction, library, cues, host, copyStats };
+ }
+ 
+-it("empty matching cues do not encourage strategy or rk queries in either instruction layer", async () => {
++it("omits strategy and rk cues entirely in both instruction layers", async () => {
+   const { req, cues } = fixture();
+   const result = await attachQueryGuidance(req), body = await cues();
+-  expect(body.strategies).toMatchObject({ count: 0 }); expect(body.rk).toMatchObject({ count: 0 });
+-  for (const cue of [body.strategies, body.rk]) { expect(cue).not.toHaveProperty("tool"); expect(cue).not.toHaveProperty("input"); }
++  expect(body).not.toHaveProperty("strategies"); expect(body).not.toHaveProperty("rk");
++  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+   expect(result.question).not.toContain("先调用"); expect(result.system).not.toContain("先查");
+ });
+ 
+ it("construction lookup excludes combat lines even if requested and returns summaries without predicate JSON", async () => {
+   const { host, combat, construction, library, cues } = fixture(); library(combat, construction);
+-  const body = await cues(); expect(body.rk.count).toBe(1); expect(body.rk.entries.map((e: any) => e.id)).toEqual([construction.id]);
+-  expect(body.rk.tool).toBe("kb_reflex"); expect(body.strategies).not.toHaveProperty("tool");
++  const body = await cues(); expect(body).not.toHaveProperty("rk"); expect(body).not.toHaveProperty("strategies");
+   const result = JSON.parse((await host.call("kb_reflex", { query: "*" })).text);
+   expect(result.entries).toHaveLength(1); expect(result.entries[0]).toMatchObject({ id: construction.id, summary: construction.label_en, confidence: construction.confidence, source_experience: construction.source_experience });
+   expect(result.entries[0]).not.toHaveProperty("predicate"); expect(result.entries[0]).not.toHaveProperty("signal");
+@@ -53,8 +52,9 @@ it("construction lookup excludes combat lines even if requested and returns summ
+ });
+ 
+ it.each(["event/plan", "rest/plan", "shop/plan", "event/act-plan"])("%s filters combat knowledge while fight-plan preserves its existing full result", async label => {
+-  const { combat, construction, library, cues, ctx } = fixture(label); library(combat, construction);
+-  expect((await cues()).rk.entries.map((e: any) => e.id)).not.toContain(combat.id);
++  const { combat, construction, library, cues, ctx, host: constructionHost } = fixture(label); library(combat, construction);
++  expect(await cues()).not.toHaveProperty("rk");
++  expect(JSON.parse((await constructionHost.call("kb_reflex", { query: "*" })).text).entries.map((e: any) => e.id)).not.toContain(combat.id);
+   const fightCtx = { ...ctx, label: "fight-plan", payload: { ...ctx.payload, run_plan_task: { trigger: "act" } } };
+   const host = new ToolHost(buildKnowledgeTools(fightCtx), fightCtx);
+   const result = JSON.parse((await host.call("kb_reflex", { query: combat.id })).text);
+diff --git a/agent/tests/brain-query-guidance.test.ts b/agent/tests/brain-query-guidance.test.ts
+index 15636a2d6..429ca7ff4 100644
+--- a/agent/tests/brain-query-guidance.test.ts
++++ b/agent/tests/brain-query-guidance.test.ts
+@@ -36,12 +36,16 @@ function fixture(label = "reward/card") {
+ }
+ const answer = (): BrainAnswer => ({ engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 10, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] });
+ 
+-it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s gives bounded identities and real call arguments without inline content", async label => {
++it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s omits strategy/rk guidance even with matches and retains experience cues and voluntary queries", async label => {
+   const { req, ctx } = fixture(label), before = JSON.stringify(req.payload);
+   const result = await attachQueryGuidance(req);
+-  expect(result.question).toContain('"query":"*"'); expect(result.question).toContain('"relevant":true');
+-  expect(result.question).toContain('"count":1'); expect(result.question).toContain("strategy-fixture");
+-  expect(result.question).toContain("格式策略标题"); expect(result.question).toContain("rk-boss");
++  const cues = JSON.parse(result.question.split("\n").at(-1)!);
++  expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
++  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
++  expect(result.tools!.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex"]));
++  expect(result.question).toContain('"relevant":true');
++  expect(result.question).not.toContain("strategy-fixture"); expect(result.question).not.toContain("格式策略标题");
++  expect(result.question).toContain("rk-boss");
+   expect(result.question).not.toContain("STRATEGY_BODY"); expect(result.question).not.toContain("RK_BODY");
+   expect(result.question).not.toContain("rk-retired"); expect(result.question).not.toContain("rk-asc"); expect(result.question).not.toContain("rk-other");
+   expect(result.payload).toBe(req.payload); expect(JSON.stringify(req.payload)).toBe(before);
+@@ -73,19 +77,19 @@ it("keeps tools read-only, reflects library changes and fails closed on bad libr
+   await host.call("kb_experience", { relevant: true });
+   expect(readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json"), "utf8")).toBe(initial);
+   write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [] });
+-  expect(strategyMatches(ctx).entries).toEqual([]); expect((await attachQueryGuidance(req)).question).toContain('"count":0');
++  expect(strategyMatches(ctx).entries).toEqual([]); expect((await attachQueryGuidance(req)).question).not.toContain('"strategies"');
+   write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, confidence: 2 }] });
+   expect(strategyMatches(ctx)).toMatchObject({ status: "invalid", entries: [] });
+-  expect((await attachQueryGuidance(req)).question).toContain('"status":"invalid","count":null');
++  expect((await attachQueryGuidance(req)).question).not.toContain('"strategies"');
+   rmSync(knowledgeFile(ctx.knowledgeDir, "strategy-entries.json"));
+   expect(strategyMatches(ctx).status).toBe("missing");
+ });
+ 
+-it("uses the live act/boss fallback for fight-plan cues and queries while preserving explicit question facts", async () => {
++it("uses the live act/boss fallback for voluntary fight-plan queries while preserving explicit question facts", async () => {
+   const { ctx, req } = fixture("fight-plan");
+   const live = { ...ctx, payload: { enemies: [{ enemy_id: "FIXTURE_ELITE" }] }, state: { run: { act_id: 0, boss_id: "FIXTURE_BOSS" } } };
+   expect(strategyMatches(live).entries).toHaveLength(1);
+-  expect((await attachQueryGuidance({ ...req, payload: live.payload, toolContext: live })).question).toContain("strategy-fixture");
++  expect((await attachQueryGuidance({ ...req, payload: live.payload, toolContext: live })).question).not.toContain("strategy-fixture");
+   expect(strategyMatches({ ...live, payload: { facts: { act_boss: "OTHER_BOSS" } } }).entries).toEqual([]);
+ });
+ 
+diff --git a/agent/tests/brain-reflex-knowledge.test.ts b/agent/tests/brain-reflex-knowledge.test.ts
+index fb808e164..539ae9c7e 100644
+--- a/agent/tests/brain-reflex-knowledge.test.ts
++++ b/agent/tests/brain-reflex-knowledge.test.ts
+@@ -49,21 +49,23 @@ it("queries actual reflex.json entries and never labels experience queries as rk
+   expect(queryAudit(host.calls).rk).toMatchObject({ queried: true, hit_ids: ["real-rk-fixture"] });
+ });
+ 
+-it("gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability", async () => {
++it("omits nonempty rk identities and query parameters while keeping the tool available", async () => {
+   const { req } = fixture();
+   const cue = await attachQueryGuidance(req);
+-  expect(cue.question).toContain('"tool":"kb_reflex"');
+-  expect(cue.question).toContain("real-rk-fixture");
++  expect(cue.question).not.toContain("kb_reflex");
++  expect(cue.tools!.map(t => t.name)).toContain("kb_reflex");
++  expect(cue.question).not.toContain("real-rk-fixture");
+   expect(cue.question).not.toContain("Reflex content fixture only");
+   expect(cue.question).not.toContain('"signal"');
+   expect(cue.question).not.toContain('"predicate"');
+-  expect(cue.question).toContain("检索候选");
++  expect(JSON.parse(cue.question.split("\n").at(-1)!)).not.toHaveProperty("rk");
+ });
+ 
+-it("retains rk cues even when the optional act-threat database is malformed", async () => {
+-  const { req, write } = fixture();
++it("keeps rk callable without cues when the optional act-threat database is malformed", async () => {
++  const { req, write, host, entry } = fixture();
+   write("monster-db.json", { monsters: {}, encounters: { INVALID_FIXTURE: null } });
+-  expect((await attachQueryGuidance(req)).question).toContain("real-rk-fixture");
++  expect((await attachQueryGuidance(req)).question).not.toContain("real-rk-fixture");
++  expect(JSON.parse((await host.call("kb_reflex", { query: "*" })).text).entries).toEqual([entry]);
+ });
+ 
+ it("retains exact file and entry versions, confidence, evidence and source-experience links without writing", async () => {
+@@ -134,12 +136,12 @@ it("reloads changed reflex bytes and keeps all other roles' existing tool surfac
+   for (const role of ["ironclad", "regent", "defect", "necrobinder"]) { setKnowledgeCharacter(role); expect(buildKnowledgeTools(ctx).map(t => t.name)).not.toContain("kb_reflex"); }
+ });
+ 
+-it("bounds returned entries and cue identities while keeping text-filtered Boss hints consistent", async () => {
++it("bounds voluntarily queried entries without adding identities or Boss query hints", async () => {
+   const { req, host, write, entry, library } = fixture();
+   write("reflex.json", { ...library, entries: Array.from({ length: 30 }, (_, i) => ({ ...entry, id: `reflex-${i}` })) });
+   const cue = await attachQueryGuidance(req), body = JSON.parse(cue.question.split("\n").at(-1)!);
+-  expect(body.rk).toMatchObject({ count: 30, omitted: 24, tool: "kb_reflex", input: { query: "*" }, entity_queries: [expect.objectContaining({ entity: "FIXTURE_BOSS", count: 30 })] });
+-  expect(body.rk.entries).toHaveLength(6);
++  expect(body).not.toHaveProperty("rk"); expect(cue.question).not.toContain("reflex-0");
++  expect(cue.question).not.toContain("entity_queries");
+   const broad = await host.call("kb_reflex", { query: "*" }); expect(Buffer.byteLength(broad.text)).toBeLessThanOrEqual(24_000);
+   expect(JSON.parse(broad.text)).toMatchObject({ omitted: 18 }); expect(JSON.parse(broad.text).entries).toHaveLength(12);
+ });
+diff --git a/agent/tests/endgame-plan.test.ts b/agent/tests/endgame-plan.test.ts
+index 5777ba94c..48c300893 100644
+--- a/agent/tests/endgame-plan.test.ts
++++ b/agent/tests/endgame-plan.test.ts
+@@ -177,7 +177,8 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
+     expect((requests[0]!.payload as any).run_plan_task.current_plan).toBeNull();
+     const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
+     expect(cues.schema).toBe("brain-query-cues-v3");
+-    for (const [key, tool] of [["strategies", "kb_strategies"], ["rk", "kb_reflex"], ["experience", "kb_experience"]]) {
++    expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
++    for (const [key, tool] of [["experience", "kb_experience"]]) {
+       if (typeof cues[key].count === "number" && cues[key].count > 0) expect(cues[key].tool).toBe(tool);
+       else {
+         expect(cues[key].tool).toBeUndefined();
+@@ -185,12 +186,12 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
+       }
+     }
+     expect(requests[0]!.system).toContain("匹配数为0、缺失或错误时跳过");
+-    expect(requests[0]!.system).toContain("构筑rk只读构筑相关摘要");
+-    expect(requests[0]!.system).toContain("经验另用kb_experience");
++    expect(requests[0]!.system).not.toMatch(/kb_strategies|kb_reflex|构筑rk/);
++    expect(requests[0]!.system).toContain("经验用kb_experience");
+     expect(requests[0]!.question).not.toContain("calibrated on logged A8");
+     expect((requests[1]!.memory as any).construction_log).toContain("格式构筑理由");
+     expect(requests[1]!.tools).toHaveLength(15);
+-    expect(requests[1]!.tools?.map(t => t.name)).toEqual(expect.arrayContaining(["kb_reflex", "kb_experience"]));
++    expect(requests[1]!.tools?.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex", "kb_experience"]));
+     if (start.recovery === "rollback") current = board(2);
+     expect((await playFixed(1)).acts).toBe(1);
+     if (start.recovery === "rollback") {
+diff --git a/docs/brain-agent-mode.md b/docs/brain-agent-mode.md
+index d4ab2942d..1d5c0774c 100644
+--- a/docs/brain-agent-mode.md
++++ b/docs/brain-agent-mode.md
+@@ -43,9 +43,9 @@ Codex 保留空 cwd、project docs/hooks/apps/skills/multi-agent/shell/网络搜
+ 
+ Roy/主管 2026-10-23 最新裁定（issue评论6361846602）：rk 指 **reflex knowledge**，即 `reflex.json` 条目（v6-plan §5），不是 experience/shared-experience 的别名。此前开发6290300d8的解释已撤回，原提交、交付报告和失败证据保留为历史；本节为修正后的合同。
+ 
+-Roy 2026-10-23 晚同意的小修正（评论6367991625）：Silent 的拿牌、商店、休息、事件、幕初路线和 fight-plan 题先给实际检索匹配数，只按非空线索和需要查询。策略/rk 数为0或库缺失/错误时不附工具名和调用参数，也不在基础指令、题面或工具说明中无条件要求先查。非空时可按工具参数或线索里的 Boss/精英/卡牌/条目 ID 缩小查询。经验继续由独立的 `kb_experience` 查询，`relevant=true` 只表示本题相关经验。Ironclad 的基础指令和原工具表/schema 保持原样。
++Roy 2026-10-24 晨裁定（评论6377338293）：先关闭策略/rk查询引导，等 #51 外部条目入库后再议开启。Silent 的系统提示和题面不再附策略/rk的匹配数量、身份、工具参数或查询引导；`kb_strategies`、`kb_reflex` 仍注册，大脑可自行调用，工具只读合同、调用/耗时预算与实际调用审计保留。R419经验暂不回退；Ironclad 的基础指令和原工具表/schema 保持原样。此前10-23晚按非空匹配给线索的R420合同作为历史保留，由本次裁定取代。
+ 
+-题面末尾 `brain-query-cues-v3` 分列 strategies、rk、experience，只含候选数量、最多六条身份/已有策略标题、经验 scope、工具名和参数。rk 只给经本题用途筛选后的真实 reflex ID/applies_to，不给 label_en、predicate、signal、证据或可信度正文；另列非零的本幕 Boss、当前敌人与已发布幕威胁文本提及数量及查询参数。这个数量是检索候选数，不证明 predicate 已成立、预测下一个精英、Jev 采用或收益。缺失/损坏库数量为 null，合法空库为0；文件变化后重新读取，不编造条目。
++题面末尾 `brain-query-cues-v3` 保留独立的 experience 及适用时的 external_stats，不再包含 strategies/rk。经验线索只含候选数量、最多六条身份/已有标题、scope及非空时的 `kb_experience relevant=true` 参数；缺失库数量为null，合法空库为0。经验正文仍由工具返回，不把相关性当作条件已成立或Jev采用。
+ 
+ `kb_reflex` 只读当前 Silent 的已发布 reflex.json，支持 query（关键词/ID/`*`）及可选 applies_to（combat_line/card_pick/potion/rest/shop），不接受路径、角色、进阶或写入参数。复用 `loadV6Knowledge` 的目录/文件边界、严格 schema 与词表/方向/core/combo 引用校验，按条目角色和当前进阶过滤；不回退到公共或其他角色文件，不以经验条目填补 rk。构筑题按用途筛选：拿牌仅card_pick，商店为shop/card_pick/potion，休息仅rest，事件与幕初规划为四种构筑用途，均排除combat_line（显式请求也不能绕过）。返回一句话摘要（原label_en）、ID/版本/用途、原confidence/evidence/source_experience，不返回原始predicate或signal JSON；摘要省略条件并不意味着无条件适用。fight-plan仍返回完整原条目，其他角色不变。source_experience为来源经验关联，不是reflex命中ID。加载器的可选审计读取回调只记录其实际解析字节及输入文件 SHA，原 Jev 消费者沿默认读取，行为不变。来源包含 reflex.json 及实际读取的引用校验输入（reflex-vocab/build-cores/direction-cards），每份有角色、版本/schema 和 SHA。
+ 
+diff --git a/docs/brain-strategies.md b/docs/brain-strategies.md
+index 54905ed4b..9bf36d594 100644
+--- a/docs/brain-strategies.md
++++ b/docs/brain-strategies.md
+@@ -50,7 +50,7 @@
+ 
+ ## 检索和 prompt
+ 
+-历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式只给查询线索，正文由 `kb_strategies` 返回，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
++历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式按Roy 2026-10-24裁定关闭策略查询引导，`kb_strategies` 仍由大脑自行调用以取得正文，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
+ 
+ - reward/card → card_reward；event/* → event；rest/* → rest；shop/* → shop。
+ - event/act-plan 同时匹配 event 和 act_plan。

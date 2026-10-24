@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T04:46:50.191791+08:00",
+  "worker": {
+    "at": "2026-10-24T04:45:30+08:00",
+    "pid": 146139,
+    "birth": "21286023",
+    "batch": "20261024-041301",
+    "worker": ".artifacts/ops-postmortem-041301-dataset-20261024/worker.py",
+    "attempts": 1,
+    "new_models_full_game": 0,
+    "completion": "worker writes result, frozen generated manifest, controlled record commit and original ops queue event"
+  },
+  "actual_phase": "unique-original-build-running",
+  "actual_pid_birth_verified": true,
+  "records_commit": "d8a9839baf06d4bbe24260c447d0b52c57858d91",
+  "dataset_rc": null,
+  "no_duplicate_build": true,
+  "completion_receipt": "paper/materials/20261024-postmortem-041301-dataset-ops/result.json",
+  "next": "Original worker commits actual generated output and queues original scheduler event; do not rerun dataset/finish/model"
+}

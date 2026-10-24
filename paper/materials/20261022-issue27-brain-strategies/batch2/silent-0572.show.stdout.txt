@@ -1,0 +1,86 @@
+{
+ "id": "silent-0572",
+ "ts": "2026-10-22T23:48:15+08:00",
+ "character": "silent",
+ "kind": "other",
+ "claim": "silent-brain-act3-reward-skip-comparison：仅A10/v0.111.0参考：第3幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部4411个奖励屏幕有1704次跳过（38.63%，玩家簇区间31.34–49.58%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。",
+ "evidence": [
+  {
+   "type": "external_aggregate",
+   "source": "external:sts2fun",
+   "url": "https://sts2.fun/static/sts2_public.db.zst",
+   "version": "v0.111.0",
+   "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+   "downloaded_at": "2026-10-21",
+   "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+   "filters": {
+    "character": "silent",
+    "ascension": 10,
+    "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; deduplicated combat card-reward screens, not candidate slots/runs"
+   },
+   "statistic": {
+    "name": "rate",
+    "value": 0.38630695987304464,
+    "unit": "fraction"
+   },
+   "denominator": {
+    "unit": "rewards",
+    "n": 4411
+   },
+   "design": "observational",
+   "limitations": [
+    "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+    "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+   ],
+   "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:20",
+   "role": "support",
+   "interval": {
+    "low": 0.3134360059449658,
+    "high": 0.4957741888332287,
+    "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+   },
+   "added": "2026-10-22T23:48:15+08:00"
+  }
+ ],
+ "confidence": 0.4,
+ "prior": "partly",
+ "prior_note": "Frozen first-batch external-review already identified observational limits. This batch adds bounded strategy wording under #42; related mechanics are not card-choice benefit evidence.",
+ "status": "proposed",
+ "by": "learner:issue-27-brain-strategies-batch2-20261022-224403",
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/strategy-entries.json#silent-brain-act3-reward-skip-comparison"
+  ],
+  "proposal": [
+   "paper/materials/20261022-issue27-brain-strategies/batch2/report.md"
+  ]
+ },
+ "note": "Pure external support; no first_run/asc/prior_runs; no causal gain or own validation. Publication and natural readback pending original ops.",
+ "history": [
+  {
+   "ts": "2026-10-22T23:48:15+08:00",
+   "by": "learner:issue-27-brain-strategies-batch2-20261022-224403",
+   "status": "proposed"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "Pure external support; no first_run/asc/prior_runs; no causal gain or own validation. Publication and natural readback pending original ops."
+ ],
+ "evidence_summary": {
+  "own_runs": 0,
+  "own_support_runs": 0,
+  "external": [
+   {
+    "source": "external:sts2fun",
+    "version": "v0.111.0",
+    "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "denominator": {
+     "unit": "rewards",
+     "n": 4411
+    }
+   }
+  ]
+ }
+}

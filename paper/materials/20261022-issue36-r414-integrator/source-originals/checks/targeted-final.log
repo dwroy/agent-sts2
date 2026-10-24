@@ -1,0 +1,205 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/agent
+
+ ✓ tests/ops-herdr.test.ts > interactive TUI arguments > resume <options> --no-daemon <id>: the exec options minus what only exec has 5ms
+ ✓ tests/ops-herdr.test.ts > interactive TUI arguments > without a session: a fresh TUI with the same options (throwaway tests) 2ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > recognizes separately styled prompt glyphs without overwriting typed text 1ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > preserves a large multilingual backlog in a file and keeps its turn marker 3ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > composer: the dim placeholder is empty, typed text is not (codex 0.160 screens) 1ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > finds our turn by the marker, its answer and its tokens; another turn before it does not count 2ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > a message steered into a turn already running belongs to that turn 0ms
+ ✓ tests/ops-herdr.test.ts > screen and session-file readers > hosting mode: env first, then the hosting file, then the default 2ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > only permits registered-batch-shaped viewer requests without arbitrary commands or target panes 1ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > new learner tabs follow the live ops pane when workspace labels are duplicated 1533ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit 6059ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit 10143ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > run, reuse, busy, status, stop; only its own labels 2802ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > --close-on-exit: the pane closes when the job ends and its last lines are kept 3363ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > brain viewer follows fixed logs across runs, reuses its tab and restarts independently 7677ms
+ ✓ tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > refuses bad labels and reports an unavailable herdr 41ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > starts the TUI once, prompts, reads the turn's answer and tokens from the session file 1076ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > other arguments (a new key file, another effort): the idle TUI is restarted 1767ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > waits for both shell exit and registry retirement before starting the replacement 2894ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > retries a short name-release race only after rechecking that the pane and name are free 2586ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers a persistent name conflict without duplicate prompts or another stop 2148ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers a competing name conflict without duplicate prompts or another stop 1977ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent 2994ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a turn that does not end in time is interrupted with esc (124); the TUI stays 6382ms
+ ✓ tests/ops-herdr.test.ts > wake through the herdr TUI (herdr.ts herdrWake, fake herdr) > a startup dialog (agent_not_ready) defers without answering it 507ms
+ ✓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes 3215ms
+ ✓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before 331ms
+ ✓ tests/ops-herdr.test.ts > hosted learner batch and the scheduler > drain: a deferred wake (exit 75) keeps the events and is not counted as a failure 59ms
+ ✓ tests/learner-entry.test.ts > recovers only the registered pre-session shared-main config import failure and preserves its evidence 5354ms
+ ✓ tests/learner-herdr.test.ts > learner interactive command policy > does not persist arbitrary inherited environment or proxy credentials in the pane launch script 5ms
+ ✓ tests/learner-herdr.test.ts > learner interactive command policy > preserves profile, model, effort, disabled features and explicit thread without exec-only options 10ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > ignores idle screens and unrelated/old completions, and requires a matching accepted native turn 2ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > counts each native turn's last usage snapshot once across continuations 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects replay instead of carrying native authorization forward 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects wrong-body instead of carrying native authorization forward 0ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects prefix instead of carrying native authorization forward 0ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > accepts duplicate native representations only within their explicitly bound turn 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > keeps partial native UTF-8 rows intact and fails closed on truncation 7ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > refuses inherited MCP/config context before launching the TUI, without changing the account 7ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > classifies unsafe persisted environment before any model/terminal start 5ms
+ × tests/learner-herdr.test.ts > interactive batch lifecycle > runs one interactive TUI, sends the original task, persists native completion and retires only its own PID 82ms
+   → expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(2) }
+(7 matching properties omitted from actual)
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > waits for the native task_complete even when the screen is idle 55ms
+ × tests/learner-herdr.test.ts > interactive batch lifecycle > does not declare timeout complete 350ms
+   → expected 75 to be 124 // Object.is equality
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains lease-lost rather than interrupting an unverified foreground 34ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains working-after-complete rather than interrupting an unverified foreground 169ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after draft appears 25ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after unknown appears 151ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-cwd appears 161ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-foreground appears 159ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-turn appears 25ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if draft changes after Esc 185ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if lease changes after Esc 150ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if uncertain-key changes after Esc 154ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the cancelled exit path 25ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the native-error exit path 28ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the transport-error exit path 23ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains an owned TUI that does not exit after verified keys, without force killing it 702ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > waits for a split native acceptance row without treating task_started alone as a human turn 32ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > accepts a matching native user message as evidence when the submission receipt is uncertain 22ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retries a capacity error by continuing the same native session 33ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > continues a known error-idle TUI even when the failed native task_started has no end record 35ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > uses ten-minute backoff and caps three error continuations without progress 165ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves an uncertain start without submitting or starting another model 154ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > keeps a changed pane and forbids finish/reclamation when retirement cannot be verified 24ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > retries a registered timestamp-only postmortem with the original lease and input 289ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > retries exact pre-session ENOENT after close with identical input and one final completion 281ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > caps persistent pre-session failures at two additional attempts 527ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 0 15ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 1 14ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 2 16ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 3 16ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 4 16ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 5 23ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 6 15ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 7 19ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 8 16ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 9 44ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > never retries ambiguous errors or any session/model/tool activity 10 17ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a lost lease 20ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a replaced lease 21ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a absent lease 22ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > refuses a cancelled lease 16ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > checks lease ownership again after backoff 276ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > does not retry an unregistered standalone launch 17ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > keeps cancellation terminal even if the child reports an eligible error 22ms
+ ✓ tests/learner-startup-recovery.test.ts > bounded learner startup recovery > keeps the original timeout across startup attempts 19ms
+ ✓ tests/learner-startup-recovery.test.ts > fails closed when error capture exceeds its fixed bound 0ms
+ ✓ tests/learner-startup-recovery.test.ts > binds lease identity to the registered live owner and rejects paths outside ops 6ms
+ ✓ tests/learner-startup-recovery.test.ts > requires a live registration for timestamp-only postmortem leases 7ms
+ ✓ tests/learner.test.ts > per-engine model and effort in the front matter > model.<engine> and effort.<engine> are kept per engine 10ms
+ ✓ tests/learner.test.ts > per-engine model and effort in the front matter > a plain model / effort (it would reach every engine), an unknown engine or a bad effort is an error 34ms
+ ✓ tests/learner.test.ts > per-engine model and effort in the front matter > the launcher takes --effort, else the task's, else offline Codex's default high; claude gets none by default 153ms
+ ✓ tests/learner.test.ts > task placeholders > lists placeholders once, in order of first use 0ms
+ ✓ tests/learner.test.ts > task placeholders > fills every placeholder, built-ins and defaults included; a default may use a built-in 1ms
+ ✓ tests/learner.test.ts > task placeholders > --set overrides a default and the worktree built-in 0ms
+ ✓ tests/learner.test.ts > task placeholders > a missing parameter is an error naming every missing one 1ms
+ ✓ tests/learner.test.ts > task placeholders > a --set no placeholder uses, or of a fixed built-in, is an error 1ms
+ ✓ tests/learner.test.ts > task placeholders > parses --set name=value keeping '=' and ',' in the value; rejects bad pairs 1ms
+ ✓ tests/learner.test.ts > task placeholders > rejects bad front matter 1ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > postmortem: parses, renders with no placeholder left, ends with the safety rules and the report format 1ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > experience-update: parses, renders with no placeholder left, ends with the safety rules and the report format 2ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > fix-batch: parses, renders with no placeholder left, ends with the safety rules and the report format 1ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > smoke: parses, renders with no placeholder left, ends with the safety rules and the report format 1ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > requires runs and evidence-linked proposals under Roy's rule-change authorization 3ms
+ ✓ tests/learner.test.ts > the task files in learner/tasks > fix-batch uses the current queue and an explicit live merge with evidence and release records 1ms
+ ✓ tests/learner.test.ts > claude command line > headless stream-json on the subscription login, prompt on stdin, permissions confined to the project root 5ms
+ ✓ tests/learner.test.ts > claude command line > a read-only task gets no Bash or Edit permission and no Bash deny list 1ms
+ ✓ tests/learner.test.ts > claude command line > --with-tools: only our stdio server, allowed as mcp__gkb 1ms
+ ✓ tests/learner.test.ts > codex command line > codex exec --json on the brain's isolation flags, workspace-write plus the project root, model and effort, prompt on stdin 3ms
+ ✓ tests/learner.test.ts > codex command line > a read-only task gets the read-only profile; gpt-6.1-sol at high unless asked; never --sandbox (it cannot mix with a profile) 1ms
+ ✓ tests/learner.test.ts > codex command line > the permission profile: all readable, writes only for write tasks (cwd, project root, tmp), key files unreadable in both 2ms
+ ✓ tests/learner.test.ts > codex command line > main checkouts and key roots 0ms
+ ✓ tests/learner.test.ts > codex command line > finds the key files on disk: home keys, codex login, every .env in the known places (worktrees included) 11ms
+ ✓ tests/learner.test.ts > codex command line > the key pre-check runs a shell under the same profile that only names the files it could open 2ms
+ ✓ tests/learner.test.ts > codex command line > puts the launcher's tool note in front of the task: shell commands are Read / Grep / Glob, read-only means no changes 1ms
+ ✓ tests/learner.test.ts > codex command line > keeps the shell and project docs: the brain's features minus its tool switches, no project_doc_max_bytes 1ms
+ ✓ tests/learner.test.ts > codex command line > --with-tools: the stdio server as -c mcp_servers.gkb.* TOML overrides 1ms
+ ✓ tests/learner.test.ts > codex command line > claude takes an effort too (--effort), and no effort flag unless asked 0ms
+ ✓ tests/learner.test.ts > codex command line > finds codex as the brain does and keeps its login home; LEARNER_CODEX_HOME overrides 1ms
+ ✓ tests/learner.test.ts > the child environment carries none of our keys > claude: keys and the parent session's variables removed; the subscription token and plain settings kept 1ms
+ ✓ tests/learner.test.ts > the child environment carries none of our keys > codex: the same, and no Claude token either 0ms
+ ✓ tests/learner.test.ts > arguments > parses the documented command line 1ms
+ ✓ tests/learner.test.ts > arguments > rejects unknown engines and flags, missing values and required flags 1ms
+ ✓ tests/learner.test.ts > arguments > quotes a command line for display 0ms
+ ✓ tests/learner.test.ts > --dry-run > prints the prompt and the command line and runs nothing 4ms
+ ✓ tests/learner.test.ts > --dry-run > codex not installed: --dry-run still shows the command and says so; a real run stops with exit 3 137ms
+ ✓ tests/learner.test.ts > --dry-run > usage errors exit 2: missing parameter, --cwd outside the project 6ms
+ ✓ tests/learner.test.ts > --dry-run > --with-tools: stops with an explanation while src/brain/tools/mcp-server.ts is missing, else mounts it 4ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised 235ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > codex: the start-up check refuses an effort the model does not take (exit 3, nothing run) 182ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > codex: a key file readable under the profile stops the run before it starts (exit 3, names only) 167ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > codex: no login in its home stops the run (exit 3) 74ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > codex: a run refused on the login asks codex to refresh its token once and says to re-run 86ms
+ ✓ tests/learner.test.ts > whole runs against fake binaries > claude: summary (turns, tokens, cache, cost, duration) printed, and a key that reached the log is redacted 54ms
+ ✓ tests/learner.test.ts > secrets and summaries > collects key values from key files, .env key lines and stripped variables, never short values 4ms
+ ✓ tests/learner.test.ts > secrets and summaries > claude error results and codex failures are errors 1ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not accept a different human turn as the batch completion 4ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is lease-lost 38ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is start-uncertain 164ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not retire a TUI with unsent human text on timeout 32ms
+ ✓ tests/learner-herdr-receipts.test.ts > gates interactive learner retirement and launch identity on fixed persisted receipts 280ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > preserves rendered task, key prechecks, original account/lease and persisted summary 71ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > rejects a failed key check before starting any TUI 46ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > refuses a missing original batch lease without starting a TUI 49ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > does not turn an unverified retirement into success 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr.test.ts > interactive batch lifecycle > runs one interactive TUI, sends the original task, persists native completion and retires only its own PID
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(2) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
++   "code": 75,
+    "message": "已保存批次报告",
+-   "stopped": true,
++   "stopped": false,
+    "turn": "turn-1",
+  }
+
+ ❯ tests/learner-herdr.test.ts:197:20
+    195|     const f = fixture();
+    196|     const result = await runLearnerTui(f.opts);
+    197|     expect(result).toMatchObject({ code: 0, stopped: true, turn: "turn…
+       |                    ^
+    198|     expect(result.usage).toMatchObject({ input_tokens: 100 });
+    199|     expect(f.prompts()).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/learner-herdr.test.ts > interactive batch lifecycle > does not declare timeout complete
+AssertionError: expected 75 to be 124 // Object.is equality
+
+- Expected
++ Received
+
+- 124
++ 75
+
+ ❯ tests/learner-herdr.test.ts:212:25
+    210|   it.each(["timeout"])("does not declare %s complete", async (kind) =>…
+    211|     const f = fixture(kind); const result = await runLearnerTui(f.opts…
+    212|     expect(result.code).toBe(124); expect(result.stopped).toBe(true);
+       |                         ^
+    213|   });
+    214|   it.each(["lease-lost", "working-after-complete"])("retains %s rather…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  2 failed | 143 passed (145)
+   Start at  13:46:34
+   Duration  77.50s (transform 3.56s, setup 1.41s, import 4.86s, tests 69.66s, environment 1ms)
+

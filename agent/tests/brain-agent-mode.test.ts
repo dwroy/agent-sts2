@@ -37,7 +37,7 @@ it("exposes only fixed knowledge selectors, keeps external provenance, and retur
   writeFileSync(join(dir, "common/open-book.json"), JSON.stringify({ schema: "open-book-v1", sources: source, entries: [{ kind: "cards", id: "FIXTURE", name: "fixture", aliases: [], source: source.source, game_version: source.game_version, provenance: [], facts: { fixture: true } }] }));
   const ctx = { ascension: 10, knowledgeDir: dir, logsDir: "/forbidden", payload: { exact: "question state" } };
   const tools = buildKnowledgeTools(ctx), host = new ToolHost(tools, ctx);
-  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
+  expect(tools.map(t => t.name)).toEqual(["kb_monster", "kb_encounter", "kb_experience", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_open_book", "kb_strategies", "kb_reflex", "external_stats_card", "external_stats_skip", "external_stats_deck_size", "external_stats_encounter", "external_stats_clusters", "external_stats_cooccurrence"]);
   const result = await host.call("kb_open_book", { query: "FIXTURE", category: "cards" });
   expect(JSON.parse(result.text)).toMatchObject({ entries: [{ id: "FIXTURE", source: source.source, game_version: "v0.111.0" }], sources: [source] });
   expect(JSON.parse((await host.call("kb_open_book", { query: "FIXTURE" })).text).entries).toHaveLength(1);
@@ -147,9 +147,11 @@ it("dsh patches disable every inherited plugin, select Nova credentials/max and 
 
 it("runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key", async () => {
   const dir = temp(), bin = join(dir, "dsh.mjs"), observed = join(dir, "observed.json");
-  writeFileSync(bin, `#!${process.execPath}\nimport {writeFileSync,readFileSync} from 'node:fs';\nconst args=process.argv.slice(2);if(args.includes('--dump-config')){console.log('- id: inherited_shell\\n  name: shell');process.exit(0);}\nconst patch=JSON.parse(readFileSync(args[args.indexOf('--patch')+1],'utf8'));writeFileSync(${JSON.stringify(observed)},JSON.stringify({cwd:process.cwd(),patch,hasDirectKey:!!process.env.DEEPSEEK_API_KEY}));\nfor await(const _ of process.stdin){}\nconsole.log(JSON.stringify({type:'session',sessionId:'fixed-session'}));console.log(JSON.stringify({type:'status',phase:'step_end',usage:{inputTokens:4,outputTokens:2}}));console.log(JSON.stringify({type:'final',text:'{"choice":"a","reason":"fixed"}'}));\n`); chmodSync(bin, 0o755);
+  writeFileSync(bin, `#!${process.execPath}\nimport {writeFileSync,readFileSync} from 'node:fs';\nconst args=process.argv.slice(2);if(args.includes('--dump-config')){console.log('- id: inherited_shell\\n  name: shell');process.exit(0);}\nconst patch=JSON.parse(readFileSync(args[args.indexOf('--patch')+1],'utf8'));writeFileSync(${JSON.stringify(observed)},JSON.stringify({cwd:process.cwd(),patch,hasDirectKey:!!process.env.DEEPSEEK_API_KEY}));\nfor await(const _ of process.stdin){}\nconsole.log(JSON.stringify({type:'session',sessionId:'fixed-session'}));console.log(JSON.stringify({type:'sts2_stream',kind:'reasoning-delta',text:'固定流式摘要。'}));console.log(JSON.stringify({type:'status',phase:'step_end',usage:{inputTokens:4,outputTokens:2}}));console.log(JSON.stringify({type:'final',text:'{"choice":"a","reason":"fixed"}'}));\n`); chmodSync(bin, 0o755);
   const cfg = settings(); cfg.dsh.bin = bin;
-  const result = await new DshEngine(cfg).decide(request());
+  const live: unknown[] = [];
+  const result = await new DshEngine(cfg).decide({ ...request(), observe: (event) => live.push(event) });
+  expect(live).toContainEqual({ kind: "reasoning", text: "固定流式摘要。" });
   expect(result).toMatchObject({ engine: "deepseek", effort: "max", answer: { choice: "a" }, usage: { inputTokens: 4, outputTokens: 2 } });
   const trace = JSON.parse(readFileSync(observed, "utf8"));
   expect(trace.cwd).toMatch(/question-.+\/cwd$/); expect(trace.hasDirectKey).toBe(false);
@@ -186,7 +188,7 @@ it("a previous question's delayed limit callback cannot cancel the next question
   expect((await engine.decide({ ...req, questionId: "second" })).agent?.fallback).toBeNull();
 });
 
-it("observes live dsh reasoning progress without printing the reasoning contents", async () => {
+it("forwards live dsh text only to the existing parent stream observer", async () => {
   const { apply } = await import("../src/brain/engines/dsh-stream.mjs");
   let listener: (e: unknown) => void = () => {};
   const writes: string[] = [];
@@ -194,8 +196,8 @@ it("observes live dsh reasoning progress without printing the reasoning contents
   try {
     apply({ on: (_name: string, fn: typeof listener) => { listener = fn; } });
     listener({ frame: { chunk: { type: "reasoning-delta", text: "private reasoning fixture" } } });
-    expect(writes.map(s => JSON.parse(s))).toEqual([{ type: "sts2_stream", kind: "reasoning-delta", chars: 25 }]);
-    expect(writes.join("")).not.toContain("private reasoning fixture");
+    expect(writes.map(s => JSON.parse(s))).toEqual([{ type: "sts2_stream", kind: "reasoning-delta", chars: 25, text: "private reasoning fixture" }]);
+    expect(writes.join("")).not.toContain("tool-call-delta");
   } finally { spy.mockRestore(); }
 });
 

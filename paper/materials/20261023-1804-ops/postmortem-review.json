@@ -1,0 +1,140 @@
+{
+  "at": "2026-10-23T18:08:37+08:00",
+  "batch": "20261023-171301",
+  "batch_state": "done/rc0",
+  "report": {
+    "path": "learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/report.md",
+    "bytes": 105693,
+    "sha256": "2e3a8d193a622048a195f0ad903dfd898270cdf82bb766bcd0a2def2484d1344"
+  },
+  "machine_report": {
+    "task": "postmortem",
+    "appended": [
+      "8JNHX23GX7ET",
+      "PEM07PPDE9Z4",
+      "BDJTF3FDA8W5",
+      "ZF8PX27B46H5"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "BDJTF3FDA8W5",
+        "where": "agent/src/reflex/card-model.ts:1068",
+        "what": "旧0461：升级斗篷的Cards=2仍落通用抽牌字段，虚构生产制造后继；fix-queue-v4已有",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0005",
+        "silent-0020",
+        "silent-0028",
+        "silent-0065",
+        "silent-0102",
+        "silent-0109",
+        "silent-0125",
+        "silent-0228",
+        "silent-0232",
+        "silent-0418",
+        "silent-0461",
+        "silent-0462"
+      ],
+      "repeats": [
+        "silent-0461"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-b8e4934516a1959b",
+      "silent-proposal-5aad2adfb7629cd6",
+      "silent-proposal-b3e3bd4fd6fd5e11",
+      "silent-proposal-6b0443eec22cc15a"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "structure",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/report.md"
+  },
+  "owned_rows": [
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "rows": 28,
+      "sha256": "3bf6afda87bf9c7ae8c9b4f0db7fd51e02b3e70da60509867c4636e792c11455",
+      "ids": [
+        "silent-0005",
+        "silent-0020",
+        "silent-0028",
+        "silent-0065",
+        "silent-0102",
+        "silent-0109",
+        "silent-0125",
+        "silent-0228",
+        "silent-0232",
+        "silent-0418",
+        "silent-0461",
+        "silent-0462"
+      ]
+    },
+    {
+      "path": "paper/materials/learning/code-proposals.jsonl",
+      "rows": 4,
+      "sha256": "5205e6d7e8a5e68c7c71fb2885afd7194dec37fdaefbbc34455955738a54cadc",
+      "ids": [
+        "silent-proposal-5aad2adfb7629cd6",
+        "silent-proposal-6b0443eec22cc15a",
+        "silent-proposal-b3e3bd4fd6fd5e11",
+        "silent-proposal-b8e4934516a1959b"
+      ]
+    }
+  ],
+  "lesson_sections": [
+    "8JNHX23GX7ET",
+    "PEM07PPDE9Z4",
+    "BDJTF3FDA8W5",
+    "ZF8PX27B46H5"
+  ],
+  "proposal_originals": [
+    {
+      "path": "learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/8JNHX23GX7ET-proposal.md",
+      "bytes": 2836,
+      "sha256": "330eddca41da266f397a6408084b7b47b96043d6203aece03ffd363f6e339348"
+    },
+    {
+      "path": "learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/PEM07PPDE9Z4-proposal.md",
+      "bytes": 2544,
+      "sha256": "f0d2a29b69b05d7d878a6d02bb1a7144af037d68e5e30c1636b6406c556d7a50"
+    },
+    {
+      "path": "learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/BDJTF3FDA8W5-proposal.md",
+      "bytes": 2939,
+      "sha256": "0992d1ff973990d34b9552fb34e7870dd41299dc8b7c368eeed35f937780509c"
+    },
+    {
+      "path": "learner/runs/20261023-171307-734101e9-cc4e-4a27-ab39-3ebbd42832f8-postmortem/ZF8PX27B46H5-proposal.md",
+      "bytes": 3089,
+      "sha256": "0457ccce67143df314fe5627665a44aa2db21feb7b7bdd2c8b1c1280e354d475"
+    }
+  ],
+  "pure_bug": "only old silent-0461 repeat, original fix-queue line1224 and f4eb strategy chain; no new blocking or duplicate task",
+  "ledger_check": {
+    "rc": 0,
+    "stdout": {
+      "path": ".artifacts/ops-1804-20261023/ledger-check.stdout.txt",
+      "bytes": 94,
+      "sha256": "da273e9cf070c9a72521771c156c0644fc83d7a9d5e6b33af5e753851610c3b5"
+    }
+  },
+  "retention_original": {
+    "path": "ops/codex-ops/retention/requests/20261023-171301.json",
+    "bytes": 491,
+    "sha256": "23bb4e9b8436a7b7452643f5df9b4d39b1da6b812f0dcb3e554634e56cb8d77f"
+  },
+  "dataset": "not yet run; one original worker follows controlled own-record commit",
+  "live_merge": null,
+  "scientific_parents_closed": false
+}

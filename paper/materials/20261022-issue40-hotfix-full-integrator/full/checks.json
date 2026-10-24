@@ -1,0 +1,83 @@
+{
+  "state": "passed",
+  "started_at": "2026-10-22T23:07:57+08:00",
+  "runner_pid": 1960085,
+  "runner_start": "10620683",
+  "nice": 19,
+  "base_main": "520c12590c59f467333c33d44f554b26ece3d4d0",
+  "source": "3ae67358d0eeab18f329f57368b7d377d20ea1e3",
+  "tree": "01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8",
+  "scope_url": "https://github.com/dwroy/agent-sts2/issues/40#issuecomment-6342802745",
+  "full_started": true,
+  "attempt": "single-unchanged-tree-repeat",
+  "prior_full": "full-first",
+  "repeat_reason": "old unchanged brain-card-value test failed once; isolated 6/6 passed; preserve first failure; no code or assertion change",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-22T23:07:57+08:00",
+      "pid": 1960114,
+      "exit_code": 0,
+      "seconds": 0.895
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator40-hotfix-20261022/.artifacts/issue40-hotfix-full/full-repeat1/vitest.json"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-22T23:07:58+08:00",
+      "pid": 1960169,
+      "exit_code": 0,
+      "seconds": 1657.942
+    },
+    {
+      "name": "production-entry-python",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "knowledge/builders/test_refresh_entrypoints.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-22T23:35:36+08:00",
+      "pid": 2096916,
+      "exit_code": 0,
+      "seconds": 2.304
+    }
+  ],
+  "input_count": 2596,
+  "inputs_unchanged": true,
+  "vitest": {
+    "files": 656,
+    "passed": 6219,
+    "failed": 0,
+    "pending": 2
+  },
+  "ended_at": "2026-10-22T23:35:38+08:00"
+}

@@ -1,0 +1,42 @@
+    def test_exec_completed_question_remains_visible_after_session_stream_stops(self):
+        emitted, titles = [], []
+        reader = view.Viewer(self.root, lambda title: titles.append(title) or True, emitted.append)
+        self.append('run-config.jsonl', {'run_id': 'STREAM000001'})
+        folder = self.root / 'brain-live/STREAM000001'
+        folder.mkdir(parents=True)
+        text = folder / 'current.txt'
+        text.write_text('推理摘要：先前 session 流。\n')
+        reader.poll()
+        self.assertIn('推理摘要：先前 session 流。', emitted)
+        text.unlink()
+        row = dict(run_id='STREAM000001', question_id='exec-q2', label='reward/card',
+            engine='codex', requested_effort='high', payload={'floor': 12},
+            answer={'choice': 'A', 'reason': '固定 exec 答案'}, latency_ms=42)
+        self.append('brain.jsonl', row)
+        before = (self.root / 'brain.jsonl').read_bytes()
+        reader.poll()
+        output = '\n'.join(emitted)
+        for value in ('exec-q2', 'F12', 'reward/card', 'high', '固定 exec 答案', '42 ms'):
+            self.assertIn(value, output)
+        count = len(emitted)
+        reader.poll()
+        self.assertEqual(len(emitted), count)
+        self.assertEqual((self.root / 'brain.jsonl').read_bytes(), before)
+        self.assertEqual(titles, ['对局大脑 · STREAM000001'])
+
+    def test_exec_without_any_stream_shows_each_completed_question_and_next_run(self):
+        emitted, titles = [], []
+        reader = view.Viewer(self.root, lambda title: titles.append(title) or True, emitted.append)
+        self.append('run-config.jsonl', {'run_id': 'EXEC00000001'})
+        for question in ('exec-q1', 'exec-q2'):
+            self.append('brain.jsonl', dict(run_id='EXEC00000001', question_id=question,
+                label='reward/card', engine='codex', answer={'choice': 'A', 'reason': question}, latency_ms=9))
+            reader.poll()
+        output = '\n'.join(emitted)
+        self.assertIn('exec-q1', output)
+        self.assertIn('exec-q2', output)
+        self.append('run-config.jsonl', {'run_id': 'EXEC00000002'})
+        self.append('brain.jsonl', dict(run_id='EXEC00000002', question_id='next-q1', answer={'choice': 'B'}))
+        reader.poll()
+        self.assertIn('next-q1', '\n'.join(emitted))
+        self.assertEqual(titles, ['对局大脑 · EXEC00000001', '对局大脑 · EXEC00000002'])

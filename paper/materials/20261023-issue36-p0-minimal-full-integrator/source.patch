@@ -1,0 +1,1034 @@
+diff --git a/agent/tests/learner-herdr-launcher.test.ts b/agent/tests/learner-herdr-launcher.test.ts
+index 84a33b6984c35163915b2912905d1372a0285d73..a18c3179ca37bf76e913173e30217ac0f21d3235 100644
+--- a/agent/tests/learner-herdr-launcher.test.ts
++++ b/agent/tests/learner-herdr-launcher.test.ts
+@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
+ const transport = vi.hoisted(() => vi.fn());
+ vi.mock("../../learner/lib/herdr.js", () => ({ runLearnerTui: transport }));
+ import { main } from "../../learner/lib/launcher.js";
++import { readQueue } from "../../ops/codex/lib.js";
+ 
+ const roots: string[] = [];
+ afterEach(() => { transport.mockReset(); for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
+@@ -74,4 +75,20 @@ describe("hosted learner launcher", () => {
+     expect(f.out.join("")).toContain("retirement-unverified");
+     expect(JSON.parse(readFileSync(f.receipt, "utf8")).state).toBe("needs-attention");
+   });
++  it("queues attention with the existing reader's alphabetic event-kind grammar", async () => {
++    const f = fixture();
++    transport.mockImplementation(async (o) => {
++      o.attention("fixed ownership failure");
++      const result = { code: 75, reason: "retirement-unverified", message: "", stopped: false };
++      writeFileSync(o.receipt, JSON.stringify({ state: "needs-attention", result })); return result;
++    });
++    expect(await f.run()).toBe(75);
++    const directory = join(f.root, "ops/codex-ops/queue");
++    writeFileSync(join(directory, "123-1aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-learner-tui-attention.md"), "old unparseable fixture");
++    const events = readQueue(directory);
++    expect(events).toHaveLength(1);
++    expect(events[0]!.kind).toMatch(/^learner-tui-attention-/);
++    expect(events[0]!.text).toContain("fixed ownership failure");
++    expect(events[0]!.text).toContain("20261022-120000");
++  });
+ });
+diff --git a/agent/tests/learner-herdr-receipts.test.ts b/agent/tests/learner-herdr-receipts.test.ts
+index 6fed72337fbc32e8155097af5e59ce0ae12738df..6434be6371ee577a2c0a0e9c520f13110721b8ce 100644
+--- a/agent/tests/learner-herdr-receipts.test.ts
++++ b/agent/tests/learner-herdr-receipts.test.ts
+@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
+ import { expect, it } from "vitest";
+ 
+ it("gates interactive learner retirement and launch identity on fixed persisted receipts", () => {
+-  const result = spawnSync("python3", ["-B", "-m", "unittest", "ops.tests.test_learner_tui"], {
++  const result = spawnSync("python3", ["-B", "-m", "unittest", "ops.tests.test_learner_tui", "ops.tests.test_learner_wrapper_completion"], {
+     cwd: fileURLToPath(new URL("../..", import.meta.url)), encoding: "utf8", timeout: 20_000,
+   });
+   expect(result.status, result.stdout + result.stderr).toBe(0);
+diff --git a/agent/tests/learner-herdr.test.ts b/agent/tests/learner-herdr.test.ts
+index a945089bd490ab1af1008d20104ab10587146ee6..8f31e76f6639882755fa46a1a7c9ff0b0717e0a6 100644
+--- a/agent/tests/learner-herdr.test.ts
++++ b/agent/tests/learner-herdr.test.ts
+@@ -315,12 +315,14 @@ describe("interactive batch lifecycle", () => {
+     const config = '[mcp_servers.unapproved]\ncommand="/fixed/forbidden"\n';
+     writeFileSync(path, config);
+     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 3, reason: "inherited-tui-config-not-isolated" });
+-    expect(f.calls).toEqual([]); expect(readFileSync(path, "utf8")).toBe(config);
++    expect(f.calls).toEqual([["pane", "get", f.opts.pane]]); expect(readFileSync(path, "utf8")).toBe(config);
++    expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({ pane: f.opts.pane, label: f.opts.label,
++      cwd: f.root, identity: { pane_id: f.opts.pane }, submitted: false, bindings: [], retirement_authorized: false });
+   });
+   it("classifies unsafe persisted environment before any model/terminal start", async () => {
+     const f = fixture(); f.opts.env.HTTPS_PROXY = "https://user:private@proxy.example";
+     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 3, reason: "unsafe-tui-environment" });
+-    expect(f.calls).toEqual([]);
++    expect(f.calls).toEqual([["pane", "get", f.opts.pane]]);
+     expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({ state: "not-started", models_started: 0 });
+   });
+   it("runs one interactive TUI, sends the original task, persists native completion and retires only its own PID", async () => {
+@@ -328,6 +330,7 @@ describe("interactive batch lifecycle", () => {
+     const result = await runLearnerTui(f.opts);
+     expect(result).toMatchObject({ code: 0, stopped: true, turn: "turn-1", message: "已保存批次报告" });
+     expect(result.usage).toMatchObject({ input_tokens: 100 });
++    expect(f.notices).toEqual([]);
+     expect(f.prompts()).toBe(1);
+     expect(f.calls.find((c) => c[1] === "prompt")![3]).toContain(f.opts.prompt);
+     expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
+@@ -339,9 +342,33 @@ describe("interactive batch lifecycle", () => {
+     const f = fixture("late-complete"); expect((await runLearnerTui(f.opts)).code).toBe(0);
+     expect(f.calls.filter((c) => c[1] === "get" && c[0] === "agent").length).toBeGreaterThan(2);
+   });
++  it.each([false, true])("checks the original host/tab when pane.label is absent (foreign title: %s)", async (foreign) => {
++    const f = fixture(); const h = f.opts.h!;
++    mkdirSync(join(f.root, "ops/codex-ops"), { recursive: true });
++    writeFileSync(join(f.root, "ops/codex-ops/herdr.json"), JSON.stringify({ workspace_id: "w1", panes: {
++      [f.opts.label]: { pane_id: f.opts.pane, title: "学习大脑 · 原批" },
++    } }));
++    f.opts.h = async (args) => {
++      if (args[0] === "tab" && args[1] === "list") return ok({ tabs: [{ tab_id: f.pane.tab_id, pane_count: 1,
++        label: foreign ? "人工改名" : "学习大脑 · 原批" }] });
++      const result = await h(args);
++      if (args[0] === "pane" && args[1] === "get") {
++        const pane = { ...(result.result!.pane as Record<string, unknown>), workspace_id: "w1" };
++        delete pane.label; return ok({ pane });
++      }
++      return result;
++    };
++    const result = await runLearnerTui(f.opts);
++    expect(result.code).toBe(foreign ? 3 : 0);
++    expect(f.prompts()).toBe(foreign ? 0 : 1);
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    if (!foreign) expect(receipt.identity).toMatchObject({ pane_id: f.opts.pane, workspace_id: "w1" });
++    expect(receipt.identity?.label).toBeUndefined();
++  });
+   it.each(["timeout"])("does not declare %s complete", async (kind) => {
+     const f = fixture(kind); const result = await runLearnerTui(f.opts);
+     expect(result.code).toBe(124); expect(result.stopped).toBe(true);
++    expect(f.notices).toHaveLength(1);
+   });
+   it.each(["lease-lost", "working-after-complete"])("retains %s rather than interrupting an unverified foreground", async (kind) => {
+     const f = fixture(kind); const result = await runLearnerTui(f.opts);
+diff --git a/agent/tests/learner-stdio-view.test.ts b/agent/tests/learner-stdio-view.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5694cded7e6cea776aa837f3a5c7f2bb2f5d0e52
+--- /dev/null
++++ b/agent/tests/learner-stdio-view.test.ts
+@@ -0,0 +1,77 @@
++import { spawn } from "node:child_process";
++import { once } from "node:events";
++import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join, resolve } from "node:path";
++import { expect, it } from "vitest";
++
++// Exercise the real shell wrapper with fixed output and finish/TUI stubs, without a model or Herdr server.
++it.each(["learner-20260101-000001", "learner-20260101-000001-postmortem"])(
++  "streams both log files before the registered command exits: %s", async (label) => {
++    await exercise(label, false, true);
++  }, 10_000,
++);
++
++it.each([
++  { label: "ops", tui: false },
++  { label: "learner-20260101-000001-postmortem", tui: true },
++])("leaves other hosts and native TUI displays alone: %j", async ({ label, tui }) => {
++  await exercise(label, tui, false);
++}, 10_000);
++
++async function exercise(label: string, tui: boolean, live: boolean) {
++  const root = mkdtempSync(join(tmpdir(), "learner-stdio-view-"));
++  const ops = join(root, "ops");
++  const directory = join(ops, "state");
++  mkdirSync(directory, { recursive: true });
++  for (const name of ["paths.sh", "codex-ops-learner.sh"]) {
++    copyFileSync(resolve("../ops", name), join(ops, name));
++  }
++  writeFileSync(join(ops, "codex-ops-learn.py"), "# Fixed completion receipt; no scheduler or model.\n");
++  writeFileSync(join(ops, "learner_tui.py"), "# Fixed verified code and finish receipt; no native session.\nimport sys\nif sys.argv[1] == 'verified-code': print(7)\n");
++  writeFileSync(join(ops, "learner_tabs.py"), "# Fixed successful seal; no pane or registry commands.\n");
++  const batch = "20260101-000001";
++  const child = spawn("nice", ["-n", "19", "bash", join(ops, "codex-ops-learner.sh"), batch, "FIXTURE00001", "silent"], {
++    env: {
++      ...process.env,
++      CODEX_OPS_ROOT: root, CODEX_OPS_DIR: directory, CODEX_OPS_NO_DRAIN: "1",
++      HERDR_HOST_LABEL: label, LEARNER_HERDR_PANE: tui ? "fixture:p1" : "",
++      LEARNER_TUI_RECEIPT: join(directory, "fixture.tui.json"),
++      LEARNER_CMD: "printf 'live-out\\n'; printf 'live-err\\n' >&2; read -r fixture_release; exit 7",
++    },
++    stdio: ["pipe", "pipe", "pipe"],
++  });
++  const closed = once(child, "close");
++  let output = "";
++  let errors = "";
++  child.stderr.on("data", (chunk) => { errors += chunk.toString(); });
++  try {
++    if (live) {
++      await new Promise<void>((done, fail) => {
++        const timeout = setTimeout(() => fail(new Error(`no live output: ${output} ${errors}`)), 5000);
++        child.stdout.on("data", (chunk) => {
++          output += chunk.toString();
++          if (output.includes("live-out\n") && output.includes("live-err\n")) {
++            clearTimeout(timeout);
++            done();
++          }
++        });
++      });
++      expect(child.exitCode).toBeNull();
++    } else {
++      child.stdout.on("data", (chunk) => { output += chunk.toString(); });
++    }
++    child.stdin.end("release\n");
++    const [code] = await closed;
++    expect(code, errors).toBe(7);
++    expect(readFileSync(join(directory, "learner", `${batch}.out`), "utf8")).toBe("live-out\n");
++    expect(readFileSync(join(directory, "learner", `${batch}.err`), "utf8")).toBe("live-err\n");
++    if (!live) expect(output).toBe("");
++  } finally {
++    if (child.exitCode === null) {
++      child.stdin.end("release\n");
++      await closed;
++    }
++    rmSync(root, { recursive: true, force: true });
++  }
++}
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 08065c5258997cd9c8161bea2a81a6eb6e34e78b..fa5ccec8dbbfbf255019718f764fdf0b99180a54 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -140,7 +140,7 @@ nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性
+ 
+ **学习交互会话（#36）**：`learners=herdr` 的新批次先开专属 tab，后台 `codex-ops-learner.sh` 监管进程继续以原批次/PID/工作树持租约。`learner/run.ts` 沿原任务渲染、账号、模型/强度、key 预检和权限 profile 启动真正的 Codex TUI；从 herdr 发送原始任务，不再 tail `.out/.err` 假装会话。提示超过 96 KiB 时保存在同一 scratch 中的完整文件，首次提示要求完整读入；原完整提示仍记录在 `learner_launch`。TUI 的环境在原 `codexChildEnv` 去密钥结果上只保留本角色路径、locale、账号 home 和必要证书/无凭据代理设置，用 `env -i` 隔离 herdr server 环境；任意继承变量不写进启动脚本，含凭据代理则保留现场并拒绝启动；`--no-daemon`，nice 19，不改共用 config、账号或 home。交互 CLI 不支持 exec 专用的忽略配置参数，故启动前沿原只读配置检查器核账号及 cwd 各级配置：仅允许被显式覆盖的模型/强度、TUI 与项目 trust；继承 MCP、指令、hook 等非被动配置则零模型启动并交原 ops 核验，不改账号配置、不降级权限。原 `.out/.err`、learner JSONL、原生会话、任务产物和完成审计保留；日志和完成回执与 native session/turn 绑定，令牌按原生每回合最后用量去重累计。
+ 
+-屏幕 idle 或进程退出都不能证明批次完成：须有匹配原提示的原生 `task_complete`、实际 TUI idle 且输入框空、无新原生回合；初次发送与每次接续都先持久化独立的一次性 marker 和提示词 SHA，原生 user_message/response_item 必须按完整正文核成对应 turn；旧 marker、后续人类回合不继承本批权限。Python 完成核验会独立从原生记录重建这一绑定，失败/超时也不能跳过。退出前复核本批 PID birth、pane、前台进程组、agent/cwd、原租约和空输入框。原 `.out` 已刷新后，`ops/learner_tui.py` 核原日志 SHA/summary、原生完成记录、实际进程结束，再执行原 `finish` 产物审计。终态事务已登记且原件持久化才关闭本批闲置 pane；分类失败/超时也保留原输出与错误。会话退出不确定、新的人类输入、pane 身份变化、回执缺失等保留 tab/原监管租约，排队给原 ops，不标 done、不另开模型、不申请回收。key/模型预检失败仍为退出码 3、零模型启动，空 tab 保留待 ops 核验。运行中切换开关不热切已有批次。
++屏幕 idle 或进程退出都不能证明批次完成：须有匹配原提示的原生 `task_complete`、实际 TUI idle 且输入框空、无新原生回合；初次发送与每次接续都先持久化独立的一次性 marker 和提示词 SHA，原生 user_message/response_item 必须按完整正文核成对应 turn；旧 marker、后续人类回合不继承本批权限。Python 完成核验会独立从原生记录重建这一绑定，失败/超时也不能跳过。退出前复核本批 PID birth、pane、前台进程组、agent/cwd、原租约和空输入框。原 `.out` 已刷新后，`ops/learner_tui.py` 核原日志 SHA/summary、原生完成记录、实际进程结束，再执行原 `finish` 产物审计。终态事务已登记且原件持久化后，wrapper 写入 `wrapper` 完成段（批次、真实终态、退出码、supervisor PID/birth、批次快照 SHA），调用 #20 的 `ops/learner_tabs.py seal --root ROOT --state-dir DIR --batch BATCH` 封存交接；wrapper 不关 tab。#20 回收任务等待 supervisor 实际退出，再独立核原身份、回执与产物 SHA、空闲与无人工输入，统一关 tab。seal 缺失或失败只发去重 attention、保留现场，不回退直接关闭；分类失败/超时也保留原输出与错误。会话退出不确定、新的人类输入、pane 身份变化、回执缺失等保留 tab/原件，排队给原 ops，不标 done、不另开模型、不申请回收。wrapper 核验默认最多 300 秒（`LEARNER_TUI_VERIFY_TIMEOUT_S` 可设 1–3600 秒），单次核验亦受同一截止时间约束；到期写 `BATCH.verification-deferred.json`，在原 learn.lock 下将本批从 running 变为 `awaiting_review`，不写成功/finished/rc，追加 `ops/codex-ops/inbox-claude.md` 一行后监督退出释放逻辑槽位。锁忙最多再等 2 秒，先落盘的待核记录由下一原调度 tick 在 lost/重试判断前应用。原局号、key、研究/feature/Boss 请求保持冻结，不自动重派；无关新任务继续正常准入。待核不是 #20 可回收终态，实际 pane/工作树仍由原安全门保留。key/模型预检失败仍为退出码 3、零模型启动；wrapper 刷新空输出也写 SHA，显式记录 launcher 的 1→原结果 3 映射，经原 finish 失败/重试策略登记后封存交接。没有身份、绑定或处置权证明的空 tab 仍保留，不能根据零输出猜测可回收。wrapper 只在异常排 `learner-tui-attention`；正常完成不依赖 ops 模型空闲。当前 Herdr 的 pane 若不含 label，须由同一原 host 登记的 pane/workspace 和 tab 唯一标题读回核身份，不伪造 pane.label；旧含 label 的原件仍可读。复盘 label/回执带 `-postmortem` 后缀，batch key 不带。运行中切换开关不热切已有批次。
+ 
+ Codex 0.163 的首题在派发提示前，会先写一个 `response_item/message/user`，恰含两段 `input_text`：本 cwd 的 AGENTS 包装和本 cwd 的 environment_context。解析器仅在首个待绑定回合、已核 session/cwd、尚未见 turn_context/派发提示时暂存这一已观察结构；随后的 turn_context 必须匹配原 cwd/turn，再凭原 marker 与完整提示 SHA 接受任务。上下文本身不接受或完成任务；回执以 `native_context_version=1/native_preludes` 留该前缀 SHA/turn/cwd，Python 从原生文件独立重建。原提示及每次明确续接被原生接受时即 fsync 保存 `native-accepted` 和 session/turn/bindings/前缀证明，不等任务结束；该状态不授权 finish 或退场。额外段落、未知 user/event_user、错 cwd/turn、缺上下文确认、重复或出现在提示之后/续轮的同形消息仍按外来输入保留，不能靠后续 marker 清除。活动派发 turn 从 task_started 到原提示接受之间，调用、返回、推理和助手输出一律保留拒绝，不依赖是否已经见到前缀；明确续轮同样检查，已绑定回合的正常模型工作不受影响。resume 的历史 EOF 前缀和 Python 首个绑定 turn 之前的历史仍隔离。首题前缀不豁免任何人工输入、处置权或退出门。
+ 
+diff --git a/learner/lib/herdr.ts b/learner/lib/herdr.ts
+index 3fb81e518f81916952894dac6432ee765b57a0b0..8e9973bf6cb7d1778c543cbef8962653fb59ec7b 100644
+--- a/learner/lib/herdr.ts
++++ b/learner/lib/herdr.ts
+@@ -278,9 +278,42 @@ export interface TuiResult {
+ 
+ /** Never retry a start or an uncertain prompt. Every retry continues the same live native session. */
+ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+-  const unstarted = (reason: string): TuiResult => {
++  const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
++  let originalHostTitle: string | undefined;
++  const paneSnapshot = async (): Promise<Record<string, unknown> | undefined> => {
++    const info = await h(["pane", "get", o.pane]);
++    const pane = info.result?.pane as Record<string, unknown> | undefined;
++    if (!info.ok || pane?.pane_id !== o.pane) return undefined;
++    if (pane.label === o.label) return pane;
++    if (pane.label !== undefined || !o.lease?.current() ||
++        [pane.workspace_id, pane.tab_id, pane.terminal_id].some((id) => typeof id !== "string" || !id)) return undefined;
++    // Current Herdr exposes labels on tabs, while older receipts included pane.label.
++    // Require the original host registration and exact tab title; never invent a pane label.
++    try {
++      const directory = resolve(o.request.projectRoot ?? o.request.cwd, o.env.CODEX_OPS_DIR ?? "ops/codex-ops");
++      const host = JSON.parse(readFileSync(join(directory, "herdr.json"), "utf8"));
++      const entry = host.panes?.[o.label];
++      if (host.workspace_id !== pane.workspace_id || entry?.pane_id !== o.pane || typeof entry.title !== "string" ||
++          !entry.title || (originalHostTitle !== undefined && originalHostTitle !== entry.title)) return undefined;
++      const tabs = await h(["tab", "list", "--workspace", String(pane.workspace_id)]);
++      const matches = (tabs.result?.tabs as Record<string, unknown>[] | undefined)?.filter((tab) => tab.tab_id === pane.tab_id);
++      if (!tabs.ok || matches?.length !== 1 || matches[0]!.label !== entry.title || matches[0]!.pane_count !== 1) return undefined;
++      originalHostTitle = entry.title;
++      return pane;
++    } catch { return undefined; }
++  };
++  const unstarted = async (reason: string): Promise<TuiResult> => {
+     const result: TuiResult = { code: 3, reason, message: "", stopped: true };
+-    writeFileSync(o.receipt, JSON.stringify({ state: "not-started", models_started: 0, result }) + "\n", { mode: 0o600 });
++    let identity: Record<string, unknown> | undefined;
++    if (/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) && /^learner-[a-z0-9-]+$/.test(o.label) && o.lease?.current()) {
++      try {
++        identity = await paneSnapshot();
++      } catch { /* Missing identity is preserved as missing evidence for the independent recycler. */ }
++    }
++    writeFileSync(o.receipt, JSON.stringify({ state: "not-started", models_started: 0, result,
++      pane: o.pane, label: o.label, cwd: o.request.cwd, identity, submitted: false,
++      submissions: [], bindings: [], retirement_authorized: false }) + "\n", { mode: 0o600 });
++    const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+     o.attention("learner TUI initialization refused before model startup; inspect original local settings");
+     return result;
+   };
+@@ -289,7 +322,6 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   try { tuiEnv = learnerTuiEnv(o.env); } catch { return unstarted("unsafe-tui-environment"); }
+   if (!/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) || !/^learner-[a-z0-9-]+$/.test(o.label)) return unstarted("invalid-pane-identity");
+   const agentName = learnerAgentName(o.label, o.pane, o.request.cwd);
+-  const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
+   const now = o.now ?? Date.now;
+   const pause = o.pause ?? sleep;
+   const started = now();
+@@ -332,13 +364,11 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   let progress = 0;
+   let retryAt: number | undefined;
+   let result: TuiResult = { code: 1, reason: "startup-failed", message: "", stopped: false };
+-  const initial = await h(["pane", "get", o.pane]);
+-  const identity = initial.result?.pane as Record<string, unknown> | undefined;
+-  if (!initial.ok || identity?.label !== o.label) return unstarted("pane-identity-changed-before-startup");
++  const identity = await paneSnapshot();
++  if (!identity) return unstarted("pane-identity-changed-before-startup");
+   const samePane = async (): Promise<boolean> => {
+-    const info = await h(["pane", "get", o.pane]);
+-    const pane = info.result?.pane as Record<string, unknown> | undefined;
+-    return info.ok && !!pane && pane.pane_id === o.pane && pane.label === o.label && pane.tab_id === identity.tab_id &&
++    const pane = await paneSnapshot();
++    return !!pane && pane.pane_id === o.pane && pane.tab_id === identity.tab_id &&
+       pane.terminal_id === identity.terminal_id && pane.workspace_id === identity.workspace_id;
+   };
+   const save = (state: string, extra: Record<string, unknown> = {}): void => {
+@@ -557,6 +587,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   }
+   result = { ...result, session: native.session, turn: native.turn, rollout, message: native.message, usage: native.totalUsage(), ...(native.error ? { error: native.error.slice(0, 2000) } : {}) };
+   if (!result.stopped) { result.code = 75; result.reason = "retirement-unverified"; attention("learner TUI retirement unverified; finish and reclamation forbidden"); }
++  else if (result.code !== 0) attention("learner TUI ended exceptionally; preserve original evidence for ops review");
+   save(result.stopped ? "session-ended" : "needs-attention", { result });
+   return result;
+ }
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index d0b6efdfe58b1f465165e8050f5acb4ec89d0b72..d7f2056284feee2a97dae9995f87b606a2aa8c82 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -439,7 +439,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+   const unavailable = (message: string): number => {
+     if (request.engine === "codex" && deps.env.LEARNER_HERDR_PANE && deps.env.LEARNER_TUI_RECEIPT) {
+       writeFileSync(deps.env.LEARNER_TUI_RECEIPT, JSON.stringify({ state: "not-started", models_started: 0,
++        pane: deps.env.LEARNER_HERDR_PANE, label: deps.env.LEARNER_HERDR_LABEL, cwd: request.cwd,
++        submitted: false, submissions: [], bindings: [], retirement_authorized: false,
+         result: { code: 3, reason: "engine-preflight-unavailable" } }) + "\n", { mode: 0o600 });
++      const fd = openSync(deps.env.LEARNER_TUI_RECEIPT, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+     }
+     deps.err(message);
+     return 3;
+@@ -525,7 +528,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+       ...(prepared.timeoutMin ? { timeoutMs: prepared.timeoutMin * 60_000 } : {}), log,
+       attention: (reason) => {
+         mkdirSync(queue, { recursive: true });
+-        const name = `${Date.now()}-${randomUUID()}-learner-tui-attention.md`;
++        const name = `${BigInt(Date.now()) * 1_000_000n}-learner-tui-attention-${randomUUID()}.md`;
+         writeFileSync(join(queue, name), `学习批次 ${lease.batch} 需要原 ops 核验：${reason}。原 pane ${deps.env.LEARNER_HERDR_PANE}；回执 ${receipt}。保留批次和会话，不另开模型、不回收。\n`);
+       },
+     });
+diff --git a/ops/boss_sim_jobs.py b/ops/boss_sim_jobs.py
+index 7b5d0d8c98fd8f15fbfb75d78699d279141bbf5a..c5fe8dc4fd307a159ef5e5969b6789faeb3b32a7 100644
+--- a/ops/boss_sim_jobs.py
++++ b/ops/boss_sim_jobs.py
+@@ -169,7 +169,7 @@ def dispatch_candidates(state, evidence, root, scripts, alive, stamp, start, now
+                    and b["boss_sim"]["boss"] == e["boss"] and b["boss_sim"]["mode"] == e["mode"]
+                    and (not cool or b.get("started_epoch", 0) > cool["at"])]
+         if history:
+-            if any(b.get("state") in ("done", "rejected") for _, b in history):
++            if any(b.get("state") in ("done", "rejected", "awaiting_review") for _, b in history):
+                 continue
+             if max(b.get("retry_at", 0) for _, b in history) > now:
+                 continue
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 8596289e4e5be4d38516cc1928045aa770406e00..01973391ca8be915f6127df81000a3c6d55300de 100644
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -42,6 +42,7 @@ import learner_retention  # noqa: E402
+ import ordinary_close  # noqa: E402
+ import ops_current  # noqa: E402
+ import disk_admission  # noqa: E402
++from learner_tui import apply_deferrals  # noqa: E402
+ from learner_checks import read_report  # noqa: E402
+ 
+ ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
+@@ -80,6 +81,7 @@ def load_state():
+     state.setdefault("batches", {})
+     state.setdefault("runs", {})
+     state.setdefault("ascension", {})
++    apply_deferrals(state, DIR)
+     return state
+ 
+ 
+@@ -245,11 +247,13 @@ def check_postmortems(state, character):
+         return None
+     have = postmortem_ids()
+     now = time.time()
++    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
++            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
+     todo = []
+     retry_ready = False
+     for row in finished_runs(character):
+         run = row["run_id"]
+-        if run in have or run in todo:
++        if run in have or run in todo or run in held:
+             continue
+         info = state["runs"].get(run)
+         if info:
+@@ -336,6 +340,11 @@ def cmd_dispatch(args):
+         print(f"runs 要 1–{BATCH_MAX} 个 12 位局号，逗号分隔")
+         return 2
+     state = load_state()
++    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
++            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
++    if set(runs) & held:
++        print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
++        return 1
+     busy = running_batch(state)
+     if busy:
+         save_state(state)
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index f284b6e31be8dd65caf5c2816d16633c71579233..c63aca475ec7e63f7970cd598d148308f84471d8 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -45,6 +45,15 @@ if [ "$learner_task" = silent-historical-core-builds ]; then
+ fi
+ mkdir -p "$DIR/learner"
+ out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
++# The command-host pane follows this batch's files; native TUI supervisors keep their own display.
++if [ -z "${LEARNER_HERDR_PANE:-}" ]; then
++  case "${HERDR_HOST_LABEL:-}" in
++    "learner-$batch"|"learner-$batch-postmortem")
++      : >> "$out"; : >> "$err"
++      nice -n 19 tail --sleep-interval=0.2 -n 80 --pid="$$" -F -- "$out" "$err" &
++      ;;
++  esac
++fi
+ export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+ export STS2_WORKSPACE="$ROOT"
+ cd "$ROOT" || exit 1
+@@ -193,21 +202,52 @@ else
+     rc=75
+   fi
+ fi
++launcher_rc="$rc"
++wrapper_attention() {
++  nice -n 19 python3 "$OPS/learner_tui.py" attention "$DIR" "$batch" "$1" 2>> "$err"
++}
+ # A failed transport receipt never releases the scheduler lease or marks the batch complete.
+ # Preserve this supervisor until ops verifies the original session/artifacts; never start a second model.
+ if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
+-  while ! nice -n 19 python3 "$OPS/learner_tui.py" verify "$LEARNER_TUI_RECEIPT" "$out" 2>> "$err"; do
+-    sleep 30
++  verify_timeout="${LEARNER_TUI_VERIFY_TIMEOUT_S:-300}"
++  if ! [[ "$verify_timeout" =~ ^[1-9][0-9]{0,3}$ ]] || [ "$verify_timeout" -gt 3600 ]; then verify_timeout=300; fi
++  verify_deadline=$((SECONDS + verify_timeout))
++  while true; do
++    remaining=$((verify_deadline - SECONDS))
++    if [ "$remaining" -le 0 ]; then
++      nice -n 19 python3 "$OPS/learner_tui.py" defer "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err" \
++        || echo "$(date '+%F %T') [dev #36 wrapper] $batch verification timeout; deferral persistence failed, preserve original batch/pane and inspect learner journal" >> "$DIR/inbox-claude.md"
++      exit 75
++    fi
++    if rc="$(nice -n 19 timeout --kill-after=1s "${remaining}s" python3 "$OPS/learner_tui.py" verified-code "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" 2>> "$err")"; then break; fi
++    wrapper_attention verify
++    remaining=$((verify_deadline - SECONDS))
++    if [ "$remaining" -gt 0 ]; then
++      if [ "$remaining" -gt 30 ]; then remaining=30; fi
++      sleep "$remaining"
++    fi
+   done
+ fi
+ echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
++finish_rc=75
+ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
+     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
+   finish_rc=0
+   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
+   if [ "$finish_rc" = 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
+-    nice -n 19 python3 "$OPS/learner_tui.py" close "$ROOT" "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" \
+-      >> "$DIR/scheduler.log" 2>&1 || echo "learner TUI pane retained for $batch; finish audit or pane identity is not ready" >> "$DIR/scheduler.log"
++    if nice -n 19 python3 "$OPS/learner_tui.py" finished "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" "$launcher_rc" "$$" 2>> "$err"; then
++      # Seal only. The #20 recycler independently waits for this supervisor to exit before closing a tab.
++      if ! nice -n 19 python3 "$OPS/learner_tabs.py" seal --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
++          >> "$DIR/scheduler.log" 2>> "$err"; then
++        wrapper_attention seal
++        finish_rc=75
++      fi
++    else
++      wrapper_attention finish
++      finish_rc=75
++    fi
++  elif [ "$finish_rc" != 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ]; then
++    wrapper_attention finish
+   fi
+   if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] \
+       && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
+@@ -217,7 +257,10 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
+     nice -n 19 python3 "$OPS/learner_retention.py" request --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
+       >> "$DIR/scheduler.log" 2>&1 || echo "learner cleanup request deferred for $batch; normal tick will retry" >> "$DIR/scheduler.log"
+   fi
++else
++  if [ -n "${LEARNER_HERDR_PANE:-}" ]; then wrapper_attention registration; fi
+ fi
++if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$finish_rc" != 0 ]; then rc=75; fi
+ if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
+   # Keep the wake outside either the legacy command pane or the new supervised TUI lifecycle.
+   if [ -n "${HERDR_HOST_LABEL:-}${LEARNER_HERDR_PANE:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index 7133499b16c5f02602a1e182f4a3c4a1fbe929ff..9d83257efac551dec7e5c3e6a2887e08297886b8 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -167,7 +167,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
+         return False, None
+     key = "feature:" + request["request_id"]
+     prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
+-    if (any(batch.get("state") == "done" or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
++    if (any(batch.get("state") in ("done", "awaiting_review") or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
+             or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
+         return True, None
+     worktree = os.path.join(root, ".worktrees", learner_task)
+@@ -223,7 +223,7 @@ def busy(state, task, alive):
+ 
+ def retryable(state, task, key):
+     previous = [batch for batch in state["batches"].values() if batch.get("task") == task and batch.get("key") == key]
+-    if any(batch.get("state") == "done" for batch in previous) or len(previous) >= 3:
++    if any(batch.get("state") in ("done", "awaiting_review") for batch in previous) or len(previous) >= 3:
+         return False
+     return not previous or max(batch.get("retry_at", 0) for batch in previous) <= time.time()
+ 
+@@ -265,6 +265,12 @@ def fix_key(root, character):
+ 
+ 
+ def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
++    # A released supervisor slot does not authorize replay of its unresolved original demand.
++    if any(batch.get("state") == "awaiting_review" and batch.get("task") == task
++           and batch.get("character") == character
++           and (batch.get("key") == key or (runs and sorted(batch.get("runs", [])) == sorted(runs)))
++           for batch in state["batches"].values()):
++        return None
+     if implementation_request is not None:
+         from strategy_implementation_jobs import REQUEST, CONTINUATION
+         if (implementation_request not in (REQUEST, CONTINUATION) or research_request is not None or task != "strategy-proposal"
+diff --git a/ops/learner_tui.py b/ops/learner_tui.py
+index 1f8457ee0631885a8abc086b4266533cb0f02a60..683cfcf6e578dc0d26a82081e99e629d5ba52286 100644
+--- a/ops/learner_tui.py
++++ b/ops/learner_tui.py
+@@ -6,6 +6,30 @@ from pathlib import Path
+ import re
+ import subprocess
+ import sys
++import datetime as dt
++import tempfile
++import fcntl
++import time
++
++
++def persist(path, value):
++    """Publish only flushed, complete JSON and persist the directory entry as well."""
++    path = Path(path)
++    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=path.name + ".", delete=False) as target:
++        temporary = Path(target.name)
++        try:
++            json.dump(value, target, ensure_ascii=False)
++            target.write("\n")
++            target.flush()
++            os.fsync(target.fileno())
++            temporary.replace(path)
++        finally:
++            temporary.unlink(missing_ok=True)
++    fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
++    try:
++        os.fsync(fd)
++    finally:
++        os.close(fd)
+ 
+ 
+ def digest(path):
+@@ -159,7 +183,11 @@ def verify(path, output):
+             raise ValueError("native agent name is not bound to the original pane/label/cwd")
+     result = receipt.get("result", {})
+     if receipt.get("state") == "not-started" and result.get("code") == 3 and receipt.get("models_started") == 0:
+-        digest(output)
++        if (receipt.get("submitted") or receipt.get("bindings") or receipt.get("submissions") or receipt.get("pid")
++                or any(receipt.get(key) or result.get(key) for key in ("session", "turn", "rollout"))):
++            raise ValueError("not-started receipt contains model activity")
++        receipt["output"] = {"path": str(output), "sha256": digest(output)}
++        persist(path, receipt)
+         return receipt
+     artifacts = receipt.get("artifacts", {})
+     if (receipt.get("state") != "session-ended" or receipt.get("retirement_authorized") is not True
+@@ -180,12 +208,144 @@ def verify(path, output):
+         raise ValueError("original batch output is missing")
+     receipt["output"] = {"path": str(output), "sha256": digest(output)}
+     artifacts["out_pending_wrapper_flush"] = False
+-    Path(path).write_text(json.dumps(receipt) + "\n")
+-    with open(path) as source:
+-        os.fsync(source.fileno())
++    persist(path, receipt)
+     return receipt
+ 
+ 
++def verified_code(path, output, launcher_rc):
++    receipt = verify(path, output)
++    code = receipt["result"]["code"]
++    # The interactive launcher's error summary maps a preflight refusal to 1.
++    if int(launcher_rc) != code and not (receipt["state"] == "not-started" and code == 3 and int(launcher_rc) == 1):
++        raise ValueError("launcher exit differs from the original transport result")
++    return code
++
++
++def finished(state, batch, path, output, launcher_rc, supervisor):
++    """Record the original finish transaction; tab retirement belongs to the #20 adapter."""
++    code = verified_code(path, output, launcher_rc)
++    receipt = json.loads(Path(path).read_text())
++    value = json.loads(Path(state).read_text())["batches"][batch]
++    supervisor = int(supervisor)
++    label = "learner-" + batch + ("-postmortem" if value.get("task", "postmortem") == "postmortem" else "")
++    fields = Path(f"/proc/{supervisor}/stat").read_text().rsplit(")", 1)[1].split()
++    if (value.get("pid") != supervisor or supervisor != os.getppid() or supervisor <= 1 or fields[0] in ("Z", "X")
++            or value.get("state") not in ("done", "failed", "rejected") or not value.get("finished")
++            or value.get("rc") != code or code == 75
++            or (code == 0 and value.get("state") != "done")
++            or value.get("pane") != receipt.get("pane") or not receipt.get("pane")
++            or receipt.get("label") != label
++            or Path(value.get("worktree", Path(state).parents[2])).resolve() != Path(receipt.get("cwd", "")).resolve()):
++        raise ValueError("original terminal batch or supervisor authority is missing")
++    receipt["wrapper"] = {"version": 1, "batch": batch, "state": value["state"], "rc": code,
++        "launcher_rc": int(launcher_rc), "finished": value["finished"],
++        "supervisor": {"pid": supervisor, "birth": fields[19]},
++        "batch_sha256": hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()}
++    persist(path, receipt)
++
++
++def attention(directory, batch, stage):
++    """One durable exception notification per wrapper/stage, independent of an ops model turn."""
++    if not re.fullmatch(r"[a-z0-9-]+", batch) or stage not in ("verify", "finish", "seal", "registration"):
++        raise ValueError("invalid wrapper attention identity")
++    directory = Path(directory)
++    record = directory / "learner" / f"{batch}.wrapper-attention-{stage}.json"
++    queue = directory / "queue"
++    queue.mkdir(parents=True, exist_ok=True)
++    record.parent.mkdir(parents=True, exist_ok=True)
++    if record.exists():
++        return
++    # Persist the notification before its deduplication receipt; an interrupted enqueue is retried.
++    # Keep the existing queue reader's <epoch-ns>-<kind>.md grammar, including after a retry.
++    existing = list(queue.glob(f"*-wrapper-{batch}-{stage}-learner-tui-attention.md"))
++    message = existing[0] if existing else queue / f"{time.time_ns()}-wrapper-{batch}-{stage}-learner-tui-attention.md"
++    if not message.exists():
++        with message.open("w") as target:
++            target.write(f"学习批次 {batch} wrapper {stage} 核验未通过；保留原回执、批次与 pane，交原 ops 核验，不另开模型、不自行关 tab。\n")
++            target.flush()
++            os.fsync(target.fileno())
++        fd = os.open(queue, os.O_RDONLY | os.O_DIRECTORY)
++        try:
++            os.fsync(fd)
++        finally:
++            os.close(fd)
++    persist(record, {"batch": batch, "stage": stage, "at": dt.datetime.now().astimezone().isoformat(),
++                     "notification": str(message)})
++
++
++REGISTRATION_FIELDS = ("pid", "pane", "started", "task", "character", "worktree", "key", "runs",
++                       "learner_task", "feature_request", "research_request", "implementation_request")
++
++
++def apply_deferrals(state, directory):
++    """Replay a durable hold after lock contention, before a dead supervisor can become a retry."""
++    changed = False
++    for path in (Path(directory) / "learner").glob("*.verification-deferred.json"):
++        record = json.loads(path.read_text())
++        batch = state.get("batches", {}).get(record.get("batch"))
++        registration = record.get("registration")
++        if (not batch or not isinstance(registration, dict) or batch.get("state") != "running"
++                or batch.get("pid") != record.get("supervisor", {}).get("pid")
++                or any(batch.get(key) != registration.get(key) for key in REGISTRATION_FIELDS)):
++            continue
++        batch.update(state="awaiting_review", review_required="tui-verification-timeout",
++                     deferred_at=record["at"], verification_deferred=str(path))
++        changed = True
++    return changed
++
++
++def defer(state, batch, path, output, launcher_rc, supervisor):
++    """Release only our scheduler lease; preserve the native receipt, model and original demand."""
++    state = Path(state)
++    directory = state.parent
++    supervisor = int(supervisor)
++    if supervisor != os.getppid() or supervisor <= 1 or not re.fullmatch(r"[a-z0-9-]+", batch):
++        raise ValueError("deferral does not belong to the invoking supervisor")
++    fields = Path(f"/proc/{supervisor}/stat").read_text().rsplit(")", 1)[1].split()
++    try:
++        current = json.loads(state.read_text())
++    except (OSError, ValueError):
++        current = {}
++    original = current.get("batches", {}).get(batch, {})
++    record_path = directory / "learner" / f"{batch}.verification-deferred.json"
++    if record_path.exists():
++        record = json.loads(record_path.read_text())
++        if record.get("supervisor") != {"pid": supervisor, "birth": fields[19]}:
++            raise ValueError("deferral belongs to another supervisor")
++    else:
++        record = {"schema": "learner-verification-deferred-v1", "batch": batch,
++            "at": dt.datetime.now().astimezone().isoformat(), "reason": "tui-verification-timeout",
++            "supervisor": {"pid": supervisor, "birth": fields[19]}, "launcher_rc": int(launcher_rc),
++            "receipt": str(path), "output": str(output), "finish_authorized": False,
++            "retirement_authorized": False, "automatic_replay_authorized": False,
++            "registration": {key: original.get(key) for key in REGISTRATION_FIELDS}}
++        persist(record_path, record)
++    # Journal first: the next original scheduler tick applies the hold if its lock is busy now.
++    until = time.monotonic() + 2
++    with (directory / "learn.lock").open("a") as lock:
++        while True:
++            try:
++                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++                latest = json.loads(state.read_text())
++                if apply_deferrals(latest, directory):
++                    persist(state, latest)
++                break
++            except BlockingIOError:
++                if time.monotonic() >= until:
++                    break
++                time.sleep(0.05)
++    if not record.get("inbox_notice"):
++        # Mark the append uncertain first; a crash must not produce repeated supervisor notifications.
++        record["inbox_notice"] = "sending"
++        persist(record_path, record)
++        with (directory / "inbox-claude.md").open("a") as inbox:
++            inbox.write(f"- {record['at']} [dev #36 wrapper] 学习批次 {batch} 回执核验超时，监督退出、原批次待核；原产物/回执/pane保留，不自动重派原任务、不认完成，见 learner/{record_path.name}。\n")
++            inbox.flush()
++            os.fsync(inbox.fileno())
++        record["inbox_notice"] = "written"
++        persist(record_path, record)
++
++
+ def close(root, state, batch, path, output):
+     receipt = verify(path, output)
+     value = json.loads(Path(state).read_text())["batches"][batch]
+@@ -208,12 +368,20 @@ def main(argv):
+     try:
+         if argv[0] == "verify" and len(argv) == 3:
+             verify(*argv[1:])
++        elif argv[0] == "verified-code" and len(argv) == 4:
++            print(verified_code(*argv[1:]))
++        elif argv[0] == "finished" and len(argv) == 7:
++            finished(*argv[1:])
++        elif argv[0] == "attention" and len(argv) == 4:
++            attention(*argv[1:])
++        elif argv[0] == "defer" and len(argv) == 7:
++            defer(*argv[1:])
+         elif argv[0] == "close" and len(argv) == 6:
+             close(*argv[1:])
+         else:
+             return 2
+         return 0
+-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
++    except (OSError, ValueError, KeyError, TypeError, IndexError, subprocess.SubprocessError):
+         sys.stderr.write("learner TUI receipt/retirement gate deferred; preserve original batch and pane\n")
+         return 75
+ 
+diff --git a/ops/ops_current.py b/ops/ops_current.py
+index 7605adc85f24de3c41643a71b2925558cf852e99..04ac9fae36a73871cf525a815dae660f66055021 100644
+--- a/ops/ops_current.py
++++ b/ops/ops_current.py
+@@ -111,7 +111,7 @@ def generate(root, directory):
+                     context_artifact(task["receipt"])
+         active = {k: {name: v.get(name) for name in ("task", "learner_task", "character", "state", "pid", "worktree", "feature_request", "research_request", "resume_thread", "checks_pending") if v.get(name) is not None}
+                   for k, v in state.get("batches", {}).items()
+-                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery") or v.get("checks_pending")}
++                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery", "awaiting_review") or v.get("checks_pending")}
+         lost = {k: v for k, v in state.get("batches", {}).items() if v.get("state") == "lost"}
+         requests = {k: {name: v.get(name) for name in ("state", "revision", "owner", "batch", "checkpoint", "next") if v.get(name) is not None}
+                     for k, v in state.get("learning_requests", {}).items() if v.get("state") != "completed"}
+diff --git a/ops/tests/test_learner_tui.py b/ops/tests/test_learner_tui.py
+index c3a76fa189a1e2a3021511aee831704c4331e798..0a2751d455a982f230c3570c90df28308765dc81 100644
+--- a/ops/tests/test_learner_tui.py
++++ b/ops/tests/test_learner_tui.py
+@@ -63,7 +63,8 @@ class CompletionGate(unittest.TestCase):
+     def test_name_contract_matches_typescript_with_non_ascii_cwd(self):
+         self.value.update(label="learner-20261023-021302-strategy-proposal", pane="w1:p2", cwd="/fixture/中文",
+                           agent_name="learner-8f55a5ad47c4b2bb40b86574", agent_name_version=1,
+-                          state="not-started", models_started=0, result={"code": 3})
++                          state="not-started", models_started=0, result={"code": 3}, submitted=False, bindings=[], submissions=[])
++        self.value.pop("pid")
+         self.save()
+         self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
+ 
+diff --git a/ops/tests/test_learner_wrapper_completion.py b/ops/tests/test_learner_wrapper_completion.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..87eee637bb0c7d21b3b590c9232242a494795d97
+--- /dev/null
++++ b/ops/tests/test_learner_wrapper_completion.py
+@@ -0,0 +1,288 @@
++"""Real shell wrapper with frozen receipts and finish/seal stubs; no model or Herdr calls."""
++import json
++import importlib.util
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import unittest
++import time
++from unittest.mock import patch
++
++from ops.tests import test_learner_tui as fixtures
++
++tui = fixtures.tui
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++class WrapperCompletion(unittest.TestCase):
++    setUp = fixtures.CompletionGate.setUp
++    save = fixtures.CompletionGate.save
++
++    def prepare(self, task="experience-update"):
++        self.batch = "20261023-120000" + ("" if task == "postmortem" else "-experience-update")
++        label = "learner-" + self.batch + ("-postmortem" if task == "postmortem" else "")
++        self.directory = self.root / "ops/codex-ops"
++        self.directory.mkdir(parents=True)
++        (self.directory / "learner").mkdir()
++        for name in ("paths.sh", "codex-ops-learner.sh", "learner_tui.py"):
++            shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
++        self.value.update(pane="w1:p2", label=label,
++                          identity={"pane_id": "w1:p2", "label": label,
++                                    "tab_id": "w1:t2", "terminal_id": "terminal", "workspace_id": "w1"})
++        self.save()
++        # A pending ops turn/notification cannot be consumed or gate this code-only completion.
++        (self.directory / "queue").mkdir()
++        (self.directory / "queue/old-event.md").write_text("ops busy: original pending event\n")
++        (self.root / "ops/codex-ops-learn.py").write_text('''import json,os,sys
++from pathlib import Path
++root=Path(os.environ["CODEX_OPS_ROOT"])
++batch=sys.argv[sys.argv.index("--batch")+1]
++rc=int(sys.argv[sys.argv.index("--rc")+1])
++row={"state":os.environ.get("FIXTURE_FINISH_STATE", "done" if rc==0 else "failed"), "rc":rc,
++     "task":os.environ["FIXTURE_TASK"],
++     "finished":"2026-10-23T12:00:00+08:00", "pid":os.getppid(), "pane":"w1:p2", "worktree":str(root)}
++(root/"ops/codex-ops/learn.json").write_text(json.dumps({"batches":{batch:row}}))
++''')
++        (self.root / "ops/learner_tabs.py").write_text('''import json,os,sys
++from pathlib import Path
++root=Path(os.environ["CODEX_OPS_ROOT"])
++(root/"seal-args.json").write_text(json.dumps(sys.argv[1:]))
++sys.exit(int(os.environ.get("FIXTURE_SEAL_RC", "0")))
++''')
++        sleep = self.root / "home/.local/node/bin/sleep"
++        sleep.parent.mkdir(parents=True)
++        # End only this fixture's wrapper after its first deferred verification, without a 30s wait.
++        sleep.write_text("#!/usr/bin/python3\nimport os,signal\nos.kill(os.getppid(),signal.SIGTERM)\n")
++        sleep.chmod(0o755)
++        return {"HOME": str(self.root / "home"), "PATH": "/usr/bin:/bin", "CODEX_OPS_ROOT": str(self.root),
++                "CODEX_OPS_NO_DRAIN": "1", "FIXTURE_TASK":task, "LEARNER_HERDR_PANE": "w1:p2", "LEARNER_HERDR_LABEL": label,
++                "LEARNER_TUI_RECEIPT": str(self.receipt), "LEARNER_CMD": "printf 'fixed report\\n'"}
++
++    def run_wrapper(self, env):
++        result = subprocess.run(["bash", str(self.root / "ops/codex-ops-learner.sh"), self.batch,
++                                 "FIXTURE000001", "silent", env["FIXTURE_TASK"], str(self.root)],
++                                env=env, capture_output=True, text=True, timeout=10)
++        self.assertEqual((self.directory / "queue/old-event.md").read_text(), "ops busy: original pending event\n")
++        return result
++
++    def attention_files(self):
++        return list((self.directory / "queue").glob("*learner-tui-attention.md"))
++
++    def test_clean_finish_seals_without_ops_attention_or_pane_commands(self):
++        env = self.prepare()
++        result = self.run_wrapper(env)
++        self.assertEqual(result.returncode, 0, result.stderr)
++        value = json.loads(self.receipt.read_text())
++        self.assertEqual(value["wrapper"]["state"], "done")
++        self.assertEqual(value["wrapper"]["batch"], self.batch)
++        self.assertEqual(value["wrapper"]["launcher_rc"], 0)
++        self.assertEqual(value["wrapper"]["supervisor"]["pid"], json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["pid"])
++        self.assertTrue(value["wrapper"]["supervisor"]["birth"])
++        self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
++        self.assertEqual(json.loads((self.root / "seal-args.json").read_text()),
++                         ["seal", "--root", str(self.root), "--state-dir", str(self.directory), "--batch", self.batch])
++        self.assertEqual(self.attention_files(), [])
++        self.assertEqual(self.receipt.stat().st_mode & 0o777, 0o600)
++
++    def test_zero_model_refusal_is_terminal_code_three_not_success(self):
++        env = self.prepare()
++        self.value.update(state="not-started", models_started=0, submitted=False, submissions=[], bindings=[], result={"code": 3})
++        self.value.pop("pid")
++        self.save()
++        result = self.run_wrapper(dict(env, LEARNER_CMD="exit 1"))
++        self.assertEqual(result.returncode, 3, result.stderr)
++        value = json.loads(self.receipt.read_text())
++        self.assertEqual(value["wrapper"]["state"], "failed")
++        self.assertEqual(value["wrapper"]["rc"], 3)
++        self.assertEqual(value["wrapper"]["launcher_rc"], 1)
++        self.assertEqual(value["output"]["sha256"], tui.digest(self.directory / "learner" / (self.batch + ".out")))
++        self.assertTrue((self.root / "seal-args.json").exists())
++        self.assertEqual(self.attention_files(), [])
++
++    def test_invalid_native_binding_preserves_original_and_never_finishes_or_seals(self):
++        env = self.prepare()
++        self.value["bindings"] = []
++        self.save()
++        before = self.receipt.read_bytes()
++        result = self.run_wrapper(env)
++        self.assertEqual(result.returncode, -15)
++        self.assertEqual(self.receipt.read_bytes(), before)
++        self.assertFalse((self.directory / "learn.json").exists())
++        self.assertFalse((self.root / "seal-args.json").exists())
++        self.assertEqual(len(self.attention_files()), 1)
++        self.assertRegex(self.attention_files()[0].name, r"^[0-9]+-[a-z][a-z0-9-]*\.md$")
++
++    def test_artifact_audit_failure_retains_pane_and_emits_attention(self):
++        env = self.prepare()
++        result = self.run_wrapper(dict(env, FIXTURE_FINISH_STATE="failed"))
++        self.assertEqual(result.returncode, 75)
++        self.assertNotIn("wrapper", json.loads(self.receipt.read_text()))
++        self.assertFalse((self.root / "seal-args.json").exists())
++        self.assertEqual(len(self.attention_files()), 1)
++
++    def test_seal_failure_keeps_verified_finish_but_reports_retained_handoff(self):
++        env = self.prepare()
++        result = self.run_wrapper(dict(env, FIXTURE_SEAL_RC="75"))
++        self.assertEqual(result.returncode, 75)
++        self.assertEqual(json.loads(self.receipt.read_text())["wrapper"]["state"], "done")
++        self.assertEqual(len(self.attention_files()), 1)
++        notification = self.attention_files()[0].read_bytes()
++        tui.attention(self.directory, self.batch, "seal")
++        self.assertEqual(self.attention_files()[0].read_bytes(), notification)
++        self.assertEqual(len(self.attention_files()), 1)
++
++    def test_missing_seal_adapter_never_falls_back_to_closing(self):
++        env = self.prepare()
++        (self.root / "ops/learner_tabs.py").unlink()
++        self.assertEqual(self.run_wrapper(env).returncode, 75)
++        self.assertEqual(len(self.attention_files()), 1)
++
++    def test_mismatched_launcher_exit_is_not_silently_replaced(self):
++        env = self.prepare()
++        result = self.run_wrapper(dict(env, LEARNER_CMD="printf 'fixed report\\n'; exit 1"))
++        self.assertEqual(result.returncode, -15)
++        self.assertFalse((self.directory / "learn.json").exists())
++        self.assertFalse((self.root / "seal-args.json").exists())
++        self.assertEqual(len(self.attention_files()), 1)
++
++    def test_not_started_cannot_launder_model_activity(self):
++        for extra in ({"submitted": True}, {"pid": 123}, {"bindings": [{"turn_id": "turn"}]},
++                      {"submissions": [{"marker": "sent"}]}, {"session": "thread"}, {"result": {"code": 3, "session": "thread"}}):
++            with self.subTest(extra=extra):
++                value = {"state": "not-started", "models_started": 0, "result": {"code": 3}, **extra}
++                self.receipt.write_text(json.dumps(value))
++                before = self.receipt.read_bytes()
++                with self.assertRaises(ValueError):
++                    tui.verified_code(self.receipt, self.output, "1")
++                self.assertEqual(self.receipt.read_bytes(), before)
++
++    def test_terminal_record_requires_original_supervisor_pane_worktree_and_audit(self):
++        self.prepare()
++        state = self.directory / "learn.json"
++        original = {"pid": os.getpid(), "pane": "w1:p2", "state": "done", "rc": 0,
++                    "finished": "fixed", "worktree": str(self.root), "task": "experience-update"}
++        for changed in ({"pid": 1}, {"pane": "w1:p3"}, {"state": "failed"}, {"state": "running"},
++                        {"finished": None}, {"rc": 75}, {"worktree": "/foreign"}):
++            with self.subTest(changed=changed), patch.object(tui.os, "getppid", return_value=os.getpid()):
++                state.write_text(json.dumps({"batches": {self.batch: {**original, **changed}}}))
++                with self.assertRaises(ValueError):
++                    tui.finished(state, self.batch, self.receipt, self.output, "0", str(os.getpid()))
++                self.assertNotIn("wrapper", json.loads(self.receipt.read_text()))
++
++
++    def timeout_fixture(self):
++        env = self.prepare()
++        self.value["bindings"] = []
++        self.save()
++        (self.root / "home/.local/node/bin/sleep").write_text('#!/bin/bash\nexec /bin/sleep "$1"\n')
++        (self.root / "ops/fixture-initial.py").write_text('''import json,os
++from pathlib import Path
++root=Path(os.environ["CODEX_OPS_ROOT"])
++batch="20261023-120000-experience-update"
++row={"state":"running", "pid":os.getppid(), "pane":"w1:p2", "worktree":str(root),
++     "task":"experience-update", "character":"silent", "runs":["FIXTURE000001"], "key":"original-key"}
++(root/"ops/codex-ops/learn.json").write_text(json.dumps({"batches":{batch:row},"runs":{}}))
++print("original fixed output")
++''')
++        return dict(env, LEARNER_TUI_VERIFY_TIMEOUT_S="1",
++                    LEARNER_CMD='exec python3 "$CODEX_OPS_ROOT/ops/fixture-initial.py"')
++
++    def test_timeout_releases_only_the_supervisor_slot_and_holds_original_demand(self):
++        env = self.timeout_fixture()
++        before = self.receipt.read_bytes()
++        started = time.monotonic()
++        result = self.run_wrapper(env)
++        self.assertEqual(result.returncode, 75)
++        self.assertLess(time.monotonic() - started, 6)
++        state = json.loads((self.directory / "learn.json").read_text())
++        batch = state["batches"][self.batch]
++        self.assertEqual(batch["state"], "awaiting_review")
++        self.assertNotIn("finished", batch)
++        self.assertNotIn("rc", batch)
++        self.assertEqual(self.receipt.read_bytes(), before)
++        self.assertFalse((self.root / "seal-args.json").exists())
++        notice = (self.directory / "inbox-claude.md").read_text()
++        self.assertEqual(notice.count(self.batch), 2)  # batch label and journal name in the same line
++        self.assertEqual(len(notice.splitlines()), 1)
++        record = json.loads((self.directory / "learner" / (self.batch + ".verification-deferred.json")).read_text())
++        self.assertFalse(record["finish_authorized"])
++        self.assertFalse(record["retirement_authorized"])
++        self.assertFalse(record["automatic_replay_authorized"])
++        module_spec = importlib.util.spec_from_file_location("jobs_under_test", REPO / "ops/learner_jobs.py")
++        jobs = importlib.util.module_from_spec(module_spec)
++        module_spec.loader.exec_module(jobs)
++        self.assertFalse(jobs.busy(state, "experience-update", lambda _: True))
++        self.assertFalse(jobs.retryable(state, "experience-update", "original-key"))
++        self.assertTrue(jobs.retryable(state, "experience-update", "unrelated-key"))
++        self.assertIsNone(jobs.dispatch_write(state, str(self.root), str(REPO / "ops"), "experience-update", "silent",
++                                             ["FIXTURE000001"], "original-key", "ops", lambda _: False, "20261023-130000"))
++
++    def test_pending_hold_survives_lock_contention_without_infinite_wait(self):
++        self.prepare()
++        state_file = self.directory / "learn.json"
++        state = {"batches": {self.batch: {"state":"running", "pid":os.getpid(), "pane":"w1:p2",
++                                         "task":"experience-update", "key":"original-key"}}}
++        state_file.write_text(json.dumps(state))
++        with patch.object(tui.os, "getppid", return_value=os.getpid()), \
++             patch.object(tui.fcntl, "flock", side_effect=BlockingIOError), \
++             patch.object(tui.time, "monotonic", side_effect=[0,3]):
++            tui.defer(state_file, self.batch, self.receipt, self.output, "75", str(os.getpid()))
++        self.assertEqual(json.loads(state_file.read_text())["batches"][self.batch]["state"], "running")
++        self.assertTrue(tui.apply_deferrals(state, self.directory))
++        self.assertEqual(state["batches"][self.batch]["state"], "awaiting_review")
++        self.assertFalse(tui.apply_deferrals(state, self.directory))
++        self.assertEqual(len((self.directory / "inbox-claude.md").read_text().splitlines()), 1)
++
++    def test_postmortem_keeps_its_real_label_suffix_and_receipt_identity(self):
++        env = self.prepare("postmortem")
++        self.assertEqual(self.run_wrapper(env).returncode, 0)
++        value = json.loads(self.receipt.read_text())
++        self.assertEqual(value["label"], "learner-20261023-120000-postmortem")
++        self.assertEqual(value["wrapper"]["batch"], "20261023-120000")
++        self.assertEqual(self.attention_files(), [])
++
++
++    def test_one_hung_verifier_is_bounded_by_the_same_deadline(self):
++        env = self.timeout_fixture()
++        helper = self.root / "ops/learner_tui.py"
++        helper.write_text(helper.read_text().replace('if __name__ == "__main__":',
++            'if __name__ == "__main__" and sys.argv[1:2] == ["verified-code"]: time.sleep(60)\nif __name__ == "__main__":'))
++        started = time.monotonic()
++        self.assertEqual(self.run_wrapper(env).returncode, 75)
++        self.assertLess(time.monotonic() - started, 6)
++        self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "awaiting_review")
++        self.assertTrue((self.directory / "inbox-claude.md").is_file())
++
++    def test_deferral_does_not_take_over_another_supervisor_or_duplicate_notice(self):
++        self.prepare()
++        state_file = self.directory / "learn.json"
++        state = {"batches": {self.batch: {"state":"running", "pid":123456789, "pane":"w1:p2"}}}
++        state_file.write_text(json.dumps(state))
++        with patch.object(tui.os, "getppid", return_value=os.getpid()):
++            for _ in range(2):
++                tui.defer(state_file, self.batch, self.receipt, self.output, "75", str(os.getpid()))
++        self.assertEqual(json.loads(state_file.read_text()), state)
++        self.assertEqual(len((self.directory / "inbox-claude.md").read_text().splitlines()), 1)
++
++    def test_postmortem_admission_skips_held_inputs_but_dispatches_unrelated_work(self):
++        self.prepare()
++        module_spec = importlib.util.spec_from_file_location("scheduler_under_test", REPO / "ops/codex-ops-learn.py")
++        scheduler = importlib.util.module_from_spec(module_spec)
++        with patch.dict(os.environ, {"CODEX_OPS_ROOT":str(self.root), "CODEX_OPS_DIR":str(self.directory)}):
++            module_spec.loader.exec_module(scheduler)
++        held, fresh = "FIXTURE000001", "FIXTURE000002"
++        state = {"batches": {self.batch: {"state":"awaiting_review", "runs":[held], "pid":os.getpid()}},
++                 "runs":{held:{"attempts":1,"retry_at":0},fresh:{"attempts":1,"retry_at":0}}}
++        with patch.object(scheduler,"postmortem_ids",return_value=set()), \
++             patch.object(scheduler,"finished_runs",return_value=[{"run_id":held},{"run_id":fresh}]), \
++             patch.object(scheduler,"dispatch",return_value=("new",123)) as dispatch:
++            self.assertIsNone(scheduler.running_batch(state))
++            self.assertEqual(scheduler.check_postmortems(state,"silent"),("new",123))
++            self.assertEqual(dispatch.call_args.args[1],[fresh])
++        self.assertEqual(state["batches"][self.batch]["state"],"awaiting_review")
++
++
++if __name__ == "__main__":
++    unittest.main()

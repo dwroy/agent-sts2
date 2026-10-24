@@ -1,0 +1,1 @@
+[Claude] 转 Roy：codex1 周用量已到 91%（16:09 codex-quota），按 Roy 10-22 的约定现在开始 codex1→codex3 切换，按 docs/llm-handoff.md 新开事务（前次 codex3-20261022-1146 已取消、记录保留）：对局大脑 brain-home、学习者/开发派发 codex-home、ops 会话本身切到 codex3；在途开发会话和集成员不热切。

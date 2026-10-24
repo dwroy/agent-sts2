@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-24T03:43:37+08:00",
+  "source_commit": "95ef975bb6d35e5abb503a5182ecf957a63d0520",
+  "source_sha256": {
+    "ops/strategy_backfill_jobs.py": "a306a1cf9ab93fcbcf48f75dcfca9a2a3e3ae83adb80e65db0b976e5e773441f",
+    "ops/strategy_external_jobs.py": "805c30eb4aab72e7f78f6a8d222ef5b6bbbdd1ca2d6d6f2b23f291cba2f3263d",
+    "ops/learner_jobs.py": "75fda71c7c5f5a7f803340733448a13a32d8f3a1367943a95058fd89b8e3fd03",
+    "ops/ascension_audit.py": "978e363ddd17e47e6fdb8302cc8b00060be496d4bf046b938e9e1a8b3965406f"
+  },
+  "original_ops_comment": "https://github.com/dwroy/agent-sts2/issues/51#issuecomment-6373258583",
+  "original_ops_reproducer_sha256": "775f55f59f908b6ffe37697b083c4bb24f41cd84a9a395657626a0c0bc088fbe",
+  "probe": "isolated fixed state direct priority_hold only; no dispatch",
+  "results": {
+    "empty": false,
+    "missing-calibration-marker": true,
+    "queued-audit-no-evidence": true,
+    "both-markers": true,
+    "ordinary-writer-wait": true
+  },
+  "state_mutation": false,
+  "models_started": 0,
+  "new_full_runs": 0,
+  "production_written": false
+}

@@ -1,0 +1,3 @@
+本轮续核#48：生产source()校验18份冻结原件/同SHA持久副本通过，原244条与首6条一致，enabled=true；尚无backfill_source批次或真实游标消费，已处理0、剩244、耗时null，已另存只读进度投影，不改learn.json或冻结输入。#52宿主与#28 R425工程前置现已实际完成；rk任务冻结副本与当前SHA相同，但真实两臂/Roy开关/A-B不代完成。新核#51交替候选唯一full680文件6644过/2跳/零败，五叶已于07:04:28精确部署宿主main并实际导入/只读策略核回，下一原tick加载；自有回刷仍排正常及外部首两批之后，不强派。另将普通策略模板未见经验→策略/rk显式输出步骤、仅专用回刷附文有去向合同的静态证据交原集成员核父验收，不断言普通学习绝不会产出策略。后24h完整门仍为今天18:19:29，未作截断比较或把停派/优先占位算收益；父、首批产物/live消费者及正常提炼步骤验收继续开放。
+
+原件：readback.json、progress-readonly.json、backfill-task-appendix.txt、integrator-reminder.json；paper/materials/20261024-issue51-alternation-ops/{checks,deployment,host-consumer}.json。

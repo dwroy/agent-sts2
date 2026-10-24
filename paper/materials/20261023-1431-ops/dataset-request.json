@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-23T14:35:37+08:00",
+  "schema": "original-ops-dataset-once-v1",
+  "batches": [
+    "20261023-124241-s2-strategy-proposal",
+    "20261023-124301"
+  ],
+  "attempts": 1,
+  "command": "python3 ops/paper_dataset.py --no-raw",
+  "execution": "original main entry build_locked inside original paper-dataset.lock, freeze generated SHA/blob before releasing lock",
+  "phase": "prepared-not-started",
+  "new_model_full_or_game": 0,
+  "after_success": "freeze actual outputs; commit only generated leaves and own records; enqueue original manual completion",
+  "on_failure": "retain actual stage and enqueue original manual attention; never automatically repeat"
+}

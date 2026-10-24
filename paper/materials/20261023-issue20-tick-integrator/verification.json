@@ -1,0 +1,40 @@
+{
+  "public_source": "e1204dcf92508079730e6c0fbf994ee3dc84e979",
+  "public_parent": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
+  "kit_source": "7e5a408f641f30a442eef06f81e933adda194daf",
+  "kit_parent": "26130354b86fbdbb4a1baddda07a770b0b9d6fd5",
+  "remote_refs_verified": true,
+  "tsc": {
+    "exit_code": 0,
+    "command": "nice -n 19 env PATH=/home/dw/.local/node/bin:/usr/bin:/bin OMP_NUM_THREADS=1 ./node_modules/.bin/tsc -p tsconfig.json --noEmit"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "tests": 102,
+    "command": "nice -n 19 env PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python3 -B -m unittest test_outcomes test_board test_watchdog test_claude_inbox test_project_contract test_release_order -v"
+  },
+  "boundaries": {
+    "exit_code": 0,
+    "tests": 4,
+    "command": "nice -n 19 env PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python3 -B review_boundaries.py"
+  },
+  "kit_archive_files": 15,
+  "kit_matches_pinned_archive_after_targeted": true,
+  "kit_before_after_boundaries_identical": true,
+  "public_runtime_tracked_diff_clean": true,
+  "full_run": false,
+  "full_queue_submission": false,
+  "source_merged": false,
+  "production_changed": false,
+  "issue37_dependency": "open/review; source not main ancestor",
+  "issue42_old_uncertain": "resolved by ops 6344146966; untouched",
+  "developer_first_failure": "99 pass / 1 fail, only original session receipt; no saved raw log, not recreated",
+  "artifacts_sha256": {
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preflight.json": "fa070fd6225ce20184f1dc99f188278028fa4468a6cfcfe2a3f1dc4373b35574",
+    "review_boundaries.py": "fd427649a74347b5a6ab95fd0e698f25100ba206665cd0172e69b5419e40f9ed",
+    "targeted.log": "052c7e87bfafd157f55a0c52b4d10a97f8b55cfa088aee6cea06b4c062f80602",
+    "boundaries.log": "b336e512536ab53440d93cf91266c148614b8f73de05de4a1fcb8fafb6e11086",
+    "kit-inputs.json": "f622f7b1a931887ca520617b01fea4b0a578cd6d0edd2675f4bd7dfc019ea9e3"
+  }
+}

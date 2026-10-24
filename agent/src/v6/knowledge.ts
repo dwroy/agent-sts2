@@ -24,7 +24,8 @@ export interface V6Knowledge {
   reflex: KnowledgeResult<ReflexEntry[]>;
 }
 /** No global/default character, common fallback, directory creation, cache or knowledge synthesis. */
-export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined): V6Knowledge {
+export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined,
+  readText: (path: string) => string = path => readFileSync(path, "utf8")): V6Knowledge {
   const parsed = validate(characterSchema, characterKey(rawCharacter));
   const character = parsed.ok ? parsed.value : null;
   function load<T>(name: string, parse: (v: unknown) => Result<T>): KnowledgeResult<T> {
@@ -36,7 +37,7 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
       const rel = relative(root, resolved);
       if (rel.startsWith("..") || isAbsolute(rel)) return { status: "invalid", message: "知识文件越出角色目录", path };
       if (!statSync(resolved).isFile() || statSync(resolved).size > 8 * 1024 * 1024) return { status: "invalid", message: "知识文件不是有效大小的普通文件", path };
-      const data: unknown = JSON.parse(readFileSync(resolved, "utf8"));
+      const data: unknown = JSON.parse(readText(resolved));
       const result = parse(data);
       if (!result.ok) return { status: "invalid", message: "知识格式校验失败", path, issues: result.issues };
       return { status: "loaded", path, value: result.value };

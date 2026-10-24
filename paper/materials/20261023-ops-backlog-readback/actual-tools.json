@@ -1,0 +1,2038 @@
+{
+  "consumer_tree": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "actual_registered_tools": [
+    "kb_monster",
+    "kb_encounter",
+    "kb_experience",
+    "kb_stats",
+    "kb_old_knowledge",
+    "kb_potion",
+    "kb_open_book",
+    "kb_strategies",
+    "kb_reflex",
+    "external_stats_card",
+    "external_stats_skip",
+    "external_stats_deck_size",
+    "external_stats_encounter",
+    "external_stats_clusters",
+    "external_stats_cooccurrence"
+  ],
+  "stats": [
+    {
+      "name": "external_stats_card",
+      "input": {
+        "id": "SNAKEBITE"
+      },
+      "bytes": 7708,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "offered/picked/not_picked 是保留奖励机会数，同局可重复；players 是贡献玩家数，逐行独立局数未提供（未知）。只含单room战斗3/4张且至多选1张的奖励，不含商店/事件或无法拆分的多奖励。",
+          "pick_rate_cluster_ci、picked_win_cluster_ci、not_picked_win_cluster_ci、win_difference_cluster_ci 为玩家整簇bootstrap；win_difference 是拿后整局胜率减不拿整局胜率。",
+          "player_act_adjusted_difference/adjusted_cluster_ci 只在玩家×幕内两边都有观察的 strata 做重叠权重调整；只提供调整后的差值，分别调整后的两组胜率无数据。matched_players/strata/offers 是重叠覆盖，不能当总样本。调整仍非因果；逐卡未做多重比较校正。"
+        ],
+        "status": "ok",
+        "table": "card",
+        "total_rows": 4,
+        "offset": 0,
+        "returned_rows": 4,
+        "next_offset": null,
+        "rows": [
+          {
+            "version": "v0.111",
+            "card": "SNAKEBITE",
+            "act": 1,
+            "offered": 1136,
+            "picked": 425,
+            "not_picked": 711,
+            "players": 87,
+            "pick_rate": 0.37411971830985913,
+            "pick_rate_cluster_ci": [
+              0.28881205845188523,
+              0.4418253747823212
+            ],
+            "picked_wins": 124,
+            "not_picked_wins": 184,
+            "picked_win_rate": 0.2917647058823529,
+            "picked_win_wilson": [
+              0.25056619627944043,
+              0.3366938590175762
+            ],
+            "not_picked_win_rate": 0.2587904360056259,
+            "not_picked_win_wilson": [
+              0.22795438560761178,
+              0.29221893986533654
+            ],
+            "picked_win_cluster_ci": [
+              0.19867474922637643,
+              0.3640182597392046
+            ],
+            "not_picked_win_cluster_ci": [
+              0.20319765652739968,
+              0.2988487965522849
+            ],
+            "win_difference": 0.032974269876727025,
+            "win_difference_cluster_ci": [
+              -0.048682777556500634,
+              0.09348185505613442
+            ],
+            "valid_bootstrap_draws": 1000,
+            "player_act_adjusted_difference": 0.019088053748148665,
+            "adjusted_cluster_ci": [
+              -0.04786466857602895,
+              0.07765803008835122
+            ],
+            "matched_players": 52,
+            "matched_strata": 52,
+            "matched_offers": 1049,
+            "frequent_player_offers": 1013,
+            "frequent_players": 38,
+            "frequent_player_pick_rate": 0.3859822309970385,
+            "frequent_player_win_difference": 0.022779417932418333
+          },
+          {
+            "version": "v0.111",
+            "card": "SNAKEBITE",
+            "act": 2,
+            "offered": 647,
+            "picked": 81,
+            "not_picked": 566,
+            "players": 73,
+            "pick_rate": 0.125193199381762,
+            "pick_rate_cluster_ci": [
+              0.09618598982242625,
+              0.16138910721043284
+            ],
+            "picked_wins": 30,
+            "not_picked_wins": 212,
+            "picked_win_rate": 0.37037037037037035,
+            "picked_win_wilson": [
+              0.2733168425395493,
+              0.4791626610910767
+            ],
+            "not_picked_win_rate": 0.3745583038869258,
+            "not_picked_win_wilson": [
+              0.3356552799087797,
+              0.41515260217499544
+            ],
+            "picked_win_cluster_ci": [
+              0.2325134168157424,
+              0.455185508511567
+            ],
+            "not_picked_win_cluster_ci": [
+              0.2928382213134725,
+              0.42524324550048026
+            ],
+            "win_difference": -0.004187933516555442,
+            "win_difference_cluster_ci": [
+              -0.11406554237672753,
+              0.08756700214608448
+            ],
+            "valid_bootstrap_draws": 1000,
+            "player_act_adjusted_difference": -0.0005212770886123629,
+            "adjusted_cluster_ci": [
+              -0.14537171834107776,
+              0.10820807557885896
+            ],
+            "matched_players": 28,
+            "matched_strata": 28,
+            "matched_offers": 521,
+            "frequent_player_offers": 574,
+            "frequent_players": 37,
+            "frequent_player_pick_rate": 0.11846689895470383,
+            "frequent_player_win_difference": -0.0030225528946756786
+          },
+          {
+            "version": "v0.111",
+            "card": "SNAKEBITE",
+            "act": 3,
+            "offered": 405,
+            "picked": 27,
+            "not_picked": 378,
+            "players": 59,
+            "pick_rate": 0.06666666666666667,
+            "pick_rate_cluster_ci": [
+              0.03223490272045818,
+              0.10660541118565608
+            ],
+            "picked_wins": 12,
+            "not_picked_wins": 221,
+            "picked_win_rate": 0.4444444444444444,
+            "picked_win_wilson": [
+              0.27585858177023004,
+              0.6268697548677552
+            ],
+            "not_picked_win_rate": 0.5846560846560847,
+            "not_picked_win_wilson": [
+              0.5343704803825194,
+              0.6332383492025708
+            ],
+            "picked_win_cluster_ci": [
+              0.2727272727272727,
+              0.8
+            ],
+            "not_picked_win_cluster_ci": [
+              0.4611797916225936,
+              0.6431375922913278
+            ],
+            "win_difference": -0.14021164021164023,
+            "win_difference_cluster_ci": [
+              -0.3234772560113154,
+              0.2580553613432624
+            ],
+            "valid_bootstrap_draws": 1000,
+            "player_act_adjusted_difference": -0.2584620818656521,
+            "adjusted_cluster_ci": [
+              -0.3981602785816722,
+              0.1252784351755209
+            ],
+            "matched_players": 10,
+            "matched_strata": 10,
+            "matched_offers": 236,
+            "frequent_player_offers": 370,
+            "frequent_players": 36,
+            "frequent_player_pick_rate": 0.07027027027027027,
+            "frequent_player_win_difference": -0.12567084078711988
+          },
+          {
+            "version": "v0.111",
+            "card": "SNAKEBITE",
+            "act": "all",
+            "offered": 2188,
+            "picked": 533,
+            "not_picked": 1655,
+            "players": 93,
+            "pick_rate": 0.24360146252285192,
+            "pick_rate_cluster_ci": [
+              0.20240559599636032,
+              0.2787444742879525
+            ],
+            "picked_wins": 166,
+            "not_picked_wins": 617,
+            "picked_win_rate": 0.31144465290806755,
+            "picked_win_wilson": [
+              0.2735978342472252,
+              0.3519899501956035
+            ],
+            "not_picked_win_rate": 0.37280966767371604,
+            "not_picked_win_wilson": [
+              0.3498327447572021,
+              0.3963756721102556
+            ],
+            "picked_win_cluster_ci": [
+              0.22221599402092673,
+              0.3755192273189402
+            ],
+            "not_picked_win_cluster_ci": [
+              0.2919701129606296,
+              0.4304606418393501
+            ],
+            "win_difference": -0.061365014765648485,
+            "win_difference_cluster_ci": [
+              -0.0952694972861418,
+              -0.022082567253485917
+            ],
+            "valid_bootstrap_draws": 1000,
+            "player_act_adjusted_difference": -0.0023727828189955857,
+            "adjusted_cluster_ci": [
+              -0.04127893217377311,
+              0.033730283336671
+            ],
+            "matched_players": 56,
+            "matched_strata": 90,
+            "matched_offers": 1806,
+            "frequent_player_offers": 1957,
+            "frequent_players": 38,
+            "frequent_player_pick_rate": 0.24782830863566685,
+            "frequent_player_win_difference": -0.07183577991931867
+          }
+        ]
+      }
+    },
+    {
+      "name": "external_stats_skip",
+      "input": {
+        "act": 1
+      },
+      "bytes": 3132,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "screens/skipped 是保留奖励点数/跳过点数；同局重复，独立局数及逐行玩家数未提供（未知）。cluster_ci 为玩家整簇bootstrap；不是固定跳过门槛。只含单room战斗可识别的3/4张奖励。"
+        ],
+        "status": "ok",
+        "table": "skip",
+        "total_rows": 1,
+        "offset": 0,
+        "returned_rows": 1,
+        "next_offset": null,
+        "rows": [
+          {
+            "version": "v0.111",
+            "act": 1,
+            "screens": 13307,
+            "skipped": 1456,
+            "rate": 0.10941609679116254,
+            "cluster_ci": [
+              0.0595123436377582,
+              0.16450124705081484
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "external_stats_deck_size",
+      "input": {},
+      "bytes": 3746,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "size 是结束牌组张数分箱，n 是局数，players 是贡献玩家数；all 为全体，reached_act3 为已到第三幕。两范围重叠，不能相加。cluster_ci 为玩家簇bootstrap，wilson 未处理玩家相关。",
+          "结束张数受死亡时点和未来取牌影响，存在存活偏差；不能据此推荐增大牌组。"
+        ],
+        "status": "ok",
+        "table": "deck_size",
+        "total_rows": 37,
+        "offset": 0,
+        "returned_rows": 4,
+        "next_offset": 4,
+        "rows": [
+          {
+            "version": "v0.111",
+            "scope": "all",
+            "size": "10-14",
+            "n": 3,
+            "wins": 0,
+            "players": 3,
+            "win_rate": 0,
+            "wilson": [
+              4.8683609171202235e-17,
+              0.5614970317550455
+            ],
+            "cluster_ci": [
+              0,
+              0
+            ]
+          },
+          {
+            "version": "v0.111",
+            "scope": "all",
+            "size": "105-109",
+            "n": 2,
+            "wins": 2,
+            "players": 1,
+            "win_rate": 1,
+            "wilson": [
+              0.3423802275066531,
+              1
+            ],
+            "cluster_ci": [
+              1,
+              1
+            ]
+          },
+          {
+            "version": "v0.111",
+            "scope": "all",
+            "size": "15-19",
+            "n": 219,
+            "wins": 1,
+            "players": 53,
+            "win_rate": 0.0045662100456621,
+            "wilson": [
+              0.0008065034670904193,
+              0.025407015559431315
+            ],
+            "cluster_ci": [
+              0,
+              0.01680672268907563
+            ]
+          },
+          {
+            "version": "v0.111",
+            "scope": "all",
+            "size": "155-159",
+            "n": 1,
+            "wins": 1,
+            "players": 1,
+            "win_rate": 1,
+            "wilson": [
+              0.20654931437723742,
+              1
+            ],
+            "cluster_ci": [
+              1,
+              1
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "external_stats_encounter",
+      "input": {
+        "id": "DECIMILLIPEDE_ELITE"
+      },
+      "bytes": 4323,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "fights 是场次，independent_runs/independent_players 是独立局数/玩家数；同局可贡献多场。各指标另列 n、unknown、independent_runs/units，units 为玩家。",
+          "gross_damage 是外部总受伤，不是本系统HP净损失，不能当模拟伤害真值；回合被死亡截断。death_events 是死亡场数，death_mean 是死亡率，death_cluster_ci/turns_cluster_ci 为按玩家整簇的场次加权区间。",
+          "只保留可归属的单room记录；SL政策未知，只看到上传尝试；缺进场条件匹配。按原生遭遇ID查，不猜怪物映射；不返回本系统对照行。"
+        ],
+        "status": "ok",
+        "table": "encounter",
+        "total_rows": 1,
+        "offset": 0,
+        "returned_rows": 1,
+        "next_offset": null,
+        "rows": [
+          {
+            "version": "v0.111",
+            "act": 2,
+            "kind": "elite",
+            "encounter_id": "ENCOUNTER.DECIMILLIPEDE_ELITE",
+            "fights": 762,
+            "independent_runs": 758,
+            "independent_players": 82,
+            "sl_policy": "unknown; uploaded attempt only",
+            "gross_damage_n": 762,
+            "gross_damage_unknown": 0,
+            "gross_damage_independent_runs": 758,
+            "gross_damage_independent_units": 82,
+            "gross_damage_mean": 17.402887139107612,
+            "gross_damage_p25": 5.25,
+            "gross_damage_median": 16,
+            "gross_damage_p75": 27,
+            "gross_damage_p90": 37,
+            "turns_n": 762,
+            "turns_unknown": 0,
+            "turns_independent_runs": 758,
+            "turns_independent_units": 82,
+            "turns_mean": 4.8727034120734904,
+            "turns_p25": 3,
+            "turns_median": 4,
+            "turns_p75": 6,
+            "turns_p90": 8,
+            "death_n": 762,
+            "death_unknown": 0,
+            "death_independent_runs": 758,
+            "death_independent_units": 82,
+            "death_mean": 0.06824146981627296,
+            "death_p25": 0,
+            "death_median": 0,
+            "death_p75": 0,
+            "death_p90": 0,
+            "turns_cluster_ci": [
+              4.5920079266411795,
+              5.034795396419437
+            ],
+            "death_events": 52,
+            "death_cluster_ci": [
+              0.04520781319685143,
+              0.10298310229400305
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "external_stats_clusters",
+      "input": {},
+      "bytes": 8964,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "现有样本无法区分流派优劣、不作方向依据",
+          "仅v0.111，最终牌组二元TF-IDF+球面k-means，半数玩家发现、另一半评估；标签由数据产生，不是已验证流派。默认k=4/seed=24/reached_act3；cluster编号不跨模型对齐。",
+          "n/wins/players 为该簇评估局/胜局/玩家，train_n/evaluation_n 为该模型范围的训练/评估局；玩家可跨簇，不能求和当独立玩家。distinctive_cards 的n为簇内含该卡局数，lift只描述常一起出现。cluster_ci 为玩家簇区间，wilson 未处理玩家相关。",
+          "第三幕主模型六对比较及k=3/4/5、三个初始化的57对比较均无法分辨；不等于流派等效。区间未包括重新训练不确定性；最终牌组含未来信息和存活偏差，不支持早期方向选择。"
+        ],
+        "status": "ok",
+        "table": "clusters",
+        "total_rows": 4,
+        "offset": 0,
+        "returned_rows": 4,
+        "next_offset": null,
+        "rows": [
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "k": 4,
+            "seed": 24,
+            "cluster": 0,
+            "n": 60,
+            "wins": 36,
+            "players": 23,
+            "win_rate": 0.6,
+            "wilson": [
+              0.47366053492040755,
+              0.7143050946511744
+            ],
+            "cluster_ci": [
+              0.5,
+              0.7083522727272727
+            ],
+            "distinctive_cards": [
+              {
+                "card": "ASSASSINATE",
+                "n": 20,
+                "prevalence": 0.3333333333333333,
+                "lift": 2.5106382978723403
+              },
+              {
+                "card": "DAGGER_SPRAY",
+                "n": 20,
+                "prevalence": 0.3333333333333333,
+                "lift": 2.1071428571428568
+              },
+              {
+                "card": "BLADE_OF_INK",
+                "n": 23,
+                "prevalence": 0.38333333333333336,
+                "lift": 1.9666666666666668
+              },
+              {
+                "card": "PRECISE_CUT",
+                "n": 14,
+                "prevalence": 0.23333333333333334,
+                "lift": 1.9666666666666666
+              },
+              {
+                "card": "ABRASIVE",
+                "n": 23,
+                "prevalence": 0.38333333333333336,
+                "lift": 1.8093333333333335
+              },
+              {
+                "card": "PROWESS",
+                "n": 9,
+                "prevalence": 0.15,
+                "lift": 1.77
+              },
+              {
+                "card": "FLECHETTES",
+                "n": 11,
+                "prevalence": 0.18333333333333332,
+                "lift": 1.7540540540540541
+              },
+              {
+                "card": "PREDATOR",
+                "n": 9,
+                "prevalence": 0.15,
+                "lift": 1.7129032258064516
+              },
+              {
+                "card": "REFLEX",
+                "n": 15,
+                "prevalence": 0.25,
+                "lift": 1.609090909090909
+              },
+              {
+                "card": "FINISHER",
+                "n": 13,
+                "prevalence": 0.21666666666666667,
+                "lift": 1.5979166666666667
+              },
+              {
+                "card": "SERPENT_FORM",
+                "n": 13,
+                "prevalence": 0.21666666666666667,
+                "lift": 1.5979166666666667
+              },
+              {
+                "card": "RICOCHET",
+                "n": 25,
+                "prevalence": 0.4166666666666667,
+                "lift": 1.586021505376344
+              }
+            ],
+            "train_n": 519,
+            "evaluation_n": 354,
+            "features": 120,
+            "train_objective": 271.116639378422
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "k": 4,
+            "seed": 24,
+            "cluster": 1,
+            "n": 74,
+            "wins": 39,
+            "players": 21,
+            "win_rate": 0.527027027027027,
+            "wilson": [
+              0.41477356761948636,
+              0.6366129307915197
+            ],
+            "cluster_ci": [
+              0.43831275323171903,
+              0.6500198412698412
+            ],
+            "distinctive_cards": [
+              {
+                "card": "OUTBREAK",
+                "n": 26,
+                "prevalence": 0.35135135135135137,
+                "lift": 3.6581875993640702
+              },
+              {
+                "card": "MIRAGE",
+                "n": 24,
+                "prevalence": 0.32432432432432434,
+                "lift": 2.5513513513513515
+              },
+              {
+                "card": "PINPOINT",
+                "n": 12,
+                "prevalence": 0.16216216216216217,
+                "lift": 2.391891891891892
+              },
+              {
+                "card": "HAZE",
+                "n": 15,
+                "prevalence": 0.20270270270270271,
+                "lift": 2.3147340889276373
+              },
+              {
+                "card": "ACCELERANT",
+                "n": 49,
+                "prevalence": 0.6621621621621622,
+                "lift": 2.253898128898129
+              },
+              {
+                "card": "SNAKEBITE",
+                "n": 50,
+                "prevalence": 0.6756756756756757,
+                "lift": 1.8983268983268984
+              },
+              {
+                "card": "POUNCE",
+                "n": 16,
+                "prevalence": 0.21621621621621623,
+                "lift": 1.7800125707102452
+              },
+              {
+                "card": "BURST",
+                "n": 14,
+                "prevalence": 0.1891891891891892,
+                "lift": 1.7172557172557175
+              },
+              {
+                "card": "DEADLY_POISON",
+                "n": 30,
+                "prevalence": 0.40540540540540543,
+                "lift": 1.6495806150978565
+              },
+              {
+                "card": "BOUNCING_FLASK",
+                "n": 17,
+                "prevalence": 0.22972972972972974,
+                "lift": 1.5945945945945947
+              },
+              {
+                "card": "FLECHETTES",
+                "n": 12,
+                "prevalence": 0.16216216216216217,
+                "lift": 1.5514974433893354
+              },
+              {
+                "card": "SPEEDSTER",
+                "n": 8,
+                "prevalence": 0.10810810810810811,
+                "lift": 1.471933471933472
+              }
+            ],
+            "train_n": 519,
+            "evaluation_n": 354,
+            "features": 120,
+            "train_objective": 271.116639378422
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "k": 4,
+            "seed": 24,
+            "cluster": 2,
+            "n": 76,
+            "wins": 39,
+            "players": 26,
+            "win_rate": 0.5131578947368421,
+            "wilson": [
+              0.4028869302897975,
+              0.6221627122084884
+            ],
+            "cluster_ci": [
+              0.36227726300784036,
+              0.6530808477237048
+            ],
+            "distinctive_cards": [
+              {
+                "card": "BUBBLE_BUBBLE",
+                "n": 60,
+                "prevalence": 0.7894736842105263,
+                "lift": 3.9924812030075185
+              },
+              {
+                "card": "BOUNCING_FLASK",
+                "n": 26,
+                "prevalence": 0.34210526315789475,
+                "lift": 2.374613003095975
+              },
+              {
+                "card": "POISONED_STAB",
+                "n": 21,
+                "prevalence": 0.27631578947368424,
+                "lift": 2.2747858017135862
+              },
+              {
+                "card": "MIRAGE",
+                "n": 21,
+                "prevalence": 0.27631578947368424,
+                "lift": 2.173684210526316
+              },
+              {
+                "card": "DEADLY_POISON",
+                "n": 38,
+                "prevalence": 0.5,
+                "lift": 2.0344827586206895
+              },
+              {
+                "card": "ACCELERANT",
+                "n": 45,
+                "prevalence": 0.5921052631578947,
+                "lift": 2.0154352226720644
+              },
+              {
+                "card": "HAZE",
+                "n": 11,
+                "prevalence": 0.14473684210526316,
+                "lift": 1.6528013582342955
+              },
+              {
+                "card": "NOXIOUS_FUMES",
+                "n": 56,
+                "prevalence": 0.7368421052631579,
+                "lift": 1.6302631578947369
+              },
+              {
+                "card": "SUPPRESS",
+                "n": 11,
+                "prevalence": 0.14473684210526316,
+                "lift": 1.506965944272446
+              },
+              {
+                "card": "MALAISE",
+                "n": 19,
+                "prevalence": 0.25,
+                "lift": 1.4047619047619049
+              },
+              {
+                "card": "SNAKEBITE",
+                "n": 35,
+                "prevalence": 0.4605263157894737,
+                "lift": 1.293859649122807
+              },
+              {
+                "card": "BLUR",
+                "n": 27,
+                "prevalence": 0.35526315789473684,
+                "lift": 1.2703349282296652
+              }
+            ],
+            "train_n": 519,
+            "evaluation_n": 354,
+            "features": 120,
+            "train_objective": 271.116639378422
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "k": 4,
+            "seed": 24,
+            "cluster": 3,
+            "n": 144,
+            "wins": 86,
+            "players": 33,
+            "win_rate": 0.5972222222222222,
+            "wilson": [
+              0.5155967976218372,
+              0.6737952729336834
+            ],
+            "cluster_ci": [
+              0.49205698672911785,
+              0.6989516129032258
+            ],
+            "distinctive_cards": [
+              {
+                "card": "PANACHE",
+                "n": 15,
+                "prevalence": 0.10416666666666667,
+                "lift": 2.3046875
+              },
+              {
+                "card": "UP_MY_SLEEVE",
+                "n": 21,
+                "prevalence": 0.14583333333333334,
+                "lift": 2.151041666666667
+              },
+              {
+                "card": "KNIFE_TRAP",
+                "n": 38,
+                "prevalence": 0.2638888888888889,
+                "lift": 1.7299382716049383
+              },
+              {
+                "card": "TRACKING",
+                "n": 29,
+                "prevalence": 0.2013888888888889,
+                "lift": 1.6974206349206349
+              },
+              {
+                "card": "PHANTOM_BLADES",
+                "n": 84,
+                "prevalence": 0.5833333333333334,
+                "lift": 1.652
+              },
+              {
+                "card": "ACCURACY",
+                "n": 100,
+                "prevalence": 0.6944444444444444,
+                "lift": 1.6388888888888888
+              },
+              {
+                "card": "FAN_OF_KNIVES",
+                "n": 32,
+                "prevalence": 0.2222222222222222,
+                "lift": 1.5733333333333333
+              },
+              {
+                "card": "BLADE_DANCE",
+                "n": 80,
+                "prevalence": 0.5555555555555556,
+                "lift": 1.560846560846561
+              },
+              {
+                "card": "LEADING_STRIKE",
+                "n": 107,
+                "prevalence": 0.7430555555555556,
+                "lift": 1.529312015503876
+              },
+              {
+                "card": "INFINITE_BLADES",
+                "n": 77,
+                "prevalence": 0.5347222222222222,
+                "lift": 1.5265456989247312
+              },
+              {
+                "card": "FINISHER",
+                "n": 29,
+                "prevalence": 0.2013888888888889,
+                "lift": 1.4852430555555556
+              },
+              {
+                "card": "CLOAK_AND_DAGGER",
+                "n": 104,
+                "prevalence": 0.7222222222222222,
+                "lift": 1.4283054003724396
+              }
+            ],
+            "train_n": 519,
+            "evaluation_n": 354,
+            "features": 120,
+            "train_objective": 271.116639378422
+          }
+        ]
+      }
+    },
+    {
+      "name": "external_stats_cooccurrence",
+      "input": {},
+      "bytes": 3843,
+      "result": {
+        "source": "external:sts2fun",
+        "version": "v0.111",
+        "character": "silent",
+        "ascension": 10,
+        "downloaded_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+        "cohort": {
+          "runs": 1739,
+          "players": 98,
+          "wins": 492,
+          "builds": {
+            "v0.111.0": 1739
+          }
+        },
+        "provenance": {
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "faq": "https://sts2.fun/faq",
+          "downloaded_at": "2026-10-21",
+          "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+          "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+        },
+        "aggregate_sha256": {
+          "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+          "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+          "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+          "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+          "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+          "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+          "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+          "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+        },
+        "limitations": [
+          "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+          "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+          "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+          "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+          "现有样本无法区分流派优劣、不作方向依据",
+          "仅v0.111；n 是共现局数，total 是范围总局数，a_n/b_n 是各卡出现局数；逐行玩家数未提供（未知）。按原表lift降序、相同lift保持原序，支持至少20局且排除出现超过90%的卡。",
+          "lift/Jaccard 只描述常一起出现，不是协同收益或拿第二张的增益；最终牌组有未来信息和存活偏差。"
+        ],
+        "status": "ok",
+        "table": "cooccurrence",
+        "total_rows": 2486,
+        "offset": 0,
+        "returned_rows": 4,
+        "next_offset": 4,
+        "rows": [
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "a": "MIRAGE",
+            "b": "OUTBREAK",
+            "n": 30,
+            "total": 873,
+            "a_n": 112,
+            "b_n": 92,
+            "lift": 2.5417313664596275,
+            "jaccard": 0.1724137931034483
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "a": "BULLET_TIME",
+            "b": "NIGHTMARE",
+            "n": 23,
+            "total": 873,
+            "a_n": 111,
+            "b_n": 76,
+            "lift": 2.3801564722617354,
+            "jaccard": 0.1402439024390244
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "a": "ACCELERANT",
+            "b": "MIRAGE",
+            "n": 69,
+            "total": 873,
+            "a_n": 226,
+            "b_n": 112,
+            "lift": 2.379780341340076,
+            "jaccard": 0.25650557620817843
+          },
+          {
+            "version": "v0.111",
+            "scope": "reached_act3",
+            "a": "ACCELERANT",
+            "b": "OUTBREAK",
+            "n": 53,
+            "total": 873,
+            "a_n": 226,
+            "b_n": 92,
+            "lift": 2.225327048864948,
+            "jaccard": 0.2
+          }
+        ]
+      }
+    }
+  ],
+  "missing": {
+    "isError": true,
+    "result": {
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "character": "silent",
+      "ascension": 10,
+      "downloaded_at": "2026-10-21",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+      "cohort": {
+        "runs": 1739,
+        "players": 98,
+        "wins": 492,
+        "builds": {
+          "v0.111.0": 1739
+        }
+      },
+      "provenance": {
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "faq": "https://sts2.fun/faq",
+        "downloaded_at": "2026-10-21",
+        "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+        "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+      },
+      "aggregate_sha256": {
+        "paper/materials/2026-10-21-sts2fun-stats/provenance.json": "26f63114df20940cc1c99781a0b97f4d899d1cb6e1a8af916a7f3a3fca45d0df",
+        "paper/materials/2026-10-21-sts2fun-stats/summary.json": "69a37aa8fa55927555927616f94f433be0a695c0b5d7cd485f0f5cd8c1f0cfc9",
+        "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+        "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+        "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+        "paper/materials/2026-10-21-sts2fun-stats/clusters.csv": "c2266549f41582b097c8a0c19ed8844fbeee85465dd73bd9ec4ce114507025fc",
+        "paper/materials/2026-10-21-sts2fun-stats/cooccurrence.csv": "9d5ff598a5677377f8313b58964a7a7562460687a5c9d97fe2975489c4dcae12",
+        "paper/materials/2026-10-21-sts2fun-combat-diagnostic/combat_distribution.csv": "51c8584188c64229ad3cf6815adec4effa9fa18afdbc75dc2837499905cc1bed"
+      },
+      "limitations": [
+        "自选上传偏差：可能只上传胜局；区间不能纠正缺失对局，不能代表全体玩家。",
+        "描述性关联，非因果；未控制牌组、HP、替代选项、路线、玩家水平等全部混杂。",
+        "口径不同：仅外部 Silent A10 单人有效、未弃局、无 modifiers 的上传；与本系统自有统计分账，不计入自有分母或实盘验证。",
+        "版本分别统计，不池化；邻近版本不能直接套用当前机制。区间为95%；null为未知，零/全胜的退化区间不表示确定性。",
+        "offered/picked/not_picked 是保留奖励机会数，同局可重复；players 是贡献玩家数，逐行独立局数未提供（未知）。只含单room战斗3/4张且至多选1张的奖励，不含商店/事件或无法拆分的多奖励。",
+        "pick_rate_cluster_ci、picked_win_cluster_ci、not_picked_win_cluster_ci、win_difference_cluster_ci 为玩家整簇bootstrap；win_difference 是拿后整局胜率减不拿整局胜率。",
+        "player_act_adjusted_difference/adjusted_cluster_ci 只在玩家×幕内两边都有观察的 strata 做重叠权重调整；只提供调整后的差值，分别调整后的两组胜率无数据。matched_players/strata/offers 是重叠覆盖，不能当总样本。调整仍非因果；逐卡未做多重比较校正。"
+      ],
+      "status": "无数据",
+      "reason": "无匹配数据或分页已到末尾；未观察不等于零。请核ID、幕、范围、模型或offset",
+      "rows": []
+    }
+  },
+  "strategies": [
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "input": {
+        "query": "silent-brain-act2-reward-skip-comparison"
+      },
+      "context": {
+        "ascension": 10,
+        "knowledgeDir": "/home/dw/Projects/agent-sts2/.artifacts/ops-backlog-20261023/external-contract-fixture",
+        "logsDir": "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "label": "reward/card",
+        "act": 2,
+        "payload": {
+          "act": 2
+        }
+      },
+      "bytes": 3972,
+      "result": {
+        "schema": "brain-knowledge-result-v1",
+        "sources": [
+          {
+            "source": "own",
+            "file": "strategy-entries.json",
+            "character": "silent",
+            "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808"
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "1.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+                },
+                "statistic": {
+                  "name": "rate",
+                  "value": 0.281038230405319,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 7821
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+                "role": "support",
+                "interval": {
+                  "low": 0.20745451951842533,
+                  "high": 0.37107431798918306,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "provenance": null
+          }
+        ],
+        "entries": [
+          {
+            "id": "silent-brain-act2-reward-skip-comparison",
+            "version": "1.0.0",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                2
+              ]
+            },
+            "strategy": "仅A10/v0.111.0参考：第2幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部7821个奖励屏幕有2198次跳过（28.10%，玩家簇区间20.75–37.11%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+                },
+                "statistic": {
+                  "name": "rate",
+                  "value": 0.281038230405319,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 7821
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+                "role": "support",
+                "interval": {
+                  "low": 0.20745451951842533,
+                  "high": 0.37107431798918306,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "source": "external:sts2fun",
+            "confidence": 0.4,
+            "design": "observational",
+            "limits": {
+              "own_support_runs": 0,
+              "effect": null,
+              "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+            },
+            "evidence_summary": {
+              "own_runs": 0,
+              "own_support_runs": 0,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "rate",
+                  "denominator": {
+                    "unit": "rewards",
+                    "n": 7821
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "status": "ok",
+        "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+        "omitted": 0
+      }
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "input": {
+        "query": "silent-brain-act3-reward-skip-comparison"
+      },
+      "context": {
+        "ascension": 10,
+        "knowledgeDir": "/home/dw/Projects/agent-sts2/.artifacts/ops-backlog-20261023/external-contract-fixture",
+        "logsDir": "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "label": "reward/card",
+        "act": 3,
+        "payload": {
+          "act": 3
+        }
+      },
+      "bytes": 3972,
+      "result": {
+        "schema": "brain-knowledge-result-v1",
+        "sources": [
+          {
+            "source": "own",
+            "file": "strategy-entries.json",
+            "character": "silent",
+            "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808"
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "1.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; deduplicated combat card-reward screens, not candidate slots/runs"
+                },
+                "statistic": {
+                  "name": "rate",
+                  "value": 0.38630695987304464,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 4411
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:20",
+                "role": "support",
+                "interval": {
+                  "low": 0.3134360059449658,
+                  "high": 0.4957741888332287,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "provenance": null
+          }
+        ],
+        "entries": [
+          {
+            "id": "silent-brain-act3-reward-skip-comparison",
+            "version": "1.0.0",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                3
+              ]
+            },
+            "strategy": "仅A10/v0.111.0参考：第3幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部4411个奖励屏幕有1704次跳过（38.63%，玩家簇区间31.34–49.58%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; deduplicated combat card-reward screens, not candidate slots/runs"
+                },
+                "statistic": {
+                  "name": "rate",
+                  "value": 0.38630695987304464,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "rewards",
+                  "n": 4411
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:20",
+                "role": "support",
+                "interval": {
+                  "low": 0.3134360059449658,
+                  "high": 0.4957741888332287,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "source": "external:sts2fun",
+            "confidence": 0.4,
+            "design": "observational",
+            "limits": {
+              "own_support_runs": 0,
+              "effect": null,
+              "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+            },
+            "evidence_summary": {
+              "own_runs": 0,
+              "own_support_runs": 0,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "rate",
+                  "denominator": {
+                    "unit": "rewards",
+                    "n": 4411
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "status": "ok",
+        "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+        "omitted": 0
+      }
+    },
+    {
+      "id": "silent-brain-act1-blade-dance-choice-context",
+      "input": {
+        "query": "silent-brain-act1-blade-dance-choice-context"
+      },
+      "context": {
+        "ascension": 10,
+        "knowledgeDir": "/home/dw/Projects/agent-sts2/.artifacts/ops-backlog-20261023/external-contract-fixture",
+        "logsDir": "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "label": "reward/card",
+        "act": 1,
+        "payload": {
+          "act": 1
+        }
+      },
+      "bytes": 6849,
+      "result": {
+        "schema": "brain-knowledge-result-v1",
+        "sources": [
+          {
+            "source": "own",
+            "file": "strategy-entries.json",
+            "character": "silent",
+            "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808"
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "1.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; picked=411/not_picked=643; players=83; repeated candidate slots; no upgrade split"
+                },
+                "statistic": {
+                  "name": "win_difference",
+                  "value": 0.05204088196675405,
+                  "unit": "fraction_difference"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 1054
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+                "role": "support",
+                "interval": {
+                  "low": -0.03615654583529024,
+                  "high": 0.10221408635664815,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; within-player/act matched; players=49; strata=49; no upgrade split"
+                },
+                "statistic": {
+                  "name": "player_act_adjusted_difference",
+                  "value": 0.0026505734406033804,
+                  "unit": "fraction_difference"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 983
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+                "role": "support",
+                "interval": {
+                  "low": -0.07934429860626409,
+                  "high": 0.058595189483940914,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "provenance": null
+          }
+        ],
+        "entries": [
+          {
+            "id": "silent-brain-act1-blade-dance-choice-context",
+            "version": "1.0.0",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1
+              ]
+            },
+            "strategy": "仅A10/v0.111.0第一幕参考：奖励出现刀刃之舞BLADE_DANCE时，先按现场牌文、当前牌组和能量比较其可兑现用途与其他选项/跳过，不把外部拿牌后胜率较高当作必拿。1054个候选槽/83玩家的原始拿与不拿胜率差约+5.20个百分点；按玩家/幕匹配的983槽/49玩家，调整差约+0.27个百分点，区间−7.93至+5.86。两者口径不同，均非因果；重复奖励不增加独立局数，未分普通/升级，不据此判牌无用或给固定拿牌排名。候选没有此牌时本条不提出选牌建议。",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; picked=411/not_picked=643; players=83; repeated candidate slots; no upgrade split"
+                },
+                "statistic": {
+                  "name": "win_difference",
+                  "value": 0.05204088196675405,
+                  "unit": "fraction_difference"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 1054
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+                "role": "support",
+                "interval": {
+                  "low": -0.03615654583529024,
+                  "high": 0.10221408635664815,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=1; card=BLADE_DANCE; within-player/act matched; players=49; strata=49; no upgrade split"
+                },
+                "statistic": {
+                  "name": "player_act_adjusted_difference",
+                  "value": 0.0026505734406033804,
+                  "unit": "fraction_difference"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 983
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#card_choices:2902",
+                "role": "support",
+                "interval": {
+                  "low": -0.07934429860626409,
+                  "high": 0.058595189483940914,
+                  "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+                }
+              }
+            ],
+            "source": "external:sts2fun",
+            "confidence": 0.38,
+            "design": "observational",
+            "limits": {
+              "own_support_runs": 0,
+              "effect": null,
+              "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+            },
+            "evidence_summary": {
+              "own_runs": 0,
+              "own_support_runs": 0,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "win_difference",
+                  "denominator": {
+                    "unit": "offers",
+                    "n": 1054
+                  }
+                },
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "player_act_adjusted_difference",
+                  "denominator": {
+                    "unit": "offers",
+                    "n": 983
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "status": "ok",
+        "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+        "omitted": 0
+      }
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "input": {
+        "query": "silent-brain-knowledge-demon-external-tail-budget"
+      },
+      "context": {
+        "ascension": 10,
+        "knowledgeDir": "/home/dw/Projects/agent-sts2/.artifacts/ops-backlog-20261023/external-contract-fixture",
+        "logsDir": "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "label": "map/act-start",
+        "act": 2,
+        "payload": {
+          "act": 2,
+          "act_boss": "KNOWLEDGE_DEMON_BOSS"
+        }
+      },
+      "bytes": 3974,
+      "result": {
+        "schema": "brain-knowledge-result-v1",
+        "sources": [
+          {
+            "source": "own",
+            "file": "strategy-entries.json",
+            "character": "silent",
+            "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808"
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "1.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+                },
+                "statistic": {
+                  "name": "gross_damage_p90",
+                  "value": 51,
+                  "unit": "hp"
+                },
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+                "role": "support"
+              }
+            ],
+            "provenance": null
+          }
+        ],
+        "entries": [
+          {
+            "id": "silent-brain-knowledge-demon-external-tail-budget",
+            "version": "1.0.0",
+            "trigger": {
+              "question_types": [
+                "act_plan",
+                "event",
+                "rest",
+                "shop"
+              ],
+              "acts": [
+                2
+              ],
+              "bosses": [
+                "KNOWLEDGE_DEMON_BOSS"
+              ]
+            },
+            "strategy": "仅A10/v0.111.0参考：备战KNOWLEDGE_DEMON时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配360场/360局/68玩家，总受伤gross_damage的90分位为51。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是51血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+                },
+                "statistic": {
+                  "name": "gross_damage_p90",
+                  "value": 51,
+                  "unit": "hp"
+                },
+                "denominator": {
+                  "unit": "fights",
+                  "n": 360
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+                "role": "support"
+              }
+            ],
+            "source": "external:sts2fun",
+            "confidence": 0.36,
+            "design": "observational",
+            "limits": {
+              "own_support_runs": 0,
+              "effect": null,
+              "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+            },
+            "evidence_summary": {
+              "own_runs": 0,
+              "own_support_runs": 0,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "gross_damage_p90",
+                  "denominator": {
+                    "unit": "fights",
+                    "n": 360
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "status": "ok",
+        "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+        "omitted": 0
+      }
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "input": {
+        "query": "silent-brain-test-subject-external-tail-budget"
+      },
+      "context": {
+        "ascension": 10,
+        "knowledgeDir": "/home/dw/Projects/agent-sts2/.artifacts/ops-backlog-20261023/external-contract-fixture",
+        "logsDir": "/home/dw/Projects/agent-sts2/.worktrees/live/logs",
+        "label": "map/act-start",
+        "act": 3,
+        "payload": {
+          "act": 3,
+          "act_boss": "TEST_SUBJECT_BOSS"
+        }
+      },
+      "bytes": 4054,
+      "result": {
+        "schema": "brain-knowledge-result-v1",
+        "sources": [
+          {
+            "source": "own",
+            "file": "strategy-entries.json",
+            "character": "silent",
+            "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808"
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "1.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+                },
+                "statistic": {
+                  "name": "gross_damage_p90",
+                  "value": 62,
+                  "unit": "hp"
+                },
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+                "role": "support"
+              }
+            ],
+            "provenance": null
+          }
+        ],
+        "entries": [
+          {
+            "id": "silent-brain-test-subject-external-tail-budget",
+            "version": "1.0.0",
+            "trigger": {
+              "question_types": [
+                "act_plan",
+                "event",
+                "rest",
+                "shop"
+              ],
+              "acts": [
+                3
+              ],
+              "bosses": [
+                "TEST_SUBJECT_BOSS"
+              ]
+            },
+            "strategy": "仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111.0",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+                },
+                "statistic": {
+                  "name": "gross_damage_p90",
+                  "value": 62,
+                  "unit": "hp"
+                },
+                "denominator": {
+                  "unit": "fights",
+                  "n": 501
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+                  "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+                ],
+                "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+                "role": "support"
+              }
+            ],
+            "source": "external:sts2fun",
+            "confidence": 0.36,
+            "design": "observational",
+            "limits": {
+              "own_support_runs": 0,
+              "effect": null,
+              "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+            },
+            "evidence_summary": {
+              "own_runs": 0,
+              "own_support_runs": 0,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111.0",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "gross_damage_p90",
+                  "denominator": {
+                    "unit": "fights",
+                    "n": 501
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "status": "ok",
+        "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+        "omitted": 0
+      }
+    }
+  ],
+  "published_external_count": 0,
+  "external_strategy_probe_scope": "isolated candidate fixture through actual live consumer; not formally published strategy data",
+  "mutated_published_data": false,
+  "natural_query_or_causal_gain_claimed": false
+}

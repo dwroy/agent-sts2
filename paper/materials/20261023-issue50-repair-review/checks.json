@@ -1,0 +1,60 @@
+{
+  "state": "failed",
+  "checks": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "start": "2026-10-23T20:17:42+08:00",
+      "finish": "2026-10-23T20:17:44+08:00",
+      "exit": 0,
+      "log": "tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vitest-directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/endgame-plan.test.ts",
+        "tests/run-plan.test.ts",
+        "tests/run-plan-merge.test.ts",
+        "tests/construction-log-loop.test.ts",
+        "tests/brain-query-guidance.test.ts",
+        "tests/brain-reflex-knowledge.test.ts",
+        "tests/brain-agent-report.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/reward-external-stats.test.ts",
+        "tests/check-imports.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--fileParallelism=false"
+      ],
+      "start": "2026-10-23T20:17:44+08:00",
+      "finish": "2026-10-23T20:18:12+08:00",
+      "exit": 1,
+      "log": "vitest-directed.log",
+      "log_sha256": "5a53fdb2483da0fde5c04b6dffab2f1b4638e42ec6b0931e15158a60fbdfa494"
+    }
+  ],
+  "input_count": 2635,
+  "inputs_unchanged": true,
+  "tree": "eed9751983cf7bf6027ac4ba5d5c88b7c14cbde6",
+  "full_started": false,
+  "main_product_written": false,
+  "live_written": false,
+  "workers": 1,
+  "nice": 19
+}

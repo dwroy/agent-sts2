@@ -1,0 +1,66 @@
+{
+  "state": "main-live-ops-published-and-consumers-verified",
+  "at": "2026-10-23T11:02:46+08:00",
+  "published": true,
+  "full": {
+    "success": true,
+    "numPassedTests": 6206,
+    "numFailedTests": 0,
+    "numPendingTests": 2
+  },
+  "full_base": "70eb1287042d80bf6f253b4dce66ac888a5f4868",
+  "scope": "three ops/test/doc leaves; gameplay and knowledge untouched",
+  "gameplay_release": "V6-R417 unchanged",
+  "inflight_sessions_changed": false,
+  "new_model_calls_in_publication": 0,
+  "source_commit": "f761bec50b384df82f515e06ee2effa22ed17588",
+  "live": {
+    "parent": "3a06cb43d751245ec2930d1526b064056db24a76",
+    "commit": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+    "tree": "bc955aa0141b900c11dd84dce43f7d896c5be093",
+    "paths": [
+      "ops/learner_jobs.py",
+      "agent/tests/learner-jobs.test.ts"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/3f43e88e8bc34314a75464440edd2cd6/manifest.json",
+      "manifest_sha256": "fbb08afebd0ca58ce3fa35687ce8794ac719774a31e7d09936a762f95c564945",
+      "scanned_leaves": 2,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "main": {
+    "parent": "8a241eb7b3f72d6d6f4c996030e5917ef90b1194",
+    "commit": "3226b6be3c88b3457837b1cfd56fb5e2dc213efd",
+    "tree": "4f96405f9bdc07aea2df0aedf4327fcf4ec355b4",
+    "paths": [
+      "ops/learner_jobs.py",
+      "agent/tests/learner-jobs.test.ts"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/7bd14b7d8d7f42ccb96ffef8b507fee0/manifest.json",
+      "manifest_sha256": "f3a02683a9007f78735bff0a641e6c1635a278e7bca604fefa8974715a009ff4",
+      "scanned_leaves": 0,
+      "reused_clean_leaves": 2,
+      "full_copy_bytes": 0
+    }
+  },
+  "consumers": [
+    {
+      "root": "main",
+      "learner_jobs_sha256": "819e277af2bf1281ffbbc39e656f8ee511b8a79efb34fddb9dd503970fd667cc",
+      "learners": "herdr",
+      "learner_tui": "off",
+      "brain_view": "herdr"
+    },
+    {
+      "root": "live",
+      "learner_jobs_sha256": "819e277af2bf1281ffbbc39e656f8ee511b8a79efb34fddb9dd503970fd667cc",
+      "learners": "herdr",
+      "learner_tui": "off",
+      "brain_view": "herdr"
+    }
+  ],
+  "ended_at": "2026-10-23T11:02:51+08:00"
+}

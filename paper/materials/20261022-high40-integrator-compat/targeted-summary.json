@@ -1,0 +1,13 @@
+{
+  "source": "exec session 90151 stdout; not a raw log",
+  "command": "vitest run tests/component-usage.test.ts tests/legacy-refresh-incremental.test.ts tests/v6-history-refresh-exclusions.test.ts --pool=forks --maxWorkers=1 --no-file-parallelism",
+  "exit_code": 0,
+  "files": 3,
+  "tests": 3,
+  "python_nested_counts": {
+    "refresh_pipeline": 12,
+    "v6_loop": 17,
+    "component_usage": 9
+  },
+  "seconds": 10.7
+}

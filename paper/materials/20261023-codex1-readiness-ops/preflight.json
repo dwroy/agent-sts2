@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-23T23:16:47+08:00",
+  "account": "codex1",
+  "scope": "readiness only; no prepare/drain/switch or model inference",
+  "results": [
+    {
+      "role": "learner",
+      "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+      "login": {
+        "exit_code": 0,
+        "logged_in": true,
+        "raw_output_retained": false
+      },
+      "check": {
+        "ok": true,
+        "version": "codex-cli 0.164.0"
+      },
+      "isolation": {
+        "home_exists": true,
+        "auth_symlink": true,
+        "auth_target_is_codex1": true,
+        "global_instruction_files": 0,
+        "config_problems": [
+          "service_tier"
+        ]
+      },
+      "key_check": {
+        "ok": true,
+        "checked": 8
+      }
+    },
+    {
+      "role": "brain",
+      "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+      "login": {
+        "exit_code": 0,
+        "logged_in": true,
+        "raw_output_retained": false
+      },
+      "check": {
+        "ok": true,
+        "version": "codex-cli 0.164.0"
+      },
+      "extra_effort_check": {
+        "ok": true,
+        "version": "codex-cli 0.164.0"
+      },
+      "isolation": {
+        "home_exists": true,
+        "auth_symlink": true,
+        "auth_target_is_codex1": true,
+        "global_instruction_files": 0,
+        "config_problems": []
+      }
+    }
+  ],
+  "selectors_unchanged": true,
+  "flags_unchanged": true,
+  "new_models": 0,
+  "credentials_read_or_copied_by_probe": false,
+  "config_written": false,
+  "ready": false,
+  "blockers": [
+    "learner isolated config includes inherited service_tier; current config isolation guard rejects it"
+  ],
+  "next": "Precheck only: retain config. Before a future authorized 90% handoff, resolve the isolated learner config through the approved reversible change and recheck; do not prepare/drain on this receipt."
+}

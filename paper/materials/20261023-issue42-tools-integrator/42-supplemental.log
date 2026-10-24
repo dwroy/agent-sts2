@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator42-tools-20261023-2238/agent
+
+ ❯ tests/external-strategy-evidence.test.ts (41 tests | 2 failed) 27ms
+   × registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool 6ms
+   × keeps the existing published own library and its retrieved bytes unchanged 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-strategy-evidence.test.ts > registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool
+Error: ENOENT: no such file or directory, open './tests/external-strategy-data/frozen-skip-aggregate.json'
+ ❯ tests/external-strategy-evidence.test.ts:56:15
+     54|   // Check the copied statistic/denominator against the existing #24 f…
+     55|   const dataPath = "./tests/external-strategy-data/frozen-skip-aggrega…
+     56|   const raw = readFileSync(dataPath, "utf8"), data = JSON.parse(raw);
+       |               ^
+     57|   const table = data.tables.skip, row = table.rows.find((r: unknown[])…
+     58|   expect(ev.dataset_sha256).toBe(data.provenance.database_sha256);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/external-strategy-evidence.test.ts > keeps the existing published own library and its retrieved bytes unchanged
+Error: ENOENT: no such file or directory, open '../knowledge/characters/silent/strategy-entries.json'
+ ❯ tests/external-strategy-evidence.test.ts:104:26
+    102|
+    103| it("keeps the existing published own library and its retrieved bytes u…
+    104|   const raw = JSON.parse(readFileSync("../knowledge/characters/silent/…
+       |                          ^
+    105|   const lib = parseStrategyLibrary(raw);
+    106|   expect(lib).toEqual(raw);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 40 passed (42)
+   Start at  22:30:58
+   Duration  2.50s (transform 1.28s, setup 636ms, import 998ms, tests 281ms, environment 0ms)
+

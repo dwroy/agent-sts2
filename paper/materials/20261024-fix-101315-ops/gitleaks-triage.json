@@ -1,0 +1,12 @@
+{
+  "finding_rule": "generic-api-key",
+  "finding_origin": "paper/materials/20261024-fix-101315-ops/batch-original.json:key",
+  "value": "8d2d4b2f812f8c9c27af4561f8bbd58be4b4be4514262c11c396468de39ba738",
+  "classification": "SHA256 workload deduplication fingerprint, not an authentication credential",
+  "generation": "ops/learner_jobs.py:fix_key SHA256(json.dumps([original fix queue text, sorted accepted bug-infra IDs], ensure_ascii=False))",
+  "original_queue_sha256": "160a43ba212ab67d3b65df02a90bcffb728595dce51a1083e10a6603367706b5",
+  "original_queue_lines": 1595,
+  "accepted_bug_ids": [],
+  "exact_recompute_matches_original_batch_key": true,
+  "scope_of_exception": "only this complete exact secret-field value in this record scan; all default rules remain active"
+}

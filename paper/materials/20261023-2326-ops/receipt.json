@@ -1,0 +1,264 @@
+{
+  "at": "2026-10-23T23:27:21+08:00",
+  "batch": "20261023-231302-fix-batch",
+  "canonical_state": "failed",
+  "rc": 0,
+  "new_fixes": [],
+  "source_worktree_clean": true,
+  "base": "93c474e5afc182691756c3dc092421a84c398631",
+  "targeted_tsc": 0,
+  "targeted_vitest": {
+    "files": 6,
+    "tests": 23,
+    "rc": 0
+  },
+  "python_checks_separate": [
+    18,
+    3
+  ],
+  "initial_EROFS_retained": true,
+  "full_rerun": false,
+  "native": {
+    "state": "session-ended",
+    "session": "01a16952-cd4d-7a23-9a33-ee789af9843f",
+    "bindings": [
+      {
+        "turn_id": "01a16953-3583-7eb1-adc2-f122dc3dd8c7",
+        "marker": "[learner-batch:172c026b-cbba-4b50-88ab-060f82b157d2]",
+        "prompt_sha256": "d56681fbb869a9d151c701d2c0f3e62330bd1bf7ea17a4223f8b200efe52109e"
+      }
+    ]
+  },
+  "empty_fix_verifier": null,
+  "base_live_source_difference": {
+    "count": 134,
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/eye/decision-log.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/hand/screens/v6-room-projection.ts",
+      "agent/src/hand/screens/v6-room.ts",
+      "agent/src/memory/construction-log.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/sim/continuous-boss-result.ts",
+      "agent/src/sim/v6-completion.ts",
+      "agent/src/sim/v6-formation-table.ts",
+      "agent/src/sim/v6-precompute.ts",
+      "agent/src/sim/v6-projection-entries.ts",
+      "agent/src/sim/v6-projection.ts",
+      "agent/src/sim/v6-request-factory.ts",
+      "agent/src/sim/v6-supply.ts",
+      "agent/src/sim/v6-table-copy.ts",
+      "agent/src/sim/v6-targets.ts",
+      "agent/src/v6/formats.ts",
+      "agent/src/v6/log.ts",
+      "agent/src/v6/target-values.ts",
+      "agent/tests/brain-card-distill.test.ts",
+      "agent/tests/brain-codex-session.test.ts",
+      "agent/tests/build-decider.test.ts",
+      "agent/tests/codex-fast.test.ts",
+      "agent/tests/construction-log-loop.test.ts",
+      "agent/tests/construction-log.test.ts",
+      "agent/tests/cost_incremental_test.py",
+      "agent/tests/fixture-command.test.ts",
+      "agent/tests/global-build-fixed-inputs.test.ts",
+      "agent/tests/global-build-integration.test.ts",
+      "agent/tests/herdr-workspace-fixture.ts",
+      "agent/tests/human-pace-budget.test.ts",
+      "agent/tests/journal-replay.test.ts",
+      "agent/tests/knowledge-catalog.test.ts",
+      "agent/tests/learner-herdr.test.ts",
+      "agent/tests/learner-retention-fixture.test.ts",
+      "agent/tests/learner-retention.test.ts",
+      "agent/tests/learner-startup-recovery.test.ts",
+      "agent/tests/learner-tabs.test.ts",
+      "agent/tests/learner-wrapper-scripts.test.ts",
+      "agent/tests/legacy-refresh-incremental.test.ts",
+      "agent/tests/loop-consumer-fixed-transport.test.ts",
+      "agent/tests/oneshot-support.ts",
+      "agent/tests/ops-codex.test.ts",
+      "agent/tests/ops-herdr.test.ts",
+      "agent/tests/ordinary-close-isolation.test.ts",
+      "agent/tests/paper-dataset-publication.test.ts",
+      "agent/tests/report_incremental_test.py",
+      "agent/tests/run-plan-merge.test.ts",
+      "agent/tests/sandbox-entry.test.ts",
+      "agent/tests/shared-tools.test.ts",
+      "agent/tests/silent-double-boss.test.ts",
+      "agent/tests/strategy-backfill.test.ts",
+      "agent/tests/synthetic-board-fixture.ts",
+      "agent/tests/unassigned-proposal-resolution.test.ts",
+      "agent/tests/v6-appearance.test.ts",
+      "agent/tests/v6-chain-log.test.ts",
+      "agent/tests/v6-combo-metrics.test.ts",
+      "agent/tests/v6-combo-simulation.test.ts",
+      "agent/tests/v6-direction-pairs.test.ts",
+      "agent/tests/v6-direction-provider.test.ts",
+      "agent/tests/v6-draft.test.ts",
+      "agent/tests/v6-formation-table.test.ts",
+      "agent/tests/v6-history-pack.test.ts",
+      "agent/tests/v6-history-targets.test.ts",
+      "agent/tests/v6-precompute.test.ts",
+      "agent/tests/v6-projection-entries.test.ts",
+      "agent/tests/v6-projection-fixture.ts",
+      "agent/tests/v6-projection-input.test.ts",
+      "agent/tests/v6-projection-progress.test.ts",
+      "agent/tests/v6-projection.test.ts",
+      "agent/tests/v6-request-factory.test.ts",
+      "agent/tests/v6-room-prompt-budget.test.ts",
+      "agent/tests/v6-room.test.ts",
+      "agent/tests/v6-supply.test.ts",
+      "agent/tests/v6-target-values.test.ts",
+      "agent/tests/v6_learning_loop_test.py",
+      "agent/tools/issue29-availability.py",
+      "agent/tools/issue29-brain-speed-report.py",
+      "agent/tools/issue29-brain-speed-test.py",
+      "agent/tools/issue29-brain-speed.ts",
+      "agent/tools/issue29-deepseek-report.py",
+      "agent/tools/issue29-deepseek-report.test.py",
+      "agent/tools/issue29-deepseek-stream.test.ts",
+      "agent/tools/issue29-deepseek-stream.ts",
+      "agent/tools/issue31-quality-replay.ts",
+      "eval/brain_source.py",
+      "eval/brain_trial.py",
+      "eval/cost.py",
+      "eval/metrics.py",
+      "eval/sts2fun_combat_diagnostic.py",
+      "eval/sts2fun_stats.py",
+      "eval/tests/test_sts2fun_combat_diagnostic.py",
+      "eval/tests/test_sts2fun_stats.py",
+      "knowledge/builders/refresh-step.py",
+      "knowledge/builders/test_legacy_incremental.py",
+      "knowledge/builders/test_potion_incremental.py",
+      "learner/evidence_summary.py",
+      "learner/lib/launcher.ts",
+      "learner/tasks/postmortem.md",
+      "ops/agent_board.py",
+      "ops/autoplay.sh",
+      "ops/brain_trial.py",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/codex-ops.sh",
+      "ops/codex/lib.ts",
+      "ops/global_build_funnel.py",
+      "ops/issue_process_cwd.py",
+      "ops/issue_session.py",
+      "ops/issue_session_project.py",
+      "ops/issue_session_support.py",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py",
+      "ops/learner_tabs.py",
+      "ops/learner_tui.py",
+      "ops/ordinary_close.py",
+      "ops/paper_dataset.py",
+      "ops/proposal_dispatch.py",
+      "ops/run.sh",
+      "ops/shared_tools.py",
+      "ops/strategy_backfill_jobs.py",
+      "ops/tests/test_brain_trial.py",
+      "ops/tests/test_brain_view.py",
+      "ops/tests/test_issue_session.py",
+      "ops/tests/test_learner_tabs.py",
+      "ops/tests/test_learner_wrapper_completion.py",
+      "ops/tests/test_llm_handoff.py",
+      "ops/tests/test_paper_dataset_publication.py",
+      "ops/tests/test_shared_tools.py",
+      "ops/tests/test_strategy_backfill.py",
+      "ops/tests/test_unassigned_proposal_resolution.py",
+      "ops/worktree_checkout.py"
+    ]
+  },
+  "cited_fixes_actual_ancestry": {
+    "3b48088dec5f": {
+      "main": true,
+      "live": true
+    },
+    "8045d9fbf0a1": {
+      "main": true,
+      "live": true
+    },
+    "0b240cbd109a": {
+      "main": true,
+      "live": false
+    },
+    "c299eaf3e49c": {
+      "main": true,
+      "live": true
+    },
+    "86b3b1721b4b": {
+      "main": true,
+      "live": false
+    }
+  },
+  "no_merge_or_version_created": true,
+  "retirement_or_scientific_completion_claimed": false,
+  "disposition": "Preserve original failed/rc0; no new source to merge. Existing candidates remain on original host verification/publication chains; do not rerun full just to manufacture empty success.",
+  "sources": [
+    {
+      "path": "ops/codex-ops/learner/20261023-231302-fix-batch.out",
+      "bytes": 3651,
+      "sha256": "825b153adf460e26467217d70bd5cd3e2c83b13b3b4d4c34d730b81698a717b5"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/report.md",
+      "bytes": 3975,
+      "sha256": "2b2c3f2a637cd5b7c6c4b4dd4c37073401946b224870040f2db0cbc5e00e6c2b"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/queue-audit.json",
+      "bytes": 79825,
+      "sha256": "22b26a21f2915663ed603461d0bc47514b27a08fda93ec7ec6f872b908513f18"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/existing-fixes-runner-tests.log",
+      "bytes": 266,
+      "sha256": "71e2f1bafb18103cb046d03094e30dae87fec5c1d626e1598f326aca523d1a09"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/existing-waiting-python.log",
+      "bytes": 117,
+      "sha256": "5bf3ae237e5bbb34c135ba29f248a01cb0444831ee57833cd3d52057c99de6d5"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/existing-death-fight-python.log",
+      "bytes": 212,
+      "sha256": "f2d3c0f51cb2904c6c980496c8a629a5dced4d759f3274a36162b38cd64efec2"
+    },
+    {
+      "path": "learner/runs/20261023-231308-5a569623-fc93-47b5-855e-f22c3c1e87b4-fix-batch/gitleaks.log",
+      "bytes": 80,
+      "sha256": "77bf2ffe28fe64d1bf84c01f34f9f65fda58faf928d9493f616396e7666d97bb"
+    }
+  ],
+  "remaining_waiting_release": [
+    {
+      "number": 48,
+      "title": "经验提炼为策略与 rk：并入策略提炼流水线，过往经验逐批回刷"
+    },
+    {
+      "number": 47,
+      "title": "对局大脑直播显示完整对话：题目全文、推理过程、检索参数与返回（只截断系统知识）"
+    },
+    {
+      "number": 46,
+      "title": "降低学习批次的工作树分配量（#23 后续）"
+    },
+    {
+      "number": 36,
+      "title": "对局大脑与学习大脑在 herdr tab 里可见（tab 标题写明）"
+    },
+    {
+      "number": 35,
+      "title": "每局构筑记录：每道构筑题附本局已做选择与简短理由"
+    },
+    {
+      "number": 27,
+      "title": "大脑文字策略库：学习者编写首批“情境 → 策略”条目"
+    },
+    {
+      "number": 23,
+      "title": "回收机制不运转：实例绑定文件进了 git、发布门要求进 live（P0）"
+    }
+  ]
+}

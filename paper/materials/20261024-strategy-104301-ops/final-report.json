@@ -1,0 +1,76 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261024-104301-strategy-proposal",
+  "status": "blocked",
+  "base": "01f574021dc4507c45da69302d02c466db05820b",
+  "runs": [
+    "H5BVXA9SQWTY",
+    "FU9SGZ3WF6QJ",
+    "CS8BJ1J3LRCV",
+    "927J08F25QUX",
+    "W546CNAWY3RG",
+    "DDR9U5D07U49",
+    "0LH6KZ26VXJR",
+    "QVDR4R3UWKXU",
+    "5ZT1SKS66C1N",
+    "BKK8KAR3E83C"
+  ],
+  "fixes": [],
+  "skipped": [
+    "本项候选尚未提交：完整沙箱检查仍在途，已见3文件11项失败，缺最终退出码；live/main合并预演另有22个冲突路径，按任务停止合入。"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": null,
+    "cases": 0
+  },
+  "test_details": {
+    "baseline_without_patch": {
+      "exit": 1,
+      "passed": 3,
+      "failed": 1
+    },
+    "targeted_with_patch": {
+      "exit": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    "sandbox": {
+      "status": "in-flight",
+      "exit": null,
+      "observed_failed_files": 3,
+      "observed_failed_tests": 11,
+      "tool_session_id": 86183,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/test-sandbox.log",
+      "scope": "prescribed fixed exclusions unchanged; configLoader runner; SANDBOX_WORKERS=1"
+    },
+    "gitleaks": 0
+  },
+  "code_proposals": [
+    "silent-proposal-146784d761377d66"
+  ],
+  "implementation_domains": [
+    "combat",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-146784d761377d66",
+      "state": "waiting",
+      "reason": "已保留silent-0581三叶候选与固定原帧回归，尚无源码commit/live祖先；完整沙箱原检查在途并已观察11失败，main/live预演22处冲突，需原ops按冲突停线与实际完整检查接续，不能登记implemented或shipped。"
+    }
+  ],
+  "candidate_patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/commit-candidate.patch",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-104301/learner/runs/20261024-104307-89da0e5f-e1ad-45d9-8a92-e0a16fd2a027-strategy-proposal/report.md",
+  "ledger": {
+    "id": "silent-0581",
+    "status": "proposed",
+    "initial_status_update_exit": 0,
+    "final_status_repeat_exit": 2,
+    "final_note_update_exit": 0,
+    "limitation": "物理/已提交账本状态分歧导致重复状态写入被拒，未自行对齐发布历史；保留原proposed，仅经CLI追加最终note/where成功。"
+  }
+}

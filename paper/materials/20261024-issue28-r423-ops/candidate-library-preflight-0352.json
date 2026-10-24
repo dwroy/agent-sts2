@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-24T03:53:28+08:00",
+  "issue": 28,
+  "phase": "candidate-library-preflight-passed-await52-release",
+  "tree": "b30925f714d0ee4ac0b4f26ed10bd3d8037eb603",
+  "frozen_inputs": [
+    {
+      "path": "characters/silent/build-cores.json",
+      "bytes": 7906638,
+      "sha256": "51c757a11ded9db2619466104f284a7d8a2490e10a621e0b367640e82a81df36"
+    },
+    {
+      "path": "characters/silent/reflex-vocab.json",
+      "bytes": 186815,
+      "sha256": "561d34d506aa4b8768531f51811aa80a3642bac0838dd32bea802167bf9891db"
+    },
+    {
+      "path": "characters/silent/reflex.json",
+      "bytes": 531785,
+      "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776"
+    }
+  ],
+  "candidate_result": {
+    "path": ".artifacts/ops-issue28-r423-20261024/consumer-preflight-0352/candidate.json",
+    "bytes": 1343,
+    "sha256": "c7f18913564e49b2360c1c972b8a5156e62422ecc041fb51d3116d765a754420"
+  },
+  "baseline_code_same_frozen_knowledge_result": {
+    "path": ".artifacts/ops-issue28-r423-20261024/consumer-preflight-0352/baseline-code.json",
+    "bytes": 1343,
+    "sha256": "c7f18913564e49b2360c1c972b8a5156e62422ecc041fb51d3116d765a754420"
+  },
+  "probe_source": {
+    "path": ".artifacts/ops-issue28-r423-20261024/consumer-preflight-0352/probe.mjs",
+    "bytes": 1328,
+    "sha256": "94565bbb985277d29bdbdaff9671258a85077c90335f4beef4c39c7e7ac2d848"
+  },
+  "consumer": {
+    "cores": {
+      "status": "loaded",
+      "normalized_sha256": "d3d836a73a962341241b0231ff60c3cc7342dad511243f8d4ccdb4541c7583ee",
+      "count": 4
+    },
+    "directions": {
+      "status": "missing",
+      "issues": [],
+      "message": "无此知识"
+    },
+    "vocab": {
+      "status": "loaded",
+      "normalized_sha256": "f26664b5da442a69d0bf357a830744f822bb9c5eb5b5376cc21380b59bda45d9",
+      "count": null
+    },
+    "reflex": {
+      "status": "loaded",
+      "normalized_sha256": "5eab30770ffd8d54b3fc3fe647784aeb39ad10f267e44ae75e01bf7f6cddcbaf",
+      "count": 85
+    }
+  },
+  "normalized_results_equal": true,
+  "existing_reflex_entries": 85,
+  "existing_reflex_file_sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+  "window_owner_receipt": {
+    "path": "paper/materials/20261024-issue52-window-integrator/window-acceptance.json",
+    "bytes": 1615,
+    "sha256": "22be0a1b1fb4417dfb2012dae65af6589a6f8fc53f39f23f87eb21adcfbd349c"
+  },
+  "release_received": false,
+  "new_full_runs": 0,
+  "source_published": false,
+  "new_model_game_simulations": 0,
+  "scope": "candidate loader and current live loader read the same frozen existing library; does not prove new code live consumer, source publication, natural use, two-arm effect, A/B, or scientific completion"
+}

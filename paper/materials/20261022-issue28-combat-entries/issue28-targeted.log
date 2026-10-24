@@ -1,0 +1,48 @@
+
+ RUN  v4.1.11 <worktree>/agent
+
+ ❯ tests/combat-entry-replay.test.ts (6 tests | 1 failed) 96ms
+   × CLI prepares and reports without calls, verifies byte SHA and refuses uncertain call replay 31ms
+ ❯ tests/v6-draft.test.ts (18 tests | 1 failed) 86ms
+   × CLI accepts a frozen-context draft and rejects missing coverage without writes 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/combat-entry-replay.test.ts > CLI prepares and reports without calls, verifies byte SHA and refuses uncertain call replay
+ConfigError: MODE: expected one of shadow, play, record, replay, got "test"
+ ❯ loadConfig src/core/config.ts:1398:34
+    1396|   }
+    1397|
+    1398|   if (problems.length > 0) throw new ConfigError(problems);
+       |                                  ^
+    1399|
+    1400|   return {
+ ❯ main tools/v6/combat-entry-replay.ts:68:18
+ ❯ tests/combat-entry-replay.test.ts:127:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-draft.test.ts > CLI accepts a frozen-context draft and rejects missing coverage without writes
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/v6-draft.test.ts:55:45
+     53|     writeFileSync(join(dir, "draft.json"), JSON.stringify(draft));
+     54|     const run = () => fixtureCommand(process.execPath, ["--import", "t…
+     55|     const good = run(); expect(good.status).toBe(0); expect(JSON.parse…
+       |                                             ^
+     56|     writeFileSync(join(dir, "draft.json"), JSON.stringify({ ...draft, …
+     57|     const bad = run(); expect(bad.status).toBe(1); expect(JSON.parse(b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 67 passed (69)
+   Start at  11:17:16
+   Duration  2.94s (transform 663ms, setup 654ms, import 368ms, tests 1.31s, environment 0ms)

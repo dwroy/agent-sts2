@@ -1,0 +1,163 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-50-task/agent
+
+ ↓ tests/endgame-plan.test.ts > scopes the base goal from act one to Silent A10 and keeps other characters and levels byte equivalent
+ ↓ tests/endgame-plan.test.ts > updates reward/card with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates reward/skip with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates shop/plan with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates rest/choose with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates selection/deck with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates event/act-plan with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates bundle/choose with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates capstone/choose with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates map/act-start with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates map/route-plan with no extra decision
+ ↓ tests/endgame-plan.test.ts > updates run-plan with no extra decision
+ ↓ tests/endgame-plan.test.ts > offers checkpoints only on pre-boss construction questions in each act
+ ↓ tests/endgame-plan.test.ts > requires bounded nonempty plan fields and a checkpoint answer only when it was asked
+ ↓ tests/endgame-plan.test.ts > persists the full hypothesis and refuses a future-floor plan when restoring after rollback
+ × tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after restart 37ms
+   → expected { runId: 'TESTRUN123', act: 1, …(13) } to be null
+ × tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after cached rollback 5ms
+   → expected { runId: 'TESTRUN123', act: 1, …(13) } to be null
+ × tests/endgame-plan.test.ts > restores an available past plan after rollback and preserves the legacy unbounded default 5ms
+   → expected 9 to be 1 // Object.is equality
+ ↓ tests/endgame-plan.test.ts > codex, F1, normal: construction answers update the next question, survive restart and keep #35 / #49
+ ↓ tests/endgame-plan.test.ts > codex, F31, normal: construction answers update the next question, survive restart and keep #35 / #49
+ × tests/endgame-plan.test.ts > codex, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49 756ms
+   → expected { …(5) } to be null
+ × tests/endgame-plan.test.ts > codex, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49 833ms
+   → expected { …(5) } to be null
+ ↓ tests/endgame-plan.test.ts > codex, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49
+ ↓ tests/endgame-plan.test.ts > deepseek, F1, normal: construction answers update the next question, survive restart and keep #35 / #49
+ ↓ tests/endgame-plan.test.ts > deepseek, F31, normal: construction answers update the next question, survive restart and keep #35 / #49
+ × tests/endgame-plan.test.ts > deepseek, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49 525ms
+   → expected { …(5) } to be null
+ × tests/endgame-plan.test.ts > deepseek, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49 843ms
+   → expected { …(5) } to be null
+ ↓ tests/endgame-plan.test.ts > deepseek, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49
+ ↓ tests/endgame-plan.test.ts > reports actual prior plans and accepted checkpoint updates per engine and act without treating empty samples as passed
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after restart
+ FAIL  tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after cached rollback
+AssertionError: expected { runId: 'TESTRUN123', act: 1, …(13) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "act": 1,
+  "archetype": "格式方向",
+  "avoid": [],
+  "blockTarget": 0,
+  "bossPrep": "未知，查库",
+  "elites": "normal",
+  "endgame": {
+    "checkpoint": "",
+    "core": "格式核心9",
+    "gaps": "格式缺口9",
+    "resources": "两场资源未知，待证",
+    "scaling_damage": "未知，待证",
+    "sustainable_defense": "未知，待证",
+    "win_condition": "格式终局假设9，尚未验证",
+  },
+  "floor": 9,
+  "hpPct": 0.6875,
+  "remove": [],
+  "rest": "auto",
+  "runId": "TESTRUN123",
+  "summary": "格式计划9",
+  "trigger": "review",
+  "want": [],
+}
+
+ ❯ tests/endgame-plan.test.ts:102:57
+    100|   const memory = createScreenMemory();
+    101|   memory.runPlan = mode === "restart" ? loadRunPlan(file, "TESTRUN123"…
+    102|   expect(currentRunPlan(memory, file, "TESTRUN123", 2)).toBeNull();
+       |                                                         ^
+    103|   expect(memory.runPlan).toBeNull();
+    104|   expect(currentRunPlan(memory, file, "TESTRUN123", 2)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/endgame-plan.test.ts > restores an available past plan after rollback and preserves the legacy unbounded default
+AssertionError: expected 9 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 9
+
+ ❯ tests/endgame-plan.test.ts:116:64
+    114|   writeFileSync(file, [past, future].map(p => JSON.stringify({ plan: p…
+    115|   const memory = createScreenMemory(); memory.runPlan = future;
+    116|   expect(currentRunPlan(memory, file, "TESTRUN123", 2)?.floor).toBe(1);
+       |                                                                ^
+    117|   const legacy = createScreenMemory();
+    118|   expect(currentRunPlan(legacy, file, "TESTRUN123")?.floor).toBe(9);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49
+ FAIL  tests/endgame-plan.test.ts > deepseek, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49
+AssertionError: expected { …(5) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "hp_then": "69%",
+  "in": "state.facts.your_run_plan",
+  "made_because": "review",
+  "made_in_act": 1,
+  "made_on_floor": 9,
+}
+
+ ❯ tests/endgame-plan.test.ts:177:70
+    175|     expect(requests[0]!.question).toContain("run_plan.endgame");
+    176|     expect((requests[0]!.payload as any).facts.your_run_plan).toBeNull…
+    177|     expect((requests[0]!.payload as any).run_plan_task.current_plan).t…
+       |                                                                      ^
+    178|     const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
+    179|     expect(cues.schema).toBe("brain-query-cues-v2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49
+ FAIL  tests/endgame-plan.test.ts > deepseek, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49
+AssertionError: expected { …(5) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "hp_then": "69%",
+  "in": "state.facts.your_run_plan",
+  "made_because": "review",
+  "made_in_act": 1,
+  "made_on_floor": 10,
+}
+
+ ❯ tests/endgame-plan.test.ts:192:72
+    190|     if (start.recovery === "rollback") {
+    191|       expect((requests[2]!.payload as any).facts.your_run_plan).toBeNu…
+    192|       expect((requests[2]!.payload as any).run_plan_task.current_plan)…
+       |                                                                        ^
+    193|     } else expect((requests[2]!.payload as any).facts.your_run_plan.en…
+    194|     expect(sent).toBe(3); expect(requests).toHaveLength(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 22 skipped (29)
+   Start at  19:51:29
+   Duration  6.06s (transform 2.38s, setup 391ms, import 2.50s, tests 3.01s, environment 0ms)
+

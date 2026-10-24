@@ -1,0 +1,149 @@
+{
+  "at": "2026-10-23T11:14:54+08:00",
+  "event_time": "2026-10-23 11:06 CST",
+  "state": "old-failure-event-reconciled-with-later-actual-ops-recovery",
+  "old_failure_retained": true,
+  "later_followup_preserved": true,
+  "actual_consumers": [
+    {
+      "root": "main",
+      "settings": {
+        "learners": "herdr",
+        "learner_tui": "off",
+        "brain_view": "herdr"
+      },
+      "learner_jobs_sha256": "819e277af2bf1281ffbbc39e656f8ee511b8a79efb34fddb9dd503970fd667cc"
+    },
+    {
+      "root": "live",
+      "settings": {
+        "learners": "herdr",
+        "learner_tui": "off",
+        "brain_view": "herdr"
+      },
+      "learner_jobs_sha256": "819e277af2bf1281ffbbc39e656f8ee511b8a79efb34fddb9dd503970fd667cc"
+    }
+  ],
+  "flags": {
+    "ACCOUNT_DRAIN": false,
+    "LLM_DRAIN": false,
+    "PAUSE": false
+  },
+  "batches": [
+    {
+      "original": "20261023-011301",
+      "batch": "20261023-110000",
+      "started_once": 1,
+      "plan_state": "normal-start-registered",
+      "registry_state": "done",
+      "rc": 0,
+      "live_original_pid": false,
+      "pid_birth_matches": false
+    },
+    {
+      "original": "20261023-011302-strategy-proposal",
+      "batch": "20261023-110800-strategy-proposal",
+      "started_once": 1,
+      "plan_state": "normal-start-registered",
+      "registry_state": "running",
+      "rc": null,
+      "live_original_pid": true,
+      "pid_birth_matches": true
+    },
+    {
+      "original": "20261023-011302-s2-strategy-proposal",
+      "batch": "20261023-110000-s2-strategy-proposal",
+      "started_once": 1,
+      "plan_state": "normal-start-registered",
+      "registry_state": "running",
+      "rc": null,
+      "live_original_pid": true,
+      "pid_birth_matches": true
+    },
+    {
+      "original": "20261023-011302-fix-batch",
+      "batch": "20261023-110800-fix-batch",
+      "started_once": 1,
+      "plan_state": "normal-start-registered",
+      "registry_state": "running",
+      "rc": null,
+      "live_original_pid": true,
+      "pid_birth_matches": true
+    },
+    {
+      "original": "20261023-014302-strategy-proposal",
+      "batch": "20261023-110001-strategy-proposal",
+      "started_once": 0,
+      "plan_state": "frozen-requeue-accepted-await-original-slot",
+      "registry_state": null,
+      "rc": null,
+      "live_original_pid": false,
+      "pid_birth_matches": false
+    },
+    {
+      "original": "20261023-014302-s2-strategy-proposal",
+      "batch": "20261023-110001-s2-strategy-proposal",
+      "started_once": 0,
+      "plan_state": "frozen-requeue-accepted-await-original-slot",
+      "registry_state": null,
+      "rc": null,
+      "live_original_pid": false,
+      "pid_birth_matches": false
+    },
+    {
+      "original": "20261023-014302-fix-batch",
+      "batch": "20261023-110801-fix-batch",
+      "started_once": 0,
+      "plan_state": "frozen-requeue-accepted-await-original-slot",
+      "registry_state": null,
+      "rc": null,
+      "live_original_pid": false,
+      "pid_birth_matches": false
+    }
+  ],
+  "event_files": [
+    {
+      "path": "ops/codex-ops/delivered/1792724602849073472-manual.md",
+      "sha256": "f9b257e278580e341540bfc5dd78eb8eef0f17f6b4bfeea31d514b3cfdab5d4e"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/publication-continuation.json",
+      "sha256": "2f2eb3b8b6d5a4fefaf97023a38014bccdb8a583ebc916d97310f331de058ad1"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/original-transaction-followup.json",
+      "sha256": "c7b0748d3cf12c84b0c12aefbe91dcbfbab6bdb51b1074cebe3f81e61a292301"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/recovery-final.json",
+      "sha256": "a9648101a97fcd04c6175edd716de8afe73b7628e0a469a02a6bedd5adc3fd29"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/four-new-native-starts.json",
+      "sha256": "8f949db025f09cf1966165af1e2cb03f6e80e51aa67ebc3d27f3c504b276e1ce"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/seven-requeue-plan.json",
+      "sha256": "76e0c92cdaa9cc1a65bb4ea613202bd18572640c7c8c385a42d27f1e9364f60c"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/stdio-switch-publication.json",
+      "sha256": "fd018bfa2e363f2c7277309763893d607109f275a441b7cb419af0fb128f546e"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/final-issue-readback.json",
+      "sha256": "67ec4ab1c416d704d3a6da0a4e734df9c9f604ae41998bc0a375356d1956e41f"
+    },
+    {
+      "path": "paper/materials/20261023-learner-recovery-ops/dual-and-supervisor-notices.json",
+      "sha256": "4ffb5f355ddfa45a041c6199d977437d9ce2aed33c4eaafa1e54ee440c145da3"
+    }
+  ],
+  "original_thread_and_input_replayed": false,
+  "new_full_model_game_actions": 0,
+  "three_frozen_requeues": "pending original 2 strategy / 1 fix slots; wait actual completion events, no polling",
+  "role_ack_or_scientific_parent_closed": false,
+  "existing_issue_receipt": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6356448167"
+}

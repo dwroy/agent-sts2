@@ -1,0 +1,122 @@
+{
+  "schema": "brain-knowledge-result-v1",
+  "sources": [
+    {
+      "source": "external:sts2fun",
+      "version": "1.0.0",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 62,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 501
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+          "role": "support"
+        }
+      ],
+      "provenance": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "event",
+          "rest",
+          "shop"
+        ],
+        "acts": [
+          3
+        ],
+        "bosses": [
+          "TEST_SUBJECT_BOSS"
+        ]
+      },
+      "strategy": "仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 62,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 501
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+          "role": "support"
+        }
+      ],
+      "source": "external:sts2fun",
+      "confidence": 0.36,
+      "design": "observational",
+      "limits": {
+        "own_support_runs": 0,
+        "effect": null,
+        "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+      },
+      "evidence_summary": {
+        "own_runs": 0,
+        "own_support_runs": 0,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_p90",
+            "denominator": {
+              "unit": "fights",
+              "n": 501
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    }
+  ],
+  "library_sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+  "omitted": 0
+}

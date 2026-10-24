@@ -1,0 +1,167 @@
+{
+  "schema": "external-observational-knowledge-candidate-v1",
+  "id": "silent-external-selected-route-exposure-001",
+  "character": "silent",
+  "source": "external:sts2fun",
+  "game_version": "v0.111",
+  "ascension": 10,
+  "collected_at": "2026-10-21",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "natural_adoption": "pending",
+  "status": "descriptive_candidate_only",
+  "confidence": 0.2,
+  "provenance": {
+    "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "downloaded_at": "2026-10-21",
+    "faq": "https://sts2.fun/faq",
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "url": "https://sts2.fun/static/sts2_public.db.zst"
+  },
+  "input_sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+  "input_manifest_sha256": "4b9303b9ac358c280a576bd495ea2921dfd3733132bd3c5190f7ec061114aaee",
+  "direction": "所选代表样本内，赢家相对输家的Boss前精英暴露均值差随幕改变：第一幕+0.50、第二幕-0.10、第三幕+0.40个；不据此设固定每幕精英目标。",
+  "situation_to_action": "幕初评估路线时，把精英数量作为暴露描述，并核当前资源与实际可选后继节点；该选样只提供方向性参照，不给路线优劣排序或安全阈值。",
+  "applicability": "仅Silent A10/v0.111、冻结簇0的10胜10负代表投影；簇为终局描述，不能作在线触发事实；每幕可观察样本及到达Boss分母分列。",
+  "sample": {
+    "uploads": 20,
+    "players": null,
+    "win_uploads": 10,
+    "loss_uploads": 10,
+    "nodes": 883,
+    "selection": "原reader中cluster0全部offset0..9，每页一对，固定胜负配额/前5节点近邻匹配",
+    "sample_independence": "仅匿名内容摘要去重，玩家/SL相关性未知；幕间复用同一上传，不加总"
+  },
+  "statistics": [
+    {
+      "act": 1,
+      "whole_run_win": 0,
+      "selected_uploads": 10,
+      "boss_reached_n": 10,
+      "elite_count_before_first_boss_or_terminal_mean": 1.3,
+      "elite_count_range": [
+        0,
+        2
+      ],
+      "distribution": {
+        "0": 2,
+        "1": 3,
+        "2": 5
+      }
+    },
+    {
+      "act": 1,
+      "whole_run_win": 1,
+      "selected_uploads": 10,
+      "boss_reached_n": 10,
+      "elite_count_before_first_boss_or_terminal_mean": 1.8,
+      "elite_count_range": [
+        1,
+        3
+      ],
+      "distribution": {
+        "1": 3,
+        "2": 6,
+        "3": 1
+      }
+    },
+    {
+      "act": 2,
+      "whole_run_win": 0,
+      "selected_uploads": 10,
+      "boss_reached_n": 8,
+      "elite_count_before_first_boss_or_terminal_mean": 2.1,
+      "elite_count_range": [
+        1,
+        3
+      ],
+      "distribution": {
+        "1": 3,
+        "2": 3,
+        "3": 4
+      }
+    },
+    {
+      "act": 2,
+      "whole_run_win": 1,
+      "selected_uploads": 10,
+      "boss_reached_n": 10,
+      "elite_count_before_first_boss_or_terminal_mean": 2.0,
+      "elite_count_range": [
+        0,
+        3
+      ],
+      "distribution": {
+        "0": 1,
+        "1": 1,
+        "2": 5,
+        "3": 3
+      }
+    },
+    {
+      "act": 3,
+      "whole_run_win": 0,
+      "selected_uploads": 6,
+      "boss_reached_n": 3,
+      "elite_count_before_first_boss_or_terminal_mean": 1.5,
+      "elite_count_range": [
+        0,
+        3
+      ],
+      "distribution": {
+        "0": 1,
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    {
+      "act": 3,
+      "whole_run_win": 1,
+      "selected_uploads": 10,
+      "boss_reached_n": 10,
+      "elite_count_before_first_boss_or_terminal_mean": 1.9,
+      "elite_count_range": [
+        1,
+        3
+      ],
+      "distribution": {
+        "1": 2,
+        "2": 7,
+        "3": 1
+      }
+    }
+  ],
+  "counterexamples": [
+    "第二幕赢家2.0个、输家2.1个，方向与第一幕相反。",
+    "第一幕10个输家也全部记录了Boss；到达不等于通过或整局获胜。",
+    "死亡/终止造成更短暴露窗口，不能把累计精英少解释成主动绕路。"
+  ],
+  "proxies": [
+    "记录的elite房间计数：首次Boss节点之前，没Boss则计至终止。",
+    "有boss房间记录仅为到达代理；原ordinal不是游戏floor。",
+    "event房间不等同地图问号；前节点末HP仅作资源代理。"
+  ],
+  "limitations": [
+    "簇号仅为固定取样标签，不解释为玩法或决策时触发条件。",
+    "死亡/终止提前结束累计精英暴露；有Boss记录只是到达代理，不是通过。",
+    "没有未走分支、可选路线或拒选机会分母，不能估计绕路效果。",
+    "模型完整逐节点读pair offset=0的两局98节点；另18局785节点仅脚本处理并完整保存，未冒称模型逐节点通读。",
+    "20个配额上传不能代表6348上传总体；该条没有达到100独立上传。",
+    "不估计因果收益；不拿未来精英数量、终局簇或Boss标签作当前触发条件。"
+  ],
+  "own_support_runs": [],
+  "runs": [],
+  "evidence_files": [
+    "route-descriptives.json",
+    "low-hp-route-proxy.json",
+    "page-index.json"
+  ],
+  "complete_archetype_playbook": false,
+  "new_entries": 1,
+  "updated_entries": 0,
+  "reused_entries": 0
+}

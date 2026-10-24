@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-10-24T13:11:54+08:00",
+  "full_runs": 0,
+  "commands": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "returncode": 0,
+      "seconds": 3.7067527640028857
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/learner-tabs.test.ts",
+        "tests/worktree-retention.test.ts",
+        "tests/worktree-storage.test.ts",
+        "tests/learner-wrapper-scripts.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--testTimeout=60000",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/integrator20-reclaim-20261024/directed.json"
+      ],
+      "returncode": 0,
+      "seconds": 17.65759717198671
+    }
+  ],
+  "inputs_count": 2809,
+  "inputs_unchanged": true,
+  "finished_at": "2026-10-24T13:12:16+08:00",
+  "passed": true
+}

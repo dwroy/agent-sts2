@@ -1,0 +1,91 @@
+{
+  "unit_id": "decision-potion-own-fallback-002",
+  "counting_rule": "stable target ID and distinct context; strength/dexterity one context; comparisons/aliases/paragraphs not entries",
+  "contexts": [
+    {
+      "context": "buff-order",
+      "id": "silent-brain-potion-buff-before-relevant-cards",
+      "disposition": "new",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/buff-order-strategy.json",
+      "reason": "先比较药后牌：445/470动作观察到相关手牌数值变化（238/246独立局有此现象）；抽核Damage 6→8、Block 5→7。"
+    },
+    {
+      "context": "block-before-end",
+      "id": "silent-brain-potion-uncovered-end-turn",
+      "disposition": "new",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/block-before-end-strategy.json",
+      "reason": "结束回合前比较可兑现防护：227/227用药动作观察格挡+12，138独立局；168个可用未用的end_turn动作/69局另账。"
+    },
+    {
+      "context": "energy-continuation",
+      "id": "silent-brain-potion-zero-energy-continuation",
+      "disposition": "new",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/energy-continuation-strategy.json",
+      "reason": "零能量时比较药后续牌：146/146动作观察0→2并解锁手牌，109独立局；142次下一记录选择出牌（135完成/7排队未稳定），4次先选其他动作。"
+    },
+    {
+      "context": "full-shop-slot",
+      "id": "silent-brain-potion-full-shop-replacement",
+      "disposition": "new",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/full-shop-slot-strategy.json",
+      "reason": "满栏有可买替代药时比较腾栏方式：26/306店机会观察到弃后换购（8.50%），191独立局；27组换购动作/25局均核ID及金币变化。"
+    },
+    {
+      "context": "boss-resource-recheck",
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "disposition": "update",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-resource-recheck-strategy.json",
+      "reason": "场间按实资源重评：48独立局中HP变化0为43次、+25为5次；同非空ID仅7次，新增ID7次；不估最优留药数。"
+    }
+  ],
+  "predecessors": [
+    {
+      "batch": "20261024-114313-strategy-proposal",
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "original_sha256": "a81174e7d567ab3e5fdb58f36f5077e06463ccc12078518c39ba93780725d575",
+      "disposition": "updated_in_new_scratch_same_id"
+    },
+    {
+      "batch": "20261024-121311-strategy-proposal",
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "original_sha256": "94757d7fe649578e0ea3ec25c32b15a17af6420e16363998ecc099066c847084",
+      "disposition": "retained_out_of_scope_not_counted"
+    },
+    {
+      "batch": "20261024-121311-strategy-proposal",
+      "id": "silent-external-selected-route-exposure-001",
+      "original_sha256": "503dadca2e4f68f8cf72424d10d76fb42e6b5daa11f4bbbed5bf4fb9958ae687",
+      "disposition": "retained_out_of_scope_not_counted"
+    },
+    {
+      "batch": "20261024-124312-strategy-proposal",
+      "id": "silent-brain-opening-golden-pearl-external-comparison",
+      "original_sha256": "b3510a026295a8a2ad9ac81a04c1b1aa542c154edfda51f617a10690b8e51d61",
+      "disposition": "retained_out_of_scope_not_counted"
+    },
+    {
+      "batch": "20261024-124312-strategy-proposal",
+      "id": "silent-external-cold-start-ancient-build-associations",
+      "original_sha256": "cb4b4dae0283e5ae6187c38752baaf03fd984d3dd30e8a4b2e19a80c6f422b55",
+      "disposition": "retained_out_of_scope_not_counted"
+    }
+  ],
+  "local_waiting": [
+    {
+      "context": "optimal_potion_reservation",
+      "reason": "缺同状态选择对照、逐战counterfactual，不设HP/瓶数阈值。"
+    },
+    {
+      "context": "all_unused_opportunity_causes",
+      "reason": "只核可用状态/动作及有限后继；每次保留动机、最终是否致死不能由持药推出。"
+    },
+    {
+      "context": "rk_or_direct_combat_execution",
+      "reason": "缺#28固定完整Plan/配对结果/留出与独立消费者；本批不创建rk、不改开关。"
+    },
+    {
+      "context": "cross_version_pooling",
+      "reason": "机制未改依据缺失；各build独立，自有版本unknown。"
+    }
+  ]
+}

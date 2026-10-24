@@ -1,0 +1,68 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-50-task/agent
+
+ ❯ tests/endgame-plan.test.ts (17 tests | 2 failed) 255ms
+   × codex: every construction answer updates the next question, survives restart and keeps #35 / #49 175ms
+   × deepseek: every construction answer updates the next question, survives restart and keeps #35 / #49 39ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex: every construction answer updates the next question, survives restart and keeps #35 / #49
+BrainBlockedError: Brain decision resolution failed: expected [ …(5) ] to deeply equal []
+ ❯ brainFault src/hand/loop.ts:190:9
+    188| function brainFault(brain: Brain, label: string, runId: string | undef…
+    189|   brain.router.wait.finish("fault", { label, runId, questionId: random…
+    190|   throw new BrainBlockedError("fault", reason, cause);
+       |         ^
+    191| }
+    192|
+ ❯ runLoopWithBudgets src/hand/loop.ts:1435:13
+ ❯ tests/endgame-plan.test.ts:129:13
+
+Caused by: AssertionError: expected [ …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "run_plan: construction.primary must be a coreCatalog ID or uncommitted",
++   "run_plan: construction.alternatives must contain up to three distinct alternative core IDs",
++   "run_plan: construction.checkpoint must be a future floor",
++   "run_plan: construction.reason is required",
++   "run_plan: construction.pivot_if is required",
++ ]
+
+ ❯ BrainRouter.<anonymous> tests/endgame-plan.test.ts:121:43
+ ❯ Brain.decide src/brain/brain.ts:367:32
+ ❯ Brain.choose src/brain/brain.ts:440:20
+ ❯ runLoopWithBudgets src/hand/loop.ts:1413:28
+ ❯ tests/endgame-plan.test.ts:129:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/endgame-plan.test.ts > deepseek: every construction answer updates the next question, survives restart and keeps #35 / #49
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/endgame-plan.test.ts:129:39
+    127|         buildSim: {} as buildSim.BuildSimSetup, knowledge: testKnowled…
+    128|     };
+    129|     expect((await playFixed(2)).acts).toBe(2);
+       |                                       ^
+    130|     expect(requests).toHaveLength(2);
+    131|     const second = requests[1]!.payload as any;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 61 passed (63)
+   Start at  16:55:52
+   Duration  11.88s (transform 2.41s, setup 524ms, import 3.57s, tests 7.15s, environment 1ms)
+

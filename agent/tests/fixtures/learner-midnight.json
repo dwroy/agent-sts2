@@ -1,0 +1,941 @@
+{
+  "rows": [
+    {
+      "type": "session_meta",
+      "payload": {
+        "id": "fixture-session",
+        "cwd": "/fixture/learner"
+      }
+    },
+    {
+      "type": "event_msg",
+      "payload": {
+        "type": "task_started",
+        "turn_id": "fixture-turn"
+      }
+    },
+    {
+      "type": "response_item",
+      "payload": {
+        "type": "message",
+        "role": "user",
+        "content": [
+          {
+            "type": "input_text",
+            "text": "# AGENTS.md instructions for /fixture/learner\n\n<INSTRUCTIONS>\nFixed instructions.\n</INSTRUCTIONS>"
+          },
+          {
+            "type": "input_text",
+            "text": "<environment_context>\n  <cwd>/fixture/learner</cwd>\n  <shell>bash</shell>\n  <current_date>2026-10-23</current_date>\n  <timezone>Asia/Shanghai</timezone>\n  <filesystem><workspace_roots><root>/fixture/learner</root></workspace_roots><permission_profile type=\"managed\"><file_system type=\"restricted\" glob_scan_max_depth=\"8\"><entry access=\"deny\" escalatable=\"false\"><path>/fixture/private</path></entry><entry access=\"write\"><path>/fixture/learner</path></entry><entry access=\"read\"><special>:root</special></entry></file_system></permission_profile></filesystem>\n</environment_context>"
+          }
+        ],
+        "id": "msg_00000000-0000-7000-8000-000000000002",
+        "internal_chat_message_metadata_passthrough": {
+          "turn_id": "fixture-turn",
+          "create_time": 1792771140.00025,
+          "content_item_kinds": [
+            "agents_md.instructions",
+            "environments.environment_context"
+          ],
+          "content_item_metadata": [
+            {
+              "provenance": {
+                "type": "agents_md"
+              }
+            },
+            {
+              "provenance": {
+                "type": "harness",
+                "hook": false
+              }
+            }
+          ]
+        }
+      },
+      "timestamp": "2026-10-23T15:59:00.000Z"
+    },
+    {
+      "type": "turn_context",
+      "payload": {
+        "turn_id": "fixture-turn",
+        "cwd": "/fixture/learner",
+        "approval_policy": "never",
+        "sandbox_policy": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/fixture/learner"
+          ],
+          "network_access": false
+        }
+      }
+    },
+    {
+      "type": "response_item",
+      "payload": {
+        "type": "message",
+        "role": "user",
+        "content": [
+          {
+            "type": "input_text",
+            "text": "[learner-batch:midnight]\n原始固定任务"
+          }
+        ]
+      }
+    },
+    {
+      "type": "response_item",
+      "payload": {
+        "type": "function_call",
+        "name": "fixed_tool"
+      }
+    },
+    {
+      "type": "response_item",
+      "payload": {
+        "type": "message",
+        "role": "user",
+        "content": [
+          {
+            "type": "input_text",
+            "text": "<environment_context>\n  <current_date>2026-10-24</current_date>\n  <timezone>Asia/Shanghai</timezone>\n  <filesystem><workspace_roots><root>/fixture/learner</root></workspace_roots><permission_profile type=\"managed\"><file_system type=\"restricted\" glob_scan_max_depth=\"8\"><entry access=\"deny\" escalatable=\"false\"><path>/fixture/private</path></entry><entry access=\"write\"><path>/fixture/learner</path></entry><entry access=\"read\"><special>:root</special></entry></file_system></permission_profile></filesystem>\n</environment_context>"
+          }
+        ],
+        "id": "msg_00000000-0000-7000-8000-000000000006",
+        "internal_chat_message_metadata_passthrough": {
+          "turn_id": "fixture-turn",
+          "create_time": 1792771200.00025,
+          "content_item_kinds": [
+            "environments.environment_context"
+          ],
+          "content_item_metadata": [
+            {
+              "provenance": {
+                "type": "harness",
+                "hook": false
+              }
+            }
+          ]
+        }
+      },
+      "timestamp": "2026-10-23T16:00:00.000Z"
+    },
+    {
+      "type": "event_msg",
+      "payload": {
+        "type": "task_complete",
+        "turn_id": "fixture-turn",
+        "last_agent_message": "固定报告"
+      }
+    }
+  ],
+  "receipt": {
+    "state": "needs-attention",
+    "submitted": true,
+    "cwd": "/fixture/learner",
+    "label": "learner-20261023-234301-postmortem",
+    "pane": "w1:p2",
+    "agent_name": "learner-e801fc0ab69d0bc6080a272d",
+    "agent_name_version": 1,
+    "session": "fixture-session",
+    "turn": "fixture-turn",
+    "submissions": [
+      {
+        "marker": "[learner-batch:midnight]",
+        "prompt_sha256": "a3e11beda2418403465a18bfaf5e83b7296de2473d3b1ad384303e93f0177ae5"
+      }
+    ],
+    "bindings": [
+      {
+        "turn_id": "fixture-turn",
+        "marker": "[learner-batch:midnight]",
+        "prompt_sha256": "a3e11beda2418403465a18bfaf5e83b7296de2473d3b1ad384303e93f0177ae5"
+      }
+    ],
+    "native_context_version": 1,
+    "native_preludes": [
+      {
+        "turn_id": "fixture-turn",
+        "cwd": "/fixture/learner",
+        "sha256": "832b3ae547b234fd46f97cd09f220415536a2ec1c7774f880f1378c641c166d3"
+      }
+    ],
+    "native_environment_version": 1,
+    "native_environment_updates": [
+      {
+        "session": "fixture-session",
+        "turn_id": "fixture-turn",
+        "cwd": "/fixture/learner",
+        "timestamp": "2026-10-23T16:00:00.000Z",
+        "current_date": "2026-10-24",
+        "timezone": "Asia/Shanghai",
+        "filesystem_sha256": "96c338644c842ccb17bef70c64620d7aaa0e20c60538847b793d230e86d5ed09",
+        "sha256": "99ab815ae3956e1af65853f092785371a9d8b5dfd95ddb3c6f9713f292d69799",
+        "message_id": "msg_00000000-0000-7000-8000-000000000006"
+      }
+    ],
+    "result": {
+      "code": 0,
+      "session": "fixture-session",
+      "turn": "fixture-turn",
+      "message": "固定报告"
+    }
+  },
+  "proof": {
+    "session": "fixture-session",
+    "turn_id": "fixture-turn",
+    "cwd": "/fixture/learner",
+    "timestamp": "2026-10-23T16:00:00.000Z",
+    "current_date": "2026-10-24",
+    "timezone": "Asia/Shanghai",
+    "filesystem_sha256": "96c338644c842ccb17bef70c64620d7aaa0e20c60538847b793d230e86d5ed09",
+    "sha256": "99ab815ae3956e1af65853f092785371a9d8b5dfd95ddb3c6f9713f292d69799",
+    "message_id": "msg_00000000-0000-7000-8000-000000000006"
+  },
+  "cases": [
+    {
+      "name": "trailing-human",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "</environment_context>",
+            "</environment_context>\nHuman task"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leading-human",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "<environment_context>",
+            "Human task\n<environment_context>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extra-tag",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "  <current_date>",
+            "  <instructions>Human task</instructions>\n  <current_date>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duplicate-date",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "  <timezone>",
+            "  <current_date>2026-10-24</current_date>\n  <timezone>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "permission-change",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "access=\"deny\"",
+            "access=\"write\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "profile-disabled",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "type=\"managed\"",
+            "type=\"disabled\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "filesystem-unrestricted",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "type=\"restricted\"",
+            "type=\"unrestricted\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "glob-depth-change",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "glob_scan_max_depth=\"8\"",
+            "glob_scan_max_depth=\"9\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "allow-escalation",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "escalatable=\"false\"",
+            "escalatable=\"true\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "workspace-change",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "<root>/fixture/learner</root>",
+            "<root>/foreign</root>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extra-workspace",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "</workspace_roots>",
+            "<root>/foreign</root></workspace_roots>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "timezone-change",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "Asia/Shanghai",
+            "Asia/Tokyo"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extra-cwd",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "  <current_date>",
+            "  <cwd>/fixture/learner</cwd>\n  <current_date>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "xml-entity",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "/fixture/private",
+            "/fixture/&#112;rivate"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown-entry",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "</file_system>",
+            "<human>task</human></file_system>"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "date-jump",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "2026-10-24",
+            "2026-10-25"
+          ]
+        },
+        {
+          "row": 6,
+          "path": [
+            "timestamp"
+          ],
+          "value": "2026-10-24T16:00:00.000Z"
+        },
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "create_time"
+          ],
+          "value": 1792857600.00025
+        }
+      ]
+    },
+    {
+      "name": "backward-clock",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "2026-10-24",
+            "2026-10-23"
+          ]
+        },
+        {
+          "row": 6,
+          "path": [
+            "timestamp"
+          ],
+          "value": "2026-10-23T15:58:00.000Z"
+        },
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "create_time"
+          ],
+          "value": 1792771080.00025
+        }
+      ]
+    },
+    {
+      "name": "invalid-date",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "2026-10-24",
+            "2026-02-30"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "missing-timestamp",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "timestamp"
+          ],
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "invalid-timestamp",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "timestamp"
+          ],
+          "value": "2026-10-23T24:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "name": "wrong-part-type",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "content",
+            0,
+            "type"
+          ],
+          "value": "output_text"
+        }
+      ]
+    },
+    {
+      "name": "extra-part",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "content"
+          ],
+          "value": [
+            {
+              "type": "input_text",
+              "text": "<environment_context>\n  <current_date>2026-10-24</current_date>\n  <timezone>Asia/Shanghai</timezone>\n  <filesystem><workspace_roots><root>/fixture/learner</root></workspace_roots><permission_profile type=\"managed\"><file_system type=\"restricted\" glob_scan_max_depth=\"8\"><entry access=\"deny\" escalatable=\"false\"><path>/fixture/private</path></entry><entry access=\"write\"><path>/fixture/learner</path></entry><entry access=\"read\"><special>:root</special></entry></file_system></permission_profile></filesystem>\n</environment_context>"
+            },
+            {
+              "type": "input_text",
+              "text": "Human task"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "part-extra-field",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "content",
+            0,
+            "extra"
+          ],
+          "value": "Human task"
+        }
+      ]
+    },
+    {
+      "name": "event-user",
+      "changes": [
+        {
+          "row": 6,
+          "whole": {
+            "type": "event_msg",
+            "timestamp": "2026-10-23T16:00:00.000Z",
+            "payload": {
+              "type": "user_message",
+              "message": "<environment_context>\n  <current_date>2026-10-24</current_date>\n  <timezone>Asia/Shanghai</timezone>\n  <filesystem><workspace_roots><root>/fixture/learner</root></workspace_roots><permission_profile type=\"managed\"><file_system type=\"restricted\" glob_scan_max_depth=\"8\"><entry access=\"deny\" escalatable=\"false\"><path>/fixture/private</path></entry><entry access=\"write\"><path>/fixture/learner</path></entry><entry access=\"read\"><special>:root</special></entry></file_system></permission_profile></filesystem>\n</environment_context>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "before-prompt",
+      "changes": [
+        {
+          "move": [
+            6,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "name": "after-complete",
+      "changes": [
+        {
+          "move": [
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "name": "new-turn",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "event_msg",
+            "payload": {
+              "type": "task_started",
+              "turn_id": "foreign"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "session-change",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "session_meta",
+            "payload": {
+              "id": "foreign",
+              "cwd": "/fixture/learner"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "policy-network-change",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "turn_context",
+            "payload": {
+              "turn_id": "fixture-turn",
+              "cwd": "/fixture/learner",
+              "approval_policy": "never",
+              "sandbox_policy": {
+                "type": "workspace-write",
+                "writable_roots": [
+                  "/fixture/learner"
+                ],
+                "network_access": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "policy-approval-change",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "turn_context",
+            "payload": {
+              "turn_id": "fixture-turn",
+              "cwd": "/fixture/learner",
+              "approval_policy": "on-request",
+              "sandbox_policy": {
+                "type": "workspace-write",
+                "writable_roots": [
+                  "/fixture/learner"
+                ],
+                "network_access": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "context-cwd-change",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "turn_context",
+            "payload": {
+              "turn_id": "fixture-turn",
+              "cwd": "/foreign",
+              "approval_policy": "never",
+              "sandbox_policy": {
+                "type": "workspace-write",
+                "writable_roots": [
+                  "/fixture/learner"
+                ],
+                "network_access": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "poisoned-user",
+      "changes": [
+        {
+          "insert": 6,
+          "value": {
+            "type": "response_item",
+            "payload": {
+              "type": "message",
+              "role": "user",
+              "content": [
+                {
+                  "type": "input_text",
+                  "text": "Human task"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "untrusted-bootstrap",
+      "changes": [
+        {
+          "row": 2,
+          "replace": [
+            "type=\"managed\"",
+            "type=\"disabled\""
+          ]
+        },
+        {
+          "row": 6,
+          "replace": [
+            "type=\"managed\"",
+            "type=\"disabled\""
+          ]
+        }
+      ]
+    },
+    {
+      "name": "human-provenance",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_metadata"
+          ],
+          "value": [
+            {
+              "provenance": {
+                "type": "user"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "human-content-kind",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_kinds"
+          ],
+          "value": [
+            "user.text"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extra-content-kind",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_kinds"
+          ],
+          "value": [
+            "environments.environment_context",
+            "user.text"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hook-provenance",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_metadata"
+          ],
+          "value": [
+            {
+              "provenance": {
+                "type": "harness",
+                "hook": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "numeric-hook-provenance",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_metadata"
+          ],
+          "value": [
+            {
+              "provenance": {
+                "type": "harness",
+                "hook": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wrong-provenance-turn",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "turn_id"
+          ],
+          "value": "foreign"
+        }
+      ]
+    },
+    {
+      "name": "missing-provenance",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough"
+          ],
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "create-time-skew",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "create_time"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "boolean-create-time",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "create_time"
+          ],
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "wrong-message-id",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "id"
+          ],
+          "value": "msg_foreign"
+        }
+      ]
+    },
+    {
+      "name": "reused-bootstrap-message-id",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "id"
+          ],
+          "value": "msg_00000000-0000-7000-8000-000000000002"
+        }
+      ]
+    },
+    {
+      "name": "extra-payload-field",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "human_text"
+          ],
+          "value": "Human task"
+        }
+      ]
+    },
+    {
+      "name": "extra-provenance-field",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "human_text"
+          ],
+          "value": "Human task"
+        }
+      ]
+    },
+    {
+      "name": "untrusted-bootstrap-provenance",
+      "changes": [
+        {
+          "row": 2,
+          "path": [
+            "payload",
+            "internal_chat_message_metadata_passthrough",
+            "content_item_kinds"
+          ],
+          "value": [
+            "user.text"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "trailing-newline",
+      "changes": [
+        {
+          "row": 6,
+          "replace": [
+            "</environment_context>",
+            "</environment_context>\n"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "message-id-newline",
+      "changes": [
+        {
+          "row": 6,
+          "path": [
+            "payload",
+            "id"
+          ],
+          "value": "msg_00000000-0000-7000-8000-000000000006\n"
+        }
+      ]
+    }
+  ]
+}

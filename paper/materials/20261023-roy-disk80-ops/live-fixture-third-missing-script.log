@@ -1,0 +1,24 @@
+..E.........
+======================================================================
+ERROR: test_existing_tick_keeps_victory_and_completion_paths_but_starts_no_jobs (__main__.Admission.test_existing_tick_keeps_victory_and_completion_paths_but_starts_no_jobs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-disk80-20261023/live-consumer-fixture/ops/tests/test_disk_admission.py", line 136, in test_existing_tick_keeps_victory_and_completion_paths_but_starts_no_jobs
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-disk80-20261023/live-consumer-fixture/ops/codex-ops-learn.py", line 37, in <module>
+    import boss_sim_jobs  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-disk80-20261023/live-consumer-fixture/ops/boss_sim_jobs.py", line 12, in <module>
+    from trust import BOSS_KEYS
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-disk80-20261023/live-consumer-fixture/agent/tools/boss-sim/trust.py", line 41, in <module>
+    from characters import LEGACY, character_dir, character_key, run_character  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'characters'
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.179s
+
+FAILED (errors=1)

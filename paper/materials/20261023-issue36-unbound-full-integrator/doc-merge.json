@@ -1,0 +1,11 @@
+{
+  "path": "docs/codex-ops.md",
+  "base_blob": "6f953fd64bfcd267a0d02784473bb8ad2a3d0e3c",
+  "original_full_blob": "aa9da8c6bc1cb01b5b1aa3e2c9ea645958e6df90",
+  "integrated_blob": "08065c5258997cd9c8161bea2a81a6eb6e34e78b",
+  "sha256": "c41d52e92b2069def82551392dad028852a5287365fe0d72a754b0d8ac6d09a3",
+  "ops_comment": 6356069735,
+  "ops_fallback_sha256": "d47c3e98a879376ee3800353d8f0b73a4bb7f5c5b04f437072262d2905240cb1",
+  "fallback_paragraph": "**学习者非交互回退（Roy 2026-10-23）**：`hosting` 中设 `learner_tui=off`，保留 `learners=herdr` 和 `brain_view=herdr`。后续新学习批次走原 herdr 命令 pane，在 tab 显示 `.out/.err` 日志并沿原 wrapper 完成审计、退场；模型、账号、强度、沙箱权限和批次身份不变。不修改在途批次。恢复交互时删除该行或设 `learner_tui=on`，下一自然学习启动点生效；环境变量 `CODEX_OPS_LEARNER_TUI` 优先，须核实际原生请求，配置值不代运行回执。此回退不解决交互原生回合绑定问题；#36 修复仍须单独验收。",
+  "only_docs_changed_after_full": true
+}

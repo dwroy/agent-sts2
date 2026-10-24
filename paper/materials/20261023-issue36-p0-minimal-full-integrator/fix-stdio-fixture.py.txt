@@ -1,0 +1,32 @@
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent
+def git(*args,cwd=R):return subprocess.check_output(['git',*args],cwd=cwd)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+assert not (B/'full').exists()
+save=B/'stdio-bridge-first-red';assert not save.exists();save.mkdir()
+for name in ['assembly.json','main-assembly.json','main-checks.json','main-inputs-before.json','main-tsc.log','main-directed.log','main-vitest.json']:
+ shutil.copy2(B/name,save/name)
+MA=json.loads((B/'main-assembly.json').read_text());MW=Path(MA['worktree'])
+before=json.loads((B/'main-inputs-before.json').read_text())
+assert all(sha((MW/r['path']).read_bytes())==r['sha256'] for r in before)
+(save/'inputs-unchanged.json').write_text(json.dumps(dict(unchanged=True,count=len(before)))+'\n')
+name='agent/tests/learner-stdio-view.test.ts';old=(MW/name).read_text()
+needle='  writeFileSync(join(ops, "learner_tui.py"), "# Fixed verified TUI receipt; no native session.\\n");'
+replacement='''  writeFileSync(join(ops, "learner_tui.py"), "# Fixed verified code and finish receipt; no native session.\\nimport sys\\nif sys.argv[1] == 'verified-code': print(7)\\n");
+  writeFileSync(join(ops, "learner_tabs.py"), "# Fixed successful seal; no pane or registry commands.\\n");'''
+assert old.count(needle)==1;new=old.replace(needle,replacement);raw=new.encode()
+for prefix in ['', 'main-']:
+ p=B/(prefix+'assembly.json');a=json.loads(p.read_text());w=Path(a['worktree']);assert (w/name).read_text()==old
+ (w/name).write_bytes(raw);git('add','--sparse','--',name,cwd=w)
+ row=next(r for r in a['paths'] if r['path']==name);row['sha256']=sha(raw)
+ blob=git('rev-parse',':'+name,cwd=w).decode().strip()
+ if prefix:row['blob']=blob
+ else:row.update(tested_blob=blob,bytes=len(raw))
+ a['tree']=git('write-tree',cwd=w).decode().strip();a['stdio_fixture_adaptation']='fixed verified-code=7, successful seal stub; no production change'
+ p.write_text(json.dumps(a,ensure_ascii=False,indent=2)+'\n')
+ if not prefix:(B/'source.patch').write_bytes(git('diff','--binary','--full-index',a['live_base'],'--',*[r['path'] for r in a['paths']],cwd=w))
+for n in ['main-checks.json','main-inputs-before.json','main-tsc.log','main-directed.log','main-vitest.json']:(B/n).unlink()
+receipt=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),first_red=dict(files=11,passed=212,failed=1,expected=7,actual=75,reason='new display-only fixture had no verified-code output or optional seal stub; P0 correctly retained attention'),original_sha256=sha(old.encode()),adapted_sha256=sha(raw),production_changed=False,full_started=False)
+(B/'stdio-fixture-adaptation.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(receipt),flush=True)

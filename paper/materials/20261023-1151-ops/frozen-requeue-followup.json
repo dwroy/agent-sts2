@@ -1,0 +1,158 @@
+{
+  "at": "2026-10-23T12:03:21+08:00",
+  "wave": {
+    "at": "2026-10-23T12:01:45+08:00",
+    "newly_started": [
+      {
+        "original": "20261023-014302-strategy-proposal",
+        "new_batch": "20261023-110001-strategy-proposal",
+        "task": "strategy-proposal",
+        "pid": 133718,
+        "birth": "15263123",
+        "pane": "w1H:pBV",
+        "label": "learner-20261023-110001-strategy-proposal",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
+      },
+      {
+        "original": "20261023-014302-fix-batch",
+        "new_batch": "20261023-110801-fix-batch",
+        "task": "fix-batch",
+        "pid": 134337,
+        "birth": "15263453",
+        "pane": "w1H:pBW",
+        "label": "learner-20261023-110801-fix-batch",
+        "transport_requested": "stdio in original herdr command host",
+        "old_disposition": "未启动、已重排",
+        "new_model_acceptance_claimed": false
+      }
+    ],
+    "remaining_frozen_queued": [
+      "20261023-110001-s2-strategy-proposal"
+    ],
+    "own_learning_hold_released": false,
+    "normal_learning_admission_restored": true,
+    "plan": "paper/materials/20261023-learner-recovery-ops/seven-requeue-plan.json",
+    "no_task_replay_of_any_previously_started_session": true,
+    "log_views": [
+      {
+        "batch": "20261023-110001-strategy-proposal",
+        "rc": 0,
+        "stdout": "{\"batch\": \"20261023-110001-strategy-proposal\", \"pane\": \"w1H:pBX\", \"tab\": \"w1H:tBT\", \"workspace\": \"w1H\", \"ops_pane\": \"w1H:p8\", \"label\": \"learner-log-20261023-110001-strategy-proposal\", \"logs\": [\"/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.out\", \"/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.err\"], \"screen\": \"dw@xdwin:~/Projects/agent-sts2$  bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-log-20261023-110001-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-log-20261023-110001-strategy-proposal.pid 1 - /home/dw/Projects/agent-sts2/ops/codex-ops/herdr.json -- tail -n 80 --pid=133718 -F -- /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.out /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.err\\n==> /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.out <==\\n\\n==> /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110001-strategy-proposal.err <==\", \"learner_restarted\": false}\n",
+        "stderr": ""
+      },
+      {
+        "batch": "20261023-110801-fix-batch",
+        "rc": 0,
+        "stdout": "{\"batch\": \"20261023-110801-fix-batch\", \"pane\": \"w1H:pBY\", \"tab\": \"w1H:tBV\", \"workspace\": \"w1H\", \"ops_pane\": \"w1H:p8\", \"label\": \"learner-log-20261023-110801-fix-batch\", \"logs\": [\"/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.out\", \"/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.err\"], \"screen\": \"dw@xdwin:~/Projects/agent-sts2$  bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-log-20261023-110801-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-log-20261023-110801-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/codex-ops/herdr.json -- tail -n 80 --pid=134337 -F -- /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.out /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.err\\n==> /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.out <==\\n\\n==> /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-110801-fix-batch.err <==\", \"learner_restarted\": false}\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "started_once_total": 6,
+  "remaining": [
+    {
+      "original": "20261023-014302-s2-strategy-proposal",
+      "new_batch": "20261023-110001-s2-strategy-proposal",
+      "base": "4d27513beba43b10e147a066d288e3ddf1bf05ad",
+      "frozen_inputs": [
+        {
+          "path": "ops/codex-ops/recovery/pre-model-requeues/20261023-014302-s2-strategy-proposal/frozen-inputs/launch-prompt.txt",
+          "sha256": "6a4b0a9d5c879d05725ed8d3b717cc866db33e86e77925cdb58ce1d27d2f2801",
+          "bytes": 22881
+        },
+        {
+          "path": "ops/codex-ops/recovery/pre-model-requeues/20261023-014302-s2-strategy-proposal/frozen-inputs/launch-params.json",
+          "sha256": "4946fe3a26379ec1c71f2e1642b5a6b81df0c7959748c8d5fffb93cb5f9b05e9",
+          "bytes": 743
+        },
+        {
+          "path": "ops/codex-ops/recovery/pre-model-requeues/20261023-014302-s2-strategy-proposal/frozen-inputs/original-tui.json",
+          "sha256": "b71081a63423f9d841ee41f5d627fd4c1b178e300948d1ba341bfb6c2df134a5",
+          "bytes": 401
+        },
+        {
+          "path": "ops/codex-ops/recovery/pre-model-requeues/20261023-014302-s2-strategy-proposal/frozen-inputs/original-launch.json",
+          "sha256": "a733b8bba82deb59d0ca053a2fb18975ae3c4ff71f8c843d2b8cf46782c1a90c",
+          "bytes": 26939
+        }
+      ],
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2",
+      "next_action": "下一个真实strategy-done/fix-done事件核原2策略/1修复容量；若原预分配树缺失，核原回执及零模型/once guard后用allocator --resume恢复同基线，再原helper启动一次。"
+    }
+  ],
+  "allocation_first_failure_preserved": true,
+  "explicit_resume_receipt": {
+    "schema": "workspace-allocation-v1",
+    "root": "/home/dw/Projects/agent-sts2",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001",
+    "branch": "codex-strategy-silent-20261023-110001",
+    "base": "4d27513beba43b10e147a066d288e3ddf1bf05ad",
+    "at": "2026-10-23T10:42:04+08:00",
+    "state": "allocated",
+    "require_node": false,
+    "excluded_generated_snapshots": [
+      "paper/data/history/",
+      "paper/raw/",
+      "paper/materials/",
+      "experiments/"
+    ],
+    "canonical_history_kept_in_main_and_git": true,
+    "shared_tools": {
+      "schema": "shared-readonly-tools-v1",
+      "root": "/home/dw/Projects/agent-sts2",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001",
+      "source_permissions_unchanged": true,
+      "install_or_dependency_copy": false,
+      "tools": {
+        "node": {
+          "state": "linked",
+          "source": "/home/dw/Projects/agent-sts2/agent/node_modules",
+          "manifests": {
+            "agent/package.json": "3fbb4fa484314e53df83b4b1338872be4e72b24d4ee250e47b9af96c38265ae2",
+            "agent/package-lock.json": "0ed7b860e8085eb62d354df0825d7af6f7fc7e6a610284469de8c29ef5f5d676"
+          },
+          "installed_lock_sha256": "5eb24c8e6b6bd7b2a4f363372a0d8b98885c317c284709c81be8e2fa4a6d4c4a",
+          "runtime": {
+            "node": "v22.23.3",
+            "abi": "127",
+            "platform": "linux",
+            "arch": "x64"
+          },
+          "consumer_cache": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001/.cache/vitest",
+          "usage": "read-only"
+        },
+        "python": {
+          "state": "linked",
+          "source": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+          "manifests": {
+            "agent/tools/logdb/requirements.txt": "e9c02b7acc611bd2acbaa41fef6b8db7313aa045bf15ef6e1b6653c2d2f237c1"
+          },
+          "runtime": {
+            "python": [
+              3,
+              14,
+              4
+            ],
+            "cache_tag": "cpython-314",
+            "duckdb": "1.5.6"
+          },
+          "usage": "read-only"
+        }
+      }
+    },
+    "finished_at": "2026-10-23T12:01:40+08:00",
+    "resume_history": [
+      {
+        "at": "2026-10-23T12:01:37+08:00",
+        "state": "allocated",
+        "error": null,
+        "failed_checkout_reclaimed": null
+      }
+    ]
+  },
+  "new_TUI_enabled": false,
+  "native_evidence": "paper/materials/20261023-1151-ops/two-new-native-starts.json",
+  "mirror_titles_suffix": "· 日志"
+}

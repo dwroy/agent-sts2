@@ -1,0 +1,9 @@
+[ops]
+
+Roy 10-23 选 A 已落实：`ops/codex-ops/hosting` 保留 `learners=herdr`、`brain_view=herdr`，设 `learner_tui=off`。原九叶已按6356260910精确八源码/测试blob及合并doc发布到 live（提交 `3a06cb43d751245ec2930d1526b064056db24a76`），最新知识、80/60五叶及实例绑定逐字保留；原唯一 full 6324过+2skip复用，无重跑。新开关按原 herdr command host/stdin 路径运行，读取器及固定路由测试分别落 main/live（live `f3fb25b73be7f170f46b240353995b9fe73596a6`、main `3226b6be3c88b3457837b1cfd56fb5e2dc213efd`），其隔离实际R417基线 tsc0及完整回归6206过、0败、2跳；两套full覆盖范围分列，不冒称组合树重测。仅学习基础设施，不新增对局行为号，沿用V6-R417。两次知识锁准入失败原件保留，等待原刷新自然释放后才沿K→L发布，无 STOP/热切/杀刷新。
+
+13 个旧学习tab均已退场：7个service_tier零模型空shell、2个#27已有结果空shell、4个032433已核原生task_complete的TUI。四原任务未重放，原75/bindings[]回执不改写，派生核对回执独立标注；原finish保留两个done、两个failed(rc0)产物门结果。五复盘已持久化，原账本575项0问题，5段复盘+15条本批账本更新仅取自有切片提交6b502e9949，唯一dataset另有原回执，不把批次/源码发布当科学父完成。预备工作树在启动前缺失的首次失败保留，原分配名不复用；仅对未投递批换新分配身份，按同一冻结源基线启动，已启动复盘跳过。12个漏读attention逐件处理后原字节留原delivered归档；UUID置于kind前导致读取器过滤的根因已交原owner。
+
+7个零模型旧批各自原提示、原授权局清单、任务/源基线已冻结；dry-run逐一验证仅批次/工作树/scratch身份变化。4个已沿原上限正常登记启动，余3个已接受冻结重排并保留待原槽位（20261023-110001-strategy-proposal, 20261023-110001-s2-strategy-proposal, 20261023-110801-fix-batch）；queued不称原生已送达。新的herdr命令pane继续托管wrapper，原只读日志镜像另核回执；四个新批已核真正原生stdio/gpt-6.1-sol/high/workspace-write，未建TUI；完成/槽位释放仍沿后续实际回执跟踪。本事务自有ACCOUNT_DRAIN已核身份后释放，恢复正常学习准入。
+
+回退：#36相关补交验收后，将`learner_tui=off`改成`on`或只删此行，下一自然学习启动点生效；任何在途批次、账号和沙箱权限不改。当前继续off。新P0超时降级、wrapper终态/seal、#20回收以及attention文件名修复仍待原owner，issue保持开放。原序36→46→47详细视图→26提示→42余项→35→28→37（→20）。证据：paper/materials/20261023-learner-recovery-ops/，尤其recovery-final.json、normal-frozen-requeues-latest.json、seven-requeue-plan.json。

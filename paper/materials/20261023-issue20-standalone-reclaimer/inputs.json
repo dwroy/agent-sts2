@@ -1,0 +1,79 @@
+{
+  "base": "0a9e87763b80dd3fee3af52a3a1a3bd9c50c6a91",
+  "source": "3f449fc6d8c651e429f71830d8ffe28117db5d51",
+  "branch": "issue-20-learner-tabs-release",
+  "original_parent_branch": "issue-20-agent-board-kit",
+  "original_sources": [
+    "c17842f8cf2ffbfac1960caa6fa23b925e0f6aa1",
+    "fc37ac1fd9d9959c49b369b1682a818d4af4c583",
+    "6eb822280e66449bf5fdd6572ed1b0a862cf1a00"
+  ],
+  "files": {
+    ".agents/board.yaml": {
+      "sha256": "4e6de79cb0a48bbfd4ebb855de13b0f48e37568afed2340393777ec66f5a55a6",
+      "blob": "3db07687889c741affb9a50832958c2463767568"
+    },
+    "AGENTS.md": {
+      "sha256": "c2264c4f6dc95e37cc9afeb8d84f58562155ada20136292d443e3512ed25c1b9",
+      "blob": "01d8bcf1e280ebc498495ba2fd6610e49b63ea47"
+    },
+    "agent/tests/learner-tabs.test.ts": {
+      "sha256": "6f12001a902d102db074dab222c236ce6f226bec856cfd2ddd14f40ab90d6e8d",
+      "blob": "d14765edf8c5c006fe7b9063c0de8fe5d61795d8"
+    },
+    "agent/tests/learner-wrapper-scripts.test.ts": {
+      "sha256": "1aba4230f387ca50aa52225c90a53163c6d961bd7f85d1298c6c95395caf167d",
+      "blob": "20d0976755fcbf4e6da83d6a4347a20ef2e9303c"
+    },
+    "docs/github-issues-workflow.md": {
+      "sha256": "4fd4acf6b329e0dd588be508859b7efb6902c12c6883d69b93cab82dc03b1497",
+      "blob": "284acfd535cc5d7756847e93c01425485b55ef22"
+    },
+    "docs/learner-tab-reclamation.md": {
+      "sha256": "2035201db0011a42d2ca608acc4e299b463c934d54008be4b95388a0a95fbcdf",
+      "blob": "92b6859417c2a0f3ea4aad30e4d2dc3d47ea9bc1"
+    },
+    "ops/codex-ops-learner.sh": {
+      "sha256": "70553d7b60a6a3589ea6439c04711a3412896ce2c38de55cce0a2c31131722ed",
+      "blob": "682fdd0881dbaa123f2dd1a2b2611716746a44fd"
+    },
+    "ops/codex-ops.sh": {
+      "sha256": "3c7676bc44edb5c2bb53f5209d39542711b9cdc16fa5982eb384a063c2791894",
+      "blob": "0ef5e68f7338427ba792e2c6b06ab387a47f2d36"
+    },
+    "ops/issue_session_support.py": {
+      "sha256": "e2a9281edb16e96acf843e0dcd58ab9e3e5dcffdba62fa555c60d81fb43e956b",
+      "blob": "4636bac6ecbf17fdab51349d3042aa6453095f9b"
+    },
+    "ops/learner_tabs.py": {
+      "sha256": "f08005fc3c93d6ff4eed243071064ffbd57cdd7edaa54c40c83b9d1ec6bcf3ed",
+      "blob": "2e6892ef95c412c4e0600a267d769e6ffa465a84"
+    },
+    "ops/tests/test_issue_session.py": {
+      "sha256": "192af820c4a58bce1940b7a36ddf723c414bb4e18a8ad1b8ed2f88f8233de506",
+      "blob": "1cf80cf604fd7c4fa914b8647e53a526398c4814"
+    },
+    "ops/tests/test_learner_tabs.py": {
+      "sha256": "84e61e1491efb82fa15141dd4f4ac13734ca2cda0c0a9f4fa1ac8c600c5a5eab",
+      "blob": "77cadf49a895d1967c0ec9ed9ab265a95e426dae"
+    },
+    "ops/tests/test_learner_wrapper_completion.py": {
+      "sha256": "39e6ab2c811e9c2ec6eb0e114a548739c1a4db26de4c7fc70f7b1723b7e421a3",
+      "blob": "affd9ec88b84ebc4c2bf0b7cc0cb9f74f9bdfb7e"
+    }
+  },
+  "preserved_sha256": {
+    "learner/lib/herdr.ts": "d9f0f543c0ba5ae98e0c2d7cc687ee9b46b3941cde31a10d04e5ce98e9dd447d",
+    "ops/learner_tui.py": "7eb558f2881fa0c0ca14cde3acc39e840d2ab093e4088b2e2da1beffa502168e",
+    "ops/brain_view.py": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+    "ops/learner_jobs.py": "86f60d302ffa84dfe4b704f90ee4b0e05704c006bd5e43d4d85609b8f985d88d",
+    "agent/tests/learner-herdr.test.ts": "be3982a636ce33130aadceb36e79c00b4c98dd64b9d4597a648eb8bd477638bc"
+  },
+  "config_non_protection_fields_unchanged": true,
+  "dev_max_parallel": 20,
+  "protection": [
+    ".worktrees/live",
+    "panes: integrator, ops, brain-view",
+    "running-panes: learner-*"
+  ]
+}

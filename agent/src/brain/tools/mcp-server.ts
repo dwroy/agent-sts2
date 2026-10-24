@@ -1,3 +1,4 @@
+import { observeBrain, type BrainObserver } from "../live-view.js";
 /**
  * Our MCP tool server (docs/v4-architecture.md §2 "工具服务"), hand-written JSON-RPC 2.0 over stdio
  * (newline-delimited), no dependencies. A CLI agent (claude; later the offline learner's agents) starts it with
@@ -46,6 +47,7 @@ export class ToolHost {
     /** Called with each record as it is made (the --record-file writer). */
     private readonly onRecord?: (record: ToolCallRecord) => void,
     private readonly knowledgeAudit = false,
+    private readonly observe?: BrainObserver,
   ) {}
 
   /** tools/list entries. */
@@ -61,6 +63,7 @@ export class ToolHost {
   async call(name: string, input: unknown): Promise<ToolResult> {
     const tool = this.tools.find((candidate) => candidate.name === name);
     const started = Date.now();
+    observeBrain(this.observe, { kind: "tool-start", name, input });
     let result: ToolResult;
     if (!tool) {
       result = { text: `unknown tool "${name}"`, isError: true };
@@ -83,6 +86,7 @@ export class ToolHost {
     } catch { /* Legacy prose tools have no envelope. */ }
     if (this.knowledgeAudit || record.sources) { record.outputBytes = Buffer.byteLength(result.text, "utf8"); record.sources ??= []; }
     this.records.push(record);
+    observeBrain(this.observe, { kind: "tool-end", name, output: result.text, ms: record.ms, isError: result.isError, sources: record.sources });
     this.onRecord?.(record);
     return result;
   }

@@ -7,6 +7,7 @@ cross-run closing order. No pickle, strategy values or inferred evidence.
 from collections import Counter, defaultdict
 import atexit
 import hashlib
+import gzip
 import json
 import os
 from pathlib import Path
@@ -95,6 +96,7 @@ class RunCache:
         if self.index is None:
             return
         row = dict(schema='legacy-refresh-cache-v1', pid=os.getpid(), seconds=time.monotonic()-self.started,
+                   cycle=os.environ.get('STS2_REFRESH_CYCLE'),
                    sources={s: self.index.metadata(s) for s in sorted(self.streams)},
                    stats=self.index.stats, phases=self.timings, extractions=self.extractions)
         with (self.index.directory / 'timing.jsonl').open('a') as out:
@@ -457,6 +459,37 @@ class RunCache:
             parts.extend(self.cached('card-witnesses', refs, produce, code=code))
         for off, raw in sorted(parts, key=lambda p:p[0]):
             yield off, raw.encode('utf8',errors='surrogateescape')
+
+    def card_result(self, path, selected, audit, reduce, code_path):
+        stream = self.ready(path)
+        info = self.index.metadata(stream)
+        code = token([self.code, implementation(code_path)])
+        stamp = self.index.directory / ('card-aggregate-' + token(selected and sorted(selected)) + '.json.gz')
+        old, reason = None, None
+        try:
+            with gzip.open(stamp, 'rt') as source:
+                old = json.load(source)
+            if not isinstance(old, dict):
+                raise ValueError('invalid card checkpoint envelope')
+            if (old['code'] != code or old['sha256'] != token(old['state'])
+                    or old['offset'] > info['source_size'] or old['generation'] != info['generation']):
+                old, reason = None, 'source_or_implementation_changed'
+        except (OSError, ValueError, KeyError, EOFError, TypeError):
+            old, reason = None, 'cold_or_damaged_cache'
+        offset = old['offset'] if old else 0
+        accumulator = {'value': unpack(old['state'])} if old else {}
+        refs = [ref for ref, _rid, _reason in self.index.references(stream, start_offset=offset)]
+        result = reduce(path, selected, audit,
+                        ((ref['offset'], raw) for ref, raw in zip(refs, self.raw(path, refs))), accumulator)
+        state = pack(accumulator['value'])
+        temporary = stamp.with_suffix('.tmp')
+        with gzip.open(temporary, 'wt') as out:
+            json.dump(dict(code=code, offset=info['source_size'], generation=info['generation'],
+                           state=state, sha256=token(state)), out)
+        os.replace(temporary, stamp)
+        self.timings.append(dict(name='card-upgrades:append', processed_frames=len(refs),
+                                 from_offset=offset, rebuild_reason=reason))
+        return result
 
 
 def merge_stuns(target, source, evidence_limit):

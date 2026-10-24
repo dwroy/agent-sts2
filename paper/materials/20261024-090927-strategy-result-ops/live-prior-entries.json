@@ -1,0 +1,83 @@
+[
+  {
+    "id": "silent-brain-act1-deadly-poison-prefix-context",
+    "version": "1.0.0",
+    "trigger": {
+      "question_types": [
+        "card_reward"
+      ],
+      "acts": [
+        1
+      ]
+    },
+    "strategy": "仅Silent A10/v0.111第一幕：出现DEADLY_POISON时保留拿、备选牌及不拿比较，别由历史频率认定必拿或禁拿。奖励拿牌前缀代理为0张时拿20/77局胜、不拿47/123；7个可配对前缀张数组差均负。但前缀含SNAKEBITE时拿13/35、不拿33/117，方向反转，故不能称普遍负收益。后者后续Boss到达34/35与140/146机会，非独立局率或Boss通过率。前缀遗漏初始/删改/商店/升级牌；未控制玩家/路径/状态，均非因果。不从牌名推断组合机制。",
+    "source": "external:sts2fun",
+    "confidence": 0.3,
+    "evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "许可未核；仅署名聚合，原始数据不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "single-player; valid; not abandoned; no modifiers; patch_major=v0.111; act_index=0; card_id=CARD.DEADLY_POISON; picked=true; prior_reward_cards_n=0; cell distinct_uploaded_runs>=10; upgrades unresolved"
+        },
+        "statistic": {
+          "name": "eventual_win_per_uploaded_run",
+          "value": 0.2597402597402597,
+          "unit": "fraction"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 77
+        },
+        "design": "observational",
+        "limitations": [
+          "观察性非因果；奖励前缀非完整牌组、同局/组间重叠、玩家/SL混杂；完整筛选、反例与局限见原件。"
+        ],
+        "ref": "paper/materials/20261024-51-strategy/081200.json#silent-brain-act1-deadly-poison-prefix-context",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "许可未核；仅署名聚合，原始数据不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "single-player; valid; not abandoned; no modifiers; patch_major=v0.111; act_index=0; card_id=CARD.DEADLY_POISON; picked=false; prior_reward_cards_n=0; cell distinct_uploaded_runs>=10; upgrades unresolved"
+        },
+        "statistic": {
+          "name": "eventual_win_per_uploaded_run",
+          "value": 0.3821138211382114,
+          "unit": "fraction"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 123
+        },
+        "design": "observational",
+        "limitations": [
+          "观察性非因果；奖励前缀非完整牌组、同局/组间重叠、玩家/SL混杂；完整筛选、反例与局限见原件。"
+        ],
+        "ref": "paper/materials/20261024-51-strategy/081200.json#silent-brain-act1-deadly-poison-prefix-context",
+        "role": "support"
+      }
+    ],
+    "evidence_detail_ref": {
+      "path": "paper/materials/20261024-51-strategy/081200.json",
+      "sha256": "8cb115ad44eb1aa10cf3632c1fb0eb742bd7bd4707bafb1854db391e728cc2ae",
+      "original_evidence_items": 12,
+      "prior_evidence_preserved_separately": false
+    }
+  }
+]

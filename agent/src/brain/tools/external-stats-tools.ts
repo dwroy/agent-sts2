@@ -87,6 +87,55 @@ function id(input: Input, key: string, prefix: string): string | undefined {
   return normalized;
 }
 
+/** Availability/identity cues only, using the very pinned aggregate and exact IDs the tools accept. */
+export function externalStatsQueryHints(ctx: ToolContext) {
+  const reward = ctx.label === "reward/card", shop = ctx.label?.startsWith("shop/") === true;
+  if ((!reward && !shop) || knowledgeCharacter() !== "silent" || ctx.ascension !== 10) return null;
+  const object = (v: unknown): Row => !!v && typeof v === "object" && !Array.isArray(v) ? v as Row : {};
+  const raw = object(ctx.state), p = object(ctx.payload), facts = object(p["facts"]);
+  const screen = object(raw[reward ? "reward" : "shop"] ?? p[reward ? "reward" : "shop"]);
+  const offered = screen[reward ? "card_options" : "cards"];
+  const ids = new Set<string>();
+  const add = (v: unknown) => {
+    if (typeof v !== "string") return;
+    try { const value = id({ id: v }, "id", "CARD"); if (value) ids.add(value); } catch { /* No guessed names or mappings. */ }
+  };
+  if (Array.isArray(offered)) for (const entry of offered) {
+    const row = object(entry); if (!shop || row["is_stocked"] !== false) add(row["card_id"]);
+  }
+  else for (const [key, value] of Object.entries(ctx.options ?? {})) {
+    if (shop && !key.startsWith("buy_card") || !value) continue;
+    try { const row = object(JSON.parse(value)); add(row["id"] ?? row["card_id"]); } catch { /* Display prose is not an ID. */ }
+  }
+  let data: Dataset;
+  try { data = load(ctx); } catch { return null; }
+  const act = Number(ctx.act ?? facts["act"] ?? p["act"]);
+  const byAct = Number.isInteger(act) && act >= 1 && act <= 3 ? { act } : {};
+  const tables = new Map<Table, Row[]>();
+  const rows = (table: Table) => {
+    let view = tables.get(table);
+    if (!view) { view = data.tables[table].rows.map(values => Object.fromEntries(data.tables[table].columns.map((key, i) => [key, values[i]])))
+      .filter(row => row["version"] === "v0.111"); tables.set(table, view); }
+    return view;
+  };
+  const matching = (row: Row) => byAct.act === undefined || row["act"] === byAct.act;
+  const cards = [...ids].map(card => ({ id: card, count: rows("card").filter(r => r["card"] === card && matching(r)).length,
+    input: { id: card, ...byAct } })).filter(card => card.count > 0);
+  const make = (table: Table, input: Input, count: number) => ({ tool: `external_stats_${table}`, count, ...(count ? { input } : {}) });
+  const boss = object(raw["run"])["boss_id"] ?? facts["act_boss"];
+  const encounters = typeof boss === "string" ? rows("encounter").filter(r => r["encounter_id"] === `ENCOUNTER.${boss.replace(/^ENCOUNTER\./, "")}` && matching(r)) : [];
+  const cooccurrence = [...ids].map(card => ({ card, count: rows("cooccurrence").filter(r => r["scope"] === "reached_act3" && (r["a"] === card || r["b"] === card)).length })).find(r => r.count > 0);
+  return { source: SOURCE, version: "v0.111", status: "ok", optional: true, dataset_sha256: EXTERNAL_STATS_DATA_SHA256,
+    candidate_cards: ids.size, matched_cards: cards.length, cards: cards.slice(0, 6), omitted_cards: Math.max(0, cards.length - 6),
+    tools: [make("card", cards[0]?.input ?? {}, cards[0]?.count ?? 0),
+      make("skip", byAct, rows("skip").filter(matching).length),
+      make("deck_size", { scope: "all" }, rows("deck_size").filter(r => r["scope"] === "all").length),
+      make("encounter", { id: boss, ...byAct }, encounters.length),
+      make("clusters", { scope: "reached_act3", k: 4, seed: 24 }, rows("clusters").filter(r => r["scope"] === "reached_act3" && r["k"] === 4 && r["seed"] === 24).length),
+      make("cooccurrence", { card: cooccurrence?.card, scope: "reached_act3" }, cooccurrence?.count ?? 0)],
+    note: "外部Silent A10真人样本背景，由你自行决定是否查询；卡牌/跳过表是奖励机会统计，不是商店购买率。仅描述关联、非因果，与自有验证分账；聚类/共现不作构筑方向依据。" };
+}
+
 function makeTool(table: Table, description: string, properties: Record<string, JsonSchema>, required: string[],
   select: (row: Row, input: Input) => boolean): ToolDef {
   const schema: JsonSchema = { type: "object", properties: { version: VERSION, ...properties, ...PAGING }, required, additionalProperties: false };

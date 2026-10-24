@@ -1,0 +1,1353 @@
+diff --git a/agent/tests/learner-startup-recovery.test.ts b/agent/tests/learner-startup-recovery.test.ts
+index 5f08554a19c8183a00fc8ed1cda28da4521956d5..6e3bcdd45690c0f8c8567527d8d1dbbd7592835b 100644
+--- a/agent/tests/learner-startup-recovery.test.ts
++++ b/agent/tests/learner-startup-recovery.test.ts
+@@ -1,4 +1,5 @@
+ import { spawn } from "node:child_process";
++import { createHash } from "node:crypto";
+ import { EventEmitter } from "node:events";
+ import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+@@ -96,6 +97,21 @@ function children(attempts: Attempt[]) {
+ }
+ 
+ describe("bounded learner startup recovery", () => {
++  it("journals a backfill launch once without claiming a native start or allowing another launcher", async () => {
++    const f = fixture();
++    Object.assign(f.env, { LEARNER_BACKFILL_SOURCE: "issue48-fixed" });
++    mkdirSync(join(f.root, "ops/state/learner"));
++    const fake = children([{ code: 0 }]);
++    expect(await f.run()).toBe(0);
++    const receipt = JSON.parse(readFileSync(join(f.root, "ops/state/learner", `${f.env.LEARNER_BATCH_ID}.backfill-launch.json`), "utf8"));
++    expect(receipt).toMatchObject({ batch: f.env.LEARNER_BATCH_ID, source: "issue48-fixed", cwd: f.cwd,
++      input_sha256: createHash("sha256").update(fake.inputs[0]!).digest("hex") });
++    expect(receipt.native).toBeUndefined();
++    expect(receipt.cursor).toBeUndefined();
++    await expect(f.run()).rejects.toThrow();
++    expect(spawn).toHaveBeenCalledTimes(1);
++  });
++
+   it("retries a registered timestamp-only postmortem with the original lease and input", async () => {
+     const f = fixture(true);
+     const fake = children([{ stderr: failure }, { code: 0 }]);
+diff --git a/agent/tests/strategy-backfill.test.ts b/agent/tests/strategy-backfill.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e523a98c7412c0682c19ee9c5ca5c950d19c43ac
+--- /dev/null
++++ b/agent/tests/strategy-backfill.test.ts
+@@ -0,0 +1,9 @@
++import { execFileSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("admits frozen backfill only after normal work and consumes actual native starts once", () => {
++  const output = execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_backfill.py"], {
++    encoding: "utf8", timeout: 30_000, stdio: ["ignore", "pipe", "pipe"],
++  });
++  expect(output).toBe("");
++});
+diff --git a/learner/README.md b/learner/README.md
+index ab4504af2199fbb590f01862f76d9c34c4a2a7a0..7e22a3eeba0f32bb0376349235b42c60e0945fec 100644
+--- a/learner/README.md
++++ b/learner/README.md
+@@ -75,6 +75,20 @@ boss-sim、静默校准、双 boss、核心组合等专题各有任务文件；
+ - 当前调度器按角色批复盘（最多 5 局），有待并复盘即可派经验更新；旧「每 10 局并经验」是早期节奏。自动策略复核另在升阶或新增 10 局完成复盘时触发，并消费证据关联代码提案。
+ - 策略消费者当前两路，各持独立工作树与任务租约，不能重复领取同提案；状态写入及 live 合入/完整检查仍串行。
+ 
++### 后置经验回刷（#48）
++
++`ops/strategy_backfill_jobs.py` 是统一 `strategy-proposal` 的来源适配器。自然 `tick` 先运行原复盘、经验、注册学习、旧专题、提案、普通策略、修复、校准、Boss 重任务和升阶审计，再考虑回刷；正常来源已经就绪但在等 writer/lease 时仍让行。运行中的正常任务及原重任务候选队列也先行。原两个策略槽、learn.lock、账号选择、磁盘门和工作树锁继续由原启动器管理；不增加定时器或独立经验更新链。铁甲战士的派发行为不变。
++
++来源配置是 `notes/strategy-backfill-silent.json`，随代码交付时 `enabled=false`。集成员核验、ops 精确发布后，ops 沿原发布步骤开启，再等自然 tick；这不是新增审批。首计划 `issue48-boss-elite-001` 直接引用原冻结 manifest/work_spec，每次派发和宿主准备都核全部输入 SHA、原经验 ID/原文及已结束 Silent 锚点；不继承旧专题 ID、旧批次或旧线程。`artifact_copies` 只允许把 manifest 中原引用指向同 SHA/字节数的持久冻结副本；首批 rk 参考使用 ops 已保存的 `rk-task-reference.md`，保留其原临时树路径及 SHA，不依赖原树继续存在。每次注册使用当次真实 batch、独立工作树和 `backfill_source/backfill_binding`，模型请求保持 gpt-6.1-sol/high，实际生效以原生回执为准。
++
++进度位于原 `learn.json.strategy_backfill`，只读投影是同目录 `strategy-backfill-progress.json`。`cursor` 是已核原生接受任务的唯一旧 ID 数；注册 wrapper、提交 prompt 或空 bindings 不推进。TUI 沿原 journal；原启动器退回 stdio 时，只核该 launcher、该账号、该 session 的原生 prompt/context。进度另记实际 batch/session/turn、输入 SHA、原生启动时间、结束及耗时、逐 ID 去向、processed/remaining。运行中只更新独立进度，不改变批次租约指纹；重启从原批次和原生原件恢复，重复 tick 不重计。
++
++首批在原策略 scratch 产出 brain strategy/rk 候选和逐旧 ID 的 `backfill_results`，正式知识与旧经验原文不改。`processed` 只表示有真实候选文件的提炼处置；`waiting` 保留缺证理由和剩余数，不表示已上线、消费者已读回或科学父完成。正式策略、rk 回放门、账本/提案、发布和自然消费继续沿 #27/#28 原流程。缺失、重复 ID、虚构文件或报告身份不符不能完成该来源，也不转成普通提案补链任务。
++
++失败或 waiting 保留原批次，不自动重播。原会话的不确定状态先沿既有工具核查/恢复；确认原 wrapper 未启动模型，或原模型和 launcher 已真实退出后，ops 可增加该计划的 `retry_generation`，下一自然 tick 只领取剩余 ID，同计划最多三个实际登记尝试。完成项不重做，唯一启动游标不重计；缺退出证明或仍有 owner 时继续等待。新的冻结小计划可追加 `plans`，重叠来源同样必须核原租约退场，不能用新计划绕过不确定旧启动。
++
++吞吐验收沿既有调度和批次记录，以 ops 实际发布时刻 T 为切点，比较 T 前后各 24 小时的正常派发间隔、完成产出、等待/失败/重复与槽位占用。配置准备、源码交付和排队都不是 T，不新增观察计时器；#48/#50 的内容入库、消费与收益验收仍开放。
++
+ ### 任务格式
+ 
+ ```yaml
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index d7f2056284feee2a97dae9995f87b606a2aa8c82..e4559aa787eace1241dab60e9988f810c805658c 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -21,7 +21,7 @@ import { spawn, spawnSync, type ChildProcess } from "node:child_process";
+ import { createHash, randomUUID } from "node:crypto";
+ import { appendFileSync, closeSync, existsSync, fsyncSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from "node:fs";
+ import { homedir, tmpdir } from "node:os";
+-import { join, relative, resolve, sep } from "node:path";
++import { dirname, join, relative, resolve, sep } from "node:path";
+ import { createInterface } from "node:readline";
+ 
+ import { PROJECT_ROOT as REPO_ROOT, workspaceRoot } from "../../agent/src/core/paths.js";
+@@ -495,6 +495,16 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+   const lease = request.engine === "codex" ? captureStartupLease(deps.env, deps.projectRoot, request.cwd) : undefined;
+   const inputSha = createHash("sha256").update(command.stdin).digest("hex");
+   const commandSha = createHash("sha256").update(JSON.stringify([command.command, command.args, request.cwd])).digest("hex");
++  if (deps.env.LEARNER_BACKFILL_SOURCE) {
++    if (!lease || !deps.env.LEARNER_STATE_FILE) return unavailable("后置回刷缺少原批次租约，不启动模型\n");
++    // A launch receipt is evidence of registration only; native acceptance consumes the source IDs.
++    const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.backfill-launch.json`);
++    writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: deps.env.LEARNER_BACKFILL_SOURCE,
++      cwd: request.cwd, log: logPath, codex_home: learnerCodexHome(deps.env),
++      input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
++      command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
++    const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
++  }
+   let child: ChildProcess | undefined;
+   const stop = (signal: NodeJS.Signals): void => {
+     if (!child) return;
+diff --git a/notes/strategy-backfill-silent.json b/notes/strategy-backfill-silent.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a503b3aee194fc45681683b2423e317a3bd32782
+--- /dev/null
++++ b/notes/strategy-backfill-silent.json
+@@ -0,0 +1,25 @@
++{
++  "schema": 1,
++  "request_id": "github-issue-48-experience-strategy-rk-20261023",
++  "authorized_by": "Roy",
++  "character": "silent",
++  "enabled": false,
++  "plans": [
++    {
++      "plan_id": "issue48-boss-elite-001",
++      "retry_generation": 0,
++      "work_spec": {
++        "path": "paper/materials/20261023-issue48-first-batch-ops/work-spec.md",
++        "bytes": 5815,
++        "sha256": "2a2897a9e30fbf181babf0bc79f61bff2d812b03deb38a46f52b48153074e1f7"
++      },
++      "input_manifest": {
++        "path": "paper/materials/20261023-issue48-first-batch-ops/input-manifest.json",
++        "sha256": "92f903526251364727c2d939b742af26998d5b7b395c6c62a5ed22db9a6b707f"
++      },
++      "artifact_copies": {
++        ".worktrees/integrator-28-20261022/learner/tasks/jev-encounter-reflex.md": "paper/materials/20261023-issue48-first-batch-ops/rk-task-reference.md"
++      }
++    }
++  ]
++}
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 01973391ca8be915f6127df81000a3c6d55300de..c05c55663e8b31397b6d83575041146833de9de7 100644
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -329,6 +329,11 @@ def cmd_tick(args):
+     report["pending_notified"] = check_pending(state, character)
+     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+     report["ascension_audit"] = check_ascension_audits(state, character)
++    import strategy_backfill_jobs
++    normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
++    report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
++        state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"),
++        dispatch_write, normal)
+     save_state(state)
+     report["retention"] = learner_retention.kick(ROOT, DIR, SCRIPTS)
+     print(json.dumps(report, ensure_ascii=False))
+@@ -421,6 +426,10 @@ def cmd_finish(args):
+             boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
+         else:
+             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
++        if batch.get("backfill_source"):
++            import strategy_backfill_jobs
++            batch["backfill_finished_at"] = time.time()
++            strategy_backfill_jobs.reconcile(state, DIR)
+         if batch["state"] == "failed":
+             batch["retry_at"] = time.time() + RETRY_AFTER_S
+         if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 89b205313a96ab7f2c3da092711d605ba31f33d7..80c3f8ad772d1aa171e6aff4629898e3ba492721 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -15,14 +15,18 @@ learner_task="${6:-$task}"
+ research_request=""
+ implementation_request=""
+ implementation_task_file=""
++backfill_source=""
++backfill_task_file=""
+ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
+-    && { [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
++    && { [[ "$7" =~ ^backfill:[a-z0-9][a-z0-9._-]{0,119}$ ]] || [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
+       || [ "$7" = roy-20261010-silent-core-output-value ] \
+       || [ "$7" = roy-20261012-concrete-core-decklists ] \
+       || [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] \
+       || [ "$7" = ops-20261012-quantitative-continuation ]; } || exit 2
+-  if [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
++  if [[ "$7" == backfill:* ]]; then
++    backfill_source="${7#backfill:}"
++  elif [ "$7" = roy-20261011-silent-core-cycle-quantitative-learning ] || [ "$7" = ops-20261012-quantitative-continuation ]; then
+     implementation_request="$7"
+   else
+     research_request="$7"
+@@ -73,6 +77,17 @@ if [ -n "$research_request" ]; then
+   fi
+   exec 8>&-
+ fi
++if [ -n "$backfill_source" ]; then
++  exec 8> "$DIR/learn.lock"
++  if flock -w 120 8; then
++    research_base="$(python3 "$OPS/strategy_backfill_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
++    flock -u 8
++  else
++    echo "backfill registration lock timed out; no model started" >> "$err"
++    audit_ready=0
++  fi
++  exec 8>&-
++fi
+ if [ -n "$implementation_request" ]; then
+   exec 8> "$DIR/learn.lock"
+   if flock -w 120 8; then
+@@ -105,7 +120,7 @@ if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
+     echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
+     audit_ready=0
+   fi
+-  if [ "$audit_ready" = 1 ] && [ -n "$research_request" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
++  if [ "$audit_ready" = 1 ] && [ -n "$research_request$backfill_source" ] && [ "$(git -C "$worktree" rev-parse HEAD)" != "$research_base" ]; then
+     echo "research worktree HEAD differs from its registered dispatch baseline; no model started" >> "$err"
+     audit_ready=0
+   fi
+@@ -145,9 +160,23 @@ if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
+   fi
+   exec 8>&-
+ fi
++if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
++  exec 8> "$DIR/learn.lock"
++  if flock -w 120 8; then
++    backfill_task_file="$(python3 "$OPS/strategy_backfill_jobs.py" prepare "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
++    flock -u 8
++  else
++    echo "backfill task input lock timed out; no model started" >> "$err"
++    audit_ready=0
++  fi
++  exec 8>&-
++fi
+ # Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
+ # LEARNER_CMD overrides the command for fixed tests only.
+ if [ "$audit_ready" != 1 ]; then
++  if [ -n "$backfill_source" ]; then
++    python3 "$OPS/strategy_backfill_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
++  fi
+   rc=1
+ elif [ -n "${LEARNER_CMD:-}" ]; then
+   nice -n 19 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
+@@ -175,7 +204,7 @@ else
+   if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
+     learner_effort=xhigh
+   fi
+-  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
++  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
+   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+   if [ "$learner_task" = silent-historical-core-builds ]; then
+     args+=(--set "evidence=${7}" --set "batch=$batch")
+@@ -190,6 +219,7 @@ else
+   fi
+   # The launcher may retry only a proven pre-session failure under this same registration.
+   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
++  if [ -n "$backfill_source" ]; then export LEARNER_BACKFILL_SOURCE="$backfill_source"; else unset LEARNER_BACKFILL_SOURCE; fi
+   # The parent spawns us before saving the registration. Wait for its state transaction
+   # before either entry point captures the lease; release the lock before running a learner.
+   if (flock -w 120 8) 8> "$DIR/learn.lock"; then
+@@ -202,6 +232,11 @@ else
+     rc=75
+   fi
+ fi
++if [ -n "$backfill_source" ] && [ "$rc" != 0 ] \
++    && [ ! -e "$DIR/learner/$batch.backfill-launch.json" ] \
++    && [ ! -e "$DIR/learner/learner-$batch.tui.json" ]; then
++  python3 "$OPS/strategy_backfill_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
++fi
+ launcher_rc="$rc"
+ wrapper_attention() {
+   nice -n 19 python3 "$OPS/learner_tui.py" attention "$DIR" "$batch" "$1" 2>> "$err"
+@@ -231,6 +266,7 @@ fi
+ echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
+ finish_rc=75
+ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
++    && { [ -z "$backfill_source" ] || python3 "$OPS/strategy_backfill_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"; } \
+     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
+   finish_rc=0
+   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
+diff --git a/ops/learner_checks.py b/ops/learner_checks.py
+index c5e54ca4eddf5af83c2715f8fdd0d785816d3092..f3212b395d06d3ded9288239bb342d754a81a48d 100644
+--- a/ops/learner_checks.py
++++ b/ops/learner_checks.py
+@@ -122,10 +122,17 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
+     if missing_failed_report:
+         batch["completion_failure"] = {"reason": "learner exited without a completion report", "rc": rc,
+                                        "stderr": os.path.join(out_dir, batch_id + ".err")}
+-    if proposal_only: batch["no_change_proposals"] = proposal_only
++    if proposal_only:
++        batch["no_change_proposals"] = proposal_only
++        if batch.get("backfill_source") and batch["state"] == "done":
++            batch["backfill_result"] = proposal_only["backfill"]["dispositions"]
++            batch["backfill_output_files"] = proposal_only["backfill"]["destination_files"]
+     if proposal_errors:
+         inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
+-        batch["proposal_repair_needed"] = True
++        if batch.get("backfill_source"):
++            batch["backfill_completion_errors"] = proposal_errors
++        else:
++            batch["proposal_repair_needed"] = True
+     if empty:
+         batch["no_changes"] = empty
+     kind = {"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done")
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index 9d83257efac551dec7e5c3e6a2887e08297886b8..dee97a999c76f4207286ade0f016f678a9a7c54c 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -37,7 +37,7 @@ def start_learner(argv, root, scripts, state_dir, label):
+     Fixed LEARNER_CMD fixtures retain the generic command-host path.
+     """
+     launch_env = dict(os.environ)
+-    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT"):
++    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE"):
+         launch_env.pop(name, None)
+     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
+         pidfile = os.path.join(state_dir, "learner", label + ".pid")
+@@ -264,7 +264,13 @@ def fix_key(root, character):
+     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
+ 
+ 
+-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
++def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None):
++    if backfill_source is not None:
++        from strategy_backfill_jobs import ID
++        if (not isinstance(backfill_source, str) or not ID.fullmatch(backfill_source)
++                or task != "strategy-proposal" or character != "silent" or reason != "backfill"
++                or not re.fullmatch(re.escape("strategy-backfill:" + backfill_source) + r":[0-9]+", str(key)) or research_request or implementation_request):
++            return None
+     # A released supervisor slot does not authorize replay of its unresolved original demand.
+     if any(batch.get("state") == "awaiting_review" and batch.get("task") == task
+            and batch.get("character") == character
+@@ -299,7 +305,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
+         return None
+     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
+     argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
+-    if research_request:
++    if backfill_source:
++        argv += [task, "backfill:" + backfill_source]
++    elif research_request:
+         argv += [task, research_request]
+     elif implementation_request:
+         argv += [task, implementation_request]
+@@ -311,7 +319,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
+                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
+     if pane:
+         state["batches"][batch_id]["pane"] = pane
+-    if research_request:
++    if backfill_source:
++        state["batches"][batch_id]["backfill_source"] = backfill_source
++    elif research_request:
+         state["batches"][batch_id]["research_request"] = research_request
+     elif implementation_request:
+         state["batches"][batch_id]["implementation_request"] = implementation_request
+@@ -322,39 +332,50 @@ def check_jobs(state, root, scripts, character, alive, stamp):
+     from disk_admission import jobs_allowed
+     if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
+         return {"disk_capacity_hold": True, "dispatched": None}
++    attempted = []
++    def priority_writer(*args, **kwargs):
++        # A ready normal source retains priority even when its writer/lease gate waits.
++        if args[7] == "ops" or retryable(args[0], args[3], args[6]):
++            attempted.append(args[3])
++        return dispatch_write(*args, **kwargs)
+     core = None
++    core_ready = False
++    request = None
+     if character == "silent":
+         import core_build_jobs
+         request = core_build_jobs.pending_request(root)
+         if request:
++            prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
++            core_ready = len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior)
+             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
+     runs = pending(root, scripts, character)
+-    experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
++    experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+     from learning_requests import reconcile as reconcile_learning
+     learning = reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)
+     # This approved frozen study gets the next slot before automatic proposals.
+     # Its host wrapper waits for the parent's save_state under the existing lock.
+     from strategy_research_jobs import dispatch as dispatch_research
+-    research = dispatch_research(state, root, scripts, character, alive, stamp, dispatch_write, STRATEGY_WORKERS)
++    research = dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)
+     # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
+     proposals = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(proposals)
+-    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, dispatch_write)
++    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer)
+     # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
+     key = fix_key(root, character)
+-    fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+-    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal and not research else None
++    fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
++    strategy = strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer) if not proposal and not research else None
+     calibration = calibration_job(state, root, scripts, character, alive, stamp)
+     from boss_sim_jobs import check
+     boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+     return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+-            "core_builds": core,
++            "core_builds": core, "backfill_hold": bool(attempted or core_ready),
+             "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+ 
+ 
+ def calibration_job(state, root, scripts, character, alive, stamp):
+     """Roy-authorized periodic calibration; read live data, never overwrite refreshing knowledge."""
++    state.setdefault("calibration_ready", {}).pop(character, None)
+     if character != "silent":
+         return None
+     try:
+@@ -377,11 +398,14 @@ def calibration_job(state, root, scripts, character, alive, stamp):
+     identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
+     request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
+                "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
++    prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
++    if len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior):
++        state["calibration_ready"][character] = request["request_id"]
+     _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
+     return result
+ 
+ 
+-def strategy_job(state, root, scripts, character, alive, stamp):
++def strategy_job(state, root, scripts, character, alive, stamp, writer=None):
+     """Dispatch after an ascension change or ten new completed postmortems, retaining a busy trigger."""
+     runs = list(dict.fromkeys(run for batch in state["batches"].values()
+                              if batch.get("task", "postmortem") == "postmortem"
+@@ -399,7 +423,7 @@ def strategy_job(state, root, scripts, character, alive, stamp):
+     if not runs or (level <= progress["ascension"] and len(runs) < progress["runs"] + 10):
+         return None
+     key = f"{character}:A{level}:{len(runs)}"
+-    result = dispatch_write(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
++    result = (writer or dispatch_write)(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
+     if result:
+         state["batches"][result[0]]["strategy_progress"] = {"ascension": level, "runs": len(runs)}
+     return result
+diff --git a/ops/learner_tui.py b/ops/learner_tui.py
+index 9c61b24efa2d9feb0000bcb29cb604a3dd4b7e8a..a455e1922a8603b51e878ea6e213975800c712c0 100644
+--- a/ops/learner_tui.py
++++ b/ops/learner_tui.py
+@@ -274,7 +274,7 @@ def attention(directory, batch, stage):
+ 
+ 
+ REGISTRATION_FIELDS = ("pid", "pane", "started", "task", "character", "worktree", "key", "runs",
+-                       "learner_task", "feature_request", "research_request", "implementation_request")
++                       "learner_task", "feature_request", "research_request", "implementation_request", "backfill_source", "backfill_binding")
+ 
+ 
+ def apply_deferrals(state, directory):
+diff --git a/ops/ordinary_close.py b/ops/ordinary_close.py
+index b16cc8e1e18416b29fea1db97f4f83a54959fe58..d4e99d46c4ba4dc0977a197be527a24309a2266c 100644
+--- a/ops/ordinary_close.py
++++ b/ops/ordinary_close.py
+@@ -14,7 +14,7 @@ import record_manifest
+ from ops_current import atomic, git, save, stamp
+ 
+ RECORDS = ("notes/lessons.md", "paper/materials/learning/ledger.jsonl", "paper/materials/learning/code-proposals.jsonl")
+-SPECIAL = ("feature_request", "research_request", "implementation_request", "boss_sim", "proposal_repair", "continuation_parent_batch")
++SPECIAL = ("backfill_source", "feature_request", "research_request", "implementation_request", "boss_sim", "proposal_repair", "continuation_parent_batch")
+ 
+ 
+ def fingerprint(root):
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index 3eebc4e205a76db8cfe584bc636f5ceac1880999..53bbcbaac9d7cdcc2f6bbe58de17db677976def4 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -133,6 +133,12 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
+ 
+ 
+ def links(report,batch,root,scripts):
++    if batch.get('backfill_source'):
++        try:
++            from strategy_backfill_jobs import report_proof
++            report_proof(report, batch, root)
++        except (OSError, ValueError, KeyError, TypeError) as error:
++            return [str(error)]
+     if batch.get('implementation_request'):
+         from strategy_implementation_jobs import report_errors
+         errors = report_errors(report, batch, root)
+@@ -461,8 +467,12 @@ def no_change(report,batch,root):
+     try:
+         research=None
+         cadence=None
++        backfill=None
+         if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
+-            if batch.get('reason') == 'tick':
++            if batch.get('backfill_source'):
++                from strategy_backfill_jobs import report_proof
++                backfill=report_proof(report,batch,root)
++            elif batch.get('reason') == 'tick':
+                 cadence=cadence_proof(report,batch,root)
+                 if not cadence: return None
+             else:
+@@ -489,6 +499,8 @@ def no_change(report,batch,root):
+         path=Path(raw_path).resolve()
+         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
+         proof={'base':base,'report':str(path),'dispositions':rows}
++        if backfill:
++            proof["backfill"]=backfill
+         if cadence:
+             proof['cadence']=cadence
+         if research:
+diff --git a/ops/strategy_backfill_jobs.py b/ops/strategy_backfill_jobs.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d353a606cbdda1a17e8b10eb78bf924e05b2549
+--- /dev/null
++++ b/ops/strategy_backfill_jobs.py
+@@ -0,0 +1,517 @@
++"""Frozen experience sources at the tail of the existing strategy writer queue.
++
++The caller owns learn.lock. Registration reserves an attempt; only native prompt
++acceptance consumes IDs. Uncertain/failed attempts retain their original leases.
++"""
++import datetime as dt
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++
++from strategy_research_jobs import atomic_json, digest
++
++QUEUE = "notes/strategy-backfill-silent.json"
++REQUEST = "github-issue-48-experience-strategy-rk-20261023"
++ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,119}")
++BATCH = re.compile(r"[0-9]{8}-[0-9]{6}-strategy-proposal")
++
++
++def artifact(root, ref):
++    project = Path(root).resolve()
++    relative, sha = ref.get("path"), ref.get("sha256")
++    if not isinstance(relative, str) or Path(relative).is_absolute() or not re.fullmatch(r"[0-9a-f]{64}", str(sha)):
++        raise ValueError("invalid backfill artifact identity")
++    path = (project / relative).resolve()
++    if not path.is_relative_to(project):
++        raise ValueError("backfill artifact outside project")
++    raw = path.read_bytes()
++    if digest(raw) != sha or "bytes" in ref and len(raw) != ref["bytes"]:
++        raise ValueError("backfill artifact fingerprint changed: " + relative)
++    return raw
++
++
++def queue(root):
++    value = json.loads(Path(root, QUEUE).read_bytes())
++    if (value.get("schema") != 1 or value.get("request_id") != REQUEST or value.get("character") != "silent"
++            or value.get("authorized_by") != "Roy" or type(value.get("enabled")) is not bool
++            or not isinstance(value.get("plans"), list)):
++        raise ValueError("invalid backfill queue")
++    ids = [plan.get("plan_id") for plan in value["plans"]]
++    if any(not isinstance(ident, str) or not ID.fullmatch(ident) for ident in ids) or len(set(ids)) != len(ids):
++        raise ValueError("invalid or duplicate backfill plan")
++    return value
++
++
++def source(root, plan):
++    """Read immutable inputs without borrowing legacy request or batch identities."""
++    raw = artifact(root, plan["input_manifest"])
++    manifest = json.loads(raw)
++    ident = plan["plan_id"]
++    if manifest.get("request_id") != REQUEST or manifest.get("batch_plan_id") != ident:
++        raise ValueError("backfill manifest identity mismatch")
++    spec = artifact(root, plan["work_spec"])
++    if manifest.get("work_spec") != plan["work_spec"]:
++        raise ValueError("backfill work spec identity mismatch")
++    original = json.loads(artifact(root, manifest["source_experience"]))["entries"]
++    selected = json.loads(artifact(root, manifest["first_batch"]))
++    inventory = json.loads(artifact(root, manifest["own_ended_inventory"]))
++    artifact(root, manifest["priority"])
++    copies = plan.get("artifact_copies", {})
++    refs = manifest["external_aggregates"] + manifest["contracts"]
++    if not isinstance(copies, dict) or not set(copies) <= {ref["path"] for ref in refs}:
++        raise ValueError("backfill artifact copy is not a frozen manifest reference")
++    for ref in refs:
++        # The manifest retains its original path and SHA. Only an identical durable
++        # copy can replace a temporary owner checkout; no input bytes are revised.
++        artifact(root, {**ref, "path": copies.get(ref["path"], ref["path"])})
++    if selected.get("batch_plan_id") != ident or inventory.get("character") != "silent":
++        raise ValueError("backfill selection/inventory identity mismatch")
++    entries = selected["entries"]
++    ids = [row["id"] for row in entries]
++    originals = {row["id"]: row for row in original}
++    if (not 1 <= len(ids) <= 6 or len(set(ids)) != len(ids)
++            or any(row != originals.get(row["id"]) for row in entries)
++            or len(originals) != len(original)):
++        raise ValueError("backfill IDs differ from immutable experience")
++    runs = inventory["runs"]
++    if not runs or any(not row.get("ended") or not re.fullmatch(r"[A-Z0-9]{12}", str(row.get("run_id"))) for row in runs):
++        raise ValueError("backfill inventory requires ended Silent runs")
++    available = set(selected["available_ended_silent_ids"])
++    if not available <= {row["run_id"] for row in runs}:
++        raise ValueError("backfill anchors outside ended inventory")
++    # Anchors identify dispatch only; they never claim raw-window verification.
++    anchors = sorted(available)[:10]
++    if not anchors:
++        raise ValueError("backfill has no ended dispatch anchors")
++    binding = {"request_id": REQUEST, "plan_id": ident, "input_manifest": plan["input_manifest"],
++               "work_spec": plan["work_spec"], "entry_ids": ids,
++               "all_entry_ids": list(originals), "dispatch_runs": anchors, "artifact_copies": copies}
++    return binding, spec
++
++
++def progress(state):
++    return state.setdefault("strategy_backfill", {"schema": 1, "cursor": 0, "entries": {}, "plans": {}})
++
++
++def priority_hold(state, character, alive, normal):
++    """Existing ready dispatch attempts and live heavy leases always win."""
++    if normal.get("disk_capacity_hold") or normal.get("backfill_hold") or any(
++            value for key, value in normal.items() if key != "backfill_hold"):
++        return True
++    if any(batch.get("state") in ("running", "launching", "awaiting_review")
++           and (alive(batch.get("pid")) or batch.get("state") == "launching")
++           for batch in state["batches"].values()):
++        return True
++    if state.get("calibration_ready", {}).get(character) or any(
++            req.get("state") in ("pending", "running") and req.get("character", character) == character
++            for req in state.get("learning_requests", {}).values()):
++        return True
++    if any(req.get("character") == character and req.get("state") in ("queued", "running", "launching")
++           for req in state.get("ascension_audits", {}).values()):
++        return True
++    # Existing heavy evidence waiting on a lease/retry must not be overtaken.
++    observed = state.get("boss_sim_observed", {}).get(character, {}).get("eligible", [])
++    for item in observed:
++        prior = [b for b in state["batches"].values() if b.get("boss_sim", {}).get("key") == item.get("key")]
++        scope = f"{character}:{item['boss']}:{item['mode']}"
++        if not state.get("boss_sim_cooldown", {}).get(scope) and not any(
++                b.get("state") in ("done", "rejected") for b in prior):
++            return True
++    return False
++
++
++def stdio_registration(batch_id, batch, directory, complete=False):
++    """Locate only this launcher's own session in its original selected account."""
++    launch = json.loads(Path(directory, "learner", batch_id + ".backfill-launch.json").read_bytes())
++    if any(launch.get(k) != v for k, v in {"batch": batch_id, "source": batch["backfill_source"], "cwd": batch["worktree"]}.items()):
++        raise ValueError("backfill stdio launch mismatch")
++    log = Path(launch["log"]).resolve()
++    if not log.is_relative_to(Path(batch["worktree"]).parent.parent / "learner/runs"):
++        raise ValueError("backfill launch log outside learner records")
++    first = attempt = session = summary = None
++    with log.open() as stream:
++        for line in stream:
++            if not line.endswith("\n"):
++                break
++            row = json.loads(line)
++            if first is None:
++                first = row
++                if (first.get("type") != "learner_launch" or first.get("transport") != "stdio"
++                        or first.get("cwd") != batch["worktree"] or first.get("task") != "strategy-proposal"
++                        or first.get("params", {}).get("batch") != batch_id):
++                    raise ValueError("backfill launch journal mismatch")
++            if row.get("type") == "learner_startup_attempt":
++                if session or row.get("batch") != batch_id or any(row.get(k) != launch.get(k) for k in ("lease", "input_sha256", "command_sha256")):
++                    raise ValueError("backfill stdio startup identity mismatch")
++                attempt = row
++            if row.get("type") == "thread.started":
++                if not attempt or session:
++                    raise ValueError("backfill stdio cannot adopt another session")
++                session = row.get("thread_id")
++                if not complete:
++                    break
++            if row.get("type") == "learner_summary":
++                summary = row
++    if not isinstance(session, str) or not re.fullmatch(r"[0-9a-f-]{36}", session):
++        raise ValueError("backfill stdio native session not yet created")
++    files = list(Path(launch["codex_home"], "sessions").glob("*/*/*/*-" + session + ".jsonl"))
++    if len(files) != 1:
++        raise ValueError("backfill stdio native rollout not uniquely located")
++    return launch, session, files[0], summary
++
++
++def retired(batch_id, batch, directory):
++    """Recovery needs a verified original exit, including wrapper pre-model failures."""
++    folder = Path(directory, "learner")
++    no_model = folder / (batch_id + ".backfill-not-started.json")
++    if no_model.exists():
++        saved = json.loads(no_model.read_bytes())
++        if (saved == {"batch": batch_id, "source": batch["backfill_source"], "worktree": batch["worktree"], "models_started": 0}
++                and not (folder / (batch_id + ".backfill-launch.json")).exists()
++                and not (folder / ("learner-" + batch_id + ".tui.json")).exists()):
++            return
++        raise ValueError("backfill pre-model failure proof changed")
++    tui = folder / ("learner-" + batch_id + ".tui.json")
++    if tui.exists():
++        from learner_tui import verified_code
++        verified_code(tui, folder / (batch_id + ".out"), batch["rc"])
++        return
++    proof = native_start(batch_id, batch, directory)
++    _, session, rollout, summary = stdio_registration(batch_id, batch, directory, complete=True)
++    if (not summary or summary.get("exit_code") != batch["rc"] or summary.get("summary", {}).get("sessionId") != session):
++        raise ValueError("backfill stdio original launcher has not finished")
++    closed = False
++    with rollout.open() as stream:
++        for line in stream:
++            if not line.endswith("\n"):
++                raise ValueError("backfill stdio native exit incomplete")
++            row = json.loads(line); payload = row.get("payload", {})
++            if row.get("type") == "event_msg" and payload.get("type") == "task_started":
++                if payload.get("turn_id") != proof["turn"]:
++                    raise ValueError("backfill stdio has unbound later activity")
++                closed = False
++            if row.get("type") == "event_msg" and payload.get("type") in ("task_complete", "turn_aborted"):
++                closed = payload.get("turn_id") == proof["turn"]
++    if not closed:
++        raise ValueError("backfill stdio native task is still open")
++
++
++def native_start(batch_id, batch, directory):
++    """Verify the first native prompt and high/workspace-write context while still running."""
++    from learner_tui import bootstrap_context, prompt_hash
++    path = Path(directory, "learner", "learner-" + batch_id + ".tui.json")
++    stdio = not path.exists()
++    if stdio:
++        launch, session, rollout, _ = stdio_registration(batch_id, batch, directory)
++        receipt = {"label": "learner-" + batch_id, "pane": batch.get("pane"), "cwd": batch["worktree"],
++                   "submitted": True, "session": session, "rollout": str(rollout),
++                   "bindings": [{"marker": None, "turn_id": None, "prompt_sha256": launch["prompt_sha256"]}],
++                   "submissions": [{"marker": None, "prompt_sha256": launch["prompt_sha256"]}]}
++    else:
++        receipt = json.loads(path.read_bytes())
++    if (receipt.get("label") != "learner-" + batch_id or receipt.get("pane") != batch.get("pane")
++            or receipt.get("cwd") != batch["worktree"] or not receipt.get("submitted")):
++        raise ValueError("backfill native receipt identity mismatch")
++    first = receipt["bindings"][0]
++    if receipt["submissions"][0] != {"marker": first["marker"], "prompt_sha256": first["prompt_sha256"]}:
++        raise ValueError("backfill native submission mismatch")
++    meta = current = started = None
++    accepted = context = False
++    prefix = bytearray()
++    with open(receipt["rollout"], "rb") as stream:
++        for _ in range(128):
++            line = stream.readline(2 * 1024 * 1024)
++            if not line.endswith(b"\n"):
++                break
++            prefix.extend(line)
++            if len(prefix) > 4 * 1024 * 1024:
++                raise ValueError("backfill native prefix exceeds bound")
++            row = json.loads(line); payload = row.get("payload", {})
++            if row.get("type") == "session_meta":
++                if meta or payload.get("id") != receipt.get("session") or payload.get("cwd") != batch["worktree"]:
++                    raise ValueError("backfill native session mismatch")
++                meta = payload["id"]
++            if row.get("type") == "event_msg" and payload.get("type") == "task_started":
++                if current or not stdio and payload.get("turn_id") != first["turn_id"]:
++                    raise ValueError("backfill cannot adopt an old native turn")
++                current = payload["turn_id"]
++                started = row.get("timestamp")
++            if row.get("type") == "turn_context":
++                if (payload.get("turn_id") != current or payload.get("cwd") != batch["worktree"]
++                        or payload.get("model") != "gpt-6.1-sol" or payload.get("effort") != "high"
++                        or payload.get("sandbox_policy", {}).get("type") != "workspace-write"):
++                    raise ValueError("backfill native execution context mismatch")
++                context = True
++            user = None
++            if row.get("type") == "event_msg" and payload.get("type") == "user_message":
++                user = payload.get("message", "")
++            if row.get("type") == "response_item" and payload.get("type") == "message" and payload.get("role") == "user":
++                if bootstrap_context(row, batch["worktree"]) and not context and not accepted:
++                    continue
++                user = "\n".join(part.get("text", "") for part in payload.get("content", []))
++            if user is not None:
++                if (not meta or not current or not stdio and user.replace("\r\n", "\n").split("\n")[0] != first["marker"]
++                        or prompt_hash(user) != first["prompt_sha256"]):
++                    raise ValueError("backfill native prompt mismatch")
++                if not accepted and any(token not in user for token in (
++                        batch_id, batch["backfill_source"], batch["backfill_binding"]["input_manifest"]["sha256"])):
++                    raise ValueError("backfill native prompt lacks frozen source binding")
++                accepted = True
++            if meta and current and context and accepted:
++                return {"session": meta, "turn": current, "started_at": started, "prompt_sha256": first["prompt_sha256"],
++                        "rollout": receipt["rollout"], "prefix_bytes": len(prefix), "prefix_sha256": digest(prefix)}
++    raise ValueError("backfill native start not yet verified")
++
++
++def _reconcile(state, directory):
++    """Recover progress from saved batches; never mutate a running startup lease."""
++    own = [(bid, b) for bid, b in state["batches"].items() if b.get("backfill_source")]
++    if not own:
++        return
++    record = progress(state)
++    for bid, batch in own:
++        binding = batch["backfill_binding"]; ident = binding["plan_id"]
++        plan = record["plans"].setdefault(ident, {"attempts": [], "state": "registered"})
++        attempt = next((row for row in plan["attempts"] if row["batch"] == bid), None)
++        if attempt is None:
++            attempt = {"batch": bid, "registered_at": batch["backfill_registered_at"], "state": "registered",
++                       "input_manifest_sha256": binding["input_manifest"]["sha256"],
++                       "work_spec_sha256": binding["work_spec"]["sha256"], "entry_ids": binding["entry_ids"], "worktree": batch["worktree"]}
++            plan["attempts"].append(attempt)
++        if "native" not in attempt:
++            try:
++                attempt.update(native=native_start(bid, batch, directory), observed_at=time.time(), state="started")
++                attempt["started_at"] = attempt["native"]["started_at"]
++                for old_id in binding["entry_ids"]:
++                    entry = record["entries"].setdefault(old_id, {"status": "unprocessed", "attempts": []})
++                    if not entry["attempts"]:
++                        record["cursor"] += 1
++                    if bid not in entry["attempts"]:
++                        entry["attempts"].append(bid)
++                    entry.update(status="started", batch=bid)
++            except (OSError, ValueError, KeyError, IndexError, TypeError):
++                pass  # Missing/uncertain acceptance preserves the reservation without consuming IDs.
++        plan["state"] = attempt["state"]
++        if batch.get("state") not in ("done", "failed", "lost", "awaiting_review"):
++            continue
++        attempt.update(finished=batch.get("finished"), rc=batch.get("rc"), state=batch["state"])
++        attempt["elapsed_seconds"] = None
++        if attempt.get("started_at") and batch.get("backfill_finished_at"):
++            started = dt.datetime.fromisoformat(attempt["started_at"].replace("Z", "+00:00")).timestamp()
++            elapsed = batch["backfill_finished_at"] - started
++            if elapsed >= 0:
++                attempt["elapsed_seconds"] = elapsed
++        if "native" in attempt and batch.get("state") == "done" and batch.get("backfill_result"):
++            attempt["destination_files"] = batch.get("backfill_output_files", [])
++            for row in batch["backfill_result"]:
++                entry = record["entries"][row["id"]]
++                if entry.get("batch") != bid:
++                    continue
++                entry.update(status=row["state"], destinations=row["destinations"], reason=row["reason"], batch=bid)
++            plan["state"] = "processed" if all(row["state"] == "processed" for row in batch["backfill_result"]) else "waiting"
++        elif "native" in attempt:
++            for old_id in binding["entry_ids"]:
++                entry = record["entries"][old_id]
++                if entry.get("batch") == bid:
++                    entry.update(status=batch["state"], batch=bid)
++            plan["state"] = batch["state"]
++        else:
++            plan["state"] = "unverified-start"
++    all_ids = set(own[0][1]["backfill_binding"]["all_entry_ids"])
++    record.update(total=len(all_ids), processed=sum(record["entries"].get(ident, {}).get("status") == "processed" for ident in all_ids))
++    record["remaining"] = record["total"] - record["processed"]
++    atomic_json(Path(directory, "strategy-backfill-progress.json"), record)
++
++
++def reconcile(state, directory):
++    try:
++        _reconcile(state, directory)
++    except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError) as error:
++        # An unreadable progress artifact must not lose the normal scheduler transaction.
++        state["strategy_backfill_error"] = {"at": time.time(), "reason": str(error)}
++
++
++def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
++    directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
++    reconcile(state, directory)
++    if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp) or priority_hold(state, character, alive, normal):
++        return None
++    try:
++        configured = queue(root)
++        if not configured["enabled"]:
++            return None
++        for plan in configured["plans"]:
++            ident = plan["plan_id"]
++            generation = plan.get("retry_generation", 0)
++            if type(generation) is not int or generation < 0:
++                raise ValueError("invalid backfill retry generation")
++            prior_batches = [(bid, b) for bid, b in state["batches"].items() if b.get("backfill_source") == ident]
++            if prior_batches:
++                if len(prior_batches) >= 3:
++                    continue
++                if generation <= max(b["backfill_binding"].get("retry_generation", 0) for _, b in prior_batches):
++                    continue
++                for bid, old in prior_batches:
++                    if old.get("state") not in ("done", "failed") or alive(old.get("pid")):
++                        return None
++                    # Explicit recovery still requires the original verified retirement;
++                    # a dead supervisor or an empty binding never authorizes replay.
++                    retired(bid, old, directory)
++            binding, _ = source(root, plan)
++            binding["retry_generation"] = generation
++            for bid, other in state["batches"].items():
++                if (other.get("backfill_source") and other["backfill_source"] != ident
++                        and set(other["backfill_binding"]["entry_ids"]) & set(binding["entry_ids"])):
++                    if other.get("state") not in ("done", "failed") or alive(other.get("pid")):
++                        return None
++                    retired(bid, other, directory)
++            prior = state.get("strategy_backfill", {}).get("entries", {})
++            binding["entry_ids"] = [old_id for old_id in binding["entry_ids"] if prior.get(old_id, {}).get("status") != "processed"]
++            if not binding["entry_ids"] or any(prior.get(old_id, {}).get("status") not in (None, "waiting", "failed", "lost") for old_id in binding["entry_ids"]):
++                continue
++            base = subprocess.check_output(["git", "-C", root, "rev-parse", "main"], text=True).strip()
++            if not re.fullmatch(r"[0-9a-f]{40}", base):
++                raise ValueError("invalid backfill dispatch base")
++            launched = writer(state, root, scripts, "strategy-proposal", character, binding["dispatch_runs"],
++                              "strategy-backfill:" + ident + ":" + str(generation), "backfill", alive, stamp, backfill_source=ident)
++            if launched:
++                batch = state["batches"][launched[0]]
++                batch.update(backfill_binding={**binding, "dispatch_base": base}, backfill_registered_at=time.time())
++            return launched
++    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as error:
++        state["strategy_backfill_error"] = {"at": time.time(), "reason": str(error)}
++    return None
++
++
++def bound(root, directory, bid, character, tree, ident):
++    if character != "silent" or not BATCH.fullmatch(bid) or not ID.fullmatch(ident):
++        raise ValueError("invalid backfill host identity")
++    batch = json.loads(Path(directory, "learn.json").read_bytes())["batches"][bid]
++    expected_tree = str(Path(root).resolve() / ".worktrees" / ("codex-strategy-silent-" + bid.removesuffix("-strategy-proposal")))
++    if (tree != expected_tree or any(batch.get(k) != v for k, v in {
++            "task": "strategy-proposal", "character": character, "worktree": tree, "backfill_source": ident,
++            "reason": "backfill", "key": "strategy-backfill:" + ident + ":" + str(batch.get("backfill_binding", {}).get("retry_generation", 0))}.items())
++            or any(k in batch for k in ("research_request", "implementation_request", "learning_request", "proposal_ids", "proposal_repair"))):
++        raise ValueError("backfill registration mismatch")
++    return batch
++
++
++def prepare(root, directory, bid, character, tree, ident):
++    batch = bound(root, directory, bid, character, tree, ident)
++    binding = batch["backfill_binding"]
++    configured = queue(root)
++    plan = next(plan for plan in configured["plans"] if plan["plan_id"] == ident)
++    current, spec = source(root, plan)
++    current["retry_generation"] = plan.get("retry_generation", 0)
++    selected_ids = binding.get("entry_ids", [])
++    current["entry_ids"] = [old_id for old_id in current["entry_ids"] if old_id in selected_ids]
++    if not selected_ids or current["entry_ids"] != selected_ids:
++        raise ValueError("backfill selection differs from frozen IDs")
++    if (not configured["enabled"] or batch["state"] != "running"
++            or any(binding.get(k) != v for k, v in current.items()) or batch["runs"] != current["dispatch_runs"]):
++        raise ValueError("backfill frozen binding changed")
++    base = binding["dispatch_base"]
++    if not re.fullmatch(r"[0-9a-f]{40}", base):
++        raise ValueError("invalid backfill base")
++    return batch, spec
++
++
++def task_file(root, directory, bid, character, tree, ident):
++    batch, spec = prepare(root, directory, bid, character, tree, ident)
++    if subprocess.check_output(["git", "-C", tree, "rev-parse", "HEAD"], text=True).strip() != batch["backfill_binding"]["dispatch_base"]:
++        raise ValueError("backfill tree differs from dispatch base")
++    template = Path(tree, "learner/tasks/strategy-proposal.md").read_text()
++    appendix = ("\n\n## 本批后置回刷来源（优先于普通选题及旧专题章节）\n"
++                + json.dumps({"batch": bid, "worktree": tree, **{k: v for k, v in batch["backfill_binding"].items() if k != "all_entry_ids"}}, ensure_ascii=False, indent=2)
++                + "\n" + spec.decode() + "\n"
++                + "只处理绑定的 entry_ids；不读取旧专题请求，不承接旧线程。冻结源从 project_root 的上述精确路径读回。"
++                + "HEAD保持dispatch_base，不执行普通选题的git merge；本批先在 scratch 保存策略/rk候选与旧ID去向；正式发布、消费者及科学父仍交原流程，不在本批改源码/正式知识。"
++                + "最终JSON必填task=strategy-proposal、character=silent、batch=本批实际ID、base=dispatch_base；runs仅派发锚点。另带backfill_source、input_sha256及backfill_results。"
++                + "backfill_results逐entry_id一行 {id,state:processed或waiting,destinations:[{kind:strategy或rk或merged-into,id:目标ID,path:scratch内真实候选文件绝对路径}],reason:具体理由}。"
++                + "processed要求至少一个真实候选文件，waiting保留空destinations；缺证允许全waiting。"
++                + "tests固定{tsc:null,vitest:null,cases:null}，fixes=[]、merged=null，不冒称live/收益；report为scratch/report.md。\n")
++    if "{{" in appendix or "}}" in appendix:
++        raise ValueError("backfill text contains template delimiters")
++    path = Path(directory, "learner", bid + ".backfill-input", "strategy-proposal.md")
++    path.parent.mkdir(parents=True, exist_ok=True)
++    raw = (template + appendix).encode()
++    if path.exists() and path.read_bytes() != raw:
++        raise ValueError("backfill task input already differs")
++    path.write_bytes(raw)
++    return str(path)
++
++
++def report_proof(report, batch, root):
++    binding = batch["backfill_binding"]
++    directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
++    bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
++    native_start(bid, batch, directory)
++    if (report.get("task") != "strategy-proposal" or report.get("character") != "silent"
++            or report.get("backfill_source") != batch["backfill_source"]
++            or report.get("input_sha256") != binding["input_manifest"]["sha256"]
++            or report.get("runs") != batch["runs"] or report.get("fixes") != [] or report.get("merged") is not None
++            or report.get("tests") != {"tsc": None, "vitest": None, "cases": None}):
++        raise ValueError("backfill completion binding mismatch")
++    tree = Path(batch["worktree"]).resolve()
++    path = Path(report["report"]).resolve()
++    if not path.is_relative_to((tree / "learner/runs").resolve()) or not (tree / "learner/runs").resolve().is_relative_to(tree) or path.suffix != ".md":
++        raise ValueError("backfill report outside scratch")
++    saved = None
++    for block in reversed(re.findall(r"```json\s*([\s\S]*?)```", path.read_text())):
++        try:
++            candidate = json.loads(block)
++        except ValueError:
++            continue
++        if isinstance(candidate, dict) and candidate.get("task") == "strategy-proposal":
++            saved = candidate; break
++    keys = ("task", "character", "batch", "base", "runs", "fixes", "merged", "tests", "backfill_source", "input_sha256", "backfill_results")
++    if not saved or any(saved.get(k) != report.get(k) for k in keys):
++        raise ValueError("backfill report differs from preserved output")
++    bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
++    if report.get("batch") != bid or report.get("base") != binding["dispatch_base"]:
++        raise ValueError("backfill report batch/base mismatch")
++    rows = report.get("backfill_results")
++    if (not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows)
++            or [row.get("id") for row in rows] != binding["entry_ids"]):
++        raise ValueError("backfill needs one ordered disposition per old ID")
++    files = []
++    for row in rows:
++        if (row.get("state") not in ("processed", "waiting") or not isinstance(row.get("reason"), str) or not row["reason"].strip()
++                or not isinstance(row.get("destinations"), list) or bool(row["destinations"]) != (row["state"] == "processed")):
++            raise ValueError("invalid backfill disposition")
++        for target in row["destinations"]:
++            if (not isinstance(target, dict) or target.get("kind") not in ("strategy", "rk", "merged-into")
++                    or not isinstance(target.get("id"), str) or not target["id"].strip()):
++                raise ValueError("invalid backfill destination")
++            candidate = Path(target["path"]).resolve()
++            if not candidate.is_relative_to(path.parent) or not candidate.is_file() or candidate == path or candidate.stat().st_size == 0:
++                raise ValueError("backfill destination lacks its scratch artifact")
++            files.append({"old_id": row["id"], "kind": target["kind"], "id": target["id"],
++                          "path": str(candidate), "bytes": candidate.stat().st_size, "sha256": digest(candidate.read_bytes())})
++    return {"destination_files": files, "plan_id": batch["backfill_source"], "report_sha256": digest(path.read_bytes()), "dispositions": rows}
++
++
++if __name__ == "__main__":
++    try:
++        action, *args = sys.argv[1:]
++        if action == "ready":
++            batch, _ = prepare(*args)
++            print(batch["backfill_binding"]["dispatch_base"])
++        elif action == "prepare":
++            print(task_file(*args))
++        elif action == "registered":
++            bound(*args)
++        elif action == "not-started":
++            batch = bound(*args)
++            root, directory, bid, character, tree, ident = args
++            atomic_json(Path(directory, "learner", bid + ".backfill-not-started.json"),
++                        {"batch": bid, "source": ident, "worktree": tree, "models_started": 0})
++        else:
++            raise ValueError("unknown backfill action")
++    except (OSError, ValueError, KeyError, IndexError, TypeError, StopIteration, subprocess.SubprocessError) as error:
++        sys.stderr.write(str(error) + "\n")
++        raise SystemExit(1)
+diff --git a/ops/tests/test_strategy_backfill.py b/ops/tests/test_strategy_backfill.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..807d9de5e38c2bae905ebc511df32c1437b6acd3
+--- /dev/null
++++ b/ops/tests/test_strategy_backfill.py
+@@ -0,0 +1,329 @@
++"""Fixed backfill admission, native consumption and recovery fixtures; no model/game."""
++import copy
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "ops"))
++import strategy_backfill_jobs as backfill
++import learner_jobs as jobs
++import proposal_dispatch as proposals
++
++STAMP = "20260101-000001"
++BID = STAMP + "-strategy-proposal"
++PLAN = "issue48-boss-elite-001"
++RUN = "SILENT000001"
++
++
++class Backfill(unittest.TestCase):
++    def setUp(self):
++        temporary = tempfile.TemporaryDirectory()
++        self.addCleanup(temporary.cleanup)
++        self.root = Path(temporary.name)
++        self.directory = self.root / "ops/codex-ops"
++        (self.directory / "learner").mkdir(parents=True)
++        (self.root / "notes").mkdir()
++        self.env = patch.dict(os.environ, {"CODEX_OPS_DIR": str(self.directory)})
++        self.env.start(); self.addCleanup(self.env.stop)
++        self.state = {"batches": {}}
++        self.entries = [{"id": "silent-one", "lesson": "固定证据夹具"}, {"id": "silent-two", "lesson": "固定反例夹具"}, {"id": "silent-three"}]
++        self.original = self.ref("frozen/experience.json", {"entries": self.entries})
++        selected = self.ref("frozen/selected.json", {"batch_plan_id": PLAN, "entries": self.entries[:2], "available_ended_silent_ids": [RUN]})
++        spec = self.ref("frozen/work.md", "固定冻结任务。\n")
++        self.manifest = {"request_id": backfill.REQUEST, "batch_plan_id": PLAN, "source_experience": self.original,
++                         "first_batch": selected, "work_spec": spec,
++                         "own_ended_inventory": self.ref("frozen/runs.json", {"character": "silent", "runs": [{"run_id": RUN, "ended": "2026-01-01"}]}),
++                         "priority": self.ref("frozen/priority.json", {}), "contracts": [], "external_aggregates": []}
++        self.plan = {"plan_id": PLAN, "work_spec": spec, "input_manifest": self.ref("frozen/manifest.json", self.manifest)}
++        self.config = {"schema": 1, "authorized_by": "Roy", "request_id": backfill.REQUEST, "character": "silent", "enabled": True, "plans": [self.plan]}
++        self.save_config()
++        self.base = "a" * 40
++        self.tree = self.root / ".worktrees" / ("codex-strategy-silent-" + STAMP)
++        self.calls = []
++
++    def ref(self, name, value):
++        path = self.root / name; path.parent.mkdir(parents=True, exist_ok=True)
++        raw = value.encode() if isinstance(value, str) else json.dumps(value, ensure_ascii=False).encode()
++        path.write_bytes(raw)
++        return {"path": name, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
++
++    def save_config(self):
++        (self.root / backfill.QUEUE).write_text(json.dumps(self.config))
++
++    def writer(self, *args, **kwargs):
++        self.calls.append((args, kwargs))
++        bid = args[9] + "-strategy-proposal"
++        self.state["batches"][bid] = {"task": args[3], "character": args[4], "runs": args[5], "key": args[6],
++            "reason": args[7], "worktree": str(self.tree), "state": "running", "pid": 10, "pane": "w1:p2", **kwargs}
++        return bid, 10
++
++    def dispatch(self, normal=None, writer=None, stamp=STAMP, alive=lambda pid: False):
++        with patch.object(backfill.subprocess, "check_output", return_value=self.base + "\n"):
++            return backfill.dispatch(self.state, str(self.root), str(REPO / "ops"), "silent", alive, stamp,
++                                     writer or self.writer, normal or {})
++
++    def registered(self):
++        self.assertEqual(self.dispatch(), (BID, 10))
++        (self.directory / "learn.json").write_text(json.dumps(self.state))
++        return self.state["batches"][BID]
++
++    def native(self, batch=None, bid=BID):
++        batch = batch or self.state["batches"][bid]
++        marker = "[learner fixed marker]"
++        prompt = marker + "\n" + bid + " " + PLAN + " " + batch["backfill_binding"]["input_manifest"]["sha256"]
++        rows = [{"type": "session_meta", "payload": {"id": "session-new", "cwd": str(self.tree)}},
++                {"type": "event_msg", "timestamp": "2026-01-01T00:00:00Z", "payload": {"type": "task_started", "turn_id": "turn-new"}},
++                {"type": "turn_context", "payload": {"turn_id": "turn-new", "cwd": str(self.tree), "model": "gpt-6.1-sol", "effort": "high", "sandbox_policy": {"type": "workspace-write"}}},
++                {"type": "event_msg", "payload": {"type": "user_message", "message": prompt}}]
++        rollout = self.directory / "native.jsonl"
++        rollout.write_text("".join(json.dumps(row) + "\n" for row in rows))
++        proof = {"marker": marker, "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()}
++        receipt = {"label": "learner-" + bid, "pane": "w1:p2", "cwd": str(self.tree), "session": "session-new",
++                   "submitted": True, "bindings": [{**proof, "turn_id": "turn-new"}], "submissions": [proof], "rollout": str(rollout)}
++        path = self.directory / "learner" / ("learner-" + bid + ".tui.json")
++        path.write_text(json.dumps(receipt))
++        return path, rollout, rows
++
++    def stdio(self, batch=None):
++        batch = batch or self.state["batches"][BID]
++        path, old, rows = self.native(batch)
++        receipt = json.loads(path.read_text()); path.unlink()
++        session = "11111111-2222-3333-4444-555555555555"
++        rows[0]["payload"]["id"] = session
++        rows.append({"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "turn-new", "last_agent_message": "fixed"}})
++        home = self.root / "account"
++        rollout = home / "sessions/2026/01/01" / ("rollout-" + session + ".jsonl")
++        rollout.parent.mkdir(parents=True); rollout.write_text("".join(json.dumps(row) + "\n" for row in rows))
++        log = self.root / "learner/runs/fixed-launch.jsonl"; log.parent.mkdir(parents=True, exist_ok=True)
++        identity = {"lease": "fixed", "input_sha256": "b" * 64, "command_sha256": "c" * 64}
++        stream = [{"type": "learner_launch", "transport": "stdio", "cwd": str(self.tree), "task": "strategy-proposal", "params": {"batch": BID}},
++                  {"type": "learner_startup_attempt", "batch": BID, **identity},
++                  {"type": "thread.started", "thread_id": session},
++                  {"type": "learner_summary", "exit_code": 0, "summary": {"sessionId": session}}]
++        log.write_text("".join(json.dumps(row) + "\n" for row in stream))
++        launch = {"batch": BID, "source": PLAN, "cwd": str(self.tree), "log": str(log), "codex_home": str(home),
++                  "prompt_sha256": receipt["bindings"][0]["prompt_sha256"], **identity}
++        (self.directory / "learner" / (BID + ".backfill-launch.json")).write_text(json.dumps(launch))
++        return rollout
++
++    def test_stdio_fallback_uses_its_original_account_native_prompt(self):
++        self.registered(); self.stdio()
++        backfill.reconcile(self.state, self.directory)
++        self.assertEqual(self.state["strategy_backfill"]["cursor"], 2)
++        self.assertEqual(self.state["strategy_backfill"]["plans"][PLAN]["attempts"][0]["native"]["session"], "11111111-2222-3333-4444-555555555555")
++
++    def test_pre_model_failure_can_retry_explicitly_without_consuming(self):
++        batch = self.registered(); batch.update(state="failed", rc=1)
++        (self.directory / "learner" / (BID + ".backfill-not-started.json")).write_text(json.dumps(
++            {"batch": BID, "source": PLAN, "worktree": str(self.tree), "models_started": 0}))
++        self.plan["retry_generation"] = 1; self.save_config()
++        self.tree = self.root / ".worktrees/codex-strategy-silent-20260101-000002"
++        self.assertEqual(self.dispatch(stamp="20260101-000002")[0], "20260101-000002-strategy-proposal")
++        self.assertEqual(self.state["strategy_backfill"]["cursor"], 0)
++        self.assertEqual(len(self.calls), 2)
++
++    def test_verified_retry_revisits_only_waiting_ids_and_keeps_unique_cursor(self):
++        batch, report = self.report(); self.stdio(batch)
++        batch.update(state="done", rc=0, backfill_result=report["backfill_results"])
++        backfill.reconcile(self.state, self.directory)
++        self.plan["retry_generation"] = 1; self.save_config()
++        stamp = "20260101-000002"; bid = stamp + "-strategy-proposal"
++        self.tree = self.root / ".worktrees" / ("codex-strategy-silent-" + stamp)
++        with patch.object(jobs, "available", return_value=True), patch.object(jobs, "start_learner", return_value=(10, "w1:p2")):
++            self.assertEqual(self.dispatch(stamp=stamp, writer=jobs.dispatch_write)[0], bid)
++        new = self.state["batches"][bid]
++        self.assertEqual(new["backfill_binding"]["entry_ids"], ["silent-two"])
++        self.native(new, bid)
++        backfill.reconcile(self.state, self.directory)
++        backfill.reconcile(self.state, self.directory)
++        record = self.state["strategy_backfill"]
++        self.assertEqual(record["cursor"], 2)
++        self.assertEqual(record["entries"]["silent-two"]["status"], "started")
++        self.assertEqual(record["entries"]["silent-one"]["status"], "processed")
++        self.assertEqual(record["processed"], 1)
++
++    def test_task_preparation_preserves_strategy_identity_and_frozen_scope(self):
++        self.registered()
++        template = self.tree / "learner/tasks/strategy-proposal.md"; template.parent.mkdir(parents=True)
++        shutil.copyfile(REPO / "learner/tasks/strategy-proposal.md", template)
++        with patch.object(backfill.subprocess, "check_output", return_value=self.base + "\n"):
++            task = backfill.task_file(str(self.root), str(self.directory), BID, "silent", str(self.tree), PLAN)
++        text = Path(task).read_text()
++        self.assertEqual(Path(task).name, "strategy-proposal.md")
++        self.assertIn(self.plan["input_manifest"]["sha256"], text)
++        self.assertIn("HEAD保持dispatch_base", text)
++        self.assertIn("backfill_results", text)
++
++    def test_disabled_and_wrong_character_do_not_dispatch_or_consume(self):
++        self.config["enabled"] = False; self.save_config()
++        self.assertIsNone(self.dispatch())
++        self.assertNotIn("strategy_backfill", self.state)
++        self.assertIsNone(backfill.dispatch(self.state, str(self.root), "", "ironclad", lambda pid: False, STAMP, self.writer, {}))
++        self.assertEqual(self.calls, [])
++
++    def test_normal_ready_work_and_live_heavy_leases_win(self):
++        for field in ("backfill_hold", "disk_capacity_hold", "strategy", "code_proposal", "calibration", "core_builds", "postmortem", "ascension_audit", "learning_requests"):
++            self.assertIsNone(self.dispatch({field: True}))
++        self.state["learning_requests"] = {"normal": {"state": "pending"}}
++        self.assertIsNone(self.dispatch())
++        self.state.pop("learning_requests")
++        self.state["calibration_ready"] = {"silent": "fixed-calibration"}
++        self.assertIsNone(self.dispatch())
++        self.state.pop("calibration_ready")
++        self.state["batches"]["heavy"] = {"state": "running", "pid": 20, "task": "fix-batch"}
++        self.assertIsNone(self.dispatch(alive=lambda pid: True))
++        self.assertEqual(self.calls, [])
++
++    def test_pending_heavy_queue_and_audit_are_not_overtaken(self):
++        self.state["boss_sim_observed"] = {"silent": {"eligible": [{"boss": "FIXTURE", "mode": "b4", "key": "fixed"}]}}
++        self.assertIsNone(self.dispatch())
++        self.state.pop("boss_sim_observed")
++        self.state["ascension_audits"] = {"fixed": {"character": "silent", "state": "queued"}}
++        self.assertIsNone(self.dispatch())
++
++    def test_normal_writer_wait_retains_priority_without_a_launch(self):
++        with patch.object(jobs, "pending", return_value=[RUN]), patch.object(jobs, "dispatch_write", return_value=None), \
++                patch.object(jobs, "fix_key", return_value=None), patch.object(jobs, "strategy_job", return_value=None), \
++                patch.object(jobs, "calibration_job", return_value=None), patch("boss_sim_jobs.check", return_value=None):
++            normal = jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: False, STAMP)
++        self.assertTrue(normal["backfill_hold"])
++        self.assertIsNone(self.dispatch(normal))
++
++    def test_completed_normal_source_does_not_starve_backfill_on_a_stale_pending_index(self):
++        self.state["batches"]["completed"] = {"task": "experience-update", "key": RUN, "state": "done"}
++        with patch.object(jobs, "pending", return_value=[RUN]), patch.object(jobs, "dispatch_write", return_value=None), \
++                patch.object(jobs, "fix_key", return_value=None), patch.object(jobs, "strategy_job", return_value=None), \
++                patch.object(jobs, "calibration_job", return_value=None), patch("boss_sim_jobs.check", return_value=None):
++            normal = jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: False, STAMP)
++        self.assertFalse(normal["backfill_hold"])
++        self.assertEqual(self.dispatch(normal), (BID, 10))
++
++    def test_shared_writer_slots_and_available_gates_are_preserved(self):
++        for mode in ("slots", "writer"):
++            self.state = {"batches": {}}
++            if mode == "slots":
++                self.state["batches"] = {str(i): {"task": "strategy-proposal", "state": "running", "pid": i + 1} for i in range(2)}
++            with patch.object(jobs, "available", return_value=mode != "writer"), patch.object(jobs, "start_learner", side_effect=AssertionError("gate bypass")):
++                result = self.dispatch(writer=jobs.dispatch_write, alive=lambda pid: True)
++            self.assertIsNone(result)
++            self.assertNotIn("strategy_backfill", self.state)
++
++    def test_durable_contract_copy_preserves_original_sha_after_owner_tree_reclaim(self):
++        original = self.ref(".worktrees/temporary/task.md", "固定冻结参考")
++        copied = self.ref("frozen/contract.md", "固定冻结参考")
++        self.manifest["contracts"] = [original]
++        self.plan["input_manifest"] = self.ref("frozen/manifest.json", self.manifest)
++        self.plan["artifact_copies"] = {original["path"]: copied["path"]}
++        (self.root / original["path"]).unlink()
++        self.save_config()
++        self.assertEqual(self.dispatch(), (BID, 10))
++        (self.root / copied["path"]).write_text("改变的参考")
++        with self.assertRaises(ValueError): backfill.source(str(self.root), self.plan)
++
++    def test_frozen_input_tamper_stops_before_registration(self):
++        (self.root / self.original["path"]).write_text("tampered")
++        self.assertIsNone(self.dispatch())
++        self.assertIn("fingerprint", self.state["strategy_backfill_error"]["reason"])
++        self.assertEqual(self.calls, [])
++
++    def test_registered_wrapper_is_not_a_native_start_and_no_duplicate(self):
++        self.registered()
++        backfill.reconcile(self.state, self.directory)
++        self.assertEqual(self.state["strategy_backfill"]["cursor"], 0)
++        self.assertIsNone(self.dispatch(stamp="20260101-000002"))
++        self.assertEqual(len(self.calls), 1)
++        self.assertNotIn("research_request", self.state["batches"][BID])
++        self.assertEqual(self.calls[0][1], {"backfill_source": PLAN})
++
++    def test_host_must_read_actual_saved_binding_and_immutable_inputs(self):
++        batch = self.registered()
++        self.assertEqual(backfill.prepare(str(self.root), str(self.directory), BID, "silent", str(self.tree), PLAN)[0], batch)
++        (self.directory / "learn.json").write_text('{"batches":{}}')
++        with self.assertRaises(KeyError): backfill.prepare(str(self.root), str(self.directory), BID, "silent", str(self.tree), PLAN)
++
++    def test_native_acceptance_advances_ids_once_across_restarts(self):
++        batch = self.registered(); original = copy.deepcopy(batch)
++        self.native()
++        backfill.reconcile(self.state, self.directory)
++        self.assertEqual(self.state["strategy_backfill"]["cursor"], 2)
++        self.assertEqual(self.state["strategy_backfill"]["processed"], 0)
++        self.assertEqual(self.state["strategy_backfill"]["remaining"], 3)
++        restored = json.loads(json.dumps(self.state))
++        backfill.reconcile(restored, self.directory)
++        self.assertEqual(restored["strategy_backfill"]["cursor"], 2)
++        self.assertEqual(batch, original)  # Startup lease fingerprint never changes.
++
++    def test_native_wrong_prompt_context_or_old_turn_does_not_consume(self):
++        self.registered()
++        for mode in ("prompt", "context", "old-turn"):
++            self.state.pop("strategy_backfill", None)
++            _, rollout, rows = self.native()
++            if mode == "prompt": rows[-1]["payload"]["message"] += " changed"
++            if mode == "context": rows[2]["payload"]["effort"] = "xhigh"
++            if mode == "old-turn": rows.insert(1, {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "old"}})
++            rollout.write_text("".join(json.dumps(row) + "\n" for row in rows))
++            backfill.reconcile(self.state, self.directory)
++            self.assertEqual(self.state["strategy_backfill"]["cursor"], 0)
++
++    def report(self):
++        batch = self.registered(); self.native()
++        scratch = self.tree / "learner/runs/fixed"; scratch.mkdir(parents=True)
++        candidate = scratch / "candidate.json"; candidate.write_text('{"candidate":"fixed"}')
++        report = {"task": "strategy-proposal", "character": "silent", "batch": BID, "base": self.base, "runs": [RUN],
++                  "fixes": [], "merged": None, "tests": {"tsc": None, "vitest": None, "cases": None}, "proposal_results": [],
++                  "backfill_source": PLAN, "input_sha256": self.plan["input_manifest"]["sha256"], "report": str(scratch / "report.md"),
++                  "backfill_results": [{"id": "silent-one", "state": "processed", "reason": "候选待发布", "destinations": [{"kind": "strategy", "id": "fixed", "path": str(candidate)}]},
++                                       {"id": "silent-two", "state": "waiting", "reason": "缺原窗", "destinations": []}]}
++        self.save_report(report)
++        return batch, report
++
++    def save_report(self, report):
++        Path(report["report"]).write_text('```json\n' + json.dumps(report) + '\n```\n')
++
++    def test_completed_dispositions_keep_waiting_remaining_and_duration(self):
++        batch, report = self.report()
++        proof = backfill.report_proof(report, batch, str(self.root))
++        batch.update(state="done", rc=0, finished="2026-01-01", backfill_finished_at=1767225602, backfill_result=proof["dispositions"])
++        backfill.reconcile(self.state, self.directory)
++        p = self.state["strategy_backfill"]
++        self.assertEqual((p["cursor"], p["processed"], p["remaining"]), (2, 1, 2))
++        self.assertEqual(p["plans"][PLAN]["state"], "waiting")
++        self.assertEqual(p["plans"][PLAN]["attempts"][0]["elapsed_seconds"], 2)
++        self.assertIsNone(self.dispatch(stamp="20260101-000002"))
++
++    def test_missing_duplicate_or_invented_destination_cannot_complete(self):
++        batch, report = self.report()
++        for rows in (report["backfill_results"][:1], [report["backfill_results"][0]] * 2):
++            changed = dict(report, backfill_results=rows); self.save_report(changed)
++            with self.assertRaises(ValueError): backfill.report_proof(changed, batch, str(self.root))
++        changed = copy.deepcopy(report); changed["backfill_results"][0]["destinations"][0]["path"] = str(self.root / "outside")
++        self.save_report(changed)
++        with self.assertRaises(ValueError): backfill.report_proof(changed, batch, str(self.root))
++
++    def test_failed_or_uncertain_attempt_does_not_restart_from_a_dead_pid(self):
++        batch = self.registered(); batch.update(state="failed", rc=1)
++        backfill.reconcile(self.state, self.directory)
++        self.assertEqual(self.state["strategy_backfill"]["cursor"], 0)
++        self.config["plans"][0]["retry_generation"] = 1; self.save_config()
++        self.assertIsNone(self.dispatch(stamp="20260101-000002"))
++        self.assertEqual(len(self.calls), 1)
++        self.assertEqual(self.state["strategy_backfill"]["plans"][PLAN]["state"], "unverified-start")
++
++    def test_no_change_proof_uses_backfill_instead_of_legacy_research(self):
++        batch, report = self.report()
++        with patch.object(proposals.subprocess, "check_output", side_effect=[self.base + "\n", ""]), \
++                patch.object(proposals, "research_proof", side_effect=AssertionError("legacy route")):
++            proof = proposals.no_change(report, batch, str(self.root))
++        self.assertEqual(proof["backfill"]["plan_id"], PLAN)
++
++
++if __name__ == "__main__":
++    unittest.main()

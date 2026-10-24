@@ -1,0 +1,64 @@
+{
+  "coverage": {
+    "decisions": [
+      305743,
+      506
+    ],
+    "frames": [
+      321328,
+      506
+    ],
+    "run_config": [
+      570,
+      506
+    ],
+    "sl_attempts": [
+      2826,
+      450
+    ],
+    "runs_raw": [
+      506,
+      506
+    ],
+    "run_plans": [
+      7653,
+      506
+    ]
+  },
+  "rest_raw_rows": 3067,
+  "rest_unique_opportunities": 2981,
+  "rest_unique_runs": 498,
+  "map_raw_rows": 15239,
+  "map_unique_opportunities": 15239,
+  "map_unique_runs": 506,
+  "kinds": {
+    "SMITH": 921,
+    "HEAL": 2041,
+    "KINDLE": 11,
+    "DIG": 5,
+    "HATCH": 3
+  },
+  "strata": {
+    "10/reload_confirmed": 342,
+    "10/no_retry_evidence": 123,
+    "3/no_retry_evidence": 1,
+    "0/reload_confirmed": 7,
+    "4/no_retry_evidence": 2,
+    "4/reload_confirmed": 2,
+    "6/reload_confirmed": 6,
+    "7/reload_confirmed": 6,
+    "6/no_retry_evidence": 5,
+    "7/no_retry_evidence": 1,
+    "2/reload_confirmed": 1,
+    "1/reload_confirmed": 3,
+    "9/reload_confirmed": 3,
+    "8/no_retry_evidence": 1,
+    "10/predicted_death_without_confirmed_reload": 1,
+    "5/reload_confirmed": 1,
+    "2/no_retry_evidence": 1
+  },
+  "raw_rows_read": 24359,
+  "sl_layer_definition": "reload_ok true; else predicted_death; else attempt>1 unconfirmed; otherwise no_retry_evidence (may include first-attempt won/died log, absence not proof of no SL)",
+  "raw_bytes_referenced": 993606147,
+  "raw_count_basis": "最终聚合/模型抽核引用表去重；试探性旧统计和重复I/O不作额外样本。"
+}

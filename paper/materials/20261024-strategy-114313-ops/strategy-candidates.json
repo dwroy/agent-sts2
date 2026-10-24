@@ -1,0 +1,85 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "fight_plan"
+        ]
+      },
+      "strategy": "仅Silent A10/v0.111.0：备战且实际持药时，逐瓶比较本战可兑现的用途与留药理由；把留药列为待比较选择。外部非胜上传的终局保存数组非空447/1247（35.85%），胜局166/492（33.74%），差+2.11百分点。这是终局字段代理，不能判漏喝致死或证明提前用药有收益；其他build差值可反向，不能跨版本照搬。用途与风险须据当前实盘，未知就保留；不据此规定药水、回合、HP线或相邻Boss留几瓶。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；build=v0.111.0；whole_run_win=false；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+          },
+          "statistic": {
+            "name": "terminal_nonempty_given_nonwin_pct",
+            "value": 35.84603047313553,
+            "unit": "percent"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1247
+          },
+          "design": "observational",
+          "limitations": [
+            "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+            "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+            "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+          ],
+          "license": "Dataset license unspecified; attributed aggregates only.",
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/14",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；build=v0.111.0；whole_run_win=true；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+          },
+          "statistic": {
+            "name": "terminal_nonempty_given_win_pct",
+            "value": 33.739837398373986,
+            "unit": "percent"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 492
+          },
+          "design": "observational",
+          "limitations": [
+            "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+            "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+            "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+          ],
+          "license": "Dataset license unspecified; attributed aggregates only.",
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/15",
+          "role": "support"
+        }
+      ],
+      "source": "external:sts2fun",
+      "confidence": 0.3,
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

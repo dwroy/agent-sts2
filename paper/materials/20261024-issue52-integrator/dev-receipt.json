@@ -1,0 +1,101 @@
+{
+  "schema": "issue52-priority-dev-handoff-v1",
+  "at": "2026-10-24T04:14:03+08:00",
+  "issue": 52,
+  "source_commit": "1fd887cfce534bc84cf5f01148d99f1c5d031389",
+  "base": "60aa49541ad53d5abbc3e35106201fae454d36be",
+  "branch": "issue-52-priority-hold",
+  "code_leaves": [
+    {
+      "path": "agent/tests/strategy-priority.test.ts",
+      "bytes": 407,
+      "sha256": "ac63cc1ea693b3fcbcfc6d9749cf304d1c8267e5a300aa9b34855a02d47aa635"
+    },
+    {
+      "path": "ops/ascension_audit.py",
+      "bytes": 11152,
+      "sha256": "560da1b699a8cf4409fbd201b9152120a9c0d63f0602a6b8dc145916a2f87fc5"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "bytes": 28188,
+      "sha256": "d4b60bd1df7a4cd3e477c38c05e227b2a729bb0e94e84e137ae21a403f7c7939"
+    },
+    {
+      "path": "ops/strategy_backfill_jobs.py",
+      "bytes": 33129,
+      "sha256": "17f7b0e42d7fbb433144d9357b4b57db1b0c096f6983eac58cc603b401ddd130"
+    },
+    {
+      "path": "ops/strategy_external_jobs.py",
+      "bytes": 13718,
+      "sha256": "dbcb55748254f1d1bb25e6a49401a94b6b991e3776a4baf31edf89d251a6806f"
+    },
+    {
+      "path": "ops/tests/test_strategy_backfill.py",
+      "bytes": 20972,
+      "sha256": "3753218e5eb2469dc728a421de3ce7b94ea8d2fb1dce29d443fbb8d9b61772fe"
+    },
+    {
+      "path": "ops/tests/test_strategy_external.py",
+      "bytes": 14934,
+      "sha256": "c81446c8556d693145a6748ddf3cfbcf057e0a9052a030c411809dccbb267b9a"
+    },
+    {
+      "path": "ops/tests/test_strategy_priority.py",
+      "bytes": 12023,
+      "sha256": "16c49b6904d3807484e58bc16d537f72b98a6e4eaa4f740277566e10b202ebd9"
+    }
+  ],
+  "protected_source_configs": [
+    {
+      "path": "notes/strategy-backfill-silent.json",
+      "bytes": 1206,
+      "sha256": "d9fa72da950be562c772a3d42304ddd7cce0f49300421ff20473bc86122a9b9a",
+      "equals_baseline": true
+    },
+    {
+      "path": "notes/strategy-external-silent.json",
+      "bytes": 1253,
+      "sha256": "8978c3dde61d06eb255f96c7a68d4a86f25a2a380fe4785f95bebd38fea7f532",
+      "equals_baseline": true
+    }
+  ],
+  "checks": {
+    "tsc": {
+      "command": "cd agent && npx tsc -p tsconfig.json --noEmit",
+      "rc": 0
+    },
+    "vitest": {
+      "command": "cd agent && node node_modules/vitest/vitest.mjs run tests/strategy-priority.test.ts tests/strategy-backfill.test.ts tests/strategy-external.test.ts tests/calibration-dispatch-fixtures.test.ts tests/learner-jobs.test.ts tests/learner-learning-flow.test.ts tests/strategy-research-scheduling.test.ts tests/strategy-concurrency.test.ts tests/ascension-audit-path.test.ts tests/ascension-audit-report.test.ts tests/ascension-audit-output-fixture.test.ts tests/ops-codex.test.ts --maxWorkers=1 --no-file-parallelism",
+      "files": 12,
+      "cases": 82,
+      "rc": 0,
+      "output": "directed.txt"
+    },
+    "new_python": {
+      "command": "nice -n 19 python3 -B ops/tests/test_strategy_priority.py",
+      "cases": 7,
+      "rc": 0
+    },
+    "last_fixture_clarification": {
+      "command": "nice -n 19 python3 -B ops/tests/test_strategy_backfill.py",
+      "cases": 20,
+      "rc": 0
+    },
+    "before_after_reproducer": {
+      "cases": 16,
+      "reproduced_false_holds": 6,
+      "after_controls": 8,
+      "rc": 0,
+      "output": "reproducer.json"
+    }
+  },
+  "full_runs": 0,
+  "real_models_started": 0,
+  "games_started": 0,
+  "production_state_written": false,
+  "published": false,
+  "scientific_parents_closed": false,
+  "handoff": "integrator directed verification, freeze and original coordinated unique check window; original ops deploys host scheduler only"
+}

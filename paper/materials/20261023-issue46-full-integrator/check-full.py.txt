@@ -1,0 +1,55 @@
+from pathlib import Path
+import os,json,hashlib,subprocess,fcntl,time,traceback,sys
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent;A=json.loads((B/'assembly.json').read_text());W=Path(A['worktree']);F=B/'full';F.mkdir(exist_ok=False)
+def now():return subprocess.check_output(['date','-Iseconds'],text=True).strip()
+def git(*a):return subprocess.check_output(['git',*a],cwd=W)
+def put(n,v):
+ t=B/(n+'.tmp');t.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n');os.replace(t,B/n)
+def manifest():
+ names=git('ls-files','-z','--cached','--others','--exclude-standard','agent','ops','learner','eval','knowledge','tools','.agents').decode().split('\0')+[A['fixed_input']['path']];rows=[]
+ for n in sorted(set(names)):
+  p=W/n
+  if not n or not p.is_file() or p.is_symlink() or p.name.startswith('.env') or n=='ops/instance-binding.json':continue
+  raw=p.read_bytes();rows.append(dict(path=n,bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest()))
+ return rows
+s=dict(state='admission',at=now(),runner_pid=os.getpid(),runner_birth=Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],nice=os.getpriority(os.PRIO_PROCESS,0),tree=A['tree'],base=A['live_base'],source=A['source'],supervisor_comment=6353937742,full_started=False,steps=[],K_or_L_held_during_checks=False,new_model_API_game_actions=0,worktree=str(W));locks=[]
+try:
+ assert s['nice']==19 and git('rev-parse','HEAD').decode().strip()==A['live_base'] and git('write-tree').decode().strip()==A['tree'] and not git('diff','--name-only').strip()
+ for n in []:
+  h=(R/n).open('a');fcntl.flock(h,fcntl.LOCK_EX|fcntl.LOCK_NB);locks.append(h)
+ active=[];sandbox=[]
+ for p in Path('/proc').iterdir():
+  if not p.name.isdigit():continue
+  try:
+   args=(p/'cmdline').read_bytes().split(b'\0')
+   if len(args)>1 and (args[1].endswith(b'vitest.mjs') or args[1].endswith(b'/vitest')) and str((p/'cwd').resolve()).startswith(str(R)):
+    argv=[x.decode() for x in args if x]; row=dict(pid=int(p.name),cwd=str((p/'cwd').resolve()),argv=argv,nice=os.getpriority(os.PRIO_PROCESS,int(p.name)))
+    # The original automatic learner sandbox excludes files and is not the sole unrestricted full.
+    # It has its own one-worker, nice19 budget; never stop a production learner or reclassify its run as full.
+    if '--exclude' in argv and '--maxWorkers=1' in argv and row['nice']>=19:sandbox.append(row)
+    else:active.append(row)
+  except (OSError,RuntimeError):pass
+ s['existing_sandbox_selftests']=sandbox;assert len(sandbox)<=1,sandbox;assert not active,active
+ before=manifest();put('final-inputs-before.json',before);s.update(state='running',input_count=len(before),knowledge_count=A['knowledge_count']);put('final-checks.json',s)
+ env={**os.environ,'PATH':str(Path.home()/'.local/node/bin')+':'+os.environ['PATH'],'PYTHONDONTWRITEBYTECODE':'1','OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1','MKL_NUM_THREADS':'1'};env.pop('CHARACTER',None)
+ commands=[('tsc',['node','node_modules/typescript/bin/tsc','-p','tsconfig.json','--noEmit']),('full',['node','node_modules/vitest/vitest.mjs','run','--pool=forks','--maxWorkers=1','--no-file-parallelism','--reporter=default','--reporter=json','--outputFile.json='+str(F/'vitest.json')])]
+ for name,args in commands:
+  step=dict(name=name,argv=['nice','-n','19',*args],started_at=now());s['steps'].append(step);start=time.monotonic()
+  with (F/(name+'.log')).open('xb') as out:
+   child=subprocess.Popen(step['argv'],cwd=W/'agent',env=env,stdout=out,stderr=subprocess.STDOUT);step['pid']=child.pid;s['full_started']|=name=='full';put('final-checks.json',s);step['exit_code']=child.wait()
+  step['seconds']=round(time.monotonic()-start,3);put('final-checks.json',s);print(json.dumps(step),flush=True)
+  if step['exit_code'] and name=='tsc':raise RuntimeError('tsc failed; no automatic full retry')
+ after=manifest();put('final-inputs-after.json',after);assert before==after,'input bytes changed';assert git('write-tree').decode().strip()==A['tree'] and not git('diff','--name-only').strip()
+ q=json.loads((F/'vitest.json').read_text())
+ failed=[r for r in q['testResults'] if r['status']=='failed']
+ assert q['success'],'full failed; preserve first failure, no automatic retry'
+ s.update(state='passed',inputs_unchanged=True,vitest=dict(files=len(q['testResults']),passed=q['numPassedTests'],failed=q['numFailedTests'],pending=q['numPendingTests'],success=q['success']))
+except BaseException as e:
+ after=manifest();put('final-inputs-after.json',after);s['inputs_unchanged']=before==after if 'before' in locals() else None
+ if (F/'vitest.json').exists():
+  q=json.loads((F/'vitest.json').read_text());s['vitest']=dict(files=len(q['testResults']),passed=q['numPassedTests'],failed=q['numFailedTests'],pending=q['numPendingTests'],success=q['success'])
+ s.update(state='failed-or-blocked',error=type(e).__name__,reason=str(e));(F/'error.txt').write_text(traceback.format_exc())
+finally:
+ for h in reversed(locks):h.close()
+ s['ended_at']=now();put('final-checks.json',s);(F/'driver.exit').write_text('0\n' if s['state']=='passed' else '1\n')
+sys.exit(0 if s['state']=='passed' else 1)

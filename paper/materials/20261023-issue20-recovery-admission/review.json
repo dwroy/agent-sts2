@@ -1,0 +1,61 @@
+{
+  "issue": 20,
+  "scope": "explicit ops recovery seal; independent learning-tab subclass only",
+  "source": "baa313f74ad514eac5794db5f42ebf144ba2b532",
+  "developer_comment": 6362247596,
+  "request_comment": 6361965194,
+  "base": "d203fe8edc435a211d9ea81d61303e0a7d120bc3",
+  "combination_tree": "523dfcb6a95a434cedb9fbaf4546aee13e091a7a",
+  "verdict": "admitted for host main; actual ops recovery pending",
+  "files": [
+    {
+      "path": "ops/learner_tabs.py",
+      "preimage": "2e6892ef95c412c4e0600a267d769e6ffa465a84",
+      "blob": "20a24a65deae862ed17ed950f51be8839a1da9b4",
+      "mode": "100644",
+      "sha256": "9e7f72275b68a3774fba5a1cefc96a003cc8f31a01564cde09ba18fae1d67883"
+    },
+    {
+      "path": "ops/tests/test_learner_tabs.py",
+      "preimage": "77cadf49a895d1967c0ec9ed9ab265a95e426dae",
+      "blob": "f9629a991f74db121cef04c9342b268b48aab716",
+      "mode": "100644",
+      "sha256": "844b6a4a657838c0fc15887a34f9b16436aa8416f9edfeadc1e028685579866c"
+    },
+    {
+      "path": "docs/learner-tab-reclamation.md",
+      "preimage": "92b6859417c2a0f3ea4aad30e4d2dc3d47ea9bc1",
+      "blob": "58869514a6211d2902e815a3f5f5c2f17ba1f2ee",
+      "mode": "100644",
+      "sha256": "e80dd59fb1eebc39c74fbf433fd54304c3633a74d08164f3501ce7e5a9de31c1"
+    }
+  ],
+  "tests": {
+    "tsc": 0,
+    "learner_tabs": 81,
+    "wrapper_completion": 17,
+    "native_tui": 26,
+    "vitest_files": 2,
+    "vitest_tests": 4,
+    "duplicate_wrapped_81_not_double_counted": true
+  },
+  "input_count": 2633,
+  "inputs_unchanged": true,
+  "source_review": [
+    "default read-only creates no state or locks; --apply seal only under original three locks",
+    "full current canonical row SHA, wrapper-v1 original supervisor PID/birth, original output path/SHA, both original PIDs absent; PID reuse retained",
+    "shared original native evidence/disposal authority/pane/tab/workspace/terminal/idle/empty-input gates",
+    "repeat whole row/host/artifact/evidence/pane checks before persistence; preserve old proof",
+    "authority ops-recovery; original owner retained; actual operator PID/birth/time/evidence separate",
+    "original tick alone tails/sending/close/absence/host-remove/done; additional recovery evidence/PID checks before close",
+    "running/awaiting_review/rc75/rc124, missing wrapper birth, uncertain sending/done, permanent panes and live protected",
+    "failed/rc0, original TUI/learn artifacts, checkout retention unchanged"
+  ],
+  "full_suite_run": false,
+  "production_recover_seals": 0,
+  "production_tabs_closed": 0,
+  "live_written": false,
+  "parent_issue_after": 37,
+  "natural_acceptance": "ops rechecks each original batch, default dry readback then explicit apply only for eligible; next original stall tick actual tail/absence/host/slot proof",
+  "rollback": "revert only three product leaves; never rewrite original journals/receipts/learn/TUI or recreate actually reclaimed tabs"
+}

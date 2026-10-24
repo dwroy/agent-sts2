@@ -1,0 +1,109 @@
+{
+  "at": "2026-10-24T04:04:13+08:00",
+  "issue": 46,
+  "phase": "deployed-observation-time-gate-not-reached",
+  "publication_evidence": {
+    "path": "paper/materials/20261023-issue46-publication-ops/publication.json",
+    "sha256": "5931759ba05f82a420bbcf24d16cf163c41579f606f3570aea430136d2523e40"
+  },
+  "T": "2026-10-23T13:46:30+08:00",
+  "deadline_CST": "2026-10-24T13:46:30+08:00",
+  "deadline_reached": false,
+  "remaining_seconds": 34937.0,
+  "source_leaves": [
+    {
+      "path": "ops/proposal_dispatch.py",
+      "published_sha256": "181764c3d54af9e6e6b41bddede98bc8494849486f205100c2da7214fe3f4d3f",
+      "host_sha256": "206caf61b00f49faee22e79dc11dd5fa8adea447dcb58eef8e6df5ddd317f368",
+      "host_same_published": false,
+      "live_sha256": "181764c3d54af9e6e6b41bddede98bc8494849486f205100c2da7214fe3f4d3f",
+      "live_same_published": true
+    },
+    {
+      "path": "ops/worktree_allocation_report.py",
+      "published_sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a",
+      "host_sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a",
+      "host_same_published": true,
+      "live_sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a",
+      "live_same_published": true
+    },
+    {
+      "path": "ops/tests/test_proposal_recheck.py",
+      "published_sha256": "a511da0b04c98c8271416f803411e2c5534fb1515b39b3a26387ad3572b0d416",
+      "host_sha256": "a511da0b04c98c8271416f803411e2c5534fb1515b39b3a26387ad3572b0d416",
+      "host_same_published": true,
+      "live_sha256": "a511da0b04c98c8271416f803411e2c5534fb1515b39b3a26387ad3572b0d416",
+      "live_same_published": true
+    },
+    {
+      "path": "agent/tests/proposal-recheck.test.ts",
+      "published_sha256": "b7f8d414bf5b36dcd525c801cd431315555e540b9d0a3113256548aa1baa830a",
+      "host_sha256": "b7f8d414bf5b36dcd525c801cd431315555e540b9d0a3113256548aa1baa830a",
+      "host_same_published": true,
+      "live_sha256": "b7f8d414bf5b36dcd525c801cd431315555e540b9d0a3113256548aa1baa830a",
+      "live_same_published": true
+    },
+    {
+      "path": "docs/learner-retention.md",
+      "published_sha256": "7c9076d23610bb5e18c79d9f436217df8e5b875e6f0895b1855699edcb5ce189",
+      "host_sha256": "7c9076d23610bb5e18c79d9f436217df8e5b875e6f0895b1855699edcb5ce189",
+      "host_same_published": true,
+      "live_sha256": "7c9076d23610bb5e18c79d9f436217df8e5b875e6f0895b1855699edcb5ce189",
+      "live_same_published": true
+    }
+  ],
+  "actual_host_scheduler_entry": "ops/codex-ops-learn.py via original cron tick",
+  "waiting_policy": {
+    "WAITING_RUNS": 10,
+    "WAITING_SECONDS": 21600,
+    "WAITING_SLOTS": 2
+  },
+  "four_dispatch_functions_AST_equal_original": {
+    "waiting_round": true,
+    "record_waiting_round": true,
+    "dispatch": true,
+    "dispatch_one": true
+  },
+  "current_waiting_round_watermarks": {},
+  "waiting_round_consumption_claimed": false,
+  "actual_24h_acceptance": "pending complete [T,T+24h) window only; no interim allocation comparison/trend created",
+  "allocation_report_invoked": false,
+  "truncated_window_or_comparison_generated": false,
+  "original_baseline106_preserved": true,
+  "interference_to_keep_separate": [
+    "learning dispatch stalled before originalexp baseline recovery033643",
+    "issue51 external priority/issue52 false-ready gate fix pending; stalled work cannot be savings"
+  ],
+  "new_full_models_games_timers_dispatch": 0,
+  "issue_closed": false,
+  "next": "On original wake at/after13:46:30, use exact half-open24h source receipts with complete=true plus full workload/backlog and original run/round context. Do not infer benefit before the gate.",
+  "host_dispatcher_committed_and_verified": true,
+  "host_dispatcher_last_commit": "d23925417fbac45cfc7b68218a72cb6042ecdb4f",
+  "host_drift_scope": "Later committed successor adds non-round functionality; all four round/dispatch functions equal original AST. No waiting round is recorded yet; no exercise or benefit assertion.",
+  "original_baseline_ref": {
+    "path": "paper/materials/20261023-issue46-publication-ops/allocation-baseline-original-24h.json",
+    "sha256": "440fad451241dd7fe747b1ea1c2df35c819f1bf353c81c46b8cbf3efa685199f",
+    "allocated": 106,
+    "rerun": false
+  },
+  "future_acceptance_command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_allocation_report.py",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--since",
+    "2026-10-23T13:46:30+08:00",
+    "--until",
+    "2026-10-24T13:46:30+08:00"
+  ],
+  "future_acceptance_conditions": [
+    "wall clock at or after deadline",
+    "full exact24h half-open window only; complete=true required",
+    "all task categories/workload/backlog/cooldown/queued and failures separately reported",
+    "restore/legacy excluded and static68 estimate not actual savings",
+    "learning stalls and priority holds never counted as efficiency gains"
+  ]
+}

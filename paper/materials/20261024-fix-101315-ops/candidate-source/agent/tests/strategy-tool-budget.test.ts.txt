@@ -1,0 +1,72 @@
+/** Fixed provenance fixtures only; no changing knowledge files, game or network calls. */
+import { createHash } from "node:crypto";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, expect, it } from "vitest";
+import { buildKnowledgeTools } from "../src/brain/tools/agent-knowledge.js";
+import { ToolHost } from "../src/brain/tools/mcp-server.js";
+import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+import { parseStrategyLibrary, retrieveStrategies, type StrategyEntry } from "../src/knowledge/strategy-entries.js";
+import fixture from "./external-strategy-data/external-strategy.json";
+
+const dirs: string[] = [];
+afterEach(() => {
+  for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+  setKnowledgeCharacter(null);
+});
+
+function setup(count: number, long = true) {
+  const entries = Array.from({ length: count }, (_, i) => {
+    const entry = structuredClone(fixture.entries[0]) as StrategyEntry;
+    entry.id = `fixture-${String(i).padStart(2, "0")}`;
+    entry.version = `fixed-${i}`;
+    if (long) entry.evidence[0]!.ref = `fixed-ref-${i}-${"中".repeat(200)}`;
+    return entry;
+  });
+  const library = parseStrategyLibrary({ ...fixture, entries });
+  const raw = JSON.stringify(library);
+  const dir = mkdtempSync(join(tmpdir(), "strategy-budget-")); dirs.push(dir);
+  mkdirSync(join(dir, "characters/silent"), { recursive: true });
+  writeFileSync(join(dir, "characters/silent/strategy-entries.json"), raw);
+  setKnowledgeCharacter("silent");
+  const ctx = { ascension: 10, knowledgeDir: dir, logsDir: "/unused", label: "reward/card", payload: { act: 1 } };
+  return { host: new ToolHost(buildKnowledgeTools(ctx), ctx), entries: retrieveStrategies(library, ctx.label, ctx.payload),
+    source: { source: "own", file: "strategy-entries.json", character: "silent", library_sha256: createHash("sha256").update(raw).digest("hex") } };
+}
+
+function sourcesFor(entries: StrategyEntry[], source: unknown) {
+  return [source, ...entries.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null })),
+    ...entries.flatMap(e => e.evidence.map(ev => ev.type === "external_aggregate"
+      ? { source: ev.source, version: ev.version, dataset_sha256: ev.dataset_sha256, denominator: ev.denominator }
+      : { source: "own", version: e.version }))];
+}
+
+it("bounds a broad strategy query with the matching complete provenance instead of all omitted sources", async () => {
+  const { host, entries, source } = setup(30);
+  expect(Buffer.byteLength(JSON.stringify(sourcesFor(entries, source)))).toBeGreaterThan(24_000);
+  const result = await host.call("kb_strategies", { query: "*" });
+  expect(result.isError).not.toBe(true);
+  expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
+  const parsed = JSON.parse(result.text);
+  expect(parsed.entries.length).toBeGreaterThan(0);
+  expect(parsed.entries.length).toBeLessThanOrEqual(12);
+  expect(parsed.omitted).toBe(30 - parsed.entries.length);
+  expect(parsed.entries).toEqual(entries.slice(0, parsed.entries.length));
+  expect(parsed.sources).toEqual(sourcesFor(parsed.entries, source));
+  expect(host.calls[0]).toMatchObject({ outputBytes: Buffer.byteLength(result.text), sources: parsed.sources });
+  // Adding the next complete entry and its provenance must exceed the real byte budget.
+  expect(Buffer.byteLength(JSON.stringify({ ...parsed, entries: entries.slice(0, parsed.entries.length + 1),
+    sources: sourcesFor(entries.slice(0, parsed.entries.length + 1), source), omitted: parsed.omitted - 1 }))).toBeGreaterThan(24_000);
+});
+
+it("preserves exact-ID results and other-character empty results byte for byte", async () => {
+  const { host, entries, source } = setup(2, false);
+  const selected = [entries[1]!];
+  const expected = { schema: "brain-knowledge-result-v1", sources: sourcesFor(selected, source), entries: selected,
+    status: "ok", library_sha256: source.library_sha256, omitted: 0 };
+  expect((await host.call("kb_strategies", { query: selected[0]!.id })).text).toBe(JSON.stringify(expected));
+  setKnowledgeCharacter("ironclad");
+  expect((await host.call("kb_strategies", { query: "*" })).text).toBe(JSON.stringify({
+    schema: "brain-knowledge-result-v1", sources: [], entries: [], status: "empty", omitted: 0 }));
+});

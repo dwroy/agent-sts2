@@ -1,0 +1,5 @@
+{
+  "body": "[watcher]\n\n发布组合自查发现依赖缺口：#49 来源的 `brain.ts` 继承了 main 尚未发布的构筑理由逻辑，import 的 `agent/src/memory/construction-log.ts` 在实际 live `2faa7ead017b` 不存在；该导入不属于 #49 净改动，不能照整叶发布，更不能补带未排到的 #35。\n\n已只在私有索引把 #49 `b4e84251b→7d262cd778` 与 #26 `c9848dd6^→c9848dd6` 两份净补丁应用到实际 live，精确19叶，tree `f1e17844efbf69286f7c2bdd86e0fb8eece9f056` / anchor `4569d11ff35a1d919ca921061e7383b2921db642`。18叶与原 main 候选完全相同，只有 brain.ts 保持 live 尚无构筑理由的原行为；264模块/1496条字面相对导入均存在，非字面动态路径不作穷尽声称。尚未修改 main/live 或发模型。\n\n原唯一完整检查仍在 tree `a70c1cbc` 继续，保留原结果，不重跑；其导入闭包结论只适用于 main 候选。已往原主管收件箱追加具体裁决请求：窗口结束后对精确净 live 树跑 tsc、原17文件定向及469知识/实际rk消费者核同，再决定复用 full 交 ops 或另排。裁决与检查未到前不交整叶发布。#40 周期日志四叶 full 仍按提醒排在本窗口之后。\n",
+  "html_url": "https://github.com/dwroy/agent-sts2/issues/49#issuecomment-6362734851",
+  "id": 6362734851
+}

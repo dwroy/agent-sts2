@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-22T20:29:09+08:00",
+  "issue": 20,
+  "state": "blocked-input-proof",
+  "blocking_issue": 43,
+  "public_source": "d9c4849b1fa69b6fae5510a82f20cf95abf796a8",
+  "kit_source": "26130354b86fbdbb4a1baddda07a770b0b9d6fd5",
+  "kit_tree": "14a28a62040e24b331f21ab6cbbe41a711ce91bf",
+  "source_layers": [
+    {
+      "name": "20261022-issue20-machine-claims",
+      "matched": 26
+    },
+    {
+      "name": "20261022-issue20-claude-inbox",
+      "matched": 9
+    },
+    {
+      "name": "20261022-issue20-publication-order",
+      "matched": 14
+    }
+  ],
+  "source_worktree": ".worktrees/integrator20-r4-20261022",
+  "ordinary_checks": [
+    {
+      "name": "public-lifecycle",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "ops/tests",
+        "-p",
+        "test_issue_session*.py"
+      ],
+      "start": "2026-10-22T20:20:44.632331+08:00",
+      "end": "2026-10-22T20:21:00.799090+08:00",
+      "exit": 0
+    },
+    {
+      "name": "launch-regression",
+      "command": [
+        "python3",
+        "-B",
+        "paper/materials/20261022-issue20-sim-startup/review-regression.py"
+      ],
+      "start": "2026-10-22T20:21:00.799446+08:00",
+      "end": "2026-10-22T20:21:11.243007+08:00",
+      "exit": 0
+    },
+    {
+      "name": "machine-0937-replay",
+      "command": [
+        "python3",
+        "-B",
+        "paper/materials/20261022-issue20-machine-claims/replay_machine.py",
+        "--kit",
+        ".artifacts/kit-26130354",
+        "--config",
+        ".agents/board.yaml"
+      ],
+      "start": "2026-10-22T20:21:11.243250+08:00",
+      "end": "2026-10-22T20:21:11.509559+08:00",
+      "exit": 0
+    },
+    {
+      "name": "production-tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "start": "2026-10-22T20:21:11.509884+08:00",
+      "end": "2026-10-22T20:21:12.362985+08:00",
+      "exit": 0
+    },
+    {
+      "name": "source-targeted",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/board-resources.test.ts",
+        "tests/launch-environment.test.ts",
+        "tests/learner-self-check.test.ts",
+        "tests/v6-card-option-loop.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism"
+      ],
+      "start": "2026-10-22T20:21:12.363252+08:00",
+      "end": "2026-10-22T20:21:50.618677+08:00",
+      "exit": 0
+    }
+  ],
+  "kit_tests": {
+    "exit": 0,
+    "tests": 113,
+    "log": "raw/kit-all-first.log"
+  },
+  "inputs_count": 1969,
+  "inputs_unchanged": true,
+  "issue41_source": "c6428609c0f0a2e40ad0660532393c244df5a766",
+  "reward_contract_test_blob": "ecabd4a4f050b5e82db13743383d48f185833c6d",
+  "blocker": {
+    "source": "d9c4849b1fa69b6fae5510a82f20cf95abf796a8",
+    "fixture_only": true,
+    "full_commands_mocked": true,
+    "actual_vitest_scope": "one fixed imported-module.test.ts",
+    "input": "agent/tests/runtime-helper.mts",
+    "before_sha256": "ca6a953dce94a14a206f19ceb8b2994f2adf32d9e279918affb1d4866af14ffd",
+    "after_sha256": "d3060194ea761e070d6035ee992199b208e1338b28a76aeaf574482ba57ef515",
+    "inventory_before_after_same": true,
+    "inventory_contains_module": false,
+    "actual_consumer_before_exit": 0,
+    "actual_consumer_after_exit": 1,
+    "initial_mocked_check_exit": 0,
+    "reused_check_exit": 0,
+    "reuse_mode": "exact-reuse",
+    "reused_state": "reused",
+    "extra_mocked_commands": 0,
+    "original_receipt_unchanged": true,
+    "observed_boundary_failure": true
+  },
+  "full_suite_executed": false,
+  "merged_source_to_main": false,
+  "changed_live": false,
+  "changed_production_install": false,
+  "changed_stop": false,
+  "isolated_merge_probe": {
+    "main": "f3b93a211ddce5cc301e79075f1c56e91350ace8",
+    "conflict_paths": [
+      "ops/report.py",
+      "paper/materials/decision-log.md"
+    ],
+    "candidate": false
+  },
+  "pending": [
+    "主管分派#43并修复后独立复核",
+    "保留#37→#20同文件顺序及原完整检查窗口",
+    "#39启动/实际pin/首局回执",
+    "#40精确组合及原ops发布回执",
+    "跨项目各自精确kit安装/真实回收/续跑/采用；不代其它项目部署"
+  ],
+  "input_manifest_public_format": "integrator-input-list-v1",
+  "original_input_manifest_sha256": {
+    "before.json": "58f2f41757a06969c478456c437e39045beae2506d0406e6f499afe7bd0bcc56",
+    "after.json": "58f2f41757a06969c478456c437e39045beae2506d0406e6f499afe7bd0bcc56"
+  }
+}

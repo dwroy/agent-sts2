@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-24T01:14:16+08:00",
+  "activation": "2026-10-24T00:07:46+08:00",
+  "hours": {
+    "2026-10-23T16:00Z": {
+      "requests": 130,
+      "charged": 100,
+      "not_modified": 30
+    },
+    "2026-10-23T17:00Z": {
+      "requests": 18,
+      "charged": 7,
+      "not_modified": 11
+    }
+  },
+  "cumulative_since_budget_created": {
+    "requests": 148,
+    "charged": 107,
+    "not_modified": 41
+  },
+  "first_post_activation_hour_request_upper_bound": 148,
+  "first_post_activation_hour_charge_upper_bound": 107,
+  "exact_first_hour_counts_available": false,
+  "rolling_charged": 33,
+  "budget_source_sha256": "b14b0d801df56c5f5412fb2de5e297ba2bdeab04bf62b16ecd04d12b7ec75af1",
+  "state_source_sha256": "20f3e015cf5245b28e7818e933e190f5284f15f28004bbf2f08d14c3ab29865f",
+  "idle_wait_samples": [
+    {
+      "at": 1792772405.7164505,
+      "pane": "w1H:p8",
+      "role": "ops",
+      "seconds": 123
+    },
+    {
+      "at": 1792772525.655285,
+      "pane": "wJ:p1HD",
+      "role": "integrator",
+      "seconds": 364
+    },
+    {
+      "at": 1792773546.816192,
+      "pane": "wJ:p1HD",
+      "role": "integrator",
+      "seconds": 844
+    },
+    {
+      "at": 1792774087.0378149,
+      "pane": "w1H:p8",
+      "role": "ops",
+      "seconds": 124
+    },
+    {
+      "at": 1792774503.5809834,
+      "pane": "wJ:p1HD",
+      "role": "integrator",
+      "seconds": 181
+    },
+    {
+      "at": 1792774747.5087156,
+      "pane": "w1H:p8",
+      "role": "ops",
+      "seconds": 125
+    },
+    {
+      "at": 1792775165.128277,
+      "pane": "wJ:p1HD",
+      "role": "integrator",
+      "seconds": 423
+    }
+  ],
+  "latency_limit_passed": null,
+  "latency_limitation": "Raw idle samples include repeat reminders and cooldown/blocked periods; 844s observed for integrator. Need original notification timing/guard classification before claiming <=180s.",
+  "quota_below_1000": true,
+  "conversations_mode": "configured shadow",
+  "new_model_or_game": false
+}

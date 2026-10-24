@@ -1,0 +1,196 @@
+{
+  "at": "2026-10-22T20:15:08+08:00",
+  "release_id": "V6-R413",
+  "behavior": {
+    "parent": "b9c9fdfdc3a8eb823ba274fa2b5022f38e85a1aa",
+    "commit": "84852effb177452fd9e989e8fdc91a3cf7646dd5",
+    "tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+    "paths": [
+      "agent/tests/legacy-refresh-incremental.test.ts",
+      "agent/tests/v6_learning_loop_test.py",
+      "knowledge/builders/build-boss-damage.py",
+      "knowledge/builders/build-card-upgrades.py",
+      "knowledge/builders/build-catalog.py",
+      "knowledge/builders/build-construction-opportunities.py",
+      "knowledge/builders/build-fight-value.py",
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/build-room-costs.py",
+      "knowledge/builders/fight_value_incremental.py",
+      "knowledge/builders/incremental_evidence.py",
+      "knowledge/builders/legacy_incremental.py",
+      "knowledge/builders/monster-db-check.py",
+      "knowledge/builders/refresh-v6-history.py",
+      "knowledge/builders/refresh.sh",
+      "knowledge/builders/refresh_driver.py",
+      "knowledge/builders/refresh_publish.py",
+      "knowledge/builders/test_refresh_pipeline.py",
+      "ops/report.py",
+      "agent/src/brain/router.ts",
+      "agent/src/eye/run-config.ts",
+      "agent/tests/human-pace-budget.test.ts",
+      "ops/report_log_cache.py",
+      "eval/jsonl_cache.py",
+      "agent/tests/v6-card-option-loop.test.ts",
+      "agent/tests/component_usage_test.py",
+      "agent/tests/ops-mod-state.test.ts"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/5e5bc066a22d4757a9daef15b939dd61/manifest.json",
+      "manifest_sha256": "b7e6b609f6e5aaa6adc0524bee43b67a3534876e4a24ff6a69aa8c57949b034d",
+      "scanned_leaves": 29,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "registrations": {
+    "live": {
+      "parent": "84852effb177452fd9e989e8fdc91a3cf7646dd5",
+      "commit": "0073e0eddf052d2fe21dfca914b2440d8491ce9b",
+      "tree": "436eb4207775cfac7d684ba642ee8432d1d1e82c",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/199fa00ed2644c00a4efdf922729406d/manifest.json",
+        "manifest_sha256": "98f31665821440c31b3e590e90bc0822085dfc0d69fea67ab2d12d8dea64cdb3",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "1223877d1e2da8927d830203bdebf88b0bac6017",
+      "commit": "f3b93a211ddce5cc301e79075f1c56e91350ace8",
+      "tree": "eedd8f92dc673cb6ef91e8a3515de77415594823",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/c90acf8bca75421ebb5efcd9d432a29d/manifest.json",
+        "manifest_sha256": "0f43c9bae69090071d1e23c233bfcd01384d427006918a34ebd48540ba829802",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "source_candidate": "326d5636f974c57b1a594ae78d75d68feaba838c",
+  "source_count": 29,
+  "fixed_source_tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+  "full_reused": {
+    "code_commit": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+    "tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+    "knowledge_json_count": 462,
+    "input_count": 2488,
+    "vitest": {
+      "success": true,
+      "numTotalTests": 6012,
+      "numPassedTests": 6010,
+      "numFailedTests": 0,
+      "numPendingTests": 2,
+      "numTotalTestSuites": 1640,
+      "test_result_file_count": 637
+    },
+    "checks_archive": "full-timeout-compatible-first/",
+    "runtime_source_identical": true,
+    "input_delta": [
+      "eval/versions.json",
+      "knowledge/catalog.json",
+      "knowledge/characters/silent/strategy-entries.json"
+    ]
+  },
+  "targeted_checks": {
+    "knowledge_snapshot": "knowledge-snapshot-r412.json",
+    "knowledge_json_count": 463,
+    "state": "passed",
+    "tree": "4fd9abc0af1a7227879f765d20e3a0947069764c",
+    "base_head": "62ccce2bb0d98fc94d76018e056d621f471dd39c",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T19:50:52+08:00",
+        "pid": 1166411,
+        "exit_code": 0,
+        "seconds": 0.9542244019976351
+      },
+      {
+        "name": "targeted",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "tests/strategy-entries.test.ts",
+          "tests/knowledge-catalog.test.ts",
+          "tests/legacy-refresh-incremental.test.ts",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/vitest.json"
+        ],
+        "started_at": "2026-10-22T19:50:53+08:00",
+        "pid": 1166523,
+        "exit_code": 0,
+        "seconds": 4.095933793010772
+      },
+      {
+        "name": "strategy-consumer",
+        "command": [
+          "node",
+          "--import",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent/node_modules/tsx/dist/loader.mjs",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-strategy-consumer.mts",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022",
+          "/home/dw/Projects/agent-sts2/learner/runs/20261022-184754-e08ce39d-b6e8-490b-9b69-c66a8f59dd38-issue-27-brain-strategies-task/merged-main-consumer",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/targeted-r412-first/strategy-consumer"
+        ],
+        "started_at": "2026-10-22T19:50:57+08:00",
+        "pid": 1167124,
+        "exit_code": 0,
+        "seconds": 0.5538182940072147
+      },
+      {
+        "name": "catalog-pipeline",
+        "command": [
+          "python3",
+          "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/candidate-catalog-pipeline.py"
+        ],
+        "started_at": "2026-10-22T19:50:58+08:00",
+        "pid": 1167171,
+        "exit_code": 0,
+        "seconds": 0.1321774789976189
+      }
+    ],
+    "runner_pid": 1166351,
+    "runner_start": "9438186",
+    "nice": 19,
+    "full_started": false,
+    "full_reused": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+    "supervisor_comment": 6339963519,
+    "started_at": "2026-10-22T19:50:52+08:00",
+    "input_count": 2489,
+    "inputs_unchanged": true,
+    "ended_at": "2026-10-22T19:50:58+08:00"
+  },
+  "latest_knowledge_preserved": 463,
+  "binding_sha256": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "homes": {
+    "brain-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "codex-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+  },
+  "main_source_preservation": "/home/dw/Projects/agent-sts2/paper/materials/20261022-high40-r412-publication-ops/main-source-preservation.json",
+  "whole_issue33_completed": false,
+  "heavy_enabled": false,
+  "natural_acceptance": "pending-original-normal-codex3-run"
+}

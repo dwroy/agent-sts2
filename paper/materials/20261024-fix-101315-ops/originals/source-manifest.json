@@ -1,0 +1,39 @@
+{
+  "base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "files": [
+    {
+      "path": "agent/src/brain/tools/agent-knowledge.ts",
+      "sha256": "9a72c6a2c5e0ddb57369ae7c92cb1eec0ee5b856b53f30f3df0ebe37efce5dac"
+    },
+    {
+      "path": "agent/tests/strategy-tool-budget.test.ts",
+      "sha256": "c48360f545720d0c294b68ff4bdb870652e321e3b4bee5dccef3031a138310cf"
+    }
+  ],
+  "patch": "/home/dw/Projects/agent-sts2/learner/runs/20261024-101321-540583b2-6eec-4ebd-9cf3-3bc8974806cc-fix-batch/strategy-budget-complete.patch",
+  "without_fix": {
+    "exit": 1,
+    "failed": 1,
+    "passed": 1,
+    "log": "strategy-budget-without-fix.log"
+  },
+  "with_fix": {
+    "exit": 0,
+    "passed": 2,
+    "log": "strategy-budget-fixed.log"
+  },
+  "wrapped_with_fix": {
+    "exit": 0,
+    "passed": 2,
+    "log": "strategy-budget-wrapped.log"
+  },
+  "gitleaks": {
+    "exit": 0,
+    "log": "gitleaks.log"
+  },
+  "ledger_matches": [],
+  "fixed_input": {
+    "path": "agent/tests/external-strategy-data/external-strategy.json",
+    "sha256": "cfbe01dac72b5fc1eceb0e0332187b8a20731bd4486970215802d185aa96c2c9"
+  }
+}

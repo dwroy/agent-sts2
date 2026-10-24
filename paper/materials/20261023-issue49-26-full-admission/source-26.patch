@@ -1,0 +1,275 @@
+diff --git a/agent/src/hand/screens/reward-external-stats-ids.ts b/agent/src/hand/screens/reward-external-stats-ids.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..14d0f753752c42ca1aeb7fdb1a0d9d79c42c7b7e
+--- /dev/null
++++ b/agent/src/hand/screens/reward-external-stats-ids.ts
+@@ -0,0 +1,61 @@
++/** Exact mapped card IDs from #24; no names or inferred mappings. */
++// Source: paper/materials/2026-10-21-sts2fun-stats/id_mapping.csv
++// Source SHA256: 5b37c495f081e2b17d8500d56087b83997743870a30896e88e0f93279bec3d6d
++const MAPPED_IDS = new Set([
++  "ABRASIVE ABUNDANCE ACCELERANT ACCURACY ACROBATICS ADAPTIVE_STRIKE ADRENALINE AFTERIMAGE AFTERLIFE AGGRESSION",
++  "ALCHEMIZE ALIGNMENT ALL_FOR_ONE ANGER ANOINTED ANTICIPATE APOTHEOSIS APPARITION ARMAMENTS ARSENAL",
++  "ASCENDERS_BANE ASHEN_STRIKE ASSASSINATE ASTRAL_PULSE AUTOMATION BACKFLIP BACKSTAB BAD_LUCK BALL_LIGHTNING",
++  "BANSHEES_CRY BARRAGE BARRICADE BATTLE_TRANCE BEAM_CELL BEAT_DOWN BEAT_INTO_SHAPE BEGONE BIG_BANG BLACK_HOLE",
++  "BLADE_DANCE BLADE_OF_INK BLIGHT_STRIKE BLOODLETTING BLOOD_WALL BLUDGEON BLUR BODY_SLAM BOLAS BOMBARDMENT",
++  "BONE_SHARDS BOOST_AWAY BOOT_SEQUENCE BORROWED_TIME BOUNCING_FLASK BRAND BREAKTHROUGH BRIGHTEST_FLAME",
++  "BUBBLE_BUBBLE BUFFER BULK_UP BULLET_TIME BULLY BULWARK BUNDLE_OF_JOY BURNING_PACT BURST BURY BYRDONIS_EGG",
++  "BYRD_SWOOP CALAMITY CALCIFY CALCULATED_GAMBLE CALL_OF_THE_VOID CALTROPS CAPACITOR CAPTURE_SPIRIT CASCADE",
++  "CATASTROPHE CELESTIAL_MIGHT CHAOS CHARGE CHARGE_BATTERY CHILD_OF_THE_STARS CHILL CINDER CLASH CLAW CLEANSE",
++  "CLOAK_AND_DAGGER CLOAK_OF_STARS CLUMSY COLD_SNAP COLLISION_COURSE COLOSSUS COMET COMPACT COMPILE_DRIVER",
++  "CONFLAGRATION CONQUEROR CONVERGENCE COOLHEADED CORROSIVE_WAVE COSMIC_INDIFFERENCE COUNTDOWN CRASH_LANDING",
++  "CREATIVE_AI CRESCENT_SPEAR CRIMSON_MANTLE CRUELTY CRUSH_UNDER CURSE_OF_THE_BELL DAGGER_SPRAY DAGGER_THROW",
++  "DANSE_MACABRE DARKNESS DARK_EMBRACE DARK_SHACKLES DASH DEADLY_POISON DEATHBRINGER DEATHS_DOOR DEATH_MARCH",
++  "DEBILITATE DEBT DECAY DECISIONS_DECISIONS DEFEND_SILENT DEFILE DEFLECT DEFRAGMENT DEFY DELAY DEMESNE",
++  "DEMON_FORM DEVASTATE DEVOUR_LIFE DIRGE DISCOVERY DISMANTLE DISTRACTION DODGE_AND_ROLL DOMINATE DOUBLE_ENERGY",
++  "DOUBT DOWSING DRAIN_POWER DRAMATIC_ENTRANCE DREDGE DRUM_OF_BATTLE DUAL_WIELD ECHOING_SLASH ECHO_FORM EIDOLON",
++  "END_OF_DAYS ENFEEBLING_TOUCH ENLIGHTENMENT ENTHRALLED ENTRENCH ENTROPY ENVENOM EQUILIBRIUM ERADICATE",
++  "ESCAPE_PLAN ETERNAL_ARMOR EVIL_EYE EXPECT_A_FIGHT EXPERTISE EXPOSE EXTERMINATE FAN_OF_KNIVES FASTEN FEAR FEED",
++  "FEEDING_FRENZY FEEL_NO_PAIN FERAL FETCH FIEND_FIRE FIGHT_ME FIGHT_THROUGH FINESSE FINISHER FISTICUFFS",
++  "FLAK_CANNON FLAME_BARRIER FLASH_OF_STEEL FLATTEN FLECHETTES FLICK_FLACK FOCUSED_STRIKE FOLLY FOOTWORK",
++  "FOREGONE_CONCLUSION FORGOTTEN_RITUAL FRIENDSHIP FTL FURNACE FUSION GAMMA_BLAST GATHER_LIGHT GENESIS",
++  "GENETIC_ALGORITHM GLACIER GLASSWORK GLIMMER GLITTERSTREAM GLOW GOLD_AXE GO_FOR_THE_EYES GRAND_FINALE",
++  "GRAVEBLAST GRAVE_WARDEN GREED GUARDS GUIDING_STAR GUILTY GUNK_UP HAILSTORM HAND_OF_GREED HAND_TRICK HANG HAUNT",
++  "HAVOC HAZE HEADBUTT HEAVENLY_DRILL HEGEMONY HEIRLOOM_HAMMER HELIX_DRILL HELLO_WORLD HELLRAISER HEMOKINESIS",
++  "HIDDEN_CACHE HIDDEN_DAGGERS HIDDEN_GEM HIGH_FIVE HOLOGRAM HOTFIX HOWL_FROM_BEYOND HYPERBEAM ICE_LANCE",
++  "IMPATIENCE IMPERVIOUS INFERNAL_BLADE INFERNO INFINITE_BLADES INFLAME INJURY INVOKE IRON_WAVE ITERATION",
++  "I_AM_INVINCIBLE JACKPOT JACK_OF_ALL_TRADES JUGGERNAUT JUGGLING KINGLY_KICK KINGLY_PUNCH KNIFE_TRAP",
++  "KNOCKOUT_BLOW KNOW_THY_PLACE LANTERN_KEY LEADING_STRIKE LEAP LEG_SWEEP LETHALITY LIGHTNING_ROD LOOP",
++  "LUNAR_BLAST MACHINE_LEARNING MAD_SCIENCE MAKE_IT_SO MALAISE MANGLE MANIFEST_AUTHORITY MASTER_OF_STRATEGY",
++  "MASTER_PLANNER MAUL MAYHEM MELANCHOLY MEMENTO_MORI METAMORPHOSIS METEOR_STRIKE MIND_BLAST MIRAGE MISERY MODDED",
++  "MOLTEN_FIST MOMENTUM_STRIKE MONARCHS_GAZE MONOLOGUE MULTI_CAST MURDER NECRO_MASTERY NEGATIVE_PULSE NEOWS_FURY",
++  "NEUROSURGE NEUTRALIZE NEUTRON_AEGIS NIGHTMARE NORMALITY NOSTALGIA NOT_YET NOXIOUS_FUMES NO_ESCAPE NULL",
++  "OBLIVION OFFERING OMNISLICE ONE_TWO_PUNCH ORBIT OUTBREAK OUTMANEUVER OVERCLOCK PACTS_END PAGESTORM",
++  "PALE_BLUE_DOT PANACHE PANIC_BUTTON PARRY PARSE PARTICLE_WALL PATTER PECK PERFECTED_STRIKE PHANTOM_BLADES",
++  "PHOTON_CUT PIERCING_WAIL PILLAGE PILLAR_OF_CREATION PINPOINT POISONED_STAB POKE POMMEL_STRIKE POOR_SLEEP",
++  "POUNCE PRECISE_CUT PREDATOR PREPARED PREP_TIME PRIMAL_FORCE PRODUCTION PROLONG PROPHESIZE PROWESS PULL_AGGRO",
++  "PULL_FROM_BELOW PURITY PUTREFY PYRE QUASAR RADIATE RAGE RAMPAGE RATTLE REANIMATE REAP REAPER_FORM REAVE REBOOT",
++  "REBOUND REFINE_BLADE REFLECT REFLEX REFRACT REGRET RELAX REND RESONANCE RESTLESSNESS RICOCHET RIGHT_HAND_HAND",
++  "RIP_AND_TEAR ROCKET_PUNCH ROLLING_BOULDER ROYALTIES ROYAL_GAMBLE RUPTURE SACRIFICE SALVO SCAVENGE SCOURGE",
++  "SCRAPE SCRAWL SCULPTING_STRIKE SEANCE SECOND_WIND SECRET_TECHNIQUE SECRET_WEAPON SEEKER_STRIKE SEEKING_EDGE",
++  "SENTRY_MODE SERPENT_FORM SETUP_STRIKE SEVEN_STARS SEVERANCE SHADOWMELD SHADOW_SHIELD SHADOW_STEP SHAME",
++  "SHARED_FATE SHATTER SHINING_STRIKE SHOCKWAVE SHROUD SHRUG_IT_OFF SIC_EM SIDESTEP SIGNAL_BOOST SKEWER SKIM",
++  "SLEIGHT_OF_FLESH SLICE SMOKESTACK SNAKEBITE SNAP SOLAR_STRIKE SOUL_STORM SOW SPECTRUM_SHIFT SPEEDSTER SPINNER",
++  "SPIRIT_OF_ASH SPITE SPLASH SPOILS_MAP SPOILS_OF_BATTLE SPORE_MIND SPUR SQUASH SQUEEZE STACK STAMPEDE STARDUST",
++  "STOKE STOMP STONE_ARMOR STORM STORM_OF_STEEL STRANGLE STRATAGEM STRIKE_SILENT SUBROUTINE SUCKER_PUNCH",
++  "SUMMON_FORTH SUNDER SUPERCRITICAL SUPERMASSIVE SUPPRESS SURVIVOR SWEEPING_BEAM SWORD_BOOMERANG SWORD_SAGE",
++  "SYNCHRONIZE SYNTHESIS TACTICIAN TAUNT TEAR_ASUNDER TEMPEST TERRAFORMING TESLA_COIL THE_BOMB THE_GAMBIT",
++  "THE_HUNT THE_SCYTHE THE_SMITH THINKING_AHEAD THRASH THRUMMING_HATCHET THUNDER THUNDERCLAP TIMES_UP",
++  "TOOLS_OF_THE_TRADE TORIC_TOUGHNESS TRACKING TRANSFIGURE TRASH_TO_TREASURE TREMBLE TRUE_GRIT TURBO TWIN_STRIKE",
++  "TYRANNY ULTIMATE_DEFEND ULTIMATE_STRIKE UNDEATH UNMOVABLE UNRELENTING UNTOUCHABLE UPPERCUT UPROAR UP_MY_SLEEVE",
++  "VEILPIERCER VICIOUS VOID_FORM VOLLEY VOLTAIC WELL_LAID_PLANS WHIRLWIND WHISTLE WHITE_NOISE WISH WISP",
++  "WRAITH_FORM WRITHE WROUGHT_IN_WAR",
++].join(" ").split(" "));
++
++export function externalStatsCardId(localId: string): string | null {
++  return MAPPED_IDS.has(localId) ? localId : null;
++}
+diff --git a/agent/src/hand/screens/reward-external-stats.ts b/agent/src/hand/screens/reward-external-stats.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ca71ffd40146f58c45af70e84b3f0e9ed917feaa
+--- /dev/null
++++ b/agent/src/hand/screens/reward-external-stats.ts
+@@ -0,0 +1,33 @@
++/** Optional lookup navigation for the Silent A10 brain reward question only. */
++import { asArray, asRecord, numOrNull, str } from "../../core/util/json.js";
++import type { DecisionEnv } from "../../memory/types.js";
++import type { PickOption } from "./pick.js";
++import { externalStatsCardId } from "./reward-external-stats-ids.js";
++
++export const REWARD_EXTERNAL_STATS_MAX_BYTES = 1024;
++export const REWARD_EXTERNAL_STATS_NOTE =
++  "若需真人样本背景，可任选 external_stats_card 按候选 id 与当前幕 act 查 Silent A10（v0.111）的拿取率与胜率关联，或 external_stats_skip 查本幕跳过率；结果仅为观察统计、非因果，与题内自有 outcome_stats 分账。";
++
++export function rewardExternalStatsView(env: DecisionEnv, options: PickOption[]): { options: PickOption[]; note: string } {
++  if (env.state.screen !== "REWARD" || env.state.in_combat
++    || str(env.state.run?.raw["character_id"]).toLowerCase() !== "silent" || env.state.run?.ascension !== 10) {
++    return { options, note: "" };
++  }
++  const offered = new Map(asArray(asRecord(env.state.raw["reward"])["card_options"]).map((raw, fallbackIndex) => {
++    const card = asRecord(raw);
++    return [numOrNull(card["index"]) ?? fallbackIndex, str(card["card_id"])] as const;
++  }));
++  let bytes = Buffer.byteLength(` ${REWARD_EXTERNAL_STATS_NOTE}`);
++  const shown = options.map(option => {
++    if (option.intent.action !== "choose_reward_card") return option;
++    const localId = offered.get(option.intent.option_index ?? -1);
++    const id = localId ? externalStatsCardId(localId) : null;
++    if (!id) return option;
++    // Include JSON key/separator escaping so even an unusually large offer list stays bounded.
++    const extra = Buffer.byteLength(JSON.stringify(id)) + 12;
++    if (bytes + extra > REWARD_EXTERNAL_STATS_MAX_BYTES) return option;
++    bytes += extra;
++    return { ...option, facts: { ...option.facts, id } };
++  });
++  return { options: shown, note: REWARD_EXTERNAL_STATS_NOTE };
++}
+diff --git a/agent/src/hand/screens/reward.ts b/agent/src/hand/screens/reward.ts
+index ec999ca39dbf498387c366f61e14ded28977336d..77cea96b12c6181e1e1ff9f391f1b3d08d78cb1c 100644
+--- a/agent/src/hand/screens/reward.ts
++++ b/agent/src/hand/screens/reward.ts
+@@ -22,6 +22,7 @@ import { silentRewardAdditionFacts } from "./silent-reward-addition.js";
+ import { buildV6CardPick } from "../../v6/card-pick.js";
+ import { v6Config } from "../../v6/config.js";
+ import { brainCardValueFacts } from "../../v6/brain-card-value.js";
++import { rewardExternalStatsView } from "./reward-external-stats.js";
+ 
+ /**
+  * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
+@@ -152,6 +153,8 @@ export function planReward(env: DecisionEnv): Decision | null {
+     // The act's route rides on the same question while a fork is left (route-review.ts): keep or change.
+     const review = routeReviewBlock(env, "card", CARD_REWARD_ROOMS);
+     const note = "in_deck: copies of that card already in your deck.";
++    const external = rewardExternalStatsView(env, options);
++    const brainNote = external.note ? `${note} ${external.note}` : note;
+     // DeepSeek's state: the deck as it is, without code's card-role counts (deck_needs) or its advice on skipping.
+     const { deck_needs: _needs, note: _advice, ...deepseekState } = params.state;
+     return withRouteReview(
+@@ -159,9 +162,9 @@ export function planReward(env: DecisionEnv): Decision | null {
+       buildPickDecision({
+         ...params,
+         state: review ? { ...deepseekState, route_review: review.state } : deepseekState,
+-        options,
++        options: external.options,
+         deepseek: { facts: buildFacts(env, { ...silentRewardAdditionFacts(state, options),
+-          ...(supplement ? { card_value_v2: supplement.context } : {}) }), baseline, note: review ? `${note} ${review.note}` : note },
++          ...(supplement ? { card_value_v2: supplement.context } : {}) }), baseline, note: review ? `${brainNote} ${review.note}` : brainNote },
+       }),
+       review,
+     );
+diff --git a/agent/tests/reward-external-stats.test.ts b/agent/tests/reward-external-stats.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd45499a08ac290a46fb9bad8f620f23262a11b9
+--- /dev/null
++++ b/agent/tests/reward-external-stats.test.ts
+@@ -0,0 +1,130 @@
++/** Fixed reward payloads: optional navigation, exact IDs, byte bound and original action contract. */
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { planReward } from "../src/hand/screens/reward.js";
++import { brainView, type PickOption } from "../src/hand/screens/pick.js";
++import * as navigation from "../src/hand/screens/reward-external-stats.js";
++import { externalStatsCardId } from "../src/hand/screens/reward-external-stats-ids.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
++import { baseState } from "./scenarios.js";
++
++vi.mock("../src/knowledge/files.js", async original => ({
++  ...await original<typeof import("../src/knowledge/files.js")>(),
++  knowledgeFile: (_dir: string, name: string) => `/__reward_external_stats_fixed__/${name}`,
++}));
++vi.mock("../src/knowledge/monster-db.js", async original => ({
++  ...await original<typeof import("../src/knowledge/monster-db.js")>(),
++  readMonsterDbJson: () => ({ monsters: {}, bosses: {}, encounters: {} }),
++}));
++
++beforeEach(() => { vi.stubEnv("CHARACTER", "silent"); vi.stubEnv("V6_BUILD", "off"); });
++afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
++
++function envOf(ids = ["SNAKEBITE", "BLADE_DANCE", "NOT_MAPPED"], indices = [4, 9, 2]): DecisionEnv {
++  const raw = baseState("REWARD", {
++    available_actions: ["choose_reward_card", "skip_reward_cards"],
++    reward: { pending_card_choice: true, card_options: ids.map((id, i) => ({
++      index: indices[i] ?? i, card_id: id, name: ["蛇咬", "刀刃之舞", "蛇咬"][i] ?? "未知牌", resolved_rules_text: "固定文本。",
++    })) },
++  });
++  Object.assign(raw.run as Record<string, unknown>, { character_id: "SILENT", ascension: 10 });
++  const state = parseGameState(raw), knowledge = makeKnowledge({}, "cache");
++  return { state, knowledge, brief: buildRunBrief(state, knowledge), thresholds: loadConfig({}).thresholds,
++    runStart: "auto", characterPreference: null, allowFtueModals: false, strictJev: true,
++    combatPlanner: "card", buildDecider: "deepseek", screenMemory: createScreenMemory("REWARD"), shopDiscardPotions: [] };
++}
++function question(env = envOf()) {
++  const decision = planReward(env) as AskDecision;
++  expect(decision.kind).toBe("ask"); expect(decision.label).toBe("reward/card");
++  const q = decision.questions.pick!;
++  if (q.type !== "choice") throw Error("expected choice");
++  return { decision, q, options: Object.fromEntries(Object.entries(q.criteria).map(([key, text]) => [key, JSON.parse(text!)])) };
++}
++function disableNavigation() {
++  return vi.spyOn(navigation, "rewardExternalStatsView").mockImplementation((_env, options) => ({ options, note: "" }));
++}
++function pickOptions(count: number): PickOption[] {
++  return [...Array.from({ length: count }, (_, i): PickOption => ({ key: `card${i}`, summary: { card: "固定牌" },
++    score: 0, intent: { action: "choose_reward_card", option_index: i } })),
++  { key: "skip", summary: { card: "skip", note: "take no card" }, score: 0, intent: { action: "skip_reward_cards" } }];
++}
++
++it("adds exact mapped IDs and optional card/skip navigation without querying or inventing a skip ID", () => {
++  const { q, options } = question();
++  expect(options.card4.id).toBe("SNAKEBITE"); expect(options.card9.id).toBe("BLADE_DANCE");
++  expect(options.card2).not.toHaveProperty("id"); expect(options.skip).not.toHaveProperty("id");
++  expect(q.instructions).toContain(navigation.REWARD_EXTERNAL_STATS_NOTE);
++  for (const word of ["若需", "可任选", "external_stats_card", "external_stats_skip", "Silent A10", "v0.111", "观察统计", "非因果", "分账"]) {
++    expect(q.instructions).toContain(word);
++  }
++  expect(options.card4).not.toHaveProperty("external_stats");
++  expect(JSON.stringify(options)).not.toContain("external:sts2fun");
++});
++
++it.each(["NOT_MAPPED", "ACTSFROMTHEPAST-PARASITE", "", "蛇咬", "SNAKEBITE+", "snakebite"])("omits only the ID for missing mapping %s", id => {
++  const { options } = question(envOf([id, "BLADE_DANCE", "SNAKEBITE"]));
++  expect(options.card4).not.toHaveProperty("id");
++  expect(options.card9.id).toBe("BLADE_DANCE"); expect(options.card2.id).toBe("SNAKEBITE");
++  expect(Object.keys(options)).toEqual(["card4", "card9", "card2", "skip"]);
++  expect(externalStatsCardId(id)).toBeNull();
++});
++
++it("preserves all original facts, order, fallback and resolved take/skip actions", () => {
++  const env = envOf(), beforeRaw = JSON.stringify(env.state.raw), hinted = question(env);
++  disableNavigation(); const original = question(env);
++  const withoutIds = Object.fromEntries(Object.entries(hinted.options).map(([key, option]) => {
++    const { id: _id, ...rest } = option; return [key, rest];
++  }));
++  expect(withoutIds).toEqual(original.options);
++  expect(hinted.q.instructions.replace(` ${navigation.REWARD_EXTERNAL_STATS_NOTE}`, "")).toBe(original.q.instructions);
++  expect(hinted.decision.state).toEqual(original.decision.state);
++  expect(JSON.stringify(hinted.decision.deepseek?.baseline)).toBe(JSON.stringify(original.decision.deepseek?.baseline));
++  for (const [key, index] of [["card4", 4], ["card9", 9], ["card2", 2], ["skip", null]] as const) {
++    const answer = { pick: { type: "choice" as const, choice: key, reason: "固定验证", confidence: 1 } };
++    expect(hinted.decision.resolve(answer)).toEqual(original.decision.resolve(answer));
++    expect(hinted.decision.resolve(answer).intent).toEqual(index === null
++      ? { action: "skip_reward_cards" } : { action: "choose_reward_card", option_index: index });
++  }
++  const bytes = (q: typeof hinted.q) => Buffer.byteLength(JSON.stringify(q));
++  expect(bytes(hinted.q) - bytes(original.q)).toBeGreaterThan(0);
++  expect(bytes(hinted.q) - bytes(original.q)).toBeLessThanOrEqual(navigation.REWARD_EXTERNAL_STATS_MAX_BYTES);
++  expect(JSON.stringify(env.state.raw)).toBe(beforeRaw);
++});
++
++it("bounds ID plus navigation bytes even on unusually large repeated offers", () => {
++  const env = envOf(Array(100).fill("ALCHEMIZE"), Array.from({ length: 100 }, (_, i) => i));
++  const original = pickOptions(100), before = JSON.stringify(original);
++  const shown = navigation.rewardExternalStatsView(env, original);
++  const bytes = (options: PickOption[], note: string) => Buffer.byteLength(JSON.stringify({ note, options: options.map(brainView) }));
++  expect(bytes(shown.options, shown.note) - bytes(original, "")).toBeLessThanOrEqual(navigation.REWARD_EXTERNAL_STATS_MAX_BYTES);
++  expect(shown.options[0]?.facts?.id).toBe("ALCHEMIZE");
++  expect(shown.options.at(-2)?.facts?.id).toBeUndefined();
++  expect(shown.options.map(o => o.key)).toEqual(original.map(o => o.key));
++  expect(JSON.stringify(original)).toBe(before);
++});
++
++it.each(["IRONCLAD", "REGENT", "DEFECT"])("keeps %s reward requests byte-equivalent", character => {
++  const env = envOf(); env.state.run!.raw.character_id = character;
++  const actual = question(env); disableNavigation(); const original = question(env);
++  expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(original.decision));
++});
++
++it.each([9, 11])("keeps Silent A%s requests byte-equivalent", ascension => {
++  const env = envOf(); env.state.run!.ascension = ascension;
++  const actual = question(env); disableNavigation(); const original = question(env);
++  expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(original.decision));
++});
++
++it("keeps the Jev reward path and other screens outside the navigation helper", () => {
++  const env = envOf(); env.buildDecider = "jev";
++  const spy = vi.spyOn(navigation, "rewardExternalStatsView");
++  planReward(env); expect(spy).not.toHaveBeenCalled();
++  const options = pickOptions(3);
++  for (const screen of ["SHOP", "MAP", "CARD_SELECTION", "EVENT"]) {
++    env.state.screen = screen;
++    expect(navigation.rewardExternalStatsView(env, options)).toEqual({ options, note: "" });
++  }
++});

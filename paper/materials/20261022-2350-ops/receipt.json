@@ -1,0 +1,21 @@
+{
+  "schema": "ops-2350-events-audit-v1",
+  "at": "2026-10-23T00:02:34+08:00",
+  "event": "2026-10-22 23:50 CST",
+  "state": "manual-audit-complete-original-attention-and-semantic-pending-retained",
+  "postmortem_batch": "20261022-231301",
+  "postmortem_audit": "paper/materials/20261022-2350-ops/postmortem-audit.json",
+  "ordinary_attention_audit": "paper/materials/20261022-2350-ops/ordinary-attention-audit.json",
+  "dataset": "paper/materials/20261022-2350-ops/dataset-reuse.json",
+  "new_dataset_jobs": 0,
+  "record_commit_receipt": "paper/materials/20261022-2350-ops/record-commit.json",
+  "record_scope": "audited historical append-only prefix through four postmortems; subsequent in-flight issue27 ledger rows excluded; preserve 24 original incorrect downgrade rows with pending diagnosis",
+  "notices": "paper/materials/20261022-2350-ops/notices-audit.json",
+  "pending": [
+    "24 historical ledger statuses require timestamp-preserving CLI repair; original fix-queue remains open",
+    "two original ordinary-close attention receipts remain attention; no automatic closed marker",
+    "eleven notices formal watcher_received/roy_notified blocked by original CLI whitelist",
+    "four pending proposals and all scientific parents stay open"
+  ],
+  "source_live_runtime_or_model_changed": false
+}

@@ -1,0 +1,113 @@
+{
+  "at": "2026-10-23T14:35:37+08:00",
+  "batches": {
+    "20261023-124241-s2-strategy-proposal": {
+      "state": "done",
+      "rc": 0,
+      "finished": "2026-10-23 14:24",
+      "native_ended_at": "2026-10-23T05:20:04.590Z",
+      "original_output": {
+        "path": "ops/codex-ops/learner/20261023-124241-s2-strategy-proposal.out",
+        "bytes": 4842,
+        "sha256": "eac54696ddebc6ae3d9006afb1504dcfcabf777ac85ca008b85c37a3a7004bb7"
+      },
+      "report": {
+        "path": ".worktrees/codex-strategy-silent-20261023-124241-s2/learner/runs/20261023-130031-8e183d97-be4f-4d1c-aae0-853f669a94ac-strategy-proposal/report.md",
+        "bytes": 10975,
+        "sha256": "d928d1e4a3cb1fdb1f59ca5a6ed25dfd8943690466e7b21c735925959cd2eac4"
+      },
+      "native_summary": {
+        "path": "learner/runs/20261023-130031-8e183d97-be4f-4d1c-aae0-853f669a94ac-strategy-proposal.jsonl",
+        "offset": 2320148,
+        "bytes": 15688,
+        "sha256": "db250cfc301babadf475a7690536a02eadf8f813292b9ea6df3216b40152a75e",
+        "line": 643
+      },
+      "canonical_finish_repeated": false,
+      "source_or_gameplay_publication": false,
+      "retention": {
+        "batch": "20261023-124241-s2-strategy-proposal",
+        "task": "strategy-proposal",
+        "character": "silent",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241-s2",
+        "schema": "learner-cleanup-request-v1",
+        "requested_at": "2026-10-23T14:28:10+08:00",
+        "requested_by": "learner-wrapper",
+        "state": "deferred",
+        "admission_required": true,
+        "model_finished_does_not_prove_ingestion": true,
+        "last_result": {
+          "state": "deferred",
+          "reason": "source leaf not in recorded publication: ops/learner_tui.py"
+        },
+        "updated_at": "2026-10-23T14:28:12+08:00"
+      },
+      "dispositions": "10 waiting; already committed in dd669e2916cdc655bce9dd15740c4de79228df4c"
+    },
+    "20261023-124301": {
+      "state": "done",
+      "rc": 0,
+      "finished": "2026-10-23 14:24",
+      "native_ended_at": "2026-10-23T05:21:44.606Z",
+      "original_output": {
+        "path": "ops/codex-ops/learner/20261023-124301.out",
+        "bytes": 2683,
+        "sha256": "921faa40456da81a64bce1b04492c209ea45cea42928a7694fd0f30808e6a89e"
+      },
+      "report": {
+        "path": "learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem/report.md",
+        "bytes": 6896,
+        "sha256": "8d505cad09716e03d295f2659a106cd593b553b435bc34f2db6ed5f18217ca30"
+      },
+      "native_summary": {
+        "path": "learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem.jsonl",
+        "offset": 1344048,
+        "bytes": 7823,
+        "sha256": "102bd837cce4bd16983f0a1eb56f2983a3e616e43693fadd8f600e5c4d7e7df1",
+        "line": 335
+      },
+      "canonical_finish_repeated": false,
+      "source_or_gameplay_publication": false,
+      "retention": {
+        "batch": "20261023-124301",
+        "task": "postmortem",
+        "character": "silent",
+        "worktree": "/home/dw/Projects/agent-sts2",
+        "schema": "learner-cleanup-request-v1",
+        "requested_at": "2026-10-23T14:28:10+08:00",
+        "requested_by": "learner-wrapper",
+        "state": "deferred",
+        "admission_required": true,
+        "model_finished_does_not_prove_ingestion": true,
+        "last_result": {
+          "state": "deferred",
+          "reason": "postmortem not settled"
+        },
+        "updated_at": "2026-10-23T14:28:17+08:00"
+      },
+      "postmortem": "5 skipped because original headings exist; 0 new knowledge, bug, proposal or lesson",
+      "event_earlier_success_log": "learner/runs/20261023-124312-9361fe15-7330-408d-85d6-87735510731b-postmortem.jsonl",
+      "actual_last_summary_log": "learner/runs/20261023-131255-16957ada-957f-44a4-97c6-f815b6becaf5-postmortem.jsonl",
+      "log_boundary": "Event names earlier successful attempt; final .out points to later131255 summary. Both historical originals preserved, neither replayed."
+    }
+  },
+  "ledger_check": {
+    "command": "nice -n 19 python3 learner/ledger.py check",
+    "rc": 0,
+    "items": 577,
+    "problems": 0
+  },
+  "owned_ledger_delta": {
+    "path": ".artifacts/ops-1431-20261023/ledger.jsonl.delta",
+    "sha256": "9c4da5b16ed5d3b0633918bf8652f3b0e03b6112befe17c7d32ca958c82dbe1f",
+    "id": "silent-0576",
+    "rows": 1,
+    "scope": "learner original audit range only; no new game rule"
+  },
+  "owned_lessons_delta": 0,
+  "owned_proposals_delta": 0,
+  "canonical_finish_already_recorded": true,
+  "dataset_attempts_before_this_turn": 0,
+  "source_drift_and_retention": "strict close not claimed; original worker reasons preserved",
+  "next": "one shared original paper_dataset --no-raw build and frozen generated record commit; no model/check/full/task replay"
+}

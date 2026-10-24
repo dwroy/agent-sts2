@@ -75,6 +75,20 @@ boss-sim、静默校准、双 boss、核心组合等专题各有任务文件；�
 - 当前调度器按角色批复盘（最多 5 局），有待并复盘即可派经验更新；旧「每 10 局并经验」是早期节奏。自动策略复核另在升阶或新增 10 局完成复盘时触发，并消费证据关联代码提案。
 - 策略消费者当前两路，各持独立工作树与任务租约，不能重复领取同提案；状态写入及 live 合入/完整检查仍串行。
 
+### 后置经验回刷（#48）
+
+`ops/strategy_backfill_jobs.py` 是统一 `strategy-proposal` 的来源适配器。自然 `tick` 先运行原复盘、经验、注册学习、旧专题、提案、普通策略、修复、校准、Boss 重任务和升阶审计，再考虑回刷；正常来源已经就绪但在等 writer/lease 时仍让行。运行中的正常任务及原重任务候选队列也先行。原两个策略槽、learn.lock、账号选择、磁盘门和工作树锁继续由原启动器管理；不增加定时器或独立经验更新链。铁甲战士的派发行为不变。
+
+来源配置是 `notes/strategy-backfill-silent.json`，随代码交付时 `enabled=false`。集成员核验、ops 精确发布后，ops 沿原发布步骤开启，再等自然 tick；这不是新增审批。首计划 `issue48-boss-elite-001` 直接引用原冻结 manifest/work_spec，每次派发和宿主准备都核全部输入 SHA、原经验 ID/原文及已结束 Silent 锚点；不继承旧专题 ID、旧批次或旧线程。`artifact_copies` 只允许把 manifest 中原引用指向同 SHA/字节数的持久冻结副本；首批 rk 参考使用 ops 已保存的 `rk-task-reference.md`，保留其原临时树路径及 SHA，不依赖原树继续存在。每次注册使用当次真实 batch、独立工作树和 `backfill_source/backfill_binding`，模型请求保持 gpt-6.1-sol/high，实际生效以原生回执为准。
+
+进度位于原 `learn.json.strategy_backfill`，只读投影是同目录 `strategy-backfill-progress.json`。`cursor` 是已核原生接受任务的唯一旧 ID 数；注册 wrapper、提交 prompt 或空 bindings 不推进。TUI 沿原 journal；原启动器退回 stdio 时，只核该 launcher、该账号、该 session 的原生 prompt/context。进度另记实际 batch/session/turn、输入 SHA、原生启动时间、结束及耗时、逐 ID 去向、processed/remaining。运行中只更新独立进度，不改变批次租约指纹；重启从原批次和原生原件恢复，重复 tick 不重计。
+
+首批在原策略 scratch 产出 brain strategy/rk 候选和逐旧 ID 的 `backfill_results`，正式知识与旧经验原文不改。`processed` 只表示有真实候选文件的提炼处置；`waiting` 保留缺证理由和剩余数，不表示已上线、消费者已读回或科学父完成。正式策略、rk 回放门、账本/提案、发布和自然消费继续沿 #27/#28 原流程。缺失、重复 ID、虚构文件或报告身份不符不能完成该来源，也不转成普通提案补链任务。
+
+失败或 waiting 保留原批次，不自动重播。原会话的不确定状态先沿既有工具核查/恢复；确认原 wrapper 未启动模型，或原模型和 launcher 已真实退出后，ops 可增加该计划的 `retry_generation`，下一自然 tick 只领取剩余 ID，同计划最多三个实际登记尝试。完成项不重做，唯一启动游标不重计；缺退出证明或仍有 owner 时继续等待。新的冻结小计划可追加 `plans`，重叠来源同样必须核原租约退场，不能用新计划绕过不确定旧启动。
+
+吞吐验收沿既有调度和批次记录，以 ops 实际发布时刻 T 为切点，比较 T 前后各 24 小时的正常派发间隔、完成产出、等待/失败/重复与槽位占用。配置准备、源码交付和排队都不是 T，不新增观察计时器；#48/#50 的内容入库、消费与收益验收仍开放。
+
 ### 任务格式
 
 ```yaml
@@ -117,3 +131,6 @@ Codex 使用登录态；程序由 LEARNER_CODEX_BIN 覆盖，登录目录由 LEA
 所有学习批次成功结束后，启动器会自动申请本批回收并释放 checkout 租约；回收结果或暂缓原因写入 `ops/codex-ops/retention/requests/<batch>.json`。学习者无需在仍运行时删除自己的工作树，入库和完整检查门禁始终生效。新独立 checkout 使用标准稀疏分配器，运维/开发功能发布后另登记完成回执；原请求接续、进阶审计和未完成研究不会被普通完成回执关闭。
 
 早期 Claude/Codex 冒烟和 v3 迁移过程保留在 Git 历史及 paper 材料中，只证明当时测试场景；当前生产流程见 [codex-ops.md](../docs/codex-ops.md)。
+
+
+运维通过 `learners=herdr` 新派的 Codex 批次现在直接打开交互 TUI（#36），原任务、权限/key 预检和日志/完成审计继续。原生回合结束、实际 TUI 空闲且无未发文本、输出持久化并执行原完成事务后才关闭本批 tab；容量/限流按原会话十分钟退避接续，三次无工具进展后交原 ops。发送/退场不确定时不重开、不标完成或回收；旧在途 headless 批次保持原样。传输、落盘回执和操作边界详见 [herdr 托管](../docs/codex-ops.md#herdr-托管)。

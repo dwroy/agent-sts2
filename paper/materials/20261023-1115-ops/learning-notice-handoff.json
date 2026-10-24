@@ -1,0 +1,92 @@
+[
+  {
+    "notice_id": "99a933ce6b140f81db812b16",
+    "request_id": "silent-elite-simulation-pessimism-20261021",
+    "original_message": "{\n  \"id\": \"D1\",\n  \"prior\": \"原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。\",\n  \"finding\": \"显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造成六张重复身份和升级失配。保留原结果作原管线诊断，不称完整真实开场控制。\",\n  \"evidence\": [\n    \"ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2\",\n    \"source-excerpts.md: parse_state_line / boardOf / findIndex\"\n  ],\n  \"affected_ids\": [\n    \"silent-elite-simulation-pessimism-20261021\",\n    \"issue-4\",\n    \"silent-proposal-e76e895381da5bfc\"\n  ],\n  \"next_step\": \"原ops接收本异议，沿原通知CLI实际写入watcher与Roy收件箱并取得各角色真实回执；先做无MC输入保真回归。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "f9a02febd8602a4ab46d685f",
+    "request_id": "silent-elite-simulation-pessimism-20261021",
+    "original_message": "{\n  \"id\": \"D2\",\n  \"prior\": \"原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”\",\n  \"finding\": \"不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比较绝对结果，无候选反事实，且有状态/牌身份相关偏差。\",\n  \"evidence\": [\n    \"issue输入内elite-learning-authorization-original.md，SHA25ae2141a16fa4fc61c48d00943240a0a5fb3340bd6627d663c2d17606a34d25\",\n    \"ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2\"\n  ],\n  \"affected_ids\": [\n    \"silent-elite-simulation-pessimism-20261021\",\n    \"issue-4\",\n    \"R407论证边界\"\n  ],\n  \"next_step\": \"原ops→watcher→Roy实际告知，单独验证候选增量；保持CARDbrain/REFLEXoff，不将CEN或预测器子项完成当本issue完成。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "7430982d1c28981e46d44d75",
+    "request_id": "github-issue-13-silent-learning-20261021",
+    "original_message": "{\n  \"prior\": \"Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。\",\n  \"finding\": \"重算完全复现原标签计数；EXPOSE的208只来自1局13道题的候选/目标槽，SPORE_MIND的60只来自1局3题。其余卡A标签为11/4/4，不是施放分母。\",\n  \"evidence\": [\n    \"shadow-unknown-inventory.json\",\n    \"coverage.csv\"\n  ],\n  \"affected_ids\": [\n    \"github-issue-13-silent-learning-20261021\"\n  ],\n  \"next_step\": \"保留R409原结果；发布与消费者验收按逐卡独立局/真实施放和分支重新计数，不关闭父要求。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "7dcddb0749fa60e0f2f78f3f",
+    "request_id": "github-issue-13-silent-learning-20261021",
+    "original_message": "{\n  \"prior\": \"旧钢铁风暴升级手牌边界已implemented，可能被读作完整生成/自动效果已实现。\",\n  \"finding\": \"旧71e742提案原文明确只清旧手牌并停线，known仍false；普通0费69776提案也明确尚无完整生成。实际12次施放见N-1刀转换，但32VS净6挡、K643净11挡、其他0挡，不能实现固定格挡或未知奇巧顺序。\",\n  \"evidence\": [\n    \"prior-proposal-boundary.md\",\n    \"prior-proposal-sly.md\",\n    \"effect-audit.json\",\n    \"r410-consumer-replay.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-0455\",\n    \"silent-0456\",\n    \"silent-0458\",\n    \"silent-proposal-71e742c6453608bf\",\n    \"silent-proposal-c1dd614cdf7bfc37\",\n    \"silent-proposal-69776c308a3b298e\"\n  ],\n  \"next_step\": \"复用原ID；生成与自动交互分开，先验动态张数和原手牌离手保护，再沿原闭环实现。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "751e5b79d972608c69f79626",
+    "request_id": "github-issue-14-silent-learning-20261021",
+    "original_message": "{\n  \"kind\": \"scope-limitation\",\n  \"prior\": \"当前整战源码将给定firstPlan直接交applyPlan；初始候选计划不一定覆盖实盘同回合后续补牌。\",\n  \"finding\": \"SVBEFF首试T1原四步后，实盘另打基础防御及精准切割，25→31挡、预计损1而实际净损0；这是局部可核策略路径差异，尚未证明R410固定回放或整体4.40倍误差的机制根因。\",\n  \"evidence\": [\n    \"/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/policy-prefix-case.json\",\n    \"/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/verified-raw-refs.jsonl\"\n  ],\n  \"affected_ids\": [\n    \"silent-0559\",\n    \"silent-proposal-40be025a2ec4528e\",\n    \"roy-20261017-human-pace-h0\",\n    \"issue-14\"\n  ],\n  \"next_step\": \"原owner固定R410单案例逐步轨迹对照；旧验证已读只作诊断/回归，正式候选验收另用未读新局留出。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "4d4fd8d8ebbbf1b709b759fc",
+    "request_id": "silent-elite-simulation-pessimism-20261021",
+    "original_message": "{\n  \"id\": \"D3\",\n  \"prior\": \"原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。\",\n  \"finding\": \"ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。\",\n  \"evidence\": [\n    \"ET1QAZCV8GUP-f9-fight4（Silent A10/F9/T1可行动），logs/states.jsonl offset=14287839500 bytes=30795 SHA256=b4622465a1aeb30caece92f41cf74f007f199358cb33710f2d933b6c68db6469\",\n    \"logs/states.jsonl offset=14288657897 bytes=20832 SHA256=e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90\",\n    \"2XCG8LXUZLRE-f9-fight5（Silent A10/F9/T1可行动），logs/states.jsonl offset=14516553453 bytes=30452 SHA256=9de6174c27382f0546c6348a5e2b0a5078caa8374aff1b708d05166ec10d08fd\",\n    \"logs/states.jsonl offset=14517771530 bytes=20474 SHA256=fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223\"\n  ],\n  \"affected_ids\": [\n    \"silent-elite-simulation-pessimism-20261021\",\n    \"issue-4\",\n    \"原审计净掉血口径\"\n  ],\n  \"next_step\": \"原ops沿通知链实际告知，固定索引补核两段跨界HP事件；不得用无归因9HP拟伤害参数。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "3d8e3359ffe4d6992bd3960e",
+    "request_id": "github-issue-13-silent-learning-20261021",
+    "original_message": "{\n  \"prior\": \"空rules_text、空dynamic_values且只显示消耗的SPORE_MIND可能可以按零效果known。\",\n  \"finding\": \"本批仅10行真实手牌、4个局/层/回合键、1独立局，0施放；另有显示昏眩版本。不能证实零效果，也未绑定其生成来源。索引唯一同名施放是非Silent，已拒绝。\",\n  \"evidence\": [\n    \"shadow-card-observations.json\",\n    \"historical-index-discovery.json\"\n  ],\n  \"affected_ids\": [\n    \"github-issue-13-silent-learning-20261021\"\n  ],\n  \"next_step\": \"继续unmodelled，等待Silent真实选择/施放与状态后继，不按卡名或其他角色补机制。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "99c134c7850ae5bae9fb64c9",
+    "request_id": "github-issue-13-silent-learning-20261021",
+    "original_message": "{\n  \"prior\": \"silent-0066已shipped；普通EXPOSE在当前消费者known=true。\",\n  \"finding\": \"这仅覆盖普通Power→易伤。R410升级EXPOSE仍known=false且vulnerable=0；当前CardModel也没有清格挡/全部人工制品的字段。7XS普通清8挡、升级清18挡/1制品/加3易伤均直接兑现。silent-0217修预览消耗，与这些缺口独立。\",\n  \"evidence\": [\n    \"r410-consumer-replay.json\",\n    \"effect-audit.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-0066\",\n    \"silent-0073\",\n    \"silent-0208\",\n    \"silent-0217\",\n    \"silent-proposal-00a6a10b15a62b38\"\n  ],\n  \"next_step\": \"复用原机制提案补CardModel/solver/rollout及离手物化、目标语义测试；旧shipped状态不代表本新增范围已发布。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "a2c843430ed6f492ea2eb1b0",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\"id\": \"q27-card-causal-gap\", \"prior\": \"#27期望首批包含拿牌与幕初方向；公开数据可以用。\", \"finding\": \"本批没有足够证据发布单卡收益排名，三条仅为备战计划。公开数据允许使用，但不把相关性/最终牌组聚类变成决策时可用的因果收益。\", \"evidence\": [\"external-review.json\", \"coverage.json\", \"entry-dispositions.json\"], \"affected_ids\": [\"candidate-external-sts2fun-card-ranking\"], \"next_step\": \"原ops→watcher→Roy转达保留的拿牌缺口；不为本批自行开实验或续派。\"}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "43652bbc1deb15d9a437af88",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\"id\": \"q27-external-schema-floor\", \"prior\": \"外部聚合或机械参考可进入同一策略schema。\", \"finding\": \"所选外部资料无真实逐局ID及精确全局楼层；当前evidence要求run与非空整数floor。可用aggregate命名空间保留候选，但本批不伪造floor=0或本系统局号。未改schema/消费者。\", \"evidence\": [\"external-review.json\", \"docs/brain-strategies.md\"], \"affected_ids\": [\"candidate-external-sts2fun-card-ranking\", \"candidate-external-spire-codex-boss-plans\"], \"next_step\": \"原owner若要正式表达这些资料，先明确非对局证据合同；本批不扩大架构。ledger CLI也只接受12位真实局号，外部候选未登记伪造账本。\"}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "8418097488ff1ad810b15b1f",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\"id\": \"q27-one-fight-boundaries\", \"prior\": \"既有boss经验含更多历史支持与高confidence。\", \"finding\": \"本批只独立核回3局4个窗口，三条各n=1；不继承旧条目20/22等支持分母，不以观察成功/SL次数证明策略收益。没有推翻既有机制，只限制本批应用与收益声明。\", \"evidence\": [\"evidence-refs.jsonl\", \"observed-frames.json\", \"coverage.json\"], \"affected_ids\": [\"silent-brain-kin-priest-exit-window\", \"silent-brain-vantom-two-stage-preparation\", \"silent-brain-crab-surviving-part-budget\"], \"next_step\": \"保留既有科学父；原ops发布后等首个自然问题真实查询/命中，不代其他角色ACK。\"}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "9cb62c98e778f565d5954f73",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\n  \"id\": \"q27-b2-external-contract-progress\",\n  \"prior\": \"首批外部聚合因run/floor必填无法正式表达。\",\n  \"finding\": \"#42学习合同已提供external_aggregate；本批5条及CLI读回通过，旧格式障碍已被实际固定验证覆盖。机械参考仍不等于策略；这不代通知ACK、live或自然消费，也不关闭原科学父。\",\n  \"evidence\": [\n    \"content-verification.json\",\n    \"consumer-output/summary.json\",\n    \"ledger-ids.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-brain-act2-reward-skip-comparison\",\n    \"silent-brain-act3-reward-skip-comparison\",\n    \"silent-brain-act1-blade-dance-choice-context\",\n    \"silent-brain-knowledge-demon-external-tail-budget\",\n    \"silent-brain-test-subject-external-tail-budget\"\n  ],\n  \"next_step\": \"原ops按原通知链转达进展；原问题原件保留，后续完成状态由owner核真实回执。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "3d4cc7af851a72e5bc47a3f8",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\n  \"id\": \"q27-b2-card-disagreement-causal-gap\",\n  \"prior\": \"#24拿取率分歧可能提供固定拿牌优先级。\",\n  \"finding\": \"精确Git旧表确认刀刃之舞本系统22/189=11.64%，外部411/1054=38.99%；此为不同局面的频率分歧。外部原始胜率差+5.20pp，经玩家/幕重叠调整约+0.27pp且区间跨零。只发布情境比较提醒，不指示照外部比例补拿；旧自有汇总未逐局核回，不作为mixed支持或提高confidence。致命毒药、步法及报告最大分歧牌亦无因果优先级。\",\n  \"evidence\": [\n    \"supplemental-git-context.json\",\n    \"external-review.json#card_choices:2902\",\n    \"entry-dispositions.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-brain-act1-blade-dance-choice-context\",\n    \"candidate-external-sts2fun-card-ranking\"\n  ],\n  \"next_step\": \"原ops→watcher→Roy保留因果缺口及分歧；不在本批启动实验/模拟或续派。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "fc89900f81f276e48a4ec214",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\n  \"id\": \"q27-b2-hard-fight-metric-boundary\",\n  \"prior\": \"外部硬仗受伤可直接用为本系统安全HP门槛或证明模拟错误。\",\n  \"finding\": \"知识恶魔p90=51和实验体p90=62是外部总受伤分位，非净损、置信界或安全线。上传SL未知、死亡截断，第三幕后场未知；不能与自有净损/预测判死直接比值推因果。已有机制与H0/G1a质量限制保留，没有发现足以推翻其原证据的新反证。\",\n  \"evidence\": [\n    \"evidence-refs.jsonl#combat_distribution:45\",\n    \"evidence-refs.jsonl#combat_distribution:66\",\n    \"dedup-review.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-brain-knowledge-demon-external-tail-budget\",\n    \"silent-brain-test-subject-external-tail-budget\"\n  ],\n  \"next_step\": \"只作为低可信备战参照；自然发布/命中与收益分别跟踪，原校准/机制父不关闭。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  },
+  {
+    "notice_id": "b40a4420f889d3e759a627c0",
+    "request_id": "github-issue-27-brain-strategies-20261022",
+    "original_message": "{\n  \"id\": \"q27-b2-ledger-frozen-inventory-boundary\",\n  \"prior\": \"共享账本全量check应全通过。\",\n  \"finding\": \"新增五条show/find均0自有局、外部分母正确。使用本批冻结runs检查共享575项时，有3条其他并行记录引用0VBCQS9V0N87，超出本批冻结清单；原check rc1保留。LEDGER_RUNS=none结构检查575项0问题，并非这些新局的来源验证。\",\n  \"evidence\": [\n    \"ledger-check.stdout.txt\",\n    \"ledger-shape-check.stdout.txt\",\n    \"ledger-commands.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-0571\",\n    \"silent-0572\",\n    \"silent-0573\",\n    \"silent-0574\",\n    \"silent-0575\"\n  ],\n  \"next_step\": \"原ops用其授权当前局清单核三条并行记录；本批不越冻结上限读取新局、不修改他人记录，不代全量来源验证通过。\"\n}",
+    "next": "original watcher receipt and Roy-visible delivery must be registered by original role via compatible CLI; scientific followups remain original owners"
+  }
+]

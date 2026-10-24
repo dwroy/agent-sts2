@@ -8,7 +8,7 @@ import type { BrainRequest } from "../src/brain/types.js";
 import { pickSpec } from "../src/brain/specs.js";
 import { userMessage } from "../src/brain/message.js";
 import { applyStrategyEntries, parseStrategyLibrary, questionTypes, retrieveStrategies, StrategyEntries, STRATEGY_LIMITS, type StrategyEntry, type StrategyLibrary } from "../src/knowledge/strategy-entries.js";
-const entry = (id = "fixture"): StrategyEntry => ({ id, version: "test-v1", trigger: { question_types: ["card_reward"] }, strategy: "仅测试占位文字，不是游戏建议。", source: "own", evidence: [{ run: "FIXTURE", floor: 4 }], confidence: .5 });
+const entry = (id = "fixture"): StrategyEntry => ({ id, version: "test-v1", trigger: { question_types: ["card_reward"] }, strategy: "仅测试占位文字，不是游戏建议。", source: "own", evidence: [{ run: "SILENT000001", floor: 4 }], confidence: .5 });
 const library = (...entries: StrategyEntry[]): StrategyLibrary => ({ schema: "brain-strategies-v1", character: "silent", entries });
 const payload = { run_brief: { character: "静默猎手", act: "1", floor: 4 }, facts: { act: 1, floor: 4, hp: "35/70 (50%)", act_boss: "FIXTURE_BOSS", deck_size: 3, deck: ["2x FIXTURE_A (Skill, 1 energy): 测试", "FIXTURE_B (Attack, 0 energy): 测试"] } };
 const request = (label = "reward/card", p: unknown = payload): BrainRequest => ({ label, system: "fixed", question: "测试问题", payload: p, options: { yes: null }, spec: pickSpec(label, { yes: null }) });
@@ -23,7 +23,7 @@ it("validates metadata and refuses malformed or misspelled triggers", () => {
   expect(parseStrategyLibrary(library(entry()))).toEqual(library(entry()));
   for (const change of [{ evidence: [] }, { version: "" }, { confidence: 1.1 }, { strategy: "中".repeat(500) }, { trigger: { question_types: ["event"], typo: 1 } }, { trigger: { question_types: [] } }, { trigger: { question_types: ["event"], hp_ratio: { min: .9, max: .1 } } }, { source: "external:fixture" }]) expect(() => parseStrategyLibrary(library({ ...entry(), ...change } as StrategyEntry))).toThrow();
   expect(() => parseStrategyLibrary(library(entry(), entry()))).toThrow();
-  expect(() => parseStrategyLibrary(library({ ...entry(), source: "external:fixture", provenance: { url: "https://example.org/fixture", version: "fixture-v1", sha256: "a".repeat(64), license: "fixture" } }))).not.toThrow();
+  expect(() => parseStrategyLibrary(library({ ...entry(), source: "external:fixture", provenance: { url: "https://example.org/fixture", version: "fixture-v1", sha256: "a".repeat(64), license: "fixture" } }))).toThrow("source must match evidence");
 });
 it("matches every trigger inclusively and rejects missing facts", () => {
   const exact: StrategyEntry = { ...entry(), trigger: { question_types: ["card_reward"], acts: [1], floor: { min: 4, max: 4 }, bosses: ["FIXTURE_BOSS"], hp_ratio: { min: .5, max: .5 }, deck_size: { min: 3, max: 3 }, deck_cards: [{ name: "FIXTURE_A", count: { min: 2, max: 2 } }, { name: "ABSENT", count: { max: 0 } }] } };

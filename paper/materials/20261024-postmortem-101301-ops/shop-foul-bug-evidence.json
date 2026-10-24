@@ -1,0 +1,99 @@
+{
+  "decision": {
+    "ts": "2026-10-24T00:00:59.675Z",
+    "floor": 31,
+    "turn": null,
+    "label": "shop/discard",
+    "decision_id": "b7892e99-9607-4a48-9838-a4a432ef5bdc",
+    "decider": "code",
+    "chosen": {
+      "action": "discard_potion",
+      "option_index": 1
+    },
+    "expect": {
+      "potion": {
+        "id": "FOUL_POTION"
+      },
+      "from": "decision"
+    },
+    "rationale": "discarding 污浊药水 before shopping",
+    "confidence": null,
+    "fallback": false,
+    "result": "completed: Action completed.",
+    "gate_reject": null,
+    "selection_dispatch": null,
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "reused_answer": false,
+    "journal": {
+      "choice": "discarding 污浊药水 before shopping",
+      "reason": ""
+    },
+    "ref": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "line": 513351,
+      "offset": 4627067360,
+      "bytes": 2194,
+      "sha256": "b6bc710fe00839355cd70f89b9a184a946accbecd90fe3b358b62f2dbe1b72b0"
+    }
+  },
+  "before": {
+    "run": "EQLB6SK9W9H7",
+    "ts": "2026-10-24T00:00:59.675Z",
+    "observed_ts": "2026-10-24T00:00:59.673Z",
+    "floor": 31,
+    "turn": null,
+    "screen": "SHOP",
+    "hp": 12,
+    "max_hp": 70,
+    "gold": 89,
+    "potions": [
+      [
+        0,
+        "GAMBLERS_BREW"
+      ],
+      [
+        1,
+        "FOUL_POTION"
+      ]
+    ],
+    "player": null,
+    "enemies": null,
+    "ref": {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 17009574996,
+      "bytes": 33187,
+      "sha256": "a6002406503e5536999d5a13bfa9ae0612e49e5d9965b9d23a0d5f41cf4fe8c8"
+    }
+  },
+  "after": {
+    "run": "EQLB6SK9W9H7",
+    "ts": "2026-10-24T00:00:59.849Z",
+    "observed_ts": "2026-10-24T00:00:59.847Z",
+    "floor": 31,
+    "turn": null,
+    "screen": "SHOP",
+    "hp": 12,
+    "max_hp": 70,
+    "gold": 89,
+    "potions": [
+      [
+        0,
+        "GAMBLERS_BREW"
+      ]
+    ],
+    "player": null,
+    "enemies": null,
+    "ref": {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 17009608183,
+      "bytes": 32759,
+      "sha256": "42947712b3fddcbb526f5c08185d8ff2c1ace92bd48da46b416281add8657630"
+    }
+  },
+  "ledger": "silent-0604",
+  "proposal_id": "silent-proposal-3477e3a0ce08a7c6",
+  "where": "agent/src/hand/screens/shop.ts:48",
+  "new": true,
+  "limits": "准确当局SHA缺失；当前源码分支与已核rationale及前后状态吻合；兑换金额、执行兑换后继及胜率未知。"
+}

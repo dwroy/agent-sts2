@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-22T22:02:32+08:00",
+  "issue": 20,
+  "related_issue": 43,
+  "source": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
+  "kit": "26130354b86fbdbb4a1baddda07a770b0b9d6fd5",
+  "state": "targeted-fix-verified-awaiting-final-combination",
+  "tsc_rc": 0,
+  "python_tests": 30,
+  "python_rc": 0,
+  "inputs_count": 2109,
+  "inputs_unchanged": true,
+  "full_suite_executed": false,
+  "merged_source_to_main": false,
+  "changed_live": false,
+  "changed_production_gates": false,
+  "independent_replay": {
+    "source": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
+    "full_commands_mocked": true,
+    "actual_vitest_scope": "one imported-module.test.ts",
+    "cases": {
+      "original_module_present": {
+        "consumer_before_rc": 0,
+        "consumer_after_rc": 1,
+        "inventory_rejected": true,
+        "initial_gate_rc": 1,
+        "mock_command_count": 0,
+        "before_sha256": "ca6a953dce94a14a206f19ceb8b2994f2adf32d9e279918affb1d4866af14ffd",
+        "after_sha256": "d3060194ea761e070d6035ee992199b208e1338b28a76aeaf574482ba57ef515"
+      },
+      "exact": {
+        "gate_rc": 1,
+        "state": "failed-retain-original",
+        "mode": null,
+        "extra_mock_commands": 0,
+        "original_unchanged": true
+      },
+      "data": {
+        "gate_rc": 1,
+        "state": "failed-retain-original",
+        "mode": null,
+        "extra_mock_commands": 0,
+        "original_unchanged": true
+      }
+    }
+  },
+  "merge_probe": {
+    "source": "380083709f49a06871be39b5c7f0c65e3a6ab5ac",
+    "parent": "d9c4849b1fa69b6fae5510a82f20cf95abf796a8",
+    "kit": "26130354b86fbdbb4a1baddda07a770b0b9d6fd5",
+    "main_probe": "043a1980720b85ff1a374c9e6b88b535caba13a9",
+    "merge_probe_rc": 1,
+    "input_count": 2109
+  },
+  "pending": [
+    "#37 precedes #20; final exact combination and unique full slot",
+    "ops natural boundary migration; release/area/heavy gates remain off",
+    "#43 closes with #20 acceptance; no early close",
+    "#27 formal CLI compatibility and scientific/natural adoption parents retained"
+  ]
+}

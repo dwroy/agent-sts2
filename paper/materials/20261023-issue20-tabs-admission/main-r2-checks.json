@@ -1,0 +1,128 @@
+{
+  "at": "2026-10-23T17:07:51+08:00",
+  "state": "passed",
+  "base": "dc94e8ef388f71718e0cb572621b659c9941a9b9",
+  "tree": "2bbebd99f642330c3252f7fa8bc3cde7fe67d614",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator20-tabs-main-20261023-1700",
+  "steps": [
+    {
+      "name": "bash-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops-learner.sh"
+      ],
+      "started_at": "2026-10-23T17:07:51+08:00",
+      "exit_code": 0,
+      "seconds": 0.005
+    },
+    {
+      "name": "scheduler-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops.sh"
+      ],
+      "started_at": "2026-10-23T17:07:51+08:00",
+      "exit_code": 0,
+      "seconds": 0.006
+    },
+    {
+      "name": "wrapper",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "../ops/tests",
+        "-p",
+        "test_learner_wrapper_completion.py"
+      ],
+      "started_at": "2026-10-23T17:07:51+08:00",
+      "exit_code": 0,
+      "seconds": 3.908
+    },
+    {
+      "name": "scheduler",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "../ops/tests",
+        "-p",
+        "test_issue_session.py"
+      ],
+      "started_at": "2026-10-23T17:07:55+08:00",
+      "exit_code": 0,
+      "seconds": 14.018
+    },
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T17:08:09+08:00",
+      "exit_code": 0,
+      "seconds": 1.065
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-wrapper-scripts.test.ts",
+        "tests/learner-tabs.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/brain-view.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue20-tabs-1700/main-r2-vitest.json"
+      ],
+      "started_at": "2026-10-23T17:08:10+08:00",
+      "exit_code": 0,
+      "seconds": 8.215
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "inputs_unchanged": true,
+  "input_count": 2622,
+  "vitest": {
+    "files": 4,
+    "passed": 67,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T17:08:19+08:00"
+}

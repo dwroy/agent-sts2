@@ -66,6 +66,10 @@ class LearnerLauncher(unittest.TestCase):
     def test_explicit_native_override_is_kept(self):
         self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_LEARNER_BIN="/unselected/codex")
 
+    def test_host_without_root_override_exports_resolved_root_to_native(self):
+        self.env.pop("CODEX_OPS_ROOT")
+        self.launch(LEARNER_CODEX_BIN=str(self.native))
+
     def test_nested_dispatch_reuses_the_original_native(self):
         self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.native))
 

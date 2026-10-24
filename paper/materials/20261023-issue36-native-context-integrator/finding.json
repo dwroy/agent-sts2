@@ -1,0 +1,29 @@
+{
+  "severity": "P1",
+  "state": "changes-requested",
+  "source": "76b41d6d7ef4df6a2423210eb4a2780a686ed159",
+  "files": [
+    {
+      "path": "learner/lib/herdr.ts",
+      "line": 158
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "line": 106
+    }
+  ],
+  "trigger": [
+    "session_meta",
+    "task_started(bound first turn)",
+    "foreign assistant/tool response_item",
+    "exact allowed bootstrap user item",
+    "matching turn_context",
+    "exact dispatched marker and full prompt hash",
+    "matching task_complete"
+  ],
+  "actual": "TS successful=true/foreignActivity=false; read-only reconciliation accepted=true; Python verify_native accepts code=0 proof",
+  "expected": "Retain foreign activity before any dispatched prompt; do not authorize completion from this sequence",
+  "cause": "Both guards require pending or confirmed prelude; activity before the prelude is ignored and does not prevent later bootstrap classification.",
+  "required": "Track unbound native assistant/tool activity from the active dispatch turn start, reject it before bootstrap as well as between bootstrap/context/prompt and before continuation prompts; keep intentional historic-session boundary and exact session/cwd/turn/prompt/ownership guards.",
+  "existing_real_models": "Already consumed; no replay, resend, new same-task model or rewriting original75; read-only snapshot proof is not product/retirement/finish authority."
+}

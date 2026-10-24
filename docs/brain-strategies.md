@@ -15,16 +15,34 @@
 | 字段 | 含义 |
 | --- | --- |
 | id / version | 库内唯一稳定编号 / 学习者维护的条目版本（非行为 release_id） |
-| trigger.question_types | card_reward、event、rest、shop、act_plan 的非空数组；任一命中 |
+| trigger.question_types | card_reward、event、rest、shop、act_plan、fight_plan 的非空数组；任一命中（fight_plan 为 #49 备战查询入口，旧条目不自动扩用） |
 | trigger.acts / floor / bosses | 幕号数组、全局楼层闭区间、当前幕 Boss 原始 ID 数组；不同字段全部满足 |
 | trigger.hp_ratio | 当前 HP / 最大 HP，闭区间 0–1 |
 | trigger.deck_size | 当前牌组张数闭区间 |
 | trigger.deck_cards | 每个 `{name,count:{min,max}}` 都要满足；精确匹配展示行中括号/冒号前的牌名，保留 ID、中文名及升级号；前缀 `Nx ` 按张数展开，不推断构筑标签 |
 | strategy | 情境成立时给大脑的策略文字，最多 1200 UTF-8 字节 |
-| evidence | 1–20 个 `{run,floor,ref?}`，自有证据必须可追溯到局号/全局楼层；ref 可指向账本/窗口 |
-| source | own 或 external:来源名；不同来源不混算独立分母 |
-| confidence | 学习者给出的 0–1 可信度；检索不根据结果自行推断可信度 |
-| provenance | 外部来源必填 `{url,version,sha256,license}`；外部局号属于外部命名空间 |
+| evidence | 1–20 个自有证据或 external_aggregate（下文）；自有 `{type?:"own",run,floor,ref?,role?}` 保持兼容，floor≥1 |
+| source | 单来源 own / external:来源名；多来源 mixed，必须与 evidence 实际来源一致 |
+| confidence | 0–1；只有外部支持（自有仅反证也算）最高 0.49，不自动因样本量提升 |
+| evidence_status | 多来源必填 aligned（一致）/conflict（冲突）/unassessed（未评估）；任一外部相关反证 role=contradict 时强制 conflict |
+
+### 外部聚合证据（#42）
+
+`evidence` 用判别字段 `type:"external_aggregate"` 与自有记录分开。外部记录禁止出现 `run/floor`（包括 null、虚构局号和 floor=0）；不能把原外部来源加一个 provenance 再贴到自有局号上。旧自有条目无须迁移。每条外部记录必填：
+
+- `source: external:<名称>`、公开 `url`、游戏 `version`、`dataset_sha256`（64位小写十六进制）、`downloaded_at`（YYYY-MM-DD）、`license`（许可/Required Notice 或明确未知限制）。
+- `filters:{character:"silent",ascension:0..20,criteria:"完整筛选口径"}`；版本内小版本、单/多人、是否弃局、模组等写 criteria。外部证据范围不等于已验证可外推范围。
+- `statistic:{name,value,unit}`（有限数值）与 `denominator:{unit,n}`（正安全整数）；unit 为 runs/players/offers/fights/rooms/rewards/cards。多种统计量、分母或版本分别列证据，不把奖励屏幕当作局数。
+- `design:"observational"`、非空 `limitations` 字符串数组，明确自选上传、非因果、与本系统的口径差异。
+- 可选 `interval:{low,high,method}`，有限且 low≤high；没有区间就省略，不补零。可选 `ref` 定位精确表/行；`role` 为 support（默认）或 contradict。外部不能登记成本系统 repeat。
+
+证据可放在同一个数组，但每项类型/来源独立；检索与题面为含外部条目派生 `evidence_summary:{own_runs,own_support_runs,external:[{source,version,dataset_sha256,statistic,denominator}]}` 和一句 `limitation_notice`。自有局号去重；外部分母逐条列，不加总（表、版本、玩家可能重叠）。字段由消费者计算，不能靠手写 summary 提升验证数。自有原条目题面保持原字节。
+
+可信度分级：0–0.49 为“外部观察/低可信”；大于 0.49 且不超过 1 为“有本系统支持才可赋值”，仍由学习者说明可信度，n=1 并不自动高可信。自有仅反证不能解锁更高档；冲突保留双方原证据，不用新来源覆盖旧结论。`unassessed` 不能冒称一致；机械校验不能发现未明确记录的语义冲突，学习者须核查并标注。
+
+账本沿 `learner/ledger.py add/update/show/find/check` 使用同一个 external_aggregate 对象。纯外部 add 省略 `first_run/asc/prior_runs`（进阶在 filters），仍填 character/kind/claim/evidence/prior/status/by，新增 confidence；混合证据须填 evidence_status，有自有证据仍要求真实 first_run/asc。update 只追加证据，按折叠后的所有反证、来源与可信度校验；后来补自有局时同次更新 first_run/asc。show/find --json 派生独立分账；find 文本显示 runs=0 与外部分母，外部数据不进入 repeat/本系统发布后验证计数。现有自有账本规则不变。
+
+可复制的纯格式示例：`agent/tests/external-strategy-data/external-strategy.json` 引用 #24 的 v0.111/第一幕 skip 行，只描述 1456/13307，不是正式游戏知识。固定测试贯通独立临时账本登记→show→真实检索→兼容题面及生产 kb_strategies 工具；不写正式库或真实学习账本、不代 live 采用。
 
 区间可只给一端，不允许空区间、反向区间、未知 trigger 字段。trigger 需要的事实缺失就不匹配。其他扩展元数据可以保留；最多 500 条、整个文件最多 1 MiB，重复 ID 或任一无效条目会使整库本次不注入。JSON Schema 用于编辑器；运行时还检查空白文字、ID 唯一、min≤max 和字节限制。
 
@@ -32,15 +50,16 @@
 
 ## 检索和 prompt
 
-五类大脑请求在 `Brain.request` 中统一处理，发生在 full knowledge prefix 构建之前，因此普通调用、full prefix 和上下文溢出回退都带同一检索结果。模型及工具路由不变。
+历史适配器在 `Brain.request` 中检索并附加正文；生产知识工具模式按Roy 2026-10-24裁定关闭策略查询引导，`kb_strategies` 仍由大脑自行调用以取得正文，见 [查询引导](brain-agent-mode.md#查询引导49)。普通历史调用、full prefix 和上下文溢出回退沿原检索路径。
 
 - reward/card → card_reward；event/* → event；rest/* → rest；shop/* → shop。
 - event/act-plan 同时匹配 event 和 act_plan。
+- map/act-start 匹配 act_plan；fight-plan 匹配 fight_plan，供已明确声明该触发题型的条目查询。
 - run-plan 的 run_state.trigger 为 start/act，或任意题携带 run_plan_task.trigger=start/act 时，也匹配 act_plan。hp_drop/age 的独立重规划不计幕初规划。
-- 只读取静默角色文件。其他角色及无规划任务的战斗题不会读取它。
+- 只读取静默角色文件。其他角色及无规划任务的普通战斗题不会读取它；独立 fight-plan 备战题有专用触发类型。
 - 上下文取 facts → payload 根 → run_state → run_plan_task → run_brief，数值幕号兼容旧字符串。HP 允许尾随百分比。
 - 排序：触发字段数＋指定牌条件数更多优先，再按 confidence 降序、id 升序。同一条即使匹配多个题型也只注入一次。
-- 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源。装不下的条目跳过，不截断证据。
+- 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源、派生分账及局限。装不下的条目跳过，不截断证据。
 - 注入位置为 payload.strategy_entries；不改问题指令和原选项。无命中、空库、文件缺失、损坏或超限时返回原请求，原 prompt 字节不变。
 - 每次提问先 stat，按路径＋mtime＋size 缓存解析结果；文件变化后重校验，不等待进程重启。库内容来自学习者，开发者不把大脑旧理由直接提升成策略。
 

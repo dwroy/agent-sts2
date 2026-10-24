@@ -1,0 +1,85 @@
+{
+  "issue": 49,
+  "role": "watcher",
+  "at": "2026-10-24T08:17:08+08:00",
+  "authorization": "https://github.com/dwroy/agent-sts2/issues/49#issuecomment-6377338293",
+  "source_commit": "aeb03164e58ef9b65de08461a8f5421b15a892e4",
+  "main_commit": "2dd98bb329ad78312d7745b989c71fae3bd3cec3",
+  "base": "a0b9272c39ec5e6c745a444bb759335a355817c9",
+  "changed_files": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "afa766634fffd7542b72039bbef5384fb81e8a454953d7b9a4db0c89a10b9a91"
+    },
+    {
+      "path": "agent/src/brain/tools/query-guidance.ts",
+      "sha256": "4053f0b0d778f2e032ceb4b9fc50f6c5a8804c0ed2a3a1c1538dcc1c42addf4b"
+    },
+    {
+      "path": "agent/tests/brain-query-efficiency.test.ts",
+      "sha256": "d72a444734b56343c8f035c9e25c692ad05c6ed126938e5a06526044ed46a1ec"
+    },
+    {
+      "path": "agent/tests/brain-query-guidance.test.ts",
+      "sha256": "0cb031b2a747be1ea42a479c2822d46d96b10ff25e57fc3e07dd5a3f7c9c6171"
+    },
+    {
+      "path": "agent/tests/brain-reflex-knowledge.test.ts",
+      "sha256": "2d88c7c6fd4574519ab60bc14aad2b0d2c1fe732af25d8be476f7c7f5fea15dc"
+    },
+    {
+      "path": "agent/tests/endgame-plan.test.ts",
+      "sha256": "f3f8e14f21c2a8c6b67b2f73ed6ce5bd8185b7af1b26bb9c1ad3d0771f22496b"
+    },
+    {
+      "path": "docs/brain-agent-mode.md",
+      "sha256": "8bdd4e2633204858d46ff60b192de6953dc3284dffc7e2abe8a418a5ce5cdd48"
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "sha256": "b57d549ac3919ba3dd1292b88a7eddb3dc2267d51af8e9a19e42ad015995775e"
+    }
+  ],
+  "scope": {
+    "strategy_rk_system_question_guidance": "off",
+    "kb_strategies_kb_reflex": "registered and callable; original implementations/schema unchanged",
+    "experience_R419": "preserved",
+    "experience_and_external_stats_cues": "preserved",
+    "other_roles": "unchanged",
+    "budgets_and_query_audit": "unchanged"
+  },
+  "checks": {
+    "tsc_exit": 0,
+    "targeted_exit": 0,
+    "test_files": 6,
+    "passed": 123,
+    "failed": 0,
+    "full_runs": 0,
+    "frozen_inputs": 2310,
+    "frozen_input_drift": [],
+    "installed_dependency_lock_drift": false,
+    "initial_run": {
+      "passed": 113,
+      "failed": 10,
+      "reason": "endgame construction assertions still required removed strategy/rk cues; updated only those assertions and reran same six files",
+      "raw_report": "targeted-tests-initial.json"
+    },
+    "gitleaks_candidate_exit": 0,
+    "initial_gitleaks": {
+      "exit": 1,
+      "rule": "generic-api-key",
+      "reason": "False positive: SHA256 field keyed by learner-keycheck-retry.test.ts in initial path-to-hash map. No credential value; original preserved locally, equivalent path/sha256 rows supplied and rescanned."
+    },
+    "gitleaks_delivery_exit": 0
+  },
+  "delivery": {
+    "live_written": false,
+    "release_allocated": false,
+    "ops": "Issue comment 6377404708 posted and exactly read back; wake exit0; queue observed, actual acceptance not observed",
+    "publish_at": "natural game boundary per Roy; directed checks only",
+    "rollback": "Revert only the eight-path source patch aeb03164e if Roy/ops chooses to restore the prior guidance; never revert experience or unrelated main/live changes.",
+    "acceptance": "ops verify actual source/release, Silent system+question no strategies/rk cues, 15 registered tools including both selectors, experience bytes preserved, actual natural question/run-config receipt. Natural manual query/hit only if observed; no fabricated adoption.",
+    "receipt": "delivery-receipt.json"
+  },
+  "window": "061302/37 original unique full window not taken or implicitly released"
+}

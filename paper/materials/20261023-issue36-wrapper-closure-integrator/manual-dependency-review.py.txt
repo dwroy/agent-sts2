@@ -1,0 +1,28 @@
+from pathlib import Path
+import hashlib,json,subprocess
+B=Path(__file__).resolve().parent;R=Path('/home/dw/Projects/agent-sts2');W=R/'.worktrees/integrator36-closure-live-20261023-1432'
+x=json.loads((B/'dependencies.json').read_text());assert not x['missing'];names={v['path'] for v in x['files']}
+map_targets={
+('ops/learner_checks.py',14):['ops/proposal_dispatch.py'],('ops/learner_checks.py',284):['ops/learner_check_continuation.py'],
+('ops/proposal_dispatch.py',63):['learner/code_proposals.py'],('ops/proposal_dispatch.py',311):['ops/strategy_research_jobs.py'],
+('learner/code_proposals.py',147):['learner/ledger.py'],('ops/ordinary_close.py',124):['learner/ledger.py'],
+('ops/paper_dataset.py',624):['eval/metrics.py'],('ops/paper_dataset.py',1035):['eval/learning-curve.py'],('ops/paper_dataset.py',1048):['eval/cost.py'],
+('eval/learning-curve.py',43):['eval/metrics.py','learner/ledger.py'],('ops/report_run.py',159):['ops/report.py'],
+('ops/global_build_funnel.py',15):['eval/global_build_funnel.py'],('ops/codex-ops-learn.py',370):['learner/ledger.py'],
+('ops/learner_jobs.py',252):['learner/ledger.py'],('ops/learner_jobs.py',340):['ops/proposal_dispatch.py'],('ops/learner_jobs.py',365):['agent/tools/boss-sim/cadence.py'],
+('ops/boss_sim_jobs.py',268):['agent/tools/boss-sim/acceptance.py'],
+('ops/regent-startup-check.py',14):['ops/regent-launch-inspect.py'],('ops/regent-native-repair.py',14):['ops/regent-launch-inspect.py'],('ops/regent-launch-solo.py',15):['ops/regent-launch-inspect.py']}
+manual=[]
+for d in x['dynamic']:
+ targets=map_targets[(d['path'],d['line'])];assert all(t in names and (W/t).is_file() for t in targets);manual.append(dict(**d,resolved_targets=targets,review='read source construction (__file__/root/SCRIPTS), actual combination target and recursive imports included'))
+for row in x['files']:
+ info=subprocess.check_output(['git','ls-tree','HEAD','--',row['path']],cwd=W).decode().split();assert info[0]==row['mode'] and info[2]==row['blob'],row['path']
+p=subprocess.run(['nice','-n','19','bash','-n',str(W/'ops/codex-ops-learner.sh')],capture_output=True);assert p.returncode==0
+old=subprocess.check_output(['git','show','b49984b7d716e02d8a2f3e324f66ebf68fa1b5a7:ops/codex-ops-learner.sh'],cwd=R).decode();new=(W/'ops/codex-ops-learner.sh').read_text()
+marker='# The command-host pane follows';end='export PATH='
+def block(t):return t[t.index(marker):t.index(end,t.index(marker))]
+assert block(old)==block(new) and '"$OPS/learner_tabs.py" seal' in old and 'learner_tabs.py' not in new
+out=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),verdict='passed',local_source_files=len(x['files']),recursive_edges=len(x['edges']),dynamic_loads=manual,shell_syntax_exit=0,stdio_block_sha256=hashlib.sha256(block(new).encode()).hexdigest(),stdio_block_unchanged=True,old_missing_seal_removed=True,tracked_files_and_modes_match=True,
+resolution_notes=['Production ROOT/.worktrees/live in codex-ops-actions boss-check resolves to this actual candidate, not a nested test path.','Python local search uses source directory, ops/learner/eval/knowledge/builders as declared by source sys.path. Relative TS .js imports resolve to tracked .ts files; installed node_modules validated by original allocator, not copied or recursively treated as repository modules.','learner_tui finished/defer/verified-code use standard library only; existing retire requires explicit CLI and identity/idle gates and is never called by patched wrapper.','paths.sh instance/lane helpers and policy wrappers are included. Optional configs remain guarded by existing file gates; no config changed.','LEARNER_CMD and configured external commands remain external override boundaries; no production code or model executed for this audit.'],
+scanner_preflight_issue='Initial broad scanner followed node_modules symlink outside candidate and stopped before any tests or production operation; fixed by excluding verified installed providers; no product failure hidden.',module_closure_limit='Source references under this wrapper, retained call graph and enumerated dynamic loaders; no claim about arbitrary future config commands or all repository features.',full_started=False,production_written=False)
+(B/'dependency-review.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k!='dynamic_loads'}),flush=True)

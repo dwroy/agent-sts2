@@ -34,7 +34,8 @@ Usage:
   python3 knowledge/builders/build-fight-value.py folds --fold-dir DIR        (out-of-fold models + gates for the rollout backtest)
   python3 knowledge/builders/build-fight-value.py rollout-report --work DIR   (after agent/tools/rollout-backtest.ts; see notes/rollout-backtest.md)
 `train` also writes knowledge/characters/<id>/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
-current solver weights, and the win-probability calibration). Rebuild after each run: `python3 knowledge/builders/build-fight-value.py all`.
+current solver weights, and the win-probability calibration). `all` extracts each run and trains every 10 completed
+runs by default (--train-every / FIGHT_VALUE_TRAIN_EVERY); `train` explicitly forces a completed fit.
 Parsing (fight boundaries, room kind, enemy identity across a fight) is knowledge/builders/build-monster-db.py's.
 """
 import argparse
@@ -48,9 +49,13 @@ import os
 import random
 import sys
 import time
+import tempfile
+import shutil
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+# Incremental evidence imports must also work in a fresh production process.
+sys.path.insert(0, os.path.join(ROOT, "learner"))
 _spec = importlib.util.spec_from_file_location("bmd", os.path.join(ROOT, "knowledge", "builders", "build-monster-db.py"))
 bmd = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bmd)
@@ -197,14 +202,23 @@ def extract(states, runs_path, game_path, rows_path, character=None):
         game = raw.get("collections", raw)
     bmd.GAME_TYPES.clear()
     bmd.GAME_TYPES.update({m["id"]: m.get("type") for m in game.get("monsters") or []})
-    bmd.observe_combat = _observe(bmd.observe_combat)
+    from fight_value_incremental import extract as append_extract
+    from types import SimpleNamespace
+    builder = append_extract(SimpleNamespace(**globals()), states, bmd.load_runs(runs_path), rows_path, character, game)
+    if builder is not None:
+        return builder
+    original_observe = bmd.observe_combat
+    bmd.observe_combat = _observe(original_observe)
     os.makedirs(os.path.dirname(rows_path), exist_ok=True)
     tmp = rows_path + ".tmp"
-    with open(tmp, "w", encoding="utf8") as out:
-        builder = RowBuilder(bmd.load_runs(runs_path), out, character)
-        from legacy_incremental import consume_fights
-        consume_fights(bmd, builder, states, extra_code=__file__)
-        builder.finish()
+    try:
+        with open(tmp, "w", encoding="utf8") as out:
+            builder = RowBuilder(bmd.load_runs(runs_path), out, character)
+            from legacy_incremental import consume_fights
+            consume_fights(bmd, builder, states, extra_code=__file__)
+            builder.finish()
+    finally:
+        bmd.observe_combat = original_observe
     os.replace(tmp, rows_path)
     return builder
 
@@ -1904,7 +1918,11 @@ def main(argv=None):
     parser.add_argument("--notes", default=None, help="default notes/fight-value-backtest.md (another character: -<id> before .md)")
     parser.add_argument("--gates", default=None, help="default knowledge/characters/<character>/fight-value-gates.json")
     parser.add_argument("--trees", type=int, default=150)
+    parser.add_argument("--train-every", type=int, default=os.environ.get('FIGHT_VALUE_TRAIN_EVERY', '10'))
+    parser.add_argument("--idle", action="store_true", help="train pending rows at an ops-verified idle boundary")
     args = parser.parse_args(argv)
+    if args.train_every < 1:
+        parser.error('--train-every must be positive')
     character = character_key(args.character)
     suffix = "" if character == LEGACY else f"-{character}"
     args.rows = args.rows or DEFAULT_ROWS.replace(".jsonl", f"{suffix}.jsonl")
@@ -1929,8 +1947,39 @@ def main(argv=None):
         os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
         from legacy_incremental import context
         cache = context(args.decisions)
+        from fight_value_incremental import training_due, trained
+        completed = bmd.load_runs(args.runs)
+        # Character-specific denominators; never count another character's run.
+        from characters import run_character
+        completed = {rid: r for rid, r in completed.items() if (run_character(r) or LEGACY) == character}
+        cadence = Path(args.rows).with_suffix('.training.json')
+        outputs = [args.out, args.notes, args.gates]
+        due, policy = training_due(cadence, completed, outputs, args.train_every, args.idle, args.stage == 'train')
+        print('train-policy: ' + json.dumps(policy, sort_keys=True))
+        if not due:
+            print('train: deferred; previous completed model retained')
+            return 0
         def fit():
-            train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
+            # Complete all artifacts before touching the previous model. A failed
+            # fit leaves every reader on the last successful generation.
+            from refresh_publish import publication
+            with tempfile.TemporaryDirectory(prefix='.fight-fit-', dir=Path(args.out).parent) as directory:
+                staged = [str(Path(directory) / str(i)) for i in range(3)]
+                train(args.rows, args.decisions, staged[0], staged[1], args.trees, staged[2])
+                ready = []
+                try:
+                    for source, target in zip(staged, outputs):
+                        fd, temporary = tempfile.mkstemp(prefix='.fight-ready-', dir=Path(target).parent)
+                        os.close(fd)
+                        ready.append((temporary, target))
+                        shutil.copyfile(source, temporary)
+                        os.chmod(temporary, 0o644)
+                    with publication():
+                        for temporary, target in ready:
+                            os.replace(temporary, target)
+                finally:
+                    for temporary, _target in ready:
+                        Path(temporary).unlink(missing_ok=True)
         if cache:
             cache.ready(args.decisions)
             def file_sha(path):
@@ -1950,6 +1999,7 @@ def main(argv=None):
                 print('train: unchanged inputs and verified outputs; reusing completed fit')
         else:
             fit()
+        trained(cadence, completed, outputs)
         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
     return 0
 

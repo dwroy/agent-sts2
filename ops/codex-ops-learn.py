@@ -42,6 +42,7 @@ import learner_retention  # noqa: E402
 import ordinary_close  # noqa: E402
 import ops_current  # noqa: E402
 import disk_admission  # noqa: E402
+from learner_tui import apply_deferrals  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -80,6 +81,7 @@ def load_state():
     state.setdefault("batches", {})
     state.setdefault("runs", {})
     state.setdefault("ascension", {})
+    apply_deferrals(state, DIR)
     return state
 
 
@@ -245,11 +247,13 @@ def check_postmortems(state, character):
         return None
     have = postmortem_ids()
     now = time.time()
+    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
+            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
     todo = []
     retry_ready = False
     for row in finished_runs(character):
         run = row["run_id"]
-        if run in have or run in todo:
+        if run in have or run in todo or run in held:
             continue
         info = state["runs"].get(run)
         if info:
@@ -320,11 +324,20 @@ def cmd_tick(args):
                    f"原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
         inbox(message)
         enqueue("disk-capacity", message)
-    batch = check_postmortems(state, character)
+    import strategy_external_jobs
+    external_pending = character == "silent" and strategy_external_jobs.ready(state, ROOT)
+    batch = None if external_pending else check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    report["ascension_audit"] = check_ascension_audits(state, character)
+    # Pending external work precedes new postmortems, writers and audits.
+    report["ascension_audit"] = (None if report["write_jobs"].get("external_priority_hold") or report["write_jobs"].get("external_alternation_hold")
+                                 else check_ascension_audits(state, character))
+    import strategy_backfill_jobs
+    normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
+    report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
+        state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"),
+        dispatch_write, normal)
     save_state(state)
     report["retention"] = learner_retention.kick(ROOT, DIR, SCRIPTS)
     print(json.dumps(report, ensure_ascii=False))
@@ -336,6 +349,11 @@ def cmd_dispatch(args):
         print(f"runs 要 1–{BATCH_MAX} 个 12 位局号，逗号分隔")
         return 2
     state = load_state()
+    held = {run for batch in state["batches"].values() if batch.get("state") == "awaiting_review"
+            and batch.get("task", "postmortem") == "postmortem" for run in batch.get("runs", [])}
+    if set(runs) & held:
+        print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
+        return 1
     busy = running_batch(state)
     if busy:
         save_state(state)
@@ -412,6 +430,14 @@ def cmd_finish(args):
             boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
         else:
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
+        if batch.get("external_source"):
+            import strategy_external_jobs
+            batch["external_finished_at"] = time.time()
+            strategy_external_jobs.reconcile(state, DIR)
+        if batch.get("backfill_source"):
+            import strategy_backfill_jobs
+            batch["backfill_finished_at"] = time.time()
+            strategy_backfill_jobs.reconcile(state, DIR)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
         if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)

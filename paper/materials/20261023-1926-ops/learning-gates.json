@@ -1,0 +1,125 @@
+{
+  "at": "2026-10-23T19:31:14.751738+08:00",
+  "read_only": true,
+  "write_jobs": {
+    "experience": null,
+    "fixes": null,
+    "strategy": null,
+    "calibration": null,
+    "core_builds": null,
+    "backfill_hold": true,
+    "code_proposal": null,
+    "boss_sim": null,
+    "strategy_research": null,
+    "learning_requests": null
+  },
+  "writer_gates": [
+    {
+      "task": "experience-update",
+      "reason": "tick",
+      "runs": [
+        "QU61RVKHPTZS",
+        "AX56AR19UCHD",
+        "YP428GT9ZLL3",
+        "4YPGHGJD393H",
+        "Y2K25VFDU95P",
+        "X7REGM0RUNSA",
+        "A3X30TN54LSH",
+        "ATP5MCMJDMQY",
+        "FGKZALWSTQQ1",
+        "FD8NZAHU7SNY"
+      ],
+      "awaiting_same_demand": [],
+      "prior": [],
+      "busy": false,
+      "available": false,
+      "retryable": true,
+      "would_admit": false,
+      "demand_identity": "QU61RVKHPTZS,AX56AR19UCHD,YP428GT9ZLL3,4YPGHGJD393H,Y2K25VFDU95P,X7REGM0RUNSA,A3X30TN54LSH,ATP5MCMJDMQY,FGKZALWSTQQ1,FD8NZAHU7SNY"
+    },
+    {
+      "task": "strategy-proposal",
+      "reason": "proposal",
+      "runs": [
+        "FU8ZUQHBHNV9",
+        "456MRNGCPD8E",
+        "3KME36ADUE4U",
+        "ZZMYZ5UBCG72",
+        "2PVLGRBGUX9S",
+        "KUZVERN40NGK",
+        "Z91JN3S3PQX2",
+        "J8PHG72DGD90",
+        "0DJ6GFZZ0TG9"
+      ],
+      "awaiting_same_demand": [
+        "20261023-151302-s2-strategy-proposal"
+      ],
+      "prior": [],
+      "busy": false,
+      "available": true,
+      "retryable": true,
+      "would_admit": false,
+      "demand_identity": "code-proposals:silent-proposal-f6f27a4e9301d1f9,silent-proposal-a9c0bfa7e34da37d,silent-proposal-f35501885edc7aa1,silent-proposal-0800d092e6d7eab0,silent-proposal-3edf35d9b47a7486,silent-proposal-167b20d3b7105257,silent-proposal-2b42d1fc73a94000,silent-proposal-8d0219c3a8a99060,silent-proposal-3cc456821c19d2f1,silent-proposal-90e0bc4e45916d16:484"
+    },
+    {
+      "task": "fix-batch",
+      "reason": "tick",
+      "runs": [],
+      "awaiting_same_demand": [],
+      "prior": [
+        {
+          "id": "20261023-174301-fix-batch",
+          "state": "failed",
+          "retry_at": 1792752673.1624718,
+          "pid_alive": false
+        }
+      ],
+      "busy": false,
+      "available": true,
+      "retryable": true,
+      "would_admit": true,
+      "demand_identity": "ec62c3620de664b8ff79f60ebb7aab109a0f23b60ee7f3d827d81d12a24f8150"
+    },
+    {
+      "task": "strategy-proposal",
+      "reason": "tick",
+      "runs": [
+        "UW7X088RVVLR",
+        "KUHYZBFFLALU",
+        "QLEGQ76DJ1MN",
+        "6ANZJ6XRKV4P",
+        "Q3R929GHT14R",
+        "HD6BM39PYL21",
+        "8JNHX23GX7ET",
+        "PEM07PPDE9Z4",
+        "BDJTF3FDA8W5",
+        "ZF8PX27B46H5"
+      ],
+      "awaiting_same_demand": [],
+      "prior": [
+        {
+          "id": "20261023-175037-strategy-proposal",
+          "state": "lost",
+          "retry_at": 1792753983.8244824,
+          "pid_alive": false
+        }
+      ],
+      "busy": false,
+      "available": true,
+      "retryable": true,
+      "would_admit": true,
+      "demand_identity": "silent:A11:475"
+    }
+  ],
+  "postmortem_wait": {
+    "silent": {
+      "anchor": "YR636ZUULAU1",
+      "since": 1792749920.291,
+      "runs": [
+        "YR636ZUULAU1",
+        "1KRVLZZHNX2R"
+      ]
+    }
+  },
+  "learn_sha256": "f03aabfa635a543cec87ed4b7e4be9153bfe12717f3fc5a2d15f5a1339eecd46"
+}

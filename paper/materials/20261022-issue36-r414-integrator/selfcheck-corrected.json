@@ -1,0 +1,73 @@
+{
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "seconds": 1.095
+    },
+    {
+      "name": "targeted",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-r414-integrator-20261022/selfcheck-corrected/vitest.json",
+        "tests/legacy-refresh-incremental.test.ts"
+      ],
+      "exit_code": 0,
+      "seconds": 5.668
+    },
+    {
+      "name": "python-view",
+      "argv": [
+        "python3",
+        "-B",
+        "ops/tests/test_brain_view.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.35
+    },
+    {
+      "name": "python-tui",
+      "argv": [
+        "python3",
+        "-B",
+        "ops/tests/test_learner_tui.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.124
+    },
+    {
+      "name": "shell",
+      "argv": [
+        "bash",
+        "-n",
+        "ops/codex-ops-learner.sh",
+        "ops/codex-ops.sh",
+        "ops/herdr-host.sh",
+        "ops/run.sh"
+      ],
+      "exit_code": 0,
+      "seconds": 0.007
+    }
+  ],
+  "state": "passed",
+  "production_written": false,
+  "prior_eight_files_passed": true,
+  "prior_failure_preserved": "selfcheck-first.json",
+  "tree": "dbf16fff0546aece14b637acb809d641f0023570"
+}

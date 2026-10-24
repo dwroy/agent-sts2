@@ -503,18 +503,25 @@ def refresh_knowledge(character=None) -> None:
     import subprocess
     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
     # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
-    refresh = "bash " + shlex.quote(f"{LIVE}/knowledge/builders/refresh.sh") + " --ops-root " + shlex.quote(ROOT)
+    combined = os.path.isfile(os.path.join(LIVE, "knowledge/builders/refresh_driver.py"))
+    refresh = ["bash", f"{LIVE}/knowledge/builders/refresh.sh", "--ops-root", ROOT]
     if character and re.fullmatch(r"[a-z0-9_]+", character):
-        refresh += f" --character {character}"
-    cmd = refresh
+        refresh += ["--character", character]
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
-    # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
-    # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
-    fight = subprocess.Popen(["nice", "-n", "19", "bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
-                             stdout=log, stderr=log, start_new_session=True)
-    proc = subprocess.Popen(["nice", "-n", "19", "bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    # One queued worker per completed run, including incremental extraction.
+    # Model training is cadence-controlled; admission of the next game never waits.
+    if combined:
+        refresh += ["--all"]
+        fight = None
+    else:
+        # Main can be integrated before the matching live release. Retain the
+        # old argv until live actually contains the combined entry.
+        fight = subprocess.Popen(["nice", "-n", "19", *refresh, "--fight-value"],
+                                 stdout=log, stderr=log, start_new_session=True)
+    proc = subprocess.Popen(["nice", "-n", "19", *refresh], stdout=log, stderr=log, start_new_session=True)
     result = {"pid": proc.pid, "exit": None, "status": "background", "admission_wait": False,
-              "fight_value_pid": fight.pid, "fight_value": "background",
+              "fight_value_pid": proc.pid if combined else fight.pid, "fight_value": "background",
+              "refresh_worker": "combined" if combined else "legacy",
               "history_policy": "last_completed_packet"}
     # Even legacy REFRESH_WAIT callers must not block the next game (Roy 2026-10-20).
     if character:

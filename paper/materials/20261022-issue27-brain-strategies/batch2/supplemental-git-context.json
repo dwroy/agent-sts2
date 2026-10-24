@@ -1,0 +1,70 @@
+{
+  "restore_commands": [
+    "nice -n 10 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace issue-27-brain-strategies-batch2-20261022-224403 --path paper/materials/2026-10-21-sts2fun-stats/report.md",
+    "nice -n 10 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace issue-27-brain-strategies-batch2-20261022-224403 --path paper/materials/2026-10-21-sts2fun-stats/brain_comparison.csv"
+  ],
+  "exit_codes": [
+    0,
+    0
+  ],
+  "files": [
+    {
+      "path": "paper/materials/2026-10-21-sts2fun-stats/report.md",
+      "commit": "3094a78988ba513cfa4d286ef5be28b746fa4ee8",
+      "blob": "ec0794fe7094027e2b119a928d8e7e148a6d3e6a",
+      "bytes": 17641,
+      "sha256": "dbe84a336fc0cf252889baaaf54b8e25299d926fcca5a46b8207431109af8258",
+      "scope": "supplemental exact frozen-base Git blob restored using worktree_storage materialize; context/dedup only, not formal strategy own evidence"
+    },
+    {
+      "path": "paper/materials/2026-10-21-sts2fun-stats/brain_comparison.csv",
+      "commit": "3094a78988ba513cfa4d286ef5be28b746fa4ee8",
+      "blob": "81b07dac21be833e4aa346bc435d996f42da0498",
+      "bytes": 55725,
+      "sha256": "93f996832ed1ab69c1f0f292341f036738295c0cbc339b34161659a62202f944",
+      "scope": "supplemental exact frozen-base Git blob restored using worktree_storage materialize; context/dedup only, not formal strategy own evidence"
+    }
+  ],
+  "contextual_rows": [
+    {
+      "card": "DEADLY_POISON",
+      "act": "1",
+      "human_offered": "1060",
+      "human_pick_rate": "0.25",
+      "human_cluster_ci": "[0.19077300483304419, 0.34762557890986817]",
+      "own_offered": "236",
+      "own_picked": "155",
+      "own_pick_rate": "0.6567796610169492",
+      "own_wilson": "[0.5941288789811742, 0.7144082703668146]",
+      "difference": "0.4067796610169492",
+      "adequate_both": "True"
+    },
+    {
+      "card": "BLADE_DANCE",
+      "act": "1",
+      "human_offered": "1054",
+      "human_pick_rate": "0.3899430740037951",
+      "human_cluster_ci": "[0.311654348182265, 0.4448367290654585]",
+      "own_offered": "189",
+      "own_picked": "22",
+      "own_pick_rate": "0.1164021164021164",
+      "own_wilson": "[0.07813874840503862, 0.16994825069393413]",
+      "difference": "-0.2735409576016787",
+      "adequate_both": "True"
+    },
+    {
+      "card": "FOOTWORK",
+      "act": "1",
+      "human_offered": "389",
+      "human_pick_rate": "0.8894601542416453",
+      "human_cluster_ci": "[0.8392245999186903, 0.9279323441088146]",
+      "own_offered": "86",
+      "own_picked": "78",
+      "own_pick_rate": "0.9069767441860465",
+      "own_wilson": "[0.8270425887501315, 0.9521077157847294]",
+      "difference": "0.017516589944401195",
+      "adequate_both": "True"
+    }
+  ],
+  "limits": "Own historical reward frequencies are not new own support; no per-run/window independent denominator recovered; no raw brain lines revalidated. No source=mixed or confidence promotion. Inputs.json/frozen files unchanged."
+}

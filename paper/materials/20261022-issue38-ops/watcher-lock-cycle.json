@@ -1,0 +1,101 @@
+{
+  "observed_at": "2026-10-22T13:19:41+08:00",
+  "finding": "lock-order-cycle-before-full",
+  "processes": [
+    {
+      "pid": 3927598,
+      "start_ticks": "6711087",
+      "comm": "python3",
+      "wchan": "locks_lock_inode_wait",
+      "ppid": 3927597,
+      "lock_fds": [
+        {
+          "fd": 3,
+          "path": "ops/codex-ops/ordinary-close.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t4100586\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:4100586 0 EOF\n"
+        },
+        {
+          "fd": 4,
+          "path": "ops/codex-ops/paper-dataset.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t4157958\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:4157958 0 EOF\n"
+        },
+        {
+          "fd": 5,
+          "path": "ops/codex-ops/tick-snapshot.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t383232\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:383232 0 EOF\n"
+        },
+        {
+          "fd": 6,
+          "path": "ops/live-merge.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t372157\nlock:\t1: FLOCK  ADVISORY  WRITE 3927598 08:30:372157 0 EOF\n"
+        },
+        {
+          "fd": 7,
+          "path": "ops/knowledge-refresh.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t1055837\n"
+        }
+      ]
+    },
+    {
+      "pid": 3893265,
+      "start_ticks": "6681484",
+      "comm": "bash",
+      "wchan": "do_wait",
+      "ppid": 330,
+      "lock_fds": [
+        {
+          "fd": 9,
+          "path": "ops/knowledge-refresh.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t82\nino:\t1055837\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:30:1055837 0 EOF\n"
+        }
+      ]
+    },
+    {
+      "pid": 3951265,
+      "start_ticks": "6765077",
+      "comm": "python3",
+      "wchan": "do_wait",
+      "ppid": 3893265,
+      "lock_fds": [
+        {
+          "fd": 9,
+          "path": "ops/knowledge-refresh.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t82\nino:\t1055837\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:30:1055837 0 EOF\n"
+        }
+      ]
+    },
+    {
+      "pid": 3951266,
+      "start_ticks": "6765079",
+      "comm": "python3",
+      "wchan": "locks_lock_inode_wait",
+      "ppid": 3951265,
+      "lock_fds": [
+        {
+          "fd": 3,
+          "path": "ops/codex-ops/v6-refresh/silent/refresh.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t1059494\nlock:\t1: FLOCK  ADVISORY  WRITE 3951266 08:30:1059494 0 EOF\n"
+        },
+        {
+          "fd": 4,
+          "path": "ops/live-merge.lock",
+          "fdinfo": "pos:\t0\nflags:\t02102001\nmnt_id:\t82\nino:\t372157\n"
+        }
+      ]
+    }
+  ],
+  "issue33_status": {
+    "state": "queued-original-locks",
+    "started_at": "2026-10-22T12:16:21+08:00",
+    "runner_pid": 3927598,
+    "runner_start": "6711087",
+    "full_started": false,
+    "steps": []
+  },
+  "cycle": [
+    "#33 runner holds live-merge.lock -> waits knowledge-refresh.lock",
+    "refresh.sh holds knowledge-refresh.lock -> waits refresh-step/v6-history child",
+    "v6-history child waits live-merge.lock held by #33 runner"
+  ],
+  "production_mutations": 0
+}

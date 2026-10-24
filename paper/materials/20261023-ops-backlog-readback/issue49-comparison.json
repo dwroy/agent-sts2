@@ -1,0 +1,693 @@
+{
+  "schema": "brain-query-comparison-v1",
+  "baseline": {
+    "schema": "brain-agent-acceptance-v1",
+    "questions": 520,
+    "run_ids": [
+      "1303HVDLVMGR",
+      "4XZHJFMUKDJW",
+      "6ANZJ6XRKV4P",
+      "8JNHX23GX7ET",
+      "C7LERZPCRFZ1",
+      "E420FDJNEDKR",
+      "GLWXPCHNXS4P",
+      "HD6BM39PYL21",
+      "K94WZS8B2MQ6",
+      "KUHYZBFFLALU",
+      "KWNMCCCNH3P2",
+      "PEM07PPDE9Z4",
+      "Q3R929GHT14R",
+      "QLEGQ76DJ1MN",
+      "UW7X088RVVLR",
+      "VX6RJ608LR5F",
+      "XU3M3P5CU3X7",
+      "Y3824FJLSUXY"
+    ],
+    "prefix_budget_open_book_omissions": 0,
+    "inline_knowledge_rows": 0,
+    "groups": [
+      {
+        "engine": "codex",
+        "questions": 520,
+        "completed": 520,
+        "completion_rate": 1,
+        "tool_call_rate": 0.17692307692307693,
+        "calls_total": 148,
+        "calls_mean": 0.2846153846153846,
+        "calls_p95": 2,
+        "tool_execution_ms_mean": 1.25,
+        "tool_execution_ms_p95": 5,
+        "latency_ms_mean": 14742.561538461538,
+        "latency_ms_p95": 27313,
+        "tool_phase_ms_mean": 14730.701923076924,
+        "final_phase_fallbacks": 0,
+        "fallback_rate": 0,
+        "fallback_reasons": {
+          "calls": 0,
+          "time": 0,
+          "stall": 0
+        },
+        "thinking_without_native_tool_calls": 145,
+        "textual_tool_call_without_native_call": 0,
+        "missing_agent_telemetry": 0,
+        "source_tags": [
+          "external:spire-codex",
+          "own"
+        ]
+      }
+    ],
+    "query_groups": [
+      {
+        "engine": "codex",
+        "question_type": "act_plan",
+        "questions": 18,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 7,
+          "query_rate": 0.3888888888888889,
+          "calls": 9,
+          "hit_calls": 4,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0.4444444444444444,
+          "hit_ids": [
+            "silent-diamond-diadem-opening-retention",
+            "silent-paels-flesh-third-turn-energy",
+            "silent-paels-legion-card-block-double",
+            "silent-whispering-earring-first-turn-control"
+          ]
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 1.2777777777777777,
+        "calls_p95": 4,
+        "latency_ms_mean": 24652.61111111111,
+        "latency_ms_p95": 53329
+      },
+      {
+        "engine": "codex",
+        "question_type": "card_reward",
+        "questions": 222,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 12,
+          "query_rate": 0.05405405405405406,
+          "calls": 13,
+          "hit_calls": 13,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-abrasive-thorns-dexterity",
+            "silent-accelerant-triggers",
+            "silent-afterimage-per-card-block",
+            "silent-burst-next-skills-replay",
+            "silent-core-dexterity-defense-observation",
+            "silent-core-discard-relic-observation",
+            "silent-core-shiv-defense-observation",
+            "silent-deadly-poison-application",
+            "silent-deck-burst-observation",
+            "silent-entomancer-growth-hand-window",
+            "silent-fan-of-knives-capacity",
+            "silent-flick-flack-discard-aoe",
+            "silent-hand-trick-sly-card-limit",
+            "silent-kaiser-crab-facing-sl",
+            "silent-knowledge-demon-sloth-replay-observation",
+            "silent-kunai-attack-count-dexterity",
+            "silent-living-fog-smoggy-legality",
+            "silent-mirage-poison-card-block",
+            "silent-nightmare-next-turn-copies",
+            "silent-outbreak-immediate-poison",
+            "silent-ricochet-discard-intangible",
+            "silent-serpent-form-per-card-damage",
+            "silent-shadow-step-delayed-damage",
+            "silent-spiny-toad-draw-block-sl",
+            "silent-survivor-neutralize-discard",
+            "silent-toasty-mittens-growth",
+            "silent-vajra-opening-strength",
+            "silent-well-laid-plans-retention"
+          ]
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 0.1981981981981982,
+        "calls_p95": 1,
+        "latency_ms_mean": 14345.315315315316,
+        "latency_ms_p95": 24072
+      },
+      {
+        "engine": "codex",
+        "question_type": "event",
+        "questions": 102,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 13,
+          "query_rate": 0.12745098039215685,
+          "calls": 14,
+          "hit_calls": 2,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0.14285714285714285,
+          "hit_ids": [
+            "silent-fishing-rod-random-upgrade",
+            "silent-foul-potion-slot-replacement-observation"
+          ]
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 0.5490196078431373,
+        "calls_p95": 3,
+        "latency_ms_mean": 14838.813725490196,
+        "latency_ms_p95": 27914
+      },
+      {
+        "engine": "codex",
+        "question_type": "other",
+        "questions": 44,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 1,
+          "query_rate": 0.022727272727272728,
+          "calls": 1,
+          "hit_calls": 1,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-act-transition-missing-hp-heal",
+            "silent-route-hp-observation"
+          ]
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 0.22727272727272727,
+        "calls_p95": 1,
+        "latency_ms_mean": 13334.954545454546,
+        "latency_ms_p95": 24018
+      },
+      {
+        "engine": "codex",
+        "question_type": "rest",
+        "questions": 94,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 0.02127659574468085,
+        "calls_p95": 0,
+        "latency_ms_mean": 12316.936170212766,
+        "latency_ms_p95": 21234
+      },
+      {
+        "engine": "codex",
+        "question_type": "shop",
+        "questions": 40,
+        "strategies": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 2,
+          "query_rate": 0.05,
+          "calls": 2,
+          "hit_calls": 2,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-accelerant-triggers",
+            "silent-g1a-test-subject-calibration-boundary",
+            "silent-test-subject-phase-reset"
+          ]
+        },
+        "rk_available_questions": 0,
+        "calls_mean": 0.325,
+        "calls_p95": 2,
+        "latency_ms_mean": 19490.9,
+        "latency_ms_p95": 37570
+      }
+    ],
+    "rk_definition": "reflex.json via kb_reflex; kb_experience is experience, never rk",
+    "limitation": "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。"
+  },
+  "current": {
+    "schema": "brain-agent-acceptance-v1",
+    "questions": 33,
+    "run_ids": [
+      "GV9MTBL2G6QJ"
+    ],
+    "prefix_budget_open_book_omissions": 0,
+    "inline_knowledge_rows": 0,
+    "groups": [
+      {
+        "engine": "codex",
+        "questions": 33,
+        "completed": 33,
+        "completion_rate": 1,
+        "tool_call_rate": 1,
+        "calls_total": 93,
+        "calls_mean": 2.8181818181818183,
+        "calls_p95": 4,
+        "tool_execution_ms_mean": 173.12121212121212,
+        "tool_execution_ms_p95": 294,
+        "latency_ms_mean": 19723.878787878788,
+        "latency_ms_p95": 34488,
+        "tool_phase_ms_mean": 19723.878787878788,
+        "final_phase_fallbacks": 0,
+        "fallback_rate": 0,
+        "fallback_reasons": {
+          "calls": 0,
+          "time": 0,
+          "stall": 0
+        },
+        "thinking_without_native_tool_calls": 0,
+        "textual_tool_call_without_native_call": 0,
+        "missing_agent_telemetry": 0,
+        "source_tags": [
+          "external:spire-codex",
+          "own"
+        ]
+      }
+    ],
+    "query_groups": [
+      {
+        "engine": "codex",
+        "question_type": "act_plan",
+        "questions": 1,
+        "strategies": {
+          "queried_questions": 1,
+          "query_rate": 1,
+          "calls": 1,
+          "hit_calls": 1,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-brain-crab-surviving-part-budget"
+          ]
+        },
+        "rk": {
+          "queried_questions": 1,
+          "query_rate": 1,
+          "calls": 1,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 1,
+          "query_rate": 1,
+          "calls": 1,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "rk_available_questions": 1,
+        "calls_mean": 3,
+        "calls_p95": 3,
+        "latency_ms_mean": 25937,
+        "latency_ms_p95": 25937
+      },
+      {
+        "engine": "codex",
+        "question_type": "card_reward",
+        "questions": 14,
+        "strategies": {
+          "queried_questions": 14,
+          "query_rate": 1,
+          "calls": 14,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 14,
+          "query_rate": 1,
+          "calls": 14,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 12,
+          "query_rate": 0.8571428571428571,
+          "calls": 14,
+          "hit_calls": 7,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0.5,
+          "hit_ids": [
+            "silent-afterimage-per-card-block",
+            "silent-flick-flack-discard-aoe",
+            "silent-haze-group-poison-weak",
+            "silent-malaise-x-debuff",
+            "silent-noxious-fumes-growth",
+            "silent-piercing-wail-temporary-strength",
+            "silent-tough-bandages-discard-block"
+          ]
+        },
+        "rk_available_questions": 14,
+        "calls_mean": 3.0714285714285716,
+        "calls_p95": 4,
+        "latency_ms_mean": 20822.64285714286,
+        "latency_ms_p95": 34488
+      },
+      {
+        "engine": "codex",
+        "question_type": "event",
+        "questions": 6,
+        "strategies": {
+          "queried_questions": 6,
+          "query_rate": 1,
+          "calls": 6,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 6,
+          "query_rate": 1,
+          "calls": 6,
+          "hit_calls": 3,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0.5,
+          "hit_ids": [
+            "silent-r2-card-flechettes",
+            "silent-r2-card-malaise",
+            "silent-r2-card-metamorphosis",
+            "silent-r2-card-piercing-wail",
+            "silent-r2-card-precise-cut",
+            "silent-r2-card-rolling-boulder",
+            "silent-r2-card-shadowmeld",
+            "silent-r2-card-shockwave",
+            "silent-r2-card-well-laid-plans"
+          ]
+        },
+        "experience": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk_available_questions": 6,
+        "calls_mean": 2.8333333333333335,
+        "calls_p95": 4,
+        "latency_ms_mean": 16099,
+        "latency_ms_p95": 19762
+      },
+      {
+        "engine": "codex",
+        "question_type": "other",
+        "questions": 3,
+        "strategies": {
+          "queried_questions": 3,
+          "query_rate": 1,
+          "calls": 3,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "rk": {
+          "queried_questions": 3,
+          "query_rate": 1,
+          "calls": 3,
+          "hit_calls": 2,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0.6666666666666666,
+          "hit_ids": [
+            "silent-r2-card-flechettes",
+            "silent-r2-card-malaise",
+            "silent-r2-card-metamorphosis",
+            "silent-r2-card-piercing-wail",
+            "silent-r2-card-precise-cut",
+            "silent-r2-card-rolling-boulder",
+            "silent-r2-card-shadowmeld",
+            "silent-r2-card-shockwave",
+            "silent-r2-card-well-laid-plans"
+          ]
+        },
+        "experience": {
+          "queried_questions": 2,
+          "query_rate": 0.6666666666666666,
+          "calls": 2,
+          "hit_calls": 2,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-act-transition-missing-hp-heal",
+            "silent-fan-of-knives-capacity",
+            "silent-rest-buffer-observation",
+            "silent-route-hp-observation"
+          ]
+        },
+        "rk_available_questions": 3,
+        "calls_mean": 3.6666666666666665,
+        "calls_p95": 5,
+        "latency_ms_mean": 22854,
+        "latency_ms_p95": 24965
+      },
+      {
+        "engine": "codex",
+        "question_type": "rest",
+        "questions": 7,
+        "strategies": {
+          "queried_questions": 7,
+          "query_rate": 1,
+          "calls": 7,
+          "hit_calls": 7,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-brain-crab-surviving-part-budget",
+            "silent-brain-kin-priest-exit-window"
+          ]
+        },
+        "rk": {
+          "queried_questions": 7,
+          "query_rate": 1,
+          "calls": 7,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 0,
+          "query_rate": 0,
+          "calls": 0,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": null,
+          "hit_ids": []
+        },
+        "rk_available_questions": 7,
+        "calls_mean": 2,
+        "calls_p95": 2,
+        "latency_ms_mean": 14799.857142857143,
+        "latency_ms_p95": 16041
+      },
+      {
+        "engine": "codex",
+        "question_type": "shop",
+        "questions": 2,
+        "strategies": {
+          "queried_questions": 2,
+          "query_rate": 1,
+          "calls": 2,
+          "hit_calls": 2,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-brain-crab-surviving-part-budget",
+            "silent-brain-kin-priest-exit-window"
+          ]
+        },
+        "rk": {
+          "queried_questions": 2,
+          "query_rate": 1,
+          "calls": 2,
+          "hit_calls": 0,
+          "unknown_hit_calls": 0,
+          "hit_rate": 0,
+          "hit_ids": []
+        },
+        "experience": {
+          "queried_questions": 1,
+          "query_rate": 0.5,
+          "calls": 1,
+          "hit_calls": 1,
+          "unknown_hit_calls": 0,
+          "hit_rate": 1,
+          "hit_ids": [
+            "silent-accelerant-triggers"
+          ]
+        },
+        "rk_available_questions": 2,
+        "calls_mean": 2.5,
+        "calls_p95": 3,
+        "latency_ms_mean": 32339.5,
+        "latency_ms_p95": 39689
+      }
+    ],
+    "rk_definition": "reflex.json via kb_reflex; kb_experience is experience, never rk",
+    "limitation": "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。策略/rk/经验按引擎和互斥题型分母统计；rk仅为kb_reflex，历史kb_experience查询不计rk，命中率=返回非空id数组的调用/该工具调用（含错误）；不把线索或调用文字算命中。自然前后窗口不是A/B，不推断因果耗时或收益；零题不构成验收。"
+  },
+  "baseline_run_count": 18,
+  "expected_baseline_runs": 18,
+  "baseline_matches_18_runs": true,
+  "changes": [
+    {
+      "engine": "codex",
+      "question_type": "act_plan",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 1.7222222222222223,
+      "latency_ms_mean_delta": 1284.3888888888905
+    },
+    {
+      "engine": "codex",
+      "question_type": "card_reward",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 2.8732303732303732,
+      "latency_ms_mean_delta": 6477.3275418275425
+    },
+    {
+      "engine": "codex",
+      "question_type": "event",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 2.284313725490196,
+      "latency_ms_mean_delta": 1260.1862745098042
+    },
+    {
+      "engine": "codex",
+      "question_type": "other",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 3.4393939393939394,
+      "latency_ms_mean_delta": 9519.045454545454
+    },
+    {
+      "engine": "codex",
+      "question_type": "rest",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 1.9787234042553192,
+      "latency_ms_mean_delta": 2482.920972644377
+    },
+    {
+      "engine": "codex",
+      "question_type": "shop",
+      "strategies_query_rate_delta": 1,
+      "rk_query_rate_delta": 1,
+      "calls_mean_delta": 2.175,
+      "latency_ms_mean_delta": 12848.599999999999
+    }
+  ],
+  "limitation": "上线前18局与上线后首批自然局须由调用者明确冻结原日志和局号；缺失题型变化为null，不补零，不追加实验局。"
+}

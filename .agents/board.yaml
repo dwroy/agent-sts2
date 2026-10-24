@@ -17,12 +17,17 @@ roles:
     codex_home_env: LEARNER_CODEX_HOME
     model: gpt-6.1-sol
     effort: high
-    max_parallel: 10
-  integrator: {pane: "wJ:p1HD"}
-  ops: {pane: "w1H:p8"}
+    max_parallel: 5
+  integrator: {pane: "wJ:p1HD", handoff: notes/integrator-current.md}
+  ops:
+    pane: "w1H:p8"
+    handoff: notes/ops-current.md
+    handoff_generated_marker: "# 运维当前清单（调度器生成"
+    handoff_receipt: ops/codex-ops/ops-current-handoff.json
   lead: {kind: claude, notify: board-digest}
 resource_gate: {when: "game running", max_procs_per_task: 2, nice: 19}
-never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
+# Protection uses stable pane labels; readable tab titles never enter lifecycle matching.
+never_reclaim: [".worktrees/live", "panes: integrator, ops, brain-view", "running-panes: learner-*"]
 verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 dispatcher:
   install: ops/codex-ops/agent-board-kit
@@ -34,9 +39,16 @@ dispatcher:
   inbox: ops/inbox-dev.md
   digest: ops/codex-ops/board-digest.md
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
+  # Ops switches the persisted poll_source only after installing the minute cron/kit.
+  poll_source: minute
   interval_minutes: 5
+  minute_interval_minutes: 1
+  conversations:
+    # Observe for at least one day; lead approval is required before any /new.
+    mode: shadow
+    guard_locks: [ops/live-merge.lock, ops/v3-merge.lock, ops/knowledge-refresh.lock]
   watchdog:
-    idle_minutes: 30
+    idle_minutes: 2
     error_patterns: ["at capacity", "rate limit", "stream disconnected", "Reconnecting", "error sending request"]
 session:
   state_dir: ops/codex-ops

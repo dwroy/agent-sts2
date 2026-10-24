@@ -1,0 +1,83 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator42-tools-20261023-2238/agent
+
+ ❯ tests/external-strategy-evidence.test.ts (41 tests | 1 failed) 165ms
+   × registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool 146ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-strategy-evidence.test.ts > registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool
+AssertionError: expected [ { source: 'own', …(3) }, { …(4) } ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   ObjectContaining {
++ [
++   {
++     "character": "silent",
++     "file": "strategy-entries.json",
++     "library_sha256": "bf5614a47f9a5220ea3a79458e53b0c866bf0fda17d7e1cd4308c0a0aec83c2e",
++     "source": "own",
++   },
++   {
++     "evidence": [
++       {
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "denominator": {
+            "n": 13307,
+            "unit": "rewards",
++         },
++         "design": "observational",
++         "downloaded_at": "2026-10-21",
++         "filters": {
++           "ascension": 10,
++           "character": "silent",
++           "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip",
++         },
++         "interval": {
++           "high": 0.16450124705081484,
++           "low": 0.0595123436377582,
++           "method": "player-cluster bootstrap (source cluster_ci)",
+          },
++         "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++         "limitations": [
++           "自选上传样本，非随机抽样。",
++           "观察性统计，不能推断跳过或拿牌的因果收益。",
++           "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。",
++         ],
++         "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1",
+          "source": "external:sts2fun",
++         "statistic": {
++           "name": "skip.rate",
++           "unit": "fraction of reward screens",
++           "value": 0.10941609679116254,
++         },
++         "type": "external_aggregate",
++         "url": "https://sts2.fun/static/sts2_public.db.zst",
++         "version": "v0.111",
++       },
++     ],
++     "provenance": null,
++     "source": "external:sts2fun",
++     "version": "fixture-1",
+    },
+  ]
+
+ ❯ tests/external-strategy-evidence.test.ts:88:24
+     86|   const tool = JSON.parse(result.text);
+     87|   expect(tool.entries[0].evidence_summary).toMatchObject({ own_runs: 0…
+     88|   expect(tool.sources).toEqual(expect.arrayContaining([expect.objectCo…
+       |                        ^
+     89|   expect(tool.entries[0].limitation_notice).toContain("非因果");
+     90|   expect(retrieveStrategies(lib, "reward/card", { act: 2 })).toEqual([…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 40 passed (41)
+   Start at  22:27:33
+   Duration  1.47s (transform 945ms, setup 343ms, import 816ms, tests 165ms, environment 0ms)
+

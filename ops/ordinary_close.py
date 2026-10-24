@@ -14,7 +14,7 @@ import record_manifest
 from ops_current import atomic, git, save, stamp
 
 RECORDS = ("notes/lessons.md", "paper/materials/learning/ledger.jsonl", "paper/materials/learning/code-proposals.jsonl")
-SPECIAL = ("feature_request", "research_request", "implementation_request", "boss_sim", "proposal_repair", "continuation_parent_batch")
+SPECIAL = ("external_source", "backfill_source", "feature_request", "research_request", "implementation_request", "boss_sim", "proposal_repair", "continuation_parent_batch")
 
 
 def fingerprint(root):

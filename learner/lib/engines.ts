@@ -106,7 +106,7 @@ export function strippedEnvNames(env: NodeJS.ProcessEnv, engine: EngineName): st
 export function childEnv(env: NodeJS.ProcessEnv, engine: EngineName): NodeJS.ProcessEnv {
   const drop = new Set(strippedEnvNames(env, engine));
   const out: NodeJS.ProcessEnv = {};
-  for (const [name, value] of Object.entries(env)) if (!drop.has(name) && value !== undefined) out[name] = value;
+  for (const [name, value] of Object.entries(env)) if (!drop.has(name) && !["LEARNER_EXTERNAL_SERVICE_TIER", "LEARNER_EXTERNAL_SOURCE"].includes(name) && value !== undefined) out[name] = value;
   if (engine === "claude") {
     // The user's auto-memory belongs to the interactive sessions; the task brief is the learner's whole context.
     out["CLAUDE_CODE_DISABLE_AUTO_MEMORY"] = "1";
@@ -471,6 +471,16 @@ export function codexCommand(request: EngineRequest, prompt: string, binary = "c
   }
   args.push("-");
   return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
+}
+
+/** TUI options share the task profile, model and feature policy with exec; exec-only switches are omitted. */
+export function learnerInteractiveArgs(request: EngineRequest): string[] {
+  const args = codexCommand({ ...request, resumeThread: undefined }, "").args;
+  if (args.slice(0, 5).join(" ") !== "exec --json --ignore-user-config --ignore-rules --cd") {
+    throw new Error("learner Codex command shape changed");
+  }
+  const options = [...args.slice(4, -1), "--no-daemon"];
+  return request.resumeThread ? ["resume", ...options, request.resumeThread] : options;
 }
 
 /** A codex request with the home, codex home and key files its permission profile denies (from the launcher's env). */

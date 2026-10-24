@@ -1,0 +1,137 @@
+{
+  "state": "passed",
+  "started_at": "2026-10-23T00:17:57+08:00",
+  "tree": "6b8d15d12d6acf96cfbe9b4359878e142c5685f3",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023/agent",
+      "started_at": "2026-10-23T00:17:57+08:00",
+      "pid": 2293831,
+      "exit_code": 0,
+      "seconds": 1.241
+    },
+    {
+      "name": "targeted",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-44-r414-integrator-20261023/selfcheck/vitest.json",
+        "tests/brain-codex-session.test.ts",
+        "tests/brain-live.test.ts",
+        "tests/brain-view.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/ops-herdr.test.ts",
+        "tests/boss-sim-home.test.ts",
+        "tests/legacy-refresh-incremental.test.ts",
+        "tests/v6-brain-card-value-loop.test.ts",
+        "tests/v6-card-input-bridge.test.ts",
+        "tests/v6-card-option-loop.test.ts",
+        "tests/v6-card-value.test.ts",
+        "tests/v6-completed-core-peek.test.ts",
+        "tests/v6-potions.test.ts",
+        "tests/v6-projection-runtime.test.ts",
+        "tests/v6-prompt-summary-perf.test.ts",
+        "tests/v6-prompt-summary.test.ts"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023/agent",
+      "started_at": "2026-10-23T00:17:58+08:00",
+      "pid": 2294005,
+      "exit_code": 0,
+      "seconds": 123.812
+    },
+    {
+      "name": "python-boss",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_boss_sim_home.py",
+        "-v"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023",
+      "started_at": "2026-10-23T00:20:02+08:00",
+      "pid": 2314631,
+      "exit_code": 0,
+      "seconds": 0.218
+    },
+    {
+      "name": "python-view",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_brain_view.py",
+        "-v"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023",
+      "started_at": "2026-10-23T00:20:02+08:00",
+      "pid": 2314646,
+      "exit_code": 0,
+      "seconds": 0.606
+    },
+    {
+      "name": "python-tui",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_learner_tui.py",
+        "-v"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023",
+      "started_at": "2026-10-23T00:20:03+08:00",
+      "pid": 2314790,
+      "exit_code": 0,
+      "seconds": 0.234
+    },
+    {
+      "name": "shell",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "ops/codex-ops-learner.sh",
+        "ops/codex-ops.sh",
+        "ops/herdr-host.sh",
+        "ops/run.sh"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator36-44-r414-20261023",
+      "started_at": "2026-10-23T00:20:03+08:00",
+      "pid": 2314838,
+      "exit_code": 0,
+      "seconds": 0.019
+    }
+  ],
+  "ended_at": "2026-10-23T00:20:03+08:00"
+}

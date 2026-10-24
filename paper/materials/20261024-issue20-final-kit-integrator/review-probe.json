@@ -1,0 +1,83 @@
+[
+  {
+    "case": "due-idle-ready",
+    "would_clear": true,
+    "reasons": [],
+    "external_actions": 0
+  },
+  {
+    "case": "idle-under-two-minutes",
+    "would_clear": false,
+    "reasons": [
+      "idle-window-or-cooldown"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "same-pane-sending",
+    "would_clear": false,
+    "reasons": [
+      "notification-acknowledgement-uncertain",
+      "idle-window-or-cooldown",
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "same-pane-uncertain",
+    "would_clear": false,
+    "reasons": [
+      "notification-acknowledgement-uncertain",
+      "idle-window-or-cooldown",
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "done-in-ten-minute-cooldown",
+    "would_clear": false,
+    "reasons": [
+      "idle-window-or-cooldown",
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "cooldown-expired-but-no-due-intent",
+    "would_clear": false,
+    "reasons": [
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "pending-different-issue",
+    "would_clear": false,
+    "reasons": [
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "pending-different-role",
+    "would_clear": false,
+    "reasons": [
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "recovery-hold",
+    "would_clear": false,
+    "reasons": [
+      "no-notification-due"
+    ],
+    "external_actions": 0
+  },
+  {
+    "case": "recovery-due",
+    "would_clear": true,
+    "reasons": [],
+    "external_actions": 0
+  }
+]

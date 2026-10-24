@@ -1,0 +1,110 @@
+{
+  "at": "2026-10-22T14:02:51.294967+08:00",
+  "source": "386c8b224ba476f2319cc258fcdffb18b120f085",
+  "merged_main": "d3b2a747453bba3ac6b2488dd518731651f54e98",
+  "verdict": "targeted-pass-full-and-natural-acceptance-pending",
+  "results": {
+    "targeted": {
+      "files": 8,
+      "passed": 146,
+      "failed": 0,
+      "success": true
+    },
+    "combination-targeted": {
+      "files": 12,
+      "passed": 193,
+      "failed": 0,
+      "success": true
+    }
+  },
+  "tsc_source_exit": 0,
+  "tsc_combination_exit": 0,
+  "python_tests_passed": 31,
+  "full_started": false,
+  "window": {
+    "issue": 33,
+    "runner_pid": 7161,
+    "state": "waiting-one-kernel-lock-no-other-held",
+    "full_started": false,
+    "steps": []
+  },
+  "planned_order": [
+    33,
+    35,
+    28,
+    37,
+    36
+  ],
+  "machine_queue_created": false,
+  "new_waiter_created": false,
+  "production_actions": false,
+  "setup_failures": [
+    {
+      "exit": 1,
+      "reason": "initial redirect directory absent; no test process started; corrected before source test run"
+    },
+    {
+      "reason": "first final-input audit attempted sparse-excluded data path; retried against merge index, no source change"
+    }
+  ],
+  "final_inputs": {
+    ".agents/board.yaml": "756f46b307cd657510a3e1306ef164d44a81e7ce563ce238b73db3dff06ed57f",
+    "agent/package.json": "3fbb4fa484314e53df83b4b1338872be4e72b24d4ee250e47b9af96c38265ae2",
+    "agent/src/brain/engines/codex-session.ts": "7c874ad1257f0d9b809e2e9585cd25d98909cce4fe9832e0cd6b57681d486faf",
+    "agent/src/brain/engines/codex.ts": "3ca4964a9aa3637ec640017643c2a8095f0a3877e151117549ac41eddbb63e1f",
+    "agent/src/brain/engines/dsh-stream.mjs": "d67424ed1bf637c432b71e17c2c0e99ef34c22a3bd77c97ccf6332ec71d38dfc",
+    "agent/src/brain/engines/dsh.ts": "74eb738f5137776fcf466996ccf44e4d7cd2232bac4258f2b64f2b28f2931f69",
+    "agent/src/brain/engines/knowledge-agent.ts": "35f14d0dfc04f2a7ade71ba451de36545deffadb7a471c0d131bf2a6edc7a4cf",
+    "agent/src/brain/live-view.ts": "84a9496e1813c652583fa92a7a1a1100ff121b0126a706d27267ff7f76b241e7",
+    "agent/src/brain/router.ts": "b70b0f6c85dbec65b5913d487ed7df4cf19a17f8ec8ff5fdcb15b066525c4dc0",
+    "agent/src/brain/tools/knowledge-mcp.ts": "498bfb08eda3de0ebe39ffe016b56d5ad8371e7a836d7b8cc2f79120b373b776",
+    "agent/src/brain/tools/mcp-server.ts": "145669c0e29c7703598abfa78b008fc83cea2c922ad4092a23160de9934eecbd",
+    "agent/src/brain/types.ts": "06de54e5da6bfa22d9e12f9f39180fb825c05edbce06dd70cd17b7066ed7bc41",
+    "agent/tests/brain-agent-mode.test.ts": "28345c435ecb48fbc7942f45de2172b7262786799b503d49d6e540a5653e92b2",
+    "agent/tests/brain-codex-session.test.ts": "ff049853b09275c7465702c277207aa6dc00b83cc5f9950d41d3cd8bf628d8f2",
+    "agent/tests/brain-live.test.ts": "e30bd790bd214fea19ceede4280af9594998fdd83837291a6231e0713452ecc0",
+    "agent/tests/brain-view.test.ts": "1b660fe1cb6d94a8106b2112011da5215cc4ccf34d9e39fe0a7dbe7959a5fa12",
+    "agent/tests/fixtures-herdr/fake-herdr.py": "063a971296258466e1d1c075872cf017daeb544d3111823c28faec2987fa29de",
+    "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+    "agent/tests/learner-herdr-launcher.test.ts": "38eb7cc58e79c8fe368269c69ebd795fc960dfb2a4bfbe0b32c6287670bf9607",
+    "agent/tests/learner-herdr-ownership.test.ts": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+    "agent/tests/learner-herdr-receipts.test.ts": "d3b234d079a94abfe8aa964c2a8250bea65bd7e7983006712ec395fa179902fc",
+    "agent/tests/learner-herdr.test.ts": "26d9bf99bfe5d42b22dfc1423d66185e1f78ef771004508ff898a73198bc56ea",
+    "agent/tests/learner-startup-recovery.test.ts": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+    "agent/tests/learner.test.ts": "5f5bff0622a15ac7e4ba317b83b857dff57963d9a605394f0d3d8ec40a2980ad",
+    "agent/tests/ops-herdr.test.ts": "260c4f51cfb7c1432fc9fc2f2894a6631a2859e56921c28911b6ab9e077b5d2e",
+    "agent/tsconfig.json": "4fbe5b7528d98c132b9228f439d2775e552213e1d5251996383e5363a58dd1b2",
+    "agent/vitest.config.ts": "d93598c0f94053bad3aea3e927564749b7afef8a32a02d49abb298204e823804",
+    "docs/codex-ops.md": "0af4197032cd74fd81fd36c86347c5301125e10c9d1dff15ecdf6356b406838f",
+    "learner/README.md": "328c516e1f43b13cb360f11bc21a39f8e4c579ba406a5521e42bdb53dcbb6ebc",
+    "learner/lib/engines.ts": "7cd3b2282d1435fb8c1cce82a1aab4d1f003031242cd2195562e0e32cc7a1de1",
+    "learner/lib/herdr.ts": "0ee482b041aed0d3f6be7d6696718e55ea3f1fcbf7a93eea0f2ee46e856d1488",
+    "learner/lib/launcher.ts": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
+    "learner/lib/startup-recovery.ts": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+    "ops/brain_view.py": "3ccc6bbd44c31f37d32d234e86488e9c3369e0feb8a481db88fe854d965df784",
+    "ops/codex-ops-learner.sh": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
+    "ops/codex-ops.sh": "eaa46329d8e1d01a12b3c88e32ec9c15acc4445b18fdd9a311db6823ed6848df",
+    "ops/herdr-host.sh": "5eaed2e62493c979e8d128fb1de9fdae3ce9eed1afeed749cf93273969126ab0",
+    "ops/herdr_titles.py": "835c2db82b7c523ccf23ad11fb27d394363fdfdf61f27edbd76f303c5d00c04e",
+    "ops/learner-log-pane.py": "ba5f2a6a77a4accd562e00dbec5b7bb39dcd837c49910f6e922d26f30ed3f306",
+    "ops/learner_jobs.py": "9732eddeae4427182ac0cd957b54c7e1e163fafd291ee2086bcf1c67dbe4cffe",
+    "ops/learner_tui.py": "8b5d0fe0c4ebce8366b3c6c0fae560c27ed9937181b4d139cf7ea579db9be066",
+    "ops/run.sh": "2061a42c17cda65a6792f22e71eda2d91bc5d416cd00ab6991ef3dbc7dbcaf3f",
+    "ops/tests/test_brain_view.py": "74a2f4b957e428500f2a993180b5e5ea064fda082c6b42aea6ce1ea30f757721",
+    "ops/tests/test_learner_entry.py": "29cab02478bebc5520979d6ff52e8a48c5c0451420d76464daa796c751d508ba",
+    "ops/tests/test_learner_tui.py": "60a4403a5311a362ebe3f0f24193bea2c1bab291cd90306811b0ad05c826e2a6",
+    "paper/materials/issue29-brain-speed/results.jsonl": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
+  },
+  "final_input_method": "SHA256 of Git merge index; source tests used allocated working tree; sparse-excluded material read from index",
+  "changed_from_source": [],
+  "ledger_resolution": "main bytes preserved; developer addition saved as source-decision-log.patch and original Git history",
+  "pending": [
+    "integrator full on final candidate after preceding windows",
+    "natural learner TUI task/native model effort/output/retirement/tab close",
+    "natural gameplay streaming/rolling and switch-run; brain_view remains off"
+  ],
+  "whitespace_check": {
+    "feature_exit": 0,
+    "whole_merge_index": "pre-existing main CSV CRLF and preserved original evidence patch context reported whitespace; no normalization performed"
+  }
+}

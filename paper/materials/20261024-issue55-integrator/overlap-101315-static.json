@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-24T11:16:14+08:00",
+  "stage": "static-review-only",
+  "directed_tests_started": 0,
+  "full_runs": 0,
+  "issue37_window_held": true,
+  "ops_comment": 6379041915,
+  "source55": "67d189cce56334eaf5c0865a55ebbdae7757ed34",
+  "source101315_tree": "1a1d9dbea1daf87597c30056cf71f69c6a71db91",
+  "old_regression_sha256": "c48360f545720d0c294b68ff4bdb870652e321e3b4bee5dccef3031a138310cf",
+  "overlap": [
+    "agent/src/brain/tools/agent-knowledge.ts"
+  ],
+  "disposition": "After issue37 actual window release, verify source55 bounded whole entries and returned-only source metadata against the original 101315 regression purpose. Do not apply competing tool implementations together. Original 101315 test assumes 12 entries, maximal packing and the old exact-ID envelope; source55 intentionally introduces default3/max6, pagination and summary metadata while retaining complete entries/evidence. Keep original test and original failed full unchanged. Independently test source55 and compare non-Silent output to current main; no inferred pass from static review.",
+  "knowledge_publication": false
+}

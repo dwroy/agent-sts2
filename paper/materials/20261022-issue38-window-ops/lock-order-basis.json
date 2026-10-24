@@ -1,0 +1,42 @@
+{
+  "order": [
+    "knowledge-refresh",
+    "ordinary-close",
+    "paper-dataset",
+    "tick-snapshot",
+    "live-merge"
+  ],
+  "existing_edges": [
+    "refresh.sh knowledge-refresh -> refresh-v6-history.py live-merge",
+    "ordinary_close.close_pending ordinary-close -> paper_dataset.main paper-dataset",
+    "background_statistics knowledge-refresh only",
+    "learner host recheck live-merge only"
+  ],
+  "check_releases_knowledge_before_rebuild_tsc_full": true,
+  "previous_all_or_release_test_results_preserved": "paper/materials/20261022-issue38-ops/",
+  "new_fixed_test_cases": 4,
+  "product_scripts_modified": false,
+  "original_foreign_jobs_not_stopped": true,
+  "source_candidate": {
+    "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+    "tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-high-20261022-1215",
+    "paths": [
+      {
+        "path": "agent/src/brain/router.ts",
+        "sha256": "05edcc617521309b44ab02a526fbd899dabf47bcf8915e89721613ac0befbb4b"
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "sha256": "72f310c268444b9174327f1a7e36febdf40d20f8c8ac4581abe267dd1ab4d6ff"
+      },
+      {
+        "path": "agent/tests/human-pace-budget.test.ts",
+        "sha256": "abf56e06bcf48914e9a56a891ac9a5719f5a8395db3e09058b7db4e557df998d"
+      }
+    ],
+    "new_source_not_full33_retry": true
+  },
+  "driver_sha256": "7f5c75c773c94dd214dce01033ef896aaf88040a875123f18a92a9056ca051e9",
+  "helper_sha256": "8aee45d278bbafe4dce358564a0eccc4e017e8094e53db9bf2c2a8c4464e94a0"
+}

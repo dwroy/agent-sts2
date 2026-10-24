@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-23T16:31:40+08:00",
+  "schema": "ops-existing-dispatch-admission-gap-v1",
+  "existing_entry_points": [
+    {
+      "path": "ops/strategy_research_jobs.py",
+      "bytes": 16161,
+      "sha256": "5578038f8c79bba81bec727d2dc934faed5a7451cff99b38f2977350e54ed02c"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "bytes": 24001,
+      "sha256": "86f60d302ffa84dfe4b704f90ee4b0e05704c006bd5e43d4d85609b8f985d88d"
+    },
+    {
+      "path": "ops/learning_requests.py",
+      "bytes": 64953,
+      "sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4"
+    },
+    {
+      "path": "learner/tasks/strategy-proposal.md",
+      "bytes": 18771,
+      "sha256": "7ee77c0667e20da558937a8cca8239a430fb258134256666027c01aaa3fef5af"
+    }
+  ],
+  "known_research_request_ids": [
+    "roy-20261010-silent-deck-size-value",
+    "roy-20261010-silent-core-reuse-value",
+    "roy-20261010-silent-core-output-value",
+    "roy-20261012-concrete-core-decklists"
+  ],
+  "existing_order": "core/experience/registered-learning/research before automatic proposals, fixes and ordinary strategy; no issue48 low-priority backfill binding",
+  "new_parent_request_is_not_valid_existing_thread_continuation": true,
+  "required_dev_change": "unified strategy-proposal backfill subtype consumes immutable issue48 manifest/work_spec; dispatch only after normal ready work and existing heavy queue, cap/lease/account/disk intact; idempotent old-id cursor and progress receipt",
+  "not_dispatched": true,
+  "no_temporary_priority_bypass_or_separate_experience_chain": true,
+  "normal_learning_not_paused": true,
+  "dev_and_integrator_ownership": "#48 pipeline developer; original integrator checks and ops publishes before learner admission"
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "ops-learning-prelaunch-plan-v1",
+  "at": "2026-10-23T23:10:40+08:00",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "authorized_by": "Roy",
+  "authorization": {
+    "path": "paper/materials/20261023-issue51-intake-ops/issue51-original.json",
+    "bytes": 3982,
+    "sha256": "9d298b4c2add762b1bf3e3140e1d3b029169192569ce4e40c6c9a9e3d8a8edcf"
+  },
+  "character": "silent",
+  "status": "awaiting-original-issue48-external-source-entry",
+  "native_started": false,
+  "learning_request_registered": false,
+  "registration_boundary": "Only create learning-request-v1 with actual first native launch/log/thread binding; no fabricated original_log or own run anchors. Revisions/continuations retain original identity.",
+  "priority": [
+    "normal-postmortem",
+    "normal-bugfix",
+    "issue51-external",
+    "automatic-strategy",
+    "issue48-own-experience-backfill"
+  ],
+  "plans": [
+    {
+      "id": "issue51-dual-boss-001",
+      "order": 1,
+      "merge_scope": "issue50 item4; reuse scientific parent, no duplicate study",
+      "selection": "Ended valid unmodified single-player Silent A10 reaching actual F48; verify F48/F49 terminal and boss semantics from schema; compare F49 win/loss, retain censoring/exclusions.",
+      "features_at_decision": [
+        "F48 entry HP/maxHP",
+        "available potions",
+        "deck size",
+        "core cards and upgrade state",
+        "power-card count",
+        "observed damage and defense sources"
+      ],
+      "forbidden_substitution": "No terminal deck/potions treated as entry snapshot; missing entry state remains missing; no final-victory shortcut for unverified F49 outcome."
+    },
+    {
+      "id": "issue51-act-boss-002",
+      "order": 2,
+      "selection": "Per-act actual boss encounter winner/loss cohorts; freeze encountered boss identity, act/floor and timing.",
+      "features_at_decision": [
+        "boss entry snapshot when available",
+        "act-end winner/loss deck snapshots distinctly labeled",
+        "HP/potions/card count and recorded card mechanics"
+      ],
+      "forbidden_substitution": "No act-end knowledge assumed available before boss; no comparisons across mixed boss/act/version."
+    }
+  ],
+  "shared_requirements": {
+    "source": "external:sts2fun",
+    "versions": "v0.111 separate from v0.107-v0.110, preserve exact game builds and actual filtered denominators; do not inherit issue intro/sample counts",
+    "design": "observational",
+    "provenance": [
+      "public URL",
+      "download date",
+      "compressed/database SHA",
+      "query/export version",
+      "actual cohort sample and denominator"
+    ],
+    "privacy": "Never read/select/serialize player identifiers or sensitive fields. Explicit safe-column projection only, no SELECT *, no raw database dump or raw public redistribution. Do not use player-ID adjustment/dedup as a workaround; record resulting limitation.",
+    "evidence": "Game interpretation and strategy written by learner from supplied evidence; no ops-authored card/HP thresholds. Merge same situations; preserve own/external separation, counterexamples, selection bias, upload/SL/death censoring, player-skill confounding and missingness.",
+    "outputs": [
+      "knowledge/external/sts2fun aggregate additions as needed",
+      "schema-compatible strategy candidates and evidence",
+      "rk candidates through original issue28 replay gate; not bypassed for speed"
+    ],
+    "delivery": "Each batch separately evaluated/published/read back; report/pipeline completion is not live/consumer/natural use/benefit or science-parent completion."
+  },
+  "execution": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "preferred_service_tier": "ultrafast",
+    "cli_only": "-c service_tier=ultrafast; never config.toml or unrelated sessions",
+    "quota": ">70% weekly => fast; >85% => default and notify Roy, using actual original usage receipt; no false effective-tier claim",
+    "original_gates": [
+      "account isolation",
+      "two original writer slots",
+      "learn lock",
+      "worktree lease",
+      "disk threshold",
+      "normal postmortem and bugfix priority"
+    ],
+    "verification": [
+      "actual native request tier/effort receipt",
+      "wall time and recorded usage per batch",
+      "before/after normal postmortem/bugfix dispatch intervals",
+      "actual kb_strategies nonempty hits and external references, no A/B"
+    ]
+  },
+  "current_safe_aggregate": {
+    "ref": {
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    },
+    "provenance": {
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "faq": "https://sts2.fun/faq",
+      "downloaded_at": "2026-10-21",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
+    },
+    "existing_tables": [
+      "card",
+      "skip",
+      "deck_size",
+      "clusters",
+      "cooccurrence",
+      "encounter"
+    ],
+    "limits": "Existing card/skip/deck_size/clusters/cooccurrence/encounter aggregates do not by themselves supply F48 entry inventory or per-act winner/loss snapshots; new allowlisted export needed if absent."
+  },
+  "code_handoff": {
+    "issue": 48,
+    "scope": [
+      "external source contract without fake own run IDs",
+      "two ordered task templates",
+      "priority insert before automatic strategy and own backfill",
+      "quota-aware per-launch tier override without config writes",
+      "native identity/progress/continuation retention"
+    ],
+    "owner_state": "existing issue48 session working; no duplicate session/prompt injected"
+  },
+  "new_models_games_full_checks": 0
+}

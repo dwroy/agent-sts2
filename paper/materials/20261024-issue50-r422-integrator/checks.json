@@ -1,0 +1,54 @@
+{
+  "tree": "fedb7319fe03717612f46324c3f7f8c4fa7f300a",
+  "checks": [
+    {
+      "name": "tsc",
+      "rc": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "at": "2026-10-24T01:33:10+08:00",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "directed",
+      "rc": 0,
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/endgame-plan.test.ts",
+        "tests/brain-query-guidance.test.ts",
+        "tests/brain-agent-report.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/external-strategy-evidence.test.ts",
+        "tests/construction-log.test.ts",
+        "tests/construction-log-loop.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/issue50-r422/directed.json"
+      ],
+      "at": "2026-10-24T01:33:11+08:00",
+      "sha256": "6d018558aaf0bc345ff57f67b852317d2a9e3e75bcc2dc7d011054c0abef544c"
+    }
+  ],
+  "input_count": 2682,
+  "inputs_unchanged": true,
+  "full_started": false,
+  "workers": 1,
+  "nice": 19,
+  "files": 7,
+  "passed": 112,
+  "failed": 0,
+  "skipped": 0,
+  "manifest_sha256": "9856b95524d281c59da2f7d7ecfcc9de651f9f7aee307b38518c9467654ba4dc",
+  "prior_failures_preserved": "20261024-issue50-r421-preflight and 20261023-issue50-repair-review",
+  "published_manifest_sha256": "2a70edfb2203988e1d994c6b79586d5cf780e04319afb8d3d7650f05299532f6",
+  "scan_first_result": "false positive: tracked learner-keycheck-retry.test.ts path key plus SHA256 in JSON mapping, not a credential; original redacted scanner report retained in local artifacts; published as conventional SHA256 manifest"
+}

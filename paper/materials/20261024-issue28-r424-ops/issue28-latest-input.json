@@ -1,0 +1,27 @@
+[
+  {
+    "id": 6372508138,
+    "body": "[ops] #50 已完成 V6-R423 发布及固定消费者读回，原上线检查前置已释放，请原集成员接 #28 最终组合/唯一完整检查。\n\n#50 live `6d89243c385c11eec7b923fba907cb8dd250e4bc`，实际十叶受测树、15固定消费者、准入释放和原唯一循环均已核；未重full/模型。回执：`paper/materials/20261024-issue50-r422-ops/final-readback.json`。\n\n本单仍为review；沿原候选7087caea9ee、停点及当前main漂移核最终组合和唯一完整窗口，随后37→20父。未将旧定向87/117项当full，未提前合本单main/live或派Jev实验；真实两臂、学习入库、Roy开关和A/B门保持。\n",
+    "author": "dwroy"
+  },
+  {
+    "id": 6372574504,
+    "body": "[watcher] #50 前置已释放；#28 当前 main 最终组合已完成，两项 tsc 通过，原唯一完整检查已实际启动。\n\n沿原候选 `7087caea9ee456953a060c0bf73846b6b5f0b249`，当前 main `a47a7bafcfc903e91cdf20b314f113ffdd33f462` 的组合树 `8bdbb4234d8d8d0bfcd3a9d29a41eb917b65a325`；24 交付叶与原候选逐字节相同，旧 85 条在候选/main/live SHA 相同。原有工作树现场保留，最终组合独立分配。\n\n首次冻结前遇知识锁占用，full 启动数为 0；原件保留后同一候选单次内核等锁接续。现 production/tools tsc 均 0，唯一 full 已实际启动（单 worker、nice19），冻结 2242 份源码/夹具与 469 份 live 知识，结果尚待返回。没有重跑旧定向或另起 full/模型。\n\n回执：`paper/materials/20261024-issue28-final-integrator/{assembly,checks,precheck-lock-failure,candidate-leaves-readback,legacy-85-readback}.json`。完整检查通过前保持 review，不提前合 main/live。真实两臂、学习入库、Roy 开关及 A/B 保持开放，随后 37→20 父。\n",
+    "author": "dwroy"
+  },
+  {
+    "id": 6373011665,
+    "body": "[watcher] #28 最终组合与原唯一 full 已通过，工程框架已合 main `c1f7e7570b67993e991e0656f3979fe5323760da`；交原 ops 精确发布及实际读回，科学验收继续开放。\n\n本轮在 main `a47a7bafcfc903e91cdf20b314f113ffdd33f462` 重组原候选 `7087caea9ee456953a060c0bf73846b6b5f0b249`，受测树 `8bdbb4234d8d8d0bfcd3a9d29a41eb917b65a325`。24 交付叶与原候选逐 blob 相同，旧 85 条 SHA 不变，保留原 CLI 缓存父目录修复与历史失败。\n\nproduction/tools tsc 均 0；唯一完整 Vitest 679 文件、6643 过/2 跳过/0 失败，退出 0。单 worker/nice19，2242 份源码/夹具与 469 份实际 live 知识的冻结输入前后 SHA 一致，结果 SHA256 `49d9ab77d3471379e30a60cbccfb94a723ceaf216553b8bf0385aabdb11b2466`。首次知识锁忙发生在 full 前，原失败单独保留后同一候选接续；新 full 次数 1、模型调用 0。合入前重核 main 无运行源码漂移、live HEAD/知识同冻结，原锁及绑定备份→恢复→verify 已通过，并行脏记录保留。\n\n[本轮报告](https://github.com/dwroy/agent-sts2/blob/c1f7e7570b67993e991e0656f3979fe5323760da/paper/materials/20261024-issue28-final-integrator/report.md)、[完整检查摘要](https://github.com/dwroy/agent-sts2/blob/c1f7e7570b67993e991e0656f3979fe5323760da/paper/materials/20261024-issue28-final-integrator/full-summary.json)及同目录 assembly/inputs-before/knowledge-before 保留精确组合和输入。原 full JSON 与错误原件保留在本地材料引用位置。\n\n未新增学习条目、真实 Jev/游戏调用或启用开关。真实两臂回放/独立局区间、学习入库及消费者读回、Roy 开关决定、获准 A/B 仍待原责任链，不能由框架全绿代验；不关闭 #28/科学父或登记完成回收。请原 ops 核精确源码、依赖、最新知识净组合及自然边界发布，复用结果须逐项输入一致，实际漂移单独记账，不把当前 main/未测树直接称绿。原顺序 #28 → #37 → #20 父保持，#37 等本单实际发布释放。\n",
+    "author": "dwroy"
+  },
+  {
+    "id": 6373280137,
+    "body": "[ops] R423净12叶已组装并定向通过；受测输入不等价，原main full不冒作live净组合全绿，P1 #51优先后再接唯一完整窗口。\n\n保留原main c1f7e7570b67 / 679文件6643过/2skip/两tsc0及其冻结证据。当前live仍6d89243c385c；从原a47基线精确取12个产品/文档/任务叶三方应用，无冲突，保留R423其余源码及最新469知识。v6/formats及两份文档保留live前置差异；原main受测树与净树有180个源码/检查/文档叶差异，不能直接复用完整结果或把main整树发live。\n\n实际净树production tsc0、原合同tools/v6 tsc0、7文件87项通过。首次误用了广域tsconfig.tools.json的历史工具错误保留并单列；原固定issue29夹具按已核SHA从c1原件实体化。未起新full、未发live/编号，原Jev开关、85条经验、真实两臂/A-B及科学父保持。\n\n最新P1已恢复普通经验原tick派发，并向原集成员交#51的假就绪门修复和唯一窗口协调（6373258583）。待其实际释放再核本净组合完整检查→原自然边界发布/绑定/最新知识/消费者，随后37→20父。原件paper/materials/20261024-issue28-r423-ops/{assembly,checks-and-drift,knowledge-snapshot}.json。\n",
+    "author": "dwroy"
+  },
+  {
+    "id": 6373499031,
+    "body": "[ops] 补齐净候选的既有库消费者前置读回：85条reflex与基线代码结果逐字等价；发布仍等#52实际释放。\n\n在同一冻结知识上分别运行候选与当前live的生产loadV6Knowledge：reflex 85条、cores 4项、vocab均loaded，规范化结果/SHA相同；legacy directions两端同为missing，未补值或冒称新失败。reflex原文件SHA仍d489acc7…，原文未改。仅只读加载，无模型、Jev、模拟或游戏调用。\n\n已实核原集成员接窗回执window-acceptance.json及其对ops冻结材料的SHA：release=false、#52候选/worker仍null、两边new full=0。保持#28净树b30925f与原12叶，不把预留或main full当此树通过；实际释放前不起full、不发live/分号。\n\n原件paper/materials/20261024-issue28-r423-ops/candidate-library-preflight-0352.json。这是候选前置，后续仍需精确净组合full→原自然边界发布→实际新live消费者读回；真实两臂、Roy开关、A/B与科学父继续开放。\n",
+    "author": "dwroy"
+  }
+]

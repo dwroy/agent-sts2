@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-23T13:21:30+08:00",
+  "batch": "20261023-131316-fix-batch",
+  "state": "native-completed-batch-failed-empty-fix-acceptance-wrapper-finish-blocked",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-131316",
+  "head": "530da1b5f5341883a105c90f31f5c8fef6ab9a8d",
+  "worktree_clean": true,
+  "new_fix_source_merge_or_tests": false,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": 0
+  },
+  "report_sha256": "ef7d1b1cd15f8f17865c0af2ebce3aac83dcdf4d84a3483b4217a8c7d6f8704b",
+  "native": {
+    "session": "01a1672d-a309-73b1-b253-a07eccb2571f",
+    "turn": "01a1672e-0ecc-74a1-a9dd-f053e6a649e6",
+    "bindings": [
+      {
+        "turn_id": "01a1672e-0ecc-74a1-a9dd-f053e6a649e6",
+        "marker": "[learner-batch:800d58a8-799d-4a7f-9149-87f651128b85]",
+        "prompt_sha256": "00909af80d7e2a545fdbd8fc2638a85b1d1d280f0d61d0d8e7a9ed1882596ea7"
+      }
+    ],
+    "verify_native": "passed against original final rollout including exact matching completion message",
+    "native_process_stopped": true,
+    "artifact_log_sha256": "c501bdba700e10dc11e86fad002f05b09377e901d3c1297e9a5f942604176f40",
+    "output_sha256": "df4b06e5433f0abf5c21bafdded61c5ead87d6520bf3b6c9da81d423d91b01cf",
+    "learner_summary_refs": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261023-131322-1972254f-1087-4cdc-b6ac-7dcf61058a8f-fix-batch.jsonl",
+        "line": 121,
+        "offset": 1039001,
+        "bytes": 2959,
+        "sha256": "cb2f4916be98ddb92abd8e2472be156b1c19f4ae4e4bc232339a4dac65cbb9eb"
+      }
+    ],
+    "wall_ms": 310013,
+    "timed_out": false
+  },
+  "semantic_empty_fix_gate": {
+    "result": null,
+    "reason": "tests.tsc/vitest null, cases 0; original contract needs both rc0 and cases>0 plus Git/live-source equality. No replacement tests or state manufactured."
+  },
+  "wrapper_finish_guard": {
+    "batch_state": "failed",
+    "batch_rc": 0,
+    "native_code": 0,
+    "requires_done_when_code_zero": true,
+    "actual_done": false,
+    "wrapper_seal_present": false,
+    "verified_code_stage": "passed naturally; no verify attention/timeout deferral observed",
+    "finish_attention": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-131316-fix-batch.wrapper-attention-finish.json"
+  },
+  "pane": {
+    "id": "w1H:pC5",
+    "idle_shell_pid": 473808,
+    "close_called": false
+  },
+  "slot": {
+    "registry_terminal_state": "failed",
+    "supervisor_exited": true,
+    "lease": "ops/codex-ops/learner/codex-fix-silent-20261023-131316.lock",
+    "lease_single_nonblocking_probe": "free; released immediately",
+    "other_new_batches_after_activation": {}
+  },
+  "requirements": {
+    "native_nonempty_bindings": "verified",
+    "automatic_completion": "native task_complete verified; wrapper final acceptance blocked by semantic failed/rc0",
+    "timeout_fallback_not_triggered_or_correct": "verified-not-triggered; native exit to attention about 2s, 300s bound is post-launch verification, not 310s model duration",
+    "slot_release": "verified terminal failed path and original checkout lease released",
+    "next_batch_dispatch": "pending next natural tick; scheduler log shows ops-wake drain"
+  },
+  "host_policy": "on unchanged; original sessions/pane kept; no game behavior affected",
+  "next_step": "Original #36 owner reconcile native rc0 / semantic failed finish contract without inventing passing tests, completion or old supervisor authority. Keep batch failure, report, pane and lease proof. Next naturally dispatched batch only; no model/task replay.",
+  "scientific_parents_closed": false,
+  "record_scan": {
+    "first_scan": "generic-api-key matched original scheduler key field; exact redacted diagnostic preserved",
+    "diagnostic": ".artifacts/ops-1318-20261023/record-scan-redacted.json",
+    "original_batch_snapshot": ".artifacts/ops-1318-20261023/batch-original.json",
+    "public_projection": "paper/materials/20261023-1318-ops/batch-projection.json",
+    "scanner_allowlist_added": false
+  }
+}

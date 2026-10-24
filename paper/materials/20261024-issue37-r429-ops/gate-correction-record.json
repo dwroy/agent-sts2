@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-24T15:27:04+08:00",
+  "correction": "纠正37发布门：原main full6661过及实际R429两tsc0/57定向只能分别证明原受测树与定向兼容，不能代替有15处运行差异/72叶知识更新的实际组合完整检查。已在任何生产源码写入前终止自有临时发布worker2585296，并核R429/九叶前像未变、自有准入释放；原对局/学习/autoplay无信号。现由唯一实际运行组合检查worker2593100/birth25094291占原完整检查窗，15:24宿主核其持检查锁、等原刷新owner2589445自然释放知识锁，full尚0；无持生产发布锁。冻结最新实际知识及宿主代码后只跑这次独立full，主库固定测试夹具不发布，091302未审净12经验不夹入。通过后才创建新自然发布事务、核实际编号/工具及首新局Jev；旧结果、source=null、失败与科学父保留。原main检查不重跑、不强制释放他人锁。",
+  "publication_state": {
+    "at": "2026-10-24T15:16:41+08:00",
+    "phase": "cancelled-before-source-write-required-actual-runtime-full",
+    "issue": 37,
+    "worker_pid": 2585296,
+    "worker_birth": "25044430",
+    "published": false,
+    "new_full_model_or_game": 0,
+    "held_locks": [],
+    "boundary": {
+      "at": "2026-10-24T15:11:55+08:00",
+      "play_pid": 2435786,
+      "play_birth": "24858712",
+      "play_cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "autoplay_pid": 1245890,
+      "autoplay_birth": "23151982",
+      "console_path": "logs/console/20261024-144052-ee0680a9b+dirty.log",
+      "prefix_bytes": 232978,
+      "prefix_sha256": "0e2b97c2342f05b482b516ef2fbfb57113a9536531419564e8e322516598b03b",
+      "wait": "original PID/birth pidfd natural terminal only; no signals, keys or game requests"
+    },
+    "own_admission_released": true,
+    "own_provisional_publisher_terminated": 2585296,
+    "game_learner_or_autoplay_signals": 0,
+    "reason": "original main full plus actual-context targeted checks do not replace required full for different game+host runtime inputs",
+    "next": "one actual runtime-profile full under original released check window; source091302 not included"
+  },
+  "observation": {
+    "at": "2026-10-24T15:24:22+08:00",
+    "producer_state": {
+      "at": "2026-10-24T15:20:13+08:00",
+      "phase": "preparing-required-full-for-actual-game-host-profile",
+      "worker_pid": 2593100,
+      "worker_birth": "25094291",
+      "new_full_runs": 0,
+      "new_models_games": 0,
+      "published": false,
+      "held_locks": []
+    },
+    "worker_birth_verified": true,
+    "worker_wchan": "locks_lock_inode_wait",
+    "lock_readback": {
+      "ops/integrator-full-check.lock": [
+        "14: FLOCK  ADVISORY  WRITE 2593100 08:30:5925863 0 EOF"
+      ],
+      "ops/knowledge-refresh.lock": [
+        "159: FLOCK  ADVISORY  WRITE 2589445 08:30:1055837 0 EOF",
+        "159: -> FLOCK  ADVISORY  WRITE 2589464 08:30:1055837 0 EOF",
+        "159:  -> FLOCK  ADVISORY  WRITE 2589523 08:30:1055837 0 EOF",
+        "159:   -> FLOCK  ADVISORY  WRITE 2593100 08:30:1055837 0 EOF"
+      ],
+      "ops/live-merge.lock": []
+    },
+    "original_refresh_owner": {
+      "pid": 2589445,
+      "birth": "25085919",
+      "script": "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh_driver.py",
+      "not_signalled": true
+    },
+    "observed_phase": "waiting-original-knowledge-refresh-lock-before-freeze",
+    "actual_full_runs_so_far": 0,
+    "old_provisional_publisher_cancelled_before_any_source_write": true,
+    "own_admission_released": true,
+    "game_model_or_autoplay_signal_count": 0
+  },
+  "old_notes_preserved": true
+}

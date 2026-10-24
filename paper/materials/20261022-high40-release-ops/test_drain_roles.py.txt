@@ -1,0 +1,47 @@
+import unittest
+from drain_roles import filter_snapshot
+
+
+class RoleBoundary(unittest.TestCase):
+    def setUp(self):
+        self.tree = {10: dict(pid=10, ppid=1, start_ticks='root'),
+                     11: dict(pid=11, ppid=10, start_ticks='child'),
+                     20: dict(pid=20, ppid=1, start_ticks='other')}
+        self.policy = dict(authorization='fixed-original', roles=[dict(
+            role='developer', name='issue-20', pane='fixed-pane',
+            roots=[dict(pid=10, start_ticks='root')])])
+
+    def run_case(self, workers):
+        return filter_snapshot(dict(active_workers=workers, excluded_workers=[],
+            inventory_complete=True, ops_idle=False), self.policy, self.tree.get)
+
+    def test_retained_native_and_tool_host_keep_account(self):
+        out = self.run_case([dict(kind='old_account_engine', pid=11, start_ticks='child')])
+        self.assertEqual(out['active_workers'], [])
+        self.assertEqual(out['excluded_workers'][0]['name'], 'issue-20')
+        self.assertTrue(out['excluded_workers'][0]['account_unchanged'])
+        self.assertFalse(out['ops_idle'])
+
+    def test_learner_and_play_never_exempt_even_under_same_pid(self):
+        rows = [dict(kind=k, pid=11, start_ticks='child') for k in ['learner', 'play_or_loop', 'unsettled_batch']]
+        self.assertEqual(self.run_case(rows)['active_workers'], rows)
+
+    def test_unknown_old_engine_remains_blocking(self):
+        rows = [dict(kind='old_account_engine', pid=20, start_ticks='other')]
+        self.assertEqual(self.run_case(rows)['active_workers'], rows)
+
+    def test_reused_role_pid_cannot_authorize_new_family(self):
+        self.tree[10]['start_ticks'] = 'reused'
+        rows = [dict(kind='old_account_engine', pid=11, start_ticks='child')]
+        self.assertEqual(self.run_case(rows)['active_workers'], rows)
+
+    def test_reused_worker_pid_and_missing_parent_remain_blocking(self):
+        rows = [dict(kind='old_account_engine', pid=11, start_ticks='stale')]
+        self.assertEqual(self.run_case(rows)['active_workers'], rows)
+        del self.tree[10]
+        rows = [dict(kind='old_account_engine', pid=11, start_ticks='child')]
+        self.assertEqual(self.run_case(rows)['active_workers'], rows)
+
+
+if __name__ == '__main__':
+    unittest.main()

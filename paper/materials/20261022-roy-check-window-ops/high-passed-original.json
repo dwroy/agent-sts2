@@ -1,0 +1,90 @@
+{
+  "state": "passed-await-original-publication",
+  "started_at": "2026-10-22T16:03:02+08:00",
+  "runner_pid": 589590,
+  "runner_start": "8071265",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-high-20261022-1215",
+  "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+  "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "nice": 19,
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-22T16:12:29+08:00",
+      "pid": 610109,
+      "exit_code": 0,
+      "seconds": 0.9147387589910068
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/ops-issue33-high-20261022/vitest.json"
+      ],
+      "started_at": "2026-10-22T16:12:30+08:00",
+      "pid": 610249,
+      "exit_code": 0,
+      "seconds": 1290.8732563489903
+    }
+  ],
+  "full_started": true,
+  "new_model_API_MC_game_actions": 0,
+  "continuation_of": "same high narrow candidate first tsc/full; prior harness rc2 missing inapplicable external builder preserved; no full has started",
+  "issue38_receipt": "paper/materials/20261022-issue38-window-ops/waiter-cancellation.json",
+  "lock_admission_sha256": "8aee45d278bbafe4dce358564a0eccc4e017e8094e53db9bf2c2a8c4464e94a0",
+  "held_locks": [],
+  "harness_correction": "paper/materials/20261022-1601-ops/harness-correction.json",
+  "prior_issue20_test_exited_at": "2026-10-22T13:33:35+08:00",
+  "lock_order": [
+    "knowledge-refresh",
+    "ordinary-close",
+    "paper-dataset",
+    "tick-snapshot",
+    "live-merge"
+  ],
+  "waiting_lock": null,
+  "admitted_at": "2026-10-22T16:12:29+08:00",
+  "knowledge_snapshot_finished_at": "2026-10-22T16:12:29+08:00",
+  "input_count": 2475,
+  "external_aggregate_rebuild": {
+    "status": "not-applicable",
+    "reason": "builder and aggregate absent in exact baseline and narrow candidate",
+    "evidence": [
+      {
+        "revision": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+        "path": "agent/tools/build-external-stats.py",
+        "tree_entry_absent": true
+      },
+      {
+        "revision": "90c6d041640b1bec7082635f6344fc69dd260751",
+        "path": "agent/tools/build-external-stats.py",
+        "tree_entry_absent": true
+      },
+      {
+        "revision": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+        "path": "knowledge/external/sts2fun/silent-a10.json",
+        "tree_entry_absent": true
+      },
+      {
+        "revision": "90c6d041640b1bec7082635f6344fc69dd260751",
+        "path": "knowledge/external/sts2fun/silent-a10.json",
+        "tree_entry_absent": true
+      }
+    ]
+  },
+  "ended_at": "2026-10-22T16:34:01+08:00"
+}

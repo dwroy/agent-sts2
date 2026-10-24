@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-23T23:57:11+08:00",
+  "operation": "one existing scheduler core tick under original tick-learn and learn locks",
+  "exit_code": 0,
+  "tick_stdout_sha256": "e8338a691e2dad5c06fc132e5e5265a0e184d8764bb5ce07af9866a30f5881a4",
+  "tick_stderr_bytes": 0,
+  "write_jobs": {
+    "experience": [
+      "20261023-235635-experience-update",
+      3379317
+    ],
+    "fixes": null,
+    "strategy": null,
+    "calibration": null,
+    "core_builds": null,
+    "backfill_hold": true,
+    "strategy_external": null,
+    "code_proposal": null,
+    "boss_sim": null,
+    "strategy_research": null,
+    "learning_requests": null,
+    "strategy_backfill": null
+  },
+  "normal_active": [
+    {
+      "batch": "20261023-234301",
+      "state": "running",
+      "pid": 3312927,
+      "task": null,
+      "worktree": null
+    },
+    {
+      "batch": "20261023-235635-experience-update",
+      "state": "running",
+      "pid": 3379317,
+      "task": "experience-update",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp"
+    }
+  ],
+  "external_enabled": true,
+  "external_plan_ids": [
+    "issue51-dual-boss-001",
+    "issue51-act-boss-002"
+  ],
+  "external_source_validation": true,
+  "external_batches": [],
+  "external_units_consumed": [],
+  "blocking_reason": "normal postmortem and experience work ahead of external line under original priority",
+  "timers_added": 0,
+  "full_started": false,
+  "next": "original normal tasks complete; next original tick may start external before auto strategies, preserving normal priority; register only after real native acceptance"
+}

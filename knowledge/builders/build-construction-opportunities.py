@@ -4,6 +4,7 @@
 This is an observational supply table, not a learned strategy or a game drop-rate specification.
 Duplicate room/offer identities are counted once; costs that cannot be read are never filled with zero.
 """
+from refresh_publish import replace as publish_replace
 import argparse
 import bisect
 from datetime import datetime, timezone
@@ -169,5 +170,5 @@ if __name__ == '__main__':
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix('.tmp')
     temporary.write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
-    temporary.replace(output)
+    publish_replace(temporary, output)
     print(json.dumps({'path': str(output), 'opportunities': len(result['rows']), 'digest': result['digest']}))

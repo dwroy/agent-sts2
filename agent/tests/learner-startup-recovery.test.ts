@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { EventEmitter } from "node:events";
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -96,6 +97,21 @@ function children(attempts: Attempt[]) {
 }
 
 describe("bounded learner startup recovery", () => {
+  it("journals a backfill launch once without claiming a native start or allowing another launcher", async () => {
+    const f = fixture();
+    Object.assign(f.env, { LEARNER_BACKFILL_SOURCE: "issue48-fixed" });
+    mkdirSync(join(f.root, "ops/state/learner"));
+    const fake = children([{ code: 0 }]);
+    expect(await f.run()).toBe(0);
+    const receipt = JSON.parse(readFileSync(join(f.root, "ops/state/learner", `${f.env.LEARNER_BATCH_ID}.backfill-launch.json`), "utf8"));
+    expect(receipt).toMatchObject({ batch: f.env.LEARNER_BATCH_ID, source: "issue48-fixed", cwd: f.cwd,
+      input_sha256: createHash("sha256").update(fake.inputs[0]!).digest("hex") });
+    expect(receipt.native).toBeUndefined();
+    expect(receipt.cursor).toBeUndefined();
+    await expect(f.run()).rejects.toThrow();
+    expect(spawn).toHaveBeenCalledTimes(1);
+  });
+
   it("retries a registered timestamp-only postmortem with the original lease and input", async () => {
     const f = fixture(true);
     const fake = children([{ stderr: failure }, { code: 0 }]);

@@ -1,0 +1,47 @@
+{
+  "ledger_ids": [
+    "silent-0568",
+    "silent-0569",
+    "silent-0570"
+  ],
+  "status": "proposed",
+  "root_cli_only": true,
+  "readback": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "/home/dw/Projects/agent-sts2/learner/ledger.py",
+        "show",
+        "silent-0568"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "/home/dw/Projects/agent-sts2/learner/ledger.py",
+        "show",
+        "silent-0569"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "/home/dw/Projects/agent-sts2/learner/ledger.py",
+        "show",
+        "silent-0570"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "at": "2026-10-23T15:29:17+08:00",
+  "batch": "20261023-144301",
+  "batch_state": "done/rc0",
+  "report": {
+    "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/report.md",
+    "bytes": 250501,
+    "sha256": "c2de904de7d4bf12cb83ed64d336087202710c3b74bdf249d8f442e74c62eada"
+  },
+  "machine_report": {
+    "task": "postmortem",
+    "appended": [
+      "KUHYZBFFLALU",
+      "QLEGQ76DJ1MN",
+      "6ANZJ6XRKV4P",
+      "Q3R929GHT14R",
+      "HD6BM39PYL21"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "HD6BM39PYL21",
+        "where": "agent/src/reflex/combat.ts:163",
+        "what": "感染棱柱单步题漏算技能新污染，防御后净损报5而应为11；未证明修正后能赢。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0578",
+        "silent-0579"
+      ],
+      "updated": [
+        "silent-0228",
+        "silent-0027",
+        "silent-0090",
+        "silent-0125",
+        "silent-0020",
+        "silent-0286",
+        "silent-0418",
+        "silent-0019",
+        "silent-0239",
+        "silent-0330",
+        "silent-0183",
+        "silent-0168",
+        "silent-0005"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-7aaeb67b5de3b83e",
+      "silent-proposal-6ed5b0be05ddcf4a",
+      "silent-proposal-6ea1082d0ea33b1b",
+      "silent-proposal-f12f1d9548b6dff7",
+      "silent-proposal-08f9b6f1658b5d7b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/report.md"
+  },
+  "owned_rows": [
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "rows": 33,
+      "sha256": "e0e11bf8e5aaef0fc0c3c318d7ff956f26df6420e8b412e593525e9180f7a155",
+      "ids": [
+        "silent-0005",
+        "silent-0019",
+        "silent-0020",
+        "silent-0027",
+        "silent-0090",
+        "silent-0125",
+        "silent-0168",
+        "silent-0183",
+        "silent-0228",
+        "silent-0239",
+        "silent-0286",
+        "silent-0330",
+        "silent-0418",
+        "silent-0578",
+        "silent-0579"
+      ]
+    },
+    {
+      "path": "paper/materials/learning/code-proposals.jsonl",
+      "rows": 5,
+      "sha256": "0f0136d1378c29701496946b3cae5af03c75a2673c6e5376a0c885d300d47da1",
+      "ids": [
+        "silent-proposal-08f9b6f1658b5d7b",
+        "silent-proposal-6ea1082d0ea33b1b",
+        "silent-proposal-6ed5b0be05ddcf4a",
+        "silent-proposal-7aaeb67b5de3b83e",
+        "silent-proposal-f12f1d9548b6dff7"
+      ]
+    }
+  ],
+  "lesson_sections": [
+    "KUHYZBFFLALU",
+    "QLEGQ76DJ1MN",
+    "6ANZJ6XRKV4P",
+    "Q3R929GHT14R",
+    "HD6BM39PYL21"
+  ],
+  "proposal_originals": [
+    {
+      "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/KUHYZBFFLALU-proposal.md",
+      "bytes": 4119,
+      "sha256": "df92dc1b6b71dcc8619a3a13cd5e9fc93f1f495491e1589a03f669ff0a0db4bc"
+    },
+    {
+      "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/QLEGQ76DJ1MN-proposal.md",
+      "bytes": 4064,
+      "sha256": "e714a26a720e79d182d6b6ccdd3158298f86575c46e3943a98ba2f9479dab132"
+    },
+    {
+      "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/6ANZJ6XRKV4P-proposal.md",
+      "bytes": 4087,
+      "sha256": "c2cd8496d6877cefed9298edc3ead8fb86396971db5b1c98751a3ae4b10afb55"
+    },
+    {
+      "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/Q3R929GHT14R-proposal.md",
+      "bytes": 4068,
+      "sha256": "50801202db2a8dfb62dc51fa71226e128da3d571c5bc69ddbba9dc99b64dda5b"
+    },
+    {
+      "path": "learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/HD6BM39PYL21-proposal.md",
+      "bytes": 4640,
+      "sha256": "d4a07ee0865b5cba67855c1f08bc3cfb3e826ca8d9cafa85f08f804605f66f8f"
+    }
+  ],
+  "pure_bug": "nonblocking; queue under original silent-0579 / silent-proposal-08f9b6f1658b5d7b; no demonstrated win counterfactual",
+  "ledger_check": {
+    "rc": 0,
+    "stdout": {
+      "path": ".artifacts/ops-1520-20261023/ledger-check.stdout.txt",
+      "bytes": 94,
+      "sha256": "da273e9cf070c9a72521771c156c0644fc83d7a9d5e6b33af5e753851610c3b5"
+    }
+  },
+  "retention_original": {
+    "path": "ops/codex-ops/retention/requests/20261023-144301.json",
+    "bytes": 491,
+    "sha256": "1799c8590b88b08ab84f6ce008d1dc845ff33ece8e78879d9885634042f2f4cd"
+  },
+  "dataset": "not yet run for this batch; original unique worker registered after owned records commit",
+  "live_merge": null,
+  "scientific_parents_closed": false
+}

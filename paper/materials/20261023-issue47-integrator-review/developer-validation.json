@@ -1,0 +1,52 @@
+{
+  "baseline": "8a241eb7b3f72d6d6f4c996030e5917ef90b1194",
+  "validation_time": "2026-10-23T12:16:19+08:00",
+  "policy": "Claude direct instruction in original #47 session: tsc + directed tests only; complete regression belongs to integrator",
+  "nice": 19,
+  "vitest_pool": "threads",
+  "vitest_max_workers": 1,
+  "tsc": {
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "exit_code": 0
+  },
+  "directed": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/brain-live.test.ts tests/brain-agent-mode.test.ts tests/brain-agent-codex.test.ts tests/brain-agent-loop.test.ts tests/brain-router.test.ts tests/mcp-server.test.ts tests/brain-view.test.ts --pool=threads --maxWorkers=1",
+    "cwd": "agent",
+    "exit_code": 0,
+    "test_files_passed": 7,
+    "tests_passed": 71,
+    "failed": 0,
+    "python_viewer_tests": 16,
+    "python_count_note": "Included by brain-view.test.ts; do not add to 71 as independent Vitest cases"
+  },
+  "full_suite": "Not completed by developer. Original sandbox SIGTERM/143 retained; no restart after Claude clarification. Integrator owns complete regression.",
+  "logs": {
+    ".artifacts/issue47/directed-final/tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue47/directed-final/vitest.log": {
+      "bytes": 249,
+      "sha256": "47bf22bf0ce00eb89c1fc9f614973f949161991cd7290a1e777e701af565a9bc"
+    },
+    ".artifacts/issue47/sandbox-tests.log": {
+      "bytes": 76,
+      "sha256": "8974590d3532e107914b6ba4b99073d3606f7b61937480b47cd57bb7aa5930ed"
+    },
+    ".artifacts/issue47/sandbox-interrupted.json": {
+      "bytes": 411,
+      "sha256": "dc62d4db05f5d13e6f89e178af8f81594d165668d5db7317a845fed3d53fe2d5"
+    }
+  },
+  "inputs_sha256": {
+    "agent/src/brain/live-view.ts": "e44e4f48aca592321933c571f24f876994b169a89a97447eb2c43fca31dc3e50",
+    "agent/src/brain/engines/codex-session.ts": "f2f5df4d682baddfd3c17ba083f94812c1b1dcf7d052fcef17f542fefc61b05c",
+    "agent/src/brain/engines/knowledge-agent.ts": "93f1421192a74b92f805f5edcb301f8cb6bdaf89eb0d9d2b3c9c82ba04ef88b5",
+    "agent/src/brain/tools/mcp-server.ts": "e530062b82f2f42d68ab13d14133df6b1b83d223dfe1a1c0dfcd432959c8b40c",
+    "ops/brain_view.py": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+    "agent/tests/brain-live.test.ts": "c2b8796abd40e3ee4118fc600dae224e8d7b6ae21ee1258acc236b441d2e675b",
+    "agent/tests/brain-agent-codex.test.ts": "e43cfc4d5a9edf96e9fcfb7bf756908ede6f821e597a713b095775263ed8f9a5",
+    "ops/tests/test_brain_view.py": "abdba7eed2ad0e00093bcba0ef8cb6276bc47927b52157b9af4e4da1c88f7075"
+  }
+}

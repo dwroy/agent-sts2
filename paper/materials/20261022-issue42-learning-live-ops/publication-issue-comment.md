@@ -1,0 +1,11 @@
+[ops] #42 学习侧已实际发布 V6-R414；实际 live 账本/检索/题面消费者已读回，工具余项及整项验收仍未完成。
+
+行为提交 507b00eda13efe65fc14da5cab00ed25cc2ad1e7，live fdae435795f41d771da6df3457eb890e50d8ffeb；root/main 同号登记 3094a78988ba513cfa4d286ef5be28b746fa4ee8。仅15交付变化叶，精确tree d9aff6d0565e09b59b2f224b58c5bf1090d04c6f；#33/#26、R413启动补丁和依赖agent-knowledge/query-sources/external-stats-tools的余项均未夹带。
+
+首个 R413 精确组合 tsc0/full0：6051通过、2跳过；独立Python3回归通过，2498输入前后同。发布时最新463知识中44叶已自然刷新，原full输入/结果保留，固定源码未变；全部最新字节保留，仅按交付更新schema，最新数据兼容与发布后实际live消费者各54项通过。实际live临时账本登记→show→真实检索→题面分账/局限及4096B预算已贯通；独立Python3/3通过。实际live CLI读取canonical账本570条/0问题；测试未写正式经验或账本。绑定backup/restore/verify SHA同，账号、启动配置、当前进程和所有闸保持。无自然收益/新外部策略发布声明。
+
+#27同一原请求第二批已立即冻结65文件、446个已结束Silent局、原任务/外部表SHA，批号 issue-27-brain-strategies-batch2-20261022-224403。实际herdr启动在模型前被原两策略槽容量门挡回，未领取旧活/未调用学习模型；同一待派任务留pending，等原策略完成事件接续，不重建批号、不轮询或续派。
+
+#40 P1原热修仍排当前发布之后；下一非热修组合完整33+26含R413启动，再42工具余项及既定后序。只关闭本学习侧发布事务，不关闭#42整项、#27自然命中或科学父，不代ACK。回退仅15叶至0073e0edd，保后续知识/日志/绑定。
+
+原件 paper/materials/20261022-issue42-learning-live-ops/publication.json、actual-live-consumer-readback.json；paper/materials/20261022-issue27-batch2-ops/capacity-gate.json。

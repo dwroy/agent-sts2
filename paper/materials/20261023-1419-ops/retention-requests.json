@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-23T14:28:10+08:00",
+  "requests": {
+    "20261023-124241-s2-strategy-proposal": {
+      "batch": "20261023-124241-s2-strategy-proposal",
+      "state": "pending_verification",
+      "request": "ops/codex-ops/retention/requests/20261023-124241-s2-strategy-proposal.json",
+      "worker": "started"
+    },
+    "20261023-124301": {
+      "batch": "20261023-124301",
+      "state": "pending_verification",
+      "request": "ops/codex-ops/retention/requests/20261023-124301.json",
+      "worker": "running"
+    }
+  },
+  "admission_blockers_verified_before_request": {
+    "20261023-124241-s2-strategy-proposal": "source leaf not in recorded publication: ops/learner_tui.py",
+    "20261023-124301": "postmortem not settled (all five skipped; no new appended run)"
+  },
+  "request_is_not_reclamation": true,
+  "force_cleanup_or_pane_close": false,
+  "worker_actual_readback": {
+    "20261023-124241-s2-strategy-proposal": {
+      "state": "deferred",
+      "last_result": {
+        "state": "deferred",
+        "reason": "source leaf not in recorded publication: ops/learner_tui.py"
+      }
+    },
+    "20261023-124301": {
+      "state": "deferred",
+      "last_result": {
+        "state": "deferred",
+        "reason": "postmortem not settled"
+      }
+    }
+  }
+}

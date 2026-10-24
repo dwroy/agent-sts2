@@ -50,8 +50,11 @@ def configuration(root):
     for path in candidates:
         if path.is_file() and not path.is_symlink():
             value = json.loads(path.read_text())
-            if value != {"schema": "disk-admission-policy-v1", "authorization": value.get("authorization"),
-                         "unit": "GiB", "hold_new_jobs_at_or_below": 100, "hold_next_run_at_or_below": 60,
+            jobs_hold = value.get("hold_new_jobs_at_or_below")
+            # Keep the prior approved policy readable during an atomic policy rollout.
+            if type(jobs_hold) is not int or jobs_hold not in (80, 100) or value != {
+                         "schema": "disk-admission-policy-v1", "authorization": value.get("authorization"),
+                         "unit": "GiB", "hold_new_jobs_at_or_below": jobs_hold, "hold_next_run_at_or_below": 60,
                          "regent_minimum_available": 200, "regent_buffer_hours": 48}:
                 raise ValueError("capacity policy differs from the approved thresholds")
             return path, value
@@ -72,13 +75,13 @@ def rate(samples):
     return consumed * 3600 / elapsed if elapsed else None
 
 
-def evaluate(available, samples):
+def evaluate(available, samples, *, hold_new_jobs_at_or_below=80):
     per_hour = rate(samples)
     buffer = None if per_hour is None else (available / per_hour if per_hour > 0 else None)
     regent = available >= 200 * GiB and per_hour is not None and (per_hour == 0 or buffer >= 48)
     return {"available_bytes": available, "available_GiB": available / GiB,
-            "new_jobs_allowed": available > 100 * GiB,
-            "new_channel_allowed": available > 100 * GiB,
+            "new_jobs_allowed": available > hold_new_jobs_at_or_below * GiB,
+            "new_channel_allowed": available > hold_new_jobs_at_or_below * GiB,
             "next_run_allowed": available > 60 * GiB,
             "regent_resume_allowed": regent,
             "recent_consumption_bytes_per_hour": per_hour,
@@ -115,7 +118,7 @@ def atomic(path, value):
 
 
 def snapshot(root, directory, *, record=False, now=None, available=None):
-    policy_path, _ = configuration(root)
+    policy_path, policy = configuration(root)
     if policy_path is None:
         # Historical isolated fixtures/old lanes have no policy yet. Regent admission is
         # still denied; publication installs the policy and code together in real lanes.
@@ -141,7 +144,8 @@ def snapshot(root, directory, *, record=False, now=None, available=None):
             samples.append({"at": current, "available_bytes": free})
         temporary = temporary_capacity()
         result = {"schema": "disk-admission-state-v1", "configured": True, "at": current,
-                  "root": str(root), "policy": str(policy_path), "samples": samples, **evaluate(free, samples)}
+                  "root": str(root), "policy": str(policy_path), "samples": samples,
+                  **evaluate(free, samples, hold_new_jobs_at_or_below=policy["hold_new_jobs_at_or_below"])}
         result["temporary_filesystem"] = temporary
         if not temporary["allowed"]:
             for key in ("new_jobs_allowed", "new_channel_allowed", "next_run_allowed", "regent_resume_allowed"):

@@ -1,0 +1,26 @@
+{
+  "schema": "knowledge-catalog-v1",
+  "migration_stage": "guarded-public-layer-with-legacy-compatible-views",
+  "_about": "存储/索引不证明角色无关、可信或自然采用；原common范围保持，角色统计分账，跨角色只读参考。",
+  "sources": {
+    "characters/silent/strategy-entries.json": {
+      "path": "characters/silent/strategy-entries.json",
+      "sha256": "9df3740b4254daade365a4c3cf48b25b2d840e9f656bcda50e64735a79b3d95e",
+      "bytes": 5711,
+      "source_character": "silent",
+      "storage_scope": "character",
+      "scope_policy": "原条件/进阶/证据/未知保持；查询和迁移不增加验证或独立支持数。"
+    }
+  },
+  "enemies": {},
+  "legacy_views": {},
+  "generated_files": {
+    "common/enemies/_legacy-meta.json": {
+      "sha256": "4fd11e2fae0278b4cf3d3890a9a7cacca88b6263d20f91ef8725a785459c8d3d",
+      "bytes": 58
+    }
+  },
+  "curated_files_never_overwritten": true,
+  "game_knowledge_added": false,
+  "evidence_policy": "逐条保留原证据；无原局号时明确未知，仅有文件SHA不能补证。"
+}

@@ -1,0 +1,110 @@
+{
+  "at": "2026-10-23T07:28:14+08:00",
+  "issue": 39,
+  "source": "e1204dcf92508079730e6c0fbf994ee3dc84e979",
+  "original_fix": "459366bac49b7a959d3fd59b92bffcb12360aebe",
+  "main": "2c23c7197d71d37ac5b330a0f4d844d1b14abc11",
+  "live": "e925357ad984e4d88509ab0d791388be047f3428",
+  "release_id": "V6-R417",
+  "latest_issue39_comment": 6335126978,
+  "latest_parent20_comment": 6352062299,
+  "critical_leaves": [
+    {
+      "path": "ops/launch_runtime.py",
+      "source_blob": "53e496730e4b4d5388a19e98f0d57d61a7a51203",
+      "independently_reviewed_r4_blob": "53e496730e4b4d5388a19e98f0d57d61a7a51203",
+      "original_fix_blob": "58136b7a1c429f870d06cf91a1303b94655fcf29",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "4c12cc8c27cfa85d2543bfcfa71d3fa5709670fabd3337129d0398ef8816a0bc",
+      "same_as_independent_r4": true
+    },
+    {
+      "path": "ops/launch_environment_audit.py",
+      "source_blob": "da1f4bc559dda87001a48a555f0c26af498778c2",
+      "independently_reviewed_r4_blob": "da1f4bc559dda87001a48a555f0c26af498778c2",
+      "original_fix_blob": "1e8a96798062eaedf8e61ce93b5ebce3448a6b89",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "b4afeca60b487c66b3b31d4b0a5e957e69b61d906206bb78a5d7f087370417ac",
+      "same_as_independent_r4": true
+    },
+    {
+      "path": "ops/tests/test_launch_runtime.py",
+      "source_blob": "855a166ceffb128375039a16bfa72e5c2bb1f611",
+      "independently_reviewed_r4_blob": "855a166ceffb128375039a16bfa72e5c2bb1f611",
+      "original_fix_blob": "80d92eb24d0edd7f8e2bbdf6b2cc23fa5e169c41",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "ddfacb46f03391e62654a63fb243560e252bada83383457d2a7efac6b32a2382",
+      "same_as_independent_r4": true
+    },
+    {
+      "path": "ops/tests/test_launch_environment.py",
+      "source_blob": "37865a25b0e507f8df5d192c0778134c7fb34c76",
+      "independently_reviewed_r4_blob": "37865a25b0e507f8df5d192c0778134c7fb34c76",
+      "original_fix_blob": "37865a25b0e507f8df5d192c0778134c7fb34c76",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "98c824f0f4e7c1b95b04e746ade78d21e4a225858c884967f046ddc429ed65bc",
+      "same_as_independent_r4": true
+    },
+    {
+      "path": "agent/tests/board-resources.test.ts",
+      "source_blob": "f49b9e20e24d7637187c843fa192af0b97a35de4",
+      "independently_reviewed_r4_blob": "f49b9e20e24d7637187c843fa192af0b97a35de4",
+      "original_fix_blob": "a8fdbcf32039b8a2668a8e3010d6687bf120de55",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "f08d0fc88675dd3338fda2296b5e7c4e85e43567eb9535281e5c7865c0f41ce3",
+      "same_as_independent_r4": true
+    },
+    {
+      "path": "agent/tests/launch-environment.test.ts",
+      "source_blob": "9a4158191217edb169a068d2d28ced0d0e717f79",
+      "independently_reviewed_r4_blob": "9a4158191217edb169a068d2d28ced0d0e717f79",
+      "original_fix_blob": "9a4158191217edb169a068d2d28ced0d0e717f79",
+      "main_blob": null,
+      "live_blob": null,
+      "sha256": "1d2257dc2bce13285ed1504454e474d17c880de97d221c00dbacebaf22f76092",
+      "same_as_independent_r4": true
+    }
+  ],
+  "source_inventory": {
+    "sources": 329,
+    "variables": 285,
+    "unclassified": [],
+    "whole_object_equals_delivery": true,
+    "source_bytes_match_exact_git": true
+  },
+  "merge_tree_exit": 1,
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in ops/report.py",
+    "CONFLICT (content): Merge conflict in ops/run.sh",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+  ],
+  "shared_test_preserved_in_preview": true,
+  "preview_is_final_candidate": false,
+  "source_in_main": false,
+  "issue37_in_main": false,
+  "known_fix_in_main": false,
+  "full_started": false,
+  "full_waiter_started": false,
+  "candidate_assembled": false,
+  "source_merged": false,
+  "production_changed": false,
+  "prior_launch_regressions": {
+    "source": "d9c4849b1fa69b6fae5510a82f20cf95abf796a8",
+    "independent_check_record": "paper/materials/20261022-issue20-integrator-r4/checks-first.json",
+    "result": "23 passed / exit0",
+    "repeated_this_turn": false,
+    "raw_log_sha256": "2c04ae98b4312f3cc625ae389adee01e7ad925203a6c2dc2555b1f9e7bf15a4d"
+  },
+  "pending_order": "42 tools -> 35 -> 28 -> 37; 37 -> 20",
+  "verdict": "known isolation counters pass; await final combination full/main integration and ops publication/pin/natural readback",
+  "issue41_closed_readback": true,
+  "issue44_closed_readback": true,
+  "issue41_source_in_main": true,
+  "shared_test_main_blob": "1f52768e4418ed48e65c9cf1c6002843e5cade21",
+  "inventory_scope": "exact delivered source only; not current production or final merged combination"
+}

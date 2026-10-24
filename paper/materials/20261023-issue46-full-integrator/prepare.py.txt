@@ -1,0 +1,74 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, subprocess, time
+
+R = Path('/home/dw/Projects/agent-sts2')
+B = Path(__file__).resolve().parent
+W = R / '.worktrees/integrator46-final-20261023-1318'
+L = R / '.worktrees/live'
+BASE = 'c707d5c903c03de3bc8d8cb2864f643b59b254a6'
+SOURCE = 'a213612c65d6262bf4e90ab968b22cb305bed156'
+PATHS = ['ops/proposal_dispatch.py', 'ops/worktree_allocation_report.py',
+         'ops/tests/test_proposal_recheck.py', 'agent/tests/proposal-recheck.test.ts',
+         'docs/learner-retention.md']
+
+def git(*args, cwd=W, data=None):
+    return subprocess.check_output(['git', *args], cwd=cwd, input=data, stderr=subprocess.PIPE)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+assert git('rev-parse', 'HEAD').decode().strip() == BASE
+assert not git('diff', '--name-only').strip() and not git('diff', '--cached', '--name-only').strip()
+patch = git('diff', '--binary', '--full-index', SOURCE + '^', SOURCE, '--', *PATHS, cwd=R)
+(B / 'source.patch').write_bytes(patch)
+git('apply', '--3way', '--index', '-', data=patch)
+assert not git('ls-files', '-u').strip()
+rows = []
+for name in PATHS:
+    raw = (W / name).read_bytes()
+    rows.append(dict(path=name, tested_blob=git('rev-parse', ':' + name).decode().strip(),
+                     sha256=sha(raw), bytes=len(raw), source_blob=git('rev-parse', SOURCE + ':' + name).decode().strip()))
+knowledge = []
+print('Waiting for original K then L snapshot admission; no production mutation.', flush=True)
+with (R / 'ops/knowledge-refresh.lock').open('a') as k, (R / 'ops/live-merge.lock').open('a') as l:
+    deadline = time.monotonic() + 600
+    while True:
+        try:
+            fcntl.flock(k, fcntl.LOCK_SH | fcntl.LOCK_NB)
+            fcntl.flock(l, fcntl.LOCK_SH | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            fcntl.flock(k, fcntl.LOCK_UN)
+            fcntl.flock(l, fcntl.LOCK_UN)
+            assert time.monotonic() < deadline, 'snapshot admission timed out; retain candidate'
+            time.sleep(2)
+    assert git('rev-parse', 'HEAD', cwd=L).decode().strip() == BASE
+    for p in sorted((L / 'knowledge').rglob('*')):
+        name = p.relative_to(L)
+        if not p.is_file() or p.is_symlink() or 'builders' in name.parts:
+            continue
+        raw = p.read_bytes()
+        target = W / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(raw)
+        knowledge.append(dict(path=str(name), bytes=len(raw), sha256=sha(raw)))
+    assert all(sha((L / x['path']).read_bytes()) == x['sha256'] for x in knowledge)
+fixed = 'paper/materials/issue29-brain-speed/results.jsonl'
+raw = git('show', 'b84d95c5185941eec143cbcf2966d5770309cca5', cwd=R)
+target = W / fixed
+target.parent.mkdir(parents=True, exist_ok=True)
+target.write_bytes(raw)
+git('add', '--sparse', '--', *[x['path'] for x in knowledge])
+assert not git('diff', '--name-only').strip()
+prior = json.loads((B / 'issue36-publication-receipt.json').read_text())
+for row in prior['paths']:
+    assert git('rev-parse', ':' + row['path']).decode().strip() == row['live'], row['path']
+A = dict(at=subprocess.check_output(['date', '-Iseconds'], text=True).strip(), live_base=BASE,
+         main_base=git('rev-parse', 'main', cwd=R).decode().strip(), source=SOURCE,
+         worktree=str(W), tree=git('write-tree').decode().strip(), paths=rows,
+         knowledge_manifest=knowledge, knowledge_count=len(knowledge),
+         fixed_input=dict(path=fixed, sha256=sha(raw), git_blob='b84d95c5185941eec143cbcf2966d5770309cca5'),
+         supervisor_comment=6353937742, issue36_fifteen_preserved=True,
+         production_written=False, locks_held_during_tests=False)
+(B / 'assembly.json').write_text(json.dumps(A, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({k:v for k,v in A.items() if k not in ('paths','knowledge_manifest')}), flush=True)

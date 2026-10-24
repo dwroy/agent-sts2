@@ -1,0 +1,189 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/agent
+
+ ❯ tests/learner-herdr.test.ts (79 tests | 11 failed | 68 skipped) 290ms
+     × replaces noninteractive TERM=undefined only in the isolated TUI environment 15ms
+     × replaces noninteractive TERM= only in the isolated TUI environment 2ms
+     × replaces noninteractive TERM=dumb only in the isolated TUI environment 2ms
+     × replaces noninteractive TERM= DUMB  only in the isolated TUI environment 1ms
+     × does not propagate the observed TERM=dumb startup confirmation into the pane 21ms
+     × retains queued inputs at initial without another prompt or retirement 38ms
+     × retains queued inputs at before-name without another prompt or retirement 34ms
+     × retains queued inputs at before-prompt without another prompt or retirement 30ms
+     × retains queued inputs at after-binding without another prompt or retirement 36ms
+     × waits for the original 450000-ms-delayed turn with a concurrent 'aaa' session 54ms
+     × waits for the original 450000-ms-delayed turn with a concurrent 'zzz' session 54ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-herdr.test.ts > learner interactive command policy > replaces noninteractive TERM=undefined only in the isolated TUI environment
+AssertionError: expected { PATH: '/fixed/bin' } to deeply equal { PATH: '/fixed/bin', …(1) }
+
+- Expected
++ Received
+
+  {
+    "PATH": "/fixed/bin",
+-   "TERM": "xterm-256color",
+  }
+
+ ❯ tests/learner-herdr.test.ts:115:32
+    113|   it.each([undefined, "", "dumb", " DUMB "])("replaces noninteractive …
+    114|     const env = { PATH: "/fixed/bin", ...(term === undefined ? {} : { …
+    115|     expect(learnerTuiEnv(env)).toEqual({ PATH: "/fixed/bin", TERM: "xt…
+       |                                ^
+    116|     expect(env.TERM).toBe(term);
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > learner interactive command policy > replaces noninteractive TERM= only in the isolated TUI environment
+AssertionError: expected { PATH: '/fixed/bin', TERM: '' } to deeply equal { PATH: '/fixed/bin', …(1) }
+
+- Expected
++ Received
+
+  {
+    "PATH": "/fixed/bin",
+-   "TERM": "xterm-256color",
++   "TERM": "",
+  }
+
+ ❯ tests/learner-herdr.test.ts:115:32
+    113|   it.each([undefined, "", "dumb", " DUMB "])("replaces noninteractive …
+    114|     const env = { PATH: "/fixed/bin", ...(term === undefined ? {} : { …
+    115|     expect(learnerTuiEnv(env)).toEqual({ PATH: "/fixed/bin", TERM: "xt…
+       |                                ^
+    116|     expect(env.TERM).toBe(term);
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > learner interactive command policy > replaces noninteractive TERM=dumb only in the isolated TUI environment
+AssertionError: expected { PATH: '/fixed/bin', TERM: 'dumb' } to deeply equal { PATH: '/fixed/bin', …(1) }
+
+- Expected
++ Received
+
+  {
+    "PATH": "/fixed/bin",
+-   "TERM": "xterm-256color",
++   "TERM": "dumb",
+  }
+
+ ❯ tests/learner-herdr.test.ts:115:32
+    113|   it.each([undefined, "", "dumb", " DUMB "])("replaces noninteractive …
+    114|     const env = { PATH: "/fixed/bin", ...(term === undefined ? {} : { …
+    115|     expect(learnerTuiEnv(env)).toEqual({ PATH: "/fixed/bin", TERM: "xt…
+       |                                ^
+    116|     expect(env.TERM).toBe(term);
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > learner interactive command policy > replaces noninteractive TERM= DUMB  only in the isolated TUI environment
+AssertionError: expected { PATH: '/fixed/bin', TERM: ' DUMB ' } to deeply equal { PATH: '/fixed/bin', …(1) }
+
+- Expected
++ Received
+
+  {
+    "PATH": "/fixed/bin",
+-   "TERM": "xterm-256color",
++   "TERM": " DUMB ",
+  }
+
+ ❯ tests/learner-herdr.test.ts:115:32
+    113|   it.each([undefined, "", "dumb", " DUMB "])("replaces noninteractive …
+    114|     const env = { PATH: "/fixed/bin", ...(term === undefined ? {} : { …
+    115|     expect(learnerTuiEnv(env)).toEqual({ PATH: "/fixed/bin", TERM: "xt…
+       |                                ^
+    116|     expect(env.TERM).toBe(term);
+    117|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > startup readiness and queued inputs > does not propagate the observed TERM=dumb startup confirmation into the pane
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
+-   "stopped": true,
++   "code": 75,
++   "stopped": false,
+  }
+
+ ❯ tests/learner-herdr.test.ts:149:41
+    147|       return h(args);
+    148|     };
+    149|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopp…
+       |                                         ^
+    150|     expect(f.opts.env.TERM).toBe("dumb"); expect(f.prompts()).toBe(1);
+    151|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > startup readiness and queued inputs > retains queued inputs at initial without another prompt or retirement
+ FAIL  tests/learner-herdr.test.ts > startup readiness and queued inputs > retains queued inputs at before-name without another prompt or retirement
+ FAIL  tests/learner-herdr.test.ts > startup readiness and queued inputs > retains queued inputs at before-prompt without another prompt or retirement
+ FAIL  tests/learner-herdr.test.ts > startup readiness and queued inputs > retains queued inputs at after-binding without another prompt or retirement
+AssertionError: expected { code: +0, …(7) } to match object { code: 75, stopped: false }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 75,
+-   "stopped": false,
++   "code": 0,
++   "stopped": true,
+  }
+
+ ❯ tests/learner-herdr.test.ts:163:41
+    161|       return h(args);
+    162|     };
+    163|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stop…
+       |                                         ^
+    164|     expect(f.prompts()).toBe(phase === "after-binding" ? 1 : 0);
+    165|     expect(f.calls.some((c) => c[1] === "send-keys")).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for the original 450000-ms-delayed turn with a concurrent 'aaa' session
+ FAIL  tests/learner-herdr.test.ts > delayed native acceptance after prompt delivery > waits for the original 450000-ms-delayed turn with a concurrent 'zzz' session
+AssertionError: expected { code: 75, …(7) } to match object { code: +0, stopped: true, …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": 0,
+-   "stopped": true,
+-   "turn": "turn-1",
++   "code": 75,
++   "stopped": false,
++   "turn": undefined,
+  }
+
+ ❯ tests/learner-herdr.test.ts:310:41
+    308|     "waits for the original $delay-ms-delayed turn with a concurrent $…
+    309|     const f = delayed(delay, delay > 120_000 ? "queue" : "paste", neig…
+    310|     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopp…
+       |                                         ^
+    311|     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    312|     expect(receipt.bindings).toHaveLength(1); expect(receipt.native_pr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 68 skipped (79)
+   Start at  19:52:26
+   Duration  1.94s (transform 1.24s, setup 401ms, import 1.09s, tests 290ms, environment 0ms)
+

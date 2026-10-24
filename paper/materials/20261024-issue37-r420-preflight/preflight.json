@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-24T00:23:12+08:00",
+  "main": "aec606583b6f50dc7dccbfb12a255e3d19369693",
+  "live": "902206965e0698253fab1f9a135c9666bdd1ed3b",
+  "live_release": "V6-R420",
+  "live_behavior_commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+  "source": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+  "remote_source": "9e8f900dde2df7829d73482bc8ac632af7128c65",
+  "merge_exit": 1,
+  "preview_tree": "326cc2c4e18f2e7357d6d552ec48da6ae6e68c65",
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in agent/tests/v6-card-option-loop.test.ts",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+  ],
+  "runtime_changed_paths": [
+    "agent/src/eye/jev-prompt-log.ts",
+    "agent/src/reflex/jev/client.ts"
+  ],
+  "blobs": {
+    "agent/src/eye/jev-prompt-log.ts": {
+      "main": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "live": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "source": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8",
+      "preview": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8",
+      "pre25": "ce0fecd8782205b83b8ecad288aa5e643ac2fbf8"
+    },
+    "agent/src/reflex/jev/client.ts": {
+      "main": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "live": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "source": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c",
+      "preview": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c",
+      "pre25": "f52ba9b6259519bb8f331447c9f2c6c4ebbe542c"
+    }
+  },
+  "shared_test_blob": "1f52768e4418ed48e65c9cf1c6002843e5cade21",
+  "three_leaves_unchanged_since_r418": true,
+  "shared_main_clock_contracts": {
+    "afterEach(() =>": true,
+    "samplingNow = 0": true,
+    "samplingNow = 5_000": true,
+    "solver budget exhausted": true,
+    "sampling budget exhausted": true,
+    "budgets.map(b => b.remaining)": true,
+    "[5000, 0]": true,
+    "[0, 5000]": true
+  },
+  "preview_preserves_main_brain_and_knowledge": true,
+  "issue_states": [
+    {
+      "number": 37,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:bug",
+        "status:review"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/37#issuecomment-6367337582"
+    },
+    {
+      "number": 42,
+      "state": "CLOSED",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:infra",
+        "status:waiting-release",
+        "area:learning"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/42#issuecomment-6369275332"
+    },
+    {
+      "number": 35,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P2",
+        "type:feature",
+        "status:waiting-release"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/35#issuecomment-6369181682"
+    },
+    {
+      "number": 50,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:feature",
+        "status:review",
+        "area:brain"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/50#issuecomment-6368127373"
+    },
+    {
+      "number": 28,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P3",
+        "type:feature",
+        "status:review"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/28#issuecomment-6367338426"
+    },
+    {
+      "number": 20,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:infra",
+        "status:review"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6369414825"
+    },
+    {
+      "number": 39,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:bug",
+        "status:review"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/39#issuecomment-6367608617"
+    },
+    {
+      "number": 43,
+      "state": "OPEN",
+      "labels": [
+        "owner:dev",
+        "P1",
+        "type:bug",
+        "status:review"
+      ],
+      "last_comment": "https://github.com/dwroy/agent-sts2/issues/43#issuecomment-6367829253"
+    }
+  ],
+  "predecessor_check": {
+    "at": "2026-10-24T00:07:20+08:00",
+    "phase": "unique-net-full-running",
+    "worker_pid": 3432945,
+    "worker_birth": "19616677",
+    "new_full_runs": 1,
+    "new_models_games": 0,
+    "published": false,
+    "tsc_rc": 0
+  },
+  "predecessor_process": {
+    "pid": 3432945,
+    "birth": "19616677",
+    "command": "python3 /home/dw/Projects/agent-sts2/.artifacts/ops-issue42-extra-20261024/check-once.py ",
+    "children": "3433049"
+  },
+  "queue": [
+    42,
+    35,
+    50,
+    28,
+    37,
+    "20-parent"
+  ],
+  "prior_directed_review": "paper/materials/20261022-issue37-integrator-review/checks.json",
+  "new_tests_run": false,
+  "full_started": false,
+  "candidate_created": false,
+  "source_merged": false,
+  "production_changed": false,
+  "proposed_resolution": "Keep main shared test with #41/#44 complete solver/sampling clocks, budget contrasts and cleanup; preserve both histories; rebuild after predecessors. Unresolved preview is not a tested candidate."
+}

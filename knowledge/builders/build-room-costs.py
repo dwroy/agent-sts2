@@ -35,6 +35,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import character_dir, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 MAP_MARK = b'"screen":"MAP"'
 OVER_MARK = b'"screen":"GAME_OVER"'
 
@@ -235,7 +236,7 @@ def main():
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, indent=1, sort_keys=True)
         handle.write("\n")
-    os.replace(tmp, out_path)
+    publish_replace(tmp, out_path)
     print(f"room costs: {len(runs)} runs -> {out_path} ({time.time() - started:.1f} s)", file=sys.stderr)
 
 

@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-23T11:47:37+08:00",
+  "tree": "e9e3009f92814e317f0a0c89e8ce8de517208008",
+  "base": "f3fb25b73be7f170f46b240353995b9fe73596a6",
+  "state": "unique-full-failed-no-automatic-retry",
+  "tsc": 0,
+  "vitest": {
+    "files": 653,
+    "passed": 6326,
+    "failed": 2,
+    "pending": 2,
+    "success": false
+  },
+  "inputs_unchanged": true,
+  "full_log_sha256": "1bb8eb6b3d936cb9e371e926f3feeabaac2e4f0feca62424c8d979f3b1bb6f5e",
+  "failures": [
+    {
+      "path": "agent/tests/brain-view.test.ts",
+      "assertions": [
+        {
+          "fullName": "renders and follows fixed brain logs with redaction, title protection and isolated lifecycle",
+          "duration": 604.3220090000001,
+          "failureMessages": [
+            "AssertionError: ............/home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-live-20261023-1114/ops/learner_jobs.py:23: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.cache/t/s-vDQd5z/tmph86v2twp/hosting' mode='r' encoding='utf8'>\n  for line in open(os.path.join(state_dir, \"hosting\"), encoding=\"utf8\"):\nResourceWarning: Enable tracemalloc to get the object allocation traceback\n...F\n======================================================================\nFAIL: test_titles_keep_stable_learner_labels_protected_by_real_board_rules (test_brain_view.BrainView.test_titles_keep_stable_learner_labels_protected_by_real_board_rules)\n----------------------------------------------------------------------\nValueError: running learner pane retained\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-live-20261023-1114/ops/tests/test_brain_view.py\", line 274, in test_titles_keep_stable_learner_labels_protected_by_real_board_rules\n    with self.assertRaisesRegex(ValueError, 'protected board role'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: \"protected board role\" does not match \"running learner pane retained\"\n\n----------------------------------------------------------------------\nRan 16 tests in 0.444s\n\nFAILED (failures=1)\n: expected 1 to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-live-20261023-1114/agent/tests/brain-view.test.ts:9:56\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "agent/tests/ordinary-close-isolation.test.ts",
+      "assertions": [
+        {
+          "fullName": "isolates failed candidates and revalidates preserved preflight failures before one dataset commit",
+          "duration": 15034.731673,
+          "failureMessages": [
+            "AssertionError: fatal: bad object 0000000000000000000000000000000000000000\nfatal: bad object 0000000000000000000000000000000000000000\n....: expected null to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator36-p0-live-20261023-1114/agent/tests/ordinary-close-isolation.test.ts:14:56\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ]
+        }
+      ]
+    }
+  ],
+  "product_merged": false,
+  "live_written": false,
+  "main_compatibility_started": false,
+  "supervisor_decision_needed": true
+}

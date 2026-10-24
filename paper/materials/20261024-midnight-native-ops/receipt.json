@@ -1,0 +1,129 @@
+{
+  "at": "2026-10-24T00:02:59+08:00",
+  "finding": "Both original bound turns received later environment_context-only user records crossing midnight; no second task_started found. Current parser treats any unmatched late user text as foreign. Do not bypass guard until same-context profile is validated.",
+  "records": [
+    {
+      "batch": "20261023-235635-experience-update",
+      "receipt_path": "ops/codex-ops/learner/learner-20261023-235635-experience-update.tui.json",
+      "receipt_sha256": "272131577eeca950e963fce256992cfbdd6ac7855927dc7b830b57cd7b38ff68",
+      "state": "needs-attention",
+      "session": "01a1697a-98c4-7142-a460-d9437cd6c2a7",
+      "bound": [
+        {
+          "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "marker": "[learner-batch:a25a61f0-bc89-422c-8e11-98ea4cf981b3]",
+          "prompt_sha256": "3c07bf7075ed6beec959a5d1004764e8b6b64f52ca41e86de01e0cb5e9748625"
+        }
+      ],
+      "native_contexts": [
+        {
+          "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        }
+      ],
+      "events": [
+        {
+          "ts": "2026-10-23T15:57:10.422Z",
+          "offset": 22669,
+          "bytes": 496,
+          "sha256": "f95be786b094594f7be03f8176c8f7126abc5d5a1db880718d06584e1aef8e0c",
+          "kind": "task_started",
+          "turn_id": "01a1697a-fd8b-7862-96a4-ed65d975ee89"
+        },
+        {
+          "ts": "2026-10-23T16:00:02.025Z",
+          "offset": 459462,
+          "bytes": 3222,
+          "sha256": "99c581a489cc7f1f84df177e36eb34dd83639222be6d4bef6731b7af850d2924",
+          "kind": "environment-context-user-item",
+          "content_sha256": "47f572b84f01fb09acb506f2156bfe2c251026af17b63a89bf60310974c0f376",
+          "current_date": "2026-10-24",
+          "timezone": "Asia/Shanghai",
+          "workspace_roots": [
+            "/home/dw/Projects/agent-sts2/.worktrees/exp"
+          ],
+          "profile_type": "managed",
+          "file_system_type": "restricted",
+          "only_expected_top_tags": [
+            "current_date",
+            "timezone",
+            "filesystem"
+          ]
+        }
+      ],
+      "native_process": {
+        "pid": 3379871,
+        "birth": "19553332",
+        "state": "S",
+        "ppid": "3379255",
+        "name": "node"
+      },
+      "retirement_authorized": false
+    },
+    {
+      "batch": "20261023-234301",
+      "receipt_path": "ops/codex-ops/learner/learner-20261023-234301-postmortem.tui.json",
+      "receipt_sha256": "e6edf32143a6676cafe68ccd17149c64cdefbeff035d485e246eab1b6432c471",
+      "state": "needs-attention",
+      "session": "01a1696e-2e9c-7571-95d8-9009fd4dd982",
+      "bound": [
+        {
+          "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+          "marker": "[learner-batch:a054d27a-9c64-4764-bdf8-a5ab3b91ef90]",
+          "prompt_sha256": "5030a2e9f45e3556439a31a636525d1b21a89a03f8bee4053721b7f58395f3da"
+        }
+      ],
+      "native_contexts": [
+        {
+          "turn_id": "01a1696e-866d-7112-9865-7417add28418",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        }
+      ],
+      "events": [
+        {
+          "ts": "2026-10-23T15:43:33.493Z",
+          "offset": 22640,
+          "bytes": 496,
+          "sha256": "152b72cd5206c8e3eb2a49cb4fe4d3f073deca882b2d5a1a6ed623edbc8be7f2",
+          "kind": "task_started",
+          "turn_id": "01a1696e-866d-7112-9865-7417add28418"
+        },
+        {
+          "ts": "2026-10-23T16:01:30.534Z",
+          "offset": 1884391,
+          "bytes": 3028,
+          "sha256": "95c25ec5d17e45d2966223daa96af3c96b5a2b3960f5031b75011bcbae37b4e4",
+          "kind": "environment-context-user-item",
+          "content_sha256": "eff8f033538ec6095bdadc17f8680755b2b438278f05f61b9f34046951aaf7cb",
+          "current_date": "2026-10-24",
+          "timezone": "Asia/Shanghai",
+          "workspace_roots": [
+            "/home/dw/Projects/agent-sts2"
+          ],
+          "profile_type": "managed",
+          "file_system_type": "restricted",
+          "only_expected_top_tags": [
+            "current_date",
+            "timezone",
+            "filesystem"
+          ]
+        }
+      ],
+      "native_process": {
+        "pid": 3313357,
+        "birth": "19471979",
+        "state": "S",
+        "ppid": "3312876",
+        "name": "node"
+      },
+      "retirement_authorized": false
+    }
+  ],
+  "action": "Preserve original sessions, leases, evidence; no new model or retirement. Original issue36 to add strict environment-update validation and same-session supervision/reconciliation.",
+  "models_or_games_started": 0,
+  "receipts_or_bindings_modified": false
+}

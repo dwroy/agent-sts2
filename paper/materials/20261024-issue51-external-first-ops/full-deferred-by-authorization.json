@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-24T08:18:20+08:00",
+  "authority": 6377403719,
+  "before": {
+    "checks": {
+      "at": "2026-10-24T08:15:03+08:00",
+      "phase": "waiting-knowledge-lock",
+      "worker_pid": 740068,
+      "worker_birth": "22543367",
+      "new_full_runs": 0,
+      "model_calls": 0,
+      "main_merged": false,
+      "live_written": false
+    },
+    "deployment": {
+      "at": "2026-10-24T08:15:35+08:00",
+      "phase": "waiting-original-candidate-check-worker",
+      "worker_pid": 747375,
+      "worker_birth": "22546569",
+      "deployed": false,
+      "new_full_models_games_ticks": 0
+    }
+  },
+  "controls": [
+    {
+      "pid": 747375,
+      "birth": "22546569",
+      "signal": "SIGTERM",
+      "scope": "own pre-write host policy/check supervisor only; no model/game"
+    },
+    {
+      "pid": 740068,
+      "birth": "22543367",
+      "signal": "SIGTERM",
+      "scope": "own pre-write host policy/check supervisor only; no model/game"
+    }
+  ],
+  "full_runs_before_stop": 0,
+  "reason": "45 fixed targeted tests authorized for immediate ops-only deployment; complete check joins next original full train",
+  "old_waiting_receipts_preserved": true,
+  "no_model_game_or_external_supervision_stopped": true
+}

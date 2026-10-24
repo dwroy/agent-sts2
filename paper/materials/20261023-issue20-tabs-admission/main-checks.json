@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-23T17:06:53+08:00",
+  "state": "failed",
+  "base": "dc94e8ef388f71718e0cb572621b659c9941a9b9",
+  "tree": "2bbebd99f642330c3252f7fa8bc3cde7fe67d614",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator20-tabs-main-20261023-1700",
+  "steps": [
+    {
+      "name": "bash-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops-learner.sh"
+      ],
+      "started_at": "2026-10-23T17:06:53+08:00",
+      "exit_code": 0,
+      "seconds": 0.006
+    },
+    {
+      "name": "scheduler-syntax",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "../ops/codex-ops.sh"
+      ],
+      "started_at": "2026-10-23T17:06:53+08:00",
+      "exit_code": 0,
+      "seconds": 0.006
+    },
+    {
+      "name": "wrapper",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "../ops/tests",
+        "-p",
+        "test_learner_wrapper_completion.py"
+      ],
+      "started_at": "2026-10-23T17:06:53+08:00",
+      "exit_code": 1,
+      "seconds": 0.079
+    }
+  ],
+  "full_started": false,
+  "production_written": false,
+  "reason": "wrapper failed; retain first failure",
+  "ended_at": "2026-10-23T17:06:53+08:00"
+}

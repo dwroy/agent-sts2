@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-23T15:39:13+08:00",
+  "batch": "20261023-151302-strategy-proposal",
+  "source_publication": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+  "fresh_start_after_publication": true,
+  "native_receipt": {
+    "path": "ops/codex-ops/learner/learner-20261023-151302-strategy-proposal.tui.json",
+    "bytes": 9502,
+    "sha256": "b3e09abead6b1887c76fe7a4a1970c6d83c5681cb17309cd85b586fc150c81c3"
+  },
+  "bindings": [
+    {
+      "turn_id": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2",
+      "marker": "[learner-batch:8cc49807-308f-4bec-acf6-827dd65c377d]",
+      "prompt_sha256": "f39144ab11f059458661fcc0f94925bac8f8ed4b236e5beea51dcdba93074f95"
+    }
+  ],
+  "result": {
+    "code": 0,
+    "reason": "native-task-complete",
+    "stopped": true,
+    "session": "01a1679b-445b-7812-8a18-3c56cdb63cc7",
+    "turn": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2"
+  },
+  "native_contexts": [
+    {
+      "turn_id": "01a1679b-d2ae-7e13-8b12-7d6498fa49d2",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox_policy": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261023-151302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      }
+    }
+  ],
+  "automatic_completion": {
+    "version": 1,
+    "batch": "20261023-151302-strategy-proposal",
+    "state": "done",
+    "rc": 0,
+    "launcher_rc": 0,
+    "finished": "2026-10-23 15:36",
+    "supervisor": {
+      "pid": 1033057,
+      "birth": "16411302"
+    },
+    "batch_sha256": "8c2d706e904d2f0dcbb7e0f0b19ea9ce51d8259d29c90178f425d48d248b8cea"
+  },
+  "timeout_300s": "not triggered; native completed, no deferred receipt or wrapper attention",
+  "supervisor_and_native_stopped": true,
+  "lease_free": true,
+  "checkout_reclaimed": true,
+  "scratch_preserved_bytes": 205084211,
+  "available_bytes_delta": 257892352,
+  "next_natural_batch": "pending; not forced or inferred",
+  "separate_s2_binding_failure_retained": true,
+  "issue36_closed": false,
+  "issue46_original_24h_window_unchanged": true
+}

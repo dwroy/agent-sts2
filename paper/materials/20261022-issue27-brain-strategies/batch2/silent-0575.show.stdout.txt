@@ -1,0 +1,81 @@
+{
+ "id": "silent-0575",
+ "ts": "2026-10-22T23:48:15+08:00",
+ "character": "silent",
+ "kind": "other",
+ "claim": "silent-brain-test-subject-external-tail-budget：仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。",
+ "evidence": [
+  {
+   "type": "external_aggregate",
+   "source": "external:sts2fun",
+   "url": "https://sts2.fun/static/sts2_public.db.zst",
+   "version": "v0.111.0",
+   "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+   "downloaded_at": "2026-10-21",
+   "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+   "filters": {
+    "character": "silent",
+    "ascension": 10,
+    "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+   },
+   "statistic": {
+    "name": "gross_damage_p90",
+    "value": 62.0,
+    "unit": "hp"
+   },
+   "denominator": {
+    "unit": "fights",
+    "n": 501
+   },
+   "design": "observational",
+   "limitations": [
+    "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+    "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+   ],
+   "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+   "role": "support",
+   "added": "2026-10-22T23:48:15+08:00"
+  }
+ ],
+ "confidence": 0.36,
+ "prior": "partly",
+ "prior_note": "Frozen first-batch external-review already identified observational limits. This batch adds bounded strategy wording under #42; related mechanics are not card-choice benefit evidence.",
+ "status": "proposed",
+ "by": "learner:issue-27-brain-strategies-batch2-20261022-224403",
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/strategy-entries.json#silent-brain-test-subject-external-tail-budget"
+  ],
+  "proposal": [
+   "paper/materials/20261022-issue27-brain-strategies/batch2/report.md"
+  ]
+ },
+ "note": "Pure external support; no first_run/asc/prior_runs; no causal gain or own validation. Publication and natural readback pending original ops.",
+ "history": [
+  {
+   "ts": "2026-10-22T23:48:15+08:00",
+   "by": "learner:issue-27-brain-strategies-batch2-20261022-224403",
+   "status": "proposed"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "Pure external support; no first_run/asc/prior_runs; no causal gain or own validation. Publication and natural readback pending original ops."
+ ],
+ "evidence_summary": {
+  "own_runs": 0,
+  "own_support_runs": 0,
+  "external": [
+   {
+    "source": "external:sts2fun",
+    "version": "v0.111.0",
+    "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "denominator": {
+     "unit": "fights",
+     "n": 501
+    }
+   }
+  ]
+ }
+}

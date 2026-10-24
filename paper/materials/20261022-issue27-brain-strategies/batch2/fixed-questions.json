@@ -1,0 +1,783 @@
+[
+  {
+    "type": "card_reward",
+    "dataset_id": "C48LLXBGKXQ9/2/19",
+    "label": "reward/card",
+    "question": {
+      "act": 2,
+      "ascension": 0,
+      "boss": "THE_INSATIABLE_BOSS",
+      "character": "静默猎手",
+      "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御+ (Skill, 1E): 获得8点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n刀刃之舞+ (Skill, 1E): 添加4张小刀到你的手牌。 消耗。\n先制打击 (Attack, 1E): 造成3点伤害。 将2张小刀加入你的手牌。\n冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。\n终结技+ (Attack, 1E): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。\n刀刃之舞+ (Skill, 1E): 添加4张小刀到你的手牌。 消耗。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n肾上腺素 (Skill, 0E): 获得1点能量。 抽2张牌。 消耗。\n匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n独门技术 (Skill, 1E): 抽2张牌。 这些牌在本回合获得保留。\n刀扇 (Power, 2E): 小刀现在会攻击所有敌人。 将4张小刀添加到你的手牌。\n刀刃陷阱 (Skill, 2E): 将你消耗牌堆中的所有小刀对一名敌人打出。",
+      "floor": 19,
+      "gold": 134,
+      "hp": "32/70 (46%)",
+      "options": {
+        "card0": {
+          "card": "扫腿",
+          "cost": 2,
+          "in_deck": 0,
+          "rarity": "Uncommon",
+          "text": "给予2层虚弱。 获得11点格挡。",
+          "type": "Skill"
+        },
+        "card1": {
+          "card": "致命毒药+",
+          "cost": 1,
+          "in_deck": 0,
+          "rarity": "Common",
+          "text": "给予7层中毒。",
+          "type": "Skill"
+        },
+        "card2": {
+          "card": "弹跳药瓶",
+          "cost": 2,
+          "in_deck": 0,
+          "rarity": "Uncommon",
+          "text": "随机给予敌人3层中毒3次。",
+          "type": "Skill"
+        },
+        "skip": {
+          "card": "skip",
+          "note": "take no card"
+        }
+      },
+      "potions": [
+        "混沌药水: 在所有空药水栏位中获得随机药水。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+        "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。",
+        "战纹涂料: 拾起时，随机升级?(数值未知)张技能牌。",
+        "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。",
+        "烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。"
+      ]
+    },
+    "source_sha256": "6841faeffa4780df2992c7a9e428e73ac9aeb1a5153a2fa3d76917267c113eb5",
+    "dataset_ref": {
+      "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+      "uncompressed_offset": 83781,
+      "bytes": 3448,
+      "line": 18,
+      "sha256": "a37eb19838cce13853adb3d9ce300979bb81ff90c8487bd75f3b7a8f5c3650e8"
+    }
+  },
+  {
+    "type": "event",
+    "dataset_id": "T082DRCUHRRD/3/36/event/choose/47354db69c068cc3",
+    "label": "event/choose",
+    "question": {
+      "act": 3,
+      "ascension": 0,
+      "boss": "TEST_SUBJECT_BOSS",
+      "character": "静默猎手",
+      "deck": [
+        "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ECHOING_SLASH+ 回响斩击+ (Attack, 1 energy): 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。 重放1。",
+        "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "DAGGER_THROW 投掷匕首 (Attack, 1 energy): 造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "BACKSTAB 背刺 (Attack, 0 energy): 固有。 造成11点伤害。 消耗。",
+        "ESCAPE_PLAN 逃脱计划 (Skill, 0 energy): 抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "OUTBREAK+ 毒性爆发+ (Skill, 3 energy): 给予所有敌人12层中毒。 立即触发中毒。",
+        "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+        "CLOAK_AND_DAGGER+ 斗篷与匕首+ (Skill, 1 energy): 获得6点格挡。 将2张小刀添加到你的手牌。",
+        "EXPOSE 暴露 (Skill, 0 energy): 去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+        "STRANGLE 紧勒 (Attack, 1 energy): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+        "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。",
+        "CLOAK_AND_DAGGER 斗篷与匕首 (Skill, 1 energy): 获得6点格挡。 将1张小刀添加到你的手牌。",
+        "CALCULATED_GAMBLE 计算下注 (Skill, 0 energy): 丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+        "DEFLECT 偏折 (Skill, 0 energy): 获得4点格挡。",
+        "POUNCE 猛扑 (Attack, 2 energy): 造成14点伤害。 你的下一张技能牌耗能变为0点能量。",
+        "TOOLS_OF_THE_TRADE 必备工具 (Power, 1 energy): 在你的回合开始时，抽1张牌，丢弃1张牌。",
+        "RICOCHET+ 连续反弹+ (Attack, 2 energy): 奇巧。 随机对敌人造成3点伤害5次。"
+      ],
+      "deck_size": 31,
+      "event": {
+        "text": "一个[purple]你至今为止见过最年迈的人[/purple]走到了你的身前。\n[sine]“我们又见面了....是我，兰伟德！”[/sine]\n\n你不认识这个男人。",
+        "title": "长者兰伟德"
+      },
+      "floor": 36,
+      "gold": 123,
+      "hp": "75/76 (99%)",
+      "options": {
+        "o0": {
+          "description": "获得一件随机[gold]遗物[/gold]。",
+          "lethal": false,
+          "option": "给他易伤药水"
+        },
+        "o1": {
+          "description": "获得一件随机[gold]遗物[/gold]。",
+          "lethal": false,
+          "option": "给他100金币"
+        },
+        "o2": {
+          "description": "获得[blue]2[/blue]件随机[gold]遗物[/gold]。",
+          "lethal": false,
+          "option": "给他骇人头盔"
+        }
+      },
+      "plan_trigger": null,
+      "potions": [
+        "VULNERABLE_POTION 易伤药水: 给予3层易伤。"
+      ],
+      "question": "Which option should I choose? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call. facts.event.option_outcome_stats: how our logged runs did after each option, by option key. state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 \"route\"：\"keep\"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），以及 \"route_reason\"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。",
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+        "音叉: 你每打出?(数值未知)张技能牌，获得?(数值未知)点格挡。",
+        "骇人头盔: 每当你打出一张耗能大于等于?(数值未知)的牌，获得?(数值未知)点格挡。",
+        "烛台: 在你的第2回合开始时，获得?(数值未知)。",
+        "烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。",
+        "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+        "剃刀牙: 你打出攻击牌和技能牌时，将其在本场战斗内升级。",
+        "钗: 在你的回合开始时，获得?(数值未知)点格挡。"
+      ],
+      "situation": {
+        "gold": 123,
+        "hp": "75/76 (99%)",
+        "screen": "EVENT"
+      }
+    },
+    "source_sha256": "47354db69c068cc37474053c05440ae7265216f8cf2b28267c0e7370a9bc8312",
+    "dataset_ref": {
+      "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+      "uncompressed_offset": 727521,
+      "bytes": 6645,
+      "line": 123,
+      "sha256": "67bd77514a6d12dffdedce8e2c5a40f4c2828f278a27e4ca6e23aa66861505f3"
+    }
+  },
+  {
+    "type": "rest",
+    "dataset_id": "T082DRCUHRRD/3/40/rest/plan/ab0a84ce7a99a5e6",
+    "label": "rest/plan",
+    "question": {
+      "act": 3,
+      "ascension": 0,
+      "boss": "TEST_SUBJECT_BOSS",
+      "character": "静默猎手",
+      "deck": [
+        "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ECHOING_SLASH+ 回响斩击+ (Attack, 1 energy): 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。 重放1。",
+        "DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "BOUNCING_FLASK 弹跳药瓶 (Skill, 2 energy): 随机给予敌人3层中毒3次。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "DAGGER_THROW 投掷匕首 (Attack, 1 energy): 造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "BACKSTAB 背刺 (Attack, 0 energy): 固有。 造成11点伤害。 消耗。",
+        "ESCAPE_PLAN 逃脱计划 (Skill, 0 energy): 抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "OUTBREAK+ 毒性爆发+ (Skill, 3 energy): 给予所有敌人12层中毒。 立即触发中毒。",
+        "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+        "CLOAK_AND_DAGGER+ 斗篷与匕首+ (Skill, 1 energy): 获得6点格挡。 将2张小刀添加到你的手牌。",
+        "EXPOSE 暴露 (Skill, 0 energy): 去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+        "STRANGLE 紧勒 (Attack, 1 energy): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+        "NOXIOUS_FUMES 毒雾 (Power, 1 energy): 在你的回合开始时，给予所有敌人2层中毒。",
+        "CLOAK_AND_DAGGER 斗篷与匕首 (Skill, 1 energy): 获得6点格挡。 将1张小刀添加到你的手牌。",
+        "CALCULATED_GAMBLE 计算下注 (Skill, 0 energy): 丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+        "DEFLECT 偏折 (Skill, 0 energy): 获得4点格挡。",
+        "POUNCE 猛扑 (Attack, 2 energy): 造成14点伤害。 你的下一张技能牌耗能变为0点能量。",
+        "TOOLS_OF_THE_TRADE 必备工具 (Power, 1 energy): 在你的回合开始时，抽1张牌，丢弃1张牌。",
+        "RICOCHET+ 连续反弹+ (Attack, 2 energy): 奇巧。 随机对敌人造成3点伤害5次。",
+        "ACCELERANT 触媒 (Power, 1 energy): 中毒会额外触发1次。",
+        "BUBBLE_BUBBLE+ 咕嘟冒泡+ (Skill, 1 energy): 如果敌方拥有中毒，则给予12层中毒。"
+      ],
+      "deck_size": 32,
+      "floor": 40,
+      "gold": 14,
+      "hp": "73/77 (95%)",
+      "options": {
+        "o0": {
+          "description": "回复最大生命值的30%（23）。",
+          "kind": "HEAL",
+          "option": "休息"
+        },
+        "o1:c0": {
+          "card": "打击",
+          "copies": 4,
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "not_on_selection_screen": "the game's upgrade screen lists only the first 25 eligible cards in deck order; these cannot be picked there: 触媒",
+          "option": "锻造",
+          "then": "upgrade 打击",
+          "upgrade": "造成6点伤害。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c12": {
+          "card": "带毒刺击",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 带毒刺击",
+          "upgrade": "造成6点伤害。 给予3层中毒。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c13": {
+          "card": "弹跳药瓶",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 弹跳药瓶",
+          "upgrade": "随机给予敌人3层中毒3次。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c14": {
+          "card": "冲刺",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 冲刺",
+          "upgrade": "获得10点格挡。 造成10点伤害。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c15": {
+          "card": "投掷匕首",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 投掷匕首",
+          "upgrade": "造成9点伤害。 抽1张牌。 丢弃1张牌。 -> 造成12点伤害。 抽1张牌。 丢弃1张牌。"
+        },
+        "o1:c16": {
+          "card": "背刺",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 背刺",
+          "upgrade": "固有。 造成11点伤害。 消耗。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c17": {
+          "card": "逃脱计划",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 逃脱计划",
+          "upgrade": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。 -> 抽1张牌。 如果抽到的是技能牌，则获得5点格挡。"
+        },
+        "o1:c19": {
+          "card": "灵动步法",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 灵动步法",
+          "upgrade": "获得2点敏捷。 -> 获得3点敏捷。"
+        },
+        "o1:c21": {
+          "card": "暴露",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 暴露",
+          "upgrade": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c22": {
+          "card": "紧勒",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 紧勒",
+          "upgrade": "造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。 -> 造成10点伤害。 你在这个回合内每出一张牌，该名敌人都会失去3点生命。"
+        },
+        "o1:c23": {
+          "card": "毒雾",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 毒雾",
+          "upgrade": "在你的回合开始时，给予所有敌人2层中毒。 -> 在你的回合开始时，给予所有敌人3层中毒。 (PoisonPerTurn 2->3, cost 1->2)"
+        },
+        "o1:c24": {
+          "card": "斗篷与匕首",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 斗篷与匕首",
+          "upgrade": "获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。"
+        },
+        "o1:c25": {
+          "card": "计算下注",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 计算下注",
+          "upgrade": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c26": {
+          "card": "偏折",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 偏折",
+          "upgrade": "获得4点格挡。 -> 获得7点格挡。"
+        },
+        "o1:c27": {
+          "card": "猛扑",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 猛扑",
+          "upgrade": "造成14点伤害。 你的下一张技能牌耗能变为0点能量。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c28": {
+          "card": "必备工具",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 必备工具",
+          "upgrade": "在你的回合开始时，抽1张牌，丢弃1张牌。 -> (upgrade not in code's data: see the card's text)"
+        },
+        "o1:c4": {
+          "card": "防御",
+          "copies": 4,
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 防御",
+          "upgrade": "获得5点格挡。 -> 获得8点格挡。"
+        },
+        "o1:c8": {
+          "card": "中和",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 中和",
+          "upgrade": "造成3点伤害。 给予1层虚弱。 -> 造成4点伤害。 给予2层虚弱。"
+        },
+        "o1:c9": {
+          "card": "生存者",
+          "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+          "kind": "SMITH",
+          "option": "锻造",
+          "then": "upgrade 生存者",
+          "upgrade": "获得8点格挡。 丢弃1张牌。 -> (upgrade not in code's data: see the card's text)"
+        }
+      },
+      "plan_trigger": null,
+      "potions": [],
+      "question": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again. state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 \"route\"：\"keep\"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），以及 \"route_reason\"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。plan_facts.if_option 是本题每个选项之后的 HP 对应的下一只精英和 boss 前血量。",
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "华美发束: 拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+        "音叉: 你每打出?(数值未知)张技能牌，获得?(数值未知)点格挡。",
+        "骇人头盔: 每当你打出一张耗能大于等于?(数值未知)的牌，获得?(数值未知)点格挡。",
+        "烛台: 在你的第2回合开始时，获得?(数值未知)。",
+        "烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。",
+        "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+        "剃刀牙: 你打出攻击牌和技能牌时，将其在本场战斗内升级。",
+        "钗: 在你的回合开始时，获得?(数值未知)点格挡。",
+        "奥利哈钢: 如果你在回合结束时没有任何格挡，获得?(数值未知)点格挡。"
+      ],
+      "situation": {
+        "hp": "73/77 (95%)",
+        "hp_percent": 95,
+        "next_nodes": [
+          "Treasure",
+          "Treasure"
+        ],
+        "screen": "REST",
+        "upgradable_cards": 26
+      }
+    },
+    "source_sha256": "ab0a84ce7a99a5e6921a2da4dc5f5af82a48c55bcb722ab61f5854a0bacde3e0",
+    "dataset_ref": {
+      "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+      "uncompressed_offset": 762356,
+      "bytes": 11977,
+      "line": 128,
+      "sha256": "e8d394ce82ac1742a780dffd8a1ef74dac86cf74f123cfe1195d7cc5376d1ee8"
+    }
+  },
+  {
+    "type": "act_plan",
+    "dataset_id": "KAY522KT5NXR/2/18/event/act-plan/8765deb684dd9ad4",
+    "label": "event/act-plan",
+    "question": {
+      "act": 2,
+      "ascension": 0,
+      "boss": "KNOWLEDGE_DEMON_BOSS",
+      "character": "静默猎手",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。",
+        "GREED 贪婪 (Curse, -1 energy): 不能被打出。 永恒。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "SKEWER 串刺 (Attack, 0 energy): 造成8点伤害X次。",
+        "DAGGER_SPRAY 匕首雨 (Attack, 1 energy): 对所有敌人造成4点伤害两次。",
+        "STRANGLE 紧勒 (Attack, 1 energy): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+        "2x SLICE 切割 (Attack, 0 energy): 造成6点伤害。",
+        "MALAISE 萎靡 (Skill, 0 energy): 敌人失去X点力量。给予X层虚弱。 消耗。",
+        "BOLAS 流星锤 (Attack, 0 energy): 造成3点伤害。 在你的下个回合开始时，将此卡返回你的手牌。",
+        "LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "PREDATOR 猎杀者 (Attack, 2 energy): 造成15点伤害。 在下个回合抽2张牌。",
+        "FLICK_FLACK 翻越撑击 (Attack, 1 energy): 奇巧。 对所有敌人造成7点伤害。",
+        "BURST 爆发 (Skill, 1 energy): 在这个回合，你打出的下一张技能牌会被额外打出一次。"
+      ],
+      "deck_size": 26,
+      "event": {
+        "text": "",
+        "title": "特兹卡塔拉"
+      },
+      "floor": 18,
+      "gold": 320,
+      "hp": "70/70 (100%)",
+      "options": {
+        "o0": {
+          "description": "为你[gold]牌组[/gold]中的所有“[gold]打击[/gold]”[gold]附魔[/gold]：[purple]特兹卡塔拉的余烬[/purple]（特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)）",
+          "lethal": false,
+          "option": "营养汤"
+        },
+        "o1": {
+          "description": "在你的回合开始时，[gold]消耗[/gold]你[gold]手牌[/gold]中的[blue]1[/blue]张牌并获得[blue]1[/blue]点[gold]力量[/gold]。",
+          "lethal": false,
+          "option": "烘焙手套"
+        },
+        "o2": {
+          "description": "在每个回合开始时获得1点能量。这件遗物会在[blue]5[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
+          "lethal": false,
+          "option": "南瓜蜡烛"
+        }
+      },
+      "plan_trigger": "act",
+      "potions": [],
+      "question": "Which of the Ancient's options should I take, and which route should I follow this act? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call. facts.event.option_outcome_stats: how our logged runs did after each option, by option key. 幕初：远古的选项和本幕路线一起定。state.act_route 是本幕完整地图（你在远古节点上，节点 id 规则见 map_legend）。回答 JSON：{\"choice\": \"<选项 key>\", \"route\": \"<节点 id，用空格分隔：从 next_nodes 之一出发，沿连线（或用飞行靴）一直到 boss>\", \"reason\": \"<30 字以内>\"}（选项列出 eligible_cards 时再加 \"cards\"）。选项改变 HP、最大生命或金币时写在它的 route_effect 里。代码先执行选项，再按路线逐个节点走，只在路线走不通时再问你；选项结果随机时，揭晓后在第一张地图问一次保留还是换路线；之后的选牌、休息点和事件的最后一问也会附上路线让你保留或修改。state.act_route.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。 ALSO DUE NOW: your run plan (state.run_plan_task says why, and where your current plan is). Settle it first, then decide this question with it in mind. You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops, removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act. act_boss_clock gives the boss's HP at this ascension (heals and wasted hits included), the turns you survive at its logged damage and so the turns the fight can last, the damage a turn that needs, and code's estimate of this deck's damage a turn in that fight (calibrated on logged A8 boss fights; Strength growth and the boss mechanic in harder_because counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary. A gap of 0 is not a reason to stop adding damage: the estimate's typical error is ~25%. Reply to this question in its own JSON format as asked, with one more field in the same JSON object: \"run_plan\": {\"archetype\": \"<the deck direction, max 12 words>\", \"want\": [card ids to pick when offered, most important first, max 6], \"avoid\": [card ids not to take, max 6], \"remove\": [card ids in the deck to remove first, max 3], \"block_target\": <number of block cards the deck should hold by the act boss>, \"elites\": \"seek\" | \"normal\" | \"avoid\", \"rest\": \"heal\" | \"smith\" | \"auto\", \"boss_prep\": \"<max 30 words: what to have ready for the act boss>\", \"summary\": \"<max 40 words: the plan in plain words>\"}",
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "涅奥骨骰: 拾起时，获得?(数值未知)件随机涅奥{Relics:plural:遗物|遗物}。将?(数值未知)张随机{Curses:plural:诅咒|诅咒}加入你的牌组。",
+        "新叶: 拾起时，变化?(数值未知)张牌。",
+        "诅咒珍珠: 拾起时，获得一张贪婪，获得?(数值未知)金币。",
+        "奥利哈钢: 如果你在回合结束时没有任何格挡，获得?(数值未知)点格挡。",
+        "紫水晶茄子: 敌人额外掉落?(数值未知)金币。"
+      ],
+      "situation": {
+        "gold": 320,
+        "hp": "70/70 (100%)",
+        "screen": "EVENT"
+      }
+    },
+    "source_sha256": "8765deb684dd9ad4e4e1e5e9cadc683f95e197691ef74dd2a0115beb32000b96",
+    "dataset_ref": {
+      "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+      "uncompressed_offset": 1322917,
+      "bytes": 8508,
+      "line": 218,
+      "sha256": "c70d91cbdbf38b6ca18d768130cfcdc87f14a4b41c17e2d1be1a00fd9e5c015e"
+    }
+  },
+  {
+    "type": "shop",
+    "dataset_id": "KAY522KT5NXR/2/24/shop/plan/8cbcea1c7261550a",
+    "label": "shop/plan",
+    "question": {
+      "act": 2,
+      "ascension": 0,
+      "boss": "KNOWLEDGE_DEMON_BOSS",
+      "character": "静默猎手",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。",
+        "GREED 贪婪 (Curse, -1 energy): 不能被打出。 永恒。",
+        "POISONED_STAB 带毒刺击 (Attack, 1 energy): 造成6点伤害。 给予3层中毒。",
+        "SKEWER 串刺 (Attack, 0 energy): 造成8点伤害X次。",
+        "DAGGER_SPRAY 匕首雨 (Attack, 1 energy): 对所有敌人造成4点伤害两次。",
+        "2x SLICE 切割 (Attack, 0 energy): 造成6点伤害。",
+        "MALAISE 萎靡 (Skill, 0 energy): 敌人失去X点力量。给予X层虚弱。 消耗。",
+        "BOLAS 流星锤 (Attack, 0 energy): 造成3点伤害。 在你的下个回合开始时，将此卡返回你的手牌。",
+        "LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。",
+        "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+        "PREDATOR 猎杀者 (Attack, 2 energy): 造成15点伤害。 在下个回合抽2张牌。",
+        "FLICK_FLACK 翻越撑击 (Attack, 1 energy): 奇巧。 对所有敌人造成7点伤害。",
+        "BURST 爆发 (Skill, 1 energy): 在这个回合，你打出的下一张技能牌会被额外打出一次。",
+        "BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。",
+        "STRANGLE 紧勒 (Attack, 1 energy): 造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+        "PIERCING_WAIL+ 尖啸+ (Skill, 1 energy): 所有敌人在本回合失去8点力量。 消耗。",
+        "EXTERMINATE 杀灭 (Attack, 1 energy): 对所有敌人造成3点伤害4次。"
+      ],
+      "deck_size": 29,
+      "floor": 24,
+      "gold": 370,
+      "hp": "34/70 (49%)",
+      "options": {
+        "buy_card0": {
+          "affordable_now": true,
+          "buy": "猛扑",
+          "cost": 2,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 74,
+          "rarity": "Uncommon",
+          "text": "造成14点伤害。 你的下一张技能牌耗能变为0点能量。",
+          "type": "Attack"
+        },
+        "buy_card1": {
+          "affordable_now": true,
+          "buy": "精密瞄准",
+          "cost": 3,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 75,
+          "rarity": "Uncommon",
+          "text": "造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1点能量。",
+          "type": "Attack"
+        },
+        "buy_card2": {
+          "affordable_now": true,
+          "buy": "肾上腺素",
+          "cost": 0,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 72,
+          "rarity": "Rare",
+          "text": "获得1点能量。 抽2张牌。 消耗。",
+          "type": "Skill"
+        },
+        "buy_card3": {
+          "affordable_now": true,
+          "buy": "致命毒药",
+          "cost": 1,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 51,
+          "rarity": "Common",
+          "text": "给予5层中毒。",
+          "type": "Skill"
+        },
+        "buy_card4": {
+          "affordable_now": true,
+          "buy": "触媒",
+          "cost": 1,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 73,
+          "rarity": "Uncommon",
+          "text": "中毒会额外触发1次。",
+          "type": "Power"
+        },
+        "buy_card5": {
+          "affordable_now": true,
+          "buy": "炸弹",
+          "cost": 2,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 85,
+          "rarity": "Uncommon",
+          "text": "在3回合结束后，对所有敌人造成40点伤害。",
+          "type": "Skill"
+        },
+        "buy_card6": {
+          "affordable_now": true,
+          "buy": "熵",
+          "cost": 1,
+          "in_deck": 0,
+          "kind": "card",
+          "price": 170,
+          "rarity": "Rare",
+          "text": "在你的回合开始时，变化你手牌中的1张牌。",
+          "type": "Power"
+        },
+        "buy_potion0": {
+          "affordable_now": true,
+          "buy": "力量药水",
+          "kind": "potion",
+          "potion_slots": "3 of 3 potion slots empty",
+          "price": 48,
+          "text": "获得2点力量。"
+        },
+        "buy_potion1": {
+          "affordable_now": true,
+          "buy": "欧洛巴斯之酸",
+          "kind": "potion",
+          "potion_slots": "3 of 3 potion slots empty",
+          "price": 101,
+          "text": "往你的手牌中加入一张随机攻击牌、一张随机技能牌和一张随机能力牌。这些牌在本回合免费。"
+        },
+        "buy_potion2": {
+          "affordable_now": true,
+          "buy": "能力药水",
+          "kind": "potion",
+          "potion_slots": "3 of 3 potion slots empty",
+          "price": 50,
+          "text": "从3张随机能力牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。"
+        },
+        "buy_relic0": {
+          "affordable_now": true,
+          "buy": "船夹板",
+          "kind": "relic",
+          "price": 219,
+          "text": "在你的第二回合开始时，获得?(数值未知)点格挡。"
+        },
+        "buy_relic1": {
+          "affordable_now": true,
+          "buy": "永冻冰晶",
+          "kind": "relic",
+          "price": 215,
+          "text": "当你在战斗中第一次打出能力牌时，获得?(数值未知)点格挡。"
+        },
+        "buy_relic2": {
+          "affordable_now": true,
+          "buy": "会员卡",
+          "kind": "relic",
+          "price": 200,
+          "text": "所有商品打折?(数值未知)%！"
+        },
+        "leave": {
+          "end": "stop shopping (implied after the last step)"
+        },
+        "remove": {
+          "affordable_now": true,
+          "buy": "card removal",
+          "kind": "service",
+          "not_on_selection_screen": "the game's remove screen lists only the first 25 eligible cards in deck order; these cannot be picked there: 紧勒, 尖啸+, 杀灭",
+          "not_removable_eternal": "贪婪",
+          "price": 100,
+          "text": "removes one card from the deck: write \"remove:<card key>\" with the card from state.your_cards"
+        }
+      },
+      "plan_trigger": null,
+      "potions": [],
+      "question": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "涅奥骨骰: 拾起时，获得?(数值未知)件随机涅奥{Relics:plural:遗物|遗物}。将?(数值未知)张随机{Curses:plural:诅咒|诅咒}加入你的牌组。",
+        "新叶: 拾起时，变化?(数值未知)张牌。",
+        "诅咒珍珠: 拾起时，获得一张贪婪，获得?(数值未知)金币。",
+        "奥利哈钢: 如果你在回合结束时没有任何格挡，获得?(数值未知)点格挡。",
+        "紫水晶茄子: 敌人额外掉落?(数值未知)金币。",
+        "烘焙手套: 在你的回合开始时，消耗你手牌中的1张牌并获得1点力量。",
+        "花粉核心: 每?(数值未知)个回合，额外抽?(数值未知)张牌。",
+        "抱抱先生: 在你的回合开始时，对所有敌人造成等量于当前回合数的伤害。"
+      ],
+      "situation": {
+        "gold": 370,
+        "hp": "34/70 (49%)",
+        "potion_slots": "0/3 used",
+        "screen": "SHOP"
+      },
+      "stock": [
+        {
+          "affordable": true,
+          "kind": "relic",
+          "name": "船夹板",
+          "price": 219
+        },
+        {
+          "affordable": true,
+          "kind": "relic",
+          "name": "永冻冰晶",
+          "price": 215
+        },
+        {
+          "affordable": true,
+          "kind": "relic",
+          "name": "会员卡",
+          "price": 200
+        },
+        {
+          "affordable": true,
+          "cost": 2,
+          "kind": "card",
+          "name": "猛扑",
+          "price": 74,
+          "rarity": "Uncommon",
+          "type": "Attack"
+        },
+        {
+          "affordable": true,
+          "cost": 3,
+          "kind": "card",
+          "name": "精密瞄准",
+          "price": 75,
+          "rarity": "Uncommon",
+          "type": "Attack"
+        },
+        {
+          "affordable": true,
+          "cost": 0,
+          "kind": "card",
+          "name": "肾上腺素",
+          "price": 72,
+          "rarity": "Rare",
+          "type": "Skill"
+        },
+        {
+          "affordable": true,
+          "cost": 1,
+          "kind": "card",
+          "name": "致命毒药",
+          "price": 51,
+          "rarity": "Common",
+          "type": "Skill"
+        },
+        {
+          "affordable": true,
+          "cost": 1,
+          "kind": "card",
+          "name": "触媒",
+          "price": 73,
+          "rarity": "Uncommon",
+          "type": "Power"
+        },
+        {
+          "affordable": true,
+          "cost": 2,
+          "kind": "card",
+          "name": "炸弹",
+          "price": 85,
+          "rarity": "Uncommon",
+          "type": "Skill"
+        },
+        {
+          "affordable": true,
+          "cost": 1,
+          "kind": "card",
+          "name": "熵",
+          "price": 170,
+          "rarity": "Rare",
+          "type": "Power"
+        },
+        {
+          "affordable": true,
+          "kind": "potion",
+          "name": "力量药水",
+          "price": 48
+        },
+        {
+          "affordable": true,
+          "kind": "potion",
+          "name": "欧洛巴斯之酸",
+          "price": 101
+        },
+        {
+          "affordable": true,
+          "kind": "potion",
+          "name": "能力药水",
+          "price": 50
+        }
+      ]
+    },
+    "source_sha256": "8cbcea1c7261550aec48b0b6e3e8331f8781f286f3fd61cfa01683b2769d3ac4",
+    "dataset_ref": {
+      "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue27-batch2-20261022/frozen/paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "snapshot_sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee",
+      "uncompressed_offset": 1378302,
+      "bytes": 9693,
+      "line": 227,
+      "sha256": "f9f81e855f369401c764f243af7cb80237c344f567a42b9d21695ed301afe7d1"
+    }
+  }
+]

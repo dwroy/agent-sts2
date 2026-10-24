@@ -1,0 +1,35 @@
+{
+  "action": "single original-name metadata repair after verifying absent name and unchanged owned idle pane",
+  "argv": [
+    "agent",
+    "rename",
+    "w1H:pB7",
+    "learner-20261023-021302-strategy-proposal"
+  ],
+  "ok": false,
+  "code": 1,
+  "error": "invalid_agent_name",
+  "stdout": "",
+  "stderr": "{\"error\":{\"code\":\"invalid_agent_name\",\"message\":\"agent name must start with a lowercase letter and contain only lowercase letters, digits, '-' or '_' (1-32 characters)\"},\"id\":\"cli:agent:rename\"}\n",
+  "after": {
+    "agent": {
+      "agent": "codex",
+      "agent_status": "idle",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "focused": false,
+      "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-021302",
+      "pane_id": "w1H:pB7",
+      "revision": 2,
+      "state_change_seq": 833,
+      "tab_id": "w1H:tB4",
+      "terminal_id": "term_65e71d16de1fddd",
+      "terminal_title": "codex-strategy-silent...",
+      "terminal_title_stripped": "codex-strategy-silent...",
+      "workspace_id": "w1H"
+    },
+    "type": "agent_info"
+  },
+  "task_prompt_sent": false,
+  "keys_sent": false,
+  "models_started_by_ops": false
+}

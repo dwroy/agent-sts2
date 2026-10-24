@@ -1,0 +1,22 @@
+failed to load config from /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261024-091302/agent/vitest.config.ts
+
+⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯
+Error: EROFS: read-only file system, open '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261024-091302/agent/node_modules/.vite-temp/vitest.config.ts.timestamp-1792804755038-b5328a4aed535.mjs'
+    at async open (node:internal/fs/promises:639:25)
+    at async Object.writeFile (node:internal/fs/promises:1222:14)
+    at async loadConfigFromBundledFile (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/chunks/node.js:37497:3)
+    at async bundleAndLoadConfigFile (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/chunks/node.js:37345:21)
+    at async loadConfigFromFile (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/chunks/node.js:37305:42)
+    at async resolveConfig (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/chunks/node.js:36906:22)
+    at async _createServer (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/chunks/node.js:24268:65)
+    at async createViteServer (file:///home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:8902:17)
+    at async createVitest (file:///home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:14288:18)
+    at async prepareVitest (file:///home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:14655:14) {
+  errno: -30,
+  code: 'EROFS',
+  syscall: 'open',
+  path: '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261024-091302/agent/node_modules/.vite-temp/vitest.config.ts.timestamp-1792804755038-b5328a4aed535.mjs'
+}
+
+
+

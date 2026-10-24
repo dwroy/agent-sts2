@@ -1,0 +1,96 @@
+{
+  "issue": 48,
+  "role": "dev #48",
+  "at": "2026-10-23T17:14:22.350649+08:00",
+  "status": "development-delivered-for-integrator-review",
+  "branch": "issue-48-backfill-entry",
+  "base": "89a445066",
+  "source_commits": [
+    "e16a2e33f",
+    "2038effdf"
+  ],
+  "tested_source": "2038effdf4c02132708ea8da3127df653edd1897",
+  "scope": [
+    "existing strategy-proposal source adapter after all normal tick jobs and existing heavy queues",
+    "shared writer/caps/learn.lock/worktree lease/account/disk policies retained",
+    "unique old-ID cursor advances only on original native prompt acceptance; no running batch lease mutation",
+    "TUI and original stdio account journals; failed/waiting attempts retained and explicit verified bounded recovery",
+    "frozen work spec/manifest/reference SHA validation and durable identical rk reference copy",
+    "scratch candidate destinations, exact output SHA, remaining counts and actual native-start elapsed time"
+  ],
+  "configuration": {
+    "path": "notes/strategy-backfill-silent.json",
+    "enabled": false,
+    "first_plan": "issue48-boss-elite-001",
+    "old_ids": 244,
+    "first_batch_ids": 6,
+    "native_models_started": 0
+  },
+  "validation": {
+    "tsc": {
+      "rc": 0,
+      "log": "paper/materials/20261023-issue48-backfill-dev/tsc.txt",
+      "compiled_typescript_blobs_identical_to_tested_source": true
+    },
+    "vitest": {
+      "rc": 0,
+      "files": 12,
+      "passed": 186,
+      "log": "paper/materials/20261023-issue48-backfill-dev/final-targeted-latest.txt",
+      "command": "nice -n 19 ./node_modules/.bin/vitest run --pool=threads --maxWorkers=1 (12 named files; see log)"
+    },
+    "backfill_python": {
+      "rc": 0,
+      "passed": 20,
+      "log": "paper/materials/20261023-issue48-backfill-dev/python.txt",
+      "included_in_vitest_wrapper": true,
+      "do_not_add_to_vitest_count": true
+    },
+    "shell_syntax": {
+      "rc": 0,
+      "command": "bash -n ops/codex-ops-learner.sh"
+    },
+    "diff_check": {
+      "rc": 0
+    },
+    "full_suite_run": false,
+    "initial_failure_preserved": {
+      "log": "paper/materials/20261023-issue48-backfill-dev/initial-targeted.txt",
+      "reason": "wrapper closure checks HEAD; new module had not been committed in the first working-copy check",
+      "failed": 2,
+      "passed": 116,
+      "resolved_by_committing_required_module": true
+    }
+  },
+  "frozen_source_verification": "paper/materials/20261023-issue48-backfill-dev/source-verification.json",
+  "handoff": [
+    "integrator checks the source commits and main compatibility; do not close the learner/science parent",
+    "ops publishes the exact admitted leaves while preserving latest live knowledge; then enables the existing source config",
+    "first model admission is only through the original natural tick; bind its actual native batch/session/turn",
+    "T for the existing before/after 24h normal-throughput comparison is the actual pipeline publication time"
+  ],
+  "still_open": [
+    "actual main/live publication",
+    "first-batch content extraction",
+    "formal strategy/rk publication and #28 replay gate",
+    "natural consumers and measured benefit",
+    "#48/#50 science parents",
+    "before/after 24h throughput comparison"
+  ],
+  "changed_leaf_sha256": {
+    "agent/tests/learner-startup-recovery.test.ts": "3461c397ae5f2012a91524aa6bfc3d5989e52b2dc853c36ef7e120e197f48013",
+    "agent/tests/strategy-backfill.test.ts": "6aacfc8c8c54155f006249d30351a933292369475d4179d662f6a08f1dcd6cc7",
+    "learner/README.md": "1fef10fb29438f9c6187710b31f031d5d8cce9f091cf67b6803ec7a4490ca0df",
+    "learner/lib/launcher.ts": "fff5c7a0b0f8a2397263b09404f72c4821b30fea60ae231771eac1552fb656dc",
+    "notes/strategy-backfill-silent.json": "654a3e3612a49736f80b54edfb9d070f55d2276d1ecef95cc47462cae7f5db3e",
+    "ops/codex-ops-learn.py": "136132ccb0e00d4f74daa60aae0845119039a492cb1e3852cc2dbe42d9232441",
+    "ops/codex-ops-learner.sh": "97745fedcc1e8c6fafc609af60a07be2a670f3a73ac94b79948c6110c290a83e",
+    "ops/learner_checks.py": "5665c88416d3cbba4fd19c0fc86d3f131df76a8f8a29f3b2b0d4de7a48fdeef2",
+    "ops/learner_jobs.py": "2012729717491fbf47cab9973450f927de03f7624891ee0b0c3153245e1a3b2f",
+    "ops/learner_tui.py": "a12639e8dc446ec4d7d987cf3cdbce40e71297357fb83e6fc8a340a36e8b9839",
+    "ops/ordinary_close.py": "5e031c59cdf01dadebf77d6fbb7b6c1e175d2733e06d30616e435f5961a2dc8d",
+    "ops/proposal_dispatch.py": "6c5714d6a7dd9af8ef9b8ef7cd7eb0fa3aeac4d72b2f545a0d0e1372515c2cbe",
+    "ops/strategy_backfill_jobs.py": "c484372965317e1ee3451e1ce0850d5516eb5c256f46fb171a2519a08d0a505d",
+    "ops/tests/test_strategy_backfill.py": "95e583aa1098a89281e7ec2a304d6b0c6bc0f0ca2de0af2cf65becd2613d3c6c"
+  }
+}

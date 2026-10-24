@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-24T03:01:23+08:00",
+  "rows": [
+    {
+      "pid": 3929450,
+      "birth": "20614034",
+      "argv": "flock /home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/ops/global_build_funnel.py --root /home/dw/Projects/agent-sts2 --character silent ",
+      "children": []
+    },
+    {
+      "pid": 3929440,
+      "birth": "20613901",
+      "argv": "flock /home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock python3 /home/dw/Projects/agent-sts2/.worktrees/live/ops/refresh-costs.py --root /home/dw/Projects/agent-sts2 --code-root /home/dw/Projects/agent-sts2/.worktrees/live ",
+      "children": [
+        {
+          "pid": 3941284,
+          "argv": "python3 /home/dw/Projects/agent-sts2/.worktrees/live/ops/refresh-costs.py --root /home/dw/Projects/agent-sts2 --code-root /home/dw/Projects/agent-sts2/.worktrees/live ",
+          "status": "R"
+        }
+      ]
+    }
+  ],
+  "new_full_runs": 0,
+  "continuation_pid": 3941729,
+  "policy": "single blocking original lock wait; no process signal or repeated full"
+}

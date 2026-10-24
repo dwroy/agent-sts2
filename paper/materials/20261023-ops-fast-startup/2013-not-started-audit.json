@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-23T20:27:27+08:00",
+  "batches": [
+    {
+      "batch": "20261023-201301",
+      "state": "failed",
+      "rc": 3,
+      "pane": "w1H:pCR",
+      "supervisor_present": false,
+      "models_started": 0,
+      "submitted": false,
+      "bindings": 0,
+      "reason": "inherited-tui-config-not-isolated",
+      "receipt": "ops/codex-ops/learner/learner-20261023-201301-postmortem.tui.json",
+      "receipt_sha256": "64819e627ad617d8f1bdf30b16b6b1be3c64fcfa1d626aaa944f3950af1c153e",
+      "runs": {
+        "YR636ZUULAU1": {
+          "attempts": 1,
+          "retry_at": 1792761192.463268,
+          "retry_due": false,
+          "retry_at_local": "2026-10-23T21:13:12.463268+08:00"
+        },
+        "1KRVLZZHNX2R": {
+          "attempts": 1,
+          "retry_at": 1792761192.4632716,
+          "retry_due": false,
+          "retry_at_local": "2026-10-23T21:13:12.463272+08:00"
+        },
+        "8XVMBYRD8R8D": {
+          "attempts": 1,
+          "retry_at": 1792761192.463274,
+          "retry_due": false,
+          "retry_at_local": "2026-10-23T21:13:12.463274+08:00"
+        },
+        "GV9MTBL2G6QJ": {
+          "attempts": 1,
+          "retry_at": 1792761192.4632747,
+          "retry_due": false,
+          "retry_at_local": "2026-10-23T21:13:12.463275+08:00"
+        }
+      }
+    },
+    {
+      "batch": "20261023-201302-fix-batch",
+      "state": "failed",
+      "rc": 3,
+      "pane": "w1H:pCS",
+      "supervisor_present": false,
+      "models_started": 0,
+      "submitted": false,
+      "bindings": 0,
+      "reason": "inherited-tui-config-not-isolated",
+      "receipt": "ops/codex-ops/learner/learner-20261023-201302-fix-batch.tui.json",
+      "receipt_sha256": "755567301cc123b27c0b08f6219c8d02d9cbe47fc3ec8fcc684835317439b7ba",
+      "same_key_prior": [
+        {
+          "batch": "20261023-201302-fix-batch",
+          "state": "failed",
+          "retry_at": 1792761197.0046577,
+          "retry_at_local": "2026-10-23T21:13:17.004658+08:00"
+        }
+      ],
+      "retryable_now": false
+    }
+  ],
+  "learner_config_bytes": 300,
+  "config_content_not_output": true,
+  "learn_state_modified": false,
+  "next_natural_tick": "2026-10-23T20:43:00+08:00",
+  "dispatch_or_model_started_by_ops": false,
+  "actual_recovery": "pending original tick and native receipts",
+  "retry_policy": "original 3600 seconds, max3; due21:13; no attempt/cooldown reset"
+}

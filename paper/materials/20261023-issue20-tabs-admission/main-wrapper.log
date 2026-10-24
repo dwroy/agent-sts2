@@ -1,0 +1,20 @@
+E
+======================================================================
+ERROR: test_learner_wrapper_completion (unittest.loader._FailedTest.test_learner_wrapper_completion)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_learner_wrapper_completion
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/integrator20-tabs-main-20261023-1700/ops/tests/test_learner_wrapper_completion.py", line 12, in <module>
+    from ops.tests import test_learner_tui as fixtures
+ModuleNotFoundError: No module named 'ops'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

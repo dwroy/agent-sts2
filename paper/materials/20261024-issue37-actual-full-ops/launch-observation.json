@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-24T15:24:22+08:00",
+  "producer_state": {
+    "at": "2026-10-24T15:20:13+08:00",
+    "phase": "preparing-required-full-for-actual-game-host-profile",
+    "worker_pid": 2593100,
+    "worker_birth": "25094291",
+    "new_full_runs": 0,
+    "new_models_games": 0,
+    "published": false,
+    "held_locks": []
+  },
+  "worker_birth_verified": true,
+  "worker_wchan": "locks_lock_inode_wait",
+  "lock_readback": {
+    "ops/integrator-full-check.lock": [
+      "14: FLOCK  ADVISORY  WRITE 2593100 08:30:5925863 0 EOF"
+    ],
+    "ops/knowledge-refresh.lock": [
+      "159: FLOCK  ADVISORY  WRITE 2589445 08:30:1055837 0 EOF",
+      "159: -> FLOCK  ADVISORY  WRITE 2589464 08:30:1055837 0 EOF",
+      "159:  -> FLOCK  ADVISORY  WRITE 2589523 08:30:1055837 0 EOF",
+      "159:   -> FLOCK  ADVISORY  WRITE 2593100 08:30:1055837 0 EOF"
+    ],
+    "ops/live-merge.lock": []
+  },
+  "original_refresh_owner": {
+    "pid": 2589445,
+    "birth": "25085919",
+    "script": "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh_driver.py",
+    "not_signalled": true
+  },
+  "observed_phase": "waiting-original-knowledge-refresh-lock-before-freeze",
+  "actual_full_runs_so_far": 0,
+  "old_provisional_publisher_cancelled_before_any_source_write": true,
+  "own_admission_released": true,
+  "game_model_or_autoplay_signal_count": 0
+}

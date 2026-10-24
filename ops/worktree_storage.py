@@ -239,6 +239,14 @@ def copy_paths(root, scratch):
     return sorted(files)
 
 
+def original_report(root, directory, batch_id, batch):
+    report = batch.get("report")
+    if not isinstance(report, dict) or not report.get("report"):
+        output = retention.safe_path(root, directory / "learner" / (batch_id + ".out"))
+        report = retention.read_report(str(output))
+    return report if isinstance(report, dict) and report.get("task", batch.get("task", "postmortem")) == batch.get("task", "postmortem") else {}
+
+
 def compress(root, directory, batch_id, scratch, apply=True):
     if not retention.BATCH.fullmatch(batch_id):
         raise ValueError("invalid original batch")
@@ -257,7 +265,7 @@ def compress(root, directory, batch_id, scratch, apply=True):
         event = scratch.with_suffix(".jsonl")
         with event.open() as handle:
             launch = json.loads(handle.readline())
-        bound_report = batch.get("report", {}).get("report")
+        bound_report = original_report(root, directory, batch_id, batch).get("report")
         if (launch.get("type") != "learner_launch" or launch.get("cwd") != str(tree)
                 or launch.get("task") != batch.get("task")
                 or bound_report != str(scratch / "report.md")
@@ -368,10 +376,12 @@ def sweep(root, directory, apply=True, limit=4):
     for batch_id, batch in state.get("batches", {}).items():
         if len(result["results"]) >= limit:
             break
-        report = batch.get("report", {}).get("report")
-        if batch.get("state") == "running" or not report:
+        if batch.get("state") == "running":
             continue
         try:
+            report = original_report(root, directory, batch_id, batch).get("report")
+            if not report:
+                continue
             scratch = retention.safe_path(root, report).parent
             prior = directory / "retention/storage/source-copies" / (batch_id + ".manifest.json")
             if prior.is_file():

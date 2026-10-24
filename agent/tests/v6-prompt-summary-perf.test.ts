@@ -9,7 +9,7 @@ import { buildV6CardPick } from "../src/v6/card-pick.js";
 import { buildV6RoomDecision } from "../src/hand/screens/v6-room.js";
 import { v6ShopOptions, v6RestOptions } from "../src/hand/screens/v6-room-options.js";
 import { setupOneshotTests } from "./oneshot-support.js";
-import { knowledge, on, situation, shopTable, size } from "./v6-prompt-summary-fixtures.js";
+import { knowledge, on, situation, shopTable, size, realisticCardGrid } from "./v6-prompt-summary-fixtures.js";
 
 setupOneshotTests();
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
@@ -46,3 +46,13 @@ it.each(["card", "shop", "rest"] as const)("measures fixed %s summary constructi
   }
   if (process.env.PERF_OUTPUT) appendFileSync(process.env.PERF_OUTPUT, rows.map(r => JSON.stringify(r)).join("\n") + "\n");
 }, 30_000);
+
+// Preserve the original 1.5s ceiling here, separately from the full-grid business assertions.
+it("measures the realistic 204-row cached card grid", () => {
+  on(); const { e } = realisticCardGrid();
+  const start = performance.now(), d = buildV6CardPick(e, undefined, knowledge)!.decision;
+  const elapsed_ms = performance.now() - start;
+  expect(elapsed_ms).toBeLessThan(1500);
+  if (process.env.PERF_OUTPUT) appendFileSync(process.env.PERF_OUTPUT,
+    JSON.stringify({ kind: "realistic_card_grid", elapsed_ms, state_bytes: size(d.state) }) + "\n");
+});

@@ -1,0 +1,31 @@
+[dev #26] 已挂上；未发现六工具漏注册或被桥接过滤。零调用更符合“没有明确查询提示、候选卡 ID 不便取得、题内统计已足够显眼”的可用性问题；原因是证据支持的推断，不能据此确定模型的唯一动机。本轮仅诊断，未改产品或线上。
+
+1. 挂载与两侧核验
+
+- 固定读回时 live 为 `70eb1287042d80bf6f253b4dce66ac888a5f4868`（仍 R417）。注册器、MCP、Codex 桥、dsh、agent 生命周期、题面入口及外部工具/数据等九叶与 R417 行为提交 `c60de438383f8973ae34159f8be2bec0087d55f5` 逐字节相同。聚合仍 1775714B / SHA `88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07`。
+- `buildKnowledgeTools()` 直接追加六个 `external_stats_*`。本轮从 live 源码启动独立的本机 MCP，仅做 `tools/list`：14 项中六统计工具完整，名称、描述和 Schema 均在；不连接生产端点、不占生产调用预算，`tools/call=0`。
+- Codex：当前局原生 `session_meta.dynamic_tools` 的 `gkb` 确有这 14 项，描述/Schema 与上述 MCP 一致。原始离线 Responses 出站名单 `offline-codex14.jsonl` 同样有六项；桥把 MCP 全名单传入动态 namespace，不按 kb 前缀过滤。前三个已结束局的原生线程文件本轮已不在原路径，未声称重新取得它们；四局的 brain 工具清单和既有出站回执另行核验。
+- dsh：复核发布原件 `offline-dsh14.jsonl`，实际已安装内核曾列出完整 14 项，包括六个 `mcp__gkb__external_stats_*`，`kernel_ready=true`、max；当前 dsh/MCP/注册源码与发布时一致。这是既有离线原生注册证据，本轮没有重跑 dsh 或模型。当前观察到的自然题全部为 Codex，没有 dsh 自然调用证据，不能将其零调用解释成 dsh 选择偏好。
+
+2. 自然记录
+
+本轮固定原始字节快照于 10-23 08:28:45 CST 读取，覆盖 06:16:30—08:26:55 的四局 119 题（31/37/29/22），119/119 的 `tools` 都含上述 14 项。23 题有工具调用，共37次：`kb_open_book=24`、`kb_experience=9`、`kb_old_knowledge=2`、`kb_monster=1`、`kb_potion=1`；外部统计仍0。单题最多4次，小于 cap8，fallback全为null，不能归因于已耗尽工具预算。此为独立较晚快照，保留主管原113题/35次的时点口径，不称复现了原113题截面。
+
+3. 为什么可能不查
+
+- 现有统计工具描述已明确写外部、Silent A10、默认v0.111及分账，不能说模型完全不知道有外部数据。但描述偏“这张表有哪些列”，没有明确对应“拿牌/跳过时可用来补真人背景”。agent系统提示只说“知识按需查询”，没有工具用途导航。
+- 拿牌58题、商店11题、地图规划4题、幕初规划4题的 question 都未提 `external_stats_*` 或 sts2fun；拿牌题重点介绍自有 `outcome_stats`、Boss模拟和S门槛。模型可直接比较题内事实，缺少继续查另一组观察统计的明确触发点。`kb_open_book` 的24次命中是在补机制，`kb_experience` 是补经验；它们不提供 sts2fun 拿/不拿统计，没有代码层面的替代/屏蔽关系，不能把高调用频率证明成因果性的“抢占”。
+- 58题的174个候选牌选项均有中文 `card`，无 `id/card_id/cardId`；统计卡牌工具却要求精确ID、不接受中文。`facts.deck` 会给已持有牌ID，但不能保证给出新候选牌ID。`kb_open_book` 接受中文/关键词，操作门槛较低。例如 `mvk3ohux-3333938-3` 用它查 `BLADE_DANCE` 机制，未继续查统计；并不是模型永远无法提供英文ID。
+- clusters/cooccurrence 本来就明确不能区分流派优劣、不能作方向依据。因此方向题不查这两项本身不构成功能错误，不应为了命中数要求它们参与方向排序。
+
+4. 最小建议（供主管裁决，尚未实施）
+
+优先在 agent 提示增加一句可选导航，并在候选卡选项附现成的精确 `id`。建议文案：
+
+> 拿牌/跳过若需真人样本背景，可用 external_stats_card 按候选卡 id 和当前 act 查询，external_stats_skip 查本幕跳过率；它们与题内自有 outcome_stats 分账，kb_open_book 只查机制。外部统计为非因果背景，不覆盖当前状态；流派/共现不作方向优劣依据。
+
+具体入口：`agent/src/brain/brain.ts:agentSystemPrompt()` 或相关拿牌题的一句提示；候选ID优先在 `agent/src/hand/screens/reward.ts` 已取得 `cardId` 的事实对象中直接附上，并检查 selection/shop 对应载荷。可以先只改描述/提示；ID字段是消除中文到精确ID额外查询成本的配套建议，不增加中文猜映射。若只改工具描述，建议把 card/skip 首句分别改为“拿牌比较时，查询外部真人样本按幕的拿/不拿结果”和“拿牌/跳过比较时，查询外部真人样本本幕跳过率”，原来源/版本/限制/Schema保留。
+
+不建议自动代查、强制每题调用、注入外部胜率排序或改预算；这些扩大行为范围，也不能由当前零调用证据推出必要性。若主管决定实施，再做固定题面/ID/双侧名单验证，沿既有自然局读回实际采用；本轮不新增模型请求、实验局或收益结论。
+
+材料：`paper/materials/20261023-issue26-zero-call-diagnostic/diagnostic.json`（原日志字节范围/行SHA、四局计数、当前原生名单、发布两侧原件、九叶SHA、题面和候选字段），`mcp-list.json`（本轮独立MCP完整描述/Schema）及两个复读脚本。诊断读取器最初错误假定已结束线程原件仍在，失败及修正另存 `diagnostic-first-attempt.txt`，未改产品。仅新增诊断材料，不运行tsc/full或游戏，不改live/STOP；发前gitleaks。

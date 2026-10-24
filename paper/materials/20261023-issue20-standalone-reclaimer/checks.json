@@ -1,0 +1,45 @@
+{
+  "source": "3f449fc6d8c651e429f71830d8ffe28117db5d51",
+  "production_tsc": {
+    "exit_code": 0,
+    "log": "tsc-final.log"
+  },
+  "wrapper": {
+    "tests": 17,
+    "exit_code": 0,
+    "log": "wrapper.log"
+  },
+  "reclaimer_scheduler_view": {
+    "tests": 72,
+    "exit_code": 0,
+    "log": "reclaimer-scheduler-view.log",
+    "native_verifier": "current main ops/learner_tui.py; actual pane/proc remain fixed fixtures"
+  },
+  "vitest_targeted": {
+    "files": 3,
+    "tests": 66,
+    "exit_code": 0,
+    "log": "vitest-targeted.log.gz",
+    "command": "vitest run tests/learner-wrapper-scripts.test.ts tests/learner-tabs.test.ts tests/learner-herdr.test.ts --maxWorkers=1 --fileParallelism=false --pool=threads",
+    "nested_python_reclaimer_tests": "55, already included in the separate Python coverage; do not add twice"
+  },
+  "bash_syntax": {
+    "exit_code": 0,
+    "scripts": [
+      "ops/codex-ops-learner.sh",
+      "ops/codex-ops.sh"
+    ]
+  },
+  "full_vitest": false,
+  "production_actions": false,
+  "logs_sha256": {
+    "reclaimer-scheduler-view.log": "4e6f0dcc4e5394b90c281c18d427953dec814b79e12d752b4fbd46f5930882b3",
+    "tsc-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vitest-targeted.log": "2cbe777f525ccae134e0e6b9a988f419b0757d72aadc7f0e388c8473cae6bafc",
+    "wrapper.log": "76c27a957d1b6bdab776d07023a5d71295668d73f2ece8d2beba53dbe8872e3c"
+  },
+  "compressed_logs_sha256": {
+    "vitest-targeted.log.gz": "03843b8a3d4753321b04ba931947067b09862b99339a1bed305b961c25b94c52"
+  }
+}

@@ -1,5 +1,6 @@
 """Mechanical proposal consumption, audit links, and no-change dispositions."""
 import importlib.util
+import datetime as dt
 import hashlib
 import json
 import os
@@ -12,6 +13,49 @@ import time
 RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*.json','agent/tsconfig*.json',
     'agent/vitest*','learner/*.ts','learner/*.py','learner/lib','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
     'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
+
+WAITING_RUNS = 10
+WAITING_SECONDS = 6 * 3600
+WAITING_SLOTS = 2
+
+
+def waiting_round(state, character, count, stamp, now):
+    """Batch repeat reviews before allocating trees; the caller holds learn.lock."""
+    previous = state.get('proposal_rechecks', {}).get(character)
+    if previous is None:
+        return True
+    if (not isinstance(previous, dict) or previous.get('schema') != 1
+            or type(previous.get('finished_runs')) is not int
+            or not isinstance(previous.get('at'), (int, float))
+            or not isinstance(previous.get('round'), str)
+            or not isinstance(previous.get('batches'), list)):
+        raise ValueError('invalid proposal recheck watermark; preserve original state')
+    # Counter or clock rollback must not reopen an already consumed round.
+    if count < previous['finished_runs'] or now < previous['at']:
+        return False
+    if previous['round'] == stamp.removesuffix('-s2'):
+        return len(previous['batches']) < WAITING_SLOTS
+    return count >= previous['finished_runs'] + WAITING_RUNS or now >= previous['at'] + WAITING_SECONDS
+
+
+def record_waiting_round(state, character, count, stamp, now, batch_id):
+    rounds = state.setdefault('proposal_rechecks', {})
+    identity = stamp.removesuffix('-s2')
+    previous = rounds.get(character)
+    if previous is None or previous['round'] != identity:
+        rounds[character] = {'schema': 1, 'round': identity, 'at': now,
+                             'finished_runs': count, 'batches': [batch_id]}
+    else:
+        previous['batches'].append(batch_id)
+
+
+def waiting_age(proposal):
+    """Oldest dispositions go first, so a stable queue prefix cannot starve others."""
+    try:
+        value = dt.datetime.fromisoformat(proposal.get('ts', ''))
+        return value.timestamp() if value.tzinfo is not None else 0
+    except (TypeError, ValueError, OverflowError):
+        return 0
 
 
 def library(scripts):
@@ -63,19 +107,38 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
             claimed.update(batch['proposal_ids'])
         else:
             batch.update(state='lost',retry_at=time.time()+3600)
-    ready=[p for p in items.values() if p.get('character')==character and p.get('target_task')=='strategy-proposal'
-           and p['id'] not in claimed
-           and (p.get('state')=='pending' or p.get('state')=='waiting' and count>p.get('seen_runs',count))]
+    candidates=[p for p in items.values() if p.get('character')==character
+                and p.get('target_task')=='strategy-proposal' and p['id'] not in claimed]
+    # New proposals and link repairs keep their existing prompt, priority and retry rules.
+    # Never mix them with a repeat-review round or share a writer checkout.
+    ready=[p for p in candidates if p.get('state')=='pending']
+    repeat = not ready
+    now = time.time()
+    if repeat:
+        ready=sorted((p for p in candidates if p.get('state')=='waiting' and count>p.get('seen_runs',count)),
+                     key=lambda p: (waiting_age(p), p['id']))
+        if ready and not waiting_round(state,character,count,stamp,now):
+            return None
     if not ready: return None
     ids=[p['id'] for p in ready[:10]]
     runs=list(dict.fromkeys(r for p in ready[:10] for r in p['runs']))[:10]
     key='code-proposals:'+','.join(ids)+':'+str(count)
     result=dispatch_write(state,root,scripts,'strategy-proposal',character,runs,key,'proposal',alive,stamp)
-    if result: state['batches'][result[0]]['proposal_ids']=ids
+    if result:
+        state['batches'][result[0]]['proposal_ids']=ids
+        if repeat:
+            record_waiting_round(state,character,count,stamp,now,result[0])
+            state['batches'][result[0]]['proposal_recheck_round']=stamp.removesuffix('-s2')
     return result
 
 
 def links(report,batch,root,scripts):
+    if batch.get('backfill_source') or batch.get('external_source'):
+        try:
+            from strategy_backfill_jobs import report_proof
+            report_proof(report, batch, root)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            return [str(error)]
     if batch.get('implementation_request'):
         from strategy_implementation_jobs import report_errors
         errors = report_errors(report, batch, root)
@@ -198,9 +261,17 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         return (isinstance(source,str) and re.fullmatch('[0-9a-f]{7,40}',source)
                 and subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,target],
                     stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0)
+    # Link repairs may preserve waiting dispositions without publishing any source.
+    # Keep the same registration/report proofs and independently verify the clean base.
+    waiting_repair = (bool(batch.get('proposal_repair')) and all(row['state']=='waiting' for row in rows)
+                      and fixes==[] and report.get('merged') is None
+                      and all(report.get(key) is None for key in ('commit','source_commit','published_commit')))
+    unchanged = no_change(report,batch,root) if waiting_repair else None
+    if waiting_repair and not unchanged:
+        raise ValueError('waiting link repair lacks a verified unchanged source base')
     merged=report.get('merged')
     live = Path(os.environ.get('STS2_LIVE', str(project/'.worktrees/live')))
-    if not ancestor(merged,'HEAD',live):
+    if not waiting_repair and not ancestor(merged,'HEAD',live):
         raise ValueError('unassigned report lacks an actual live merge')
     publication = {}
     if descriptive:
@@ -220,6 +291,10 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         if hashlib.sha256(original.read_bytes()).hexdigest()!=item.get('proposal_sha256'):
             raise ValueError('unassigned proposal source fingerprint changed')
         commit=row.get('commit')
+        if waiting_repair:
+            if commit is not None:
+                raise ValueError('waiting link repair cannot claim a source commit')
+            continue
         if row['state'] not in ('implemented','duplicate'):
             raise ValueError('unassigned resolution requires a published source disposition')
         if descriptive:
@@ -233,6 +308,7 @@ def unassigned_proof(report,batch,root,items,rows,lib):
             raise ValueError('unassigned disposition conflicts with an existing resolution')
     return {'resolution_report':str(path),'resolution_report_sha256':hashlib.sha256(raw).hexdigest(),
             'resolution_batch':batch.get('key'),
+            **({'resolution_no_change_base': unchanged['base']} if unchanged else {}),
             **({'resolution_publication': publication} if publication else {})}
 
 
@@ -404,8 +480,12 @@ def no_change(report,batch,root):
     try:
         research=None
         cadence=None
+        backfill=None
         if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
-            if batch.get('reason') == 'tick':
+            if batch.get('backfill_source') or batch.get('external_source'):
+                from strategy_backfill_jobs import report_proof
+                backfill=report_proof(report,batch,root)
+            elif batch.get('reason') == 'tick':
                 cadence=cadence_proof(report,batch,root)
                 if not cadence: return None
             else:
@@ -432,6 +512,8 @@ def no_change(report,batch,root):
         path=Path(raw_path).resolve()
         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
         proof={'base':base,'report':str(path),'dispositions':rows}
+        if backfill:
+            proof["external" if batch.get("external_source") else "backfill"]=backfill
         if cadence:
             proof['cadence']=cadence
         if research:

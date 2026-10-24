@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-24T10:49:53+08:00",
+  "batch": "20261024-101315-fix-batch",
+  "original_state": "failed",
+  "original_rc": 0,
+  "native_retirement_verified": true,
+  "no_source_commit": true,
+  "source_base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "candidate_live_parent": "02eb468f8728b47ccbc22f39f14e5b2db1580971",
+  "candidate_tree": "1a1d9dbea1daf87597c30056cf71f69c6a71db91",
+  "candidate_paths": [
+    "agent/src/brain/tools/agent-knowledge.ts",
+    "agent/tests/strategy-tool-budget.test.ts"
+  ],
+  "source_manifest": {
+    "base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+    "files": [
+      {
+        "path": "agent/src/brain/tools/agent-knowledge.ts",
+        "sha256": "9a72c6a2c5e0ddb57369ae7c92cb1eec0ee5b856b53f30f3df0ebe37efce5dac"
+      },
+      {
+        "path": "agent/tests/strategy-tool-budget.test.ts",
+        "sha256": "c48360f545720d0c294b68ff4bdb870652e321e3b4bee5dccef3031a138310cf"
+      }
+    ],
+    "patch": "/home/dw/Projects/agent-sts2/learner/runs/20261024-101321-540583b2-6eec-4ebd-9cf3-3bc8974806cc-fix-batch/strategy-budget-complete.patch",
+    "without_fix": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 1,
+      "log": "strategy-budget-without-fix.log"
+    },
+    "with_fix": {
+      "exit": 0,
+      "passed": 2,
+      "log": "strategy-budget-fixed.log"
+    },
+    "wrapped_with_fix": {
+      "exit": 0,
+      "passed": 2,
+      "log": "strategy-budget-wrapped.log"
+    },
+    "gitleaks": {
+      "exit": 0,
+      "log": "gitleaks.log"
+    },
+    "ledger_matches": [],
+    "fixed_input": {
+      "path": "agent/tests/external-strategy-data/external-strategy.json",
+      "sha256": "cfbe01dac72b5fc1eceb0e0332187b8a20731bd4486970215802d185aa96c2c9"
+    }
+  },
+  "source_patch_sha256": "6e99acde5ea0e7d86c0ec98a0733887aac2e4c4ede07349041014808e5a8e81a",
+  "original_final_report_result_equal": true,
+  "full_checks": {
+    "tsc": 0,
+    "vitest": 124,
+    "cases": 5783,
+    "files": 628,
+    "complete": false,
+    "observed_passed": 5725,
+    "observed_failed": 58,
+    "targeted_vitest": 0,
+    "targeted_files": 2,
+    "targeted_cases": 3,
+    "first_full_exit": 130
+  },
+  "full_exit_130_124_preserved": true,
+  "failure_scope": "includes EPERM plus baseline assertions/sparse historical input; not all failures attributed to sandbox",
+  "retention": "deferred: scratch ownership not bound to original report; preserve original root scratch and dirty worktree; no reclaim/finish replay",
+  "host_unique_full": "await original issue37 owner explicit current window/combination; no new full started",
+  "candidate_tree_scope": "committed R428 + exact two source leaves; final host check must refreeze actual newest knowledge and data, no borrowing prior full",
+  "source_commit_audit_publication_release": 0,
+  "host_targeted": {
+    "exit_code": 0,
+    "files": 2,
+    "passed": 43,
+    "full": false,
+    "log": "paper/materials/20261024-fix-101315-ops/host-targeted.log",
+    "log_sha256": "3221a048585bffa177e9b83e6853d652548177fc59616d5a60f840804053fb08",
+    "candidate_source_hash_unchanged": true
+  },
+  "new_full_models_games_dataset": 0,
+  "unique_full_window": {
+    "owner_issue": 37,
+    "authority_comment": 6379020119,
+    "frozen": "R428 + issue37 six source leaves + 091302 net12 knowledge; current51/54/36 host paths explicitly covered",
+    "tool_budget_candidate_included": false,
+    "do_not_start_another_full": true
+  }
+}

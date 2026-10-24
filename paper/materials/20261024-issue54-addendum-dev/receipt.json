@@ -1,0 +1,123 @@
+{
+  "issue": 54,
+  "source_commit": "3f6641e92e585e53b532d3e00de2ae51de38ccdd",
+  "prior_delivery_tip": "8b082b5b6",
+  "first_addendum_checkpoint": "17165efad (superseded by complete/manual cohort exclusions in source_commit)",
+  "recorded_at": "2026-10-24T10:29:34.065293+08:00",
+  "requests": [
+    "https://github.com/dwroy/agent-sts2/issues/51#issuecomment-6378443035",
+    "https://github.com/dwroy/agent-sts2/issues/51#issuecomment-6378493412",
+    "https://github.com/dwroy/agent-sts2/issues/54#issuecomment-6378529758"
+  ],
+  "own": {
+    "raw_finished_silent_runs": 508,
+    "eligible_complete_runs": 506,
+    "eligible_a10_runs": 466,
+    "eligible_wins": 17,
+    "excluded": [
+      {
+        "run_id": "Z2KBGZQMSRV5",
+        "reason": "Roy manual/handoff; whole run excluded"
+      },
+      {
+        "run_id": "KF9HMZKTFC3V",
+        "reason": "recorded victory summary but missing confirmed terminal snapshot; complete trajectory unknown"
+      }
+    ],
+    "unfinished_run_not_in_frozen_finished_source": "BP9C8K9NSRZ0",
+    "four_table_rows": [
+      46,
+      1842,
+      46,
+      204
+    ],
+    "representatives": 114,
+    "primary_comparison": {
+      "self_a10_no_retry_evidence_n": 123,
+      "self_wins": 4,
+      "external_v0111_winner_n": 492,
+      "denominators_pooled": false
+    },
+    "exclusion_policy_sha256": "85fb440350593d693d252c8c5e4c1f5dff398a1c22073489bad5c5906b559b3d",
+    "source_dataset_unmodified": true
+  },
+  "external_decisions": {
+    "runs": 6348,
+    "nodes": 207997,
+    "builds": 8,
+    "field_cells": 104,
+    "item_cells": 84691,
+    "player_identifiers_read": false,
+    "source": "existing downloaded sts2.fun database; independent authorized field projection; no new download",
+    "partial_or_unavailable": [
+      "ordinary shop card purchase explicit field absent",
+      "first act ancient choice is opening blessing proxy, not verified opening snapshot",
+      "node-level potion use has no turn timing or true pre-use HP",
+      "rest HP is node end; previous node HP proxy only",
+      "true inter-Boss resources and verified floor unavailable",
+      "event title is localization key/table; variables and mechanisms not inferred"
+    ]
+  },
+  "checks": {
+    "tsc": {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0
+    },
+    "directed_vitest": {
+      "files": 5,
+      "passed": 92,
+      "max_workers": 1,
+      "file_parallelism": false,
+      "raw_log": "directed.txt",
+      "raw_log_sha256": "1fccf2ee6cd384df21ea7459568289f8a4bbdc37a1640870f0084c7309ee29d4",
+      "raw_log_trailing_blank_line_preserved": true
+    },
+    "python_fixed_cases": {
+      "external_original": 10,
+      "addendum": 8,
+      "passed": 18
+    },
+    "independent_accounting": "independent-verification.json",
+    "source_and_actual_bounded_readback": "source-and-bounded-readback.json",
+    "deterministic_byte_replays": [
+      "own-reproducibility.txt",
+      "decision-reproducibility.txt"
+    ],
+    "gitleaks": "staged source/data passed, no leaks"
+  },
+  "manifests": {
+    "original_external_unchanged": {
+      "path": "knowledge/external/sts2fun/builds-v1/manifest.json",
+      "sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852"
+    },
+    "own": {
+      "path": "knowledge/characters/silent/build-statistics-v1/manifest.json",
+      "sha256": "a078c592dabf5909473f59967334ccd7ae24166f9f1e74e7140a062282e72e64"
+    },
+    "decisions": {
+      "path": "knowledge/external/sts2fun/decision-fields-v1/manifest.json",
+      "sha256": "e9d1e6d76e6edc78aee67f451b9691d0f7c4b81d0c8e8c129c21a90351bbe78f"
+    }
+  },
+  "scope": {
+    "full_tests_started": 0,
+    "model_starts": 0,
+    "game_starts": 0,
+    "live_changes": false,
+    "brain_changes": false,
+    "pipeline_or_cursor_changes": false,
+    "inflight_008_changed": false,
+    "old_085327_scope_changed": false,
+    "learning_parent_closed": false,
+    "formal_strategy_or_rk_published": false,
+    "consumer_adoption_claimed": false,
+    "integration": "pending integrator; ops freezes new inputs after integration"
+  },
+  "limits": [
+    "Own game version remains unknown; each ascension/SL evidence group kept separate.",
+    "Source observations and per-source descriptive differences are not causal game recommendations.",
+    "Own representatives use extracted complete-record coverage, not all original prompt text; original off/len retained.",
+    "No significant own combinations after BH; archetype naming and deviation interpretation remain learner work."
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "version": "2026-10-24-own-rest-route-002",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "第一幕休息题先按当前真实HP与后继风险比较回血/具名升级，不凭终局胜率选锻造。自有Silent A10、版本unknown：HEAL/SMITH题前HP均33.53/48.97，差15.44血；1039/474次、451/309个组内独立局（组间重叠）。外部v0.111.0前节点HP代理差17.85血，赢家上传372/1254与465/1458，差2.23pp，仅方向对照。适用：两项当前合法；观察关联、SL分层另附，不给固定回血线、升级因果收益或其他进阶结论。",
+      "source": "mixed",
+      "confidence": 0.4,
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=HEAL；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "HEAL whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.2966507177033493,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1254
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/HEAL;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=SMITH；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "SMITH whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.31893004115226337,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1458
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/SMITH;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "EQLB6SK9W9H7",
+          "floor": 16,
+          "ref": "logs/decisions.jsonl@4620717499+570326;sha256=7a3c72f676a86b5e4fd637dc4e05c3096907079d997624aaba3f5828e0b8d5bb",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "QVDR4R3UWKXU",
+          "floor": 8,
+          "ref": "logs/decisions.jsonl@4577763203+432997;sha256=993083101bed355280cf190deb087dde3806123d5f57ab6edd2e77fde08dfd6f",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "audit_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/source-ledger.json#silent-brain-act1-rest-smith-resource-proxy",
+      "scope_notice": "仅Silent A10；自有游戏版本unknown；当前合同不能强制进阶/遗物/路线备选谓词，正文条件必须人工核。",
+      "evidence_status": "unassessed"
+    }
+  ],
+  "candidate_disposition": "update",
+  "merge_target": {
+    "kind": "strategy",
+    "id": "silent-brain-act1-rest-smith-resource-proxy",
+    "baseline_file": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-strategy-121311-ops/rest-strategy-candidate.json",
+      "bytes": 4049,
+      "sha256": "94757d7fe649578e0ea3ec25c32b15a17af6420e16363998ecc099066c847084"
+    },
+    "preserve_existing_content_and_evidence": true,
+    "projection_counted_as_separate_knowledge": false
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-24T08:49:09+08:00",
+  "phase": "published-registered-fixed-readback-manual-hold",
+  "published": true,
+  "new_full_model_game_tick": 0,
+  "held_locks": [
+    "ops/knowledge-refresh.lock",
+    "ops/live-merge.lock"
+  ],
+  "T": "2026-10-24T08:49:02+08:00",
+  "boundary": {
+    "manual_hold": true,
+    "STOP_retained": true,
+    "no_automatic_play": true,
+    "no_game_actions": true,
+    "terminal_receipt": "paper/materials/20261024-roy-manual-ops/final-game-readback.json"
+  },
+  "behavior": {
+    "parent": "80779d059fd127a2467952e79cc802c543fec620",
+    "commit": "31810fa440ff57a42e38b68ec4581d32c642b246",
+    "tree": "35d33d1896bf493d6079b2d02e36adcd7a0f211a",
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/tools/query-guidance.ts",
+      "agent/tests/brain-query-efficiency.test.ts",
+      "agent/tests/brain-query-guidance.test.ts",
+      "agent/tests/brain-reflex-knowledge.test.ts",
+      "agent/tests/endgame-plan.test.ts",
+      "docs/brain-agent-mode.md",
+      "docs/brain-strategies.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/f1d5a44194914a3088c350a1a3fdfeee/manifest.json",
+      "manifest_sha256": "efe4858e4849015de1dd7b8f9ce241d9940dbc61e79c59f604b4a6a646cb350a",
+      "scanned_leaves": 8,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "release_id": "V6-R427",
+  "live": "0f760a5c5b34014e60eb0be43ec50f790486604d",
+  "registrations": {
+    "live": {
+      "parent": "31810fa440ff57a42e38b68ec4581d32c642b246",
+      "commit": "0f760a5c5b34014e60eb0be43ec50f790486604d",
+      "tree": "34343c402a0b85e69fb92bac7657206ed744aac7",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/b857f5dbd3354424aa2e631afbf1316b/manifest.json",
+        "manifest_sha256": "9e987fd02030a6b05ddd144149fee1a5b5d38fbb441a330c7da1fc17612e0cd7",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "485dfeaa0d1b068ce3970e46f46e4471f976c564",
+      "commit": "a208f802d89ff0a65cf4eeccd3cafc7f84de03af",
+      "tree": "cbfc9bd9288931d63144d45f6d455170088afeba",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/0077eea28b8e4894ae0f39113b401327/manifest.json",
+        "manifest_sha256": "a0f9e1fd2565030963aaa57c748c234366d46c67aef7bc9f773e57598c7ebe13",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "checks": {
+    "at": "2026-10-24T08:48:34+08:00",
+    "phase": "passed-targeted-only-authorized-await-publication",
+    "full_runs": 0,
+    "new_models_games_ticks": 0,
+    "files": [
+      "tests/brain-agent-mode.test.ts",
+      "tests/brain-query-efficiency.test.ts",
+      "tests/brain-query-guidance.test.ts",
+      "tests/brain-reflex-knowledge.test.ts",
+      "tests/endgame-plan.test.ts",
+      "tests/external-strategy-evidence.test.ts"
+    ],
+    "tsc_rc": 0,
+    "targeted_rc": 0,
+    "passed": 123,
+    "failed": 0,
+    "input_count": 2549,
+    "inputs_unchanged": true
+  },
+  "source": "aeb03164e58ef9b65de08461a8f5421b15a892e4",
+  "experience_unchanged": true,
+  "knowledge_unchanged": true,
+  "STOP_unchanged": true,
+  "resume_requires_explicit_Roy": true,
+  "actual_natural_question": null,
+  "scientific_parents_closed": false,
+  "rollback": "reverse only eight-leaf guidance patch; preserve all knowledge"
+}

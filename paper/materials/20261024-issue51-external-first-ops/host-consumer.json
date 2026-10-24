@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-24T08:18:55+08:00",
+  "imports": [
+    {
+      "module": "learner_jobs",
+      "path": "ops/learner_jobs.py",
+      "sha256": "71e743bce4bf0115ea774b88360030adf6a22a46b6b68f2722136ae83d0c988d"
+    },
+    {
+      "module": "strategy_external_jobs",
+      "path": "ops/strategy_external_jobs.py",
+      "sha256": "abdb26a6c30b033e2fc93c6984492b195d7e80aaee993b3bc27dc1a8a6808043"
+    }
+  ],
+  "policy_on_actual_state_readonly": {
+    "external_pending": true,
+    "mode": "external-first-no-alternation",
+    "normal_postmortems_yield_to_pending_external": true,
+    "queue_enabled": true
+  },
+  "host_script_hashes": [
+    {
+      "path": "ops/learner_jobs.py",
+      "sha256": "71e743bce4bf0115ea774b88360030adf6a22a46b6b68f2722136ae83d0c988d"
+    },
+    {
+      "path": "ops/strategy_external_jobs.py",
+      "sha256": "abdb26a6c30b033e2fc93c6984492b195d7e80aaee993b3bc27dc1a8a6808043"
+    },
+    {
+      "path": "ops/codex-ops-learn.py",
+      "sha256": "a700697aa2264083da63d0c6aca97fe99dc37f9f24a52a26d0be9113da142a2a"
+    }
+  ],
+  "new_tick_or_native_claimed": false
+}

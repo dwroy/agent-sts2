@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-23T22:36:46+08:00",
+  "source": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6367397414",
+  "source_author": "dwroy",
+  "source_role": "Claude",
+  "order": [
+    "20 learning-tab subclass (accepted)",
+    "20 one-minute dispatcher independent delivery",
+    "42 tools remainder",
+    "35",
+    "50",
+    "28",
+    "37",
+    "20 parent"
+  ],
+  "developer": "original issue-20 session",
+  "review": "integrator directed checks, no additional full",
+  "publication": "ops cron update; no new daemon",
+  "delivery_available": false,
+  "actual_current_config": {
+    "interval_minutes": 5,
+    "watchdog_idle_minutes": 10
+  },
+  "required": {
+    "interval_minutes": 1,
+    "idle_threshold_minutes": 2,
+    "per_session_cooldown_minutes": 10,
+    "existing_escalation": "retain two-hour/three-attempt rule",
+    "github": "conditional requests or updated_at detail caching; hourly actual request accounting; above1000/hour slow down + digest",
+    "directed_checks": [
+      "lightweight entry invokes only dispatcher",
+      "idle/done with backlog notifies after2min",
+      "same session no repeated reminder within10min",
+      "busy/no work no reminder",
+      "304 exempt accounting",
+      "automatic slower cadence at hourly threshold"
+    ],
+    "ops_readback": [
+      "one-hour actual GitHub calls",
+      "max backlog idle <=3min"
+    ]
+  },
+  "full_occupant": "ops original211302 fix + ultrafast",
+  "no_changes": [
+    "runtime cron",
+    "control switch",
+    "production",
+    "candidate source",
+    "full window"
+  ]
+}

@@ -34,8 +34,8 @@ class Admission(unittest.TestCase):
     def sample(self, at, free):
         return disk.snapshot(self.root, self.directory, record=True, now=at, available=free * disk.GiB)
 
-    def test_100_and_60_are_inclusive_holds_without_reducing_current_turn(self):
-        for value, jobs, next_run in [(101, True, True), (100, False, True), (61, False, True), (60, False, False), (59, False, False)]:
+    def test_80_and_60_are_inclusive_holds_without_reducing_current_turn(self):
+        for value, jobs, next_run in [(100, True, True), (81, True, True), (80, False, True), (61, False, True), (60, False, False), (59, False, False)]:
             with self.subTest(value=value):
                 result = disk.evaluate(value * disk.GiB, [])
                 self.assertEqual(result["new_jobs_allowed"], jobs)
@@ -59,8 +59,8 @@ class Admission(unittest.TestCase):
 
     def test_original_tick_samples_are_small_and_only_bad_transition_needs_attention(self):
         healthy = self.sample(1000, 124)
-        first = self.sample(2800, 100)
-        repeated = self.sample(4600, 99)
+        first = self.sample(2800, 80)
+        repeated = self.sample(4600, 79)
         critical = self.sample(6400, 60)
         self.assertFalse(healthy["attention_transition"])
         self.assertTrue(first["attention_transition"])
@@ -70,6 +70,20 @@ class Admission(unittest.TestCase):
         self.assertEqual(len((self.directory / "disk-capacity/measurements.jsonl").read_text().splitlines()), 4)
         self.assertFalse((self.root / "ops/STOP").exists())
         self.assertFalse((self.directory / "queue").exists())
+
+    def test_snapshot_consumes_the_configured_approved_jobs_threshold(self):
+        path = self.root / "ops/disk-policy.json"
+        policy = json.loads(path.read_text())
+        for threshold, allowed in [(100, False), (80, True)]:
+            policy["hold_new_jobs_at_or_below"] = threshold
+            path.write_text(json.dumps(policy))
+            result = disk.snapshot(self.root, self.directory, now=1000, available=90 * disk.GiB)
+            self.assertEqual(result["new_jobs_allowed"], allowed)
+            self.assertTrue(result["next_run_allowed"])
+        policy["hold_next_run_at_or_below"] = 40
+        path.write_text(json.dumps(policy))
+        with self.assertRaisesRegex(ValueError, "approved thresholds"):
+            disk.snapshot(self.root, self.directory, now=1000, available=90 * disk.GiB)
 
     def test_clock_or_corrupt_state_failure_keeps_original(self):
         self.sample(1000, 124)

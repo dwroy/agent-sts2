@@ -1,0 +1,29 @@
+{
+  "roots": [
+    "ops/learner_tabs.py",
+    "ops/learner_tui.py"
+  ],
+  "modules": [
+    "ops/issue_session.py",
+    "ops/issue_session_support.py",
+    "ops/learner_tabs.py",
+    "ops/learner_tui.py"
+  ],
+  "edges": [
+    {
+      "source": "ops/learner_tabs.py",
+      "target": "ops/issue_session_support.py"
+    },
+    {
+      "source": "ops/learner_tabs.py",
+      "target": "ops/issue_session.py"
+    },
+    {
+      "source": "ops/issue_session.py",
+      "target": "ops/issue_session_support.py"
+    }
+  ],
+  "missing": [],
+  "tracked_and_materialized": true,
+  "method": "AST local ops imports; explicit dynamic native-verifier root"
+}

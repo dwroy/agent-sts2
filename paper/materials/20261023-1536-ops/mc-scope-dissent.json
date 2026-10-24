@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-23T15:39:13+08:00",
+  "batch": "20261023-151302-strategy-proposal",
+  "question_original": {
+    "id": "silent-proposal-e7ed37db21fc698a",
+    "prior": "134302将整体记duplicate",
+    "finding": "手牌修复已live，原文要求的药水MC补线8ed7001347cedd668ddf82e308df56653074be85尚非live祖先，故本批waiting。",
+    "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302/learner/runs/20261023-151307-0c0fde54-139b-4ab1-af67-17c7942d48cb-strategy-proposal/original-integration-receipt.json",
+    "next": "原ops核集成与消费者后经watcher转告Roy；未代填送达或ACK。"
+  },
+  "prior_original_disposition": {
+    "id": "silent-proposal-e7ed37db21fc698a",
+    "state": "duplicate",
+    "commit": "66c22ba7d87b8748690a4183fff838acd346bd3e",
+    "reason": "已核实际live祖先；普通刀刃之舞生成三刀、容量限制及生成后重读已有实现。"
+  },
+  "prior_report": {
+    "path": "ops/codex-ops/learner/20261023-134302-strategy-proposal.out",
+    "bytes": 5403,
+    "sha256": "21ca552243f79038acea539973f464f9cfefb45bb6ed97cfc88e844a45f85b2c"
+  },
+  "affected_ledger": [
+    "silent-0324"
+  ],
+  "live": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+  "ancestry": [
+    {
+      "commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+      "live_ancestor": true,
+      "rc": 0
+    },
+    {
+      "commit": "b9d6ed779c9e369d1f02a0e0935acbe4d1e44d14",
+      "live_ancestor": true,
+      "rc": 0
+    },
+    {
+      "commit": "8ed7001347cedd668ddf82e308df56653074be85",
+      "live_ancestor": false,
+      "rc": 1
+    }
+  ],
+  "current_consumer_source": {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "git_commit": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+    "sha256": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+    "selected_lines": [
+      {
+        "line": 4748,
+        "text": " * Gauntlets costs `ctx.powerExtraCost` (1) all the same (card-model potionCardCost; A4PWRULKG2JT F46 T1)."
+      },
+      {
+        "line": 4749,
+        "text": " */"
+      },
+      {
+        "line": 4750,
+        "text": "export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean; powerExtraCost?: number }): CardModel {"
+      },
+      {
+        "line": 4751,
+        "text": "  const cost = potionCardCost({ type: info.type, xCost: info.xCost, cost: 0 }, ctx.powerExtraCost ?? 0);"
+      },
+      {
+        "line": 4752,
+        "text": "  const raw = {"
+      },
+      {
+        "line": 4753,
+        "text": "    card_id: info.id,"
+      },
+      {
+        "line": 4764,
+        "text": "    index: 0,"
+      },
+      {
+        "line": 4765,
+        "text": "  };"
+      },
+      {
+        "line": 4766,
+        "text": "  const model = modelHandCard(raw, 0, knowledge);"
+      },
+      {
+        "line": 4767,
+        "text": "  return {"
+      },
+      {
+        "line": 4768,
+        "text": "    ...model,"
+      },
+      {
+        "line": 4769,
+        "text": "    cost,"
+      }
+    ]
+  },
+  "original_integration": {
+    "path": "ops/codex-ops/pending-integrations/20261020-074302-s2-strategy-proposal.json",
+    "bytes": 2862,
+    "sha256": "61bd6c04a10f0705b98a1fa2c3482484e843ba42e61e5a784541ff6e008f299b"
+  },
+  "original_integration_readback": {
+    "path": ".worktrees/codex-strategy-silent-20261023-151302/learner/runs/20261023-151307-0c0fde54-139b-4ab1-af67-17c7942d48cb-strategy-proposal/original-integration-receipt.json",
+    "bytes": 3219,
+    "sha256": "a2770d0ff1fa384ad0b9de6ba039c68e18f24f594fc07e35e9325ae26daf9c7a"
+  },
+  "difference": "implemented hand branch does not establish potion MC integration; keep whole original proposal waiting",
+  "next": "original source integration owner verifies actual combined inputs, main/live and consumers; watcher relays original dissent to Roy",
+  "watcher_received": false,
+  "roy_notified": false,
+  "no_proxy_ACK": true,
+  "new_model_or_experiment": false
+}

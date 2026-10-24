@@ -1,0 +1,48 @@
+{
+  "schema": "brain-agent-acceptance-v1",
+  "questions": 162,
+  "run_ids": [
+    "1303HVDLVMGR",
+    "4XZHJFMUKDJW",
+    "E420FDJNEDKR",
+    "GLWXPCHNXS4P",
+    "K94WZS8B2MQ6",
+    "KWNMCCCNH3P2",
+    "XU3M3P5CU3X7",
+    "Y3824FJLSUXY"
+  ],
+  "prefix_budget_open_book_omissions": 0,
+  "inline_knowledge_rows": 0,
+  "groups": [
+    {
+      "engine": "codex",
+      "questions": 162,
+      "completed": 162,
+      "completion_rate": 1,
+      "tool_call_rate": 0.18518518518518517,
+      "calls_total": 48,
+      "calls_mean": 0.2962962962962963,
+      "calls_p95": 1,
+      "tool_execution_ms_mean": 2.111111111111111,
+      "tool_execution_ms_p95": 5,
+      "latency_ms_mean": 13259.543209876543,
+      "latency_ms_p95": 25974,
+      "tool_phase_ms_mean": 13259.537037037036,
+      "final_phase_fallbacks": 0,
+      "fallback_rate": 0,
+      "fallback_reasons": {
+        "calls": 0,
+        "time": 0,
+        "stall": 0
+      },
+      "thinking_without_native_tool_calls": 42,
+      "textual_tool_call_without_native_call": 0,
+      "missing_agent_telemetry": 0,
+      "source_tags": [
+        "external:spire-codex",
+        "own"
+      ]
+    }
+  ],
+  "limitation": "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。无工具调用是观测，不自动判错；无对照局，不推断因果增加耗时或收益。零题不构成验收。"
+}

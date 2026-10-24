@@ -28,6 +28,7 @@ import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
 import { loadConstructionData } from "../construction/data.js";
 import { CONSTRUCTION_EVALUATION_NOTE, constructionEvaluationEnabled } from "../construction/consumer.js";
+import { parseEndgamePlan, type EndgamePlan } from "./endgame-plan.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
 export type EliteAppetite = "seek" | "normal" | "avoid";
@@ -55,6 +56,7 @@ export interface RunPlan {
   rest: RestPolicy;
   bossPrep: string;
   summary: string;
+  endgame?: EndgamePlan;
   construction?: { primary: string; alternatives: string[]; checkpoint: number; reason: string; pivot_if: string };
 }
 
@@ -208,6 +210,7 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
   const validConstruction = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
     && (allowedCores.has(primary) || primary === "uncommitted") && typeof checkpoint === "number" && Number.isInteger(checkpoint)
     && checkpoint > (state.run?.floor ?? 0) && checkpoint <= 100 && str(construction["reason"]).length > 0 && str(construction["pivot_if"]).length > 0;
+  const endgame = parseEndgamePlan(json["endgame"]);
   return {
     runId: str(state.raw["run_id"]),
     act: actOf(state),
@@ -223,6 +226,7 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
     rest,
     bossPrep: typeof json["boss_prep"] === "string" ? json["boss_prep"].trim() : "",
     summary: typeof json["summary"] === "string" ? json["summary"].trim() : "",
+    ...(endgame ? { endgame } : {}),
     ...(validConstruction ? { construction: { primary, alternatives: [...new Set(asArray(construction["alternatives"]).map((v) => str(v)).filter((id) => id !== primary && allowedCores.has(id)))].slice(0, 3),
       checkpoint, reason: str(construction["reason"]).slice(0, 500), pivot_if: str(construction["pivot_if"]).slice(0, 500) } } : {}),
   };
@@ -283,7 +287,7 @@ export function logRunPlan(file: string, entry: Record<string, JsonValue>): void
 }
 
 /** The last logged plan of this run (a restart keeps it), else null. */
-export function loadRunPlan(file: string, runId: string): RunPlan | null {
+export function loadRunPlan(file: string, runId: string, throughFloor = Infinity): RunPlan | null {
   if (!file || !existsSync(file)) return null;
   try {
     const size = statSync(file).size;
@@ -299,7 +303,7 @@ export function loadRunPlan(file: string, runId: string): RunPlan | null {
       if (!line.includes(runId)) continue;
       try {
         const entry = JSON.parse(line) as { plan?: RunPlan };
-        if (entry.plan && entry.plan.runId === runId) return entry.plan;
+        if (entry.plan && entry.plan.runId === runId && (throughFloor === Infinity || entry.plan.floor <= throughFloor)) return entry.plan;
       } catch {
         // a torn first line
       }

@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-23T13:40:01+08:00",
+  "state": "passed",
+  "base": "7974f37b684d1458e54ceacada712464ef25fe22",
+  "tree": "0d75301667af15f72e538b08247abf5e8a834d43",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator46-main-20261023-1318",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T13:40:01+08:00",
+      "exit_code": 0,
+      "seconds": 0.916
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/proposal-recheck.test.ts",
+        "tests/strategy-concurrency.test.ts",
+        "tests/cadence-no-change.test.ts",
+        "tests/strategy-research-scheduling.test.ts",
+        "tests/strategy-implementation.test.ts",
+        "tests/strategy-implementation-continuation.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue46-final-20261023-1318/main-vitest.json"
+      ],
+      "started_at": "2026-10-23T13:40:02+08:00",
+      "exit_code": 0,
+      "seconds": 16.173
+    }
+  ],
+  "full_repeated": false,
+  "inputs_unchanged": true,
+  "input_count": 2618,
+  "vitest": {
+    "files": 6,
+    "passed": 16,
+    "failed": 0,
+    "pending": 0
+  },
+  "ended_at": "2026-10-23T13:40:19+08:00"
+}

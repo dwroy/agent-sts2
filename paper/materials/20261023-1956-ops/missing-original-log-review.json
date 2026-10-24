@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-23T20:00:52.676596+08:00",
+  "notice_id": "0ca61b2ba10a18ca2e12f5b3",
+  "request_id": "ops-20261013-experience-000402-merge-recovery",
+  "prior": "registered original launch JSONL bound to fixed exp path/hash",
+  "finding": "bound wrapper JSONL missing; restoring shared exp checkout does not restore old ignored log",
+  "original_log": {
+    "path": ".worktrees/exp/learner/runs/20261013-000403-experience-update.jsonl",
+    "sha256": "b1be2be174208edcafe23f3e0e47f4236560577c2752b6a02f88bd094755a765"
+  },
+  "request_sha256": "2facc2aac097c508e5f6583296ef9e19c584ab05d178170f9eb1ceba8a44adfe",
+  "input_verified": {
+    "path": "paper/materials/20261013-0056-ops/experience-same-thread-recovery.md",
+    "sha256": "fb4ee3c343ba823bde40bb438d7dad56f7fc0403a035736be38f8c680ed9ed95"
+  },
+  "archive_manifest": {
+    "path": "paper/materials/20261013-0056-ops/experience-original-archive-before-prune.json",
+    "sha256": "5d3f1c7ccf016d65545b294fcd28c1f5740f045672ec6a49f1b1c53808072976",
+    "entries": 211,
+    "contains_original_wrapper_jsonl": false
+  },
+  "same_source_commit": "aa27705f654a102944b7aac1294107269c4b8aa7",
+  "current_request_state": "blocked",
+  "original_attempts_unchanged": [
+    "20261013-010547-strategy-proposal"
+  ],
+  "next": "recover exact wrapper JSONL with bound SHA and validate original launch/thread; if unavailable retain blocked and notify watcher, never substitute raw-state excerpts or native logs",
+  "cross_account_resume_or_registration_rewrite_or_model_replay": false,
+  "new_model_or_live_change": false,
+  "ops_forwarded_already_real": true,
+  "watcher_received": false,
+  "roy_notified": false
+}

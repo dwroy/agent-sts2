@@ -1,0 +1,49 @@
+{
+  "knowledge_snapshot": "knowledge-snapshot.json",
+  "knowledge_json_count": 462,
+  "state": "passed",
+  "tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+  "base_head": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-22T19:25:29+08:00",
+      "pid": 1026584,
+      "exit_code": 0,
+      "seconds": 0.8219963290030137
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/.artifacts/high40-compat-20261022/full-timeout-compatible-first/vitest.json"
+      ],
+      "started_at": "2026-10-22T19:25:29+08:00",
+      "pid": 1026649,
+      "exit_code": 0,
+      "seconds": 1385.6368719019956
+    }
+  ],
+  "runner_pid": 1026528,
+  "runner_start": "9285804",
+  "nice": 19,
+  "full_started": true,
+  "started_at": "2026-10-22T19:25:28+08:00",
+  "input_count": 2488,
+  "inputs_unchanged": true,
+  "ended_at": "2026-10-22T19:48:36+08:00"
+}

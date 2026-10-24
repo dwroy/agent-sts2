@@ -1,0 +1,283 @@
+{
+  "at": "2026-10-23T15:29:45+08:00",
+  "issue": 36,
+  "batch": "20261023-151302-s2-strategy-proposal",
+  "live_head": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+  "original_receipt": {
+    "path": "ops/codex-ops/learner/learner-20261023-151302-s2-strategy-proposal.tui.json",
+    "bytes": 1423,
+    "sha256": "98e4804fe06002229c84f91810ea0984101fc762570ad25cb8fe2d1b8bcd4473",
+    "submitted": true,
+    "submissions": [
+      {
+        "marker": "[learner-batch:e153b882-fc82-4d14-8d3e-87203c6e5a90]",
+        "prompt_sha256": "055ac5d37b461e0cc0d52486578309daed250e9d4c6ee3ce663b18dca2b677ed"
+      }
+    ],
+    "bindings": [],
+    "result": {
+      "code": 75,
+      "reason": "retirement-unverified",
+      "message": "",
+      "stopped": false
+    },
+    "retirement_authorized": false
+  },
+  "native_snapshot": {
+    "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T15-13-12-01a1679b-4956-7843-88b8-99d2c695ef69.jsonl",
+    "complete_line_prefix_bytes": 1528979,
+    "sha256": "ca84499feee3397fbb617999454c7b2a6651067e83c9ad6bec68eeb39323416e",
+    "rows": 284,
+    "windows": [
+      {
+        "line": 1,
+        "offset": 0,
+        "bytes": 22780,
+        "sha256": "bc8b8d5183e05c94c919ea7cdac9339350f51cba6b3bbae1e48458d63c838b3d",
+        "type": "session_meta",
+        "timestamp": "2026-10-23T07:13:47.627Z",
+        "session_meta": {
+          "id": "01a1679b-4956-7843-88b8-99d2c695ef69",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2",
+          "timestamp": "2026-10-23T07:13:12.581Z",
+          "source": "cli",
+          "cli_version": "0.163.0"
+        }
+      },
+      {
+        "line": 2,
+        "offset": 22780,
+        "bytes": 496,
+        "sha256": "1d9c71b8baf22a71322f65f33a00f81a4d9664517f5c093ca418f34aed40f434",
+        "type": "event_msg",
+        "timestamp": "2026-10-23T07:13:47.628Z",
+        "turn_id": "01a1679b-d263-7281-8953-bf119b7cf9b4"
+      },
+      {
+        "line": 6,
+        "offset": 30007,
+        "bytes": 13059,
+        "sha256": "2f9a351462fb1a8f17db2445d1c2d94107c1f0b2abae9ce83346332e7bd4c2bf",
+        "type": "response_item",
+        "timestamp": "2026-10-23T07:13:49.356Z"
+      },
+      {
+        "line": 8,
+        "offset": 56538,
+        "bytes": 7605,
+        "sha256": "475f423268745dfa46fa45fa5dc19e1202e7eb9f940b817281f49b5da557586b",
+        "type": "turn_context",
+        "timestamp": "2026-10-23T07:13:49.361Z",
+        "context": {
+          "turn_id": "01a1679b-d263-7281-8953-bf119b7cf9b4",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2",
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "sandbox_policy": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261023-151302-s2"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          }
+        }
+      },
+      {
+        "line": 10,
+        "offset": 68872,
+        "bytes": 24485,
+        "sha256": "90ee17c832d6192ff1773201c786da73f63fdcd59285876e51dc02fd96debe5e",
+        "type": "response_item",
+        "timestamp": "2026-10-23T07:13:49.366Z",
+        "prompt_sha256": "055ac5d37b461e0cc0d52486578309daed250e9d4c6ee3ce663b18dca2b677ed",
+        "marker": "[learner-batch:e153b882-fc82-4d14-8d3e-87203c6e5a90]"
+      }
+    ],
+    "task_events": [
+      {
+        "timestamp": "2026-10-23T07:13:47.628Z",
+        "type": "task_started",
+        "turn_id": "01a1679b-d263-7281-8953-bf119b7cf9b4"
+      }
+    ],
+    "scope": "bounded read-only snapshot; no claim after captured byte limit"
+  },
+  "launcher_log": {
+    "path": "learner/runs/20261023-151307-08aa388d-dbf4-42c1-812e-fe18b707903f-strategy-proposal.jsonl",
+    "bytes": 27241,
+    "sha256": "22cf804b6a07193bdbf1857401d8f4a02fecdc2a7ad00441e06dc0419726987f"
+  },
+  "initial_attention": {
+    "path": "ops/codex-ops/queue/1792739596973000000-learner-tui-attention-cd52ea7a-83e5-4117-868a-b3953e315281.md",
+    "bytes": 321,
+    "sha256": "600294746567a8fad4bed9ad1ef33c5697352cfa19be16d7b8f6833010aee3a0",
+    "reason": "unsent human draft; keep original session and supervision",
+    "original_screen_unavailable": true
+  },
+  "deferral": {
+    "path": "ops/codex-ops/learner/20261023-151302-s2-strategy-proposal.verification-deferred.json",
+    "bytes": 1433,
+    "sha256": "4e9f1be9f3229026e1794735b75631547bf02ada81dab13b41ff50d606f36770",
+    "record": {
+      "schema": "learner-verification-deferred-v1",
+      "batch": "20261023-151302-s2-strategy-proposal",
+      "at": "2026-10-23T15:18:18.116918+08:00",
+      "reason": "tui-verification-timeout",
+      "supervisor": {
+        "pid": 1033180,
+        "birth": "16411358"
+      },
+      "launcher_rc": 75,
+      "receipt": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261023-151302-s2-strategy-proposal.tui.json",
+      "output": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-151302-s2-strategy-proposal.out",
+      "finish_authorized": false,
+      "retirement_authorized": false,
+      "automatic_replay_authorized": false,
+      "registration": {
+        "pid": 1033180,
+        "pane": "w1H:pCC",
+        "started": null,
+        "task": "strategy-proposal",
+        "character": "silent",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2",
+        "key": "code-proposals:silent-proposal-f6f27a4e9301d1f9,silent-proposal-a9c0bfa7e34da37d,silent-proposal-f35501885edc7aa1,silent-proposal-0800d092e6d7eab0,silent-proposal-3edf35d9b47a7486,silent-proposal-167b20d3b7105257,silent-proposal-2b42d1fc73a94000,silent-proposal-8d0219c3a8a99060,silent-proposal-3cc456821c19d2f1,silent-proposal-90e0bc4e45916d16:478",
+        "runs": [
+          "FU8ZUQHBHNV9",
+          "456MRNGCPD8E",
+          "3KME36ADUE4U",
+          "ZZMYZ5UBCG72",
+          "2PVLGRBGUX9S",
+          "KUZVERN40NGK",
+          "Z91JN3S3PQX2",
+          "J8PHG72DGD90",
+          "0DJ6GFZZ0TG9"
+        ],
+        "learner_task": null,
+        "feature_request": null,
+        "research_request": null,
+        "implementation_request": null
+      },
+      "inbox_notice": "written"
+    }
+  },
+  "canonical_batch_projection": {
+    "batch": null,
+    "state": "awaiting_review",
+    "review_required": "tui-verification-timeout",
+    "deferred_at": "2026-10-23T15:18:18.116918+08:00",
+    "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261023-151302-s2-strategy-proposal.verification-deferred.json",
+    "pid": 1033180,
+    "pane": "w1H:pCC",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2"
+  },
+  "supervisor": {
+    "pid": 1033180,
+    "present": false
+  },
+  "native_host": {
+    "pid": 1034144,
+    "present": true,
+    "birth": "16412055",
+    "state": "S",
+    "ppid": 1033129,
+    "pgrp": 1034144,
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2"
+  },
+  "herdr_agent": {
+    "name": "learner-c09861971fdcd50606b2800b",
+    "agent_status": "working",
+    "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2",
+    "pane_id": "w1H:pCC",
+    "tab_id": "w1H:tC9",
+    "terminal_id": "term_65e7cb60e43f0105",
+    "revision": 44,
+    "state_change_seq": 1294
+  },
+  "lease": "free-at-one-nonblocking-probe",
+  "mutations": {
+    "model_start_or_replay": false,
+    "pane_action": false,
+    "receipt_rewrite": false,
+    "production_write": false,
+    "full_test": false
+  },
+  "limits": [
+    "Original code75/bindings0 remains unchanged. Offline identity proof does not authorize finish or retirement.",
+    "Original composer screen was not captured; own-submit rendering race remains a hypothesis requiring original issue36 regression.",
+    "Issue36, issue20 and scientific parents remain open; issue46 original 24h window unchanged."
+  ],
+  "launcher_summary_window": {
+    "offset": 26763,
+    "bytes": 478,
+    "sha256": "297f1bb19d91e2418897063da51e4c9ef5a4cac7a26fc887ec168c072358572f",
+    "row": {
+      "type": "learner_summary",
+      "ts": "2026-10-23T07:13:16.980Z",
+      "exit_code": 75,
+      "signal": null,
+      "timed_out": false,
+      "cancelled": false,
+      "wall_ms": 6335,
+      "summary": {
+        "engine": "codex",
+        "toolCalls": {},
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheCreation": 0,
+          "reasoning": 0
+        },
+        "isError": true,
+        "permissionDenials": [],
+        "mcpServers": [],
+        "errors": [
+          "retirement-unverified"
+        ],
+        "retries": [],
+        "warnings": [],
+        "timing": {
+          "toolMs": 0,
+          "timeline": [],
+          "firstEventMs": 6335
+        },
+        "model": "gpt-6.1-sol",
+        "status": "turn.failed"
+      }
+    }
+  },
+  "source_review": [
+    {
+      "path": "learner/lib/herdr.ts",
+      "blob": "8e9973bf6cb7d1778c543cbef8962653fb59ec7b",
+      "sha256": "ddcc720c6dec4c5d7bf6f13db437d56beb6e235e75754a13153f5a7821920238"
+    },
+    {
+      "path": "ops/codex/herdr.ts",
+      "blob": "3545745abd37929dfb6c3083c1be8d39ad9cc9f4",
+      "sha256": "7c2bff7f1baa4577dfbe8a8a754cca8f04db53dabc85a7fc76b40773d4a31c14"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "blob": "89b205313a96ab7f2c3da092711d605ba31f33d7",
+      "sha256": "83d99a27ad6753fb1cb5415a394443e45c2bd56c818cb47cbed9b6da9d6b78d2"
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "blob": "9c61b24efa2d9feb0000bcb29cb604a3dd4b7e8a",
+      "sha256": "7eb558f2881fa0c0ca14cde3acc39e840d2ab093e4088b2e2da1beffa502168e"
+    }
+  ],
+  "timing": {
+    "launcher_summary_at": "2026-10-23T07:13:16.980Z",
+    "first_native_row_record_timestamp": "2026-10-23T07:13:47.627Z",
+    "exact_native_prompt_at": "2026-10-23T07:13:49.366Z",
+    "first_native_row_after_summary_seconds": 30.647,
+    "deferral_after_summary_seconds": 301.136918,
+    "caveat": "Native session_meta.payload.timestamp is 07:13:12.581Z. Later row timestamps establish observed ordering, not a proof that no native file existed earlier."
+  }
+}

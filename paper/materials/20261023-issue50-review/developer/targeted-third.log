@@ -1,0 +1,370 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-50-task/agent
+
+ ❯ tests/endgame-plan.test.ts (17 tests | 2 failed) 900ms
+   × codex: every construction answer updates the next question, survives restart and keeps #35 / #49 512ms
+   × deepseek: every construction answer updates the next question, survives restart and keeps #35 / #49 345ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/endgame-plan.test.ts > codex: every construction answer updates the next question, survives restart and keeps #35 / #49
+ FAIL  tests/endgame-plan.test.ts > deepseek: every construction answer updates the next question, survives restart and keeps #35 / #49
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 3 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "POMMEL_STRIKE",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.16666666666666666,
+              "deck_after": 6,
+              "deck_before": 5,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "SHRUG_IT_OFF",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.16666666666666666,
+              "deck_after": 6,
+              "deck_before": 5,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "INFLAME",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.16666666666666666,
+              "deck_after": 6,
+              "deck_before": 5,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 5,
+              "deck_before": 5,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "missing",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "POMMEL_STRIKE",
+            "card1": "SHRUG_IT_OFF",
+            "card2": "INFLAME",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "POMMEL_STRIKE",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.14285714285714285,
+              "deck_after": 7,
+              "deck_before": 6,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "SHRUG_IT_OFF",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.14285714285714285,
+              "deck_after": 7,
+              "deck_before": 6,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "INFLAME",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.14285714285714285,
+              "deck_after": 7,
+              "deck_before": 6,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 6,
+              "deck_before": 6,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "uncommitted",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "POMMEL_STRIKE",
+            "card1": "SHRUG_IT_OFF",
+            "card2": "INFLAME",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+  3rd vi.fn() call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "POMMEL_STRIKE",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.125,
+              "deck_after": 8,
+              "deck_before": 7,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "SHRUG_IT_OFF",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.125,
+              "deck_after": 8,
+              "deck_before": 7,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "INFLAME",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.125,
+              "deck_after": 8,
+              "deck_before": 7,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 7,
+              "deck_before": 7,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "table_pass_only_production_trust_unknown",
+            "next_boss_win_delta": null,
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "uncommitted",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "POMMEL_STRIKE",
+            "card1": "SHRUG_IT_OFF",
+            "card2": "INFLAME",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+
+Number of calls: 3
+
+ ❯ tests/endgame-plan.test.ts:143:80
+    141|     expect((await playFixed(1)).acts).toBe(1);
+    142|     expect((requests[2]!.payload as any).facts.your_run_plan.endgame.c…
+    143|     expect(sent).toBe(3); expect(requests).toHaveLength(3); expect(jev…
+       |                                                                                ^
+    144|     const stored = readFileSync(cfg.runPlanLog, "utf8").trim().split("…
+    145|     expect(stored.filter(r => r.plan?.endgame).map(r => r.plan.endgame…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 61 passed (63)
+   Start at  16:57:02
+   Duration  12.28s (transform 2.38s, setup 496ms, import 3.52s, tests 7.62s, environment 1ms)
+

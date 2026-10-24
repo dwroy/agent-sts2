@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-issue33-high-20261022-1215/agent
+
+ ❯ tests/human-pace-budget.test.ts (10 tests | 1 failed) 77ms
+   × honors configured Codex effort high while preserving the independent 90-second deadline 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-budget.test.ts > honors configured Codex effort high while preserving the independent 90-second deadline
+AssertionError: expected [ 'xhigh' ] to deeply equal [ 'high' ]
+
+- Expected
++ Received
+
+  [
+-   "high",
++   "xhigh",
+  ]
+
+ ❯ tests/human-pace-budget.test.ts:164:16
+    162|   await vi.advanceTimersByTimeAsync(90000); await rejection;
+    163|   await vi.advanceTimersByTimeAsync(2000);
+    164|   expect(seen).toEqual([effort]);
+       |                ^
+    165|   expect(aborted).toBe(1);
+    166| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  12:14:06
+   Duration  2.55s (transform 1.95s, setup 1.24s, import 1.03s, tests 77ms, environment 0ms)
+

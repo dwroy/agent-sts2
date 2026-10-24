@@ -1,0 +1,77 @@
+{
+  "commands": [
+    {
+      "command": "nice -n 10 python3 paper/materials/20261022-issue27-brain-strategies/batch2/audit_inputs.py",
+      "exit_code": 0,
+      "scope": "before content edit; 65 frozen file SHA/bytes and inventory, metadata coverage"
+    },
+    {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 node --import tsx paper/materials/20261022-issue27-brain-strategies/batch2/check_consumers.mts",
+      "exit_code": 1,
+      "stdout": "consumer-check-attempt1.stdout.txt",
+      "stderr": "consumer-check-attempt1.stderr.txt",
+      "scope": "package resolver from root; no check executed"
+    },
+    {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 node --import ./agent/node_modules/tsx/dist/loader.mjs paper/materials/20261022-issue27-brain-strategies/batch2/check_consumers.mts",
+      "exit_code": 0,
+      "stdout": "consumer-check.stdout.txt",
+      "stderr": "consumer-check.stderr.txt",
+      "scope": "final real library parse, 8 per-entry positives/negatives/unknown/roles, actual #33 tool and compatibility, five question types, count/byte stress"
+    },
+    {
+      "command": "nice -n 10 python3 paper/materials/20261022-issue27-brain-strategies/batch2/verify_content.py",
+      "exit_code": 0,
+      "stdout": "content-check.stdout.txt",
+      "stderr": "content-check.stderr.txt",
+      "scope": "exact row slices/SHA, 6 external statistics/denominators and actual ledger show equality"
+    },
+    {
+      "command": "git diff --cached --binary > /tmp/issue27-batch2-staged.patch; nice -n 10 gitleaks stdin --no-banner --redact < /tmp/issue27-batch2-staged.patch",
+      "exit_code": 0,
+      "stdout": "gitleaks.stdout.txt",
+      "stderr": "gitleaks.stderr.txt",
+      "scope": "precise staged strategy file and all audit artifacts; no network"
+    },
+    {
+      "command": "git diff --cached --binary > /tmp/issue27-batch2-staged-final.patch; nice -n 10 gitleaks stdin --no-banner --redact < /tmp/issue27-batch2-staged-final.patch",
+      "exit_code": 0,
+      "stdout": "source-final-gitleaks.stdout.txt",
+      "stderr": "source-final-gitleaks.stderr.txt",
+      "scope": "final staged 93-file source snapshot"
+    },
+    {
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 node --import /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects/agent-sts2/paper/materials/20261022-issue27-brain-strategies/batch2/check_consumers.mts /home/dw/Projects/agent-sts2/learner/runs/20261022-233748-9db2ee6e-f26f-402e-8413-6f87a6864ebe-issue-27-brain-strategies-task/main-consumer-output",
+      "exit_code": 0,
+      "stdout": "main-consumer.stdout.txt",
+      "stderr": "main-consumer.stderr.txt",
+      "scope": "actual integrated main data and consumers; no live or natural use"
+    },
+    {
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "gitleaks",
+        "stdin",
+        "--no-banner",
+        "--redact"
+      ],
+      "exit_code": 0,
+      "stdout": "result-gitleaks.stdout.txt",
+      "stderr": "result-gitleaks.stderr.txt",
+      "scope": "Known final task reports, source patch, audit and actual-main consumer outputs; launcher in-flight files excluded"
+    }
+  ],
+  "ledger_commands": "ledger-commands.json",
+  "full_tsc_vitest": {
+    "run": false,
+    "reason": "Only formal data and audit material/scripts under paper changed; no production code/scripts in agent/learner/eval/ops/builders changed."
+  },
+  "failures_retained": [
+    "root tsx import resolver rc1 before tests",
+    "registration wrapper used splitlines against space-delimited CLI IDs after successful one-time append; corrected to whitespace split/readback only, no duplicate append",
+    "whole shared ledger with frozen inventory rc1 for three newer concurrent references; shape-only check separately0",
+    "Initial git add skipped sparse-excluded audit artifacts; git add --sparse staged exact task files without modifying sparse rules. First narrow scan only covered strategy; complete scan performed afterward."
+  ]
+}

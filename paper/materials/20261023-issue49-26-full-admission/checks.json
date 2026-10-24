@@ -1,0 +1,71 @@
+{
+  "state": "failed-or-blocked",
+  "at": "2026-10-23T18:02:16+08:00",
+  "runner_pid": 1806440,
+  "runner_birth": "17426651",
+  "nice": 19,
+  "tree": "a70c1cbc697ee4d21bbbc50d848945241918040c",
+  "base": "2faa7ead017b977051b317355e352aa229b1344d",
+  "sources": [
+    {
+      "issue": "49",
+      "parent": "b4e84251b",
+      "source": "7d262cd778715b80c5f216e27753c9d140cae38c"
+    },
+    {
+      "issue": "26",
+      "parent": "c9848dd6^",
+      "source": "c9848dd6b3e258a2c7ab5433479dc0725e4e73ba"
+    }
+  ],
+  "supervisor_comment": "49+26 combined sole full; window released by ops original identity",
+  "full_started": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-23T18:02:17+08:00",
+      "pid": 1806490,
+      "exit_code": 0,
+      "seconds": 0.982
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue49-combination-1756/full/vitest.json"
+      ],
+      "started_at": "2026-10-23T18:02:18+08:00",
+      "pid": 1806572,
+      "exit_code": 1,
+      "seconds": 1471.635
+    }
+  ],
+  "K_or_L_held_during_checks": false,
+  "new_model_API_game_actions": 0,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator49-combination-20261023-1756",
+  "input_count": 2632,
+  "knowledge_count": 469,
+  "error": "RuntimeError",
+  "reason": "full failed; preserve first result, no automatic full retry",
+  "ended_at": "2026-10-23T18:26:49+08:00"
+}

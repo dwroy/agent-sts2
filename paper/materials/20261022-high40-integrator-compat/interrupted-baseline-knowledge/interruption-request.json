@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-22T18:56:22+08:00",
+  "reason": "integrator omitted original ops latest-knowledge snapshot; 221 JSONs differed from actual live and original frozen ops inputs",
+  "action": "interrupt own in-flight full; retain original logs; restart only after exact input correction in new artifact directory",
+  "runner_pid": 884435,
+  "target_full_pid": 884517,
+  "target_start": "9050604",
+  "children": [
+    {
+      "pid": 905724,
+      "parent": 884517,
+      "start": "9106103",
+      "cmd": "/home/dw/.local/node/bin/node --experimental-import-meta-resolve --require /home/dw/Projects/agent-sts2/agent/node_modules/vitest/suppress-warnings.cjs --conditions node --conditions development /home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/workers/forks.js "
+    }
+  ],
+  "knowledge_delta_count": 221,
+  "production_changed": false
+}

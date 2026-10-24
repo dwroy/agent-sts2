@@ -1,0 +1,76 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-route-hp-observation",
+      "version": "2026-10-24-own-rest-route-002",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "event"
+        ]
+      },
+      "strategy": "核路线时先确认当前合法分支及到火前资源，不把未来营火预支为现有HP。Silent A10、版本unknown：精英/火同为备选524次/280局；走火475次平均后继净增14.50血，走精英15次中14次有后继、平均净减25血，另1次缺失；题前HP均37.32/63.27，非同状态对照。每局每幕首次多备选的960个窗口中90未观测到下火；831个已到火且地图标记战斗≥2的段均净减23.26，亦见净增。适用：幕初/带路线复核题；标记战斗数及跨节点净变化是代理，含事件/SL混杂；不作战斗毛伤、绕路收益或安全线。",
+      "source": "own",
+      "confidence": 0.4,
+      "evidence": [
+        {
+          "type": "own",
+          "run": "JMH5C51RLN4E",
+          "floor": 8,
+          "ref": "logs/decisions.jsonl@566244311+1910;sha256=3104b2c4211645b1bc66c506e361675e54125a5ac05e1e0e5b359f967ad7bb41",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9ZERN492CSHX",
+          "floor": 7,
+          "ref": "logs/decisions.jsonl@3076195162+2618;sha256=9e34489fc627bb47c5672c17a0e5a515602054a72a5a36f8c059407a26fdf032",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "MGA0CZDDKC0P",
+          "floor": 6,
+          "ref": "logs/decisions.jsonl@559694510+1745;sha256=1168bd0a2c8cbe6fe48c15ba02e3dabde31d6986a204b207d7b2668d07430e6a",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "UJ0K3G10609Y",
+          "floor": 34,
+          "ref": "logs/decisions.jsonl@585043632+1972;sha256=156869b43b12d0a8f70764970e7eb406744672f6c2c9de357aa1d81006b6ec9f",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "D4LJ9QMGFB8Q",
+          "floor": 1,
+          "ref": "logs/decisions.jsonl@590273768+5566;sha256=207a0a814550ae442deea952d8f009f0004a63495cf2e0aaa4386fad7c937483",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "audit_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/source-ledger.json#silent-route-hp-observation",
+      "scope_notice": "仅Silent A10；自有游戏版本unknown；当前合同不能强制进阶/遗物/路线备选谓词，正文条件必须人工核。"
+    }
+  ],
+  "candidate_disposition": "update",
+  "merge_target": {
+    "kind": "knowledge",
+    "id": "silent-route-hp-observation",
+    "baseline_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/knowledge/characters/silent/experience.json",
+      "bytes": 352061,
+      "sha256": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2"
+    },
+    "preserve_existing_content_and_evidence": true,
+    "projection_counted_as_separate_knowledge": false
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

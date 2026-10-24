@@ -1,0 +1,121 @@
+{
+  "roots": [
+    {
+      "root": "main",
+      "policy": "/home/dw/Projects/agent-sts2/ops/disk-policy.json",
+      "policy_sha256": "38ed0fc8d3ff90a9381cc7c870440adf770b38d706cbfa34ebf3c7f33c6bb4e2",
+      "thresholds": {
+        "schema": "disk-admission-policy-v1",
+        "authorization": "Roy 2026-10-23; new jobs 80 GiB; other thresholds retain Roy 2026-10-18 19:39 CST; roy-20261018-regent-adapt",
+        "unit": "GiB",
+        "hold_new_jobs_at_or_below": 80,
+        "hold_next_run_at_or_below": 60,
+        "regent_minimum_available": 200,
+        "regent_buffer_hours": 48
+      },
+      "boundary_checks": [
+        {
+          "available_GiB": 100,
+          "new_jobs_allowed": true,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 81,
+          "new_jobs_allowed": true,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 80,
+          "new_jobs_allowed": false,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 61,
+          "new_jobs_allowed": false,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 60,
+          "new_jobs_allowed": false,
+          "next_run_allowed": false
+        }
+      ],
+      "actual_capacity": {
+        "available_GiB": 352.62366104125977,
+        "new_jobs_allowed": true,
+        "next_run_allowed": true,
+        "severity": "ok",
+        "temporary_filesystem": {
+          "path": "/tmp",
+          "minimum_available_bytes": 1073741824,
+          "minimum_available_inodes": 16384,
+          "available_bytes": 61587189760,
+          "available_inodes": 925572,
+          "allowed": true,
+          "reason": "ok"
+        }
+      },
+      "targeted_tests_passed": true
+    },
+    {
+      "root": "live",
+      "policy": "/home/dw/Projects/agent-sts2/ops/disk-policy.json",
+      "policy_sha256": "38ed0fc8d3ff90a9381cc7c870440adf770b38d706cbfa34ebf3c7f33c6bb4e2",
+      "thresholds": {
+        "schema": "disk-admission-policy-v1",
+        "authorization": "Roy 2026-10-23; new jobs 80 GiB; other thresholds retain Roy 2026-10-18 19:39 CST; roy-20261018-regent-adapt",
+        "unit": "GiB",
+        "hold_new_jobs_at_or_below": 80,
+        "hold_next_run_at_or_below": 60,
+        "regent_minimum_available": 200,
+        "regent_buffer_hours": 48
+      },
+      "boundary_checks": [
+        {
+          "available_GiB": 100,
+          "new_jobs_allowed": true,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 81,
+          "new_jobs_allowed": true,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 80,
+          "new_jobs_allowed": false,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 61,
+          "new_jobs_allowed": false,
+          "next_run_allowed": true
+        },
+        {
+          "available_GiB": 60,
+          "new_jobs_allowed": false,
+          "next_run_allowed": false
+        }
+      ],
+      "actual_capacity": {
+        "available_GiB": 352.62364959716797,
+        "new_jobs_allowed": true,
+        "next_run_allowed": true,
+        "severity": "ok",
+        "temporary_filesystem": {
+          "path": "/tmp",
+          "minimum_available_bytes": 1073741824,
+          "minimum_available_inodes": 16384,
+          "available_bytes": 61587079168,
+          "available_inodes": 925571,
+          "allowed": true,
+          "reason": "ok"
+        }
+      },
+      "targeted_tests_passed": true
+    }
+  ],
+  "account_config_reopened": false,
+  "game_or_model_calls": 0,
+  "at": "2026-10-23T08:02:40+08:00"
+}

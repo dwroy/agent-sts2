@@ -1,0 +1,106 @@
+{
+  "task": "fix-batch",
+  "item": "infra-proposal-repair-no-source-waiting-20261023",
+  "base": "16a3d49d25f0e7744876f256433c6c69c9067cb0",
+  "commit": null,
+  "merged": null,
+  "files": [
+    {
+      "path": "ops/proposal_dispatch.py",
+      "base_blob": "53bbcbaac9d7cdcc2f6bbe58de17db677976def4",
+      "candidate_sha256": "9567adb9789defd94e630633b8edafd1e62bd3963ccc679dd436c66ec5ec19c1",
+      "bytes": 32348
+    },
+    {
+      "path": "ops/tests/test_unassigned_proposal_resolution.py",
+      "base_blob": "4499cf3a11a8310fcf4bfd2ebeed05e32ce610ce",
+      "candidate_sha256": "851227f366c449d95b77baa3e84222d635e5ba556cd57733b4e3a291f83a226a",
+      "bytes": 22649
+    },
+    {
+      "path": "agent/tests/unassigned-proposal-resolution.test.ts",
+      "base_blob": "98f6f7e7cfbe6ab7f0af4cd579a9a646347a2522",
+      "candidate_sha256": "274442d87b0568ab0a1485b9b488079a341b3b01225d8574f0fa59b47f37614e",
+      "bytes": 1705
+    }
+  ],
+  "patch": "/home/dw/Projects/agent-sts2/learner/runs/20261023-211321-0c33ebf2-35bf-4db9-b344-ea75afd5eb01-fix-batch/fix.patch",
+  "patch_sha256": "281381e0e0b3a8271c1e9b87d845213ad23939219504aa703779729666bb9823",
+  "tests": {
+    "python": {
+      "exit": 0,
+      "cases": 18
+    },
+    "vitest_targeted": {
+      "exit": 0,
+      "files": 1,
+      "cases": 18
+    },
+    "without_source_fix": {
+      "exit": 1,
+      "files": 1,
+      "passed": 16,
+      "failed": 2
+    },
+    "sandbox_suite": {
+      "at": "2026-10-23T22:10:11.211658+08:00",
+      "command": "bash tools/test-sandbox.sh --configLoader runner",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-211302/agent",
+      "session": 6638,
+      "command_exit": 130,
+      "complete": false,
+      "tsc_exit": 0,
+      "vitest_terminal_exit": null,
+      "vitest_terminal_files": null,
+      "vitest_terminal_cases": null,
+      "known_failure_groups": [
+        {
+          "file": "tests/brain-agent-mode.test.ts",
+          "cases": 15,
+          "failed": 8
+        },
+        {
+          "file": "tests/brain-reflex-knowledge.test.ts",
+          "cases": 13,
+          "failed": 2
+        },
+        {
+          "file": "tests/ops-mod-state.test.ts",
+          "cases": 37,
+          "failed": 37
+        }
+      ],
+      "known_failed_cases": 47,
+      "reason": "Confirmed baseline listen/spawnSync EPERM; stopped only this test session after prolonged execution. Do not treat the partial log as a completed suite or a code failure.",
+      "log_sha256": "19318d6c4aa8972a02e45eaf45a9e3b3d0ca1e32a321b685ffdeebe292eab850",
+      "paths_stage_executed": false
+    },
+    "unchanged_scope_environment_probes": [
+      {
+        "files": [
+          "agent/tests/brain-agent-mode.test.ts",
+          "agent/tests/brain-reflex-knowledge.test.ts"
+        ],
+        "selected_failed": 2,
+        "error": "listen EPERM 127.0.0.1"
+      },
+      {
+        "files": [
+          "agent/tests/ops-mod-state.test.ts"
+        ],
+        "selected_failed": 1,
+        "error": "spawnSync bash EPERM"
+      }
+    ]
+  },
+  "live_preflight": {
+    "live": "c2a249380bae547fc5545fcd3807dbdff2d58869",
+    "conflicts": 23,
+    "mutated_live": false
+  },
+  "gitleaks": 0,
+  "code_proposals": [],
+  "implementation_domains": [],
+  "publication_blocker": "Required full sandbox check must exit 0 before committing; original host continuation must verify this frozen three-leaf candidate.",
+  "source_snapshot_verified": true
+}

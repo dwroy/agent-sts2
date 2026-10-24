@@ -1,0 +1,15 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: kb_old_knowledge:{"schema":"brain-knowledge-result-v1","sources":[{"source":"own","character":"silent","file":"jev-hints.json","path":"characters/silent/jev-hints.json","status":"missing","version":"missing","sha256":null}],"entries":"旧知识 jev_hints里没有「*」。可用的来源: guide, handbook, jev_hints；不带关键词可取整份","evidence_scope":"自有知识；条目内来源/反证保持原样；其他角色来源不计本角色验证"}
+    at <anonymous> (/home/dw/Projects/agent-sts2/.artifacts/ops-issue33-publish-20261023/read-consumers.mts:18:53) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v22.23.3

@@ -1,0 +1,107 @@
+{
+  "schema": "integrator-issue40-full-v1",
+  "checked_at": "2026-10-22T18:01:59+08:00",
+  "state": "main-integrated-await-ops",
+  "candidate": "31265530a748266feb87ce8953a89087f44bf0c3",
+  "main_at_preparation": "2949591509a398c86edecf8b7e39b2be27636d17",
+  "issue40_source": "8f09b842628ce84e167b1f8917d2c8f807512f74",
+  "issue41_source": "c6428609c0f0a2e40ad0660532393c244df5a766",
+  "first_full": true,
+  "input_count": 2588,
+  "inputs_unchanged": true,
+  "vitest": {
+    "success": true,
+    "numTotalTests": 6179,
+    "numPassedTests": 6177,
+    "numPendingTests": 2,
+    "numFailedTests": 0,
+    "numTotalTestSuites": 1661,
+    "test_result_file_count": 655
+  },
+  "source_files_verified": 21,
+  "clock_test_exact_source": true,
+  "original_artifacts": [
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/checks.json",
+      "bytes": 1475,
+      "sha256": "f1f9d52ac9272c4ab7dd17781bdf727c9a7e0c7bb91224f4a2a18aa770bba305"
+    },
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/inputs-before.json",
+      "bytes": 431566,
+      "sha256": "7f421be161ff2736e4fea9ef0216d5613186167b5708258716482f5fe311230d"
+    },
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/inputs-after.json",
+      "bytes": 431566,
+      "sha256": "7f421be161ff2736e4fea9ef0216d5613186167b5708258716482f5fe311230d"
+    },
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/vitest.json",
+      "bytes": 2395206,
+      "sha256": "bc808ce2a5160a42ec947e6550222d115fd45e8a4f673373f5f92694afae371c"
+    },
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/full.log",
+      "bytes": 75974,
+      "sha256": "8f06e6aeb8806b9de4a3667d8743a57338a693fe9e66df484436fbc66e138ba2"
+    },
+    {
+      "path": ".worktrees/integrator-40-20261022/.artifacts/issue40-full-20261022/full-first/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "production_refresh": false,
+  "live_published": false,
+  "heavy_enabled": false,
+  "old_issue20_included": false,
+  "main_delta_since_test_base": [
+    "notes/codex3-drain-ops-handoff.md",
+    "notes/for-roy.md",
+    "notes/ops-current-context.json",
+    "notes/ops-current.md",
+    "ops/inbox-dev.md",
+    "paper/materials/20261022-roy-check-window-ops/authorization-original.md",
+    "paper/materials/20261022-roy-check-window-ops/flags-after.json",
+    "paper/materials/20261022-roy-check-window-ops/flags-before.json",
+    "paper/materials/20261022-roy-check-window-ops/handoff-after-roy-pause.md",
+    "paper/materials/20261022-roy-check-window-ops/handoff-before-roy-pause.md",
+    "paper/materials/20261022-roy-check-window-ops/high-fixed-inputs-verified.json",
+    "paper/materials/20261022-roy-check-window-ops/high-full-summary.json",
+    "paper/materials/20261022-roy-check-window-ops/high-passed-original.json",
+    "paper/materials/20261022-roy-check-window-ops/integrator-reminder-send.json",
+    "paper/materials/20261022-roy-check-window-ops/issue33-comment.md",
+    "paper/materials/20261022-roy-check-window-ops/issue33-readback.json",
+    "paper/materials/20261022-roy-check-window-ops/issue33-send-receipt.json",
+    "paper/materials/20261022-roy-check-window-ops/issue38-comment.md",
+    "paper/materials/20261022-roy-check-window-ops/issue38-readback.json",
+    "paper/materials/20261022-roy-check-window-ops/issue38-send-receipt.json",
+    "paper/materials/20261022-roy-check-window-ops/issue40-comment.md",
+    "paper/materials/20261022-roy-check-window-ops/issue40-readback.json",
+    "paper/materials/20261022-roy-check-window-ops/issue40-send-receipt.json",
+    "paper/materials/20261022-roy-check-window-ops/no-game-or-refresh-processes.json",
+    "paper/materials/20261022-roy-check-window-ops/receipt.json",
+    "paper/materials/20261022-roy-check-window-ops/refresh-last-terminal.json",
+    "paper/materials/20261022-roy-check-window-ops/report.md",
+    "paper/materials/20261022-roy-check-window-ops/roy-pause.json",
+    "paper/materials/20261022-roy-check-window-ops/roy-stop.txt",
+    "paper/materials/20261022-roy-check-window-ops/switch-state-at-pause.json",
+    "paper/materials/decision-log.md"
+  ],
+  "changed_tested_operational_records": [
+    "ops/inbox-dev.md"
+  ],
+  "integration_record_policy": "Keep current main ledger Git blob unchanged to preserve concurrent dirty operational records; retain candidate ledger increment verbatim here and append missing entries to the working ledger.",
+  "prior_targeted_review": "paper/materials/20261022-issue40-integrator-review/review.json",
+  "dependency_boundary": "Standalone legacy/off refresh works without issue20. New cross-dispatcher adapter and queue priority require the revised issue20 exact combination; no old issue20 integration.",
+  "pending": [
+    "ops exact live publication with issue33 high while Roy pause remains",
+    "natural first-game high and incremental consumer readback",
+    "cold/warm/training-cycle timings, publication-lock wait/hold, model SHA",
+    "revised issue20 exact adapter and future issue37 shared-test compatibility"
+  ],
+  "main_code_commit": "692242e71c599ddae8b5ae89fab68e8941511fc1",
+  "main_binding_verified": true,
+  "concurrent_dirty_bytes_preserved": true
+}

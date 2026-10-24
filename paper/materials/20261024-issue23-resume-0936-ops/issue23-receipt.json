@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-24T09:43:36+08:00",
+  "issue": 23,
+  "comment_id": 6378326067,
+  "url": "https://github.com/dwroy/agent-sts2/issues/23#issuecomment-6378326067",
+  "gitleaks_rc": 0,
+  "actual_POST_GET_body_equal": true,
+  "role": "ops",
+  "body": "[ops]\n已接05:15停点继续核收，#23原代码已发布，**可持续验收仍未通过**，不重复上线。\n\n|窗口|历史去重回收路径|成功分配|\n|---|---:|---:|\n|部署至10-24 09:39|155|311|\n|05:15后本次增量|2|21|\n|最近24h|16|123|\n\n最近24h当前缺失且保留分支可核的是15棵；历史回收/同路径后续恢复与分支推进分列，两个旧差异仍与原reuse证据相同，不当作丢失或新收益。新增两棵为09:02的#49发布工作树、09:27的091302报告型策略checkout，均核不在册、`.git`缺失及保留分支；575字节小归档SHA通过，其他原scratch/研究材料保持。21项分配按原名称分类为strategy8/fix1/integrator或issue4/ops8，是分配数而非模型数。\n\n原disk-admission 10-23 09:13→10-24 09:13约24h，可用空间净减**107.15GiB**，最大采样间隔约1h；原首窗失败保持，整机变化不全归因本仓。Roy自08:38手动STOP窗口另记，不能将业务暂停当#46或回收收益；#46完整后24h仍要到今天13:46:30，本轮没有提前生成其截断报告/趋势。\n\n原worker09:27仍实际回收、每轮最多4；本轮原工作树只读plan **0 eligible**，dirty54/普通收尾37/身份36/scratch归属30等保护不放宽，10个ops显式完成验收仍由原owner补；既存NoneType不冒新根因。四核心main/live叶逐项同e69b2fed0、真实绑定verify通过。一次初始范围过宽的学习历史只读plan未返回，已按确切自有PID停止，未apply；单独保留终止回执，不混作当前plan结果。没有操作学习者/游戏进程。\n\n下一步等原owner结算保护项与#46完整窗口，由原限4worker自然继续；本轮没有手工apply/删树、full、dataset、新模型/游戏或计时器，Roy STOP及原科学父保持。交接已更新为in-flight/issue:23，写明进行中/等谁/下一步。原件 `paper/materials/20261024-issue23-resume-0936-ops/{audit,plan,disk-samples,incremental-reclaims,actual-root-core}.json`。"
+}

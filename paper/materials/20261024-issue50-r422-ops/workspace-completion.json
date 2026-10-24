@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_retention.py",
+    "complete",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--workspace",
+    "ops-issue50-r422-net-20261024",
+    "--source",
+    "5c29110623be69100580809127752e5b333ed932",
+    "--main-commit",
+    "a47a7bafcfc903e91cdf20b314f113ffdd33f462",
+    "--live-commit",
+    "6d89243c385c11eec7b923fba907cb8dd250e4bc"
+  ],
+  "rc": 0,
+  "stdout": "{\"schema\": \"workspace-lifecycle-v1\", \"root\": \"/home/dw/Projects/agent-sts2\", \"worktree\": \"/home/dw/Projects/agent-sts2/.worktrees/ops-issue50-r422-net-20261024\", \"state\": \"accepted\", \"at\": \"2026-10-24T02:58:40+08:00\", \"acceptance\": {\"source\": \"5c29110623be69100580809127752e5b333ed932\", \"base\": \"e6debc3a13f4749b98f55822dd856e753c583b52\", \"main_commit\": \"a47a7bafcfc903e91cdf20b314f113ffdd33f462\", \"live_commit\": \"6d89243c385c11eec7b923fba907cb8dd250e4bc\", \"verified_source_paths\": [\"agent/src/brain/brain.ts\", \"agent/src/brain/build-facts.ts\", \"agent/src/brain/specs.ts\", \"agent/src/hand/loop.ts\", \"agent/src/memory/endgame-plan.ts\", \"agent/src/memory/run-plan-merge.ts\", \"agent/src/memory/run-plan.ts\", \"agent/tests/endgame-plan.test.ts\", \"agent/tools/brain-agent-report.ts\"], \"live_required\": true, \"scope\": \"workspace-only; no parent request or gameplay claim closed\", \"allocation_receipt\": \"ops/codex-ops/retention/allocations/ops-issue50-r422-net-20261024.json\", \"allocation_sha256\": \"5d9cdc7f690aa61dace48d410654c5096a2a9698ab6bfe598bb022fbe114fbaa\"}}\n",
+  "stderr": "",
+  "knowledge_overlays_retained": 221,
+  "first_local_precondition_rejection": "unexpected knowledge overlays; no source/index/ref changed before independent classification"
+}

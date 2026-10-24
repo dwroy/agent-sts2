@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-24T09:56:28+08:00",
+  "authorization": "Current Claude relay of Roy P0: restore automatic games; first publish #49 guidance-off, then remove STOP and autoplay-start; return first run_id.",
+  "guidance_off_already_published": true,
+  "guidance_release": "V6-R427",
+  "actual_live": "02eb468f8728b47ccbc22f39f14e5b2db1580971",
+  "approved_guidance_commit": "31810fa440ff57a42e38b68ec4581d32c642b246",
+  "eight_approved_leaves_verified": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "afa766634fffd7542b72039bbef5384fb81e8a454953d7b9a4db0c89a10b9a91",
+      "same_approved_publication": true
+    },
+    {
+      "path": "agent/src/brain/tools/query-guidance.ts",
+      "sha256": "4053f0b0d778f2e032ceb4b9fc50f6c5a8804c0ed2a3a1c1538dcc1c42addf4b",
+      "same_approved_publication": true
+    },
+    {
+      "path": "agent/tests/brain-query-efficiency.test.ts",
+      "sha256": "d72a444734b56343c8f035c9e25c692ad05c6ed126938e5a06526044ed46a1ec",
+      "same_approved_publication": true
+    },
+    {
+      "path": "agent/tests/brain-query-guidance.test.ts",
+      "sha256": "0cb031b2a747be1ea42a479c2822d46d96b10ff25e57fc3e07dd5a3f7c9c6171",
+      "same_approved_publication": true
+    },
+    {
+      "path": "agent/tests/brain-reflex-knowledge.test.ts",
+      "sha256": "2d88c7c6fd4574519ab60bc14aad2b0d2c1fe732af25d8be476f7c7f5fea15dc",
+      "same_approved_publication": true
+    },
+    {
+      "path": "agent/tests/endgame-plan.test.ts",
+      "sha256": "f3f8e14f21c2a8c6b67b2f73ed6ce5bd8185b7af1b26bb9c1ad3d0771f22496b",
+      "same_approved_publication": true
+    },
+    {
+      "path": "docs/brain-agent-mode.md",
+      "sha256": "8bdd4e2633204858d46ff60b192de6953dc3284dffc7e2abe8a418a5ce5cdd48",
+      "same_approved_publication": true
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "sha256": "b57d549ac3919ba3dd1292b88a7eddb3dc2267d51af8e9a19e42ad015995775e",
+      "same_approved_publication": true
+    }
+  ],
+  "manual_window": {
+    "start": "2026-10-24T08:38:01+08:00",
+    "end": "2026-10-24T09:56:28+08:00",
+    "all_manual_games_excluded": true
+  },
+  "observed_window_runs": [
+    {
+      "run_id": "Z2KBGZQMSRV5",
+      "started": null,
+      "ended": "2026-10-24T00:38:37.180Z"
+    }
+  ],
+  "excluded_run_ids": [
+    "Z2KBGZQMSRV5"
+  ],
+  "current_mod_state": "GAME_OVER Z2KBGZQMSRV5, verified native instance4680; original broker procs/mod-state readback",
+  "STOP_before_sha256": "433f55a905606cf30cad77c4db76e6af6f84d234716bce4f9759852a9532860e",
+  "no_existing_autoplay_play": true,
+  "no_new_publication_or_full": true,
+  "next": "original autoplay-start removes STOP and starts loop; no direct game action"
+}

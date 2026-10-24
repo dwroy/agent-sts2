@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-22T11:49:06+08:00",
+  "transaction": "codex3-20261022-1146",
+  "phase_at_readback": "draining",
+  "authorization": {
+    "path": "paper/materials/20261022-codex3-switch/authorization-original.md",
+    "sha256": "eaee8dc04da2a2629eaff7dd24f7970fa2cf8cfbb2faaea251c36d3beb949bc1"
+  },
+  "target_profile": "ops/codex-ops/accounts/codex3/profile.json",
+  "target_profile_changed": false,
+  "preflight": "paper/materials/20261022-codex3-switch/codex3-precheck.json",
+  "fresh_role_catalog_and_key_checks_passed": true,
+  "new_model_turns_for_preflight": 0,
+  "initial_begin_blocked_learn_lock": true,
+  "controller": {
+    "pid": 3783940,
+    "start": "6540410",
+    "pane": "w1H:p9B",
+    "nice": "0"
+  },
+  "owned_flags": {
+    "ops/codex-ops/LLM_DRAIN": "codex3-20261022-1146",
+    "ops/codex-ops/PAUSE": "codex3-20261022-1146"
+  },
+  "source_selectors_at_record": {
+    "codex-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  },
+  "source_ops_session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "handoff": "notes/codex3-drain-ops-handoff.md",
+  "historical_handoff_sha256": "9f856eec72b6ecd52ea6af355e1096f56dc44cca6c059e1f46e209fff188ed21",
+  "ready_to_drain": "source ops ends this turn after durable records; not all workers drained",
+  "active_workers_at_snapshot": 48,
+  "ops_idle_at_snapshot": false,
+  "actual_new_ops_uuid": null,
+  "control_plane_complete": false,
+  "brain_learner_runtime_consumption": "awaiting normal dispatch after verified handoff",
+  "inflight_dev_integrator_hot_switch": false,
+  "no_STOP_or_process_signal": true,
+  "live_changed": false,
+  "watcher_reminder": {
+    "path": "paper/materials/20261022-codex3-switch/watcher-reminder-send.json",
+    "transport_rc": 0,
+    "not_receiver_or_Roy_ack": true
+  }
+}

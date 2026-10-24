@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-23T18:37:36+08:00",
+  "python_pipeline": {
+    "command": "nice -n 19 python3 -B knowledge/builders/test_refresh_pipeline.py",
+    "exit_code": 0,
+    "cases": 15,
+    "seconds": 1.929,
+    "evidence": "original tool session71925 output; later full includes original Python subprocess regression"
+  },
+  "global_import_initial_exit": 1,
+  "global_import_initial_reason": "two new URL references to local ignored .cache directory; tests normally create it",
+  "cache_materialized": "local isolated ignored .cache directory; no production cache linked",
+  "global_import_after_cache_exit": 0,
+  "full_started": false
+}

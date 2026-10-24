@@ -1,0 +1,1350 @@
+{
+  "schema": "playbook-rk-candidates-v1",
+  "generated_at": "2026-10-24T13:33:39+08:00",
+  "batch": "83cbd6d7-013e-44f2-9754-12afa0564663",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "three_inputs": {
+    "external_statistics": {
+      "status": "frozen_read",
+      "version": "v0.111.0",
+      "character": "silent",
+      "ascension": 10,
+      "cluster5_uploaded_records": 238,
+      "cluster5_wins": 79,
+      "independent_players": null,
+      "design": "observational",
+      "four_table_selection": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/external-four-table-selected.json"
+    },
+    "external_representative": {
+      "status": "complete_node_projection_read_49_nodes_not_turn_trace",
+      "example": "projection-8073cfa295837685",
+      "sha256": "8073cfa295837685356fd3222ba665a7810c538e4cc1229d8b5cff594ceba306",
+      "n": 1,
+      "version": "v0.111",
+      "exact_choice_date_coverage": 0.64,
+      "source": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/external-representative-selected.json"
+    },
+    "own_full_runs": {
+      "status": "ended_trajectories_and_resource_chains_read",
+      "runs": [
+        "BP9C8K9NSRZ0",
+        "TB5YKELW0355",
+        "GJ81EPE4B8Z2",
+        "37U27AS6JNJ0",
+        "XC9AHZH3CZVK"
+      ],
+      "independent_runs": 5,
+      "per_run_comparison_n": 1,
+      "whole_run_summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json"
+    },
+    "complete_three_input_playbook": false,
+    "missing": [
+      "外部逐回合完整动作/药水时点和当时资源；代表投影不补为原始打法。",
+      "本批不在#54冻结506局自有四表中；不扩读其他局或将历史表的分母混入本批。",
+      "严格同前缀/遭遇/资源可比组和因果验证。"
+    ]
+  },
+  "field_availability_receipt": {
+    "artifact": {
+      "bytes": 41598781,
+      "path": "statistics.json",
+      "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+    },
+    "categories": {
+      "events": {
+        "fields": [
+          "event_choices"
+        ],
+        "limit": "记录title文本/键；没有变量与完整备选项，不由标题解释机制或收益。",
+        "status": "partial"
+      },
+      "opening_blessing": {
+        "fields": [
+          "ancient_choice"
+        ],
+        "limit": "按幕/房间列ancient选项与was_chosen；第一幕仅作开局祝福代理，未证实际首节点或所有局开局字段完整。",
+        "status": "act1_ancient_proxy"
+      },
+      "potions": {
+        "fields": [
+          "potion_choices",
+          "potion_used",
+          "potion_discarded",
+          "bought_potions"
+        ],
+        "limit": "获得候选/是否实选、节点使用/丢弃可记；无回合/动作顺序/即时HP，不能据此学精确用药时机。",
+        "status": "node_level_only"
+      },
+      "removal": {
+        "fields": [
+          "cards_removed"
+        ],
+        "limit": "记录移除ID，不能仅据此认定花钱删牌；结合房间也只是来源代理。",
+        "status": "recorded"
+      },
+      "rest_smith": {
+        "fields": [
+          "rest_site_choices",
+          "upgraded_cards"
+        ],
+        "limit": "记录选择ID与升级牌ID；current_hp为节点末，休息前HP不真实可用，前节点末HP仅代理。",
+        "status": "recorded_choice"
+      },
+      "shop": {
+        "fields": [
+          "bought_cards",
+          "bought_colorless",
+          "bought_relics",
+          "bought_potions",
+          "cards_gained"
+        ],
+        "limit": "仅bought_*为显式购买；shop所得牌/遗物只能作取得代理。无逐物价格、购买前金币或全部货架拒选。",
+        "status": "partial"
+      }
+    },
+    "kind": "readiness",
+    "limitations": [
+      "来源固定6348 Silent A10单人有效上传记录，版本/build分列。",
+      "分母是上传行/节点/条目；同局可多次选择，不视为独立玩家。",
+      "所有胜率是整局结局按条目计数的描述关联，不是单战通过率或因果收益。",
+      "字段缺失/空数组/非法类型及单人节点不成立分开列；缺字段不证明没有动作，不能当拒选对照；无实选标志的事件title不补造备选。",
+      "不选player_id、seed、时间、原局标识或原JSON；只交安全聚合。"
+    ],
+    "next_offset": null,
+    "offset": 0,
+    "rows": [
+      {
+        "available": "节点获得/实选/使用/丢弃和终局保存药水数",
+        "status": "partial_proxy",
+        "unavailable": "回合时机、使用前HP、双Boss场间真实持药快照；不以无使用记录推断有机会未用",
+        "unit": "1-potions"
+      },
+      {
+        "available": "休息选择、升级ID、已记录房间类型/精英节点数",
+        "status": "partial_proxy",
+        "unavailable": "选择前真实HP、未走分支/路线反事实；前节点末HP仅代理",
+        "unit": "2-rest-route"
+      },
+      {
+        "available": "ancient选项/选择、早期拿牌ID和顺序；可与既有四表联读",
+        "status": "partial_proxy",
+        "unavailable": "历史版本对齐的牌机制/伤害防御分类、跳过动机、最低可行牌组阈值",
+        "unit": "3-opening"
+      }
+    ],
+    "section": null,
+    "source": "external:sts2fun",
+    "total": 3
+  },
+  "frozen_input_verification": {
+    "knowledge/external/sts2fun/builds-v1/manifest.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/manifest.json",
+      "bytes": 1197,
+      "sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/archetypes.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+      "bytes": 96798,
+      "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/boss-semantics.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+      "bytes": 695296,
+      "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/combinations.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+      "bytes": 13623341,
+      "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/matchups.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+      "bytes": 1898951,
+      "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/representative-timelines.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+      "bytes": 1093141,
+      "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/safe-projection.sql": {
+      "path": "knowledge/external/sts2fun/builds-v1/safe-projection.sql",
+      "bytes": 2906,
+      "sha256": "5c3012360bdf7fb8f3936a6fb31b0bd9db8fd1d21afca56295064a5abcc7992b",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/builds-v1/timeline.json": {
+      "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+      "bytes": 90856,
+      "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/decision-fields-v1/manifest.json": {
+      "path": "knowledge/external/sts2fun/decision-fields-v1/manifest.json",
+      "bytes": 238,
+      "sha256": "e9d1e6d76e6edc78aee67f451b9691d0f7c4b81d0c8e8c129c21a90351bbe78f",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/decision-fields-v1/safe-projection.sql": {
+      "path": "knowledge/external/sts2fun/decision-fields-v1/safe-projection.sql",
+      "bytes": 6417,
+      "sha256": "0ae75277d4f75730df3a2d5eca74acd17ab25dec67ecd6212bdfed39036c2e61",
+      "verified": true
+    },
+    "knowledge/external/sts2fun/decision-fields-v1/statistics.json": {
+      "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+      "bytes": 41598781,
+      "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/manifest.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/manifest.json",
+      "bytes": 14506,
+      "sha256": "a078c592dabf5909473f59967334ccd7ae24166f9f1e74e7140a062282e72e64",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/archetypes.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/archetypes.json",
+      "bytes": 50399,
+      "sha256": "cef45cb86bfede86185ab2b7d25242c284180fd184a5934a78e7b088f14b4d09",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/combinations.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/combinations.json",
+      "bytes": 1024918,
+      "sha256": "3f45850be765eb4afb83193f852473e1afb6b927ccc175ed9e1f09d1332114c9",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/comparison.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/comparison.json",
+      "bytes": 5749602,
+      "sha256": "84930c88a2509166b922cb21846f88c94b84527e17291ad515cf156a62d2e6d8",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/matchups.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/matchups.json",
+      "bytes": 180685,
+      "sha256": "3c24a593264afcffb537bb55673e3209cdb014c0ca85bca00cd92ae86081d5ab",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/run-index.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/run-index.json",
+      "bytes": 142312,
+      "sha256": "9e7599e3601ab66a7222f0c8003b17d81dc9f8fd0b40e73b5d36e3d1e9a19f9a",
+      "verified": true
+    },
+    "knowledge/characters/silent/build-statistics-v1/timeline.json": {
+      "path": "knowledge/characters/silent/build-statistics-v1/timeline.json",
+      "bytes": 137875,
+      "sha256": "34805ae0b0c88b3590922881dbe8918951601d989e116f4ffb9e178d4b2b947c",
+      "verified": true
+    }
+  },
+  "entries": [
+    {
+      "id": "silent-pb-poison-maul-transition-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "game": "v0.111.0（项目版本口径）",
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "BP9C8K9NSRZ0"
+      ],
+      "independent_own_runs": 1,
+      "windows": {
+        "full_run": [
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 533494,
+            "offset": 17026876024,
+            "bytes": 13643,
+            "sha256": "93f96fadd5951a471cb0d5a93e9f0bc02ec090f28da6d9322fe35fb7b1baa961"
+          },
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 534293,
+            "offset": 17058442060,
+            "bytes": 48224,
+            "sha256": "265d2f4f7030c3cd1879a5d32727a38d977a95cf09eaad123321deca892e3d53"
+          }
+        ],
+        "key_combats": [
+          {
+            "floor": 2,
+            "entry_line": 533497,
+            "last_line": 533515,
+            "exit_line": 533516
+          },
+          {
+            "floor": 5,
+            "entry_line": 533532,
+            "last_line": 533543,
+            "exit_line": 533544
+          },
+          {
+            "floor": 8,
+            "entry_line": 533557,
+            "last_line": 533568,
+            "exit_line": 533569
+          },
+          {
+            "floor": 12,
+            "entry_line": 533585,
+            "last_line": 533598,
+            "exit_line": 533599
+          },
+          {
+            "floor": 15,
+            "entry_line": 533612,
+            "last_line": 533625,
+            "exit_line": 533626
+          },
+          {
+            "floor": 17,
+            "entry_line": 533635,
+            "last_line": 533695,
+            "exit_line": 533696
+          },
+          {
+            "floor": 19,
+            "entry_line": 533704,
+            "last_line": 533721,
+            "exit_line": 533722
+          },
+          {
+            "floor": 22,
+            "entry_line": 533738,
+            "last_line": 533752,
+            "exit_line": 533753
+          },
+          {
+            "floor": 24,
+            "entry_line": 533765,
+            "last_line": 533783,
+            "exit_line": null
+          },
+          {
+            "floor": 24,
+            "entry_line": 533784,
+            "last_line": 533793,
+            "exit_line": null
+          },
+          {
+            "floor": 24,
+            "entry_line": 533794,
+            "last_line": 533811,
+            "exit_line": null
+          },
+          {
+            "floor": 24,
+            "entry_line": 533812,
+            "last_line": 533848,
+            "exit_line": 533849
+          },
+          {
+            "floor": 29,
+            "entry_line": 533869,
+            "last_line": 533885,
+            "exit_line": 533886
+          },
+          {
+            "floor": 33,
+            "entry_line": 533910,
+            "last_line": 533949,
+            "exit_line": 533950
+          },
+          {
+            "floor": 35,
+            "entry_line": 533964,
+            "last_line": 533982,
+            "exit_line": 533983
+          },
+          {
+            "floor": 38,
+            "entry_line": 533996,
+            "last_line": 534014,
+            "exit_line": 534015
+          },
+          {
+            "floor": 42,
+            "entry_line": 534034,
+            "last_line": 534072,
+            "exit_line": 534073
+          },
+          {
+            "floor": 46,
+            "entry_line": 534092,
+            "last_line": 534128,
+            "exit_line": 534129
+          },
+          {
+            "floor": 48,
+            "entry_line": 534139,
+            "last_line": 534181,
+            "exit_line": null
+          },
+          {
+            "floor": 48,
+            "entry_line": 534182,
+            "last_line": 534218,
+            "exit_line": null
+          },
+          {
+            "floor": 48,
+            "entry_line": 534219,
+            "last_line": 534254,
+            "exit_line": null
+          },
+          {
+            "floor": 48,
+            "entry_line": 534255,
+            "last_line": 534292,
+            "exit_line": 534293
+          }
+        ]
+      },
+      "target_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-brain-test-subject-external-tail-budget",
+        "silent-r2-card-noxious-fumes"
+      ],
+      "ledger_ids": [
+        "silent-0352",
+        "silent-0020"
+      ],
+      "observed_deviation": "外部赢家节点5已有触媒、12取得步法、17取得余像；本局第二幕F28才得触媒且终局无这些防御组件，第三幕改加六撕咬。仅n=1的顺序/组件偏离，不能认作迟拿触媒或撕咬导致失败。",
+      "situation_to_action": {
+        "situation": "遗物过渡→F12暂定毒方向→F28触媒/F31毒雾→F34混合撕咬成长；持续防御未齐",
+        "action": "按已观察的持牌、启动、当轮存活及前序资源链复核该方向；未齐时仍标过渡，不预支终局或未喝药收益。"
+      },
+      "disposition": {
+        "reuse": [
+          "silent-core-poison-defense-observation",
+          "silent-brain-test-subject-external-tail-budget",
+          "silent-r2-card-noxious-fumes"
+        ],
+        "candidate": "silent-pb-poison-maul-transition-83cbd6d7",
+        "waiting": "严格同流派三输入完整战斗证据；当前仅局部对照，不改正式权重/阈值。"
+      },
+      "limits": [
+        "自有n=1；有限完整题面核读",
+        "外部代表与本局不构成同种子/同资源反事实",
+        "保留旧证据、反例、置信度；本批不重写244经验或#48旧条目"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-pb-poison-footwork-realization-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "game": "v0.111.0（项目版本口径）",
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "TB5YKELW0355"
+      ],
+      "independent_own_runs": 1,
+      "windows": {
+        "full_run": [
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 534297,
+            "offset": 17058499105,
+            "bytes": 13716,
+            "sha256": "d2736087c7e8a5c90b75bcda518a8104bc0b1cdfaa768c0cb6cdd0e43f76b563"
+          },
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 534884,
+            "offset": 17078449853,
+            "bytes": 38062,
+            "sha256": "c63e9fb0c45d251243ed45ee63cc299d865bc6a5e88a86781c58b75134143956"
+          }
+        ],
+        "key_combats": [
+          {
+            "floor": 2,
+            "entry_line": 534303,
+            "last_line": 534321,
+            "exit_line": 534322
+          },
+          {
+            "floor": 3,
+            "entry_line": 534327,
+            "last_line": 534342,
+            "exit_line": 534343
+          },
+          {
+            "floor": 4,
+            "entry_line": 534348,
+            "last_line": 534363,
+            "exit_line": 534364
+          },
+          {
+            "floor": 5,
+            "entry_line": 534370,
+            "last_line": 534399,
+            "exit_line": 534400
+          },
+          {
+            "floor": 11,
+            "entry_line": 534427,
+            "last_line": 534430,
+            "exit_line": 534431
+          },
+          {
+            "floor": 13,
+            "entry_line": 534439,
+            "last_line": 534445,
+            "exit_line": 534446
+          },
+          {
+            "floor": 14,
+            "entry_line": 534452,
+            "last_line": 534472,
+            "exit_line": 534473
+          },
+          {
+            "floor": 15,
+            "entry_line": 534480,
+            "last_line": 534503,
+            "exit_line": 534504
+          },
+          {
+            "floor": 17,
+            "entry_line": 534512,
+            "last_line": 534545,
+            "exit_line": 534546
+          },
+          {
+            "floor": 19,
+            "entry_line": 534554,
+            "last_line": 534570,
+            "exit_line": 534571
+          },
+          {
+            "floor": 25,
+            "entry_line": 534600,
+            "last_line": 534619,
+            "exit_line": 534620
+          },
+          {
+            "floor": 28,
+            "entry_line": 534635,
+            "last_line": 534677,
+            "exit_line": 534678
+          },
+          {
+            "floor": 30,
+            "entry_line": 534686,
+            "last_line": 534717,
+            "exit_line": 534718
+          },
+          {
+            "floor": 33,
+            "entry_line": 534730,
+            "last_line": 534775,
+            "exit_line": null
+          },
+          {
+            "floor": 33,
+            "entry_line": 534776,
+            "last_line": 534799,
+            "exit_line": null
+          },
+          {
+            "floor": 33,
+            "entry_line": 534800,
+            "last_line": 534839,
+            "exit_line": null
+          },
+          {
+            "floor": 33,
+            "entry_line": 534840,
+            "last_line": 534883,
+            "exit_line": 534884
+          }
+        ]
+      },
+      "target_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-brain-crab-surviving-part-budget",
+        "silent-r2-card-noxious-fumes"
+      ],
+      "ledger_ids": [
+        "silent-0352",
+        "silent-0570",
+        "silent-0020",
+        "silent-0278"
+      ],
+      "observed_deviation": "同为毒/敏捷组件对照：外部代表一幕节点5得触媒、12得步法且已有蜃景，17得余像；本局F9步法/F14触媒、无蜃景余像，转用暗影/残影；二幕F28后资源链明显不同。两局不同遗物/Boss/牌组，不解释成哪张牌的因果效应。",
+      "situation_to_action": {
+        "situation": "即时攻防过渡→F11主方向P→F14毒雾/蛇咬/触媒/步法持牌签名→二幕补暗影残影与升级",
+        "action": "按已观察的持牌、启动、当轮存活及前序资源链复核该方向；未齐时仍标过渡，不预支终局或未喝药收益。"
+      },
+      "disposition": {
+        "reuse": [
+          "silent-core-poison-defense-observation",
+          "silent-brain-crab-surviving-part-budget",
+          "silent-r2-card-noxious-fumes"
+        ],
+        "candidate": "silent-pb-poison-footwork-realization-83cbd6d7",
+        "waiting": "严格同流派三输入完整战斗证据；当前仅局部对照，不改正式权重/阈值。"
+      },
+      "limits": [
+        "自有n=1；有限完整题面核读",
+        "外部代表与本局不构成同种子/同资源反事实",
+        "保留旧证据、反例、置信度；本批不重写244经验或#48旧条目"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-pb-poison-unformed-kin-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "game": "v0.111.0（项目版本口径）",
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "GJ81EPE4B8Z2"
+      ],
+      "independent_own_runs": 1,
+      "windows": {
+        "full_run": [
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 534888,
+            "offset": 17078496736,
+            "bytes": 13738,
+            "sha256": "8015192d1f9a76839b301b4203cda82799e5b71a3d268b54fb32c8afb2d30e49"
+          },
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 535281,
+            "offset": 17088997994,
+            "bytes": 29823,
+            "sha256": "bb688a99e833236755b90248819d3e779b2c5ecee1b75f25ac10c337b8a64c93"
+          }
+        ],
+        "key_combats": [
+          {
+            "floor": 2,
+            "entry_line": 534891,
+            "last_line": 534915,
+            "exit_line": 534916
+          },
+          {
+            "floor": 3,
+            "entry_line": 534921,
+            "last_line": 534947,
+            "exit_line": 534948
+          },
+          {
+            "floor": 4,
+            "entry_line": 534954,
+            "last_line": 534970,
+            "exit_line": 534971
+          },
+          {
+            "floor": 6,
+            "entry_line": 534979,
+            "last_line": 535001,
+            "exit_line": 535002
+          },
+          {
+            "floor": 8,
+            "entry_line": 535010,
+            "last_line": 535034,
+            "exit_line": 535035
+          },
+          {
+            "floor": 9,
+            "entry_line": 535040,
+            "last_line": 535062,
+            "exit_line": 535063
+          },
+          {
+            "floor": 11,
+            "entry_line": 535074,
+            "last_line": 535095,
+            "exit_line": 535096
+          },
+          {
+            "floor": 13,
+            "entry_line": 535105,
+            "last_line": 535131,
+            "exit_line": 535132
+          },
+          {
+            "floor": 15,
+            "entry_line": 535142,
+            "last_line": 535163,
+            "exit_line": 535164
+          },
+          {
+            "floor": 17,
+            "entry_line": 535174,
+            "last_line": 535201,
+            "exit_line": null
+          },
+          {
+            "floor": 17,
+            "entry_line": 535202,
+            "last_line": 535226,
+            "exit_line": null
+          },
+          {
+            "floor": 17,
+            "entry_line": 535227,
+            "last_line": 535251,
+            "exit_line": null
+          },
+          {
+            "floor": 17,
+            "entry_line": 535252,
+            "last_line": 535280,
+            "exit_line": 535281
+          }
+        ]
+      },
+      "target_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-brain-kin-priest-exit-window"
+      ],
+      "ledger_ids": [
+        "silent-0352",
+        "silent-0020",
+        "silent-0278"
+      ],
+      "observed_deviation": "与外部毒方向赢家只有施毒起点可比，本局未取得其触媒/敏捷/持续防御组合且Boss不同；缺严格同前缀可比组，未知为何没有取得、也不能宣称补齐即可胜。",
+      "situation_to_action": {
+        "situation": "F2致命毒药起步、F6迷雾、F8蛇咬的毒方向过渡；全程uncommitted，未建立毒放大/持续防御",
+        "action": "按已观察的持牌、启动、当轮存活及前序资源链复核该方向；未齐时仍标过渡，不预支终局或未喝药收益。"
+      },
+      "disposition": {
+        "reuse": [
+          "silent-core-poison-defense-observation",
+          "silent-brain-kin-priest-exit-window"
+        ],
+        "candidate": "silent-pb-poison-unformed-kin-83cbd6d7",
+        "waiting": "严格同流派三输入完整战斗证据；当前仅局部对照，不改正式权重/阈值。"
+      },
+      "limits": [
+        "自有n=1；有限完整题面核读",
+        "外部代表与本局不构成同种子/同资源反事实",
+        "保留旧证据、反例、置信度；本批不重写244经验或#48旧条目"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-pb-poison-belt-early-transition-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "game": "v0.111.0（项目版本口径）",
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "37U27AS6JNJ0"
+      ],
+      "independent_own_runs": 1,
+      "windows": {
+        "full_run": [
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 535285,
+            "offset": 17089036638,
+            "bytes": 13779,
+            "sha256": "3a9f903c42fc221ba2500e02b07f86b1cc548456243ddf8e5319b732867d84c6"
+          },
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 535432,
+            "offset": 17092543094,
+            "bytes": 26150,
+            "sha256": "ff079856223a1b9336163917d7a30b5db826c887bc0b172a4d2a41a6c37c5eac"
+          }
+        ],
+        "key_combats": [
+          {
+            "floor": 2,
+            "entry_line": 535288,
+            "last_line": 535316,
+            "exit_line": 535317
+          },
+          {
+            "floor": 5,
+            "entry_line": 535329,
+            "last_line": 535343,
+            "exit_line": 535344
+          },
+          {
+            "floor": 6,
+            "entry_line": 535350,
+            "last_line": 535371,
+            "exit_line": 535372
+          },
+          {
+            "floor": 7,
+            "entry_line": 535377,
+            "last_line": 535404,
+            "exit_line": 535405
+          },
+          {
+            "floor": 9,
+            "entry_line": 535417,
+            "last_line": 535431,
+            "exit_line": 535432
+          }
+        ]
+      },
+      "target_ids": [
+        "silent-core-poison-defense-observation",
+        "silent-poison-potion-observed-application",
+        "silent-belt-buckle-empty-slots-dexterity"
+      ],
+      "ledger_ids": [
+        "silent-0278",
+        "silent-0119",
+        "silent-0262"
+      ],
+      "observed_deviation": "外部毒方向赢家的防御组件及环境不同；本局仅空栏药水与触媒的局部自有对照，不能将其归为已成型毒防失败；严格人类同局面组未知。",
+      "situation_to_action": {
+        "situation": "金币/攻击过渡→F5蛇咬/F6迷雾→F8买触媒后暂定P；空栏腰带扣是条件防守，未成完整核心",
+        "action": "按已观察的持牌、启动、当轮存活及前序资源链复核该方向；未齐时仍标过渡，不预支终局或未喝药收益。"
+      },
+      "disposition": {
+        "reuse": [
+          "silent-core-poison-defense-observation",
+          "silent-poison-potion-observed-application",
+          "silent-belt-buckle-empty-slots-dexterity"
+        ],
+        "candidate": "silent-pb-poison-belt-early-transition-83cbd6d7",
+        "waiting": "严格同流派三输入完整战斗证据；当前仅局部对照，不改正式权重/阈值。"
+      },
+      "limits": [
+        "自有n=1；有限完整题面核读",
+        "外部代表与本局不构成同种子/同资源反事实",
+        "保留旧证据、反例、置信度；本批不重写244经验或#48旧条目"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-pb-uncommitted-early-resource-chain-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "game": "v0.111.0（项目版本口径）",
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "XC9AHZH3CZVK"
+      ],
+      "independent_own_runs": 1,
+      "windows": {
+        "full_run": [
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 535436,
+            "offset": 17092578065,
+            "bytes": 13876,
+            "sha256": "2bbb2e50a229707ddeeb587fb0fb93f9cbc2301e9d09a21649232e6e5381f998"
+          },
+          {
+            "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "source_size": 17105333240,
+            "line": 535578,
+            "offset": 17096007250,
+            "bytes": 24233,
+            "sha256": "a3b190715655e17ff94686d55c931a08fe94d3cd3a134c81cfaec4a745deae54"
+          }
+        ],
+        "key_combats": [
+          {
+            "floor": 2,
+            "entry_line": 535442,
+            "last_line": 535455,
+            "exit_line": 535456
+          },
+          {
+            "floor": 4,
+            "entry_line": 535466,
+            "last_line": 535486,
+            "exit_line": 535487
+          },
+          {
+            "floor": 5,
+            "entry_line": 535493,
+            "last_line": 535508,
+            "exit_line": 535509
+          },
+          {
+            "floor": 6,
+            "entry_line": 535514,
+            "last_line": 535543,
+            "exit_line": 535544
+          },
+          {
+            "floor": 7,
+            "entry_line": 535549,
+            "last_line": 535577,
+            "exit_line": 535578
+          }
+        ]
+      },
+      "target_ids": [
+        "silent-core-shiv-defense-observation"
+      ],
+      "ledger_ids": [
+        "silent-0354"
+      ],
+      "observed_deviation": "未定流派无严格人类可比组；外部毒方向代表仅为缺口目录，不能把本局判成刀流或用终局聚类倒填开局，更不能归因于刀舞拿牌本身。",
+      "situation_to_action": {
+        "situation": "蛇咬起步→F2刀舞补即时输出→F3单步法→毒/刀/敏捷未定过渡；全程uncommitted",
+        "action": "按已观察的持牌、启动、当轮存活及前序资源链复核该方向；未齐时仍标过渡，不预支终局或未喝药收益。"
+      },
+      "disposition": {
+        "reuse": [
+          "silent-core-shiv-defense-observation"
+        ],
+        "candidate": "silent-pb-uncommitted-early-resource-chain-83cbd6d7",
+        "waiting": "严格同流派三输入完整战斗证据；当前仅局部对照，不改正式权重/阈值。"
+      },
+      "limits": [
+        "自有n=1；有限完整题面核读",
+        "外部代表与本局不构成同种子/同资源反事实",
+        "保留旧证据、反例、置信度；本批不重写244经验或#48旧条目"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-unit-potion-plan-unknown-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "BP9C8K9NSRZ0"
+      ],
+      "independent_own_runs": 1,
+      "per_context_n": 1,
+      "windows": [
+        {
+          "run": "BP9C8K9NSRZ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/BP9C8K9NSRZ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 513924,
+            "offset": 4638942829,
+            "bytes": 164342,
+            "sha256": "7e86299dce3d4578f51f9a446b88d82e9c4a623bb3cc68563a6360bf4e9ed8cf"
+          }
+        }
+      ],
+      "target_ids": [
+        "silent-unit-potion-plan-unknown-83cbd6d7"
+      ],
+      "observed_deviation": "F4明确留粉末王战，F5同题已展示未知持有价null且计费0、整战不用药参考，实际提前饮用；实盘无伤但留药反事实未知。",
+      "situation_to_action": "用药时分列即用/后饮/整战不用的同题模型和储药计划；未知价格不赋造正值，不强制留或喝。",
+      "limits": [
+        "有限自有对照；外部字段按回执仅节点级或代理",
+        "无受控胜负对照，不生成安全药量、金币或拿牌比例阈值"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "disposition": "candidate_waiting_independent_strategy_publication",
+      "ledger_ids": [
+        "silent-0605"
+      ],
+      "code_proposal_ids": [
+        "silent-proposal-bd8e444927fbade7"
+      ]
+    },
+    {
+      "id": "silent-unit-potion-conditional-poison-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "TB5YKELW0355",
+        "GJ81EPE4B8Z2",
+        "37U27AS6JNJ0"
+      ],
+      "independent_own_runs": 3,
+      "per_context_n": 1,
+      "windows": [
+        {
+          "run": "TB5YKELW0355",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/TB5YKELW0355",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 514704,
+            "offset": 4662725130,
+            "bytes": 144759,
+            "sha256": "8eeb5da27a9c7c1daa1f8a139a231d461b359d2f6402138707f846bec2a52173"
+          }
+        },
+        {
+          "run": "GJ81EPE4B8Z2",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/GJ81EPE4B8Z2",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515278,
+            "offset": 4681275133,
+            "bytes": 159849,
+            "sha256": "f2627972b7c848fd0afafa108056db303197fed7079b341187fef9dfc53d86b9"
+          }
+        },
+        {
+          "run": "37U27AS6JNJ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/37U27AS6JNJ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515665,
+            "offset": 4689002054,
+            "bytes": 94611,
+            "sha256": "780ae9ede9be3bb5855e244eeedf9a7a3758ecaf5026dce21273b87e022ea4d3"
+          }
+        }
+      ],
+      "target_ids": [
+        "silent-poison-potion-observed-application"
+      ],
+      "observed_deviation": "三局危急题明确毒药水effect not simulated；实际分别加6毒且当步敌HP不变；37局还使空栏腰带扣敏捷0→2。",
+      "situation_to_action": "独立strategy-proposal核条件施毒模型/空栏联动；未知机制保持未知，不能断言早喝必胜。",
+      "limits": [
+        "有限自有对照；外部字段按回执仅节点级或代理",
+        "无受控胜负对照，不生成安全药量、金币或拿牌比例阈值"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "disposition": "candidate_waiting_independent_strategy_publication",
+      "ledger_ids": [
+        "silent-0278",
+        "silent-0119",
+        "silent-0262"
+      ],
+      "code_proposal_ids": [
+        "silent-proposal-6505287889b3d649"
+      ]
+    },
+    {
+      "id": "silent-unit-rest-route-chain-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "BP9C8K9NSRZ0",
+        "TB5YKELW0355",
+        "GJ81EPE4B8Z2",
+        "37U27AS6JNJ0",
+        "XC9AHZH3CZVK"
+      ],
+      "independent_own_runs": 5,
+      "per_context_n": 1,
+      "windows": [
+        {
+          "run": "BP9C8K9NSRZ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/BP9C8K9NSRZ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 513924,
+            "offset": 4638942829,
+            "bytes": 164342,
+            "sha256": "7e86299dce3d4578f51f9a446b88d82e9c4a623bb3cc68563a6360bf4e9ed8cf"
+          }
+        },
+        {
+          "run": "TB5YKELW0355",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/TB5YKELW0355",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 514704,
+            "offset": 4662725130,
+            "bytes": 144759,
+            "sha256": "8eeb5da27a9c7c1daa1f8a139a231d461b359d2f6402138707f846bec2a52173"
+          }
+        },
+        {
+          "run": "GJ81EPE4B8Z2",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/GJ81EPE4B8Z2",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515278,
+            "offset": 4681275133,
+            "bytes": 159849,
+            "sha256": "f2627972b7c848fd0afafa108056db303197fed7079b341187fef9dfc53d86b9"
+          }
+        },
+        {
+          "run": "37U27AS6JNJ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/37U27AS6JNJ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515665,
+            "offset": 4689002054,
+            "bytes": 94611,
+            "sha256": "780ae9ede9be3bb5855e244eeedf9a7a3758ecaf5026dce21273b87e022ea4d3"
+          }
+        },
+        {
+          "run": "XC9AHZH3CZVK",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/XC9AHZH3CZVK",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515810,
+            "offset": 4691600301,
+            "bytes": 70391,
+            "sha256": "334278b08e1400285a088b25de72631195fe0b5995af1d93dd54f215d5bc0ed8"
+          }
+        }
+      ],
+      "target_ids": [
+        "silent-unit-rest-route-chain-83cbd6d7"
+      ],
+      "observed_deviation": "前三局有实际休息回血，后两局尚未到火；赢战的大额净损与计划落点必须一并交付。",
+      "situation_to_action": "情境是当前HP、下次补给前的实际必经战斗与选项；对照原预测和实际，不设统一安全HP/精英数量。",
+      "limits": [
+        "有限自有对照；外部字段按回执仅节点级或代理",
+        "无受控胜负对照，不生成安全药量、金币或拿牌比例阈值"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "disposition": "candidate_waiting_independent_strategy_publication"
+    },
+    {
+      "id": "silent-unit-coldstart-83cbd6d7",
+      "source_character": "silent",
+      "source_version": {
+        "code": "current",
+        "exact_commit": null,
+        "ascension": 10
+      },
+      "runs": [
+        "BP9C8K9NSRZ0",
+        "TB5YKELW0355",
+        "GJ81EPE4B8Z2",
+        "37U27AS6JNJ0",
+        "XC9AHZH3CZVK"
+      ],
+      "independent_own_runs": 5,
+      "per_context_n": 1,
+      "windows": [
+        {
+          "run": "BP9C8K9NSRZ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/BP9C8K9NSRZ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 513924,
+            "offset": 4638942829,
+            "bytes": 164342,
+            "sha256": "7e86299dce3d4578f51f9a446b88d82e9c4a623bb3cc68563a6360bf4e9ed8cf"
+          }
+        },
+        {
+          "run": "TB5YKELW0355",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/TB5YKELW0355",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 514704,
+            "offset": 4662725130,
+            "bytes": 144759,
+            "sha256": "8eeb5da27a9c7c1daa1f8a139a231d461b359d2f6402138707f846bec2a52173"
+          }
+        },
+        {
+          "run": "GJ81EPE4B8Z2",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/GJ81EPE4B8Z2",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515278,
+            "offset": 4681275133,
+            "bytes": 159849,
+            "sha256": "f2627972b7c848fd0afafa108056db303197fed7079b341187fef9dfc53d86b9"
+          }
+        },
+        {
+          "run": "37U27AS6JNJ0",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/37U27AS6JNJ0",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515665,
+            "offset": 4689002054,
+            "bytes": 94611,
+            "sha256": "780ae9ede9be3bb5855e244eeedf9a7a3758ecaf5026dce21273b87e022ea4d3"
+          }
+        },
+        {
+          "run": "XC9AHZH3CZVK",
+          "summary": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/whole-run-summary.json#/runs/XC9AHZH3CZVK",
+          "raw_refs": {
+            "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+            "source_size": 4702025129,
+            "line": 515810,
+            "offset": 4691600301,
+            "bytes": 70391,
+            "sha256": "334278b08e1400285a088b25de72631195fe0b5995af1d93dd54f215d5bc0ed8"
+          }
+        }
+      ],
+      "target_ids": [
+        "silent-unit-coldstart-83cbd6d7"
+      ],
+      "observed_deviation": "开局及前三战根据当时奖励补输出/防守；取得毒或刀组件不等已形成相应构筑。",
+      "situation_to_action": "按当时选项和计划保留转向，后继Boss结局只作验证，不倒填早期触发。",
+      "limits": [
+        "有限自有对照；外部字段按回执仅节点级或代理",
+        "无受控胜负对照，不生成安全药量、金币或拿牌比例阈值"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "disposition": "candidate_waiting_independent_strategy_publication"
+    }
+  ],
+  "handoff": {
+    "ledger": {
+      "appended": [
+        "BP9C8K9NSRZ0",
+        "TB5YKELW0355",
+        "GJ81EPE4B8Z2",
+        "37U27AS6JNJ0",
+        "XC9AHZH3CZVK"
+      ],
+      "skipped": [],
+      "added": [
+        "silent-0605"
+      ],
+      "updated": [
+        "silent-0020",
+        "silent-0119",
+        "silent-0262",
+        "silent-0278",
+        "silent-0352",
+        "silent-0354",
+        "silent-0570"
+      ],
+      "repeats": [],
+      "per_run": {
+        "BP9C8K9NSRZ0": {
+          "added": [
+            "silent-0605"
+          ],
+          "updated": [
+            "silent-0352",
+            "silent-0020"
+          ]
+        },
+        "TB5YKELW0355": {
+          "added": [],
+          "updated": [
+            "silent-0352",
+            "silent-0020",
+            "silent-0570",
+            "silent-0278"
+          ]
+        },
+        "GJ81EPE4B8Z2": {
+          "added": [],
+          "updated": [
+            "silent-0352",
+            "silent-0020",
+            "silent-0278"
+          ]
+        },
+        "37U27AS6JNJ0": {
+          "added": [],
+          "updated": [
+            "silent-0352",
+            "silent-0278",
+            "silent-0119",
+            "silent-0262"
+          ]
+        },
+        "XC9AHZH3CZVK": {
+          "added": [],
+          "updated": [
+            "silent-0354"
+          ]
+        }
+      },
+      "new_powder_id": "silent-0605"
+    },
+    "code_proposals": [
+      {
+        "id": "silent-proposal-bd8e444927fbade7",
+        "input": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/code-proposal-1.json",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/proposal-powder-plan.md",
+        "domains": [
+          "potion"
+        ],
+        "state": "pending",
+        "implemented_commit": null
+      },
+      {
+        "id": "silent-proposal-6505287889b3d649",
+        "input": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/code-proposal-2.json",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261024-131308-9f3949d1-8714-42c3-a37c-af5229e5d9e9-postmortem/proposal-conditional-poison.md",
+        "domains": [
+          "potion"
+        ],
+        "state": "pending",
+        "implemented_commit": null
+      }
+    ],
+    "strategy_publication": "pending",
+    "consumer_readback": "pending",
+    "natural_benefit": null,
+    "old_244_and_issue48": "只复用原ID与证据，不重写244项或替#48完成回刷。"
+  }
+}

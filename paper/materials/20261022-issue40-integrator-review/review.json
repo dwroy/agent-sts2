@@ -1,0 +1,145 @@
+{
+  "schema": "integrator-issue40-review-v1",
+  "checked_at": "2026-10-22T15:33:01+08:00",
+  "issue": 40,
+  "source": "8f09b842628ce84e167b1f8917d2c8f807512f74",
+  "main": "23a6a0e20f75c295e370290516f94a3a60a44fb7",
+  "source_tree_before_report": "01583f7ec22a5555b9cf6b46c7c89f67a2f57941",
+  "status": "targeted-verified-full-window-pending",
+  "source_file_count": 21,
+  "source_file_mismatches": [],
+  "merge_conflicts": [
+    "paper/materials/decision-log.md"
+  ],
+  "resolution": "Retain main bytes then append both source entries verbatim; no functional file changes.",
+  "checks": [
+    {
+      "name": "production-tsc",
+      "exit_code": 0
+    },
+    {
+      "name": "targeted-vitest",
+      "files": 11,
+      "passed": 55,
+      "exit_code": 0
+    },
+    {
+      "name": "pipeline-python",
+      "passed": 12,
+      "exit_code": 0
+    },
+    {
+      "name": "related-python",
+      "passed": 54,
+      "exit_code": 0
+    },
+    {
+      "name": "independent-boundary-contracts-r2",
+      "passed": 2,
+      "exit_code": 0
+    }
+  ],
+  "independent_contracts": [
+    "Actual all CLI: unrelated character 12 runs excluded; 9 new silent runs defer all 3 old outputs; tenth trains; explicit idle trains new run; cadence contains silent IDs only.",
+    "Exact #20 board_heavy.py/issue_session_support.py plus exact private kit ba7a9c39d9786e4c31256d63ea5b57d03b7db58f in a temporary repository-local fixture: disabled passthrough; enabled produces a single other entry; one-slot command exits0. Production settings untouched."
+  ],
+  "preserved_failures": [
+    {
+      "path": "contracts.log",
+      "cause": "Reviewer fixture passed literal JSON braces through Board.argv format_map; changed fixture to probe.py path. No product source changed.",
+      "product_failure": false
+    }
+  ],
+  "command_errors": [
+    "Initial allocator used path without .worktrees and was refused before mutation; corrected allocation succeeded.",
+    "Sparse material absent on disk: read committed source verification with git show instead.",
+    "Initial STATE filename guessed without dashes missing; located latest top-level STATE-2026-10-19.md and read it."
+  ],
+  "full": {
+    "started": false,
+    "passed": false,
+    "coordination_issue": 38,
+    "original_runner": {
+      "pid": 7161,
+      "start": "7136824",
+      "wchan": "locks_lock_inode_wait"
+    },
+    "original_receipt": "paper/materials/20261022-issue33-high-ops/checks.json",
+    "receipt_state": "waiting-one-kernel-lock-no-other-held",
+    "receipt_waiting_lock": "ops/knowledge-refresh.lock",
+    "held_locks": [],
+    "lock_owner": "unknown: current PID namespace did not expose a matching owner; no inferred attribution",
+    "new_runner": false
+  },
+  "dependencies": [
+    {
+      "issue": 20,
+      "source": "bfcb85bd0c30287aaee4e7fc4be4fb53bd4b6e2f",
+      "candidate": "5c235855809dc0178bb69eb458afd8d37357a2be",
+      "state": "not main; original #41 and full/main/pin/enable gates remain",
+      "collision": "ops/report.py",
+      "resolution_contract": "Retain #20 ablation and background_statistics cost queue; combined queues inside driver exactly once; old live legacy branch preserves #20 outer learner adapter. Re-test final exact combined tree before merge/release."
+    }
+  ],
+  "main_merged": false,
+  "live_published": false,
+  "heavy_enabled": false,
+  "production_refresh_run": false,
+  "play_run": false,
+  "natural_acceptance": "pending ops cold/warm/training cycle timings, publication held/wait, actual model consumer SHA",
+  "logs": [
+    {
+      "path": "source-audit.json",
+      "sha256": "5f4919b06a56a6eea8ddbbf081b786ea7b9b35900ee05eacb0cb7a13d1cc3fa5",
+      "bytes": 94
+    },
+    {
+      "path": "tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "targeted-vitest.log",
+      "sha256": "ff8055cd06c3c6dc4a8de7bddbddfad258704d8549998584bffc506532832e3f",
+      "bytes": 261
+    },
+    {
+      "path": "python-pipeline.log",
+      "sha256": "064b2e1571589bbee7b5f939f81e1a2cdcbc57c2ec093c7ac7d3b108de3f5c5f",
+      "bytes": 10733
+    },
+    {
+      "path": "python-related.log",
+      "sha256": "10e04753b71da1cffac1ce5448e5520b420caabea44bc23580e3f662a42b08ce",
+      "bytes": 618
+    },
+    {
+      "path": "contracts.py",
+      "sha256": "fc25e03fafa8bd5b8ee1af185cdfbcaae16ac5e2f814153530e48749367d17f2",
+      "bytes": 6025
+    },
+    {
+      "path": "contracts.log",
+      "sha256": "0861327f240b8e7fa468ccb6972d7b612fc50bf527fb655c1d587afddce001de",
+      "bytes": 1302
+    },
+    {
+      "path": "contracts-r2.log",
+      "sha256": "0458053b2aff258ce53227163b56617d971c6cf9f3b3db3a8e1b9ff5d32d6ce3",
+      "bytes": 527
+    }
+  ],
+  "gitleaks": {
+    "staged_merge_patch_exit": 0,
+    "scanned_bytes": 2270485
+  },
+  "whitespace": {
+    "exit": 2,
+    "cause": "Existing source test logs end with blank lines; imported main also has CSV CRLF and existing notes EOF warnings. Original logs retained unchanged.",
+    "functional_and_new_review_check": "exit0: agent, knowledge/builders, ops/report.py, docs, new integrator review files"
+  },
+  "dependency_fixture_source": {
+    "public": "5c235855809dc0178bb69eb458afd8d37357a2be",
+    "private_kit": "ba7a9c39d9786e4c31256d63ea5b57d03b7db58f"
+  }
+}

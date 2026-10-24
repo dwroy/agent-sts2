@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-23T13:24:13+08:00",
+  "ops_comment": 6358044084,
+  "batch": "20261023-131316-fix-batch",
+  "native_readonly_verified": true,
+  "native_code": 0,
+  "batch_state": "failed",
+  "batch_rc": 0,
+  "empty_fix_gate_returns": null,
+  "wrapper_seal_present": false,
+  "lease_nonblocking_probe": "free",
+  "original_pids_absent": [
+    473861,
+    474595
+  ],
+  "timeout": "not triggered; post-launch verification bound",
+  "requirements": {
+    "native_nonempty_bindings": "verified",
+    "automatic_completion": "native task_complete verified; wrapper final acceptance blocked by semantic failed/rc0",
+    "timeout_fallback_not_triggered_or_correct": "verified-not-triggered; native exit to attention about 2s, 300s bound is post-launch verification, not 310s model duration",
+    "slot_release": "verified terminal failed path and original checkout lease released",
+    "next_batch_dispatch": "pending next natural tick; scheduler log shows ops-wake drain"
+  },
+  "evidence": {
+    "paper/materials/20261023-1318-ops/receipt.json": {
+      "bytes": 4029,
+      "sha256": "9a01a3c364373681f040fb4d6c2eed8b23deb837749530cf3516a17a0582ac10"
+    },
+    "paper/materials/20261023-1318-ops/tui-original.json": {
+      "bytes": 4661,
+      "sha256": "99aff54211bfa22fa634424bb478b45b4d847203f6da6aca83acdb7e0e30fd42"
+    },
+    "paper/materials/20261023-1318-ops/batch-projection.json": {
+      "bytes": 5159,
+      "sha256": "7d88803db52682ecc3a8dc35516784a9fc8510b838d4c758ec91325225f1f0eb"
+    },
+    "paper/materials/20261023-1318-ops/wrapper-attention-original.json": {
+      "bytes": 254,
+      "sha256": "95e4b53ad85cb699065d1975491bb442a9457cd3573fa6941a509c7237ff9d7d"
+    },
+    "learner/runs/20261023-131322-1972254f-1087-4cdc-b6ac-7dcf61058a8f-fix-batch.jsonl": {
+      "bytes": 1041960,
+      "sha256": "c501bdba700e10dc11e86fad002f05b09377e901d3c1297e9a5f942604176f40"
+    },
+    "ops/codex-ops/learner/20261023-131316-fix-batch.out": {
+      "bytes": 2711,
+      "sha256": "df4b06e5433f0abf5c21bafdded61c5ead87d6520bf3b6c9da81d423d91b01cf"
+    }
+  },
+  "production_written": false,
+  "new_tests_models_full": 0,
+  "next_batch_dispatch": "pending",
+  "issue_closed": false
+}

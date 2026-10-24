@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-23T11:21:49+08:00",
+  "rows": [
+    {
+      "batch": "20261023-110000",
+      "task": "postmortem",
+      "started_once": 1,
+      "registry_state": "done",
+      "pid": 4085217,
+      "frozen_queue": null
+    },
+    {
+      "batch": "20261023-110800-strategy-proposal",
+      "task": "strategy-proposal",
+      "started_once": 1,
+      "registry_state": "running",
+      "pid": 4097646,
+      "frozen_queue": null
+    },
+    {
+      "batch": "20261023-110000-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "started_once": 1,
+      "registry_state": "running",
+      "pid": 4097826,
+      "frozen_queue": null
+    },
+    {
+      "batch": "20261023-110800-fix-batch",
+      "task": "fix-batch",
+      "started_once": 1,
+      "registry_state": "running",
+      "pid": 4098062,
+      "frozen_queue": null
+    },
+    {
+      "batch": "20261023-110001-strategy-proposal",
+      "task": "strategy-proposal",
+      "started_once": 0,
+      "registry_state": null,
+      "pid": null,
+      "frozen_queue": "frozen-requeue-accepted-await-original-slot"
+    },
+    {
+      "batch": "20261023-110001-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "started_once": 0,
+      "registry_state": null,
+      "pid": null,
+      "frozen_queue": "frozen-requeue-accepted-await-original-slot"
+    },
+    {
+      "batch": "20261023-110801-fix-batch",
+      "task": "fix-batch",
+      "started_once": 0,
+      "registry_state": null,
+      "pid": null,
+      "frozen_queue": "frozen-requeue-accepted-await-original-slot"
+    }
+  ],
+  "new_launches_this_wake": 0,
+  "reason": "both original strategy slots and fix slot remain occupied; no actual strategy-done/fix-done event supplied",
+  "next_trigger": "actual corresponding completion event, original capped frozen plan once only",
+  "off_to_on_boundary": "original ops must honor P0 gate when adapting temporary helper off assertion; no inherited old TUI replay"
+}

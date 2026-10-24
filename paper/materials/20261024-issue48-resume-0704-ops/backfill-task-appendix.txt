@@ -1,0 +1,17 @@
+def task_file(root, directory, bid, character, tree, ident):
+    batch, spec = prepare(root, directory, bid, character, tree, ident)
+    if subprocess.check_output(["git", "-C", tree, "rev-parse", "HEAD"], text=True).strip() != batch["backfill_binding"]["dispatch_base"]:
+        raise ValueError("backfill tree differs from dispatch base")
+    template = Path(tree, "learner/tasks/strategy-proposal.md").read_text()
+    appendix = ("\n\n## 本批后置回刷来源（优先于普通选题及旧专题章节）\n"
+                + json.dumps({"batch": bid, "worktree": tree, **{k: v for k, v in batch["backfill_binding"].items() if k != "all_entry_ids"}}, ensure_ascii=False, indent=2)
+                + "\n" + spec.decode() + "\n"
+                + "只处理绑定的 entry_ids；不读取旧专题请求，不承接旧线程。冻结源从 project_root 的上述精确路径读回。"
+                + "HEAD保持dispatch_base，不执行普通选题的git merge；本批先在 scratch 保存策略/rk候选与旧ID去向；正式发布、消费者及科学父仍交原流程，不在本批改源码/正式知识。"
+                + "最终JSON必填task=strategy-proposal、character=silent、batch=本批实际ID、base=dispatch_base；runs仅派发锚点。另带backfill_source、input_sha256及backfill_results。"
+                + "backfill_results逐entry_id一行 {id,state:processed或waiting,destinations:[{kind:strategy或rk或merged-into,id:目标ID,path:scratch内真实候选文件绝对路径}],reason:具体理由}。"
+                + "processed要求至少一个真实候选文件，waiting保留空destinations；缺证允许全waiting。"
+                + "tests固定{tsc:null,vitest:null,cases:null}，fixes=[]、merged=null，不冒称live/收益；report为scratch/report.md。\n")
+    if "{{" in appendix or "}}" in appendix:
+        raise ValueError("backfill text contains template delimiters")
+    path = Path(directory, "learner", bid + ".backfill-input", "strategy-proposal.md")

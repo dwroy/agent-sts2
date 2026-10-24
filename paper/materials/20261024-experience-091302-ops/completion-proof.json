@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-24T09:48:28+08:00",
+  "task": "experience-update",
+  "batch": "20261024-091302-experience-update",
+  "original_state": "failed",
+  "original_rc": 0,
+  "original_errors": [
+    "missing source commit for proposal audit"
+  ],
+  "native_session": "01a16b78-7f91-7513-a1aa-6511184ceef5",
+  "native_turn": "01a16b79-45c7-7480-ba15-da4fbd159154",
+  "retirement_authorized": true,
+  "original_output_sha256": "2d8df76c8b725bfd4f1c684a6a98a845073923ee20d4fd3f411179f02d42c427",
+  "real_source_commit": null,
+  "candidate_policy_check": {
+    "command": "python3 learner/code_proposals.py check-experience --character silent --before actual-live-before.json --after candidate-experience.json",
+    "rc": 0,
+    "missing": [],
+    "policy": "Roy-2026-10-07-learning"
+  },
+  "no_original_failed_retry_rewritten": true,
+  "no_actual_experience_publication": true
+}

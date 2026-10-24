@@ -1,3 +1,4 @@
+import { observeBrain } from "../live-view.js";
 /** Knowledge-agent lifecycle shared by Codex app-server and dsh. No alternate engine makes the final decision. */
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import type { BrainConfig } from "../../core/config.js";
@@ -41,7 +42,7 @@ export class KnowledgeAgent implements BrainEngine {
     const abort = () => phase.abort();
     signal?.addEventListener("abort", abort, { once: true });
     if (signal?.aborted) phase.abort();
-    const host = this.mcp.begin(req.tools ?? [], req.toolContext ?? { ascension: 0, knowledgeDir: "", logsDir: "" }, Math.max(0, this.config.agent.maxToolCalls - previousCalls.length), started + toolMs, limit);
+    const host = this.mcp.begin(req.tools ?? [], req.toolContext ?? { ascension: 0, knowledgeDir: "", logsDir: "" }, Math.max(0, this.config.agent.maxToolCalls - previousCalls.length), started + toolMs, limit, req.observe);
     const timer = setTimeout(() => limit("time"), toolMs);
     let calls: ToolCallRecord[] = [];
     let first: BrainAnswer | null = null;
@@ -63,6 +64,7 @@ export class KnowledgeAgent implements BrainEngine {
       if (first?.answer && first.problems.length === 0) fallback = null;
       let answer = first;
       if (fallback) {
+        observeBrain(req.observe, { kind: "status", text: `!!! 查询阶段兜底 ${fallback}，用已有资料作答` });
         this.mcp.end();
         // Release the querying harness before starting the final one; only one child harness is alive.
         if (this.querying && "close" in this.querying) await (this.querying as BrainEngine & { close(): Promise<void> }).close();
@@ -72,6 +74,7 @@ export class KnowledgeAgent implements BrainEngine {
         // Rebuild the same question with the exact recorded tool returns; no new lookup can happen in this phase.
         const finalReq: BrainRequest = { ...req, tools: [], timeoutMs: remaining,
           question: `${req.question}\n\n知识查询阶段已结束（${fallback}）。使用原题状态和以下已取得的工具资料直接作答；缺失资料保持未知，不再查工具。\n${JSON.stringify(calls.map(c => ({ name: c.name, input: c.input, output: c.output, isError: c.isError ?? false })))}` };
+        observeBrain(req.observe, { kind: "prompt", request: finalReq, phase: "查询阶段结束，使用已取得资料作答" });
         answer = await this.answering.decide(finalReq, signal);
       }
       if (!answer) throw new Error("knowledge agent produced no result");

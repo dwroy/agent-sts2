@@ -1,0 +1,99 @@
+{
+  "issue": 48,
+  "at": "2026-10-23T17:46:11.823226+08:00",
+  "review_comment": "https://github.com/dwroy/agent-sts2/issues/48#issuecomment-6361916716",
+  "root_causes": {
+    "native_fixture": "delayed fixture advances the injected clock by 10000ms per pause even during retirement; one 2ms real yield can consume the entire production 10000ms exit observation window before the real sleep child closes",
+    "ordinary_close_fixture": "six independent real Git fixtures shared one 15000ms child budget; the same baseline also timed out and this run totals over 15s despite each original case passing separately"
+  },
+  "patch_scope": [
+    "agent/tests/learner-herdr.test.ts",
+    "agent/tests/ordinary-close-isolation.test.ts"
+  ],
+  "fix": {
+    "native": "during fixture retirement, await the actual owned child close event with a 2000ms wall-clock bound, then advance by pollMs; never fabricate exit/foreground/lease/retirement",
+    "ordinary": "run the exact six original Python cases individually; preserve each 15000ms subprocess timeout, zero-status/OK assertions and Python source bodies",
+    "regressions": [
+      "original aaa/zzz 35000ms native-acceptance assertions retained",
+      "aaa/zzz with a controlled 250ms signal delay",
+      "5000ms delayed signal exceeds the 2000ms fixture wait: still code75/stoppedfalse and retirement unauthorized"
+    ]
+  },
+  "evidence": {
+    "controlled_before": {
+      "log": "paper/materials/20261023-issue48-sync-dev/controlled-before.txt",
+      "failed": 2,
+      "skipped": 62,
+      "exit_code": 1,
+      "instrumented_fixture_sha256": "005f5f2a800bde5807781ccbe66bdd140de36ff80374dff87bfc948b77626ae4",
+      "reconstruction_patch": "paper/materials/20261023-issue48-sync-dev/controlled-before.patch"
+    },
+    "controlled_after": {
+      "log": "paper/materials/20261023-issue48-sync-dev/controlled-after.txt",
+      "passed": 3,
+      "skipped": 62,
+      "exit_code": 0
+    },
+    "development_tree": {
+      "anchor": "daccecba7",
+      "tsc": 0,
+      "files": 10,
+      "tests": 161,
+      "log": "paper/materials/20261023-issue48-sync-dev/directed.txt",
+      "note": "11 filters were supplied, but learner-tabs and its newer dependencies are absent from this development baseline; this is not counted as 11 matched files"
+    },
+    "frozen_combination": {
+      "anchor": "3bc21861f9e78e526b2383066c4b2fd84fc24684",
+      "tested_tree": "2ab98c9c74e708efc984a82772a06095a67ce8df",
+      "modified_paths": [
+        "agent/tests/learner-herdr.test.ts",
+        "agent/tests/ordinary-close-isolation.test.ts"
+      ],
+      "leaf_sha256": {
+        "agent/tests/learner-herdr.test.ts": "3dff88de50424a23f60b5e010c6fa07126a139a7299307258bf7822841611681",
+        "agent/tests/ordinary-close-isolation.test.ts": "cf4ff35aeb6bd4115ba1361fb36b36d57b54e50856b2d8a5c488d75246687528"
+      },
+      "production_changed": false,
+      "tsc": 0,
+      "files": 11,
+      "tests": 163,
+      "passed": 163,
+      "failed": 0,
+      "log": "paper/materials/20261023-issue48-sync-dev/combination-directed.txt",
+      "json": "paper/materials/20261023-issue48-sync-dev/combination-directed.json",
+      "ordinary_close_total_ms": 16349.409912109375,
+      "ordinary_close_case_max_ms": 6560.344088000001
+    }
+  },
+  "original_failures_preserved": {
+    "paper/materials/20261023-issue48-directed-admission/report.md": "2b01d207d5cbb63e8cbe7cc8aaaba2539547c30ea4d4a4ea9cd5d92731d2d415",
+    "paper/materials/20261023-issue48-directed-admission/directed-checks.json": "4d288ab0f0196b70011ea41f8d39e8cb064cbf3486b9e76982f8cbd523541f9a",
+    "paper/materials/20261023-issue48-directed-admission/directed-directed.log": "d484e148d854a27776d4f203b4c307470dddd6994bf8909d5c3b7835dfca11f4",
+    "paper/materials/20261023-issue48-directed-admission/directed-vitest.json": "9ed6e300a10a6417420979f9e95f78b5d64a5ed71159e21868b73072e6839485",
+    "paper/materials/20261023-issue48-directed-admission/baseline-checks.json": "5f44b514a40023532a4b0d730e20c0e7fbc5b019c1ffc8bd75cc223f94f1ec9d",
+    "paper/materials/20261023-issue48-directed-admission/baseline-learner-herdr.json": "b12730421e261c24aafa53e67bad81f04f39958d0493742172fc4ab295f41b84",
+    "paper/materials/20261023-issue48-directed-admission/baseline-ordinary-close-isolation.json": "cec5b66e26dd4c6b3fefbb5824b7d0c89e06f94fde80faeba2cd3d71200e7dc1",
+    "paper/materials/20261023-issue48-directed-admission/herdr-unchanged-r2.json": "fb0931ff45c6b250dc859da16fd482946b8916e931fd2db6a18daddfc45a25d6",
+    "paper/materials/20261023-issue48-directed-admission/ordinary-six-direct.log": "baac2879bd5c0cbd8e894740502ea2e5ebe69d9586fe0bd0f564b271e79706eb"
+  },
+  "additional_blob_proofs": {
+    "ops/tests/test_ordinary_close.py": {
+      "daccecba7": "51298ce22dfb87a379f086b8cd5e41e59e115e42",
+      "f55ef40ff": "51298ce22dfb87a379f086b8cd5e41e59e115e42",
+      "3bc21861": "51298ce22dfb87a379f086b8cd5e41e59e115e42"
+    },
+    "ops/ordinary_close.py": {
+      "daccecba7": "d4e99d46c4ba4dc0977a197be527a24309a2266c",
+      "f55ef40ff": "b16cc8e1e18416b29fea1db97f4f83a54959fe58",
+      "3bc21861": "d4e99d46c4ba4dc0977a197be527a24309a2266c"
+    }
+  },
+  "production_changed": false,
+  "full_started": false,
+  "models_started": 0,
+  "game_actions": 0,
+  "main_live_changed": false,
+  "validation_checkout": "/home/dw/Projects/agent-sts2/.worktrees/issue48-sync-combination-20261023-1742",
+  "validation_checkout_policy": "allocated by worktree_checkout.py; keep original frozen anchor and receipts for integrator audit; no model/session or research output in this validation checkout",
+  "handoff": "integrator applies only the two fixture leaves on top of the existing 14-leaf #48 candidate; original failures remain historical evidence, passing this bounded causal check is not a claim of global stability"
+}

@@ -1,0 +1,78 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ❯ tests/ops-mod-state.test.ts (37 tests | 37 failed) 4375ms
+     × does not report ready for empty 166ms
+     × does not report ready for invalid JSON 153ms
+     × does not report ready for truncated JSON 170ms
+     × does not report ready for non-object 176ms
+     × does not report ready for unsuccessful 176ms
+     × does not report ready for missing ok 180ms
+     × does not report ready for missing data 170ms
+     × does not report ready for null data 185ms
+     × does not report ready for missing screen 170ms
+     × does not report ready for null screen 154ms
+     × does not report ready for non-string screen 154ms
+     × does not report ready for blank screen 177ms
+     × rejects HTTP 204 even with a valid-looking state body 53ms
+     × rejects HTTP 302 even with a valid-looking state body 41ms
+     × rejects HTTP 404 even with a valid-looking state body 33ms
+     × rejects HTTP 503 even with a valid-looking state body 29ms
+     × rejects curl transport failures even with a complete body 24ms
+     × reports the validated screen from one response without a second read 105ms
+     × keeps polling until an unsuccessful envelope becomes a valid state 189ms
+     × keeps fixed HTTP responses independent of inherited game instance bindings 103ms
+     × preserves a small COMBAT state envelope 101ms
+     × preserves a small CARD_SELECTION state envelope 98ms
+     × preserves a small MAP state envelope 92ms
+     × preserves the complete ASCII state beyond 20000 characters 121ms
+     × preserves the complete Chinese state beyond 20000 characters 175ms
+     × preserves the complete nested arrays state beyond 20000 characters 136ms
+     × returns an explicit error for an invalid response "" 101ms
+     × returns an explicit error for an invalid response "{broken" 124ms
+     × returns an explicit error for an invalid response "[]" 108ms
+     × returns an explicit error for an invalid response "{\"ok\":false}" 117ms
+     × returns an explicit error for an invalid response "{\"data\":{\"screen\":\"CARD_SELECTION\",\"turn\":6}}" 115ms
+     × returns an explicit error for an invalid response "{\"ok\":true}" 114ms
+     × returns an explicit error for an invalid response "{\"ok\":true,\"data\":{}}" 123ms
+     × returns an explicit error for an invalid response "{\"ok\":true,\"data\":{\"screen\":\"COMBAT\",\"value\":NaN}}" 127ms
+     × does not report success for HTTP 302 41ms
+     × does not report success for HTTP 503 28ms
+     × reports a transport failure without printing a partial state 42ms
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":392.4435250000097,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":347.567853000015,"added_prompt_bytes":1591}
+ ❯ tests/learner-launch-failures.test.ts (1 test | 1 failed) 2027ms
+   × nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure 2026ms
+ ❯ tests/brain-agent-mode.test.ts (15 tests | 8 failed) 163ms
+   × serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 10ms
+   × mounts all six #26 tools through the same MCP and retains controller role/ascension identity 5ms
+   × uses the same engine and exact acquired results to answer after calls limit 6ms
+   × uses the same engine and exact acquired results to answer after time limit 1ms
+   × honors a configured answer reserve larger than half the question budget 1ms
+   × runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 93ms
+   × does not renew the tool allowance when the same question recovers after an engine error 5ms
+   × a previous question's delayed limit callback cannot cancel the next question 1ms
+ ❯ tests/brain-agent-codex.test.ts (1 test | 1 failed) 21ms
+   × Codex app-server exposes only gkb, keeps all isolation switches and records native effort plus tool results 19ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 292ms
+     × all resolve 291ms
+ ❯ tests/temp-lifecycle.test.ts (5 tests | 3 failed) 322ms
+     × defaults to the common repository disk before a child starts and cleans on failure 142ms
+     × keeps caller-owned child scratch on a successful smoke command 94ms
+     × reports a missing offline executable as a failure 75ms
+ ❯ tests/brain-card-distill.test.ts (1 test | 1 failed) 181ms
+   × checks offline dataset dispatch, censoring, run splits and entry leakage boundaries 180ms
+ ❯ tests/brain-reflex-knowledge.test.ts (13 tests | 2 failed) 107ms
+   × serves rk through the production MCP with the same provenance and unchanged combat-off consumer 13ms
+   × uses the same engine's answer reserve after a real rk lookup consumes the call allowance 8ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7976,"sent_entries":2}
+ ❯ tests/brain-decision-dataset.test.ts (1 test | 1 failed) 177ms
+   × checks five-type dataset projection, version timing and first-trajectory outcome censoring 176ms
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.501s
+
+OK
+ ❯ tests/strategy-external.test.ts (15 tests | 1 failed) 1399ms
+   × external admission, source proof, original writer gates and retirement use fixed aggregates 673ms
+ ❯ tests/learner-wrapper-scripts.test.ts (0 test)

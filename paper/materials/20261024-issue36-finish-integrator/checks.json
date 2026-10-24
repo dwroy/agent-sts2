@@ -1,0 +1,78 @@
+{
+  "tsc": {
+    "exit": 0,
+    "seconds": 1.066,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ]
+  },
+  "typescript": {
+    "exit": 0,
+    "seconds": 15.621,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/learner-herdr.test.ts",
+      "tests/learner-herdr-ownership.test.ts",
+      "tests/learner-native-environment.test.ts",
+      "tests/learner-native-prelude.test.ts",
+      "tests/learner-tui-reconciliation.test.ts",
+      "tests/learner-herdr-launcher.test.ts",
+      "tests/learner-tui-observation.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--no-file-parallelism"
+    ]
+  },
+  "python": {
+    "exit": 1,
+    "seconds": 9.77,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "ops.tests.test_learner_tui",
+      "ops.tests.test_learner_tui_recovery",
+      "ops.tests.test_learner_environment",
+      "ops.tests.test_learner_wrapper_completion",
+      "ops.tests.test_strategy_external",
+      "ops.tests.test_learner_launch_failures"
+    ]
+  },
+  "python_corrected": {
+    "exit": 0,
+    "seconds": 9.643,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "ops.tests.test_learner_tui",
+      "ops.tests.test_learner_tui_recovery",
+      "ops.tests.test_learner_environment",
+      "ops.tests.test_learner_wrapper_completion",
+      "ops.tests.test_strategy_external",
+      "ops.tests.test_learner_launch_failures"
+    ],
+    "PYTHONPATH": "<isolated-worktree>/ops/tests",
+    "prior_failure": "python.log: fixture import path; original preserved"
+  }
+}

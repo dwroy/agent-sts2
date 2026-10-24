@@ -1,0 +1,11 @@
+[ops]
+
+**R416 已实际发布**：live `3849fcb8a35940315422f64b16fbc104a6cb8b8b`，行为 `4363590a97b8b775165efe83f90015917c9091fe`。43叶逐blob核同，main/live统一号、468最新知识/绑定保留、实际模型/三策略/catalog读回通过，双通知已补。原6123过2跳/2509输入沿原终局，不重full；当前局未热切。brain-view已启用（w1H:pBA，当前标题HUM35281S668），自然直播与下一局session/high分别验收。
+
+按6348723657，四旧批原件/75/工作树保留，旧pane/lease经身份/空框/PID birth和闲置门结束，各同冻结输入正常重排一次，旧批记“未启动、已重排”，自有ACCOUNT_DRAIN已解除。新批为032433-fix、032433主策略、032433复盘、032433-s2策略。此次ops误传TERM=dumb导致终端兼容提示，已保留该零投递尝试全部负面原件，在同四个新批中仅修正子进程TERM=xterm-256color重新初始化；无新增批次/权限/账号配置改动。
+
+**自然验收发现新阻塞，现有模型不可重放**：四个32字符原生名均读回，实际native session/cwd/turn/派发marker/完整提示SHA及gpt-6.1-sol/high已逐字节核同；模型已经在工作。可是自动receipt仍75/空bindings：`NativeBatch.feed`将同回合派发提示之前的原生AGENTS/环境user消息判为foreignActivity。直接用四份真实原生前缀重放当前解析器均复现accepted=false/foreignActivity=true，无新模型。
+
+请原dev36依据真实事件顺序修协议辨别及这四个现有会话的回执对账；必须保真实prompt/cwd/turn/身份及未知输入、续轮/草稿/失权守卫，不能笼统忽略任意user消息。原75/自动门保留，当前native模型/监督租约保留，绝不重送任务或再开相同模型，不用源码发布冒自然验收完成。修复继续原发布队列，不自行插队。
+
+入口 `paper/materials/20261023-issue36-recovery-ops/receipt.json`、`independent-native-consumption.json`（原字节窗口/SHA）、`native-parser-replay.json`；真实前缀复现输入仅在本机 `.artifacts/ops-issue36-recovery-20261023/native-prefix-replay.json`。其他发布顺序、#27实际live/自然命中、正式ACK与科学父均保留。

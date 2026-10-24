@@ -35,13 +35,54 @@ def observe(state, configs, character, character_of, level_of):
     return created
 
 
-def lease_busy(state_dir, request):
+def lease_busy(state_dir, request, create=True):
     path = Path(state_dir,'learner',f"ascension-audit-{request['character']}-a{request['level']}.lock")
-    path.parent.mkdir(parents=True,exist_ok=True)
-    with path.open('a') as lock:
+    if not create and not path.exists(): return False
+    if create: path.parent.mkdir(parents=True,exist_ok=True)
+    with path.open('a' if create else 'r') as lock:
         try: fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError: return True
     return False
+
+
+def candidate(state, root, character, request, finished, available):
+    """Share evidence/retry/tree admission without changing the retained request."""
+    if (request.get('character') != character or request.get('state') not in ('queued','failed')
+            or request.get('retry_at',0) > time.time() or request.get('attempts',0) >= 3):
+        return None
+    runs = [r['run_id'] for r in finished if str(r.get('character','IRONCLAD')).lower() == character
+            and r.get('ascension') == request.get('level') and re.fullmatch('[A-Z0-9]{12}',str(r.get('run_id','')))]
+    if not runs: return None
+    attempt = request.get('attempts',0)+1
+    tree = str(Path(root,'.worktrees',f"ascension-audit-{character}-a{request['level']}-{attempt}"))
+    if any(b.get('worktree') == tree and b.get('state') in ('running','launching') for b in state['batches'].values()):
+        return None
+    if Path(tree).exists() and not available(tree): return None
+    return runs, tree, attempt
+
+
+def priority_pending(state, root, character, available):
+    """Deferred audits hold only for runnable evidence or an original active lease."""
+    requests = [r for r in state.get('ascension_audits',{}).values() if r.get('character') == character]
+    if any(r.get('state') in ('running','launching') for r in requests): return True
+    queued = [r for r in requests if r.get('state') in ('queued','failed')
+              and type(r.get('level')) is int and r['level'] >= 0]
+    if not queued: return False
+    state_dir = os.environ.get('CODEX_OPS_DIR') or str(Path(root,'ops/codex-ops'))
+    # Never create lock files or reserve attempts from a priority observation.
+    if any(lease_busy(state_dir,r,create=False) for r in queued): return True
+    finished = []
+    path = Path(os.environ.get('CODEX_OPS_LOGS') or Path(root,'logs'), 'runs.jsonl')
+    try:
+        if path.exists():
+            with path.open() as source:
+                for line in source:
+                    try: row = json.loads(line)
+                    except ValueError: continue
+                    if isinstance(row,dict): finished.append(row)
+    except OSError:
+        return True  # Unknown evidence availability never authorizes overtaking.
+    return any(candidate(state,root,character,r,finished,available) is not None for r in queued)
 
 
 def dispatch(state, root, scripts, character, finished, alive, stamp, start, available, persist=lambda s:None, notice=lambda text:None):
@@ -61,13 +102,9 @@ def dispatch(state, root, scripts, character, finished, alive, stamp, start, ava
             notice('升阶审计 '+request['key']+' 三次失败或丢失已耗尽；旧工作树/日志保留，需要运维续派。')
             continue
         if lease_busy(state_dir,request): continue
-        runs = [r['run_id'] for r in finished if str(r.get('character','IRONCLAD')).lower() == character
-                and r.get('ascension') == request['level'] and re.fullmatch('[A-Z0-9]{12}',str(r.get('run_id','')))]
-        if not runs: continue  # Keep the request until this level has observed, completed evidence.
-        attempt = request['attempts']+1
-        tree = str(Path(root,'.worktrees',f"ascension-audit-{character}-a{request['level']}-{attempt}"))
-        if any(b.get('worktree') == tree and b.get('state') in ('running','launching') for b in state['batches'].values()): continue
-        if Path(tree).exists() and not available(tree): continue
+        ready = candidate(state,root,character,request,finished,available)
+        if ready is None: continue
+        runs, tree, attempt = ready
         batch_id = stamp+'-ascension-audit'
         if batch_id in state['batches']: return None
         batch = {'task':'ascension-audit','learner_task':'ascension-audit','character':character,

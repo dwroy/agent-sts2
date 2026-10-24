@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue55-publication-20261024/publish-natural.py", line 27, in <module>
+    fcntl.flock(guard,fcntl.LOCK_EX|fcntl.LOCK_NB);assert not drain.exists(),'other owner drain retained';autos=kind('autoplay');plays=kind('play');assert len(autos)==1 and len(plays)==1,'original natural loop boundary unavailable';prior=plays[0];console=Path('/proc',str(prior['pid']),'fd/1').resolve();assert console.is_relative_to(R/'logs/console') and console.is_file();size=console.stat().st_size
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable

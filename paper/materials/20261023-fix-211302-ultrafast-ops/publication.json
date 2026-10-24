@@ -1,0 +1,81 @@
+{
+  "at": "2026-10-23T22:49:22+08:00",
+  "main": {
+    "parent": "4414a7665b476553b552a2f0ae54b66b84f2ac0c",
+    "commit": "86b3b1721b4b6ad4db48b0279504144e490db010",
+    "tree": "8fe484cf6f48ae10b6059160e5fd3d86a4f836b8",
+    "paths": [
+      "ops/proposal_dispatch.py",
+      "ops/tests/test_unassigned_proposal_resolution.py",
+      "agent/tests/unassigned-proposal-resolution.test.ts",
+      "ops/codex/lib.ts",
+      "agent/tests/codex-fast.test.ts",
+      "agent/tests/ops-codex.test.ts",
+      "agent/tests/ops-herdr.test.ts",
+      "docs/codex-fast.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/85f83217c1774c20bad71ae95e550c02/manifest.json",
+      "manifest_sha256": "dcb779f6b61948cf5d95a4b9cd1dd6ccef2fb5a19721c995480184284fbe859e",
+      "scanned_leaves": 0,
+      "reused_clean_leaves": 8,
+      "full_copy_bytes": 0
+    }
+  },
+  "fix_source": {
+    "parent": "16a3d49d25f0e7744876f256433c6c69c9067cb0",
+    "commit": "a2c6767b6954d46078812ae9be9ca5a45ce871cc",
+    "tree": "4d5ee848016ddbef1cd5b590cc3e454a80eb44b7",
+    "paths": [
+      "ops/proposal_dispatch.py",
+      "ops/tests/test_unassigned_proposal_resolution.py",
+      "agent/tests/unassigned-proposal-resolution.test.ts"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/becea59887a3430396b7d95c386e12ed/manifest.json",
+      "manifest_sha256": "9a84e64cc1da79e5cdb75f5dd4b4219f99c98c4a7a89834faba3b0664c90eaea",
+      "scanned_leaves": 3,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "ultrafast_source": {
+    "parent": "76b40520a3627f6decbd820e09dd871b59fe329c",
+    "commit": "45f9b1ccacd34498dde24635dc530cf4ade4a94d",
+    "tree": "4af0132196d29f29a1c258f912c671df3e5f2ece",
+    "paths": [
+      "ops/codex/lib.ts",
+      "agent/tests/codex-fast.test.ts",
+      "agent/tests/ops-codex.test.ts",
+      "agent/tests/ops-herdr.test.ts",
+      "docs/codex-fast.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/49bab7cf24fc4e5e96f74322f55e25b7/manifest.json",
+      "manifest_sha256": "8eaa50dfb5b1803eaf771f021fc326989db90cfd2b3f4f46a954f9c80c62ff37",
+      "scanned_leaves": 5,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "tested_tree": "446a8ef4fd02e5ff9b68bb4b914332ace6eb501b",
+  "checks": {
+    "tsc_rc": 0,
+    "full_rc": 0,
+    "passed": 6513,
+    "skipped": 2,
+    "sha256": "1960a924d830296ebd57408fe51f0c1244c3fcba3a135947ef1aff8db141cbd0",
+    "actual_root_producer_rc": 0
+  },
+  "original_sandbox_partial_failure": "47 known EPERM cases; controlled130; retained, not full denominator",
+  "game_live_written": false,
+  "release_unchanged": "V6-R419",
+  "main_only_reason": "main-only #48 backfill proof integration is not in live; do not overwrite whole live script",
+  "default_ops_effort": "high",
+  "ops_tier": "ultrafast",
+  "native_adoption": "pending original idle startup/resume; no active turn switched",
+  "rollback": "restore only ops-only serviceTier parameter to Fast when relevant backlog <4; retain waiting fix",
+  "other_role_tiers_unchanged": true,
+  "shared_config_toml_written": false,
+  "old_failed_rc0_or_scientific_parents_closed": false
+}

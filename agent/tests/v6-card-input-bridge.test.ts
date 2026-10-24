@@ -1,4 +1,4 @@
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -27,7 +27,8 @@ vi.mock("../src/knowledge/files.js", async original => ({
 }));
 setupOneshotTests();
 const roots: string[] = [];
-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
+afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.restoreAllMocks(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
 function fixture(history = true) {
   vi.stubEnv("V6_BUILD", "on");
   const root = mkdtempSync(join(tmpdir(), "v6-input-")); roots.push(root);

@@ -1,0 +1,99 @@
+{
+  "source": "c9848dd6b3e258a2c7ab5433479dc0725e4e73ba",
+  "source_parent": "5d2bc7a2c42b70b209cf419069f34bac7790b146",
+  "current_main_at_preimage_check": "dc20478742386f194fc9d60eec7b972ebca92f6e",
+  "product_leaves": {
+    "agent/src/hand/screens/reward.ts": "269f3e5f363c8f43b048a58264655f45cdca118a9a558dcf4678026ba5e77091",
+    "agent/src/hand/screens/reward-external-stats.ts": "63c4670c677aba69995746b1db654fc3e777b807f701bb2552aaea8a5d8646ab",
+    "agent/src/hand/screens/reward-external-stats-ids.ts": "361eafee4121a3fc6e97b1766e8baf4b421a053ca9db6ac22d617acd9a77fe53",
+    "agent/tests/reward-external-stats.test.ts": "46df76b1f5f4582e52f451a98ee7780445e9e29d05028541a525089f9a65aedc"
+  },
+  "preimage": {
+    "agent/src/hand/screens/reward.ts": {
+      "exists": true,
+      "current_main_matches_source_preimage": true
+    },
+    "agent/src/hand/screens/reward-external-stats.ts": {
+      "exists": false,
+      "current_main_matches_source_preimage": true
+    },
+    "agent/src/hand/screens/reward-external-stats-ids.ts": {
+      "exists": false,
+      "current_main_matches_source_preimage": true
+    },
+    "agent/tests/reward-external-stats.test.ts": {
+      "exists": false,
+      "current_main_matches_source_preimage": true
+    }
+  },
+  "mapped_cards": 505,
+  "unmapped_cards_excluded": 3,
+  "mapping_sha256": "5b37c495f081e2b17d8500d56087b83997743870a30896e88e0f93279bec3d6d",
+  "mapping_exact_identity_only": true,
+  "developer_gzip_sha256": "2113faff13abdfe95eedc4f4d820fd3bd74b978f9044049e7cd8151ed6e90af9",
+  "developer_raw_log_sha256": "4f0dc4820fd8deaf9075d1779ab2de97fc7073b67ee8d957ade0bed77b2de554",
+  "fixed_input_files": 2071,
+  "fixed_input_digest": "2f3636521da545462f6fa344ee8af73c929d93ccd50ca3faf5b1c547539a49c6",
+  "all_fixed_inputs_unchanged": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "args": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 1.159
+    },
+    {
+      "name": "vitest",
+      "args": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/reward-external-stats.test.ts",
+        "tests/silent-reward-addition.test.ts",
+        "tests/reward-special.test.ts",
+        "tests/v6-card-reward-scope.test.ts",
+        "tests/v6-card-pick.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/issue26-hint-review-20261023/vitest.json"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 11.93
+    }
+  ],
+  "test_files": [
+    "tests/reward-external-stats.test.ts",
+    "tests/reward-special.test.ts",
+    "tests/silent-reward-addition.test.ts",
+    "tests/v6-card-pick.test.ts",
+    "tests/v6-card-reward-scope.test.ts"
+  ],
+  "passed_tests": 78,
+  "failed_tests": 0,
+  "skipped_tests": 0,
+  "full_test_run": false,
+  "source_merged_to_main": false,
+  "live_modified": false,
+  "model_requests": 0,
+  "pending_queue": [
+    "36-supplement",
+    "46",
+    "26-hint",
+    "42-tools",
+    "35",
+    "28",
+    "37",
+    "20-after-37"
+  ]
+}

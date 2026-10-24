@@ -1,0 +1,172 @@
+{
+  "transaction": "codex3-20261022-1610",
+  "phase": "draining",
+  "drain_role_exception": {
+    "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+    "authorization_sha256": "2de72aeb0e01dff3aa3ec5cb1037b65457f9b7d74d5088a1ae0b2f37edbbabcd",
+    "policy": "/home/dw/Projects/agent-sts2/.artifacts/ops-high40-release-20261022/drain-role-policy.json",
+    "controller_pid": 826698,
+    "controller_start": "8899747",
+    "retained_role_accounts_unchanged": true,
+    "unknown_workers_remain_blocking": true
+  },
+  "snapshot": {
+    "at": "2026-10-22T18:36:57+08:00",
+    "active_workers": [
+      {
+        "kind": "source_ops_fixed_check_publication",
+        "pid": 821586,
+        "start_ticks": "8890034",
+        "receipt": ".artifacts/ops-high40-release-20261022/checks.json"
+      }
+    ],
+    "excluded_workers": [
+      {
+        "kind": "source_ops_process",
+        "pid": 9375,
+        "start_ticks": "102982"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 10073,
+        "start_ticks": "104073"
+      }
+    ],
+    "ops_idle": false,
+    "checkpoint_ready": true,
+    "inventory_complete": true,
+    "ops_pane": "w1H:p8",
+    "ops_identity": [
+      {
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "pid": 9375,
+        "start_ticks": "102982"
+      }
+    ],
+    "original_active_worker_records": 0
+  },
+  "registered_roles": [
+    {
+      "name": "sts2-integrator",
+      "pane_id": "wJ:p1HD",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "agent_status": "working",
+      "agent_session": {
+        "agent": "codex",
+        "kind": "id",
+        "source": "herdr:codex",
+        "value": "01a15c5b-b82e-7c00-8c24-edab5253de8c"
+      }
+    },
+    {
+      "name": "issue-20",
+      "pane_id": "wJ:p1HF",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit",
+      "agent_status": "working",
+      "agent_session": null
+    },
+    {
+      "name": "issue-33",
+      "pane_id": "wJ:p1HG",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-33-brain-agent-mode",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-26",
+      "pane_id": "wJ:p1HH",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-26-external-stats-tools",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-36",
+      "pane_id": "wJ:p1HJ",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-35",
+      "pane_id": "wJ:p1HK",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-35-build-log",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-37",
+      "pane_id": "wJ:p1HM",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-37-jev-no-open-book",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-28",
+      "pane_id": "wJ:p1HN",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-28-task",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-40",
+      "pane_id": "wJ:p1HP",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-40-task",
+      "agent_status": "done",
+      "agent_session": null
+    },
+    {
+      "name": "issue-41",
+      "pane_id": "wJ:p1HQ",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-41-task",
+      "agent_status": "done",
+      "agent_session": null
+    }
+  ],
+  "fixed_check": {
+    "state": "checking-fixed-combination",
+    "runner_pid": 821586,
+    "runner_start": "8890034",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T18:19:31+08:00",
+        "pid": 821603,
+        "exit_code": 0,
+        "seconds": 0.8186011189973215
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/ops-high40-release-20261022/vitest.json"
+        ],
+        "started_at": "2026-10-22T18:19:32+08:00",
+        "pid": 821648
+      }
+    ],
+    "error": null,
+    "ended_at": null
+  }
+}

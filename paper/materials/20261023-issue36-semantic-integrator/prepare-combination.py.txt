@@ -1,0 +1,50 @@
+from pathlib import Path
+import fcntl,hashlib,json,subprocess,time
+R=Path('/home/dw/Projects/agent-sts2');B=Path(__file__).resolve().parent
+W=R/'.worktrees/integrator36-semantic-20261023-1340';L=R/'.worktrees/live'
+SOURCE='5b8a458538bbe014da0938c9b5bd0bd5811dfaf5'
+PATHS=['ops/learner_tui.py','ops/tests/test_learner_wrapper_completion.py']
+def git(*a,cwd=R,data=None):return subprocess.check_output(['git',*a],cwd=cwd,input=data,stderr=subprocess.PIPE)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+pub=json.loads((R/'paper/materials/20261023-issue46-publication-ops/publication.json').read_text())
+assert pub.get('published') is True,'retain original ops release gate'
+base=git('rev-parse','HEAD',cwd=L).decode().strip()
+prior=json.loads((R/'.artifacts/issue46-final-20261023-1318/assembly.json').read_text())
+for x in prior['paths']:assert git('rev-parse',base+':'+x['path']).decode().strip()==x['tested_blob']
+coverage=json.loads((R/'.artifacts/issue46-final-20261023-1318/full/vitest.json').read_text())
+covered=[x for x in coverage['testResults'] if x['name'].endswith('/tests/learner-herdr-receipts.test.ts')]
+assert len(covered)==1 and covered[0]['status']=='passed'
+assert not W.exists()
+with (B/'allocation.log').open('xb') as out:
+ subprocess.run(['nice','-n','19','python3','-B','ops/worktree_checkout.py',str(R),str(W),base,'--require-node'],cwd=R,stdout=out,stderr=subprocess.STDOUT,check=True)
+patch=git('diff','--binary','--full-index',SOURCE+'^',SOURCE,'--',*PATHS);assert patch==(B/'source.patch').read_bytes()
+git('apply','--3way','--index','-',cwd=W,data=patch)
+rows=[]
+for name in PATHS:
+ raw=(W/name).read_bytes();blob=git('rev-parse',':'+name,cwd=W).decode().strip()
+ assert blob==git('rev-parse',SOURCE+':'+name).decode().strip()
+ pre=git('rev-parse',base+':'+name).decode().strip();assert pre==git('rev-parse',SOURCE+'^:'+name).decode().strip()
+ rows.append(dict(path=name,blob=blob,preimage=pre,sha256=sha(raw),mode=git('ls-files','-s','--',name,cwd=W).decode().split()[0]))
+knowledge=[]
+with (R/'ops/knowledge-refresh.lock').open('a') as k,(R/'ops/live-merge.lock').open('a') as l:
+ deadline=time.monotonic()+600
+ while True:
+  try:
+   fcntl.flock(k,fcntl.LOCK_SH|fcntl.LOCK_NB);fcntl.flock(l,fcntl.LOCK_SH|fcntl.LOCK_NB);break
+  except BlockingIOError:
+   fcntl.flock(k,fcntl.LOCK_UN);fcntl.flock(l,fcntl.LOCK_UN);assert time.monotonic()<deadline;time.sleep(2)
+ assert git('rev-parse','HEAD',cwd=L).decode().strip()==base
+ for p in sorted((L/'knowledge').rglob('*')):
+  name=p.relative_to(L)
+  if not p.is_file() or p.is_symlink() or 'builders' in name.parts:continue
+  raw=p.read_bytes();target=W/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
+  knowledge.append(dict(path=str(name),sha256=sha(raw),bytes=len(raw)))
+ assert all(sha((L/x['path']).read_bytes())==x['sha256'] for x in knowledge)
+git('add','--sparse','--',*[x['path'] for x in knowledge],cwd=W)
+assert not git('diff','--name-only',cwd=W).strip()
+preserved={}
+for name in ['ops/codex-ops-learner.sh','ops/learner_checks.py','agent/tests/learner-empty-fix.test.ts','learner/lib/herdr.ts','learner/lib/launcher.ts']+[x['path'] for x in prior['paths']]:
+ blob=git('rev-parse',base+':'+name).decode().strip();assert git('rev-parse',':'+name,cwd=W).decode().strip()==blob;preserved[name]=blob
+A=dict(at=subprocess.check_output(['date','-Iseconds'],text=True).strip(),source=SOURCE,live_base=base,main_base=git('rev-parse','HEAD').decode().strip(),worktree=str(W),tree=git('write-tree',cwd=W).decode().strip(),paths=rows,knowledge_count=len(knowledge),knowledge_manifest=knowledge,preserved=preserved,prior_full_coverage=dict(tree=prior['tree'],file='learner-herdr-receipts.test.ts',status='passed'),full_started=False,locks_held_during_checks=False,production_written=False)
+(B/'assembly.json').write_text(json.dumps(A,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({k:v for k,v in A.items() if k not in ['knowledge_manifest','preserved']},ensure_ascii=False),flush=True)

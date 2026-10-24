@@ -1,0 +1,21 @@
+from pathlib import Path
+import json,sys,fcntl,hashlib,subprocess
+from datetime import datetime
+R=Path.cwd();M=R/'paper/materials/20261024-strategy-101315-ops';assert not (M/'resolution.json').exists();sys.path.insert(0,str(R/'ops'));import proposal_dispatch
+r=json.loads((M/'adapted-original-output.json').read_text());lib=proposal_dispatch.library(R/'ops');queue=R/lib.QUEUE;ident='silent-proposal-0293de647a6db596';learn=R/'ops/codex-ops/learn.json';batchid='20261024-101315-strategy-proposal'
+with (R/'ops/codex-ops/learn.lock').open('a') as lk:
+ fcntl.flock(lk,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ with queue.with_suffix('.lock').open('a') as ql:
+  fcntl.flock(ql,fcntl.LOCK_EX|fcntl.LOCK_NB);state=json.loads(learn.read_text());b=state['batches'][batchid];before=json.dumps(b,ensure_ascii=False,sort_keys=True);assert b['state']=='failed' and b['rc']==0;items=lib.fold(queue);assert items[ident]['state']=='pending';offset=queue.stat().st_size
+  proposal_dispatch.resolve(r,b,str(R),str(R/'ops'));after=lib.fold(queue);assert after[ident]['state']=='waiting';raw=queue.read_bytes()[offset:];rows=[json.loads(l) for l in raw.splitlines() if l.strip()];assert len(rows)==1 and rows[0]['id']==ident and rows[0]['state']=='waiting';assert rows[0]['commit'] is None and rows[0]['resolution_no_change_base']==r['base'];assert json.dumps(json.loads(learn.read_text())['batches'][batchid],ensure_ascii=False,sort_keys=True)==before
+(M/'resolution-queue-row.jsonl').write_bytes(raw)
+source=r['report'];originalpath=str((R/'.worktrees/codex-strategy-silent-20261024-101315/learner/runs/20261024-101320-4c237120-d379-4fed-b7c1-1cc2238ffa5b-strategy-proposal/report.md'))
+ledger=R/'paper/materials/learning/ledger.jsonl';matches=[]
+with ledger.open('rb') as f:
+ for line in f:
+  if originalpath.encode() in line and b'20261024-101315' in line:
+   d=json.loads(line)
+   if d.get('by')=='learner:strategy-proposal':matches.append(line)
+assert len(matches)==14,len(matches);assert len({json.loads(x)['id'] for x in matches})==14;assert all('status' not in json.loads(x) and 'version' not in json.loads(x) for x in matches);(M/'ledger-own-rows.jsonl').write_bytes(b''.join(matches))
+headqueue=subprocess.check_output(['git','show','HEAD:'+lib.QUEUE]);assert ident.encode() in headqueue,'original registration absent from committed queue'
+proof={'at':datetime.now().astimezone().isoformat(timespec='seconds'),'batch':batchid,'original_batch_state':'failed','original_rc':0,'original_proposal_audit_errors_preserved':b['proposal_audit_errors'],'original_report_output_result_unchanged':True,'resolution':'existing dispatcher.resolve with original guards, canonical source-bound format supplement','proposal_id':ident,'proposal_state_before':'pending','proposal_state_after':'waiting','new_queue_rows':1,'new_implementation_commit':None,'publication':0,'new_full_models_games':0,'ledger_rows_verified':14,'ledger_prior_statuses_untouched':True,'source_registration_in_HEAD':True,'original_061302_repair':'pending/missing source commit remains; this waiting disposition does not manufacture experience audit success','retention':'original deferred, not reclaimed; no finish replay'};(M/'resolution.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'proposal':ident,'state':'waiting','queue_rows':1,'ledger_rows':14,'original_failed_rc0_preserved':True}))

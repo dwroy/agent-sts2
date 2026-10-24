@@ -1,0 +1,86 @@
+{
+  "unit_id": "decision-rest-route-own-fallback-002",
+  "contexts": [
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "context": "第一幕回血与锻造的真实题前资源差异",
+      "disposition": "update",
+      "statistics_keys": [
+        "act1"
+      ],
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/act1-candidate.json"
+    },
+    {
+      "id": "silent-rest-buffer-observation",
+      "context": "缺血少于面板回复时比较实际回血与其他收益",
+      "disposition": "update",
+      "statistics_keys": [
+        "heal_clipping"
+      ],
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/heal_clipping-candidate.json"
+    },
+    {
+      "id": "silent-pumpkin-candle-charge-energy",
+      "context": "添火的充能与当场HP分开计账",
+      "disposition": "update",
+      "statistics_keys": [
+        "kindle"
+      ],
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/kindle-candidate.json"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "context": "真实精英/营火分支与到火前资源预算",
+      "disposition": "update",
+      "statistics_keys": [
+        "rest_elite_branch",
+        "segment_to_rest"
+      ],
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/route-candidate.json"
+    },
+    {
+      "id": "silent-miniature-tent-two-rest-options",
+      "context": "已持微型帐篷的同火多动作机会",
+      "disposition": "update",
+      "statistics_keys": [
+        "two_rest_actions"
+      ],
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/two_rest_actions-candidate.json"
+    }
+  ],
+  "deduplication": {
+    "checked_contracts": [
+      "#27 existing strategy/experience IDs",
+      "#28 encounter/reflex source and replay boundary",
+      "#42 external aggregate fields",
+      "#55 consumer and text size"
+    ],
+    "new_stable_ids": 0,
+    "updated_stable_ids": 5,
+    "route_segment_rows_count_as_extra_entries": false,
+    "strategy_projections_count_as_extra_entries": false,
+    "unchanged_external_route": {
+      "id": "silent-external-selected-route-exposure-001",
+      "reference": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-strategy-121311-ops/route-knowledge-candidate.json",
+        "bytes": 5647,
+        "sha256": "503dadca2e4f68f8cf72424d10d76fb42e6b5daa11f4bbbed5bf4fb9958ae687"
+      },
+      "counted": false
+    }
+  },
+  "partial_waiting": [
+    {
+      "id": "route-counterfactual-and-safe-threshold",
+      "reason": "实际备选与实选可核，未走分支无同局结果；段净变化含问号战斗、事件、遗物和SL，不能估绕路因果或安全HP。"
+    },
+    {
+      "id": "non-strategy-consumer-readback",
+      "reason": "无正式发布，不运行经验/rk生产消费；同ID策略投影沿#55候选交付，正式合并和各消费者读回继续pending。"
+    },
+    {
+      "id": "cross-version-mechanism-and-first-attempt-causality",
+      "reason": "自有版本unknown、外部八build缺机制对照，不跨版本合并；SL日志覆盖不等同首次轨迹受控比较。"
+    }
+  ]
+}

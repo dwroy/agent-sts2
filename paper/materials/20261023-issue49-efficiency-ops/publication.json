@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-23T23:39:17+08:00",
+  "T": "2026-10-23T23:39:08+08:00",
+  "release_id": "V6-R420",
+  "source_main": "88b53d81c77011b41a0b5781f9abbd52e50688ca",
+  "behavior": {
+    "parent": "5ac042189bc8708528a902b4cbb52403d1e4c96c",
+    "commit": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+    "tree": "d1b05fbe70604660131a72dc2741604d06bcc4bf",
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/tools/agent-knowledge.ts",
+      "agent/src/brain/tools/external-stats-tools.ts",
+      "agent/src/brain/tools/query-guidance.ts",
+      "agent/src/brain/tools/reflex-knowledge.ts",
+      "agent/tests/brain-agent-report.test.ts",
+      "agent/tests/brain-query-efficiency.test.ts",
+      "agent/tests/brain-query-guidance.test.ts",
+      "agent/tests/brain-reflex-knowledge.test.ts",
+      "agent/tools/brain-agent-report.ts",
+      "docs/brain-agent-mode.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/6e6d391d2abc45e0a64cc41080b245fb/manifest.json",
+      "manifest_sha256": "26dbe850741abe2ea079fb258b6bc684562d183ff0422eb2d8de273d5c3db28f",
+      "scanned_leaves": 11,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    }
+  },
+  "registrations": {
+    "live": {
+      "parent": "986b30b9dc726b1b524dc7ae5e75d78042b511d6",
+      "commit": "902206965e0698253fab1f9a135c9666bdd1ed3b",
+      "tree": "1f5eb9f34928af731611e2fab1cb0770e0f3f6ef",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/2a613d0d5df84b64980ac6bab7bf948c/manifest.json",
+        "manifest_sha256": "e0eb23bc8f7c538608a6e32730ffca5d8a6190ab708fb85a06817aa90c772edd",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "f7a820f4c8c59a7a8346b7519446e610b20b6513",
+      "commit": "0716a3c5d9dfd7506a4eda205d19a66569ca349e",
+      "tree": "c5fa37c86d75febaab9d78c2f332e0b1e15ad9a4",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/06509ea5b24c4efabe6f09a82213933a/manifest.json",
+        "manifest_sha256": "ab570a889bea664554d665e8d92fc68d533a9cb0bae63d837adb738744788922",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "exact_product_leaves": 11,
+  "latest_knowledge_files": 518,
+  "unshipped35_excluded": true,
+  "directed": {
+    "at": "2026-10-23T23:29:21+08:00",
+    "phase": "passed-net-directed",
+    "live_base": "5ac042189bc8708528a902b4cbb52403d1e4c96c",
+    "tree": "d1b05fbe70604660131a72dc2741604d06bcc4bf",
+    "knowledge_files": 518,
+    "knowledge_basis": "original integrator frozen snapshot; current live recheck required under publication lock",
+    "full_started": false,
+    "new_models_games": 0,
+    "tsc_rc": 0,
+    "directed_rc": 0,
+    "files": 8,
+    "passed": 136,
+    "failed": 0,
+    "skipped": 0,
+    "result_sha256": "cc8c33b45ee1e4432587feb823e329c8b19b16b16af9427e4a6a5fc1bc0aaceb",
+    "knowledge_unchanged": true,
+    "product_unchanged": true
+  },
+  "actual_live_readback": "actual-live-readback.json",
+  "new_full_model_game": 0,
+  "latency_14s_or_causal_benefit_proven": false,
+  "natural_acceptance": "pending new post-release natural window; preserve original18-run report",
+  "scientific_parents_closed": false
+}

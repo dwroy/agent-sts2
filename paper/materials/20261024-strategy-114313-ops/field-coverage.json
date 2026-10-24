@@ -1,0 +1,187 @@
+{
+  "source": "external:sts2fun",
+  "input": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+  "input_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+  "categories": {
+    "events": {
+      "fields": [
+        "event_choices"
+      ],
+      "limit": "记录title文本/键；没有变量与完整备选项，不由标题解释机制或收益。",
+      "status": "partial"
+    },
+    "opening_blessing": {
+      "fields": [
+        "ancient_choice"
+      ],
+      "limit": "按幕/房间列ancient选项与was_chosen；第一幕仅作开局祝福代理，未证实际首节点或所有局开局字段完整。",
+      "status": "act1_ancient_proxy"
+    },
+    "potions": {
+      "fields": [
+        "potion_choices",
+        "potion_used",
+        "potion_discarded",
+        "bought_potions"
+      ],
+      "limit": "获得候选/是否实选、节点使用/丢弃可记；无回合/动作顺序/即时HP，不能据此学精确用药时机。",
+      "status": "node_level_only"
+    },
+    "removal": {
+      "fields": [
+        "cards_removed"
+      ],
+      "limit": "记录移除ID，不能仅据此认定花钱删牌；结合房间也只是来源代理。",
+      "status": "recorded"
+    },
+    "rest_smith": {
+      "fields": [
+        "rest_site_choices",
+        "upgraded_cards"
+      ],
+      "limit": "记录选择ID与升级牌ID；current_hp为节点末，休息前HP不真实可用，前节点末HP仅代理。",
+      "status": "recorded_choice"
+    },
+    "shop": {
+      "fields": [
+        "bought_cards",
+        "bought_colorless",
+        "bought_relics",
+        "bought_potions",
+        "cards_gained"
+      ],
+      "limit": "仅bought_*为显式购买；shop所得牌/遗物只能作取得代理。无逐物价格、购买前金币或全部货架拒选。",
+      "status": "partial"
+    }
+  },
+  "coverage": {
+    "ancient_choice": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 40749,
+      "missing_or_null": 194414,
+      "nodes": 207997,
+      "nonempty_array": 13583,
+      "present_array": 13583,
+      "wrong_type": 0
+    },
+    "bought_cards": {
+      "missing_or_null": 207997,
+      "nodes": 207997,
+      "present_array": 0,
+      "wrong_type": 0
+    },
+    "bought_colorless": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 3175,
+      "missing_or_null": 205112,
+      "nodes": 207997,
+      "nonempty_array": 2885,
+      "present_array": 2885,
+      "wrong_type": 0
+    },
+    "bought_potions": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 3869,
+      "missing_or_null": 204778,
+      "nodes": 207997,
+      "nonempty_array": 3219,
+      "present_array": 3219,
+      "wrong_type": 0
+    },
+    "bought_relics": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 8242,
+      "missing_or_null": 202058,
+      "nodes": 207997,
+      "nonempty_array": 5939,
+      "present_array": 5939,
+      "wrong_type": 0
+    },
+    "cards_gained": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 116924,
+      "missing_or_null": 111825,
+      "nodes": 207997,
+      "nonempty_array": 96172,
+      "present_array": 96172,
+      "wrong_type": 0
+    },
+    "cards_removed": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 12824,
+      "missing_or_null": 197040,
+      "nodes": 207997,
+      "nonempty_array": 10957,
+      "present_array": 10957,
+      "wrong_type": 0
+    },
+    "event_choices": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 46159,
+      "missing_or_null": 167038,
+      "nodes": 207997,
+      "nonempty_array": 40959,
+      "present_array": 40959,
+      "wrong_type": 0
+    },
+    "potion_choices": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 97542,
+      "missing_or_null": 143705,
+      "nodes": 207997,
+      "nonempty_array": 64292,
+      "present_array": 64292,
+      "wrong_type": 0
+    },
+    "potion_discarded": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 7097,
+      "missing_or_null": 201182,
+      "nodes": 207997,
+      "nonempty_array": 6815,
+      "present_array": 6815,
+      "wrong_type": 0
+    },
+    "potion_used": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 42521,
+      "missing_or_null": 174089,
+      "nodes": 207997,
+      "nonempty_array": 33908,
+      "present_array": 33908,
+      "wrong_type": 0
+    },
+    "rest_site_choices": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 38454,
+      "missing_or_null": 170702,
+      "nodes": 207997,
+      "nonempty_array": 37295,
+      "present_array": 37295,
+      "wrong_type": 0
+    },
+    "upgraded_cards": {
+      "empty_array": 0,
+      "invalid_items": 0,
+      "item_n": 31941,
+      "missing_or_null": 181627,
+      "nodes": 207997,
+      "nonempty_array": 26370,
+      "present_array": 26370,
+      "wrong_type": 0
+    }
+  },
+  "unit": "recorded nodes across disjoint build partitions, never action opportunities",
+  "missing_counters": "Absent counter keys remain absent; not filled with zero."
+}

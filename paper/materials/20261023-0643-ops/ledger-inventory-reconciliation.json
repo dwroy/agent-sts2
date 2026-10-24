@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-23T06:44:18+08:00",
+  "scope": "ops current authorized run inventory and shared ledger validation; not learner frozen inventory expansion or raw gameplay/scientific re-audit",
+  "snapshots": [
+    {
+      "path": "logs/runs.jsonl",
+      "snapshot": ".artifacts/ops-notices-20261023-0643/runs.jsonl",
+      "bytes": 431100,
+      "sha256": "2907671ad4670476abfc13192433212c1a57f5315a92afdf14a2f3c2602da2d6"
+    },
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "snapshot": ".artifacts/ops-notices-20261023-0643/ledger.jsonl",
+      "bytes": 28908141,
+      "sha256": "2a5c3b989c06aa20c3f62192a481f898d9d1076e3e293d0db7097470e037f9df"
+    },
+    {
+      "path": "eval/versions.json",
+      "snapshot": ".artifacts/ops-notices-20261023-0643/versions.json",
+      "bytes": 439201,
+      "sha256": "53a8ab5a768825789851d58f0ae781f5b950eae4c56b627fcbc88838d9922028"
+    }
+  ],
+  "run_inventory_refs": [
+    {
+      "path": "logs/runs.jsonl",
+      "offset": 423432,
+      "bytes": 531,
+      "sha256": "56fdafe5888ff382a80b24d92422a83c4186c67d614cae699af2a98dd6353b7c",
+      "run_id": "0VBCQS9V0N87",
+      "character": "SILENT",
+      "ascension": 10
+    }
+  ],
+  "parallel_evidence_records": [
+    {
+      "id": "silent-0019",
+      "line": 36745,
+      "offset": 28833982,
+      "bytes": 874,
+      "sha256": "bc0e0bfaf0d384c32f77a0ae54b06abe2be3176a85134e234bc0889409430d30",
+      "evidence": [
+        {
+          "run": "0VBCQS9V0N87",
+          "floor": 28,
+          "turn": 1,
+          "role": "support",
+          "note": "[赢的走廊战消耗也必须接到死亡入口；打法（Codex路线／构筑／休息）] F24在55/87选择升级计划妥当 WELL_LAID_PLANS，F25虱虫之祖 LOUSE_PROGENITOR 55→27，F27盛碗虫群 BOWLBUG_EGG／BOWLBUG_ROCK／BOWLBUG_NECTAR 27→8且饮掉毒药水 POISON_POTION，随后问号开出胧光怪 THE_OBSCURA，以8血空药入场。F25避后续精英不能消除尚未到休息点的普通／问号战代价，未打路线的59/87精英投影不是实到HP。（之前学过：silent-0019，S1.exp203）"
+        }
+      ]
+    },
+    {
+      "id": "silent-0039",
+      "line": 36746,
+      "offset": 28834856,
+      "bytes": 787,
+      "sha256": "04d2d82949826d8f9b31d349bd3913f263595b6bf102b812f80a5687d868436e",
+      "evidence": [
+        {
+          "run": "0VBCQS9V0N87",
+          "floor": 28,
+          "turn": 4,
+          "role": "support",
+          "note": "[杀掉幻象只取消当轮攻击，主怪和复活新增血池分账；打法（Jev出牌）] 末试T2寄生惧魔 PARAFRIGHT被打掉、T3又21血；T3再次打掉、T4仍21血。胧光怪 THE_OBSCURA到T4仍64血6毒，结毒后58血；寄生惧魔20攻加主怪14攻合34，18挡不足保护6血。原题focus可选寄生惧魔或主怪，不能把选择主怪focus记成已经击杀主怪。（之前学过：silent-0039，S1.exp201）"
+        }
+      ]
+    },
+    {
+      "id": "silent-0490",
+      "line": 36747,
+      "offset": 28835643,
+      "bytes": 851,
+      "sha256": "489049b5b9c3fde9465240ce57a6c646ed32c1abcc91314df102859a0e2338e9",
+      "evidence": [
+        {
+          "run": "0VBCQS9V0N87",
+          "floor": 28,
+          "turn": 4,
+          "role": "support",
+          "note": "[增力与消耗手牌的代价不应合成纯收益；打法（代码消耗选择／Jev出牌）] 烘焙手套 TOASTY_MITTENS使末试力量逐轮1／2／3／4；T4代码选择消耗杂技+ ACROBATICS，记录分42对防御 DEFEND_SILENT的−9，之后两防御及生存者 SURVIVOR仅18挡，6血对34攻阵亡。既有0490的零费抽能牌消耗风险可作同类观察，本局未实打保留杂技的抽序分支，不认定这次消耗为纯bug或换耗便可活。（之前见过：silent-0490）"
+        }
+      ]
+    }
+  ],
+  "check_rc": 0,
+  "original_frozen_check_rc1_preserved": true,
+  "original_shape_check_not_source_verification": true,
+  "learner_freeze_or_other_records_modified": false,
+  "limitation": "checks schema and references to actual current inventory; does not independently establish scientific content/counterfactuals or ship five strategies"
+}

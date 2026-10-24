@@ -1,0 +1,226 @@
+{
+  "at": "2026-10-23T19:07:01+08:00",
+  "source_main": "da3b2d5f1209ced6fab7444c1bdaa8b36fe61480",
+  "full": {
+    "checks": {
+      "path": "paper/materials/20261023-issue40-periodic-full-admission/checks.json",
+      "bytes": 1893,
+      "sha256": "84dd10f82c88afce3d958473e2a9c3a1a384ab3676503979bccfa01f8d8dd27c"
+    },
+    "tree": "27064f382c209d4d5d2b9396aa1ba68a31b2e7c6",
+    "vitest": {
+      "files": 672,
+      "passed": 6491,
+      "failed": 0,
+      "pending": 2,
+      "success": true
+    },
+    "input_count": 2632,
+    "originals": [
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/inputs-before.json.gz",
+        "bytes": 139101,
+        "sha256": "ef0c34bae71f3f4d15051a27cdc2603d15c039e36bdaa08fa1bb3660068a129c"
+      },
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/inputs-after.json.gz",
+        "bytes": 139101,
+        "sha256": "ef0c34bae71f3f4d15051a27cdc2603d15c039e36bdaa08fa1bb3660068a129c"
+      },
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/full.log",
+        "bytes": 81990,
+        "sha256": "a12fb94150b7070b3e1ff1ebab82d2963996946769e293d753c4fb62d803e51a"
+      },
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/vitest.json",
+        "bytes": 2513739,
+        "sha256": "7e75f874d3baac931d0513649d84727eebf9ef44435393e67fc17b5da63c668c"
+      },
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/periodic-python.log",
+        "bytes": 8734,
+        "sha256": "a906c81334ed4724419d37b78bc2426e26f6dedf88acc027269235a07c841998"
+      },
+      {
+        "path": "paper/materials/20261023-issue40-periodic-full-admission/sparse-fixture-admission.json",
+        "bytes": 259,
+        "sha256": "ded259e9b65a1fdec112cbd93c81b0ba4fce22fdcccc57556e3427a69dad1127"
+      }
+    ]
+  },
+  "net_manifest": {
+    "path": "paper/materials/20261023-issue40-periodic-release-ops/net-four-leaf-manifest.json",
+    "bytes": 3062,
+    "sha256": "5e8046a78af67c64a287461818ff34539e3d33b25f7d4c186eb5bf64b9065bbe"
+  },
+  "interpreters": [
+    {
+      "root": "main",
+      "executable": "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "prefix": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+      "python": "3.14.4",
+      "duckdb": "1.5.6",
+      "modules": {
+        "sync": "/home/dw/Projects/agent-sts2/agent/tools/logdb/sync.py",
+        "extract": "/home/dw/Projects/agent-sts2/agent/tools/logdb/extract.py",
+        "component_usage": "/home/dw/Projects/agent-sts2/agent/tools/logdb/component_usage.py",
+        "query": "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py"
+      }
+    },
+    {
+      "root": "live",
+      "executable": "/home/dw/Projects/agent-sts2/.worktrees/live/data/logdb-venv/bin/python",
+      "prefix": "/home/dw/Projects/agent-sts2/.worktrees/live/data/logdb-venv",
+      "python": "3.14.4",
+      "duckdb": "1.5.6",
+      "modules": {
+        "sync": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/sync.py",
+        "extract": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/extract.py",
+        "component_usage": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/component_usage.py",
+        "query": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/query.py"
+      }
+    }
+  ],
+  "local_dependencies": [
+    {
+      "root": "main",
+      "path": "agent/tools/logdb/sync.py",
+      "bytes": 17980,
+      "sha256": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd"
+    },
+    {
+      "root": "main",
+      "path": "agent/tools/logdb/extract.py",
+      "bytes": 42297,
+      "sha256": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545"
+    },
+    {
+      "root": "main",
+      "path": "agent/tools/logdb/component_usage.py",
+      "bytes": 6289,
+      "sha256": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16"
+    },
+    {
+      "root": "main",
+      "path": "agent/tools/logdb/query.py",
+      "bytes": 10809,
+      "sha256": "b7a46e3f788da68663583a90c69fc6064e0f244ea9ba25dc96fc07c41684f67e"
+    },
+    {
+      "root": "main",
+      "path": "agent/tools/logdb/views.sql",
+      "bytes": 23086,
+      "sha256": "31858edfd5c82d5d5759980daad9f020fa87a465fb2c0f980c3388ae9a2b5d57"
+    },
+    {
+      "root": "main",
+      "path": "knowledge/builders/refresh.sh",
+      "bytes": 348,
+      "sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d"
+    },
+    {
+      "root": "main",
+      "path": "knowledge/builders/characters.py",
+      "bytes": 2697,
+      "sha256": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9"
+    },
+    {
+      "root": "main",
+      "path": "ops/report.py",
+      "bytes": 32685,
+      "sha256": "c3fbcb2a72a2ef3cabbb1f4314d5e6f1462374f1ad42bc3e6e2e191aff6ce265"
+    },
+    {
+      "root": "main",
+      "path": "ops/paths.sh",
+      "bytes": 921,
+      "sha256": "93889ea58e5af5e61b348257961f0664d5307cfaf051b36b54524d00aa8081b2"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/agent/tools/logdb/sync.py",
+      "bytes": 17980,
+      "sha256": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/agent/tools/logdb/extract.py",
+      "bytes": 42297,
+      "sha256": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/agent/tools/logdb/component_usage.py",
+      "bytes": 6289,
+      "sha256": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/agent/tools/logdb/query.py",
+      "bytes": 10809,
+      "sha256": "b7a46e3f788da68663583a90c69fc6064e0f244ea9ba25dc96fc07c41684f67e"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/agent/tools/logdb/views.sql",
+      "bytes": 23086,
+      "sha256": "31858edfd5c82d5d5759980daad9f020fa87a465fb2c0f980c3388ae9a2b5d57"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/knowledge/builders/refresh.sh",
+      "bytes": 348,
+      "sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/knowledge/builders/characters.py",
+      "bytes": 2697,
+      "sha256": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/ops/report.py",
+      "bytes": 32685,
+      "sha256": "c3fbcb2a72a2ef3cabbb1f4314d5e6f1462374f1ad42bc3e6e2e191aff6ce265"
+    },
+    {
+      "root": "live",
+      "path": ".worktrees/live/ops/paths.sh",
+      "bytes": 921,
+      "sha256": "93889ea58e5af5e61b348257961f0664d5307cfaf051b36b54524d00aa8081b2"
+    }
+  ],
+  "entry_refs": [
+    {
+      "path": "ops/report.py",
+      "bytes": 32685,
+      "sha256": "c3fbcb2a72a2ef3cabbb1f4314d5e6f1462374f1ad42bc3e6e2e191aff6ce265"
+    },
+    {
+      "path": ".worktrees/live/knowledge/builders/refresh.sh",
+      "bytes": 348,
+      "sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d"
+    },
+    {
+      "path": "ops/codex-ops.sh",
+      "bytes": 19519,
+      "sha256": "3c7676bc44edb5c2bb53f5209d39542711b9cdc16fa5982eb384a063c2791894"
+    }
+  ],
+  "distinct_caches": {
+    "main": "/home/dw/Projects/agent-sts2/data/logdb",
+    "live": "/home/dw/Projects/agent-sts2/.worktrees/live/data/logdb"
+  },
+  "sync_script_for_both": "/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/logdb/sync.py",
+  "steps": [
+    "logdb-sync",
+    "logdb-sync-ops-root"
+  ],
+  "both_no_wait": true,
+  "first_manual_sync_separate": "paper/materials/20261023-logdb-sync-ops/sync-result.json",
+  "game_behavior_or_release_id_change": false,
+  "predecessor": "paper/materials/20261023-issue49-26-publication-ops/publication-state.json",
+  "no_full_model_sync_reset_or_daemon_started": true
+}

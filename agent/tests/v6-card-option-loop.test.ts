@@ -3,6 +3,8 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { loadConfig } from "../src/core/config.js";
+import { currentDecisionBudget } from "../src/core/decision-budget.js";
+import { solveTap } from "../src/reflex/turn-solver.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { setKnowledgeCharacter } from "../src/knowledge/files.js";
 import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
@@ -28,7 +30,10 @@ vi.mock("../src/knowledge/files.js", async original => ({
 }));
 setupOneshotTests();
 const roots: string[] = [];
-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+afterEach(() => {
+  roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true }));
+  vi.unstubAllEnvs(); vi.restoreAllMocks(); solveTap.onSolve = null; setKnowledgeCharacter(null);
+});
 const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
 // Match the documented wire representation exactly, including half-way rounding and nulls.
 function expectDisplayCell(cell: unknown, estimate: CombatEstimate | null) {
@@ -76,24 +81,48 @@ function fixture(warmCore = false) {
       digest: "b".repeat(64), limitations: [], rows: [] }, combo_metrics: [], checkpointFloors: warmCore ? [17, 33] : [17] });
   writeFileSync(join(own, "v6-history.json"), JSON.stringify(pack));
   for (const [key, value] of Object.entries({ V6_BUILD: "on", V6_CARD_DECIDER: "jev", V6_DIRECTION_REPLAN: "off",
-    V6_POTION_DECIDER: "brain", V6_SHOP_DECIDER: "brain", V6_REST_DECIDER: "brain", V6_COMBAT_ENTRIES: "off", BOSS_SIM_BUILD: "off" })) vi.stubEnv(key, value);
+    V6_POTION_DECIDER: "brain", V6_SHOP_DECIDER: "brain", V6_REST_DECIDER: "brain", V6_COMBAT_ENTRIES: "off", BOSS_SIM_BUILD: "off",
+    V6_PICK_MS: "5000" })) vi.stubEnv(key, value);
   setKnowledgeCharacter("silent"); setCardUpgradesForTests({});
   const loaded = loadV6Knowledge(root, "silent").cores;
   expect(loaded, JSON.stringify(loaded)).toMatchObject({ status: "loaded" });
   return root;
 }
 
-it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
-  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator", async (run, floor) => {
+it.each([
+  ["T0TP8S9MMU9Q", 2, "fixed clocks"], ["RBMEQGXPE9Z2", 3, "fixed clocks"],
+  ["T0TP8S9MMU9Q", 2, "solver budget exhausted"], ["T0TP8S9MMU9Q", 2, "sampling budget exhausted"],
+] as const)(
+  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator (%s)", async (run, floor, timing) => {
+    // Fix the ledger, runtime preparation and inherited L2 solver clock as well as sample scheduling.
+    // Real timers and HTTP remain active; virtual elapsed time advances only at an explicit sample boundary.
+    let hostNow = 0, samplingNow = 0;
+    vi.spyOn(performance, "now").mockImplementation(() => hostNow);
     const root = fixture(), knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
     const combat: Raw = frozen.states[`${run}-f${floor}-COMBAT`], reward: Raw = frozen.states[`${run}-f${floor}-REWARD`];
     const tables: V6CardResults[] = [], notes: string[] = [], actions: Raw[] = [];
     const runner = new SerialDeckRunner(), runSamples = vi.spyOn(runner, "run");
+    const budgets: { key: string; remaining: number; now: number }[] = [];
+    const solves: { timedOut: boolean; remaining: number | undefined }[] = [];
+    runSamples.mockImplementation(async request => {
+      const budget = currentDecisionBudget()!;
+      if (request.range!.from === 2 && timing === "solver budget exhausted") hostNow += budget.remaining();
+      budgets.push({ key: budget.key, remaining: budget.remaining(), now: budget.now() });
+      // Opening preparation uses the same tap temporarily; observe only the real serial sample solves.
+      const previous = solveTap.onSolve;
+      solveTap.onSolve = (input, result) => {
+        solves.push({ timedOut: result.timedOut === true, remaining: currentDecisionBudget()?.remaining() });
+        previous?.(input, result);
+      };
+      try {
+        const result = await SerialDeckRunner.prototype.run.call(runner, request);
+        if (timing === "sampling budget exhausted") samplingNow = 5_000;
+        return result;
+      } finally { solveTap.onSolve = previous; }
+    });
     const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, () => {},
       v6ProjectionInputs(root, () => "2026-10-20T16:20:00.000Z"), {
-        // This fixture verifies eight shared sample results, independent of host load.
-        // Partial rows and deadline enforcement have deterministic coverage in v6-card-results.test.ts.
-        engine: new V6CardResultsEngine(runner, () => 0, 8), context: cardResultsContext,
+        engine: new V6CardResultsEngine(runner, () => samplingNow, 8), context: cardResultsContext,
         record(_env, table) { tables.push(table); },
       });
     let polls = 0;
@@ -136,8 +165,34 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
       const ids = ["card0", "card1", "card2", "skip"];
       expect(ids.map(id => cardResultKnown(table, id))).toEqual([true, true, true, true]);
       const rows = ids.map(id => table.immediate.find(r => r.option_id === id && r.target_id === target.id)!);
-      // Fixed shared samples verify actual results, not just three distinct cache identities.
-      expect(rows.map(r => r.metrics.death_rate?.n)).toEqual([8, 8, 8, 8]);
+      const diagnostics = JSON.stringify({ timing, budgets, telemetry: table.telemetry,
+        rows: rows.map(r => ({ samples: r.samples, capped: r.capped, missing: r.missing, n: r.metrics.death_rate?.n })) });
+      expect(budgets.length).toBeGreaterThan(0);
+      expect(budgets.every(b => b.key.endsWith(":V6_card_results")), diagnostics).toBe(true);
+      if (timing === "solver budget exhausted") {
+        // Scheduling still produces eight samples. The real inner solver sees an exhausted inherited L2 budget.
+        expect(budgets.map(b => b.remaining), diagnostics).toEqual([5000, 0]);
+        expect(budgets.map(b => b.now), diagnostics).toEqual([0, 5000]);
+        expect(solves.some(s => s.timedOut && s.remaining === 0)).toBe(true);
+        expect(rows.map(r => [r.samples, r.capped, r.time_up, r.missing, r.metrics.death_rate?.n]), diagnostics)
+          .toEqual(Array.from({ length: 4 }, () => [8, 6, 0, 0, 2]));
+        expect(rows.map(r => r.paired_delta.death_rate?.n)).toEqual([2, 2, 2, 2]);
+      } else if (timing === "sampling budget exhausted") {
+        // An outer sampling deadline instead leaves six missing samples, with no capped fake survivals.
+        expect(runSamples).toHaveBeenCalledTimes(1);
+        expect(rows.map(r => [r.samples, r.capped, r.time_up, r.missing, r.metrics.death_rate?.n]), diagnostics)
+          .toEqual(Array.from({ length: 4 }, () => [2, 0, 0, 6, 2]));
+        expect(table.telemetry.pending_work).toBe(true);
+      } else {
+        // Fixed shared samples verify actual terminal results, not just three distinct cache identities.
+        expect(rows.map(r => r.metrics.death_rate?.n), diagnostics).toEqual([8, 8, 8, 8]);
+        expect(rows.every(r => r.samples === 8 && r.capped === 0 && r.time_up === 0 && r.missing === 0)).toBe(true);
+      }
+      if (timing !== "solver budget exhausted") {
+        expect(budgets.every(b => b.remaining === 5000 && b.now === 0), diagnostics).toBe(true);
+        expect(solves.length).toBeGreaterThan(0);
+        expect(solves.every(s => !s.timedOut && s.remaining === 5000)).toBe(true);
+      }
       expect(new Set(rows.slice(0, 3).map(r => JSON.stringify([r.metrics, r.paired_delta]))).size).toBe(3);
       const offers = reward["reward"] as { card_options: { card_id: string; energy_cost: number }[] };
       for (const face of offers.card_options) {
@@ -150,6 +205,8 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
   }, 15_000);
 
 it("warms numeric B through the real brain reward loop without a separate request or foreground B fill", async () => {
+  // Fix both the background runtime's allowance and the inherited solver budget, as in the foreground contracts.
+  vi.spyOn(performance, "now").mockReturnValue(0);
   const root = fixture(true); vi.stubEnv("V6_CARD_DECIDER", "brain");
   const knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
   const combat: Raw = frozen.states["T0TP8S9MMU9Q-f2-COMBAT"], reward: Raw = frozen.states["T0TP8S9MMU9Q-f2-REWARD"];
@@ -165,8 +222,8 @@ it("warms numeric B through the real brain reward loop without a separate reques
   const wait = vi.spyOn(runtime, "duringModelWait"), brain = new FakeDeepSeek(criteria => Object.keys(criteria)[0]!);
   const original = brain.choose.bind(brain);
   vi.spyOn(brain, "choose").mockImplementation(async (...args) => {
-    // Fixed model latency, no API call. Existing network wait is the only scheduling opportunity.
-    const answer = original(...args); await new Promise(resolve => setTimeout(resolve, 600)); return answer;
+    // Hold the already-issued model response until the real background work finishes; no host-speed race.
+    const answer = original(...args); await completed; return answer;
   });
   let polls = 0;
   const server = await startFixtureServer((req, res) => {

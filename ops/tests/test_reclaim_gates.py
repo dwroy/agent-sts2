@@ -107,9 +107,12 @@ class ReclaimGates(unittest.TestCase):
         resource.retention.atomic(self.directory / 'retention/allocations' / (self.tree.name + '.json'), {
             'schema': 'workspace-allocation-v1', 'root': str(self.root), 'worktree': str(self.tree),
             'branch': self.tree.name, 'state': 'allocated', 'base': base})
-        # Allocated ops workspaces continue to need explicit completion.
-        with self.assertRaisesRegex(ValueError, 'explicit completion'):
-            self.reclaim(False)
+        # A published report may settle from its original allocation without charging inherited code.
+        proof, _ = resource.admission(self.root, self.directory, self.tree)
+        self.assertEqual(proof['source_acceptance']['base'], base)
+        self.assertEqual(proof['source_acceptance']['verified_source_paths'], [])
+        self.assertFalse(proof['source_acceptance']['live_required'])
+        self.assertEqual(self.reclaim(False)['state'], 'eligible')
         head = self.git('rev-parse', 'HEAD', tree=self.tree).strip()
         resource.complete(self.root, self.directory, self.tree.name, head, head, self.head)
         self.assertEqual(self.reclaim(False)['state'], 'eligible')

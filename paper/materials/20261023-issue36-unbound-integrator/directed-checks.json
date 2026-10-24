@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "name": "tsc",
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-native-prelude.test.ts",
+        "tests/learner-tui-reconciliation.test.ts",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/boss-sim-home.test.ts",
+        "tests/learner-entry.test.ts",
+        "tests/learner-startup-recovery.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "input_count": 2597,
+  "inputs_unchanged": true,
+  "source": "c8ff9caf5edefd3c21e73b60386202a3d90920ed"
+}

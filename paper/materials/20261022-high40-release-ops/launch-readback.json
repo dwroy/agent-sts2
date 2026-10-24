@@ -1,0 +1,376 @@
+{
+  "at": "2026-10-22T18:21:29.955485+08:00",
+  "joint_checks": {
+    "state": "checking-fixed-combination",
+    "started_at": "2026-10-22T18:19:30+08:00",
+    "runner_pid": 821586,
+    "runner_start": "8890034",
+    "nice": 19,
+    "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+    "tree": "9e53f156c3e1662e2ab6cffe667610214b005ca4",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-high40-live-20261022",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T18:19:31+08:00",
+        "pid": 821603,
+        "exit_code": 0,
+        "seconds": 0.8186011189973215
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/ops-high40-release-20261022/vitest.json"
+        ],
+        "started_at": "2026-10-22T18:19:32+08:00",
+        "pid": 821648
+      }
+    ],
+    "full_started": true,
+    "new_model_API_MC_game_actions": 0,
+    "source_count": 27,
+    "input_count": 2487
+  },
+  "switch_phase": "draining",
+  "scope": {
+    "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+    "authorization_sha256": "2de72aeb0e01dff3aa3ec5cb1037b65457f9b7d74d5088a1ae0b2f37edbbabcd",
+    "policy": "/home/dw/Projects/agent-sts2/.artifacts/ops-high40-release-20261022/drain-role-policy.json",
+    "controller_pid": 826698,
+    "controller_start": "8899747",
+    "retained_role_accounts_unchanged": true,
+    "unknown_workers_remain_blocking": true
+  },
+  "switch_snapshot": {
+    "at": "2026-10-22T18:21:28+08:00",
+    "active_workers": [
+      {
+        "kind": "source_ops_fixed_check_publication",
+        "pid": 821586,
+        "start_ticks": "8890034",
+        "receipt": ".artifacts/ops-high40-release-20261022/checks.json"
+      }
+    ],
+    "excluded_workers": [
+      {
+        "kind": "source_ops_process",
+        "pid": 9375,
+        "start_ticks": "102982"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 10073,
+        "start_ticks": "104073"
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 160512,
+        "start_ticks": "7339834",
+        "role": "developer",
+        "name": "issue-40",
+        "pane": "wJ:p1HP",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 160521,
+        "start_ticks": "7339838",
+        "role": "developer",
+        "name": "issue-40",
+        "pane": "wJ:p1HP",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 162216,
+        "start_ticks": "7340791",
+        "role": "developer",
+        "name": "issue-40",
+        "pane": "wJ:p1HP",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 351895,
+        "start_ticks": "856583",
+        "role": "developer",
+        "name": "issue-20",
+        "pane": "wJ:p1HF",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 351902,
+        "start_ticks": "856588",
+        "role": "developer",
+        "name": "issue-20",
+        "pane": "wJ:p1HF",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 352832,
+        "start_ticks": "857830",
+        "role": "developer",
+        "name": "issue-20",
+        "pane": "wJ:p1HF",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 407209,
+        "start_ticks": "7759639",
+        "role": "developer",
+        "name": "issue-41",
+        "pane": "wJ:p1HQ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 407216,
+        "start_ticks": "7759642",
+        "role": "developer",
+        "name": "issue-41",
+        "pane": "wJ:p1HQ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 407623,
+        "start_ticks": "7761128",
+        "role": "developer",
+        "name": "issue-41",
+        "pane": "wJ:p1HQ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1774516,
+        "start_ticks": "3728180",
+        "role": "developer",
+        "name": "issue-33",
+        "pane": "wJ:p1HG",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1774523,
+        "start_ticks": "3728184",
+        "role": "developer",
+        "name": "issue-33",
+        "pane": "wJ:p1HG",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1776884,
+        "start_ticks": "3730296",
+        "role": "developer",
+        "name": "issue-33",
+        "pane": "wJ:p1HG",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1908790,
+        "start_ticks": "3889624",
+        "role": "developer",
+        "name": "issue-26",
+        "pane": "wJ:p1HH",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1908806,
+        "start_ticks": "3889632",
+        "role": "developer",
+        "name": "issue-26",
+        "pane": "wJ:p1HH",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 1911346,
+        "start_ticks": "3890638",
+        "role": "developer",
+        "name": "issue-26",
+        "pane": "wJ:p1HH",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2951094,
+        "start_ticks": "5498012",
+        "role": "developer",
+        "name": "issue-36",
+        "pane": "wJ:p1HJ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2951117,
+        "start_ticks": "5498016",
+        "role": "developer",
+        "name": "issue-36",
+        "pane": "wJ:p1HJ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2951957,
+        "start_ticks": "5499090",
+        "role": "developer",
+        "name": "issue-36",
+        "pane": "wJ:p1HJ",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2952613,
+        "start_ticks": "5501083",
+        "role": "developer",
+        "name": "issue-35",
+        "pane": "wJ:p1HK",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2952620,
+        "start_ticks": "5501086",
+        "role": "developer",
+        "name": "issue-35",
+        "pane": "wJ:p1HK",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 2953495,
+        "start_ticks": "5502019",
+        "role": "developer",
+        "name": "issue-35",
+        "pane": "wJ:p1HK",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3615071,
+        "start_ticks": "6309506",
+        "role": "developer",
+        "name": "issue-37",
+        "pane": "wJ:p1HM",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3615079,
+        "start_ticks": "6309510",
+        "role": "developer",
+        "name": "issue-37",
+        "pane": "wJ:p1HM",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3615752,
+        "start_ticks": "6313103",
+        "role": "developer",
+        "name": "issue-37",
+        "pane": "wJ:p1HM",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3618640,
+        "start_ticks": "6319068",
+        "role": "developer",
+        "name": "issue-28",
+        "pane": "wJ:p1HN",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3618647,
+        "start_ticks": "6319071",
+        "role": "developer",
+        "name": "issue-28",
+        "pane": "wJ:p1HN",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      },
+      {
+        "kind": "retained_developer_or_integrator",
+        "pid": 3619491,
+        "start_ticks": "6320118",
+        "role": "developer",
+        "name": "issue-28",
+        "pane": "wJ:p1HN",
+        "authorization": "paper/materials/20261022-high40-release-ops/authorization-original.md",
+        "account_unchanged": true
+      }
+    ],
+    "ops_idle": false,
+    "checkpoint_ready": true,
+    "inventory_complete": true,
+    "ops_pane": "w1H:p8",
+    "ops_identity": [
+      {
+        "pid": 9382,
+        "start_ticks": "102985"
+      },
+      {
+        "pid": 9375,
+        "start_ticks": "102982"
+      }
+    ],
+    "original_active_worker_records": 27
+  },
+  "wrapper_pids": {
+    "check-runner.pid": "821585",
+    "scoped-switch-runner.pid": "826697"
+  }
+}

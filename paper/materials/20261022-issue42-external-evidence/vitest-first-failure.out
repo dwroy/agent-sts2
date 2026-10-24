@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-42-task/agent
+
+ ❯ tests/external-strategy-evidence.test.ts (35 tests | 1 failed) 171ms
+   × registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool 153ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-strategy-evidence.test.ts > registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool
+AssertionError: expected '{"state":{"act":1,"run_brief":{"chara…' to contain '"own_runs": 0'
+
+Expected: ""own_runs": 0"
+Received: "{"state":{"act":1,"run_brief":{"character":"静默猎手"},"strategy_entries":{"schema":"brain-strategies-v1","entries":[{"id":"fixture-issue42-external-skip","version":"fixture-1","trigger":{"question_types":["card_reward"],"acts":[1]},"strategy":"仅格式验收示例：来源表的第一幕跳过率为1456/13307；仅描述公开样本，不据此规定拿牌或跳过。","source":"external:sts2fun","confidence":0.49,"evidence":[{"type":"external_aggregate","source":"external:sts2fun","url":"https://sts2.fun/static/sts2_public.db.zst","version":"v0.111","dataset_sha256":"1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5","downloaded_at":"2026-10-21","filters":{"character":"silent","ascension":10,"criteria":"character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"},"statistic":{"name":"skip.rate","value":0.10941609679116254,"unit":"fraction of reward screens"},"denominator":{"unit":"rewards","n":13307},"interval":{"low":0.0595123436377582,"high":0.16450124705081484,"method":"player-cluster bootstrap (source cluster_ci)"},"design":"observational","limitations":["自选上传样本，非随机抽样。","观察性统计，不能推断跳过或拿牌的因果收益。","奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"],"license":"No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.","ref":"knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"}],"evidence_summary":{"own_runs":0,"own_support_runs":0,"external":[{"source":"external:sts2fun","version":"v0.111","dataset_sha256":"1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5","statistic":"skip.rate","denominator":{"unit":"rewards","n":13307}}]},"limitation_notice":"外部聚合为观察性、自选上传样本，非因果；版本和统计口径有差异，外部分母不计本系统验证；逐条局限见 evidence.limitations。"}]}},"question":"格式验收","options":{"yes":null}}"
+
+ ❯ tests/external-strategy-evidence.test.ts:76:19
+     74|   const applied = applyStrategyEntries(request, lib), message = userMe…
+     75|   expect(message).toContain("external:sts2fun");
+     76|   expect(message).toContain('"own_runs": 0');
+       |                   ^
+     77|   expect(message).toContain("13307");
+     78|   expect(message).toContain("非因果");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 41 passed (42)
+   Start at  20:18:29
+   Duration  1.92s (transform 1.07s, setup 390ms, import 1.07s, tests 196ms, environment 0ms)
+

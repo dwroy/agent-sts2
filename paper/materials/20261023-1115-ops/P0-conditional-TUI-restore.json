@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-23T11:21:49+08:00",
+  "authorization": "Claude 转 Roy 2026-10-23 latest instruction; issue36 Claude comment6356519604",
+  "P0_commit": "0933ea0ef60304bfe4634d4bfb4ad35e32015f09",
+  "state": "await-original-integrator-full-and-ops-actual-publication",
+  "current_learner_tui": "off",
+  "old_6324_and_6206_full_do_not_validate_P0": true,
+  "required_before_enable": [
+    "original integrator complete checks on exact P0 combination pass",
+    "original ops exact publication with latest live knowledge and off fallback preserved",
+    "only next natural learner scheduling boundary may set learner_tui=on; no hot-switch"
+  ],
+  "first_natural_TUI_acceptance": [
+    "bindings nonempty and native original prompt binding verified",
+    "automatic completion judgement",
+    "timeout fallback not triggered or correctly triggered",
+    "original slot released",
+    "next batch normally dispatched"
+  ],
+  "issue20_reclamation_supplement_blocks_enable": false,
+  "live_P0_leaf_readback": [
+    {
+      "path": "learner/lib/herdr.ts",
+      "P0_source_sha256": "ddcc720c6dec4c5d7bf6f13db437d56beb6e235e75754a13153f5a7821920238",
+      "actual_live_sha256": "64e1dccb003be7e9eb5eef1f43929e9eb3cb52e21a2a0e96873060049a672974",
+      "identical": false
+    },
+    {
+      "path": "learner/lib/launcher.ts",
+      "P0_source_sha256": "a761c13fdda70aa3d987fb2c27524ca146dce79c5e8682889d17b84f9358d856",
+      "actual_live_sha256": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
+      "identical": false
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "P0_source_sha256": "c5ca47f530bd92912100a6e28d396bafa53b3a5c8e1e7bf89a838cb7fc5acd15",
+      "actual_live_sha256": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
+      "identical": false
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "P0_source_sha256": "16f8850343164e2b1d5e7b9d07880e0c413d278a44455587e8e731c20b71216a",
+      "actual_live_sha256": "26346b8d4b783dc9109e7e4894b489f38e99f0745f9df81b6fc234c700d06ea5",
+      "identical": false
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "P0_source_sha256": "d27b05dd6a66edce43b881bf210606a6d4eecf71140756ed8deef91a941c9f5f",
+      "actual_live_sha256": "819e277af2bf1281ffbbc39e656f8ee511b8a79efb34fddb9dd503970fd667cc",
+      "identical": false
+    }
+  ],
+  "brain_view_remains": "herdr",
+  "inflight_stdio_batches_unchanged": true
+}

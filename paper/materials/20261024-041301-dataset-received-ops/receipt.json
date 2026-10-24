@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-24T05:00:44.777460+08:00",
+  "batch": "20261024-041301",
+  "phase": "dataset-records-verified-retention-gate-retained",
+  "commit": "daead9cdc7826a5ff32d4a0146557a25e0cb01d8",
+  "commit_is_main_ancestor": true,
+  "dataset_rc": 0,
+  "attempts": 1,
+  "source_checks_passed": true,
+  "generated_leaves": 14,
+  "generated_Git_blob_SHA_readback": true,
+  "four_runs": [
+    {
+      "run_id": "FU9SGZ3WF6QJ",
+      "has_postmortem": "1"
+    },
+    {
+      "run_id": "CS8BJ1J3LRCV",
+      "has_postmortem": "1"
+    },
+    {
+      "run_id": "927J08F25QUX",
+      "has_postmortem": "1"
+    },
+    {
+      "run_id": "W546CNAWY3RG",
+      "has_postmortem": "1"
+    }
+  ],
+  "original_cleanup_request": {
+    "path": "ops/codex-ops/retention/requests/20261024-041301.json",
+    "sha256": "c4e088200beb7d85f4bfdbadba45288d45b5428a4ae8e44e2596813464464c3d",
+    "value": {
+      "batch": "20261024-041301",
+      "task": "postmortem",
+      "character": "silent",
+      "worktree": "/home/dw/Projects/agent-sts2",
+      "schema": "learner-cleanup-request-v1",
+      "requested_at": "2026-10-24T04:43:34+08:00",
+      "requested_by": "learner-wrapper",
+      "state": "pending_verification",
+      "admission_required": true,
+      "model_finished_does_not_prove_ingestion": true
+    }
+  },
+  "retention_plan": {
+    "command": "nice -n 19 python3 ops/learner_retention.py plan --root /home/dw/Projects/agent-sts2 --state-dir /home/dw/Projects/agent-sts2/ops/codex-ops --batch 20261024-041301",
+    "actual_rc": 1,
+    "observed_stdout": {
+      "state": "retained",
+      "reason": "postmortem not settled"
+    },
+    "evidence_origin": "actual CLI output observed in this ops turn; no retry, no apply",
+    "source_sha256": "a4c81a6412ae8fc22859f175d0b6a74dd367628302ec2e69d528f06bd7a21538",
+    "gate": "postmortem report has unresolved bugs; original admission rejects before tested-live-experience gate"
+  },
+  "scratch_retained": "learner/runs/20261024-041321-8b1c485e-9875-4fde-870b-bdf7fcf10c4f-postmortem",
+  "new_dataset_finish_model_full_game": 0,
+  "original_batch_done_rc0_preserved": true,
+  "science_parents_closed": false,
+  "next": "Original strategy owners resolve0581/0461 along existing proposals; original experience ingestion/passing checks and retention worker gates remain. Do not edit original report/bugs to bypass admission or delete shared root."
+}

@@ -58,7 +58,21 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 
 只处理本批已领取的三原提案和冻结任务。按正文交付代码、证据校准与消费者验证，允许第 3、4 节的自测/live；watcher 的六文件职责保持，发生路径冲突交 ops 协调。不得修改根请求/旧 done 父请求/提案原文，不另建重复 id，不把框架完成当量化学习完成。最终 JSON 除正常实现字段和逐项 proposal_results 外，必须带 character、batch、request_id、input_sha256、work_spec_sha256；不带 research_complete。无新代码时仍须逐项给真实 waiting/duplicate 理由，不冒造实现、合入或测试。原失败回执保留，宿主输入准备不等同模型已经启动。
 
-## 2. 边界与实现
+{{^is_ironclad}}## 1.4 静默普通策略提炼：整局/流派 → 策略与 rk（#48，Roy 2026-10-24）
+
+本节仅适用于 character=silent 的普通自然策略批次；其他角色保持原任务。不改变本批领取范围：先核第1.1—1.3节及实际batch；有 proposal_ids、proposal_repair、research_request、implementation_request、backfill_source 或 external_source 的任务，继续只按该原绑定/冻结规格处理，本节不扩大它们的职责。手动任务只有原规格明确授权时才适用；不领取别的队列、不偷跑旧244条或另开经验链。
+
+普通批次把本批真实新局证据及对应经验，统一提炼为“情境→做法”的大脑策略/流派剧本与 reflex knowledge（rk）候选，或明确等待/不适用理由；不要求每条同时产出两类、不强凑数量。先核完整整局主线：本角色/已观察进阶、流派/转向、核心首次观察、各幕末已记录牌组/HP、Boss结果、死因与关键失血战（赢战也核）；原题/状态按已有证据合同定位，不以摘要、终局牌组或一次成功倒推中间状态。
+
+逐条核本批涉及的 {{experience_path}} 原ID与账本，同情境合并、旧条目只注明去向不删除。按已有核心原ID和实际完整局判断流派；未知就保留未知，不按卡名/预训练知识预设打法，也不为分组凭空加机制。三输入已冻结时，完整流派剧本需同时读外部统计、外部代表完整局、同流派自有完整局，版本/进阶/重试/独立分母分别记录，核我们对照人类赢家的真实偏离；缺任何一份就明确是局部候选及缺口，不冒完整剧本已验收，不自行扩大到新日志/外部原库。原244回刷另由后置绑定按流派归组，普通批次不逐条改写旧经验。
+
+候选先写 {{scratch}}/experience-strategy-rk-map.json，至少给本批核过的 experience_ids、ledger_ids、source_refs（局号/窗口或外部来源/版本/日期/样本与SHA）、目标 playbook/strategy/rk ID、disposition（new/update/reuse/waiting/not_applicable）、候选文件/JSON pointer、反证/限制及具体理由。说明未读范围；旧支持分母不自动继承，observational 与自有/外部来源分账，不将相关性写为因果或安全阈值。仅有映射不计新策略，多个观察段不拆多个条目，等待理由不伪造实现。
+
+大脑候选读 docs/brain-strategies.md 与 knowledge/schemas/brain-strategies-v1.schema.json，给符合现有合同的可查询候选（完整触发条件、做法、可信度、来源与反例）；不能用临时knowledge封套代正式StrategyEntry。rk候选沿 docs/jev-encounter-reflex.md、learner/tasks/jev-encounter-reflex.md 的原#28合同与回放门槛，只写本批授权的候选/链接，不借本节开模型、MC、对局或启用开关。若现有合同不能表达完整剧本，保存真实候选并明确消费者合同缺口，不扩schema或冒消费者已读回。
+
+只读或无源码产出保持原干净base、fixes=[]、merged=null与tests=null合同；CLI账本/代码提案、已领取proposal_results及源码实现职责不变。实际策略/rk发布、固定消费者读回、自然查询/采用与收益逐项分账，科学父保持。最终报告写候选/更新/复用/待证数量和映射路径；report.md末尾与最终回复使用同一真实JSON对象，保原字段，不另造来源commit、发布号或成功测试。没有游戏结论可产出也必须写明本批核过范围、逐项缺口与下一步。
+
+{{/is_ironclad}}## 2. 边界与实现
 - 依据已有证据提出并实现策略；涉及 Roy 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
 - 怪物血量与伤害按当前进阶从数据库取，第一个样本起就用；房间代价保留 5 个样本门槛。
 - 出牌、药水、SL、终局价值规则按本角色实盘证据决定；Roy 2026-10-07 已授权学习者有理由和数据时修改既有人定规则，原规则不是不可修改的前提。

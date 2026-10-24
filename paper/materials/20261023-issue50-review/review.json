@@ -1,0 +1,66 @@
+{
+  "issue": 50,
+  "source": "108b9841d68f7f9b6eba6aae0ee8f35e0d483a9a",
+  "base": "79a4f80ff039523e588f75c7e7da8589fbf5ab2a",
+  "live_base": "0f5dfa4726f2f8e20723100eac55e617d3191c19",
+  "combination_tree": "7f432aa337116997d7d6d52b09c0e7152aafaf40",
+  "verdict": "return to original developer; not admitted",
+  "developer_comment": 6361882215,
+  "findings": [
+    {
+      "priority": "P1",
+      "path": "agent/src/memory/run-plan-merge.ts:65",
+      "problem": "bounded restore returns null then currentRunPlan reloads the same log without a floor bound",
+      "observed": {
+        "current_floor": 2,
+        "only_logged_plan_floor": 9,
+        "bounded_restore": null,
+        "subsequent_floor": 9,
+        "other_run": null
+      },
+      "fix": "preserve the current-floor bound through every restore caller and add future-only/restart/other-run regression controls"
+    },
+    {
+      "priority": "P2",
+      "path": "agent/tests/endgame-plan.test.ts:139",
+      "problem": "four fixed loop tests still expect brain-query-cues-v1 although published #49 contract is v2 with real kb_reflex",
+      "unreached_stale_assertion": "line 142 still expects tools: 14; not counted as an observed failure",
+      "fix": "rebase against current real #49/#26, preserve kb_reflex/experience separation and update fixed assertions"
+    }
+  ],
+  "checks": {
+    "tsc_exit": 0,
+    "directed_files": 10,
+    "directed_pass": 104,
+    "directed_fail": 5,
+    "candidate_assertion_failures": 4,
+    "environment_failures": 1,
+    "environment": "new isolated tree had no generated .cache directory; check-imports scans new URL paths; not a missing tracked fixture",
+    "environment_recheck_files": 1,
+    "environment_recheck_pass": 1,
+    "rollback_probe_exit": 0,
+    "rollback_probe_exit_means": "expected bug reproduced; not contract passing",
+    "tracked_fixture_restored_before_checks": "paper/materials/issue29-brain-speed/results.jsonl"
+  },
+  "input_count": 2635,
+  "inputs_unchanged": true,
+  "full_started": false,
+  "main_product_written": false,
+  "live_written": false,
+  "queue": [
+    "42 remaining",
+    "35",
+    "50",
+    "28",
+    "37",
+    "20 parent"
+  ],
+  "dependencies": {
+    "issue35": "main only; actual game live pending",
+    "issue49_26": "actual V6-R418; retain current real rk contract",
+    "learning4": "open via #48",
+    "natural_acceptance": "open; no actual F48/F49 claims"
+  },
+  "original_developer_failures_preserved": true,
+  "probe_replay_note": "rollback-probe.mts is preserved byte-exact at its original .artifacts location; its relative imports assume that location and the exact isolated worktree in assembly.json; archive copy is evidence, not a standalone runner"
+}

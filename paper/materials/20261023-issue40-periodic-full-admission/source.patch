@@ -1,0 +1,111 @@
+diff --git a/agent/tests/legacy-refresh-incremental.test.ts b/agent/tests/legacy-refresh-incremental.test.ts
+index 4cefb910bf5485c6d22ee9b2ac0bb07e52523c20..27d9da17356a2badd7213b2aa0e257a8afc36623 100644
+--- a/agent/tests/legacy-refresh-incremental.test.ts
++++ b/agent/tests/legacy-refresh-incremental.test.ts
+@@ -8,7 +8,7 @@ const duckPython = `${root}data/logdb-venv/bin/python`;
+ 
+ it.each([
+   ["python3", "knowledge/builders/test_legacy_incremental.py", 11],
+-  ["python3", "knowledge/builders/test_refresh_pipeline.py", 12],
++  ["python3", "knowledge/builders/test_refresh_pipeline.py", 15],
+   ["python3", "knowledge/builders/test_refresh_entrypoints.py", 2],
+   ["python3", "agent/tests/cost_incremental_test.py", 2],
+   ["python3", "agent/tests/report_incremental_test.py", 4],
+diff --git a/docs/logdb.md b/docs/logdb.md
+index c769e92a557958ad351f5ba4bb5011aec46826a9..34e2723298c49f20d1d6f8912637b5186c8f2b4b 100644
+--- a/docs/logdb.md
++++ b/docs/logdb.md
+@@ -10,6 +10,7 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
+ - **派生库**在 `data/logdb/`（`.cache` 软链到 jev-sts2/.cache，所有工作树共用），随时可以整个删掉重建（`sync.py --reset`，全量约 30 秒）。
+ - **增量同步** `agent/tools/logdb/sync.py`：`manifest.json` 记每个源文件已处理到的字节偏移；每次只读新追加的**完整行**（没写完的最后一行留到下次），每行变成一行紧凑的记录（`agent/tools/logdb/extract.py`），写成 Parquet 分片 `data/logdb/<表>/part-<源>-<起>-<止>.parquet`（zstd）。分片写完不再改；同一个源连着 8 个以上小于 16 MB 的小分片时合并成一个新分片，旧的删掉。
+ - **重建条件**（只重建出问题的那个源）：记录的偏移超过文件大小（被截断）、偏移前一个字节不是换行（文件被改写）、首行哈希变了（文件被换掉）、源文件没了、或者这个源的抽取器版本（`extract.VERSIONS`）变了。启动时还会删掉 manifest 里没有的分片（上次同步中途死掉留下的）。
++- **周期同步**：每局结束后的原 `refresh.sh` / `refresh_driver.py` 在同一刷新 worker 内增量同步，先于知识消费者；显式绑定日志和库路径。live 与运维主检出各有独立 `data/logdb` 时两份都更新；目录实际共享时只同步一次。均使用 `--no-wait`，同步锁忙则留到下一原刷新周期；失败沿原步骤日志保留，不新增 daemon、cron、模型或阻塞下一局。`--no-sync` 查询不再承担保鲜触发职责。
+ - **不抢对局的资源**：sync 把自己设成 `nice 19` + `ionice -c3`，DuckDB 只用 2 个线程、内存上限 2 GB。
+ - **并发**：同时只有一个 sync（`sync.lock`，query.py 顺带的同步拿不到锁就跳过）；查询持共享读锁，sync 只在删除/替换分片的那一刻持排他锁，所以查询不会看到一半替换的表。
+ - **key 不进库**：进库的自由文本（rationale、模型的简短理由、计划摘要、chosen）都过 `scrub()`，像 key 的串（`sk-…`、`Bearer …`、`api_key: …`）换成 `[REDACTED]`；问题、推理、memory 原文不进库，只存长度和源文件字节偏移。
+diff --git a/knowledge/builders/refresh_driver.py b/knowledge/builders/refresh_driver.py
+index df6fee5a969cbb6df4170895acc1ca68670d8648..ae2ba8ff68ccd58fb122829aaf39e01c1336e107 100644
+--- a/knowledge/builders/refresh_driver.py
++++ b/knowledge/builders/refresh_driver.py
+@@ -33,6 +33,17 @@ def queue_command(ops_root, command):
+         sys.path.pop(0)
+ 
+ 
++def logdb_sync_steps(ops_root):
++    """Refresh both deployed readers when live and ops do not share a cache."""
++    roots = [ROOT]
++    if (ops_root / 'data/logdb').resolve() != (ROOT / 'data/logdb').resolve():
++        roots.append(ops_root)
++    return [('logdb-sync' if i == 0 else 'logdb-sync-ops-root',
++             [root / 'data/logdb-venv/bin/python', ROOT / 'agent/tools/logdb/sync.py',
++              '--logs', root / 'logs', '--db', root / 'data/logdb', '--no-wait'])
++            for i, root in enumerate(roots)]
++
++
+ def step(ops_root, name, argv):
+     started = time.monotonic()
+     stamp = datetime.now(timezone.utc).isoformat()
+@@ -103,7 +114,8 @@ def main():
+             run('monster-db-check', build('monster-db-check'))
+             run('card-upgrades', build('build-card-upgrades'))
+             run('report-state-index', [sys.executable, ROOT / 'ops/report_log_cache.py', '--warm-states', ROOT / 'logs/states.jsonl'])
+-            run('logdb-sync', [ROOT / 'data/logdb-venv/bin/python', ROOT / 'agent/tools/logdb/sync.py'])
++            for name, command in logdb_sync_steps(root):
++                run(name, command)
+             for c in characters:
+                 run('outcome:'+c, build('build-outcome-stats', '--character', c))
+                 if c == 'silent':
+diff --git a/knowledge/builders/test_refresh_pipeline.py b/knowledge/builders/test_refresh_pipeline.py
+index 2baccb33aa98d0f76ec80cc89468296bd3fa8960..3423e14639642993d5cf80d26082d8d7013e7eb8 100644
+--- a/knowledge/builders/test_refresh_pipeline.py
++++ b/knowledge/builders/test_refresh_pipeline.py
+@@ -234,6 +234,49 @@ class PipelineTest(unittest.TestCase):
+         self.assertEqual(actual, ['queue',str(self.root),'other','--',*command])
+         self.assertEqual(status, 'enabled')
+ 
++    def test_logdb_sync_covers_separate_live_and_ops_databases(self):
++        driver = load('refresh_driver')
++        live = self.root / 'live'
++        with patch.object(driver, 'ROOT', live):
++            steps = driver.logdb_sync_steps(self.root)
++        self.assertEqual([name for name, _ in steps], ['logdb-sync', 'logdb-sync-ops-root'])
++        for (_name, command), root in zip(steps, (live, self.root)):
++            self.assertEqual(command, [root / 'data/logdb-venv/bin/python',
++                live / 'agent/tools/logdb/sync.py', '--logs', root / 'logs',
++                '--db', root / 'data/logdb', '--no-wait'])
++
++    def test_logdb_sync_deduplicates_same_or_shared_database(self):
++        driver = load('refresh_driver')
++        live = self.root / 'live'
++        with patch.object(driver, 'ROOT', self.root):
++            self.assertEqual(len(driver.logdb_sync_steps(self.root)), 1)
++        target = self.root / 'data/logdb'
++        target.mkdir(parents=True)
++        (live / 'data').mkdir(parents=True)
++        (live / 'data/logdb').symlink_to(target, target_is_directory=True)
++        with patch.object(driver, 'ROOT', live):
++            self.assertEqual(len(driver.logdb_sync_steps(self.root)), 1)
++
++    def test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry(self):
++        driver = load('refresh_driver')
++        live = self.root / 'live'
++        calls = []
++        def step(_root, name, argv):
++            calls.append((name, argv))
++            return 0
++        with patch.object(driver, 'ROOT', live), patch.object(driver, 'BUILDERS', live / 'knowledge/builders'), \
++                patch.object(driver, 'step', side_effect=step), patch.dict(os.environ), \
++                patch.object(sys, 'argv', ['refresh_driver.py', '--ops-root', str(self.root),
++                                          '--character', 'silent', '--queue-entered']):
++            self.assertEqual(driver.main(), 0)
++        names = [name for name, _ in calls]
++        self.assertEqual([n for n in names if n.startswith('logdb-sync')],
++                         ['logdb-sync', 'logdb-sync-ops-root'])
++        self.assertLess(names.index('logdb-sync-ops-root'), names.index('construction-opportunities:silent'))
++        command = next(argv for name, argv in calls if name == 'logdb-sync-ops-root')
++        self.assertIn('--no-wait', command)
++        self.assertEqual(command[command.index('--db') + 1], self.root / 'data/logdb')
++
+     def test_real_fit_full_and_incremental_models_and_gates_match_bytes(self):
+         fv = load('build-fight-value')
+         fixture = list(fv.bmd._synthetic_lines())

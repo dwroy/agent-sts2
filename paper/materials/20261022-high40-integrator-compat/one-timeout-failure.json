@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-22T19:23:13+08:00",
+  "state": "full-failed-one-test-child-timeout-suspected-no-admission",
+  "code_tree": "459699abeb08d0d238f6a537eea817476d72587f",
+  "files": 637,
+  "passed": 6009,
+  "failed": 1,
+  "skipped": 2,
+  "failed_tests": [
+    {
+      "name": "/home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent/tests/ops-mod-state.test.ts",
+      "assertions": [
+        {
+          "ancestorTitles": [
+            "launch-game mod readiness"
+          ],
+          "fullName": "launch-game mod readiness keeps polling until an unsuccessful envelope becomes a valid state",
+          "status": "failed",
+          "title": "keeps polling until an unsuccessful envelope becomes a valid state",
+          "duration": 5924.475251999999,
+          "failureMessages": [
+            "AssertionError: expected null to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator-high40-compat-20261022/agent/tests/ops-mod-state.test.ts:103:42\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+          ],
+          "meta": {},
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "original_six_mismatch_failures_now_pass": true,
+  "immediate_unchanged_targeted_recheck": "targeted-before.json",
+  "new_source_tree": "bb1c16b0124be3e3fe09a59dae98043df1064675",
+  "new_paths": 29,
+  "new_full_not_yet_started": true,
+  "production_changed": false,
+  "new_full_reason": "test fixture child watchdog adjusted from5s to10s and child error surfaced; no polling assertions or production source changes"
+}

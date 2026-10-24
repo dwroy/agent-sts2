@@ -32,18 +32,45 @@ def hosting(state_dir, key, env_name, default):
 def start_learner(argv, root, scripts, state_dir, label):
     """Start a learner batch in the background; returns (pid, pane id or None).
 
-    hosting learners=herdr (docs/codex-ops.md「herdr 托管」): in its own herdr pane `label` via ops/herdr-host.sh run
-    --close-on-exit (the pid is the pane-side wrapper, the batch script's parent); otherwise, or when herdr is not
-    available, setsid as before.
+    Hosted Codex batches have a detached supervisor and a dedicated interactive pane.
+    The supervisor PID remains the scheduler's lease; only verified completion closes the pane.
+    Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
+    launch_env = dict(os.environ)
+    for name in ("LEARNER_HERDR_PANE", "LEARNER_HERDR_LABEL", "LEARNER_TUI_RECEIPT", "LEARNER_BACKFILL_SOURCE", "LEARNER_EXTERNAL_SOURCE", "LEARNER_EXTERNAL_SERVICE_TIER"):
+        launch_env.pop(name, None)
     if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
         os.makedirs(os.path.dirname(pidfile), exist_ok=True)
         envs = []
-        for name in sorted(os.environ):
+        for name in sorted(launch_env):
             if PASS_ENV.match(name) and not SECRET_NAME.search(name):
-                envs += ["--env", f"{name}={os.environ[name]}"]
+                envs += ["--env", f"{name}={launch_env[name]}"]
         try:
+            if (not os.environ.get("LEARNER_CMD")
+                    and hosting(state_dir, "learner_tui", "CODEX_OPS_LEARNER_TUI", "on") != "off"):
+                result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "open-pane", label],
+                                        cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
+                pane = result.stdout.strip()
+                if result.returncode == 0 and re.fullmatch(r"[A-Za-z0-9]+:p[A-Za-z0-9]+", pane):
+                    env = dict(launch_env, LEARNER_HERDR_PANE=pane, LEARNER_HERDR_LABEL=label,
+                               LEARNER_TUI_RECEIPT=os.path.join(state_dir, "learner", label + ".tui.json"))
+                    proc = subprocess.Popen(["nice", "-n", "19", *argv], cwd=root, env=env, stdin=subprocess.DEVNULL,
+                                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+                    try:
+                        with open(pidfile, "w", encoding="utf8") as handle:
+                            handle.write(str(proc.pid) + "\n")
+                    except OSError:
+                        # The supervisor already exists: never fall back and start a second one.
+                        sys.stderr.write("learner supervisor pidfile unavailable; original PID returned for registration\n")
+                    return proc.pid, pane
+                if result.returncode == 4:
+                    raise RuntimeError("learner pane is already busy; preserve it without a second launch")
+                # No command was submitted: falling back cannot duplicate a model session.
+                sys.stderr.write(f"herdr-host open {label} failed (exit {result.returncode}); starting with setsid\n")
+                proc = subprocess.Popen(argv, cwd=root, env=launch_env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                        stderr=subprocess.DEVNULL, start_new_session=True)
+                return proc.pid, None
             result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "run", label, "--pidfile", pidfile, "--close-on-exit",
                                      *envs, "--", *argv], cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
             parts = result.stdout.split()
@@ -52,7 +79,7 @@ def start_learner(argv, root, scripts, state_dir, label):
             sys.stderr.write(f"herdr-host run {label} failed (exit {result.returncode}): {result.stderr.strip()[-300:]}; starting with setsid\n")
         except (OSError, subprocess.SubprocessError) as error:
             sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
-    proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    proc = subprocess.Popen(argv, cwd=root, env=launch_env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     if "boss-sim-batch" in argv:
         pidfile = os.path.join(state_dir, "learner", label + ".pid")
         os.makedirs(os.path.dirname(pidfile), exist_ok=True)
@@ -104,6 +131,20 @@ def available_worktree(worktree):
     return result.returncode == 0 and not result.stdout.strip()
 
 
+def feature_worktree(state, root, learner_task, request_id, alive):
+    """The original feature retry/tree gates, also used by deferred priority checks."""
+    prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request_id]
+    if (any(batch.get("state") in ("done", "awaiting_review") or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
+            or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
+        return None
+    worktree = os.path.join(root, ".worktrees", learner_task)
+    if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
+            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
+            or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
+        return None
+    return worktree
+
+
 def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
     if character != "silent" or reason not in ("ops", "calibration-refresh", "core-builds"):
@@ -139,14 +180,8 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
     if request is None:
         return False, None
     key = "feature:" + request["request_id"]
-    prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
-    if (any(batch.get("state") == "done" or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
-            or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
-        return True, None
-    worktree = os.path.join(root, ".worktrees", learner_task)
-    if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
-            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
-            or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
+    worktree = feature_worktree(state, root, learner_task, request["request_id"], alive)
+    if worktree is None:
         return True, None
     batch_id = stamp + "-fix-batch"
     if batch_id in state["batches"]:
@@ -196,7 +231,7 @@ def busy(state, task, alive):
 
 def retryable(state, task, key):
     previous = [batch for batch in state["batches"].values() if batch.get("task") == task and batch.get("key") == key]
-    if any(batch.get("state") == "done" for batch in previous) or len(previous) >= 3:
+    if any(batch.get("state") in ("done", "awaiting_review") for batch in previous) or len(previous) >= 3:
         return False
     return not previous or max(batch.get("retry_at", 0) for batch in previous) <= time.time()
 
@@ -237,7 +272,26 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None):
+    if external_source is not None:
+        from strategy_backfill_jobs import ID
+        if (not isinstance(external_source, str) or not ID.fullmatch(external_source)
+                or task != "strategy-proposal" or character != "silent" or reason != "external" or runs
+                or not re.fullmatch(re.escape("strategy-external:" + external_source) + r":[0-9]+", str(key))
+                or research_request or implementation_request or backfill_source):
+            return None
+    if backfill_source is not None:
+        from strategy_backfill_jobs import ID
+        if (not isinstance(backfill_source, str) or not ID.fullmatch(backfill_source)
+                or task != "strategy-proposal" or character != "silent" or reason != "backfill"
+                or not re.fullmatch(re.escape("strategy-backfill:" + backfill_source) + r":[0-9]+", str(key)) or research_request or implementation_request):
+            return None
+    # A released supervisor slot does not authorize replay of its unresolved original demand.
+    if any(batch.get("state") == "awaiting_review" and batch.get("task") == task
+           and batch.get("character") == character
+           and (batch.get("key") == key or (runs and sorted(batch.get("runs", [])) == sorted(runs)))
+           for batch in state["batches"].values()):
+        return None
     if implementation_request is not None:
         from strategy_implementation_jobs import REQUEST, CONTINUATION
         if (implementation_request not in (REQUEST, CONTINUATION) or research_request is not None or task != "strategy-proposal"
@@ -266,7 +320,11 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         return None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
     argv = ["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree]
-    if research_request:
+    if external_source:
+        argv += [task, "external:" + external_source]
+    elif backfill_source:
+        argv += [task, "backfill:" + backfill_source]
+    elif research_request:
         argv += [task, research_request]
     elif implementation_request:
         argv += [task, implementation_request]
@@ -278,7 +336,11 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
     if pane:
         state["batches"][batch_id]["pane"] = pane
-    if research_request:
+    if external_source:
+        state["batches"][batch_id]["external_source"] = external_source
+    elif backfill_source:
+        state["batches"][batch_id]["backfill_source"] = backfill_source
+    elif research_request:
         state["batches"][batch_id]["research_request"] = research_request
     elif implementation_request:
         state["batches"][batch_id]["implementation_request"] = implementation_request
@@ -289,39 +351,81 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
         return {"disk_capacity_hold": True, "dispatched": None}
+    import strategy_external_jobs as external_jobs
+    directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    external_jobs.reconcile(state, directory)
+    external_ready = character == "silent" and external_jobs.ready(state, root)
+    if external_ready:
+        # Roy #51: pending external units precede all ordinary learning demand.
+        # Active batches and the original audit/writer leases remain authoritative.
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp,
+                                          dispatch_write, {}, alternating=True)
+        return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
+                "core_builds": None, "backfill_hold": True, "strategy_external": external,
+                "external_priority_hold": True, "external_alternation_hold": True,
+                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
+    attempted = []
+    ordinary_claimed = [False]
+    def claim(result):
+        if result:
+            ordinary_claimed[0] = True
+        return result
+    def normal_allowed():
+        return not external_ready or not ordinary_claimed[0]
+    def priority_writer(*args, **kwargs):
+        # Keep the ordinary order, but spend at most one launch on its turn.
+        if not normal_allowed():
+            return None
+        if args[7] == "ops" or retryable(args[0], args[3], args[6]):
+            attempted.append(args[3])
+        return claim(dispatch_write(*args, **kwargs))
     core = None
+    core_ready = False
+    request = None
     if character == "silent":
         import core_build_jobs
         request = core_build_jobs.pending_request(root)
         if request:
+            prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
+            core_ready = len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior)
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
+            claim(core)
     runs = pending(root, scripts, character)
-    experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
     from learning_requests import reconcile as reconcile_learning
-    learning = reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)
+    learning = claim(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)) if normal_allowed() else None
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
-    research = dispatch_research(state, root, scripts, character, alive, stamp, dispatch_write, STRATEGY_WORKERS)
-    # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+    research = claim(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)) if normal_allowed() else None
+    # Normal turns retain the ordinary proposal/fix/strategy order.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(proposals)
-    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, dispatch_write)
-    # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer) if normal_allowed() else None
     key = fix_key(root, character)
-    fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal and not research else None
-    calibration = calibration_job(state, root, scripts, character, alive, stamp)
+    fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
+    strategy = claim(strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer)) if normal_allowed() and not proposal and not research else None
+    calibration = claim(calibration_job(state, root, scripts, character, alive, stamp)) if normal_allowed() else None
     from boss_sim_jobs import check
-    boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
-            "core_builds": core,
-            "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    boss_sim = claim(check(state, root, scripts, character, alive, stamp, start_learner)) if normal_allowed() else None
+    external = None
+    from ascension_audit import priority_pending as audit_pending
+    audit_turn = external_ready and not ordinary_claimed[0] and audit_pending(state, root, character, available_worktree)
+    if external_ready and not ordinary_claimed[0] and not audit_turn:
+        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
+            {"postmortem_wait": state.get("postmortem_wait", {}).get(character)}, alternating=True)
+    result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+              "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
+              "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    if external_ready and (ordinary_claimed[0] or external):
+        result["external_alternation_hold"] = True
+    return result
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):
     """Roy-authorized periodic calibration; read live data, never overwrite refreshing knowledge."""
+    state.setdefault("calibration_ready", {}).pop(character, None)
     if character != "silent":
         return None
     try:
@@ -344,11 +448,13 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
     request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
                "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
+    if feature_worktree(state, root, request["task"], request["request_id"], alive) is not None:
+        state["calibration_ready"][character] = request["request_id"]
     _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
     return result
 
 
-def strategy_job(state, root, scripts, character, alive, stamp):
+def strategy_job(state, root, scripts, character, alive, stamp, writer=None):
     """Dispatch after an ascension change or ten new completed postmortems, retaining a busy trigger."""
     runs = list(dict.fromkeys(run for batch in state["batches"].values()
                              if batch.get("task", "postmortem") == "postmortem"
@@ -366,7 +472,7 @@ def strategy_job(state, root, scripts, character, alive, stamp):
     if not runs or (level <= progress["ascension"] and len(runs) < progress["runs"] + 10):
         return None
     key = f"{character}:A{level}:{len(runs)}"
-    result = dispatch_write(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
+    result = (writer or dispatch_write)(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
     if result:
         state["batches"][result[0]]["strategy_progress"] = {"ascension": level, "runs": len(runs)}
     return result

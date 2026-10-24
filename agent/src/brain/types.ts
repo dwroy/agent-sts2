@@ -1,3 +1,4 @@
+import type { BrainObserver } from "./live-view.js";
 import type { BrainNativeReceipt } from "./run-profile.js";
 /**
  * V4 brain contract (docs/v4-architecture.md §2).
@@ -47,6 +48,8 @@ export interface AnswerSpec {
 }
 
 export interface BrainRequest {
+  /** Local read-only stream observer; never included in model input or run configuration. */
+  observe?: BrainObserver;
   label: string;
   /** Stable prefix: rules + knowledge. Byte-identical across a run so prefix caches hit. */
   system: string;

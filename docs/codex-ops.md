@@ -103,7 +103,7 @@ Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-cal
 目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：新 tab 优先跟随实际 ops pane 所在的 workspace；尚无 ops pane 时使用 `sts2-run`（cwd 主检出）。每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
 
 ```bash
-bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
+bash ops/herdr-host.sh status            # 稳定 label、可读 title、pane、存活/忙碌、前台 PID
 bash ops/herdr-host.sh run <label> [--pidfile F] [--close-on-exit] [--env K=V]... -- <命令>
 bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登记的 label
 bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
@@ -116,11 +116,67 @@ Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspac
 | 键 | 值（默认在前） | 环境变量 | 管什么 |
 |---|---|---|---|
 | ops | exec / herdr | CODEX_OPS_MODE | 叫醒走 `codex exec resume`（无头），还是走 herdr 里的交互 TUI |
-| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | 学习者批次在 pane `learner-<批次 id>[-postmortem]` 里跑，结束关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | tab 标题 `学习大脑 · <批次> · <类型>`（复盘、经验更新、策略提案、修复等）；pane label 仍是 `learner-<批次 id>[-postmortem]`，新批次直接运行 Codex 交互 TUI；实际会话结束、原输出持久化且完成事务登记后才关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| brain_view | herdr / off | CODEX_OPS_BRAIN_VIEW | 只读常驻 tab `对局大脑 · <run_id>`；pane label 固定 `brain-view`。独立关闭视图，不影响对局、学习或 autoplay |
 | autoplay | setsid / herdr | CODEX_OPS_AUTOPLAY_HOST | 动作 autoplay-start 把 `ops/autoplay.sh` 放进 pane `autoplay`；PID 仍写 `autoplay.pid`，autoplay-stop / kill / 卡死检查不变 |
 
-herdr 不可用时（`herdr-host.sh available` 失败）学习者和 autoplay 退回 setsid，ops 叫醒退回 exec（日志里各有一行）。学习者的命令行、权限配置、key 预检、退出码、`learner/runs/*.jsonl`、批次登记都不变；pane 里 `tail -F` 显示 `.out/.err`，批次结束后 drain 放到 setsid 里（不随 pane 关掉）。
+**对局直播（#36、#47）**：沿现有 Codex app-server 通知监听和 dsh 流式观察器写入 `logs/brain-live/<run_id>/current.txt`，不新增模型、客户端或连接，不输入/修改原线程和回滚。默认详细模式，每题用中文前缀和分隔线展示：
 
+- 系统提示每局或内容变化时显示原文字节数、SHA256 和前 12 行预览（默认最多 2 KiB）；后续题显示“系统提示同上（SHA256 …）”。SHA 基于原文，预览先脱敏。
+- 题目展示引擎用户消息的全部字段，包括状态、选项、投影/模拟事实、本局记忆及重问；JSON 仅在展示时缩进。默认 16 KiB，超过上限按段落/行保留首尾，标明脱敏全文和省略字节数、保留的字节区间，UTF-8 不拆字。查询预算耗尽后的已有资料作答题也另行展示。
+- 公开推理摘要和正文增量按安全分句滚动，并与工具调用穿插；工具开始前刷新未完成段。没有收到公开摘要时，明确显示“本题无公开推理摘要”。Codex 只展示提供方的 summary 字段/summaryTextDelta，不读取 raw reasoning text/content；仅有 completed 公开摘要或正文时也展示，已有增量不重复播放。dsh 沿其现有流。
+- 每次检索展示工具名、完整脱敏参数、返回正文、原文字节数和耗时，另列来源与版本（缺失写未知）。参数、返回及来源段各默认最多 4 KiB，超过同样保留首尾并注明省略字节及位置。
+- 本次尝试和路由最终接受/拒绝保留完整答案 JSON 与理由。错误、卡住、超时与兜底继续标 `!!!`。公开摘要不可用不等于模型没有思考。
+
+只读展示不改题面、决策、预算或计时，也不额外请求推理。敏感字段、凭据、地址、邮箱、外部玩家/逐局标识和终端控制符先脱敏再截断；已知敏感标识的自由文本回显也隐藏。流式片段遇到未完成单词/JSON 时等安全分句，长段每 256 字显示接收进度；单个未分句段最多缓存 256 KiB，超出明确折叠，避免把分块凭据前缀写出。直播队列最多 8 MiB，满时仅丢展示并写提示；原对局日志保留。写盘异步、失败不进入答题路径。每局保留 `current.txt` 与 `previous.txt` 双份滚动，各最多 **64 MiB**（合计最多 128 MiB）。
+
+展示配置从控制器启动环境读取，下一自然启动时生效，不热切在途会话：`BRAIN_LIVE_MODE=compact` 保留原简洁样式，默认 `detailed`；`BRAIN_LIVE_QUESTION_BYTES`（默认 16384）、`BRAIN_LIVE_TOOL_BYTES`（默认 4096）、`BRAIN_LIVE_SYSTEM_BYTES`（默认 2048）控制各段字节上限，合法范围 256–1048576，非法值退默认。省略标记计入上限。读取端保留已脱敏长行和 SHA，不再额外截成 1600 字。
+
+`ops/brain_view.py` 每秒仅 tail 该脱敏文本并按 `run-config.jsonl` 更新同一 tab 标题，没有可输入的会话界面；直播缺失时兼容 `brain.jsonl`、`brain-wait.jsonl` 的非流式版本。旧版本只在尝试完成后显示工具等已落盘字段，不冒充直播。只读进程能处理半行、轮转和截断；单次尝试耗时不冒充跨重试整题耗时。
+视图与对局没有共享控制通道。`run.sh` 在自然进程边界异步尝试启动，原 `stall` tick 可恢复退出的视图；均为 nice 19，不阻塞对局，也不启动新模型、游戏动作或额外调度器。换局按 `run-config.jsonl` 更新同一 tab 的标题；日志轮转、缺失、半行和无效 JSON 可继续读取。视图挂掉只留下闲置 tab，重启复用它。环境可用时也可由 ops 在主运行根执行：
+
+```bash
+nice -n 19 python3 ops/brain_view.py ensure              # 只启动/复用本实例只读视图
+nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性输出已落盘样例，不操作 herdr
+```
+
+写 `brain_view=off` 到 hosting 可单独停视图（通常一秒，标题更新中的 herdr 故障最多延迟一次命令超时），tab 保留；写回 `brain_view=herdr` 后在下个自然启动边界或原 stall tick 恢复。显式 `CODEX_OPS_BRAIN_VIEW` 优先。herdr 不可用时跳过视图，对局照常。
+
+**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id 与登记键保持原值；新批次的租约 PID 对应后台监管 wrapper，模型 PID/birth 另在交互回执核验。herdr 原生 agent 名最多 32 字符，故使用 `learner-` 加完整 `[label, pane_id, 绝对 cwd]` 紧凑 JSON 的 SHA256 前 24 位十六进制字符（共 32 字符），不截断批次或类型。交互回执在命名前持久化 `agent_name`、`agent_name_version=1` 及原完整身份；命名前检查租约/前台/cwd/空输入框，命名后须读回该原生名才发提示，接续与每次退场按键沿用同一绑定。命名冲突、失败或回执不确定均保留现场，不另换名字或重送任务。Python 完成核验独立复核新名称绑定，既有无名称字段的 R3 原件仍按原身份/原生回合/退场合同核验。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
+
+**学习者非交互回退（Roy 2026-10-23）**：`hosting` 中设 `learner_tui=off`，保留 `learners=herdr` 和 `brain_view=herdr`。后续新学习批次走原 herdr 命令 pane，在 tab 显示 `.out/.err` 日志并沿原 wrapper 完成审计、退场；模型、账号、强度、沙箱权限和批次身份不变。不修改在途批次。恢复交互时删除该行或设 `learner_tui=on`，下一自然学习启动点生效；环境变量 `CODEX_OPS_LEARNER_TUI` 优先，须核实际原生请求，配置值不代运行回执。此回退不解决交互原生回合绑定问题；#36 修复仍须单独验收。
+
+**学习交互会话（#36）**：`learners=herdr` 的新批次先开专属 tab，后台 `codex-ops-learner.sh` 监管进程继续以原批次/PID/工作树持租约。`learner/run.ts` 沿原任务渲染、账号、模型/强度、key 预检和权限 profile 启动真正的 Codex TUI；从 herdr 发送原始任务，不再 tail `.out/.err` 假装会话。提示超过 96 KiB 时保存在同一 scratch 中的完整文件，首次提示要求完整读入；原完整提示仍记录在 `learner_launch`。TUI 的环境在原 `codexChildEnv` 去密钥结果上只保留本角色路径、locale、账号 home 和必要证书/无凭据代理设置，用 `env -i` 隔离 herdr server 环境；任意继承变量不写进启动脚本，含凭据代理则保留现场并拒绝启动；`--no-daemon`，nice 19，不改共用 config、账号或 home。交互 CLI 不支持 exec 专用的忽略配置参数，故启动前沿原只读配置检查器核账号及 cwd 各级配置：仅允许被显式覆盖的模型/强度、TUI 与项目 trust；继承 MCP、指令、hook 等非被动配置则零模型启动并交原 ops 核验，不改账号配置、不降级权限。原 `.out/.err`、learner JSONL、原生会话、任务产物和完成审计保留；日志和完成回执与 native session/turn 绑定，令牌按原生每回合最后用量去重累计。
+
+屏幕 idle 或进程退出都不能证明批次完成：须有匹配原提示的原生 `task_complete`、实际 TUI idle 且输入框空、无新原生回合；初次发送与每次接续都先持久化独立的一次性 marker 和提示词 SHA，原生 user_message/response_item 必须按完整正文核成对应 turn；旧 marker、后续人类回合不继承本批权限。Python 完成核验会独立从原生记录重建这一绑定，失败/超时也不能跳过。退出前复核本批 PID birth、pane、前台进程组、agent/cwd、原租约和空输入框。原 `.out` 已刷新后，`ops/learner_tui.py` 核原日志 SHA/summary、原生完成记录、实际进程结束，再执行原 `finish` 产物审计。终态事务已登记且原件持久化后，wrapper 写入 `wrapper` 完成段（批次、真实终态、退出码、supervisor PID/birth、批次快照 SHA），调用 #20 的 `ops/learner_tabs.py seal --root ROOT --state-dir DIR --batch BATCH` 封存交接；wrapper 不关 tab。#20 回收任务等待 supervisor 实际退出，再独立核原身份、回执与产物 SHA、空闲与无人工输入，统一关 tab。seal 缺失或失败只发去重 attention、保留现场，不回退直接关闭；分类失败/超时也保留原输出与错误。会话退出不确定、新的人类输入、pane 身份变化、回执缺失等保留 tab/原件，排队给原 ops，不标 done、不另开模型、不申请回收。wrapper 核验默认最多 300 秒（`LEARNER_TUI_VERIFY_TIMEOUT_S` 可设 1–3600 秒），单次核验亦受同一截止时间约束；到期写 `BATCH.verification-deferred.json`，在原 learn.lock 下将本批从 running 变为 `awaiting_review`，不写成功/finished/rc，追加 `ops/codex-ops/inbox-claude.md` 一行后监督退出释放逻辑槽位。锁忙最多再等 2 秒，先落盘的待核记录由下一原调度 tick 在 lost/重试判断前应用。原局号、key、研究/feature/Boss 请求保持冻结，不自动重派；无关新任务继续正常准入。待核不是 #20 可回收终态，实际 pane/工作树仍由原安全门保留。key/模型预检失败仍为退出码 3、零模型启动；wrapper 刷新空输出也写 SHA，显式记录 launcher 的 1→原结果 3 映射，经原 finish 失败/重试策略登记后封存交接。没有身份、绑定或处置权证明的空 tab 仍保留，不能根据零输出猜测可回收。wrapper 只在异常排 `learner-tui-attention`；正常完成不依赖 ops 模型空闲。当前 Herdr 的 pane 若不含 label，须由同一原 host 登记的 pane/workspace 和 tab 唯一标题读回核身份，不伪造 pane.label；旧含 label 的原件仍可读。复盘 label/回执带 `-postmortem` 后缀，batch key 不带。运行中切换开关不热切已有批次。
+
+屏幕文字与原生绑定分开处理：在原轮已接受后，composer 首次显示文字时，最多120秒只读观察同一原轮，较短任务期限/取消优先；文字期间不发prompt、接续、按键或完成。原生外来轮/租约变化仍立即保留；只有屏幕重新明确为空且原生身份/绑定不变，才恢复正常监督。仍有文字或屏幕不可辨至截止则待核，禁止退场。回执和日志保留 `input_hold` 的时间/屏幕SHA及恢复事件，不保存屏幕正文；`result.failure_reason` 保留被 `retirement-unverified` 覆盖前的原因。若启动PID还未捕获birth就已消失，立即按 `startup-process-unavailable` 保留75，不能改称零模型启动。
+
+wrapper 的300秒仅用于可能尚未就绪的核验输入。若原launcher已退出75，原回执为 `needs-attention/retirement-unverified/stopped=false` 且原日志SHA/终态summary75/session相符，`verification-blocked` 仅识别“继续轮询不能补齐处置权”，立即沿原deferral转 `awaiting_review`，原因 `terminal-unverified-receipt`；不补绑定、finish或关tab。分类器同样受剩余300秒预算约束，未知/缺件仍沿原超时兜底；分类后deferral不再次读取可能阻塞的日志。两个原因都不自动重派。此前保留的旧75不因新代码自动改写。
+
+Codex 0.163 的首题在派发提示前，会先写一个 `response_item/message/user`，恰含两段 `input_text`：本 cwd 的 AGENTS 包装和本 cwd 的 environment_context。解析器仅在首个待绑定回合、已核 session/cwd、尚未见 turn_context/派发提示时暂存这一已观察结构；随后的 turn_context 必须匹配原 cwd/turn，再凭原 marker 与完整提示 SHA 接受任务。上下文本身不接受或完成任务；回执以 `native_context_version=1/native_preludes` 留该前缀 SHA/turn/cwd，Python 从原生文件独立重建。原提示及每次明确续接被原生接受时即 fsync 保存 `native-accepted` 和 session/turn/bindings/前缀证明，不等任务结束；该状态不授权 finish 或退场。额外段落、未知 user/event_user、错 cwd/turn、缺上下文确认、重复或出现在提示之后/续轮的同形消息仍按外来输入保留，不能靠后续 marker 清除。活动派发 turn 从 task_started 到原提示接受之间，调用、返回、推理和助手输出一律保留拒绝，不依赖是否已经见到前缀；明确续轮同样检查，已绑定回合的正常模型工作不受影响。resume 的历史 EOF 前缀和 Python 首个绑定 turn 之前的历史仍隔离。首题前缀不豁免任何人工输入、处置权或退出门。
+
+对已经投递、却被旧解析器误判而保留 75 的会话，可先用只读入口对账（在 `agent/` 目录）：`nice -n 19 node --import tsx ../learner/reconcile-tui.ts --receipt <原回执> --native <原生JSONL>`。它仅核完整原 label/pane/cwd/短名与原提交 marker/SHA，从最多 64 MiB 原生快照的完整行重建实际 session/turn/前缀和接受状态，报告来源 SHA 与半行字节数；不会连接 herdr、发提示、改原回执/状态或授权退场/finish。退出 0 仅表示该快照的原任务已被原生接受，不代表完成或已核当前 pane/PID/lease。原回执的 75、空 bindings 与原件照留；原 ops 仍须按原实例/产物/监督/退场门处理，不能将对账报告写回为完成回执或重派已消费的任务。
+
+Codex 0.164 的跨日期环境更新必须在已绑定且仍打开的原 turn 内核验：原生 metadata 的类型只能是 `environments.environment_context`，来源为 `harness` 且非 hook，turn_id、消息 ID、create_time 与原始行一致；普通 `user.text` 即使形似环境上下文也拒绝。正文仅接受日期、原时区和完整 filesystem；日期须符合该行时间戳在原时区的日期，保持或递增一天，时间不倒退。workspace roots、managed/restricted 配置及每条权限须与可信启动上下文逐字相同，turn_context 的 approval/sandbox 也不得变化。重复消息 ID、额外文本/字段、新 turn 或未知格式均不继承例外。传输器持久化独立 `native_environment_version=1` / `native_environment_updates`，Python 从原生记录独立重建并比较全部证明；不会把元数据当作新任务绑定。旧 75 缺此证明的原件只能只读对账，不人工补填为完成。
+
+原 ops 需要持续观察保留的原进程时，可显式使用同一工具的只读监督模式：在上述 `--receipt` / `--native` 后加 `--watch-state <原learn.json> --batch <原批次key> --output <全新路径.observation.json> --timeout-seconds <1至3600>`。它仅对原生、回执及原登记做只读重建，并经 Herdr `pane get` / `agent get` / `pane process-info` 核原 pane/tab/terminal/workspace、短名/cwd、前台 PID/birth；来源回执 SHA、登记快照或原生既有字节变化就保留待核。只写新的 0600 观察产物，既有输出路径拒绝覆盖；不发 prompt/按键、不改 canonical/旧回执，不重开模型或替换原 supervisor。`completed-observed`/退出0只证明本次观察的原轮完成及身份核验，不授予 finish/retirement，也不撤销原 rc75。原 PID 已退、登记已交他人、未知或超时均按75交原 ops。实际恢复完成事务和回收仍须原 supervisor/产物合同，不把观察文件写回为旧完成回执。
+
+**同会话完成恢复**仅支持已原生完成、旧监督已退出的复盘和经验更新批：`nice -n 19 python3 ops/learner_tui.py recover-completed ROOT DIR BATCH ORIGINAL_RECEIPT_SHA256` 默认只读预检，不授权退场。ops 在部署核同后明确加 `--apply` 才登记新的恢复监督事务。它核完整原生绑定/环境/成功完成，原 PID/birth、短名、pane 与空 composer；只对确已完成的原 TUI 发送经过逐次复核的 Ctrl-C，不发任务、不重启模型或关 tab。原监督仍活着、人工/排队输入、身份变化、原生追加不明内容、回执不确定、锁忙或十秒退场预算耗尽均拒绝。
+
+恢复入口归主检出运维运行根所有。上例必须从原主运行根执行，或用该根下 `ops/learner_tui.py` 的绝对路径；`ROOT` 为同一主运行根，`DIR` 为其原 `ops/codex-ops` 实例目录，批次登记、原输出和原生会话路径保持原绑定。不要把 `ROOT` 换成 live、开发树或另一实例，也不要用主目录的依赖路径给 live 入口补导入。`--apply` 所需的 `issue_session.py`、`issue_session_support.py`，同根的 `codex-ops-learn.py` 完成链及其依赖，以及后续 `learner_tabs.py` 原退场链，都在主检出核部署与 SHA；恢复子进程以同一 `ROOT` 为 cwd，并显式传同一 `CODEX_OPS_ROOT` / `CODEX_OPS_DIR`。live 中的游戏代码另沿原发布锁和自然边界部署；仅运输午夜修复的11叶不会在 live 提供独立恢复入口，不要求把主目录派单器或退场模块整套复制过去。
+
+默认预检在导入 `issue_session` 前就会返回，因此 rc0 不能证明 apply 依赖齐全。原 ops 在 apply 前须核主运行根源码与已审清单一致、恢复和 finish 的本地模块均可导入，并重新核原两批的只读预检及 fresh 身份。主目录恢复可用、live 游戏补丁已发布、原两批真实恢复和后续自然验收分别留回执；不得合写成“live 恢复链通过”。2026-10-24 的 R422+11叶 Python 导入失败保留原件，采用此主目录部署合同不会追认其成功。
+
+恢复事务先以原 SHA 归档旧75回执、原输出、登记及原生快照，原绑定不变；只有原生实际退出并回到同 pane 的 shell 后才生成带 `recovery` 来源的新完成回执和新监督日志。原输出仅追加经核实的原生最终回报，旧前缀另存；canonical 回执切换到明确的新 producer epoch，旧75原字节保留在归档，不能将其描述为原监督返回成功。新监督仍调用原 `verify`、`finish` 产物审计与 `finished` PID/父进程合同，native rc0不代语义done；原失败/空修复验收不放宽。之后由原 #20 门核新 wrapper 监督实际退出与封存/关 tab，恢复入口不自行 seal 或回收。任何中途不确定都保留恢复 journal/证据并将仍属本恢复监督的批次置待核，不盲目重试；已经退场或发布的阶段不回写成未发生。不能对保留了未完成恢复事务的批次重复 `--apply`。
+
+恢复登记前会预先写入带原恢复监督 PID/birth 的存活保护记录；监督存活时原调度器跳过它，监督被杀或退出且登记仍未完成时，在 lost/重试之前沿原 deferral 门转待核并发 recovery attention。旧 deferral 记录不覆盖，任务/局号与外部学习绑定完整保留；不会把中断的恢复自动重派为新模型任务。
+
+容量/限流/断流等报错空闲沿 #20 的方式接续：只在原生接受的同一批、同一原会话、实际 idle/done 且输入框空、原租约仍有效时，十分钟退避后发送“沿原任务接着做”；不重启、不换账号/线程，不重送原完整任务。即使失败回合缺少结束行，也不会把它算完成；明确报错空闲可接续。连续三次无原生工具进展后再观察完整退避，通知原 ops/Roy 并停自动提醒，保留原任务期限；人工接续有进展可恢复。发送回执不确定时只等匹配的原生用户消息核实，未核实不重发。注意通知排队不代表已送达 Roy。原超时和失败分类继续，所有退出原因都走同一处置权检查，每次 Esc/Ctrl-C 前重读；草稿、未知屏幕、前台变化、租约丢失或启动回执不确定即停止自动退出，返回 75，保留原监管租约与现场。退出按键回执不确定时同样保留，不升级为强杀；已核本批进程退出后只读等待 shell 复位。不能核退场时监管进程保留租约等原 ops 核验。
+
+**命名失败后尚未提交的旧 TUI**：若原 launcher 已返回 `75/stopped=false`，原 supervisor 只在等待原 `learner_tui.py verify`，不会因更新源码或手工补名字自动恢复。当前没有接管该在途进程的受控发送入口；`learner/run.ts` 正常入口会创建新的 scratch/TUI，`--resume-thread` 也会启动 TUI，`learner_entry.py` 的重试仅限零输出的特定 import 失败，均不能用来恢复这个旧 pane。必须保留原监督/租约、输出、回执、一次性提示和原生记录，交原 ops 登记恢复待办；不可修改 submitted/bindings、代填完成、重派或仅手工改名后发提示。需要在原进程恢复的工作，应另行实现基于原回执/原 lease/PID birth/提示 SHA 的明确接管入口，连同原输出/summary 与 supervisor 的退出码交接一起验证后才执行；本次短名称修复只适用于后续自然启动，不声称旧批已恢复或完成。
+
+`learner-log-tab` 遇到新批交互回执时返回已经核实的 TUI tab，不另开日志 tab；旧在途 headless 批次仍可用原只读镜像，不重启或迁移。herdr 不可用且尚未提交模型命令时，学习者退回原 setsid；忙碌身份冲突不降级另起模型。autoplay/ops 的既有 fallback 不变。开发固定测试的 `LEARNER_CMD` 仍走通用命令 pane，不能当作真实 TUI 验收。
 **ops TUI**：第一轮（建会话）仍走 exec。之后每次叫醒：`herdr agent start ops --kind codex --pane <label ops 的 pane> -- resume <同样的 -c / 权限配置 / 模型 / 强度 / --disable …> --no-daemon <会话 id>`（lib.ts `interactiveArgs`；TUI 不接受 `--json`、`--ignore-user-config`、`--ignore-rules`，其余全收，2026-10-05 实测 codex 0.160）。TUI 常驻；参数变了（例如磁盘上多了一个 key 文件、强度改了）且空闲时重启。一次叫醒（herdr.ts `herdrWake`）：
 1. 等就绪：herdr 状态 idle/done（unknown 时看会话文件）、输入框空（ansi 读屏：占位符是暗色）、会话文件里没有没结束的 turn。最多等 10 分钟（CODEX_OPS_HERDR_READY_MIN），不就绪 → exit 75「延后」：事件留在队列，不算失败，下个 tick 再来。blocked（对话框）也延后，调度器不替人回答。
 2. `herdr agent prompt ops "<事件>"`，broker 照常在叫醒期间运行。

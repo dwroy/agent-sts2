@@ -1,0 +1,17 @@
+test_empty_fix_audit_stays_failed_while_native_completion_is_recorded (ops.tests.test_learner_wrapper_completion.WrapperCompletion.test_empty_fix_audit_stays_failed_while_native_completion_is_recorded) ... ERROR
+
+======================================================================
+ERROR: test_empty_fix_audit_stays_failed_while_native_completion_is_recorded (ops.tests.test_learner_wrapper_completion.WrapperCompletion.test_empty_fix_audit_stays_failed_while_native_completion_is_recorded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/ops/tests/test_learner_wrapper_completion.py", line 164, in test_empty_fix_audit_stays_failed_while_native_completion_is_recorded
+    tui.finished(state, self.batch, self.receipt, output, "0", str(os.getpid()))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/.artifacts/issue36-semantic-terminal/before.py", line 239, in finished
+    raise ValueError("original terminal batch or supervisor authority is missing")
+ValueError: original terminal batch or supervisor authority is missing
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (errors=1)

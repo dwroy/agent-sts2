@@ -1,0 +1,40 @@
+{
+  "tsc": {
+    "exit": 0,
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+  },
+  "directed": {
+    "exit": 0,
+    "files": 4,
+    "cases": 183,
+    "command": "node node_modules/vitest/vitest.mjs run tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism"
+  },
+  "baseline": {
+    "source": "8b15bae4eb8fb5fea0c75b6e8b09accf9b843031:learner/lib/herdr.ts",
+    "exit": 1,
+    "new_regressions_failed": 6,
+    "filter": "delayed native acceptance after prompt delivery",
+    "note": "The two pending lease/pane checks were added after this negative control."
+  },
+  "full_run": false,
+  "models_started": 0,
+  "live_operations": false,
+  "logs": {
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "directed.log": {
+      "bytes": 264,
+      "sha256": "5c3e74c461f2d20f4901ba87602c8f1b34b186e5e5af3eecc504e75c75e36cee"
+    },
+    "baseline.log": {
+      "bytes": 5571,
+      "sha256": "b7ca0c8e2017ef5ca495d3ee1339309c6bfcb0c56b1461465cf56ba1f173102e"
+    },
+    "replay-cross.log": {
+      "bytes": 90,
+      "sha256": "d887c4ab33d70c90ffcad003809ff31941d16a98cd55fb6859a9d42329e3acdd"
+    }
+  }
+}

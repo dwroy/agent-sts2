@@ -1,0 +1,41 @@
+EEF
+======================================================================
+ERROR: test_logdb_sync_covers_separate_live_and_ops_databases (__main__.PipelineTest.test_logdb_sync_covers_separate_live_and_ops_databases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-logdb-periodic-20261023/knowledge/builders/test_refresh_pipeline.py", line 241, in test_logdb_sync_covers_separate_live_and_ops_databases
+    steps = driver.logdb_sync_steps(self.root)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'refresh_driver' has no attribute 'logdb_sync_steps'
+
+======================================================================
+ERROR: test_logdb_sync_deduplicates_same_or_shared_database (__main__.PipelineTest.test_logdb_sync_deduplicates_same_or_shared_database)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-logdb-periodic-20261023/knowledge/builders/test_refresh_pipeline.py", line 252, in test_logdb_sync_deduplicates_same_or_shared_database
+    self.assertEqual(len(driver.logdb_sync_steps(self.root)), 1)
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'refresh_driver' has no attribute 'logdb_sync_steps'
+
+======================================================================
+FAIL: test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry (__main__.PipelineTest.test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-logdb-periodic-20261023/knowledge/builders/test_refresh_pipeline.py", line 273, in test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry
+    self.assertEqual([n for n in names if n.startswith('logdb-sync')],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     ['logdb-sync', 'logdb-sync-ops-root'])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['logdb-sync'] != ['logdb-sync', 'logdb-sync-ops-root']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'logdb-sync-ops-root'
+
+- ['logdb-sync']
++ ['logdb-sync', 'logdb-sync-ops-root']
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+FAILED (failures=1, errors=2)

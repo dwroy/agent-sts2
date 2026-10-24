@@ -62,3 +62,8 @@
 - **学出来的 vs 预训练的**：`prior` 是 `yes` 的条目算预训练带来的；`no` / `partly` 而后 `shipped` 的算学出来的。
 - **证据链**：每个 `shipped` 条目都能从 `evidence` 的局号 → 复盘小节（`where.lessons`）→ 经验条目或提案（`where.experience` / `proposal`）→ 提交（`commits`）→ eval 版本（`version`）→ 之后的局（`effect`）。
 - **学习曲线**：`paper/data/learning-curve-<角色>.csv`，每个进阶一行：局数、第一次尝试赢、SL 后赢、平均层数、这一级里发现的条目、这一级里上线的条目、老错重犯次数（eval/learning-curve.py 的说明）。
+
+
+## 外部聚合证据（#42）
+
+`learner/ledger.py` 支持协议第9节的 `external_aggregate`，精确对象与字段见 [策略合同](../../../docs/brain-strategies.md#外部聚合证据42)。纯外部条目的 first_run/asc/prior_runs 省略，不能虚构局号/层数；外部进阶写 filters，confidence≤0.49。自有条目沿原要求。混合条目 evidence_status=aligned/conflict/unassessed；明确反证强制 conflict。update 只追加 evidence，已有反证仍参与校验；新增自有局同时登记真实 first_run/asc。show/find --json 显示 evidence_summary，自有独立局与每份外部分母分账，外部不计本系统 repeat 或验证。

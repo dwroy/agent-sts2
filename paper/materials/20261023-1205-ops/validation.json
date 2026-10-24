@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-23T12:07:36+08:00",
+  "batches": [
+    "20261023-110000-s2-strategy-proposal",
+    "20261023-111302"
+  ],
+  "report_sha_verified": true,
+  "no_source_eligibility_verified": true,
+  "current_ledger_check": {
+    "problems": 0,
+    "items": 575
+  },
+  "postmortem_five_lessons_and_three_proposals_already_in_HEAD": "6635f1cf814193d947d37f9506459746e616a91c",
+  "dataset": {
+    "attempts": 1,
+    "shared_log": "ops/codex-ops/ordinary-close/20261023-110000-s2-strategy-proposal.dataset.log",
+    "sha256": "67274161ffdf08e1064e516809da60635fd062a4155c77692aa197618ec1d86c",
+    "rc": 0,
+    "rc_basis": "原ordinary_close只在dataset returncode=0后进入本次失败的controlled_commit；原日志完整收尾。",
+    "repeated": false
+  },
+  "foreign_delta_excluded": {
+    "ledger_rows": 30,
+    "proposal_rows": 10,
+    "owner_batch": "20261023-114052-s2-strategy-proposal"
+  },
+  "source_merge": false
+}

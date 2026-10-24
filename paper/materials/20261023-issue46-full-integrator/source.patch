@@ -1,0 +1,400 @@
+diff --git a/agent/tests/proposal-recheck.test.ts b/agent/tests/proposal-recheck.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..96532dd53f7b4d3069230eee10bc91ff12476450
+--- /dev/null
++++ b/agent/tests/proposal-recheck.test.ts
+@@ -0,0 +1,10 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("batches waiting proposals before allocation while retaining independent writer ownership", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_proposal_recheck.py"], {
++    encoding: "utf8", timeout: 30_000,
++  });
++  expect(result.status, result.stderr).toBe(0);
++  expect(result.stderr).toContain("Ran 10 tests");
++});
+diff --git a/docs/learner-retention.md b/docs/learner-retention.md
+index 885dec777f3fac03d41653bef11cdb91367f8679..c860841f79ec8d4fc10b70e9819d953a808d9b6b 100644
+--- a/docs/learner-retention.md
++++ b/docs/learner-retention.md
+@@ -41,6 +41,23 @@ nice -n 19 python3 ops/worktree_retention.py restore --workspace <工作树名>
+ 
+ ## 新工作树的分配
+ 
++### 等待证据的提案先聚合，再分配（#46）
++
++普通策略提案及二组仍各用独立工作树、原批次 scratch 和租约。自动重审 `waiting` 提案时，每个角色在原 `learn.lock` 内登记一个复核轮次：相较上轮派发时原 `finished_count` 计数新增 10 局，或已过 6 小时，才准入下一轮；每轮最多两批、每批仍最多 10 个提案。每项还须满足原 `count > seen_runs` 条件，无新局不能仅靠时钟反复派发。按最后处置时间从旧到新轮转，保持失败候选与历史处置。首次安装无轮次记录时允许一轮，启动成功取得 PID 后才消耗名额；后续启动或模型失败保留原失败及重试规则，并占用该轮名额。
++
++新 `pending` 提案、补链、显式 ops 请求、原线程接续、经验更新、修复、复盘与专门学习不经过这个等待门。两组不混用树，不能以“上次无源码”推定本次只读。原门已到但槽位忙或原重试门未到时不消耗新轮次；计数或时钟倒退保留准入。等待轮次保存在原 `learn.json.proposal_rechecks.<character>`，不修改提案账本的 waiting/seen_runs，不把延期当完成；复核 eligible 不代表已投递。旧 waiting 积压可能跨日轮转，pending/补链优先也可能继续延后，六小时是下一轮的准入条件，不是单项最长等待时限。
++
++上线和回退由集成员及 ops 沿原队列执行，不由开发树改生产。回退本次 `proposal_dispatch.py` 调度差量即可恢复原逐新局重审，保留轮次记录、原批次与所有候选；未来再次启用会继续读取原水位。此项只改学习调度，不分配游戏发布号、不改游戏知识或出牌行为。方案、固定基线及估算见 [#46 交付](../paper/materials/20261023-issue46-allocation/report.md)。
++
++上线后由 ops 记实际发布时间 T 和实际源码 SHA，再读取 **[T,T+24h)** 的原分配回执，不能用开发固定测试或流量估算代验收：
++
++```bash
++nice -n 19 python3 ops/worktree_allocation_report.py --root "$PWD" \
++  --since '<T，带时区>' --until '<T+24h，带时区>'
++```
++
++工具只读原 `retention/allocations`，按半开时间窗口统计成功分配、失败/在途尝试及类别，已经回收的树仍计入。损坏回执会令 complete=false/退出1，目录缺失不会冒报零。无原分配回执的 legacy checkout、restore 不在此口径，须分开记录。24 小时终局前保持 #46 此验收项开放，记录当日对局量、pending/补链/专题/修复量与等待轮次数；比较策略树和全类别，不能将正常业务停摆当成减少分配的收益。不新增计时器、模型或调度进程。
++
+ 新的普通学习和进阶验收工作树使用 `ops/worktree_checkout.py`，其他新功能和运维工作树也使用同一入口：
+ 
+ ```bash
+diff --git a/ops/proposal_dispatch.py b/ops/proposal_dispatch.py
+index 9dad4f64fa84ee6c7f0898190723f97e6ed6e55c..3eebc4e205a76db8cfe584bc636f5ceac1880999 100644
+--- a/ops/proposal_dispatch.py
++++ b/ops/proposal_dispatch.py
+@@ -1,5 +1,6 @@
+ """Mechanical proposal consumption, audit links, and no-change dispositions."""
+ import importlib.util
++import datetime as dt
+ import hashlib
+ import json
+ import os
+@@ -13,6 +14,49 @@ RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*
+     'agent/vitest*','learner/*.ts','learner/*.py','learner/lib','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
+     'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
+ 
++WAITING_RUNS = 10
++WAITING_SECONDS = 6 * 3600
++WAITING_SLOTS = 2
++
++
++def waiting_round(state, character, count, stamp, now):
++    """Batch repeat reviews before allocating trees; the caller holds learn.lock."""
++    previous = state.get('proposal_rechecks', {}).get(character)
++    if previous is None:
++        return True
++    if (not isinstance(previous, dict) or previous.get('schema') != 1
++            or type(previous.get('finished_runs')) is not int
++            or not isinstance(previous.get('at'), (int, float))
++            or not isinstance(previous.get('round'), str)
++            or not isinstance(previous.get('batches'), list)):
++        raise ValueError('invalid proposal recheck watermark; preserve original state')
++    # Counter or clock rollback must not reopen an already consumed round.
++    if count < previous['finished_runs'] or now < previous['at']:
++        return False
++    if previous['round'] == stamp.removesuffix('-s2'):
++        return len(previous['batches']) < WAITING_SLOTS
++    return count >= previous['finished_runs'] + WAITING_RUNS or now >= previous['at'] + WAITING_SECONDS
++
++
++def record_waiting_round(state, character, count, stamp, now, batch_id):
++    rounds = state.setdefault('proposal_rechecks', {})
++    identity = stamp.removesuffix('-s2')
++    previous = rounds.get(character)
++    if previous is None or previous['round'] != identity:
++        rounds[character] = {'schema': 1, 'round': identity, 'at': now,
++                             'finished_runs': count, 'batches': [batch_id]}
++    else:
++        previous['batches'].append(batch_id)
++
++
++def waiting_age(proposal):
++    """Oldest dispositions go first, so a stable queue prefix cannot starve others."""
++    try:
++        value = dt.datetime.fromisoformat(proposal.get('ts', ''))
++        return value.timestamp() if value.tzinfo is not None else 0
++    except (TypeError, ValueError, OverflowError):
++        return 0
++
+ 
+ def library(scripts):
+     path=Path(scripts).parent/'learner/code_proposals.py'
+@@ -63,15 +107,28 @@ def dispatch_one(state,root,scripts,character,alive,stamp,dispatch_write):
+             claimed.update(batch['proposal_ids'])
+         else:
+             batch.update(state='lost',retry_at=time.time()+3600)
+-    ready=[p for p in items.values() if p.get('character')==character and p.get('target_task')=='strategy-proposal'
+-           and p['id'] not in claimed
+-           and (p.get('state')=='pending' or p.get('state')=='waiting' and count>p.get('seen_runs',count))]
++    candidates=[p for p in items.values() if p.get('character')==character
++                and p.get('target_task')=='strategy-proposal' and p['id'] not in claimed]
++    # New proposals and link repairs keep their existing prompt, priority and retry rules.
++    # Never mix them with a repeat-review round or share a writer checkout.
++    ready=[p for p in candidates if p.get('state')=='pending']
++    repeat = not ready
++    now = time.time()
++    if repeat:
++        ready=sorted((p for p in candidates if p.get('state')=='waiting' and count>p.get('seen_runs',count)),
++                     key=lambda p: (waiting_age(p), p['id']))
++        if ready and not waiting_round(state,character,count,stamp,now):
++            return None
+     if not ready: return None
+     ids=[p['id'] for p in ready[:10]]
+     runs=list(dict.fromkeys(r for p in ready[:10] for r in p['runs']))[:10]
+     key='code-proposals:'+','.join(ids)+':'+str(count)
+     result=dispatch_write(state,root,scripts,'strategy-proposal',character,runs,key,'proposal',alive,stamp)
+-    if result: state['batches'][result[0]]['proposal_ids']=ids
++    if result:
++        state['batches'][result[0]]['proposal_ids']=ids
++        if repeat:
++            record_waiting_round(state,character,count,stamp,now,result[0])
++            state['batches'][result[0]]['proposal_recheck_round']=stamp.removesuffix('-s2')
+     return result
+ 
+ 
+diff --git a/ops/tests/test_proposal_recheck.py b/ops/tests/test_proposal_recheck.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b7ededdc22a900ed17686091fac958a57d7ed8d
+--- /dev/null
++++ b/ops/tests/test_proposal_recheck.py
+@@ -0,0 +1,171 @@
++"""Fixed queue/clock fixtures; never allocate a production tree or start a learner."""
++import copy
++import json
++from pathlib import Path
++import sys
++import tempfile
++from types import SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++import learner_jobs as jobs
++import proposal_dispatch as dispatch
++import worktree_allocation_report as allocations
++
++
++class ProposalRecheck(unittest.TestCase):
++    def setUp(self):
++        self.state = {'batches': {}}
++        self.items = {f'p{i:02}': {'id': f'p{i:02}', 'character': 'silent', 'target_task': 'strategy-proposal',
++                      'state': 'waiting', 'seen_runs': 100, 'runs': ['SILENT000001'],
++                      'ts': '2026-01-01T00:00:00+00:00'} for i in range(40)}
++        self.clock = 100000
++        self.count = 101
++        self.calls = []
++
++    def start(self, argv, *args):
++        self.calls.append(argv)
++        return 100 + len(self.calls), None
++
++    def consume(self, stamp='20261023-010000'):
++        lib = SimpleNamespace(QUEUE='unused', fold=lambda _: self.items)
++        with patch.object(dispatch, 'library', return_value=lib), \
++             patch.object(dispatch, 'finished_count', return_value=self.count), \
++             patch.object(dispatch.time, 'time', return_value=self.clock), \
++             patch.object(jobs, 'available', return_value=True), \
++             patch.object(jobs, 'start_learner', side_effect=self.start):
++            return dispatch.dispatch(self.state, '/fixture', str(Path(jobs.__file__).parent), 'silent',
++                                     lambda pid: True, stamp, jobs.dispatch_write)
++
++    def settle(self):
++        for batch in self.state['batches'].values():
++            if batch['state'] != 'running':
++                continue
++            batch.update(state='done')
++            for ident in batch.get('proposal_ids', []):
++                self.items[ident].update(seen_runs=self.count, ts='2026-01-02T00:00:00+00:00')
++
++    def test_two_slots_keep_disjoint_ids_trees_and_batch_scratch_owners(self):
++        self.consume()
++        first, second = self.state['batches'].values()
++        self.assertFalse(set(first['proposal_ids']) & set(second['proposal_ids']))
++        self.assertNotEqual(first['worktree'], second['worktree'])
++        self.assertTrue(second['worktree'].endswith('-s2'))
++        self.assertEqual(len(self.state['proposal_rechecks']['silent']['batches']), 2)
++        before = copy.deepcopy(self.state)
++        self.assertIsNone(self.consume())
++        self.assertEqual(self.state, before)
++
++    def test_one_new_run_does_not_allocate_but_ten_open_one_round(self):
++        self.consume()
++        self.settle()
++        before = copy.deepcopy(self.state)
++        self.count += 1
++        self.clock += 1800
++        self.assertIsNone(self.consume('20261023-013000'))
++        self.assertEqual(self.state, before)
++        self.count = 111
++        self.consume('20261023-020000')
++        self.assertEqual(len(self.calls), 4)
++
++    def test_time_boundary_and_oldest_first_prevent_starvation(self):
++        self.consume()
++        self.settle()
++        self.count += 1
++        self.clock += dispatch.WAITING_SECONDS - 1
++        self.assertIsNone(self.consume('20261023-065959'))
++        self.clock += 1
++        self.consume('20261023-070000')
++        new = list(self.state['batches'].values())[2:]
++        self.assertEqual(set(p for b in new for p in b['proposal_ids']), set(list(self.items)[20:]))
++
++    def test_time_alone_cannot_repeat_identical_evidence(self):
++        self.items = dict(list(self.items.items())[:20])
++        self.consume()
++        self.settle()
++        self.clock += dispatch.WAITING_SECONDS
++        self.assertIsNone(self.consume('20261023-070000'))
++        self.assertEqual(len(self.calls), 2)
++
++    def test_new_pending_and_link_repairs_bypass_waiting_gate(self):
++        self.consume()
++        self.settle()
++        watermark = copy.deepcopy(self.state['proposal_rechecks'])
++        self.items['p39']['state'] = 'pending'
++        self.state['proposal_repairs'] = {'repair': {'character': 'silent', 'state': 'pending',
++                                                    'runs': ['SILENT000001']}}
++        self.consume('20261023-013000')
++        new = list(self.state['batches'].values())[2:]
++        self.assertEqual(new[0]['proposal_repair'], 'repair')
++        self.assertEqual(new[1]['proposal_ids'], ['p39'])
++        self.assertEqual(self.state['proposal_rechecks'], watermark)
++
++    def test_busy_or_failed_dispatch_does_not_consume_round(self):
++        with patch.object(jobs, 'busy', return_value=True):
++            self.assertIsNone(self.consume())
++        self.assertNotIn('proposal_rechecks', self.state)
++        self.consume('20261023-013000')
++        self.assertEqual(len(self.calls), 2)
++
++    def test_foreign_character_claims_and_failed_candidates_are_preserved(self):
++        self.items['foreign'] = dict(self.items['p00'], id='foreign', character='regent', state='pending')
++        old = {'task': 'strategy-proposal', 'character': 'silent', 'state': 'failed', 'pid': 77,
++               'proposal_ids': ['p00'], 'worktree': '/failed-candidate', 'key': 'old'}
++        active = dict(old, state='running', pid=78, worktree='/active-candidate')
++        self.state['batches'].update(failed=copy.deepcopy(old), active=copy.deepcopy(active))
++        self.consume()
++        self.assertEqual(self.state['batches']['failed'], old)
++        self.assertEqual(self.state['batches']['active'], active)
++        new = list(self.state['batches'].values())[2:]
++        self.assertEqual(len(new), 1)
++        self.assertNotIn('p00', new[0]['proposal_ids'])
++        self.assertNotIn('foreign', new[0]['proposal_ids'])
++
++    def test_clock_counter_rollback_and_corrupt_watermark_do_not_reopen(self):
++        self.consume()
++        self.settle()
++        self.clock -= 1
++        self.count += dispatch.WAITING_RUNS
++        self.assertIsNone(self.consume('20261023-020000'))
++        self.clock += dispatch.WAITING_SECONDS
++        self.count = 100
++        self.assertIsNone(self.consume('20261023-020000'))
++        self.state['proposal_rechecks']['silent']['at'] = 'corrupt'
++        self.count = 102
++        with self.assertRaisesRegex(ValueError, 'watermark'):
++            self.consume('20261023-020000')
++
++
++class AllocationReport(unittest.TestCase):
++    def test_fixed_window_counts_allocated_attempts_and_categories_without_mutation(self):
++        with tempfile.TemporaryDirectory() as temp:
++            directory = Path(temp)
++            receipts = directory / 'retention/allocations'
++            receipts.mkdir(parents=True)
++            for name, at, state in (('codex-strategy-silent-s2', '2026-01-01T08:00:00+08:00', 'allocated'),
++                                    ('codex-fix-silent-fixed', '2026-01-01T01:00:00Z', 'allocation_failed'),
++                                    ('issue-46-task', '2026-01-02T00:00:00Z', 'allocated')):
++                (receipts / (name + '.json')).write_text(json.dumps({'schema': 'workspace-allocation-v1',
++                    'worktree': '/fixture/' + name, 'at': at, 'state': state}))
++            before = {p.name: p.read_bytes() for p in receipts.iterdir()}
++            result = allocations.report(directory, allocations.timestamp('2026-01-01T00:00:00Z'),
++                                         allocations.timestamp('2026-01-02T00:00:00Z'))
++            self.assertEqual((result['hours'], result['allocated'], result['attempts']), (24, 1, 2))
++            self.assertEqual(result['by_category'], {'strategy-proposal': 1})
++            self.assertTrue(result['complete'])
++            self.assertEqual(before, {p.name: p.read_bytes() for p in receipts.iterdir()})
++            (receipts / 'corrupt.json').write_text('{')
++            self.assertFalse(allocations.report(directory, allocations.timestamp('2026-01-01T00:00:00Z'),
++                                                allocations.timestamp('2026-01-02T00:00:00Z'))['complete'])
++
++    def test_missing_receipts_and_ambiguous_timezone_cannot_claim_zero(self):
++        with self.assertRaises(ValueError):
++            allocations.timestamp('2026-01-01T00:00:00')
++        with tempfile.TemporaryDirectory() as temp, self.assertRaises(ValueError):
++            allocations.report(Path(temp), allocations.timestamp('2026-01-01T00:00:00Z'),
++                               allocations.timestamp('2026-01-02T00:00:00Z'))
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/ops/worktree_allocation_report.py b/ops/worktree_allocation_report.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..9859b734040d2521e95518d43477d3f6a63d7738
+--- /dev/null
++++ b/ops/worktree_allocation_report.py
+@@ -0,0 +1,79 @@
++#!/usr/bin/env python3
++"""Read allocation receipts in an explicit time window without changing runtime state."""
++import argparse
++from collections import Counter
++import datetime as dt
++import json
++from pathlib import Path
++
++
++def timestamp(value):
++    parsed = dt.datetime.fromisoformat(value)
++    if parsed.tzinfo is None:
++        raise ValueError('timestamp must include a timezone')
++    return parsed.astimezone(dt.timezone.utc)
++
++
++def category(name):
++    for prefix, kind in (('codex-strategy-', 'strategy-proposal'), ('codex-fix-', 'fix-batch'),
++                         ('ascension-audit-', 'ascension-audit'), ('boss-sim-', 'boss-sim'),
++                         ('issue-', 'issue'), ('ops-', 'ops'), ('integrator', 'integrator')):
++        if name.startswith(prefix):
++            return kind
++    return 'other'
++
++
++def report(directory, since, until):
++    if since >= until:
++        raise ValueError('since must precede until')
++    allocations = directory / 'retention/allocations'
++    if not allocations.is_dir() or allocations.is_symlink():
++        raise ValueError('original allocation receipt directory is unavailable')
++    rows, errors = [], []
++    for path in sorted(allocations.glob('*.json')):
++        try:
++            if path.is_symlink():
++                raise ValueError('linked allocation receipt retained')
++            item = json.loads(path.read_text())
++            at = timestamp(item['at'])
++            if (item.get('schema') != 'workspace-allocation-v1'
++                    or item.get('state') not in ('allocating', 'allocated', 'allocation_failed')
++                    or not isinstance(item.get('worktree'), str)
++                    or Path(item['worktree']).name != path.stem):
++                raise ValueError('unrecognized allocation receipt')
++            if since <= at < until:
++                rows.append({'workspace': path.stem, 'at': at.isoformat(), 'category': category(path.stem),
++                             'state': item['state'], 'base': item.get('base'),
++                             'failed_checkout_reclaimed': item.get('failed_checkout_reclaimed')})
++        except (OSError, TypeError, ValueError, KeyError):
++            # Do not expose raw receipts, exception text or private runtime paths.
++            errors.append(path.name)
++    allocated = [row for row in rows if row['state'] == 'allocated']
++    return {'schema': 'worktree-allocation-report-v1', 'since': since.isoformat(), 'until': until.isoformat(),
++            'hours': (until - since).total_seconds() / 3600,
++            'complete': not errors, 'invalid_receipts': errors, 'attempts': len(rows),
++            'allocated': len(allocated), 'by_category': dict(sorted(Counter(row['category'] for row in allocated).items())),
++            'by_state': dict(sorted(Counter(row['state'] for row in rows).items())), 'receipts': rows,
++            'scope': 'original allocator receipts; restored checkouts and legacy unreceipted trees excluded'}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
++    parser.add_argument('--state-dir', type=Path)
++    parser.add_argument('--since', required=True, type=timestamp)
++    parser.add_argument('--until', type=timestamp, default=dt.datetime.now(dt.timezone.utc))
++    args = parser.parse_args()
++    root = args.root.resolve()
++    directory = args.state_dir or root / 'ops/codex-ops'
++    try:
++        result = report(directory, args.since, args.until)
++        print(json.dumps(result, ensure_ascii=False, indent=2))
++        return 0 if result['complete'] else 1
++    except (OSError, ValueError) as error:
++        print(json.dumps({'complete': False, 'error': str(error)}))
++        return 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

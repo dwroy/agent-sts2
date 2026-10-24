@@ -1,0 +1,152 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-50-task/agent
+
+ ✓ tests/brain-agent-mode.test.ts > exposes only fixed knowledge selectors, keeps external provenance, and returns empty optional libraries 13ms
+ ✓ tests/brain-agent-mode.test.ts > serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 47ms
+ ✓ tests/brain-agent-mode.test.ts > records the external statistics single-source envelope without rewriting the tool output 1ms
+ ✓ tests/brain-agent-mode.test.ts > mounts all six #26 tools through the same MCP and retains controller role/ascension identity 108ms
+ ✓ tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after calls limit 34ms
+ ✓ tests/brain-agent-mode.test.ts > uses the same engine and exact acquired results to answer after time limit 14ms
+ ✓ tests/brain-agent-mode.test.ts > honors a configured answer reserve larger than half the question budget 24ms
+ ✓ tests/brain-agent-mode.test.ts > production removes prefixes and inline open-book/strategies while retaining state and projections 7ms
+ ✓ tests/brain-agent-mode.test.ts > dsh patches disable every inherited plugin, select Nova credentials/max and expose only the shared MCP 2ms
+ ✓ tests/brain-agent-mode.test.ts > runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 98ms
+ ✓ tests/brain-agent-mode.test.ts > does not renew the tool allowance when the same question recovers after an engine error 10ms
+ ✓ tests/brain-agent-mode.test.ts > a previous question's delayed limit callback cannot cancel the next question 68ms
+ ✓ tests/brain-agent-mode.test.ts > forwards live dsh text only to the existing parent stream observer 5ms
+ ✓ tests/brain-agent-mode.test.ts > freezes codex/high with its configured L2 allowance of 300000 ms 6ms
+ ✓ tests/brain-agent-mode.test.ts > freezes deepseek/max with its configured L2 allowance of 900000 ms 1ms
+ ✓ tests/brain-reflex-knowledge.test.ts > queries actual reflex.json entries and never labels experience queries as rk 13ms
+ ✓ tests/brain-reflex-knowledge.test.ts > gives rk identities and kb_reflex parameters without exposing content or claiming predicate applicability 9ms
+ ✓ tests/brain-reflex-knowledge.test.ts > retains rk cues even when the optional act-threat database is malformed 9ms
+ ✓ tests/brain-reflex-knowledge.test.ts > retains exact file and entry versions, confidence, evidence and source-experience links without writing 7ms
+ ✓ tests/brain-reflex-knowledge.test.ts > distinguishes missing, empty, no match, unsupported ascension and malformed reflex knowledge 10ms
+ ✓ tests/brain-reflex-knowledge.test.ts > keeps strict reference validation and includes the actual vocabulary input SHA 10ms
+ ✓ tests/brain-reflex-knowledge.test.ts > rejects cross-role headers, scopes, duplicates, traversal inputs and symlink escapes 10ms
+ ✓ tests/brain-reflex-knowledge.test.ts > reloads changed reflex bytes and keeps all other roles' existing tool surface unchanged 8ms
+ ✓ tests/brain-reflex-knowledge.test.ts > bounds returned entries and cue identities while keeping text-filtered Boss hints consistent 11ms
+ ✓ tests/brain-reflex-knowledge.test.ts > serves rk through the production MCP with the same provenance and unchanged combat-off consumer 39ms
+ ✓ tests/brain-reflex-knowledge.test.ts > uses the same engine's answer reserve after a real rk lookup consumes the call allowance 45ms
+ ✓ tests/brain-reflex-knowledge.test.ts > recomputes historical rk rates only from kb_reflex and keeps experience in a separate denominator 1ms
+ ✓ tests/brain-reflex-knowledge.test.ts > persists actual reflex IDs and its exact sources in the brain log on success and failure 7ms
+ ✓ tests/endgame-plan.test.ts > scopes the base goal from act one to Silent A10 and keeps other characters and levels byte equivalent 5ms
+ ✓ tests/endgame-plan.test.ts > updates reward/card with no extra decision 1ms
+ ✓ tests/endgame-plan.test.ts > updates reward/skip with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates shop/plan with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates rest/choose with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates selection/deck with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates event/act-plan with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates bundle/choose with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates capstone/choose with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates map/act-start with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates map/route-plan with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > updates run-plan with no extra decision 0ms
+ ✓ tests/endgame-plan.test.ts > offers checkpoints only on pre-boss construction questions in each act 3ms
+ ✓ tests/endgame-plan.test.ts > requires bounded nonempty plan fields and a checkpoint answer only when it was asked 5ms
+ ✓ tests/endgame-plan.test.ts > persists the full hypothesis and refuses a future-floor plan when restoring after rollback 30ms
+ ✓ tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after restart 2ms
+ ✓ tests/endgame-plan.test.ts > keeps a future-only log unknown across repeated reads after cached rollback 2ms
+ ✓ tests/endgame-plan.test.ts > restores an available past plan after rollback and preserves the legacy unbounded default 2ms
+ ✓ tests/endgame-plan.test.ts > codex, F1, normal: construction answers update the next question, survive restart and keep #35 / #49 1009ms
+ ✓ tests/endgame-plan.test.ts > codex, F31, normal: construction answers update the next question, survive restart and keep #35 / #49 829ms
+ ✓ tests/endgame-plan.test.ts > codex, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49 821ms
+ ✓ tests/endgame-plan.test.ts > codex, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49 798ms
+ ✓ tests/endgame-plan.test.ts > codex, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49 863ms
+ ✓ tests/endgame-plan.test.ts > deepseek, F1, normal: construction answers update the next question, survive restart and keep #35 / #49 822ms
+ ✓ tests/endgame-plan.test.ts > deepseek, F31, normal: construction answers update the next question, survive restart and keep #35 / #49 806ms
+ ✓ tests/endgame-plan.test.ts > deepseek, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49 806ms
+ ✓ tests/endgame-plan.test.ts > deepseek, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49 819ms
+ ✓ tests/endgame-plan.test.ts > deepseek, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49 950ms
+ ✓ tests/endgame-plan.test.ts > reports actual prior plans and accepted checkpoint updates per engine and act without treating empty samples as passed 2ms
+ ✓ tests/run-plan-merge.test.ts > RUN_PLAN_MERGE config > is on by default; off when set; an unreadable value warns and stays on 4ms
+ ✓ tests/run-plan-merge.test.ts > RUN_PLAN_MERGE config > the separate call's task is byte for byte what it was; the merged note shares its brief and format 1ms
+ ✓ tests/run-plan-merge.test.ts > when a run plan is due, and what carries it > the map keeps runPlanTrigger's checkpoints: due is pending, not asked; nothing due clears it 3ms
+ ✓ tests/run-plan-merge.test.ts > when a run plan is due, and what carries it > asked on its own after 2 floors with no question carrying it, or right away when the act boss is next 1ms
+ ✓ tests/run-plan-merge.test.ts > when a run plan is due, and what carries it > a question carries what the map left pending; the run start rides on the run's first question (before any map) 1ms
+ ✓ tests/run-plan-merge.test.ts > when a run plan is due, and what carries it > an answer's run_plan is used when it is a plan 1ms
+ ✓ tests/run-plan-merge.test.ts > the answer format and the call > a question carrying the run plan gets the run_plan field (never a problem); without it the spec is as before 3ms
+ ✓ tests/run-plan-merge.test.ts > the answer format and the call > its thinking effort is the run plan's when that is higher (a card reward thinks at high, the run plan at max) 1ms
+ ✓ tests/run-plan-merge.test.ts > the answer format and the call > a run plan sent as its own object after the answer joins the answer; a reply without one is read as before 1ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > one call: the Ancient's option, the act's route and the run plan; all three stored 819ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it 626ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off 1213ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on 681ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan 607ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > no question at all: asked on its own once the plan has waited the floors 209ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > the act boss next: asked on its own at once (the fight comes before any question) 101ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > the run start rides on the run's first question (no plan yet) 542ms
+ ✓ tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > the real client reads the run plan from the answer, or from its own object after it 1206ms
+ ✓ tests/run-plan-merge.test.ts > card reward in the loop: a review rides on it with the route review > the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan 294ms
+ ✓ tests/reward-external-stats.test.ts > adds exact mapped IDs and optional card/skip navigation without querying or inventing a skip ID 16ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping NOT_MAPPED 3ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping ACTSFROMTHEPAST-PARASITE 3ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping  2ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping 蛇咬 3ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping SNAKEBITE+ 3ms
+ ✓ tests/reward-external-stats.test.ts > omits only the ID for missing mapping snakebite 3ms
+ ✓ tests/reward-external-stats.test.ts > preserves all original facts, order, fallback and resolved take/skip actions 8ms
+ ✓ tests/reward-external-stats.test.ts > bounds ID plus navigation bytes even on unusually large repeated offers 3ms
+ ✓ tests/reward-external-stats.test.ts > keeps IRONCLAD reward requests byte-equivalent 4ms
+ ✓ tests/reward-external-stats.test.ts > keeps REGENT reward requests byte-equivalent 3ms
+ ✓ tests/reward-external-stats.test.ts > keeps DEFECT reward requests byte-equivalent 3ms
+ ✓ tests/reward-external-stats.test.ts > keeps Silent A9 requests byte-equivalent 4ms
+ ✓ tests/reward-external-stats.test.ts > keeps Silent A11 requests byte-equivalent 3ms
+ ✓ tests/reward-external-stats.test.ts > keeps the Jev reward path and other screens outside the navigation helper 2ms
+ ✓ tests/construction-log-loop.test.ts > codex: two construction decisions make two requests and persist short reasons 300ms
+ ✓ tests/construction-log-loop.test.ts > deepseek: two construction decisions make two requests and persist short reasons 145ms
+ ✓ tests/brain-query-guidance.test.ts > reward/card gives bounded identities and real call arguments without inline content 21ms
+ ✓ tests/brain-query-guidance.test.ts > shop/plan gives bounded identities and real call arguments without inline content 9ms
+ ✓ tests/brain-query-guidance.test.ts > rest/plan gives bounded identities and real call arguments without inline content 9ms
+ ✓ tests/brain-query-guidance.test.ts > event/plan gives bounded identities and real call arguments without inline content 10ms
+ ✓ tests/brain-query-guidance.test.ts > event/act-plan gives bounded identities and real call arguments without inline content 10ms
+ ✓ tests/brain-query-guidance.test.ts > map/act-start gives bounded identities and real call arguments without inline content 10ms
+ ✓ tests/brain-query-guidance.test.ts > fight-plan gives bounded identities and real call arguments without inline content 10ms
+ ✓ tests/brain-query-guidance.test.ts > keeps Ironclad and non-target/legacy requests unchanged 7ms
+ ✓ tests/brain-query-guidance.test.ts > keeps tools read-only, reflects library changes and fails closed on bad libraries 15ms
+ ✓ tests/brain-query-guidance.test.ts > uses the live act/boss fallback for fight-plan cues and queries while preserving explicit question facts 8ms
+ ✓ tests/brain-query-guidance.test.ts > bounds cue identities, returns full ids in queries and permits a narrower id lookup 9ms
+ ✓ tests/brain-query-guidance.test.ts > retains public lesson conditions and source roles without reading another character's private file 8ms
+ ✓ tests/brain-query-guidance.test.ts > bounds an oversized strategy provenance envelope without dropping evidence from a returned entry 6ms
+ ✓ tests/brain-query-guidance.test.ts > routes production guidance and records actual query identities in brain logs 18ms
+ ✓ tests/brain-query-guidance.test.ts > separates calls, errors, empty results and identities from tool-looking prose 0ms
+ ✓ tests/brain-query-guidance.test.ts > compares natural before/after cohorts by engine and disjoint question type without inventing missing cells 2ms
+ × tests/check-imports.test.ts > relative imports > all resolve 182ms
+   → expected [ Array(1) ] to deeply equal []
+ ✓ tests/run-plan.test.ts > RUN_PLAN config > is off by default and v1 when set 5ms
+ ✓ tests/run-plan.test.ts > runPlanTrigger > asks at the run start, a new act, a heavy HP loss and every 8 floors 2ms
+ ✓ tests/run-plan.test.ts > parseRunPlan > keeps real card ids, deck-only removals, and valid enums 2ms
+ ✓ tests/run-plan.test.ts > plan weights > rates wanted cards up, avoided cards down, block cards up below the target 0ms
+ ✓ tests/run-plan.test.ts > plan weights > shifts elites and rest sites, never against a low-HP or pre-boss heal 1ms
+ ✓ tests/run-plan.test.ts > plan weights > shows the plan in the run brief 2ms
+ ✓ tests/run-plan.test.ts > run plan log > restores the last plan of this run 2ms
+ ✓ tests/brain-agent-report.test.ts > separates natural completions, fallbacks, text-tool failures and observed tool-free thinking 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tools/issue29-deepseek-stream.test.ts: ../../paper/materials/issue29-brain-speed/results.jsonl",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  1 failed | 117 passed (118)
+   Start at  19:52:25
+   Duration  23.36s (transform 2.83s, setup 896ms, import 4.48s, tests 16.39s, environment 1ms)
+

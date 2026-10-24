@@ -1,0 +1,53 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-miniature-tent-two-rest-options",
+      "version": "2026-10-24-own-rest-route-002",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ]
+      },
+      "strategy": "已持微型帐篷且当前营火仍给出可用的另一个动作时，执行后重新核选项，把回血与具名升级都纳入本火预算。Silent A10、版本unknown：14局70个营火实际完成HEAL与SMITH；70次升级均见牌组升级变化且当步净回血0，70次HEAL均净回22.01（0—50），2次回0；两种先后顺序均已出现。适用：必须核当前遗物、剩余合法选项和目标，不把选完一项当已离火，不承诺可重复同项；含SL/增上限/额外动作混杂，未证最佳顺序或整胜收益。",
+      "source": "own",
+      "confidence": 0.35,
+      "evidence": [
+        {
+          "type": "own",
+          "run": "YF0LXT1QSTGG",
+          "floor": 44,
+          "ref": "logs/decisions.jsonl@686078962+14631;sha256=3636c26eaceb9ae4b337594b056ee052ca19b191103506b0d96fd0508b77d48f",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "YF0LXT1QSTGG",
+          "floor": 47,
+          "ref": "logs/decisions.jsonl@686358970+57938;sha256=b7cbfbb56d08e5a0a9eab158a22a9eb368674282d61179ae1672d9c31d1d8b72",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "audit_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/source-ledger.json#silent-miniature-tent-two-rest-options",
+      "scope_notice": "仅Silent A10；自有游戏版本unknown；当前合同不能强制进阶/遗物/路线备选谓词，正文条件必须人工核。"
+    }
+  ],
+  "candidate_disposition": "update",
+  "merge_target": {
+    "kind": "knowledge",
+    "id": "silent-miniature-tent-two-rest-options",
+    "baseline_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/knowledge/characters/silent/experience.json",
+      "bytes": 352061,
+      "sha256": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2"
+    },
+    "preserve_existing_content_and_evidence": true,
+    "projection_counted_as_separate_knowledge": false
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

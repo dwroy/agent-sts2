@@ -1,60 +1,63 @@
-# codex3-20261017 主 ops 接续
+# 最新更正：开发现在原 pane 交接，集成员当前一步后交接（2026-10-22T18:38:21+08:00）
 
-2026-10-17 23:43:10 CST 原 ops 本轮复盘、唯一论文刷新和记录审计已完成。
+原文 paper/materials/20261022-high40-release-ops/user-correction-verbatim.md 覆盖下方“用完旧号后再重开”“其他角色不热切”的旧调度安排。主管负责现在正常退出开发、在原 pane 切 CODEX_HOME 至 codex3/learner 后重启接续；集成员当前一步结束后由主管同样处理。ops 不代主管信号或重启其他角色，也不等其所有任务完成。
 
-ready_to_drain: true
+已核实际同事务 snapshot 2026-10-22T18:36:57+08:00：原始待排空工作记录0，只额外保留本 ops 唯一821586/start8890034的精确联合检查/发布，ops_idle=false 是本轮仍在写交接。登记开发/集成员不阻塞，无未知旧账号进程等待项；这不等于已核其他角色目标账号或任务完成。原826698/start8899747控制器不重启，目标、两旗及原角色身份策略不改；原检查未重跑。检查和本轮收尾后由标准控制器切两home并正常重启本ops，验证目标新UUID后才释放自有两旗。
 
-这是原 ops 收尾并将在本轮结束后空闲的声明，**不是全部在途已排空或换号完成**。门禁、实际任务清单与控制器就绪/激活仍由原事务按真实进程身份核验。
+ready_to_drain：源session01a1517b-e200-7c52-b463-6ea22220c0a9 / w1H:p8，本轮记录后空闲。原high+#40通过后短锁联合发布、仅解除Roy检查窗口暂停；codex3接管验证complete后沿原broker恢复正常循环及首局high/增量刷新读回的授权不变。失败保留原件/闸，按主管收件箱规则报告，不复跑full、不绕过接管门。原实际快照见 supervisor-restart-snapshot.json；下方历史保留。
 
-原主 ops session：`01a12bec-c83f-7c21-b76f-eb8e5304eb8f`；原 watcher：`01a13dcd-83d4-7c63-b233-f93cf878ecf4`，watcher 不在换号事务中。
+--- 以下历史以本更正及实际终局为准 ---
 
-## 换号控制与隔离
+# 最新原用户指令：联合发布 high+#40，并排除在途开发/集成员（2026-10-22T18:24:16+08:00）
 
-Roy 2026-10-17 23:29 经 Claude 授权原 watcher 执行主线 codex1→codex3。唯一事务 `codex3-20261017`；原控制器已运行，状态/进程盘点以 `ops/codex-ops/llm-switches/codex3-20261017/state.json` 为准。准备、目标 profile、两实际 checkCodex/key 隔离预检及控制器启动原件在 `paper/materials/20261017-codex3-switch/`。不要启动第二控制器，不解除别人拥有的旗，不以 STOP 排空、不杀在途任务、不重启现局。
+优先原文 paper/materials/20261022-high40-release-ops/user-authorization-verbatim.md。此段覆盖下方旧“等所有旧账号引擎”“两项live前不释放Roy暂停”的未完成阶段叙述；恢复仍须核真实终局，不能仅看授权当作已发布。
 
-目标仍为 gpt-6.1-sol / xhigh / default，沿现有普通服务、权限和上下文策略。旧账号的学习线程不能跨号 resume；使用新 UUID 从原任务/WT/输入/缓存/失败记录恢复语义，保存实际新原生首回复证据，不复制凭据或加密 session，不通过改 home 字符串冒迁移完成。codex3 **不适用 R355 codex1 paid-credit 例外**，沿普通额度保护。控制器 complete 只表示控制面接管；真正新 brain/learner 还须沿正常派发留下账号/模型实际消费回执，不能为了证明换号额外开模型或局。
+原#33 high tsc/full6007+2skip0及#40 main候选31265530a/6177+2skip0原件核同。#40已main692242e7/cbbcfd7，legacy/off可独立。原集成员明确这些绿不代表精确live组合；因此只在R411基线构建27叶新精确树9e53f156c3e1662e2ab6cffe667610214b005ca4：原high3、原40的21、必需ops/report_log_cache.py及eval/jsonl_cache.py、原41 fixed-clock测试。没有整包33、35、旧20或whole-main。唯一固定检查/条件发布原生821586/start8890034（wrapper821585，w1H:pA2，nice19），18:21读回tsc0/首次full在途，2487冻结输入。原两个full不重跑，这是一棵新精确树的首次检查；不得启动第二同源full或候选。
 
-Roy23:32明确 regent/sts2-climb-2 不在事务内且保持暂停。`.worktrees/regent-climb` 原 STOP/PAUSE 不清，不恢复 autoplay/play，不改它的账号/home/权限。原 ops 已只读核 PID1843187→1843224→1849145 均属于 regent；主 ops PID922264→922271→922551 中922551是持久工具 host，原 snapshot 把这些都按旧 home 列成 old_account_engine 会阻塞切换。原始盘点及本 ops 实核分别在 switch 目录和 `paper/materials/20261017-2328-ops/ops-drain-scope-readback.json`。这不是已排空，也不能 kill 规避；由原事务 owner 处理 scope/正常 quit 边界，保现有门禁与在途工作。若已有后续修复/控制回执，先读其精确证据，不依据这份较早快照回退。
+唯一运行脚本 .artifacts/ops-high40-release-20261022/check-and-publish-once.py，入口guard check-once.guard 保留；动态终局 paper/materials/20261022-high40-release-ops/checks.json。它在独占WT冻结当前知识、无生产长锁检查，通过且输入前后同后才在原K→L短锁内再核自然无局、Roy STOP所有权、最新catalog/JSON、精确27预像及binding备份/恢复，提交同一live行为、分配统一新release、root/live版本登记与双通知。只读实际live report/driver/helpers导入不发模型或训练。保runtime/全部最新独立知识/Regent标记、#20heavy off；回滚仅27叶至原0cd3629d3，不能回滚新数据/账号。通过后脚本仅释放roy-check-window-20261022-172x及自己核过的Roy STOP，不移换号两旗；失败保Roy STOP并写原事件，禁止重放已经提交过的阶段。publication.json存在时先核实际HEAD和版本，不能盲重发。
 
-## 当前轮实际交付
+换号仍同一codex3-20261022-1610。仅停止确认尚在draining、未activation的自有旧控制器609806/start8127174，其余角色未信号。唯一接续控制器826698/start8899747（wrapper826697，w1H:pA3，nice19）沿原 llm_switch.py/Handoff/adapter 全流程，只加本次明确授权的身份过滤。来源为登记issue角色和sts2-integrator/wJ:p1HD的原foreground PID/启动时间真实祖先；5项固定边界检查通过，27条old_account_engine均识别为保留角色，从阻塞改为有出处的excluded，原账号/TUI不变。未知、学习/play/assist不豁免，PID复用拒绝。当前只等本ops自己的821586组合检查/发布工作及原ops空闲，不再等开发TUI退出。policy/测试/替换证明见本轮目录，runtime .artifacts/ops-high40-release-20261022/drain-role-policy.json；别重开控制器或改本事务target/flags。文档补记当前特定授权例外。
 
-23:28事件：原 `20261017-231301` / `U1JMSKC80LQE` 复盘 done0，missing/audit 空，无新纯 bug。七旧经验获支持（共8个证据项），14根 CLI 为7证据更新+7提案链接；两原 pending 提案 `silent-proposal-f65a1342259d798a`、`silent-proposal-27b7729ab6aaac4d` 留原策略槽，不冒源码实现/发布。273条原行、五场资源窗及原追加正文/前缀 SHA 已核；本局 Silent A10/F6败，六原脑请求均 Sol6.1/xhigh（五接受一预算无答）。原 dirty 知识、替线整战、未到营火/Boss及实际费用未知，预算出口是既有 L2_deadline_existing_L1。ops 初始误以每经验只能一个本局证据的辅助 assert1、核实 silent-0079 有两个 support 后更正0留证，不改学习者原件。
+ready_to_drain 原source ops session01a1517b-e200-7c52-b463-6ea22220c0a9 / w1H:p8，本轮记录后空闲。控制器仍须等ops自己的固定工作结束，再正常quit旧ops，真实shell导出codex3并核新UUID/rollout；旧开发/集成员不热切，后续由主管在codex3重开。新bootstrap接管轮只核接管，不移旗/派发；controller核完后才释放自有LLM_DRAIN/PAUSE。
 
-本轮唯一 `nice -n 19 python3 ops/paper_dataset.py --no-raw` 由原 ops 启动，终局、截点、五一致性/key scan、冻结输出及最终提交回执见 `paper/materials/20261017-2328-ops/` 与 `ops/codex-ops/record-staging/20261017-2328/commit-readback.json`。新 ops 不重复此入口、原源 full 或消费者。只提交本轮自有复盘/账本/提案、登记、论文结果和交接，保普通 index 与所有并行物理记录。主检出有大量其他会话记录/成本/历史空行等未提交内容，不能 add-all、reset、覆盖或称工作区全干净。
+原组合通过发布且Roy暂停已解除后，在codex3控制面complete事件沿原broker恢复正常autoplay（仅一次，先查实际进程；不要让换号失败继续无声挡开局，按新主管inbox规则回报）。这不是新实验局，用户已授权恢复正常循环。首正常局核native turn_context effort=high、codex3 brain-home、run-config/来源SHA；局末原增量刷新cold/warm/本角色十新局或idle触发训练、publication lock等位/持有与真实模型消费者SHA。未到训练阈值保未触发，不能额外训练或开局“补验收”。不宣布自然采用/收益或科学父完成。
 
-## Roy23:29 三项最高优先学习
+其他未完任务/失败/冷却、9通知、141301与154302同提案中断及Regent暂停仍读下方交接/context。发布后#35等须从实际新live重建，不能把旧准备树覆盖high/增量修复；下一顺序35→28→37→36，40已先按本授权处理。源码/版本真正变化后再登记retention完成，不回收在跑的WT/原日志。无外部push、新模型、模拟或A/B授权。
 
-1. 新要求 `roy-20261017-human-pace-support-mapping` / r1 已登记 `notes/learning-requests/`，依原四模板 owner 的真实 provenance 绑定，冻结 input/SHA 在本轮目录。四 P/D/S/R 支撑映射只由 Silent 学习者从本角色对局得出，每条附证据局/进阶/回合/原偏移；原 H2 三自然局42/42 support_component 未知的原因是没有独立映射，不能由 ops 填游戏知识。核心/支撑/实际兑现与模板 candidate/functional 未知保持区别，允许反证/缺证。
-2. H0 继续用 `roy-20261017-human-pace-h0`，本轮提升 r2，不另造同范围父项。原 r1 completed 的阶段交付记录完整冻结在 `H0-r1-original-completion-record.json`，旧 request/输入/失败/源码和验收历史保留。R386/R388 不证明六 Boss 可信：冻结表中 TEST_SUBJECT/AEONGLASS/QUEEN/KAISER_CRAB/KNOWLEDGE_DEMON/THE_INSATIABLE 的 B2/B3 仍低可信。由学习者逐阶段/招式/量测/轨迹定位，修后按原 split/种子/Platt/四闸校准，不降门槛、不把高 leak 当机制倍率因果；旧缓存能复用则不重算。H0 使用 `.worktrees/silent-boss-calibration`，拿真实 lease/owner 后才可续写。
-3. `silent-0332` r3 原父/owner/失败/blocked 原样保留。根失败完整输入、完整资源封套、首处分歧和根修复仍未完成；已有日志/诊断/阶段源码不关闭它。沿原输入/原链显式新账号接续，任何新 revision 与新原生线程均需真实 provenance，不能把 H0 的 UJ 净损残差当根因解决。
+--- 以下为历史交接，冲突以上述最新原文/动态回执为准 ---
 
-两新登记目前 **blocked / dispatched=false**，原因是 drain 禁止新准入且需 codex3 真实新线程。没有为排队冒造 batch/first reply。它们与0332同为最高优先，共用原两策略槽，三个任务不能同时占两槽；不抢旧任务、不并写同 WT，必要时按实际 owner/槽位冲突向 Roy 报告。原校准 WT 与其他校准批共享时先核具体 owner，不开同范围第二研究。接管释放门禁后，新 ops 要先做身份恢复、补 revision/provenance、再沿原 reconcile/原槽派发；账号不符错误不能绕过。
+# Roy 17:2x 新指令优先：换号后仍不恢复开局/生产刷新（2026-10-22T17:46:04+08:00记录）
 
-每项要求终点仍是实际 live 祖先+逐条经验/内容 SHA/证据局+消费者原输入输出读回，以及 ops→watcher→Roy 各自真实回执；queued不是 dispatched、读取不是自然采用、报告 done不关闭科学宽父。新异议/缺证原文转原 watcher，不能代填其 ACK。
+授权原文paper/materials/20261022-roy-check-window-ops/authorization-original.md，#40主管评论6337610752。此段覆盖下方旧交接中“根STOP原不存在/不创建STOP”“验证后恢复下一局”的运行安排；原取消事务与失败历史不改。
 
-## 原 live 发布与检查边界
+已新增独立Roy暂停id=roy-check-window-20261022-172x：根ops/STOP的实际内容归Roy，另有ops/codex-ops/roy-check-window-pause.json。与codex3-20261022-1610的LLM_DRAIN/PAUSE分开，控制器只能删除自己仍拥有的两旗，不可删除Roy STOP/独立暂停。即使换号complete也禁止autoplay-start/launch-game/play/人工report-run及生产refresh；禁止为了验收新账号或#40额外开局/刷新。当前没有对局/报告/刷新；最后生产fight-value/catalog均正常结束17:16:29，无信号/半成品补发。旧源码没有REFRESH_PAUSE检查，此为原ops调度暂停+真实STOP阻断正常局末触发，不冒单写JSON就有脚本级闸。固定检查仅用独立fixture，不能重启生产刷新。
 
-本轮起点 main `bc8470169ae4194a7250047f9b0f8155c7d7cd5b`；live `deb9135b8c8e63080beae091b959a04738c64587` / tree `42a4f769d550046ed378750ce2c3429e6a9b7556`，最新行为编号 **V5-R388**。集成前重新读真实 live/知识刷新及普通 index，不能用这个快照覆盖。
+完整检查新顺序#33 high→#40→#35→#28→#37→#36，替代旧#40排末尾的各段；无对局最多2个重任务位，允许#33/#40并行。#33 high唯一589590已16:34结束tsc0/full0，6007pass/2skip/0fail，1639suite含嵌套非文件数，inputs-before/after一致。仍待原发布锁/实际最新知识及绑定备份恢复等门/源码提交/版本登记；不重full，不代原#33整包完成或自然high读回。原件paper/materials/20261022-roy-check-window-ops/high-passed-original.json；live目前仍R411。#40原候选c255682f/8f09b842仍review，原集成员已经收到一次#40提醒及新窗口评论，沿其原owner处理精确依赖/full/集成，不另派模型或等待者。#20heavy实际off，不把本次2位授权冒作生产队列已启用；#41及将来#37→#20共享文件兼容仍保留。
 
-- 原 G2 六叶诊断 source `0b1807b159a1e3d7fc09aad541ea6f97be627a91`，main `179ed1c628ad25c8cafecae60222b8edf1eafdf2`、live 如上；纯 shadow provenance/cache/expected-deadline 诊断，无新行为号。唯一精确宿主 tsc+Vitest0，531文件5222过2跳，原日志及回执 `paper/materials/20261017-2220-ops/G2-exact-host-completion.json`。原 canonical failed/rc0/mergednull 不改写，source/full/原失败与独立 publication 分列。原 WT完成登记在2301轮 CLI0，原 retention 自动按门禁回收，不再重登记、手删、重源full或重宿主。F15/F16完整失败数组/DPR仍未知。
-- R388预算校准的原两个宿主 full1 与各精确所选补验0永久分列，有限验收不是旧全套绿。source71ad52…、live3d691cff/tree24be6da 与编号 live b23506/treea63667 原回执在2125轮；不能借最新 G2 host0 回写旧树。六 Boss/F49 低可信与0332根因继续开放。
-- R386 H0阶段、R387赤牛/飞镖、R384采样身份、R385 Boss60及 H1/H2 已有各自 source/publication/host 回执，先查原原件，不重测旧源。H1/Boss60仍V5；Silent首试Boss60、SL已有结果+10s、P1/P2/S与G2 shadow边界保持。
-- H2 source8165321296eeab263f8cfe0cc7dd08b30245bad2/12叶、live3910f41/tree77dd769 精确 host0，纯shadow未升号。三自然局原 listener 已退出0，报告 `paper/materials/20261017-human-pace-h2/natural/`；未授权转 on/实际移交/H3+。watcher 现获单独 H2 A/B/C shadow 修正任务，在独立 WT 后交精确 source；接源后沿原唯一 pending/live锁窄合、规则分类/需要时编号双通知、实际最终组合唯一宿主，保记录/知识/index。没有源交付时不替 watcher 实现或另派模型。
-- 默认关闭联合日志的 `0e4f7687c` 曾在08:40窄发布后按Claude撤回同锁恢复；历史留 `paper/materials/20261017-0829-ops/shadow-withdrawal.json`。该撤回源不得再次发布，联合shadow继续，F48主耗时是 B2，不为诊断日志重启局。
+恢复条件是#33 high窄修与#40都实际live、codex3控制面已验证且自然边界；由原ops核真实提交/版本、双方准入及Roy暂停所有权后释放本暂停，不因测试绿/切换完成自动恢复。首个正常恢复局保存原生high、新号配置、增量刷新冷/热/训练口径与模型消费者SHA；未知/未触发保留，不增实验局、A/B或模拟。
 
-## 在途完成、队列与通知
+换号标准控制器609806/start8127174继续自然draining，当前盘点27旧账号引擎进程记录，不当作27独立任务或排空。原开发与集成员不热切，不擅停他们；旧ops本轮记录后仍ready_to_drain，当前源session01a1517b-e200-7c52-b463-6ea22220c0a9保留供controller验证正常quit。最新暂停与窗口结论同时写双箱/decision-log，并在#33/#38/#40评论实际送达。
 
-本轮23:36盘点三个原在途 wrapper：`20261017-201043-fix-batch`（Queen/Boss模拟 WT，PID1107093）、`20261017-232844-strategy-proposal`（PID1874730）、其 `-s2-`（PID1874844）。原 JSON/PID/worktree 快照在本轮 `inflight-batches-at-drain.json`；这是当时盘点，不保证接管时仍运行。它们先自然收尾，原完成回调/宿主/事件仍允许。原队列保持，接管按实际 completion 收报，失败/超时/stdout/stderr/精确 source 证据不改写，不当启动/中断失败是提案缺失，不重复领取旧活。
+--- 以下为此前交接，冲突处以上述Roy新指令为准 ---
 
-尚未三阶段确认的通知盘点在 `pending-notices-at-drain.json`；23:36时只有 `733e3a9e9380d9155431980e`，原普通提案 silent-proposal-578e415a259e6835 的金刚杵/覆甲经验关联异议，ops_forwarded 已有真实自动双收件回执，watcher_received/roy_notified 未有。须原 watcher读原文并告知Roy，不新建父项或伪造ACK，后续按实际 notice 新状态核对。此前RC预算异议4fc100…已三链实际闭环，不重复通知。
+# codex1 → codex3：codex3-20261022-1610
 
-`ops/codex-ops/pending-integrations/` 包含大量历史 schema 和已闭环记录，不能只因某通用字段 null 全量重发布/补测；先对原 source、live祖先、publication、host和retention各回执去重。保原 owner、宽父和缺证。
+记录时间：2026-10-22T16:14:58+08:00。Roy/Claude 16:10授权原文与91%触发报告：paper/materials/20261022-codex3-switch-1610/authorization-original.md。91%为16:09 codex-quota的用户转达，本ops不重复探额度。旧codex3-20261022-1146已cancelled，不再run；其state及本文件先前取消内容已原字节备份到本轮目录，历史不覆盖。
 
-## 回收与其他约束
+ready_to_drain：原ops会话 01a1517b-e200-7c52-b463-6ea22220c0a9，pane w1H:p8，账号codex1，当前轮写完记录后正常空闲。此声明只表示本轮可交接；盘点仍有34条进程记录，非34独立任务，不能冒已排空。唯一标准一次性控制器原生609806/start8127174（wrapper609805，w1H:pA1，nice19），只沿ops/llm_switch.py及原wake/learn/assist锁接续。事务state在ops/codex-ops/llm-switches/codex3-20261022-1610/state.json。不要另建控制器/ops，activating/verifying/failed先核回执，禁止重复bootstrap。
 
-Roy18:15扩展压缩已按原逐文件gzip6/SHA读回/restore流程完成：100.238GiB、5862文件/3477独立SHA，留原清单/恢复脚本。根logs、knowledge、账本/经验、报告/提案、原生事件与未完成任务不删，不无授权重 sweep；agent-hearthstone/home/tmp不碰。工作树完成只经原retention登记/调度自动回收，不手删正在跑 WT。
+目标为既有ops/codex-ops/accounts/codex3/profile.json，两隔离home新checkCodex及key_check通过，无模型问答；profile模型/服务档/权限不改。日常ops/学习/开发自然启动仍按现有launcher high，实际原生回执才能称生效；对局xhigh旧状态与high窄候选另行保留。codex-home同时供学习及开发派发读取（.agents/board.yaml: session/project codex_home_file），brain-home独立。当前选择器仍codex1，须控制器排空后正常quit旧ops、目标真实shell写home回执、新UUID与target rollout接管成功后才能报complete。不得跨号resume/复制加密会话/凭据，不能手改选择器绕过准入。
 
-游戏知识只由学习者从本角色证据得出。只改本仓库，不读输出凭据、游戏dll/pck，不改prompt/账号/home/模型/权限（换号配置只由原事务owner按授权执行）。生产改动固定自测+gitleaks，原live锁内保并行刷新后窄合、行为编号、date后旧新/证据/预期/回退根双通知、精确最终树唯一宿主；记录/数据-only不重复生产测试。原main/push授权 `notes/core-cycle-main-push-request.json` 仍有完成条件，不把工程入口交付当所有宽父完成；完成后只经Windows ssh.exe推origin，不force、不推upstream，不重新问已授权权限。
+本事务只拥有主ops/codex-ops/LLM_DRAIN和PAUSE；根STOP原不存在，不创建STOP、不发SIGTERM或停play；Regent原STOP/PAUSE保留。已开始对局及报告自然收尾，学习wrapper/宿主检查继续落原回执；在途开发/集成员不热切，完成或碰额度后的重开由主管在codex3上安排。原队列/任务/租约/失败/退避不搬迁或重置。新ops受控接管轮不派发/不移闸；由控制器核UUID及rollout并只释放自有两闸，原队列恢复后检查正常brain/learner真实消费，启动与控制面complete不代表学习/收益验收。
 
+接管待办与原件：
+- 首读notes/ops-current.md，按SHA读current.json及notes/ops-current-context.json；首次README/最新STATE/学习协议。不要全文重读旧handoff/decision-log。最新科学父/异议/索引均在context，旧摘要与原件冲突须保留并查原件。
+- #33 high三叶窄候选tree90c6d041640b1bec7082635f6344fc69dd260751，base liveR411/0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78。唯一原589590/start8071265于16:12读回tsc0、首次full运行中；持O/D/T/L且已释K，不另起同源检查或发布。先前523632实际15:56取得全锁后误用整包#26生成器rc2，原件paper/materials/20261022-1601-ops/；更早整包#33失败保留、不能由窄修关闭。终局仅原checks及队列事件准，禁止轮询/模型/实验局。通过后仍原最新知识/绑定备份恢复/发布锁/自测提交与自然新局及原生high；当前high不能称生效，不热切当前局。
+- #38已有真实锁准入与首次检查证据，原4锁回归通过；评论已交主管核收，不代关单。原序#33→#35→#28→#37→#36；#35准备树须依实际33新live重建。#40仍review，c255682f/8f09b842，21双份SHA/8原件核同；保#20/#41组合冲突与完整窗口/自然验收门，不插队/新等待者。
+- 154302-s2原线程01a16290-5cc9-70f3-ac5a-b77ed9c4216c、codex1容量中断/rc1。3源+2测试/22scratch/9对象/十原提案已封存，定向2/11过，原完整sandbox无终局/审计decision_id缺失；冷却17:05:24、同十ID141301旧中断仍开放。paper/materials/20261022-1605-ops/及两个pending-continuations索引仅检查点，非自动resume；不另造同机制，不将fresh retry当原线程恢复。换号complete后需要接续须沿原任务账号恢复合同，未有真实新线程首回复前不冒恢复。
+- 15:43八研究notice与既有watcher实读/Roy可见转达证明核同；原CLI SHA3f7afefb仍不兼容issue4/13/14三research，两角色正式ACK pending。保原rc2，不代ACK/重复发送/改名或关科学父。另原R4 f9d1cd…四question保持原链。
+- 当前live V6-R411不动；CARD/POTION/SHOP/REST brain，REFLEX/DIRECTION/COMBAT_ENTRIES off；Regent暂停、#31取消。session已依Roy保留为实际生效观察，#33整包尚未发布。#36 hosting脑视图实际off，不用旧07325命令启动。
+- #23原24h磁盘/持续回收待验（17:57/18:13原计划），只沿正常事件，不新增计时器/清理模型/扩删。034302四局记录83f3c975已完成，不重dataset/report/full。其他ordinary attention与failed保留各原回执，不重生成器。
+- 七科学父、H0/0332与真实来源/分母边界开放；本轮仅换号，不赋予新研究/实验/外部推送或gameplay授权。历史main/push请求按自身原件与范围核，当前任务不发push。普通记录300–500字+路径，date后双箱及decision-log；只改本仓库，不读输出凭据/游戏二进制，不改ops prompt/共享配置，不扩大辅助沙箱。
 
-本轮论文终局：实际 exit0，截点 `2026-10-17T15:31:39.830Z`，831局，五一致性全真、keyscan CLEAN；本局 has_postmortem=1。原计数警告和费用估计边界保持。自有生成输出12件，最终提交 SHA 由上述 commit-readback.json 给出，保留并行 index。
+后续只用新ops UUID控制原通道；完成验证后记录新brain/learner正常派发home及原生上下文，不为验收额外开局/学习或发模型请求。

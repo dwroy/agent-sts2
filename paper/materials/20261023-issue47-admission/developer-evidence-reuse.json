@@ -1,0 +1,68 @@
+{
+  "source": "68f7db42820e60ff3fb68645f70ea9cc33e651c2",
+  "prior_audit": "paper/materials/20261023-issue47-integrator-review/verification.json",
+  "inputs": {
+    "agent/src/brain/live-view.ts": {
+      "sha256": "e44e4f48aca592321933c571f24f876994b169a89a97447eb2c43fca31dc3e50",
+      "git_and_developer_match": true
+    },
+    "agent/src/brain/engines/codex-session.ts": {
+      "sha256": "f2f5df4d682baddfd3c17ba083f94812c1b1dcf7d052fcef17f542fefc61b05c",
+      "git_and_developer_match": true
+    },
+    "agent/src/brain/engines/knowledge-agent.ts": {
+      "sha256": "93f1421192a74b92f805f5edcb301f8cb6bdaf89eb0d9d2b3c9c82ba04ef88b5",
+      "git_and_developer_match": true
+    },
+    "agent/src/brain/tools/mcp-server.ts": {
+      "sha256": "e530062b82f2f42d68ab13d14133df6b1b83d223dfe1a1c0dfcd432959c8b40c",
+      "git_and_developer_match": true
+    },
+    "ops/brain_view.py": {
+      "sha256": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+      "git_and_developer_match": true
+    },
+    "agent/tests/brain-live.test.ts": {
+      "sha256": "c2b8796abd40e3ee4118fc600dae224e8d7b6ae21ee1258acc236b441d2e675b",
+      "git_and_developer_match": true
+    },
+    "agent/tests/brain-agent-codex.test.ts": {
+      "sha256": "e43cfc4d5a9edf96e9fcfb7bf756908ede6f821e597a713b095775263ed8f9a5",
+      "git_and_developer_match": true
+    },
+    "ops/tests/test_brain_view.py": {
+      "sha256": "abdba7eed2ad0e00093bcba0ef8cb6276bc47927b52157b9af4e4da1c88f7075",
+      "git_and_developer_match": true
+    }
+  },
+  "logs": {
+    ".artifacts/issue47/directed-final/tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue47/directed-final/vitest.log": {
+      "bytes": 249,
+      "sha256": "47bf22bf0ce00eb89c1fc9f614973f949161991cd7290a1e777e701af565a9bc"
+    },
+    ".artifacts/issue47/sandbox-tests.log": {
+      "bytes": 76,
+      "sha256": "8974590d3532e107914b6ba4b99073d3606f7b61937480b47cd57bb7aa5930ed"
+    },
+    ".artifacts/issue47/sandbox-interrupted.json": {
+      "bytes": 411,
+      "sha256": "dc62d4db05f5d13e6f89e178af8f81594d165668d5db7317a845fed3d53fe2d5"
+    }
+  },
+  "directed": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/brain-live.test.ts tests/brain-agent-mode.test.ts tests/brain-agent-codex.test.ts tests/brain-agent-loop.test.ts tests/brain-router.test.ts tests/mcp-server.test.ts tests/brain-view.test.ts --pool=threads --maxWorkers=1",
+    "cwd": "agent",
+    "exit_code": 0,
+    "test_files_passed": 7,
+    "tests_passed": 71,
+    "failed": 0,
+    "python_viewer_tests": 16,
+    "python_count_note": "Included by brain-view.test.ts; do not add to 71 as independent Vitest cases"
+  },
+  "historical_full_sigterm_143_preserved": true,
+  "full_result_claimed": false
+}

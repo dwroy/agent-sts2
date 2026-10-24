@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator50-repair-20261023-2017/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 210ms
+     × all resolve 208ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tests/v6-build-core.test.ts: ../../.cache/",
++   "agent/tests/v6-infrastructure.test.ts: ../../.cache/",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  1 failed | 117 passed (118)
+   Start at  20:17:44
+   Duration  27.86s (transform 2.76s, setup 911ms, import 4.58s, tests 20.76s, environment 1ms)
+

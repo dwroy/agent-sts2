@@ -1,0 +1,113 @@
+{
+  "batches": [
+    {
+      "batch": "20261023-014302-strategy-proposal",
+      "state": "failed",
+      "scheduler_rc": 1,
+      "TUI_code": 3,
+      "TUI_state": "not-started",
+      "models_started": 0,
+      "original_tui_receipt": {
+        "path": "ops/codex-ops/learner/learner-20261023-014302-strategy-proposal.tui.json",
+        "bytes": 401,
+        "sha256": "69c6b0abe0fcf99d9dd69e9f2dde418a4bf2bf70b17845160c0428f2e79acbfc"
+      },
+      "original_native_log": {
+        "path": "learner/runs/20261023-014319-fe2b3acc-2651-42ae-abea-2011e376c1ea-strategy-proposal.jsonl",
+        "bytes": 27387,
+        "sha256": "af443c1c421bd44709a87ceed327421cbabac3296f37c9e0356200711122b76a"
+      },
+      "original_rejection": [
+        {
+          "path": "learner/runs/20261023-014319-fe2b3acc-2651-42ae-abea-2011e376c1ea-strategy-proposal.jsonl",
+          "offset": 26367,
+          "bytes": 112,
+          "sha256": "a1eacbfa61bb489648d99b2aec9319ca902c72bce1047351a451ea641e60beca",
+          "row": {
+            "type": "learner_tui_result",
+            "code": 3,
+            "reason": "inherited-tui-config-not-isolated",
+            "message": "",
+            "stopped": true
+          }
+        }
+      ],
+      "pane": "w1H:pB3",
+      "pane_closed_or_replaced_by_ops": false,
+      "original_retry_at": 1792694603.2171683,
+      "retry_modified_or_batch_relaunched": false,
+      "completion_report": null,
+      "tests": null,
+      "merged": null,
+      "worktree_git_metadata_present": true,
+      "reclaimed_by_ops": false
+    },
+    {
+      "batch": "20261023-014302-s2-strategy-proposal",
+      "state": "failed",
+      "scheduler_rc": 1,
+      "TUI_code": 3,
+      "TUI_state": "not-started",
+      "models_started": 0,
+      "original_tui_receipt": {
+        "path": "ops/codex-ops/learner/learner-20261023-014302-s2-strategy-proposal.tui.json",
+        "bytes": 401,
+        "sha256": "b71081a63423f9d841ee41f5d627fd4c1b178e300948d1ba341bfb6c2df134a5"
+      },
+      "original_native_log": {
+        "path": "learner/runs/20261023-014320-2ba1e3d6-165c-4a90-b805-4ea74189d73e-strategy-proposal.jsonl",
+        "bytes": 27489,
+        "sha256": "87096bfb09051121e4c271a165dba304bde76e6d21b36799544138510bc41c1a"
+      },
+      "original_rejection": [
+        {
+          "path": "learner/runs/20261023-014320-2ba1e3d6-165c-4a90-b805-4ea74189d73e-strategy-proposal.jsonl",
+          "offset": 26466,
+          "bytes": 112,
+          "sha256": "a1eacbfa61bb489648d99b2aec9319ca902c72bce1047351a451ea641e60beca",
+          "row": {
+            "type": "learner_tui_result",
+            "code": 3,
+            "reason": "inherited-tui-config-not-isolated",
+            "message": "",
+            "stopped": true
+          }
+        }
+      ],
+      "pane": "w1H:pB4",
+      "pane_closed_or_replaced_by_ops": false,
+      "original_retry_at": 1792694603.7692714,
+      "retry_modified_or_batch_relaunched": false,
+      "completion_report": null,
+      "tests": null,
+      "merged": null,
+      "worktree_git_metadata_present": true,
+      "reclaimed_by_ops": false
+    }
+  ],
+  "queue_events": [
+    {
+      "path": "ops/codex-ops/queue/1792691002758-cf7d477e-1dfd-4eaf-b252-6220f4f2a589-learner-tui-attention.md",
+      "bytes": 346,
+      "sha256": "ba4b5288a77a954add967224f72ca960cf2acb39cbc5f24e3719cab8f8756101"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792691003216977643-strategy-done.md",
+      "bytes": 419,
+      "sha256": "0a25f9608c3af7351747bd325a1a89a655f0cc6afebd604b5f7764f8a322f1fe"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792691003372-ba779dae-5cfe-4307-9f22-c7f8bb732f2c-learner-tui-attention.md",
+      "bytes": 352,
+      "sha256": "c2bff7d9ea28f5acb826b4998abefa81ee393a05951754e4434aab706664a87f"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792691003769130235-strategy-done.md",
+      "bytes": 428,
+      "sha256": "a4413c9950cb5e8a79564504c8653cb79a1c069a30cbc445de56223362393bad"
+    }
+  ],
+  "out_pending_wrapper_flush_boundary": "Original receipt says out_pending_wrapper_flush=true; actual final stdout now read and scheduler failed receipt independently verified. Do not rewrite original pre-flush receipt or infer natural TUI completion.",
+  "role_authorization_or_epoch_takeover": false,
+  "new_model_data_full_merge_or_game_actions": false
+}
