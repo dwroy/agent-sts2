@@ -1,0 +1,521 @@
+{
+  "schema": "encounter-replay-inventory-scratch-v1",
+  "cases": [
+    {
+      "id": "bygone",
+      "state": "waiting",
+      "run_id": "0CLP16ZR4ZZC",
+      "act": 1,
+      "floor": 8,
+      "turn": 1,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15266906405-27309.json",
+        "sha256": "7476709bb9dd895f4747f49c698e69be56889205024851c4043e1d5f985ca9e7"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3349383622-29913.json",
+        "sha256": "e8943ee9ceb3923f00a12d1c7817d39a54eabaffedc389d311d734f8eb3e8dbf",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5"
+      ],
+      "original_selected_summary": {
+        "line": "灵动步法, 迷雾+, potion 明耀酊剂, 打击 -> 旧日雕像",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "FOOTWORK",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "HAZE",
+            "upgraded": true,
+            "card_index": 6,
+            "target_index": null
+          },
+          {
+            "card_id": "POTION:RADIANT_TINCTURE:1",
+            "upgraded": false,
+            "card_index": 101,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          }
+        ],
+        "turn": {
+          "hp_loss": 0,
+          "damage": 13,
+          "block_gained": 0,
+          "strength_gained": 0,
+          "lasting_value": 20,
+          "cards_drawn": 0,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "deaths": 0,
+          "further_hp_loss": 26.692393595599995
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "vantom",
+      "state": "waiting",
+      "run_id": "0CLP16ZR4ZZC",
+      "act": 1,
+      "floor": 17,
+      "turn": 3,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15271051280-29085.json",
+        "sha256": "d9fdc6dbbabc9b94c8441b3e05cb7bc05af018544e90aae7ab81330386ceee17"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3353169951-59838.json",
+        "sha256": "92dd88e79a3924aab7d619157f6d5e6c5695a811042e4092982b08845a6d5bef",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5"
+      ],
+      "original_selected_summary": {
+        "line": "冲刺 -> 墨影幻灵, 后空翻",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "DASH",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "BACKFLIP",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "turn": {
+          "hp_loss": 0,
+          "damage": 2,
+          "block_gained": 23,
+          "strength_gained": 0,
+          "lasting_value": 0,
+          "cards_drawn": 2,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "deaths": 0,
+          "further_hp_loss": 16.846798524199997
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "kin",
+      "state": "waiting",
+      "run_id": "KUHYZBFFLALU",
+      "act": 1,
+      "floor": 17,
+      "turn": 3,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-16415106161-37946.json",
+        "sha256": "75489afc7c080bf9059563487c8ef83c11a75304533f45c4f59fbe1fea83bc3e"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4194487747-83969.json",
+        "sha256": "79230af300cb13bc205bddd4ac7469009ec1e5be08cf4c8270a2f80b54e14ab6",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7"
+      ],
+      "original_selected_summary": {
+        "line": "毒雾+, 尖啸, 触媒",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "NOXIOUS_FUMES",
+            "upgraded": true,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "PIERCING_WAIL",
+            "upgraded": false,
+            "card_index": 8,
+            "target_index": null
+          },
+          {
+            "card_id": "ACCELERANT",
+            "upgraded": false,
+            "card_index": 9,
+            "target_index": null
+          }
+        ],
+        "turn": {
+          "hp_loss": 0,
+          "damage": 0,
+          "block_gained": 0,
+          "strength_gained": 0,
+          "lasting_value": 16,
+          "cards_drawn": 0,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 1,
+          "deaths": 0,
+          "further_hp_loss": 46.70666828312727
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "demon",
+      "state": "waiting",
+      "run_id": "KUHYZBFFLALU",
+      "act": 2,
+      "floor": 33,
+      "turn": 2,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-16423059233-40288.json",
+        "sha256": "ade23faf66a8de622b709672bf8a4e7fbd33e436cb021b699bc6478be947a38f"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4201632427-28445.json",
+        "sha256": "94bb153a66cdd7908c0465e789fad353948587d4260fa05d89fabd0b13c0ae2d",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "p0->e0"
+      ],
+      "original_selected_summary": {
+        "line": "尖啸, 防御, 触媒, 防御",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "PIERCING_WAIL",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "ACCELERANT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          }
+        ],
+        "turn": {
+          "hp_loss": 0,
+          "damage": 0,
+          "block_gained": 10,
+          "strength_gained": 0,
+          "lasting_value": 8,
+          "cards_drawn": 0,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "deaths": 1,
+          "further_hp_loss": 63
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "millipede",
+      "state": "waiting",
+      "run_id": "FZT053H9PSC5",
+      "act": 2,
+      "floor": 31,
+      "turn": 2,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15332875753-44771.json",
+        "sha256": "cbdbea9490bb024bf14562f4a8b9d24676da0627f20b073f9149c6acdfb82ecc"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3405985844-51517.json",
+        "sha256": "4a72a0e01dd3d424ad216024cad3dc2786470ba65b31355c9f3f5a027d182d78",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "p0->e0",
+        "p0->e1",
+        "p0->e2",
+        "p1"
+      ],
+      "original_selected_summary": {
+        "line": "偏折+, 致命毒药+ -> 残杀千足虫 (MIDDLE), 防御+, 带毒刺击+ -> 残杀千足虫 (FRONT)",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "DEFLECT",
+            "upgraded": true,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "DEADLY_POISON",
+            "upgraded": true,
+            "card_index": 3,
+            "target_index": 1
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": true,
+            "card_index": 5,
+            "target_index": null
+          },
+          {
+            "card_id": "POISONED_STAB",
+            "upgraded": true,
+            "card_index": 6,
+            "target_index": 0
+          }
+        ],
+        "turn": {
+          "hp_loss": 7,
+          "damage": 17,
+          "block_gained": 21,
+          "strength_gained": 0,
+          "lasting_value": 0,
+          "cards_drawn": 0,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 3,
+          "samples": 2,
+          "deaths": 0,
+          "further_hp_loss": 24.04358974358974
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    },
+    {
+      "id": "crab",
+      "state": "waiting",
+      "run_id": "LKC9YXKZWTKR",
+      "act": 2,
+      "floor": 33,
+      "turn": 5,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-12566674165-40362.json",
+        "sha256": "ebd58e54d5e22ce65999a1e7f4bb2be048e5f248545cc5d8465e03b4f864b00c"
+      },
+      "original_decision": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-1312225444-50902.json",
+        "sha256": "b2b6a0cba143407377408225763d95efea1165b9b7519ba1431ea9f19a812ec8",
+        "questions_pointer": "/questions"
+      },
+      "fingerprint_exact_match": true,
+      "original_candidate_keys": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7",
+        "plan8",
+        "plan9"
+      ],
+      "original_selected_summary": {
+        "line": "致命毒药 -> 碾碎爪, 扫腿 -> 碾碎爪, 带毒刺击 -> 碾碎爪",
+        "outcome_kind": "turn_model",
+        "planned_steps": [
+          {
+            "card_id": "DEADLY_POISON",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "LEG_SWEEP",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": 0
+          },
+          {
+            "card_id": "POISONED_STAB",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 0
+          }
+        ],
+        "turn": {
+          "hp_loss": 0,
+          "damage": 88,
+          "block_gained": 12,
+          "strength_gained": 0,
+          "lasting_value": 0,
+          "cards_drawn": 0,
+          "sandpit_after": null,
+          "unmodelled_cards": []
+        },
+        "rollout": {
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 4,
+          "deaths": 0,
+          "further_hp_loss": 7.75
+        }
+      },
+      "original_complete_request_board": null,
+      "original_plans": null,
+      "candidate_contexts": null,
+      "per_candidate_shared_seed_outcomes": null,
+      "legal_replay_manifest_case": null,
+      "gaps": [
+        "原questions有据，完整原V5 request.state未存于本行；不能从题面重建。",
+        "本窗口所有候选缺原Plan.steps/outcome；selection_audit.planned_steps与quantitative_turn不是原Plan，不补造。",
+        "缺每候选同seed结果/模型SHA，候选均值不能代矩阵；实际走过单线不补未走分支。",
+        "缺#28离线capture/回放与正式rk消费者；本批禁止开模型/MC/Jev/两臂，留原owner补原件。"
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ],
+  "not_a_combat_entry_replay_manifest": true,
+  "enable_authorized": false
+}

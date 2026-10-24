@@ -1,0 +1,174 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-kin-beam-wail-window",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "KIN_PRIEST"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.move_id",
+                      "value": "BEAM_MOVE"
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "KIN_FOLLOWER"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.move_id",
+                      "value": "BOOMERANG_MOVE"
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "player.hand",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "PIERCING_WAIL"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.can_play",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "eq",
+                "field": "option.kind",
+                "value": "combat_line"
+              },
+              {
+                "op": "any",
+                "field": "option.actions",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "action.kind",
+                      "value": "card"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "PIERCING_WAIL"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-kin-beam-wail-window-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare Wail during observed Kin beam and boomerang",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "KUHYZBFFLALU",
+            "floor": 17,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4194487747-83969.json",
+          "sha256": "79230af300cb13bc205bddd4ac7469009ec1e5be08cf4c8270a2f80b54e14ab6",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 22,
+            "players": null,
+            "selection": "v0.111 cluster=1 ENCOUNTER.THE_KIN_BOSS; contextual cost only; uploaded runs=22; no independent player estimate"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    }
+  ]
+}

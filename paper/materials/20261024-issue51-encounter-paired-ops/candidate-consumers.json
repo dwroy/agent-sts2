@@ -1,0 +1,1893 @@
+{
+  "passed": true,
+  "content_root": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-encounter-paired-20261024/live-candidate-root",
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "strategy_count": 55,
+  "reflex_count": 103,
+  "fixed_strategy_queries": 6,
+  "fixed_rk_construction_negative_queries": 6,
+  "fixed_rk_construction_queries": 0,
+  "fixed_rk_full_queries": 6,
+  "fixed_original_state_conditions": 6,
+  "full_predicates_unknown_without_original_plan": 6,
+  "wrong_ascension_cases": 6,
+  "wrong_enemy_cases": 6,
+  "other_role_cases": 4,
+  "new_executable_combat_comparisons": 0,
+  "new_executable_card_pick_advice": 0,
+  "natural_queries": 0,
+  "model_or_jev_calls": 0,
+  "strategies": [
+    {
+      "id": "silent-brain-effigy-sleep-setup-review",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 8,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3349383622-29913.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "2Q6ZYZ6JHM0M",
+          "floor": 8,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/bygone-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; selected c1 pair0; recorded ENCOUNTER.BYGONE_EFFIGY_ELITE nodes only; not population representative"
+          },
+          "statistic": {
+            "name": "selected_representative_node_gross_damage_mean_context_only",
+            "value": 10,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 1
+          },
+          "design": "observational",
+          "limitations": [
+            "挑选的匿名完整代表，非随机样本；不估总体效果。",
+            "无逐回合动作/真实入场牌组；节点前末HP只作代理。",
+            "终局簇不作当前触发；自有版本unknown分账；外部反例/未到达不当作同遭遇动作反证。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#v0.111,c1,pair0,ENCOUNTER.BYGONE_EFFIGY_ELITE"
+        }
+      ],
+      "strategy": "旧日雕像当前为SLEEP_MOVE且灵动步法可打时，把先建敏捷的线与直接输出比较，随后按真实醒转/攻击重算防护。0CLP16ZR4ZZC F8的一次A10机会，实打灵动步法后敏捷0→2，随后迷雾/用药/攻击，至T2仍49血；整战49→30，并非免伤保证。另局2Q6ZYZ6JHM0M也持灵动步法，48血进场仍实际败；未核同一动作窗口。\n范围：Silent/A10/自有版本unknown、仅当前具名敌人和合法手牌；1局1机会，后继观察非因果，不推固定启动顺序或安全血线。",
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 1,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "selected_representative_node_gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 1
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    },
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "max": 17
+        },
+        "bosses": [
+          "VANTOM_BOSS"
+        ]
+      },
+      "strategy": "墨影备战继续分核有滑溜的早期推进与后段输出；当前DISMEMBER_MOVE且滑溜仍在、冲刺/后空翻均可打时，比较兼顾防护抽牌的组合线。0CLP16ZR4ZZC F17 T3一次机会：4敏捷，敌178血/4滑溜/显示22攻；实打冲刺、后空翻后23挡，敌仅177血/3滑溜，次轮玩家84血未降。整战85→84；旧证据55→17仍保留，不能以本局覆盖旧血价。\n范围：Silent/A10/版本unknown；1局1动作窗口，抽牌/遗物/药水混杂；1303HVDLVMGR终败含重试，首次仅预判截止，非独立同起点反事实。",
+      "evidence": [
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083191808"
+        },
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12083456038"
+        },
+        {
+          "run": "VGNDNGPFYRE3",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12084068941"
+        },
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 17,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3353169951-59838.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1303HVDLVMGR",
+          "floor": 17,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/vantom-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.VANTOM_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 25.31578947368421,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 19
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.VANTOM_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "sample": {
+        "independent_runs": 1,
+        "first_attempt_fights": 1,
+        "sl_attempts_used": 0,
+        "observed_ascensions": [
+          10
+        ]
+      },
+      "limits": [
+        "单局胜战同时有38净血价，不能由胜利证明安全或毒的因果收益。",
+        "净血池推进包含已结算效果，不能拆成未经逐帧核实的单牌贡献。",
+        "非出牌条目，不指定拿牌优先级、耗层顺序或药水时点。"
+      ],
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 3,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 19
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    },
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "max": 17
+        },
+        "bosses": [
+          "THE_KIN_BOSS"
+        ]
+      },
+      "strategy": "同族备战仍核神官退出窗口及撑到该窗口的资源；当前神官BEAM_MOVE、信徒BOOMERANG_MOVE且尖啸可打时，比较群体减攻与单纯格挡/继续输出。KUHYZBFFLALU F17 T3一次机会：显示3×3与5×2；实际派发毒雾+、尖啸、触媒后，两组攻击均变0，T4仍47血。原脑选防御线，执行闸改线，不能把原答案当实打；整战55→9，后续仍有高血价。\n范围：Silent/A10/版本unknown、1局1窗口；不指定固定击杀顺序。ZTRGYYMLR8SC持尖啸仍最终败，含SL；首次预判不冒实际死亡，不能推出尖啸整战收益。",
+      "evidence": [
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12039634787"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040774765"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040838947"
+        },
+        {
+          "type": "own",
+          "run": "KUHYZBFFLALU",
+          "floor": 17,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-4194487747-83969.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "ZTRGYYMLR8SC",
+          "floor": 17,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/kin-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.THE_KIN_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 30.318181818181817,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 22
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.THE_KIN_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "sample": {
+        "independent_runs": 1,
+        "first_attempt_fights": 1,
+        "sl_attempts_used": 0,
+        "observed_ascensions": [
+          10
+        ]
+      },
+      "limits": [
+        "单局描述，未隔离牌、休息或杀序的因果收益。",
+        "信徒退场不记成其剩余117点实际伤害。",
+        "无反事实对照；当前机制和状态优先，其他进阶数值未知。"
+      ],
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 3,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 22
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "event",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "KNOWLEDGE_DEMON_BOSS"
+        ]
+      },
+      "strategy": "知识恶魔准备仍给受伤尾部留预算，不以均值定安全血线。当前SLAP_MOVE且尖啸与防御合法时，比较减攻后补挡的整条线。KUHYZBFFLALU F33 T2一次机会：已有3弱化，显示13攻；实打尖啸变9攻，再两张防御合10挡，兼打触媒，T3仍63血。整战63→24，后续血价并未消失。\n范围：Silent/A10/自有版本unknown、1局1窗口；MEQ6ETDCEEE9持尖啸仍终败，含SL，首次仅预判截止。外部v0.111分簇代价只是方向对照；不把模型均值当反事实，不改变H0/G1a或校准可信度。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 51,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 360
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "KUHYZBFFLALU",
+          "floor": 33,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-4201632427-28445.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "MEQ6ETDCEEE9",
+          "floor": 33,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/demon-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 22.77777777777778,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 27
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.KNOWLEDGE_DEMON_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "limits": {
+        "own_support_runs": 0,
+        "effect": null,
+        "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+      },
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 1,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_p90",
+            "denominator": {
+              "unit": "fights",
+              "n": 360
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 27
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    },
+    {
+      "id": "silent-brain-decimillipede-poison-target-review",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "evidence": [
+        {
+          "type": "own",
+          "run": "FZT053H9PSC5",
+          "floor": 31,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3405985844-51517.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 31,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/millipede-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; selected c3 pair0; recorded ENCOUNTER.DECIMILLIPEDE_ELITE nodes only; not population representative"
+          },
+          "statistic": {
+            "name": "selected_representative_node_gross_damage_mean_context_only",
+            "value": 38.5,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "挑选的匿名完整代表，非随机样本；不估总体效果。",
+            "无逐回合动作/真实入场牌组；节点前末HP只作代理。",
+            "终局簇不作当前触发；自有版本unknown分账；外部反例/未到达不当作同遭遇动作反证。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#v0.111,c3,pair0,ENCOUNTER.DECIMILLIPEDE_ELITE"
+        }
+      ],
+      "strategy": "残杀千足虫三段均在且两张施毒牌可打时，比较前段集中与前/中分配目标，并合计全部仍活实体的来袭与防护。FZT053H9PSC5 F31 T2一次机会，实打偏折+、致命毒药+到中段、防御+、带毒刺击+到前段：毒分别0→7、0→4，合21挡；显示总来袭28，T3玩家70→63。这是实选分配线，未证优于集中线；1913SE84AXQF也持施毒牌却46血进场实际败。\n范围：Silent/A10/版本unknown，1局1窗口；按当前实体索引核目标，不能按部位名字推固定杀序、重连机制或免伤保证。",
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 2,
+        "own_support_runs": 1,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "selected_representative_node_gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 2
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "floor": {
+          "min": 18,
+          "max": 33
+        },
+        "bosses": [
+          "KAISER_CRAB_BOSS"
+        ]
+      },
+      "strategy": "帝王蟹仍分核双体与残敌预算；双体当前为碾碎爪GUARDED_STRIKE_MOVE、火箭RECHARGE_MOVE时，按实际攻击侧比较扫腿与施毒目标。LKC9YXKZWTKR F33 T5一次机会：火箭95血/15毒暂不显示攻击，碾碎爪191血/7毒/25攻；实打致命毒药后已变17攻，再扫腿到12攻/12挡，带毒刺击后T6仍47血；不把25→12全归于扫腿。不能把火箭休眠当退场，也未证固定先杀哪侧；整战76→47。\n范围：Silent/A10/版本unknown、1局1窗口；F6XY4QJMS5RC持施毒/防护仍57血进场实际败。旧预判SL/后试败例原样保留，不作扫腿因果收益或安全保证。",
+      "evidence": [
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12108239410"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12110446436"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123299008"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123455148"
+        },
+        {
+          "type": "own",
+          "run": "LKC9YXKZWTKR",
+          "floor": 33,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-1312225444-50902.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "F6XY4QJMS5RC",
+          "floor": 33,
+          "ref": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/own-fight-pages/crab-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.KAISER_CRAB_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 37.29032258064516,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 31
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.KAISER_CRAB_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "sample": {
+        "independent_runs": 1,
+        "first_attempt_fights": 1,
+        "sl_attempts_used": 1,
+        "sl_attempt_numbers": [
+          6
+        ],
+        "observed_ascensions": [
+          10
+        ]
+      },
+      "limits": [
+        "第六试不是新独立局；第2–5试不作本条逐帧证据。",
+        "首次轨迹到第一次判死截断，第六试单列，不合成首试终局。",
+        "只在A10观察，不给其他进阶固定阈值；未验证构筑、休息或杀序因果收益。"
+      ],
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "evidence_summary": {
+        "own_runs": 3,
+        "own_support_runs": 2,
+        "external": [
+          {
+            "source": "external:sts2fun",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "statistic": "gross_damage_mean_context_only",
+            "denominator": {
+              "unit": "fights",
+              "n": 31
+            }
+          }
+        ]
+      },
+      "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+    }
+  ],
+  "rows": [
+    {
+      "strategy_id": "silent-brain-effigy-sleep-setup-review",
+      "rk_id": "silent-encounter-rk-effigy-sleep-footwork",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-effigy-sleep-footwork",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "BYGONE_EFFIGY"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "SLEEP_MOVE"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "FOOTWORK"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "FOOTWORK"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-effigy-sleep-footwork-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Footwork during observed Effigy sleep",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 8,
+              "turn": 1
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3349383622-29913.json",
+            "sha256": "e8943ee9ceb3923f00a12d1c7817d39a54eabaffedc389d311d734f8eb3e8dbf",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "v0.111 selected c1 pair0; ENCOUNTER.BYGONE_EFFIGY_ELITE; 1 recorded encounters; no action-level evidence"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    },
+    {
+      "strategy_id": "silent-brain-vantom-two-stage-preparation",
+      "rk_id": "silent-encounter-rk-vantom-slippery-defense-draw",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-vantom-slippery-defense-draw",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "VANTOM"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "DISMEMBER_MOVE"
+                      },
+                      {
+                        "op": "gt",
+                        "field": "enemy.powers.SLIPPERY_POWER",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DASH"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "BACKFLIP"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DASH"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "BACKFLIP"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-vantom-slippery-defense-draw-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Dash Backflip while Vantom remains slippery",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 17,
+              "turn": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3353169951-59838.json",
+            "sha256": "92dd88e79a3924aab7d619157f6d5e6c5695a811042e4092982b08845a6d5bef",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 19,
+              "players": null,
+              "selection": "v0.111 cluster=1 ENCOUNTER.VANTOM_BOSS; contextual cost only; uploaded runs=19; no independent player estimate"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    },
+    {
+      "strategy_id": "silent-brain-kin-priest-exit-window",
+      "rk_id": "silent-encounter-rk-kin-beam-wail-window",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-kin-beam-wail-window",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "KIN_PRIEST"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "BEAM_MOVE"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "KIN_FOLLOWER"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "BOOMERANG_MOVE"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "PIERCING_WAIL"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "PIERCING_WAIL"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-kin-beam-wail-window-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Wail during observed Kin beam and boomerang",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "KUHYZBFFLALU",
+              "floor": 17,
+              "turn": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-4194487747-83969.json",
+            "sha256": "79230af300cb13bc205bddd4ac7469009ec1e5be08cf4c8270a2f80b54e14ab6",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 22,
+              "players": null,
+              "selection": "v0.111 cluster=1 ENCOUNTER.THE_KIN_BOSS; contextual cost only; uploaded runs=22; no independent player estimate"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    },
+    {
+      "strategy_id": "silent-brain-knowledge-demon-external-tail-budget",
+      "rk_id": "silent-encounter-rk-demon-slap-wail-block",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-demon-slap-wail-block",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "KNOWLEDGE_DEMON"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "SLAP_MOVE"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "PIERCING_WAIL"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEFEND_SILENT"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "PIERCING_WAIL"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEFEND_SILENT"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-demon-slap-wail-block-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Wail and blocks against observed Demon slap",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "KUHYZBFFLALU",
+              "floor": 33,
+              "turn": 2
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-4201632427-28445.json",
+            "sha256": "94bb153a66cdd7908c0465e789fad353948587d4260fa05d89fabd0b13c0ae2d",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 27,
+              "players": null,
+              "selection": "v0.111 cluster=1 ENCOUNTER.KNOWLEDGE_DEMON_BOSS; contextual cost only; uploaded runs=27; no independent player estimate"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    },
+    {
+      "strategy_id": "silent-brain-decimillipede-poison-target-review",
+      "rk_id": "silent-encounter-rk-decimillipede-split-poison",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-decimillipede-split-poison",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "DECIMILLIPEDE_SEGMENT_FRONT"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.index",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "DECIMILLIPEDE_SEGMENT_MIDDLE"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.index",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "DECIMILLIPEDE_SEGMENT_BACK"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.index",
+                        "value": 2
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEADLY_POISON"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "POISONED_STAB"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEADLY_POISON"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "action.target",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "POISONED_STAB"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "action.target",
+                        "value": 0
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-decimillipede-split-poison-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare front middle poison while budgeting all segments",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 31,
+              "turn": 2
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-3405985844-51517.json",
+            "sha256": "4a72a0e01dd3d424ad216024cad3dc2786470ba65b31355c9f3f5a027d182d78",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "v0.111 selected c3 pair0; ENCOUNTER.DECIMILLIPEDE_ELITE; 2 recorded encounters; no action-level evidence"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    },
+    {
+      "strategy_id": "silent-brain-crab-surviving-part-budget",
+      "rk_id": "silent-encounter-rk-crab-active-side-leg-sweep",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-crab-active-side-leg-sweep",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "CRUSHER"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "GUARDED_STRIKE_MOVE"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.index",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "enemies.items",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "enemy.id",
+                        "value": "ROCKET"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.alive",
+                        "value": true
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.move_id",
+                        "value": "RECHARGE_MOVE"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "enemy.index",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "LEG_SWEEP"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "player.hand",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEADLY_POISON"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.can_play",
+                        "value": true
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "eq",
+                  "field": "option.kind",
+                  "value": "combat_line"
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "LEG_SWEEP"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "action.target",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                {
+                  "op": "any",
+                  "field": "option.actions",
+                  "arg": {
+                    "op": "and",
+                    "args": [
+                      {
+                        "op": "eq",
+                        "field": "action.kind",
+                        "value": "card"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "card.id",
+                        "value": "DEADLY_POISON"
+                      },
+                      {
+                        "op": "eq",
+                        "field": "action.target",
+                        "value": 0
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-crab-active-side-leg-sweep-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Leg Sweep on currently attacking Crusher",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "LKC9YXKZWTKR",
+              "floor": 33,
+              "turn": 5
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/raw/decisions-1312225444-50902.json",
+            "sha256": "b2b6a0cba143407377408225763d95efea1165b9b7519ba1431ea9f19a812ec8",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 31,
+              "players": null,
+              "selection": "v0.111 cluster=1 ENCOUNTER.KAISER_CRAB_BOSS; contextual cost only; uploaded runs=31; no independent player estimate"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+          }
+        ]
+      },
+      "construction_negative_entries": 0,
+      "current_state_conditions": true,
+      "wrong_enemy_control": false,
+      "full_predicate_without_original_plan": null,
+      "actual_fixed_production_tools": true,
+      "executable_replay": false
+    }
+  ]
+}

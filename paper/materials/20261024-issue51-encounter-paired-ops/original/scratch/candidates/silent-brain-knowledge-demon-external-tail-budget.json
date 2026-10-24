@@ -1,0 +1,113 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "event",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "KNOWLEDGE_DEMON_BOSS"
+        ]
+      },
+      "strategy": "知识恶魔准备仍给受伤尾部留预算，不以均值定安全血线。当前SLAP_MOVE且尖啸与防御合法时，比较减攻后补挡的整条线。KUHYZBFFLALU F33 T2一次机会：已有3弱化，显示13攻；实打尖啸变9攻，再两张防御合10挡，兼打触媒，T3仍63血。整战63→24，后续血价并未消失。\n范围：Silent/A10/自有版本unknown、1局1窗口；MEQ6ETDCEEE9持尖啸仍终败，含SL，首次仅预判截止。外部v0.111分簇代价只是方向对照；不把模型均值当反事实，不改变H0/G1a或校准可信度。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+          },
+          "statistic": {
+            "name": "gross_damage_p90",
+            "value": 51.0,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 360
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+            "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+          ],
+          "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "KUHYZBFFLALU",
+          "floor": 33,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4201632427-28445.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "MEQ6ETDCEEE9",
+          "floor": 33,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/demon-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 22.77777777777778,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 27
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.KNOWLEDGE_DEMON_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "limits": {
+        "own_support_runs": 0,
+        "effect": null,
+        "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+      },
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

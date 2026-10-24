@@ -1,0 +1,1025 @@
+{
+  "source": "external:sts2fun",
+  "artifact_sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+  "rows": [
+    {
+      "act": 2,
+      "act_index": 1,
+      "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+      "boss_record_n": 44,
+      "cluster": 1,
+      "costs": {
+        "definition": "仅单房间给记录总受伤与治疗；缺真实入场快照，净HP损失未知；多房间节点总值不分给单个Boss",
+        "end_hp": {
+          "max": 72,
+          "mean": 21.136363636363637,
+          "min": 0,
+          "missing_n": 0,
+          "n": 44
+        },
+        "end_max_hp": {
+          "max": 100,
+          "mean": 73.0,
+          "min": 51,
+          "missing_n": 0,
+          "n": 44
+        },
+        "entry_hp": {
+          "missing_n": 44,
+          "n": 0
+        },
+        "gross_damage": {
+          "max": 76,
+          "mean": 34.11363636363637,
+          "min": 0,
+          "missing_n": 0,
+          "n": 44
+        },
+        "healing": {
+          "max": 43,
+          "mean": 4.454545454545454,
+          "min": 0,
+          "missing_n": 0,
+          "n": 44
+        },
+        "multi_room_or_partial_n": 0,
+        "verified_net_hp_loss": {
+          "missing_n": 44,
+          "n": 0
+        }
+      },
+      "distinct_content_n": 44,
+      "distinct_uploaded_runs": 44,
+      "duplicate_boss_visits_n": 0,
+      "encounters": 44,
+      "hp_definition": "前一节点结束HP代理，仅单房间归属；非真实Boss入场HP",
+      "hp_previous_node_end_proxy": {
+        "max": 100,
+        "mean": 50.79545454545455,
+        "min": 19,
+        "missing_n": 0,
+        "n": 44
+      },
+      "independent_players": null,
+      "missing_n": 0,
+      "outcome_cross_counts": [
+        {
+          "build_id": "v0.107.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 4,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.107.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 5,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.107.0",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 5,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        },
+        {
+          "build_id": "v0.107.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 14,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.107.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 8,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.107.1",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 8,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        }
+      ],
+      "outcome_definition": {
+        "conflict": "末HP非正却有后继或整局win时保持unknown；不以整局win替代任何其他单战结果",
+        "indices": "act_index/point_index/room_index从0开始；boss_position是本幕已记录Boss访问从1开始；record_ordinal是记录序号，全部不是已核floor",
+        "passed_by_later_record": "单战斗单房间、回合数为正且无HP矛盾，有后继记录；仅延续代理",
+        "source": "仅使用#54原白名单缓存；不扩大字段或重新导出原库",
+        "terminal_hp_nonpositive": "上述条件成立，无后继、整局非win且末HP非正；仅终止HP标签",
+        "terminal_run_win_positive_hp": "上述条件成立，无后继、整局win且节点末HP为正；仅终局胜代理",
+        "unknown": "多房间、非单战斗、回合缺失/非正、残缺统计及其余终止/HP不足均unknown",
+        "win_rate_proxy": "仅前两类/前三类合计的描述比例，非已认证单战胜率"
+      },
+      "outcome_known": 44,
+      "overlap_with": [
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+          "distinct_uploaded_runs": 8
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+          "distinct_uploaded_runs": 11
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+          "distinct_uploaded_runs": 8
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.THE_KIN_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.VANTOM_BOSS",
+          "distinct_uploaded_runs": 5
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.WATERFALL_GIANT_BOSS",
+          "distinct_uploaded_runs": 8
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.AEONGLASS_BOSS",
+          "distinct_uploaded_runs": 22
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.QUEEN_BOSS",
+          "distinct_uploaded_runs": 16
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+          "distinct_uploaded_runs": 16
+        }
+      ],
+      "player_cluster_uncertainty": "unknown",
+      "position_counts": [
+        {
+          "boss_position": 1,
+          "build_id": "v0.107.0",
+          "n": 13,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        },
+        {
+          "boss_position": 1,
+          "build_id": "v0.107.0",
+          "n": 1,
+          "point_index": 17,
+          "record_ordinal": 35,
+          "room_index": 0,
+          "verified_floor": null
+        },
+        {
+          "boss_position": 1,
+          "build_id": "v0.107.1",
+          "n": 29,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        },
+        {
+          "boss_position": 1,
+          "build_id": "v0.107.1",
+          "n": 1,
+          "point_index": 17,
+          "record_ordinal": 35,
+          "room_index": 0,
+          "verified_floor": null
+        }
+      ],
+      "previous_point_context_hp": {
+        "max": 100,
+        "mean": 50.79545454545455,
+        "min": 19,
+        "missing_n": 0,
+        "n": 44
+      },
+      "snapshot": {
+        "entry_deck_present": null,
+        "entry_hp": null,
+        "entry_max_hp": null,
+        "entry_potions_present": null,
+        "snapshot_timing": "真实战前快照未在原投影中；仅另列节点末/前节点末代理",
+        "true_entry_snapshot_missing_n": 44,
+        "verified_floor_missing_n": 44
+      },
+      "unknown": 0,
+      "version": "v0.107",
+      "win_rate_proxy": 0.7045454545454546,
+      "wins_proxy": 31
+    },
+    {
+      "act": 2,
+      "act_index": 1,
+      "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+      "boss_record_n": 14,
+      "cluster": 1,
+      "costs": {
+        "definition": "仅单房间给记录总受伤与治疗；缺真实入场快照，净HP损失未知；多房间节点总值不分给单个Boss",
+        "end_hp": {
+          "max": 56,
+          "mean": 18.857142857142858,
+          "min": 0,
+          "missing_n": 0,
+          "n": 14
+        },
+        "end_max_hp": {
+          "max": 101,
+          "mean": 74.28571428571429,
+          "min": 61,
+          "missing_n": 0,
+          "n": 14
+        },
+        "entry_hp": {
+          "missing_n": 14,
+          "n": 0
+        },
+        "gross_damage": {
+          "max": 72,
+          "mean": 31.357142857142858,
+          "min": 6,
+          "missing_n": 0,
+          "n": 14
+        },
+        "healing": {
+          "max": 25,
+          "mean": 5.428571428571429,
+          "min": 0,
+          "missing_n": 0,
+          "n": 14
+        },
+        "multi_room_or_partial_n": 0,
+        "verified_net_hp_loss": {
+          "missing_n": 14,
+          "n": 0
+        }
+      },
+      "distinct_content_n": 14,
+      "distinct_uploaded_runs": 14,
+      "duplicate_boss_visits_n": 0,
+      "encounters": 14,
+      "hp_definition": "前一节点结束HP代理，仅单房间归属；非真实Boss入场HP",
+      "hp_previous_node_end_proxy": {
+        "max": 72,
+        "mean": 44.785714285714285,
+        "min": 11,
+        "missing_n": 0,
+        "n": 14
+      },
+      "independent_players": null,
+      "missing_n": 0,
+      "outcome_cross_counts": [
+        {
+          "build_id": "v0.108.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 2,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.108.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 7,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.108.0",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 5,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        }
+      ],
+      "outcome_definition": {
+        "conflict": "末HP非正却有后继或整局win时保持unknown；不以整局win替代任何其他单战结果",
+        "indices": "act_index/point_index/room_index从0开始；boss_position是本幕已记录Boss访问从1开始；record_ordinal是记录序号，全部不是已核floor",
+        "passed_by_later_record": "单战斗单房间、回合数为正且无HP矛盾，有后继记录；仅延续代理",
+        "source": "仅使用#54原白名单缓存；不扩大字段或重新导出原库",
+        "terminal_hp_nonpositive": "上述条件成立，无后继、整局非win且末HP非正；仅终止HP标签",
+        "terminal_run_win_positive_hp": "上述条件成立，无后继、整局win且节点末HP为正；仅终局胜代理",
+        "unknown": "多房间、非单战斗、回合缺失/非正、残缺统计及其余终止/HP不足均unknown",
+        "win_rate_proxy": "仅前两类/前三类合计的描述比例，非已认证单战胜率"
+      },
+      "outcome_known": 14,
+      "overlap_with": [
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+          "distinct_uploaded_runs": 1
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+          "distinct_uploaded_runs": 2
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+          "distinct_uploaded_runs": 2
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.THE_KIN_BOSS",
+          "distinct_uploaded_runs": 5
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.VANTOM_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.WATERFALL_GIANT_BOSS",
+          "distinct_uploaded_runs": 1
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.AEONGLASS_BOSS",
+          "distinct_uploaded_runs": 5
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.QUEEN_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+          "distinct_uploaded_runs": 6
+        }
+      ],
+      "player_cluster_uncertainty": "unknown",
+      "position_counts": [
+        {
+          "boss_position": 1,
+          "build_id": "v0.108.0",
+          "n": 14,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        }
+      ],
+      "previous_point_context_hp": {
+        "max": 72,
+        "mean": 44.785714285714285,
+        "min": 11,
+        "missing_n": 0,
+        "n": 14
+      },
+      "snapshot": {
+        "entry_deck_present": null,
+        "entry_hp": null,
+        "entry_max_hp": null,
+        "entry_potions_present": null,
+        "snapshot_timing": "真实战前快照未在原投影中；仅另列节点末/前节点末代理",
+        "true_entry_snapshot_missing_n": 14,
+        "verified_floor_missing_n": 14
+      },
+      "unknown": 0,
+      "version": "v0.108",
+      "win_rate_proxy": 0.6428571428571429,
+      "wins_proxy": 9
+    },
+    {
+      "act": 2,
+      "act_index": 1,
+      "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+      "boss_record_n": 15,
+      "cluster": 1,
+      "costs": {
+        "definition": "仅单房间给记录总受伤与治疗；缺真实入场快照，净HP损失未知；多房间节点总值不分给单个Boss",
+        "end_hp": {
+          "max": 70,
+          "mean": 31.266666666666666,
+          "min": 0,
+          "missing_n": 0,
+          "n": 15
+        },
+        "end_max_hp": {
+          "max": 90,
+          "mean": 76.0,
+          "min": 58,
+          "missing_n": 0,
+          "n": 15
+        },
+        "entry_hp": {
+          "missing_n": 15,
+          "n": 0
+        },
+        "gross_damage": {
+          "max": 77,
+          "mean": 34.2,
+          "min": 4,
+          "missing_n": 0,
+          "n": 15
+        },
+        "healing": {
+          "max": 26,
+          "mean": 7.333333333333333,
+          "min": 0,
+          "missing_n": 0,
+          "n": 15
+        },
+        "multi_room_or_partial_n": 0,
+        "verified_net_hp_loss": {
+          "missing_n": 15,
+          "n": 0
+        }
+      },
+      "distinct_content_n": 15,
+      "distinct_uploaded_runs": 15,
+      "duplicate_boss_visits_n": 0,
+      "encounters": 15,
+      "hp_definition": "前一节点结束HP代理，仅单房间归属；非真实Boss入场HP",
+      "hp_previous_node_end_proxy": {
+        "max": 80,
+        "mean": 58.13333333333333,
+        "min": 37,
+        "missing_n": 0,
+        "n": 15
+      },
+      "independent_players": null,
+      "missing_n": 0,
+      "outcome_cross_counts": [
+        {
+          "build_id": "v0.109.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 5,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.109.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 5,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.109.0",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 1,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        },
+        {
+          "build_id": "v0.109.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 1,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.109.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 2,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.109.1",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 1,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        }
+      ],
+      "outcome_definition": {
+        "conflict": "末HP非正却有后继或整局win时保持unknown；不以整局win替代任何其他单战结果",
+        "indices": "act_index/point_index/room_index从0开始；boss_position是本幕已记录Boss访问从1开始；record_ordinal是记录序号，全部不是已核floor",
+        "passed_by_later_record": "单战斗单房间、回合数为正且无HP矛盾，有后继记录；仅延续代理",
+        "source": "仅使用#54原白名单缓存；不扩大字段或重新导出原库",
+        "terminal_hp_nonpositive": "上述条件成立，无后继、整局非win且末HP非正；仅终止HP标签",
+        "terminal_run_win_positive_hp": "上述条件成立，无后继、整局win且节点末HP为正；仅终局胜代理",
+        "unknown": "多房间、非单战斗、回合缺失/非正、残缺统计及其余终止/HP不足均unknown",
+        "win_rate_proxy": "仅前两类/前三类合计的描述比例，非已认证单战胜率"
+      },
+      "outcome_known": 15,
+      "overlap_with": [
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+          "distinct_uploaded_runs": 2
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.THE_KIN_BOSS",
+          "distinct_uploaded_runs": 1
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.WATERFALL_GIANT_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.AEONGLASS_BOSS",
+          "distinct_uploaded_runs": 7
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.QUEEN_BOSS",
+          "distinct_uploaded_runs": 7
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+          "distinct_uploaded_runs": 7
+        }
+      ],
+      "player_cluster_uncertainty": "unknown",
+      "position_counts": [
+        {
+          "boss_position": 1,
+          "build_id": "v0.109.0",
+          "n": 11,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        },
+        {
+          "boss_position": 1,
+          "build_id": "v0.109.1",
+          "n": 4,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        }
+      ],
+      "previous_point_context_hp": {
+        "max": 80,
+        "mean": 58.13333333333333,
+        "min": 37,
+        "missing_n": 0,
+        "n": 15
+      },
+      "snapshot": {
+        "entry_deck_present": null,
+        "entry_hp": null,
+        "entry_max_hp": null,
+        "entry_potions_present": null,
+        "snapshot_timing": "真实战前快照未在原投影中；仅另列节点末/前节点末代理",
+        "true_entry_snapshot_missing_n": 15,
+        "verified_floor_missing_n": 15
+      },
+      "unknown": 0,
+      "version": "v0.109",
+      "win_rate_proxy": 0.8666666666666667,
+      "wins_proxy": 13
+    },
+    {
+      "act": 2,
+      "act_index": 1,
+      "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+      "boss_record_n": 9,
+      "cluster": 1,
+      "costs": {
+        "definition": "仅单房间给记录总受伤与治疗；缺真实入场快照，净HP损失未知；多房间节点总值不分给单个Boss",
+        "end_hp": {
+          "max": 58,
+          "mean": 24.11111111111111,
+          "min": 0,
+          "missing_n": 0,
+          "n": 9
+        },
+        "end_max_hp": {
+          "max": 85,
+          "mean": 76.77777777777777,
+          "min": 65,
+          "missing_n": 0,
+          "n": 9
+        },
+        "entry_hp": {
+          "missing_n": 9,
+          "n": 0
+        },
+        "gross_damage": {
+          "max": 68,
+          "mean": 32.333333333333336,
+          "min": 10,
+          "missing_n": 0,
+          "n": 9
+        },
+        "healing": {
+          "max": 25,
+          "mean": 6.777777777777778,
+          "min": 0,
+          "missing_n": 0,
+          "n": 9
+        },
+        "multi_room_or_partial_n": 0,
+        "verified_net_hp_loss": {
+          "missing_n": 9,
+          "n": 0
+        }
+      },
+      "distinct_content_n": 9,
+      "distinct_uploaded_runs": 9,
+      "duplicate_boss_visits_n": 0,
+      "encounters": 9,
+      "hp_definition": "前一节点结束HP代理，仅单房间归属；非真实Boss入场HP",
+      "hp_previous_node_end_proxy": {
+        "max": 71,
+        "mean": 49.666666666666664,
+        "min": 27,
+        "missing_n": 0,
+        "n": 9
+      },
+      "independent_players": null,
+      "missing_n": 0,
+      "outcome_cross_counts": [
+        {
+          "build_id": "v0.110.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 1,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.110.0",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 1,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        },
+        {
+          "build_id": "v0.110.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 3,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.110.1",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 4,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        }
+      ],
+      "outcome_definition": {
+        "conflict": "末HP非正却有后继或整局win时保持unknown；不以整局win替代任何其他单战结果",
+        "indices": "act_index/point_index/room_index从0开始；boss_position是本幕已记录Boss访问从1开始；record_ordinal是记录序号，全部不是已核floor",
+        "passed_by_later_record": "单战斗单房间、回合数为正且无HP矛盾，有后继记录；仅延续代理",
+        "source": "仅使用#54原白名单缓存；不扩大字段或重新导出原库",
+        "terminal_hp_nonpositive": "上述条件成立，无后继、整局非win且末HP非正；仅终止HP标签",
+        "terminal_run_win_positive_hp": "上述条件成立，无后继、整局win且节点末HP为正；仅终局胜代理",
+        "unknown": "多房间、非单战斗、回合缺失/非正、残缺统计及其余终止/HP不足均unknown",
+        "win_rate_proxy": "仅前两类/前三类合计的描述比例，非已认证单战胜率"
+      },
+      "outcome_known": 9,
+      "overlap_with": [
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+          "distinct_uploaded_runs": 2
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.THE_KIN_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.VANTOM_BOSS",
+          "distinct_uploaded_runs": 1
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.AEONGLASS_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.QUEEN_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+          "distinct_uploaded_runs": 6
+        }
+      ],
+      "player_cluster_uncertainty": "unknown",
+      "position_counts": [
+        {
+          "boss_position": 1,
+          "build_id": "v0.110.0",
+          "n": 2,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        },
+        {
+          "boss_position": 1,
+          "build_id": "v0.110.1",
+          "n": 7,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        }
+      ],
+      "previous_point_context_hp": {
+        "max": 71,
+        "mean": 49.666666666666664,
+        "min": 27,
+        "missing_n": 0,
+        "n": 9
+      },
+      "snapshot": {
+        "entry_deck_present": null,
+        "entry_hp": null,
+        "entry_max_hp": null,
+        "entry_potions_present": null,
+        "snapshot_timing": "真实战前快照未在原投影中；仅另列节点末/前节点末代理",
+        "true_entry_snapshot_missing_n": 9,
+        "verified_floor_missing_n": 9
+      },
+      "unknown": 0,
+      "version": "v0.110",
+      "win_rate_proxy": 0.8888888888888888,
+      "wins_proxy": 8
+    },
+    {
+      "act": 2,
+      "act_index": 1,
+      "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+      "boss_record_n": 27,
+      "cluster": 1,
+      "costs": {
+        "definition": "仅单房间给记录总受伤与治疗；缺真实入场快照，净HP损失未知；多房间节点总值不分给单个Boss",
+        "end_hp": {
+          "max": 83,
+          "mean": 24.666666666666668,
+          "min": 0,
+          "missing_n": 0,
+          "n": 27
+        },
+        "end_max_hp": {
+          "max": 93,
+          "mean": 74.18518518518519,
+          "min": 57,
+          "missing_n": 0,
+          "n": 27
+        },
+        "entry_hp": {
+          "missing_n": 27,
+          "n": 0
+        },
+        "gross_damage": {
+          "max": 55,
+          "mean": 22.77777777777778,
+          "min": 0,
+          "missing_n": 0,
+          "n": 27
+        },
+        "healing": {
+          "max": 22,
+          "mean": 2.037037037037037,
+          "min": 0,
+          "missing_n": 0,
+          "n": 27
+        },
+        "multi_room_or_partial_n": 0,
+        "verified_net_hp_loss": {
+          "missing_n": 27,
+          "n": 0
+        }
+      },
+      "distinct_content_n": 27,
+      "distinct_uploaded_runs": 27,
+      "duplicate_boss_visits_n": 0,
+      "encounters": 27,
+      "hp_definition": "前一节点结束HP代理，仅单房间归属；非真实Boss入场HP",
+      "hp_previous_node_end_proxy": {
+        "max": 75,
+        "mean": 45.666666666666664,
+        "min": 24,
+        "missing_n": 0,
+        "n": 27
+      },
+      "independent_players": null,
+      "missing_n": 0,
+      "outcome_cross_counts": [
+        {
+          "build_id": "v0.111.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 7,
+          "outcome_label": "passed_by_later_record",
+          "run_win": false,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.111.0",
+          "contradictory": false,
+          "end_hp_zero": false,
+          "has_later_record": true,
+          "n": 15,
+          "outcome_label": "passed_by_later_record",
+          "run_win": true,
+          "terminal_point": false
+        },
+        {
+          "build_id": "v0.111.0",
+          "contradictory": false,
+          "end_hp_zero": true,
+          "has_later_record": false,
+          "n": 5,
+          "outcome_label": "terminal_hp_nonpositive",
+          "run_win": false,
+          "terminal_point": true
+        }
+      ],
+      "outcome_definition": {
+        "conflict": "末HP非正却有后继或整局win时保持unknown；不以整局win替代任何其他单战结果",
+        "indices": "act_index/point_index/room_index从0开始；boss_position是本幕已记录Boss访问从1开始；record_ordinal是记录序号，全部不是已核floor",
+        "passed_by_later_record": "单战斗单房间、回合数为正且无HP矛盾，有后继记录；仅延续代理",
+        "source": "仅使用#54原白名单缓存；不扩大字段或重新导出原库",
+        "terminal_hp_nonpositive": "上述条件成立，无后继、整局非win且末HP非正；仅终止HP标签",
+        "terminal_run_win_positive_hp": "上述条件成立，无后继、整局win且节点末HP为正；仅终局胜代理",
+        "unknown": "多房间、非单战斗、回合缺失/非正、残缺统计及其余终止/HP不足均unknown",
+        "win_rate_proxy": "仅前两类/前三类合计的描述比例，非已认证单战胜率"
+      },
+      "outcome_known": 27,
+      "overlap_with": [
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+          "distinct_uploaded_runs": 1
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+          "distinct_uploaded_runs": 7
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.THE_KIN_BOSS",
+          "distinct_uploaded_runs": 3
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.VANTOM_BOSS",
+          "distinct_uploaded_runs": 4
+        },
+        {
+          "act_index": 0,
+          "boss": "ENCOUNTER.WATERFALL_GIANT_BOSS",
+          "distinct_uploaded_runs": 8
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.AEONGLASS_BOSS",
+          "distinct_uploaded_runs": 17
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.QUEEN_BOSS",
+          "distinct_uploaded_runs": 12
+        },
+        {
+          "act_index": 2,
+          "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+          "distinct_uploaded_runs": 11
+        }
+      ],
+      "player_cluster_uncertainty": "unknown",
+      "position_counts": [
+        {
+          "boss_position": 1,
+          "build_id": "v0.111.0",
+          "n": 27,
+          "point_index": 15,
+          "record_ordinal": 33,
+          "room_index": 0,
+          "verified_floor": null
+        }
+      ],
+      "previous_point_context_hp": {
+        "max": 75,
+        "mean": 45.666666666666664,
+        "min": 24,
+        "missing_n": 0,
+        "n": 27
+      },
+      "snapshot": {
+        "entry_deck_present": null,
+        "entry_hp": null,
+        "entry_max_hp": null,
+        "entry_potions_present": null,
+        "snapshot_timing": "真实战前快照未在原投影中；仅另列节点末/前节点末代理",
+        "true_entry_snapshot_missing_n": 27,
+        "verified_floor_missing_n": 27
+      },
+      "unknown": 0,
+      "version": "v0.111",
+      "win_rate_proxy": 0.8148148148148148,
+      "wins_proxy": 22
+    }
+  ],
+  "versions_pooled": false,
+  "mechanism_change_comparison": "unknown; no version mechanism evidence in frozen input; never inferred unchanged",
+  "independent_players": null,
+  "cells_not_summed": true
+}

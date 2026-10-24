@@ -1,0 +1,108 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "max": 17
+        },
+        "bosses": [
+          "THE_KIN_BOSS"
+        ]
+      },
+      "strategy": "同族备战仍核神官退出窗口及撑到该窗口的资源；当前神官BEAM_MOVE、信徒BOOMERANG_MOVE且尖啸可打时，比较群体减攻与单纯格挡/继续输出。KUHYZBFFLALU F17 T3一次机会：显示3×3与5×2；实际派发毒雾+、尖啸、触媒后，两组攻击均变0，T4仍47血。原脑选防御线，执行闸改线，不能把原答案当实打；整战55→9，后续仍有高血价。\n范围：Silent/A10/版本unknown、1局1窗口；不指定固定击杀顺序。ZTRGYYMLR8SC持尖啸仍最终败，含SL；首次预判不冒实际死亡，不能推出尖啸整战收益。",
+      "evidence": [
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12039634787"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040774765"
+        },
+        {
+          "run": "FETDVL1P59B9",
+          "floor": 17,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12040838947"
+        },
+        {
+          "type": "own",
+          "run": "KUHYZBFFLALU",
+          "floor": 17,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4194487747-83969.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "ZTRGYYMLR8SC",
+          "floor": 17,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/kin-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.THE_KIN_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 30.318181818181817,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 22
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.THE_KIN_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "sample": {
+        "independent_runs": 1,
+        "first_attempt_fights": 1,
+        "sl_attempts_used": 0,
+        "observed_ascensions": [
+          10
+        ]
+      },
+      "limits": [
+        "单局描述，未隔离牌、休息或杀序的因果收益。",
+        "信徒退场不记成其剩余117点实际伤害。",
+        "无反事实对照；当前机制和状态优先，其他进阶数值未知。"
+      ],
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

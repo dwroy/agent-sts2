@@ -1,0 +1,232 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-crab-active-side-leg-sweep",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "CRUSHER"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.move_id",
+                      "value": "GUARDED_STRIKE_MOVE"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.index",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "ROCKET"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.move_id",
+                      "value": "RECHARGE_MOVE"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.index",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "player.hand",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "LEG_SWEEP"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.can_play",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "player.hand",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "DEADLY_POISON"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.can_play",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "eq",
+                "field": "option.kind",
+                "value": "combat_line"
+              },
+              {
+                "op": "any",
+                "field": "option.actions",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "action.kind",
+                      "value": "card"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "LEG_SWEEP"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "action.target",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "option.actions",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "action.kind",
+                      "value": "card"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "card.id",
+                      "value": "DEADLY_POISON"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "action.target",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-crab-active-side-leg-sweep-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare Leg Sweep on currently attacking Crusher",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "LKC9YXKZWTKR",
+            "floor": 33,
+            "turn": 5
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-1312225444-50902.json",
+          "sha256": "b2b6a0cba143407377408225763d95efea1165b9b7519ba1431ea9f19a812ec8",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "Silent A10; exact fingerprint-matched current window; no_retry_evidence; actual action receipts plus observed successors. No exact-action counterfactual."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 31,
+            "players": null,
+            "selection": "v0.111 cluster=1 ENCOUNTER.KAISER_CRAB_BOSS; contextual cost only; uploaded runs=31; no independent player estimate"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    }
+  ]
+}

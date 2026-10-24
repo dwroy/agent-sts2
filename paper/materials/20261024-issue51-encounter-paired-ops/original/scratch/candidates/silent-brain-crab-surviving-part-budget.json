@@ -1,0 +1,117 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "version": "2.0.0",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "floor": {
+          "min": 18,
+          "max": 33
+        },
+        "bosses": [
+          "KAISER_CRAB_BOSS"
+        ]
+      },
+      "strategy": "帝王蟹仍分核双体与残敌预算；双体当前为碾碎爪GUARDED_STRIKE_MOVE、火箭RECHARGE_MOVE时，按实际攻击侧比较扫腿与施毒目标。LKC9YXKZWTKR F33 T5一次机会：火箭95血/15毒暂不显示攻击，碾碎爪191血/7毒/25攻；实打致命毒药后已变17攻，再扫腿到12攻/12挡，带毒刺击后T6仍47血；不把25→12全归于扫腿。不能把火箭休眠当退场，也未证固定先杀哪侧；整战76→47。\n范围：Silent/A10/版本unknown、1局1窗口；F6XY4QJMS5RC持施毒/防护仍57血进场实际败。旧预判SL/后试败例原样保留，不作扫腿因果收益或安全保证。",
+      "evidence": [
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12108239410"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12110446436"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123299008"
+        },
+        {
+          "run": "YZQEEDWQ6AY6",
+          "floor": 33,
+          "ref": "paper/materials/20261022-issue27-brain-strategies/evidence-refs.jsonl#states:12123455148"
+        },
+        {
+          "type": "own",
+          "run": "LKC9YXKZWTKR",
+          "floor": 33,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-1312225444-50902.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "F6XY4QJMS5RC",
+          "floor": 33,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/crab-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; final-deck cluster=1; boss=ENCOUNTER.KAISER_CRAB_BOSS; contextual cost only, no action effect"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 37.29032258064516,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 31
+          },
+          "design": "observational",
+          "limitations": [
+            "终局簇只作事后统计定位，不是当前触发或已确认流派。",
+            "总受伤非净掉血；入场HP仅前节点末代理；不是动作收益。",
+            "上传与玩家独立性未知；选择、SL、截断混杂；自有版本unknown不能等同v0.111。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#version=v0.111,cluster=1,boss=ENCOUNTER.KAISER_CRAB_BOSS"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "design": "observational",
+      "sample": {
+        "independent_runs": 1,
+        "first_attempt_fights": 1,
+        "sl_attempts_used": 1,
+        "sl_attempt_numbers": [
+          6
+        ],
+        "observed_ascensions": [
+          10
+        ]
+      },
+      "limits": [
+        "第六试不是新独立局；第2–5试不作本条逐帧证据。",
+        "首次轨迹到第一次判死截断，第六试单列，不合成首试终局。",
+        "只在A10观察，不给其他进阶固定阈值；未验证构筑、休息或杀序因果收益。"
+      ],
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

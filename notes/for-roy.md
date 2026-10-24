@@ -5304,3 +5304,22 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 原181311已核done/rc0、无源码提案，原source=null及测试null保持。431份产物、144冻结输入和242授权原字节窗口核同；原native/high及终态已核，实际tier未知。满批独立发布V6-R435，六文字投影和六战斗描述rk/词汇上线，策略47至53、rk91至97；知识情境仅2新4更新，五情境配对，B1的rk及完整剧本仍待。六文字与六备战rk生产读回通过，构筑负例六个均空；当前状态条件为真也不代缺原Plan的完整谓词，六条仍unknown。12投影账本shipped、638项检查0，旧91/其他知识与开关保持，锁81.54秒已释。来源只重定向至逐字节档案，反向完全还原原候选；未重full/模型/局，未部署旧3:1或#56。自然采用、收益及科学父继续开放，交接clear-ok/51，原C回报另接。
 
 原件：paper/materials/20261024-issue51-blade-paired-ops/publication.json、verification.json、actual-live-consumers.json；issue51评论6383319401。
+
+
+### 2026-10-24T18:58:36+08:00 [ops] #51 182343原学习者限制转交
+
+[learner]
+
+本单元实际处理6个有区别的动作情境：真实新建2，同ID更新4，逐字节复用0；新rk6均为描述tag，可执行比较0、合法回放0、正式发布/消费者读回0。若按真实新建数审计，只有2条，不能冒称5条新增。主要缺口是原完整request.state、逐候选原Plan.steps/outcome与同seed结果矩阵；下一步交原owner在506名单/六流原截止内补原件或保持waiting，不扩批/不重开旧005，不关闭科学父。
+
+投递状态：仅保存本批scratch，待原ops→watcher→Roy/主管链转交；未冒称已发送或ACK。
+
+
+ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回；此为后续发布进展，不改原文当时发布0。原完整request.state/Plan/同seed矩阵仍缺，6完整谓词unknown；真实新增2/同ID更4，不能冒5新。证据、旧知识差异和下一步见paper/materials/20261024-issue51-encounter-paired-ops/original/scratch/source-ledger.json、replay-inventory.json、verification.json。交原集成员转Roy，接收与用户可见通知pending；本批仅既有strategy-proposal来源，不伪造别类manual notice/代其他角色ACK。
+
+
+### 2026-10-24T18:59:31+08:00 [ops] #51 C182343正式数据发布及R435返回核验
+
+182343原done/rc0、无源码、原source=null及测试null保持。146冻结输入、314产物、235授权原字节窗口与原native/high终态核同，实际tier未知。满批发布V6-R436，六遭遇描述配对为2新4同ID更，策略53至55、rk97至103；六文字与六备战rk生产读回、六构筑/A11负例和错误敌人拒绝通过。当前状态条件六真，缺原完整request/Plan/同seed矩阵时完整谓词仍unknown；合法回放/执行比较0，四独立支持局不计六局。12投影账本shipped、646项检查0，其他知识与开关保持，锁39.42秒已释。R435原发布、六文字/六rk及81.54秒锁释放原件核同，未重发。学习者限制原文已双收件箱并向原集成员发送一行提醒，仅agent_prompted，接收/Roy通知pending；不代ACK。未开模型/full/局，未部署#56或旧3:1，科学父开放，交接clear-ok/51。
+
+原件：paper/materials/20261024-issue51-encounter-paired-ops/verification.json、actual-live-consumers.json、supervisor-forwarding.json；issue51评论6383380100。

@@ -1,0 +1,149 @@
+{
+  "unit_ids": [
+    "external-decision-encounter-001"
+  ],
+  "unit_disposition": "processed_candidates_with_local_waiting",
+  "target_contexts": [
+    5,
+    10
+  ],
+  "handled_contexts": 6,
+  "new_contexts": 2,
+  "updated_same_id": 4,
+  "source": "mixed",
+  "own_support_runs": [
+    "0CLP16ZR4ZZC",
+    "FZT053H9PSC5",
+    "KUHYZBFFLALU",
+    "LKC9YXKZWTKR"
+  ],
+  "own_action_windows": 6,
+  "own_independent_support_runs": 4,
+  "own_negative_context_runs": [
+    "1303HVDLVMGR",
+    "1913SE84AXQF",
+    "2Q6ZYZ6JHM0M",
+    "F6XY4QJMS5RC",
+    "MEQ6ETDCEEE9",
+    "ZTRGYYMLR8SC"
+  ],
+  "own_total_read_fight_summary_runs": 10,
+  "own_raw_rows": 235,
+  "own_raw_bytes": 6193041,
+  "own_raw_state_rows": 124,
+  "own_raw_decision_rows": 111,
+  "own_model_read": "6个当前题指纹匹配的原状态/原候选问题与实际派发、逐状态资源/敌人/招式/power/手牌投影；抽核具体后继字段，未逐字阅读6MB原件所有冗余字段。",
+  "own_complete_game_four_sections_read": false,
+  "own_complete_playbook_claimed": false,
+  "own_fight_summaries": 12,
+  "external_complete_pairs": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/external-pages/c1-pair0.json",
+      "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+      "offset": 0,
+      "limit": 1,
+      "reader": "eval/sts2fun_build_view.py page; original artifact manifest size/SHA verified",
+      "examples": [
+        {
+          "example": "projection-40ed0656498ebe5e",
+          "safe_projection_sha256": "40ed0656498ebe5ed1f2abd576d79e8178940b2aa6813f657f8ed7aac9b689a7",
+          "nodes": 49,
+          "version": "v0.111",
+          "win": 1,
+          "complete_page_model_read": true
+        },
+        {
+          "example": "projection-a7d1a45b65eee902",
+          "safe_projection_sha256": "a7d1a45b65eee902663dce3a00e76f327a2a1ce993cf43b1ef5e773daac69566",
+          "nodes": 15,
+          "version": "v0.111",
+          "win": 0,
+          "complete_page_model_read": true
+        }
+      ]
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/external-pages/c3-pair0.json",
+      "sha256": "14f21d3f7f1d1c2fa54df2218388211977d74da5b0af6a4c33ff32e9151c874e",
+      "offset": 0,
+      "limit": 1,
+      "reader": "eval/sts2fun_build_view.py page; original artifact manifest size/SHA verified",
+      "examples": [
+        {
+          "example": "projection-7f11e27082146136",
+          "safe_projection_sha256": "7f11e27082146136c2c833524a5f584d75630c62e17b5a67869fb02a0e8f5fc0",
+          "nodes": 49,
+          "version": "v0.111",
+          "win": 1,
+          "complete_page_model_read": true
+        },
+        {
+          "example": "projection-854cbe948c146a68",
+          "safe_projection_sha256": "854cbe948c146a68930897486a2cabcafade53d39dba9be6940c7ee9f19d15c1",
+          "nodes": 25,
+          "version": "v0.111",
+          "win": 0,
+          "complete_page_model_read": true
+        }
+      ]
+    }
+  ],
+  "external_full_examples_model_read": 4,
+  "external_full_nodes_model_read": 138,
+  "external_unread_examples": 156,
+  "external_cluster_semantics": "簇1/3仅定位页，未给簇命名，也未据终局簇触发本批策略；无完整流派剧本声明。",
+  "program_coverage": [
+    "冻结3 manifest+129叶全大小/SHA；11片全SHA，源nlink可为1。",
+    "11片仅显式名单；内存DuckDB threads=2；查询先allowed506，且off+len<=原6流截止。",
+    "506局机会索引及按真实enemy ID的6类机会；A10与各其他进阶分列；reload/predicted/no_retry独立分层。",
+    "124状态+111决策原行235条有offset/bytes/SHA；不复制17GB流。",
+    "114个冻结代表文件仅程序筛选负例；12个选定战斗条目通过有界reader完整模型读回，不冒114整局人工通读。"
+  ],
+  "waiting_subitems": [
+    {
+      "context": "bygone",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    },
+    {
+      "context": "vantom",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    },
+    {
+      "context": "kin",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    },
+    {
+      "context": "demon",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    },
+    {
+      "context": "millipede",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    },
+    {
+      "context": "crab",
+      "state": "waiting",
+      "what": "原完整请求/各候选Plan/同seed结果矩阵/#28 capture与固定回放/正式消费者",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/replay-inventory.json",
+      "next": "原owner仅在原授权切点补实际保存原件；缺失继续unknown；本学习者不开模拟/模型或新单元。"
+    }
+  ],
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "scientific_parent_closed": false
+}

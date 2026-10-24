@@ -1,0 +1,534 @@
+[
+  {
+    "context": "bygone",
+    "disposition": "new_context",
+    "text_id": "silent-brain-effigy-sleep-setup-review",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-effigy-sleep-setup-review.json",
+    "rk_id": "silent-encounter-rk-effigy-sleep-footwork",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-effigy-sleep-footwork.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3349383622-29913.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15266906405-27309.json",
+      "successor_offsets": [
+        15266933714,
+        15267061804
+      ],
+      "support_run": "0CLP16ZR4ZZC",
+      "floor": 8,
+      "turn": 1
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "0CLP16ZR4ZZC"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "敌人不再显示SLEEP_MOVE、无合法灵动步法、资源不够或当前需要处理其他伤害时停止套用；重新求现有合法候选。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "在已观察睡眠窗口比较灵动步法启动与输出",
+    "magnitude": {
+      "observed_dexterity_change": 2,
+      "hp_until_next_turn": 0,
+      "whole_fight_net_hp_loss": 19
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "bygone",
+      "role": "limitation",
+      "run": "2Q6ZYZ6JHM0M",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/bygone-limitation.json",
+      "sha256": "022e85ccdcfe2d69b53aeb9f8ba32eb896f96b500b820cd1a58e67d6f9899116",
+      "floor": 8,
+      "outcome": "died",
+      "net_hp_loss": 48,
+      "entry_hp": 48,
+      "post_hp": 0,
+      "sl_touched": false,
+      "first_attempt_end": {
+        "actual_death_verified": true,
+        "basis": "final result; no predicted_death cutoff recorded",
+        "cutoff_ts": null,
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 8,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+    "external_input_sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/bygone-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  },
+  {
+    "context": "vantom",
+    "disposition": "update_same_id",
+    "text_id": "silent-brain-vantom-two-stage-preparation",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-vantom-two-stage-preparation.json",
+    "rk_id": "silent-encounter-rk-vantom-slippery-defense-draw",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-vantom-slippery-defense-draw.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3353169951-59838.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15271051280-29085.json",
+      "successor_offsets": [
+        15271080365,
+        15271108596,
+        15271138001
+      ],
+      "support_run": "0CLP16ZR4ZZC",
+      "floor": 17,
+      "turn": 3
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "0CLP16ZR4ZZC"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "缺冲刺/后空翻或不能支付、当前敌人/出招不同、无滑溜、额外伤害未覆盖时停止套用。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "滑溜未尽且大攻击已显示时比较防护抽牌线",
+    "magnitude": {
+      "observed_block_after": 23,
+      "displayed_incoming": 22,
+      "enemy_hp_progress_during_two_actions": 1,
+      "next_turn_player_hp_change": 0
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "vantom",
+      "role": "limitation",
+      "run": "1303HVDLVMGR",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/vantom-limitation.json",
+      "sha256": "359d960eca9deca8a0e628e71f0d00ff3bf94dadc1ede16983c63a3b9ec30938",
+      "floor": 17,
+      "outcome": "died",
+      "net_hp_loss": null,
+      "entry_hp": 25,
+      "post_hp": 0,
+      "sl_touched": true,
+      "first_attempt_end": {
+        "actual_death_verified": false,
+        "basis": "predicted_death cutoff proxy",
+        "cutoff_ts": "2026-10-23T00:43:02.661000",
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 17,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+    "external_input_sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/vantom-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  },
+  {
+    "context": "kin",
+    "disposition": "update_same_id",
+    "text_id": "silent-brain-kin-priest-exit-window",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-kin-priest-exit-window.json",
+    "rk_id": "silent-encounter-rk-kin-beam-wail-window",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-kin-beam-wail-window.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4194487747-83969.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-16415106161-37946.json",
+      "successor_offsets": [
+        16415144107,
+        16415181063,
+        16415217816,
+        16415254117
+      ],
+      "support_run": "KUHYZBFFLALU",
+      "floor": 17,
+      "turn": 3
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "KUHYZBFFLALU"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "须分别核同实体ID/出招、尖啸可打和当轮伤害；其他怪/出招/免疫或不可施放时不匹配，不沿用19→0。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "两实体多击同时显示时比较合法群体减攻线",
+    "magnitude": {
+      "displayed_incoming_before": 19,
+      "displayed_incoming_after": 0,
+      "next_turn_player_hp_change": 0,
+      "whole_fight_net_hp_loss": 46
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "kin",
+      "role": "limitation",
+      "run": "ZTRGYYMLR8SC",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/kin-limitation.json",
+      "sha256": "3a09e994ad795c9a8441cc9267c2b36eeec33f436ee21f95c8b60ddb533e7330",
+      "floor": 17,
+      "outcome": "died",
+      "net_hp_loss": null,
+      "entry_hp": 68,
+      "post_hp": 0,
+      "sl_touched": true,
+      "first_attempt_end": {
+        "actual_death_verified": false,
+        "basis": "predicted_death cutoff proxy",
+        "cutoff_ts": "2026-10-08T00:01:31.677000",
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 17,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+    "external_input_sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/kin-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  },
+  {
+    "context": "demon",
+    "disposition": "update_same_id",
+    "text_id": "silent-brain-knowledge-demon-external-tail-budget",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-knowledge-demon-external-tail-budget.json",
+    "rk_id": "silent-encounter-rk-demon-slap-wail-block",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-demon-slap-wail-block.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-4201632427-28445.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-16423059233-40288.json",
+      "successor_offsets": [
+        16423099521,
+        16423139236,
+        16423215786,
+        16423252668
+      ],
+      "support_run": "KUHYZBFFLALU",
+      "floor": 33,
+      "turn": 2
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "KUHYZBFFLALU"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "须按当前弱化/力量/来袭重新计算，未知诅咒或额外伤害不由10挡保证；不沿用13/9常数或判定模拟可信。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "按已显示单击比较减攻与补挡组合并留后续预算",
+    "magnitude": {
+      "displayed_attack_before": 13,
+      "displayed_attack_after": 9,
+      "observed_block": 10,
+      "next_turn_player_hp_change": 0,
+      "whole_fight_net_hp_loss": 39
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "demon",
+      "role": "limitation",
+      "run": "MEQ6ETDCEEE9",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/demon-limitation.json",
+      "sha256": "d70179cfadf7474198b909af6c80be00a32d08d0357793e711acf4806b70d161",
+      "floor": 33,
+      "outcome": "died",
+      "net_hp_loss": null,
+      "entry_hp": 67,
+      "post_hp": 0,
+      "sl_touched": true,
+      "first_attempt_end": {
+        "actual_death_verified": false,
+        "basis": "predicted_death cutoff proxy",
+        "cutoff_ts": "2026-10-19T05:42:59.687000",
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 33,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+    "external_input_sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/demon-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  },
+  {
+    "context": "millipede",
+    "disposition": "new_context",
+    "text_id": "silent-brain-decimillipede-poison-target-review",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-decimillipede-poison-target-review.json",
+    "rk_id": "silent-encounter-rk-decimillipede-split-poison",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-decimillipede-split-poison.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3405985844-51517.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-15332875753-44771.json",
+      "successor_offsets": [
+        15332964529,
+        15333050438,
+        15333092314
+      ],
+      "support_run": "FZT053H9PSC5",
+      "floor": 31,
+      "turn": 2
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "FZT053H9PSC5"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "三个实体或索引不符、牌不合法、资源不同、缺一段当前状态时停止套用；REATTACH只记录原power，不解释机制。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "比较真实可选的集中/分配目标并核三段总威胁",
+    "magnitude": {
+      "observed_middle_poison_added": 7,
+      "observed_front_poison_added": 4,
+      "observed_block": 21,
+      "displayed_incoming": 28,
+      "next_turn_player_hp_loss": 7
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "millipede",
+      "role": "limitation",
+      "run": "1913SE84AXQF",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/millipede-limitation.json",
+      "sha256": "bf94c8b7d8a2c85d400dbcc8992001b33f9f8ae67fccf952f64d0f7affbe0177",
+      "floor": 31,
+      "outcome": "died",
+      "net_hp_loss": 46,
+      "entry_hp": 46,
+      "post_hp": 0,
+      "sl_touched": false,
+      "first_attempt_end": {
+        "actual_death_verified": true,
+        "basis": "final result; no predicted_death cutoff recorded",
+        "cutoff_ts": null,
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 31,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+    "external_input_sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/millipede-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  },
+  {
+    "context": "crab",
+    "disposition": "update_same_id",
+    "text_id": "silent-brain-crab-surviving-part-budget",
+    "text_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-brain-crab-surviving-part-budget.json",
+    "rk_id": "silent-encounter-rk-crab-active-side-leg-sweep",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/candidates/silent-encounter-rk-crab-active-side-leg-sweep.json",
+    "same_evidence": {
+      "decision": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-1312225444-50902.json",
+      "before_state": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/states-12566674165-40362.json",
+      "successor_offsets": [
+        12566714527,
+        12566754083,
+        12566792886,
+        12566830509
+      ],
+      "support_run": "LKC9YXKZWTKR",
+      "floor": 33,
+      "turn": 5
+    },
+    "source": "mixed",
+    "own_support_runs": [
+      "LKC9YXKZWTKR"
+    ],
+    "independent_action_runs": 1,
+    "selected_action_opportunities": 1,
+    "rk_qualification": "descriptive_tag_only",
+    "executable_comparisons": 0,
+    "legal_plan_replays": 0,
+    "consumer_boundary": "必须核两实体当前ID/索引/出招；火箭醒转、碾碎爪已退、扫腿不可用或其他伤害未知时不匹配，不固定杀序。",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "direction": "按当前实际攻击侧比较减攻加挡与施毒目标",
+    "magnitude": {
+      "displayed_active_attack_before": 25,
+      "displayed_active_attack_after": 12,
+      "observed_block": 12,
+      "next_turn_player_hp_change": 0,
+      "whole_fight_net_hp_loss": 29
+    },
+    "applicability": "Silent A10 only; actual current enemies/moves/legal hand; own version unknown, external v0.111 context separate.",
+    "own_counterexample": {
+      "context": "crab",
+      "role": "limitation",
+      "run": "F6XY4QJMS5RC",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "game_version": "unknown",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/crab-limitation.json",
+      "sha256": "bce0f0eed9773a92f732aeb6286ec7e3b2bd2ff05d09bd70f3a9e8e3ad3f944c",
+      "floor": 33,
+      "outcome": "died",
+      "net_hp_loss": 57,
+      "entry_hp": 57,
+      "post_hp": 0,
+      "sl_touched": false,
+      "first_attempt_end": {
+        "actual_death_verified": true,
+        "basis": "final result; no predicted_death cutoff recorded",
+        "cutoff_ts": null,
+        "deck_at_cutoff": "not substituted with final deck",
+        "floor": 33,
+        "victory_proxy": false
+      },
+      "terminal_state_confirmed": true
+    },
+    "counterexample_scope": "整战泛化反例；未核负例是否命中严格动作谓词，不计作精确谓词反证样本。",
+    "external_provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "external_input_path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+    "external_input_sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+    "external_versions_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-182343/learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/statistics/crab-external-versions.json",
+    "versions_pooled": false,
+    "mechanism_change_status": "unknown",
+    "source_commit": null,
+    "limitations": [
+      "本系统单动作窗口n=1；这是观察到的后继，不是因果收益、固定命令或安全阈值。",
+      "四个本系统支持局有六个窗口，不能计六个独立局。",
+      "其他进阶/SL分层只在机会账列出，未提升动作适用范围。",
+      "完整候选问题不等原Plan；描述tag不是可执行rk；当前状态字段适配与完整回放分开。"
+    ]
+  }
+]

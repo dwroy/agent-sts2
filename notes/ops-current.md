@@ -1,18 +1,18 @@
 state: clear-ok
 issue: 51
-updated: 2026-10-24T18:52:13+08:00
+updated: 2026-10-24T18:59:31+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#51 A181311已实发V6-R435，T2026-10-24T18:49:55+08:00，6文字投影/6战斗描述rk/6词汇，策略47→53/rk91→97；情境2新4更，B1 rk待。6文字与6备战rk生产读回、6构筑负例、12shipped/638检查0，锁81.54s已释，源码无改。
-在等谁：原C182343/后续自然回报与#56四道P0；B1/原Plan/完整剧本/自然采用收益及科学父保持，旧3:1不部署。
-下一步：本轮写事务结，clear-ok/51，不重派/回收。原null/失败保留，数据源f63b6c4f31。issue评论6383319401，原件paper/materials/20261024-issue51-blade-paired-ops/verification.json。
+进行中的事：C182343已实发V6-R436/T2026-10-24T18:57:17+08:00：六遭遇配对、文字2新4同ID更，55策略/103rk；6文字/6备战rk读回、6构筑负例、12shipped/646检查0，锁39.42s已释。R435六文字/六rk及原件核同，不重发。
+在等谁：#56四道P0；原输入/Plan/矩阵/回放与采用收益、科学父待。原限制已双收件箱+集成员提醒，接收/Roy pending。
+下一步：本轮写事务结，clear-ok/51；原null/失败保持，不重模型/full/旧3:1。原件paper/materials/20261024-issue51-encounter-paired-ops/verification.json及supervisor-forwarding.json，issue评论6383380100。
 
 #50本轮已结：三自然晚层局143落盘/140后继、18检查点/15后继；F48三/F49一/0胜只为选样，原首W546/ENOBUFS-null不改。BP9/P4学习读取已核，冷重启/回退及达标线正式入库待，issue6383251914；paper/materials/20261024-issue50-resume-1834-ops/。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51并行保持：R434/T18:12:30实发6对，47策略/91rk、12shipped/626检查0、锁35.58s已释；描述tag比较建议0，剧本/第7对/自然采用收益待。新6382974399/6382976033要求4类别+独立自有1槽，当前仅2策略槽/外部单道，P0点6383016491交主管。A181311已发R435，原C182343独立native/high/原沙箱已核，仅手动新增C1；fast请求/实际tier未知。B20～25已冻、旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权换codex1、磁盘≤80停新派仍待代码。旧8叶3:1部署授权取消，源稿/旧full保留；C独立在途不重派/回收，A按原retention门，R430八ID自然命中非收益，旧005/008不改。506/28窗口/18局反向分层守界，满批或2h先到串行发布，无新计时器。paper/materials/20261024-issue51-four-lanes-ops/及issue51-r434-return-ops/。
+#51并行保持：R434/T18:12:30实发6对，47策略/91rk、12shipped/626检查0、锁35.58s已释；描述tag比较建议0，剧本/第7对/自然采用收益待。新6382974399/6382976033要求4类别+独立自有1槽，当前仅2策略槽/外部单道，P0点6383016491交主管。A181311已发R435，C182343已发R436/原native high及沙箱已核，仅手动新增C1；fast请求/实际tier未知。B20～25已冻、旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权换codex1、磁盘≤80停新派仍待代码。旧8叶3:1部署授权取消，源稿/旧full保留；A/C均done按原retention门，不重派/回收，R430八ID自然命中非收益，旧005/008不改。506/28窗口/18局反向分层守界，满批或2h先到串行发布，无新计时器。paper/materials/20261024-issue51-four-lanes-ops/及issue51-r434-return-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
