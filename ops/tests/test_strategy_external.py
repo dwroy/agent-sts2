@@ -37,6 +37,23 @@ class External(unittest.TestCase):
                          "aggregates": [self.ref("frozen/aggregate.json", {"wins": 1, "losses": 1})]}]}
         self.config["request_id"] = external.REQUEST
         self.freeze()
+        from types import SimpleNamespace
+        self.home = str(self.root / "selected-account")
+        self.env_account = patch.dict(os.environ, {"LEARNER_CODEX_HOME": self.home})
+        self.env_account.start(); self.addCleanup(self.env_account.stop)
+        self.clock = patch.object(external.policy.time, "time", return_value=1767225601)
+        self.clock.start(); self.addCleanup(self.clock.stop)
+        self.disk = patch.object(external.policy.shutil, "disk_usage", return_value=SimpleNamespace(free=200 * (1 << 30)))
+        self.disk_mock = self.disk.start(); self.addCleanup(self.disk.stop)
+        self.quota()
+
+    def quota(self, used=20, **changes):
+        value = {"schema_version": 1, "provider": "codex", "freshness": "fresh",
+                 "account_home_sha256": hashlib.sha256(self.home.encode()).hexdigest(),
+                 "sample_observed_at": "2026-01-01T00:00:00Z", "windows": [
+                     {"kind": "weekly", "window_minutes": 10080, "used_percent": used,
+                      "resets_at": "2026-01-02T00:00:00Z", "stale": False}], **changes}
+        (self.directory / "subscription-usage.json").write_text(json.dumps(value))
 
     def save_config(self):
         (self.root / external.QUEUE).write_text(json.dumps(self.config))
@@ -86,6 +103,21 @@ class External(unittest.TestCase):
         self.assertEqual(original, batch)
         self.assertIsNone(self.dispatch(stamp="20260101-000002"))
 
+    def test_launch_receipt_records_only_verified_native_tier_not_requested_tier(self):
+        self.registered()
+        path=self.directory / "learner" / (BID+".external-launch.json")
+        launch={"batch":BID,"source":PLAN,"cwd":str(self.tree),"log":"fixed-log",
+                "external_tier":{"effective":"ultrafast","observed_service_tier":None}}
+        path.write_text(json.dumps(launch))
+        external.reconcile(self.state,self.directory)
+        self.assertIsNone(json.loads(path.read_text())["external_tier"]["observed_service_tier"])
+        self.native("fast"); external.reconcile(self.state,self.directory)
+        observed=json.loads(path.read_text())
+        self.assertEqual(observed["external_tier"],{"effective":"ultrafast","observed_service_tier":"fast"})
+        self.assertEqual(observed["native_tier_readback"]["service_tier"],"fast")
+        original=path.read_bytes();external.reconcile(self.state,self.directory)
+        self.assertEqual(path.read_bytes(),original)
+
     def test_wrong_context_does_not_consume_and_missing_tier_remains_unknown(self):
         self.registered(); rollout, rows = self.native()
         rows[2]["payload"]["effort"] = "xhigh"
@@ -118,13 +150,6 @@ class External(unittest.TestCase):
         self.assertFalse(external.ready(self.state, self.root))
         self.assertIsNone(self.dispatch())
 
-    def test_original_priority_gates(self):
-        for normal in ({"postmortem": True}, {"fixes": True}, {"backfill_hold": True}, {"disk_capacity_hold": True}):
-            self.assertIsNone(self.dispatch(normal))
-        for item in ({"learning_requests": {"x": {"state": "pending"}}},
-                     {"ascension_audits": {"x": {"character": "silent", "state": "running"}}}):
-            self.state.update(item); self.assertIsNone(self.dispatch()); self.state.pop(next(iter(item)))
-        self.assertEqual(self.calls, [])
 
     def test_explicit_retry_requires_original_retirement_and_keeps_ids(self):
         batch = self.registered(); batch.update(state="failed", rc=1)
@@ -160,22 +185,6 @@ class External(unittest.TestCase):
         self.assertEqual(self.state["strategy_external"]["plans"][PLAN]["attempts"][0]["elapsed_seconds"], 2)
         self.assertFalse(external.ready(self.state, self.root))
 
-    def test_first_external_turn_preempts_ready_normal_fix(self):
-        for fix in (None, "normal-fix"):
-            self.state = {"batches": {}}; self.calls = []
-            def writer(*args, **kwargs):
-                if args[3] == "fix-batch":
-                    self.calls.append((args, kwargs)); return None
-                return self.writer(*args, **kwargs)
-            with patch.object(jobs, "pending", return_value=[]), patch.object(jobs, "dispatch_write", side_effect=writer), \
-                    patch.object(jobs, "fix_key", return_value=fix), patch.object(jobs, "strategy_job") as auto, \
-                    patch.object(jobs, "calibration_job", return_value=None), patch("boss_sim_jobs.check", return_value=None), \
-                    patch("strategy_research_jobs.dispatch", return_value=None) as research, patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
-                result = jobs.check_jobs(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: False, STAMP)
-            self.assertTrue(result["backfill_hold"])
-            auto.assert_not_called(); research.assert_not_called()
-            self.assertEqual([args[3] for args, _ in self.calls], ["strategy-proposal"])
-            self.assertTrue(result["strategy_external"])
 
     def tick(self, stamp, writer, alive=lambda pid: False):
         with patch.object(jobs, "pending", return_value=[fixture.RUN]), patch.object(jobs, "dispatch_write", side_effect=writer), \
@@ -190,124 +199,17 @@ class External(unittest.TestCase):
         plan["input_manifest"] = self.ref("frozen/second-manifest.json", manifest)
         self.config["plans"].append(plan); self.save_config()
 
-    def test_pending_external_batches_precede_normal_work_across_restart(self):
-        self.second_plan(); lanes = []
-        def writer(*args, **kwargs):
-            if kwargs.get("external_source"):
-                lanes.append("external"); return self.writer(*args, **kwargs)
-            lanes.append("normal"); return ("ordinary", 11)
-        first = self.tick(STAMP, writer)
-        self.assertTrue(first["strategy_external"]); self.assertIsNone(first["experience"])
-        occupied = self.tick("20260101-000002", writer, alive=lambda pid: pid == 10)
-        self.assertIsNone(occupied["experience"]); self.assertEqual(lanes, ["external"])
-        self.state["batches"][BID]["state"] = "done"
-        self.state = json.loads(json.dumps(self.state))
-        second = self.tick("20260101-000003", writer)
-        self.assertTrue(second["strategy_external"]); self.assertIsNone(second["experience"])
-        self.assertTrue(second["external_priority_hold"])
-        self.assertEqual(lanes, ["external", "external"])
-        second_id = second["strategy_external"][0]
-        self.state["batches"][second_id]["state"] = "done"
-        normal = self.tick("20260101-000004", writer)
-        self.assertTrue(normal["experience"]); self.assertIsNone(normal["strategy_external"])
-        self.assertEqual(lanes, ["external", "external", "normal"])
-        self.assertEqual(self.state["strategy_external"]["cursor"], 0)
-
-    def test_no_launchable_normal_work_allows_next_external_without_losing_demand(self):
-        self.second_plan(); self.registered(); self.state["batches"][BID]["state"] = "done"
-        attempted = []
-        def writer(*args, **kwargs):
-            if kwargs.get("external_source"): return self.writer(*args, **kwargs)
-            attempted.append(args[3]); return None
-        result = self.tick("20260101-000002", writer)
-        self.assertEqual(attempted, [])
-        self.assertTrue(result["strategy_external"])
-        self.assertIsNone(result["experience"])
-        self.assertEqual(len(self.state["batches"]), 2)
 
 
-    def test_failed_admission_does_not_spend_external_turn_or_start_normal(self):
-        calls = []
-        def unavailable(*args, **kwargs): calls.append(kwargs.get("external_source")); return None
-        self.assertIsNone(self.tick(STAMP, unavailable)["strategy_external"])
-        self.assertIsNone(self.tick("20260101-000002", unavailable)["strategy_external"])
-        self.assertEqual(len(calls), 2); self.assertTrue(all(calls))
-        self.assertEqual(self.state["batches"], {}); self.assertTrue(external.external_turn(self.state, "silent"))
-
-    def test_postmortem_active_writer_and_audit_lease_still_hold_external_turn(self):
-        def never(*args, **kwargs): self.fail("existing launch or lease must not be overtaken")
-        self.state["batches"]["original"] = {"task":"postmortem", "state":"running", "pid":99, "character":"silent"}
-        self.assertIsNone(self.tick(STAMP, never, alive=lambda pid: pid == 99)["strategy_external"])
-        self.state["batches"] = {}; self.state["postmortem_wait"] = {"silent":{"since":1}}
-        result = self.tick(STAMP, self.writer)
-        self.assertTrue(result["strategy_external"])
-        self.assertIn("silent", self.state["postmortem_wait"])
-        self.state["batches"] = {}
-        self.state.pop("postmortem_wait")
-        import ascension_audit as audit
-        request = {"character":"silent", "level":11, "state":"queued"}
-        self.state["ascension_audits"] = {"silent:A11":request}
-        with patch.object(audit, "lease_busy", return_value=True):
-            self.assertIsNone(self.tick(STAMP, never)["strategy_external"])
-
-    def test_disabled_external_keeps_normal_pipeline_and_character_history_separate(self):
-        self.config["enabled"] = False; self.save_config(); calls = []
-        def normal(*args, **kwargs): calls.append(args[3]); return ("ordinary", 12)
-        result = self.tick(STAMP, normal)
-        self.assertTrue(result["experience"]); self.assertEqual(calls, ["experience-update"])
-        self.state["batches"] = {"20990101-000001-strategy-proposal":{
-            "character":"ironclad", "task":"strategy-proposal", "pid":1, "external_source":"other"}}
-        self.assertTrue(external.external_turn(self.state, "silent"))
-        self.state["batches"]["20990102-000001-postmortem"] = {
-            "character":"silent", "task":"postmortem", "pid":2}
-        self.assertTrue(external.external_turn(self.state, "silent"))
 
 
-    def test_pending_audit_without_active_lease_yields_to_external(self):
-        import ascension_audit as audit
-        self.second_plan(); self.registered(); self.state["batches"][BID]["state"] = "done"
-        def unavailable(*args, **kwargs):
-            self.assertTrue(kwargs.get("external_source")); return None
-        with patch.object(audit, "priority_pending", return_value=True):
-            result = self.tick("20260101-000002", unavailable)
-        self.assertIsNone(result["strategy_external"])
-        self.assertTrue(result.get("external_priority_hold"))
 
 
-    def test_original_tick_gives_external_priority_over_postmortems_and_audits(self):
-        import contextlib
-        import importlib.util
-        import io
-        from types import SimpleNamespace
-        spec = importlib.util.spec_from_file_location("alternating_original_tick", REPO / "ops/codex-ops-learn.py")
-        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
-        for held in (True, False):
-            calls = []
-            result = {"external_priority_hold":True} if held else {}
-            def postmortem(*args): calls.append("postmortem"); return ("fixed-postmortem", 90)
-            def writes(*args): calls.append("writes"); return result
-            with patch.object(module, "ROOT", str(self.root)), patch.object(module, "DIR", str(self.directory)), \
-                    patch.object(module, "load_state", return_value={"batches":{}}), patch.object(module, "save_state"), \
-                    patch.object(module, "check_victories", return_value=[]), patch.object(module, "check_ascension", return_value=[]), \
-                    patch.object(module.disk_admission, "snapshot", return_value={}), patch.object(module, "check_pending", return_value=None), \
-                    patch.object(external, "ready", return_value=held), patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
-                    patch.object(module, "check_ascension_audits", return_value=("audit", 91)) as audit, \
-                    patch.object(shared, "dispatch", return_value=None), patch.object(module.learner_retention, "kick", return_value={}):
-                with contextlib.redirect_stdout(io.StringIO()): module.cmd_tick(SimpleNamespace(character="silent"))
-            self.assertEqual(calls, ["writes"] if held else ["postmortem", "writes"])
-            self.assertEqual(audit.call_count, 0 if held else 1)
 
 
-    def test_original_writer_gates_and_scope(self):
-        binding = external.source(self.root, self.plan)[0]
-        for blocked in ("slot", "worktree"):
-            with patch.object(jobs, "busy", return_value=blocked == "slot"), patch.object(jobs, "available", return_value=blocked != "worktree"), patch.object(jobs, "start_learner") as start:
-                self.assertIsNone(self.dispatch(writer=jobs.dispatch_write))
-                start.assert_not_called()
-        with patch.object(jobs, "busy", return_value=False), patch.object(jobs, "available", return_value=True), patch.object(jobs, "start_learner", return_value=(10, None)) as start:
-            self.assertIsNotNone(self.dispatch(writer=jobs.dispatch_write))
-            self.assertEqual(start.call_args.args[0][-1], "external:" + PLAN)
-        self.assertEqual(binding["dispatch_runs"], [])
+
+
+
 
     def test_frozen_task_preparation_and_changed_input_stop_before_model(self):
         self.registered()
@@ -339,6 +241,120 @@ class External(unittest.TestCase):
             self.assertIn('service_tier="' + tier + '"', json.loads(result.stdout))
         batch.update(reason="tick"); (self.directory / "learn.json").write_text(json.dumps(self.state))
         self.assertNotEqual(subprocess.run(wrapper, cwd=self.tree, env=env, capture_output=True, timeout=5).returncode, 0)
+
+    def four_plans(self):
+        self.config["plans"] = []
+        for index, lane in enumerate("ABCDAB"):
+            plan = copy.deepcopy(self.plan); plan.update(plan_id="lane-unit-" + str(index), lane=lane)
+            manifest = copy.deepcopy(self.manifest)
+            manifest.update(batch_plan_id=plan["plan_id"], unit_ids=["unit-" + str(index)])
+            plan["input_manifest"] = self.ref("frozen/manifest-" + str(index) + ".json", manifest)
+            self.config["plans"].append(plan)
+        self.save_config()
+
+    def lanes(self, stamp=STAMP):
+        with patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
+            return external.dispatch_lanes(self.state, str(self.root), str(REPO / "ops"), "silent", lambda pid: pid == 10, stamp, self.writer)
+
+    def test_four_lanes_independent_single_owner_and_resume_after_restart(self):
+        self.four_plans()
+        self.assertEqual(len(self.lanes()), 4)
+        self.assertEqual({b["external_lane"] for b in self.state["batches"].values()}, set("ABCD"))
+        self.assertEqual(self.lanes(), [])
+        first = next(iter(self.state["batches"].values()))
+        first.update(state="done", pid=None)
+        self.state = json.loads(json.dumps(self.state))
+        self.assertEqual(len(self.lanes("20260101-000010")), 1)
+        self.assertEqual([b["external_lane"] for b in self.state["batches"].values()].count("A"), 2)
+        self.assertEqual(len(self.calls), 5)
+
+    def test_pending_review_lost_owner_and_duplicate_ids_hold_only_their_lane(self):
+        self.four_plans(); self.lanes()
+        first = next(iter(self.state["batches"].values()))
+        for state in ("awaiting_review", "lost", "launching", "running"):
+            first.update(state=state, pid=None)
+            self.assertEqual(self.lanes("20260101-000010"), [])
+        # A live wrapper still owns the lane after its model result.
+        first.update(state="done", pid=10)
+        self.assertEqual(self.lanes("20260101-000010"), [])
+
+    def test_quota_boundaries_disk_and_account_binding(self):
+        self.four_plans()
+        for used, limit, tier in ((70,4,"ultrafast"), (70.01,2,"fast"), (89.99,2,"fast")):
+            self.state = {"batches": {}}; self.calls=[]; self.quota(used)
+            self.assertEqual(len(self.lanes()), limit)
+            self.assertTrue(all(b["external_policy"]["service_tier"] == tier for b in self.state["batches"].values()))
+        self.state = {"batches": {}}; self.quota(90)
+        self.assertEqual(self.lanes(), [])
+        self.assertEqual(self.lanes(), [])
+        self.assertEqual(len(list((self.directory / "queue").glob("*switch.md"))), 1)
+        for changes in ({"account_home_sha256":"wrong"}, {"sample_observed_at":"2025-12-31T23:49:00Z"}, {"freshness":"failed"}):
+            self.quota(**changes); self.assertEqual(self.lanes(), [])
+        self.quota()
+        for free, expected in ((80 * (1 << 30),0), (80 * (1 << 30) + 1,4)):
+            self.disk_mock.return_value.free=free; self.state={"batches":{}}
+            self.assertEqual(len(self.lanes()), expected)
+
+    def test_downgrade_preserves_inflight_and_waits_for_two_worker_capacity(self):
+        self.four_plans();self.lanes();self.quota(75)
+        self.assertEqual(self.lanes("20260101-000010"),[])
+        for batch in list(self.state["batches"].values())[:3]:batch.update(state="done",pid=None)
+        self.assertEqual(len(self.lanes("20260101-000010")),1)
+        self.assertEqual(len(external.active_external(self.state,lambda pid:pid==10)),2)
+
+    def test_corrupt_plan_cannot_block_healthy_sibling_lane(self):
+        self.four_plans()
+        self.config["plans"][0]["input_manifest"]["sha256"]="0"*64;self.save_config()
+        self.assertEqual(len(self.lanes()),4)
+        self.assertIn("strategy_external_error",self.state)
+
+    def test_original_audit_lease_retains_own_lane_while_external_can_run(self):
+        self.four_plans()
+        self.state["ascension_audits"]={"original":{"character":"silent","level":11,"state":"queued"}}
+        import ascension_audit as audit
+        with patch.object(audit,"lease_busy",return_value=True):
+            result=self.tick(STAMP,self.writer,alive=lambda pid:pid==10)
+        self.assertEqual(len(result["strategy_external"]),4)
+        self.assertIsNone(result["experience"])
+
+    def test_own_lane_is_not_suppressed_and_keeps_original_owner(self):
+        self.four_plans()
+        def writer(*args, **kwargs):
+            if kwargs.get("external_source"): return self.writer(*args, **kwargs)
+            self.state["batches"]["ordinary"]={"task":"experience-update", "state":"running", "pid":11}
+            return ("ordinary",11)
+        result = self.tick(STAMP, writer, alive=lambda pid: pid in (10,11))
+        self.assertEqual(len(result["strategy_external"]),4)
+        self.assertTrue(result["experience"])
+        self.assertIsNone(self.tick("20260101-000010",writer,alive=lambda pid: pid in (10,11))["experience"])
+        self.assertEqual(len(self.state["batches"]),5)
+        self.assertNotIn("external_priority_hold",result)
+
+    def test_writer_still_checks_worktree_and_independent_capacity(self):
+        with patch.object(jobs,"available",return_value=False), patch.object(jobs,"start_learner") as start:
+            self.assertIsNone(self.dispatch(writer=jobs.dispatch_write)); start.assert_not_called()
+        with patch.object(jobs,"available",return_value=True), patch.object(jobs,"start_learner",return_value=(10,None)) as start:
+            self.assertIsNotNone(self.dispatch(writer=jobs.dispatch_write))
+            self.assertEqual(start.call_args.args[0][-1],"external:"+PLAN)
+            self.assertIsNone(self.dispatch(writer=jobs.dispatch_write,stamp="20260101-000010",alive=lambda pid:pid==10))
+            self.assertEqual(start.call_count,1)
+
+    def test_tick_always_attempts_postmortems_before_writers(self):
+        import contextlib, importlib.util, io
+        from types import SimpleNamespace
+        spec=importlib.util.spec_from_file_location("four_lane_tick",REPO/"ops/codex-ops-learn.py")
+        module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        calls=[]
+        with patch.object(module,"ROOT",str(self.root)), patch.object(module,"DIR",str(self.directory)), \
+             patch.object(module,"load_state",return_value={"batches":{}}), patch.object(module,"save_state"), \
+             patch.object(module,"check_victories",return_value=[]), patch.object(module,"check_ascension",return_value=[]), \
+             patch.object(module.disk_admission,"snapshot",return_value={}), patch.object(module,"check_pending",return_value=None), \
+             patch.object(module,"check_postmortems",side_effect=lambda *a:calls.append("postmortem")), \
+             patch.object(module,"check_jobs",side_effect=lambda *a:calls.append("writers") or {}), \
+             patch.object(module,"check_ascension_audits",return_value=None), patch.object(shared,"dispatch",return_value=None), \
+             patch.object(module.learner_retention,"kick",return_value={}):
+            with contextlib.redirect_stdout(io.StringIO()): module.cmd_tick(SimpleNamespace(character="silent"))
+        self.assertEqual(calls,["postmortem","writers"])
 
 
 if __name__ == "__main__":

@@ -1,0 +1,32 @@
+{
+  "initial_sandbox_exit": 1,
+  "initial_sandbox": {
+    "passed": 5839,
+    "failed": 3
+  },
+  "corrections": [
+    {
+      "path": "agent/tests/ops-herdr.test.ts",
+      "reason": "Copy newly imported external_learning_policy.py with learner_jobs.py in isolated fake-herdr fixture"
+    },
+    {
+      "path": "paper/materials/issue29-brain-speed/results.jsonl",
+      "source": "b84d95c5185941eec143cbcf2966d5770309cca5",
+      "reason": "Materialize an unchanged tracked import dependency omitted by sparse checkout; no commit delta"
+    },
+    {
+      "path": "agent/tests/external-strategy-evidence.test.ts",
+      "source_main": "154178c8574aa6f4d7baaebe1ededf2c77a9c20a",
+      "source_blob": "0b44f59e5a8d923bdf8b623993ec52901994493f",
+      "sha256": "4eacb4ea72044c40a9675de0a38cee55a230838930f410e2606e48774ce23664",
+      "reason": "Reuse already integrated #37 fixed fixture, without importing main product/knowledge deltas"
+    }
+  ],
+  "optional_tools_tsc": {
+    "exit": 1,
+    "compiler_api_baseline_attempt": {
+      "exit": 1,
+      "reason": "Installed TypeScript CLI package does not expose compiler API; no baseline equivalence claimed"
+    }
+  }
+}

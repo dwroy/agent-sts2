@@ -29,7 +29,7 @@ import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js"
 import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { readCodexUsage, type CodexUsage } from "../../agent/src/brain/engines/codex-usage.js";
-import { externalRegistration, externalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
+import { externalRegistration, registeredExternalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
@@ -492,10 +492,9 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 
   let externalDecision: ExternalTierDecision | undefined;
   if (deps.env.LEARNER_EXTERNAL_SOURCE) {
-    let usage: CodexUsage | null = null;
-    try { usage = await deps.readExternalUsage?.(binary, learnerCodexHome(deps.env), codexChildEnv(deps.env, binary)) ?? null; }
-    catch { /* Never persist account identities or raw quota diagnostics. */ }
-    externalDecision = externalTier(usage, deps.now(), options.serviceTier ?? "ultrafast");
+    const selected = registeredExternalTier(deps.env, learnerCodexHome(deps.env), deps.now(), options.serviceTier ?? "ultrafast");
+    if (!selected) return unavailable("外部学习统一额度快照缺失、已过期、账号不符或达到90%；保留原租约，不启动模型\n");
+    externalDecision = selected;
     const lease = captureStartupLease(deps.env, deps.projectRoot, request.cwd);
     if (!externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约，不启动模型\n");
     request.serviceTier = externalDecision.effective;
@@ -541,13 +540,6 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
       command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
     const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
-  }
-  if (externalDecision?.reason === "weekly_over_85" || externalDecision?.reason === "weekly_unknown") {
-    const message = `[learner] #51 外部批次 ${lease!.batch}：周额度 ${externalDecision.weekly_used_percent ?? "unknown"}%，本次启动降为 default；${externalDecision.reason === "weekly_over_85" ? "请 ops→watcher 提醒 Roy" : "请 ops 核验原账号额度"}。这是启动请求，实际档位以原生回执为准。`;
-    const queue = join(dirname(deps.env.LEARNER_STATE_FILE!), "queue");
-    mkdirSync(queue, { recursive: true });
-    writeFileSync(join(queue, `${BigInt(Date.now()) * 1_000_000n}-external-tier-${lease!.batch}.md`), message + "\n", { flag: "wx" });
-    if (externalDecision.reason === "weekly_over_85") appendFileSync(join(deps.projectRoot, "notes/for-roy.md"), `\n${deps.now().toISOString()} ${message}\n`);
   }
   let child: ChildProcess | undefined;
   const stop = (signal: NodeJS.Signals): void => {

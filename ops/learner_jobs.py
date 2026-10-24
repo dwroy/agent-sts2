@@ -8,6 +8,7 @@ import subprocess
 import sys
 import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import external_learning_policy
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -218,6 +219,8 @@ def busy(state, task, alive):
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
         if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
             continue
+        if batch.get("external_source"):
+            continue
         if batch.get("task") != task or batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
@@ -280,6 +283,21 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
                 or not re.fullmatch(re.escape("strategy-external:" + external_source) + r":[0-9]+", str(key))
                 or research_request or implementation_request or backfill_source):
             return None
+    if external_source:
+        import strategy_external_jobs as external_jobs
+        directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+        selected = external_learning_policy.snapshot(root, directory)
+        if not selected["workers"] or not external_learning_policy.external_disk_allowed(root):
+            return None
+        try:
+            configured = external_jobs.queue(root)
+            plan = next(p for p in configured["plans"] if p["plan_id"] == external_source)
+            occupied = external_jobs.occupied_lanes(state, configured, root, alive)
+            if (not configured["enabled"] or len(external_jobs.active_external(state, alive)) >= selected["workers"]
+                    or external_jobs.lane(plan, external_jobs.source(root, plan)[0]) in occupied):
+                return None
+        except (OSError, ValueError, KeyError, TypeError, StopIteration):
+            return None
     if backfill_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(backfill_source, str) or not ID.fullmatch(backfill_source)
@@ -302,6 +320,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         if (research_request not in REQUEST_PATHS or task != "strategy-proposal" or character != "silent"
                 or reason != "ops" or key != research_key(research_request)):
             return None
+    if character == "silent" and not external_source and external_learning_policy.four_lane_mode(state, root, alive) and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
+        return None
     if task == "fix-batch":
         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
         if handled:
@@ -309,8 +329,11 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     if task == "strategy-proposal" and any(batch.get("task") == task and batch.get("key") == key
             and batch.get("state") == "running" and alive(batch.get("pid")) for batch in state["batches"].values()):
         return None
-    if busy(state, task, alive) or not available(root, task) or (reason != "ops" and not retryable(state, task, key)):
+    if (not external_source and busy(state, task, alive)) or not available(root, task) or (reason != "ops" and not retryable(state, task, key)):
         return None
+    if task == "strategy-proposal" and character == "silent" and external_learning_policy.four_lane_mode(state, root, alive):
+        from strategy_external_jobs import next_stamp
+        stamp = next_stamp(state, stamp)
     batch_id = stamp + "-" + task
     if batch_id in state["batches"]:
         return None
@@ -349,20 +372,21 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
 
 def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
-    if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
-        return {"disk_capacity_hold": True, "dispatched": None}
     import strategy_external_jobs as external_jobs
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
-    if external_ready:
-        # Roy #51: pending external units precede all ordinary learning demand.
-        # Active batches and the original audit/writer leases remain authoritative.
-        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp,
-                                          dispatch_write, {}, alternating=True)
+    four_lane_mode = character == "silent" and (external_ready or bool(external_jobs.active_external(state, alive)))
+    if four_lane_mode:
+        selected = external_learning_policy.snapshot(root, directory)
+        state["external_learning_policy"] = selected
+        external_learning_policy.request_switch(state, directory, selected)
+    if not jobs_allowed(root, directory):
+        return {"disk_capacity_hold": True, "dispatched": None}
+    external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+    if four_lane_mode and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
-                "external_priority_hold": True, "external_alternation_hold": True,
                 "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
     attempted = []
     ordinary_claimed = [False]
@@ -371,7 +395,7 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             ordinary_claimed[0] = True
         return result
     def normal_allowed():
-        return not external_ready or not ordinary_claimed[0]
+        return not four_lane_mode or not ordinary_claimed[0]
     def priority_writer(*args, **kwargs):
         # Keep the ordinary order, but spend at most one launch on its turn.
         if not normal_allowed():
@@ -392,12 +416,15 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             claim(core)
     runs = pending(root, scripts, character)
     experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    # Research helpers count strategy batches themselves, including external owners.
+    helper_limit = STRATEGY_WORKERS + sum(bool(b.get("external_source")) and b.get("state") == "running"
+                                        and alive(b.get("pid")) for b in state["batches"].values())
     from learning_requests import reconcile as reconcile_learning
-    learning = claim(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, STRATEGY_WORKERS)) if normal_allowed() else None
+    learning = claim(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, helper_limit)) if normal_allowed() else None
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
-    research = claim(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, STRATEGY_WORKERS)) if normal_allowed() else None
+    research = claim(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, helper_limit)) if normal_allowed() else None
     # Normal turns retain the ordinary proposal/fix/strategy order.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
@@ -409,17 +436,9 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     calibration = claim(calibration_job(state, root, scripts, character, alive, stamp)) if normal_allowed() else None
     from boss_sim_jobs import check
     boss_sim = claim(check(state, root, scripts, character, alive, stamp, start_learner)) if normal_allowed() else None
-    external = None
-    from ascension_audit import priority_pending as audit_pending
-    audit_turn = external_ready and not ordinary_claimed[0] and audit_pending(state, root, character, available_worktree)
-    if external_ready and not ordinary_claimed[0] and not audit_turn:
-        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp, dispatch_write,
-            {"postmortem_wait": state.get("postmortem_wait", {}).get(character)}, alternating=True)
     result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
               "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
               "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
-    if external_ready and (ordinary_claimed[0] or external):
-        result["external_alternation_hold"] = True
     return result
 
 

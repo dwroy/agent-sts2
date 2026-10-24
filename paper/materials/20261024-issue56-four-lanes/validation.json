@@ -1,0 +1,132 @@
+{
+  "base": "2b0f1ebc1fcced5685387905fcde708908eacc8f",
+  "source_freeze_matches": true,
+  "required_checks": {
+    "production_tsc": {
+      "exit": 0,
+      "via": "tools/test-sandbox.sh set -e before Vitest"
+    },
+    "sandbox_script": {
+      "exit": 0,
+      "workers": 2,
+      "pool": "threads plus paths fork1",
+      "phases": [
+        "production tsc",
+        "fixed-exclusion Vitest",
+        "paths standalone Vitest"
+      ],
+      "log": "sandbox-repaired.log",
+      "report_note": "The standard script reuses outputFile in both Vitest phases. sandbox-repaired.json is the final paths phase, not the aggregate full-suite count."
+    },
+    "paths": {
+      "numPassedTests": 11,
+      "numFailedTests": 0,
+      "success": true
+    },
+    "python_strategy": {
+      "exit": 0,
+      "tests": 107,
+      "log": "python-strategy-final2.log"
+    }
+  },
+  "prior_checks": {
+    "sandbox_initial": {
+      "exit": 1,
+      "files": 631,
+      "passed": 5839,
+      "failed": 3,
+      "report": "sandbox-final.json"
+    },
+    "directed_before_main_fixture_reuse": {
+      "exit": 1,
+      "passed": 108,
+      "failed": 1,
+      "report": "final-directed.json"
+    },
+    "aborted_sandbox": {
+      "exit": 143,
+      "reason": "Stopped only own Vitest PID 3557371 while correcting strategy regression scope; no green claim"
+    },
+    "optional_tools_tsc": {
+      "exit": 1,
+      "diagnostics": 52,
+      "log": "tools-tsc.log",
+      "note": "Additional broad tools config fails; no baseline compiler-API equivalence claimed. This is separate from required production tsc.",
+      "diagnostic_source_files": [
+        {
+          "path": "agent/tools/boss-loss-backtest.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/boss-sim/pairs.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/combat-latency-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/deepseek-prompt-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/deepseek-reward-prompt-dump.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/double-boss/validate.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/issue29-deepseek-stream.test.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/jev-context-eval.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/living-death-moves-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/mech-move-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/passive-pieces-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/potion-card-cost-replay.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/potion-mc-measure.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "agent/tools/target-options-measure.ts",
+          "same_as_base": true
+        },
+        {
+          "path": "eval/boss-clock-recompute.ts",
+          "same_as_base": true
+        }
+      ]
+    }
+  },
+  "runtime_acceptance": {
+    "deployed": false,
+    "natural_five_slots": false,
+    "two_hour_four_units": false,
+    "actual_account_switch": false
+  },
+  "knowledge_game_source_version_delta": [],
+  "security_scan": {
+    "tool": "gitleaks 8.30.1 stdin --redact",
+    "exit": 0,
+    "leaks": 0,
+    "receipt": "gitleaks-staged.json"
+  }
+}

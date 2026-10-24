@@ -1,4 +1,5 @@
-"""Frozen, aggregate-only external sources in the original strategy writer lane."""
+"""Four independent external study lanes on the original registered writer path."""
+from datetime import datetime, timedelta
 import json
 import os
 from pathlib import Path
@@ -8,6 +9,7 @@ import sys
 import time
 
 import strategy_backfill_jobs as shared
+import external_learning_policy as policy
 from strategy_research_jobs import atomic_json
 
 QUEUE = "notes/strategy-external-silent.json"
@@ -90,13 +92,9 @@ def source(root, plan):
             "entry_ids": ids, "all_entry_ids": ids, "dispatch_runs": [], "cohorts": cohorts}, spec
 
 
-def ready(state, root):
-    """Only an explicitly enabled, unconsumed generation can preempt auto proposals."""
-    try:
-        configured = queue(root)
-        if not configured["enabled"]:
-            return False
-        for plan in configured["plans"]:
+def candidates(state, root, configured):
+    for plan in configured["plans"]:
+        try:
             generation = plan.get("retry_generation", 0)
             if type(generation) is not int or generation < 0:
                 raise ValueError("invalid external retry generation")
@@ -104,9 +102,21 @@ def ready(state, root):
             if prior and (len(prior) >= 3 or generation <= max(b["external_binding"]["retry_generation"] for b in prior)):
                 continue
             binding, _ = source(root, plan)
-            entries = state.get("strategy_external", {}).get("entries", {})
-            if any(entries.get(ident, {}).get("status") != "processed" for ident in binding["entry_ids"]):
-                return True
+            lane(plan, binding)
+            yield plan, binding
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RecursionError) as error:
+            state["strategy_external_error"] = {"at": time.time(), "reason": str(error), "plan": plan["plan_id"]}
+
+
+def ready(state, root):
+    """Unconsumed generations remain queued independently of the own-game lane."""
+    try:
+        configured = queue(root)
+        if not configured["enabled"]:
+            return False
+        entries = state.get("strategy_external", {}).get("entries", {})
+        return any(any(entries.get(ident, {}).get("status") != "processed" for ident in binding["entry_ids"])
+                   for _, binding in candidates(state, root, configured))
     except FileNotFoundError:
         return False
     except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RecursionError) as error:
@@ -116,83 +126,136 @@ def ready(state, root):
 
 def reconcile(state, directory):
     shared.reconcile(state, directory, "external")
+    for plan in state.get("strategy_external", {}).get("plans", {}).values():
+        for attempt in plan.get("attempts", []):
+            native = attempt.get("native", {})
+            observed = native.get("service_tier")
+            if observed not in ("ultrafast", "fast", "default"):
+                continue
+            try:
+                path = Path(directory, "learner", attempt["batch"] + ".external-launch.json")
+                launch = json.loads(path.read_bytes())
+                batch = state["batches"][attempt["batch"]]
+                if (launch.get("batch") != attempt["batch"] or launch.get("source") != batch["external_source"]
+                        or launch.get("cwd") != batch["worktree"] or not isinstance(launch.get("external_tier"), dict)):
+                    continue
+                if launch["external_tier"].get("observed_service_tier") != observed:
+                    launch["external_tier"]["observed_service_tier"] = observed
+                    launch["native_tier_readback"] = native
+                    atomic_json(path, launch)
+            except (OSError, ValueError, KeyError, TypeError):
+                pass  # The original native proof/progress stays authoritative.
 
 
-def external_turn(state, character):
-    """Use registered launch order, never tick count or an unstarted attempt."""
-    launches = [(bid, batch) for bid, batch in state["batches"].items()
-                if re.fullmatch(r"[0-9]{8}-[0-9]{6}-.+", bid)
-                and batch.get("character") == character
-                and batch.get("task", "postmortem") != "postmortem"
-                and type(batch.get("pid")) is int and batch["pid"] > 0]
-    # Start with external work; already registered ordinary work also makes it due.
-    return not launches or not max(launches, key=lambda item: item[0])[1].get("external_source")
+
+def lane(plan, binding):
+    value = plan.get("lane")
+    if value is None:
+        value = {"dual-boss": "A", "act-boss": "A", "card-picks": "B",
+                 "encounter-rk": "C", "map-resources": "D"}.get(binding.get("topic"))
+    if value not in ("A", "B", "C", "D"):
+        raise ValueError("external knowledge plan requires lane A/B/C/D")
+    return value
 
 
-def alternating_hold(state, root, character, alive, normal):
-    """Alternate pending demand without overtaking a real launch or original lease."""
-    if any(normal.values()):
-        return True
-    if any(batch.get("state") in ("running", "launching", "awaiting_review")
-           and (alive(batch.get("pid")) or batch.get("state") == "launching")
-           for batch in state["batches"].values()):
-        return True
-    from ascension_audit import lease_busy
-    directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
-    for request in state.get("ascension_audits", {}).values():
-        if request.get("character") != character:
-            continue
-        if request.get("state") in ("running", "launching"):
-            return True
-        if (type(request.get("level")) is int and request["level"] >= 0
-                and lease_busy(directory, request, create=False)):
-            return True
-    return False
+def active_external(state, alive):
+    return [old for old in state["batches"].values() if old.get("external_source")
+            and (old.get("state") not in ("done", "failed") or alive(old.get("pid")))]
 
 
-def dispatch(state, root, scripts, character, alive, stamp, writer, normal, *, alternating=False):
+def occupied_lanes(state, configured, root, alive):
+    occupied = set()
+    plans = {p["plan_id"]: p for p in configured["plans"]}
+    for old in active_external(state, alive):
+        value = old.get("external_lane")
+        if value not in ("A", "B", "C", "D"):
+            plan = plans.get(old["external_source"])
+            if not plan:
+                return set("ABCD")  # Unknown original owners never free a slot.
+            value = lane(plan, source(root, plan)[0])
+        occupied.add(value)
+    return occupied
+
+
+def next_stamp(state, stamp):
+    current = datetime.strptime(stamp, "%Y%m%d-%H%M%S")
+    while current.strftime("%Y%m%d-%H%M%S") + "-strategy-proposal" in state["batches"]:
+        current += timedelta(seconds=1)
+    return current.strftime("%Y%m%d-%H%M%S")
+
+
+def dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
+    results = []
+    for _ in range(4):
+        result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
+        if not result:
+            break
+        results.append(result)
+    return results
+
+
+def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
     reconcile(state, directory)
     if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
         return None
-    held = (alternating_hold(state, root, character, alive, normal) if alternating
-            else shared.priority_hold(state, character, alive, normal, root=root))
-    if held:
+    selected = policy.snapshot(root, directory)
+    state["external_learning_policy"] = selected
+    policy.request_switch(state, directory, selected)
+    if (not selected["workers"] or not policy.external_disk_allowed(root)
+            or normal.get("disk_capacity_hold")):
         return None
     try:
         configured = queue(root)
         if not configured["enabled"]:
             return None
-        for plan in configured["plans"]:
-            ident = plan["plan_id"]; generation = plan.get("retry_generation", 0)
-            if type(generation) is not int or generation < 0:
-                raise ValueError("invalid external retry generation")
-            prior = [(bid, b) for bid, b in state["batches"].items() if b.get("external_source") == ident]
-            if prior and (len(prior) >= 3 or generation <= max(b["external_binding"]["retry_generation"] for _, b in prior)):
-                continue
-            for bid, old in prior:
-                if old.get("state") not in ("done", "failed") or alive(old.get("pid")):
-                    return None
-                shared.retired(bid, old, directory)
-            binding, _ = source(root, plan)
-            entries = state.get("strategy_external", {}).get("entries", {})
-            binding["entry_ids"] = [ident for ident in binding["entry_ids"] if entries.get(ident, {}).get("status") != "processed"]
-            if not binding["entry_ids"] or any(entries.get(ident, {}).get("status") not in (None, "waiting", "failed", "lost") for ident in binding["entry_ids"]):
-                continue
-            for bid, old in state["batches"].items():
-                if old.get("external_source") and old["external_source"] != ident and set(old["external_binding"]["entry_ids"]) & set(binding["entry_ids"]):
-                    if old.get("state") not in ("done", "failed") or alive(old.get("pid")):
-                        return None
+        occupied = occupied_lanes(state, configured, root, alive)
+        if len(active_external(state, alive)) >= selected["workers"]:
+            return None
+        pending = list(candidates(state, root, configured))
+        last = {value: max((bid for bid, batch in state["batches"].items()
+                           if batch.get("external_lane") == value), default="") for value in "ABCD"}
+        # In the two-worker tier, untouched/oldest lanes get the next released slot.
+        pending.sort(key=lambda item: last[lane(*item)])
+        for plan, binding in pending:
+            try:
+                selected_lane = lane(plan, binding)
+                if selected_lane in occupied:
+                    continue
+                ident = plan["plan_id"]; generation = plan.get("retry_generation", 0)
+                if type(generation) is not int or generation < 0:
+                    raise ValueError("invalid external retry generation")
+                prior = [(bid, b) for bid, b in state["batches"].items() if b.get("external_source") == ident]
+                if prior and (len(prior) >= 3 or generation <= max(b["external_binding"]["retry_generation"] for _, b in prior)):
+                    continue
+                if any(old.get("state") not in ("done", "failed") or alive(old.get("pid")) for _, old in prior):
+                    continue
+                for bid, old in prior:
                     shared.retired(bid, old, directory)
-            base = subprocess.check_output(["git", "-C", root, "rev-parse", "main"], text=True).strip()
-            if not re.fullmatch(r"[0-9a-f]{40}", base):
-                raise ValueError("invalid external dispatch base")
-            result = writer(state, root, scripts, "strategy-proposal", character, [],
-                            "strategy-external:" + ident + ":" + str(generation), "external", alive, stamp, external_source=ident)
-            if result:
-                state["batches"][result[0]].update(external_binding={**binding, "retry_generation": generation, "dispatch_base": base},
-                                                 external_registered_at=time.time())
-            return result
+                entries = state.get("strategy_external", {}).get("entries", {})
+                binding["entry_ids"] = [ident for ident in binding["entry_ids"] if entries.get(ident, {}).get("status") != "processed"]
+                if not binding["entry_ids"] or any(entries.get(ident, {}).get("status") not in (None, "waiting", "failed", "lost") for ident in binding["entry_ids"]):
+                    continue
+                overlaps = [(bid, old) for bid, old in state["batches"].items()
+                            if old.get("external_source") and old["external_source"] != ident
+                            and set(old["external_binding"]["entry_ids"]) & set(binding["entry_ids"])]
+                if any(old.get("state") not in ("done", "failed") or alive(old.get("pid")) for _, old in overlaps):
+                    continue
+                for bid, old in overlaps:
+                    shared.retired(bid, old, directory)
+                base = subprocess.check_output(["git", "-C", root, "rev-parse", "main"], text=True).strip()
+                if not re.fullmatch(r"[0-9a-f]{40}", base):
+                    raise ValueError("invalid external dispatch base")
+                result = writer(state, root, scripts, "strategy-proposal", character, [],
+                                "strategy-external:" + ident + ":" + str(generation), "external", alive, stamp, external_source=ident)
+                if result:
+                    state["batches"][result[0]].update(external_binding={**binding, "retry_generation": generation, "dispatch_base": base},
+                                                     external_registered_at=time.time(), external_lane=selected_lane,
+                                                     external_policy=selected)
+                    return result
+            except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError, subprocess.SubprocessError) as error:
+                state["strategy_external_error"] = {"at": time.time(), "reason": str(error), "plan": plan["plan_id"]}
+
     except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError, subprocess.SubprocessError) as error:
         state["strategy_external_error"] = {"at": time.time(), "reason": str(error)}
     return None
@@ -255,6 +318,13 @@ if __name__ == "__main__":
         action, *args = sys.argv[1:]
         if action == "ready":
             print(prepare(*args)[0]["external_binding"]["dispatch_base"])
+        elif action == "tier":
+            batch = prepare(*args)[0]
+            selected = batch["external_policy"]
+            latest = policy.snapshot(args[0], args[1])
+            if any(selected.get(key) != latest.get(key) for key in ("account_home_sha256", "service_tier", "workers")) or not latest["workers"]:
+                raise ValueError("external quota tier changed; retain registration")
+            print(selected["service_tier"])
         elif action == "prepare":
             print(task_file(*args))
         elif action == "registered":

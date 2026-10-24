@@ -41,6 +41,7 @@ import core_build_jobs  # noqa: E402
 import learner_retention  # noqa: E402
 import ordinary_close  # noqa: E402
 import ops_current  # noqa: E402
+import external_learning_policy
 import disk_admission  # noqa: E402
 from learner_tui import apply_deferrals  # noqa: E402
 from learner_checks import read_report  # noqa: E402
@@ -233,6 +234,8 @@ def check_ascension(state, character):
 
 
 def check_ascension_audits(state, character):
+    if character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive) and external_learning_policy.own_busy(state, alive, DIR):
+        return None
     if not disk_admission.jobs_allowed(ROOT, DIR):
         return None
     return ascension_audit.dispatch(state, ROOT, SCRIPTS, character, finished_runs(character), alive,
@@ -244,6 +247,8 @@ def check_postmortems(state, character):
     if not disk_admission.jobs_allowed(ROOT, DIR):
         return None
     if running_batch(state):
+        return None
+    if character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive) and external_learning_policy.own_busy(state, alive, DIR):
         return None
     have = postmortem_ids()
     now = time.time()
@@ -324,15 +329,11 @@ def cmd_tick(args):
                    f"原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
         inbox(message)
         enqueue("disk-capacity", message)
-    import strategy_external_jobs
-    external_pending = character == "silent" and strategy_external_jobs.ready(state, ROOT)
-    batch = None if external_pending else check_postmortems(state, character)
+    batch = check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    # Pending external work precedes new postmortems, writers and audits.
-    report["ascension_audit"] = (None if report["write_jobs"].get("external_priority_hold") or report["write_jobs"].get("external_alternation_hold")
-                                 else check_ascension_audits(state, character))
+    report["ascension_audit"] = check_ascension_audits(state, character)
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(

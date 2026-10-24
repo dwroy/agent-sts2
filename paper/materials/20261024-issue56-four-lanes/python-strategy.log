@@ -1,0 +1,315 @@
+....................E.FF.F..................FFF.FFFFF.EFFFFFFF...FFFF............E..E.............EFresearch dispatch receipt could not be saved; actual batch remains registered
+....F..
+======================================================================
+ERROR: test_old_running_batch_keeps_ownership_while_other_ids_are_claimed (test_strategy_concurrency.StrategyConcurrency.test_old_running_batch_keeps_ownership_while_other_ids_are_claimed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_concurrency.py", line 63, in test_old_running_batch_keeps_ownership_while_other_ids_are_claimed
+    new = next(b for k, b in self.state['batches'].items() if k != 'old')
+StopIteration
+
+======================================================================
+ERROR: test_unsaved_registration_changed_sha_and_lease_conflict_reject_host (test_strategy_implementation.ImplementationBinding.test_unsaved_registration_changed_sha_and_lease_conflict_reject_host)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 176, in test_unsaved_registration_changed_sha_and_lease_conflict_reject_host
+    implementation.ready(*self.args())
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/strategy_implementation_jobs.py", line 210, in ready
+    batch = bound_batch(root, state_dir, batch_id, character, worktree, ident)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/strategy_implementation_jobs.py", line 205, in bound_batch
+    raise ValueError("implementation registration not saved")
+ValueError: implementation registration not saved
+
+======================================================================
+ERROR: test_completed_first_study_does_not_block_second_or_rewrite_history (test_strategy_research_scheduling.ResearchScheduling.test_completed_first_study_does_not_block_second_or_rewrite_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_research_scheduling.py", line 466, in test_completed_first_study_does_not_block_second_or_rewrite_history
+    self.assertEqual(result["strategy_research"][0], new["batch"])
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_decklist_report_waits_for_a_shared_slot_and_never_repeats_old_or_new_studies (test_strategy_research_scheduling.ResearchScheduling.test_decklist_report_waits_for_a_shared_slot_and_never_repeats_old_or_new_studies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_research_scheduling.py", line 625, in test_decklist_report_waits_for_a_shared_slot_and_never_repeats_old_or_new_studies
+    batch = self.state["batches"][request["batch"]]
+            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+======================================================================
+ERROR: test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies (test_strategy_research_scheduling.ResearchScheduling.test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_research_scheduling.py", line 382, in test_output_study_uses_independent_slot_and_preserves_completed_and_failed_studies
+    self.state["batches"][reuse["batch"]].update(state="failed", rc=3, retry_at=123)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+KeyError: None
+
+======================================================================
+FAIL: test_running_repair_is_not_dispatched_twice (test_strategy_concurrency.StrategyConcurrency.test_running_repair_is_not_dispatched_twice)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_concurrency.py", line 83, in test_running_repair_is_not_dispatched_twice
+    self.assertEqual(len(self.calls), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_same_manual_strategy_key_cannot_take_both_slots (test_strategy_concurrency.StrategyConcurrency.test_same_manual_strategy_key_cannot_take_both_slots)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_concurrency.py", line 75, in test_same_manual_strategy_key_cannot_take_both_slots
+    self.assertIsNotNone(call('different', '20261009-120002'))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_two_disjoint_batches_are_filled_and_third_is_blocked (test_strategy_concurrency.StrategyConcurrency.test_two_disjoint_batches_are_filled_and_third_is_blocked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_concurrency.py", line 49, in test_two_disjoint_batches_are_filled_and_third_is_blocked
+    self.assertEqual(len(batches), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_binding_write_failure_keeps_registered_claim_and_original_request (test_strategy_implementation.ImplementationBinding.test_binding_write_failure_keeps_registered_claim_and_original_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 195, in test_binding_write_failure_keeps_registered_claim_and_original_request
+    batch = self.bound()
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_correct_binding_claims_originals_and_preserves_old_history (test_strategy_implementation.ImplementationBinding.test_correct_binding_claims_originals_and_preserves_old_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 120, in test_correct_binding_claims_originals_and_preserves_old_history
+    batch = self.bound()
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_exact_task_authorization_and_ownership_reach_prepared_model_input (test_strategy_implementation.ImplementationBinding.test_exact_task_authorization_and_ownership_reach_prepared_model_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 217, in test_exact_task_authorization_and_ownership_reach_prepared_model_input
+    self.bound()
+    ~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally (test_strategy_implementation.ImplementationBinding.test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 274, in test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally
+    self.bound()
+    ~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_manual_request_routes_once_and_blocks_unknown_identity (test_strategy_implementation.ImplementationBinding.test_manual_request_routes_once_and_blocks_unknown_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 267, in test_manual_request_routes_once_and_blocks_unknown_identity
+    self.assertEqual(ops.cmd_write(args), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_no_duplicate_or_active_or_unclosed_lost_lease (test_strategy_implementation.ImplementationBinding.test_no_duplicate_or_active_or_unclosed_lost_lease)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 152, in test_no_duplicate_or_active_or_unclosed_lost_lease
+    self.bound()
+    ~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_normal_code_completion_is_accepted_without_pure_research_contract (test_strategy_implementation.ImplementationBinding.test_normal_code_completion_is_accepted_without_pure_research_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 234, in test_normal_code_completion_is_accepted_without_pure_research_contract
+    batch = self.bound()
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_pure_research_cannot_claim_implementation_or_fall_back (test_strategy_implementation.ImplementationBinding.test_pure_research_cannot_claim_implementation_or_fall_back)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 210, in test_pure_research_cannot_claim_implementation_or_fall_back
+    batch = self.bound()
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_active_original_owner_and_overlapping_leases_block (test_strategy_implementation_continuation.Continuation.test_active_original_owner_and_overlapping_leases_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_binding_write_failure_is_preserved_and_cannot_silently_restart (test_strategy_implementation_continuation.Continuation.test_binding_write_failure_is_preserved_and_cannot_silently_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_continuation_reuses_waiting_inputs_and_returns_same_receipt (test_strategy_implementation_continuation.Continuation.test_continuation_reuses_waiting_inputs_and_returns_same_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher (test_strategy_implementation_continuation.Continuation.test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_input_drift_and_cross_request_binding_block_before_launch (test_strategy_implementation_continuation.Continuation.test_input_drift_and_cross_request_binding_block_before_launch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_prepared_input_and_completion_bind_the_addendum_and_original_artifacts (test_strategy_implementation_continuation.Continuation.test_prepared_input_and_completion_bind_the_addendum_and_original_artifacts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_retries_keep_failed_receipts_and_require_cooldown_with_three_attempt_limit (test_strategy_implementation_continuation.Continuation.test_retries_keep_failed_receipts_and_require_cooldown_with_three_attempt_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation_continuation.py", line 28, in setUp
+    self.prior = self.f.bound()
+                 ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_implementation.py", line 115, in bound
+    self.assertEqual(self.dispatch(), (BATCH, 101))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != ('20260101-010101-strategy-proposal', 101)
+
+======================================================================
+FAIL: test_normal_wait_and_other_pending_learning_requests_remain_prioritized (test_strategy_priority.DeferredPriority.test_normal_wait_and_other_pending_learning_requests_remain_prioritized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_priority.py", line 187, in test_normal_wait_and_other_pending_learning_requests_remain_prioritized
+    self.assertTrue(hold(case, normal)); self.assertIsNone(case.dispatch(normal))
+                                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('20260101-000001-strategy-proposal', 10) is not None
+
+======================================================================
+FAIL: test_original_audit_lock_and_active_heavy_hold_without_new_evidence (test_strategy_priority.DeferredPriority.test_original_audit_lock_and_active_heavy_hold_without_new_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_priority.py", line 137, in test_original_audit_lock_and_active_heavy_hold_without_new_evidence
+    self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
+                                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: ('20260101-000001-strategy-proposal', 10) is not None
+
+======================================================================
+FAIL: test_runnable_audit_blocks_both_sources_and_original_request_dispatches (test_strategy_priority.DeferredPriority.test_runnable_audit_blocks_both_sources_and_original_request_dispatches) (kind='external')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_priority.py", line 90, in test_runnable_audit_blocks_both_sources_and_original_request_dispatches
+    self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
+                                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: ('20260101-000001-strategy-proposal', 10) is not None
+
+======================================================================
+FAIL: test_runnable_calibration_preempts_both_sources (test_strategy_priority.DeferredPriority.test_runnable_calibration_preempts_both_sources) (kind='external')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_priority.py", line 106, in test_runnable_calibration_preempts_both_sources
+    self.assertTrue(hold(case)); self.assertIsNone(case.dispatch())
+                                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: ('20260101-000001-strategy-proposal', 10) is not None
+
+======================================================================
+FAIL: test_priority_over_auto_proposal (test_strategy_research_scheduling.ResearchScheduling.test_priority_over_auto_proposal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_research_scheduling.py", line 136, in test_priority_over_auto_proposal
+    self.assertEqual(request["state"], "running")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pending' != 'running'
+- pending
++ running
+
+
+======================================================================
+FAIL: test_second_slot_fills_on_next_tick_without_displacing_research (test_strategy_research_scheduling.ResearchScheduling.test_second_slot_fills_on_next_tick_without_displacing_research)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-56-learn-four-lanes/ops/tests/test_strategy_research_scheduling.py", line 149, in test_second_slot_fills_on_next_tick_without_displacing_research
+    self.assertEqual(len(self.launched), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 107 tests in 5.921s
+
+FAILED (failures=24, errors=5)
+{"dispatched": null}
+{"dispatched": ["20261024-184105-strategy-proposal", 101]}
+{"dispatched": null}
+{"dispatched": null}
