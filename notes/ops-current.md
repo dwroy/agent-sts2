@@ -1,16 +1,16 @@
 state: clear-ok
 issue: 51
-updated: 2026-10-24T22:14:55+08:00
+updated: 2026-10-24T22:28:46+08:00
 
-进行中的事：R442合发211311+214315共18对，实际生产工具/36账本投影读回过，93策略133rk；22:12:05原锁释放/worker退，本轮写已结。
-在等谁：18正式经验消费者、自然采用/收益及科学父；56注册长锁/自有214311无自动续派结算待，tier未知，新窗只已核214315一个单元。
-下一步：clear-ok/51，核原新批/自然回执，不重发/full/模型/强tick或改在途行；原窗23:34:30保持。原件paper/materials/20261024-issue51-two-card-batches-ops/。
+进行中的事：214314六对已R443发布/登记/生产工具和12投影读回，96策略139rk；锁52.338秒释放/worker退，51/56评论6385395024/6385395386已核，本轮收尾。
+在等谁：1剧本消费者/自然采用收益/科学父；56注册长锁/自有214311结算待原owner；原窗已核A/B两单元，tier未知。
+下一步：clear-ok/51；核原自然新批/56修复回执，不重发/full/模型/强tick/改在途行，原窗23:34:30不变。原件paper/materials/20261024-issue51-mixed-c4-ops/。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51保持：R442已93策略133rk，R440/441旧原件保持；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
+#51保持：R443已96策略139rk；214314六对含2新/4补充，3新ID/3更新+6描述rk，12投影已核；R442旧原件保持；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
 #56源d18/14叶保持；6384816466已授权退役三旧外部，四外部含原211311已核退/owner0，两自有核退，另124241/151302-s2/194330-s2已依6384926225记abandoned-unverifiable/产出0，自有槽21:42:54释放。21131120卡8对原native完成，已与214315的10对合发R442；原rc75与补证failed/rc0围栏错保留。ops补在途lane改租约的失误已查，以后只由原dispatch启动前登记。新8单元四道各2已排队，21:39在跑0/额度63%可请求ultra，实际tier未证；主管覆盖旧窗，新释放窗保守21:34:30至23:34:30。详见paper/materials/20261024-211311-attention-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
@@ -54,23 +54,24 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
-main dda4eed98e4ba57c7101f8c7c600437c4823a8a1
-live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.release（不代表检查绿或实际采用）。
+生成：2026-10-24T22:27:16+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 7489ac64b7e241be4e9d10fb9b8f4b476dcc3fb7f0c46cdabc8c34b9f946c543
+main 50c7e7ae12ee9719fb67eeaef4d5af7d4590375c
+live 56964c16c733137a1688dabb9d175c4e2387b519；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
 - identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。
-- active_batches：在途 1；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
+- active_batches：在途 5；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
-- pending_notices：未确认 9；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
-- not_marked_completed_transactions：未标 completed 191；保留未知/失败与原件引用，不推定活进程或成功。
+- pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
+- queued_events：队列 8；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- not_marked_completed_transactions：未标 completed 287；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。
 只处理原事件，不新增轮询/模型/局/计时器；STOP、恢复开局及角色授权必须按 restoration_context 原文核实，regent 保持暂停。
-不读凭据/.env/游戏二进制，不改共享配置/账号/ops prompt，不推送。
+不读凭据/.env/游戏二进制，不改 ops prompt，不推送。
+Roy 2026-10-23：codex3 learner 删除 service_tier 保持现状；账号配置等可回退小改动 ops 可自行处理，做完须写 notes/for-roy.md 并向 ops/codex-ops/inbox-claude.md 追加一行，由主管转达 Roy；不读凭据、不扩大权限。
 H0/0332 等科学边界、精确宿主树、发布/兼容与 retention 沿原报告核实；索引不代验收、shipped、覆盖率或消费。
 严格普通无源码成功仍须原调度器账本检查、唯一 dataset、受控记录提交及 ordinary-close 回执；异常/异议/缺证/人工决定正常唤醒。
 普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。
