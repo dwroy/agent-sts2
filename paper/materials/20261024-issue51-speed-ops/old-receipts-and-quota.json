@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-24T17:40:35+08:00",
+  "old005": {
+    "batch": "20261024-082457-strategy-proposal",
+    "state": "failed",
+    "rc": 0,
+    "proposal_audit_errors": [
+      "backfill report differs from preserved output"
+    ],
+    "external_completion_errors": [
+      "backfill report differs from preserved output"
+    ],
+    "preserved_output": {
+      "path": "ops/codex-ops/learner/20261024-082457-strategy-proposal.out",
+      "bytes": 2329,
+      "sha256": "a617c987f844f3585f34c64d69ecec6b7bc2d3dab071c6666dcb63f4b1d46291"
+    },
+    "failure_rewritten": false,
+    "replacement": "issue51-decision-encounter-001-20261024; independent input revision5, no old retry"
+  },
+  "old008": {
+    "batch": "20261024-094803-strategy-proposal",
+    "verification": {
+      "path": "paper/materials/20261024-strategy-094803-ops/verification.json",
+      "bytes": 1635,
+      "sha256": "966da2ef0ab2465b21532750e69e2a386b868e6341e3b174d49a4cf2c05aa895"
+    },
+    "candidate_id": "silent-external-poison-build-playbook-c1",
+    "candidate_count": 1,
+    "formal_publication": 0,
+    "consumer_readbacks": 0,
+    "natural_adoption": 0,
+    "format": "descriptive knowledge envelope, not executable StrategyEntry/rk",
+    "new_input_retroactively_applied": false,
+    "main_strategy_library": {
+      "path": "knowledge/characters/silent/strategy-entries.json",
+      "bytes": 219702,
+      "sha256": "e577d01d57072f9f2da2eee87502809efbbf27847b45555d07f28581f0aab077",
+      "candidate_id_present": false
+    },
+    "live_strategy_library": {
+      "path": ".worktrees/live/knowledge/characters/silent/strategy-entries.json",
+      "bytes": 219702,
+      "sha256": "7f2aa89d7a2038ab3b5cf77987b26d0fe26d2994d1ff1ff85d8a913fc792cb6c",
+      "candidate_id_present": false
+    }
+  },
+  "safe_quota_sample": {
+    "captured_at": "2026-10-24T09:40:02.836Z",
+    "source": "account/rateLimits/read",
+    "sample_observed_at": "2026-10-24T09:40:01.983Z",
+    "freshness": "fresh",
+    "windows": [
+      {
+        "bucket": "codex/primary",
+        "kind": "weekly",
+        "used_percent": 47,
+        "window_minutes": 10080,
+        "resets_at": "2026-10-30T17:42:32.000Z",
+        "stale": false
+      }
+    ],
+    "file": "logs/codex-usage.jsonl",
+    "line_sha256": "3bf22443949d7e261a5f57cd384ff79c454b907b2762c2055b99f66e8b61cb3d",
+    "native_tier_proven": false
+  }
+}

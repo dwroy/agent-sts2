@@ -1,9 +1,8 @@
-state: clear-ok
-issue: 27
-updated: 2026-10-24T17:25:37+08:00
+state: in-flight
+issue: 51
+updated: 2026-10-24T17:41:35+08:00
 
-本会话前台写操作已完成，无待本对话继续的发布、合并或暂存事务；#27 R433已发并读回，发布自有锁已释放。可在空闲时开新对话；clear-ok不关闭科学父、通知ACK、研究或后台事务。
-
-后台164302数据集唯一续接PID3147286/birth25814489，等待原策略3138135的paper-dataset锁；首worker取锁前失败/实际build0，后续最多一次构建，完成沿原queue回调。不停进程、不重派、不重dataset；回收仍待原门。原件paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json、launch.json；全部其他在等事项及下一步见notes/ops-current.md。
-
-此后每个任务边界同步维护ops-state.md、ops-current.md及其保护交接源；开始实际写任务标in-flight/当轮issue，写任务收尾后按实际标clear-ok，后台独立事项及未完成验收继续具名交接。
+进行中的事：#51八叶提速候选已冻结，tsc0/Python22/TS15过；未完整检查/合源/部署，source_commit=null。7未启动单元已重冻并排队，三类文字＋rk同产要求已入输入。
+在等谁：原sts2-integrator唯一完整窗口及后续宿主部署；原自然派发/native档位和三插一读回。不得把工作树草稿当已生效。
+下一步：沿原件接实际检查→源码提交→宿主读回；不另full/模型/强制tick。源修改未结，保持in-flight；无live写锁。
+后台164302唯一dataset已rc0/14叶提交2fbf8be6核同，回收及所有科学父保持，详见notes/ops-current.md与paper/materials/20261024-issue51-speed-ops/。

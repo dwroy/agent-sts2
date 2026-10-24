@@ -1,0 +1,264 @@
+diff --git a/agent/tests/strategy-external.test.ts b/agent/tests/strategy-external.test.ts
+index 4e393eada..69074fb04 100644
+--- a/agent/tests/strategy-external.test.ts
++++ b/agent/tests/strategy-external.test.ts
+@@ -22,7 +22,7 @@ it("external admission, source proof, original writer gates and retirement use f
+   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_external.py"], { encoding: "utf8", timeout: 15_000 })).toBe("");
+ });
+ 
+-it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85.01, "default"], [100, "default"]])(
++it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85.01, "fast"], [100, "fast"]])(
+   "applies strict weekly boundary %s -> %s", (percent, expected) => {
+     const decision = externalTier(usage(Number(percent)), now);
+     expect(decision.effective).toBe(expected);
+@@ -32,9 +32,9 @@ it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85
+ it("unknown, stale and ambiguous quota cannot accelerate; all weekly buckets count", () => {
+   for (const sample of [null, { ...usage(5), windows: [] }, { ...usage(5), readAt: "2025-12-31T23:49:59Z" },
+     { ...usage(5), readAt: "2026-01-01T00:00:01Z" }, usage(NaN), { ...usage(5), windows: [{ ...usage(5).windows[0]!, resetsAt: now.toISOString() }] }]) {
+-    expect(externalTier(sample, now)).toMatchObject({ effective: "default", weekly_used_percent: null, reason: "weekly_unknown" });
++    expect(externalTier(sample, now)).toMatchObject({ effective: "fast", weekly_used_percent: null, reason: "weekly_unknown" });
+   }
+-  expect(externalTier({ ...usage(2), windows: [...usage(2).windows, ...usage(90).windows] }, now).effective).toBe("default");
++  expect(externalTier({ ...usage(2), windows: [...usage(2).windows, ...usage(90).windows] }, now).effective).toBe("fast");
+   expect(externalTier(usage(2), now, "fast").effective).toBe("fast");
+ });
+ 
+@@ -64,7 +64,7 @@ function fixture() {
+   };
+ }
+ 
+-it.each([[20, "ultrafast"], [75, "fast"], [90, "default"], [null, "default"]])(
++it.each([[20, "ultrafast"], [75, "fast"], [90, "fast"], [null, "fast"]])(
+   "launches only the selected account with quota %s and tier %s via CLI", async (percent, expected) => {
+     const f = fixture();
+     const code = await f.run(async (bin, home, env) => {
+@@ -83,9 +83,8 @@ it.each([[20, "ultrafast"], [75, "fast"], [90, "default"], [null, "default"]])(
+     const log = readFileSync(receipt.log, "utf8");
+     expect(log).not.toContain("private diagnostics");
+     expect(log.trim().split("\n").map((line) => JSON.parse(line)).find((row) => row.type === "learner_summary").summary.tokens).toMatchObject({ input: 10, output: 2 });
+-    if (percent === 90 || percent === null) {
++    if (percent === null) {
+       expect(readdirSync(join(f.root, "ops/state/queue"))).toHaveLength(1);
+-      if (percent === 90) expect(readFileSync(join(f.root, "notes/for-roy.md"), "utf8")).toContain("提醒 Roy");
+     }
+   });
+ 
+diff --git a/learner/lib/external-source.ts b/learner/lib/external-source.ts
+index ae3d0dd4b..516377f71 100644
+--- a/learner/lib/external-source.ts
++++ b/learner/lib/external-source.ts
+@@ -6,7 +6,7 @@ export type ExternalTier = "ultrafast" | "fast" | "default";
+ export interface ExternalTierDecision {
+   requested: ExternalTier; effective: ExternalTier;
+   weekly_used_percent: number | null; sample_observed_at: string | null;
+-  reason: "weekly_over_85" | "weekly_over_70" | "weekly_within_70" | "weekly_unknown";
++  reason: "weekly_over_70" | "weekly_within_70" | "weekly_unknown";
+   observed_service_tier: null;
+ }
+ export function externalRegistration(env: NodeJS.ProcessEnv, lease: StartupLease | undefined, task: string): boolean {
+@@ -29,10 +29,10 @@ export function externalTier(usage: CodexUsage | null, now: Date, requested: Ext
+   const valid = fresh && weekly.length > 0 && weekly.every((w) => Number.isFinite(w.usedPct) && w.usedPct >= 0 && w.usedPct <= 100
+     && (!w.resetsAt || Date.parse(w.resetsAt) > now.getTime()));
+   const used = valid ? Math.max(...weekly.map((w) => w.usedPct)) : null;
+-  const cap = used === null || used > 85 ? "default" : used > 70 ? "fast" : "ultrafast";
++  const cap = used === null || used > 70 ? "fast" : "ultrafast";
+   const order: ExternalTier[] = ["ultrafast", "fast", "default"];
+   return { requested, effective: order[Math.max(order.indexOf(cap), order.indexOf(requested))]!,
+     weekly_used_percent: used, sample_observed_at: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
+-    reason: used === null ? "weekly_unknown" : used > 85 ? "weekly_over_85" : used > 70 ? "weekly_over_70" : "weekly_within_70",
++    reason: used === null ? "weekly_unknown" : used > 70 ? "weekly_over_70" : "weekly_within_70",
+     observed_service_tier: null };
+ }
+diff --git a/learner/lib/launcher.ts b/learner/lib/launcher.ts
+index 2ebc92203..6def84955 100644
+--- a/learner/lib/launcher.ts
++++ b/learner/lib/launcher.ts
+@@ -542,12 +542,11 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
+       command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
+     const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+   }
+-  if (externalDecision?.reason === "weekly_over_85" || externalDecision?.reason === "weekly_unknown") {
+-    const message = `[learner] #51 外部批次 ${lease!.batch}：周额度 ${externalDecision.weekly_used_percent ?? "unknown"}%，本次启动降为 default；${externalDecision.reason === "weekly_over_85" ? "请 ops→watcher 提醒 Roy" : "请 ops 核验原账号额度"}。这是启动请求，实际档位以原生回执为准。`;
++  if (externalDecision?.reason === "weekly_unknown") {
++    const message = `[learner] #51 外部批次 ${lease!.batch}：周额度 ${externalDecision.weekly_used_percent ?? "unknown"}%，本次启动退回 fast；请 ops 核验原账号额度。这是启动请求，实际档位以原生回执为准。`;
+     const queue = join(dirname(deps.env.LEARNER_STATE_FILE!), "queue");
+     mkdirSync(queue, { recursive: true });
+     writeFileSync(join(queue, `${BigInt(Date.now()) * 1_000_000n}-external-tier-${lease!.batch}.md`), message + "\n", { flag: "wx" });
+-    if (externalDecision.reason === "weekly_over_85") appendFileSync(join(deps.projectRoot, "notes/for-roy.md"), `\n${deps.now().toISOString()} ${message}\n`);
+   }
+   let child: ChildProcess | undefined;
+   const stop = (signal: NodeJS.Signals): void => {
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index db3782950..7c521491c 100644
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -326,7 +326,9 @@ def cmd_tick(args):
+         enqueue("disk-capacity", message)
+     import strategy_external_jobs
+     external_pending = character == "silent" and strategy_external_jobs.ready(state, ROOT)
+-    batch = None if external_pending else check_postmortems(state, character)
++    own_turn = (external_pending and strategy_external_jobs.ordinary_turn(state, character)
++                and not strategy_external_jobs.alternating_hold(state, ROOT, character, alive, {}))
++    batch = check_postmortems(state, character) if not external_pending or own_turn else None
+     report["dispatched"] = batch
+     report["pending_notified"] = check_pending(state, character)
+     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 0bb7edd60..9fe9a0a80 100644
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -230,7 +230,7 @@ else
+   if [ -n "$backfill_source" ]; then
+     if [ "$source_kind" = external ]; then
+       export LEARNER_EXTERNAL_SOURCE="$backfill_source"
+-      args+=(--service-tier fast)
++      args+=(--service-tier ultrafast)
+     else
+       export LEARNER_BACKFILL_SOURCE="$backfill_source"
+     fi
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index 1549d26d6..1223ffbd6 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -356,11 +356,18 @@ def check_jobs(state, root, scripts, character, alive, stamp):
+     external_jobs.reconcile(state, directory)
+     external_ready = character == "silent" and external_jobs.ready(state, root)
+     if external_ready:
+-        # Roy #51: pending external units precede all ordinary learning demand.
+-        # Active batches and the original audit/writer leases remain authoritative.
+-        external = external_jobs.dispatch(state, root, scripts, character, alive, stamp,
+-                                          dispatch_write, {}, alternating=True)
+-        return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
++        # Roy #51: three external units, then at most one own postmortem/experience job.
++        # The postmortem lane runs first; its actual launch resets the same history.
++        experience = None
++        if (external_jobs.ordinary_turn(state, character)
++                and not external_jobs.alternating_hold(state, root, character, alive, {})):
++            own_runs = pending(root, scripts, character)
++            if own_runs:
++                experience = dispatch_write(state, root, scripts, "experience-update", character,
++                    own_runs, ",".join(own_runs), "tick", alive, stamp)
++        external = (None if experience else external_jobs.dispatch(state, root, scripts,
++                    character, alive, stamp, dispatch_write, {}, alternating=True))
++        return {"experience": experience, "fixes": None, "strategy": None, "calibration": None,
+                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
+                 "external_priority_hold": True, "external_alternation_hold": True,
+                 "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
+diff --git a/ops/strategy_external_jobs.py b/ops/strategy_external_jobs.py
+index 69b5755b5..afeb4f6b5 100644
+--- a/ops/strategy_external_jobs.py
++++ b/ops/strategy_external_jobs.py
+@@ -118,15 +118,24 @@ def reconcile(state, directory):
+     shared.reconcile(state, directory, "external")
+ 
+ 
+-def external_turn(state, character):
+-    """Use registered launch order, never tick count or an unstarted attempt."""
++def ordinary_turn(state, character):
++    """Offer one own-run job after three distinct registered external units."""
+     launches = [(bid, batch) for bid, batch in state["batches"].items()
+-                if re.fullmatch(r"[0-9]{8}-[0-9]{6}-.+", bid)
++                if re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-.+)?", bid)
+                 and batch.get("character") == character
+-                and batch.get("task", "postmortem") != "postmortem"
+                 and type(batch.get("pid")) is int and batch["pid"] > 0]
+-    # Start with external work; already registered ordinary work also makes it due.
+-    return not launches or not max(launches, key=lambda item: item[0])[1].get("external_source")
++    units = set()
++    for _, batch in sorted(launches, reverse=True):
++        if batch.get("external_source"):
++            units.add(batch["external_source"])
++        elif batch.get("task", "postmortem") in ("postmortem", "experience-update"):
++            break
++    return len(units) >= 3
++
++
++def external_turn(state, character):
++    """Admission failures and empty ticks never spend a registered unit."""
++    return not ordinary_turn(state, character)
+ 
+ 
+ def alternating_hold(state, root, character, alive, normal):
+diff --git a/ops/tests/test_strategy_external.py b/ops/tests/test_strategy_external.py
+index 0ecf9e1f9..8c1c36731 100644
+--- a/ops/tests/test_strategy_external.py
++++ b/ops/tests/test_strategy_external.py
+@@ -274,6 +274,55 @@ class External(unittest.TestCase):
+         self.assertTrue(result.get("external_priority_hold"))
+ 
+ 
++    def cadence_rows(self, count):
++        return {f"20260101-00000{i + 1}-strategy-proposal": {
++            "character": "silent", "task": "strategy-proposal", "pid": 100 + i,
++            "external_source": f"unit-{i}", "external_binding": {"entry_ids": []}, "state": "done"} for i in range(count)}
++
++    def test_three_distinct_units_offer_one_experience_and_plain_postmortem_resets(self):
++        self.state["batches"] = self.cadence_rows(3)
++        self.assertTrue(external.ordinary_turn(self.state, "silent"))
++        lanes = []
++        def writer(*args, **kwargs):
++            lanes.append(args[3])
++            self.assertEqual(args[3], "experience-update")
++            self.state["batches"]["20260101-000004-experience-update"] = {
++                "task": "experience-update", "character": "silent", "pid": 500}
++            return ("20260101-000004-experience-update", 500)
++        result = self.tick("20260101-000004", writer)
++        self.assertEqual(lanes, ["experience-update"])
++        self.assertTrue(result["experience"]); self.assertIsNone(result["strategy_external"])
++        self.assertFalse(external.ordinary_turn(self.state, "silent"))
++        self.state["batches"] = self.cadence_rows(3)
++        self.state["batches"]["20260101-000004"] = {"character":"silent", "pid":501}
++        self.assertFalse(external.ordinary_turn(self.state, "silent"))
++
++    def test_failed_admission_and_retries_do_not_fabricate_three_distinct_units(self):
++        self.state["batches"] = self.cadence_rows(2)
++        self.state["batches"]["20260101-000003-strategy-proposal"] = {
++            "character":"silent", "task":"strategy-proposal", "external_source":"unit-2", "pid":None}
++        self.assertFalse(external.ordinary_turn(self.state, "silent"))
++        self.state["batches"]["20260101-000004-strategy-proposal"] = {
++            "character":"silent", "task":"strategy-proposal", "external_source":"unit-1", "pid":501}
++        self.assertFalse(external.ordinary_turn(self.state, "silent"))
++
++    def test_due_but_no_own_demand_keeps_external_and_never_runs_an_ordinary_fix(self):
++        self.state["batches"] = self.cadence_rows(3)
++        with patch.object(jobs, "pending", return_value=[]), \
++                patch.object(jobs, "dispatch_write", side_effect=self.writer), \
++                patch.object(jobs, "fix_key") as fix, \
++                patch.object(external.subprocess, "check_output", return_value=self.base + "\n"):
++            result = jobs.check_jobs(self.state, str(self.root), str(REPO/"ops"), "silent", lambda p:False, STAMP)
++        self.assertTrue(result["strategy_external"]); fix.assert_not_called()
++
++    def test_own_slot_does_not_overtake_an_active_external_writer(self):
++        self.state["batches"] = self.cadence_rows(3)
++        self.state["batches"]["20260101-000003-strategy-proposal"]["state"] = "running"
++        with patch.object(jobs, "pending") as demand, patch.object(jobs, "dispatch_write") as writer:
++            result = jobs.check_jobs(self.state, str(self.root), str(REPO/"ops"), "silent", lambda p:True, STAMP)
++        self.assertIsNone(result["experience"]); self.assertIsNone(result["strategy_external"])
++        demand.assert_not_called(); writer.assert_not_called()
++
+     def test_original_tick_gives_external_priority_over_postmortems_and_audits(self):
+         import contextlib
+         import importlib.util
+@@ -281,7 +330,7 @@ class External(unittest.TestCase):
+         from types import SimpleNamespace
+         spec = importlib.util.spec_from_file_location("alternating_original_tick", REPO / "ops/codex-ops-learn.py")
+         module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+-        for held in (True, False):
++        for held, due in ((True, False), (True, True), (False, False)):
+             calls = []
+             result = {"external_priority_hold":True} if held else {}
+             def postmortem(*args): calls.append("postmortem"); return ("fixed-postmortem", 90)
+@@ -290,11 +339,11 @@ class External(unittest.TestCase):
+                     patch.object(module, "load_state", return_value={"batches":{}}), patch.object(module, "save_state"), \
+                     patch.object(module, "check_victories", return_value=[]), patch.object(module, "check_ascension", return_value=[]), \
+                     patch.object(module.disk_admission, "snapshot", return_value={}), patch.object(module, "check_pending", return_value=None), \
+-                    patch.object(external, "ready", return_value=held), patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
++                    patch.object(external, "ready", return_value=held), patch.object(external, "ordinary_turn", return_value=due), patch.object(external, "alternating_hold", return_value=False), patch.object(module, "check_postmortems", side_effect=postmortem), patch.object(module, "check_jobs", side_effect=writes), \
+                     patch.object(module, "check_ascension_audits", return_value=("audit", 91)) as audit, \
+                     patch.object(shared, "dispatch", return_value=None), patch.object(module.learner_retention, "kick", return_value={}):
+                 with contextlib.redirect_stdout(io.StringIO()): module.cmd_tick(SimpleNamespace(character="silent"))
+-            self.assertEqual(calls, ["writes"] if held else ["postmortem", "writes"])
++            self.assertEqual(calls, ["writes"] if held and not due else ["postmortem", "writes"])
+             self.assertEqual(audit.call_count, 0 if held else 1)
+ 
+ 

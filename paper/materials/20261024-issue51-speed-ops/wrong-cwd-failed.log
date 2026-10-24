@@ -1,0 +1,76 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-issue51-speed-20261024/agent
+
+python3: can't open file '/home/dw/Projects/agent-sts2/.worktrees/ops-issue51-speed-20261024/../ops/tests/test_strategy_external.py': [Errno 2] No such file or directory
+ ❯ tests/strategy-external.test.ts (15 tests | 7 failed) 48ms
+   × external admission, source proof, original writer gates and retirement use fixed aggregates 21ms
+   × launches only the selected account with quota 20 and tier ultrafast via CLI 5ms
+   × launches only the selected account with quota 75 and tier fast via CLI 4ms
+   × launches only the selected account with quota 90 and tier fast via CLI 4ms
+   × launches only the selected account with quota null and tier fast via CLI 4ms
+   × ordinary/spoofed leases cannot opt in; quota read cannot outlive registration 4ms
+   × both first-batch task sections render without own-run or normal proposal parameters 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-external.test.ts > external admission, source proof, original writer gates and retirement use fixed aggregates
+Error: Command failed: nice -n 19 python3 -B ../ops/tests/test_strategy_external.py
+python3: can't open file '/home/dw/Projects/agent-sts2/.worktrees/ops-issue51-speed-20261024/../ops/tests/test_strategy_external.py': [Errno 2] No such file or directory
+
+ ❯ tests/strategy-external.test.ts:22:10
+     20|
+     21| it("external admission, source proof, original writer gates and retire…
+     22|   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/te…
+       |          ^
+     23| });
+     24|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/strategy-external.test.ts > launches only the selected account with quota 20 and tier ultrafast via CLI
+ FAIL  tests/strategy-external.test.ts > launches only the selected account with quota 75 and tier fast via CLI
+ FAIL  tests/strategy-external.test.ts > launches only the selected account with quota 90 and tier fast via CLI
+ FAIL  tests/strategy-external.test.ts > launches only the selected account with quota null and tier fast via CLI
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/learner/tasks/strategy-external.md'
+ ❯ fixture tests/strategy-external.test.ts:47:23
+     45|   for (const dir of [cwd, join(root, "tasks"), join(root, "notes"), jo…
+     46|   const task = join(root, "tasks/strategy-proposal.md");
+     47|   writeFileSync(task, readFileSync(resolve("../learner/tasks/strategy-…
+       |                       ^
+     48|   const stateFile = join(root, "ops/state/learn.json");
+     49|   const registration = { state: "running", pid: process.pid, worktree:…
+ ❯ tests/strategy-external.test.ts:69:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/strategy-external.test.ts > ordinary/spoofed leases cannot opt in; quota read cannot outlive registration
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/learner/tasks/strategy-external.md'
+ ❯ fixture tests/strategy-external.test.ts:47:23
+     45|   for (const dir of [cwd, join(root, "tasks"), join(root, "notes"), jo…
+     46|   const task = join(root, "tasks/strategy-proposal.md");
+     47|   writeFileSync(task, readFileSync(resolve("../learner/tasks/strategy-…
+       |                       ^
+     48|   const stateFile = join(root, "ops/state/learn.json");
+     49|   const registration = { state: "running", pid: process.pid, worktree:…
+ ❯ tests/strategy-external.test.ts:92:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/strategy-external.test.ts > both first-batch task sections render without own-run or normal proposal parameters
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/learner/tasks/strategy-external.md'
+ ❯ tests/strategy-external.test.ts:112:25
+    110|   for (const topic of ["dual-boss", "act-boss"]) {
+    111|     const file = join(dir, "strategy-proposal.md");
+    112|     writeFileSync(file, readFileSync(resolve("../learner/tasks/strateg…
+       |                         ^
+    113|     const rendered = renderTask(loadTask(file, dir), { batch: "actual-…
+    114|     expect(rendered.prompt).toContain("runs=[]"); expect(rendered.prom…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 8 passed (15)
+   Start at  17:39:26
+   Duration  1.52s (transform 1.08s, setup 327ms, import 989ms, tests 48ms, environment 0ms)
+
