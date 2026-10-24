@@ -1,8 +1,8 @@
 state: clear-ok
-issue: 51
-updated: 2026-10-24T23:11:19+08:00
+issue: 27
+updated: 2026-10-24T23:22:13+08:00
 
-进行中的事：R446原回调与发布/登记/5对生产原件核同，仅去重；原worker/锁已退，未重发或重跑，本轮写已结。
-在等谁：C7 watcher/Roy ACK、1剧本父/5原回放/科学父；56原自然T/五槽/tier、旧214311/备单，原窗不变。
-下一步：clear-ok/51，原pending自然续核，不强tick/finish/重派。原件paper/materials/20261024-issue51-c7-publication-return-ops/。
+进行中的事：23:13同16通知/32投递及47原件核同，原watcher一次agent_prompted提醒，正式后两角色ACK仍0；本批写已结。
+在等谁：15原CLI身份/范围阻塞、000402原log缺及watcher→Roy真实回执；科学父不关。
+下一步：接56新裁决6385924090，结算214311/补各道备单；本批不重投/伪造ACK。原件paper/materials/20261024-2313-notices-ops/。
 

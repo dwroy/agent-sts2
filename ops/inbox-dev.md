@@ -6796,3 +6796,7 @@ f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装
 
 ### 2026-10-24T23:11:19+08:00 [ops] R446原回调已去重
 23:10回调与原发布/登记/实际消费者、祖先和扫描manifest SHA核同：T22:57:03、live487ce589，原5策略/5摘要rk/5完整rk读回及10投影不重计。原worker退出、持锁32.166秒并于22:57:32释放的证据保留。本轮仅登记去重，未重发/finish/派发/消费者探针/full/模型/游戏/tick，未重复提醒watcher。两条confidence0.25→0.30仍仅原学习者描述赋值，旧证据/conflict、原失败及前置帧代理限制保持；原watcher传输不代接收/Roy ACK，1剧本父/5原回放/自然收益/科学父待。56原f623安装后的自然T/五槽/tier、旧214311/备单与原23:30/23:34:30窗仍pending，不借回调刷新。原件paper/materials/20261024-issue51-c7-publication-return-ops/callback-verification.json。
+
+
+### 2026-10-24T23:21:45+08:00 [ops] 同16通知已核并提醒原watcher
+16项原文/差异/证据/下一步与旧件核同，既有ops_forwarded16份、32个真实投递窗口及47个来源/实收文件SHA通过。现有watcher同会话一次提醒返回agent_prompted，不代已读/Roy已知；正式watcher/Roy两阶段仍0，pending保持。15条原CLI任务/线程/范围拒绝及代码SHA未变，未重复必败ACK；000402原wrapper与根同名log缺失，未造替身。原frozen账本rc1与授权库存rc0分账；旧floor障碍和后external_aggregate进展并列，不以发布/固定查询代因果收益或科学父。原问题和下一步全量交原watcher，实际旧3份接收/投递证据保持，未填其他角色ACK、未重复主管收件箱。无新模型/实验/full/游戏。56新裁决另沿原合同接续，不改变本批通知状态。原件paper/materials/20261024-2313-notices-ops/notice-handoff.json。
