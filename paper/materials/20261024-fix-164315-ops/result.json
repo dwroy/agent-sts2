@@ -1,0 +1,52 @@
+{
+  "task": "fix-batch",
+  "base": "e8dd51b732e5876b2c0774758633011d74fc87aa",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "infra-run-config-git-status-enobufs-20261023",
+      "reason": "当前codeInfo仍为单次git status，问题仍在；110800已有两叶固定候选及负控，队列明确由原ops在最新live精确组合补验，后批不要重复实现。未替原候选提交、合入或修改旧config。"
+    },
+    {
+      "item": "非阻塞账本状态回退：补链显式proposed使历史shipped回退",
+      "reason": "001301已有四叶候选及17项定向检查，队列要求后批不要重复实现/试恢复；原完整检查、24条CLI更正及实际集成仍待原owner。未更新账本或伪造shipped_at。"
+    },
+    {
+      "item": "infra-jev-base-request-budget-issue25-20261022 / #37实际组合失败",
+      "reason": "原#25/#37工程链已负责投影和预算，当前交接记录实际live组合8败并退原开发者。太大且已有owner；未截断事实、改预算、重full或带入未发布候选。"
+    },
+    {
+      "item": "原v5-dpr-health/H1监控V6 A/B及战斗CARD_SELECTION适用性",
+      "reason": "已有001302六叶候选及原工程owner，队列明确不重复实现/派修；待原链实际组合检查和集成，不凭开关豁免真实错误。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2、sandbox-glob-startup-race上游生命周期",
+      "reason": "证据不足：原native失败缺stderr、扫描ENOENT删除者/精确时序未知；已有有界恢复和原owner。未重发通知、重派模型或改权限。"
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability及历史超时/缓存/性能宽项",
+      "reason": "已有多个限定测试修复和原宿主失败/补验；根因与生产因果不足，原队列禁止重复未变full、增时限、削断言或盲叠候选。保留宽父，不称本次28项通过已解决性能。"
+    },
+    {
+      "item": "infra-v6-refresh-invalid-json-provenance-20261020",
+      "reason": "原坏行完整性及来源覆盖属于原V6发布owner；缺本批可验证根因，保留原坏行/unknown，不重跑生产生成器或跳过坏行。"
+    },
+    {
+      "item": "出牌/药水/SL/终局/路线/休息/机制模型及精英悲观校准条目",
+      "reason": "策略类：均保留已有strategy-proposal原ID/证据/租约；普通fix-batch不新增打法或重复派研究。包括silent-0332、0461、0579、0581、0604及其他未完成模型提案。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression及原框架检查收尾",
+      "reason": "独立架构/策略/归因专项，超出普通纯bug批次；原owner、历史失败和科学父要求保持。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 28
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-164320-a49277ab-f5fe-4dca-98dd-91c4e364d08d-fix-batch/report.md"
+}

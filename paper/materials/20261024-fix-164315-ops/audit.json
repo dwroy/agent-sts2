@@ -1,0 +1,154 @@
+{
+  "base": "e8dd51b732e5876b2c0774758633011d74fc87aa",
+  "queue": "/home/dw/Projects/agent-sts2/notes/fix-queue-v4.md",
+  "queue_sha256": "f9ded085020b220f3614fcac8ab7749c910dde006544df0989430707c31512dd",
+  "queue_lines": 1601,
+  "known_fixed": [
+    {
+      "item": "silent-0254：无出牌决策的死亡战斗漏记",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "in_base": true,
+      "source_path": "ops/report.py",
+      "source_sha256": "c3fbcb2a72a2ef3cabbb1f4314d5e6f1462374f1ad42bc3e6e2e191aff6ce265",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "商店移除现场可选名单预判",
+      "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "in_base": true,
+      "source_path": "agent/src/hand/screens/shop.ts",
+      "source_sha256": "0dd2d50752caf48484ab83843b508ba471e473ef5272ee907cb608a8a831b532",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "codex-usage-credit-baseline-recovery",
+      "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+      "in_base": true,
+      "source_path": "agent/src/brain/engines/codex-usage.ts",
+      "source_sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "ascension-up请求目标误作实际等级",
+      "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+      "in_base": true,
+      "source_path": "ops/codex-ops-learn.py",
+      "source_sha256": "a700697aa2264083da63d0c6aca97fe99dc37f9f24a52a26d0be9113da142a2a",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "infra-ledger-status-prefix-git-divergence",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "in_base": true,
+      "source_path": "learner/ledger.py",
+      "source_sha256": "9393e1964f4805b66c3768a38343e10bb8b44875349263d69898b9c905e622a4",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "h1-b2-margin-sample-identity",
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "in_base": true,
+      "source_path": "agent/src/sim/boss-lines.ts",
+      "source_sha256": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "h1-budget-completion-health-contract/indifferent",
+      "commit": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "in_base": true,
+      "source_path": "ops/adaptive_health.py",
+      "source_sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "in_base": true,
+      "source_path": "ops/paper_dataset.py",
+      "source_sha256": "5bf7ad110ae9985c35c5cdb27f4059e1d24340a039fa643e9a19bb0e1853c2ec",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "ops-frozen-storage-v6-stream-20261019",
+      "commit": "39258bd0fba27da2ba5f95ef8f18acdd3e1f7896",
+      "in_base": true,
+      "source_path": "ops/content_store.py",
+      "source_sha256": "8d5ff2cf50975358e6bb1e65cb71c28cb47e3449386260c2fe0719358146666c",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "infra-manual-learning-notice-ack-scope-20261019（源码兼容；角色ACK另核）",
+      "commit": "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+      "in_base": true,
+      "source_path": "ops/learning_requests.py",
+      "source_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "infra-ordinary-close-candidate-failure-isolation-20261020",
+      "commit": "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+      "in_base": true,
+      "source_path": "ops/ordinary_close.py",
+      "source_sha256": "0d896a4c4b96577c88ca947de044f96e9ebbed6aa8ad81c53b7f5be6026d3fa5",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "infra-v6-publication-task-link-20261020 / infra-ops-current-summary-budget-20261020",
+      "commit": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+      "in_base": true,
+      "source_path": "learner/code_proposals.py",
+      "source_sha256": "4b78ce142411f8ef5da5ea1b937291b2fff093462eed6d1e22e5a164fed486b5",
+      "in_live_ancestry": true
+    },
+    {
+      "item": "infra-ordinary-unassigned-tick-no-change-20261020",
+      "commit": "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+      "in_base": true,
+      "source_path": "ops/proposal_dispatch.py",
+      "source_sha256": "206caf61b00f49faee22e79dc11dd5fa8adea447dcb58eef8e6df5ddd317f368",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "infra-proposal-repair-no-source-waiting-20261023",
+      "commit": "86b3b1721b4b6ad4db48b0279504144e490db010",
+      "in_base": true,
+      "source_path": "ops/proposal_dispatch.py",
+      "source_sha256": "206caf61b00f49faee22e79dc11dd5fa8adea447dcb58eef8e6df5ddd317f368",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "原生agent名长度适配",
+      "commit": "cb11e5f5beaf2d9ce1320b4222d435dc9cdf0de1",
+      "in_base": true,
+      "source_path": "learner/lib/herdr.ts",
+      "source_sha256": "508d1dbd780bae11c7ef624a28f0921626e2fc2ad8447d191329c58ddcffa48e",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "ops-external-report-contract-20261024（模板合同）",
+      "commit": "6b013cb487ccdd5cf6fd3f439537ec9cb9851f8d",
+      "in_base": true,
+      "source_path": "learner/tasks/strategy-external.md",
+      "source_sha256": "79b96cb4ecc014aa025a3e818b15c83b1d7a3b7b76479f1c9ef85230855bc237",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "kb_strategies宽查询来源元数据24KB封包",
+      "commit": "d1f590e401e825895abd548adf331f21dc079c49",
+      "in_base": true,
+      "source_path": "agent/src/brain/tools/strategy-tool.ts",
+      "source_sha256": "cf79923d626a8b6fe2165bf68a66e667ab2a138909a5933eae65b08b2a75d3bc",
+      "in_live_ancestry": false
+    },
+    {
+      "item": "窄cherry-pick提案处置与recheck格式兼容",
+      "commit": "e87e6cc08bfb2c90e1961d6783cf0c2a7462aac3",
+      "in_base": true,
+      "source_path": "ops/proposal_dispatch.py",
+      "source_sha256": "206caf61b00f49faee22e79dc11dd5fa8adea447dcb58eef8e6df5ddd317f368",
+      "in_live_ancestry": true
+    }
+  ],
+  "worktree_status": "",
+  "note": "in_live_ancestry=false不等于现场无其他等价窄发布；已对waiting_repair与atomic_output实核live缺失，不冒已上线。"
+}

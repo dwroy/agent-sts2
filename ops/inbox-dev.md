@@ -6612,3 +6612,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 ### 2026-10-24T16:43:59+08:00 [ops] #51 V6-R432 五情境独立发布
 161310补证实为5条（4新1更），不同于旧124312的1条。旧祝福仅外部比较，现原ID增加自有选择/资源证据；新增首战牌型、已有Attack后补挡、前三奖励skip及首Boss前Power/HP四种条件提醒。自有SL分层反向、版本unknown及外部旧版本反例保持，不据此定拿牌排序或安全线。source6e3976ca/行为0f999aa6/live9dee1cfc，T16:40:40，live37→41；5生产工具逐ID读回、616账本0问题，铁甲等价。预期是可检索情境，采用/收益仍待；回退仅撤4新ID并还原Golden旧版及目录该行。新毒/刀整局→商店→单牌穿插→遗物→事件→遭遇已按原锁冻结排队，冷/休不重跑，未强派模型/full/局。逐项旧新/证据/回退见paper/materials/20261024-issue51-cold-own-publication-ops/rule-changes.json；排单见paper/materials/20261024-issue51-next-units-ops/activation.json。
+
+### 2026-10-24T17:00:50+08:00 [ops] 164315 fix无新增源码，原失败/回收门保留
+164315修复批次原退出0，但登记为failed、merged=null，fixes为空；本轮核原out、report/result、原生终态和封存SHA一致，工作树干净且HEAD仍为e8dd51b基线，没有新增源码或可兜底提交。18项既有基线源码逐项核blob，不能把提交在main或祖先关系当实库采用；补链waiting_repair与数据集atomic_output在宿主main已含、实际live仍缺，沿原发布owner接续。tsc0，固定6文件28项实际通过，仅定向；最初EROFS及未知cacheDir参数两次加载退出1未执行用例，失败原件保留，不重跑full。无改动完成门仍返回空：基线与当前live有174个源码路径差异，不归因为174项回归，也不空合并整个main。原state/retry_at及旧科学父不改；回收请求原deferred，原因为scratch归属未绑定，不代通过、不手删或重finish。ENOBUFS、账本回退、预算/监控及策略等原候选和owner不重复实现，本轮不分配发布号、不新开模型/对局或数据集。
+原件：paper/materials/20261024-fix-164315-ops/verification.json、source-guard.json、ops-report.md。

@@ -1,6 +1,6 @@
 state: in-flight
 issue: 35
-updated: 2026-10-24T16:49:46+08:00
+updated: 2026-10-24T17:00:50+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -14,7 +14,7 @@ updated: 2026-10-24T16:49:46+08:00
 
 #51原144312/154311的R430十ID固定读回，4新6更/四经验消费者另验。131301数据集938ba222/14叶原rc0、回收deferred；原件paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 
-#51三原决策及三自有补证结果保持，旧1/2/2与新5/5/5逐批计数；新1613105为4新1更。原两代输入、零产/配额记录保留，不回写旧报告。paper/materials/20261024-issue51-own-fallback-ops/及各strategy原件。
+#51旧三决策1/2/2与新补证5/5/5逐批保持；161310为4新1更，不回写旧零产/配额。原输入见paper/materials/20261024-issue51-own-fallback-ops/及strategy原件。
 
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
@@ -25,7 +25,9 @@ updated: 2026-10-24T16:49:46+08:00
 
 #37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430/R431/R432策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
 
-131302 fix failed/rc0/deferred保留：tsc0/31定向、6未选；与live175源路径异，empty guard未过。两个131302补链各done，0293 waiting；各14where-only/1处置、s2原文58/本批69核同，不重复科学分母，14正式经验增量未入；061302缺源commit/101315旧失败及回收门保留。非48/51新单元。原件paper/materials/20261024-fix-131302-ops/、20261024-strategy-131302-s2-ops/、20261024-strategy-131302-ops/。
+131302 fix及两补链：原failed/rc0/tsc0/31定向、175源差/empty guard未过；两补链done/0293 waiting，各14where-only/1处置未重复分母；14正式经验未入，061302缺源/101315旧失败保持。paper/materials/20261024-fix-131302-ops/及strategy-131302{,-s2}-ops/。
+
+164315 fix：无新源码/提交，原failed/rc0/retry保持；18基线blob核同，tsc0/6文件28定向过，两加载失败留档。174源差、empty guard未过，回收deferred/scratch归属待。两旧函数宿主main有/live缺，沿原owner接发布。原件paper/materials/20261024-fix-164315-ops/。
 
 其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
 
@@ -46,7 +48,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue35-checkpoint-1648-ops/handoff-before.md；未清待办。
+本轮前完整交接见paper/materials/20261024-fix-164315-ops/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
