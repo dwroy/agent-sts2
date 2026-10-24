@@ -15,7 +15,7 @@ import { BrainRouter } from "../src/brain/router.js";
 import { loadConfig } from "../src/core/config.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { userMessage } from "../src/brain/message.js";
-import { JevClient, JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
+import { JevClient, JevError } from "../src/reflex/jev/client.js";
 import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
 
 type Row = Record<string, any>;
@@ -136,7 +136,7 @@ describe("offline open book", () => {
     expect(enemySims(board, 10, "ironclad")[0]!.externalReference).toBeUndefined();
     expect(JSON.stringify(enemy)).not.toContain("externalReference");
   });
-  it("passes enriched options through the actual Brain request and supplies Jev the same references", async () => {
+  it("passes enriched options through the actual Brain request", async () => {
     setKnowledgeCharacter("silent");
     let sent: BrainRequest | undefined;
     const router = new BrainRouter({ config: loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_LOG: "off", KNOWLEDGE_PREFIX: "off" } as NodeJS.ProcessEnv).brain,
@@ -148,12 +148,8 @@ describe("offline open book", () => {
     await brain.choose({}, "Pick", options, { label: "reward/card" });
     expect(userMessage(sent!)).toContain("基础资料补全");
     expect((sent!.payload as Row).open_book.entries[0].id).toBe(e.id);
-    const questions = { pick: { type: "choice" as const, instructions: "Pick", criteria: options } };
-    const state = prepareJevOpenBook({ run_brief: { character: "SILENT" }, enemies: [{ enemy_id: "AEONGLASS" }] }, questions) as Row;
-    expect(keys(state)).toEqual(expect.arrayContaining(["cards:ABRASIVE", "monsters:AEONGLASS"]));
-    expect(prepareJevOpenBook(state, questions)).toBe(state);
   });
-  it("sends the same enriched Jev state that the log and projection hash describe", async () => {
+  it("sends the pre-open-book Jev state with matching log and projection evidence", async () => {
     const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
     let wire: Row = {}, logged: JevPromptRecord | undefined;
     const sdk = (client as unknown as { client: { systemOne: unknown } }).client;
@@ -165,17 +161,27 @@ describe("offline open book", () => {
       label: "combat/plan-choice", jevContext: null, call: "ask",
     }, state, questions);
     expect(logged!.request).toEqual(wire);
-    expect(keys(wire.state)).toEqual(expect.arrayContaining(["cards:ABRASIVE", "monsters:AEONGLASS"]));
+    expect(wire.state).not.toHaveProperty("open_book");
+    const { jev_decision_contract, ...board } = wire.state;
+    expect(board).toEqual(state);
+    expect(jev_decision_contract.schema).toBe("silent-combat-decision-v1");
+    expect(wire.questions.pick).toEqual({ ...questions.pick, criteria: { p0: '{"card_id":"ABRASIVE"}' } });
     expect(logged!.decision_projection!.projectedBytes).toBe(Buffer.byteLength(JSON.stringify({ state: wire.state, questions: wire.questions })));
-    expect(logged!.decision_evidence!.state).toMatchObject({ open_book: { schema: "open-book-context-v1" } });
+    expect(logged!.decision_evidence).toEqual({ state, questions });
   });
-  it("keeps Jev references inside the existing request budget", () => {
-    const state = { run_brief: { character: "SILENT" }, padding: "x".repeat(16_000), cards: loadOpenBook().entries.filter(e => e.kind === "cards").slice(0, 30).map(e => ({ card_id: e.id })) };
-    const enriched = prepareJevOpenBook(state, {});
-    expect(Buffer.byteLength(JSON.stringify({ model: "fixed", state: enriched, questions: {} }))).toBeLessThanOrEqual(24_000);
-    expect((enriched as Row).open_book.omitted).toBeGreaterThan(0);
+  it.each(["SILENT", "IRONCLAD"])("direct Jev calls preserve %s request bytes without open-book enrichment", async (character) => {
+    const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
+    let wire: Row = {};
+    const sdk = (client as unknown as { client: { systemOne: unknown } }).client;
+    sdk.systemOne = (request: Row) => { wire = request; return { withResponse: async () => ({ data: { answers: {}, usage: {} } }) }; };
+    const state = { run_brief: { character }, cards: [{ card_id: "ABRASIVE", description: "?(数值未知)" }], enemies: [{ enemy_id: "AEONGLASS" }] };
+    const questions = { pick: { type: "choice" as const, instructions: "Pick", criteria: { p0: '{"card_id":"ABRASIVE"}' } } };
+    const before = JSON.stringify({ model: "fixed", state, questions });
+    await client.ask(state, questions);
+    expect(JSON.stringify(wire)).toBe(before);
+    expect(wire.state).not.toHaveProperty("open_book");
   });
-  it("does not add references after a logged context-recovery retry deliberately omitted them", async () => {
+  it("keeps both logged context-recovery attempts free of open-book fields", async () => {
     const client = new JevClient({ apiKey: "fixed-offline-placeholder", model: "fixed" });
     const calls: Row[] = [], rows: JevPromptRecord[] = [];
     const sdk = (client as unknown as { client: { systemOne: unknown } }).client;

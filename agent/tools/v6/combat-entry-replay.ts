@@ -6,7 +6,7 @@ import { parseArgs } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { array, id, literal, nullable, number, object, refine, text, validate } from "../../src/v6/schema.js";
 import { loadConfig, requireJevApiKey } from "../../src/core/config.js";
-import { JevClient, markJevOpenBookPrepared } from "../../src/reflex/jev/client.js";
+import { JevClient } from "../../src/reflex/jev/client.js";
 import { parseReplayOutcomes, prepareCombatEntryReplay, replayHash, summarizeCombatEntryReplay,
   type ReplayArm, type ReplayObservation } from "../../src/reflex/jev/combat-entry-replay.js";
 
@@ -96,7 +96,6 @@ export async function main(argv = process.argv.slice(2)) {
         if (readdirSync(claims).length >= maxCalls) break;
         // A crash after claiming is uncertain. A rerun must never dispatch that call again.
         writeFileSync(join(claims, `${key}.json`), JSON.stringify({ id: o.id, arm, request_sha256: requestSha }), { flag: "wx", flush: true });
-        markJevOpenBookPrepared(request.state, request.questions);
         let result: object;
         try {
           const answer = await client.ask(request.state, request.questions);
