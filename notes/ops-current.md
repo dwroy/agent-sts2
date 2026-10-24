@@ -1,12 +1,14 @@
 state: in-flight
-issue: 35
-updated: 2026-10-24T17:00:50+08:00
+issue: 27
+updated: 2026-10-24T17:08:28+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#35接R422构筑历史自然验收；原四终局84快照/100题全部匹配，12同战SL恢复条目及下一T1牌组一致，041301终态19/19/24/21条已实际消费；合并输出截断不代完整历史通读。
-在等谁：等原自动对局自然发生进程重启、跨层回滚、超40条溢出并产出落盘/脑题/学习原生证据；不是等Roy批准，不造场景，不手动SL/重启。效果/收益仍待原学习与科学owner。
-下一步：沿原事件及索引冻结对应offset/bytes/SHA，逐项比恢复前后构筑、脑题与消费者；缺分支继续pending，原ENOBUFS/commit=null及旧R419 lost full保留。只接必要自然回执，不重发R422、full、模型或游戏；父保持开放。原件paper/materials/20261024-issue35-natural-learning-ops/verification.json及natural-{question,sl}-readback.json、natural-learner-consumer.json。
+进行中的事：#27原二批剩余4外部条目已独立发V6-R433/T17:06:31，live41→45/main45不变。源3f642143/行为2b08241e/livebf2df1cf，4原CSV片段核同、4实际工具/12负例/两角色隔离通过，原0571/72/74/75 shipped，发布check617项0；后续并行折叠不冒同次全验。刀刃1.1.0、其他知识/脏目录及R430–R432保持，锁释。原件paper/materials/20261024-issue27-b2-publication-ops/。
+在等谁：等原自动对局自然相关问题/工具返回，由ops按ID/version/source/evidence与库SHA核；无额外审批。外部0自有/低可信、跳过频率非收益/配额、gross p90非净损/安全线及SL/截断等边界保持；科学父不关。16通知原owner仍需解来源兼容/000402日志，角色ACK及Roy可见仍待。
+下一步：沿自然事件冻结实际查询字节，固定工具不代采用/收益；只回退本次4ID及目录行可撤本发布，不重发/模型/full/开局。原二批冻结check rc1、false flags、旧反证/报告不回写，#37后续组合保留R430–R433。
+
+#35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
 #51并行保持：R432/T16:40:40已发161310五情境4新1更，live41/main45、5工具读回/616账本0，源6e3976ca/行为0f999aa6/live9dee1cfc，锁释；其他知识/脏目录/控制标记不变。原7新单元毒→刀→商店→单牌→遗物→事件→遭遇已冻结排队，等原调度native；冷/休不重跑、满批或2h独立发布、不加计时器。R430一真实局八新ID自然命中，R431/R432自然/采用/收益仍待；28窗口、506与28案例18局/反向分层等完整边界见paper/materials/20261024-issue51-cold-own-publication-ops/、20261024-issue51-next-units-ops/及本轮handoff-before.md。
 
@@ -21,9 +23,7 @@ updated: 2026-10-24T17:00:50+08:00
 
 #51用药/休息/冷启动候选原科学边界：终局持药447/1247对166/492仅代理；HEAL/SMITH1254/1458重叠/前节点HP代理；祝福34/111对24/110仅整局关联/旧版本反向。描述知识消费者待原owner，不硬转rk/StrategyEntry。原件paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
-#27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，旧30/26为历史数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
-
-#37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430/R431/R432策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
+#37实际profile已于15:50:44终态：两tsc0，673文件6562过/8败/2跳，worker2593100原检查锁释放、未发布。原main070cac9b full6661/0/2保持独立；缺board夹具、导入/临时路径等错误待原owner逐项分类，不自动判八项游戏回归。原15运行/72知识差异与091302 source=null/净12候选不夹；旧临时publisher已撤/自有准入释。R430–R433策略须后续代码组合保留，不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/issue37-failure-handoff.json。
 
 131302 fix及两补链：原failed/rc0/tsc0/31定向、175源差/empty guard未过；两补链done/0293 waiting，各14where-only/1处置未重复分母；14正式经验未入，061302缺源/101315旧失败保持。paper/materials/20261024-fix-131302-ops/及strategy-131302{,-s2}-ops/。
 
@@ -37,7 +37,7 @@ updated: 2026-10-24T17:00:50+08:00
 
 #48仍待：整局首单元issue48-whole-run-cluster6-a10-001/9R916WW0V65N/A10/簇6仅定位，原队列不变、旧首六/18输入held、0/244；等原优先级自然派发及学习者核语义/逐ID产物。普通MD09f3a443b/宿主4af34c5e已核，首新ordinary native T/映射仍null，外部/补链不借验；18:19:29完整门不重置，实际策略/rk/剧本发布与消费分账。paper/materials/20261024-issue48-checkpoint-1534-ops/readback.json。
 
-#51原R428底库现由R430/R431承接，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
+#51原R428的090927/081200去重23ID读回、宽查询fix和正式经验.1边界保持；原main4条已R433发。paper/materials/20261024-090927-strategy-result-ops/。
 
 #54原三manifest/132叶与原008双输入边界保持，版本unknown/SL/代理及Z2/KF9排除不变。新506补证仅换当前物理分片pin并守原名单/切点，无BP9/新局。postmortem/experience模板T10:03:15，普通MD09f3首native仍待。paper/materials/20261024-input-format-r2-ops/。
 
@@ -48,7 +48,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-fix-164315-ops/handoff-before.md；未清待办。
+本轮前完整交接见paper/materials/20261024-issue27-b2-publication-ops/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。

@@ -6616,3 +6616,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-24T17:00:50+08:00 [ops] 164315 fix无新增源码，原失败/回收门保留
 164315修复批次原退出0，但登记为failed、merged=null，fixes为空；本轮核原out、report/result、原生终态和封存SHA一致，工作树干净且HEAD仍为e8dd51b基线，没有新增源码或可兜底提交。18项既有基线源码逐项核blob，不能把提交在main或祖先关系当实库采用；补链waiting_repair与数据集atomic_output在宿主main已含、实际live仍缺，沿原发布owner接续。tsc0，固定6文件28项实际通过，仅定向；最初EROFS及未知cacheDir参数两次加载退出1未执行用例，失败原件保留，不重跑full。无改动完成门仍返回空：基线与当前live有174个源码路径差异，不归因为174项回归，也不空合并整个main。原state/retry_at及旧科学父不改；回收请求原deferred，原因为scratch归属未绑定，不代通过、不手删或重finish。ENOBUFS、账本回退、预算/监控及策略等原候选和owner不重复实现，本轮不分配发布号、不新开模型/对局或数据集。
 原件：paper/materials/20261024-fix-164315-ops/verification.json、source-guard.json、ops-report.md。
+
+### 2026-10-24T17:08:28+08:00 [ops] #27 V6-R433补齐二批4条
+本轮把#27上次未发的第二批四条补入live，V6-R433/T17:06:31，库41→45，主库45不变。此前二/三幕奖励比较及知识恶魔/实验体外部备战条目仅在main，现策略工具可按情境查得；四条与原学习提交3f642143及统计片段SHA核同，已有刀刃1.1.0和R430–R432未覆盖。4生产工具逐ID/版本/来源/证据读回、12负例及铁甲/Regent隔离通过；四原账本ID追加shipped，发布时当前清单617项0问题，原冻结rc1仍保留。均0自有支持、低可信外部观察：跳过比例非收益或配额，总受伤p90非净损/安全线，SL未知和死亡截断不变。预期是条件文字可检索，自然命中/采用/收益及正式ACK/Roy可见仍待；不关闭科学父。回退只删本次四ID及目录该行，保留后续知识。行为2b08241e/livebf2df1cf，原锁已释；无新源码/full/模型/局，原报告与失败不改。
+逐项旧新/证据/回退及实际读回：paper/materials/20261024-issue27-b2-publication-ops/rule-changes.json、publication.json、actual-live-consumers.json。

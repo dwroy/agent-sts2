@@ -6667,3 +6667,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T17:00:50+08:00 [ops] 164315 fix核无源码/提交，18基线blob同、tsc0/6文件28定向过，原两加载失败保留；failed/rc0/retry、174源差/empty guard及retention scratch归属门保持，不重full/空合并/模型。原件paper/materials/20261024-fix-164315-ops/。
 
 - 2026-10-24T16:46:50+08:00 [watcher] #27核收16:45同16原文/SHA、32投递窗/32回执、16新事件及2原主管转达窗；原CLI/rc2与旧实收链同，15来源身份范围拒绝和000402精确wrapper缺失仍pending，正式ACK各0/新ACK0，未见新增Roy本人接收证明，不重复主管收件箱/原通知/拒绝CLI。原冻结rc1与08:24授权当前清单rc0分账，67旧冻结证据本轮未重扫。核收paper/materials/20261024-1645-notices-integrator/receipt.json；37新补交09a08ac2b待独立核、20退开发及各父保留，本轮无测试/full/生产动作。
+
+- 2026-10-24T17:08:28+08:00 [ops] #27原二批4外部条目V6-R433/T17:06:31上线，live41→45、4实际工具/12负例/两角色隔离过，原4账本ID shipped；保刀刃1.1.0/R430–R432/旧冻结rc1，ACK/自然采用/收益与科学父待，无full/模型/局。原件paper/materials/20261024-issue27-b2-publication-ops/。

@@ -1,0 +1,421 @@
+{
+  "passed": true,
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "library_sha256": "7f2aa89d7a2038ab3b5cf77987b26d0fe26d2994d1ff1ff85d8a913fc792cb6c",
+  "library_entries": 45,
+  "fixed_production_id_queries": 4,
+  "rows": [
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "version": "1.0.0",
+      "label": "reward/card",
+      "act": 2,
+      "boss": null,
+      "entry": {
+        "id": "silent-brain-act2-reward-skip-comparison",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            2
+          ]
+        },
+        "strategy": "仅A10/v0.111.0参考：第2幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部7821个奖励屏幕有2198次跳过（28.10%，玩家簇区间20.75–37.11%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; deduplicated combat card-reward screens, not candidate slots/runs"
+            },
+            "statistic": {
+              "name": "rate",
+              "value": 0.281038230405319,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "rewards",
+              "n": 7821
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+              "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+            ],
+            "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:19",
+            "role": "support",
+            "interval": {
+              "low": 0.20745451951842533,
+              "high": 0.37107431798918306,
+              "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+            }
+          }
+        ],
+        "source": "external:sts2fun",
+        "confidence": 0.4,
+        "design": "observational",
+        "limits": {
+          "own_support_runs": 0,
+          "effect": null,
+          "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+        },
+        "evidence_summary": {
+          "own_runs": 0,
+          "own_support_runs": 0,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "rate",
+              "denominator": {
+                "unit": "rewards",
+                "n": 7821
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "bytes": 3401,
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "version": "1.0.0",
+      "label": "reward/card",
+      "act": 3,
+      "boss": null,
+      "entry": {
+        "id": "silent-brain-act3-reward-skip-comparison",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            3
+          ]
+        },
+        "strategy": "仅A10/v0.111.0参考：第3幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部4411个奖励屏幕有1704次跳过（38.63%，玩家簇区间31.34–49.58%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; deduplicated combat card-reward screens, not candidate slots/runs"
+            },
+            "statistic": {
+              "name": "rate",
+              "value": 0.38630695987304464,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "rewards",
+              "n": 4411
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+              "普通/升级未分层；奖励/候选槽/战斗与独立局不可混算。"
+            ],
+            "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#skip_rates:20",
+            "role": "support",
+            "interval": {
+              "low": 0.3134360059449658,
+              "high": 0.4957741888332287,
+              "method": "player-cluster bootstrap; 1000 draws; seed=240111"
+            }
+          }
+        ],
+        "source": "external:sts2fun",
+        "confidence": 0.4,
+        "design": "observational",
+        "limits": {
+          "own_support_runs": 0,
+          "effect": null,
+          "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+        },
+        "evidence_summary": {
+          "own_runs": 0,
+          "own_support_runs": 0,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "rate",
+              "denominator": {
+                "unit": "rewards",
+                "n": 4411
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "bytes": 3401,
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "version": "1.0.0",
+      "label": "event/act-plan",
+      "act": 2,
+      "boss": "KNOWLEDGE_DEMON_BOSS",
+      "entry": {
+        "id": "silent-brain-knowledge-demon-external-tail-budget",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "act_plan",
+            "event",
+            "rest",
+            "shop"
+          ],
+          "acts": [
+            2
+          ],
+          "bosses": [
+            "KNOWLEDGE_DEMON_BOSS"
+          ]
+        },
+        "strategy": "仅A10/v0.111.0参考：备战KNOWLEDGE_DEMON时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配360场/360局/68玩家，总受伤gross_damage的90分位为51。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是51血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=2; kind=boss; encounter=ENCOUNTER.KNOWLEDGE_DEMON_BOSS; one matched encounter per selected run; players=68; uploaded attempt; SL unknown"
+            },
+            "statistic": {
+              "name": "gross_damage_p90",
+              "value": 51,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 360
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+              "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+            ],
+            "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:45",
+            "role": "support"
+          }
+        ],
+        "source": "external:sts2fun",
+        "confidence": 0.36,
+        "design": "observational",
+        "limits": {
+          "own_support_runs": 0,
+          "effect": null,
+          "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+        },
+        "evidence_summary": {
+          "own_runs": 0,
+          "own_support_runs": 0,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "gross_damage_p90",
+              "denominator": {
+                "unit": "fights",
+                "n": 360
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "bytes": 3483,
+      "actual_production_tool_call": true
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "version": "1.0.0",
+      "label": "event/act-plan",
+      "act": 3,
+      "boss": "TEST_SUBJECT_BOSS",
+      "entry": {
+        "id": "silent-brain-test-subject-external-tail-budget",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "act_plan",
+            "event",
+            "rest",
+            "shop"
+          ],
+          "acts": [
+            3
+          ],
+          "bosses": [
+            "TEST_SUBJECT_BOSS"
+          ]
+        },
+        "strategy": "仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "v0.111=only v0.111.0; single-player; valid; not abandoned; no modifiers; act=3; kind=boss; encounter=ENCOUNTER.TEST_SUBJECT_BOSS; one matched encounter per selected run; players=70; uploaded attempt; SL unknown"
+            },
+            "statistic": {
+              "name": "gross_damage_p90",
+              "value": 62,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 501
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家/牌组选择混杂；无因果收益或本系统验证。",
+              "SL未知，仅上传尝试；死亡截断；总受伤非HP净损或安全血线。"
+            ],
+            "ref": "paper/materials/20261022-issue27-brain-strategies/batch2/evidence-refs.jsonl#combat_distribution:66",
+            "role": "support"
+          }
+        ],
+        "source": "external:sts2fun",
+        "confidence": 0.36,
+        "design": "observational",
+        "limits": {
+          "own_support_runs": 0,
+          "effect": null,
+          "scope": "仅Silent A10/v0.111.0定量参考；其他进阶/版本无验证。"
+        },
+        "evidence_summary": {
+          "own_runs": 0,
+          "own_support_runs": 0,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111.0",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "gross_damage_p90",
+              "denominator": {
+                "unit": "fights",
+                "n": 501
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "bytes": 3560,
+      "actual_production_tool_call": true
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "name": "wrong-act",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "name": "wrong-type",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "name": "unknown-facts",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "name": "wrong-act",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "name": "wrong-type",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "name": "unknown-facts",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "name": "wrong-act",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "name": "wrong-type",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "name": "unknown-facts",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "name": "wrong-act",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "name": "wrong-type",
+      "not_matched": true
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "name": "unknown-facts",
+      "not_matched": true
+    }
+  ],
+  "roles": [
+    {
+      "role": "ironclad",
+      "no_silent_ids": true
+    },
+    {
+      "role": "regent",
+      "no_silent_ids": true
+    }
+  ],
+  "natural_brain_queries": 0,
+  "new_full_model_game": 0
+}
