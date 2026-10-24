@@ -6853,3 +6853,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T03:31:18+08:00 [watcher] #60正式7af8ef5a7修正组合工程接收：原25生产/合同叶不变，两fixture三处补拷真实解析器且原断言不变；新anchorcaa480132a67/tree7371b47fd0bb，唯一full 679文件/6628过/0败/2原跳、tsc0，原PID/锁/2788输入/1417依赖/index/tree/result独立核同。原失败full保留，准备精确27叶集成及29正式材料；原ops接58后发布链，切点真实已发布叶迁移/唯一writer/控制SHA/候选→tools正负例→自然局及长期学习待核，不代ACK/科学父。材料paper/materials/20261025-issue60-fixture-composition-integrator/。
 
 - 2026-10-25T03:32:07+08:00 [watcher] #60正式7af8ef5a7→main 6970b9fb29c6及27叶安装/Windows SSH远端独立核同；唯一full 679文件/6628过/0败/2原跳、tsc0，公开结论6388588489逐字核同，open/waiting-release，原ops一行实投非ACK。接58后原发布链，迁移仅切点已发布字节/唯一writer，真实候选→tools正负例→自然局及控制SHA/幂等绑定由原ops核收，长期效果/反证/科学父保持。未动live/STOP/生产DB/控制/在途或代开发释放。材料paper/materials/20261025-issue60-fixture-composition-integrator/。
+
+- 2026-10-25T03:47:57+08:00 [watcher] #27本轮16条learning-attention完整原文/证据核读并逐项转Roy；47源SHA/32原ops投递窗口/67历史来源回执窗口核同，13实质证据及5原帧读回，公开6388751430逐字远端核同。保外部因果/分母/总受伤口径/输入保真/逐卡施放与历史R410限制，格式及B2四条V6-R433固定消费进展另列。15CLI身份原rc2与000402缺原log待owner，正式watcher/Roy字段0、不代ACK/自然采用收益/科学父；无新模型游戏full/发布或ops状态变更，相同主管收件箱不重写。材料paper/materials/20261025-learning-attention-integrator/。

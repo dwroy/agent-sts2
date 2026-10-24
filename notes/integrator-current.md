@@ -1,4 +1,30 @@
 state: clear-ok
+issue: 27
+updated_at: 2026-10-25T03:47:57+08:00
+
+# 集成员当前交接
+
+进行中的事：本轮16条learning-attention已完整读原notice并向Roy逐项转达，公开回执6388751430远端逐字核同；47源SHA/32原ops投递窗口/67历史来源回执窗口复核，另读13实质证据正文或指定字段及5原始帧。全文、逐条SHA、证据/差异/下一步及真实delivery见paper/materials/20261025-learning-attention-integrator/。本角色本轮转达完成，无在途模型/游戏/full/发布事务。
+
+在等谁：原CLI owner解决15条身份范围拒绝，原rc2不重试/不绕；000402等原owner找回绑定原wrapper日志，两原路径仍缺。正式watcher_received/roy_notified均0，未代任何角色ACK，Roy本人已读/同意无证据。#42格式固定验证及B2四条V6-R433固定消费者进展保留，未证明自然采用/收益；R410逐卡缺口只作历史结论，当前状态沿owner后续回执核收。
+
+下一步：新证据/正式回执到达后沿原通知链补差异；不重复相同主管收件箱、不把16排队当送达/科学父完成。733e为已superseded alias_only不计本轮。review队列只读核43/39/36/20，原owner/工程接收与恢复身份保持。#60工程已接收，原ops03:41仍因原局未终态及与R448三叶兼容冲突暂缓live，沿原自然发布链解决，不重复full、不改ops状态。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 27
+updated_at: 2026-10-25T03:46:39+08:00
+
+# 集成员当前交接
+
+进行中的事：本轮16条learning-attention完整原notice已读，正在独立核原件SHA、32投递窗口与学习证据，整理本轮对Roy逐项转达和真实公开回执；材料paper/materials/20261025-learning-attention-integrator/。未改原notice/其他角色ACK，无模型/游戏/full/发布事务。
+
+在等谁：15条正式CLI身份范围阻塞保持原rc2；000402原wrapper日志仍缺，等原owner找回。旧格式障碍已有external_aggregate验证和B2四条V6-R433固定消费者进展，科学收益与自然消费另待runtime。
+
+下一步：保原文/历史反证与后续进展，完成本轮用户可见转达、#27公开回帖及独立读回；不代Roy ACK、不绕CLI、不关科学父。额外旧733e通知为alias_only且已superseded，单列不混入本轮16条。#60已接收源码仍归原ops自然发布链，不重复检查。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 60
 updated_at: 2026-10-25T03:32:07+08:00
 
