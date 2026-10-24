@@ -6514,3 +6514,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T11:21:39+08:00 [ops] 101301两局复盘唯一dataset已实际rc0、源检查通过，6ec09732e为main祖先；14个生成叶的提交字节、Git blob与SHA逐项核同，runs表两局has_postmortem=1。原回收plan本次遇锁忙保留，原report含0604未决缺陷及后续tested-live经验门未绕过，不重dataset/finish。104301原failed/rc0与blocked报告核同：0581三叶候选未提交/live，负控1败3过、原定向9过、tsc0；原full终态缺失，已见11失败，EPERM及另项未定断言分账保留，整分支预演22冲突。原native已退场，现场及dirty树保留；注册提案仍pending，报告waiting不代正式登记。该10:43旧提示不计48新模板采用。37唯一冻结不纳入此候选，待原owner释窗再协调精确集成；本轮不新增检查、模型或游戏，科学父保持。
 原件：paper/materials/20261024-101301-dataset-received-ops/receipt.json；paper/materials/20261024-strategy-104301-ops/verification.json、report.md。
+
+- 2026-10-24T11:24:16+08:00 [ops/#37] 已接#37评论6379266602并沿原件核验：原唯一full实际682文件、6651过/1败/2跳，production/tools两tsc0及Python123过；原完整JSON的SHA核同，仍记失败不改绿。唯一失败为包装层固定Ran 15 tests计数，新增后实际16项；最小修复仅改正整数计数匹配，原状态/超时/原生断言及Python用例未删。revision3八叶anchor fa16f1805991/tree ac0ba106ebc0逐blob/SHA核同，最新原回执停在冻结前refresh锁EAGAIN、该修订full0。唯一窗口继续归原37集成员，等待原刷新自然完成后重核实际live/469知识并续冻续验；ops不抢锁、杀进程、另full或发布091302。104301三叶、101315两叶及55静态候选均不纳本八叶、不借其结果。091302真源审计/source_commit=null、旧失败及科学父保持；无新模型、对局或发布。
+原件：paper/materials/20261024-issue37-window-1123-ops/verification.json；paper/materials/20261024-issue37-r428-integrator/revision2/checks.json、revision3/assembly.json、revision3/freeze-attempt1.json。

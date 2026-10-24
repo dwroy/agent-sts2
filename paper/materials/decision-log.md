@@ -6579,3 +6579,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T11:18:10+08:00 [ops] 原101301两局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-101301-dataset-ops/。
 
 - 2026-10-24T11:21:39+08:00 [ops] 101301 dataset提交6ec09732e/14生成叶核同，回收原门保留；104301为0581未提交三叶候选，原failed/rc0/完整退出未知及22冲突保持，待37原窗释放，不重检查/模型或关父。原件paper/materials/20261024-101301-dataset-received-ops/、20261024-strategy-104301-ops/。
+
+- 2026-10-24T11:24:16+08:00 [ops] #37原full6651过/1败/2跳按失败留档；revision3最小八叶同一唯一窗待原刷新锁自然释放再冻续验。ops full/发布0，104301/101315不混入，091302源commit=null及科学父保持。原件paper/materials/20261024-issue37-window-1123-ops/。

@@ -1,12 +1,12 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T11:21:39+08:00
+issue: 37
+updated: 2026-10-24T11:24:16+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：101301唯一dataset已rc0并提交6ec09732e，14生成叶/Git blob核同，两局postmortem=1；回收本次plan锁忙，原bug/tested-live门保持。104301原failed/rc0，0581原146784提案三叶dirty候选未提交/live；负控1败3过/定向9过/tsc0，full终态未知、11可见失败和22冲突原件保留。paper/materials/20261024-strategy-104301-ops/及20261024-101301-dataset-received-ops/。
-在等谁：原37集成员的单次full终态与明确释窗，当前冻结没有104301三叶或101315工具两叶，不借检查。104301需随后最新live精确候选/完整检查/真源审计；原提案注册pending，学习者waiting不代正式处置。101301严格回收仍待原缺陷处置与tested-live经验门，原现场保留。
-下一步：原37窗释放后协调0581三叶与工具两叶候选的独立净组合，不重原full/模型/提案/finish，不整分支覆盖新知识；缺104301原退出回执保留unknown，不补0/1。36首新监督、48首新普通模板native、54三决策r2自然输入仍待，无强派；46 13:46:30/48 18:19:29门保持。
+进行中的事：#37原唯一full已实际结束，682文件6651过/1败/2跳，两tsc0/Python123过；JSON SHA7c462b00…595核同，按失败留档。最小计数修复revision3八叶anchor fa16f18059918c7fe96e911761966e689d3e678f/tree ac0ba106ebc0aad708f7957dd30bee577061c8c2已逐blob核同；原11:23冻结回执refresh锁EAGAIN、该修订full0。paper/materials/20261024-issue37-window-1123-ops/。
+在等谁：原refresh_driver自然完成并释放knowledge-refresh.lock，原37集成员仍持同一唯一窗口，尚未释放；由其核实际R428/469知识新冻结再续tsc/Python/第二次full。104301三叶、101315工具两叶及55静态候选均在本次八叶外，不借结果或抢窗。
+下一步：等原37自然回报，核revision3精确输入/知识/退出；旧6651过1败不能作通过，091302仍不发布/source_commit=null，原failed/rc0/EPERM/EROFS/retry未知与科学父保。ops不另full/模型/发布、不终止刷新或改冻结。104301原full终态未知/11可见失败/22冲突、注册pending待此窗实际释放后协调。
 
 其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。50 R423已发布且首自然5题更新/落盘/后4题读回核过，15固定消费者与准入释放原件在paper/materials/20261024-issue50-r422-ops/；后两幕/检查点/F48-F49/SL重启/学习/收益待，不重发布。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
 
@@ -24,11 +24,11 @@ updated: 2026-10-24T11:21:39+08:00
 
 #54新数据包已交并实际冻：原builds-v1 ac5f0d…852保持，decision-fields-v1 e9d1e6…78f、own-build-statistics-v1 a078c5…e64；Z2/KF9排除、无BP9、版本unknown/SL/节点代理/缺帧限制保持。三个决策单元已注册为可自然派输入，native本轮0。旧刀009仍held，未派旧Boss；postmortem/experience整局模板原T10:03:15不变，普通strategy模板已核宿主main09f3、首新native待，不热切任何在途任务/账号/权限。
 
-原37已明确纳入091302净12（tree b4ad4be…/经验SHA32e27b…），源commit=null及failed/rc0/EROFS/EPERM/retry未知不改；当前唯一组合97490e3854d/treebc70c0e9冻结469知识/2263源码夹具/1688依赖。等原单次tsc/Python/full终态，不抢窗。新51/54输入按各自原冻结读，旧008候选不倒补三输入已读；37→20含39/43和科学父保持。
+原37历史97490e3854d组合已被revision2/3沿原窗口接续：091302净12/经验SHA32e27b…与source_commit=null合同保持，revision2失败结果/2263源码夹具/1688依赖/469知识前后同均留档；revision3八叶因refresh锁暂未完成新冻结，不代新冻结成功。详6379266602及paper/materials/20261024-issue37-r428-integrator/revision3/。37→20含39/43和科学父保持。
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
-未完成清单：#37已按6379020119冻结R428+37六叶+091302净12，原控制器准备/执行唯一检查→20父含39/43，ops本轮full0；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18冻结/244别名保留、旧plan held，未消费。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35学习自然消费、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
+未完成清单：#37按6379266602同一唯一窗接revision3八叶，原full失败不覆盖，待刷新自然释放再冻续验→20父含39/43，ops full0；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18冻结/244别名保留、旧plan held，未消费。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35学习自然消费、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 
 10:16同16学习通知再次核16原文/32投递/旧watcher实际接收原件；内容不变，15ACK来源合同仍拒绝、000402原wrapper仍缺，正式watcher_received/roy_notified均0继续pending。原sts2-integrator同pane/session一次herdr提醒返回agent_prompted，不能代收到或Roy已知；#27未变不重复主管收件箱，不重拒绝CLI。paper/materials/20261024-1016-notices-ops/verification.json、notice-handoff.json、watcher-reminder.json；旧09:13原件保留。所有科学父、旧failed/rc0/EPERM/EROFS/retry未知及丢失full保持。
 
