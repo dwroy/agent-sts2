@@ -1,0 +1,267 @@
+{
+  "batch": "20261025-021345-strategy-proposal",
+  "base": "8b949d199aeac240a8ce16ae9f732558a936cd4d",
+  "source": "external:sts2fun",
+  "external_plan": "issue51-remaining-build-005-20261024-r56-stock",
+  "collected_at": "2026-10-21",
+  "provenance": {
+    "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "downloaded_at": "2026-10-21",
+    "faq": "https://sts2.fun/faq",
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "url": "https://sts2.fun/static/sts2_public.db.zst"
+  },
+  "versions": {
+    "v0.107": {
+      "cluster_upload_records": 129,
+      "wins": 39,
+      "failures": 90,
+      "players": null,
+      "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+    },
+    "v0.108": {
+      "cluster_upload_records": 18,
+      "wins": 4,
+      "failures": 14,
+      "players": null,
+      "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+    },
+    "v0.109": {
+      "cluster_upload_records": 38,
+      "wins": 11,
+      "failures": 27,
+      "players": null,
+      "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+    },
+    "v0.110": {
+      "cluster_upload_records": 21,
+      "wins": 10,
+      "failures": 11,
+      "players": null,
+      "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+    },
+    "v0.111": {
+      "cluster_upload_records": 129,
+      "wins": 45,
+      "failures": 84,
+      "players": null,
+      "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+    }
+  },
+  "mechanism_version_comparison": "unknown; no pooling",
+  "own_support_runs": [
+    "P5HT1272P5SB"
+  ],
+  "own_read_contrast_runs": [
+    "2L1BNN9ZJEFU"
+  ],
+  "independent_denominators_pooled": false,
+  "runs": [],
+  "source_commit": null,
+  "inputs_receipt": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/input-verification.json",
+  "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+  "limitations": [
+    "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+    "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+    "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+    "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+    "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+  ],
+  "per_context": [
+    {
+      "context": "C0-1",
+      "strategy_id": "silent-dowsing-rod-question-task",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/strategy/silent-dowsing-rod-question-task.json",
+      "logical_disposition": "update_or_reuse",
+      "strategy_projection_disposition": "new-strategy-projection",
+      "reused_knowledge_id": "silent-dowsing-rod-question-task",
+      "own_runs": [
+        "P5HT1272P5SB"
+      ],
+      "own_independent_runs": 1,
+      "own_opportunities": 1,
+      "floor": 1,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "source": "mixed",
+      "own_observed_on": "2026-10-06",
+      "external_collected_on": "2026-10-21",
+      "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+      "raw_sha256": "e1bd7e84f57521c66adbb2f72068f40a1d4b537895107ff095271f9cdb151156",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "counterexample": "本局最终F25败；局部已选动作不能当胜因或安全保证。外部赢家/失败均保留于selected-external-observations。",
+      "current_information": "只按题型/幕及正文现场条件；无终局簇、未来敌人、胜负触发",
+      "effect_estimate": null,
+      "both_comparison_groups_ge100": false,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_id": "silent-rk-c0-dowsing-stage-research",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/rk/silent-rk-c0-dowsing-stage-research.json",
+      "rk_kind": "research-only-not-loadable"
+    },
+    {
+      "context": "C0-2",
+      "strategy_id": "silent-fasten-defend-extra-block",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/strategy/silent-fasten-defend-extra-block.json",
+      "logical_disposition": "update_or_reuse",
+      "strategy_projection_disposition": "new-strategy-projection",
+      "reused_knowledge_id": "silent-fasten-defend-extra-block",
+      "own_runs": [
+        "P5HT1272P5SB"
+      ],
+      "own_independent_runs": 1,
+      "own_opportunities": 1,
+      "floor": 21,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "source": "own",
+      "own_observed_on": "2026-10-06",
+      "external_collected_on": "2026-10-21",
+      "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+      "raw_sha256": "149a8091f065f30b4731557ed626498dfc26c4696aebf4cc9ece4bc28c841921",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "counterexample": "本局最终F25败；局部已选动作不能当胜因或安全保证。外部赢家/失败均保留于selected-external-observations。",
+      "current_information": "只按题型/幕及正文现场条件；无终局簇、未来敌人、胜负触发",
+      "effect_estimate": null,
+      "both_comparison_groups_ge100": false,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_id": "silent-rk-c0-fasten-shop-target",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/rk/silent-rk-c0-fasten-shop-target.json",
+      "rk_kind": "descriptive-tag-schema-candidate"
+    },
+    {
+      "context": "C0-3",
+      "strategy_id": "silent-brain-b003-next-turn-copy-or-attack",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/strategy/silent-brain-b003-next-turn-copy-or-attack.json",
+      "logical_disposition": "update_or_reuse",
+      "strategy_projection_disposition": "same-id-update",
+      "reused_knowledge_id": "silent-nightmare-next-turn-copies",
+      "own_runs": [
+        "P5HT1272P5SB"
+      ],
+      "own_independent_runs": 1,
+      "own_opportunities": 1,
+      "floor": 17,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "source": "mixed",
+      "own_observed_on": "2026-10-06",
+      "external_collected_on": "2026-10-21",
+      "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+      "raw_sha256": "dc423187cf5ca5df30f5f8fcf2f0998fa813c826d518dae97695047021e2775a",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "counterexample": "本局最终F25败；局部已选动作不能当胜因或安全保证。外部赢家/失败均保留于selected-external-observations。",
+      "current_information": "只按题型/幕及正文现场条件；无终局簇、未来敌人、胜负触发",
+      "effect_estimate": null,
+      "both_comparison_groups_ge100": false,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_id": "silent-rk-b003-next-turn-copy-or-attack",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/rk/silent-rk-b003-next-turn-copy-or-attack.json",
+      "rk_kind": "descriptive-tag-schema-candidate"
+    },
+    {
+      "context": "C0-4",
+      "strategy_id": "silent-brain-c0-upgrade-hp-trade",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/strategy/silent-brain-c0-upgrade-hp-trade.json",
+      "logical_disposition": "new",
+      "strategy_projection_disposition": "new-strategy-projection",
+      "reused_knowledge_id": "silent-nightmare-next-turn-copies",
+      "own_runs": [
+        "P5HT1272P5SB"
+      ],
+      "own_independent_runs": 1,
+      "own_opportunities": 1,
+      "floor": 22,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "source": "own",
+      "own_observed_on": "2026-10-06",
+      "external_collected_on": "2026-10-21",
+      "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+      "raw_sha256": "44de608d12c5bc345047b4c014fdf5389ad071b8aa3ec24bda4c3f7304eaa0e0",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "counterexample": "本局最终F25败；局部已选动作不能当胜因或安全保证。外部赢家/失败均保留于selected-external-observations。",
+      "current_information": "只按题型/幕及正文现场条件；无终局簇、未来敌人、胜负触发",
+      "effect_estimate": null,
+      "both_comparison_groups_ge100": false,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_id": "silent-rk-c0-hp-upgrade-research",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/rk/silent-rk-c0-hp-upgrade-research.json",
+      "rk_kind": "research-only-not-loadable"
+    },
+    {
+      "context": "C0-5",
+      "strategy_id": "silent-route-hp-observation",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/strategy/silent-route-hp-observation.json",
+      "logical_disposition": "update_or_reuse",
+      "strategy_projection_disposition": "same-id-update",
+      "reused_knowledge_id": "silent-route-hp-observation",
+      "own_runs": [
+        "P5HT1272P5SB"
+      ],
+      "own_independent_runs": 1,
+      "own_opportunities": 1,
+      "floor": 24,
+      "game_version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "no_retry_evidence",
+      "source": "own",
+      "own_observed_on": "2026-10-06",
+      "external_collected_on": "2026-10-21",
+      "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+      "raw_sha256": "e691d5d3ec1b7f79f8af4b22a783db579636cd434e845a632287a8fc3a1a6c53",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "counterexample": "本局最终F25败；局部已选动作不能当胜因或安全保证。外部赢家/失败均保留于selected-external-observations。",
+      "current_information": "只按题型/幕及正文现场条件；无终局簇、未来敌人、胜负触发",
+      "effect_estimate": null,
+      "both_comparison_groups_ge100": false,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_id": "silent-rk-c0-unknown-room-rest",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/rk/silent-rk-c0-unknown-room-rest.json",
+      "rk_kind": "descriptive-tag-schema-candidate"
+    }
+  ],
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

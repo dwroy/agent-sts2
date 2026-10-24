@@ -1,0 +1,76 @@
+{
+  "id": "silent-fasten-defend-extra-block",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "P5HT1272P5SB",
+      "floor": 21,
+      "role": "support",
+      "ref": "logs/decisions.jsonl@650081059+9682;sha256=149a8091f065f30b4731557ed626498dfc26c4696aebf4cc9ece4bc28c841921"
+    }
+  ],
+  "confidence": 0.25,
+  "reused_knowledge_attachment": {
+    "id": "silent-fasten-defend-extra-block",
+    "scope": "card:FASTEN",
+    "name": "勒紧",
+    "asc": [
+      0,
+      20
+    ],
+    "lesson": "勒紧只给“防御”额外挡，不统一增加所有挡牌或已有挡。机制：普通/升级实建4/6层，防御合基础、当前敏捷和勒紧后核脆弱。搭配：神化已施放才兑现升级6，步法逐牌收益与勒紧专属收益分账。决定胜负的战斗：5支持局，单能力整战胜因未控（n=5）。典型案例：VLZ6CCT8AQ0A A10 F43神化后勒紧+6，后空翻+仍只8+4敏=12；F45未神化，防御5+4+3敏=12，后空翻5+3=8，32血对59攻仍死。4Y94N8RDPGPM A7女王9敏/脆弱下防御⌊(5+9+4)×0.75⌋=13。",
+    "evidence": [
+      "4Y94N8RDPGPM",
+      "P5HT1272P5SB",
+      "HSX4HYATB4E2",
+      "DUZUBAJ3A8GP",
+      "VLZ6CCT8AQ0A"
+    ],
+    "n_support": 5,
+    "n_contradict": 0,
+    "confidence": "high",
+    "last_seen": "2026-10-07",
+    "status": "active"
+  },
+  "version": "2026-10-25-c0-r56-candidate",
+  "trigger": {
+    "question_types": [
+      "shop"
+    ],
+    "acts": [
+      2
+    ]
+  },
+  "strategy": "牌组仍有5张“防御”且店内有勒紧时，按专属对象比较它与抽牌、攻击及离店，不把所有挡牌都算受益。P5HT F21原文1费、只从“防御”额外得4挡；247金买勒紧83、杂技73、精密瞄准37，共193留54。F23战斗52→40且用火焰药水，F25仍败，不能归为该购物收益。\n范围：Silent A10幕2商店、现场牌文同；1局1店，版本unknown，牌组为此前快照代理。旧勒紧机制复用；5张防御不是每轮5张可打，也不推固定购物顺序。",
+  "source": "own",
+  "own_support_runs": [
+    "P5HT1272P5SB"
+  ],
+  "source_commit": null,
+  "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "batch_provenance": {
+    "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+    "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+    "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+    "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+    "external_collected_at": "2026-10-21",
+    "own_game_version": "unknown",
+    "external_versions": [
+      "v0.107",
+      "v0.108",
+      "v0.109",
+      "v0.110",
+      "v0.111"
+    ],
+    "limitations": [
+      "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+      "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+      "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+      "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+      "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+    ]
+  },
+  "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner"
+}

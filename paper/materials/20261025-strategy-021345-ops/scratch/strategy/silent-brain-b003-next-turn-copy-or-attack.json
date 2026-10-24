@@ -1,0 +1,302 @@
+{
+  "id": "silent-brain-b003-next-turn-copy-or-attack",
+  "trigger": {
+    "question_types": [
+      "card_reward"
+    ],
+    "acts": [
+      1,
+      2,
+      3
+    ]
+  },
+  "version": "2026-10-25-c0-r56-candidate",
+  "strategy": "奖励出现夜魇或暗影步时，仍分核延迟回报与当前费用；夜魇3费消耗、下回合加所选牌3复制品，暗影步弃全手后下回合攻击翻倍。新增P5HT F17已有步法+、肾上腺素，仍应同屏比较夜魇、刀刃陷阱、磨蚀与跳过：仅持潜在复制目标不保证未来手牌或施放费用。\n范围：Silent A10、现场牌文同，新增1局1次、版本unknown；旧4局证据保留，新增局最终F25败。外部所选失败轨迹6b921同在幕1末拿夜魇，不证明拿牌导致失败或固定拒拿。",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "9TG1RP5LFAAK",
+      "floor": 33,
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/NIGHTMARE",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "JMH5C51RLN4E",
+      "floor": 33,
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/NIGHTMARE",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "L704TLETMZBM",
+      "floor": 44,
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/SHADOW_STEP",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "25226ZFLNR1J",
+      "floor": 17,
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/SHADOW_STEP",
+      "role": "support"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "v0.111.0; singleplayer valid non-abandoned unmodified uploads; cards_gained CARD.NIGHTMARE; all acts and rooms; item occurrences only; frozen statistics SHA 4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+      },
+      "statistic": {
+        "name": "whole_run_winning_acquisition_occurrence_fraction_context_only",
+        "value": 0.38235294117647056,
+        "unit": "proportion"
+      },
+      "denominator": {
+        "unit": "cards",
+        "n": 102
+      },
+      "design": "observational",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。"
+      ],
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/external-descriptive.json#/NIGHTMARE/v0.111",
+      "role": "support"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "v0.111.0; singleplayer valid non-abandoned unmodified uploads; cards_gained CARD.SHADOW_STEP; all acts and rooms; item occurrences only; frozen statistics SHA 4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+      },
+      "statistic": {
+        "name": "whole_run_winning_acquisition_occurrence_fraction_context_only",
+        "value": 0.35294117647058826,
+        "unit": "proportion"
+      },
+      "denominator": {
+        "unit": "cards",
+        "n": 51
+      },
+      "design": "observational",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。"
+      ],
+      "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/external-descriptive.json#/SHADOW_STEP/v0.111",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "P5HT1272P5SB",
+      "floor": 17,
+      "role": "support",
+      "ref": "logs/decisions.jsonl@649905818+4387;sha256=dc423187cf5ca5df30f5f8fcf2f0998fa813c826d518dae97695047021e2775a"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; cluster=0; only complete losing example projection-6b921d9edc289bad; descriptive counterexample to guaranteed scaling, no causal comparison"
+      },
+      "statistic": {
+        "name": "selected_failed_representative_with_NIGHTMARE_terminal_and_act1_choice",
+        "value": 1,
+        "unit": "proportion"
+      },
+      "denominator": {
+        "unit": "runs",
+        "n": 1
+      },
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=0/pair=3/example=projection-6b921d9edc289bad",
+      "role": "support"
+    }
+  ],
+  "source": "mixed",
+  "evidence_status": "unassessed",
+  "confidence": 0.25,
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "knowledge_candidate_id": "silent-b003-next-turn-copy-or-attack",
+  "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+  "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner",
+  "update_of": null,
+  "prior_entry_attachment": {
+    "id": "silent-brain-b003-next-turn-copy-or-attack",
+    "trigger": {
+      "question_types": [
+        "card_reward"
+      ],
+      "acts": [
+        1,
+        2,
+        3
+      ]
+    },
+    "version": "2026-10-24-b003",
+    "strategy": "奖励出现夜魇或暗影步时，分开核延迟回报和当前代价：夜魇3费消耗、下回合加所选牌3复制品；暗影步1费弃全手、下回合攻击翻倍。现有牌组只给潜在目标，不证明未来手牌；与融入暗影、萎靡、必备工具等本题备选和跳过比较，不预支复制或倍伤。\n本批牌文/备选核验4次/4独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。",
+    "evidence": [
+      {
+        "type": "own",
+        "run": "9TG1RP5LFAAK",
+        "floor": 33,
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/NIGHTMARE",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "JMH5C51RLN4E",
+        "floor": 33,
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/NIGHTMARE",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "L704TLETMZBM",
+        "floor": 44,
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/SHADOW_STEP",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "25226ZFLNR1J",
+        "floor": 17,
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/SHADOW_STEP",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "v0.111.0; singleplayer valid non-abandoned unmodified uploads; cards_gained CARD.NIGHTMARE; all acts and rooms; item occurrences only; frozen statistics SHA 4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        },
+        "statistic": {
+          "name": "whole_run_winning_acquisition_occurrence_fraction_context_only",
+          "value": 0.38235294117647056,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "cards",
+          "n": 102
+        },
+        "design": "observational",
+        "limitations": [
+          "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+          "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+          "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+          "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。"
+        ],
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/external-descriptive.json#/NIGHTMARE/v0.111",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "v0.111.0; singleplayer valid non-abandoned unmodified uploads; cards_gained CARD.SHADOW_STEP; all acts and rooms; item occurrences only; frozen statistics SHA 4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        },
+        "statistic": {
+          "name": "whole_run_winning_acquisition_occurrence_fraction_context_only",
+          "value": 0.35294117647058826,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "cards",
+          "n": 51
+        },
+        "design": "observational",
+        "limitations": [
+          "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+          "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+          "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+          "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。"
+        ],
+        "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/external-descriptive.json#/SHADOW_STEP/v0.111",
+        "role": "support"
+      }
+    ],
+    "source": "mixed",
+    "evidence_status": "unassessed",
+    "confidence": 0.25,
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "knowledge_candidate_id": "silent-b003-next-turn-copy-or-attack",
+    "candidate_kind": "descriptive comparison only",
+    "publication_eligibility": "Only descriptive candidate; numeric comparison groups below 100; no effect estimate authorized for publication",
+    "update_of": null
+  },
+  "own_support_runs": [
+    "P5HT1272P5SB"
+  ],
+  "source_commit": null,
+  "batch_provenance": {
+    "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+    "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+    "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+    "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+    "external_collected_at": "2026-10-21",
+    "own_game_version": "unknown",
+    "external_versions": [
+      "v0.107",
+      "v0.108",
+      "v0.109",
+      "v0.110",
+      "v0.111"
+    ],
+    "limitations": [
+      "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+      "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+      "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+      "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+      "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+    ]
+  }
+}
