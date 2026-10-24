@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-24T17:20:48+08:00",
+  "launch": {
+    "at": "2026-10-24T17:20:15+08:00",
+    "pid": 3147286,
+    "birth": "25814489",
+    "batch": "20261024-164302",
+    "record_commit": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
+    "attempts": 1,
+    "new_models_full_games": 0,
+    "source_script": "ops/paper_dataset.py",
+    "arguments": [
+      "--no-raw"
+    ],
+    "finite_worker": ".artifacts/ops-postmortem-164302-dataset-resume-20261024/worker.py",
+    "worker_sha256": "745ab88eaac7971da150c236ceaa949e55f61e6507afc4ab390d0e3bae838495",
+    "original_lock": "ops/codex-ops/paper-dataset.lock",
+    "callback": "original ops/codex-ops/queue once on result; no polling/timer or build retry",
+    "does_not_claim_dataset_done": true,
+    "prelock_attempt_preserved": "prelock-failure.json",
+    "actual_builds_before_start": 0,
+    "registration": 2,
+    "wait": "original paper-dataset.lock blocking flock; no sleep or polling"
+  },
+  "status": {
+    "at": "2026-10-24T17:20:15+08:00",
+    "phase": "waiting-original-paper-dataset-lock",
+    "pid": 3147286,
+    "birth": "25814489",
+    "attempts": 1,
+    "batches": [
+      "20261024-164302"
+    ],
+    "script": ".artifacts/ops-postmortem-164302-dataset-resume-20261024/worker.py",
+    "new_model_full_or_game": 0
+  },
+  "original_first_failure_preserved": true,
+  "no_first_build_executed": true,
+  "no_original_learn_or_retention_state_changed": true,
+  "record_commit": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
+  "wait_owner": "original ordinary-close strategy dataset3138135/birth25780813; no borrowed result",
+  "single_actual_build_limit": 1,
+  "no_timer_sleep_poll_or_new_model": true
+}

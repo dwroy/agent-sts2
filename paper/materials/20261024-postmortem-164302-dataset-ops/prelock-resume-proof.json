@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-24T17:20:15+08:00",
+  "batch": "20261024-164302",
+  "source_record_commit": "9f6fa4fa53bf32a5c4b045a6567e3d608c8b990d",
+  "prelock_failure": {
+    "at": "2026-10-24T17:18:20+08:00",
+    "phase": "registered-before-lock",
+    "error_type": "BlockingIOError",
+    "attempts": 1,
+    "retry_performed": false,
+    "original_stage_retained": true,
+    "next": "original ops inspect local worker log and frozen receipts; no duplicate build"
+  },
+  "first_worker_terminal": true,
+  "first_dataset_build_attempts": 0,
+  "basis": "immutable first worker failed before flock acquired; no original source import/build-result/generated manifest",
+  "original_lock_owner": {
+    "pid": 3138135,
+    "birth": "25780813",
+    "task": "ordinary-close 20261024-164315-strategy-proposal",
+    "command": "python3 ops/paper_dataset.py --no-raw",
+    "original_result_not_reused": true
+  },
+  "single_continuation_registration": 2,
+  "actual_dataset_build_limit": 1,
+  "wait": "kernel flock only; no timer/sleep/polling",
+  "new_models_full_game": 0,
+  "permissions_or_accounts_changed": false
+}

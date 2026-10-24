@@ -6623,3 +6623,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T17:17:44+08:00 [ops] 164302四局复盘done/rc0已核原out/result身份、native终态和封存SHA，4节lessons按原追加脚本的入口首见敌人说明核同，4个终态原字节窗口及4份大产物SHA核同，不冒重读2457原引用。选择本批13账本行、2个原提案及4节复盘受控提交，保留其他并行记录；当前账本check0问题。新增能量图标重复数字显示bug已排非阻塞队列，复用0617与4976c原提案，固定复现成立但胜负影响未证，不由ops改机制或重复派模型。7个整局/流派及决策候选缺完整外部三输入，477请求仅8题完整核读与4错误另记，正式发布/消费者/收益仍待。report.md无机器JSON、out/result的bug文字长短不同，原件和差异留档，其他身份/条目一致，不回写旧报告。先提交原记录，再沿原paper-dataset锁单次no-raw生成并冻结实际输出，结束由原队列回调；未重finish/full/模型/局，回收及科学父保留。
 原件paper/materials/20261024-postmortem-164302-ops/records-review.json、raw-and-source-readback.json、report-shape-difference.json。
+
+- 2026-10-24T17:20:48+08:00 [ops] 164302单次dataset启动补充：原锁正由普通策略164315的no-raw构建3138135持有；首worker3143860在取锁前返回BlockingIOError，实际build0，失败原件保留。已登记唯一续接3147286/birth25814489按内核flock等原锁，实际构建仍只允许1次、不借别批结果、不轮询或另开模型。四节/13账本/2提案及新非阻塞显示bug已由9f6fa4fa提交，dataset实际结果和回收门待原回调。
+原件paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json、launch.json。
