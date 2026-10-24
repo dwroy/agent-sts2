@@ -5392,3 +5392,7 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 
 ### 2026-10-24T21:49:29+08:00 [ops] #56 自然注册长锁阻塞
 六旧回调已去重，未重复finish。214311原wrapper117156/pEE在注册锁等待120秒后拒绝，stderr明确无模型启动；out/TUI/learn.json注册均缺。21:48:42原自然tick116632/birth27391130仍持learn.lock及tick-learn.lock，214312/pEF、214313/pEG也已记注册超时，214314/pEH仅派发pane。源码在同一全局锁内逐道eager校验全部候选，最后才save_state，导致wrapper先超时；已向原#56交实际复现，需原子注册与长校验锁范围修复，不能冒自然五槽或ultrafast已过。本轮未改在途行/队列/源码，未signal、重派、强tick、full或另开模型。保原tick自然终态后续核注册与无模型证据；211311 8+8下一批pending、旧失败/科学父保持。原件paper/materials/20261024-214311-registration-ops/。
+
+
+### 2026-10-24T21:55:04+08:00 [ops] #56 原C/D未启动失败已结
+原tick已退、五注册落盘。214312/13原wrapper已退/无TUI，err证注册锁超时；仅调用原not-started及finish75，现failed/rc75并过shared.retired。保原输入/世代、stderr、pane/worktree，A/B注册整行未动。21:53:57 A214314/B214315均已核首次原生接受，请求ultrafast，原生tier仍null，不能冒四外部＋自有已验收。自有214311仍awaiting_review/无TUI；原复盘finish会自动续派，本轮禁新模型故未调用。原跟进事务更新为tick已退/C-D已结、自有补证与56原子注册修复待；无重派/full/强tick或关tab。锁时长未冒精确起止。211311 8+8下一批、原窗/科学父保持。原件paper/materials/20261024-214312-214313-registration-return-ops/。

@@ -1,8 +1,8 @@
-state: in-flight
+state: clear-ok
 issue: 56
-updated: 2026-10-24T21:49:29+08:00
+updated: 2026-10-24T21:55:04+08:00
 
-进行中的事：#56原自然tick116632/birth27391130仍持两锁、注册未落盘；214311/12/13注册等待120秒拒绝，214314仅pane，无实际tier验收。
-在等谁：原tick自然终态/落盘与原56原子注册、长校验锁范围修复；六旧回调已去重。211311 8+8下一批pending，科学父保持。
-下一步：先核原PID/birth及落盘/无模型证明，不signal/重派/强tick或改在途行。释放窗21:34:30—23:34:30不重置；原件paper/materials/20261024-214311-registration-ops/。
+进行中的事：原tick已退/五注册已落盘；C214312/D214313原not-started+finish75已结且retired过，A/B首次原生接受、请求ultra但实际tier=null，本轮写已结。
+在等谁：#56原子注册/长锁修复及自有214311禁止续派结算；原awaiting_review/无TUI保留。211311 8+8下一批pending，科学父保持。
+下一步：clear-ok/56，不调会自动check_jobs的复盘finish，不重派/full/强tick/改在途行；原窗21:34:30—23:34:30保持。原件paper/materials/20261024-214312-214313-registration-return-ops/。
 
