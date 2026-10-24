@@ -6485,3 +6485,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-24T10:15:00+08:00 [ops] #51 094803回报与重复恢复核实
 
 本轮核094803毒008原回报：done/rc0，out、报告与结果对象一致，91页SHA/大小及20条匿名完整轨迹713节点清单核同。真实新增1份knowledge剧本候选，8观察段与8旧ID引用不拆新增；106份JSON/MD已按原字节归档。原native终态/retirement核过，调度器仅回收checkout，分支和scratch保留。候选不是可执行策略/rk，正式发布、消费者、自然采用仍0；旧冻结缺新要求的同流派自有完整局，27/27组合未达100、BH显著0及机制/安全HP未知保留。已交51原owner接消费者合同及54新输入，不重finish/full/模型。重复恢复通知核原autoplay/play仍在，STOP不存在；首局BP9C8K9NSRZ0、live02eb468f8，49关引导已在，手动Z2排除及ENOBUFS原错误保持，不再启动。原件：paper/materials/20261024-strategy-094803-ops/verification.json、artifact-manifest.json；恢复沿20261024-roy-resume-ops/。
+
+### 2026-10-24T10:23:22+08:00 [ops] #38 收尾
+
+按主管收尾要求，已将现有生产回执的live-merge实际持锁时长补回#38。最近完整周期616ab747刷新414.431秒，12次发布写入合计持锁0.472598秒，最长history为0.404293秒、catalog为0.063521秒；等待与worker锁时长独立，不把整轮计算误计为发布锁。原计时行逐条冻结offset/bytes/SHA并核对应步骤，main/live发布器边界源码相同。现有固定临时锁测试1项通过，确认计算完成后才等发布锁，无生产刷新或源码/full/模型/游戏改动。原at只是解锁后记录时刻，无独立墙钟起止字段，不倒算伪造；实测秒数及口径明确保留。结果已POST/GET核同交主管关单；#18并入#45，不另起。原件：paper/materials/20261024-issue38-lock-timing-ops/verification.json、production-timing-originals.json、delivery-receipt.json。

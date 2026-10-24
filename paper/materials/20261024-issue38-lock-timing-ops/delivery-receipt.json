@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-24T10:23:08+08:00",
+  "issue": 38,
+  "id": 6378708477,
+  "url": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6378708477",
+  "body": "[ops]\n#38 最后一项已补记实际持锁时长，交主管核收关闭。\n\n原生产 `ops/refresh-publication-timing.jsonl` 已逐次记录 PID/step/cycle、独立等待秒数和单调时钟实测 held_seconds。核最近完整周期 `616ab7475e6c4c5ab2dac0a8cf604cf1`（CST 2026-10-24 08:39:07.923—08:46:02.354）：刷新414.430626秒，12次发布写入合计持live-merge锁 **0.472598秒**；最长 `v6-history:silent` **0.404293秒**（等待0.064640秒，整步骤236.637620秒），catalog持锁0.063521秒。worker锁414.430415秒另计，不冒发布锁时长。\n\n已冻结该周期每条原始计时行的offset/bytes/SHA，逐项与对应刷新步骤起止核同；main/live发布器、history边界与测试源码SHA相同。计算、校验、临时文件准备在publication外，锁内仅成品写入/替换与必要保护；现有固定临时锁测试 `test_publication_compute_unlocked_then_waits_for_original_lock` 本轮通过（1项，0.314秒），证明计算完成后可等待原发布锁，未运行生产刷新。\n\n计时口径明确：flock取得后至解锁调用前的实际测量，等待另列；原at是解锁后日志记录时刻，没有分别采集的加锁/解锁墙钟字段，未倒算冒充实测起止。完整真实持锁秒数与记录时刻见 `paper/materials/20261024-issue38-lock-timing-ops/{verification,production-timing-originals,publication-boundary-source}.json`、fixed-lock-test.log。\n本轮仅补记录，无源码/full/模型/对局/发布号变更；原锁环已解和旧失败原件保留。#18按主管最新说明并入#45，不再另起。",
+  "post_get_equal": true
+}

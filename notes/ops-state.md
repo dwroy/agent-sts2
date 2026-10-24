@@ -1,4 +1,4 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T10:17:52+08:00
-16旧通知仍pending，原watcher已追加一次提醒；其余发布/派发及原自动局沿ops-current保持。
+updated: 2026-10-24T10:23:22+08:00
+#38计时补记已交主管核关；#18并45。51/54输入、消费者及37原检查窗口仍待，详ops-current。
