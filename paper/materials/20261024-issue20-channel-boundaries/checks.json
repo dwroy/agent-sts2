@@ -1,0 +1,114 @@
+{
+  "issue": 20,
+  "directive": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6381989248",
+  "source": "403577593891669cd201355b3899a0104d03ed3f",
+  "base": "499ac4d7528d6d44bba54568590cd00acaf6d461",
+  "rejected_source": "23b336a011bbdc4d26a6bd1224b9fe70c3652984",
+  "prior_integrator_full": {
+    "source": "23b336a01",
+    "rc": 143,
+    "full_runs": 1,
+    "reused": false
+  },
+  "changed_files": [
+    "agent/tests/worktree-retention.test.ts",
+    "docs/learner-retention.md",
+    "ops/issue_session_project.py",
+    "ops/tests/test_shared_tools.py",
+    "ops/tests/test_worktree_retention.py",
+    "ops/worktree_checkout.py",
+    "ops/worktree_retention.py",
+    "paper/materials/decision-log.md"
+  ],
+  "input_sha256": {
+    "agent/tests/worktree-retention.test.ts": "d91ca7ff8f4d497e15f425ba19c509af7f6952040b50d07196adb61c5020178e",
+    "docs/learner-retention.md": "fa44c5a5146393754729503019232d4fbb0123051ed043df27c92f219255f664",
+    "ops/issue_session_project.py": "badc65ad8d5c3f9eec5fd0df6b791bd00c1fed121613541a823797c9b20c1e74",
+    "ops/tests/test_shared_tools.py": "7b87a3eb4576b69aab3e5a62bf1c92f983dfca0de7bb53ffdb7e789637d82e31",
+    "ops/tests/test_worktree_retention.py": "99d53a88938359655121f3bcc68357e5bfca172bd4d31f6884b3b7c765af4e05",
+    "ops/worktree_checkout.py": "e4f4d1669561131762d5b6d5e0e13caaefdb85f32ed17f0acc82579d35b9ce8a",
+    "ops/worktree_retention.py": "4ae4fa4e734828664250b1b2347d93bc76fba4152225fd6f568664b4f010a214",
+    "paper/materials/decision-log.md": "a5f73ea567ae6aab7edcedd19fc1643aa98d9a8bf8f0892142ed3e235ebcf3b2"
+  },
+  "checks": [
+    {
+      "name": "production tsc",
+      "rc": 0,
+      "log": "tsc.log"
+    },
+    {
+      "name": "final directed Vitest",
+      "rc": 0,
+      "files": 3,
+      "cases": 4,
+      "python_cases": {
+        "worktree": 31,
+        "reclaim_gates": 16,
+        "shared_tools": 11
+      },
+      "log": "directed-final.log.gz"
+    },
+    {
+      "name": "issue lifecycle Python",
+      "rc": 0,
+      "cases": 62,
+      "log": "issue-sessions62.log"
+    },
+    {
+      "name": "read-only legacy three-tree publication",
+      "issues": [
+        47,
+        46,
+        49
+      ],
+      "expected": "retained for missing per-channel allocation snapshots",
+      "log": "legacy-three-trees.json"
+    },
+    {
+      "name": "gitleaks source patch",
+      "rc": 0,
+      "log": "gitleaks-source.log"
+    },
+    {
+      "name": "gitleaks material patch",
+      "rc": 0,
+      "log": "gitleaks-materials.log"
+    }
+  ],
+  "scope": {
+    "full_by_this_dev_run": 0,
+    "models": 0,
+    "production_lifecycle_calls": 0,
+    "production_helper_install": false,
+    "live_or_stop_writes": false,
+    "nice": 19,
+    "workers": 1
+  },
+  "compressed_logs": {
+    "intermediate-directed.log": {
+      "artifact": "intermediate-directed.log.gz",
+      "sha256": "bcd04dfc91f8b9499760e37989764919f7f48a8e3717c85eff3dea2dd18538be",
+      "uncompressed_sha256": "a31f6974c032cb586317931e7929615f6efb040d9af9e9cb1b0d4eabcd807c01"
+    },
+    "directed-final.log": {
+      "artifact": "directed-final.log.gz",
+      "sha256": "09c3c66a828b666c85b58d9609da25e2b662c3ba8beb9e0ec96093b118206cb6",
+      "uncompressed_sha256": "055b21ff498fba6ad4d510a0a943f7a20b124d700524a250bb696787b1f09c6f"
+    }
+  },
+  "logs_sha256": {
+    "issue-sessions62.log": "c704b55d8dfc48dad92a3ff6b6ee0d8a1abdbfc5ee7dceec8852875377cdec38",
+    "directed-final.log": "055b21ff498fba6ad4d510a0a943f7a20b124d700524a250bb696787b1f09c6f",
+    "directed-final.log.gz": "09c3c66a828b666c85b58d9609da25e2b662c3ba8beb9e0ec96093b118206cb6",
+    "intermediate-directed.log": "a31f6974c032cb586317931e7929615f6efb040d9af9e9cb1b0d4eabcd807c01",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "initial-python29.log": "332c24978f2b332a12a63626fe226a92026edada1d6daa847710a7502939559c",
+    "intermediate-test-results.json": "921ccc01083e9cff78d5df8556deb027292eaf46180b902547eea4df6c9339a0",
+    "legacy-three-trees.json": "020e8cc77a2a1f0f898ec2103c23189902bcb06682733d8a393ef9260190a8a8",
+    "gitleaks-source.log": "184bb4c025ea7669b2ef62c091a1e383dd3ce0b78bfb9546eb5a79b03c9404d6",
+    "intermediate-directed.log.gz": "bcd04dfc91f8b9499760e37989764919f7f48a8e3717c85eff3dea2dd18538be",
+    "shared-tools11.log": "2c91dd4308073a8d3452dcc3ba6b5059d8738a6f2ac0109f7974fe3392f38b5a",
+    "gitleaks-materials.log": "832617f10956a5a5dd31f5922f1b04fcb211ef8e5508cfa08464ce29d9d98d0c"
+  },
+  "affects_live_launch": false
+}
