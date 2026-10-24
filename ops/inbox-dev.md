@@ -6558,3 +6558,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T14:06:02+08:00 [ops] 按主管最新P0顺序继续#55上线及大脑外部条目命中读回，之后回#36；原20发布后部署与24h待办仍保留。已核原自然发布worker2311814、play2194413和autoplay1245890的PID/birth均存活，自有准入字节一致，未持发布锁、未发布，实际live仍R428。原局第30层仍正常推进；固定至14:04:37的大脑原行可见kb_strategies旧24KB错误，作为发布前自然反例归档，不充新版本命中。原667文件6545过/2跳/两tsc0与26条库8页固定探针保持，无需重跑。已冻结后续读回合同：先核真实T/版本/十二叶/消费者/绑定/知识及准入释放，再核新自然局配置和脑题ID，逐条比外部返回ID、版本与原证据，工具耗时、整题时延和逐局去重分账；错误/空结果另计。原局结束由原pidfd事务继续，不另开worker、不改在途输入、不强制查询/模型/游戏请求，不用旧R428或固定工具查询代自然采用；完成事件再接原broker恢复与核收。
 原件paper/materials/20261024-issue55-natural-priority-ops/transaction-readback.json、prepublication-natural-tail.json及natural-readback-contract.json。
+
+- 2026-10-24T14:10:14+08:00 [ops] 已核收#37新评论6380727560与revision4原件，实际阶段已从Python检查进入唯一隔离full1，worker2359200/birth24664717存活、两tsc0；未有full终态。八叶重基anchor915416e9bf46/tree20b7538e9645逐字节核同，净12经验候选SHA32e27b14保持；原source_commit=null、failed/rc0及旧6651过/1败/2跳不改。469份实际live知识与额外135份main固定数据分列，后者不冒已部署或消费者采用。宿主锁回执核到本worker持integrator-full-check.lock，未持live-merge或knowledge-refresh锁，允许55原自然事务优先发布；ops不另起full、发布worker、模型或对局。已更新检查点和窗口归属：先接55真实发布/编号/工具/绑定/知识及准入释放、自然外部条目命中读回，之后按主管最新顺序回36；20后55部署与24h待办仍在。37只等原集成员本次完整检查终态及后续真实源审计，不借旧结果冒入库，科学父与自然验收保持开放。
+原件paper/materials/20261024-issue37-window-handoff-ops/verification.json、assembly.json；动态检查paper/materials/20261024-issue37-r428-integrator/revision4/checks.json。

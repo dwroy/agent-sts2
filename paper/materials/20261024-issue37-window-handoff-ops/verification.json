@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-24T14:09:23+08:00",
+  "checks_snapshot": {
+    "at": "2026-10-24T14:08:57+08:00",
+    "phase": "unique-full-running",
+    "worker_pid": 2359200,
+    "worker_birth": "24664717",
+    "prior_actual_full_runs": 1,
+    "revision_full_runs": 1,
+    "model_calls": 0,
+    "main_merged": false,
+    "live_written": false,
+    "publication_lock_held": false,
+    "unique_check_lock": "ops/integrator-full-check.lock",
+    "publication_priority_issue": 55,
+    "production-tsc_rc": 0,
+    "tools-tsc_rc": 0,
+    "python_rc": 0
+  },
+  "assembly_sha256": "52ae5671b9dacd3670d178a2c65f486a4d42fd069e99dbd4d33a075552b26d77",
+  "source_8_leaves_verified": [
+    "agent/src/eye/jev-prompt-log.ts",
+    "agent/src/reflex/jev/client.ts",
+    "agent/tests/jev-decision-projection.test.ts",
+    "agent/tests/open-book.test.ts",
+    "agent/tests/v6-combat-entries.test.ts",
+    "docs/open-book.md",
+    "agent/tools/v6/combat-entry-replay.ts",
+    "agent/tests/learner-launch-failures.test.ts"
+  ],
+  "candidate_experience_sha256_verified": "32e27b144a28826ce4d88c3b932045539f79afa3180549697b28ae04a0bccf25",
+  "worker_pid_birth_verified": true,
+  "lock_readback": {
+    "ops/knowledge-refresh.lock": [],
+    "ops/live-merge.lock": [],
+    "ops/integrator-full-check.lock": [
+      "87: FLOCK  ADVISORY  WRITE 2359200 08:30:5925863 0 EOF"
+    ]
+  },
+  "issue55_original_publication_priority": true,
+  "no_new_full_worker_model_game_or_publication": true,
+  "not_full_result_acceptance": true
+}
