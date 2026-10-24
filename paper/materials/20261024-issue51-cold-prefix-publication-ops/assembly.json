@@ -1,0 +1,144 @@
+{
+  "at": "2026-10-24T16:27:28+08:00",
+  "authority_comment": 6381782543,
+  "source_batches": [
+    "20261024-124312-strategy-proposal"
+  ],
+  "ids": [
+    "silent-brain-opening-golden-pearl-external-comparison"
+  ],
+  "source_rows": [
+    {
+      "batch": "124312",
+      "unit_id": "external-decision-cold-start-001",
+      "kind": "strategy",
+      "id": "silent-brain-opening-golden-pearl-external-comparison",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-124312/learner/runs/20261024-124411-8d06fb87-5615-4697-95e0-977b5c6c5801-strategy-proposal/scratch/strategy-candidate.json",
+      "bytes": 3891,
+      "sha256": "b3510a026295a8a2ad9ac81a04c1b1aa542c154edfda51f617a10690b8e51d61",
+      "retained_copy": "paper/materials/20261024-strategy-124312-ops/strategy-candidate.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "next_gate": "original37 actual release, exact official source/ledger/publication/production tool readback; independent from descriptive knowledge",
+      "source_archive": "paper/materials/20261024-issue51-cold-prefix-publication-ops/source-124312-strategy-candidate.json",
+      "runtime_entry": {
+        "id": "silent-brain-opening-golden-pearl-external-comparison",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "event",
+            "act_plan"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "首幕开局题含GOLDEN_PEARL时，将它保留为值得比较的候选，按现场牌文和本局计划核实用途；v0.111.0选择组34/111整局胜、出现未选组24/110，观察差+8.81个百分点。\n范围：仅Silent A10/该版本/首幕祝福代理；其余题不适用。旧v0.108.0为8/31对14/42（-7.53点），v0.110.1为4/20对8/31（-5.81点），均小样本且机制对照未知。备选、玩家和后续路线混杂；不据此必选、不推首Boss通过率或因果收益。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; chosen"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.3063063063063063,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 111
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/chosen",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "single-player, valid, non-abandoned, no modifiers; act1 EVENT.NEOW ancient_choice GOLDEN_PEARL; offered_not_chosen"
+            },
+            "statistic": {
+              "name": "whole_run_winning_upload_rate",
+              "value": 0.21818181818181817,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 110
+            },
+            "design": "observational",
+            "limitations": [
+              "首幕祝福代理；上传自选/玩家未知，臂可重叠，非因果或首Boss通过率。",
+              "输入SHA=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            ],
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "ref": "decision-fields-v1/statistics.json:act1/GOLDEN_PEARL/offered_not_chosen",
+            "role": "support"
+          }
+        ],
+        "source": "external:sts2fun",
+        "confidence": 0.25,
+        "evidence_status": "conflict"
+      },
+      "candidate_disposition": "new"
+    }
+  ],
+  "runtime_schema_fields": [
+    "id",
+    "version",
+    "trigger",
+    "strategy",
+    "evidence",
+    "source",
+    "confidence",
+    "evidence_status",
+    "provenance",
+    "limitation_notice"
+  ],
+  "runtime_text_trigger_evidence_confidence_unchanged": true,
+  "candidate_semantic_new": 1,
+  "candidate_semantic_updates": 0,
+  "new_runtime_strategy_ids": 1,
+  "snapshots": {
+    "live": {
+      "before_sha256": "d13e7392046c1d48c94b6ce8c90b6dcf77c0ecd392df5272a6eefb59785fde57",
+      "candidate_sha256": "20aa2134647a33dd8947c9801b1c619beb3a4ac07bb0f307ffca112f5aa16e27",
+      "before_count": 36,
+      "after_count": 37,
+      "root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+      "library_head_clean": true
+    },
+    "main": {
+      "before_sha256": "d2fbc11e0d44daa1df5d329d36c7331ce52cf1c8f905cf1a12d04345fd76bc23",
+      "candidate_sha256": "067e287783f2db4e398a66d13faf62d7619c081e2495a9660416f71503ab2da3",
+      "before_count": 40,
+      "after_count": 41,
+      "root": "/home/dw/Projects/agent-sts2",
+      "library_head_clean": true
+    }
+  },
+  "source_code_changes": 0,
+  "experience_data_changes": 0,
+  "new_full_models_games": 0
+}

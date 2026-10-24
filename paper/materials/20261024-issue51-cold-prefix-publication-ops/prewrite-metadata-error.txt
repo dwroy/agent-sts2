@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-cold-prefix-publication-20261024/publish.py", line 15, in <module>
+    os.close(os.open(A/'publish.once',os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600));assembly=json.loads((M/'assembly.json').read_bytes());commands=json.loads((M/'ledger-commands.json').read_bytes());assert len(commands)==1 and json.loads((M/'ledger-check.json').read_bytes())['rc']==0 and json.loads((M/'candidate-consumers.json').read_bytes())['passed']
+                                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-cold-prefix-publication-ops/ledger-commands.json'
