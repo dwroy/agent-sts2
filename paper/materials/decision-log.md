@@ -6550,3 +6550,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T09:29:34+08:00 [ops] V6-R428 #51正式入库090927候选：live新增20/更新1，保081200三ID，23个唯一单牌ID实际工具读回通过；原宽*24KB限制/failed-rc0保留，full0/STOP不变，科学父开放。paper/materials/20261024-090927-strategy-result-ops/publication.json。
 
 - 2026-10-24T09:32:56+08:00 [ops] 核091302 fix无源但139路径漂移空修复门拒绝/failed-rc0及root-scratch归属deferred；strategy两提案18账本补链、R424实际18项同，pending保持/无新发布，原checkout已回收、scratch保留。full0/STOP不变。paper/materials/20261024-091302-callbacks-ops/verification.json。
+
+- 2026-10-24T09:43:11+08:00 [ops] #23继续核收：累计155历史回收/311分配，近24h16历史（15当前物理/分支）/123；disk净减107.15GiB，可持续仍失败，原worker/保护/STOP保持，不提前验#46。paper/materials/20261024-issue23-resume-0936-ops/audit.json。

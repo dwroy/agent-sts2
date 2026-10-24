@@ -1,6 +1,8 @@
 state: in-flight
-issue: 51
-updated: 2026-10-24T09:32:56+08:00
+issue: 23
+updated: 2026-10-24T09:43:11+08:00
+
+#23本轮接续：原发布已核，不重发。09:39累计155历史回收/311分配，05:15后2/21、近24h16历史（15当前缺失且分支可核）/123；disk约24h净减107.15GiB，验收仍失败。新增#49发布树/091302策略checkout已核分支与归档，旧同路径重分配不混算。一次原只读plan返回eligible=0，未手动apply或删除。等原owner补身份/dirty/归属/入库，#46完整门13:46:30；手动停局期单列，不提前归因改善。下一步沿原worker结算保护、原窗口到期再验；Roy STOP及full0保持。paper/materials/20261024-issue23-resume-0936-ops/。
 
 本轮091302回调：fix无新源码，定向24/tsc0，但139源路径与live不同，原empty guard仍拒绝，保failed/rc0；根scratch归属retention deferred，交#36原合同，不重finish/full/空合并。strategy仅补033643两提案/18账本，当前live18项同R424、提案pending，原checkout已回收而scratch/分支保留；本轮只提交真实补链记录。paper/materials/20261024-091302-callbacks-ops/verification.json。
 
