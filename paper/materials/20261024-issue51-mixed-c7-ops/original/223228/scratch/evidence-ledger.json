@@ -1,0 +1,792 @@
+[
+  {
+    "scenario": "C7-1",
+    "strategy_id": "silent-brain-discard-exchange-after-flick-flack",
+    "disposition": "new",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "own_primary": [
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 3,
+        "question_index": 13,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1283358639,
+        "bytes": 98029,
+        "sha256": "967cc9dfc687922d415dd680c2dd51286708d551f6ef38301e36f79144e7b339",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "斗篷与匕首",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "获得6点格挡。 将1张小刀添加到你的手牌。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "预判",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 0,
+                "text": "在本回合获得2点敏捷。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "计算下注",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+                "in_deck": 0
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 2
+        },
+        "rationale": "Codex decided card2: Gamble enables free Flick Flack discards, filters weak hands, and supports future scaling; distant boss simulations do not capture its full-run value. | Codex chose 计算下注 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex); route changed (card-reward review) to r3c1 普通战 → r4c2 普通战 → r5c3 问号 → r6c3 休息 → r7c2 普通战 → r8c3 普通战 → r9c2 宝箱 → r10c3 问号 → r11c4 问号 → r12c5 问号 → r13c6 商店 → r14c6 精英 → r15c5 休息 → r16c3 Boss; next rest: 到 F7 时新路线约 45/70，保留路线约 45/70（p75 33 对 35）；下一只精英：新路线 F15 r14c6 进场 60/70（p75 32），保留路线 F13 r12c4 进场 70/70（p75 59） (clearly lower at the next elite)"
+      }
+    ],
+    "own_independent_runs": 1,
+    "own_opportunities": 1,
+    "own_role": "当前题面/动作/后继的描述性证据，不证明策略收益",
+    "game_version": "unknown",
+    "own_stratum": "Silent/A10/no_retry_evidence; no_retry_evidence does not prove no SL",
+    "current_information": "所选题面原牌文/当前HP/同屏选项；此前最近快照仅牌组代理；终局簇不触发",
+    "external_direction": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation"
+        },
+        "statistic": {
+          "name": "observed_three_card_bundle",
+          "value": 25,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 62
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation",
+        "role": "support"
+      }
+    ],
+    "counterexamples": "4YPG最终F14败；CLA89拿步法后F9败；外部败者有相同卡与反向组合，不支持收益/固定顺序。",
+    "unknowns": [
+      "替代选择的因果收益",
+      "完整弃牌触发链",
+      "可泛化成型或HP阈值",
+      "其他版本机制对齐",
+      "生产消费者/自然采用/收益"
+    ],
+    "input_sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    }
+  },
+  {
+    "scenario": "C7-2",
+    "strategy_id": "silent-brain-backflip-external-prefix-context",
+    "disposition": "same_id_update",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "own_primary": [
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 4,
+        "question_index": 19,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1283500589,
+        "bytes": 94849,
+        "sha256": "5b369f83ad645a1ec210d0489c628fe5abc93dc1a8b2b8d70da674d31eb2bb24",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "后空翻",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "获得5点格挡。 抽2张牌。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "预判",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 0,
+                "text": "在本回合获得2点敏捷。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "切割",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 0,
+                "text": "造成6点伤害。",
+                "in_deck": 0
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "rationale": "Codex decided card0: Backflip finds replayed Flick Flack and future scaling while blocking; stronger long-run evidence outweighs Slice’s immediate damage advantage. | Codex chose 后空翻 (Skill, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)"
+      },
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 5,
+        "question_index": 24,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1283926113,
+        "bytes": 92226,
+        "sha256": "b5cfdaba00bf1a8028efa6947f04201fd2b002f93e0f7da2ed72b1e179b70c06",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "计算下注",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+                "in_deck": 1
+              },
+              "card1": {
+                "card": "先制打击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "造成3点伤害。 将2张小刀加入你的手牌。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "后空翻",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "获得5点格挡。 抽2张牌。",
+                "in_deck": 1
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 2
+        },
+        "rationale": "Codex decided card2: Backflip adds defense and access to replayed Flick Flack; strong outcome evidence favors it over unscaled shivs or another Gamble. | Codex chose 后空翻 (Skill, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)"
+      },
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 9,
+        "question_index": 46,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1285022202,
+        "bytes": 103413,
+        "sha256": "3e18f3169860d5656d1e3c032350012f24763eb5eaf87e74ba3a7cbd593e1f2c",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "侧步",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "text": "下回合，获得1点能量。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "翻越撑击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "奇巧。 对所有敌人造成7点伤害。",
+                "in_deck": 1
+              },
+              "card2": {
+                "card": "后空翻",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "获得5点格挡。 抽2张牌。",
+                "in_deck": 2
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 2
+        },
+        "rationale": "Codex decided card2: Backflip improves defensive consistency, finds replayed Flick Flack, and supports Fortifier; the alternatives offer little immediate survival. | Codex chose 后空翻 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex); route changed (card-reward review) to r9c2 宝箱 → r10c3 问号 → r11c4 问号 → r12c5 问号 → r13c6 商店 → r14c6 精英 → r15c5 休息 → r16c3 Boss; next rest: 到 F16 时新路线约 0（血量耗尽），保留路线约 0（血量耗尽）（p75 耗尽 对 耗尽）；下一只精英：新路线 F15 r14c6 进场 8/70（p75 2），保留路线 F13 r12c4 进场 29/70（p75 27） (clearly lower at the next elite)"
+      }
+    ],
+    "own_independent_runs": 1,
+    "own_opportunities": 3,
+    "own_role": "当前题面/动作/后继的描述性证据，不证明策略收益",
+    "game_version": "unknown",
+    "own_stratum": "Silent/A10/no_retry_evidence; no_retry_evidence does not prove no SL",
+    "current_information": "所选题面原牌文/当前HP/同屏选项；此前最近快照仅牌组代理；终局簇不触发",
+    "external_direction": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation"
+        },
+        "statistic": {
+          "name": "observed_three_card_bundle",
+          "value": 25,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 62
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:BACKFLIP+card:RICOCHET"
+        },
+        "statistic": {
+          "name": "matched_winner_combination_present",
+          "value": 10,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 27
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:BACKFLIP+card:RICOCHET",
+        "role": "contradict"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:BACKFLIP+card:RICOCHET"
+        },
+        "statistic": {
+          "name": "matched_loser_combination_present",
+          "value": 15,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 27
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:BACKFLIP+card:RICOCHET",
+        "role": "contradict"
+      }
+    ],
+    "counterexamples": "4YPG最终F14败；CLA89拿步法后F9败；外部败者有相同卡与反向组合，不支持收益/固定顺序。",
+    "unknowns": [
+      "替代选择的因果收益",
+      "完整弃牌触发链",
+      "可泛化成型或HP阈值",
+      "其他版本机制对齐",
+      "生产消费者/自然采用/收益"
+    ],
+    "input_sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    }
+  },
+  {
+    "scenario": "C7-3",
+    "strategy_id": "silent-brain-sucker-punch-external-prefix-context",
+    "disposition": "same_id_update",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "own_primary": [
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 6,
+        "question_index": 29,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1284102845,
+        "bytes": 95310,
+        "sha256": "a92ee593a9d0bf34a7bcf1fdf33493394f3b1258f059882a3f33cf01a0168f9a",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "突然一拳",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "造成8点伤害。 给予1层虚弱。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "早有准备",
+                "type": "Skill",
+                "rarity": "Common",
+                "cost": 0,
+                "text": "抽1张牌。 丢弃1张牌。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "连续反弹",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 2,
+                "text": "奇巧。 随机对敌人造成3点伤害4次。",
+                "in_deck": 0
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "rationale": "Codex decided card0: Sucker Punch adds needed damage and Weak, with the strongest simulated boss progress. More draw is not the current bottleneck. | Codex chose 突然一拳 (Attack, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)"
+      }
+    ],
+    "own_independent_runs": 1,
+    "own_opportunities": 1,
+    "own_role": "当前题面/动作/后继的描述性证据，不证明策略收益",
+    "game_version": "unknown",
+    "own_stratum": "Silent/A10/no_retry_evidence; no_retry_evidence does not prove no SL",
+    "current_information": "所选题面原牌文/当前HP/同屏选项；此前最近快照仅牌组代理；终局簇不触发",
+    "external_direction": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation"
+        },
+        "statistic": {
+          "name": "observed_three_card_bundle",
+          "value": 25,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 62
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation",
+        "role": "support"
+      }
+    ],
+    "counterexamples": "4YPG最终F14败；CLA89拿步法后F9败；外部败者有相同卡与反向组合，不支持收益/固定顺序。",
+    "unknowns": [
+      "替代选择的因果收益",
+      "完整弃牌触发链",
+      "可泛化成型或HP阈值",
+      "其他版本机制对齐",
+      "生产消费者/自然采用/收益"
+    ],
+    "input_sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    }
+  },
+  {
+    "scenario": "C7-4",
+    "strategy_id": "silent-brain-discard-skewer-versus-shiv-support",
+    "disposition": "new",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "own_primary": [
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 8,
+        "question_index": 39,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1284562248,
+        "bytes": 95559,
+        "sha256": "96814488124dcbe7765b2603524bca6ced1caf21c5706407986649b06dd6c852",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "串刺",
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "text": "造成8点伤害X次。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "先制打击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "text": "造成3点伤害。 将2张小刀加入你的手牌。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "幻影之刃",
+                "type": "Power",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
+                "in_deck": 0
+              },
+              "skip": {
+                "card": "skip",
+                "note": "take no card"
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "rationale": "Codex decided card0: Skewer adds needed single-target burst, uses spare energy, and remains useful when Ringing permits only one card. | Codex chose 串刺 (Attack, 0E) (code's fallback order: 70, rank 1 of 4; not shown to Codex); route changed (card-reward review) to r8c3 普通战 → r9c2 宝箱 → r10c3 问号 → r11c3 休息 → r12c4 精英 → r13c5 普通战 → r14c6 精英 → r15c5 休息 → r16c3 Boss; next rest: 到 F16 时新路线约 0（血量耗尽），保留路线约 0（血量耗尽）（p75 耗尽 对 耗尽）；下一只精英：新路线 F13 r12c4 进场 39/70（p75 32），保留路线 F15 r14c6 进场 18/70（p75 7）"
+      }
+    ],
+    "own_independent_runs": 1,
+    "own_opportunities": 1,
+    "own_role": "当前题面/动作/后继的描述性证据，不证明策略收益",
+    "game_version": "unknown",
+    "own_stratum": "Silent/A10/no_retry_evidence; no_retry_evidence does not prove no SL",
+    "current_information": "所选题面原牌文/当前HP/同屏选项；此前最近快照仅牌组代理；终局簇不触发",
+    "external_direction": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation"
+        },
+        "statistic": {
+          "name": "observed_three_card_bundle",
+          "value": 25,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 62
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json#v0.111/cluster7/formation",
+        "role": "support"
+      }
+    ],
+    "counterexamples": "4YPG最终F14败；CLA89拿步法后F9败；外部败者有相同卡与反向组合，不支持收益/固定顺序。",
+    "unknowns": [
+      "替代选择的因果收益",
+      "完整弃牌触发链",
+      "可泛化成型或HP阈值",
+      "其他版本机制对齐",
+      "生产消费者/自然采用/收益"
+    ],
+    "input_sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    }
+  },
+  {
+    "scenario": "C7-5",
+    "strategy_id": "silent-brain-act1-footwork-prefix-context",
+    "disposition": "same_id_update",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "own_primary": [
+      {
+        "run": "4YPGHGJD393H",
+        "floor": 11,
+        "question_index": 54,
+        "source_path": "logs/decisions.jsonl",
+        "offset": 1285175715,
+        "bytes": 94207,
+        "sha256": "c5aab70a04c96affc028dd1d4557bcdf929ccef9b1a27eda53cdf190d33badbf",
+        "cutoff": 4638939179,
+        "questions": {
+          "pick": {
+            "criteria": {
+              "card0": {
+                "card": "无尽刀刃",
+                "type": "Power",
+                "cost": 1,
+                "text": "在你的回合开始时，在你的手牌中加入1张小刀。",
+                "in_deck": 0
+              },
+              "card1": {
+                "card": "灵动步法",
+                "type": "Power",
+                "cost": 1,
+                "text": "获得2点敏捷。",
+                "in_deck": 0
+              },
+              "card2": {
+                "card": "切割",
+                "type": "Attack",
+                "cost": 0,
+                "text": "造成6点伤害。",
+                "in_deck": 0
+              },
+              "card3": {
+                "card": "杂技",
+                "type": "Skill",
+                "cost": 1,
+                "text": "抽3张牌。 丢弃1张牌。",
+                "in_deck": 0
+              },
+              "card4": {
+                "card": "连续反弹",
+                "type": "Attack",
+                "cost": 2,
+                "text": "奇巧。 随机对敌人造成3点伤害4次。",
+                "in_deck": 0
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "select_deck_card",
+          "option_index": 1
+        },
+        "rationale": "Codex decided card1: Footwork scales three Backflips and plentiful block, addressing urgent survival needs. Strong outcome evidence supports its lasting value over simulations starting at one HP. | Codex chose 灵动步法 (code's fallback order: 70, rank 1 of 5; not shown to Codex)"
+      }
+    ],
+    "own_independent_runs": 1,
+    "own_opportunities": 1,
+    "own_role": "当前题面/动作/后继的描述性证据，不证明策略收益",
+    "game_version": "unknown",
+    "own_stratum": "Silent/A10/no_retry_evidence; no_retry_evidence does not prove no SL",
+    "current_information": "所选题面原牌文/当前HP/同屏选项；此前最近快照仅牌组代理；终局簇不触发",
+    "external_direction": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:FLICK_FLACK+card:FOOTWORK"
+        },
+        "statistic": {
+          "name": "matched_winner_combination_present",
+          "value": 5,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 27
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:FLICK_FLACK+card:FOOTWORK",
+        "role": "contradict"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "singleplayer; valid; nonabandoned; no modifiers; final-deck cluster7; knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:FLICK_FLACK+card:FOOTWORK"
+        },
+        "statistic": {
+          "name": "matched_loser_combination_present",
+          "value": 9,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 27
+        },
+        "design": "observational",
+        "limitations": [
+          "最终聚类/赢家筛选只作事后方向对照；不作当前触发或因果收益。",
+          "上传记录非独立玩家，重复上传/水平/SL/幸存/遗物混杂未知；自有版本unknown，分母不混算。",
+          "终局一致不代表中途全快照；拿牌前缀/前节点HP仅代理；所有版本机改对应未知，禁止合并。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#v0.111/cluster7/card:FLICK_FLACK+card:FOOTWORK",
+        "role": "contradict"
+      },
+      {
+        "type": "own",
+        "run": "CLA89Q59WMF7",
+        "floor": 7,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-223228/learner/runs/20261024-223342-d9777500-471e-4515-b34d-08ced4db52a4-strategy-proposal/scratch/decision-evidence.json#CLA89Q59WMF7/7",
+        "role": "contradict"
+      }
+    ],
+    "counterexamples": "4YPG最终F14败；CLA89拿步法后F9败；外部败者有相同卡与反向组合，不支持收益/固定顺序。",
+    "unknowns": [
+      "替代选择的因果收益",
+      "完整弃牌触发链",
+      "可泛化成型或HP阈值",
+      "其他版本机制对齐",
+      "生产消费者/自然采用/收益"
+    ],
+    "input_sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    }
+  }
+]
