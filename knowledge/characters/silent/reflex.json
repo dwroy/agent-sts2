@@ -28301,7 +28301,7 @@
     {
       "schema": "reflex-entry-v1",
       "id": "silent-rk-lane-b-block-time-and-shiv",
-      "version": 1,
+      "version": 2,
       "applies_to": "card_pick",
       "predicate": {
         "op": "or",
@@ -28338,9 +28338,13 @@
           {
             "run_id": "U8K28UUGYP3U",
             "floor": 5
+          },
+          {
+            "run_id": "FZT053H9PSC5",
+            "floor": 19
           }
         ],
-        "n_support": 2,
+        "n_support": 3,
         "n_contradict": 0
       },
       "confidence": 0.25,
@@ -28353,7 +28357,9 @@
       "directions": [],
       "cores": [],
       "combos": [],
-      "source_experience": [],
+      "source_experience": [
+        "silent-brain-lane-b-block-time-and-shiv"
+      ],
       "sources": [
         {
           "source": "own",
@@ -28379,6 +28385,32 @@
             "runs": 0,
             "players": null,
             "selection": "cards_gained取得牌次代理534/224；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        },
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F19-reward-card.json",
+          "sha256": "6a9ea112c6d3e1ff9534bfd3d67b009a0f88bf6f92f83c3dc74a694b4c6788fe",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; FZT053H9PSC5 F19; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal DODGE_AND_ROLL: winners 1/5, failures 4/5; descriptive, not an effect or trigger"
           }
         }
       ]
@@ -28541,7 +28573,7 @@
     {
       "schema": "reflex-entry-v1",
       "id": "silent-rk-lane-b-burst-versus-setup",
-      "version": 1,
+      "version": 2,
       "applies_to": "card_pick",
       "predicate": {
         "op": "or",
@@ -28573,9 +28605,13 @@
           {
             "run_id": "VPW8YH7A4QFM",
             "floor": 33
+          },
+          {
+            "run_id": "FZT053H9PSC5",
+            "floor": 39
           }
         ],
-        "n_support": 2,
+        "n_support": 3,
         "n_contradict": 0
       },
       "confidence": 0.25,
@@ -28588,7 +28624,9 @@
       "directions": [],
       "cores": [],
       "combos": [],
-      "source_experience": [],
+      "source_experience": [
+        "silent-brain-lane-b-burst-versus-setup"
+      ],
       "sources": [
         {
           "source": "own",
@@ -28614,6 +28652,32 @@
             "runs": 0,
             "players": null,
             "selection": "cards_gained取得牌次代理172/160；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        },
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F39-reward-card.json",
+          "sha256": "824e8fc5269b04df4acad0640b0cafa782b96931275917d43a746e5b976d9b21",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; FZT053H9PSC5 F39; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal AFTERIMAGE: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
           }
         }
       ]
@@ -32709,6 +32773,406 @@
           },
           "url": "https://sts2.fun/static/sts2_public.db.zst",
           "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c5-c5-1",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "HAZE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c5-c5-1-review",
+        "unit": "label"
+      },
+      "label_en": "Compare group poison and Weak with retained single target poison",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "ATP5MCMJDMQY",
+            "floor": 2
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-haze-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F2-reward-card.json",
+          "sha256": "7e6db28de2c1bc0d615e73c9e578f24aa0fb8681aadd3a9e4ebab7c2ef27a254",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F2; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal HAZE: winners 1/5, failures 0/5; descriptive, not an effect or trigger"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c5-c5-2",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "MIRAGE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c5-c5-2-review",
+        "unit": "label"
+      },
+      "label_en": "Check established poison before valuing Mirage block",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "ATP5MCMJDMQY",
+            "floor": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-c5-mirage-needs-established-poison"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F3-reward-card.json",
+          "sha256": "98059f8115a894632acafd12e399f437f8165c78b3f458c806fb97a35f66a40b",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F3; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal MIRAGE: winners 3/5, failures 3/5; descriptive, not an effect or trigger"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c5-c5-3",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BUBBLE_BUBBLE"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c5-c5-3-review",
+        "unit": "label"
+      },
+      "label_en": "Require an existing poison source before conditional poison growth",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "ATP5MCMJDMQY",
+            "floor": 15
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-bubble-bubble-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F15-selection-add.json",
+          "sha256": "b3894e8d0d1e58854e5505e04dd7de6f8da24d5e0308e3d87047321eafd6dc69",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F15; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal BUBBLE_BUBBLE: winners 4/5, failures 5/5; descriptive, not an effect or trigger"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c5-c5-4",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "OUTBREAK"
+          },
+          {
+            "op": "or",
+            "args": [
+              {
+                "op": "eq",
+                "field": "act",
+                "value": 1
+              },
+              {
+                "op": "eq",
+                "field": "act",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c5-c5-4-review",
+        "unit": "label"
+      },
+      "label_en": "Compare immediate group poison with setup cost and available defense",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "FZT053H9PSC5",
+            "floor": 17
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-c5-outbreak-immediate-trigger-budget"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json",
+          "sha256": "d4cd04d951a56c1ce55687a63aba6b6c8f030fa7b78e9154da1f9821a3490a10",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; FZT053H9PSC5 F17; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal OUTBREAK: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c5-c5-5",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BLUR"
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c5-c5-5-review",
+        "unit": "label"
+      },
+      "label_en": "Compare retaining block with adding another damage card",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "FZT053H9PSC5",
+            "floor": 28
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-blur-external-prefix-context"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F28-reward-card.json",
+          "sha256": "8646c12c5a00a74432961dab1efb82f79b0dde86dc3430903b581c6211e24b32",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10/no_retry_evidence; FZT053H9PSC5 F28; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "five selected representative pairs 0,3,5,7,9; terminal BLUR: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+          }
         }
       ]
     }
