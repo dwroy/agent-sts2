@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "authorized_by": "Roy",
+  "character": "silent",
+  "enabled": true,
+  "plans": [
+    {
+      "plan_id": "issue51-improved-card-picks-007",
+      "retry_generation": 0,
+      "work_spec": {
+        "path": "paper/materials/20261024-issue51-card-proxy-ops/issue51-improved-card-picks-007.md",
+        "bytes": 3226,
+        "sha256": "fb0997c0dba961760db33ff2d5a443ba30501577fc3bbce5dd7651d9654001c3"
+      },
+      "input_manifest": {
+        "path": "paper/materials/20261024-issue51-card-proxy-ops/issue51-improved-card-picks-007.json",
+        "bytes": 7280,
+        "sha256": "cce019af6fb764248d83098d4e629d735db4ea9be7defa371aed5f9ab8e0c5df"
+      }
+    }
+  ],
+  "phase": "improved-single-card-only",
+  "authority_comment": 6377919186,
+  "archetype_playbooks": "wait issue54",
+  "retired_plan_ids": [
+    "issue51-deck-outcomes-003",
+    "issue51-card-picks-004",
+    "issue51-encounter-rk-005",
+    "issue51-top25-card-picks-006",
+    "issue51-dual-boss-001",
+    "issue51-act-boss-002"
+  ],
+  "zero_guard": {
+    "previous_evaluated_batch": "20261024-085327-strategy-proposal",
+    "previous_new_entries": 0,
+    "consecutive_zero": 1,
+    "allowed_next_card_batches_before_outcome_review": 1,
+    "if_next_zero": "stop this external learning line and report supervisor; do not auto-enqueue a second batch"
+  }
+}
