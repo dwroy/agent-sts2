@@ -131,6 +131,86 @@ class WorkspaceRetention(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'not in recorded publication'):
             resource.complete(self.root, self.directory, self.tree.name, source, self.head, self.head)
 
+    def source_leaf(self, name, content):
+        (self.tree/name).write_text(content)
+        self.git('add',name,tree=self.tree); self.git('commit','-m','independent source',tree=self.tree)
+        return self.git('rev-parse','HEAD',tree=self.tree).strip()
+
+    def published_leaf(self, tree, name, content, message='actual leaf publication'):
+        (tree/name).write_text(content)
+        self.git('add',name,tree=tree); self.git('commit','-m',message,tree=tree)
+        return self.git('rev-parse','HEAD',tree=tree).strip()
+
+    def settle_source(self, source):
+        return resource.complete(self.root,self.directory,self.tree.name,source,
+            self.git('rev-parse','HEAD').strip(),self.git('rev-parse','HEAD',tree=self.live).strip())
+
+    def test_leaf_publication_then_evolution_or_revert_remains_reclaimable(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        witnesses={}
+        for target in (self.root,self.live):
+            witnesses[str(target)]=self.published_leaf(target,name,'export const fixed = 2;\n')
+            self.published_leaf(target,name,'export const fixed = 1;\n','later intentional revert')
+        record=self.settle_source(source)
+        proof=record['acceptance']['publication_witnesses']
+        self.assertEqual({r['commit'] for r in proof},set(witnesses.values()))
+        self.assertTrue(all(r['kind']=='historical-leaf' for r in proof))
+        self.assertEqual(self.reclaim()['state'],'reclaimed')
+        self.assertEqual(self.git('rev-parse',self.tree.name).strip(),source)
+
+    def test_narrow_publication_preserves_unrelated_file_changes_and_later_evolution(self):
+        name='ops/fixture.py'
+        baseline='header = 1\n'+''.join('# context '+str(n)+'\n' for n in range(20))+'feature = 1\n'
+        self.published_leaf(self.root,name,baseline,'new shared baseline')
+        for target in (self.tree,self.live): self.git('merge','--ff-only','main',tree=target)
+        source=self.source_leaf(name,baseline.replace('feature = 1','feature = 2'))
+        for target in (self.root,self.live):
+            independent=baseline.replace('header = 1','header = 3')
+            self.published_leaf(target,name,independent,'unrelated runtime edit')
+            self.published_leaf(target,name,independent.replace('feature = 1','feature = 2'))
+            self.published_leaf(target,name,independent.replace('feature = 1','feature = 4'),'later evolution')
+        record=self.settle_source(source)
+        proof=record['acceptance']['publication_witnesses']
+        self.assertTrue(all(r['kind']=='verbatim-leaf-patch' for r in proof))
+        self.assertEqual(len({r['patch_id'] for r in proof}),1)
+        self.assertEqual(self.reclaim()['state'],'reclaimed')
+
+    def test_main_history_cannot_substitute_for_unpublished_live(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        self.published_leaf(self.root,name,'export const fixed = 2;\n')
+        self.published_leaf(self.root,name,'export const fixed = 3;\n','later main edit')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+        self.assertTrue((self.tree/'.git').exists())
+
+    def test_dropped_side_branch_and_preallocation_blob_do_not_prove_publication(self):
+        name='agent/src/example.ts'
+        self.published_leaf(self.root,name,'export const fixed = 2;\n','old state')
+        self.published_leaf(self.root,name,'export const fixed = 1;\n','allocation baseline')
+        for target in (self.tree,self.live): self.git('merge','--ff-only','main',tree=target)
+        source=self.source_leaf(name,'export const fixed = 2;\n')
+        self.git('checkout','-b','discarded')
+        self.published_leaf(self.root,name,'export const fixed = 2;\n','side branch only')
+        self.git('checkout','main'); self.git('merge','-s','ours','discarded','-m','discard branch content')
+        self.git('merge','--ff-only','main',tree=self.live)
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+        self.assertFalse((self.directory/'retention/workspaces/ops-fixture.json').exists())
+
+    def test_patch_adoption_requires_whitespace_identical_change(self):
+        name='ops/fixture.py'; source=self.source_leaf(name,'fixed = 2\n')
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,' fixed = 2\n','different whitespace is different code')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+
+    def test_history_limit_retains_unknown_publication(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        for value in (2,3,4):
+            self.published_leaf(self.root,name,f'export const fixed = {value};\n')
+        with patch.object(resource,'PUBLICATION_HISTORY_LIMIT',1), self.assertRaisesRegex(ValueError,'history scan limit'):
+            self.settle_source(source)
+
     def test_retry_reuses_verified_archive_after_removal_failure(self):
         original = resource.git
         def fail_remove(root, *args):

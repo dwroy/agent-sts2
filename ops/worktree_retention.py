@@ -21,6 +21,7 @@ from instance_env import binding_env
 NAME = re.compile(r"[a-z][a-z0-9-]{1,95}")
 PROTECTED = {"live", "exp", "regent-climb"}
 TERMINAL = {"done", "completed", "complete", "shipped"}
+PUBLICATION_HISTORY_LIMIT = 256
 
 
 def git(root, *args):
@@ -164,6 +165,45 @@ def source_admission(root, directory, tree, head, *, allow_leaf=False):
     return proof
 
 
+def leaf_patch(root, before, after, name):
+    """Keep whitespace, modes, paths and context; only hunk line numbers may differ."""
+    raw = git(root, "diff", "--no-ext-diff", "--no-textconv", "--no-renames", "--no-color",
+              "--binary", "--full-index", "--unified=3", "--diff-algorithm=myers",
+              "--src-prefix=a/", "--dst-prefix=b/", before, after, "--", name)
+    if not raw or b"GIT binary patch" in raw or b"Binary files" in raw:
+        return None
+    result = subprocess.run(["git", "patch-id", "--verbatim"], input=raw, capture_output=True, timeout=20)
+    value = result.stdout.split()
+    if result.returncode or len(value) != 2 or not retention.SHA.fullmatch(value[0].decode("ascii")):
+        raise ValueError("source publication patch proof unavailable")
+    return value[0].decode("ascii")
+
+
+def historical_publication(root, base, source, published, name, expected):
+    # Search only actual first-parent publication states after allocation. A blob
+    # on a discarded side branch or before this task's baseline is not adoption.
+    commits = git(root, "log", "--first-parent", "--full-history", "--format=%H",
+                  "--max-count=" + str(PUBLICATION_HISTORY_LIMIT + 1), published, "^" + base,
+                  "--", name).decode().splitlines()
+    candidates = commits[:PUBLICATION_HISTORY_LIMIT]
+    for commit in candidates:
+        if git(root, "ls-tree", commit, "--", name) == expected:
+            return dict(path=name, publication=published, commit=commit, kind="historical-leaf",
+                        source_leaf=expected.decode().strip())
+    # Narrow integration can preserve unrelated runtime changes in the same file.
+    # Require the complete per-file task delta, never a fuzzy hunk/subsequence match.
+    patch = leaf_patch(root, base, source, name)
+    if patch:
+        for commit in candidates:
+            parents = git(root, "rev-list", "--parents", "-n", "1", commit).decode().split()
+            if len(parents) > 1 and leaf_patch(root, parents[1], commit, name) == patch:
+                return dict(path=name, publication=published, commit=commit, parent=parents[1],
+                            kind="verbatim-leaf-patch", patch_id=patch, source_leaf=expected.decode().strip())
+    if len(commits) > PUBLICATION_HISTORY_LIMIT:
+        raise ValueError("source publication history scan limit reached: " + name)
+    raise ValueError("source leaf not in recorded publication: " + name)
+
+
 def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None):
     if not all(retention.SHA.fullmatch(x or "") for x in (source, main_commit, live_commit)):
         raise ValueError("full source and publication SHAs required")
@@ -182,6 +222,7 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
         ["git", "-C", str(root), "merge-base", "--is-ancestor", source, published],
         capture_output=True).returncode == 0 for published in (main_commit, live_commit)}
     checked = []
+    witnesses = []
     for name in changed:
         if retention.secret_name(name) and not name.endswith(".env.example"):
             raise ValueError("protected source change retained")
@@ -194,11 +235,14 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
             expected = git(root, "ls-tree", source, "--", name)
             actual = git(root, "ls-tree", published, "--", name)
             if actual != expected:
-                raise ValueError("source leaf not in recorded publication: " + name)
+                witnesses.append(historical_publication(root, base, source, published, name, expected))
         checked.append(name)
-    return {"source": source, "base": base, "main_commit": main_commit, "live_commit": live_commit,
+    proof = {"source": source, "base": base, "main_commit": main_commit, "live_commit": live_commit,
             "verified_source_paths": checked, "live_required": bool(checked),
             "scope": "workspace-only; no parent request or gameplay claim closed"}
+    if witnesses:
+        proof["publication_witnesses"] = witnesses
+    return proof
 
 
 def complete(root, directory, name, source, main_commit, live_commit):

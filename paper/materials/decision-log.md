@@ -6641,3 +6641,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T15:02:33+08:00 [ops] #46完整[T,T+24h)分配116对原基线106/+9.43%，waiting无登记消费，节省未证；类别/实际终局/积压/停局分账，测量已交付不关46/23，原owner接后续。无新检查/模型/tick。paper/materials/20261024-issue46-complete-window-ops/comparison.json。
 
 - 2026-10-24T15:03:40+08:00 [watcher] #37九叶main070cac9b586767d063ff34434f31a86174b26ab5已经Windows SSH推送并精确远端读回；完整检查原始JSON/SHA与冻结输入终态全绿，交付评论6381207024逐字读回、原ops单行提醒为agent_prompted，revision5窗口确认6380977732不代发布完成。55R429自然外部命中及主管关闭已核；37实际版本/首局Jev读回与091302真实源审计、20已部署T14:49:42后的真实24h观察仍交原owner，27/39/43及科学父均保留，不关闭未完成父要求。
+
+- 2026-10-24T15:29:30+08:00 [dev #20] 按Claude评论6381379788核三棵已关issue开发树误保留，原门仅核当前整叶/来源祖先，漏精确叶子采用后的演进与同文件窄集成。新增绑定main/live各自first-parent、分配基线后256次逐叶发布见证：原整叶或完整逐文件verbatim补丁（保空白/上下文，不模糊匹配），过界未知保留；测试仍须live，旧进程/owner/脏树/归档门不变。只读实核47的live测试补丁2faa7ead、46的main原叶c8fe60d9、49的main/live历史原叶88b53d81/ce3caf63等均可证明已采用，不以发布门继续误挡；不代实际删除准入。基线main3d04b1d72；tsc0、两Vitest定向2过（Python24+16，不重复计数）、原固定Python24过，发前gitleaks；无full/生产回收/模型/live或STOP写入，影响live启动否。证据paper/materials/20261024-issue20-publication-history/，交原集成员核验后沿原回收器重试。

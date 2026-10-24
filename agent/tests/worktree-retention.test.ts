@@ -6,5 +6,5 @@ it("retires only verified workspaces and recovers preserved artifacts after inte
     encoding: "utf8", timeout: 60_000,
   });
   expect(result.status, result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 18 tests");
+  expect(result.stderr).toContain("Ran 24 tests");
 }, 65_000);
