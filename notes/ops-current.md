@@ -1,12 +1,12 @@
 state: in-flight
-issue: 55
-updated: 2026-10-24T13:37:44+08:00
+issue: 23
+updated: 2026-10-24T13:43:48+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#55 P0源91fd612628已按精确12叶与实际R428/469知识隔离组装，树f097264c9c17；两tsc0、唯一full在途，worker2127112/birth24358644，当前状态以paper/materials/20261024-issue55-r428-ops/check-state.json为准。13:24两返回仅旧写前锁失败/full0，当前唯一full1未终态；未发布，不借37失败/夹101315。
-在等谁：原55单窗实际终态后，ops接自然边界精确12叶发布/编号/固定工具读回，流派模型测试fixture不冒live部署。20源f5f390c141三生产叶已核，按6380255093排55实际发布后同批部署并记真实T/24h窗。37旧独占发布等待已按6380220657撤销，科学父/原失败保留；不另起full。
-下一步：55结果事件只核原JSON/冻结输入/锁释放，失败保留实际阶段，成功按原事务发布并验自然逐题命中/时延。51已按6380207972报旧1/2/2未达标，三506自有补证单元排原队列，等真实native/5～10情境候选及独立消费者；不强派/tick/凑数。46完整门13:46:30、48原观察门18:19:29不提前。
+进行中的事：#23原代码已发布，可持续验收仍失败；09:39旧核数累计回收155/分配311，近24h16/123、空间净减107.15GiB，均非本轮新测。#55 P0精确12叶树f097264c9c17/469知识、两tsc0/唯一full1在途，worker2127112/birth24358644；13:24两返回是旧锁失败/full0，实际终态看paper/materials/20261024-issue55-r428-ops/check-state.json。
+在等谁：#23等#45原owner结算未完成归属/验收（原10个ops显式完成项），以及#46发布后完整窗13:46:30；原限4worker自然推进，旧plan eligible0保护不松。#55原窗实际终态后ops接自然边界发布/编号/工具读回；#20源f5f390c141按6380255093在55实际发布后部署并记T/24h，37独占等待已撤6380220657，原失败/科学父保留。
+下一步：#23下次自然唤醒到门后接#46原精确完整窗报告，结合实际分配/局量/积压、磁盘端点及回收回执分账复核；手动停局期单列，不用暂停/延期/旧回收数冒收益，不重发或手动删树。本轮只交接，不等待/轮询/新建模型。55仍P0先行、不另full；51三506单元等真实native/5～10情境及消费者，48门18:19:29不提前。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
@@ -30,7 +30,7 @@ updated: 2026-10-24T13:37:44+08:00
 
 091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，当前37 revision3唯一窗续核，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#23仍验收失败：09:39累计历史回收155/分配311、近24h16/123；原只读plan eligible0，保护条件/worker≤4，不手动删除/派清理模型。等原owner补归属及原窗口验收，停局期单列；原件paper/materials/20261024-issue23-resume-0936-ops/。
+#23原核验与最新issue评论6378326067同，未生成新计数；本轮交接paper/materials/20261024-issue23-checkpoint-1343-ops/，原只读plan/回收/磁盘证据paper/materials/20261024-issue23-resume-0936-ops/。
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
@@ -43,7 +43,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-strategy-131302-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue23-checkpoint-1343-ops/handoff-before.md；未清未完成项。
 
 46原完整基线/命令/AST：paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
 
