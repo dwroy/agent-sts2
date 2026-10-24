@@ -60,10 +60,52 @@
         "bytes": 39298,
         "sha256": "d97152b0440e2abab398dcfa9412d0084f2be3cc012dc16f922205bb209ee109"
       }
+    },
+    {
+      "plan_id": "issue51-decision-potion-own-20261024-002",
+      "retry_generation": 0,
+      "work_spec": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-potion-own-20261024-002.md",
+        "bytes": 5178,
+        "sha256": "70f18655310f969234f2a88cce0f3a1ee6c8f91a5155b66c8c060a6609f98c66"
+      },
+      "input_manifest": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-potion-own-20261024-002.json",
+        "bytes": 14265,
+        "sha256": "1a1afc06d9bd6cd5cddeab155d952f4c4965eb89d8ded3e39e9de9b10ef8be8b"
+      }
+    },
+    {
+      "plan_id": "issue51-decision-rest-route-own-20261024-002",
+      "retry_generation": 0,
+      "work_spec": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-rest-route-own-20261024-002.md",
+        "bytes": 5131,
+        "sha256": "f7289dc303c1627cbf49ae96e81605b9cff31af5f2a145b93fb19f1537a9446a"
+      },
+      "input_manifest": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-rest-route-own-20261024-002.json",
+        "bytes": 14289,
+        "sha256": "7b1858a744400cc9ea8d3c7b131a899981d5e7c2fd50105da746aeda4f62d964"
+      }
+    },
+    {
+      "plan_id": "issue51-decision-cold-start-own-20261024-002",
+      "retry_generation": 0,
+      "work_spec": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-cold-start-own-20261024-002.md",
+        "bytes": 5223,
+        "sha256": "141a4810bffd045f7c2f76464c5bc4a768464436e70507b6c4af11ff60e86c97"
+      },
+      "input_manifest": {
+        "path": "paper/materials/20261024-issue51-own-fallback-ops/issue51-decision-cold-start-own-20261024-002.json",
+        "bytes": 14285,
+        "sha256": "3aa655c3f4dd5213b6ede735f76cf999ec6186291148c5d894a9258b75eaed5f"
+      }
     }
   ],
-  "phase": "original-poison-in-flight-next-decision-units-1-2-3-await-field-audit",
-  "authority_comment": 6378493412,
+  "phase": "own-fallback-followups-queued-after-under3-report",
+  "authority_comment": 6380207972,
   "archetype_playbooks": "issue54 frozen, original slots only",
   "retired_plan_ids": [
     "issue51-deck-outcomes-003",
@@ -129,7 +171,36 @@
       "plan_id": "issue51-decision-cold-start-20261024-001",
       "state": "frozen-await-original-native",
       "dispatchable": true
+    },
+    {
+      "priority": 3,
+      "plan_id": "issue51-decision-potion-own-20261024-002",
+      "state": "frozen-await-original-native",
+      "dispatchable": true
+    },
+    {
+      "priority": 4,
+      "plan_id": "issue51-decision-rest-route-own-20261024-002",
+      "state": "frozen-await-original-native",
+      "dispatchable": true
+    },
+    {
+      "priority": 5,
+      "plan_id": "issue51-decision-cold-start-own-20261024-002",
+      "state": "frozen-await-original-native",
+      "dispatchable": true
     }
   ],
-  "normal_learning_unchanged": true
+  "normal_learning_unchanged": true,
+  "decision_output_contract": {
+    "target_min": 5,
+    "target_max": 10,
+    "under3_report_supervisor": true,
+    "own_506_scope": {
+      "path": "paper/materials/20261024-issue51-own-fallback-ops/own-506-scope.json",
+      "bytes": 225780,
+      "sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478"
+    },
+    "preserve_original_results": true
+  }
 }

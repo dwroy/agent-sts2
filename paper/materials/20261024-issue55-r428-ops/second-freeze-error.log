@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue55-r428-20261024/check-after-natural.py", line 23, in <module>
+    fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);lock_at=time.monotonic();state['live_lock_acquired_at']=now();state['held_locks']=['ops/live-merge.lock'];assert git(L,'rev-parse','HEAD').decode().strip()==base
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable
