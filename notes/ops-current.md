@@ -1,8 +1,8 @@
 state: in-flight
-issue: 56
-updated: 2026-10-25T02:00:46+08:00
+issue: 51
+updated: 2026-10-25T02:04:57+08:00
 
-进行中的事：014301五事件文字/五不可加载rk已核收、反证待转Roy；56运行收敛待核；保C5原事务、58已验22叶源码包。
+进行中的事：014301集成员实收/转Roy回执6387679266已核、非Roy阅读/ACK；候选未发布；保C5原事务和58已验22叶源码包。
 在等谁：C5 owner1487883/birth28580454原UVEX终态/report、实际发布读回及release；剩余56 runtime由ops接，无需再等原生tier或重派开发。
 下一步：C5结清优先58下一源码窗口，不等60；沿原未重置统计窗核56收敛/完成批次与局数并回执主管，actual tier未知单列，不重full/模型/强tick。
 
@@ -15,7 +15,7 @@ updated: 2026-10-25T02:00:46+08:00
 #35原R422/041301核验、SL分母、自然跨层/冷恢复/超40/学习收益待办及ENOBUFS/null/R419失败保持，细节沿本轮handoff-before.md原段和paper/materials/20261024-issue35-checkpoint-1648-ops/接续。
 
 #51保持：R446已114策略160rk，C7五对2新3更新/10投影核同，R445等旧原件保留；两条描述confidence.25→.30按原稿保留，旧证据/conflict不改，watcher原会话已agent_prompted转Roy，非ACK。历批正式knowledge消费者、正文自动门/完整剧本/Plan、自然收益及科学父待。C182343用户可见6383409246非本人ACK，不代旧notice。
-#56按6386401629启动参数过、actual tier未知单列；C011301原生high/原沙箱rc0、5对3新2补充和composer告警原件见paper/materials/20261025-strategy-011301-ops/。D014301原生rc0、5新文字/5不可加载事件rk，95局106机会/外部51cell分账、双百例比较0、反证原文待watcher→Roy；452原日志窗口SHA核同，见paper/materials/20261025-strategy-014301-ops/。两批均候选非发布/收益，挂就绪58/60后，原吞吐窗不重置，C5结后回56收敛。
+#56按6386401629启动参数过、actual tier未知单列；C011301原生high/原沙箱rc0、5对3新2补充和composer告警原件见paper/materials/20261025-strategy-011301-ops/。D014301原生rc0、5新文字/5不可加载事件rk，95局106机会/外部51cell分账、双百例比较0、watcher实收/转Roy6387679266已核、非Roy ACK；452原日志窗口SHA核同，见paper/materials/20261025-strategy-014301-ops/。两批均候选非发布/收益，挂就绪58/60后，原吞吐窗不重置，C5结后回56收敛。
 
 #0104：D六事件文字/六不可加载rk、C3五情境3新2更，一对与C5同ID不得覆反证，串行挂在就绪源码58/60后。001311五复盘18更新/两提案，dataset1次rc0因并行C5的0764/5反证attention；已有blob/own-append，后续只受控记录，不重生成/finish。通知6387142273/主管C5实收6387024406不代Roy/ACK，原件paper/materials/20261025-wake-0104-ops/。
 
