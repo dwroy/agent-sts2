@@ -6659,3 +6659,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T16:31:18+08:00 [ops] V6-R431原124312冷启动一策略独立发布/live37，一ID生产工具过、612账本0问题；R430八自然ID检索命中（1局/9题/10查询）不代收益，161310原native保留。预写元数据失败及格式拒绝留档，科学父开放。paper/materials/20261024-issue51-cold-prefix-publication-ops/。
 
 - 2026-10-24T16:43:59+08:00 [ops] #51 V6-R432：161310四新/Golden一更live37→41，5实际工具读回、616账本0；新毒刀整局及后续7独立单元按6382043016原锁排队，原processed/held/科学父及37失败保持；无新full/模型/局。原件paper/materials/20261024-issue51-cold-own-publication-ops/、paper/materials/20261024-issue51-next-units-ops/。
+
+- 2026-10-24T16:46:35+08:00 [ops] 16:45核R432重复回执已发布/5内容及原工具同、原worker退出锁释；16旧通知/32投递/3旧实收核同，仅原会话一次agent_prompted提醒。15身份范围拒绝/000402原日志缺、角色ACK0和科学父保持；不重发/模型/full/主管收件箱。原件paper/materials/20261024-1645-notices-ops/。

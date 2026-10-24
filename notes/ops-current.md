@@ -1,6 +1,6 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T16:43:59+08:00
+updated: 2026-10-24T16:46:35+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -10,7 +10,7 @@ updated: 2026-10-24T16:43:59+08:00
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
-#51两批144312/154311的R430策略十ID已发布并固定读回，4新6更/四经验消费者另验，原件和反证保留；131301数据集938ba222/14叶原rc0、回收deferred。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
+#51原144312/154311的R430十ID固定读回，4新6更/四经验消费者另验。131301数据集938ba222/14叶原rc0、回收deferred；原件paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 
 #51三原决策及三自有补证结果保持，旧1/2/2与新5/5/5逐批计数；新1613105为4新1更。原两代输入、零产/配额记录保留，不回写旧报告。paper/materials/20261024-issue51-own-fallback-ops/及各strategy原件。
 
@@ -44,9 +44,9 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 未完成：#36旧三批及五旧tab缺回执继续保留，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证/codex1不切；其余父与自然验收逐项见上，未清待办。
 
-通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
+通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue51-cold-own-publication-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-1645-notices-ops/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
