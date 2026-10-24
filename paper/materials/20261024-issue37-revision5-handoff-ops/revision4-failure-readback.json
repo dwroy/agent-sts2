@@ -1,0 +1,42 @@
+{
+  "checks": {
+    "at": "2026-10-24T14:31:54+08:00",
+    "phase": "stopped-at-actual-stage",
+    "worker_pid": 2359200,
+    "worker_birth": "24664717",
+    "prior_actual_full_runs": 1,
+    "revision_full_runs": 1,
+    "model_calls": 0,
+    "main_merged": false,
+    "live_written": false,
+    "publication_lock_held": false,
+    "unique_check_lock": "ops/integrator-full-check.lock",
+    "publication_priority_issue": 55,
+    "production-tsc_rc": 0,
+    "tools-tsc_rc": 0,
+    "python_rc": 0,
+    "full_rc": 1,
+    "passed": 6660,
+    "failed": 1,
+    "skipped": 2,
+    "files": 683,
+    "result_sha256": "5eef5ba012240f61f4f72bb11d0444395eec9416d5bd3ddb2e623ba693665303",
+    "inputs_unchanged": true,
+    "dependencies_unchanged": true,
+    "knowledge_unchanged": true,
+    "tree_unchanged": true,
+    "failed_phase": "checking-frozen-inputs-after-full",
+    "error": "AssertionError('full failed; original diagnostics retained')",
+    "check_lock_released": true
+  },
+  "full_json_sha256": "5eef5ba012240f61f4f72bb11d0444395eec9416d5bd3ddb2e623ba693665303",
+  "failed_tests": [
+    {
+      "file": "/home/dw/Projects/agent-sts2/.worktrees/integrator37-refreeze-20261024-1408/agent/tests/reclaim-gates.test.ts",
+      "test": "protects real runtime identities while retiring inherited bindings and main-only reports",
+      "failureMessages": [
+        "AssertionError: ..........F.....\n======================================================================\nFAIL: test_original_allocation_does_not_charge_inherited_pending_code_to_report (__main__.ReclaimGates.test_original_allocation_does_not_charge_inherited_pending_code_to_report)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator37-refreeze-20261024-1408/agent/../ops/tests/test_reclaim_gates.py\", line 111, in test_original_allocation_does_not_charge_inherited_pending_code_to_report\n    with self.assertRaisesRegex(ValueError, 'explicit completion'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 16 tests in 5.326s\n\nFAILED (failures=1)\n: expected 1 to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator37-refreeze-20261024-1408/agent/tests/reclaim-gates.test.ts:8:40\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+      ]
+    }
+  ]
+}

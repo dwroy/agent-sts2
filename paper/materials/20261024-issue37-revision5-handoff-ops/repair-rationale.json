@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-24T14:33:38+08:00",
+  "prior_full": {
+    "at": "2026-10-24T14:31:54+08:00",
+    "phase": "stopped-at-actual-stage",
+    "worker_pid": 2359200,
+    "worker_birth": "24664717",
+    "prior_actual_full_runs": 1,
+    "revision_full_runs": 1,
+    "model_calls": 0,
+    "main_merged": false,
+    "live_written": false,
+    "publication_lock_held": false,
+    "unique_check_lock": "ops/integrator-full-check.lock",
+    "publication_priority_issue": 55,
+    "production-tsc_rc": 0,
+    "tools-tsc_rc": 0,
+    "python_rc": 0,
+    "full_rc": 1,
+    "passed": 6660,
+    "failed": 1,
+    "skipped": 2,
+    "files": 683,
+    "result_sha256": "5eef5ba012240f61f4f72bb11d0444395eec9416d5bd3ddb2e623ba693665303",
+    "inputs_unchanged": true,
+    "dependencies_unchanged": true,
+    "knowledge_unchanged": true,
+    "tree_unchanged": true,
+    "failed_phase": "checking-frozen-inputs-after-full",
+    "error": "AssertionError('full failed; original diagnostics retained')",
+    "check_lock_released": true
+  },
+  "failure_file": "agent/tests/reclaim-gates.test.ts",
+  "inner_failure": "ops/tests/test_reclaim_gates.py:test_original_allocation_does_not_charge_inherited_pending_code_to_report",
+  "reason": "stale explicit-completion expectation conflicts with already authorized and merged issue20 original-allocation self-settlement",
+  "minimal_change": {
+    "path": "ops/tests/test_reclaim_gates.py",
+    "preimage": "f519b8086b10013b84ab29462050199369a8500f",
+    "blob": "3f0c39dba18ff1576aa309ed39de1d587fbc35a9",
+    "sha256": "dfe55b8a6ed7a8dacca5dde2d2f079730aef9a8d47106ef66796c972f17073c8"
+  },
+  "production_code_changes_from_revision4": 0,
+  "contract_basis": {
+    "source": "a467b14ed6a493eaae40b0a40bc9c18fd9796eff",
+    "main": "f5f390c141cc21797fa2bfe435c10722a47f0bfc",
+    "docs": "docs/learner-retention.md"
+  },
+  "preserved_guards": [
+    "no allocation still rejects inherited unpublished code",
+    "original allocation base must match",
+    "report delta has zero executable paths and no live requirement",
+    "explicit completion remains compatible",
+    "untouched allocations, unpublished task code, owner, process, request, identity and archive guards remain in original tests"
+  ],
+  "directed_python": {
+    "modules": [
+      "ops.tests.test_reclaim_gates",
+      "ops.tests.test_worktree_retention"
+    ],
+    "tests": 34,
+    "rc": 0,
+    "log_sha256": "71d061bc62fc6c0720a632864ed462080d63978b7716c973272c61fcb066732a"
+  },
+  "initial_directed_attempt": {
+    "patch_not_applied_due_to_wrong_cwd": true,
+    "old_test_failure_preserved": true,
+    "log": ".artifacts/integrator37-r428-20261024/v5-directed-python.log"
+  },
+  "new_full_runs": 0,
+  "publication_and_natural_acceptance_pending_ops": true
+}

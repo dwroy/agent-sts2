@@ -1,6 +1,6 @@
 state: in-flight
 issue: 55
-updated: 2026-10-24T14:10:14+08:00
+updated: 2026-10-24T14:35:34+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -20,7 +20,7 @@ updated: 2026-10-24T14:10:14+08:00
 
 #27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，main30/live26仅文件数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
 
-#37 revision4原2359200/birth24664717唯一隔离full1，八叶/净12候选核同；469live+135main数据分账、source=null/旧失败保持。只持integrator-full-check锁，55发布优先，ops不另full；104301/101315未夹55。原件paper/materials/20261024-issue37-window-handoff-ops/verification.json，动态20261024-issue37-r428-integrator/revision4/checks.json。
+#37 revision4 full6660/1败/2跳原SHA核同，旧20测试修正/34过；revision5原2420020/birth24818242独占隔离full1，九叶/净12核同，source=null与469live+135main分账。持integrator-full-check锁，55发布优先；104301/101315原候选保留。原件paper/materials/20261024-issue37-revision5-handoff-ops/verification.json，动态revision5/checks.json。
 
 131302 fix failed/rc0/deferred保留：tsc0/31定向、6未选；与live175源路径异，empty guard未过。两个131302补链各done，0293 waiting；各14where-only/1处置、s2原文58/本批69核同，不重复科学分母，14正式经验增量未入；061302缺源commit/101315旧失败及回收门保留。非48/51新单元。原件paper/materials/20261024-fix-131302-ops/、20261024-strategy-131302-s2-ops/、20261024-strategy-131302-ops/。
 
@@ -28,7 +28,7 @@ updated: 2026-10-24T14:10:14+08:00
 
 094803毒008已核done/rc0、91页/20轨迹/713节点、原native退场及106份原字节归档；1份knowledge剧本候选，非正式StrategyEntry/rk，发布/消费者/自然采用0，branch/scratch保留。只读原外部双输入，不能因54新三manifest冻结而倒补已读；完整剧本消费者合同待51 owner核，27/27未达100、BH0、机制/安全HP未知与原科学父保持。paper/materials/20261024-strategy-094803-ops/。
 
-091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，当前37 revision4唯一隔离窗续核，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
+091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，当前37 revision5唯一隔离窗续核，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
 #23原核验与最新issue评论6378326067同，未生成新计数；本轮交接paper/materials/20261024-issue23-checkpoint-1343-ops/，原只读plan/回收/磁盘证据paper/materials/20261024-issue23-resume-0936-ops/。
 
@@ -39,11 +39,11 @@ updated: 2026-10-24T14:10:14+08:00
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
-未完成清单：#37旧独占等待已撤销，revision3/原失败及39/43父保留，55唯一full/P0先行，20部署在后；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18/244别名及旧plan held；新整局六ID单元已尾队列登记，实际进度0/244。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35终态学习/同战SL已核，重启跨层/溢出自然待、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
+未完成清单：#37旧独占等待已撤销，revision5/旧失败及39/43父保留，55唯一full/P0先行，20部署在后；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18/244别名及旧plan held；新整局六ID单元已尾队列登记，实际进度0/244。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35终态学习/同战SL已核，重启跨层/溢出自然待、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue37-window-handoff-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue37-revision5-handoff-ops/handoff-before.md；未清未完成项。
 
 46原完整基线/命令/AST：paper/materials/20261024-issue46-gate-1233-ops/receipt.json。
 
