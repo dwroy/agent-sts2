@@ -1,10 +1,10 @@
 state: in-flight
 issue: 51
-updated: 2026-10-25T02:04:57+08:00
+updated: 2026-10-25T02:09:04+08:00
 
-进行中的事：014301集成员实收/转Roy回执6387679266已核、非Roy阅读/ACK；候选未发布；保C5原事务和58已验22叶源码包。
-在等谁：C5 owner1487883/birth28580454原UVEX终态/report、实际发布读回及release；剩余56 runtime由ops接，无需再等原生tier或重派开发。
-下一步：C5结清优先58下一源码窗口，不等60；沿原未重置统计窗核56收敛/完成批次与局数并回执主管，actual tier未知单列，不重full/模型/强tick。
+进行中的事：原UVEX F21败退/terminal/report已核；C5写前75未入脚本，原owner1487883/birth28580454在FIFO无锁等接续；58的22叶已验就绪。
+在等谁：原refresh_driver1911775/birth28945638持刷新锁、成本1911793/funnel1911863排队；v6-history→combo-metrics在算。最终取锁仍忙，未发continue。
+下一步：刷新自然释放后仅原FIFO单次continue，核C5发布/读回/release，立即58优先不等60，再broker恢复autoplay；保原75，禁重worker/模型/full/强tick或先开局。
 
 #59：28/35/48/50已可恢复停会话，20/36由集成员停并交ops接runtime；原父/树/日志/恢复入口保留，见paper/materials/20261025-issue59-ops/handoff-table.json。56参数/实际tier分账、57自然窗及58/60必要运行未验，不代关闭。
 
@@ -12,7 +12,7 @@ updated: 2026-10-25T02:04:57+08:00
 
 #50三幕后继旧窗口/达标线/冷恢复/终局父保持；原完整回执与排除口径见paper/materials/20261025-wake-0104-ops/handoff-before.md#50本轮已结及issue6384464793，未新增发布/改策略。
 
-#35原R422/041301核验、SL分母、自然跨层/冷恢复/超40/学习收益待办及ENOBUFS/null/R419失败保持，细节沿本轮handoff-before.md原段和paper/materials/20261024-issue35-checkpoint-1648-ops/接续。
+#35原R422/041301与自然跨层/冷恢复/溢出/收益待办、ENOBUFS/null/R419失败保持，沿paper/materials/20261025-issue58-source-ready-ops/handoff-before.md原段与issue35-checkpoint-1648-ops接续。
 
 #51保持：R446已114策略160rk，C7五对2新3更新/10投影核同，R445等旧原件保留；两条描述confidence.25→.30按原稿保留，旧证据/conflict不改，watcher原会话已agent_prompted转Roy，非ACK。历批正式knowledge消费者、正文自动门/完整剧本/Plan、自然收益及科学父待。C182343用户可见6383409246非本人ACK，不代旧notice。
 #56按6386401629启动参数过、actual tier未知单列；C011301原生high/原沙箱rc0、5对3新2补充和composer告警原件见paper/materials/20261025-strategy-011301-ops/。D014301原生rc0、5新文字/5不可加载事件rk，95局106机会/外部51cell分账、双百例比较0、watcher实收/转Roy6387679266已核、非Roy ACK；452原日志窗口SHA核同，见paper/materials/20261025-strategy-014301-ops/。两批均候选非发布/收益，挂就绪58/60后，原吞吐窗不重置，C5结后回56收敛。
@@ -60,8 +60,8 @@ Roy P0原autoplay自09:56:33已恢复，首BP9/live02eb468f8；手动Z2KBGZQMSRV
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-25T01:58:39+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 3c98dbf87cd28bda4047fccb37356e19b07b1f57416fdab08a18052d4a020b77
-main 888417f717f4260037ebd158cfa3294255b61f90
+生成：2026-10-25T02:05:05+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 79aa68ade41e3d01d7df3e5b6fee571a942769b167c5e7ccd82d5ec09a9b9e93
+main 04f07cb005ddb3734e857a68f9eff9c1bc6041c6
 live 487ce58924ff9e511cfbf76bfaad73608d310de3；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
@@ -70,8 +70,8 @@ live 487ce58924ff9e511cfbf76bfaad73608d310de3；登记 release 见 current.json.
 - active_batches：在途 1；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
-- not_marked_completed_transactions：未标 completed 293；保留未知/失败与原件引用，不推定活进程或成功。
+- queued_events：队列 2；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- not_marked_completed_transactions：未标 completed 294；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-25T02:08:07+08:00",
+  "original_owner_identity_exact": true,
+  "original_worker_unchanged": true,
+  "natural_terminal_and_report_verified": true,
+  "prior_write_rc": 75,
+  "prior_source_write_started": false,
+  "original_fifo_continue_sent": false,
+  "new_worker_started": false,
+  "lock_observation": [
+    {
+      "path": "ops/codex-ops/learn.lock",
+      "available": true
+    },
+    {
+      "path": "ops/codex-ops/game-admission.lock",
+      "available": true
+    },
+    {
+      "path": "ops/knowledge-refresh.lock",
+      "available": false
+    }
+  ],
+  "blocked_on": "ops/knowledge-refresh.lock",
+  "current_status": "original worker preserved; continuation pending original refresh lock natural release",
+  "repeated_full_model_game_report": false
+}

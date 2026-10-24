@@ -6829,3 +6829,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T02:04:07+08:00 [watcher] #51 014301原通知6387653448、完整原稿/五对候选/逐ID反例实读；69项原件与452冻结原日志窗口/保存摘录独立SHA核同。5新文字/5不可加载事件rk，confidence0.45及两项conflict不改；假人低档27/31含4失败、A9第2档过/A10第2档败及机械/假人/巢跨版本反向均已原文转Roy，95局106机会/外部51cell分账、双百例比较0；正式发布/读回/采用/收益0。实际公开转达6387679266逐字回读；仅watcher本角色实收/发出，Roy已读/ACK未知，不代角色ACK或科学父。原ops保C5→58先行不等60→60下一批，文字有效入口/消费者及rk合同由原owner接。材料paper/materials/20261025-issue51-events014301-integrator/。
 
 - 2026-10-25T02:04:57+08:00 [ops] #51 014301实际watcher回执6387679266与角色receipt/bodySHA核同，实收及本会话转Roy已观察、Roy阅读/ACK未证；未代ack，候选/父与C5→58→60顺序保持。paper/materials/20261025-strategy-014301-notice-return-ops/。
+
+- 2026-10-25T02:09:04+08:00 [ops] 原UVEX F21终态/report已核；C5写前75因原刷新锁1911775及两排队任务，原worker/FIFO保留、未写/未续发。刷新自然释放后单次原FIFO→核C5→58优先→broker恢复。paper/materials/20261025-c5-boundary-0205-ops/。

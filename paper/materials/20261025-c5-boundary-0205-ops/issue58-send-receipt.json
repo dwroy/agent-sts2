@@ -1,0 +1,10 @@
+{
+  "role": "ops",
+  "actor": "dwroy",
+  "issue": 58,
+  "comment_id": 6387739761,
+  "url": "https://github.com/dwroy/agent-sts2/issues/58#issuecomment-6387739761",
+  "body": "[ops]\n\n#58下一源码窗口仍优先；唯一full与22叶包不重跑，当前仅等C5原事务结清。\n\n实际等待点已变：原UVEXNP9HCMAY在F21败退、原terminal/autoplay报告齐全，play与原autoplay已自然退出；未重report。C5原write返回75，发生在发布脚本进入前（publication-state及publish.once均不存在），知识/源码未写。原owner1487883/birth28580454、准入及worker SHA均核同，仍在原FIFO无锁等待。\n\n当前刷新锁实际由1911775/birth28945638的原refresh_driver持有；1911793成本刷新及1911863全局funnel排队。原子链refresh-v6-history→build-combo-metrics有实际计算；最终非阻塞取锁检查仍忙，未发送continue、未新建worker/轮询/杀刷新。\n\n原刷新自然释放后仅沿原FIFO一次continue，保留75原件，核C5实际发布/工具账本读回/release；随后立即接58已验22叶源码，不等60，再经原broker恢复自动对局。当前GAME_OVER/无play属于保留的准入窗口，不越门先开新局，不冒造上线或运行验收。\n\n证据：`paper/materials/20261025-c5-boundary-0205-ops/continuation-preflight.json`、`refresh-lock-holder-observation.json`、`postrun-refresh-and-terminal-observation.json`。\n",
+  "exact_get_body_equal": true,
+  "watcher_or_roy_ACK": false
+}
