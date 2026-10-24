@@ -1,12 +1,12 @@
 state: in-flight
-issue: 48
-updated: 2026-10-24T15:35:22+08:00
+issue: 23
+updated: 2026-10-24T15:46:07+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#48普通提炼MD已合09f3a443b、宿主SHA4af34c5e核同；整局首单元issue48-whole-run-cluster6-a10-001仍在原尾队列，队列字节与激活后相同，旧首六/18输入held，0/244。9R916WW0V65N/A10/簇6仅定位，语义须学习者确认。原件paper/materials/20261024-issue48-checkpoint-1534-ops/readback.json。
-在等谁：等原调度按普通/外部/已有重任务优先自然派发整局单元，及首个未绑定职责的普通Silent自然批；合入后现有批均外部/补链，不计新合同native加载，首T/映射产物仍null。旧104301failed/rc0及原提示不改，派发/夹具不代学习或消费。
-下一步：原自然启动后核实际first prompt/输入绑定/新1.4映射及逐ID去向，策略/rk/完整剧本分别核源、发布、消费者和自然采用；18:19:29完整24h门不重置，外部优先/停派/手动局分账。只记本轮状态，不另起模型/full/tick或改队列；37原在途检查保持。
+进行中的事：#23原回收代码已发布，可持续验收仍未通过。09:39原核验155回收/311分配、近24h16/123/空间-107.15GiB、旧plan0 eligible均为历史观测，本轮未重测。#46完整窗现已交：116对106/+9.43%，策略减少但ops/集成增，waiting自然消费及因果节省未证，不关闭23。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
+在等谁：等#45及各原owner按真实发布/身份/研究/收尾证据结算保护项，等原限4回收器后续真实回执；旧10个ops待验只是09:42快照，现值未知。#20三宿主叶T14:49:42至明日同刻的自然入口/完整24h窗独立待验；不把46窗已满当23/20通过。
+下一步：沿原归档SHA、保留分支、不在册/物理路径及磁盘样本核增量，分配/对局/积压/手动停局分账；保留同路径恢复与分支推进旧差异及未知/失败。仅维护交接，不apply/删除/强派模型或新full；37原实际检查、48尾队列/18:19门及所有科学父保持。
 
 #51 144312五情境4新1更已核，11片/11原帧、原生退场及格式过；5条待原发布，383支持局非通读，换购25/桥接48局，不冒收益。原checkout已回收、待证scratch/分支留。131301原dataset938ba222/14叶再核，回收deferred不变。paper/materials/20261024-strategy-144312-ops/。
 
@@ -31,7 +31,7 @@ updated: 2026-10-24T15:35:22+08:00
 
 091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，37代码九叶待实际完整检查后接自然发布，本经验待真源审计，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#23原核验与最新issue评论6378326067同，未生成新计数；本轮交接paper/materials/20261024-issue23-checkpoint-1343-ops/，原只读plan/回收/磁盘证据paper/materials/20261024-issue23-resume-0936-ops/。
+#48仍待：整局首单元issue48-whole-run-cluster6-a10-001/9R916WW0V65N/A10/簇6仅定位，原队列不变、旧首六/18输入held、0/244；等原优先级自然派发及学习者核语义/逐ID产物。普通MD09f3a443b/宿主4af34c5e已核，首新ordinary native T/映射仍null，外部/补链不借验；18:19:29完整门不重置，实际策略/rk/剧本发布与消费分账。paper/materials/20261024-issue48-checkpoint-1534-ops/readback.json。
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
@@ -44,7 +44,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue48-checkpoint-1534-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue23-checkpoint-1544-ops/handoff-before.md；未清未完成项。
 
 46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
 
