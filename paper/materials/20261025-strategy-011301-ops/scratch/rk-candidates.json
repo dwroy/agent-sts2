@@ -1,0 +1,773 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-waterfall-004-1",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "WATERFALL_GIANT"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "PRESSURIZE_MOVE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "PREDATOR"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-waterfall-004-review-1",
+        "unit": "label"
+      },
+      "label_en": "Compare current Fumes and Predator setup during Giant Pressurize",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "2K4H3JEJHRSB",
+            "floor": 17,
+            "turn": 1
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-waterfall-pressurize-fumes-predator"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/combat-window-evidence.json",
+          "sha256": "65b5fec21fb39c2d174c18908459a53d852bfc6d700a0a6f650cb7e26cb9892d",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "当前局面/动作后继的描述性复核标签；完整分母及失败边界见来源账本；不表示优劣、因果收益或自动执行。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 242,
+            "players": null,
+            "selection": "242条该Boss上传战斗；独立自然局/玩家未知，仅背景而非标签机会分母。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-waterfall-004-2",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "WATERFALL_GIANT"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "STOMP_MOVE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SURVIVOR"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FOOTWORK"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFLECT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "potion.slots",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "potion.id",
+                  "value": "WEAK_POTION"
+                },
+                {
+                  "op": "eq",
+                  "field": "potion.usable",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-waterfall-004-review-2",
+        "unit": "label"
+      },
+      "label_en": "Compare setup plus actual protection during Giant Stomp",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "2K4H3JEJHRSB",
+            "floor": 17,
+            "turn": 2
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-waterfall-stomp-setup-defense"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/combat-window-evidence.json",
+          "sha256": "65b5fec21fb39c2d174c18908459a53d852bfc6d700a0a6f650cb7e26cb9892d",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "当前局面/动作后继的描述性复核标签；完整分母及失败边界见来源账本；不表示优劣、因果收益或自动执行。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 242,
+            "players": null,
+            "selection": "242条该Boss上传战斗；独立自然局/玩家未知，仅背景而非标签机会分母。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-waterfall-004-3",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "WATERFALL_GIANT"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "EXPLODE_MOVE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-waterfall-004-review-3",
+        "unit": "label"
+      },
+      "label_en": "Check actual defense during Giant explosion instead of placeholder HP",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "2K4H3JEJHRSB",
+            "floor": 17,
+            "turn": 10
+          },
+          {
+            "run_id": "456MRNGCPD8E",
+            "floor": 17,
+            "turn": 9
+          },
+          {
+            "run_id": "ATP5MCMJDMQY",
+            "floor": 17,
+            "turn": 12
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-giant-explosion-window"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/combat-window-evidence.json",
+          "sha256": "65b5fec21fb39c2d174c18908459a53d852bfc6d700a0a6f650cb7e26cb9892d",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "当前局面/动作后继的描述性复核标签；完整分母及失败边界见来源账本；不表示优劣、因果收益或自动执行。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 242,
+            "players": null,
+            "selection": "242条该Boss上传战斗；独立自然局/玩家未知，仅背景而非标签机会分母。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-waterfall-004-4",
+      "version": 1,
+      "applies_to": "rest",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "eq",
+            "field": "floor",
+            "value": 16
+          },
+          {
+            "op": "any",
+            "field": "targets.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "target.boss",
+                  "value": "WATERFALL_GIANT_BOSS"
+                },
+                {
+                  "op": "eq",
+                  "field": "target.act",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "rest.options",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "rest_option.id",
+                  "value": "HEAL"
+                },
+                {
+                  "op": "eq",
+                  "field": "rest_option.enabled",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "rest.options",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "rest_option.id",
+                  "value": "SMITH"
+                },
+                {
+                  "op": "eq",
+                  "field": "rest_option.enabled",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-waterfall-004-review-4",
+        "unit": "label"
+      },
+      "label_en": "Compare final Giant rest HP with named upgrade",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0DJ6GFZZ0TG9",
+            "floor": 16
+          },
+          {
+            "run_id": "2K4H3JEJHRSB",
+            "floor": 16
+          },
+          {
+            "run_id": "456MRNGCPD8E",
+            "floor": 16
+          },
+          {
+            "run_id": "5ZEPCTQKKXE4",
+            "floor": 16
+          },
+          {
+            "run_id": "6321RUR647FH",
+            "floor": 16
+          },
+          {
+            "run_id": "ATP5MCMJDMQY",
+            "floor": 16
+          },
+          {
+            "run_id": "FZT053H9PSC5",
+            "floor": 16
+          },
+          {
+            "run_id": "G3TD6JEN47KT",
+            "floor": 16
+          },
+          {
+            "run_id": "MR7EBRYRJ5R6",
+            "floor": 16
+          },
+          {
+            "run_id": "SVK97F9E4N56",
+            "floor": 16
+          },
+          {
+            "run_id": "TKXQ6L4N9A6U",
+            "floor": 16
+          },
+          {
+            "run_id": "UV5YK5721RPB",
+            "floor": 16
+          },
+          {
+            "run_id": "V3PJA3FV92BG",
+            "floor": 16
+          },
+          {
+            "run_id": "VVFH7BULZZR6",
+            "floor": 16
+          },
+          {
+            "run_id": "Y5H4CFAQ2WTG",
+            "floor": 16
+          },
+          {
+            "run_id": "Z91JN3S3PQX2",
+            "floor": 16
+          }
+        ],
+        "n_support": 16,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-act1-rest-smith-resource-proxy"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/own-window-statistics.json",
+          "sha256": "7c39f14926f435f6a20dca4e22f71e6e13dc7323b3ba3999e1b295b3bc5ac2af",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 16,
+            "players": null,
+            "selection": "当前局面/动作后继的描述性复核标签；完整分母及失败边界见来源账本；不表示优劣、因果收益或自动执行。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 242,
+            "players": null,
+            "selection": "242条该Boss上传战斗；独立自然局/玩家未知，仅背景而非标签机会分母。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-waterfall-004-5",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "gte",
+            "field": "floor",
+            "value": 13
+          },
+          {
+            "op": "lte",
+            "field": "floor",
+            "value": 16
+          },
+          {
+            "op": "any",
+            "field": "targets.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "target.boss",
+                  "value": "WATERFALL_GIANT_BOSS"
+                },
+                {
+                  "op": "eq",
+                  "field": "target.act",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "shop.stock",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "shop_item.id",
+                  "value": "FOOTWORK"
+                },
+                {
+                  "op": "eq",
+                  "field": "shop_item.stocked",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-waterfall-004-review-5",
+        "unit": "label"
+      },
+      "label_en": "Compare current Footwork price and deployment before Giant",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "2K4H3JEJHRSB",
+            "floor": 14
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-brain-waterfall-last-shop-footwork-budget"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/decision-window-evidence.json",
+          "sha256": "bcc74e45ae180dd64c2a927465c8b51ab38e83ae25d7e8da00508f1085a28af5",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "当前局面/动作后继的描述性复核标签；完整分母及失败边界见来源账本；不表示优劣、因果收益或自动执行。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 242,
+            "players": null,
+            "selection": "242条该Boss上传战斗；独立自然局/玩家未知，仅背景而非标签机会分母。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        }
+      ]
+    }
+  ]
+}

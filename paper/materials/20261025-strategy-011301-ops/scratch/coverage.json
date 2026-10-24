@@ -1,0 +1,127 @@
+{
+  "program": {
+    "input_packages": 3,
+    "manifests": 3,
+    "leaf_files": 129,
+    "verified_total_files": 132,
+    "own_verified_parquet_shards": 11,
+    "eligible_own_runs": 506,
+    "target_own_runs": 91,
+    "actual_encounter_own_runs": 78,
+    "own_filtered_frame_rows": 28221,
+    "own_filtered_decision_rows": 27264,
+    "own_filtered_sl_rows": 134,
+    "exact_external_boss_cells": 40,
+    "external_versions": 5,
+    "bounded_external_pages": 2,
+    "external_examples_on_saved_pages": 4,
+    "selected_raw_combat_windows": 7,
+    "raw_seek_ledger_records": 33,
+    "extra_initial_seek_receipt": "raw-example-state-receipt.json"
+  },
+  "model_read": {
+    "external_complete_timelines": [
+      {
+        "example": "projection-f9ea71f22071a180",
+        "nodes": 49,
+        "win": true,
+        "scope": "target boss reached; later whole-run win"
+      },
+      {
+        "example": "projection-92f2215255e10258",
+        "nodes": 25,
+        "win": false,
+        "scope": "target boss passed by continuation, later failed"
+      },
+      {
+        "example": "projection-2b5ac728b55d6c4d",
+        "nodes": 17,
+        "win": false,
+        "scope": "target boss terminal zero HP"
+      },
+      {
+        "example": "projection-2e5b3d6fa4a7c7e6",
+        "nodes": 49,
+        "win": true,
+        "scope": "paired companion has different first Boss; excluded from target conclusions"
+      }
+    ],
+    "own_combat_windows": [
+      {
+        "run_id": "2K4H3JEJHRSB",
+        "floor": 17,
+        "turn": 1,
+        "states": 3
+      },
+      {
+        "run_id": "2K4H3JEJHRSB",
+        "floor": 17,
+        "turn": 2,
+        "states": 3
+      },
+      {
+        "run_id": "2K4H3JEJHRSB",
+        "floor": 17,
+        "turn": 3,
+        "states": 3
+      },
+      {
+        "run_id": "2K4H3JEJHRSB",
+        "floor": 17,
+        "turn": 9,
+        "states": 3
+      },
+      {
+        "run_id": "2K4H3JEJHRSB",
+        "floor": 17,
+        "turn": 10,
+        "states": 3
+      },
+      {
+        "run_id": "456MRNGCPD8E",
+        "floor": 17,
+        "turn": 9,
+        "states": 3
+      },
+      {
+        "run_id": "ATP5MCMJDMQY",
+        "floor": 17,
+        "turn": 12,
+        "states": 3
+      }
+    ],
+    "own_selected_current_facts": "全部7战斗窗口的前后状态/当前手牌与牌文抽核；2K4 F14货架步法77/尖啸24/飞镖76及执行；0DJ F16 HEAL面板与39→61、ATP F16步法升级且53不变；资源后继另存。",
+    "raw_decision_full_text_read": false,
+    "own_complete_games_four_sections_read": 0,
+    "not_read": [
+      "其余匿名代表时间线未模型通读；程序定位扫描不计通读。",
+      "其余自有完整局四section、绝大多数原始手牌和问题未通读。",
+      "原决策中模拟预测/旧脑理由不计收益或因果证据；未核Jev完整原题，不称固定回放。"
+    ]
+  },
+  "limitations": [
+    "三包实际129叶+3manifest=132项，未把口径差改成132叶。",
+    "仅遭遇窗口候选，不声称完整剧本；无自有完整局四section消费者验收。",
+    "上传行去重与独立自然局/玩家不同；外部独立自然局/玩家分母未知。",
+    "自有分母仅已冻506；A10和其他进阶、重试/预判和无重试证据、版本unknown分别保留。",
+    "自有原始局可含不同大脑引擎，未按引擎做收益比较；不称纯Codex性能提升。"
+  ],
+  "checks": {
+    "candidate_format": "passed",
+    "isolated_loader": "passed",
+    "production_tools": "pending",
+    "fixed_combat_replay": "pending",
+    "tsc": null,
+    "vitest": null,
+    "cases": null,
+    "gitleaks": "passed; no leaks found",
+    "full_or_model_or_game_started": 0
+  },
+  "pending_consumers": {
+    "knowledge": "原经验同ID补充尚未正式入库/消费者读回。",
+    "strategy": "5条待原发布锁正式登记/生产kb_strategies逐ID读回。",
+    "rk": "5标签与词表待同锁发布/生产kb_reflex读回；当前隔离loader只验格式。",
+    "combat_replay": "缺冻结生产原题/逐候选计划与结果，未做#28两臂回放或开关变更。",
+    "natural": "自然查询、实际采用、耗时/收益、科学父均pending；不自行派下一单元。"
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-waterfall-pressurize-fumes-predator",
+      "version": "2026-10-25-waterfall-004-candidate",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "WATERFALL_GIANT_BOSS"
+        ]
+      },
+      "strategy": "巨兽当前PRESSURIZE_MOVE不显示攻击，且毒雾、猎杀者实际可打时，比较建立持续输出与下轮抽牌的整条线，再核下一轮防护。2K4H3JEJHRSB F17 T1一次窗口实打背刺、毒雾、猎杀者：敌250→212，毒雾0→2、下轮抽牌0→2，T2仍66血但已显示16攻。\n范围：Silent A10、自有版本unknown，1局1机会；反向边界为ATP5MCMJDMQY也有输出/步法却在爆炸轮无挡牌而败。不是同手牌对照，不承诺零伤回合数、固定出牌或整战收益；外部v0.111为242条上传战斗背景，未给此动作分母。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8385940344+33556;sha256=b8dec512b92d6f9ee384784ca69f1a007e623596db0b21726c605b485cf083a8"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-waterfall-stomp-setup-defense",
+      "version": "2026-10-25-waterfall-004-candidate",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "WATERFALL_GIANT_BOSS"
+        ]
+      },
+      "strategy": "巨兽当前STOMP_MOVE显示攻击，生存者、偏折、步法与毒雾可打且确有可用虚弱药时，把建立与本轮防护放在同一条线比较。2K4H3JEJHRSB F17 T2实打生存者、毒雾+、步法、偏折及虚弱药：毒雾2→5、敏捷0→2、来袭16→12、挡0→14，T3仍66血；不能把零损血单归步法或药。\n范围：Silent A10、自有版本unknown，1局1机会；同局T3已建敏捷但7挡对8攻，T4仍损1血，作为建立不保证后轮覆盖的边界。未证此线优于其他合法线，不定必喝或固定顺序；外部242条仅整战背景。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386069795+34287;sha256=0e4fbbb6ceec4caf21271e46f47d0c249c2381e1fd43a7c73246a00cc431fd40"
+        },
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386296628+32697;sha256=a5557fc5179dee027d8e4b97756fd083dd13bca0b76abd7d3042e82b94861384"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-giant-explosion-window",
+      "version": "2026-10-25-waterfall-004-candidate",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "WATERFALL_GIANT_BOSS"
+        ]
+      },
+      "strategy": "巨兽已到EXPLODE_MOVE时，按当前HP、实际可打防护/减攻比较生存线，别继续按占位血量追击；沿用既有同ID经验，不算新情境。2K4H3JEJHRSB F17 T10用生存者与两防御得24挡，61血对41爆，后继实44血（净损17）；456MRNGCPD8E T9两防御兼突然一拳，显示38→28、14挡，28→14血。\n范围：Silent A10、自有版本unknown，2支持局/2机会；反例ATP5MCMJDMQY T12有3敏但无可打挡牌，26血对47爆后0血，1局1机会。原36局机制经验、14场58试重打另账；不重验公式、不定清体/喝药阈值或安全HP；外部242条无此回合分母。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8387166040+31822;sha256=a18c24fdb173e911f8b1228dfb8c11e5efbb8cdbaf6bfb448767b5346c8f3542"
+        },
+        {
+          "type": "own",
+          "run": "456MRNGCPD8E",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@9696923436+36126;sha256=e28ac23646d98738e4547c7bfcd709a82012450f72cb83adfd29e3bba4944e9c"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "version": "2026-10-25-waterfall-004-candidate",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "第一幕休息按当前HP与后继风险比较回血/具名升级，不凭终局关联选锻造。原自有HEAL/SMITH题前HP均33.53/48.97，1039/474次、451/309组内独立局；外部前节点代理差17.85血，赢家372/1254对465/1458（+2.23pp），组间重叠。巨兽末火补证：A10无重试证据16局/16末火，14选HEAL至首战斗HP净增代理均21.93（16—27），2选SMITH净增0；不是同状态收益比较。\n范围：Silent A10/自有版本unknown；巨兽F16已核0DJ6GFZZ0TG9从39到61，升级反例ATP5MCMJDMQY从53到53后实败，但不归因升级。原证据及低可信不变，不设安全血线；版本可比性未知。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=HEAL；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "HEAL whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.2966507177033493,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1254
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/HEAL;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=SMITH；组内distinct上传行"
+          },
+          "statistic": {
+            "name": "SMITH whole_run_winning_uploads / distinct_uploaded_runs",
+            "value": 0.31893004115226337,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1458
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传、玩家独立性/SL未知，非因果。",
+            "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/SMITH;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "EQLB6SK9W9H7",
+          "floor": 16,
+          "ref": "logs/decisions.jsonl@4620717499+570326;sha256=7a3c72f676a86b5e4fd637dc4e05c3096907079d997624aaba3f5828e0b8d5bb",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "QVDR4R3UWKXU",
+          "floor": 8,
+          "ref": "logs/decisions.jsonl@4577763203+432997;sha256=993083101bed355280cf190deb087dde3806123d5f57ab6edd2e77fde08dfd6f",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0DJ6GFZZ0TG9",
+          "floor": 16,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@811028933+19701;sha256=3a537732a94de5199c01aa31c1d757b849cbd95c04e43e38b157f61039949647"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 16,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@1789266546+671853;sha256=b2b7f33e4d3c9ff58ee65751095c9c198497547cc40589ba016323ac1d56076c"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.4,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-waterfall-last-shop-footwork-budget",
+      "version": "2026-10-25-waterfall-004-candidate",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "WATERFALL_GIANT_BOSS"
+        ],
+        "floor": {
+          "min": 13,
+          "max": 16
+        }
+      },
+      "strategy": "巨兽前末段商店已有毒雾、货架有步法时，按真实金币比较持续防护、即时减攻、输出与留金，不把买到能力牌当作已建立。2K4H3JEJHRSB F14一次机会：77金全付步法，另有24金尖啸、76金飞镖可付；后继牌组新增步法、金币77→0，直到Boss T2才实际建立2敏捷。\n范围：Silent A10、自有版本unknown，1局1店；同局T3建立后仍损1血，ATP5MCMJDMQY持步法仍在爆炸轮无挡而败，均不支持“买了就安全”。只按当前毒雾/货架/价/合法性触发；替代购买未执行，无最优卡序/组合收益。外部v0.111有242条该Boss记录，没有此购物组分母。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 14,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@669907489+16429;sha256=97415a1e847305356ca13a0faad4c9d49877b300430ba3c83f9300120176a62d"
+        },
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386069795+34287;sha256=0e4fbbb6ceec4caf21271e46f47d0c249c2381e1fd43a7c73246a00cc431fd40"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    }
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "batch": "20261025-011301-strategy-proposal",
+  "unit_id": "external-boss-group-004-r56-stock",
+  "mappings": [
+    {
+      "context": "silent-brain-waterfall-pressurize-fumes-predator",
+      "disposition": "new",
+      "current_information_condition": "当前实际巨兽PRESSURIZE_MOVE；毒雾与猎杀者均合法；不以未来牌组/胜负/SL触发。",
+      "strategy_id": "silent-brain-waterfall-pressurize-fumes-predator",
+      "rk_id": "silent-rk-waterfall-004-1",
+      "related_existing_ids": [],
+      "source": "mixed",
+      "primary_evidence": "own",
+      "external_role": "整战方向背景，未核相同行动，非动作收益支持",
+      "source_refs": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8385940344+33556;sha256=b8dec512b92d6f9ee384784ca69f1a007e623596db0b21726c605b485cf083a8"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "window_statistics": {
+        "independent_support_runs": 1,
+        "opportunities": 1,
+        "next_turn_hp_delta": 0,
+        "enemy_hp_delta_before_response": -38,
+        "status_changes": {
+          "NOXIOUS_FUMES_POWER": 2,
+          "DRAW_CARDS_NEXT_TURN_POWER": 2
+        },
+        "causal_comparison_n": 0
+      },
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_query": "pending",
+      "adoption_or_benefit": "pending",
+      "source_commit": null,
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/strategy-candidates.json#/entries/0",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/rk-candidates.json#/entries/0",
+      "limits": [
+        "正文当前条件比strategy trigger细；fight_plan需读正文，rk可严格表达当前move/合法手牌；未做生产投影或回放。",
+        "反例/边界不是同状态反事实；不因最终胜负否定或保证动作。",
+        "外部分母不混自有；自有版本unknown，不称v0.111验证。"
+      ]
+    },
+    {
+      "context": "silent-brain-waterfall-stomp-setup-defense",
+      "disposition": "new",
+      "current_information_condition": "STOMP_MOVE；生存者/偏折/步法/毒雾可打，药栏实有可用WEAK_POTION；只在正文条件满足时比较。",
+      "strategy_id": "silent-brain-waterfall-stomp-setup-defense",
+      "rk_id": "silent-rk-waterfall-004-2",
+      "related_existing_ids": [],
+      "source": "mixed",
+      "primary_evidence": "own",
+      "external_role": "整战方向背景，未核相同行动，非动作收益支持",
+      "source_refs": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386069795+34287;sha256=0e4fbbb6ceec4caf21271e46f47d0c249c2381e1fd43a7c73246a00cc431fd40"
+        },
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386296628+32697;sha256=a5557fc5179dee027d8e4b97756fd083dd13bca0b76abd7d3042e82b94861384"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "window_statistics": {
+        "independent_support_runs": 1,
+        "opportunities": 1,
+        "incoming_before_after": [
+          16,
+          12
+        ],
+        "block_before_after": [
+          0,
+          14
+        ],
+        "next_turn_hp_delta": 0,
+        "same_run_boundary_turn": 3,
+        "causal_comparison_n": 0
+      },
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_query": "pending",
+      "adoption_or_benefit": "pending",
+      "source_commit": null,
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/strategy-candidates.json#/entries/1",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/rk-candidates.json#/entries/1",
+      "limits": [
+        "正文当前条件比strategy trigger细；fight_plan需读正文，rk可严格表达当前move/合法手牌；未做生产投影或回放。",
+        "反例/边界不是同状态反事实；不因最终胜负否定或保证动作。",
+        "外部分母不混自有；自有版本unknown，不称v0.111验证。"
+      ]
+    },
+    {
+      "context": "silent-giant-explosion-window",
+      "disposition": "update",
+      "current_information_condition": "当前敌人WATERFALL_GIANT且EXPLODE_MOVE；只用当前HP/手牌/牌文/来袭，不从后来结局触发。",
+      "strategy_id": "silent-giant-explosion-window",
+      "rk_id": "silent-rk-waterfall-004-3",
+      "related_existing_ids": [
+        "silent-giant-explosion-window"
+      ],
+      "source": "mixed",
+      "primary_evidence": "own",
+      "external_role": "整战方向背景，未核相同行动，非动作收益支持",
+      "source_refs": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8387166040+31822;sha256=a18c24fdb173e911f8b1228dfb8c11e5efbb8cdbaf6bfb448767b5346c8f3542"
+        },
+        {
+          "type": "own",
+          "run": "456MRNGCPD8E",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@9696923436+36126;sha256=e28ac23646d98738e4547c7bfcd709a82012450f72cb83adfd29e3bba4944e9c"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "window_statistics": {
+        "independent_support_runs": 2,
+        "support_opportunities": 2,
+        "boundary_runs": 1,
+        "boundary_opportunities": 1,
+        "observed_survivor_hp_deltas": [
+          -17,
+          -14
+        ],
+        "boundary_hp": [
+          26,
+          0
+        ],
+        "causal_comparison_n": 0
+      },
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_query": "pending",
+      "adoption_or_benefit": "pending",
+      "source_commit": null,
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/strategy-candidates.json#/entries/2",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/rk-candidates.json#/entries/2",
+      "limits": [
+        "正文当前条件比strategy trigger细；fight_plan需读正文，rk可严格表达当前move/合法手牌；未做生产投影或回放。",
+        "反例/边界不是同状态反事实；不因最终胜负否定或保证动作。",
+        "外部分母不混自有；自有版本unknown，不称v0.111验证。"
+      ]
+    },
+    {
+      "context": "silent-brain-act1-rest-smith-resource-proxy",
+      "disposition": "update",
+      "current_information_condition": "原trigger保持第一幕rest；巨兽补充段仅当前目标为WATERFALL_GIANT_BOSS且末火实际HEAL/SMITH合法时适用。",
+      "strategy_id": "silent-brain-act1-rest-smith-resource-proxy",
+      "rk_id": "silent-rk-waterfall-004-4",
+      "related_existing_ids": [
+        "silent-brain-act1-rest-smith-resource-proxy",
+        "silent-rest-buffer-observation"
+      ],
+      "source": "mixed",
+      "primary_evidence": "own",
+      "external_role": "整战方向背景，未核相同行动，非动作收益支持",
+      "source_refs": [
+        {
+          "type": "own",
+          "run": "0DJ6GFZZ0TG9",
+          "floor": 16,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@811028933+19701;sha256=3a537732a94de5199c01aa31c1d757b849cbd95c04e43e38b157f61039949647"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 16,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@1789266546+671853;sha256=b2b7f33e4d3c9ff58ee65751095c9c198497547cc40589ba016323ac1d56076c"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "window_statistics": {
+        "independent_runs": 16,
+        "opportunities": 16,
+        "HEAL": {
+          "n": 14,
+          "net_change_mean_proxy": 21.928571428571427,
+          "range": [
+            16,
+            27
+          ]
+        },
+        "SMITH": {
+          "n": 2,
+          "net_change_mean_proxy": 0
+        },
+        "causal_comparison_n": 0
+      },
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_query": "pending",
+      "adoption_or_benefit": "pending",
+      "source_commit": null,
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/strategy-candidates.json#/entries/3",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/rk-candidates.json#/entries/3",
+      "limits": [
+        "正文当前条件比strategy trigger细；fight_plan需读正文，rk可严格表达当前move/合法手牌；未做生产投影或回放。",
+        "反例/边界不是同状态反事实；不因最终胜负否定或保证动作。",
+        "外部分母不混自有；自有版本unknown，不称v0.111验证。"
+      ]
+    },
+    {
+      "context": "silent-brain-waterfall-last-shop-footwork-budget",
+      "disposition": "new",
+      "current_information_condition": "当前一幕巨兽目标、F13—16商店、已持NOXIOUS_FUMES、FOOTWORK当前在售且实际可付；不要求未来能建成。",
+      "strategy_id": "silent-brain-waterfall-last-shop-footwork-budget",
+      "rk_id": "silent-rk-waterfall-004-5",
+      "related_existing_ids": [
+        "silent-brain-poison-footwork-realization-review"
+      ],
+      "source": "mixed",
+      "primary_evidence": "own",
+      "external_role": "整战方向背景，未核相同行动，非动作收益支持",
+      "source_refs": [
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 14,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl@669907489+16429;sha256=97415a1e847305356ca13a0faad4c9d49877b300430ba3c83f9300120176a62d"
+        },
+        {
+          "type": "own",
+          "run": "2K4H3JEJHRSB",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@8386069795+34287;sha256=0e4fbbb6ceec4caf21271e46f47d0c249c2381e1fd43a7c73246a00cc431fd40"
+        },
+        {
+          "type": "own",
+          "run": "ATP5MCMJDMQY",
+          "floor": 17,
+          "role": "support",
+          "ref": "/home/dw/Projects/agent-sts2/logs/states.jsonl@13334908251+33666;sha256=90206a89eceb2dde5db17a871026468bf8c5d5beb0cd2143e8140a04f21a6690"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人/有效/非弃局/无modifiers；v0.111.0；boss精确=ENCOUNTER.WATERFALL_GIANT_BOSS、act=1；终局簇互斥分配后合并八簇；上传行不是已核自然独立局。"
+          },
+          "statistic": {
+            "name": "recorded gross_damage mean, exact boss only",
+            "value": 27.66115702479339,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 242
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传，玩家及自然局独立性未知，SL未知。",
+            "总受伤非净掉血，前节点末HP非真实入场HP；本统计不提供逐回合动作或购物效果。",
+            "簇仅用于互斥分组，不能触发当前建议；自有游戏版本unknown，跨版本机制可比性未知。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.WATERFALL_GIANT_BOSS/version=v0.111;sha256=516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "role": "support"
+        }
+      ],
+      "window_statistics": {
+        "independent_runs": 1,
+        "shop_opportunities": 1,
+        "actual_price": 77,
+        "gold_before_after": [
+          77,
+          0
+        ],
+        "first_observed_deployment_turn": 2,
+        "causal_comparison_n": 0
+      },
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_query": "pending",
+      "adoption_or_benefit": "pending",
+      "source_commit": null,
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/strategy-candidates.json#/entries/4",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-011301/learner/runs/20261025-011355-69bf16c6-d01e-4f2c-b841-9fa1440adf5e-strategy-proposal/scratch/rk-candidates.json#/entries/4",
+      "limits": [
+        "正文当前条件比strategy trigger细；fight_plan需读正文，rk可严格表达当前move/合法手牌；未做生产投影或回放。",
+        "反例/边界不是同状态反事实；不因最终胜负否定或保证动作。",
+        "外部分母不混自有；自有版本unknown，不称v0.111验证。",
+        "rk无法用现白名单比较商品价与金币，tag正文保留真实可付复核，不自动判定可购买。"
+      ]
+    }
+  ],
+  "experience_ids": [
+    "silent-giant-explosion-window"
+  ],
+  "ledger_ids": [],
+  "source_commit": null,
+  "knowledge_disposition": "同ID经验补充候选，无正式入库",
+  "playbook_disposition": "not_applicable：本单元遭遇窗口，未声称完整构筑剧本",
+  "unproduced_subitems": [
+    {
+      "id": "late-card-reward-ranking",
+      "disposition": "waiting",
+      "reason": "能算43题/16个A10无重试证据局、5跳过，但不足支持具名拿/跳优先级；未核同台完整牌文及可用反事实，不以题数或终局牌组硬凑第六条。"
+    },
+    {
+      "id": "fixed-safe-hp-or-potion-timing",
+      "disposition": "waiting",
+      "reason": "外部无真实战前/逐回合用药快照；本次自有样本不提供同起点反事实，保留动态复核。"
+    }
+  ]
+}
