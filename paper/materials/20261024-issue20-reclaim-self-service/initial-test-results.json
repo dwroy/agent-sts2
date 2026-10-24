@@ -1,0 +1,29 @@
+[
+  {
+    "check": "tsc",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "rc": 0
+  },
+  {
+    "check": "directed",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/learner-tabs.test.ts",
+      "tests/worktree-retention.test.ts",
+      "tests/worktree-storage.test.ts",
+      "tests/learner-wrapper-scripts.test.ts",
+      "--maxWorkers=1",
+      "--fileParallelism=false",
+      "--pool=threads"
+    ],
+    "rc": 1
+  }
+]

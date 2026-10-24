@@ -1,0 +1,112 @@
+{
+  "issue": 20,
+  "directive": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6378554518",
+  "base": "946dcfb390c4d04283890b93534cf887335ef0f0",
+  "source": "a467b14ed6a493eaae40b0a40bc9c18fd9796eff",
+  "changed_files": [
+    "agent/tests/learner-tabs.test.ts",
+    "agent/tests/worktree-retention.test.ts",
+    "agent/tests/worktree-storage.test.ts",
+    "docs/github-issues-workflow.md",
+    "docs/learner-retention.md",
+    "docs/learner-tab-reclamation.md",
+    "ops/learner_tabs.py",
+    "ops/tests/test_learner_tabs.py",
+    "ops/tests/test_worktree_retention.py",
+    "ops/tests/test_worktree_storage.py",
+    "ops/worktree_retention.py",
+    "ops/worktree_storage.py",
+    "paper/materials/decision-log.md"
+  ],
+  "input_sha256": {
+    "agent/tests/learner-tabs.test.ts": "1630a7e8e081f83179008b84cd1beab6bf07dfaf2bd2827f6f6c7b379a439780",
+    "agent/tests/worktree-retention.test.ts": "542aedfb0d023df400e9fc31491b359bf874e1255aa172617c4e79ed98b5874d",
+    "agent/tests/worktree-storage.test.ts": "ac1f7b84f07c836dae1b5f862e2084dd8366dad63ae22c0e27220587cff5c1b4",
+    "docs/github-issues-workflow.md": "9e0b680dad8d125dae1d0c95c20816debb6aef0739f808f1ae6071eaafb1c5ee",
+    "docs/learner-retention.md": "4d165b0364fa860fda75dfac1cba0213c8d4a36788c0014352c51158adc039eb",
+    "docs/learner-tab-reclamation.md": "cec6b6adbd99f67ad7fa1d012068193184030639a4121df7f7a277f9db25eb05",
+    "ops/learner_tabs.py": "2401213791f8e07e17d46c693801b0b18f49ee91e03be4fee0a1a9a28a3ab45b",
+    "ops/tests/test_learner_tabs.py": "df6df120921f8fae5696d4d7ca43816f862eb7eccd650364bbca7826b474214c",
+    "ops/tests/test_worktree_retention.py": "c21d5447f47e2c2c86afffb20d83e578053d7b778502fcd9885c5f99d1276baa",
+    "ops/tests/test_worktree_storage.py": "9308fb4e81e2061d8e57b8ba6885c70bbb59e316634120a5c0a47b51fe42f043",
+    "ops/worktree_retention.py": "3579aecadd19a2244dda09f623f8054bdbc0c7f30f49c7002a4bf3ba899f103e",
+    "ops/worktree_storage.py": "e720b36d925963a52404557c62470254e58a88ccf7e8eca02c6ee63cded401ad",
+    "paper/materials/decision-log.md": "f15110b362bd8dd4d86b21a094af32a67ba084b820ba5f3a9c9f4b9a0fea1da2"
+  },
+  "checks": [
+    {
+      "name": "production tsc",
+      "rc": 0,
+      "log": "tsc-final.log"
+    },
+    {
+      "name": "learner-tabs Vitest wrapper",
+      "rc": 0,
+      "python_cases": 101,
+      "log": "tabs-final.log.gz"
+    },
+    {
+      "name": "worktree-retention Vitest wrapper",
+      "rc": 0,
+      "python_cases": 18,
+      "log": "worktree-final.log.gz"
+    },
+    {
+      "name": "worktree-storage and wrapper script contract",
+      "rc": 0,
+      "python_cases": 20,
+      "log": "initial-directed-failure.log.gz",
+      "note": "Two unchanged files passed in the original four-file run; the sole failing file was learner-tabs and was rerun after correction. Worktree retention was extended and rerun separately. No combined all-green run is claimed."
+    },
+    {
+      "name": "gitleaks source patch",
+      "rc": 0,
+      "log": "gitleaks-source.log"
+    },
+    {
+      "name": "gitleaks materials patch",
+      "rc": 0,
+      "log": "gitleaks-materials.log"
+    }
+  ],
+  "limits": {
+    "nice": 19,
+    "workers": 1,
+    "full_suite": false,
+    "production_tab_calls": 0,
+    "models_started": 0,
+    "play_calls": 0,
+    "live_or_stop_changes": false
+  },
+  "affects_live_launch": false,
+  "real_24h_acceptance": "pending deployment and original ops observation",
+  "logs_sha256": {
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "initial-fixture-failure.log": "24daaa97210cb63d35ba14dd3f7e68782af1ca99411e460e151d32a28fdded90",
+    "tsc-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tabs-final.log": "b5cc3a8dfa8e36f946e8f66cf0241a72fce3fb711bd7382d3ed49e548480f3cc",
+    "initial-test-results.json": "de6f7480c873d1a8680262314defc4ba9ac21b7c8d64aacd79f7b258fa7f0789",
+    "initial-directed-failure.log": "6ecacb1beac856f189004978b953ed2f0d549d4de50764cebde01ea5725fc43f",
+    "worktree-final.log": "fb71f365d778454ac1a9cb115004fea1334a2fc07599ecf7b848472b092483ef",
+    "gitleaks-source.log": "3a58f36b8659a678f692a3963775995a41274b5c7b74e5997aab9aaef0cb7825",
+    "initial-contract-failure.log": "c6eead5467e9be2abb1c3a0402af91d9f949a22365ffa4b8d92bcdae13f6c6d3",
+    "gitleaks-materials.log": "18476233ddcaa04a16d2310ceb6d138a9dde7bbfe7ed475270589e395973210f"
+  },
+  "compressed_logs": {
+    "initial-directed-failure.log": {
+      "artifact": "initial-directed-failure.log.gz",
+      "sha256": "a86ac54c29ee1a4279ce3d13c45110aad1fa2efcbea63f8fb2938ea624e69707",
+      "uncompressed_sha256": "6ecacb1beac856f189004978b953ed2f0d549d4de50764cebde01ea5725fc43f"
+    },
+    "tabs-final.log": {
+      "artifact": "tabs-final.log.gz",
+      "sha256": "2292575822a492bd10381e8bc5c16205b6fcf82e531c535184a38331bb2aa543",
+      "uncompressed_sha256": "b5cc3a8dfa8e36f946e8f66cf0241a72fce3fb711bd7382d3ed49e548480f3cc"
+    },
+    "worktree-final.log": {
+      "artifact": "worktree-final.log.gz",
+      "sha256": "e7924b4ce1b90d475cf849a20991344ee7383b2fcbe312274537baedcb338485",
+      "uncompressed_sha256": "fb71f365d778454ac1a9cb115004fea1334a2fc07599ecf7b848472b092483ef"
+    }
+  }
+}

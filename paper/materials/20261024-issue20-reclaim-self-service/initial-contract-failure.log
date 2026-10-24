@@ -1,0 +1,89 @@
+.F.F.......F........................F...F.F........F.........................F...
+======================================================================
+FAIL: test_awaiting_review_is_retained_without_close_or_original_rewrite (test_learner_tabs.LearnerTabs.test_awaiting_review_is_retained_without_close_or_original_rewrite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 317, in test_awaiting_review_is_retained_without_close_or_original_rewrite
+    self.assertTrue(self.present); self.assertTrue(self.worker.inbox.exists())
+                                   ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_bad_receipt_identity_artifact_input_and_authority_retained_once (test_learner_tabs.LearnerTabs.test_bad_receipt_identity_artifact_input_and_authority_retained_once) (bad='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 171, in test_bad_receipt_identity_artifact_input_and_authority_retained_once
+    self.assertEqual(self.tick()[0]["state"],"retained"); self.assertTrue(self.present)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'queued' != 'retained'
+- queued
++ retained
+
+
+======================================================================
+FAIL: test_missing_receipt_dry_run_preserves_every_file (test_learner_tabs.LearnerTabs.test_missing_receipt_dry_run_preserves_every_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 243, in test_missing_receipt_dry_run_preserves_every_file
+    self.assertEqual(self.tick()[0]['state'],'retained')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'queued' != 'retained'
+- queued
++ retained
+
+
+======================================================================
+FAIL: test_unknown_unregistered_learning_tab_is_retained_and_reported (test_learner_tabs.LearnerTabs.test_unknown_unregistered_learning_tab_is_retained_and_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 212, in test_unknown_unregistered_learning_tab_is_retained_and_reported
+    self.assertTrue(self.worker.inbox.exists()); self.assertTrue(self.present)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_awaiting_review_is_retained_without_close_or_original_rewrite (test_learner_tabs.PostmortemContract.test_awaiting_review_is_retained_without_close_or_original_rewrite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 317, in test_awaiting_review_is_retained_without_close_or_original_rewrite
+    self.assertTrue(self.present); self.assertTrue(self.worker.inbox.exists())
+                                   ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_bad_receipt_identity_artifact_input_and_authority_retained_once (test_learner_tabs.PostmortemContract.test_bad_receipt_identity_artifact_input_and_authority_retained_once) (bad='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 171, in test_bad_receipt_identity_artifact_input_and_authority_retained_once
+    self.assertEqual(self.tick()[0]["state"],"retained"); self.assertTrue(self.present)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'queued' != 'retained'
+- queued
++ retained
+
+
+======================================================================
+FAIL: test_missing_receipt_dry_run_preserves_every_file (test_learner_tabs.PostmortemContract.test_missing_receipt_dry_run_preserves_every_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 243, in test_missing_receipt_dry_run_preserves_every_file
+    self.assertEqual(self.tick()[0]['state'],'retained')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'queued' != 'retained'
+- queued
++ retained
+
+
+======================================================================
+FAIL: test_unknown_unregistered_learning_tab_is_retained_and_reported (test_learner_tabs.PostmortemContract.test_unknown_unregistered_learning_tab_is_retained_and_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_learner_tabs.py", line 212, in test_unknown_unregistered_learning_tab_is_retained_and_reported
+    self.assertTrue(self.worker.inbox.exists()); self.assertTrue(self.present)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 81 tests in 1.449s
+
+FAILED (failures=8)

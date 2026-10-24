@@ -1,0 +1,14 @@
+E...............
+======================================================================
+ERROR: test_allocated_ops_tree_settles_only_after_changed_source_reaches_main_and_live (test_worktree_retention.WorkspaceRetention.test_allocated_ops_tree_settles_only_after_changed_source_reaches_main_and_live)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_worktree_retention.py", line 211, in test_allocated_ops_tree_settles_only_after_changed_source_reaches_main_and_live
+    self.assertFalse((new / '.git').exists())
+                      ^^^
+NameError: name 'new' is not defined
+
+----------------------------------------------------------------------
+Ran 16 tests in 4.207s
+
+FAILED (errors=1)
