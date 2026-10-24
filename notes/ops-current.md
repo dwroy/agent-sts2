@@ -8,9 +8,9 @@ updated: 2026-10-24T10:23:22+08:00
 在等谁：原51发布owner核剧本消费者合同，54交自有四表与字段审计，37原唯一检查窗口。
 下一步：接真实新输入和消费者合同，候选/正式发布/自然采用分账；不重复start/full/模型。
 
-本轮10:10事件已处理：Roy恢复为重复通知，原autoplay1245890/play1246535仍同PID/birth/cwd，STOP不存在；首自动局BP9C8K9NSRZ0、实际live02eb468f8728b47ccbc22f39f14e5b2db1580971，49关引导R427在R428保留，未再start/发版。手动Z2KBGZQMSRV5整局排除和原ENOBUFS/commit=null保留。原恢复paper/materials/20261024-roy-resume-ops/。
+恢复去重已核：原autoplay/play及首局BP9C8K9NSRZ0保持，未重启；手动Z2排除、原ENOBUFS保留，细节沿下文恢复回执。
 
-094803毒008本轮已核done/rc0，out/report/result一致，91页SHA/大小及20条完整轨迹713节点清单核同，原native session-ended/retirement通过；retention原checkout_reclaimed而branch/scratch保留。另按字节归档106份JSON/MD共1478796字节。真实新增1份knowledge剧本候选silent-external-poison-build-playbook-c1，8观察段/8旧ID引用不拆新增；正式发布/消费者/自然采用均0，非可执行StrategyEntry或rk。原报告不改、无source合入/代码full/finish重跑/新模型。材料paper/materials/20261024-strategy-094803-ops/verification.json及artifact-manifest.json。
+094803毒008已核done/rc0、91页/20轨迹/713节点、原native retirement与106份原字节归档。真实新增1份knowledge剧本候选，非StrategyEntry/rk；正式发布/消费者/自然采用0，branch/scratch保留。原件paper/materials/20261024-strategy-094803-ops/。
 
 在等谁/下一步：原51发布owner接兼容的可查询剧本消费者合同；54交自有四表/同流派完整局及.run字段审计，由原学习链据证据补对照。毒008旧冻仅外部统计+代表完整局，缺新三输入自有对照，保留为外部部分而不冒完整验收。版本/上传行非独立玩家、27/27未达100、0BH显著、机制/最佳转向/安全HP未知保持。前三优先用药→休息/路线→冷启动规格与原6378529377/6378529758交接不变；未派刀009或旧Boss，不热切原任务。所有其他进行中、owner、下一步按下文保持。
 
@@ -18,7 +18,7 @@ updated: 2026-10-24T10:23:22+08:00
 
 #23本轮接续：原发布已核，不重发。09:39累计155历史回收/311分配，05:15后2/21、近24h16历史（15当前缺失且分支可核）/123；disk约24h净减107.15GiB，验收仍失败。新增#49发布树/091302策略checkout已核分支与归档，旧同路径重分配不混算。一次原只读plan返回eligible=0，未手动apply或删除。等原owner补身份/dirty/归属/入库，#46完整门13:46:30；手动停局期单列，不提前归因改善。下一步沿原worker结算保护、原窗口到期再验；Roy已明确恢复自动对局/full0保持。paper/materials/20261024-issue23-resume-0936-ops/。
 
-进行中的事：#51主管指定优先正式发布已完成V6-R428，T=2026-10-24T09:28:01+08:00，live 02eb468f8728b47ccbc22f39f14e5b2db1580971，库SHA 4a98084278ddbecf6fa5ca21ef97932c1fa391a75d79a81e2e5ff6e374228847。090927候选新增20个正式ID、更新毒药1个；保留081200三ID，两批去重23单牌ID均由实际live生产kb_strategies逐项读回，文字/trigger/confidence原样、own_runs0；live总26/main总30，其他知识与铁甲等价。主比较20项offers/1项runs，不能称都100独立局/玩家或因果收益。原完整历史、反向证据和统计已主库归档，原wrapper failed/rc0及missing string code_proposals array不改；独立授权数据发布不冒代码审计成功。*宽查询原24KB来源metadata限制仍在，23精确ID可查，已记fix队列。该R428发布事务full/新模型/游戏均0，发布两锁已实际释放。原件paper/materials/20261024-090927-strategy-result-ops/publication.json、actual-live-consumers.json；首次retention持锁写前失败单独保留。
+#51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
 后续交接：原094803毒008已在本轮核结束并归档，候选/正式发布分账；刀009从未派发，原计划/manifest已held保留，按Roy新优先级/三输入重冻后再接。#54原owner需先逐字段核外部.run（祝福、购买、删牌、事件、药水获得/用药、休息/锻造）及自有四表，给非空覆盖/分母/SHA，缺列明确代理或自有对照。后续优先用药→休息锻造/路线→冷启动，每类一个单元；商店删牌/遗物随流派，事件/遭遇后排。三份规格已写但没有新input_manifest，不冒已派/学习/科学完成；普通学习不停、无全局PAUSE/账号或权限改动。原毒输入builds-v1 SHA ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852保持，不把旧两输入冒三输入已完成。
 
@@ -30,7 +30,7 @@ Roy P0恢复已执行：原关引导V6-R427八叶在当前R428逐字节核同，
 
 10:16同16学习通知再次核16原文/32投递/旧watcher实际接收原件；内容不变，15ACK来源合同仍拒绝、000402原wrapper仍缺，正式watcher_received/roy_notified均0继续pending。原sts2-integrator同pane/session一次herdr提醒返回agent_prompted，不能代收到或Roy已知；#27未变不重复主管收件箱，不重拒绝CLI。paper/materials/20261024-1016-notices-ops/verification.json、notice-handoff.json、watcher-reminder.json；旧09:13原件保留。所有科学父、旧failed/rc0/EPERM/EROFS/retry未知及丢失full保持。
 
-以上简表之外的逐项原待办/历史路径完整保留paper/materials/20261024-090927-strategy-result-ops/handoff-before.md；只有沿当前事件需要时查原件，不全文重读handoff/decision-log。当前回执：#51评论6378188756，#54评论6378189200，#37评论6378189629，POST/GET全文核同。新输入原件paper/materials/20261024-issue51-builds-ops/；发布原件paper/materials/20261024-090927-strategy-result-ops/。没有sleep/轮询等待或另派模型，交回原调度器。
+完整历史与此轮压缩前交接保留paper/materials/20261024-issue38-lock-timing-ops/handoff-finalization/handoff-before.md，及paper/materials/20261024-090927-strategy-result-ops/handoff-before.md；仅沿当前事件按需核原件，不全文重读。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
