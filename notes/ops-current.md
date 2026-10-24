@@ -1,6 +1,6 @@
 state: in-flight
 issue: 55
-updated: 2026-10-24T13:19:32+08:00
+updated: 2026-10-24T13:24:02+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
@@ -40,7 +40,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 未完成清单：#37旧独占等待已撤销，revision3/原失败及39/43父保留，55唯一full/P0先行，20部署在后；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通提炼合同已main09f3/host核同、首新native待；旧18/244别名及旧plan held；新整局六ID单元已尾队列登记，实际进度0/244。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35终态学习/同战SL已核，重启跨层/溢出自然待、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 
-通知pending：10:16核16原文/32投递/旧watcher接收；15来源ACK范围拒绝、000402精确wrapper缺，正式watcher_received/roy_notified均0。原sts2-integrator提醒仅agent_prompted，不代角色/Roy已知，不重复27主管收件箱或旧拒绝CLI。原文/核验/旧67冻结证据见paper/materials/20261024-1016-notices-ops/及旧09:13原件；科学父/旧failed/rc0/EPERM/EROFS/retry未知/lost保持。
+通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
 历史与本轮压缩前完整交接保留paper/materials/20261024-issue51-own-fallback-ops/handoff-before.md，未清未完成项；只沿事件核原件。
 
