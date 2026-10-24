@@ -1,8 +1,14 @@
 state: clear-ok
-issue: 36
-updated_at: 2026-10-24T19:20:50+08:00
+issue: 20
+updated_at: 2026-10-24T19:28:08+08:00
 
 # 集成员当前交接
+
+进行中的事: 接Claude提醒先核#36，191311原TUI/SHA及PID-birth-session-turn同19:20，原生high仍无末回合；旧三75字节同/未授权保持。后按优先级独立核#20三源码/pyc同efc与ops、code对象相等及自然191311 allocation双通道边界，未导入业务模块。#37原publisher3828459-birth26539693/play3770028-birth26491853身份同，原事务仍waiting-original-natural-terminal/published=false。材料paper/materials/20261024-integrator-resume-1928/；#20核收评论6383650305已远端逐字读回。
+在等谁: 原ops沿#36自然批次回终态/异常75/有界观察，沿#37原worker回自然发布及首Jev。缓存仅旁证曾加载，不冒进程内字节/所有新分支验收；#20真实24h至10-25T14:49:42、kit至00:15:05与39/43父保持。#54正式策略/三输入原生绑定、#27 ACK/Roy及Plan/科学父沿原owner，不代确认。
+下一步: status:review已逐项复查，36/54/37/20/39/43均等原回执或原授权，无新增可直接集成源；56仍in-progress。沿实际状态变化接核，不重复full/提醒/finish/重派/强关或发布。保R430–R437及后续知识，旧51八叶/091302净12/.2排除。只读及本角色记录事务结，无在途测试/发布进程。
+
+本轮前检查点（19:20:50 原文保留）:
 
 进行中的事: #36已接续独立核验，原6905591f0c/已合293ef1bdff78无新补交。19:10净37+20 full673文件6600过/0败/2历史跳、两tsc0，现核36三运行/八TS/六Python共17叶当前根目录/验证树/冻结SHA同，八TS281项（原七280）通过；原raw full SHA核同，无新full/生产操作。新191311自然批次已native-accepted，pEB/session01a16d9e-1daf-7c41-8a21-8cf5aae68a9a/原turn及3772411-birth26496982核同，ROOT入口和native gpt-6.1-sol/high实读。
 在等谁: 原ops沿191311原自然监督核终态、异常75/有界屏幕观察及实际加载证据；本轮只证新自然启动，不拿磁盘SHA代进程内模块字节/异常分支。旧080423/083104/084301原TUI SHA与14:49逐字同，仍needs-attention/retirement_authorized=false/原seal缺，原线程/pane及人工草稿边界保持。37+20原交付6383518698/6383518979已交ops新事务，未代发布/首Jev验收。
