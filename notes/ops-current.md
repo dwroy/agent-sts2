@@ -1,10 +1,10 @@
-state: in-flight
+state: clear-ok
 issue: 27
-updated: 2026-10-24T17:22:20+08:00
+updated: 2026-10-24T17:25:37+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#27 V6-R433/T17:06:31补齐原二批4条，live45/main45；源3f642143/行为2b08241e/livebf2df1cf，4实际工具/12负例/两角色隔离过，原0571/72/74/75 shipped，发布check617项0且并行后增另记。17:10重复返回核同，原锁释；刀刃1.1.0/R430–R432/其他知识及脏目录保留。paper/materials/20261024-issue27-b2-publication-ops/。
+进行中的事：前台写事务已收尾，可换会话；后台续接独立运行，见164302项，不因clear-ok终止/重派/回收。#27 V6-R433/T17:06:31已补4条，live45/main45；源3f642143/行为2b08241e/livebf2df1cf，4工具/12负例/两角色隔离过，原锁释，刀刃新版/R430–R432/其他知识保持。paper/materials/20261024-issue27-b2-publication-ops/。
 在等谁：等原自动对局自然相关问题/工具返回，由ops按ID/version/source/evidence与库SHA核；无额外审批。外部0自有/低可信、跳过频率非收益/配额、gross p90非净损/安全线及SL/截断等边界保持；科学父不关。16通知原owner仍需解来源兼容/000402日志，角色ACK及Roy可见仍待。
 下一步：沿自然事件冻结实际查询字节，固定工具不代采用/收益；只回退本次4ID及目录行可撤本发布，不重发/模型/full/开局。原二批冻结check rc1、false flags、旧反证/报告不回写，#37后续组合保留R430–R433。
 
@@ -50,7 +50,7 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-postmortem-164302-prelock-return-ops/handoff-before.md；未清待办。
+本轮前完整交接见paper/materials/20261024-ops-state-sync/handoff-before.md；未清待办。
 
 
 #55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
