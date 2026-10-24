@@ -59,6 +59,37 @@ class OwnStats(unittest.TestCase):
         self.assertTrue(all(r['game_version']=='unknown' for r in tables['archetypes']['rows']))
         self.assertEqual(len(index),6);self.assertEqual(len(packets),6)
 
+    def test_manual_and_handoff_whole_runs_are_excluded_without_removing_other_games(self):
+        data=own_data();policy={'excluded_run_ids':['RUN_0'],'manual_windows':[{'started':'2026-01-01T01:00:00Z','ended':'2026-01-01T02:00:00Z'}]}
+        # RUN_1 overlaps the window across observations even with no frame inside it.
+        data['runs'][1]['ended']='2026-01-01T03:00:00Z'
+        for r in data['runs'][2:]:r['ended']='2026-01-01T00:00:00Z'
+        filtered,audit=own.filter_data(data,policy)
+        self.assertEqual({r['run_id'] for r in audit['excluded']},{'RUN_0','RUN_1'})
+        self.assertEqual(audit['eligible_finished_runs'],4)
+        self.assertTrue(all(r['run_id'] not in ('RUN_0','RUN_1') for rows in filtered.values() for r in rows))
+        self.assertEqual(len(data['runs']),6)
+
+    def test_finished_summary_without_confirmed_terminal_snapshot_is_not_complete_training(self):
+        data=own_data();wins={r['run_id']:r['victory'] for r in data['runs']}
+        for snap in data['snapshots']:
+            if snap['screen']=='GAME_OVER':snap['go_victory']=wins[snap['run_id']]
+        data['snapshots'][-1]['screen']='CARDS_VIEW'
+        filtered,audit=own.filter_data(data,{'excluded_run_ids':[],'manual_windows':[],'require_confirmed_terminal_snapshot':True})
+        self.assertEqual(len(filtered['runs']),5)
+        self.assertEqual(audit['excluded'][0]['reasons'],['terminal_snapshot_missing_or_outcome_inconsistent'])
+        self.assertEqual(len(data['runs']),6)
+
+    def test_comparison_gaps_use_each_sources_denominator_and_keep_empty_unknown(self):
+        gap=own.prevalence_gap(2,4,3,10)
+        self.assertEqual(gap['self_rate'],.5);self.assertEqual(gap['external_winner_rate'],.3)
+        self.assertAlmostEqual(gap['difference_pp'],20.)
+        self.assertIsNone(own.prevalence_gap(0,0,3,10)['difference_pp'])
+        _,comparison,_,_=own.build(own_data(),self.ext,copy.deepcopy(self.ext_runs),{})
+        for row in comparison['archetypes']:
+            g=row['cluster_share_gap'];self.assertEqual((g['self_n'],g['external_winner_n']),(6,24))
+        self.assertTrue(all('act_end_proxy_gaps' in row for row in comparison['timeline']))
+
     def test_actual_snapshot_formation_unknown_defense_and_no_floor_delta(self):
         data=own_data();model=copy.deepcopy(self.ext['archetypes']['model'])
         prepared=own.prepare(data,model);r=prepared[0]

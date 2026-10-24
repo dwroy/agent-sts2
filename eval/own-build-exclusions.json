@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source": "https://github.com/dwroy/agent-sts2/issues/54#issuecomment-6378529758",
+  "window_evidence": "notes/ops-current.md / paper/materials/20261024-roy-resume-ops/resume-receipt.json",
+  "excluded_run_ids": [
+    "Z2KBGZQMSRV5"
+  ],
+  "manual_windows": [
+    {
+      "started": "2026-10-24T00:38:01Z",
+      "ended": "2026-10-24T01:56:28Z"
+    }
+  ],
+  "completed_only": true,
+  "incomplete_at_request": [
+    "BP9C8K9NSRZ0"
+  ],
+  "limits": [
+    "只使用冻结runs_raw中已结束的本角色局；incomplete_at_request只是现场说明，不永久排除将来真实结束的自动局。",
+    "与手动窗口有时间重叠的整局保守排除，不仅删掉窗口中的片段。",
+    "额外要求最后已记录牌组所在帧为GAME_OVER且胜负与终局清单一致；只有终局摘要、缺完整末态的源局单列排除，不能补造完整轨迹。"
+  ],
+  "require_confirmed_terminal_snapshot": true
+}

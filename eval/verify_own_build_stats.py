@@ -9,14 +9,19 @@ import random
 from sts2fun_build_projection import sha,canonical
 
 
-def own_verify(cache,root,external):
+def own_verify(cache,root,external,external_cache=None):
     receipt=json.loads((cache/'receipt.json').read_bytes());raw=(cache/'own-games.json.gz').read_bytes()
     assert sha(raw)==receipt['cache_sha256'];source=json.loads(gzip.decompress(raw))
     manifest=json.loads((root/'manifest.json').read_bytes())
     for name,pin in manifest['files'].items():
         raw=(root/name).read_bytes();assert len(raw)==pin['bytes'] and sha(raw)==pin['sha256']
     index=json.loads((root/'run-index.json').read_bytes())['rows'];by_id={x['run_id']:x for x in index}
-    assert len(index)==len(source['runs'])==len(by_id)
+    cohort=json.loads((root/'run-index.json').read_bytes())['cohort_audit'];excluded={r['run_id'] for r in cohort['excluded']}
+    assert len(index)==cohort['eligible_finished_runs']==len(by_id)
+    assert len(source['runs'])==len(index)+len(excluded)==cohort['source_finished_runs']
+    assert excluded.isdisjoint(by_id) and 'Z2KBGZQMSRV5' not in by_id
+    assert set(by_id)<={r['run_id'] for r in source['runs']}
+    assert all(not name.startswith('games/') or name.removeprefix('games/').removesuffix('.json') not in excluded for name in manifest['files'])
     model=json.loads((external/'archetypes.json').read_bytes())['model'];snapshots=defaultdict(list)
     for row in source['snapshots']:snapshots[row['run_id']].append(row)
     for row in index:
@@ -96,7 +101,25 @@ def own_verify(cache,root,external):
     primary=[r for r in index if r['ascension']==10 and r['attempt_scope']=='no_retry_evidence' and r['cluster'] is not None]
     assert comparison['self_primary_n']==len(primary)==sum(x['self']['n'] for x in comparison['archetypes'])
     assert not comparison['source_denominators_pooled']
-    return {'own_runs':len(index),'archetype_cells':len(tables['archetypes']['rows']),'recipe_samples':len(recipe_sample),'timeline_samples':len(sampled),'representative_games':representatives,
+    gap_samples=0
+    if external_cache:
+        ref=json.loads((external_cache/'receipt.json').read_bytes());raw=(external_cache/'runs.json.gz').read_bytes()
+        assert sha(raw)==ref['cache_sha256'];human=[]
+        for r in json.loads(gzip.decompress(raw)):
+            if r['version']!='v0.111' or r['win']!=1:continue
+            cards={c['id'] for c in r['deck']};vec={c:model['vocabulary'][c] for c in cards if c in model['vocabulary']}
+            norm=math.sqrt(sum(x*x for x in vec.values()))
+            scores=[sum(vec[c]*center.get(c,0)/norm for c in sorted(vec)) for center in model['centers']] if norm else []
+            cluster=max(range(len(scores)),key=lambda j:(scores[j],-j)) if scores else None
+            human.append({'cluster':cluster,'features':{'card:'+c for c in cards}|{'relic:'+c['id'] for c in r['relics']}})
+        assert comparison['external_winner_n']==len(human)
+        for row in random.Random(56).sample(comparison['combinations'],min(24,len(comparison['combinations']))):
+            ours=[r for r in primary if r['cluster']==row['cluster']];theirs=[r for r in human if r['cluster']==row['cluster']];items=set(row['items'])
+            a=sum(items<=prepared[r['run_id']]['features'] for r in ours);b=sum(items<=r['features'] for r in theirs)
+            assert (row['self_n'],row['self_present'],row['external_winner_n'],row['external_winner_present'])==(len(ours),a,len(theirs),b)
+            g=row['prevalence_gap'];expected=100*(a/len(ours)-b/len(theirs)) if ours and theirs else None
+            assert g['difference_pp']==expected;gap_samples+=1
+    return {'excluded_finished_runs':len(excluded),'comparison_gap_samples':gap_samples,'own_runs':len(index),'archetype_cells':len(tables['archetypes']['rows']),'recipe_samples':len(recipe_sample),'timeline_samples':len(sampled),'representative_games':representatives,
             'snapshots':states,'fights':fights,'questions':questions,'plans':plans,'self_primary_n':len(primary),'all_passed':True}
 
 
@@ -131,5 +154,6 @@ def decision_verify(cache,root):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('own-cache','own-root','external','decision-cache','decision-root','receipt'):p.add_argument('--'+name,type=Path,required=True)
-    a=p.parse_args();result={'own':own_verify(a.own_cache,a.own_root,a.external),'decisions':decision_verify(a.decision_cache,a.decision_root)}
+    p.add_argument('--external-cache',type=Path)
+    a=p.parse_args();result={'own':own_verify(a.own_cache,a.own_root,a.external,a.external_cache),'decisions':decision_verify(a.decision_cache,a.decision_root)}
     a.receipt.parent.mkdir(parents=True,exist_ok=True);a.receipt.write_bytes(canonical(result));print(json.dumps(result))

@@ -1,6 +1,7 @@
 """Own Silent four tables and side-by-side external winner comparisons for #54."""
 import argparse
 from collections import Counter,defaultdict
+import datetime
 import gzip
 import json
 import math
@@ -31,6 +32,32 @@ def assign(cards,model):
     if not v:return None,None
     scores=[dot(v,c) for c in model['centers']];j=max(range(len(scores)),key=lambda j:(scores[j],-j))
     return j,scores[j]
+
+
+def filter_data(data,policy):
+    def timestamp(value):
+        if not value:return None
+        dt=datetime.datetime.fromisoformat(value.replace('Z','+00:00'))
+        return (dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)).timestamp()
+    explicit=set(policy['excluded_run_ids']);excluded=[]
+    for r in data['runs']:
+        reasons=[]
+        if r['run_id'] in explicit:reasons.append('explicit_manual_or_handoff_run')
+        times=[timestamp(s['ts']) for s in data['snapshots'] if s['run_id']==r['run_id'] and s['ts']]
+        if r.get('ended'):times.append(timestamp(r['ended']))
+        for window in policy['manual_windows']:
+            if times and min(times)<=timestamp(window['ended']) and max(times)>=timestamp(window['started']):
+                reasons.append('overlaps_manual_window');break
+        if policy.get('require_confirmed_terminal_snapshot'):
+            terminal=[s for s in data['snapshots'] if s['run_id']==r['run_id'] and isinstance(s['deck'],list)]
+            latest=max(terminal,key=lambda s:s['off']) if terminal else None
+            if not latest or latest['screen']!='GAME_OVER' or latest['go_victory'] is not r['victory']:
+                reasons.append('terminal_snapshot_missing_or_outcome_inconsistent')
+        if reasons:excluded.append({'run_id':r['run_id'],'reasons':reasons})
+    blocked={r['run_id'] for r in excluded}
+    filtered={k:[r for r in rows if r['run_id'] not in blocked] for k,rows in data.items()}
+    return filtered,{'source_finished_runs':len(data['runs']),'eligible_finished_runs':len(filtered['runs']),'excluded':excluded,
+                     'policy':policy,'scope':'手动/交接整局排除；没有在runs_raw终局清单的活动局不纳入，也不提前补局。'}
 
 
 def prepare(data,model):
@@ -156,6 +183,13 @@ def own_tables(runs,model,blocks):
             'timeline':{'rows':timeline,'snapshot_basis':'实际记录牌组；幕末要求已见后幕。按胜负分层；不由card_choices反推。'},'matchups':{'rows':matchups}}
 
 
+def prevalence_gap(own_count,own_n,external_count,external_n):
+    a=own_count/own_n if own_n else None;b=external_count/external_n if external_n else None
+    return {'self_count':own_count,'self_n':own_n,'self_rate':a,'external_winner_count':external_count,
+            'external_winner_n':external_n,'external_winner_rate':b,
+            'difference_pp':100*(a-b) if a is not None and b is not None else None}
+
+
 def comparison(runs,external,external_runs,model,blocks,own_result):
     # Each source retains its original denominator; no pooled fit, p-value, or floor delta.
     primary=[r for r in runs if r['ascension']==10 and r['attempt_scope']=='no_retry_evidence' and r['cluster'] is not None]
@@ -178,6 +212,28 @@ def comparison(runs,external,external_runs,model,blocks,own_result):
                 'external_winner_n':len(theirs),'external_winner_present':sum(has(r) for r in theirs),
                 'external_matched_test':{'pairs':row['pairs'],'q_bh':row['q_bh'],'enriched_q05':row['enriched_q05']},
                 'effect_definition':'各来源终局出现率并列；未算因果胜率提升'})
+    for row in archetypes:
+        a,b=row['self'],row['external_winners']
+        row['cluster_share_gap']=prevalence_gap(a['n'],a['denominator'],b['n'],b['denominator'])
+        for item in row['core_prevalence']:
+            item['prevalence_gap']=prevalence_gap(item['self_present'],item['self_n'],item['external_winner_present'],item['external_winner_n'])
+    for row in recipes:
+        row['prevalence_gap']=prevalence_gap(row['self_present'],row['self_n'],row['external_winner_present'],row['external_winner_n'])
+    for row in timeline:
+        ours=row['self_all_no_retry_evidence'];theirs=row['external_winners'];gaps=[]
+        if ours and theirs:
+            all_row=next(x for x in ours['strata'] if x['outcome']=='all');f=theirs['formation'][0]
+            ext_early=sum(x['n'] for x in f['act_node_distribution'] if x['act']<=1)
+            row['recorded_bundle_by_act1_gap']=prevalence_gap(all_row['formed_by_act1'],all_row['n'],ext_early,f['terminal_consistent_winners'])
+            for act in (1,2):
+                a=next(x for x in all_row['act_end_checkpoints'] if x['act']==act)
+                b=next(x for x in theirs['act_end_checkpoints'] if x['act']==act)
+                for own_key,ext_key in [('core_copies','core_card_copies'),('positive_block_copies_proxy','positive_recorded_block_card_copies_proxy')]:
+                    x,y=a[own_key],b[ext_key]
+                    gaps.append({'act':act,'metric':own_key,'self_n':x['n'],'self_mean':x['mean'],'external_winner_n':y['n'],'external_winner_mean':y['mean'],
+                        'difference_copies':x['mean']-y['mean'] if x['mean'] is not None and y['mean'] is not None else None})
+        row['act_end_proxy_gaps']=gaps
+        row['gap_scope']='描述差异：自有全部无重试证据局 vs 外部终局还原一致赢家；缺失/版本/SL/幸存偏差保留，不是因果，也不是晚几层。'
     matchups=[]
     for own_row in own_result['matchups']['rows']:
         if own_row['ascension']!=10 or own_row['attempt_scope']!='no_retry_evidence':continue
@@ -235,6 +291,7 @@ def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('cache','external','external-cache','catalog','output'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--logdb',type=Path);p.add_argument('--log-tools',type=Path,default=Path(__file__).resolve().parents[1]/'agent/tools/logdb')
+    p.add_argument('--exclusions',type=Path,default=Path(__file__).with_name('own-build-exclusions.json'))
     p.add_argument('--check',action='store_true');a=p.parse_args(argv);a.cache.mkdir(parents=True,exist_ok=True)
     if not (a.cache/'receipt.json').exists():
         if not a.logdb:p.error('first export needs --logdb; uses existing DuckDB environment, never installs')
@@ -242,16 +299,23 @@ def main(argv=None):
         (a.cache/'own-games.json.gz').write_bytes(raw);(a.cache/'receipt.json').write_bytes(canonical(receipt))
     receipt=json.loads((a.cache/'receipt.json').read_bytes());raw=(a.cache/'own-games.json.gz').read_bytes()
     if sha(raw)!=receipt['cache_sha256'] or sha(Path(own.__file__).read_bytes())!=receipt['projection_code_sha256']:raise ValueError('own cache binding differs')
-    data=json.loads(gzip.decompress(raw));external,external_runs,external_pin=read_external(a.external,a.external_cache)
+    data=json.loads(gzip.decompress(raw));policy_raw=a.exclusions.read_bytes();data,cohort_audit=filter_data(data,json.loads(policy_raw));external,external_runs,external_pin=read_external(a.external,a.external_cache)
     catalog_raw=a.catalog.read_bytes();catalog=json.loads(catalog_raw)
     blocks={c['id']:type(c.get('block')) in (int,float) and c['block']>0 for c in catalog['collections']['cards']}
     tables,comparisons,packets,index=build(data,external,external_runs,blocks)
     meta={'source':'self:agent-sts2','character':'silent','design':'observational','game_version':'unknown','outcome_basis':'final_recorded_result; SL strata separate',
-          'own_snapshot':receipt,'external_pin':external_pin,'catalog_sha256':sha(catalog_raw),'script_sha256':sha(Path(__file__).read_bytes()),'limitations':LIMITS}
+          'own_snapshot':receipt,'cohort_audit':cohort_audit,'exclusion_policy_sha256':sha(policy_raw),'external_pin':external_pin,'catalog_sha256':sha(catalog_raw),'script_sha256':sha(Path(__file__).read_bytes()),'limitations':LIMITS}
     outputs={kind+'.json':canonical({**meta,**table}) for kind,table in tables.items()}
     outputs['comparison.json']=canonical({**meta,**comparisons});outputs['run-index.json']=canonical({**meta,'rows':index})
     for ident,packet in packets.items():outputs['games/'+ident+'.json']=canonical(packet)
     outputs['manifest.json']=canonical({'source':'self:agent-sts2','external_pin':external_pin,'files':{name:{'bytes':len(raw),'sha256':sha(raw)} for name,raw in sorted(outputs.items())}})
+    if not a.check and (a.output/'manifest.json').exists():
+        previous=json.loads((a.output/'manifest.json').read_bytes())
+        for name,pin in previous['files'].items():
+            if name in outputs:continue
+            stale=a.output/name
+            if not stale.resolve().is_relative_to(a.output.resolve()) or sha(stale.read_bytes())!=pin['sha256']:raise ValueError('stale managed file changed')
+            stale.unlink()
     for name,raw in outputs.items():
         dest=a.output/name
         if a.check:
