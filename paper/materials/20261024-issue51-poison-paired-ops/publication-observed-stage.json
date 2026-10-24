@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-24T18:08:04+08:00",
+  "observed_state": {
+    "at": "2026-10-24T18:06:35+08:00",
+    "phase": "waiting-original-publication-lock",
+    "worker_pid": 3367426,
+    "worker_birth": "26092500",
+    "published": false,
+    "new_full_model_game_tick": 0,
+    "held_locks": [],
+    "waiting_lock": "ops/knowledge-refresh.lock"
+  },
+  "existing_worker_identity_verified": true,
+  "lock": "ops/knowledge-refresh.lock",
+  "kernel_lock_rows": [
+    "178: FLOCK  ADVISORY  WRITE 3361736 08:30:1055837 0 EOF",
+    "178: -> FLOCK  ADVISORY  WRITE 3361865 08:30:1055837 0 EOF",
+    "178:  -> FLOCK  ADVISORY  WRITE 3362100 08:30:1055837 0 EOF",
+    "178:   -> FLOCK  ADVISORY  WRITE 3367426 08:30:1055837 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 3361736,
+      "birth": "26068797",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "wchan": "do_wait",
+      "waiting": false
+    },
+    {
+      "pid": 3361865,
+      "birth": "26068859",
+      "comm": "flock",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "wchan": "locks_lock_inode_wait",
+      "waiting": true
+    },
+    {
+      "pid": 3362100,
+      "birth": "26069017",
+      "comm": "flock",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "wchan": "locks_lock_inode_wait",
+      "waiting": true
+    },
+    {
+      "pid": 3367426,
+      "birth": "26092500",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "wchan": "locks_lock_inode_wait",
+      "waiting": true
+    }
+  ],
+  "publication_script": ".artifacts/ops-issue51-poison-paired-20261024/publish.py",
+  "script_sha256": "177de21557bea0a242585bbd3057657506eac872a40c9aa149b8722068f6239f",
+  "finite_existing_worker_only": true,
+  "callback_queue": "ops/codex-ops/queue/*-manual.md",
+  "no_wait_poll_model_or_second_transaction": true
+}

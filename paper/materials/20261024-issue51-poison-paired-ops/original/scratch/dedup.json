@@ -1,0 +1,124 @@
+{
+  "parent": {
+    "id": "silent-external-poison-build-playbook-c1",
+    "disposition": "update",
+    "old_candidate_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/poison-playbook-candidate.json",
+    "sha256": "34b53dafdae39c8076bd2d70a4b44e5338f08d94cf6be13398fc50b872b4fd52",
+    "old_candidate_byte_copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/dedup/old008-poison-playbook-candidate.json",
+    "old_input_and_model_read_claims_unchanged": true,
+    "delta": "新增本地牌文、当前已持牌/真实选项、1个四section完整赢家、失败对照及7情境配对去向；旧8描述段不计7条新情境"
+  },
+  "strategy_entries": [
+    {
+      "id": "silent-brain-backflip-external-prefix-context",
+      "disposition": "update",
+      "reason": "同一宽场景沿已有ID追加更具体的实牌组观察，不擦原统计"
+    },
+    {
+      "id": "silent-brain-poison-cheap-source-with-snakebite",
+      "disposition": "new",
+      "reason": "旧库没有该具体资源/副本数情境；与宽泛拿牌关联区分"
+    },
+    {
+      "id": "silent-brain-accelerant-external-prefix-context",
+      "disposition": "update",
+      "reason": "同一宽场景沿已有ID追加更具体的实牌组观察，不擦原统计"
+    },
+    {
+      "id": "silent-brain-noxious-fumes-external-prefix-context",
+      "disposition": "update",
+      "reason": "同一宽场景沿已有ID追加更具体的实牌组观察，不擦原统计"
+    },
+    {
+      "id": "silent-brain-burst-external-prefix-context",
+      "disposition": "update",
+      "reason": "同一宽场景沿已有ID追加更具体的实牌组观察，不擦原统计"
+    },
+    {
+      "id": "silent-brain-poison-third-snakebite-review",
+      "disposition": "new",
+      "reason": "旧库没有该具体资源/副本数情境；与宽泛拿牌关联区分"
+    },
+    {
+      "id": "silent-brain-poison-late-piercing-wail-review",
+      "disposition": "new",
+      "reason": "旧库没有该具体资源/副本数情境；与宽泛拿牌关联区分"
+    }
+  ],
+  "reflex_existing": {
+    "path": "knowledge/characters/silent/reflex.json",
+    "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+    "entries": 85,
+    "reason": "已有对应单牌均combat_line；本批card_pick情境不同，不继承旧HP信号或证据"
+  },
+  "boss_reuse": [
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "disposition": "reuse-reference-only",
+      "new_count": 0
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "disposition": "reuse-reference-only",
+      "new_count": 0
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "disposition": "reuse-reference-only",
+      "new_count": 0
+    },
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "disposition": "reuse-reference-only",
+      "new_count": 0
+    }
+  ],
+  "frozen_contracts": [
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/learning-protocol.md",
+      "bytes": 13131,
+      "sha256": "cf84617f23a2527cf6cf860f96babb4fc2c953792c109a3d2ad2fd5bb4d492ec"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/learning-requests.md",
+      "bytes": 6327,
+      "sha256": "98420188724fd5db1995f86a99c2ba6cc2b9decf008af3ba0d730150e59e9949"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/learning-code-proposals.md",
+      "bytes": 3954,
+      "sha256": "29c2e6aa847007780d2cfd9ce0074c79a96c303fcdab77c25304064a90ceab81"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/brain-strategies.md",
+      "bytes": 11161,
+      "sha256": "b57d549ac3919ba3dd1292b88a7eddb3dc2267d51af8e9a19e42ad015995775e"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/knowledge/schemas/brain-strategies-v1.schema.json",
+      "bytes": 13948,
+      "sha256": "377fe758487048481fae5fbafc7b49bc9455e6813de2d5c6603d7ba036c3c087"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/strategy-context-retrieval.md",
+      "bytes": 4486,
+      "sha256": "f6af9d2d593c1ef0017405bc9ec8add736cc3e6b9bcc161c78f6ee91920e9a20"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/own-build-statistics.md",
+      "bytes": 9573,
+      "sha256": "e699b599509e189d69d07d6acb811ae11ea01262bb5afbbcbcd0b00b978b019a"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-next-units-ops/contracts/docs/jev-encounter-reflex.md",
+      "bytes": 7413,
+      "sha256": "f54ceb1ef4abf633c8460e27089da5a56364b2254f5701a3d4d75cf20da5ce18"
+    },
+    {
+      "path": "paper/materials/20261024-issue51-own-fallback-ops/own-506-scope.json",
+      "bytes": 225780,
+      "sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478"
+    }
+  ],
+  "library_sha256": "e577d01d57072f9f2da2eee87502809efbbf27847b45555d07f28581f0aab077"
+}

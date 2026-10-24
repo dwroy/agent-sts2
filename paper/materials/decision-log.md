@@ -6688,3 +6688,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T17:44:16+08:00 [ops] 164302原dataset rc0/唯一1次/14叶提交2fbf8be6祖先与冻结blob核同；原回收deferred，只读admission仍postmortem not settled，请求未改；不重dataset/finish/模型/full，实际经验入库及科学父保持。原件paper/materials/20261024-postmortem-164302-dataset-return-ops/。
 
 - 2026-10-24T17:52:07+08:00 [ops] #48首普通164315原native提示T16:44:14.992/新1.4段已绑定核同，映射1新6复用4等1不适用、rk0，正式发布/消费者待；后置未派0/244/旧held及18:19:29门保持。三份交接已更，51源码in-flight不清，未新模型/full/tick。原件paper/materials/20261024-issue48-checkpoint-1750-ops/。
+
+- 2026-10-24T18:10:04+08:00 [ops] 原174311核201产物/64原窗口，新3更4/rk6描述tag+1缺口；6可配对候选组合工具过，账本8accepted/4原目标、626检查0；唯一publisher3367426/26092500等原knowledge-refresh锁，未报live/可执行比较，不重事务/full/模型。原件paper/materials/20261024-issue51-poison-paired-ops/，源八叶与科学父保持。

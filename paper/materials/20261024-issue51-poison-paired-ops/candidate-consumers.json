@@ -1,0 +1,1586 @@
+{
+  "passed": true,
+  "content_root": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-poison-paired-20261024/live-candidate-root",
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "strategy_count": 47,
+  "reflex_count": 91,
+  "fixed_strategy_queries": 6,
+  "fixed_rk_construction_queries": 6,
+  "fixed_rk_full_queries": 6,
+  "fixed_original_predicate_cases": 6,
+  "wrong_ascension_cases": 6,
+  "other_role_cases": 4,
+  "new_executable_card_pick_advice": 0,
+  "natural_queries": 0,
+  "model_or_jev_calls": 0,
+  "library_sha256": "c03956ec08d13c24ec20874ab7180d1fa9df0c27c6a76515e50ece4223c375dd",
+  "rows": [
+    {
+      "strategy_id": "silent-brain-backflip-external-prefix-context",
+      "strategy": {
+        "id": "silent-brain-backflip-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "BACKFLIP的拿牌观察关联偏正：v0.111拿56/126、不拿58/138最终胜，差+2.42个百分点；样本单位为独立上传局（两臂可重叠）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2、已拿奖励前缀含LEADING_STRIKE（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬和灵动步法时，后空翻可同时补格挡与抽牌，仍比较备选和跳过。本系统A10、版本unknown的0CLP16ZR4ZZC在F13的1次机会选择了它；牌文1费/5格挡/抽2。F6XY4QJMS5RC也拿后空翻却F33败，不能承诺通关或稀释收益。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "unassessed",
+        "version": "2.1.0",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.4444444444444444,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 126
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=not_picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.42028985507246375,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 138
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 13,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=13"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-backflip-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "runs",
+            "passed": true,
+            "exact_independent_run_gate_passed": true
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": 126,
+              "unit": "distinct_uploaded_runs_in_cell"
+            },
+            "not_picked": {
+              "n": 138,
+              "unit": "distinct_uploaded_runs_in_cell"
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 126
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "runs",
+                "n": 138
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-defense-draw",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-defense-draw",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BACKFLIP"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "FOOTWORK"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-defense-draw",
+          "unit": "label"
+        },
+        "label_en": "Consider Backflip for poison defense and draw",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 13
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F13原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-defense-draw",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Consider Backflip for poison defense and draw",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 13
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "RICOCHET",
+          "matched": false
+        },
+        {
+          "card_id": "BACKFLIP",
+          "matched": true
+        },
+        {
+          "card_id": "BLADE_DANCE",
+          "matched": false
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    },
+    {
+      "strategy_id": "silent-brain-poison-cheap-source-with-snakebite",
+      "strategy": {
+        "id": "silent-brain-poison-cheap-source-with-snakebite",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            2,
+            3
+          ]
+        },
+        "strategy": "已有2费蛇咬时，出现致命毒药可比较低费施毒与防护的同回合安排，勿只按毒牌数量追高费。牌文分别1费5毒、2费7毒；升级致命毒药1费7毒。0CLP16ZR4ZZC在F19、F36两次机会都拿，只有1个独立A10局、版本unknown，无不拿反事实；F6早有致命毒药/药瓶仍F33败。外部v0.111代表终局有致命毒药：胜3/5、负4/5，方向反向且选择偏差重。先按本题资源比较，不设固定拿牌令。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 19,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=19"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效非弃局无modifier；冻结簇1、代表页0..4、赢家子组；终局出现仅作方向对照"
+            },
+            "statistic": {
+              "name": "selected_winner_terminal_presence_DEADLY_POISON",
+              "value": 0.6,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传、非因果；按终局聚类及赢家选择含幸存偏差",
+              "代表轨迹按前五节点近邻选择，非随机样本；节点是ordinal，不是已核floor",
+              "中间牌组为记录前缀代理；没有真实战前全字段、回合时机或独立玩家数",
+              "自有游戏版本unknown；同ID本地牌文不证明历史外部版本机制相同"
+            ],
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知",
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=1/pairs=0..4; sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+          }
+        ],
+        "source": "mixed",
+        "evidence_status": "unassessed",
+        "confidence": 0.3,
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_winner_terminal_presence_DEADLY_POISON",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-cheap-source",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-cheap-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DEADLY_POISON"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-cheap-source",
+          "unit": "label"
+        },
+        "label_en": "Compare cheap poison with costly retained sources",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 19
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F19原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-cheap-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare cheap poison with costly retained sources",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 19
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "REFLEX",
+          "matched": false
+        },
+        {
+          "card_id": "PHANTOM_BLADES",
+          "matched": false
+        },
+        {
+          "card_id": "DEADLY_POISON",
+          "matched": true
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    },
+    {
+      "strategy_id": "silent-brain-accelerant-external-prefix-context",
+      "strategy": {
+        "id": "silent-brain-accelerant-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "ACCELERANT的拿牌观察关联偏负：v0.111拿37/119、不拿148/452最终胜，差-1.65个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬、致命毒药、迷雾时，再比较触媒的额外触发与启动前存活。0CLP16ZR4ZZC F21的1次机会拿触媒；本地牌文1费/额外触发1次，升级2次，版本unknown。外部v0.111配对终局触媒+致命毒药胜8/27、负11/27（-11.11pp，q=1），保留负向，不作必拿。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "unassessed",
+        "version": "2.1.0",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.31092436974789917,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 119
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=not_picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.3274336283185841,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 452
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 21,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=21"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-accelerant-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 21,
+              "upper_bound": 119,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 89,
+              "upper_bound": 441,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 119
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 452
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-amplifier-after-source",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-amplifier-after-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ACCELERANT"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "DEADLY_POISON"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "HAZE"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-amplifier-after-source",
+          "unit": "label"
+        },
+        "label_en": "Evaluate Accelerant after observed poison sources",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 21
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F21原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-amplifier-after-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Evaluate Accelerant after observed poison sources",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 21
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "PREDATOR",
+          "matched": false
+        },
+        {
+          "card_id": "UNTOUCHABLE",
+          "matched": false
+        },
+        {
+          "card_id": "ACCELERANT",
+          "matched": true
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    },
+    {
+      "strategy_id": "silent-brain-noxious-fumes-external-prefix-context",
+      "strategy": {
+        "id": "silent-brain-noxious-fumes-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "NOXIOUS_FUMES的拿牌观察关联偏负：v0.111拿77/245、不拿75/206最终胜，差-4.98个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充幕2实牌组情境：已有触媒/单体施毒而无毒雾时，比较每回合开始群体施毒与再添单体牌。0CLP16ZR4ZZC F30的1次机会在毒雾/致命毒药/计算下注/跳过中选毒雾；本地牌文1费、全体2毒/升级3，版本unknown。外部v0.111触媒+毒雾配对终局胜5/27、负8/27（-11.11pp，q=1）；并非收益或安全保证。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "unassessed",
+        "version": "2.1.0",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.3142857142857143,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 245
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=not_picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.3640776699029126,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 206
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 30,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=30"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-noxious-fumes-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 37,
+              "upper_bound": 245,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 45,
+              "upper_bound": 203,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 245
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 206
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-recurring-group-source",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-recurring-group-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "NOXIOUS_FUMES"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ACCELERANT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            },
+            {
+              "op": "not",
+              "arg": {
+                "op": "any",
+                "field": "player.deck",
+                "arg": {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                }
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-recurring-group-source",
+          "unit": "label"
+        },
+        "label_en": "Compare recurring group poison with another single source",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 30
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F30原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-recurring-group-source",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare recurring group poison with another single source",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 30
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "NOXIOUS_FUMES",
+          "matched": true
+        },
+        {
+          "card_id": "DEADLY_POISON",
+          "matched": false
+        },
+        {
+          "card_id": "CALCULATED_GAMBLE",
+          "matched": false
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    },
+    {
+      "strategy_id": "silent-brain-burst-external-prefix-context",
+      "strategy": {
+        "id": "silent-brain-burst-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "BURST的拿牌观察关联偏负：v0.107拿34/103、不拿104/228最终胜，差-12.60个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬/致命毒药及防护技能时，爆发可比较下一技能的多用途复制与1费启动，不把能力牌触媒当复制目标。0CLP16ZR4ZZC F33的1次奖励选择爆发；牌文为本回合下一技能额外打出一次，版本unknown。外部v0.111代表终局胜2/5、负1/5有爆发；负例92f节点17拿后仍节点25止。旧v0.107负关联另账，机制对齐未知。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "unassessed",
+        "version": "2.1.0",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.3300970873786408,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 103
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=not_picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.45614035087719296,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 228
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=33"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-burst-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 19,
+              "upper_bound": 103,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 55,
+              "upper_bound": 228,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 103
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 228
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-flexible-skill-copy",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-flexible-skill-copy",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BURST"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "DEADLY_POISON"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-flexible-skill-copy",
+          "unit": "label"
+        },
+        "label_en": "Compare Burst using observed poison and defensive skills",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 33
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F33原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-flexible-skill-copy",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare Burst using observed poison and defensive skills",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 33
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "BULLET_TIME",
+          "matched": false
+        },
+        {
+          "card_id": "BURST",
+          "matched": true
+        },
+        {
+          "card_id": "AFTERIMAGE",
+          "matched": false
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    },
+    {
+      "strategy_id": "silent-brain-poison-late-piercing-wail-review",
+      "strategy": {
+        "id": "silent-brain-poison-late-piercing-wail-review",
+        "version": "1.0.0",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            3
+          ]
+        },
+        "strategy": "幕3已有触媒和蛇咬时，尖啸可作为一次性的全体降力量防护候选，与本题其他牌/跳过比较；不能只追加输出。牌文1费、本回合所有敌人失去6力量、消耗。0CLP16ZR4ZZC F46的1次机会选择后，F48记录净损35、F49仍净损64，虽胜不等于稳。外部DEADLY_POISON+PIERCING_WAIL配对终局胜13/27、负10/27，+11.11pp但q=.837；负例92f也持两张尖啸却节点25止。具体出牌回合/目标与因果减损未知。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 46,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=46"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效非弃局无modifier；冻结簇1、代表页0..4、赢家子组；终局出现仅作方向对照"
+            },
+            "statistic": {
+              "name": "selected_winner_terminal_presence_PIERCING_WAIL",
+              "value": 0.8,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传、非因果；按终局聚类及赢家选择含幸存偏差",
+              "代表轨迹按前五节点近邻选择，非随机样本；节点是ordinal，不是已核floor",
+              "中间牌组为记录前缀代理；没有真实战前全字段、回合时机或独立玩家数",
+              "自有游戏版本unknown；同ID本地牌文不证明历史外部版本机制相同"
+            ],
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知",
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=1/pairs=0..4; sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+          }
+        ],
+        "source": "mixed",
+        "evidence_status": "unassessed",
+        "confidence": 0.3,
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "playbook_parent": "silent-external-poison-build-playbook-c1",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_winner_terminal_presence_PIERCING_WAIL",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk_id": "silent-poison-rk-late-mitigation",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-poison-rk-late-mitigation",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "PIERCING_WAIL"
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ACCELERANT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SNAKEBITE"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-poison-tag-late-mitigation",
+          "unit": "label"
+        },
+        "label_en": "Compare temporary mitigation while poison sources develop",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 46
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "knowledge/characters/silent/build-statistics-v1/games/0CLP16ZR4ZZC.json",
+            "sha256": "2e5c94b212cc8b748c013aed4477192af0d6ff4fb20e8a4f979180871706a377",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence；0CLP16ZR4ZZC F46原题选择可行性及牌文；非收益估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "cluster1代表页0..4的5胜5负完整节点；方向对照，未当本地验证"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知"
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-poison-rk-late-mitigation",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare temporary mitigation while poison sources develop",
+        "confidence": 0.3,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 46
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": []
+      },
+      "predicate_choices": [
+        {
+          "card_id": "PRECISE_CUT",
+          "matched": false
+        },
+        {
+          "card_id": "PIERCING_WAIL",
+          "matched": true
+        },
+        {
+          "card_id": "ANTICIPATE",
+          "matched": false
+        }
+      ],
+      "applies_to_card_pick_comparison": false,
+      "actual_fixed_production_tools": true
+    }
+  ]
+}

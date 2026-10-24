@@ -1,16 +1,16 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T17:51:37+08:00
+updated: 2026-10-24T18:09:26+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：本轮#48首普通提示/映射已核（见下）；#51/6382572399提速八叶候选已冻，tsc0/Python22/TS15过，source_commit=null、full0/未部署，待原集成员唯一完整窗口；不冒ultrafast/3插1生效。7个未启动单元T17:40:44已重冻排队，毒/刀/遭遇文字＋rk同产，旧输入/在途/进度不改；17:40额度47%，原生档位仍null。
-在等谁：原sts2-integrator核精确补丁/完整检查→合源/宿主部署，随后原自然tick及native；源工作树未结，不清会话。旧005 failed/rc0因报告差异保持；毒008一描述候选、发布/消费者0，不硬转rk。原件paper/materials/20261024-issue51-speed-ops/。
-下一步：沿原窗口接实际终态/源提交、宿主导入和自然档位/3插1回执，科学父不关，不另full/模型/强制tick。R433四条/45库及其他知识保持，原自然采用/收益和16通知角色ACK仍待；164302唯一dataset rc0/14叶提交2fbf8be6已核，回收/科学父仍待。
+进行中的事：#51原174311 done/rc0，201产物/64原窗口/原生high核同；7文字3新4更、rk6描述tag/1缺副本数谓词。6可消费对（文字2新4更+rk6）组合工具/旧85过，唯一发布worker3367426/26092500等knowledge-refresh.lock，未写live；原锁3361736；不重派。账本8新accepted/4待更、626检查0。
+在等谁：等原锁自然释放→同一publisher回调，再核实际阶段/版本、kb_strategies+kb_reflex及账本；6标签不进入比较建议，剧本/第7对待补证。原生tier未知，fast请求/额度47%，未报ultrafast。原件paper/materials/20261024-issue51-poison-paired-ops/。
+下一步：按原回调接实际发布/生产读回，固定查询不代自然采用/收益；不另full/模型/tick。原#51八叶tsc0/Python22/TS15、source_commit=null/未部署，仍等集成员唯一完整窗；不得借本数据发布证明代码或3插1生效。R433/其他知识、005原失败/008原输入、16通知ACK和科学父保留，源与数据事务未结不清会话。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51并行：R432五情境已发布/固定读回，source6e3976ca/live9dee1cfc，其他知识/脏目录/控制标记保持；自然采用/收益待。R430一真实局八ID命中非收益，R431/R432仍待。七新单元17:40:44已重冻同产，506/28窗口/18局反向分层守界；冷/休不重跑，满批或2h独立发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/及20261024-issue51-speed-ops/。
+#51并行：R432五情境已发布/固定读回，source6e3976ca/live9dee1cfc，其他知识/脏目录/控制标记保持；自然采用/收益待。R430一真实局八ID命中非收益，R431/R432仍待。七新单元17:40:44重冻；首毒174311已done，余6等自然派发，506/28窗口/18局反向分层守界；冷/休不重跑，满批或2h独立发布、不加计时器。原件paper/materials/20261024-issue51-cold-own-publication-ops/及20261024-issue51-speed-ops/。
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 

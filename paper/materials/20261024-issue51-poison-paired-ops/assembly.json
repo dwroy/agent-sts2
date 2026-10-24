@@ -1,0 +1,1594 @@
+{
+  "at": "2026-10-24T18:02:50+08:00",
+  "batch": "20261024-174311-strategy-proposal",
+  "authority_comment": 6382572399,
+  "selected_strategy_ids": [
+    "silent-brain-backflip-external-prefix-context",
+    "silent-brain-poison-cheap-source-with-snakebite",
+    "silent-brain-accelerant-external-prefix-context",
+    "silent-brain-noxious-fumes-external-prefix-context",
+    "silent-brain-burst-external-prefix-context",
+    "silent-brain-poison-late-piercing-wail-review"
+  ],
+  "selected_rk_ids": [
+    "silent-poison-rk-defense-draw",
+    "silent-poison-rk-cheap-source",
+    "silent-poison-rk-amplifier-after-source",
+    "silent-poison-rk-recurring-group-source",
+    "silent-poison-rk-flexible-skill-copy",
+    "silent-poison-rk-late-mitigation"
+  ],
+  "selected_pairs": [
+    {
+      "context": "defense-draw",
+      "condition": "已持蛇咬、灵动步法，抽牌与防护需要同时补齐，奖励出现后空翻",
+      "action": "把后空翻作为同时补格挡与抽牌的候选，仍与本题备选及跳过比较",
+      "amplitude_and_sample": "牌文为1费、5格挡、抽2；本局此情境1/1机会选择，收益差未知",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-6f1a785fb54b4210:n14,n37,n39",
+        "projection-e05868df228bc04b:n6,n7"
+      ],
+      "counterevidence": "自有F6在F19拿BACKFLIP，仍于F33败；其未持FOOTWORK，不能当同条件因果对照。外部代表负例e058也有BACKFLIP。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-backflip-external-prefix-context",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "update",
+      "rk_id": "silent-poison-rk-defense-draw",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 13,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 13,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15268982289,
+          "bytes": 21209,
+          "sha256": "7dd7734217ba062313d19d0c42538cec1df11f5ba9b5a0eeb47f2d9f312eddda",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F13.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 13,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3351192246,
+          "bytes": 225410,
+          "sha256": "89d41fa98487b984c9caf8f2fcc6062a619359860f23d887dc4872f8e4b6be0d",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3351192246.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    },
+    {
+      "context": "cheap-source",
+      "condition": "幕2/3已持2费蛇咬，当前奖励提供1费致命毒药",
+      "action": "把低费直接施毒与继续堆高费施毒分开比较，检查当下防护及能量安排",
+      "amplitude_and_sample": "未升级牌文为1费5毒，对照蛇咬2费7毒；不同牌文差，不是实测伤害收益。自有1局F19/F36共2机会均拿",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 2,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-67064be025992be3:n3,n4,n22",
+        "projection-b47197e675bcc56b:n3,n5,n8"
+      ],
+      "counterevidence": "外部代表终局DEADLY_POISON胜3/5、负4/5；本系统F6 F2取得后仍F33败。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-poison-cheap-source-with-snakebite",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "new",
+      "rk_id": "silent-poison-rk-cheap-source",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 19,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 19,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15272542938,
+          "bytes": 23273,
+          "sha256": "c23a5a22d26e23fd769878d1a8f8ad8b0c7ce07582632cbb6294fdd89782ca2c",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F19.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 19,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3353703820,
+          "bytes": 186160,
+          "sha256": "4ab64a8bdcff0c9c439c93aadb307a4ccdf50d4ebb53f0a848aafa1a4a6557bd",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3353703820.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    },
+    {
+      "context": "amplifier-after-source",
+      "condition": "已持蛇咬、致命毒药和迷雾，奖励出现触媒",
+      "action": "在已有施毒来源后比较额外触发，保留启动前存活与能量的检查",
+      "amplitude_and_sample": "牌文1费，中毒额外触发1次；升级额外2次。本局该奖励1机会选择；不估因果增益",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-67064be025992be3:n3,n4,n22",
+        "projection-59420de19fd0b489:n2,n3,n6,n9"
+      ],
+      "counterevidence": "外部页3负例节点6已有触媒、药瓶、致命毒药，却节点9结束；配对组合差-11.11pp/q=1。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-accelerant-external-prefix-context",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "update",
+      "rk_id": "silent-poison-rk-amplifier-after-source",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 21,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 21,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15274458943,
+          "bytes": 25612,
+          "sha256": "84b5c7290a80963e2e7a40accfea73c5d23c9cfa5d64626d5eff73c664cdcfc9",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F21.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 21,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3354559961,
+          "bytes": 155409,
+          "sha256": "3e2c598926e52b42500353c5ff92549240833297db9ee4c9de1802b18d440d82",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3354559961.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    },
+    {
+      "context": "recurring-group-source",
+      "condition": "幕2已有触媒和单体施毒，尚无毒雾，奖励同时给毒雾与致命毒药",
+      "action": "把每回合开始的群体施毒与再添单体来源作功能比较，核启动和生存代价",
+      "amplitude_and_sample": "毒雾1费，每回合开始全体2毒、升级3；本局F30 1机会选毒雾而非该屏致命毒药",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-40ed0656498ebe5e:n2,n3,n6,n17",
+        "projection-a7d1a45b65eee902:n2,n3,n6,n15"
+      ],
+      "counterevidence": "配对组合负向；页0负例早得DEADLY_POISON+NOXIOUS_FUMES仍节点15止。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-noxious-fumes-external-prefix-context",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "update",
+      "rk_id": "silent-poison-rk-recurring-group-source",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 30,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 30,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15277933916,
+          "bytes": 26744,
+          "sha256": "245c54de77c769df88de77018376fac9592923c1dd81f04bc5bbb02a64648b42",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F30.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 30,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3361100930,
+          "bytes": 249508,
+          "sha256": "5e2de798664facacf1264d1e95fbabf029b638f31edd3e8d41f7cb3cd06fb77f",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3361100930.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    },
+    {
+      "context": "flexible-skill-copy",
+      "condition": "已有蛇咬、致命毒药和防护技能，幕2奖励出现爆发",
+      "action": "先核当前技能中可复制的施毒/防护用途，再与爆发的1费启动及本题备选比较",
+      "amplitude_and_sample": "牌文1费，本回合下一技能额外打出1次；不是复制能力牌触媒。自有F33 1机会选择",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-adacc9b017954650:n46,n47,n48,n49",
+        "projection-92f2215255e10258:n17,n24,n25"
+      ],
+      "counterevidence": "外部projection-92f在节点17拿BURST，仍于节点25止；旧v0.107拿牌关联-12.60pp不能抹除或跨版合并。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-burst-external-prefix-context",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "update",
+      "rk_id": "silent-poison-rk-flexible-skill-copy",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 33,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15279110321,
+          "bytes": 27720,
+          "sha256": "08db7d64cc5707e7411f25321afa175f1949b209a72f6e367b496d2b72d25e66",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F33.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3362638594,
+          "bytes": 13487,
+          "sha256": "76e8a5ed046ff1c0a286bf32fb7041f15605e34d7a4bea9c99e55f7e9b45c7d3",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3362638594.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    },
+    {
+      "context": "late-mitigation",
+      "condition": "幕3已持触媒与蛇咬，奖励出现尖啸且需要复查短时防护",
+      "action": "把一次性的全体降力量作为防护候选比较，按当前遭遇检查时机；不因已有毒源只追输出",
+      "amplitude_and_sample": "牌文1费，本回合所有敌人失去6力量、消耗；自有F46 1机会拿，后场仍记录净损64，未证明防护收益",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-67064be025992be3:n14,n36,n48,n49",
+        "projection-92f2215255e10258:n14,n21,n24,n25"
+      ],
+      "counterevidence": "自有赢家F49仍净损64；外部92f负例终局2张尖啸仍失败；无未拿的同局对照。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-poison-late-piercing-wail-review",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "new",
+      "rk_id": "silent-poison-rk-late-mitigation",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "rk_state": "candidate",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 46,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 46,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15287227634,
+          "bytes": 33517,
+          "sha256": "c567f5f6b853e8f79c6f3871ba0a57c4b86f06e435cde1c2b4a73dc25d2c8803",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F46.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 46,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3369770574,
+          "bytes": 193435,
+          "sha256": "69277ed92dd74fb3e9fc1c1bfd551d4b260a7aaac4a5851c34c9ec30fa4398d3",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3369770574.json"
+        }
+      },
+      "rk_reason": "真实reflex-entry-v1描述性tag，附精确候选与当前已持牌谓词；非contrast，无HP/胜率差，不进入现行cardPickReflex比较建议"
+    }
+  ],
+  "held_pairs": [
+    {
+      "context": "third-costly-source",
+      "condition": "幕3实际牌组已持2张未升级蛇咬，奖励给蛇咬+",
+      "action": "保留跳过，比较第三张2费保留施毒与当前启动、防护占用；不要把升级奖励当自动补强",
+      "amplitude_and_sample": "本局F22拿第二张、F35拒第三张升级版，各1机会，同1局；F36随后仍拿1费致命毒药+。无收益差",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_game_version": "unknown",
+      "own_opportunities": 1,
+      "own_independent_runs": 1,
+      "external_source": "external:sts2fun",
+      "external_version": "v0.111",
+      "external_refs": [
+        "projection-adacc9b017954650:n3,n25,n48,n49"
+      ],
+      "counterevidence": "外部adacc赢家终局2张蛇咬，其余所读赢家多为1张；没有同题第三张拿/不拿对照。",
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "source_accounting": "本地牌文/实际选择为主；外部仅方向对照；不同条件不能做因果验证",
+      "available_at_decision": "原决策指纹相同的已持牌组/本题奖励；不读取终局标签作为触发",
+      "stop_boundary": "条件/原牌文/资源缺失时未知；不提供固定拿牌、出牌顺序、HP/能量安全线或SL规则",
+      "strategy_id": "silent-brain-poison-third-snakebite-review",
+      "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "strategy_disposition": "new",
+      "rk_id": "silent-poison-rk-third-costly-source",
+      "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/rk-waiting.json",
+      "rk_state": "waiting",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "original_case": {
+        "floor": 35,
+        "state": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 35,
+          "stream": "states",
+          "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 15280182391,
+          "bytes": 28622,
+          "sha256": "1398914f674af9a937106d703e9d680b3d4dd36ae7f8e2b955050631282b2cac",
+          "cutoff": 17026867203,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-matching-pick-F35.json",
+          "fingerprint_matches_decision": true
+        },
+        "decision": {
+          "run_id": "0CLP16ZR4ZZC",
+          "floor": 35,
+          "stream": "decisions",
+          "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 3362890386,
+          "bytes": 197719,
+          "sha256": "e08fce89e5410bdd0f270da4e1209b16e4701d2d077efc5acb810fae623093fb",
+          "cutoff": 4638939179,
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/raw-windows/0CLP16ZR4ZZC-decisions-3362890386.json"
+        }
+      },
+      "rk_reason": "现行card_pick物理牌player.deck无聚合count，any重复条件不能证明两份同ID；原局两张均未升级，不能以两种升级状态代替。缺可靠副本数谓词；不扩schema，不用card.count伪造DTO。下一步由原合同owner提供实际可得计数字段后补精确rk。"
+    }
+  ],
+  "source_counts": {
+    "distinct_decision_contexts": 7,
+    "text_strategy_candidates": 7,
+    "new_text_ids": 3,
+    "same_id_text_updates": 4,
+    "parent_playbook_updates": 1,
+    "parent_counted_as_new_context": 0,
+    "byte_identical_strategy_reuse": 0,
+    "boss_reference_reuse": 4,
+    "new_aliases": 0,
+    "statistical_rows_counted_as_decisions": 0,
+    "rk_candidates": 6,
+    "rk_waiting": 1,
+    "paired_candidates": 6,
+    "paired_with_explicit_gap": 1,
+    "brain_rk_schema_loadable": 6,
+    "executable_card_pick_rk": 0,
+    "new_contexts_with_comparison_groups_ge100": 0,
+    "retained_old_entries_with_groups_ge100": 4,
+    "new_qualified100_claims": 0,
+    "formal_publications": 0,
+    "production_readbacks": 0,
+    "natural_queries": 0,
+    "actual_adoptions": 0,
+    "measured_benefits": 0,
+    "scientific_parents_closed": 0,
+    "frozen_predecessor_new": 4,
+    "zero_new_streak_this_batch": 0,
+    "isolated_fixed_brain_tool_readbacks": 6,
+    "new_text_ids_ge5": false,
+    "total_decision_contexts_ge5": true,
+    "count_caveat": "新增文字ID仅3、未达5；7为3新+4同ID更新情境，旧成果不冒新增"
+  },
+  "snapshots": {
+    "main": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "e577d01d57072f9f2da2eee87502809efbbf27847b45555d07f28581f0aab077",
+          "bytes": 219702
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+          "bytes": 531785
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "561d34d506aa4b8768531f51811aa80a3642bac0838dd32bea802167bf9891db",
+          "bytes": 186815
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "f473234dbed0ff55c8c7e0bf1f5f9c7b3e5c0b62c8f94c3ffc337f673402f73d",
+          "bytes": 228908
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "2594df9cad3ff3627a495ace2a83d988d719c61ed50d329d018856ba00580911",
+          "bytes": 547926
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "2e1eb7844e771c06a9e199333773b55d22347fa6cf4a8651cca978c6e023d3fa",
+          "bytes": 188400
+        }
+      },
+      "updates": [
+        {
+          "id": "silent-brain-backflip-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-backflip-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "BACKFLIP的拿牌观察关联偏正：v0.111拿56/126、不拿58/138最终胜，差+2.42个百分点；样本单位为独立上传局（两臂可重叠）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2、已拿奖励前缀含LEADING_STRIKE（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.4444444444444444,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "runs",
+                  "n": 126
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=not_picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.42028985507246375,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "runs",
+                  "n": 138
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-backflip-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "runs",
+                "passed": true,
+                "exact_independent_run_gate_passed": true
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": 126,
+                  "unit": "distinct_uploaded_runs_in_cell"
+                },
+                "not_picked": {
+                  "n": 138,
+                  "unit": "distinct_uploaded_runs_in_cell"
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-accelerant-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-accelerant-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "ACCELERANT的拿牌观察关联偏负：v0.111拿37/119、不拿148/452最终胜，差-1.65个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.31092436974789917,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 119
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=not_picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3274336283185841,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 452
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-accelerant-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 21,
+                  "upper_bound": 119,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 89,
+                  "upper_bound": 441,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-noxious-fumes-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-noxious-fumes-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "NOXIOUS_FUMES的拿牌观察关联偏负：v0.111拿77/245、不拿75/206最终胜，差-4.98个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3142857142857143,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 245
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=not_picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3640776699029126,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 206
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-noxious-fumes-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 37,
+                  "upper_bound": 245,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 45,
+                  "upper_bound": 203,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-burst-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-burst-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "BURST的拿牌观察关联偏负：v0.107拿34/103、不拿104/228最终胜，差-12.60个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.107",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3300970873786408,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 103
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.107",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=not_picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.45614035087719296,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 228
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-burst-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 19,
+                  "upper_bound": 103,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 55,
+                  "upper_bound": 228,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        }
+      ],
+      "before_strategy_count": 45,
+      "after_strategy_count": 47,
+      "before_reflex_count": 85,
+      "after_reflex_count": 91
+    },
+    "live": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "7f2aa89d7a2038ab3b5cf77987b26d0fe26d2994d1ff1ff85d8a913fc792cb6c",
+          "bytes": 219702
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+          "bytes": 531785
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "561d34d506aa4b8768531f51811aa80a3642bac0838dd32bea802167bf9891db",
+          "bytes": 186815
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "c03956ec08d13c24ec20874ab7180d1fa9df0c27c6a76515e50ece4223c375dd",
+          "bytes": 228908
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "2594df9cad3ff3627a495ace2a83d988d719c61ed50d329d018856ba00580911",
+          "bytes": 547926
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "2e1eb7844e771c06a9e199333773b55d22347fa6cf4a8651cca978c6e023d3fa",
+          "bytes": 188400
+        }
+      },
+      "updates": [
+        {
+          "id": "silent-brain-backflip-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-backflip-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "BACKFLIP的拿牌观察关联偏正：v0.111拿56/126、不拿58/138最终胜，差+2.42个百分点；样本单位为独立上传局（两臂可重叠）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2、已拿奖励前缀含LEADING_STRIKE（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.4444444444444444,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "runs",
+                  "n": 126
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BACKFLIP;arm=not_picked;代理=幕2、已拿奖励前缀含LEADING_STRIKE;双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.42028985507246375,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "runs",
+                  "n": 138
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BACKFLIP/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-backflip-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "runs",
+                "passed": true,
+                "exact_independent_run_gate_passed": true
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": 126,
+                  "unit": "distinct_uploaded_runs_in_cell"
+                },
+                "not_picked": {
+                  "n": 138,
+                  "unit": "distinct_uploaded_runs_in_cell"
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-accelerant-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-accelerant-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "ACCELERANT的拿牌观察关联偏负：v0.111拿37/119、不拿148/452最终胜，差-1.65个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.31092436974789917,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 119
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.ACCELERANT;arm=not_picked;代理=幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3274336283185841,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 452
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/ACCELERANT/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-accelerant-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 21,
+                  "upper_bound": 119,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 89,
+                  "upper_bound": 441,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-noxious-fumes-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-noxious-fumes-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "NOXIOUS_FUMES的拿牌观察关联偏负：v0.111拿77/245、不拿75/206最终胜，差-4.98个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3142857142857143,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 245
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.NOXIOUS_FUMES;arm=not_picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3640776699029126,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 206
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/NOXIOUS_FUMES/4/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-noxious-fumes-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 37,
+                  "upper_bound": 245,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 45,
+                  "upper_bound": 203,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        },
+        {
+          "id": "silent-brain-burst-external-prefix-context",
+          "preimage": {
+            "id": "silent-brain-burst-external-prefix-context",
+            "trigger": {
+              "question_types": [
+                "card_reward"
+              ],
+              "acts": [
+                1,
+                2
+              ]
+            },
+            "strategy": "BURST的拿牌观察关联偏负：v0.107拿34/103、不拿104/228最终胜，差-12.60个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。",
+            "source": "external:sts2fun",
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "version": "2.0.0",
+            "evidence": [
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.107",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.3300970873786408,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 103
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/picked/win",
+                "role": "support"
+              },
+              {
+                "type": "external_aggregate",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.107",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "downloaded_at": "2026-10-21",
+                "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+                "filters": {
+                  "character": "silent",
+                  "ascension": 10,
+                  "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BURST;arm=not_picked;代理=幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14};双方共有保留cell;n10删失;upgrades unknown"
+                },
+                "statistic": {
+                  "name": "eventual_win_rate",
+                  "value": 0.45614035087719296,
+                  "unit": "fraction"
+                },
+                "denominator": {
+                  "unit": "offers",
+                  "n": 228
+                },
+                "design": "observational",
+                "limitations": [
+                  "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+                  "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+                  "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+                  "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+                  "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+                  "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+                  "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+                  "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+                ],
+                "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BURST/0/selected/not_picked/win",
+                "role": "support"
+              }
+            ],
+            "evidence_detail_ref": {
+              "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+              "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+              "entry_id": "silent-brain-burst-external-prefix-context",
+              "statistics": {
+                "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+                "bytes": 14899978,
+                "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+              },
+              "original_version": "2.0.0-pending",
+              "prior_evidence_preserved": true,
+              "primary_sample_gate": {
+                "threshold": 100,
+                "unit": "offers",
+                "passed": true,
+                "exact_independent_run_gate_passed": false
+              },
+              "independent_uploaded_runs": {
+                "picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 19,
+                  "upper_bound": 103,
+                  "bounds_not_estimates": true
+                },
+                "not_picked": {
+                  "n": null,
+                  "unit": "distinct_uploaded_runs_union",
+                  "lower_bound": 55,
+                  "upper_bound": 228,
+                  "bounds_not_estimates": true
+                }
+              },
+              "evidence_status": "conflict"
+            }
+          }
+        }
+      ],
+      "before_strategy_count": 45,
+      "after_strategy_count": 47,
+      "before_reflex_count": 85,
+      "after_reflex_count": 91
+    }
+  },
+  "source_files": {
+    "strategy": {
+      "path": ".worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/strategy-candidates.json",
+      "bytes": 39806,
+      "sha256": "b676ce0aea58863da4ec0b30e0d5d28d27858163c98ed2d4bac67b180040f829"
+    },
+    "rk": {
+      "path": ".worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex.json",
+      "bytes": 16218,
+      "sha256": "9889a55f98b91c8f6bc1dffc191871fc3cbb68d40fc6d4abbeeecc123b460fae"
+    },
+    "vocab": {
+      "path": ".worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/isolated-knowledge/characters/silent/reflex-vocab.json",
+      "bytes": 1789,
+      "sha256": "fa0c0f304ee1f6e84126eb70f5a060c731b1a164d50fd0672513d5a25d0a854c"
+    }
+  },
+  "verified_inventory_files": 201,
+  "raw_windows_verified": 64,
+  "new_models_full_games": 0,
+  "data_only": true,
+  "complete_playbook_publication": false,
+  "executable_card_pick_advice": 0
+}
