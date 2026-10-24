@@ -16,13 +16,14 @@
  * changed or blocked by the route.
  */
 
+import { endgameScope } from "../../memory/endgame-plan.js";
 import type { Decision, DecisionEnv, ResolvedAction, RouteReviewResult } from "../../memory/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../../core/util/json.js";
 import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nextRestVersus, nodeId, roomName, routeAnswerText, routeIds, routeText, type RouteMap } from "../../sim/route-map.js";
 import type { RoomCostModel } from "../../sim/route-projection.js";
 import { roomPosition } from "./map.js";
 import { nextPlanRef, usePlanRef } from "./oneshot.js";
-import { actPlan, makeRoutePlan, mapActOf, mapFromMemory, nextPlannedStep, remainingIds, routeBlockState, routeCosts, wingedBootsLeft, type RoutePlan } from "./route-plan.js";
+import { actPlan, makeRoutePlan, mapActOf, mapFromMemory, nextPlannedStep, remainingIds, routeBlockState, routeCalculationCache, routeCosts, wingedBootsLeft, type RoutePlan } from "./route-plan.js";
 
 export type ReviewKind = "card" | "rest" | "event";
 
@@ -50,11 +51,17 @@ export interface RouteBlock {
 }
 
 /** The answer format (added to the question's instructions). */
-export const ROUTE_REVIEW_NOTE =
+const LEGACY_ROUTE_REVIEW_NOTE =
   "state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、" +
   "你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 " +
   '"route"："keep"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），' +
   '以及 "route_reason"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。';
+
+export const ROUTE_REVIEW_NOTE =
+  'state.route_review 是已有爬楼路线，继续复用。map/next_nodes 是当前可达性，plan_facts/next_rest 是依赖当前状态的投影。' +
+  '无需因本题重推整条路线；仅在结合牌组、遗物、HP、资源、遭遇与机会，确认相较旧路线值得修改、预期有助于本局胜率后才改线。' +
+  '同一JSON可省略route，或给"route":"keep"；确需改线才给从next_nodes到boss的合法节点序列和route_reason，说明当前情况、取舍及预期收益（无需数字）。' +
+  '构筑路线与爬楼路线分别调整，只重算受影响部分；描述改写或重复节点序列不算改线。改线前可参考next_rest比较，未知保持未知。';
 
 const REST_NOTE = "plan_facts.if_option 是本题每个选项之后的 HP 对应的下一只精英和 boss 前血量。";
 
@@ -103,11 +110,12 @@ export function routeReviewBlock(env: DecisionEnv, kind: ReviewKind, rooms: read
     const options = restGroups(restOptions, max);
     const runPlanHp = runPlanHpLines(env);
     const blockState: Record<string, JsonValue> = {
-      ...routeBlockState({ map, plan: remaining, start, costs, chain: here.fights, options, ...restStart(options, start) }),
+      ...routeBlockState({ cache: routeCalculationCache(env), map, plan: remaining, start, costs, chain: here.fights, options, ...restStart(options, start) }),
       vs_plan: vsPlan(plan, map, remaining, start, kind),
       ...(runPlanHp.length > 0 ? { run_plan_hp: runPlanHp.join(" ") } : {}),
     };
-    return { kind, state: blockState, note: kind === "rest" ? `${ROUTE_REVIEW_NOTE}${REST_NOTE}` : ROUTE_REVIEW_NOTE, map, plan, remaining, costs };
+    const note = endgameScope(state) ? ROUTE_REVIEW_NOTE : LEGACY_ROUTE_REVIEW_NOTE;
+    return { kind, state: blockState, note: kind === "rest" ? `${note}${REST_NOTE}` : note, map, plan, remaining, costs };
   } catch {
     return null;
   }
@@ -165,7 +173,7 @@ export function withRouteReview(env: DecisionEnv, decision: Decision, block: Rou
       const reason = typeof raw["route_reason"] === "string" ? raw["route_reason"].trim() : "";
       const review = (outcome: RouteReviewResult["outcome"], invalid?: string): ResolvedAction => ({ ...result, routeReview: { answer: given || null, outcome, reason, ...(invalid ? { invalid } : {}) } });
       try {
-        if (!given) return review("invalid", "the answer has no route");
+        if (!given) return endgameScope(env.state) ? review("keep") : review("invalid", "the answer has no route");
         if (isKeep(given)) return review("keep");
         const ids = routeIds(given);
         if (!ids) return review("invalid", `route "${given.slice(0, 60)}" names no node ids`);
@@ -173,8 +181,9 @@ export function withRouteReview(env: DecisionEnv, decision: Decision, block: Rou
         if (problems.length > 0) return review("invalid", problems.join("; ").slice(0, 300));
         // The plan's own route again is a keep.
         if (ids.join(" ") === block.remaining.join(" ")) return review("keep");
+        if (endgameScope(env.state) && !reason) return review("invalid", "route_reason must explain current facts, tradeoff and expected win benefit");
         const choice = answer?.type === "choice" ? answer.choice : "";
-        const why = reviewWhy(block.kind);
+        const why = `${reviewWhy(block.kind)}${endgameScope(env.state) && reason ? `: ${reason}` : ""}`;
         const start = { hp: hpAfter ? hpAfter(choice) : (env.state.run?.current_hp ?? 0), max: env.state.run?.max_hp ?? 0 };
         const plan = makeRoutePlan(env, block.map, ids, start, block.costs, why);
         // The new route against the kept one at their next rest sites, from the HP this choice leaves (logged; not a block).

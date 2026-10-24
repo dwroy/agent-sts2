@@ -153,13 +153,18 @@ export function runPlanTaskState(state: GameState, knowledge: Knowledge, trigger
 /** The question with the run plan task on it: state.run_plan_task and the note after its instructions. */
 export function withRunPlanTask(decision: AskDecision & { deepseek: NonNullable<AskDecision["deepseek"]> }, task: Record<string, JsonValue>): AskDecision {
   const key = decision.deepseek.question;
+  const reuseInstruction = (text: string): string => text.replace("若本题更新run_plan，必须给construction=", "若确需修改构筑方向，只更新construction=");
+  if (task["plan_reuse"] === true) {
+    const context = asRecord(task["construction_context"]);
+    if (typeof context["instruction"] === "string") task = { ...task, construction_context: { ...context, instruction: reuseInstruction(context["instruction"]) } as JsonValue };
+  }
   const question = decision.questions[key];
   if (question?.type !== "choice") throw new Error(`the run plan rides on a choice question; ${decision.label}'s ${key} is not one`);
   return {
     ...decision,
     state: { ...decision.state, [RUN_PLAN_TASK_KEY]: task },
-    questions: { ...decision.questions, [key]: { ...question, instructions: `${question.instructions} ${task["endgame_plan_required"] === true
-      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} 在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`
+    questions: { ...decision.questions, [key]: { ...question, instructions: `${task["plan_reuse"] === true ? reuseInstruction(question.instructions) : question.instructions} ${typeof task["endgame_objective"] === "string"
+      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} ${task["plan_reuse"] === true ? "沿用题内当前计划；run_plan 为可选变更字段，省略即复用。" : `在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`}`
       : RUN_PLAN_MERGE_NOTE}` } },
   };
 }

@@ -42,7 +42,9 @@ it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan"
   const cues = JSON.parse(result.question.split("\n").at(-1)!);
   expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
   expect(result.question).toContain("本题有 1 条相关策略/剧本可查。");
-  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.system).toContain("kb_strategies"); expect(result.system).toContain("kb_reflex");
+  expect(result.system).not.toContain("查相关策略与 rk 后");
   expect(result.tools!.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex"]));
   expect(result.question).toContain('"relevant":true');
   expect(result.question).not.toContain("strategy-fixture"); expect(result.question).not.toContain("格式策略标题");

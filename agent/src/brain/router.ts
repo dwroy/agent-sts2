@@ -1,3 +1,4 @@
+import { withoutToolCapabilities } from "./tools/capabilities.js";
 import { BrainLiveWriter, observeBrain } from "./live-view.js";
 import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
 import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
@@ -589,7 +590,7 @@ export class BrainRouter {
     let second: BrainAnswer;
     try {
       second = await this.call(engine, { ...req, ...(this.knowledgeAgent ? {
-        tools: [], timeoutMs: Math.max(1, (req.timeoutMs ?? 300_000) - (this.now() - began)),
+        tools: [], system: withoutToolCapabilities(req.system, req.tools ?? []), timeoutMs: Math.max(1, (req.timeoutMs ?? 300_000) - (this.now() - began)),
         question: `${req.question}\n\n已查询的知识（不再调用工具）：${JSON.stringify(first.toolCalls)}`,
       } : {}), reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
     } catch (error) {

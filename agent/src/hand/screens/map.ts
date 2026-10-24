@@ -19,7 +19,7 @@ import { boundedV6Jev } from "../../v6/prompt-summary.js";
 import { buildFacts, deepseekDecides } from "../../brain/build-facts.js";
 import { bossStartHealOf, NO_REST_RELICS, restedHp, restHealOf, roomCost, roomCostModel, type RestHeal, type RoomCostModel } from "../../sim/route-projection.js";
 import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nextRestVersus, nodeId, roomName, routeIds, type RouteMap } from "../../sim/route-map.js";
-import { actOfFloor, actPlan, makeRoutePlan, mapActOf, mapFromState, nextPlannedStep, remainingIds, routeBlockState, routeCosts, runSnapshot, snapshotChange, type RoutePlan } from "./route-plan.js";
+import { actOfFloor, actPlan, makeRoutePlan, mapActOf, mapFromState, nextPlannedStep, remainingIds, routeBlockState, routeCalculationCache, routeCosts, runSnapshot, snapshotChange, type RoutePlan } from "./route-plan.js";
 import { oneshotOn } from "./oneshot.js";
 import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardSlotsOf, discardVariant, DRINK_SUFFIX, drinkableSlots, drinkVariant } from "./potion-discard.js";
 import { optionQuestions } from "./potion-discard.js";
@@ -668,7 +668,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
   const statue = statueSlots(env, available);
   const potion = routePotionJev(env, available);
   const routeMap: Record<string, JsonValue> = {
-    ...routeBlockState({ map, start, costs, candidates: {} }),
+    ...routeBlockState({ cache: routeCalculationCache(env), map, start, costs, candidates: {} }),
     ...(replanWhy ? { replan_because: replanWhy, previous_plan: previous?.summary ?? null } : {}),
     ...(!potion ? statue ?? {} : {}),
   };
@@ -742,10 +742,10 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
     label: "map/route-review",
     state: {
       situation: { screen: "MAP", floor: state.run?.floor ?? null, act: map.act, hp: `${start.hp}/${start.max}`, gold: state.run?.gold ?? null },
-      route_map: { ...routeBlockState({ map, plan: kept, start, costs }), revealed_outcome: `${review.why}: ${revealed}` },
+      route_map: { ...routeBlockState({ cache: routeCalculationCache(env), map, plan: kept, start, costs }), revealed_outcome: `${review.why}: ${revealed}` },
       facts: buildFacts(env),
     },
-    questions: { pick: choiceQ(ROUTE_REVIEW_TASK, { keep: `保留原路线：${plan.summary}`, ...nextOptions(map) }) },
+    questions: { pick: choiceQ(`${ROUTE_REVIEW_TASK}${routeCalculationCache(env) ? " 复用已有路线；仅在结合当前情况判断值得修改、预期有助于胜率后改线，并用reason说明取舍。" : ""}`, { keep: `保留原路线：${plan.summary}`, ...nextOptions(map) }) },
     ...(potion ? { potionJev: potion.aux } : {}),
     resolve: () => fallbackResolution(follow),
     deepseek: {
@@ -758,7 +758,7 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
       plan: {
         resolve(json): ResolvedAction | { invalid: string } {
           const reason = str(json["reason"]).trim();
-          if (isKeep(json["route"])) {
+          if (isKeep(json["route"]) || routeCalculationCache(env) && routeIds(json["route"])?.join(" ") === kept.join(" ")) {
             const first = available.find(node => node.index === follow.intent.option_index);
             const move = first ? potion?.move(first) : undefined;
             if (move) return { intent: move.intent, rationale: `route review: keep ${plan.summary}; ${move.journal ?? "Jev potion choice"}`,
@@ -772,7 +772,8 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
           if (problems.length > 0) return { invalid: problems.join("; ").slice(0, 400) };
           const first = available.find((node) => nodeId(node.row, node.col) === ids[0]);
           if (!first) return { invalid: `the route's first node ${ids[0]} is not an available map node` };
-          const changed = makeRoutePlan(env, map, ids, start, costs, `review after the act-start Ancient (${review.why}): ${revealed}`);
+          if (routeCalculationCache(env) && !reason) return { invalid: "reason must explain current facts, tradeoff and expected win benefit" };
+          const changed = makeRoutePlan(env, map, ids, start, costs, `review after the act-start Ancient (${review.why}): ${revealed}${routeCalculationCache(env) && reason ? `; ${reason}` : ""}`);
           const nextRest = nextRestVersus(map, kept, ids, start, costs);
           const move = potion?.move(first);
           return {

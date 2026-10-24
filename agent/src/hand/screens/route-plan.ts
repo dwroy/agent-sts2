@@ -252,6 +252,30 @@ export interface RouteBlockInput {
    * projected HP (candidate_routes, strategy/route-map.ts candidateRoutesFacts); `note` says where the HP starts.
    */
   candidates?: { note?: string };
+  /** Process-local, exact-dependency reuse; never persisted as a projection or plan. */
+  cache?: RouteCalculationCache;
+}
+
+/** Each computation has its own dependency key; a changed rest option need not enumerate routes again. */
+export class RouteCalculationCache {
+  private readonly entries = new Map<string, { key: string; value: unknown; dependencies: Record<string, unknown> }>();
+  read<T>(name: string, dependencies: Record<string, unknown>, compute: () => T): { value: T; audit: JsonValue } {
+    const key = JSON.stringify(dependencies), previous = this.entries.get(name);
+    const reused = previous?.key === key;
+    const changed = previous ? Object.keys(dependencies).filter(k => JSON.stringify(dependencies[k]) !== JSON.stringify(previous.dependencies[k])) : ["initial"];
+    const value = reused ? previous.value as T : compute();
+    if (!reused) this.entries.set(name, { key, value: structuredClone(value), dependencies: structuredClone(dependencies) });
+    return { value: structuredClone(value), audit: { outcome: reused ? "reused" : "computed", invalidated_by: reused ? [] : changed } };
+  }
+}
+
+/** Retain caches only for the current run. Rollbacks use fresh observed dependencies, never old HP estimates. */
+export function routeCalculationCache(env: DecisionEnv): RouteCalculationCache | undefined {
+  const raw = asRecord(env.state.run?.raw);
+  if (str(raw["character_id"]).toLowerCase() !== "silent" || env.state.run?.ascension !== 10) return undefined;
+  const run = str(env.state.raw["run_id"]), memory = env.screenMemory;
+  if (memory.routeCalculations?.run !== run) memory.routeCalculations = { run, cache: new RouteCalculationCache() };
+  return memory.routeCalculations.cache;
 }
 
 /**
@@ -261,9 +285,20 @@ export interface RouteBlockInput {
  */
 export function routeBlockState(input: RouteBlockInput): Record<string, JsonValue> {
   const planned = input.plan && input.plan.length > 0 ? input.plan : null;
-  const facts: RouteFacts | null = planned ? routeFacts(input.map, planned, input.start, input.costs, input.chain ?? 0, input.options ?? []) : null;
-  const nextRest = planned ? nextRestFacts(input.map, planned, input.nextRest?.start ?? input.start, input.costs, input.chain ?? 0, input.nextRest?.note) : null;
-  const candidates = !planned && input.candidates ? candidateRoutesFacts(input.map, input.start, input.costs, input.candidates.note) : null;
+  const audit: Record<string, JsonValue> = {};
+  const shared = { map: { ...input.map, nodes: [...input.map.nodes] }, plan: planned, costs: input.costs };
+  const calculation = <T>(name: string, dependencies: Record<string, unknown>, compute: () => T): T => {
+    if (!input.cache) return compute();
+    const result = input.cache.read(name, { ...shared, ...dependencies }, compute);
+    audit[name] = result.audit;
+    return result.value;
+  };
+  const facts: RouteFacts | null = planned ? calculation("plan_facts", { start: input.start, chain: input.chain ?? 0, options: input.options ?? [] },
+    () => routeFacts(input.map, planned, input.start, input.costs, input.chain ?? 0, input.options ?? [])) : null;
+  const nextRest = planned ? calculation("next_rest", { start: input.nextRest?.start ?? input.start, chain: input.chain ?? 0, note: input.nextRest?.note },
+    () => nextRestFacts(input.map, planned, input.nextRest?.start ?? input.start, input.costs, input.chain ?? 0, input.nextRest?.note)) : null;
+  const candidates = !planned && input.candidates ? calculation("candidate_routes", { start: input.start, note: input.candidates.note },
+    () => candidateRoutesFacts(input.map, input.start, input.costs, input.candidates!.note)) : null;
   return {
     ...(routeView(input.map) as unknown as Record<string, JsonValue>),
     ...(planned ? { plan: routeText(input.map, planned) } : {}),
@@ -271,6 +306,7 @@ export function routeBlockState(input: RouteBlockInput): Record<string, JsonValu
     ...(nextRest ? { next_rest: nextRest as unknown as JsonValue } : {}),
     ...(candidates ? { candidate_routes: candidates as unknown as JsonValue } : {}),
     room_costs: roomCostsLine(input.costs),
+    ...(input.cache ? { route_calculation: audit } : {}),
   };
 }
 

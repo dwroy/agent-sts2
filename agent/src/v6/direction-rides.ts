@@ -4,6 +4,7 @@ import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { asArray, asRecord, numOrNull, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import type { DecisionEnv } from "../memory/types.js";
+import { endgameScope } from "../memory/endgame-plan.js";
 import { actOf, logRunPlan, type RunPlan, type RunPlanTrigger } from "../memory/run-plan.js";
 import type { BuildState } from "../construction/types.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
@@ -102,6 +103,7 @@ export async function attachDirectionRide(env: DecisionEnv, task: Record<string,
     potionIds: ids(raw.potions, "potion_id"), floor: env.state.run?.floor ?? 0, current: {},
     ...(previous ? { previous: toJsonValue(previous) } : {}) });
   nested.task = "In this SAME answer, optionally add v6 using direction-weights-v1: weights for ALL listed directions sum to 1; use completed combo results and missing cards, no appearance probabilities. Unknown stays unknown. Keep route=keep; do not change the question's own route/choice. No extra request follows an omitted/invalid v6.";
+  if (endgameScope(env.state)) nested.task += " 已有方向默认复用，不必重新评估全部方向；仅结合当前情况判断相较原方向值得调整、预期有利于本局胜率时才更新v6，并在原reason说明取舍与收益，未知保持未知。仅刷新checkpoint或改写reason不要求重新计算投影。";
   nested.ride_reasons = initial ? [trigger!] : [...m.pending];
   const base = withoutLegacyContext(task);
   logRunPlan(log, { run: m.run, floor: env.state.run?.floor ?? null, v6_direction_ride: { stage: "prepared", label, reasons: nested.ride_reasons },

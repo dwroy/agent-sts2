@@ -18,7 +18,9 @@ import { directionPlanSpec } from "../v6/direction-plan.js";
 import { directionRideTask } from "../v6/direction-rides.js";
 import type { AnswerSpec } from "./types.js";
 import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
-import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems } from "../memory/endgame-plan.js";
+import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems, endgameReuse, endgamePlanningTask } from "../memory/endgame-plan.js";
+
+import { runPlanPatch, runPlanUpdateProblems } from "../memory/run-plan-update.js";
 
 type Json = Record<string, unknown>;
 
@@ -126,8 +128,9 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   if (reviewMap) {
     route = { mode: "review", map: reviewMap };
     properties["route"] = ROUTE_FIELD(true);
-    properties["route_reason"] = { type: "string", description: "max 15 words" };
-    required.push("route", "route_reason");
+    properties["route_reason"] = { type: "string", description: endgamePlanningTask(st)
+      ? "only when changing route: current facts, tradeoff and expected win benefit; no invented percentage" : "max 15 words" };
+    if (!endgamePlanningTask(st)) required.push("route", "route_reason");
   } else if (actMap) {
     route = { mode: "act", map: actMap };
     properties["route"] = ROUTE_FIELD(false);
@@ -154,7 +157,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
   // due for the next question; strategy/run-plan-merge.ts).
   if (carriesRunPlan(st)) properties["run_plan"] = runPlanField(st);
-  if (endgameRequired(st)) required.push("run_plan");
+  if (endgameRequired(st) || endgameCheckpointRequired(st)) required.push("run_plan");
   return {
     label,
     kind: "pick",
@@ -189,7 +192,11 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
       const missing = given === undefined || given === null || (typeof given === "string" && !given.trim());
       // A review without a route keeps the plan (logged, not re-asked: the route rides on this question for free).
       if (missing) return route.mode === "act" ? ['missing "route": the node ids from one of state.act_route.next_nodes to the boss'] : [];
-      return routeProblems(route.map, given, route.mode === "review");
+      const problems = routeProblems(route.map, given, route.mode === "review");
+      if (!problems.length && route.mode === "review" && endgamePlanningTask(st) && !isKeep(given)
+        && routeIds(given)?.join(" ") !== routeIds(record(st["route_review"])["plan"])?.join(" ")
+        && !(typeof answer["route_reason"] === "string" && answer["route_reason"].trim())) problems.push("route_reason must explain current facts, tradeoff and expected win benefit");
+      return problems;
     },
   };
 }
@@ -270,8 +277,10 @@ export function stableSchema(spec: AnswerSpec): JsonSchema {
     const base = run?.properties?.["construction"] || run?.properties?.["v6"] || run?.properties?.["endgame"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run },
       required: spec.schema.required?.includes("run_plan") ? [...STABLE_PICK_SCHEMA.required!, "run_plan"] : STABLE_PICK_SCHEMA.required }
       : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+    const scoped = run?.properties?.["endgame"] && spec.schema.properties?.["route_reason"]
+      ? { ...base, properties: { ...base.properties, route_reason: spec.schema.properties["route_reason"] } } : base;
     const direction = spec.schema.properties?.["v6"];
-    const riding = direction ? { ...base, properties: { ...base.properties, v6: direction } } : base;
+    const riding = direction ? { ...scoped, properties: { ...scoped.properties, v6: direction } } : scoped;
     return spec.schema.properties?.["ranking_override_reason"] ? { ...riding, properties: { ...riding.properties, ranking_override_reason: RANKING_REASON },
       required: [...(riding.required ?? []), "ranking_override_reason"] } : riding;
   }
@@ -418,6 +427,10 @@ const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run p
 function runPlanField(state: unknown): JsonSchema {
   const schema = withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
     ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
+  if (endgameReuse(state)) return { ...schema, description: "可选：只更新受影响字段；省略或null沿用当前计划。实际改线须说明预期收益。",
+    properties: { ...schema.properties, change_reason: { type: "string", description: "结合当前情况说明旧/新取舍与预期胜率收益；仅改线时给出，不编数字" },
+      endgame: { ...ENDGAME_PLAN_SCHEMA, required: endgameCheckpointRequired(state) ? ["checkpoint"] : [] } },
+    required: endgameCheckpointRequired(state) ? ["endgame"] : [] };
   return endgameRequired(state) ? { ...schema, properties: { ...schema.properties, endgame: ENDGAME_PLAN_SCHEMA },
     required: [...(schema.required ?? []), "endgame"] } : schema;
 }
@@ -441,7 +454,7 @@ export function carriesRunPlan(state: unknown): boolean {
  */
 export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec {
   return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) },
-    ...(endgameRequired(state) ? { required: [...(spec.schema.required ?? []), "run_plan"] } : {}) } };
+    ...(endgameRequired(state) || endgameCheckpointRequired(state) ? { required: [...(spec.schema.required ?? []), "run_plan"] } : {}) } };
 }
 
 /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
@@ -451,8 +464,12 @@ export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
   return {
     label,
     kind: "plan",
-    schema: withDirectionRideField({ label, kind: "plan", schema: runPlanSchema(constructionContext(state) !== null), validate: () => [] }, state).schema,
+    schema: runPlanField(state),
     validate(answer: unknown): string[] {
+      if (endgameReuse(state)) {
+        const problems = runPlanUpdateProblems(answer, state), patch = runPlanPatch(answer);
+        return [...problems, ...(patch["construction"] ? constructionProblems(patch, state) : [])];
+      }
       if (!isObject(answer)) return ["the answer is not a JSON object"];
       return isRunPlanReply(answer) ? [...constructionProblems(answer, state), ...(endgameRequired(state)
         ? endgameProblems(answer["endgame"], endgameCheckpointRequired(state)) : [])] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];

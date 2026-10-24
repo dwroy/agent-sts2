@@ -59,6 +59,25 @@ function sourceFiles(tool: string, input: Record<string, unknown>): string[] {
   }
 }
 
+/** Uses live in the authoritative ToolDef.description, shared by the prompt and every tool host. */
+const PLANNING_USES: Record<string, string> = {
+  kb_monster: "用途：理解启动窗口、敌人机制和本幕Boss压力，判断备战需求。",
+  kb_encounter: "用途：根据自有遭遇失血与回合，评估本幕Boss及爬楼路线风险。",
+  kb_experience: "用途：核对启动与过渡、费用/抽牌/防护、构筑、成长输出、持续防御及连续双Boss资源判断；保留支持、反证与未知。",
+  kb_stats: "用途：比较爬楼路线、房间代价、休息回血/升级和资源安排。",
+  kb_old_knowledge: "用途：查旧攻略背景，与当前对局证据及公开来源分清。",
+  kb_potion: "用途：用药、Boss备战和连续两战资源取舍；不直接计算完整双Boss胜率。",
+  kb_open_book: "用途：理解拿牌、删牌、升级、商店和事件选项的机械效果。",
+  kb_strategies: "用途：查已发布的启动、过渡、构筑方向、本幕Boss、最终双Boss、路线和资源策略；未知达标线保持未知。",
+  kb_reflex: "用途：查看局部打法与构筑联系，辅助拿牌、商店、休息及备战。",
+  external_stats_card: "用途：拿牌比较的外部选择背景。",
+  external_stats_skip: "用途：拿/跳牌的外部背景比较。",
+  external_stats_deck_size: "用途：理解牌组规模与结局关联，保留存活偏差。",
+  external_stats_encounter: "用途：了解外部Boss及路线风险的受伤、回合和死亡分布。",
+  external_stats_clusters: "用途：构筑样本背景；簇不等于已验证流派。",
+  external_stats_cooccurrence: "用途：组合样本背景；共现不等于收益或已验证构筑方向。",
+};
+
 export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
   const own = knowledgeTools().filter(t => ["kb_monster", "kb_encounter", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_experience"].includes(t.name)).map((original): ToolDef => {
     const tool = original.name === "kb_experience" && knowledgeCharacter() === "silent" ? { ...original,
@@ -90,7 +109,7 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
       },
     };
   });
-  return [...own,
+  const tools = [...own,
     queryTool("kb_open_book", "查公开开卷机械资料：query 为卡牌/遗物/怪物/事件 ID、中文名或关键词；category 可限类别。返回外部来源、版本、SHA、许可；当前 mod 状态优先，资料不证明模拟支持。最多12项，可细化关键词。", (query, ctx, category) => {
       const library = loadOpenBook(ctx.knowledgeDir);
       const rows = library.entries.filter(e => (!category || e.kind === category) && [e.id, e.name, ...e.aliases].some(s => s.toLowerCase().includes(query.toLowerCase())));
@@ -102,4 +121,5 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
     ...(knowledgeCharacter() === "silent" ? [reflexKnowledgeTool()] : []),
     ...externalStatsTools(),
   ];
+  return tools.map(tool => ({ ...tool, description: `${tool.description} ${PLANNING_USES[tool.name] ?? ""}`.trim() }));
 }

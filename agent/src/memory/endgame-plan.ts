@@ -5,7 +5,7 @@ import { asRecord, str, type JsonValue } from "../core/util/json.js";
 import { isConstructionQuestion } from "./construction-log.js";
 
 export const ENDGAME_OBJECTIVE = "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。";
-export const ENDGAME_PLAN_NOTE = "每道构筑题在同一答案的 run_plan.endgame 更新本局核心、缺口、成长性输出、可持续防御、两战资源和终局怎么赢；这是本局假设，不是知识规则。查相关策略与 rk 后说明依据、可信度和未知；达标线只能引用已发布条目，不自行补伤害/防御/血量门槛。endgame_checkpoint 仅在题面给出时作答，否则写空字符串。保留原方向及转向条件的语义，选择可以改变计划。";
+export const ENDGAME_PLAN_NOTE = "已有构筑路线和爬楼路线继续复用；路线未实质改变，不因下一道题重写完整计划或重算整条路线。结合当前牌组、遗物、HP、金币、药水、遭遇与机会，判断相较现有路线值得修改、预期有助于本局胜率后才改线；理由可含不确定性，不编造胜率提升数值。两类路线可分别调整，仅更新和重算实际受影响部分；普通状态变化只使依赖该状态的数值失效。无构筑计划时在同一答案给完整 run_plan（含 endgame）；已有计划时可省略 run_plan，确需调整只给变更字段及 change_reason（当前情况、旧/新取舍与预期收益），endgame 也只给受影响字段。幕末 endgame_checkpoint 要求的检查在 run_plan.endgame.checkpoint 作答，检查本身不要求换路线。计划是本局假设，不是知识规则；依据、可信度和未知须分清，达标线只引用已发布条目，不自行补伤害/防御/血量门槛。";
 export const ENDGAME_TEXT_LIMIT = 240;
 export const ENDGAME_FIELDS = ["core", "gaps", "scaling_damage", "sustainable_defense", "resources", "win_condition"] as const;
 export type EndgamePlan = Record<(typeof ENDGAME_FIELDS)[number] | "checkpoint", string>;
@@ -30,10 +30,16 @@ export function endgameCheckpoint(state: GameState, label: string): Record<strin
     instruction: "幕末检查：核心已成型、部分成型还是未知？还缺什么？本幕 Boss 怎么过、离 F48→F49 连胜还差什么？写明成长性输出、持续防御与两战 HP/药水依据；缺证保持未知，在 run_plan.endgame.checkpoint 明确作答。" };
 }
 
-export function endgameTask(state: GameState, label: string): Record<string, JsonValue> {
+export function endgameTask(state: GameState, label: string, reuse = false): Record<string, JsonValue> {
   const checkpoint = endgameCheckpoint(state, label);
-  return { endgame_objective: ENDGAME_OBJECTIVE, endgame_plan_required: true,
+  return { endgame_objective: ENDGAME_OBJECTIVE, endgame_plan_required: !reuse, ...(reuse ? { plan_reuse: true } : {}),
     ...(checkpoint ? { endgame_checkpoint: checkpoint } : {}) };
+}
+export function endgamePlanningTask(payload: unknown): boolean {
+  return typeof asRecord(asRecord(payload)["run_plan_task"])["endgame_objective"] === "string";
+}
+export function endgameReuse(payload: unknown): boolean {
+  return asRecord(asRecord(payload)["run_plan_task"])["plan_reuse"] === true;
 }
 export function endgameRequired(payload: unknown): boolean {
   const p = asRecord(payload);
@@ -46,7 +52,7 @@ export function endgameCheckpointRequired(payload: unknown): boolean {
 export const ENDGAME_PLAN_SCHEMA: JsonSchema = {
   type: "object", description: "本局终局假设；每项1句，最多240 Unicode字符，缺证明确写未知。",
   properties: Object.fromEntries([...ENDGAME_FIELDS, "checkpoint"].map(key => [key, { type: "string" as const,
-    description: key === "checkpoint" ? "只在 endgame_checkpoint 给出时回答幕末检查，其余题写空字符串" : `${key}：本题选择之后的判断及依据，最多240字符` }])),
+    description: key === "checkpoint" ? "只在 endgame_checkpoint 给出时回答幕末检查；复用时其余题可省略" : `${key}：本局假设及依据，最多240字符；复用时只给实际变更字段` }])),
   required: [...ENDGAME_FIELDS, "checkpoint"], additionalProperties: false,
 };
 
