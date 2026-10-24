@@ -6942,3 +6942,5 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 已远端读回6388068959，核dwroy/[watcher]角色及其本角色receipt的comment ID、正文SHA、实收/本会话转Roy字段一致；145原件、8窗口和6旧附件核验沿其原件复用，未重跑。只记录“watcher已实收并转达”，Roy是否已读/认可仍未证明；不代ACK、不改原通知false字段。route-hp两候选已各存原字节/SHA和旧附件，004756原文件SHA2620dd68与冻结核验一致，两稿confidence均0.4。已将内容增量串行/CAS、禁止旧全文覆盖新版本及重复证据不增独立分母写进队列约束，未替学习者合并正文/判收益。5情境仍1新4补充，3格式rk/2研究稿与反向证据原样保持，正式发布/消费者/自然采用及科学父待。已更新短清单和ops观察回执；60原full、58原RR2、现有候选顺序及父保持，未重发提醒、另派模型、补测或修改旧状态。
 
 证据：paper/materials/20261025-strategy-021345-notice-return-ops/。
+
+- 2026-10-25T02:57:55+08:00 [watcher] #60最新28780925b实际组合唯一full终态679文件/6626过/2败/2原跳、tsc0，失败定位两fixture三处漏拷新增knowledge_runtime_env.py（78先于准入/brain断言），退修https://github.com/dwroy/agent-sts2/issues/60#issuecomment-6388232854逐字核同；原dev及ops一行实投仅agent_prompted。原PID退/锁可取，2788输入/1417依赖/index entries/flags/tree/result独立核同；本批未接收安装发布，保原失败及树，等新固定SHA和真实解析器原断言定向修复，不重复full/不阻58。规则/源码/live/STOP/生产DB/控制未改，原生产迁移/三端SHA/自然闭环/科学父与ACK待项保持；材料paper/materials/20261025-issue60-wiring-composition-integrator/。#51 021345实投6388068959及两稿反证/旧附件串行边界保留，非Roy ACK。

@@ -1,5 +1,18 @@
 state: in-flight
 issue: 60
+updated_at: 2026-10-25T02:57:55+08:00
+
+# 集成员当前交接
+
+进行中的事：#60正式28780925b实际组合唯一full终态失败：679文件/677文件过/2文件败，6626测试过/2败/2原跳、生产tsc0。两TS包装下共三Python断言都因隔离fixture漏拷新增knowledge_runtime_env.py，在run.sh解析阶段返回78。退修公开6388232854逐字读回；原dev wJ:p1J1及原ops w1H:p8一行agent_prompted，投递不代已读/ACK。原PID2026370/birth29104679已退、检查锁可取，2788输入/1417依赖/index entries/flags/tree/result独立核同；本角色无在途full/安装/模型/游戏事务。材料paper/materials/20261025-issue60-wiring-composition-integrator/，failed-terminal/rework-boundary及原full.log/full.json保持。
+
+在等谁：原#60开发会话补ops/tests/test_llm_handoff.py两处和ops/tests/test_publication_gate.py一处fixture复制真实解析器，保缺控制off、原准入/brain选择断言，不mock绕过或吞78。等新固定SHA、精确变更及Python两文件/TS两包装定向原件，再由本角色核下一输入及必要检查；开发不另开full。本批未工程接收、不安装、不发布，58原RR2/用量门及原ops发布链继续，不让58等60。原科学父/反证/ACK保持；生产迁移/三端控制SHA/原batch恢复/合法候选→tools正负例→自然消费仍归原ops待验。
+
+下一步：收到补交后只读核新差异与原失败修复，冻结届时实际main/live及原在途边界；原失败树和日志不补写绿，不重58或本批检查。469实际物理知识叶/135统计夹具/465验证差异分账，生产只取切点真实已发布叶。一次状态查询误调原启动器被锁在tsc/full前拒绝、未另开full，临时状态覆盖已恢复，见observation-correction.json。#51 021345已转Roy6388068959且远端核同，1新4补充/3格式rk2研究稿、版本反向/route-hp两稿旧附件与串行增量/CAS缺口保留；原ops自身已留实收，不是Roy ACK。#36/#20原可恢复停止/身份树证据与#27缺log保持；末轮review积压36为原runtime待项，20/39/43另有needs:roy，不擅代放行。未改源码/live/STOP/生产DB/控制/在途或其他角色声明。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 60
 updated_at: 2026-10-25T02:41:47+08:00
 
 # 集成员当前交接
