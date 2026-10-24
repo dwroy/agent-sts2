@@ -6786,3 +6786,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T23:32:43+08:00 [watcher] #36接续独立核收223228普通终态/原pane缺席、四23:13自然批完整原生context/prompt及中文tab、对局LBYWQ0CLRL6K自然标题；17输入精确覆盖最新676文件6604过0败2跳，八TS281项，本轮full0。31TUI/27原日志未见自然新75或hold/resumed，人工草稿/有界监督仍待原ops，不倒填旧失败/seal。已读6386005172共享MAS独立任务，#20原窗/本项目迁移验收不替代；#57正式6386031209待接。评论6386068159逐字读回，材料paper/materials/20261024-issue36-resume-2327-integrator/；无生产/ACK/科学父修改。
 
 - 2026-10-24T23:39:26+08:00 [ops] #56依6385924090结214311为not-started/原finish一次failed rc3并封存，五局next-natural不重放；冻8单元入原队列，A/B原生接受、A/C/D各备2、B24卡最后一批穷尽。76%请求fast/原生tier=null，安装10叶核同、首T23:14:30/high原沙箱；原4自有+2外部不冒五槽通过，原窗/旧失败/科学父不重置；full/tick/游戏0。原件paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json。
+
+- 2026-10-24T23:42:50+08:00 [ops] 23:41 learner-done为214311原finish旧回调；not-started/wrapper摘要/原stderr及五局retry_at=0、attempt1核同，rc3不冒key故障，旧1h提示不覆盖授权现状。无新复盘产物，不重dataset/finish/模型/tick/full；仅通用原因文案记原fix队列。原件paper/materials/20261024-214311-not-started-return-ops/verification.json。

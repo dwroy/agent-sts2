@@ -1596,3 +1596,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-24T11:21:39+08:00 [ops/104301候选续接] silent-0581/原silent-proposal-146784d761377d66已有三叶候选，未提交/未发布：原版负控1败3过、候选定向2文件9过；原full只见11失败且无终态退出码，22处整分支合并冲突保持。按最新live精确集成须待37原唯一窗实际释放，勿重复派提案或借其full。CLI注册仍pending，学习者报告waiting不冒正式处置。原件paper/materials/20261024-strategy-104301-ops/verification.json、commit-candidate.patch。
 
 - 2026-10-24T17:16:12+08:00 [ops/postmortem 164302，非阻塞] P4ZBYNW92PPK A10：agent/src/knowledge/relic-values.ts:44 将显式数字1与energyPrefix:energyIcons(1)再次拼接，带刺手甲费用文字显示“增加11点能量”；原固定复现成立，实际费用/胜负影响另账。复用silent-0617、silent-proposal-4976c043ffdcd610原链，不重复登记/派模型；只修显示边界，不按渲染错误改机制。历史源码/release未知，现live复现不回填旧局版本，原tsx IPC EPERM保留。证据：learner/runs/20261024-164319-824e21ec-27a8-4473-98cd-03d4077a0d50-postmortem/relic-render-repro.json、bugs.json。
+
+- 2026-10-24T23:42:50+08:00 **ops-postmortem-exit3-cause-display（#56，非阻塞，待原fix）**：214311因registration lock timeout未启动模型，6385924090已授权not-started；原finish rc3事件仍套“codex不可用/key隔离自检失败”，掩盖真实前置拒绝。应优先读取经核验处置/原失败原因，保留rc与历史事件；未核原因不能写key失败。一小时重试文案是原时刻快照，需与后续授权retry_at=0区分，不能据旧通知回写冷却。固定复现、源码SHA/行及原回执见paper/materials/20261024-214311-not-started-return-ops/verification.json；仅显示问题，旧批不重放，不绕任何预检/权限或热改在途。

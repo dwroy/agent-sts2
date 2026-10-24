@@ -1,0 +1,155 @@
+{
+  "at": "2026-10-24T23:42:34+08:00",
+  "event": "23:41 learner-done 20261024-214311",
+  "same_original_finish_callback": true,
+  "authority": 6385924090,
+  "batch_state": {
+    "state": "failed",
+    "rc": 3,
+    "finished": "2026-10-24 23:33",
+    "done": [],
+    "missing": [
+      "4CR2N26QAJAV",
+      "Q7HBKHZTSPJ8",
+      "FVWXPGMA2DBQ",
+      "NYX17B18TBWG",
+      "7UEFJY5Z4Y85"
+    ],
+    "proposal_audit_skipped": true,
+    "pid": 873941
+  },
+  "disposition": "not-started",
+  "models_started": 0,
+  "wrapper_batch_digest_verified": true,
+  "supervisor_gone": true,
+  "stderr_original_unchanged": true,
+  "stdout_bytes": 0,
+  "run_rows": {
+    "4CR2N26QAJAV": {
+      "attempts": 1,
+      "batch": "20261024-214311",
+      "retry_at": 0,
+      "not_started_release": {
+        "authority": 6385924090,
+        "at": "2026-10-24T23:35:22+08:00",
+        "old_batch": "20261024-214311",
+        "next": "next natural postmortem; no old batch replay"
+      }
+    },
+    "Q7HBKHZTSPJ8": {
+      "attempts": 1,
+      "batch": "20261024-214311",
+      "retry_at": 0,
+      "not_started_release": {
+        "authority": 6385924090,
+        "at": "2026-10-24T23:35:22+08:00",
+        "old_batch": "20261024-214311",
+        "next": "next natural postmortem; no old batch replay"
+      }
+    },
+    "FVWXPGMA2DBQ": {
+      "attempts": 1,
+      "batch": "20261024-214311",
+      "retry_at": 0,
+      "not_started_release": {
+        "authority": 6385924090,
+        "at": "2026-10-24T23:35:22+08:00",
+        "old_batch": "20261024-214311",
+        "next": "next natural postmortem; no old batch replay"
+      }
+    },
+    "NYX17B18TBWG": {
+      "attempts": 1,
+      "batch": "20261024-214311",
+      "retry_at": 0,
+      "not_started_release": {
+        "authority": 6385924090,
+        "at": "2026-10-24T23:35:22+08:00",
+        "old_batch": "20261024-214311",
+        "next": "next natural postmortem; no old batch replay"
+      }
+    },
+    "7UEFJY5Z4Y85": {
+      "attempts": 1,
+      "batch": "20261024-214311",
+      "retry_at": 0,
+      "not_started_release": {
+        "authority": 6385924090,
+        "at": "2026-10-24T23:35:22+08:00",
+        "old_batch": "20261024-214311",
+        "next": "next natural postmortem; no old batch replay"
+      }
+    }
+  },
+  "current_retry_at": 0,
+  "next": "next natural postmortem; never replay old batch",
+  "stale_callback_strings": [
+    "exit3 generic key/engine category",
+    "1h retry snapshot before authorized release"
+  ],
+  "runtime_state_changed_this_wake": false,
+  "new_lessons_ledger_or_proposals": 0,
+  "dataset_finish_model_tick_full_game_calls": 0,
+  "references": [
+    {
+      "path": "ops/codex-ops/learner/learner-20261024-214311-postmortem.tui.json",
+      "bytes": 1434,
+      "sha256": "ccc25993742fcea498829c0067181bfbfaa4d46bb639daee728d09f3736efea8"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261024-214311.err",
+      "bytes": 1657,
+      "sha256": "3562e92208a7f4a9e11f160ba54bc3cc948a4cb7e1a9efd89eb28b5028307269"
+    },
+    {
+      "path": "paper/materials/20261024-issue56-stock-ops/214311/original.err",
+      "bytes": 1657,
+      "sha256": "3562e92208a7f4a9e11f160ba54bc3cc948a4cb7e1a9efd89eb28b5028307269"
+    },
+    {
+      "path": "paper/materials/20261024-issue56-stock-ops/settlement-state.json",
+      "bytes": 380,
+      "sha256": "2dce41d736ffc6fabafd189f737feab5047da22d8d9aa54c71b41e85c97f7606"
+    },
+    {
+      "path": "paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json",
+      "bytes": 13593,
+      "sha256": "0f45f386e6d71a897d75b79e13a5e62eb7e75313c05f28fbbeef78978b36611d"
+    },
+    {
+      "path": "paper/materials/20261024-issue56-stock-ops/record-commit.json",
+      "bytes": 6923,
+      "sha256": "d4179f0c096fcda520277ce81f99e6630f6e389e078106c08d74172e3307be07"
+    },
+    {
+      "path": "paper/materials/20261024-issue56-stock-ops/authority-6385924090.json",
+      "bytes": 2605,
+      "sha256": "df57424b85efcb879c70362a7deadd1815bc48341ee55933ea66155bae2438b9"
+    }
+  ],
+  "message_source": {
+    "path": "ops/codex-ops-learn.py",
+    "bytes": 37022,
+    "sha256": "8cfbd6c2577fd93f02b3eb3cf72537f69ecca1753b0001056bfa9945ad110da3"
+  },
+  "source_excerpts": [
+    {
+      "line": 70,
+      "text": "EXIT_MEANING = {0: \"完成\", 1: \"学习者失败（结果是 error，或额度 / 登录错误）\", 2: \"参数或任务说明有错\", 3: \"codex 不可用，或 key 隔离自检没过\", 124: \"超时\"}"
+    },
+    {
+      "line": 501,
+      "text": "        f\"复盘批次 {args.batch}（{','.join(batch['runs'])}）结束：exit {args.rc}（{EXIT_MEANING.get(args.rc, '其他')}）。\","
+    },
+    {
+      "line": 503,
+      "text": "        + (f\"（{','.join(retry_note)} 调度器 1 小时后重派，每局最多 {MAX_ATTEMPTS} 次）\" if retry_note else \"\")"
+    },
+    {
+      "line": 513,
+      "text": "        lines.append(\"exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。\")"
+    }
+  ],
+  "source_code_changed": false,
+  "scientific_parents_unchanged": true
+}

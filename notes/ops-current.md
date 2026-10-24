@@ -1,10 +1,10 @@
 state: clear-ok
 issue: 56
-updated: 2026-10-24T23:40:37+08:00
+updated: 2026-10-24T23:42:50+08:00
 
-进行中的事：214311 not-started结算/封存和8单元冻结入队已结，无未完成写事务；#56/#51已评论并精确读回。
-在等谁：原调度器自然完成/收敛旧4自有及新A/B；native tier仍null，原五槽/单自有和吞吐验收未过。16通知已提醒原watcher，正式下游ACK待。
-下一步：只沿新自然事件核产物/配额/加载；A/C/D库存各2不足即补，B最后24结束停道。原214311五局下一自然复盘，不重finish/full/tick或旧批。原件paper/materials/20261024-issue56-stock-ops/。
+进行中的事：214311旧回调核同已结，无未完成写事务；not-started/原stderr/封存摘要及五局retry_at=0保持，文案问题已记fix。
+在等谁：原自然复盘覆盖五局及在途收敛；原生tier/五槽/吞吐、16通知下游ACK仍待。
+下一步：沿新自然事件核产物/配额；A/C/D库存不足2即补，B最后24结束停道。不重dataset/finish/旧批。原件paper/materials/20261024-214311-not-started-return-ops/。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
@@ -54,17 +54,17 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-24T23:34:29+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 2c3dbc1c0e359abe1de240cf54f9a9329b013a350939df9da74f166dba69a9a4
-main f6361397f0d96b8dd20d9e108e0b69261396dfbd
+生成：2026-10-24T23:41:19+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 15a12aade14b2bbfe1da2c6dfe3fb670fb6cd73ecc5e3b9faa9921daef16b0d8
+main 4a271d88383936cdb1f08d26ba7670fb12931dea
 live 487ce58924ff9e511cfbf76bfaad73608d310de3；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
 - identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。
-- active_batches：在途 7；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
+- active_batches：在途 6；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 17；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
 - not_marked_completed_transactions：未标 completed 288；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。

@@ -5452,3 +5452,7 @@ f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装
 
 ### 2026-10-24T23:39:26+08:00 [ops] #56 未启动结算、常设备单与实际加载
 214311按6385924090核原锁超时/未启动，原finish一次结failed/rc3（处置not-started）；新回执标签补正封存，stderr/pane保留。五局解除冷却，attempt保持，等自然复盘不重放。8新单元已冻入原队列：A起簇5、另备3/0；B最后24卡在跑、范围已穷尽并在#51说明；C/D各备2，旧22计划/失败世代不改。原续派A/B均已原生接受，额度76%请求/有效参数fast，原生tier仍null，不称档位已证。安装10叶SHA核同，首实际T23:14:30；六原生均gpt-6.1-sol/high且原沙箱。原23:13四自有仍在途，加两外部共六，未热切，五槽/单自有验收待。原窗不重置，补丁前六完成分账，新两批窗后启动不冒吞吐。full/tick/游戏0，仅原finish续派2模型。原件paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json。
+
+
+### 2026-10-24T23:42:50+08:00 [ops] 214311旧回调核同，not-started保持
+23:41事件是上一轮214311原finish旧回调。已核6385924090裁决、not-started回执及wrapper摘要，原stderr不变、stdout空、模型0、处置主管已退出；state保留failed/rc3，原因是注册锁前置超时，不指认新的key/引擎自检故障。五局当前retry_at均0、attempt均1，交下一自然复盘，不重放旧批；“一小时后重派”是解除冷却前生成的旧快照，不能覆盖现状。无新增复盘、经验/账本或提案，不重复dataset/finish/模型/tick/full，不纳并行改动。通用exit3文案未区分not-started的显示问题已追加原fix队列；保原错误、失败记录和科学父。上一轮#56/#51真实评论回执沿用，不重复发信或代角色ACK。原件paper/materials/20261024-214311-not-started-return-ops/verification.json。
