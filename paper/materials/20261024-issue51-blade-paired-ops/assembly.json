@@ -1,0 +1,283 @@
+{
+  "at": "2026-10-24T18:47:24+08:00",
+  "batch": "20261024-181311-strategy-proposal",
+  "authority_comment": 6382974399,
+  "selected_strategy_ids": [
+    "silent-brain-blade-flexible-formation-review",
+    "silent-fan-of-knives-capacity",
+    "silent-accuracy-shiv-scaling",
+    "silent-core-shiv-defense-observation",
+    "silent-afterimage-per-card-block",
+    "silent-brain-blade-no-draw-backflip-review"
+  ],
+  "selected_rk_ids": [
+    "silent-rk-blade-fan-setup-test-subject",
+    "silent-rk-blade-accuracy-held-shivs",
+    "silent-rk-blade-intangible-shivs",
+    "silent-rk-blade-cloak-mecha-defense",
+    "silent-rk-blade-afterimage-generation",
+    "silent-rk-blade-no-draw-backflip"
+  ],
+  "selected_pairs": [
+    {
+      "strategy_id": "silent-fan-of-knives-capacity",
+      "rk_id": "silent-rk-blade-fan-setup-test-subject",
+      "context": "B2",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9147989425-48780.jsonl",
+          "sha256": "4b8b2fa332f40eac4420fa5926f731166d5473321193c8ce2358661ebdeebb7a"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Fan setup creates knives before their actual attacks"
+    },
+    {
+      "strategy_id": "silent-accuracy-shiv-scaling",
+      "rk_id": "silent-rk-blade-accuracy-held-shivs",
+      "context": "B3",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9148038205-53172.jsonl",
+          "sha256": "14b99b6137797ab1dd2f5e5354bd780c50aa782176fde8cb2640fa586905aeee"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Accuracy changes held knife text before actual damage"
+    },
+    {
+      "strategy_id": "silent-accuracy-shiv-scaling",
+      "rk_id": "silent-rk-blade-intangible-shivs",
+      "context": "B3",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9158612177-48611.jsonl",
+          "sha256": "e3a61caa66bf90b1b10f0833c6892f805f50bd53f770f767d95bb3de0bb4e802"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Intangible limited observed knives despite larger previews"
+    },
+    {
+      "strategy_id": "silent-core-shiv-defense-observation",
+      "rk_id": "silent-rk-blade-cloak-mecha-defense",
+      "context": "B4",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9133402872-47769.jsonl",
+          "sha256": "03031ca96b005bd3c44e580cafbdfb251763f57c68f91f4f56b7e141eeb06105"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Cloak provides block and knives with remaining defense gaps"
+    },
+    {
+      "strategy_id": "silent-afterimage-per-card-block",
+      "rk_id": "silent-rk-blade-afterimage-generation",
+      "context": "B5",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9146679917-50541.jsonl",
+          "sha256": "d8c2f06860130a192a9d14e2bd83981af5bf0341b0a925aa15a238ba971eac6f"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Generated knives have not yet earned play-trigger block"
+    },
+    {
+      "strategy_id": "silent-brain-blade-no-draw-backflip-review",
+      "rk_id": "silent-rk-blade-no-draw-backflip",
+      "context": "B6",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/own-raw/states-9156075736-52962.jsonl",
+          "sha256": "515fa239c7a48f83f6de129871452d98d26c2255c82f4108d578f6fca5f685c2"
+        }
+      },
+      "condition": "Exact original observed combat state; missing option.actions remains unknown",
+      "action": "Block remains observed while draw is locked"
+    }
+  ],
+  "held_pairs": [
+    {
+      "context_id": "B1",
+      "strategy_id": "silent-brain-blade-flexible-formation-review",
+      "strategy_path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/strategy-candidates.json",
+      "rk_ids": [],
+      "rk_path": null,
+      "state": "waiting",
+      "reason": "整局/奖励的功能分工与成型判断没有对应的原combat_line候选动作；不能将统计簇或三牌缺口改造成可执行rk。待合法拿牌/规划消费者与原输入。",
+      "shared_evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 45,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-blade-paired-ops/original/scratch/evidence-statistics.json#formation"
+        }
+      ],
+      "additional_text_only_evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_descriptive_bundle_observed"
+          },
+          "statistic": {
+            "name": "winner_descriptive_bundle_observed",
+            "value": 25,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 101
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ],
+  "source_counts": {
+    "contexts": 6,
+    "real_new_contexts": 2,
+    "updated_existing_contexts": 4,
+    "byte_identical_reuse": 0,
+    "aliases": 0,
+    "new_strategy_projection_ids": 6,
+    "text_candidates": 6,
+    "rk_candidates": 6,
+    "paired_contexts": 5,
+    "paired_candidates": 6,
+    "rk_waiting_contexts": 1,
+    "numeric_effect_rk": 0,
+    "format_consumable_text_candidates": 6,
+    "format_consumable_rk_candidates": 6,
+    "executable_rk_with_original_plan_and_replay": 0,
+    "comparison_groups_both_at_least_100": 0,
+    "external_descriptive_winner_checkpoint_n": 101,
+    "external_matched_comparison_n_each": 63,
+    "formal_publications": 0,
+    "production_consumer_readbacks": 0,
+    "natural_queries": 0,
+    "actual_adoptions": 0,
+    "benefits_validated": 0,
+    "scientific_parent_closed": false,
+    "previous_batch_real_new_contexts": 4,
+    "consecutive_zero_new_batches": 0
+  },
+  "snapshots": {
+    "main": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "f473234dbed0ff55c8c7e0bf1f5f9c7b3e5c0b62c8f94c3ffc337f673402f73d",
+          "bytes": 228908
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "2594df9cad3ff3627a495ace2a83d988d719c61ed50d329d018856ba00580911",
+          "bytes": 547926
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "2e1eb7844e771c06a9e199333773b55d22347fa6cf4a8651cca978c6e023d3fa",
+          "bytes": 188400
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "4b0b380d878934286bbedb1eda98c978ec17ecf9a285a15d40b0d1c001953922",
+          "bytes": 250639
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "5323536e7ec74d5f7e5ae5fef75f005942db063f17e28a3553f8031cac94c158",
+          "bytes": 587313
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "39f202cdac8ed758100705870ab0dcfff50f3cb2b1bfd7f2ca3845579b7c8efb",
+          "bytes": 190845
+        }
+      },
+      "updates": [],
+      "before_strategy_count": 47,
+      "after_strategy_count": 53,
+      "before_reflex_count": 91,
+      "after_reflex_count": 97
+    },
+    "live": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "c03956ec08d13c24ec20874ab7180d1fa9df0c27c6a76515e50ece4223c375dd",
+          "bytes": 228908
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "2594df9cad3ff3627a495ace2a83d988d719c61ed50d329d018856ba00580911",
+          "bytes": 547926
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "2e1eb7844e771c06a9e199333773b55d22347fa6cf4a8651cca978c6e023d3fa",
+          "bytes": 188400
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "b7be8536f56855ec901a2b2bc74c1317fd5433cbe9846b3c8fddbff111d0e5f9",
+          "bytes": 250639
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "5323536e7ec74d5f7e5ae5fef75f005942db063f17e28a3553f8031cac94c158",
+          "bytes": 587313
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "39f202cdac8ed758100705870ab0dcfff50f3cb2b1bfd7f2ca3845579b7c8efb",
+          "bytes": 190845
+        }
+      },
+      "updates": [],
+      "before_strategy_count": 47,
+      "after_strategy_count": 53,
+      "before_reflex_count": 91,
+      "after_reflex_count": 97
+    }
+  },
+  "source_files": {
+    "strategy": {
+      "path": ".artifacts/ops-issue51-blade-paired-20261024/normalized-strategy.json",
+      "bytes": 21813,
+      "sha256": "b54cfbb96aed01d8255ec681fdf3ef18a56130bc6ae6ad992783f9409f89deb7"
+    },
+    "rk": {
+      "path": ".artifacts/ops-issue51-blade-paired-20261024/normalized-reflex.json",
+      "bytes": 39464,
+      "sha256": "7304811a33cd5b2a0bff23b595084712e5881125d57b468d4437158c2ed92c91"
+    },
+    "vocab": {
+      "path": ".artifacts/ops-issue51-blade-paired-20261024/normalized-vocab.json",
+      "bytes": 2649,
+      "sha256": "44cf628216ceb432ca50b8a59a32ece4d534f6b0e092d6f22a60a1596c6a663a"
+    }
+  },
+  "verified_inventory_files": 431,
+  "verified_input_files": 144,
+  "raw_windows_verified": 242,
+  "new_models_full_games": 0,
+  "data_only": true,
+  "complete_playbook_publication": false,
+  "executable_card_pick_advice": 0,
+  "strategy_projection_ids_added": 6,
+  "knowledge_new_contexts": 2,
+  "knowledge_updated_contexts": 4
+}

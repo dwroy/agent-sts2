@@ -1,0 +1,517 @@
+{
+  "batch": "20261024-181311-strategy-proposal",
+  "base": "33733c9dd031d1c69be1985918a7001dca051fe8",
+  "input_manifest_sha256": "453b5f28d9030a8c4b9fba8834308e2d609773c7e410e9d67fff292155f076d1",
+  "source_commit": null,
+  "source_commit_note": "本批无源码提交；base仅派发身份。",
+  "external_source": "issue51-whole-run-blade-003-20261024",
+  "external": {
+    "source": "external:sts2fun",
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "artifact_sha256": {
+      "archetypes.json": {
+        "bytes": 96798,
+        "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+      },
+      "boss-semantics.json": {
+        "bytes": 695296,
+        "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+      },
+      "combinations.json": {
+        "bytes": 13623341,
+        "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+      },
+      "matchups.json": {
+        "bytes": 1898951,
+        "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+      },
+      "representative-timelines.json": {
+        "bytes": 1093141,
+        "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+      },
+      "safe-projection.sql": {
+        "bytes": 2906,
+        "sha256": "5c3012360bdf7fb8f3936a6fb31b0bd9db8fd1d21afca56295064a5abcc7992b"
+      },
+      "timeline.json": {
+        "bytes": 90856,
+        "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+      }
+    },
+    "versions_pooled": false,
+    "mechanism_change_comparison": "unknown",
+    "independent_players": null,
+    "license": "FAQ未发现明确再分发许可；只写署名聚合与授权匿名摘录。"
+  },
+  "own": {
+    "scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+    "manifest_sha256": "a078c592dabf5909473f59967334ccd7ae24166f9f1e74e7140a062282e72e64",
+    "eligible_runs": 506,
+    "reviewed_full_runs": [
+      "9ZERN492CSHX",
+      "9R916WW0V65N"
+    ],
+    "game_version": "unknown",
+    "raw_seek_audit": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/raw-seek-audit.json"
+  },
+  "claims": [
+    {
+      "context": "B1",
+      "source": "mixed",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_descriptive_bundle_observed"
+          },
+          "statistic": {
+            "name": "winner_descriptive_bundle_observed",
+            "value": 25,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 101
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 45,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#formation"
+        }
+      ],
+      "own_action_offsets": [],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    },
+    {
+      "context": "B2",
+      "source": "mixed",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#fan_setup"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; selected_winner_terminal_fan"
+          },
+          "statistic": {
+            "name": "selected_winner_terminal_fan",
+            "value": 6,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 10
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json;sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda;cluster=6;version=v0.111",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; selected_loser_terminal_fan"
+          },
+          "statistic": {
+            "name": "selected_loser_terminal_fan",
+            "value": 1,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 10
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json;sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda;cluster=6;version=v0.111",
+          "role": "support"
+        }
+      ],
+      "own_action_offsets": [
+        748801282,
+        749174603,
+        749266987,
+        749767963
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    },
+    {
+      "context": "B3",
+      "source": "mixed",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 42,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#accuracy"
+        },
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#intangible"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; matched_winner_accuracy_fan_terminal"
+          },
+          "statistic": {
+            "name": "matched_winner_accuracy_fan_terminal",
+            "value": 24,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 63
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/combinations.json;sha256=e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586;cluster=6;version=v0.111",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; matched_loser_accuracy_fan_terminal"
+          },
+          "statistic": {
+            "name": "matched_loser_accuracy_fan_terminal",
+            "value": 27,
+            "unit": "runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 63
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/combinations.json;sha256=e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586;cluster=6;version=v0.111",
+          "role": "support"
+        }
+      ],
+      "own_action_offsets": [
+        748415314,
+        748632146,
+        748820750,
+        749176085,
+        749380353,
+        749792862,
+        749913885,
+        749995318,
+        750070749,
+        750144575,
+        750230054,
+        750306746,
+        749836173,
+        749837665,
+        749839140
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    },
+    {
+      "context": "B4",
+      "source": "mixed",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 42,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#cloak_defense"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_checkpoint1_positive_block_card_copies_proxy_mean"
+          },
+          "statistic": {
+            "name": "winner_checkpoint1_positive_block_card_copies_proxy_mean",
+            "value": 8.089108910891088,
+            "unit": "cards"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 101
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_checkpoint2_positive_block_card_copies_proxy_mean"
+          },
+          "statistic": {
+            "name": "winner_checkpoint2_positive_block_card_copies_proxy_mean",
+            "value": 9.633663366336634,
+            "unit": "cards"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 101
+          },
+          "design": "observational",
+          "limitations": [
+            "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+            "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+            "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+            "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+          "role": "support"
+        }
+      ],
+      "own_action_offsets": [
+        748413770,
+        748520452,
+        748561779
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    },
+    {
+      "context": "B5",
+      "source": "own",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#afterimage_generation"
+        },
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 49,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#afterimage_generation"
+        }
+      ],
+      "own_action_offsets": [
+        749120876,
+        749829597,
+        750287960
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    },
+    {
+      "context": "B6",
+      "source": "own",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9R916WW0V65N",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#no_draw"
+        }
+      ],
+      "own_action_offsets": [
+        749750194
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "independent_own_support_runs": [
+        "9R916WW0V65N"
+      ],
+      "limitations": [
+        "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+        "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+        "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+        "外部完整指全部记录节点；缺真实初始/战前快照、战斗逐回合、药水时机和事件题文。拿牌还原、前节点HP及正block计数均为代理。",
+        "自有仅冻结506、11个SHA一致分片和六流原切点；DuckDB内存、threads=2，未同步共享logdb、未读外部原库。",
+        "自有A10无重试证据4局、重试/预判必死3局、A6重试1局分列，均0胜；缺同簇自有赢家。未见重试证据不等于证实无SL。",
+        "9R916WW0V65N首次预判必死截止在F48；该战最终三试过，F49六试败。重试不是独立局，跨尝试净损和药水重复列表不作单次资源成本。",
+        "自有act_end_snapshots只按幕字段取最后记录；9R首幕项实际是F17开战69血，不是战后42血。与外部幕末还原的HP/牌数不能直接作同时间点比较。",
+        "观察动作的单步变化不证明改顺序或拿牌会改善整战；无合法原Plan、完整逐候选结果或留出回放，rk仅描述tag，不含HP/胜率收益信号。",
+        "现行策略trigger只编码题型与幕；正文的实际持牌/敌人/能力条件仍须消费方逐项核，不把正文条件当自动匹配已通过。",
+        "真实新情境2、旧知识情境更新4；六个新文字投影ID和六个窄条件rk投影ID不计十二条新知识。正式发布/工具读回/自然查询/采用/收益均0。"
+      ]
+    }
+  ],
+  "shared_ledger_written": false,
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}
