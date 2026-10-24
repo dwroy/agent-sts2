@@ -1,0 +1,545 @@
+{
+  "schema": "single-card-context-candidates-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-b003-skill-count-price",
+      "cards": [
+        "PINPOINT"
+      ],
+      "strategy_id": "silent-brain-b003-skill-count-price",
+      "rk_id": "silent-rk-b003-skill-count-price",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现精密瞄准时，按原文3费15伤、每已打1张技能减1费，比较当前牌组能提供的技能与同屏杂技、咕嘟冒泡或跳过；牌组有技能不等于战斗当回合已经打出技能，不预支减费。",
+      "observations": [
+        {
+          "run_id": "0NZXA12NLDMH",
+          "floor": 4
+        },
+        {
+          "run_id": "25226ZFLNR1J",
+          "floor": 12
+        }
+      ],
+      "own_support_runs": [
+        "0NZXA12NLDMH",
+        "25226ZFLNR1J"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-weak-target-amplification",
+      "cards": [
+        "TRACKING"
+      ],
+      "strategy_id": "silent-brain-b003-weak-target-amplification",
+      "rk_id": "silent-rk-b003-weak-target-amplification",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现跟踪时，原文2费、处于虚弱的敌人受攻击伤害增加50%；先核当前已持的施加虚弱来源、攻击用途与启动费用，再与夜魇、华丽收场或跳过比较。未证实目标有虚弱时，不把50%加成预算进攻击伤害。",
+      "observations": [
+        {
+          "run_id": "MCT1GPTL8D35",
+          "floor": 17
+        },
+        {
+          "run_id": "0NZXA12NLDMH",
+          "floor": 17
+        }
+      ],
+      "own_support_runs": [
+        "0NZXA12NLDMH",
+        "MCT1GPTL8D35"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-card-count-trigger",
+      "cards": [
+        "STRANGLE",
+        "PANACHE"
+      ],
+      "strategy_id": "silent-brain-b003-card-count-trigger",
+      "rk_id": "silent-rk-b003-card-count-trigger",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现紧勒或神气制胜时，分开比较触发对象和门槛：紧勒1费8伤，本回合每出1牌使该敌人失2HP；神气制胜0费，每回合出五牌才全体10伤。按现有牌组核后续出牌能力，和真实备选/跳过比较，不把持有牌数当已出牌数。",
+      "observations": [
+        {
+          "run_id": "UJ0K3G10609Y",
+          "floor": 37
+        },
+        {
+          "run_id": "JMH5C51RLN4E",
+          "floor": 19
+        },
+        {
+          "run_id": "L6745E2ND5CT",
+          "floor": 45
+        }
+      ],
+      "own_support_runs": [
+        "JMH5C51RLN4E",
+        "L6745E2ND5CT",
+        "UJ0K3G10609Y"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-defense-activation",
+      "cards": [
+        "ANTICIPATE",
+        "ULTIMATE_DEFEND",
+        "SHRUG_IT_OFF",
+        "UNMOVABLE"
+      ],
+      "strategy_id": "silent-brain-b003-defense-activation",
+      "rk_id": "silent-rk-b003-defense-activation",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励遇预判、究极防御、耸肩无视或坚定不移时，区分0费仅本回合2敏捷、1费11挡、1费8挡抽1、2费建立后每回合第一次卡牌格挡翻倍。按现有格挡牌、费用和抽牌用途比较备选；敏捷与翻倍均不能当无条件即时格挡，未实核关键词/顺序不补数。",
+      "observations": [
+        {
+          "run_id": "MCCK2602T1SR",
+          "floor": 5
+        },
+        {
+          "run_id": "25226ZFLNR1J",
+          "floor": 29
+        },
+        {
+          "run_id": "L6745E2ND5CT",
+          "floor": 37
+        },
+        {
+          "run_id": "JMH5C51RLN4E",
+          "floor": 22
+        },
+        {
+          "run_id": "P2M3DFJ4DEZ3",
+          "floor": 29
+        }
+      ],
+      "own_support_runs": [
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "L6745E2ND5CT",
+        "MCCK2602T1SR",
+        "P2M3DFJ4DEZ3"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-next-turn-copy-or-attack",
+      "cards": [
+        "NIGHTMARE",
+        "SHADOW_STEP"
+      ],
+      "strategy_id": "silent-brain-b003-next-turn-copy-or-attack",
+      "rk_id": "silent-rk-b003-next-turn-copy-or-attack",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现夜魇或暗影步时，分开核延迟回报和当前代价：夜魇3费消耗、下回合加所选牌3复制品；暗影步1费弃全手、下回合攻击翻倍。现有牌组只给潜在目标，不证明未来手牌；与融入暗影、萎靡、必备工具等本题备选和跳过比较，不预支复制或倍伤。",
+      "observations": [
+        {
+          "run_id": "9TG1RP5LFAAK",
+          "floor": 33
+        },
+        {
+          "run_id": "JMH5C51RLN4E",
+          "floor": 33
+        },
+        {
+          "run_id": "L704TLETMZBM",
+          "floor": 44
+        },
+        {
+          "run_id": "25226ZFLNR1J",
+          "floor": 17
+        }
+      ],
+      "own_support_runs": [
+        "25226ZFLNR1J",
+        "9TG1RP5LFAAK",
+        "JMH5C51RLN4E",
+        "L704TLETMZBM"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-draw-event-window",
+      "cards": [
+        "SPEEDSTER",
+        "CORROSIVE_WAVE"
+      ],
+      "strategy_id": "silent-brain-b003-draw-event-window",
+      "rk_id": "silent-rk-b003-draw-event-window",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现速行者或腐蚀波时，按现有抽牌来源比较触发时窗：速行者2费建立后，回合进行中每抽1牌全体2伤；腐蚀波1费，打出后仅本回合每抽1牌全体2毒。与同屏即时牌、跟踪或跳过比较，不把回合初抽牌或尚未发生的抽牌算已兑现；附加重放须另核。",
+      "observations": [
+        {
+          "run_id": "E5L15SK6ZHZB",
+          "floor": 35
+        },
+        {
+          "run_id": "MGA0CZDDKC0P",
+          "floor": 13
+        },
+        {
+          "run_id": "D4LJ9QMGFB8Q",
+          "floor": 17
+        },
+        {
+          "run_id": "JMH5C51RLN4E",
+          "floor": 17
+        }
+      ],
+      "own_support_runs": [
+        "D4LJ9QMGFB8Q",
+        "E5L15SK6ZHZB",
+        "JMH5C51RLN4E",
+        "MGA0CZDDKC0P"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b003-draw-count-versus-empty-pile",
+      "cards": [
+        "MURDER",
+        "GRAND_FINALE"
+      ],
+      "strategy_id": "silent-brain-b003-draw-count-versus-empty-pile",
+      "rk_id": "silent-rk-b003-draw-count-versus-empty-pile",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励比较谋杀或华丽收场时，分开核本战累计抽牌与抽牌堆为空：谋杀3费1基础伤、每已抽1牌加1伤；华丽收场0费全体60伤但空抽牌堆才能打。奖励时的牌组大小不能代战斗牌堆状态；和腐蚀波、夜魇或跳过比较，不预支累计或可打性。",
+      "observations": [
+        {
+          "run_id": "JQPT83P8KDSZ",
+          "floor": 17
+        },
+        {
+          "run_id": "VPW8YH7A4QFM",
+          "floor": 25
+        },
+        {
+          "run_id": "9TG1RP5LFAAK",
+          "floor": 33
+        }
+      ],
+      "own_support_runs": [
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "VPW8YH7A4QFM"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "new-candidate",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-lane-b-discard-payload",
+      "cards": [
+        "STORM_OF_STEEL",
+        "MEMENTO_MORI"
+      ],
+      "strategy_id": "silent-brain-lane-b-discard-payload",
+      "rk_id": "silent-rk-lane-b-discard-payload",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励出现隐秘匕首、计算下注、钢铁风暴或铭记死亡时，分别核弃2加2刀、弃全手等量抽且消耗、1费弃全手每弃1加1刀、1费9伤且本回合每已弃1牌加4伤。把保留手牌的机会代价和真实备选/跳过一起比较，不能把生成刀当已出刀、未来弃牌当已弃牌。",
+      "observations": [
+        {
+          "run_id": "0NZXA12NLDMH",
+          "floor": 17
+        },
+        {
+          "run_id": "25226ZFLNR1J",
+          "floor": 33
+        },
+        {
+          "run_id": "MGA0CZDDKC0P",
+          "floor": 8
+        },
+        {
+          "run_id": "25226ZFLNR1J",
+          "floor": 35
+        }
+      ],
+      "own_support_runs": [
+        "0NZXA12NLDMH",
+        "25226ZFLNR1J",
+        "MGA0CZDDKC0P"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "same-id-update",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b002-explicit-keyword-resource-boundary",
+      "cards": [
+        "MASTER_PLANNER",
+        "ARMAMENTS"
+      ],
+      "strategy_id": "silent-brain-b002-explicit-keyword-resource-boundary",
+      "rk_id": "silent-rk-b002-explicit-keyword-resource-boundary",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励遇战术大师、本能反应、手上技法或谋划专家时，仅按已核原文分清得能、抽牌与赋予奇巧，不补奇巧定义。新增谋划专家2费、技能打出后该牌得奇巧；武装1费5挡、升级手中1牌，须另核手中合格目标和升级文本。与实际备选/跳过比较，不能把两种改牌效果视为等价。",
+      "observations": [
+        {
+          "run_id": "4ANT8D00TP72",
+          "floor": 33
+        },
+        {
+          "run_id": "L9SGRBB5R698",
+          "floor": 14
+        },
+        {
+          "run_id": "7X58G3LSHZ3U",
+          "floor": 23
+        },
+        {
+          "run_id": "KYJMB7ELM6FN",
+          "floor": 22
+        }
+      ],
+      "own_support_runs": [
+        "4ANT8D00TP72",
+        "7X58G3LSHZ3U",
+        "KYJMB7ELM6FN",
+        "L9SGRBB5R698"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "same-id-update",
+      "not_a_full_playbook": true
+    },
+    {
+      "id": "silent-b002-skill-discount-and-draw-lock",
+      "cards": [
+        "HEADBUTT",
+        "BATTLE_TRANCE"
+      ],
+      "strategy_id": "silent-brain-b002-skill-discount-and-draw-lock",
+      "rk_id": "silent-rk-b002-skill-discount-and-draw-lock",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction": "奖励遇猛扑或子弹时间仍分别核下一技能减费与全手减费禁抽；新增战斗专注0费抽3后本回合禁抽，头槌1费9伤并从弃牌堆放1牌到抽牌堆顶。按已有抽牌牌比较顺序和真实备选/跳过；放到堆顶不等于已入手，不能把禁抽后的后续抽牌算兑现。",
+      "observations": [
+        {
+          "run_id": "8AGEGLG40SV3",
+          "floor": 22
+        },
+        {
+          "run_id": "NB8KCF6HRGVF",
+          "floor": 23
+        },
+        {
+          "run_id": "JMH5C51RLN4E",
+          "floor": 22
+        }
+      ],
+      "own_support_runs": [
+        "8AGEGLG40SV3",
+        "JMH5C51RLN4E",
+        "NB8KCF6HRGVF"
+      ],
+      "own_game_version": "unknown",
+      "external_versions": [
+        "v0.107",
+        "v0.108",
+        "v0.109",
+        "v0.110",
+        "v0.111"
+      ],
+      "input_manifest_sha256": "9ec61e3afd7010fcd0c12c61b4e1c49f825bcdf67f3d5d28bf9da24438152e5e",
+      "limitations": [
+        "外部cards_gained只是取得条目，不是完整奖励备选；独立上传局跨cell并集未知，不累加各cell局数。",
+        "自有仅冻结506名单及原切点，A10和其他进阶、重试/判死与无重试证据分别统计；游戏版本unknown，不补为v0.111。",
+        "取得牌次与整局胜负受存活、深度、玩家/模型策略、路线及牌组选择混杂；不能解释为因果收益或固定拿牌排序。",
+        "未获跨版本机制不变证据；v0.107小版本逐build保留，不合并推断；其他版本亦单列。",
+        "当前牌组/HP为不晚于决策observed_ts的最近已记帧代理，可能早于奖励面板；未来手牌、战斗触发和终局牌组不得作当前触发。",
+        "印刷数值只在现场同牌文成立；未实测战斗结算、重放/奇巧定义、兑现率、升级变化或安全阈值。"
+      ],
+      "numeric_comparison_gate": false,
+      "disposition": "same-id-update",
+      "not_a_full_playbook": true
+    }
+  ]
+}

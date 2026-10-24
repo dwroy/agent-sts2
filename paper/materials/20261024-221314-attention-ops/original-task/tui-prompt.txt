@@ -1,0 +1,304 @@
+[learner-batch:adb6a88a-dba3-4949-bb36-5d556e0110f9]
+【启动器说明（codex）】任务说明里的工具名是通用叫法，在这里这样对应：Read = 用只读的 shell 命令看文件（sed -n '起,止p'、head、tail；大文件不许整份输出），Grep = rg 或 grep，Glob = rg --files、ls 或 find，Bash = shell 命令，Edit / Write = apply_patch（或 shell 写文件）。
+本任务允许的工具：Read、Grep、Glob、Bash、Edit、Write。沙箱：工作目录、项目目录和临时目录可写，不联网；key 文件和 .env 读不到。
+
+# 外部来源专线
+
+本批角色 silent，真实调度ID 20261024-221314-strategy-proposal，工作树 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221314，项目根 /home/dw/Projects/agent-sts2，临时产出 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221314/learner/runs/20261024-221830-799366ce-2226-4f9d-b5e6-64c376fd25cc-strategy-proposal。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
+
+只读冻结的脱敏聚合 JSON、#54新授权匿名代表轨迹与发布契约；不读原始数据库、逐玩家数据或玩家标识，不下载新数据。代表轨迹只通过manifest核SHA的有界reader读取，一对一页，保留完整节点，不把它当真实快照全字段。游戏知识只能来自这些证据，不从预训练知识补齐。来源统一 external:sts2fun；逐结论记录版本、采集日期、输入 SHA、独立样本分母、观察性限制、反例和缺口。版本处理：有实际依据表明机制未改的版本合并统计，同时保留各版本原分母和异质性；机制已改的版本拆分。缺机改对照时标明未知，先从各自已满足样本条件的组产出，不把未知补成“未改”，也不因此整批停产；本系统 live 证据另账，runs=[]，不得补局号或把玩家聚合冒成本系统验证。
+
+按 work_spec 的有界单批主题提炼 knowledge/strategy/rk 候选。先核 #27/#28/#42 冻结契约，命中同场景就合并候选/指向既有ID，冲突保留本系统与外部两条证据和适用条件。按本批冻结work_spec确定阶段：单牌批处理改进单牌；#54统计层交付后新授权的流派批，一个流派一个剧本，先毒/刀，不重新派旧双Boss/幕Boss及同类任务。统计簇号不是玩法名称，须学习者依据核心原ID与完整代表轨迹自行确认语义，ops不提供游戏结论。只在 scratch 保存真实候选和来源账本；每条写 formal_publication=pending、consumer_readback=pending。正式发布仍沿既有发布锁、学习账本、消费者读回和后续自然采用流程，候选完成不关闭科学父。不改源码/正式知识、不合入 main/live；HEAD 保持 dispatch_base。
+
+缺列先寻找可计算的代理并继续产出，条目、统计和适用范围都显式标“代理”：例如拿牌顺序/已拿奖励前缀作为牌组代理，上节点结束HP作为入场资源代理；只有连代理都没有时，才跳过该子项并说明缺什么。只有终局牌组时可以给终局关联的方向性统计，但不得写成真实战前快照或使用未来事实作当前题目的触发条件。缺因果证明不是否决方向性统计条目的理由；写清观察关联和混杂，不写因果收益/保证/固定拿牌命令。缺失分母不能估成真实样本；不累加重叠cell为独立局。单牌每个用于发布的比较组样本至少100；不满足的细分组退到真实可用的更宽代理条件，仍不满足才跳该子组，不把其他合格组一起waiting。
+
+每条采用“一句方向 + 幅度 + 样本 + 一行适用范围”，保留版本、SHA、反向结果、外部来源与代理限制；完整统计/证据另附可核文件。仅单牌批每批覆盖20～30张牌，逐卡给候选/复用/跳过；流派批以work_spec的一流派/10～20条完整轨迹为边界，报告真实新增条目数、更新复用数、达到100门槛数；候选、正式发布与自然消费分别计数。连续两批真实新增条目0就停下报主管，不能自动扩大批次或重开旧Boss任务。本批计数基线由冻结work_spec提供。
+
+所有 unit_ids 逐项写具体处置和缺证理由，允许局部waiting；不得捏造发布、读回、收益或样本。保存 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221314/learner/runs/20261024-221830-799366ce-2226-4f9d-b5e6-64c376fd25cc-strategy-proposal/report.md；还必须在该报告末尾写一个完整的json代码块（以三个反引号加json开头），其中task为strategy-proposal，内容与最终输出逐字段相同，包括reason/path/各disposition。可先生成唯一的 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221314/learner/runs/20261024-221830-799366ce-2226-4f9d-b5e6-64c376fd25cc-strategy-proposal/result.json，再把其原字节嵌进report.md代码块并原样作为最终回复；提交前解析两处并检查完全相等。不要只在独立result.json或最终回复中写JSON，否则原完整性校验会拒绝；也不要在写好报告后改写最终reason。最后输出同一 JSON：task=strategy-proposal、character=silent、code_proposals=[]、implementation_domains=[]、proposal_results=[]（本无源码批仅在实际不涉及代码提案时为空）、batch=真实ID、base=dispatch_base、runs=[]、fixes=[]、merged=null、tests={tsc:null,vitest:null,cases:null}、report=报告绝对路径、external_source=绑定plan_id、input_sha256=冻结manifest SHA、external_results=[{id:unit_id,state:processed或waiting,destinations:[{kind:knowledge或strategy或rk或merged-into,id:目标ID,path:scratch中真实候选文件绝对路径}],reason:具体理由}]。processed 表示候选已落盘且至少一个去向；waiting 的 destinations=[]。不得把启动参数或请求档位当原生已采用档位，使用量/耗时以原启动回执与运行记录为准。
+
+
+本批冻结身份（路径相对 project_root）：
+{
+  "batch": "20261024-221314-strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221314",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "plan_id": "issue51-remaining-build-002-20261024-r56",
+  "source": "external:sts2fun",
+  "input_manifest": {
+    "path": "paper/materials/20261024-211311-attention-ops/inputs/issue51-remaining-build-002-20261024-r56.json",
+    "bytes": 12084,
+    "sha256": "80838e59720689b8bae444d53b4ba813eab5a59193b3835c379ee92612b7cec0"
+  },
+  "work_spec": {
+    "path": "paper/materials/20261024-211311-attention-ops/inputs/issue51-remaining-build-002-20261024-r56.md",
+    "bytes": 4935,
+    "sha256": "29ecc9640dabd20b424881bb8bf8859aacf251b2ed95d458636c7086882bce12"
+  },
+  "topic": "knowledge",
+  "provenance": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "query_version": "issue54-decision-fields-v1+own-build-statistics-v1-frozen-a5db4d0f9",
+    "design": "observational",
+    "build_manifest": {
+      "path": "knowledge/external/sts2fun/builds-v1/manifest.json",
+      "bytes": 1197,
+      "sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852"
+    }
+  },
+  "entry_ids": [
+    "external-remaining-build-002-r56"
+  ],
+  "all_entry_ids": [
+    "external-remaining-build-002-r56"
+  ],
+  "dispatch_runs": [],
+  "cohorts": [
+    {
+      "version": "v0.107",
+      "sample_count": 2932,
+      "sample_denominator": 2932,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+          "bytes": 96798,
+          "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+          "bytes": 695296,
+          "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+          "bytes": 13623341,
+          "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "bytes": 1898951,
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "bytes": 1093141,
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "bytes": 90856,
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+        },
+        {
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "bytes": 41598781,
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        }
+      ]
+    },
+    {
+      "version": "v0.108",
+      "sample_count": 683,
+      "sample_denominator": 683,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+          "bytes": 96798,
+          "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+          "bytes": 695296,
+          "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+          "bytes": 13623341,
+          "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "bytes": 1898951,
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "bytes": 1093141,
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "bytes": 90856,
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+        },
+        {
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "bytes": 41598781,
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        }
+      ]
+    },
+    {
+      "version": "v0.109",
+      "sample_count": 583,
+      "sample_denominator": 583,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+          "bytes": 96798,
+          "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+          "bytes": 695296,
+          "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+          "bytes": 13623341,
+          "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "bytes": 1898951,
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "bytes": 1093141,
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "bytes": 90856,
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+        },
+        {
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "bytes": 41598781,
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        }
+      ]
+    },
+    {
+      "version": "v0.110",
+      "sample_count": 411,
+      "sample_denominator": 411,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+          "bytes": 96798,
+          "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+          "bytes": 695296,
+          "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+          "bytes": 13623341,
+          "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "bytes": 1898951,
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "bytes": 1093141,
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "bytes": 90856,
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+        },
+        {
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "bytes": 41598781,
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        }
+      ]
+    },
+    {
+      "version": "v0.111",
+      "sample_count": 1739,
+      "sample_denominator": 1739,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+          "bytes": 96798,
+          "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+          "bytes": 695296,
+          "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/combinations.json",
+          "bytes": 13623341,
+          "sha256": "e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "bytes": 1898951,
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "bytes": 1093141,
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+        },
+        {
+          "path": "knowledge/external/sts2fun/builds-v1/timeline.json",
+          "bytes": 90856,
+          "sha256": "d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621"
+        },
+        {
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "bytes": 41598781,
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+        }
+      ]
+    }
+  ],
+  "retry_generation": 0,
+  "dispatch_base": "522197cfb8b29eea4d640032532731642a223a0d"
+}
+# #51 新独立单元（6384816466）
+本任务按主管最新次序接续，非旧008/刀009/Boss或冷启动/休息重放。不改旧processed/failed/rc0、原输入或在途模型。保持原gpt-6.1-sol/high与原沙箱/网络边界；外部下一自然启动申请ultrafast，原账号周额度超过70%回落fast，额度未知也先fast并报告。只改启动参数，不改账号/home/config/权限、不热切在途；设置需经原唯一完整检查及宿主部署，实际档位仍只以原生回执为准。只读冻结证据、写本批scratch候选，不改源码/正式库/共享统计，不开模型/MC/Jev/游戏、full或强制tick。
+
+范围：先核#54三manifest/132叶的原SHA，外部v0.111公开统计与匿名完整赢家代表为主；版本逐项分账，先前版本反例保留，禁止读取标识/重新下载原库。自有补证限own_contrast_scope内该506名单及11个只读冻结parquet和原六流切点；A10与其他进阶、SL/预判必死与无重试证据、版本unknown分别统计。Z2手动局/KF9缺末态/BP9及后续局排除，不扩原切点。DuckDB仅内存、threads<=2、显式parquet名单并先过滤该506名单；不init/sync共享logdb，不拷完整17GB状态流。每次原始行seek留offset/bytes/SHA且不得越截止，不能把未来终局牌组/簇号当决策时可用触发。原硬链接nlink因源压实变1不等于字节坏，以冻结大小/SHA为准，不写该片。
+
+证据缺字段时按6380207972继续用实际可计算自有数据/代理作为该子项主证据，外部作方向对照；明确标代理/稀疏/反向/未知，不整批等字段，也不伪造选项、机制、时机或安全阈值。每个单元目标5～10条有区别情境→做法；新建/同ID更新/逐字节复用/统计行/别名分账，不拆泛句凑数。少于3条必须报主管原文、数目、缺口与下一步；3～4也未达5条，不冒达标。来源/版本/独立局与机会分母/分层/反例/混杂和当前信息可得性逐条保留，不以赢家选择、相关性或最终聚类冒因果收益或固定拿牌排序。
+
+若声称完整剧本，必须读具体被选外部代表全部时间线和同流派自有完整局四section（路线/拿牌构筑/资源及战斗/结局等以实际投影字段为准），程序保存全页不代模型通读。统计簇号只作定位；毒/刀语义由学习者依据实际牌文、组合与时序证据确认，不由ops或簇号命名。记录程序覆盖、模型实际通读/抽核范围与未读项。优先v0.111赢家局并列相近未成型/失败反例，外部与自有不能混分母。
+
+输出按现行冻结brain-strategies/#55合同；按本轮同产要求交付：文字策略与对应rk候选一起交；缺剧本/knowledge/rk正式消费者或回放须逐项写明，不以候选冒正式发布。archetype触发只有正式部署模型SHA/几何与语义确证才用，#55测试几何不部署；可以按已支持题型/幕与正文条件给策略，不自行扩schema。不启#28开关/两臂/A-B。正式发布、生产工具读回、自然查询、实际采用/收益和科学父分别记，候选齐不关闭父。
+
+输出相同result.json原字节嵌report.md与最终回复；保留external_source=本plan、input_sha256和unit_ids逐项external_results及destinations。runs=[]只是外部调度身份，自有支持另列own_support_runs并按真实own/mixed/external标源；不造source_commit。无代码时code_proposals/implementation_domains/proposal_results/fixes均[]，merged=null、tests各null。给decision_output_counts及逐情境mapping、coverage、来源账本与限制；旧成果复用不算新增情境。已核后按整批或2小时先到独立发布，学习者不等代码/full，不自行开下一单元。
+
+
+本轮调度以#56主管6384816466为准，覆盖旧交替、过渡fast和旧轮换文字：原自然tick按A/B/C/D每道至多1个、另留1个自有；新启动周额度≤70%申请ultrafast，>70%两道fast，≥90%仅请求原ops换号预检，未知/过期拒绝。磁盘≤80GiB不新派。不改账号/config/沙箱，不热切、不强tick、不重放旧单元。source install旧窗保留，主管新吞吐窗从实际名额释放起计；学习者不得自行派下一单元。
+
+## 本单元唯一主题（6384816466）
+剩余流派剧本第二组：与remaining-build-001使用同一冻结排序和既有毒/刀coverage排除，取第2个未核验簇，与第一组不得重叠。簇号仅定位，语义须由本学习者核原牌文/时序，不按预训练命名。通读完整赢家和失败反例、自有整局四section，逐项写程序覆盖/模型实际阅读/未读项，完整剧本消费者未知另列。
+
+原产物退役归档仅作coverage/反证索引，不计新证据、新情境或正式入库；211311已有20卡/8对，不重复学习。全部正式发布、工具读回、自然采用/收益仍0起步独立验。
+
+
+工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace codex-strategy-silent-20261024-221314 --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。

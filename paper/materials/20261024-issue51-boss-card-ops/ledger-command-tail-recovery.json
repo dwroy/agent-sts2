@@ -1,0 +1,70 @@
+{
+  "original_commands": 29,
+  "restored_existing_command_tail": [
+    {
+      "entry_id": "silent-rk-lane-b-discard-payload",
+      "kind": "rk",
+      "ledger_id": "silent-0703",
+      "new_record": false,
+      "claim": "Compare discard payloads with cards surrendered and payoff timing；描述标签，完整Plan/数值比较及因果收益未验证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0NZXA12NLDMH",
+          "floor": 17,
+          "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/STORM_OF_STEEL",
+          "role": "support"
+        }
+      ],
+      "confidence": 0.25,
+      "first_run": "QNTW139MGECA",
+      "evidence_status": "unassessed",
+      "prior_status": "shipped"
+    },
+    {
+      "entry_id": "silent-rk-b002-explicit-keyword-resource-boundary",
+      "kind": "rk",
+      "ledger_id": "silent-0708",
+      "new_record": false,
+      "claim": "Separate the unresolved keyword from a printed hand-card upgrade；描述标签，完整Plan/数值比较及因果收益未验证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "4ANT8D00TP72",
+          "floor": 33,
+          "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/MASTER_PLANNER",
+          "role": "support"
+        }
+      ],
+      "confidence": 0.25,
+      "first_run": "833ZM0MJGWHC",
+      "evidence_status": "unassessed",
+      "prior_status": "shipped"
+    },
+    {
+      "entry_id": "silent-rk-b002-skill-discount-and-draw-lock",
+      "kind": "rk",
+      "ledger_id": "silent-0706",
+      "new_record": false,
+      "claim": "Compare draw order and draw locks with the actual cost reduction；描述标签，完整Plan/数值比较及因果收益未验证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "8AGEGLG40SV3",
+          "floor": 22,
+          "ref": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json#/HEADBUTT",
+          "role": "support"
+        }
+      ],
+      "confidence": 0.25,
+      "first_run": "QNTW139MGECA",
+      "evidence_status": "unassessed",
+      "prior_status": "shipped"
+    }
+  ],
+  "final_commands": 32,
+  "existing_records_only": true,
+  "new_ledger_adds_repeated": 0,
+  "root_cause": "register script persisted command list only after new adds; final three existing rk hit continue and were not flushed",
+  "original_source_write_started": false
+}

@@ -1,0 +1,2250 @@
+{
+  "schema": "scratch-paired-candidates-v1",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "candidates": [
+    {
+      "id": "insatiable-bite-block-and-weaken",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "KHECCYUJ7K48"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "当前实际扑咬、两张牌合法；后空翻费用和额外效果只依原帧，不把外部均值当阈值。",
+      "strategy_entry": {
+        "id": "silent-brain-insatiable-bite-block-and-weaken",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            2
+          ],
+          "bosses": [
+            "THE_INSATIABLE_BOSS"
+          ]
+        },
+        "strategy": "无厌沙虫当前扑咬且中和、防御可打时，比较补挡兼减攻的整条线，再重算施毒余力。0CLP16ZR4ZZC F33 T3一次机会：76血/10挡面对31攻，实打防御、毒雾+、致命毒药+、中和、后空翻；来袭31→23、挡10→25，T4仍76血。不能把零掉血单归中和，后空翻实际费用/额外效果按当帧重核。\n范围：Silent A10、自有版本unknown、1局1窗口；KHECCYUJ7K48同Boss终败为反例索引，未核同手牌反事实。外部v0.111仅338上传记录的整战背景；不定安全血线、固定顺序或因果收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 25.449704142011836,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 338
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.THE_INSATIABLE_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-insatiable-bite-block-and-weaken",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "THE_INSATIABLE"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "LUNGING_BITE_MOVE"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "NEUTRALIZE"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEFEND_SILENT"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "NEUTRALIZE"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare block and weakening in the observed lunging bite window",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 33,
+              "turn": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json",
+            "sha256": "86fd538111ee25f688ba26e738f19b2e2602613656563ff06f8882d1c19b1d37",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 338,
+              "players": null,
+              "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+        "label_en": "Compare block and weakening in the observed lunging bite window",
+        "evidence": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "turn": 3,
+          "off": 15278671601,
+          "bytes": 36754,
+          "sha256": "86fd538111ee25f688ba26e738f19b2e2602613656563ff06f8882d1c19b1d37",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json"
+        },
+        "decisions": [
+          {
+            "off": 3362523206,
+            "bytes": 46686,
+            "sha256": "e155616d466b18904b5dab1e3437908be06c74fee934d4e26a9ac6e6c831f5c7",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362523206-46686.json"
+          },
+          {
+            "off": 3362569892,
+            "bytes": 2108,
+            "sha256": "9006928529a40bc0bd3a05cf4bd98e444de4142bbe4ebc88e424c86b24b53747",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362569892-2108.json"
+          },
+          {
+            "off": 3362572000,
+            "bytes": 2187,
+            "sha256": "9aec88d506ea35112f512d33dec387878540b5cb5a68098bd0cd5628047868bc",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362572000-2187.json"
+          },
+          {
+            "off": 3362574187,
+            "bytes": 2135,
+            "sha256": "1a776ab39b996826f0855df4324467109d0108220b15f398205f3c05014709cf",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362574187-2135.json"
+          },
+          {
+            "off": 3362576322,
+            "bytes": 19867,
+            "sha256": "f60d7b53f049716ebcfdd6c04cb7157ae73e44d9e7b14555395207a0bed803ff",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362576322-19867.json"
+          },
+          {
+            "off": 3362596189,
+            "bytes": 1942,
+            "sha256": "9289343ec1fecd3b16f956bbd7cce3689f4edbd468122c3b556027b7cde58644",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362596189-1942.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278671601,
+            "bytes": 36754,
+            "sha256": "86fd538111ee25f688ba26e738f19b2e2602613656563ff06f8882d1c19b1d37",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278708355,
+            "bytes": 35751,
+            "sha256": "234c1ed450288be4ef1cc57dc1c8d48d0ae40cf1a4f074bff38e7cfbe7e0792d",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278708355-35751.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278744106,
+            "bytes": 34761,
+            "sha256": "bcf5365254eabbe2d762fd6d0849667dffac8e98a24669f523d22198edcf94e5",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278744106-34761.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278778867,
+            "bytes": 33959,
+            "sha256": "b0431e06322bd83f4e575f743981b45a7e9cda2487a38328f503bb9cde03b12d",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278778867-33959.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278812826,
+            "bytes": 33115,
+            "sha256": "6da21b79fc2ad35eb25ef866d0433999e903cc5c01b0bf105ce8535aca516966",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278812826-33115.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3,
+            "stream": "states",
+            "off": 15278845941,
+            "bytes": 34101,
+            "sha256": "ba98dce9d74dae9823d066658e10e46c664ef991b155948a66d9fa6dcd8b6f98",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278845941-34101.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278880042,
+            "bytes": 36110,
+            "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278916152,
+            "bytes": 35410,
+            "sha256": "4248859d80434677d2d9d8f2728b3917dadafbc01ace43128cb649188cfc30e9",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278916152-35410.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278951562,
+            "bytes": 34677,
+            "sha256": "167af7e7488148d8a111db4aa19e1886a5b3844711d5e42a2f399e18d14f223a",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278951562-34677.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.THE_INSATIABLE_BOSS",
+        "version": "v0.111",
+        "uploads": 338,
+        "encounters": 338,
+        "known": 338,
+        "passed_proxy": 303,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8964497041420119,
+        "gross_damage_n": 338,
+        "gross_damage_mean": 25.449704142011836
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending"
+    },
+    {
+      "id": "insatiable-salivate-escape",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "KHECCYUJ7K48"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "仅观察到的SALIVATE及狂乱逃离/冲刺合法窗口；不拿未来胜负、最终牌组或簇号触发。",
+      "strategy_entry": {
+        "id": "silent-brain-insatiable-salivate-escape",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            2
+          ],
+          "bosses": [
+            "THE_INSATIABLE_BOSS"
+          ]
+        },
+        "strategy": "无厌沙虫当前SALIVATE_MOVE且狂乱逃离可打时，把改变沙坑与推进输出分开比较，不因本轮无攻击就忽略下轮资源。0CLP16ZR4ZZC F33 T4一次机会：实打1费狂乱逃离，沙坑2→3、能量3→2，再打冲刺；T5仍76血但已显示24攻。灵动步法也在手却未打，不能据此否定建立敏捷。\n范围：Silent A10/版本unknown、1局1窗口；只核本次计数变化，不推沙坑全机制、固定逃离次数或长期收益。KHECCYUJ7K48的SALIVATE后仍失败是边界反例；外部v0.111的338上传记录没有逐回合证据。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 25.449704142011836,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 338
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.THE_INSATIABLE_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-insatiable-salivate-escape",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "THE_INSATIABLE"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "SALIVATE_MOVE"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "FRANTIC_ESCAPE"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DASH"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "FRANTIC_ESCAPE"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-insatiable-salivate-escape-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare escape expenditure during the observed salivate window",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 33,
+              "turn": 4
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json",
+            "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 338,
+              "players": null,
+              "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-insatiable-salivate-escape-tag",
+        "label_en": "Compare escape expenditure during the observed salivate window",
+        "evidence": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "turn": 4,
+          "off": 15278880042,
+          "bytes": 36110,
+          "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json"
+        },
+        "decisions": [
+          {
+            "off": 3362598131,
+            "bytes": 28242,
+            "sha256": "a0c20d9068da097372191b991f0724eacf388efbd5ecbbcfc05a354f17187ddc",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362598131-28242.json"
+          },
+          {
+            "off": 3362626373,
+            "bytes": 2178,
+            "sha256": "37ce9657f13e69a900ba973a70ae2265d1e79900cad824a33e1e8d62e8fb24dd",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362626373-2178.json"
+          },
+          {
+            "off": 3362628551,
+            "bytes": 1953,
+            "sha256": "1b16117ee06007267bb6f7a4e1ac805ce7d5d705230e0a2b142373862775d5f3",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-3362628551-1953.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278880042,
+            "bytes": 36110,
+            "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278916152,
+            "bytes": 35410,
+            "sha256": "4248859d80434677d2d9d8f2728b3917dadafbc01ace43128cb649188cfc30e9",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278916152-35410.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4,
+            "stream": "states",
+            "off": 15278951562,
+            "bytes": 34677,
+            "sha256": "167af7e7488148d8a111db4aa19e1886a5b3844711d5e42a2f399e18d14f223a",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278951562-34677.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 5,
+            "stream": "states",
+            "off": 15278986239,
+            "bytes": 36377,
+            "sha256": "eb669b7a27177ebfaf17d2f9be36ebae4ad68d5d663aa8460e3b15ee408de9fa",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278986239-36377.json"
+          },
+          {
+            "run": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 5,
+            "stream": "states",
+            "off": 15279022616,
+            "bytes": 35574,
+            "sha256": "6c03d547300764c6660a05d474803e95dc3f070b2e53562e94a4640bdb5eaa8d",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15279022616-35574.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.THE_INSATIABLE_BOSS",
+        "version": "v0.111",
+        "uploads": 338,
+        "encounters": 338,
+        "known": 338,
+        "passed_proxy": 303,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8964497041420119,
+        "gross_damage_n": 338,
+        "gross_damage_mean": 25.449704142011836
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending",
+      "interpretation": "FRANTIC_ESCAPE count change 2→3 observed; no complete sandpit mechanism inferred."
+    },
+    {
+      "id": "matriarch-sleep-setup",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "U1QYLX1AE1WX"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "173ARCPHRVSS"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "原帧睡眠、毒雾与步法均合法；不是从Boss名字推睡眠机制。",
+      "strategy_entry": {
+        "id": "silent-brain-matriarch-sleep-setup",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "bosses": [
+            "LAGAVULIN_MATRIARCH_BOSS"
+          ]
+        },
+        "strategy": "乐加维林族母当前SLEEP_MOVE且毒雾、灵动步法可打时，比较先建立持续输出和防护的线，再按真实醒转重算。U1QYLX1AE1WX F17 T3一次机会：实打毒雾+与灵动步法+，毒雾0→3、敏捷0→3；T4转SLASH_MOVE，仍51血并显示21攻。不能承诺还能睡几轮或推固定唤醒阈值。\n范围：Silent A10/版本unknown、1局1窗口；173ARCPHRVSS也经历沉睡准备但重试/预判组终败，非同动作对照。外部v0.111为216/257延续代理，胜者代表前节点34血、Boss后6血，不能当安全入场线。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 24.35408560311284,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 257
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-matriarch-sleep-setup",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "LAGAVULIN_MATRIARCH"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "SLEEP_MOVE"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "NOXIOUS_FUMES"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "FOOTWORK"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "FOOTWORK"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-matriarch-sleep-setup-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Fumes and Footwork setup while the matriarch is asleep",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "U1QYLX1AE1WX",
+              "floor": 17,
+              "turn": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json",
+            "sha256": "7808d4de9ef72f471b05b2e36db48d7c3b86094fa5378da1b5fe2332e5af989c",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 257,
+              "players": null,
+              "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-matriarch-sleep-setup-tag",
+        "label_en": "Compare Fumes and Footwork setup while the matriarch is asleep",
+        "evidence": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "U1QYLX1AE1WX",
+          "floor": 17,
+          "turn": 3,
+          "off": 11045122245,
+          "bytes": 29534,
+          "sha256": "7808d4de9ef72f471b05b2e36db48d7c3b86094fa5378da1b5fe2332e5af989c",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json"
+        },
+        "decisions": [
+          {
+            "off": 948950039,
+            "bytes": 6851,
+            "sha256": "a3ed6e53a0bdfea42b7fa67f2aa6575151fb516de999709a28d08e9db2fef3a1",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-948950039-6851.json"
+          },
+          {
+            "off": 948956890,
+            "bytes": 1512,
+            "sha256": "bc5d9f89ac9eda327804963e2b0ec90d1f1bc463cd6542599d229535716eeb10",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-948956890-1512.json"
+          },
+          {
+            "off": 948958402,
+            "bytes": 6583,
+            "sha256": "a0af668a5bd03af6557cc7c5a5b270c6ad2ba7e0c51c2f35b33f0bae2dc2a38c",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-948958402-6583.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 11045122245,
+            "bytes": 29534,
+            "sha256": "7808d4de9ef72f471b05b2e36db48d7c3b86094fa5378da1b5fe2332e5af989c",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 11045151779,
+            "bytes": 28541,
+            "sha256": "013e124776a3555544f3d914ca25335e6e2398780e176ca7b0be78b98a5e1ad3",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045151779-28541.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 11045180320,
+            "bytes": 27656,
+            "sha256": "e2d87fe09552de186763faaa5519063e2d450c362b941f8ac614efafba555a2c",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045180320-27656.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045207976,
+            "bytes": 28875,
+            "sha256": "95b7d0acd1268578b7b21a4c5cec581dd7f7f6d73223c457373bfce1557a9e22",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045207976-28875.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045236851,
+            "bytes": 28031,
+            "sha256": "cfee9cdeee87bd25704609c15de07af7bfa22823b5d5cb5eba181a45e6aaec3e",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045236851-28031.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045264882,
+            "bytes": 27229,
+            "sha256": "75303ffe78e24c9edd3ba4e6d378999874a14ad555ef71451ec780ae7832a9f0",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045264882-27229.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045292111,
+            "bytes": 26662,
+            "sha256": "830fb62a6f960dadb2aabbae66a9fa538962e387e09f398847b06c50b6eb1c5a",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045292111-26662.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045318773,
+            "bytes": 25896,
+            "sha256": "a7f0f77c1d404774bd29e3cd1e3dbda746a9d61d3eabe06500bd3bf92e78d28f",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045318773-25896.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 11045344669,
+            "bytes": 24863,
+            "sha256": "6b5cecc37f9dc15e7623f53dde2271b79863f9368aa14ddcee5a3d88ff0620a4",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045344669-24863.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+        "version": "v0.111",
+        "uploads": 257,
+        "encounters": 257,
+        "known": 257,
+        "passed_proxy": 216,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8404669260700389,
+        "gross_damage_n": 257,
+        "gross_damage_mean": 24.35408560311284
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending"
+    },
+    {
+      "id": "matriarch-reduced-stats-block",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "U1QYLX1AE1WX"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "173ARCPHRVSS"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "当前SLASH_MOVE、防御合法且至少一项能力非零变化；幅度须读当前牌文。",
+      "strategy_entry": {
+        "id": "silent-brain-matriarch-reduced-stats-block",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "bosses": [
+            "LAGAVULIN_MATRIARCH_BOSS"
+          ]
+        },
+        "strategy": "族母当前SLASH_MOVE且己方力量或敏捷已变化时，用现牌文重算挡和伤害，不沿用睡前数值。U1QYLX1AE1WX F17 T8一次机会：力量-2、敏捷1，防御显示6挡、打击4伤；实打三张防御得18挡，面对23攻，T9由50→45血。已有25毒不代替本轮防护。\n范围：Silent A10/版本unknown、1局1窗口；不将这5点视作最优损失或推固定三防。173ARCPHRVSS能力下降后仍终败为反例索引，首预判与实际死亡不混。外部v0.111总受伤均24.35/257上传，非本窗口损失。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 24.35408560311284,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 257
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-matriarch-reduced-stats-block",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "LAGAVULIN_MATRIARCH"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "SLASH_MOVE"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "or",
+              "args": [
+                {
+                  "op": "ne",
+                  "field": "player.powers.STRENGTH_POWER",
+                  "value": 0
+                },
+                {
+                  "op": "ne",
+                  "field": "player.powers.DEXTERITY_POWER",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEFEND_SILENT"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEFEND_SILENT"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+          "unit": "label"
+        },
+        "label_en": "Recount current block after observed strength and dexterity changes",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "U1QYLX1AE1WX",
+              "floor": 17,
+              "turn": 8
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json",
+            "sha256": "3295ee882a79fa0f899cae10409f924c19d2935ba33bc5862b8e46f1f3607e2e",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 257,
+              "players": null,
+              "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+        "label_en": "Recount current block after observed strength and dexterity changes",
+        "evidence": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "U1QYLX1AE1WX",
+          "floor": 17,
+          "turn": 8,
+          "off": 11045734263,
+          "bytes": 29769,
+          "sha256": "3295ee882a79fa0f899cae10409f924c19d2935ba33bc5862b8e46f1f3607e2e",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json"
+        },
+        "decisions": [
+          {
+            "off": 949050653,
+            "bytes": 10411,
+            "sha256": "f313bd6b57ffc2f1c55631997171f673a8d07fd957283d5846ccf97430e5a3d5",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-949050653-10411.json"
+          },
+          {
+            "off": 949061064,
+            "bytes": 1548,
+            "sha256": "408c99d8a3c4084b5f2c44e57dd5dc532c8cc8b112d059500e760a0d973e71ee",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-949061064-1548.json"
+          },
+          {
+            "off": 949062612,
+            "bytes": 1514,
+            "sha256": "983ea9cace2ec599dc186fd96034ab57154c4613cb6a02bcb4b6328d6b3676f3",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-949062612-1514.json"
+          },
+          {
+            "off": 949064126,
+            "bytes": 6926,
+            "sha256": "07722e2d8a5d02860de2b1e6a8ec79681eac08e581ea8475cf811cec0d7fb5fd",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-949064126-6926.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8,
+            "stream": "states",
+            "off": 11045734263,
+            "bytes": 29769,
+            "sha256": "3295ee882a79fa0f899cae10409f924c19d2935ba33bc5862b8e46f1f3607e2e",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8,
+            "stream": "states",
+            "off": 11045764032,
+            "bytes": 28993,
+            "sha256": "4f529faebc2bce09d18e6fc65443f72870334646b26736c72bfdb655839655f3",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045764032-28993.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8,
+            "stream": "states",
+            "off": 11045793025,
+            "bytes": 28010,
+            "sha256": "893b593d20259cfa99e075fa32f2bcf1fca24abe60adf09d54fc9b88e675a9c9",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045793025-28010.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8,
+            "stream": "states",
+            "off": 11045821035,
+            "bytes": 27140,
+            "sha256": "3a356ee136678ad9336418b252f57c66b08719ccd85379b36ad7393a3c316fbc",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045821035-27140.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045848175,
+            "bytes": 29367,
+            "sha256": "b54466cc9effe41794a556dc16da70f14e8effb72e3e6f6f579fb580c792b352",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045848175-29367.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045877542,
+            "bytes": 28522,
+            "sha256": "282115930f2369fb755a62f039f4ab6c94f86ef6e7d1af897bf2b762f6e5641a",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045877542-28522.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045906064,
+            "bytes": 27530,
+            "sha256": "4eb07036a1d00bd0a3f6e88132cde05768c20c1d9914949c39fc40726db0c49d",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045906064-27530.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045933594,
+            "bytes": 26767,
+            "sha256": "948bf71086f93b62bc528106bfaacc487f246860ebbe8846282252493b65b1a8",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045933594-26767.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045960361,
+            "bytes": 25775,
+            "sha256": "7e07128bd6fd50429817a5c863ae5d78aeebab7f1488a7aa2ae0adb1ae75159c",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045960361-25775.json"
+          },
+          {
+            "run": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 9,
+            "stream": "states",
+            "off": 11045986136,
+            "bytes": 24739,
+            "sha256": "7e1d4c1a55a7181e94b9f7aca1ee294e7fec5854316ae9b893dcba8d93dea4af",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045986136-24739.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+        "version": "v0.111",
+        "uploads": 257,
+        "encounters": 257,
+        "known": 257,
+        "passed_proxy": 216,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8404669260700389,
+        "gross_damage_n": 257,
+        "gross_damage_mean": 24.35408560311284
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending"
+    },
+    {
+      "id": "ceremonial-plow-weaken-block",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "Q3R929GHT14R"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "3UPY3BP2LVS7"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "实际PLOW、合法减攻牌与防御；不推横冲直撞阈值或下一回合必定行为。",
+      "strategy_entry": {
+        "id": "silent-brain-ceremonial-plow-weaken-block",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "bosses": [
+            "CEREMONIAL_BEAST_BOSS"
+          ]
+        },
+        "strategy": "仪式兽当前PLOW_MOVE且突然一拳、防御可打时，比较减攻、补挡及推进输出的组合，动作后重读实际来袭。Q3R929GHT14R F17 T3一次机会：实打防御、突然一拳、防御，来袭22→13、挡0→13，T4仍51血；同时存在横冲直撞、余像及中毒，不能把9点降幅全归虚弱。扫腿也可打但未选，优劣未知。\n范围：Silent A10/版本unknown、1局1窗口；3UPY3BP2LVS7同Boss终败，未核同条件对照。外部v0.111为218/251延续代理，不证明这条线的收益或固定打断阈值。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 26.03585657370518,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 251
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.CEREMONIAL_BEAST_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-ceremonial-plow-weaken-block",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "CEREMONIAL_BEAST"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "PLOW_MOVE"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "SUCKER_PUNCH"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEFEND_SILENT"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "SUCKER_PUNCH"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare weakening plus block in the observed ceremonial plow",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "Q3R929GHT14R",
+              "floor": 17,
+              "turn": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json",
+            "sha256": "bfb6bcb1931b4b3241d8e009d69b789e8cab7f48679ed2f58be7c28383dd2c1e",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 251,
+              "players": null,
+              "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+        "label_en": "Compare weakening plus block in the observed ceremonial plow",
+        "evidence": [
+          {
+            "run_id": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "Q3R929GHT14R",
+          "floor": 17,
+          "turn": 3,
+          "off": 16466713684,
+          "bytes": 30860,
+          "sha256": "bfb6bcb1931b4b3241d8e009d69b789e8cab7f48679ed2f58be7c28383dd2c1e",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json"
+        },
+        "decisions": [
+          {
+            "off": 4229853419,
+            "bytes": 40007,
+            "sha256": "64b09a4575c1126d936066b5672902e9d1e0a8234db087d07cbb4ed55759c782",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-4229853419-40007.json"
+          },
+          {
+            "off": 4229893426,
+            "bytes": 2239,
+            "sha256": "e50658e65a5d4821016edad6b7dac45b7b2f011d7ff5346d341cd566ff926486",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-4229893426-2239.json"
+          },
+          {
+            "off": 4229895665,
+            "bytes": 2115,
+            "sha256": "b11b8f837b0bd603d6a69d380c64e7b756ba5f8dc8f1507ef548dd816a9b4d61",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-4229895665-2115.json"
+          },
+          {
+            "off": 4229897780,
+            "bytes": 1939,
+            "sha256": "8e5d8460e4a6a5041bb9c15242af7871fa05dbfe0df3f70c4f8765d976c26b77",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-4229897780-1939.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 16466713684,
+            "bytes": 30860,
+            "sha256": "bfb6bcb1931b4b3241d8e009d69b789e8cab7f48679ed2f58be7c28383dd2c1e",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 16466744544,
+            "bytes": 29871,
+            "sha256": "3596e42092903643f2b360cf10629383fb5da9fa81d096fcb767951394935b0b",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466744544-29871.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 16466774415,
+            "bytes": 29106,
+            "sha256": "9603511738f54a606b38dbf0006c70e46a48d8feb89bcf6a0b61c9d34df603a0",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466774415-29106.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3,
+            "stream": "states",
+            "off": 16466803521,
+            "bytes": 28240,
+            "sha256": "956ad20194fd3e02664c64012596114b3c8f309b97ffe0a5bf2ca55e7b2b8518",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466803521-28240.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 16466831761,
+            "bytes": 29693,
+            "sha256": "832df53647123cb6f5542e57a765e4449d5c747dd4e01ba41f0c78e66b0152c5",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466831761-29693.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 16466861454,
+            "bytes": 28890,
+            "sha256": "b0013909ea8df592d2fae2a1806428adae641c5486465b9ad796c8677d5f950c",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466861454-28890.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 16466890344,
+            "bytes": 27447,
+            "sha256": "85afd203a0bd4925cc37067237aca03e4b7aaf730446b35b5b6d8179f45254a2",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466890344-27447.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 16466917791,
+            "bytes": 26682,
+            "sha256": "326dd585b8cfc01603fd47ab7d862a8ad74c0735a010c9f2bc09e814aef1b883",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466917791-26682.json"
+          },
+          {
+            "run": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 4,
+            "stream": "states",
+            "off": 16466944473,
+            "bytes": 25697,
+            "sha256": "d7af21d717edacb6be176426737ebdc95135e43830afb81c685165160f36f6bf",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466944473-25697.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+        "version": "v0.111",
+        "uploads": 251,
+        "encounters": 251,
+        "known": 251,
+        "passed_proxy": 218,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8685258964143426,
+        "gross_damage_n": 251,
+        "gross_damage_mean": 26.03585657370518
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending"
+    },
+    {
+      "id": "ceremonial-cry-output-versus-next-defense",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "source": "mixed",
+      "own_support_runs": [
+        "1913SE84AXQF"
+      ],
+      "own_independent_support_n": 1,
+      "own_opportunities": 1,
+      "counterexample_index": [
+        "3UPY3BP2LVS7"
+      ],
+      "counterexample_comparability": "not same action or same starting state; no paired counterfactual; retry/predicted-death group kept separate",
+      "scope": "实际BEAST_CRY与无攻击意图、两张牌合法；本轮收益不外推下一轮安全。",
+      "strategy_entry": {
+        "id": "silent-brain-ceremonial-cry-output-versus-next-defense",
+        "version": "2026-10-24-r56-boss002-v1",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "acts": [
+            1
+          ],
+          "bosses": [
+            "CEREMONIAL_BEAST_BOSS"
+          ]
+        },
+        "strategy": "仪式兽当前BEAST_CRY_MOVE不显示攻击且致命毒药、坚韧之环可打时，比较追加输出与为后轮建立格挡的代价，不把本轮零攻击当持续安全。1913SE84AXQF F17 T5一次机会：实打打击和致命毒药，坚韧之环未选；T6由41→42血（原有再生），敌140→111血并显示17攻。不能把回血归施毒，亦未证放弃坚韧之环更好。\n范围：Silent A10/版本unknown、1局1窗口；本局首Boss通过后F33终败，另3UPY3BP2LVS7在本Boss失败。外部v0.111总受伤均26.04/251上传只作整战背景，不定固定周期或出牌顺序。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+            },
+            "statistic": {
+              "name": "gross_damage_mean_context_only",
+              "value": 26.03585657370518,
+              "unit": "hp"
+            },
+            "denominator": {
+              "unit": "fights",
+              "n": 251
+            },
+            "design": "observational",
+            "limitations": [
+              "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+              "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+              "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.CEREMONIAL_BEAST_BOSS;version=v0.111;all-disjoint-clusters"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.3,
+        "evidence_status": "unassessed"
+      },
+      "rk_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense",
+        "version": 1,
+        "applies_to": "combat_line",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "any",
+              "field": "enemies.items",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "enemy.id",
+                    "value": "CEREMONIAL_BEAST"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.alive",
+                    "value": true
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.move_id",
+                    "value": "BEAST_CRY_MOVE"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "enemy.intent_type",
+                    "value": "Debuff"
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEADLY_POISON"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.hand",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "TORIC_TOUGHNESS"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.can_play",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "eq",
+              "field": "option.kind",
+              "value": "combat_line"
+            },
+            {
+              "op": "any",
+              "field": "option.actions",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "action.kind",
+                    "value": "card"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "DEADLY_POISON"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare output and delayed defense during the observed beast cry",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "1913SE84AXQF",
+              "floor": 17,
+              "turn": 5
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.3,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json",
+            "sha256": "a58c1dd0e2c88b3d2ac61ec9b7b2669ec23371844960bd9715b7f4f89245d0ef",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+            "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 251,
+              "players": null,
+              "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+          }
+        ]
+      },
+      "rk_vocab": {
+        "id": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+        "label_en": "Compare output and delayed defense during the observed beast cry",
+        "evidence": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5
+          }
+        ]
+      },
+      "raw_evidence": {
+        "state": {
+          "run": "1913SE84AXQF",
+          "floor": 17,
+          "turn": 5,
+          "off": 8720066049,
+          "bytes": 32539,
+          "sha256": "a58c1dd0e2c88b3d2ac61ec9b7b2669ec23371844960bd9715b7f4f89245d0ef",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json"
+        },
+        "decisions": [
+          {
+            "off": 705063012,
+            "bytes": 6539,
+            "sha256": "8ea35ac760fd119f278f713972b558e91cbcf5a364adf7c28525417c8f6a0c07",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-705063012-6539.json"
+          },
+          {
+            "off": 705069551,
+            "bytes": 1575,
+            "sha256": "849a3a4b5b9a0e31941a910a368fae004d07c2676bfd5e02f42a901fd255f42f",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-705069551-1575.json"
+          },
+          {
+            "off": 705071126,
+            "bytes": 1314,
+            "sha256": "1368ded481e90f9b5a6cc4fe828cab48c01aa16f876a562a49c2f78dd57892ed",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/decisions-705071126-1314.json"
+          }
+        ],
+        "successors": [
+          {
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5,
+            "stream": "states",
+            "off": 8720066049,
+            "bytes": 32539,
+            "sha256": "a58c1dd0e2c88b3d2ac61ec9b7b2669ec23371844960bd9715b7f4f89245d0ef",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json"
+          },
+          {
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5,
+            "stream": "states",
+            "off": 8720098588,
+            "bytes": 31735,
+            "sha256": "212cf86235ecfa5e262897bcd6c6835cf4f671e5edc4ebb4f150d3af9acd3316",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720098588-31735.json"
+          },
+          {
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5,
+            "stream": "states",
+            "off": 8720130323,
+            "bytes": 31011,
+            "sha256": "dd8fc3cf9ac064d6800107a8c47ba9a945914d368dd4d341e33fae50457f4771",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720130323-31011.json"
+          },
+          {
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 6,
+            "stream": "states",
+            "off": 8720161334,
+            "bytes": 33214,
+            "sha256": "a587fee5a4fdb01bfb85394875adf073ee27c958b157195ca90d98ded2d213f6",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720161334-33214.json"
+          },
+          {
+            "run": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 6,
+            "stream": "states",
+            "off": 8720194548,
+            "bytes": 36221,
+            "sha256": "69c3203b010dee585e819549a8bbb21acf62475450a0c17dd41d982ab5c70e23",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221312/learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720194548-36221.json"
+          }
+        ]
+      },
+      "external_context": {
+        "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+        "version": "v0.111",
+        "uploads": 251,
+        "encounters": 251,
+        "known": 251,
+        "passed_proxy": 218,
+        "unknown": 0,
+        "pass_rate_proxy": 0.8685258964143426,
+        "gross_damage_n": 251,
+        "gross_damage_mean": 26.03585657370518
+      },
+      "version_comparability": "unknown; no cross-version pooling",
+      "decision_information": "Only current enemy move, legal hand, present resources and published raw IDs; no final deck/cluster/outcome triggers.",
+      "validation": "schema_passed; original_current_state_scope_passed; full_plan_replay_pending",
+      "interpretation": "Observed line not endorsement; delayed-defense alternative exists but not executed; paired tag selects the inspected poison action for review only."
+    }
+  ]
+}

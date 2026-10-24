@@ -1,0 +1,348 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-insatiable-bite-block-and-weaken",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "THE_INSATIABLE_BOSS"
+        ]
+      },
+      "strategy": "无厌沙虫当前扑咬且中和、防御可打时，比较补挡兼减攻的整条线，再重算施毒余力。0CLP16ZR4ZZC F33 T3一次机会：76血/10挡面对31攻，实打防御、毒雾+、致命毒药+、中和、后空翻；来袭31→23、挡10→25，T4仍76血。不能把零掉血单归中和，后空翻实际费用/额外效果按当帧重核。\n范围：Silent A10、自有版本unknown、1局1窗口；KHECCYUJ7K48同Boss终败为反例索引，未核同手牌反事实。外部v0.111仅338上传记录的整战背景；不定安全血线、固定顺序或因果收益。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 25.449704142011836,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 338
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.THE_INSATIABLE_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-insatiable-salivate-escape",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "THE_INSATIABLE_BOSS"
+        ]
+      },
+      "strategy": "无厌沙虫当前SALIVATE_MOVE且狂乱逃离可打时，把改变沙坑与推进输出分开比较，不因本轮无攻击就忽略下轮资源。0CLP16ZR4ZZC F33 T4一次机会：实打1费狂乱逃离，沙坑2→3、能量3→2，再打冲刺；T5仍76血但已显示24攻。灵动步法也在手却未打，不能据此否定建立敏捷。\n范围：Silent A10/版本unknown、1局1窗口；只核本次计数变化，不推沙坑全机制、固定逃离次数或长期收益。KHECCYUJ7K48的SALIVATE后仍失败是边界反例；外部v0.111的338上传记录没有逐回合证据。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 33,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 25.449704142011836,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 338
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.THE_INSATIABLE_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-matriarch-sleep-setup",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "LAGAVULIN_MATRIARCH_BOSS"
+        ]
+      },
+      "strategy": "乐加维林族母当前SLEEP_MOVE且毒雾、灵动步法可打时，比较先建立持续输出和防护的线，再按真实醒转重算。U1QYLX1AE1WX F17 T3一次机会：实打毒雾+与灵动步法+，毒雾0→3、敏捷0→3；T4转SLASH_MOVE，仍51血并显示21攻。不能承诺还能睡几轮或推固定唤醒阈值。\n范围：Silent A10/版本unknown、1局1窗口；173ARCPHRVSS也经历沉睡准备但重试/预判组终败，非同动作对照。外部v0.111为216/257延续代理，胜者代表前节点34血、Boss后6血，不能当安全入场线。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "U1QYLX1AE1WX",
+          "floor": 17,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 24.35408560311284,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 257
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-matriarch-reduced-stats-block",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "LAGAVULIN_MATRIARCH_BOSS"
+        ]
+      },
+      "strategy": "族母当前SLASH_MOVE且己方力量或敏捷已变化时，用现牌文重算挡和伤害，不沿用睡前数值。U1QYLX1AE1WX F17 T8一次机会：力量-2、敏捷1，防御显示6挡、打击4伤；实打三张防御得18挡，面对23攻，T9由50→45血。已有25毒不代替本轮防护。\n范围：Silent A10/版本unknown、1局1窗口；不将这5点视作最优损失或推固定三防。173ARCPHRVSS能力下降后仍终败为反例索引，首预判与实际死亡不混。外部v0.111总受伤均24.35/257上传，非本窗口损失。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "U1QYLX1AE1WX",
+          "floor": 17,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 24.35408560311284,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 257
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-ceremonial-plow-weaken-block",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "CEREMONIAL_BEAST_BOSS"
+        ]
+      },
+      "strategy": "仪式兽当前PLOW_MOVE且突然一拳、防御可打时，比较减攻、补挡及推进输出的组合，动作后重读实际来袭。Q3R929GHT14R F17 T3一次机会：实打防御、突然一拳、防御，来袭22→13、挡0→13，T4仍51血；同时存在横冲直撞、余像及中毒，不能把9点降幅全归虚弱。扫腿也可打但未选，优劣未知。\n范围：Silent A10/版本unknown、1局1窗口；3UPY3BP2LVS7同Boss终败，未核同条件对照。外部v0.111为218/251延续代理，不证明这条线的收益或固定打断阈值。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "Q3R929GHT14R",
+          "floor": 17,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 26.03585657370518,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 251
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.CEREMONIAL_BEAST_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    },
+    {
+      "id": "silent-brain-ceremonial-cry-output-versus-next-defense",
+      "version": "2026-10-24-r56-boss002-v1",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "CEREMONIAL_BEAST_BOSS"
+        ]
+      },
+      "strategy": "仪式兽当前BEAST_CRY_MOVE不显示攻击且致命毒药、坚韧之环可打时，比较追加输出与为后轮建立格挡的代价，不把本轮零攻击当持续安全。1913SE84AXQF F17 T5一次机会：实打打击和致命毒药，坚韧之环未选；T6由41→42血（原有再生），敌140→111血并显示17攻。不能把回血归施毒，亦未证放弃坚韧之环更好。\n范围：Silent A10/版本unknown、1局1窗口；本局首Boss通过后F33终败，另3UPY3BP2LVS7在本Boss失败。外部v0.111总受伤均26.04/251上传只作整战背景，不定固定周期或出牌顺序。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 17,
+          "ref": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "n_players=1; is_valid=1; was_abandoned=0; has_modifiers=0; ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal clusters; v0.111.0; no verified entry snapshot"
+          },
+          "statistic": {
+            "name": "gross_damage_mean_context_only",
+            "value": 26.03585657370518,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 251
+          },
+          "design": "observational",
+          "limitations": [
+            "上传行不等于独立玩家/自然局；自选上传、SL未知及生存混杂。",
+            "整战总受伤不是净失血或本回合收益；真实战前HP/牌组/药水缺失。",
+            "仅作背景；不支持这条动作的因果收益；旧版机制对照未知，各版分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/matchups.json#boss=ENCOUNTER.CEREMONIAL_BEAST_BOSS;version=v0.111;all-disjoint-clusters"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "unassessed"
+    }
+  ]
+}

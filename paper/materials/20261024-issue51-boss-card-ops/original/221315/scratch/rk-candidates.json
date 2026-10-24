@@ -1,0 +1,1213 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-skill-count-price",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "PINPOINT"
+          },
+          {
+            "op": "eq",
+            "field": "card.upgraded",
+            "value": false
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-skill-count-price-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 4
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 12
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Compare printed cost with skills actually playable this turn"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-weak-target-amplification",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "TRACKING"
+          },
+          {
+            "op": "eq",
+            "field": "card.upgraded",
+            "value": false
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-weak-target-amplification-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "MCT1GPTL8D35",
+            "floor": 17
+          },
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 17
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Check Weak availability before crediting the attack damage increase"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-card-count-trigger",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "STRANGLE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "PANACHE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-card-count-trigger-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "UJ0K3G10609Y",
+            "floor": 37
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 19
+          },
+          {
+            "run_id": "L6745E2ND5CT",
+            "floor": 45
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate a marked target trigger from a five-card threshold"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-defense-activation",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ANTICIPATE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ULTIMATE_DEFEND"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SHRUG_IT_OFF"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "UNMOVABLE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-defense-activation-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "MCCK2602T1SR",
+            "floor": 5
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 29
+          },
+          {
+            "run_id": "L6745E2ND5CT",
+            "floor": 37
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 22
+          },
+          {
+            "run_id": "P2M3DFJ4DEZ3",
+            "floor": 29
+          }
+        ],
+        "n_support": 5,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 5,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Distinguish temporary Dexterity direct block and the first block trigger"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-next-turn-copy-or-attack",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "NIGHTMARE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SHADOW_STEP"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-next-turn-copy-or-attack-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 33
+          },
+          {
+            "run_id": "L704TLETMZBM",
+            "floor": 44
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 17
+          }
+        ],
+        "n_support": 4,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Keep next-turn copies separate from discarded-hand attack setup"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-draw-event-window",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SPEEDSTER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "CORROSIVE_WAVE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-draw-event-window-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "E5L15SK6ZHZB",
+            "floor": 35
+          },
+          {
+            "run_id": "MGA0CZDDKC0P",
+            "floor": 13
+          },
+          {
+            "run_id": "D4LJ9QMGFB8Q",
+            "floor": 17
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 17
+          }
+        ],
+        "n_support": 4,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate turn-time draw damage from post-play same-turn poison"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b003-draw-count-versus-empty-pile",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MURDER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "GRAND_FINALE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b003-draw-count-versus-empty-pile-tag",
+        "unit": "label"
+      },
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "JQPT83P8KDSZ",
+            "floor": 17
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 25
+          },
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ],
+      "label_en": "Separate fight-long draw count from an empty draw-pile requirement"
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-discard-payload",
+      "version": 2,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "HIDDEN_DAGGERS"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "CALCULATED_GAMBLE"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "STORM_OF_STEEL"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MEMENTO_MORI"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-discard-payload-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare discard payloads with cards surrendered and payoff timing",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "QNTW139MGECA",
+            "floor": 8
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 7
+          },
+          {
+            "run_id": "0NZXA12NLDMH",
+            "floor": 17
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 33
+          },
+          {
+            "run_id": "MGA0CZDDKC0P",
+            "floor": 8
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 35
+          }
+        ],
+        "n_support": 5,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理305/186；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        },
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b002-explicit-keyword-resource-boundary",
+      "version": 2,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "TACTICIAN"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "REFLEX"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "HAND_TRICK"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MASTER_PLANNER"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ARMAMENTS"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b002-explicit-keyword-resource-boundary-tag",
+        "unit": "label"
+      },
+      "label_en": "Separate the unresolved keyword from a printed hand-card upgrade",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "456MRNGCPD8E",
+            "floor": 29
+          },
+          {
+            "run_id": "833ZM0MJGWHC",
+            "floor": 35
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 7
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 28
+          },
+          {
+            "run_id": "TKXQ6L4N9A6U",
+            "floor": 21
+          },
+          {
+            "run_id": "VLZ6CCT8AQ0A",
+            "floor": 36
+          },
+          {
+            "run_id": "4ANT8D00TP72",
+            "floor": 33
+          },
+          {
+            "run_id": "L9SGRBB5R698",
+            "floor": 14
+          },
+          {
+            "run_id": "7X58G3LSHZ3U",
+            "floor": 23
+          },
+          {
+            "run_id": "KYJMB7ELM6FN",
+            "floor": 22
+          }
+        ],
+        "n_support": 9,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-214315-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "2a234fcb26248b979034dec344a9cfbc0aacca480dff4592df12970cb22b1052",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 5,
+            "players": null,
+            "selection": "A10，按预设最早offset选取的拿/改选两类真实奖励；仅核原牌文/当前代理，不是效果支持样本。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "完整v0.111.0上传记录母群1739；不是本标签有效独立支持数。卡片cells重叠并集未知，方向性牌次见外部账本。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        },
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 4,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-b002-skill-discount-and-draw-lock",
+      "version": 2,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "POUNCE"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BULLET_TIME"
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "HEADBUTT"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          },
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "BATTLE_TRANCE"
+              },
+              {
+                "op": "eq",
+                "field": "card.upgraded",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-b002-skill-discount-and-draw-lock-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare draw order and draw locks with the actual cost reduction",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 17
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 22
+          },
+          {
+            "run_id": "Q3R929GHT14R",
+            "floor": 33
+          },
+          {
+            "run_id": "QNTW139MGECA",
+            "floor": 5
+          },
+          {
+            "run_id": "8AGEGLG40SV3",
+            "floor": 22
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 23
+          },
+          {
+            "run_id": "JMH5C51RLN4E",
+            "floor": 22
+          }
+        ],
+        "n_support": 5,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-214315-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "2a234fcb26248b979034dec344a9cfbc0aacca480dff4592df12970cb22b1052",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10，按预设最早offset选取的拿/改选两类真实奖励；仅核原牌文/当前代理，不是效果支持样本。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "完整v0.111.0上传记录母群1739；不是本标签有效独立支持数。卡片cells重叠并集未知，方向性牌次见外部账本。"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
+        },
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-0de2de74-ace1-47b7-a489-6b6b7534b6b7-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 1739,
+            "players": null,
+            "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit redistribution license; attributed aggregates only."
+        }
+      ]
+    }
+  ]
+}
