@@ -1,6 +1,8 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T09:30:38+08:00
+updated: 2026-10-24T09:32:56+08:00
+
+本轮091302回调：fix无新源码，定向24/tsc0，但139源路径与live不同，原empty guard仍拒绝，保failed/rc0；根scratch归属retention deferred，交#36原合同，不重finish/full/空合并。strategy仅补033643两提案/18账本，当前live18项同R424、提案pending，原checkout已回收而scratch/分支保留；本轮只提交真实补链记录。paper/materials/20261024-091302-callbacks-ops/verification.json。
 
 进行中的事：#51主管指定优先正式发布已完成V6-R428，T=2026-10-24T09:28:01+08:00，live 02eb468f8728b47ccbc22f39f14e5b2db1580971，库SHA 4a98084278ddbecf6fa5ca21ef97932c1fa391a75d79a81e2e5ff6e374228847。090927候选新增20个正式ID、更新毒药1个；保留081200三ID，两批去重23单牌ID均由实际live生产kb_strategies逐项读回，文字/trigger/confidence原样、own_runs0；live总26/main总30，其他知识与铁甲等价。主比较20项offers/1项runs，不能称都100独立局/玩家或因果收益。原完整历史、反向证据和统计已主库归档，原wrapper failed/rc0及missing string code_proposals array不改；独立授权数据发布不冒代码审计成功。*宽查询原24KB来源metadata限制仍在，23精确ID可查，已记fix队列。本轮full/新模型/游戏均0，发布两锁已实际释放。原件paper/materials/20261024-090927-strategy-result-ops/publication.json、actual-live-consumers.json；首次retention持锁写前失败单独保留。
 
