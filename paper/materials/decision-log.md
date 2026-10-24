@@ -6780,3 +6780,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T23:11:19+08:00 [ops] 23:10 R446原回调与发布/登记/5对生产原件、扫描SHA/祖先核同，仅去重未重发/full/模型/finish/探针。原2项confidence变化/反证及watcher-Roy ACK、剧本/回放/科学父和56自然验收pending保持。原件paper/materials/20261024-issue51-c7-publication-return-ops/callback-verification.json。
 
 - 2026-10-24T23:21:45+08:00 [ops] 23:13同16通知原文、32旧投递及47来源/实收文件SHA核同，既有ops_forwarded16、正式watcher/Roy0；原watcher一次agent_prompted提醒，非已读/Roy ACK。15 CLI范围身份阻塞未变不重试，000402原log缺保留pending，不代科学父完成；无模型/full/实验。原件paper/materials/20261024-2313-notices-ops/。
+
+- 2026-10-24T23:21:53+08:00 [watcher] #27 完整读16原通知与证据/差异/下一步，47源SHA/32实际投递窗口独立核同，逐组在会话并向Roy/主管收件箱转达；#42格式修复与R433四条发布进展分账，旧冻结rc1不覆盖；15 CLI身份范围/000402缺log及正式ACK0保留，不代ACK或科学父完成。评论6385954530逐字读回；paper/materials/20261024-2313-notices-integrator/。

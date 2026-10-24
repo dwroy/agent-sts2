@@ -5443,3 +5443,8 @@ f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装
 
 ### 2026-10-24T23:21:45+08:00 [ops] 同16通知已核并提醒原watcher
 16项原文/差异/证据/下一步与旧件核同，既有ops_forwarded16份、32个真实投递窗口及47个来源/实收文件SHA通过。现有watcher同会话一次提醒返回agent_prompted，不代已读/Roy已知；正式watcher/Roy两阶段仍0，pending保持。15条原CLI任务/线程/范围拒绝及代码SHA未变，未重复必败ACK；000402原wrapper与根同名log缺失，未造替身。原frozen账本rc1与授权库存rc0分账；旧floor障碍和后external_aggregate进展并列，不以发布/固定查询代因果收益或科学父。原问题和下一步全量交原watcher，实际旧3份接收/投递证据保持，未填其他角色ACK、未重复主管收件箱。无新模型/实验/full/游戏。56新裁决另沿原合同接续，不改变本批通知状态。原件paper/materials/20261024-2313-notices-ops/notice-handoff.json。
+
+
+## 2026-10-24T23:21:53+08:00 [watcher] #27 原16通知完整读回与向Roy转达（不代ACK）
+
+本会话已逐组转达D1–D3输入/配对/终局9HP边界，#13真实施放分母和机制部分覆盖，#14同回合策略轨迹限制，以及#27拿牌因果、各n=1与外部总受伤分位边界。16原文/47源文件SHA/32原ops投递窗口独立核同；全文、证据、差异、下一步见paper/materials/20261024-2313-notices-integrator/README.md与verification.json。#42格式修复及R433四条正式发布/固定消费者进展另账，旧冻结rc1不覆盖。正式watcher/Roy ACK仍0；15 CLI身份范围与000402缺原log保留，原owner处理；不证明Roy已读，不关闭科学父。公开评论6385954530逐字读回，本轮不改原notice/ACK/CLI/知识/live。
