@@ -76,6 +76,7 @@ def create(root, directory, tree, ref, require_node=False):
         record["shared_tools"] = attach(root, tree, require_node=require_node)
         if retention.git(tree, "status", "--porcelain", "--untracked-files=all"):
             raise ValueError("new sparse workspace differs from its recorded base")
+        record["publication_boundaries"] = worktree_retention.snapshot_publications(root)
         record.update(state="allocated", finished_at=retention.stamp())
         retention.atomic(receipt, record)
         return record
@@ -108,6 +109,7 @@ def resume(root, directory, tree, ref, require_node=False):
             or record.get('worktree') != str(tree) or record.get('branch') != tree.name or record.get('base') != base
             or record.get('state') not in ('allocating', 'allocation_failed', 'allocated')):
         raise ValueError('resume allocation receipt identity/state mismatch')
+    was_allocated = record['state'] == 'allocated'
     retention.require_host_process_view()
     if worktree_retention.active(tree, ignore_pid=os.getpid()):
         raise ValueError('resume allocation has active processes; original workspace retained')
@@ -140,6 +142,8 @@ def resume(root, directory, tree, ref, require_node=False):
         record['shared_tools'] = attach(root, tree, require_node=require_node)
         if retention.git(tree, 'status', '--porcelain', '--untracked-files=all'):
             raise ValueError('resumed sparse workspace differs from its recorded base')
+        if 'publication_boundaries' not in record and not was_allocated:
+            record['publication_boundaries'] = worktree_retention.snapshot_publications(root)
         record.update(state='allocated', finished_at=retention.stamp())
         retention.atomic(receipt, record)
         return record
