@@ -6653,3 +6653,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T16:16:51+08:00 [ops] V6-R430两批十策略ID独立数据发布，T16:12:23/live3fd7675b、26→36、十ID生产工具读回/611账本0问题；旧经验/脏目录与四main待发保留，4新6更及自然收益分账。37实际profile6562过8败2跳另交原owner、不重full。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 
 - 2026-10-24T16:25:27+08:00 [watcher] #20源码23b336a011bb历史采用门核验退回：独立固定反例证实main/live分叉时published^allocation-base仍可采分配前旧live叶，误放本次未采用任务；原三树旧门误保留及新门8/4/15叶独立核同，不抵消该假阳性。生产/tools两tsc0、定向Python24+16过；唯一full因反例主动中止rc143，2870输入/1688依赖/tree前后同、worker已退/锁释，不冒完整通过。产品未合未部署，三树未删；交dev补可靠各通道分配边界/未知保留和分叉旧叶/补丁回归。材料paper/materials/20261024-issue20-history-integrator/；37实际8败仍退开发、R430纯数据保留，20真实24h/39/43及其他父不关。
+
+- 2026-10-24T16:27:43+08:00 [watcher] #20历史采用门核验退回评论6381989248逐字读回，status:in-progress远端核同；原dev pane/tab/terminal/cwd与登记吻合，单行提醒仅agent_prompted，不代已读修复。记录4191c5a35经Windows SSH推送远端核同，产品未合未部署、三树保留。review队列36自然监督/54原链科学父/39与43父+Roy无新增可执行交付，等dev补分叉通道可靠分配边界和回归后重审；唯一full因反例中止rc143/锁释原件保留。材料paper/materials/20261024-issue20-history-integrator/handoff.json。
