@@ -1,0 +1,679 @@
+{
+  "at": "2026-10-24T16:09:21+08:00",
+  "authority_comment": 6381782543,
+  "source_batches": [
+    "20261024-144312-strategy-proposal",
+    "20261024-154311-strategy-proposal"
+  ],
+  "ids": [
+    "silent-brain-potion-buff-before-relevant-cards",
+    "silent-brain-potion-uncovered-end-turn",
+    "silent-brain-potion-zero-energy-continuation",
+    "silent-brain-potion-full-shop-replacement",
+    "silent-brain-potion-reserve-terminal-proxy-context",
+    "silent-brain-act1-rest-smith-resource-proxy",
+    "silent-rest-buffer-observation",
+    "silent-pumpkin-candle-charge-energy",
+    "silent-route-hp-observation",
+    "silent-miniature-tent-two-rest-options"
+  ],
+  "source_rows": [
+    {
+      "batch": "144312",
+      "unit_id": "decision-potion-own-fallback-002",
+      "kind": "strategy",
+      "id": "silent-brain-potion-buff-before-relevant-cards",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/buff-order-strategy.json",
+      "bytes": 10936,
+      "sha256": "e38762d2b22a6ec6b4aa3713c8c98bac7e62be24879a56a29e273354e43847d8",
+      "retained_copy": "paper/materials/20261024-strategy-144312-ops/buff-order-strategy.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-144312-buff-order-strategy.json",
+      "runtime_entry": {
+        "id": "silent-brain-potion-buff-before-relevant-cards",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "fight_plan",
+            "act_plan"
+          ]
+        },
+        "strategy": "仅Silent A10、来源游戏版本unknown。备战时：若本战已决定使用力量/敏捷药，且后续确有相应攻击/格挡牌可兑现，优先比较“药→相关牌”的顺序并读回变化后的牌面。470次已执行、同回合出牌数未变的用药（246局）中，445次（238局）相应手牌Damage/Block数值改变；也有25次未见相关变化。样例DAGGER_SPRAY展示6→8、防御5→7，均为实际后继牌面；不是通关收益，也不表示必须用药。没相应牌、无法出牌或准备留药时仍比较其他选择，不把固定增幅套到所有状态。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "PJ2LL9KU7FHD",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=578558473",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9TG1RP5LFAAK",
+            "floor": 30,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=570785447",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "PJ2LL9KU7FHD",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=578560059",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "new"
+    },
+    {
+      "batch": "144312",
+      "unit_id": "decision-potion-own-fallback-002",
+      "kind": "strategy",
+      "id": "silent-brain-potion-uncovered-end-turn",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/block-before-end-strategy.json",
+      "bytes": 7792,
+      "sha256": "970e586ddb7252538137f3218641b104468da427478902994c5ee84cf828b037",
+      "retained_copy": "paper/materials/20261024-strategy-144312-ops/block-before-end-strategy.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-144312-block-before-end-strategy.json",
+      "runtime_entry": {
+        "id": "silent-brain-potion-uncovered-end-turn",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "fight_plan",
+            "act_plan"
+          ]
+        },
+        "strategy": "仅Silent A10、来源游戏版本unknown。备战计划保留一个结束回合前检查：实际格挡不足以覆盖当前显示攻击、格挡药can_use且行动ready时，把现在喝与保留逐项比较；不要只以能量耗尽结束评估。227次缺口场景用药（138局）的同回合、出牌数未变后继均观察到格挡+12。另有168次可用格挡药却结束回合（69局），并非都致死；抽核78→76与40→38后药仍在。显示攻击只是威胁代理，其他伤害/防护与留药价值仍须核当前状态；不规定缺口必喝或安全HP。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "MGA0CZDDKC0P",
+            "floor": 4,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=559492762",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "UJ0K3G10609Y",
+            "floor": 28,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/opportunity-584587893.json",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "new"
+    },
+    {
+      "batch": "144312",
+      "unit_id": "decision-potion-own-fallback-002",
+      "kind": "strategy",
+      "id": "silent-brain-potion-zero-energy-continuation",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/energy-continuation-strategy.json",
+      "bytes": 7363,
+      "sha256": "c88d79947bd971a1603efa8e16e08f9ea37284295b61e94b3ee1191dbb01ada4",
+      "retained_copy": "paper/materials/20261024-strategy-144312-ops/energy-continuation-strategy.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-144312-energy-continuation-strategy.json",
+      "runtime_entry": {
+        "id": "silent-brain-potion-zero-energy-continuation",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "fight_plan",
+            "act_plan"
+          ]
+        },
+        "strategy": "仅Silent A10、来源游戏版本unknown。备战时为能量耗尽留一个条件分支：若实际能量为0、能量药可用，且手里存在仅因能量不足而不可打、喝后仍有目标与用途的牌，比较补能续牌与留药；不因0能量直接认定无动作。146次此类用药（109局）后能量0→2，并有手牌从not_enough_energy变为playable；142次下一记录选择出牌（135次完成、7次排队未稳定）。另有159次零能量持可用药后结束回合（60局），抽核可保血不掉，不能自动判错。新增能量不证明整战划算；仍核自伤、额外费用、行动闸与本战用途。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "25226ZFLNR1J",
+            "floor": 42,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=562456132",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "NB8KCF6HRGVF",
+            "floor": 17,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/opportunity-601659959.json",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "new"
+    },
+    {
+      "batch": "144312",
+      "unit_id": "decision-potion-own-fallback-002",
+      "kind": "strategy",
+      "id": "silent-brain-potion-full-shop-replacement",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/full-shop-slot-strategy.json",
+      "bytes": 8906,
+      "sha256": "8e973af134017b9dd27f9666b535e5c3aa4ce8e0ea98ce2b85e2145180f2e123",
+      "retained_copy": "paper/materials/20261024-strategy-144312-ops/full-shop-slot-strategy.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-144312-full-shop-slot-strategy.json",
+      "runtime_entry": {
+        "id": "silent-brain-potion-full-shop-replacement",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "仅Silent A10、来源游戏版本unknown。商店满栏且货架有当前金币买得起的替代药时，按当前每瓶用途比较保留、可用药先饮、弃药换购；先确认目标库存/价格，再决定腾栏，别把弃药记作喝药。306个已记录机会（191局）中26店发生弃后换购、280店未观察到这种替换；同店可多次，实际27组动作/25局均核新药入栏且金币按价减少。25226ZFLNR1J曾弃掉can_use的AnyTime果汁后买药，但用它与弃它的反事实未知；有害或未知效果不能因可用就喝。满栏时enough_gold曾为false，需同时看实金币、价格与栏位，不只读一个标志。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "25226ZFLNR1J",
+            "floor": 45,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/selected-effect-evidence.json#decision_off=562765202",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "new"
+    },
+    {
+      "batch": "144312",
+      "unit_id": "decision-potion-own-fallback-002",
+      "kind": "strategy",
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-resource-recheck-strategy.json",
+      "bytes": 9249,
+      "sha256": "f87da0dcbd63f1c12926805a8af289b8e4bd388fc06a9fabe7711f110fd468cf",
+      "retained_copy": "paper/materials/20261024-strategy-144312-ops/boss-resource-recheck-strategy.json",
+      "formal_publication": 0,
+      "actual_production_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-144312-boss-resource-recheck-strategy.json",
+      "runtime_entry": {
+        "id": "silent-brain-potion-reserve-terminal-proxy-context",
+        "version": "2026-10-24.2",
+        "trigger": {
+          "question_types": [
+            "act_plan",
+            "fight_plan"
+          ],
+          "acts": [
+            3
+          ]
+        },
+        "strategy": "仅Silent A10：第三幕连续Boss备战与场间，以本次实际敌人、当前HP和药栏重评本战可兑现用途及保留理由，不按旧目标名或上一场资源推定下一场。自有版本unknown的48局/48桥接中，地图到下一战首记录HP有43次不变、5次+25；药栏34次空→空、7次同非空ID（沿用代理）、7次出现新ID。新增不全是前战留药，首记录也非原子入场；不据此定留几瓶/安全HP。保留旧外部v0.111.0终局代理非胜447/1247、胜166/492，差+2.11百分点；与自有场间证据端点不同、版本可比性未知，不算留药收益。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；build=v0.111.0；whole_run_win=false；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+            },
+            "statistic": {
+              "name": "terminal_nonempty_given_nonwin_pct",
+              "value": 35.84603047313553,
+              "unit": "percent"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 1247
+            },
+            "design": "observational",
+            "limitations": [
+              "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+              "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+              "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+            ],
+            "license": "Dataset license unspecified; attributed aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/14",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；build=v0.111.0；whole_run_win=true；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+            },
+            "statistic": {
+              "name": "terminal_nonempty_given_win_pct",
+              "value": 33.739837398373986,
+              "unit": "percent"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 492
+            },
+            "design": "observational",
+            "limitations": [
+              "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+              "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+              "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+            ],
+            "license": "Dataset license unspecified; attributed aggregates only.",
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/15",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 48,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#0CLP16ZR4ZZC",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "1GN7WFBWC2E3",
+            "floor": 48,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#1GN7WFBWC2E3",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9TG1RP5LFAAK",
+            "floor": 48,
+            "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#9TG1RP5LFAAK",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.4,
+        "evidence_status": "unassessed"
+      },
+      "candidate_disposition": "update"
+    },
+    {
+      "batch": "154311",
+      "unit_id": "decision-rest-route-own-fallback-002",
+      "kind": "merged-into",
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/act1-candidate.json",
+      "bytes": 5563,
+      "sha256": "eba6b4f55019cc54bbdf08f7b53605a982dd35e74929513a8752174dbb6ef441",
+      "retained_copy": "paper/materials/20261024-strategy-154311-ops/act1-candidate.json",
+      "disposition": "update",
+      "merge_target_kind": "strategy",
+      "merged_into_is_candidate_intent_only": true,
+      "formal_publication": 0,
+      "actual_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-154311-act1-candidate.json",
+      "runtime_entry": {
+        "id": "silent-brain-act1-rest-smith-resource-proxy",
+        "version": "2026-10-24-own-rest-route-002",
+        "trigger": {
+          "question_types": [
+            "rest"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "第一幕休息题先按当前真实HP与后继风险比较回血/具名升级，不凭终局胜率选锻造。自有Silent A10、版本unknown：HEAL/SMITH题前HP均33.53/48.97，差15.44血；1039/474次、451/309个组内独立局（组间重叠）。外部v0.111.0前节点HP代理差17.85血，赢家上传372/1254与465/1458，差2.23pp，仅方向对照。适用：两项当前合法；观察关联、SL分层另附，不给固定回血线、升级因果收益或其他进阶结论。",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=HEAL；组内distinct上传行"
+            },
+            "statistic": {
+              "name": "HEAL whole_run_winning_uploads / distinct_uploaded_runs",
+              "value": 0.2966507177033493,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 1254
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家独立性/SL未知，非因果。",
+              "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+            ],
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/HEAL;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111.0",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=SMITH；组内distinct上传行"
+            },
+            "statistic": {
+              "name": "SMITH whole_run_winning_uploads / distinct_uploaded_runs",
+              "value": 0.31893004115226337,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 1458
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、玩家独立性/SL未知，非因果。",
+              "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+            ],
+            "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/SMITH;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "EQLB6SK9W9H7",
+            "floor": 16,
+            "ref": "logs/decisions.jsonl@4620717499+570326;sha256=7a3c72f676a86b5e4fd637dc4e05c3096907079d997624aaba3f5828e0b8d5bb",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "QVDR4R3UWKXU",
+            "floor": 8,
+            "ref": "logs/decisions.jsonl@4577763203+432997;sha256=993083101bed355280cf190deb087dde3806123d5f57ab6edd2e77fde08dfd6f",
+            "role": "support"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.4,
+        "evidence_status": "unassessed"
+      },
+      "candidate_disposition": "update"
+    },
+    {
+      "batch": "154311",
+      "unit_id": "decision-rest-route-own-fallback-002",
+      "kind": "merged-into",
+      "id": "silent-rest-buffer-observation",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/heal_clipping-candidate.json",
+      "bytes": 2764,
+      "sha256": "2b910db651f83ac9643138dd5d96792de2482ee26de26745079ad43242200989",
+      "retained_copy": "paper/materials/20261024-strategy-154311-ops/heal_clipping-candidate.json",
+      "disposition": "update",
+      "merge_target_kind": "knowledge",
+      "merged_into_is_candidate_intent_only": true,
+      "formal_publication": 0,
+      "actual_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-154311-heal_clipping-candidate.json",
+      "runtime_entry": {
+        "id": "silent-rest-buffer-observation",
+        "version": "2026-10-24-own-rest-route-002",
+        "trigger": {
+          "question_types": [
+            "rest"
+          ]
+        },
+        "strategy": "休息题若当前缺血小于面板回复，按实际缺口、增上限和附带收益比较回血/具名升级。Silent A10、版本unknown：此类565次/258局，实选HEAL163次/128局；其中最大HP未变的145次/118局，实际回复均等于缺口，含2次回0。另18次伴随上限变化，不能套旧上限；满血题面也可能附带药水收益，回0不等于选项无用。适用：当前HEAL和SMITH合法；这是已执行后继观察，不给统一血线、固定优先级或其他进阶结论。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "L704TLETMZBM",
+            "floor": 40,
+            "ref": "logs/decisions.jsonl@613651054+13124;sha256=4d859171f0429dee10d789e8890c60935caf3b87063bb21c390cb05f4a30610d",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "JLN5SK17W4FQ",
+            "floor": 32,
+            "ref": "logs/decisions.jsonl@565010807+11227;sha256=ac9c8f9d952e3b7da473d6122ce16ff53a24fc42fa0865445ce44502e90d098d",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "UMVLWER4CD98",
+            "floor": 7,
+            "ref": "logs/decisions.jsonl@631073355+13707;sha256=5a5b1f4e4dc86756c76448ac484b1a25f02e9b99b269621fadc70ef0685e5033",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "update"
+    },
+    {
+      "batch": "154311",
+      "unit_id": "decision-rest-route-own-fallback-002",
+      "kind": "merged-into",
+      "id": "silent-pumpkin-candle-charge-energy",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/kindle-candidate.json",
+      "bytes": 2514,
+      "sha256": "3d1941a06050fb19116c5a6b6ef49af792b93d317d2b1889c2fd84b3449809d0",
+      "retained_copy": "paper/materials/20261024-strategy-154311-ops/kindle-candidate.json",
+      "disposition": "update",
+      "merge_target_kind": "knowledge",
+      "merged_into_is_candidate_intent_only": true,
+      "formal_publication": 0,
+      "actual_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-154311-kindle-candidate.json",
+      "runtime_entry": {
+        "id": "silent-pumpkin-candle-charge-energy",
+        "version": "2026-10-24-own-rest-route-002",
+        "trigger": {
+          "question_types": [
+            "rest"
+          ],
+          "acts": [
+            2,
+            3
+          ]
+        },
+        "strategy": "休息题出现KINDLE添火时，把题面充能收益与当场回血分开比较；需要补当前HP时不要把添火计成HEAL。Silent A10、版本unknown：8局11次添火，题面均写为南瓜蜡烛加5层充能，动作后HP净增均0；含28/70和40/86血情境。适用：仅当前合法添火，已观察第二、三幕；全为有SL记录局、小样本，未估额外能量整战收益，也未证明回血、升级或添火的固定优先级。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "8R5CXD5C8PW8",
+            "floor": 29,
+            "ref": "logs/decisions.jsonl@639866172+48768;sha256=b481d86cf28e55197176c31f79505fcefcb3099b3c4dca3886818a8ca370554e",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "KDBWARERSGYW",
+            "floor": 40,
+            "ref": "logs/decisions.jsonl@906642893+16045;sha256=7cb03b13d947efa10c05c0e93630f26d7e64931d2c9e48ebed4bcde3f174456b",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "candidate_disposition": "update"
+    },
+    {
+      "batch": "154311",
+      "unit_id": "decision-rest-route-own-fallback-002",
+      "kind": "merged-into",
+      "id": "silent-route-hp-observation",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/route-candidate.json",
+      "bytes": 3408,
+      "sha256": "0bc9312f2ddcb29a2996aead8567aee02a63a4e5b2a7cc42707af1d8ebbe061e",
+      "retained_copy": "paper/materials/20261024-strategy-154311-ops/route-candidate.json",
+      "disposition": "update",
+      "merge_target_kind": "knowledge",
+      "merged_into_is_candidate_intent_only": true,
+      "formal_publication": 0,
+      "actual_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-154311-route-candidate.json",
+      "runtime_entry": {
+        "id": "silent-route-hp-observation",
+        "version": "2026-10-24-own-rest-route-002",
+        "trigger": {
+          "question_types": [
+            "act_plan",
+            "rest",
+            "event"
+          ]
+        },
+        "strategy": "核路线时先确认当前合法分支及到火前资源，不把未来营火预支为现有HP。Silent A10、版本unknown：精英/火同为备选524次/280局；走火475次平均后继净增14.50血，走精英15次中14次有后继、平均净减25血，另1次缺失；题前HP均37.32/63.27，非同状态对照。每局每幕首次多备选的960个窗口中90未观测到下火；831个已到火且地图标记战斗≥2的段均净减23.26，亦见净增。适用：幕初/带路线复核题；标记战斗数及跨节点净变化是代理，含事件/SL混杂；不作战斗毛伤、绕路收益或安全线。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "JMH5C51RLN4E",
+            "floor": 8,
+            "ref": "logs/decisions.jsonl@566244311+1910;sha256=3104b2c4211645b1bc66c506e361675e54125a5ac05e1e0e5b359f967ad7bb41",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9ZERN492CSHX",
+            "floor": 7,
+            "ref": "logs/decisions.jsonl@3076195162+2618;sha256=9e34489fc627bb47c5672c17a0e5a515602054a72a5a36f8c059407a26fdf032",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "MGA0CZDDKC0P",
+            "floor": 6,
+            "ref": "logs/decisions.jsonl@559694510+1745;sha256=1168bd0a2c8cbe6fe48c15ba02e3dabde31d6986a204b207d7b2668d07430e6a",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "UJ0K3G10609Y",
+            "floor": 34,
+            "ref": "logs/decisions.jsonl@585043632+1972;sha256=156869b43b12d0a8f70764970e7eb406744672f6c2c9de357aa1d81006b6ec9f",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "D4LJ9QMGFB8Q",
+            "floor": 1,
+            "ref": "logs/decisions.jsonl@590273768+5566;sha256=207a0a814550ae442deea952d8f009f0004a63495cf2e0aaa4386fad7c937483",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.4
+      },
+      "candidate_disposition": "update"
+    },
+    {
+      "batch": "154311",
+      "unit_id": "decision-rest-route-own-fallback-002",
+      "kind": "merged-into",
+      "id": "silent-miniature-tent-two-rest-options",
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/two_rest_actions-candidate.json",
+      "bytes": 2564,
+      "sha256": "c0e7276427bc4b444560f44c1577483060cc5160e0d352394eda5536cb103c2f",
+      "retained_copy": "paper/materials/20261024-strategy-154311-ops/two_rest_actions-candidate.json",
+      "disposition": "update",
+      "merge_target_kind": "knowledge",
+      "merged_into_is_candidate_intent_only": true,
+      "formal_publication": 0,
+      "actual_consumer": 0,
+      "natural_adoption": 0,
+      "source_archive": "paper/materials/20261024-issue51-ten-candidates-publication-ops/source-154311-two_rest_actions-candidate.json",
+      "runtime_entry": {
+        "id": "silent-miniature-tent-two-rest-options",
+        "version": "2026-10-24-own-rest-route-002",
+        "trigger": {
+          "question_types": [
+            "rest"
+          ]
+        },
+        "strategy": "已持微型帐篷且当前营火仍给出可用的另一个动作时，执行后重新核选项，把回血与具名升级都纳入本火预算。Silent A10、版本unknown：14局70个营火实际完成HEAL与SMITH；70次升级均见牌组升级变化且当步净回血0，70次HEAL均净回22.01（0—50），2次回0；两种先后顺序均已出现。适用：必须核当前遗物、剩余合法选项和目标，不把选完一项当已离火，不承诺可重复同项；含SL/增上限/额外动作混杂，未证最佳顺序或整胜收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "YF0LXT1QSTGG",
+            "floor": 44,
+            "ref": "logs/decisions.jsonl@686078962+14631;sha256=3636c26eaceb9ae4b337594b056ee052ca19b191103506b0d96fd0508b77d48f",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "YF0LXT1QSTGG",
+            "floor": 47,
+            "ref": "logs/decisions.jsonl@686358970+57938;sha256=b7cbfbb56d08e5a0a9eab158a22a9eb368674282d61179ae1672d9c31d1d8b72",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "candidate_disposition": "update"
+    }
+  ],
+  "runtime_schema_fields": [
+    "id",
+    "version",
+    "trigger",
+    "strategy",
+    "evidence",
+    "source",
+    "confidence",
+    "evidence_status",
+    "provenance",
+    "limitation_notice"
+  ],
+  "runtime_text_trigger_evidence_confidence_unchanged": true,
+  "candidate_semantic_new": 4,
+  "candidate_semantic_updates": 6,
+  "new_runtime_strategy_ids": 10,
+  "snapshots": {
+    "live": {
+      "before_sha256": "4a98084278ddbecf6fa5ca21ef97932c1fa391a75d79a81e2e5ff6e374228847",
+      "candidate_sha256": "d13e7392046c1d48c94b6ce8c90b6dcf77c0ecd392df5272a6eefb59785fde57",
+      "before_count": 26,
+      "after_count": 36,
+      "root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+      "library_head_clean": true
+    },
+    "main": {
+      "before_sha256": "ba726e9c3b6f2e165340e437ecea139fc95b4eb837f71da301fc61ff767a6db4",
+      "candidate_sha256": "d2fbc11e0d44daa1df5d329d36c7331ce52cf1c8f905cf1a12d04345fd76bc23",
+      "before_count": 30,
+      "after_count": 40,
+      "root": "/home/dw/Projects/agent-sts2",
+      "library_head_clean": true
+    }
+  },
+  "source_code_changes": 0,
+  "experience_data_changes": 0,
+  "new_full_models_games": 0
+}

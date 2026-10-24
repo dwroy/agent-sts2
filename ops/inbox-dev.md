@@ -6590,3 +6590,19 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T16:05:26+08:00 [ops] 154311原休息/路线补证批done/rc0、无源码，out/result/report及原生终态/退场seal核同；原49项产物、11冻结分片与六流原前缀一致，14个候选证据行有界SHA复核通过。实际交付5个既有稳定ID更新，新增0/更新5/复用0；四个经验目标附同ID策略文字投影，不拆成9条，merged-into只是目标处置而非已合入。当前live解析器5条离线格式过；13局只是模型抽核见证，不冒全聚合或整局通读。自有unknown与外部v0.111.0分账，四own一mixed/unassessed；第一幕451/309局组间重叠，添火仅8局、帐篷仅14局，未走分支无同局反事实，路线净变化不是毛伤或安全线。原共享知识/账本/代码未改，正式发布/消费者/自然采用均0；已逐ID/SHA登记待发布，精确合并时保原内容与证据，经验/策略/rk消费者另验。原回收器已收checkout，分支及待证scratch保留；本轮不重finish/模型/清理。首个零新增批不自动扩题/续派，原沙箱tsx限制及科学父保留；37在途实际检查不另起。
 原件paper/materials/20261024-strategy-154311-ops/verification.json、publication-queue.json、bounded-evidence-readback.json、current-parser-validation.json。
+
+- 2026-10-24T16:16:51+08:00 [ops/V6-R430] 已发V6-R430，T16:12:23，live26→36/main30→40，十ID生产工具读回过。旧状态均“无该ID策略入口”，新文字如下（账本均silent-；证据/SHA见rule-change-notice.json）：
+
+- 0606 增益药先后牌：已定使用时比较药后牌。
+- 0607 回合末防护：缺口下比较喝与留。
+- 0608 零能量续牌：比较补能续牌与留药。
+- 0609 满栏商店：比较保留/先饮/弃换。
+- 0610 连续Boss资源：按本次敌人/HP/药栏重评。
+- 0611 一幕回血/升级：按真实HP与风险比较。
+- 0020 回复缺口：核缺口/增上限/附带收益。
+- 0186 添火充能：充能和当前回血分账。
+- 0019 路线到火资源：核实际备选和后继资源。
+- 0146 帐篷剩余动作：执行后复核合法剩余项。
+
+4新6更，四经验仅投影。Silent A10/unknown、外部/SL/反证分账；旧经验、main另四条和脏目录刷新保留。供相关题自行查询，自然采用/收益未测，科学父不关。回退仅十ID及目录行，保后续知识；611账本0问题，无新full/模型/游戏。
+原件paper/materials/20261024-issue51-ten-candidates-publication-ops/{publication,actual-live-consumers,rule-change-notice,final-readback}.json。

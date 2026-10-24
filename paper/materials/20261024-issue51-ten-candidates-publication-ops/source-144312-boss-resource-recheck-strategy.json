@@ -1,0 +1,203 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "version": "2026-10-24.2",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "仅Silent A10：第三幕连续Boss备战与场间，以本次实际敌人、当前HP和药栏重评本战可兑现用途及保留理由，不按旧目标名或上一场资源推定下一场。自有版本unknown的48局/48桥接中，地图到下一战首记录HP有43次不变、5次+25；药栏34次空→空、7次同非空ID（沿用代理）、7次出现新ID。新增不全是前战留药，首记录也非原子入场；不据此定留几瓶/安全HP。保留旧外部v0.111.0终局代理非胜447/1247、胜166/492，差+2.11百分点；与自有场间证据端点不同、版本可比性未知，不算留药收益。",
+      "source": "mixed",
+      "confidence": 0.4,
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；build=v0.111.0；whole_run_win=false；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+          },
+          "statistic": {
+            "name": "terminal_nonempty_given_nonwin_pct",
+            "value": 35.84603047313553,
+            "unit": "percent"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1247
+          },
+          "design": "observational",
+          "limitations": [
+            "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+            "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+            "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+          ],
+          "license": "Dataset license unspecified; attributed aggregates only.",
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/14",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111.0",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；build=v0.111.0；whole_run_win=true；终局数组存在且条目合法；每上传行计一次，非独立玩家。"
+          },
+          "statistic": {
+            "name": "terminal_nonempty_given_win_pct",
+            "value": 33.739837398373986,
+            "unit": "percent"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 492
+          },
+          "design": "observational",
+          "limitations": [
+            "终局保存字段仅为代理，非死亡瞬间或战前持药；非胜不等于已核死亡。",
+            "上传自选，玩家/SL/模组未知，无用药机会分母；观察关联非因果。",
+            "仅Silent A10/v0.111.0；机制跨版本对照未知。"
+          ],
+          "license": "Dataset license unspecified; attributed aggregates only.",
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#/terminal_potions/15",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#0CLP16ZR4ZZC",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1GN7WFBWC2E3",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#1GN7WFBWC2E3",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9TG1RP5LFAAK",
+          "floor": 48,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/boss-bridge-projections.json#9TG1RP5LFAAK",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "direction_and_magnitude": "场间按实资源重评：48独立局中HP变化0为43次、+25为5次；同非空ID仅7次，新增ID7次；不估最优留药数。",
+      "applicability": "第三幕备战/真实场间检查；实际遭遇以敌人数组为准，HP和药栏以当次状态为准；首记录HP与同ID沿用均为代理。",
+      "own_game_version": "unknown",
+      "character": "silent",
+      "ascension": 10,
+      "own_support_runs": [
+        "0CLP16ZR4ZZC",
+        "1GN7WFBWC2E3",
+        "28T664BN1NCA",
+        "49HL2N70CHMU",
+        "64VJC5XT2AT2",
+        "72RFEYV6WNPA",
+        "7G7V6T3U7V27",
+        "7S8HCC0M6G9W",
+        "833ZM0MJGWHC",
+        "8FP19V1W4SRQ",
+        "9GTFF6DC500L",
+        "9KP5S3317EEL",
+        "9R916WW0V65N",
+        "9TG1RP5LFAAK",
+        "AD3QSC3P41JU",
+        "BDJTF3FDA8W5",
+        "BSXYMFKN0VJ5",
+        "C7LERZPCRFZ1",
+        "CEN1Z8HEU7NM",
+        "FZT053H9PSC5",
+        "HEMND3SMQYB8",
+        "HLAWCGM3KHVB",
+        "HUM35281S668",
+        "JBX9JLH46KVN",
+        "JMH5C51RLN4E",
+        "KUHYZBFFLALU",
+        "LKC9YXKZWTKR",
+        "NBJBVSBNPYQB",
+        "P2M3DFJ4DEZ3",
+        "PBUBM0LRTEDD",
+        "PD9AYQVMLQW6",
+        "Q10YYQ5DUPJA",
+        "RMNXHZKV716Y",
+        "RQCHNN0W72KF",
+        "T4PL60Z0DZV3",
+        "TCDUBRWMEMNA",
+        "TDLBRNA0R05B",
+        "TFYU1MY8NEJ1",
+        "TXZ6RVMQA09D",
+        "UPAB38G2PA02",
+        "VNSXWCWXR3VW",
+        "VX6RJ608LR5F",
+        "X06YT1507E5M",
+        "XTSV1U9JD34T",
+        "XW8B5CHJ814J",
+        "Y0EMJR6MKWYW",
+        "YZWV37N2MU6N",
+        "ZVYUL2YP3518"
+      ],
+      "statistics": {
+        "file": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-144312/learner/runs/20261024-144358-1acdc3a2-8329-4d87-845c-80d1778a1ab6-strategy-proposal/scratch/context-statistics.json",
+          "bytes": 238612,
+          "sha256": "96c3b3627f9b1534e1de6b1fc0dd50deb1b092b1c28879f174d19e0d04e6b9ca"
+        },
+        "context_key": "boss_bridge",
+        "sample_denominator": "独立局与动作/店/桥接机会分别见文件；不累加重叠组"
+      },
+      "limitations": [
+        "观察性日志；不是随机分组、反事实或通关收益。",
+        "仅Silent A10，游戏版本unknown；不与外部版本合并分母。",
+        "同局多动作/多回合/SL重试不独立；机会数和独立局数分列。",
+        "原始状态仅决策点；后继是实际记录状态，不保证原子效果帧。",
+        "可信度保持低档；自然采用和收益未验证。",
+        "48局均实际看到两个相邻第三幕Boss敌人数组，未按boss_id补映射。43局有重试/预判证据，5局no_retry_evidence；终局结果不当逐SL独立结果。",
+        "34次空栏、7次新增ID与7次同ID都保留；没有证明保留一瓶/两瓶优于现在使用。",
+        "外部与自有端点/版本不同，evidence_status=unassessed，不声称aligned或以外部否决自有。"
+      ],
+      "consumer_contract": {
+        "strategy": "#27/#42/#55 brain-strategies-v1 / kb_strategies；仅备战或商店文字建议，非战斗执行闸",
+        "capability_gap": "现trigger无进阶/游戏版本/药水/能量/格挡字段；题型粗筛后必须按正文核Silent A10及实时条件。版本只验证unknown历史；已知新版本需重核，不自动外推。",
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "natural_adoption": "pending",
+        "benefit": "unknown",
+        "knowledge_consumer": "not_created; 正式经验消费者未登记",
+        "rk_consumer": "not_created; 缺完整Plan配对结果/留出回放；#28保持off"
+      },
+      "source_task": {
+        "task": "strategy-proposal",
+        "batch": "20261024-144312-strategy-proposal",
+        "unit_id": "decision-potion-own-fallback-002",
+        "manifest_sha256": "1a1afc06d9bd6cd5cddeab155d952f4c4965eb89d8ded3e39e9de9b10ef8be8b"
+      },
+      "disposition": "update",
+      "context_key": "boss-resource-recheck",
+      "design": "observational",
+      "evidence_status": "unassessed"
+    }
+  ]
+}

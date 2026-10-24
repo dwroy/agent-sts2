@@ -1,0 +1,57 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-pumpkin-candle-charge-energy",
+      "version": "2026-10-24-own-rest-route-002",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          2,
+          3
+        ]
+      },
+      "strategy": "休息题出现KINDLE添火时，把题面充能收益与当场回血分开比较；需要补当前HP时不要把添火计成HEAL。Silent A10、版本unknown：8局11次添火，题面均写为南瓜蜡烛加5层充能，动作后HP净增均0；含28/70和40/86血情境。适用：仅当前合法添火，已观察第二、三幕；全为有SL记录局、小样本，未估额外能量整战收益，也未证明回血、升级或添火的固定优先级。",
+      "source": "own",
+      "confidence": 0.35,
+      "evidence": [
+        {
+          "type": "own",
+          "run": "8R5CXD5C8PW8",
+          "floor": 29,
+          "ref": "logs/decisions.jsonl@639866172+48768;sha256=b481d86cf28e55197176c31f79505fcefcb3099b3c4dca3886818a8ca370554e",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "KDBWARERSGYW",
+          "floor": 40,
+          "ref": "logs/decisions.jsonl@906642893+16045;sha256=7cb03b13d947efa10c05c0e93630f26d7e64931d2c9e48ebed4bcde3f174456b",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "audit_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/source-ledger.json#silent-pumpkin-candle-charge-energy",
+      "scope_notice": "仅Silent A10；自有游戏版本unknown；当前合同不能强制进阶/遗物/路线备选谓词，正文条件必须人工核。"
+    }
+  ],
+  "candidate_disposition": "update",
+  "merge_target": {
+    "kind": "knowledge",
+    "id": "silent-pumpkin-candle-charge-energy",
+    "baseline_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/knowledge/characters/silent/experience.json",
+      "bytes": 352061,
+      "sha256": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2"
+    },
+    "preserve_existing_content_and_evidence": true,
+    "projection_counted_as_separate_knowledge": false
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}
