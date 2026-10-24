@@ -1,18 +1,18 @@
-state: in-flight
-issue: 48
-updated: 2026-10-24T20:45:58+08:00
+state: clear-ok
+issue: 50
+updated: 2026-10-24T20:57:27+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#48普通164315单候选2正3负/2角色读回过，原worker4038655/birth27032382待原刷新锁；未发布末次20:44:22，不持发布锁。0672 accepted查询投影，0618 proposed不改。
-在等谁：原refresh_driver4023913/birth26990639释放knowledge-refresh.lock，原worker自动回manual；不要重启publish.once。候选保护R439/68策略115rk及后来知识，原模型/full/局0。
-下一步：核原publication-state最终阶段/实库/编号/读回，in-flight/48不清。旧24h注册窗已完整，普通策略5→3/复盘12→9，回刷0/244、外部与停派混杂不代不降吞吐；新MD至明16:44才满24h。原件paper/materials/20261024-issue48-resume-2033-ops/，issue6384374841；20原24h/kit/科学父保持。
+进行中的事：本轮写操作已结。#50新两终局52/50、3检查点/3后继全同，F45/F11败；#48已V6-R440/69策略115rk，0618 proposed/0672 shipped、锁13.51s释、worker退出。
+在等谁：原51学习owner核胜局/版本/SL/入场证据及双Boss阈值ID/消费者；48旧244/rk/新普通24h与自然收益、原科学父保持。
+下一步：clear-ok/50，不重发/full/模型/开局；20原24h/kit、56/drain另issue不改。原件paper/materials/20261024-issue50-resume-2047-ops/verification.json、issue48-publication-return.json；issue50:6384464793/48:6384480021。
 
-#50本轮已结：三自然晚层局143落盘/140后继、18检查点/15后继；F48三/F49一/0胜只为选样，原首W546/ENOBUFS-null不改。BP9/P4学习读取已核，冷重启/回退及达标线正式入库待，issue6383251914；paper/materials/20261024-issue50-resume-1834-ops/。
+#50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51保持：截至R437为61策略/109rk，R439见首段；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
+#51保持：截至R437为61策略/109rk，R439为68/115，普通R440见48段；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
 新6382974399/6382976033四类别+独立自有1槽待56；当前原2策略槽/外部自动单道不冒四道。A/C/D原high/沙箱/tier未知，手动仅C1；B20～25已冻/旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权codex1、磁盘≤80停新派待代码，不热切/扩权限。旧8叶3:1源稿/旧full保留而部署授权取消。A/C/D已done按原retention门；506/28窗口/18局反向分层守界，满批或2h先到串行发布，不开计时器。原件paper/materials/20261024-issue51-four-lanes-ops/及issue51-shop-paired-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
@@ -25,7 +25,7 @@ updated: 2026-10-24T20:45:58+08:00
 
 #51三原候选仍仅代理/外部关联，旧版本反向及描述知识消费者缺口保持，不硬转rk/StrategyEntry。paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
-#37旧含废止51八叶的R433组合6600/0/2及13败/profile8败/main6661原件保留、不借绿；新净37+20交付见首段，旧3:1/091302 source=null/净12/.2排除。原件paper/materials/20261024-issue37-20-51-runtime-integrator/；新issue37-20-r434-integrator/。
+#37旧含废止51八叶的R433组合6600/0/2及13败/profile8败/main6661原件保留、不借绿；净37+20已R438、首新Jev见issue51-publication-drain-audit-ops，旧3:1/091302 source=null/净12/.2排除。原件paper/materials/20261024-issue37-20-51-runtime-integrator/；新issue37-20-r434-integrator/。
 
 131302 fix及两补链：原failed/rc0/tsc0/31定向、175源差/empty guard未过；两补链done/0293 waiting，各14where-only/1处置未重复分母；14正式经验未入，061302缺源/101315旧失败保持。paper/materials/20261024-fix-131302-ops/及strategy-131302{,-s2}-ops/。
 
@@ -37,7 +37,7 @@ updated: 2026-10-24T20:45:58+08:00
 
 091302经验未提交/未发布，source_commit=null；failed/rc0/missing source audit/EROFS/EPERM/retry未知保留。43产物/24账本追加（11旧ID）/2原提案核同；R428/.1净12树b4ad4beeadbddc7e6b6477202b5ba28099d79af1、经验SHA32e27b…/245总244 active，7项含原.2补证/另7无关.2排除，.2/.3/patch保留。正式经验仍.1，37代码九叶待实际完整检查后接自然发布，本经验待真源审计，材料提交不冒真源审计/上线，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#48首普通1.4消费T16:44:14.992/high/原沙箱已核，164315 done/rc0，12映射/11经验ID：1新6复用4等待1NA，rk0。局部0618/poison-footwork候选单数据发布原worker待锁见首段；原报告base/调度base、三输入缺口、#28回放/科学父保持。后置首组9R916/A10/簇6仅定位，queue400b46b2/source只读校验过，旧held/244逐值不变，仍未派0/244。旧入口24h已实核但因无回刷暴露/政策混杂不通过不降吞吐验收，新普通窗另记不重置旧T。原件paper/materials/20261024-issue48-resume-2033-ops/。
+#48首普通T16:44:14.992/high/原沙箱、164315 done/rc0及12映射/11经验ID保持。局部poison-footwork已V6-R440入库，69策略115rk，2正3负/2角色读回；原0618 proposed不改，0672仅检索投影shipped/672检查0，不计第二发现。原报告base/null、三输入/#28回放/收益科学父保持；旧首组9R916簇6仅定位、queue400b46b2/旧held不变，未派0/244。旧24h窗不降吞吐未过，新普通窗明16:44才满；原件issue48-resume-2033-ops/及issue50-resume-2047-ops/issue48-publication-return.json，issue6384480021。
 
 #51原R428的090927/081200去重23ID读回、宽查询fix和正式经验.1边界保持；原main4条已R433发。paper/materials/20261024-090927-strategy-result-ops/。
 

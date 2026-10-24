@@ -6732,3 +6732,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T20:32:53+08:00 [ops] R439回调去重核8份原件/祖先及13投影/单次编号，原7文字6rk读回、13shipped/671检查0保持，锁34.63s已释；不重发/full/模型，正式经验消费者/交换rk/科学父待，clear-ok/51。原件paper/materials/20261024-issue51-r439-return-ops/verification.json。
 
 - 2026-10-24T20:45:58+08:00 [ops] #48首普通候选固定2正3负/2角色读回过，0672查询投影accepted/0618 proposed保持；原发布worker4038655待刷新锁，未发布末次20:44:22，不重启。旧24h注册窗已核但回刷0/244且政策混杂，不降吞吐未通过，新普通MD窗另记；in-flight/48。原件paper/materials/20261024-issue48-resume-2033-ops/。
+
+- 2026-10-24T20:57:27+08:00 [ops] #50新增两自然终局52落盘/50后继/3检查点与后继全同，F45/F11败；原143/140/18/15/W546子集保持，冷重启/阈值条目及胜局口径仍待。无新模型/full/局/源码。原件paper/materials/20261024-issue50-resume-2047-ops/verification.json；issue6384464793。
+
+- 2026-10-24T20:57:27+08:00 [ops] V6-R440原48单策略实发/登记/读回核收：69策略115rk，2正3负/2角色读回，0618 proposed整条保持/0672查询投影shipped，锁13.51s已释，R439/R438及其他知识不改；旧244/rk/自然收益/科学父待，clear-ok/50。原件paper/materials/20261024-issue50-resume-2047-ops/issue48-publication-return.json；issue6384480021。

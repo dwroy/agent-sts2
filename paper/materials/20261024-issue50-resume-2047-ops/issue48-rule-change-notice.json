@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-24T20:56:15+08:00",
+  "release_id": "V6-R440",
+  "id": "silent-brain-poison-footwork-realization-review",
+  "old": "absent from main/live strategy library; prior68 entries preserved",
+  "new": {
+    "id": "silent-brain-poison-footwork-realization-review",
+    "version": "2026-10-24.candidate1",
+    "trigger": {
+      "question_types": [
+        "card_reward",
+        "shop",
+        "rest",
+        "act_plan",
+        "fight_plan"
+      ],
+      "acts": [
+        1,
+        2
+      ],
+      "deck_cards": [
+        {
+          "name": "SNAKEBITE",
+          "count": {
+            "min": 1
+          }
+        },
+        {
+          "name": "ACCELERANT",
+          "count": {
+            "min": 1
+          }
+        },
+        {
+          "name": "FOOTWORK",
+          "count": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    "strategy": "仅Silent A10观察：同时持有蛇咬、触媒、灵动步法时，补牌、购物、营火与备战仍分开核对持牌、实际建立和可重复生存；沿最近赢战的净HP与药槽变化检查下一场资源，不把签名齐备当作停止补强的依据。BKK在F6齐备，F17胜仍77→9，二幕F19胜63→30，F33四试失败；TB在F14齐备，F17胜61→26，二幕F28胜51→17、F30胜38→18，F32休至36后F33四试失败。两局都过首Boss，反对“组件齐备就必败”；终败也不能证明蛇咬、触媒、步法或休息选择导致失败。只复核眼前缺口，不指定必拿牌、血线、杀序或喝药时点；替代选择的整战收益未知，其他进阶和版本未验证。",
+    "evidence": [
+      {
+        "type": "own",
+        "run": "BKK8KAR3E83C",
+        "floor": 6,
+        "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-resume-2033-ops/original/candidate-source-refs.json#BKK8KAR3E83C",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "TB5YKELW0355",
+        "floor": 14,
+        "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-resume-2033-ops/original/candidate-source-refs.json#TB5YKELW0355",
+        "role": "support"
+      }
+    ],
+    "source": "own",
+    "confidence": 0.35,
+    "design": "observational",
+    "source_experience": [
+      "silent-core-poison-defense-observation",
+      "silent-route-hp-observation",
+      "silent-rest-buffer-observation"
+    ],
+    "source_ledger": [
+      "silent-0352",
+      "silent-0019",
+      "silent-0020"
+    ],
+    "limitations": [
+      "两个独立A10局；同一局SL不增加分母，首试与最终结果分列。",
+      "非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。",
+      "两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。",
+      "本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。",
+      "精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。"
+    ],
+    "publication": "registered-query-library-by-ops"
+  },
+  "evidence_runs": [
+    "BKK8KAR3E83C",
+    "TB5YKELW0355"
+  ],
+  "parent_ledger": "silent-0618 proposed unchanged",
+  "consumer_ledger": "silent-0672 shipped",
+  "expected_effect": "One context can be queried through existing kb_strategies; no proven novel information, natural use or benefit",
+  "rollback": "Remove only silent-brain-poison-footwork-realization-review and its own catalog row update; preserve later knowledge and release history",
+  "no_game_content_changes": true,
+  "normalization": "durable evidence path and publication destination metadata only; reverse exact",
+  "original_report_tests_merged_preserved": true
+}
