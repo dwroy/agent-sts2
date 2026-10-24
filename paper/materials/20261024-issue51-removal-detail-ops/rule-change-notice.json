@@ -1,0 +1,823 @@
+{
+  "at": "2026-10-24T22:49:05+08:00",
+  "release_id": "V6-R445",
+  "source_commit": "b5edb30e24e747321d4f70cb236575ab959bf22c",
+  "behavior_commit": "edb17678afcf0d104ea8074a30d42cd1280acb7a",
+  "changes": [
+    {
+      "strategy_id": "silent-brain-shop-used-removal-service",
+      "rk_id": "silent-rk-shop-used-removal-service",
+      "old_strategy": null,
+      "old_rk": null,
+      "new_strategy": {
+        "id": "silent-brain-shop-used-removal-service",
+        "version": "20261024-remove-detail-002",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "本店删牌已用时，把剩余金币用于继续购物或离店，别把price=0当免费再删一次。0CLP F24付100后牌组25→24、金币420→320，服务变used=true/available=false/price=0；随后仍购193遗物及52、51药，余24。A10无重试证据36机会/32局、重试或判死184/148，首个已用状态均未再次删牌。\n范围：Silent A10/版本unknown，必须看当前used/available；不把服务未用但付不起混入，也不证明先删更优。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-used.json#visit=0CLP16ZR4ZZC:24"
+          },
+          {
+            "type": "own",
+            "run": "JLN5SK17W4FQ",
+            "floor": 21,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-used.json#visit=JLN5SK17W4FQ:21"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "new_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-used-removal-service",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-tag-shop-used-removal-service",
+          "unit": "label"
+        },
+        "label_en": "Used removal's zero price does not permit another removal",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 24
+            },
+            {
+              "run_id": "JLN5SK17W4FQ",
+              "floor": 21
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-used-removal-service"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-used.json",
+            "sha256": "2843770e6418b5e0632f726bfaf13b09683b9480559ff4f6883e8085228c6901",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本条选定商店当前状态、实选及有界后继；分层/分母见证据文件，非因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "batch": "20261024-221313-strategy-proposal",
+      "context": "used",
+      "ledger": [
+        "silent-0750",
+        "silent-0753"
+      ],
+      "expected_effect": "queryable shop context/tag only; removal availability/used, cross-field affordability and visit-history conditions remain manual body conditions",
+      "rollback": "remove only own3 new strategy/rk IDs, restore own2 updated strategy/rk/vocab from preimages if no later change; preserve later knowledge/registry history"
+    },
+    {
+      "strategy_id": "silent-brain-shop-removal-unaffordable-stock",
+      "rk_id": "silent-rk-shop-removal-unaffordable-stock",
+      "old_strategy": null,
+      "old_rk": null,
+      "new_strategy": {
+        "id": "silent-brain-shop-removal-unaffordable-stock",
+        "version": "20261024-remove-detail-002",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "未用删牌报价高于现有金币、仍有可付商品时，按现有商品与离店比较，别把此时未删牌记为主动放弃可付删牌。0CLP F42买199遗物后389→190，删牌200不可付，仍买87牌、100药后余3。A10无重试证据157机会/81局中123直接购、33离店、1弃药；重试或判死673/296中524购、138离店、11弃药。\n范围：Silent A10/版本unknown；商品可付为价格代理，药栏等合法性另核；实际动作有后继才算执行，不表示购物胜过留金。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 42,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-short.json#visit=0CLP16ZR4ZZC:42"
+          },
+          {
+            "type": "own",
+            "run": "JMH5C51RLN4E",
+            "floor": 21,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-short.json#visit=JMH5C51RLN4E:21"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "new_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-removal-unaffordable-stock",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-tag-shop-removal-unaffordable-stock",
+          "unit": "label"
+        },
+        "label_en": "Compare affordable stock and leaving when removal exceeds available gold",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 42
+            },
+            {
+              "run_id": "JMH5C51RLN4E",
+              "floor": 21
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-removal-unaffordable-stock"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-short.json",
+            "sha256": "d47005b267b49aeeb58c76ee87a5c638cf48facffb55cb6d95d62be2588be2fa",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本条选定商店当前状态、实选及有界后继；分层/分母见证据文件，非因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "batch": "20261024-221313-strategy-proposal",
+      "context": "short",
+      "ledger": [
+        "silent-0751",
+        "silent-0754"
+      ],
+      "expected_effect": "queryable shop context/tag only; removal availability/used, cross-field affordability and visit-history conditions remain manual body conditions",
+      "rollback": "remove only own3 new strategy/rk IDs, restore own2 updated strategy/rk/vocab from preimages if no later change; preserve later knowledge/registry history"
+    },
+    {
+      "strategy_id": "silent-brain-shop-next-removal-quote",
+      "rk_id": "silent-rk-shop-next-removal-quote",
+      "old_strategy": null,
+      "old_rk": null,
+      "new_strategy": {
+        "id": "silent-brain-shop-next-removal-quote",
+        "version": "20261024-remove-detail-002",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "同局前店已确证付费删牌，到后店用当前报价重新比较删牌、购物和留金，别沿用旧价或固定涨幅。0CLP先100删牌，后店报价150，再后200；9TG则50→75。A10无重试证据38后店机会/20局均比最近确证付费价高50；重试或判死213/102中201高50，另有0、25、40、100差值。\n范围：Silent A10/版本unknown、仅已记录后店；遗物/未观测动作可改价，不建立统一涨价公式，报价变化不证明该删哪张。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json#visit=0CLP16ZR4ZZC:24"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 37,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json#visit=0CLP16ZR4ZZC:37"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 42,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json#visit=0CLP16ZR4ZZC:42"
+          },
+          {
+            "type": "own",
+            "run": "9TG1RP5LFAAK",
+            "floor": 15,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json#visit=9TG1RP5LFAAK:15"
+          },
+          {
+            "type": "own",
+            "run": "9TG1RP5LFAAK",
+            "floor": 20,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json#visit=9TG1RP5LFAAK:20"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "new_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-next-removal-quote",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-tag-shop-next-removal-quote",
+          "unit": "label"
+        },
+        "label_en": "Use current removal quote after earlier paid removals",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 24
+            },
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 37
+            },
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 42
+            },
+            {
+              "run_id": "9TG1RP5LFAAK",
+              "floor": 15
+            },
+            {
+              "run_id": "9TG1RP5LFAAK",
+              "floor": 20
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-next-removal-quote"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-later_quote.json",
+            "sha256": "7a059bc79625c0d5685c58b48d947b6f87bfa5cae965652ebccc760691900159",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本条选定商店当前状态、实选及有界后继；分层/分母见证据文件，非因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "batch": "20261024-221313-strategy-proposal",
+      "context": "later_quote",
+      "ledger": [
+        "silent-0752",
+        "silent-0755"
+      ],
+      "expected_effect": "queryable shop context/tag only; removal availability/used, cross-field affordability and visit-history conditions remain manual body conditions",
+      "rollback": "remove only own3 new strategy/rk IDs, restore own2 updated strategy/rk/vocab from preimages if no later change; preserve later knowledge/registry history"
+    },
+    {
+      "strategy_id": "silent-brain-shop-joint-budget",
+      "rk_id": "silent-rk-shop-joint-budget",
+      "old_strategy": {
+        "id": "silent-brain-shop-joint-budget",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "购买与删牌各自买得起时，先比较同一笔金币能完成的整套方案，再决定把预算给哪边。证据局100金币买51金币翻越撑击后剩49，原100删牌已不可付；另一局162金币先删100后仍能买52药。A10无重试证据购买互斥125机会/84局、选择删牌28/27；重试或判死组522/280、142/127。\n范围：Silent A10/自有版本unknown；只证明预算互斥与实际执行，不证明买牌或删牌更好，不固定删牌优先。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "MGA0CZDDKC0P",
+            "floor": 11,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "NB8KCF6HRGVF",
+            "floor": 14,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/1",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "old_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-joint-budget",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            },
+            {
+              "op": "exists",
+              "field": "shop.prices"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-joint-budget",
+          "unit": "label"
+        },
+        "label_en": "Purchases and removal can exhaust the same shop budget",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "MGA0CZDDKC0P",
+              "floor": 11
+            },
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-joint-budget"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json",
+            "sha256": "b1d08e9de750ed5bfbcafdb9fadbe6385510f76fd8cb426ea8b98b6a1304e2ad",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "new_strategy": {
+        "id": "silent-brain-shop-joint-budget",
+        "version": "2026-10-24.1-remove-detail-002",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "购买与删牌共用金币时，既比较互斥方案，也核能一起完成的整套清单。保留旧例100买51后只余49、删100不可付；新例0CLP F37从1080依次付228、257、150删牌、36买牌、74买药，实余335，删牌后牌组28→27再→28。A10无重试证据120机会/80局、重试或判死531/286满足删牌加最便宜商品可付的价格代理。\n范围：Silent A10/版本unknown；代理不表示任意组合都可买，药栏/库存与实付仍逐步核；不固定先买或先删，不证明整套收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "MGA0CZDDKC0P",
+            "floor": 11,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "NB8KCF6HRGVF",
+            "floor": 14,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/1",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0CLP16ZR4ZZC",
+            "floor": 37,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-fit.json#visit=0CLP16ZR4ZZC:37"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "new_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-joint-budget",
+        "version": 2,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-joint-budget",
+          "unit": "label"
+        },
+        "label_en": "Compare affordable carts containing both purchases and removal",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "MGA0CZDDKC0P",
+              "floor": 11
+            },
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            },
+            {
+              "run_id": "0CLP16ZR4ZZC",
+              "floor": 37
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-joint-budget"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json",
+            "sha256": "b1d08e9de750ed5bfbcafdb9fadbe6385510f76fd8cb426ea8b98b6a1304e2ad",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          },
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-fit.json",
+            "sha256": "0323ebb2eabf4ab15a018619f87f902a1215d5a30f547ec351d9557f708767eb",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "本条选定商店当前状态、实选及有界后继；分层/分母见证据文件，非因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "batch": "20261024-221313-strategy-proposal",
+      "context": "fit",
+      "ledger": [
+        "silent-0647",
+        "silent-0653"
+      ],
+      "expected_effect": "queryable shop context/tag only; removal availability/used, cross-field affordability and visit-history conditions remain manual body conditions",
+      "rollback": "remove only own3 new strategy/rk IDs, restore own2 updated strategy/rk/vocab from preimages if no later change; preserve later knowledge/registry history"
+    },
+    {
+      "strategy_id": "silent-brain-shop-affordable-stop",
+      "rk_id": "silent-rk-shop-affordable-stop",
+      "old_strategy": {
+        "id": "silent-brain-shop-affordable-stop",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "有可负担商品时也把离店留金列入比较，先分清库存为空、报价超金币和主动不买，别把打折当购买理由。证据局42金币面对25金币打折群蛇仍离店，金币保持42；113金币面对100删牌和37精准仍离店。A10无重试证据可负担价格代理离店74机会/53局、全价不可负担143/82；重试或判死组328/188、650/300；明确留金理由子集分别9/8、32/30。\n范围：Silent A10/自有版本unknown；价格代理不保证药栏等合法条件。原理由仅表意图，未证留金收益，也非打折牌一律不买。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "QNTW139MGECA",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9663Y88TYK73",
+            "floor": 3,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/1",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "old_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-affordable-stop",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-affordable-stop",
+          "unit": "label"
+        },
+        "label_en": "Affordable stock does not establish intent to buy",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "QNTW139MGECA",
+              "floor": 24
+            },
+            {
+              "run_id": "9663Y88TYK73",
+              "floor": 3
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-affordable-stop"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json",
+            "sha256": "182b4c7673251bf1468a2da9015269c0eb3d054f33e3c60968e7ae1d6b2810a2",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "new_strategy": {
+        "id": "silent-brain-shop-affordable-stop",
+        "version": "2026-10-24.1-remove-detail-002",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "计划购物结束后若删牌仍可付，把继续删牌与离店留金再比较，不因刚买了牌就补一个删牌。VX6 F5买90牌和49、48药，289→102后面对100删牌仍离店；CESK F11余112面对100删牌也停。A10无重试证据2/165个曾满足删牌和商品都可付的店出现该停法，涉及2/97局；重试或判死22/730店、18/323局。\n范围：Silent A10/版本unknown；保留旧可负担离店原则，本次细化购物后剩余预算；两见证终败，未证明留金更优或102为阈值。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "QNTW139MGECA",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9663Y88TYK73",
+            "floor": 3,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/1",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "VX6RJ608LR5F",
+            "floor": 5,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-stop_selected.json#visit=VX6RJ608LR5F:5"
+          },
+          {
+            "type": "own",
+            "run": "CESK0EFSJ2C4",
+            "floor": 11,
+            "ref": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-stop_selected.json#visit=CESK0EFSJ2C4:11"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "new_rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-affordable-stop",
+        "version": 2,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-affordable-stop",
+          "unit": "label"
+        },
+        "label_en": "Unused affordable removal need not exhaust remaining shop gold",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "QNTW139MGECA",
+              "floor": 24
+            },
+            {
+              "run_id": "9663Y88TYK73",
+              "floor": 3
+            },
+            {
+              "run_id": "VX6RJ608LR5F",
+              "floor": 5
+            },
+            {
+              "run_id": "CESK0EFSJ2C4",
+              "floor": 11
+            }
+          ],
+          "n_support": 4,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-affordable-stop"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json",
+            "sha256": "182b4c7673251bf1468a2da9015269c0eb3d054f33e3c60968e7ae1d6b2810a2",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          },
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-removal-detail-ops/original/221313/scratch/evidence-stop_selected.json",
+            "sha256": "a34f9dbb87083bd4fc18213c70b8731dee0593d20ece01384ac4a755856c14fe",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本条选定商店当前状态、实选及有界后继；分层/分母见证据文件，非因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "batch": "20261024-221313-strategy-proposal",
+      "context": "stop_selected",
+      "ledger": [
+        "silent-0648",
+        "silent-0654"
+      ],
+      "expected_effect": "queryable shop context/tag only; removal availability/used, cross-field affordability and visit-history conditions remain manual body conditions",
+      "rollback": "remove only own3 new strategy/rk IDs, restore own2 updated strategy/rk/vocab from preimages if no later change; preserve later knowledge/registry history"
+    }
+  ],
+  "updated_vocab_ids": [
+    "silent-shop-observed-joint-budget",
+    "silent-shop-observed-affordable-stop"
+  ],
+  "custom_knowledge_consumers": "pending5",
+  "automatic_body_conditions": "not encoded by coarse predicates: used/available/cross-field price/prior visit",
+  "old_joint_budget_predicate_update": "exact learner-supplied coarse exists predicate, not equivalence to old affordability gate",
+  "natural_adoption_benefit_science": "remain open",
+  "source_code_switch_accounts_permissions_changed": false
+}

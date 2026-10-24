@@ -1,0 +1,22 @@
+{
+  "attempts": [
+    {
+      "entrypoint": "tsx CLI",
+      "result": "sandbox EPERM creating IPC pipe; replaced by node --import loader, no permission/network change"
+    },
+    {
+      "entrypoint": "node --import loader",
+      "result": "reflex English labels exceeded 12 words; shortened labels only"
+    },
+    {
+      "entrypoint": "node --import loader",
+      "result": "see candidate-validation.json"
+    }
+  ],
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "reason": "scratch data only; fixed parser/loader check is not a production consumer readback"
+}
