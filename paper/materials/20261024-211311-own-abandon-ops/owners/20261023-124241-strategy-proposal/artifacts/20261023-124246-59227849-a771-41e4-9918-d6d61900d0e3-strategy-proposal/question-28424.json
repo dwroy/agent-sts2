@@ -1,0 +1,264 @@
+{
+  "ts": "2026-10-07T13:08:14.088Z",
+  "decision_id": "d0cca878-edab-48eb-93b2-7427cd07ebbe",
+  "run_id": "TXZ6RVMQA09D",
+  "floor": 48,
+  "turn": 6,
+  "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:460:0:true\",\"event\":\"\",\"gold\":119,\"hand\":\"0:BUBBLE_BUBBLE:true|1:WITHER:false|2:DODGE_AND_ROLL:true|3:STRIKE_SILENT:true|4:METAMORPHOSIS:true|5:POISONED_STAB:true\",\"hp\":48,\"maxHp\":62,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:7:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"AFTERIMAGE_POWER:1|NOXIOUS_FUMES_POWER:5\",\"rewards\":\"\",\"run\":\"TXZ6RVMQA09D\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+  "observed_ts": "2026-10-07T13:08:04.911Z",
+  "label": "combat/plan-choice",
+  "jev_context": "v1",
+  "call": "ask",
+  "request": {
+    "model": "jev-latest",
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "3",
+        "floor": 48,
+        "hp": "48/62 (77%)",
+        "ascension": 10,
+        "combat_relics": [
+          "奥利哈钢: 如果你在回合结束时没有任何格挡，获得?(数值未知)点格挡。",
+          "爬行动物饰品: 当你使用药水时，在本回合获得?(数值未知)力量。",
+          "锁镰: 你每在同一回合内打出?(数值未知)张攻击牌，就随机对一名敌人造成?(数值未知)点伤害。",
+          "波纹水盆: 如果你在本回合中没有打出过攻击牌，则获得?(数值未知)点格挡。",
+          "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。"
+        ],
+        "potions": [],
+        "notes": [
+          "card selection",
+          "floor 42: moved to Monster",
+          "took a card reward",
+          "floor 43: moved to RestSite",
+          "floor 44: moved to Unknown",
+          "floor 45: moved to Monster",
+          "floor 46: moved to RestSite",
+          "floor 47: moved to Boss"
+        ],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "fight": "boss",
+      "situation": {
+        "turn": 6,
+        "hp": "48/62",
+        "block": 7,
+        "energy": 3,
+        "incoming_if_i_do_nothing": 0
+      },
+      "player": {
+        "hp": 48,
+        "max_hp": 62,
+        "block": 7,
+        "energy": 3,
+        "stars": 0,
+        "powers": [
+          "余像 1 (你每打出一张牌，都获得1点格挡。)",
+          "毒雾 5 (在你的回合开始时，给予所有敌人2层中毒。)"
+        ],
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "name": "永世沙漏",
+          "hp": "460/535",
+          "block": 0,
+          "intents": "StatusCard 2, Buff ",
+          "powers": [
+            "WITHERING_PRESENCE_POWER 6 = 凋萎存在: 你每打出6张牌，将一张凋萎加入你的手牌。 (every 6 cards I play, counted across turns, add an unplayable Wither to my hand: it deals its damage at the end of my turn while held, blockable, +3 each Increasing Intensity; play fewer, bigger cards)",
+            "POISON_POWER 18 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。",
+            "STRENGTH_POWER 4 = 力量: 力量会增加攻击牌造成的伤害。"
+          ]
+        }
+      ],
+      "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
+      "simulation_reference": {
+        "rollout": {
+          "available": true,
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 24,
+          "elapsed_ms": 757.391762000043,
+          "random_potion_shared_ms": 0,
+          "degraded": [],
+          "ranking": "best",
+          "best": "plan6",
+          "tied": [],
+          "tied_total": 0,
+          "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
+        },
+        "options": [
+          {
+            "key": "plan1",
+            "unmodelled_cards": [],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 14,
+            "sampled_deaths": 7,
+            "note": "当轮按现有模型计算；不由无未知牌标记推定整场结论可信。"
+          },
+          {
+            "key": "plan2",
+            "unmodelled_cards": [],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 15,
+            "sampled_deaths": 6,
+            "note": "当轮按现有模型计算；不由无未知牌标记推定整场结论可信。"
+          },
+          {
+            "key": "plan3",
+            "unmodelled_cards": [
+              "羽化"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 14,
+            "sampled_deaths": 6,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan4",
+            "unmodelled_cards": [
+              "羽化"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 2,
+            "sampled_deaths": 14,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan5",
+            "unmodelled_cards": [
+              "羽化"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 8,
+            "sampled_deaths": 9,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan6",
+            "unmodelled_cards": [],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 16,
+            "sampled_deaths": 6,
+            "note": "当轮按现有模型计算；不由无未知牌标记推定整场结论可信。"
+          }
+        ],
+        "random_potions": []
+      },
+      "potion_context": {
+        "slots": "0/2 used",
+        "act_boss": "this fight",
+        "continuation_objective": "F48后仍要打F49：HP/药水连续，留存资源按F49估值；仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。。证据：silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      },
+      "whole_fight_sim": "F48→F49连续通关模拟：每条第一战胜利样本以实际剩余HP、药水和复活资源进入第二战，第二boss按已观察分布抽样；1200配对样本，未经两战校准。仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。；不是必死或SL判据。证据：silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B",
+      "whole_fight_sim_trust": "低可信 (low trust): the simulator is not validated on this boss (仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。). Its numbers are shown only because this fight is an SL retry, to help find another approach; no option is ranked by them.",
+      "previous_attempts": {
+        "note": "SL retry: this fight was reloaded from its start (the game's save from entering the room) because the earlier attempt(s) below reached a certain death. The deck, the draws and the enemy moves are the same as long as the plays are the same, so playing the same way loses the same way: look for a different line (when to block, which enemy to kill first, when to drink which potion, which cards to set up). Information, not an order: the options and their numbers are unchanged and you still choose. The draw pile comes in the same order whatever you play (a card drawn earlier just arrives earlier), until the discard pile is reshuffled: known_draws lists the next cards when they are known.",
+        "this_attempt": "attempt 2 of at most 6",
+        "attempts": [
+          {
+            "attempt": 1,
+            "ended": "certain death at the end of T8 with 8 HP + 14 block against 30 incoming from 永世沙漏 (Attack 15x2) (the fight was reloaded before the enemy turn)",
+            "potions_drunk": "T3 虚弱药水",
+            "turns": [
+              "T1: 56 HP + 7 block; 永世沙漏 535/535; played 后空翻, 闪躲翻滚, 生存者",
+              "T2: 56 HP + 11 block; 永世沙漏 535/535; played 余像, 毒雾",
+              "T3: 48 HP + 7 block; 永世沙漏 535/535; played 毒雾, 中和 -> 永世沙漏, 带毒刺击 -> 永世沙漏, 回响斩击, potion 虚弱药水",
+              "T4: 48 HP + 7 block; 永世沙漏 510/535; played 致命毒药+ -> 永世沙漏, 究极防御, 残影+",
+              "T5: 48 HP + 5 block; 永世沙漏 499/535; played 迷雾+, 咕嘟冒泡 -> 永世沙漏",
+              "T6: 42 HP; 永世沙漏 470/535; played 后空翻, 早有准备+, 突然一拳 -> 永世沙漏, 回响斩击",
+              "T7: 42 HP + 7 block; 永世沙漏 420/535; played 打击 -> 永世沙漏, 致命毒药+ -> 永世沙漏, 中和 -> 永世沙漏",
+              "T8: 8 HP + 7 block; 永世沙漏 369/535; played 触媒+, 防御"
+            ]
+          }
+        ]
+      },
+      "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
+      "deepseek_plan": "DeepSeek's run plan (F47; advice, not orders): Stacked poison with passive block, retention, and defensive cycling — No calibrated damage gap is available. Existing poison scales strongly; prioritize defense and setup consistency. Avoid unnecessary attacks that disable Ripple Basin. Retention must not trap Wither. Choose defensive rewards between bosses. | boss prep: Clear artifact with Expose; establish Fumes, Accelerant, and Afterimage. Retain defense, discard Wither, reserve Weak for attacks, and preserve health for the second boss.",
+      "experience": {
+        "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
+        "lessons": [
+          "[boss:AEONGLASS | confidence high, n=13] 观察：沙漏制品、敌成长、格挡、凋萎和实际启毒一起核，血池及持有能力不保过关。机制：暴露已见可同时清挡/制品，其他施毒被制品阻挡；临时减力不关成长，状态伤另计。搭配：只算已建毒/敏捷及活到的结算，不预支滚石。决定胜负的战斗：13局56试3赢，真正重打11场54试2赢，A10五场30试0赢（n=13）。典型案例：HSX4HYATB4E2 A10六试均39/87，首/第二T2先施毒/先暴露，T3敌498/483；末扣158余377，前五T7/7/5/5/7判死、末T7实死。首与末初始39项抽序同但到手轮/动作变；第二/第四T4同19血445敌血，三防御损2扣7，换线损16扣48，多付14血多打41、下一轮3血判死，无同抽胜线或单因对照。"
+        ]
+      },
+      "mechanics_experience": {
+        "note": "lessons from past runs about the mechanics in this fight: our power cards and buffs, the enemies' own powers (experience base): evidence, not orders",
+        "lessons": [
+          "[card:NOXIOUS_FUMES | confidence high, n=46] 毒雾普通/升级建2/3层，后续玩家轮初补毒，建立不即时施毒且可叠加。机制：无其他施毒/阻挡、单结算时补a净增a−1，触媒和敌限制另核，层数不等实伤。搭配：实际建立及可活轮初共同验收，换战清能力。决定胜负的战斗：46支持局，单能力整战胜因未控（n=46）。典型案例：5PM6JAQG6FNQ A10知识恶魔建3层，T2三毒经普通触媒扣3+2=5；末战首试T3建立、末试一直未建，不能把末试已有毒归毒雾。ULP4TN1GNHMK末T7雾2→4、本轮18毒不即时增、死亡前无下一轮补4。典型案例：2K4H3JEJHRSB巨兽T1/T2雾建2→5、T3—9轮初毒6/10/23/27/31/35/48含药瓶供毒，不能全归毒雾；ULP4TN1GNHMK墨影末T7能力2→4，本轮已有18毒不即时增加，死亡前没有下一轮补4；首T4的15毒受滑溜只扣1。 VLZ6CCT8AQ0A A10 F43实际建立升级毒雾，T4的12毒经触媒三次扣33；F45两雾未建，另两骑士一直无毒，不能把牌组持有当群体持续输出。"
+        ]
+      }
+    },
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 打击 -> 永世沙漏, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 46/62 HP before healing\",\"hp_lost\":2,\"damage_dealt\":42,\"enemies_after\":\"永世沙漏 418 HP, 中毒 29\",\"block_gained\":3,\"withers_added\":1,\"hp_after\":46,\"hp_after_pct\":74,\"dmg\":42,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 41.2, fight over within 5 turns in 14/24, expected turns to the end (surviving samples) ~5.5, dead within 5 turns in 7/24 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~61% (fights won in the samples, the others by the end-of-horizon estimate), value -58.8\",\"rollout_turns\":\"T1 exact: hp -2, dmg 42; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -20.7 [9-35], dmg 83.1 [38-144], alive 23/24, won 0/24; T4: hp -0 [0-0], dmg 129.5 [46-192], alive 23/24, won 1/24; T5: hp -6.1 [0-23], dmg 90.6 [13-186], alive 17/24, won 14/24\",\"history_estimate\":\"further HP loss 40, win 63% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1009/1200，其中死F49 1009、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan2": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 闪躲翻滚, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":36,\"enemies_after\":\"永世沙漏 424 HP, 中毒 29\",\"block_gained\":7,\"withers_added\":1,\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 40, fight over within 5 turns in 15/24, expected turns to the end (surviving samples) ~5.4, dead within 5 turns in 6/24 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~65% (fights won in the samples, the others by the end-of-horizon estimate), value -56\",\"rollout_turns\":\"T1 exact: hp -0, dmg 36; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -20.9 [9-35], dmg 83.4 [38-144], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 131.5 [46-192], alive 24/24, won 1/24; T5: hp -5.6 [0-23], dmg 97 [19-186], alive 18/24, won 15/24\",\"history_estimate\":\"further HP loss 39, win 67% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1037/1200，其中死F49 1037、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan3": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 羽化\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":27,\"enemies_after\":\"永世沙漏 433 HP, 中毒 26\",\"block_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 38.6, fight over within 5 turns in 14/24, expected turns to the end (surviving samples) ~5.7, dead within 5 turns in 6/24 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~62% (fights won in the samples, the others by the end-of-horizon estimate), value -55.7\",\"rollout_turns\":\"T1 exact: hp -0, dmg 27; T2: hp -14.5 [4-26], dmg 59.7 [31-111], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 77.7 [35-135], alive 24/24, won 0/24; T4: hp -0.2 [0-2], dmg 128.2 [43-175], alive 24/24, won 0/24; T5: hp -6.3 [0-23], dmg 112.9 [26-183], alive 18/24, won 14/24\",\"history_estimate\":\"further HP loss 38, win 64% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 970/1200，其中死F49 970、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan4": "{\"plays\":\"羽化\",\"result\":\"survives with 48/62 HP before healing\",\"hp_lost\":0,\"damage_dealt\":18,\"enemies_after\":\"永世沙漏 442 HP, 中毒 17\",\"block_gained\":1,\"energy_unused\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":48,\"hp_after_pct\":77,\"dmg\":18,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":6,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 47.4, fight over within 5 turns in 2/24, expected turns to the end (surviving samples) ~7, dead within 5 turns in 14/24 (~turn 4.9); ranked on -(further loss) - 40 x (1 - win chance): win chance ~16% (fights won in the samples, the others by the end-of-horizon estimate), value -82.1\",\"rollout_turns\":\"T1 exact: hp -0, dmg 18; T2: hp -20.5 [10-32], dmg 46.2 [22-84], alive 24/24, won 0/24; T3: hp -16.7 [0-35], dmg 60.5 [26-108], alive 23/24, won 0/24; T4: hp -0.3 [0-2], dmg 106.9 [34-148], alive 23/24, won 0/24; T5: hp -14.6 [0-28], dmg 134.6 [57-174], alive 10/24, won 2/24\",\"history_estimate\":\"further HP loss 45, win 21% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 354/1200，其中死F49 354、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan5": "{\"plays\":\"羽化, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 45/62 HP before healing\",\"hp_lost\":3,\"damage_dealt\":27,\"enemies_after\":\"永世沙漏 433 HP, 中毒 20\",\"block_gained\":2,\"withers_added\":1,\"lasting_value\":\"sets up a power worth about 7 score over the fight (a few HP now is often worth it in a long fight)\",\"unmodelled_cards\":\"羽化\",\"hp_after\":45,\"hp_after_pct\":73,\"dmg\":27,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 7\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 44.6, fight over within 5 turns in 8/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 9/24 (~turn 4.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~40% (fights won in the samples, the others by the end-of-horizon estimate), value -70.2\",\"rollout_turns\":\"T1 exact: hp -3, dmg 27; T2: hp -14.5 [4-26], dmg 50.7 [25-93], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 66.2 [29-117], alive 23/24, won 0/24; T4: hp -0.2 [0-2], dmg 115.7 [37-157], alive 23/24, won 0/24; T5: hp -10.9 [0-35], dmg 128.5 [43-171], alive 15/24, won 8/24\",\"history_estimate\":\"further HP loss 42, win 45% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 600/1200，其中死F49 600、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}",
+          "plan6": "{\"plays\":\"咕嘟冒泡 -> 永世沙漏, then 带毒刺击 -> 永世沙漏\",\"result\":\"survives with 45/62 HP before healing\",\"hp_lost\":3,\"damage_dealt\":36,\"enemies_after\":\"永世沙漏 424 HP, 中毒 29\",\"block_gained\":2,\"energy_unused\":1,\"withers_added\":1,\"hp_after\":45,\"hp_after_pct\":73,\"dmg\":36,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 39.9, fight over within 5 turns in 16/24, expected turns to the end (surviving samples) ~5.3, dead within 5 turns in 6/24 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~68% (fights won in the samples, the others by the end-of-horizon estimate), value -54.7\",\"rollout_turns\":\"T1 exact: hp -3, dmg 36; T2: hp -14.5 [4-26], dmg 64.2 [34-120], alive 24/24, won 0/24; T3: hp -18.9 [8-35], dmg 83.5 [38-144], alive 23/24, won 0/24; T4: hp -0.2 [0-2], dmg 137.6 [46-184], alive 23/24, won 1/24; T5: hp -5.9 [0-22], dmg 102.1 [19-176], alive 18/24, won 16/24\",\"history_estimate\":\"further HP loss 39, win 69% (this encounter n=12; estimate from boss fights n=343, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 1009/1200，其中死F49 1009、未完成F49 0；每条样本传递实际剩余HP/药水，1200样本；不是必死或SL判据。\"}"
+        }
+      }
+    }
+  },
+  "request_id": "req_01a1167aa69c7788b9a2e72e58455372",
+  "latency_ms": 613,
+  "input_tokens": 8275,
+  "output_tokens": 66,
+  "answers": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan6",
+      "probabilities": {
+        "plan1": 0.01,
+        "plan4": 0,
+        "plan2": 0.05,
+        "plan5": 0,
+        "plan6": 0.9299999999999999,
+        "plan3": 0.01
+      },
+      "confidence": 0.92,
+      "raw": {
+        "type": "choice",
+        "choice": "plan6",
+        "confidence": 0.92,
+        "probabilities": {
+          "plan1": 0.01,
+          "plan4": 0,
+          "plan2": 0.05,
+          "plan5": 0,
+          "plan6": 0.9299999999999999,
+          "plan3": 0.01
+        }
+      }
+    }
+  }
+}

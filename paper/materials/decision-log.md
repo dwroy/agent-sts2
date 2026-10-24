@@ -6750,3 +6750,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T21:28:56+08:00 [ops] #56 核d18f34b4/14宿主叶与原full6601/0/2；原锁仅补14 plan/4 owner lane，配置T21:22:10，未重部署/full/模型/tick；三旧外部未退役+原B、自有保留owner及无新世代阻塞，自然五槽/tier/两小时验收未过，原窗不重置。原件paper/materials/20261024-issue56-host-ops/。
 
 - 2026-10-24T21:40:02+08:00 [ops] #56依6384816466归档退役三旧外部/原211311，独立shared.retired过、外部owner0；211311原20卡8对真实完成，原rc75及补证failed/rc0保留，租约变化为ops补在途lane所致；两自有核退、三缺证待主管逐项定。四道各2新单元排队，未强tick/full/模型；新释放窗保守21:34:30—23:34:30，实际tier/五槽/科学父待。原件paper/materials/20261024-211311-attention-ops/。
+
+- 2026-10-24T21:44:45+08:00 [ops] #56按6384926225将三自有旧批登记abandoned-unverifiable/rc空/产出0，原回执/草稿/过程产物归档不删、自有槽21:42:54释放；211311 8+8原字节登记下一数据批pending/source_commit=null，未发live；整行租约规则入ops笔记。21:43:51外部在跑0/实际ultrafast未证，不强tick，外部原释放窗保持。原件paper/materials/20261024-211311-own-abandon-ops/。

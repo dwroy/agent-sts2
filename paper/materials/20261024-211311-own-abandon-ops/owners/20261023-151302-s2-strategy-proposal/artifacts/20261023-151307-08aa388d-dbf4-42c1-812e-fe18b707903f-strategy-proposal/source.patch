@@ -1,0 +1,6174 @@
+diff --git a/agent/src/hand/screens/rest.ts b/agent/src/hand/screens/rest.ts
+index a00050ef1..2f5dd317d 100644
+--- a/agent/src/hand/screens/rest.ts
++++ b/agent/src/hand/screens/rest.ts
+@@ -252,7 +252,7 @@ function silentHumidifierRestFacts(state: GameState, heal: { base: number; rest:
+   };
+ }
+ 
+-/** UJ0K3G10609Y F29 and XBD8Z9XLPCPN F24/28/32, silent-0186/0184/0185/0020. */
++/** UJ0K3G10609Y F29, XBD8Z9XLPCPN F24/28/32 and J8PHG72DGD90 F29; silent-0328/0186/0184/0185/0020. */
+ export function silentCandleRestFacts(state: GameState): Record<string, JsonValue> {
+   const run = asRecord(state.run?.raw);
+   if (str(run["character_id"]).toLowerCase() !== "silent") return {};
+@@ -267,8 +267,8 @@ export function silentCandleRestFacts(state: GameState): Record<string, JsonValu
+   const observedRange = charges !== null && charges <= 5;
+   const actions = enabled.map((option) => {
+     const kind = str(option["option_id"]).toUpperCase();
+-    // Only extinguished refuelling was executed in these runs; do not infer a positive-stack cap or sum.
+-    const after = kind === "KINDLE" ? (charges === 0 ? 5 : null)
++    // J8PHG72DGD90 observed 1 -> 6 only at A10; other positive inputs and caps remain unknown.
++    const after = kind === "KINDLE" ? (charges === 0 ? 5 : charges === 1 && state.run?.ascension === 10 ? 6 : null)
+       : observedRange && (kind === "HEAL" || kind === "SMITH") ? charges : null;
+     return { key: `o${num(option["index"])}`, kind, charges_after_action_reference: after };
+   });
+@@ -281,14 +281,14 @@ export function silentCandleRestFacts(state: GameState): Record<string, JsonValu
+   }
+   return {
+     candle_refuel: {
+-      source: "UJ0K3G10609Y SILENT A10 F29；XBD8Z9XLPCPN SILENT A10 F24/28/32（回合不适用）、F19/23/27/30/31/33 T2；silent-0186/0184/0185/0020。",
++      source: "UJ0K3G10609Y SILENT A10 F29；XBD8Z9XLPCPN SILENT A10 F24/28/32（回合不适用）、F19/23/27/30/31/33 T2；silent-0186/0184/0185/0020。J8PHG72DGD90 SILENT A10 F29（无战斗回合），silent-0328：d304744、s312605→312606。",
+       current_charges: charges,
+       actions,
+       charge_tied_option_groups: [...groups.values()].filter((keys) => keys.length > 1),
+-      observed: "UJ局F29实际添火使0→5充能、77血不变。XBD局F24锻造仍3充能，F28回血30→51仍2，F32回血2→23仍0；回血与锻造没有续火。XBD五战T2正充能时能量4、基础3，各战后消耗1充能；熄灭后F33 T2只有3能量。",
++      observed: "UJ局F29实际添火使0→5充能、77血不变。J8局A10 F29实际添火使1→6充能、50/74血及28张牌组不变，只据此补输入1的条件参考。XBD局F24锻造仍3充能，F28回血30→51仍2，F32回血2→23仍0；回血与锻造没有续火。XBD五战T2正充能时能量4、基础3，各战后消耗1充能；熄灭后F33 T2只有3能量。",
+       reference_scope: "动作键为当前营火动作键，展开锻造牌选项共享此前缀。数字仅按已见机制给出动作成功后的充能参考，未知为null；同值只在充能指标并列，不代表HP、升级收益或整场推演相同。添火本身不回血，其他营火触发组合未验证。",
+       simulation_scope: "当前route_review的HP投影与boss_sim没有模拟KINDLE的续火收益，也没有沿路线消耗蜡烛充能；未模拟不等于没有能量收益。不得把未选择的添火或计划中的续燃当成已执行，不按持有遗物承诺整个后续路线都有额外能量。",
+-      limits: "正充能再次添火、充能上限与其他组合未验证，不猜充能结果或总能量。XBD F32仅2血，回血至23后仍败，没有添火后的受控胜负，不规定添火优先级或安全血线；全部选项保留，由大脑选择。",
++      limits: "仅新增Silent A10输入1的1→6参考；其他正充能输入、未观察进阶、充能上限与其他组合未验证，不按n+5猜充能结果或总能量。XBD F32仅2血，回血至23后仍败，没有添火后的受控胜负，不规定添火优先级或安全血线；全部选项保留，由大脑选择。",
+     },
+   };
+ }
+diff --git a/agent/tests/silent-candle-positive-evidence.json b/agent/tests/silent-candle-positive-evidence.json
+new file mode 100644
+index 000000000..44b299547
+--- /dev/null
++++ b/agent/tests/silent-candle-positive-evidence.json
+@@ -0,0 +1,6068 @@
++{
++  "source": "J8PHG72DGD90 SILENT A10 F29; silent-0328/0185/0186; fixed original states and byte references",
++  "observations": [
++    {
++      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
++      "source_size": 16511193662,
++      "line": 312605,
++      "offset": 9720737278,
++      "bytes": 26201,
++      "sha256": "6f5590cb60fd2c7ea586c54882847dd3ee1bad1acebb3e8d16d97a5b3913ea6e",
++      "run_id": "J8PHG72DGD90",
++      "identity": {
++        "status": "explicit_run",
++        "fields": {
++          "state.run_id": "J8PHG72DGD90",
++          "fingerprint.run": "J8PHG72DGD90"
++        },
++        "decision_ref": null
++      }
++    },
++    {
++      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
++      "source_size": 16511193662,
++      "line": 312606,
++      "offset": 9720763479,
++      "bytes": 24908,
++      "sha256": "aed4e6f30487e0eb64b52bb71c2cce8a0d0389bdab8919835fed33b568ee88d1",
++      "run_id": "J8PHG72DGD90",
++      "identity": {
++        "status": "explicit_run",
++        "fields": {
++          "state.run_id": "J8PHG72DGD90",
++          "fingerprint.run": "J8PHG72DGD90"
++        },
++        "decision_ref": null
++      }
++    },
++    {
++      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
++      "source_size": 16511193662,
++      "line": 312607,
++      "offset": 9720788387,
++      "bytes": 42672,
++      "sha256": "23a6ebce5361e3071a564213bba1f3680701e5452e1a0a76562c5c6fdd3929ca",
++      "run_id": "J8PHG72DGD90",
++      "identity": {
++        "status": "explicit_run",
++        "fields": {
++          "state.run_id": "J8PHG72DGD90",
++          "fingerprint.run": "J8PHG72DGD90"
++        },
++        "decision_ref": null
++      }
++    }
++  ],
++  "states": {
++    "312605": {
++      "state_version": 16,
++      "native_profile_id": 1,
++      "run_id": "J8PHG72DGD90",
++      "screen": "REST",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": null,
++      "available_actions": [
++        "save_and_quit",
++        "choose_rest_option",
++        "discard_potion"
++      ],
++      "combat": null,
++      "run": {
++        "character_id": "SILENT",
++        "character_name": "静默猎手",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "floor": 29,
++        "current_hp": 50,
++        "max_hp": 74,
++        "gold": 397,
++        "max_energy": 3,
++        "base_orb_slots": 0,
++        "act_id": "1",
++        "boss_id": "KNOWLEDGE_DEMON_BOSS",
++        "deck": [
++          {
++            "index": 0,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 1,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 2,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 3,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 4,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 5,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 6,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 7,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 8,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 9,
++            "card_id": "NEUTRALIZE",
++            "name": "中和+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "造成4点伤害。 给予2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 10,
++            "card_id": "SURVIVOR",
++            "name": "生存者",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++            "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 8,
++                "current_value": 8,
++                "enchanted_value": 8,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 11,
++            "card_id": "ASCENDERS_BANE",
++            "name": "进阶之灾",
++            "upgraded": false,
++            "card_type": "Curse",
++            "rarity": "Curse",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": -1,
++            "star_cost": 0,
++            "rules_text": "",
++            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
++            "dynamic_values": []
++          },
++          {
++            "index": 12,
++            "card_id": "DEFLECT",
++            "name": "偏折",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得4点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 13,
++            "card_id": "CALCULATED_GAMBLE",
++            "name": "计算下注",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
++            "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 14,
++            "card_id": "HIDDEN_DAGGERS",
++            "name": "隐秘匕首",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
++            "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
++            "dynamic_values": [
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Shivs",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 15,
++            "card_id": "PINPOINT",
++            "name": "精密瞄准",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 3,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1{energyPrefix:energyIcons(1)}。",
++            "resolved_rules_text": "造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 15,
++                "current_value": 15,
++                "enchanted_value": 15,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 16,
++            "card_id": "HAZE",
++            "name": "迷雾+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "给予所有敌人6层中毒和2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 17,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 18,
++            "card_id": "DAGGER_SPRAY",
++            "name": "匕首雨+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
++            "resolved_rules_text": "对所有敌人造成6点伤害两次。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 19,
++            "card_id": "DEADLY_POISON",
++            "name": "致命毒药",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "给予5层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 20,
++            "card_id": "TORIC_TOUGHNESS",
++            "name": "坚韧之环",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Event",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 在接下来的{Turns:diff()}个回合开始时，获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Turns",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 21,
++            "card_id": "MALAISE",
++            "name": "萎靡",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Rare",
++            "costs_x": true,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。",
++            "resolved_rules_text": "敌人失去X点力量。给予X层虚弱。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 22,
++            "card_id": "BOUNCING_FLASK",
++            "name": "弹跳药瓶+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
++            "resolved_rules_text": "随机给予敌人3层中毒4次。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 3,
++                "current_value": 3,
++                "enchanted_value": 3,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Repeat",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 23,
++            "card_id": "LEG_SWEEP",
++            "name": "扫腿",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{WeakPower:diff()}层虚弱。 获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "给予2层虚弱。 获得11点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 11,
++                "current_value": 11,
++                "enchanted_value": 11,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 24,
++            "card_id": "FOOTWORK",
++            "name": "灵动步法",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++            "resolved_rules_text": "获得2点敏捷。",
++            "dynamic_values": [
++              {
++                "name": "DexterityPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 25,
++            "card_id": "PHANTOM_BLADES",
++            "name": "幻影之刃",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成{PhantomBladesPower:diff()}点伤害。",
++            "resolved_rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "PhantomBladesPower",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 26,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 27,
++            "card_id": "SNAKEBITE",
++            "name": "蛇咬",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "保留。 给予7层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 7,
++                "current_value": 7,
++                "enchanted_value": 7,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          }
++        ],
++        "relics": [
++          {
++            "index": 0,
++            "relic_id": "RING_OF_THE_SNAKE",
++            "name": "蛇之戒指",
++            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 1,
++            "relic_id": "PHIAL_HOLSTER",
++            "name": "药瓶皮套",
++            "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 2,
++            "relic_id": "VENERABLE_TEA_SET",
++            "name": "古茶具套装",
++            "description": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 3,
++            "relic_id": "STRAWBERRY",
++            "name": "草莓",
++            "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 4,
++            "relic_id": "PUMPKIN_CANDLE",
++            "name": "南瓜蜡烛",
++            "description": "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "stack": 1,
++            "is_melted": false
++          },
++          {
++            "index": 5,
++            "relic_id": "STRIKE_DUMMY",
++            "name": "打击木偶",
++            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 6,
++            "relic_id": "PERMAFROST",
++            "name": "永冻冰晶",
++            "description": "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
++            "stack": null,
++            "is_melted": false
++          }
++        ],
++        "players": [
++          {
++            "player_id": "1",
++            "slot_index": 0,
++            "is_local": true,
++            "is_connected": true,
++            "character_id": "SILENT",
++            "character_name": "静默猎手",
++            "current_hp": 50,
++            "max_hp": 74,
++            "gold": 397,
++            "is_alive": true
++          }
++        ],
++        "potions": [
++          {
++            "index": 0,
++            "potion_id": "POISON_POTION",
++            "name": "毒药水",
++            "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++            "rarity": "Common",
++            "occupied": true,
++            "usage": "CombatOnly",
++            "target_type": "AnyEnemy",
++            "is_queued": false,
++            "requires_target": true,
++            "target_index_space": "enemies",
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": true
++          },
++          {
++            "index": 1,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          },
++          {
++            "index": 2,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          }
++        ]
++      },
++      "multiplayer": null,
++      "multiplayer_lobby": null,
++      "map": null,
++      "selection": null,
++      "character_select": null,
++      "timeline": null,
++      "unlock": null,
++      "chest": null,
++      "event": null,
++      "crystal_sphere": null,
++      "shop": null,
++      "rest": {
++        "options": [
++          {
++            "index": 0,
++            "option_id": "HEAL",
++            "title": "休息",
++            "description": "回复最大生命值的30%（22）。",
++            "is_enabled": true,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "valid_target_player_ids": []
++          },
++          {
++            "index": 1,
++            "option_id": "SMITH",
++            "title": "锻造",
++            "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
++            "is_enabled": true,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "valid_target_player_ids": []
++          },
++          {
++            "index": 2,
++            "option_id": "KINDLE",
++            "title": "添火",
++            "description": "为[gold]南瓜蜡烛[/gold]添加5层充能。",
++            "is_enabled": true,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "valid_target_player_ids": []
++          }
++        ]
++      },
++      "reward": null,
++      "bundles": null,
++      "capstone": null,
++      "modal": null,
++      "game_over": null,
++      "agent_view": {
++        "version": 11,
++        "screen": "REST",
++        "native_profile_id": 1,
++        "run_id": "J8PHG72DGD90",
++        "session": {
++          "mode": "singleplayer",
++          "phase": "run",
++          "control_scope": "local_player"
++        },
++        "turn": null,
++        "available_actions": [
++          "save_and_quit",
++          "choose_rest_option",
++          "discard_potion"
++        ],
++        "combat": null,
++        "run": {
++          "character": "静默猎手",
++          "ascension": 10,
++          "ascension_effects": [
++            {
++              "id": "LEVEL_01",
++              "name": "精英蜂拥",
++              "description": "[gold]精英[/gold]敌人出现更加频繁。"
++            },
++            {
++              "id": "LEVEL_02",
++              "name": "旅途劳顿",
++              "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++            },
++            {
++              "id": "LEVEL_03",
++              "name": "贫穷",
++              "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++            },
++            {
++              "id": "LEVEL_04",
++              "name": "收紧腰带",
++              "description": "游戏开始时药水栏位减少1。"
++            },
++            {
++              "id": "LEVEL_05",
++              "name": "进阶之灾",
++              "description": "游戏开始时被[red]诅咒[/red]。"
++            },
++            {
++              "id": "LEVEL_06",
++              "name": "通货膨胀",
++              "description": "商人的卡牌移除服务价格提升。"
++            },
++            {
++              "id": "LEVEL_07",
++              "name": "稀缺",
++              "description": "稀有和已升级卡牌更少出现。"
++            },
++            {
++              "id": "LEVEL_08",
++              "name": "强韧敌人",
++              "description": "所有的敌人变得更难杀死。"
++            },
++            {
++              "id": "LEVEL_09",
++              "name": "致命敌人",
++              "description": "所有的敌人变得更加致命。"
++            },
++            {
++              "id": "LEVEL_10",
++              "name": "双重Boss",
++              "description": "在第3阶段最后与两个Boss战斗。"
++            }
++          ],
++          "floor": 29,
++          "act_id": "1",
++          "boss_id": "KNOWLEDGE_DEMON_BOSS",
++          "hp": "50/74",
++          "gold": 397,
++          "max_energy": 3,
++          "base_orb_slots": 0,
++          "deck": [
++            {
++              "line": "中和+ [0费]：造成4点伤害。 给予2层虚弱。",
++              "card_ids": [
++                "NEUTRALIZE"
++              ],
++              "keywords": [
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "偏折 [0费]：获得4点格挡。",
++              "card_ids": [
++                "DEFLECT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "匕首雨+ [1费]：对所有敌人造成6点伤害两次。",
++              "card_ids": [
++                "DAGGER_SPRAY"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "后空翻*2 [1费]：获得5点格挡。 抽2张牌。",
++              "card_ids": [
++                "BACKFLIP"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "坚韧之环 [2费]：获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++              "card_ids": [
++                "TORIC_TOUGHNESS"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "幻影之刃 [1费]：小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++              "card_ids": [
++                "PHANTOM_BLADES"
++              ],
++              "keywords": [
++                "保留"
++              ],
++              "mods": []
++            },
++            {
++              "line": "弹跳药瓶+ [2费]：随机给予敌人3层中毒4次。",
++              "card_ids": [
++                "BOUNCING_FLASK"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "打击*3 [1费]：造成6点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "打击+ [1费]：造成9点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "扫腿 [2费]：给予2层虚弱。 获得11点格挡。",
++              "card_ids": [
++                "LEG_SWEEP"
++              ],
++              "keywords": [
++                "格挡",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "灵动步法 [1费]：获得2点敏捷。",
++              "card_ids": [
++                "FOOTWORK"
++              ],
++              "keywords": [
++                "敏捷"
++              ],
++              "mods": []
++            },
++            {
++              "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
++              "card_ids": [
++                "SURVIVOR"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "精密瞄准 [3费]：造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++              "card_ids": [
++                "PINPOINT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "致命毒药 [1费]：给予5层中毒。",
++              "card_ids": [
++                "DEADLY_POISON"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "萎靡 [X费]：敌人失去X点力量。给予X层虚弱。 消耗。",
++              "card_ids": [
++                "MALAISE"
++              ],
++              "keywords": [
++                "力量",
++                "消耗",
++                "虚弱"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "蛇咬 [2费]：保留。 给予7层中毒。",
++              "card_ids": [
++                "SNAKEBITE"
++              ],
++              "keywords": [
++                "中毒",
++                "保留"
++              ],
++              "mods": [
++                "Retain"
++              ]
++            },
++            {
++              "line": "计算下注 [0费]：丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++              "card_ids": [
++                "CALCULATED_GAMBLE"
++              ],
++              "keywords": [
++                "消耗"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
++              "card_ids": [
++                "ASCENDERS_BANE"
++              ],
++              "keywords": [],
++              "mods": [
++                "Eternal",
++                "Ethereal",
++                "Unplayable"
++              ]
++            },
++            {
++              "line": "迷雾+ [2费]：给予所有敌人6层中毒和2层虚弱。",
++              "card_ids": [
++                "HAZE"
++              ],
++              "keywords": [
++                "中毒",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "防御*5 [1费]：获得5点格挡。",
++              "card_ids": [
++                "DEFEND_SILENT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "隐秘匕首 [0费]：丢弃2张牌。 将2张小刀加入你的手牌。",
++              "card_ids": [
++                "HIDDEN_DAGGERS"
++              ],
++              "keywords": [],
++              "mods": []
++            }
++          ],
++          "relics": [
++            "蛇之戒指",
++            "药瓶皮套",
++            "古茶具套装",
++            "草莓",
++            "南瓜蜡烛",
++            "打击木偶",
++            "永冻冰晶"
++          ],
++          "relic_ids": [
++            "RING_OF_THE_SNAKE",
++            "PHIAL_HOLSTER",
++            "VENERABLE_TEA_SET",
++            "STRAWBERRY",
++            "PUMPKIN_CANDLE",
++            "STRIKE_DUMMY",
++            "PERMAFROST"
++          ],
++          "relic_stacks": [
++            null,
++            null,
++            null,
++            null,
++            1,
++            null,
++            null
++          ],
++          "relic_descriptions": [
++            "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。"
++          ],
++          "players": [
++            {
++              "player_id": "1",
++              "slot_index": 0,
++              "is_local": true,
++              "is_connected": true,
++              "character_id": "SILENT",
++              "character_name": "静默猎手",
++              "current_hp": 50,
++              "max_hp": 74,
++              "gold": 397,
++              "is_alive": true
++            }
++          ],
++          "potions": [
++            {
++              "i": 0,
++              "potion_id": "POISON_POTION",
++              "line": "0: 毒药水：CombatOnly",
++              "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++              "usable": false,
++              "discard": true,
++              "target": "enemy",
++              "targets": []
++            },
++            {
++              "i": 1,
++              "potion_id": null,
++              "line": "1: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            },
++            {
++              "i": 2,
++              "potion_id": null,
++              "line": "2: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            }
++          ],
++          "piles": {
++            "draw": [],
++            "discard": [],
++            "exhaust": []
++          }
++        },
++        "multiplayer": null,
++        "multiplayer_lobby": null,
++        "map": null,
++        "selection": null,
++        "character_select": null,
++        "timeline": null,
++        "chest": null,
++        "event": null,
++        "crystal_sphere": null,
++        "shop": null,
++        "rest": {
++          "options": [
++            {
++              "i": 0,
++              "option_id": "HEAL",
++              "line": "休息: 回复最大生命值的30%（22）。",
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "enabled": true
++            },
++            {
++              "i": 1,
++              "option_id": "SMITH",
++              "line": "锻造: [gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "enabled": true
++            },
++            {
++              "i": 2,
++              "option_id": "KINDLE",
++              "line": "添火: 为[gold]南瓜蜡烛[/gold]添加5层充能。",
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "enabled": true
++            }
++          ]
++        },
++        "reward": null,
++        "bundles": null,
++        "capstone": null,
++        "unlock": null,
++        "modal": null,
++        "game_over": null,
++        "glossary": {
++          "力量": "每层力量通常使攻击额外造成 1 点伤害。",
++          "敏捷": "每层敏捷通常使获得的格挡额外增加 1。",
++          "虚弱": "虚弱单位造成的攻击伤害会降低。",
++          "格挡": "格挡会优先抵消即将受到的伤害。",
++          "消耗": "消耗牌打出后会移出本场战斗。",
++          "保留": "保留牌在回合结束时不会被弃掉。",
++          "中毒": "中毒会在该角色回合开始时造成等量伤害（无视格挡），然后层数减少。"
++        }
++      }
++    },
++    "312606": {
++      "state_version": 16,
++      "native_profile_id": 1,
++      "run_id": "J8PHG72DGD90",
++      "screen": "REST",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": null,
++      "available_actions": [
++        "save_and_quit",
++        "proceed",
++        "discard_potion"
++      ],
++      "combat": null,
++      "run": {
++        "character_id": "SILENT",
++        "character_name": "静默猎手",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "floor": 29,
++        "current_hp": 50,
++        "max_hp": 74,
++        "gold": 397,
++        "max_energy": 3,
++        "base_orb_slots": 0,
++        "act_id": "1",
++        "boss_id": "KNOWLEDGE_DEMON_BOSS",
++        "deck": [
++          {
++            "index": 0,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 1,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 2,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 3,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 4,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 5,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 6,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 7,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 8,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 9,
++            "card_id": "NEUTRALIZE",
++            "name": "中和+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "造成4点伤害。 给予2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 10,
++            "card_id": "SURVIVOR",
++            "name": "生存者",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++            "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 8,
++                "current_value": 8,
++                "enchanted_value": 8,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 11,
++            "card_id": "ASCENDERS_BANE",
++            "name": "进阶之灾",
++            "upgraded": false,
++            "card_type": "Curse",
++            "rarity": "Curse",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": -1,
++            "star_cost": 0,
++            "rules_text": "",
++            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
++            "dynamic_values": []
++          },
++          {
++            "index": 12,
++            "card_id": "DEFLECT",
++            "name": "偏折",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得4点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 13,
++            "card_id": "CALCULATED_GAMBLE",
++            "name": "计算下注",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
++            "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 14,
++            "card_id": "HIDDEN_DAGGERS",
++            "name": "隐秘匕首",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
++            "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
++            "dynamic_values": [
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Shivs",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 15,
++            "card_id": "PINPOINT",
++            "name": "精密瞄准",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 3,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1{energyPrefix:energyIcons(1)}。",
++            "resolved_rules_text": "造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 15,
++                "current_value": 15,
++                "enchanted_value": 15,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 16,
++            "card_id": "HAZE",
++            "name": "迷雾+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "给予所有敌人6层中毒和2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 17,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 18,
++            "card_id": "DAGGER_SPRAY",
++            "name": "匕首雨+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
++            "resolved_rules_text": "对所有敌人造成6点伤害两次。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 19,
++            "card_id": "DEADLY_POISON",
++            "name": "致命毒药",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "给予5层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 20,
++            "card_id": "TORIC_TOUGHNESS",
++            "name": "坚韧之环",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Event",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 在接下来的{Turns:diff()}个回合开始时，获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Turns",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 21,
++            "card_id": "MALAISE",
++            "name": "萎靡",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Rare",
++            "costs_x": true,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。",
++            "resolved_rules_text": "敌人失去X点力量。给予X层虚弱。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 22,
++            "card_id": "BOUNCING_FLASK",
++            "name": "弹跳药瓶+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
++            "resolved_rules_text": "随机给予敌人3层中毒4次。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 3,
++                "current_value": 3,
++                "enchanted_value": 3,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Repeat",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 23,
++            "card_id": "LEG_SWEEP",
++            "name": "扫腿",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{WeakPower:diff()}层虚弱。 获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "给予2层虚弱。 获得11点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 11,
++                "current_value": 11,
++                "enchanted_value": 11,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 24,
++            "card_id": "FOOTWORK",
++            "name": "灵动步法",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++            "resolved_rules_text": "获得2点敏捷。",
++            "dynamic_values": [
++              {
++                "name": "DexterityPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 25,
++            "card_id": "PHANTOM_BLADES",
++            "name": "幻影之刃",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成{PhantomBladesPower:diff()}点伤害。",
++            "resolved_rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "PhantomBladesPower",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 26,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 27,
++            "card_id": "SNAKEBITE",
++            "name": "蛇咬",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "保留。 给予7层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 7,
++                "current_value": 7,
++                "enchanted_value": 7,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          }
++        ],
++        "relics": [
++          {
++            "index": 0,
++            "relic_id": "RING_OF_THE_SNAKE",
++            "name": "蛇之戒指",
++            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 1,
++            "relic_id": "PHIAL_HOLSTER",
++            "name": "药瓶皮套",
++            "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 2,
++            "relic_id": "VENERABLE_TEA_SET",
++            "name": "古茶具套装",
++            "description": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 3,
++            "relic_id": "STRAWBERRY",
++            "name": "草莓",
++            "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 4,
++            "relic_id": "PUMPKIN_CANDLE",
++            "name": "南瓜蜡烛",
++            "description": "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "stack": 6,
++            "is_melted": false
++          },
++          {
++            "index": 5,
++            "relic_id": "STRIKE_DUMMY",
++            "name": "打击木偶",
++            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 6,
++            "relic_id": "PERMAFROST",
++            "name": "永冻冰晶",
++            "description": "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
++            "stack": null,
++            "is_melted": false
++          }
++        ],
++        "players": [
++          {
++            "player_id": "1",
++            "slot_index": 0,
++            "is_local": true,
++            "is_connected": true,
++            "character_id": "SILENT",
++            "character_name": "静默猎手",
++            "current_hp": 50,
++            "max_hp": 74,
++            "gold": 397,
++            "is_alive": true
++          }
++        ],
++        "potions": [
++          {
++            "index": 0,
++            "potion_id": "POISON_POTION",
++            "name": "毒药水",
++            "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++            "rarity": "Common",
++            "occupied": true,
++            "usage": "CombatOnly",
++            "target_type": "AnyEnemy",
++            "is_queued": false,
++            "requires_target": true,
++            "target_index_space": "enemies",
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": true
++          },
++          {
++            "index": 1,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          },
++          {
++            "index": 2,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          }
++        ]
++      },
++      "multiplayer": null,
++      "multiplayer_lobby": null,
++      "map": null,
++      "selection": null,
++      "character_select": null,
++      "timeline": null,
++      "unlock": null,
++      "chest": null,
++      "event": null,
++      "crystal_sphere": null,
++      "shop": null,
++      "rest": {
++        "options": []
++      },
++      "reward": null,
++      "bundles": null,
++      "capstone": null,
++      "modal": null,
++      "game_over": null,
++      "agent_view": {
++        "version": 11,
++        "screen": "REST",
++        "native_profile_id": 1,
++        "run_id": "J8PHG72DGD90",
++        "session": {
++          "mode": "singleplayer",
++          "phase": "run",
++          "control_scope": "local_player"
++        },
++        "turn": null,
++        "available_actions": [
++          "save_and_quit",
++          "proceed",
++          "discard_potion"
++        ],
++        "combat": null,
++        "run": {
++          "character": "静默猎手",
++          "ascension": 10,
++          "ascension_effects": [
++            {
++              "id": "LEVEL_01",
++              "name": "精英蜂拥",
++              "description": "[gold]精英[/gold]敌人出现更加频繁。"
++            },
++            {
++              "id": "LEVEL_02",
++              "name": "旅途劳顿",
++              "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++            },
++            {
++              "id": "LEVEL_03",
++              "name": "贫穷",
++              "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++            },
++            {
++              "id": "LEVEL_04",
++              "name": "收紧腰带",
++              "description": "游戏开始时药水栏位减少1。"
++            },
++            {
++              "id": "LEVEL_05",
++              "name": "进阶之灾",
++              "description": "游戏开始时被[red]诅咒[/red]。"
++            },
++            {
++              "id": "LEVEL_06",
++              "name": "通货膨胀",
++              "description": "商人的卡牌移除服务价格提升。"
++            },
++            {
++              "id": "LEVEL_07",
++              "name": "稀缺",
++              "description": "稀有和已升级卡牌更少出现。"
++            },
++            {
++              "id": "LEVEL_08",
++              "name": "强韧敌人",
++              "description": "所有的敌人变得更难杀死。"
++            },
++            {
++              "id": "LEVEL_09",
++              "name": "致命敌人",
++              "description": "所有的敌人变得更加致命。"
++            },
++            {
++              "id": "LEVEL_10",
++              "name": "双重Boss",
++              "description": "在第3阶段最后与两个Boss战斗。"
++            }
++          ],
++          "floor": 29,
++          "act_id": "1",
++          "boss_id": "KNOWLEDGE_DEMON_BOSS",
++          "hp": "50/74",
++          "gold": 397,
++          "max_energy": 3,
++          "base_orb_slots": 0,
++          "deck": [
++            {
++              "line": "中和+ [0费]：造成4点伤害。 给予2层虚弱。",
++              "card_ids": [
++                "NEUTRALIZE"
++              ],
++              "keywords": [
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "偏折 [0费]：获得4点格挡。",
++              "card_ids": [
++                "DEFLECT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "匕首雨+ [1费]：对所有敌人造成6点伤害两次。",
++              "card_ids": [
++                "DAGGER_SPRAY"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "后空翻*2 [1费]：获得5点格挡。 抽2张牌。",
++              "card_ids": [
++                "BACKFLIP"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "坚韧之环 [2费]：获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++              "card_ids": [
++                "TORIC_TOUGHNESS"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "幻影之刃 [1费]：小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++              "card_ids": [
++                "PHANTOM_BLADES"
++              ],
++              "keywords": [
++                "保留"
++              ],
++              "mods": []
++            },
++            {
++              "line": "弹跳药瓶+ [2费]：随机给予敌人3层中毒4次。",
++              "card_ids": [
++                "BOUNCING_FLASK"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "打击*3 [1费]：造成6点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "打击+ [1费]：造成9点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "扫腿 [2费]：给予2层虚弱。 获得11点格挡。",
++              "card_ids": [
++                "LEG_SWEEP"
++              ],
++              "keywords": [
++                "格挡",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "灵动步法 [1费]：获得2点敏捷。",
++              "card_ids": [
++                "FOOTWORK"
++              ],
++              "keywords": [
++                "敏捷"
++              ],
++              "mods": []
++            },
++            {
++              "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
++              "card_ids": [
++                "SURVIVOR"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "精密瞄准 [3费]：造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++              "card_ids": [
++                "PINPOINT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "致命毒药 [1费]：给予5层中毒。",
++              "card_ids": [
++                "DEADLY_POISON"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "萎靡 [X费]：敌人失去X点力量。给予X层虚弱。 消耗。",
++              "card_ids": [
++                "MALAISE"
++              ],
++              "keywords": [
++                "力量",
++                "消耗",
++                "虚弱"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "蛇咬 [2费]：保留。 给予7层中毒。",
++              "card_ids": [
++                "SNAKEBITE"
++              ],
++              "keywords": [
++                "中毒",
++                "保留"
++              ],
++              "mods": [
++                "Retain"
++              ]
++            },
++            {
++              "line": "计算下注 [0费]：丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++              "card_ids": [
++                "CALCULATED_GAMBLE"
++              ],
++              "keywords": [
++                "消耗"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
++              "card_ids": [
++                "ASCENDERS_BANE"
++              ],
++              "keywords": [],
++              "mods": [
++                "Eternal",
++                "Ethereal",
++                "Unplayable"
++              ]
++            },
++            {
++              "line": "迷雾+ [2费]：给予所有敌人6层中毒和2层虚弱。",
++              "card_ids": [
++                "HAZE"
++              ],
++              "keywords": [
++                "中毒",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "防御*5 [1费]：获得5点格挡。",
++              "card_ids": [
++                "DEFEND_SILENT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "隐秘匕首 [0费]：丢弃2张牌。 将2张小刀加入你的手牌。",
++              "card_ids": [
++                "HIDDEN_DAGGERS"
++              ],
++              "keywords": [],
++              "mods": []
++            }
++          ],
++          "relics": [
++            "蛇之戒指",
++            "药瓶皮套",
++            "古茶具套装",
++            "草莓",
++            "南瓜蜡烛",
++            "打击木偶",
++            "永冻冰晶"
++          ],
++          "relic_ids": [
++            "RING_OF_THE_SNAKE",
++            "PHIAL_HOLSTER",
++            "VENERABLE_TEA_SET",
++            "STRAWBERRY",
++            "PUMPKIN_CANDLE",
++            "STRIKE_DUMMY",
++            "PERMAFROST"
++          ],
++          "relic_stacks": [
++            null,
++            null,
++            null,
++            null,
++            6,
++            null,
++            null
++          ],
++          "relic_descriptions": [
++            "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。"
++          ],
++          "players": [
++            {
++              "player_id": "1",
++              "slot_index": 0,
++              "is_local": true,
++              "is_connected": true,
++              "character_id": "SILENT",
++              "character_name": "静默猎手",
++              "current_hp": 50,
++              "max_hp": 74,
++              "gold": 397,
++              "is_alive": true
++            }
++          ],
++          "potions": [
++            {
++              "i": 0,
++              "potion_id": "POISON_POTION",
++              "line": "0: 毒药水：CombatOnly",
++              "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++              "usable": false,
++              "discard": true,
++              "target": "enemy",
++              "targets": []
++            },
++            {
++              "i": 1,
++              "potion_id": null,
++              "line": "1: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            },
++            {
++              "i": 2,
++              "potion_id": null,
++              "line": "2: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            }
++          ],
++          "piles": {
++            "draw": [],
++            "discard": [],
++            "exhaust": []
++          }
++        },
++        "multiplayer": null,
++        "multiplayer_lobby": null,
++        "map": null,
++        "selection": null,
++        "character_select": null,
++        "timeline": null,
++        "chest": null,
++        "event": null,
++        "crystal_sphere": null,
++        "shop": null,
++        "rest": {
++          "options": []
++        },
++        "reward": null,
++        "bundles": null,
++        "capstone": null,
++        "unlock": null,
++        "modal": null,
++        "game_over": null,
++        "glossary": {
++          "力量": "每层力量通常使攻击额外造成 1 点伤害。",
++          "敏捷": "每层敏捷通常使获得的格挡额外增加 1。",
++          "虚弱": "虚弱单位造成的攻击伤害会降低。",
++          "格挡": "格挡会优先抵消即将受到的伤害。",
++          "消耗": "消耗牌打出后会移出本场战斗。",
++          "保留": "保留牌在回合结束时不会被弃掉。",
++          "中毒": "中毒会在该角色回合开始时造成等量伤害（无视格挡），然后层数减少。"
++        }
++      }
++    },
++    "312607": {
++      "state_version": 16,
++      "native_profile_id": 1,
++      "run_id": "J8PHG72DGD90",
++      "screen": "MAP",
++      "session": {
++        "mode": "singleplayer",
++        "phase": "run",
++        "control_scope": "local_player"
++      },
++      "in_combat": false,
++      "turn": null,
++      "available_actions": [
++        "save_and_quit",
++        "choose_map_node",
++        "discard_potion"
++      ],
++      "combat": null,
++      "run": {
++        "character_id": "SILENT",
++        "character_name": "静默猎手",
++        "ascension": 10,
++        "ascension_effects": [
++          {
++            "id": "LEVEL_01",
++            "name": "精英蜂拥",
++            "description": "[gold]精英[/gold]敌人出现更加频繁。"
++          },
++          {
++            "id": "LEVEL_02",
++            "name": "旅途劳顿",
++            "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++          },
++          {
++            "id": "LEVEL_03",
++            "name": "贫穷",
++            "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++          },
++          {
++            "id": "LEVEL_04",
++            "name": "收紧腰带",
++            "description": "游戏开始时药水栏位减少1。"
++          },
++          {
++            "id": "LEVEL_05",
++            "name": "进阶之灾",
++            "description": "游戏开始时被[red]诅咒[/red]。"
++          },
++          {
++            "id": "LEVEL_06",
++            "name": "通货膨胀",
++            "description": "商人的卡牌移除服务价格提升。"
++          },
++          {
++            "id": "LEVEL_07",
++            "name": "稀缺",
++            "description": "稀有和已升级卡牌更少出现。"
++          },
++          {
++            "id": "LEVEL_08",
++            "name": "强韧敌人",
++            "description": "所有的敌人变得更难杀死。"
++          },
++          {
++            "id": "LEVEL_09",
++            "name": "致命敌人",
++            "description": "所有的敌人变得更加致命。"
++          },
++          {
++            "id": "LEVEL_10",
++            "name": "双重Boss",
++            "description": "在第3阶段最后与两个Boss战斗。"
++          }
++        ],
++        "floor": 29,
++        "current_hp": 50,
++        "max_hp": 74,
++        "gold": 397,
++        "max_energy": 3,
++        "base_orb_slots": 0,
++        "act_id": "1",
++        "boss_id": "KNOWLEDGE_DEMON_BOSS",
++        "deck": [
++          {
++            "index": 0,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 1,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 2,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 3,
++            "card_id": "STRIKE_SILENT",
++            "name": "打击",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。",
++            "resolved_rules_text": "造成6点伤害。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 4,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 5,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 6,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 7,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 8,
++            "card_id": "DEFEND_SILENT",
++            "name": "防御",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 9,
++            "card_id": "NEUTRALIZE",
++            "name": "中和+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "造成4点伤害。 给予2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 10,
++            "card_id": "SURVIVOR",
++            "name": "生存者",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Basic",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
++            "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 8,
++                "current_value": 8,
++                "enchanted_value": 8,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 11,
++            "card_id": "ASCENDERS_BANE",
++            "name": "进阶之灾",
++            "upgraded": false,
++            "card_type": "Curse",
++            "rarity": "Curse",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": -1,
++            "star_cost": 0,
++            "rules_text": "",
++            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
++            "dynamic_values": []
++          },
++          {
++            "index": 12,
++            "card_id": "DEFLECT",
++            "name": "偏折",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得4点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 13,
++            "card_id": "CALCULATED_GAMBLE",
++            "name": "计算下注",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
++            "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 14,
++            "card_id": "HIDDEN_DAGGERS",
++            "name": "隐秘匕首",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
++            "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
++            "dynamic_values": [
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Shivs",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 15,
++            "card_id": "PINPOINT",
++            "name": "精密瞄准",
++            "upgraded": false,
++            "card_type": "Attack",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 3,
++            "star_cost": 0,
++            "rules_text": "造成{Damage:diff()}点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1{energyPrefix:energyIcons(1)}。",
++            "resolved_rules_text": "造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 15,
++                "current_value": 15,
++                "enchanted_value": 15,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 16,
++            "card_id": "HAZE",
++            "name": "迷雾+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
++            "resolved_rules_text": "给予所有敌人6层中毒和2层虚弱。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 17,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 18,
++            "card_id": "DAGGER_SPRAY",
++            "name": "匕首雨+",
++            "upgraded": true,
++            "card_type": "Attack",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
++            "resolved_rules_text": "对所有敌人造成6点伤害两次。",
++            "dynamic_values": [
++              {
++                "name": "Damage",
++                "base_value": 6,
++                "current_value": 6,
++                "enchanted_value": 6,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 19,
++            "card_id": "DEADLY_POISON",
++            "name": "致命毒药",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "给予5层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 20,
++            "card_id": "TORIC_TOUGHNESS",
++            "name": "坚韧之环",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Event",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 在接下来的{Turns:diff()}个回合开始时，获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Turns",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 21,
++            "card_id": "MALAISE",
++            "name": "萎靡",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Rare",
++            "costs_x": true,
++            "star_costs_x": false,
++            "energy_cost": 0,
++            "star_cost": 0,
++            "rules_text": "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。",
++            "resolved_rules_text": "敌人失去X点力量。给予X层虚弱。 消耗。",
++            "dynamic_values": []
++          },
++          {
++            "index": 22,
++            "card_id": "BOUNCING_FLASK",
++            "name": "弹跳药瓶+",
++            "upgraded": true,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
++            "resolved_rules_text": "随机给予敌人3层中毒4次。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 3,
++                "current_value": 3,
++                "enchanted_value": 3,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Repeat",
++                "base_value": 4,
++                "current_value": 4,
++                "enchanted_value": 4,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 23,
++            "card_id": "LEG_SWEEP",
++            "name": "扫腿",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{WeakPower:diff()}层虚弱。 获得{Block:diff()}点格挡。",
++            "resolved_rules_text": "给予2层虚弱。 获得11点格挡。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 11,
++                "current_value": 11,
++                "enchanted_value": 11,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "WeakPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 24,
++            "card_id": "FOOTWORK",
++            "name": "灵动步法",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
++            "resolved_rules_text": "获得2点敏捷。",
++            "dynamic_values": [
++              {
++                "name": "DexterityPower",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 25,
++            "card_id": "PHANTOM_BLADES",
++            "name": "幻影之刃",
++            "upgraded": false,
++            "card_type": "Power",
++            "rarity": "Uncommon",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成{PhantomBladesPower:diff()}点伤害。",
++            "resolved_rules_text": "小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++            "dynamic_values": [
++              {
++                "name": "PhantomBladesPower",
++                "base_value": 9,
++                "current_value": 9,
++                "enchanted_value": 9,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 26,
++            "card_id": "BACKFLIP",
++            "name": "后空翻",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 1,
++            "star_cost": 0,
++            "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
++            "resolved_rules_text": "获得5点格挡。 抽2张牌。",
++            "dynamic_values": [
++              {
++                "name": "Block",
++                "base_value": 5,
++                "current_value": 5,
++                "enchanted_value": 5,
++                "is_modified": false,
++                "was_just_upgraded": false
++              },
++              {
++                "name": "Cards",
++                "base_value": 2,
++                "current_value": 2,
++                "enchanted_value": 2,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          },
++          {
++            "index": 27,
++            "card_id": "SNAKEBITE",
++            "name": "蛇咬",
++            "upgraded": false,
++            "card_type": "Skill",
++            "rarity": "Common",
++            "costs_x": false,
++            "star_costs_x": false,
++            "energy_cost": 2,
++            "star_cost": 0,
++            "rules_text": "给予{PoisonPower:diff()}层中毒。",
++            "resolved_rules_text": "保留。 给予7层中毒。",
++            "dynamic_values": [
++              {
++                "name": "PoisonPower",
++                "base_value": 7,
++                "current_value": 7,
++                "enchanted_value": 7,
++                "is_modified": false,
++                "was_just_upgraded": false
++              }
++            ]
++          }
++        ],
++        "relics": [
++          {
++            "index": 0,
++            "relic_id": "RING_OF_THE_SNAKE",
++            "name": "蛇之戒指",
++            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 1,
++            "relic_id": "PHIAL_HOLSTER",
++            "name": "药瓶皮套",
++            "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 2,
++            "relic_id": "VENERABLE_TEA_SET",
++            "name": "古茶具套装",
++            "description": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 3,
++            "relic_id": "STRAWBERRY",
++            "name": "草莓",
++            "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 4,
++            "relic_id": "PUMPKIN_CANDLE",
++            "name": "南瓜蜡烛",
++            "description": "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "stack": 6,
++            "is_melted": false
++          },
++          {
++            "index": 5,
++            "relic_id": "STRIKE_DUMMY",
++            "name": "打击木偶",
++            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "stack": null,
++            "is_melted": false
++          },
++          {
++            "index": 6,
++            "relic_id": "PERMAFROST",
++            "name": "永冻冰晶",
++            "description": "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
++            "stack": null,
++            "is_melted": false
++          }
++        ],
++        "players": [
++          {
++            "player_id": "1",
++            "slot_index": 0,
++            "is_local": true,
++            "is_connected": true,
++            "character_id": "SILENT",
++            "character_name": "静默猎手",
++            "current_hp": 50,
++            "max_hp": 74,
++            "gold": 397,
++            "is_alive": true
++          }
++        ],
++        "potions": [
++          {
++            "index": 0,
++            "potion_id": "POISON_POTION",
++            "name": "毒药水",
++            "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++            "rarity": "Common",
++            "occupied": true,
++            "usage": "CombatOnly",
++            "target_type": "AnyEnemy",
++            "is_queued": false,
++            "requires_target": true,
++            "target_index_space": "enemies",
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": true
++          },
++          {
++            "index": 1,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          },
++          {
++            "index": 2,
++            "potion_id": null,
++            "name": null,
++            "description": null,
++            "rarity": null,
++            "occupied": false,
++            "usage": null,
++            "target_type": null,
++            "is_queued": false,
++            "requires_target": false,
++            "target_index_space": null,
++            "valid_target_indices": [],
++            "can_use": false,
++            "can_discard": false
++          }
++        ]
++      },
++      "multiplayer": null,
++      "multiplayer_lobby": null,
++      "map": {
++        "current_node": {
++          "row": 11,
++          "col": 1
++        },
++        "is_travel_enabled": true,
++        "is_traveling": false,
++        "map_generation_count": 2,
++        "rows": 15,
++        "cols": 7,
++        "starting_node": {
++          "row": 0,
++          "col": 3
++        },
++        "boss_node": {
++          "row": 15,
++          "col": 3
++        },
++        "second_boss_node": null,
++        "nodes": [
++          {
++            "row": 0,
++            "col": 3,
++            "node_type": "Ancient",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": true,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [],
++            "children": [
++              {
++                "row": 1,
++                "col": 0
++              },
++              {
++                "row": 1,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 1,
++            "col": 0,
++            "node_type": "Monster",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 0,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 2,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 1,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 0,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 2,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 2,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 1,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 3,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 2,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 1,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 3,
++                "col": 2
++              },
++              {
++                "row": 3,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 3,
++            "col": 0,
++            "node_type": "Monster",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 2,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 4,
++                "col": 0
++              },
++              {
++                "row": 4,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 3,
++            "col": 2,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 2,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 4,
++                "col": 1
++              },
++              {
++                "row": 4,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 3,
++            "col": 4,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 2,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 4,
++                "col": 3
++              },
++              {
++                "row": 4,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 4,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 3,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 5,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 4,
++            "col": 1,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 3,
++                "col": 0
++              },
++              {
++                "row": 3,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 5,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 4,
++            "col": 2,
++            "node_type": "Shop",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 3,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 5,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 4,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 3,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 5,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 4,
++            "col": 4,
++            "node_type": "Shop",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 3,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 5,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 5,
++            "col": 0,
++            "node_type": "Monster",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 4,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 6,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 5,
++            "col": 2,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 4,
++                "col": 1
++              },
++              {
++                "row": 4,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 6,
++                "col": 1
++              },
++              {
++                "row": 6,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 5,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 4,
++                "col": 3
++              },
++              {
++                "row": 4,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 6,
++                "col": 2
++              },
++              {
++                "row": 6,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 6,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 5,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 7,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 6,
++            "col": 1,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 5,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 7,
++                "col": 1
++              },
++              {
++                "row": 7,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 6,
++            "col": 2,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 5,
++                "col": 2
++              },
++              {
++                "row": 5,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 7,
++                "col": 2
++              },
++              {
++                "row": 7,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 6,
++            "col": 4,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 5,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 7,
++                "col": 4
++              },
++              {
++                "row": 7,
++                "col": 5
++              }
++            ]
++          },
++          {
++            "row": 7,
++            "col": 1,
++            "node_type": "RestSite",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 6,
++                "col": 0
++              },
++              {
++                "row": 6,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 8,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 7,
++            "col": 2,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 6,
++                "col": 1
++              },
++              {
++                "row": 6,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 7,
++            "col": 3,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 6,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 7,
++            "col": 4,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 6,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 7,
++            "col": 5,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 6,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 8,
++                "col": 6
++              }
++            ]
++          },
++          {
++            "row": 8,
++            "col": 0,
++            "node_type": "Treasure",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 7,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 9,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 8,
++            "col": 3,
++            "node_type": "Treasure",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 7,
++                "col": 2
++              },
++              {
++                "row": 7,
++                "col": 3
++              },
++              {
++                "row": 7,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 9,
++                "col": 2
++              },
++              {
++                "row": 9,
++                "col": 3
++              },
++              {
++                "row": 9,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 8,
++            "col": 6,
++            "node_type": "Treasure",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 7,
++                "col": 5
++              }
++            ],
++            "children": [
++              {
++                "row": 9,
++                "col": 6
++              }
++            ]
++          },
++          {
++            "row": 9,
++            "col": 0,
++            "node_type": "RestSite",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 8,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 10,
++                "col": 0
++              },
++              {
++                "row": 10,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 9,
++            "col": 2,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 10,
++                "col": 1
++              },
++              {
++                "row": 10,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 9,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 10,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 9,
++            "col": 4,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 8,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 10,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 9,
++            "col": 6,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 8,
++                "col": 6
++              }
++            ],
++            "children": [
++              {
++                "row": 10,
++                "col": 5
++              }
++            ]
++          },
++          {
++            "row": 10,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 9,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 11,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 10,
++            "col": 1,
++            "node_type": "Monster",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 9,
++                "col": 0
++              },
++              {
++                "row": 9,
++                "col": 2
++              }
++            ],
++            "children": [
++              {
++                "row": 11,
++                "col": 0
++              },
++              {
++                "row": 11,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 10,
++            "col": 3,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 9,
++                "col": 2
++              },
++              {
++                "row": 9,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 11,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 10,
++            "col": 4,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 9,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 11,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 10,
++            "col": 5,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 9,
++                "col": 6
++              }
++            ],
++            "children": [
++              {
++                "row": 11,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 11,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 10,
++                "col": 0
++              },
++              {
++                "row": 10,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 12,
++                "col": 0
++              },
++              {
++                "row": 12,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 11,
++            "col": 1,
++            "node_type": "RestSite",
++            "state": "Traveled",
++            "visited": true,
++            "is_current": true,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 10,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 12,
++                "col": 1
++              }
++            ]
++          },
++          {
++            "row": 11,
++            "col": 4,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 10,
++                "col": 3
++              },
++              {
++                "row": 10,
++                "col": 4
++              },
++              {
++                "row": 10,
++                "col": 5
++              }
++            ],
++            "children": [
++              {
++                "row": 12,
++                "col": 3
++              },
++              {
++                "row": 12,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 12,
++            "col": 0,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 11,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 13,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 12,
++            "col": 1,
++            "node_type": "Monster",
++            "state": "Travelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": true,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 11,
++                "col": 0
++              },
++              {
++                "row": 11,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 13,
++                "col": 1
++              },
++              {
++                "row": 13,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 12,
++            "col": 3,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 11,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 13,
++                "col": 2
++              },
++              {
++                "row": 13,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 12,
++            "col": 4,
++            "node_type": "Shop",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 11,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 13,
++                "col": 4
++              }
++            ]
++          },
++          {
++            "row": 13,
++            "col": 0,
++            "node_type": "Unknown",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 12,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 14,
++                "col": 0
++              }
++            ]
++          },
++          {
++            "row": 13,
++            "col": 1,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 12,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 14,
++                "col": 2
++              }
++            ]
++          },
++          {
++            "row": 13,
++            "col": 2,
++            "node_type": "Monster",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 12,
++                "col": 1
++              },
++              {
++                "row": 12,
++                "col": 3
++              }
++            ],
++            "children": [
++              {
++                "row": 14,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 13,
++            "col": 4,
++            "node_type": "Elite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 12,
++                "col": 3
++              },
++              {
++                "row": 12,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 14,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 14,
++            "col": 0,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 13,
++                "col": 0
++              }
++            ],
++            "children": [
++              {
++                "row": 15,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 14,
++            "col": 2,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 13,
++                "col": 1
++              }
++            ],
++            "children": [
++              {
++                "row": 15,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 14,
++            "col": 3,
++            "node_type": "RestSite",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": false,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 13,
++                "col": 2
++              },
++              {
++                "row": 13,
++                "col": 4
++              }
++            ],
++            "children": [
++              {
++                "row": 15,
++                "col": 3
++              }
++            ]
++          },
++          {
++            "row": 15,
++            "col": 3,
++            "node_type": "Boss",
++            "state": "Untravelable",
++            "visited": false,
++            "is_current": false,
++            "is_available": false,
++            "is_start": false,
++            "is_boss": true,
++            "is_second_boss": false,
++            "parents": [
++              {
++                "row": 14,
++                "col": 0
++              },
++              {
++                "row": 14,
++                "col": 2
++              },
++              {
++                "row": 14,
++                "col": 3
++              }
++            ],
++            "children": []
++          }
++        ],
++        "available_nodes": [
++          {
++            "index": 0,
++            "row": 12,
++            "col": 1,
++            "node_type": "Monster",
++            "state": "Travelable",
++            "vote_count": 0,
++            "has_local_vote": false,
++            "voted_player_ids": []
++          }
++        ],
++        "local_vote": null,
++        "player_votes": [
++          {
++            "player_id": "1",
++            "slot_index": 0,
++            "is_local": true,
++            "coord": null
++          }
++        ]
++      },
++      "selection": null,
++      "character_select": null,
++      "timeline": null,
++      "unlock": null,
++      "chest": null,
++      "event": null,
++      "crystal_sphere": null,
++      "shop": null,
++      "rest": null,
++      "reward": null,
++      "bundles": null,
++      "capstone": null,
++      "modal": null,
++      "game_over": null,
++      "agent_view": {
++        "version": 11,
++        "screen": "MAP",
++        "native_profile_id": 1,
++        "run_id": "J8PHG72DGD90",
++        "session": {
++          "mode": "singleplayer",
++          "phase": "run",
++          "control_scope": "local_player"
++        },
++        "turn": null,
++        "available_actions": [
++          "save_and_quit",
++          "choose_map_node",
++          "discard_potion"
++        ],
++        "combat": null,
++        "run": {
++          "character": "静默猎手",
++          "ascension": 10,
++          "ascension_effects": [
++            {
++              "id": "LEVEL_01",
++              "name": "精英蜂拥",
++              "description": "[gold]精英[/gold]敌人出现更加频繁。"
++            },
++            {
++              "id": "LEVEL_02",
++              "name": "旅途劳顿",
++              "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
++            },
++            {
++              "id": "LEVEL_03",
++              "name": "贫穷",
++              "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
++            },
++            {
++              "id": "LEVEL_04",
++              "name": "收紧腰带",
++              "description": "游戏开始时药水栏位减少1。"
++            },
++            {
++              "id": "LEVEL_05",
++              "name": "进阶之灾",
++              "description": "游戏开始时被[red]诅咒[/red]。"
++            },
++            {
++              "id": "LEVEL_06",
++              "name": "通货膨胀",
++              "description": "商人的卡牌移除服务价格提升。"
++            },
++            {
++              "id": "LEVEL_07",
++              "name": "稀缺",
++              "description": "稀有和已升级卡牌更少出现。"
++            },
++            {
++              "id": "LEVEL_08",
++              "name": "强韧敌人",
++              "description": "所有的敌人变得更难杀死。"
++            },
++            {
++              "id": "LEVEL_09",
++              "name": "致命敌人",
++              "description": "所有的敌人变得更加致命。"
++            },
++            {
++              "id": "LEVEL_10",
++              "name": "双重Boss",
++              "description": "在第3阶段最后与两个Boss战斗。"
++            }
++          ],
++          "floor": 29,
++          "act_id": "1",
++          "boss_id": "KNOWLEDGE_DEMON_BOSS",
++          "hp": "50/74",
++          "gold": 397,
++          "max_energy": 3,
++          "base_orb_slots": 0,
++          "deck": [
++            {
++              "line": "中和+ [0费]：造成4点伤害。 给予2层虚弱。",
++              "card_ids": [
++                "NEUTRALIZE"
++              ],
++              "keywords": [
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "偏折 [0费]：获得4点格挡。",
++              "card_ids": [
++                "DEFLECT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "匕首雨+ [1费]：对所有敌人造成6点伤害两次。",
++              "card_ids": [
++                "DAGGER_SPRAY"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "后空翻*2 [1费]：获得5点格挡。 抽2张牌。",
++              "card_ids": [
++                "BACKFLIP"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "坚韧之环 [2费]：获得5点格挡。 在接下来的2个回合开始时，获得5点格挡。",
++              "card_ids": [
++                "TORIC_TOUGHNESS"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "幻影之刃 [1费]：小刀获得保留。 你在每回合打出的第一张小刀额外造成9点伤害。",
++              "card_ids": [
++                "PHANTOM_BLADES"
++              ],
++              "keywords": [
++                "保留"
++              ],
++              "mods": []
++            },
++            {
++              "line": "弹跳药瓶+ [2费]：随机给予敌人3层中毒4次。",
++              "card_ids": [
++                "BOUNCING_FLASK"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "打击*3 [1费]：造成6点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "打击+ [1费]：造成9点伤害。",
++              "card_ids": [
++                "STRIKE_SILENT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "扫腿 [2费]：给予2层虚弱。 获得11点格挡。",
++              "card_ids": [
++                "LEG_SWEEP"
++              ],
++              "keywords": [
++                "格挡",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "灵动步法 [1费]：获得2点敏捷。",
++              "card_ids": [
++                "FOOTWORK"
++              ],
++              "keywords": [
++                "敏捷"
++              ],
++              "mods": []
++            },
++            {
++              "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
++              "card_ids": [
++                "SURVIVOR"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "精密瞄准 [3费]：造成15点伤害。 你在本回合中每打出过一张技能牌，其耗能减少1res://images/packed/sprite_fonts/silent_energy_icon.png。",
++              "card_ids": [
++                "PINPOINT"
++              ],
++              "keywords": [],
++              "mods": []
++            },
++            {
++              "line": "致命毒药 [1费]：给予5层中毒。",
++              "card_ids": [
++                "DEADLY_POISON"
++              ],
++              "keywords": [
++                "中毒"
++              ],
++              "mods": []
++            },
++            {
++              "line": "萎靡 [X费]：敌人失去X点力量。给予X层虚弱。 消耗。",
++              "card_ids": [
++                "MALAISE"
++              ],
++              "keywords": [
++                "力量",
++                "消耗",
++                "虚弱"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "蛇咬 [2费]：保留。 给予7层中毒。",
++              "card_ids": [
++                "SNAKEBITE"
++              ],
++              "keywords": [
++                "中毒",
++                "保留"
++              ],
++              "mods": [
++                "Retain"
++              ]
++            },
++            {
++              "line": "计算下注 [0费]：丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
++              "card_ids": [
++                "CALCULATED_GAMBLE"
++              ],
++              "keywords": [
++                "消耗"
++              ],
++              "mods": [
++                "Exhaust"
++              ]
++            },
++            {
++              "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
++              "card_ids": [
++                "ASCENDERS_BANE"
++              ],
++              "keywords": [],
++              "mods": [
++                "Eternal",
++                "Ethereal",
++                "Unplayable"
++              ]
++            },
++            {
++              "line": "迷雾+ [2费]：给予所有敌人6层中毒和2层虚弱。",
++              "card_ids": [
++                "HAZE"
++              ],
++              "keywords": [
++                "中毒",
++                "虚弱"
++              ],
++              "mods": []
++            },
++            {
++              "line": "防御*5 [1费]：获得5点格挡。",
++              "card_ids": [
++                "DEFEND_SILENT"
++              ],
++              "keywords": [
++                "格挡"
++              ],
++              "mods": []
++            },
++            {
++              "line": "隐秘匕首 [0费]：丢弃2张牌。 将2张小刀加入你的手牌。",
++              "card_ids": [
++                "HIDDEN_DAGGERS"
++              ],
++              "keywords": [],
++              "mods": []
++            }
++          ],
++          "relics": [
++            "蛇之戒指",
++            "药瓶皮套",
++            "古茶具套装",
++            "草莓",
++            "南瓜蜡烛",
++            "打击木偶",
++            "永冻冰晶"
++          ],
++          "relic_ids": [
++            "RING_OF_THE_SNAKE",
++            "PHIAL_HOLSTER",
++            "VENERABLE_TEA_SET",
++            "STRAWBERRY",
++            "PUMPKIN_CANDLE",
++            "STRIKE_DUMMY",
++            "PERMAFROST"
++          ],
++          "relic_stacks": [
++            null,
++            null,
++            null,
++            null,
++            6,
++            null,
++            null
++          ],
++          "relic_descriptions": [
++            "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
++            "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
++            "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
++            "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
++            "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
++            "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
++            "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。"
++          ],
++          "players": [
++            {
++              "player_id": "1",
++              "slot_index": 0,
++              "is_local": true,
++              "is_connected": true,
++              "character_id": "SILENT",
++              "character_name": "静默猎手",
++              "current_hp": 50,
++              "max_hp": 74,
++              "gold": 397,
++              "is_alive": true
++            }
++          ],
++          "potions": [
++            {
++              "i": 0,
++              "potion_id": "POISON_POTION",
++              "line": "0: 毒药水：CombatOnly",
++              "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
++              "usable": false,
++              "discard": true,
++              "target": "enemy",
++              "targets": []
++            },
++            {
++              "i": 1,
++              "potion_id": null,
++              "line": "1: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            },
++            {
++              "i": 2,
++              "potion_id": null,
++              "line": "2: 空",
++              "description": null,
++              "usable": false,
++              "discard": false,
++              "target": null,
++              "targets": []
++            }
++          ],
++          "piles": {
++            "draw": [],
++            "discard": [],
++            "exhaust": []
++          }
++        },
++        "multiplayer": null,
++        "multiplayer_lobby": null,
++        "map": {
++          "current": "11,1",
++          "local_vote": null,
++          "boss_node": "15,3",
++          "second_boss_node": null,
++          "nodes": [
++            {
++              "coord": "0,3",
++              "node_type": "Ancient",
++              "visited": true,
++              "children": [
++                "1,0",
++                "1,3"
++              ]
++            },
++            {
++              "coord": "1,0",
++              "node_type": "Monster",
++              "visited": true,
++              "children": [
++                "2,0"
++              ]
++            },
++            {
++              "coord": "1,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "2,3"
++              ]
++            },
++            {
++              "coord": "2,0",
++              "node_type": "Unknown",
++              "visited": true,
++              "children": [
++                "3,0"
++              ]
++            },
++            {
++              "coord": "2,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "3,2",
++                "3,4"
++              ]
++            },
++            {
++              "coord": "3,0",
++              "node_type": "Monster",
++              "visited": true,
++              "children": [
++                "4,0",
++                "4,1"
++              ]
++            },
++            {
++              "coord": "3,2",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "4,1",
++                "4,2"
++              ]
++            },
++            {
++              "coord": "3,4",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "4,3",
++                "4,4"
++              ]
++            },
++            {
++              "coord": "4,0",
++              "node_type": "Unknown",
++              "visited": true,
++              "children": [
++                "5,0"
++              ]
++            },
++            {
++              "coord": "4,1",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "5,2"
++              ]
++            },
++            {
++              "coord": "4,2",
++              "node_type": "Shop",
++              "visited": false,
++              "children": [
++                "5,2"
++              ]
++            },
++            {
++              "coord": "4,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "5,3"
++              ]
++            },
++            {
++              "coord": "4,4",
++              "node_type": "Shop",
++              "visited": false,
++              "children": [
++                "5,3"
++              ]
++            },
++            {
++              "coord": "5,0",
++              "node_type": "Monster",
++              "visited": true,
++              "children": [
++                "6,0"
++              ]
++            },
++            {
++              "coord": "5,2",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "6,1",
++                "6,2"
++              ]
++            },
++            {
++              "coord": "5,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "6,2",
++                "6,4"
++              ]
++            },
++            {
++              "coord": "6,0",
++              "node_type": "Unknown",
++              "visited": true,
++              "children": [
++                "7,1"
++              ]
++            },
++            {
++              "coord": "6,1",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "7,1",
++                "7,2"
++              ]
++            },
++            {
++              "coord": "6,2",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "7,2",
++                "7,3"
++              ]
++            },
++            {
++              "coord": "6,4",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "7,4",
++                "7,5"
++              ]
++            },
++            {
++              "coord": "7,1",
++              "node_type": "RestSite",
++              "visited": true,
++              "children": [
++                "8,0"
++              ]
++            },
++            {
++              "coord": "7,2",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "8,3"
++              ]
++            },
++            {
++              "coord": "7,3",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "8,3"
++              ]
++            },
++            {
++              "coord": "7,4",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "8,3"
++              ]
++            },
++            {
++              "coord": "7,5",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "8,6"
++              ]
++            },
++            {
++              "coord": "8,0",
++              "node_type": "Treasure",
++              "visited": true,
++              "children": [
++                "9,0"
++              ]
++            },
++            {
++              "coord": "8,3",
++              "node_type": "Treasure",
++              "visited": false,
++              "children": [
++                "9,2",
++                "9,3",
++                "9,4"
++              ]
++            },
++            {
++              "coord": "8,6",
++              "node_type": "Treasure",
++              "visited": false,
++              "children": [
++                "9,6"
++              ]
++            },
++            {
++              "coord": "9,0",
++              "node_type": "RestSite",
++              "visited": true,
++              "children": [
++                "10,0",
++                "10,1"
++              ]
++            },
++            {
++              "coord": "9,2",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "10,1",
++                "10,3"
++              ]
++            },
++            {
++              "coord": "9,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "10,3"
++              ]
++            },
++            {
++              "coord": "9,4",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "10,4"
++              ]
++            },
++            {
++              "coord": "9,6",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "10,5"
++              ]
++            },
++            {
++              "coord": "10,0",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "11,0"
++              ]
++            },
++            {
++              "coord": "10,1",
++              "node_type": "Monster",
++              "visited": true,
++              "children": [
++                "11,0",
++                "11,1"
++              ]
++            },
++            {
++              "coord": "10,3",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "11,4"
++              ]
++            },
++            {
++              "coord": "10,4",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "11,4"
++              ]
++            },
++            {
++              "coord": "10,5",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "11,4"
++              ]
++            },
++            {
++              "coord": "11,0",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "12,0",
++                "12,1"
++              ]
++            },
++            {
++              "coord": "11,1",
++              "node_type": "RestSite",
++              "visited": true,
++              "children": [
++                "12,1"
++              ]
++            },
++            {
++              "coord": "11,4",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "12,3",
++                "12,4"
++              ]
++            },
++            {
++              "coord": "12,0",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "13,0"
++              ]
++            },
++            {
++              "coord": "12,1",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "13,1",
++                "13,2"
++              ]
++            },
++            {
++              "coord": "12,3",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "13,2",
++                "13,4"
++              ]
++            },
++            {
++              "coord": "12,4",
++              "node_type": "Shop",
++              "visited": false,
++              "children": [
++                "13,4"
++              ]
++            },
++            {
++              "coord": "13,0",
++              "node_type": "Unknown",
++              "visited": false,
++              "children": [
++                "14,0"
++              ]
++            },
++            {
++              "coord": "13,1",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "14,2"
++              ]
++            },
++            {
++              "coord": "13,2",
++              "node_type": "Monster",
++              "visited": false,
++              "children": [
++                "14,3"
++              ]
++            },
++            {
++              "coord": "13,4",
++              "node_type": "Elite",
++              "visited": false,
++              "children": [
++                "14,3"
++              ]
++            },
++            {
++              "coord": "14,0",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "15,3"
++              ]
++            },
++            {
++              "coord": "14,2",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "15,3"
++              ]
++            },
++            {
++              "coord": "14,3",
++              "node_type": "RestSite",
++              "visited": false,
++              "children": [
++                "15,3"
++              ]
++            },
++            {
++              "coord": "15,3",
++              "node_type": "Boss",
++              "visited": false,
++              "children": []
++            }
++          ],
++          "votes": [],
++          "options": [
++            {
++              "i": 0,
++              "line": "Monster (12,1)"
++            }
++          ]
++        },
++        "selection": null,
++        "character_select": null,
++        "timeline": null,
++        "chest": null,
++        "event": null,
++        "crystal_sphere": null,
++        "shop": null,
++        "rest": null,
++        "reward": null,
++        "bundles": null,
++        "capstone": null,
++        "unlock": null,
++        "modal": null,
++        "game_over": null,
++        "glossary": {
++          "力量": "每层力量通常使攻击额外造成 1 点伤害。",
++          "敏捷": "每层敏捷通常使获得的格挡额外增加 1。",
++          "虚弱": "虚弱单位造成的攻击伤害会降低。",
++          "格挡": "格挡会优先抵消即将受到的伤害。",
++          "消耗": "消耗牌打出后会移出本场战斗。",
++          "保留": "保留牌在回合结束时不会被弃掉。",
++          "中毒": "中毒会在该角色回合开始时造成等量伤害（无视格挡），然后层数减少。"
++        }
++      }
++    }
++  }
++}
+diff --git a/agent/tests/silent-candle-rest.test.ts b/agent/tests/silent-candle-rest.test.ts
+index 059853d58..7cfd4b3d5 100644
+--- a/agent/tests/silent-candle-rest.test.ts
++++ b/agent/tests/silent-candle-rest.test.ts
+@@ -18,6 +18,7 @@ vi.mock("../src/knowledge/monster-db.js", async (original) => ({
+ }));
+ 
+ const fixture = JSON.parse(readFileSync(new URL("./silent-candle-rest-evidence.json", import.meta.url), "utf8"));
++const positiveFixture = JSON.parse(readFileSync(new URL("./silent-candle-positive-evidence.json", import.meta.url), "utf8"));
+ beforeEach(() => vi.stubEnv("CHARACTER", "silent"));
+ afterEach(() => vi.unstubAllEnvs());
+ 
+@@ -80,6 +81,45 @@ it("does not extrapolate positive-charge refuelling from the extinguished observ
+   }
+ });
+ 
++it.each([true, false])("reports the observed A10 one-to-six refuelling without changing HP or choices (oneshot=%s)", (oneshot) => {
++  const raw = structuredClone(positiveFixture.states["312605"]);
++  const before = JSON.stringify(raw);
++  const { decision, rest, options } = question(raw, oneshot);
++  expect(rest.candle_refuel.current_charges).toBe(1);
++  expect(rest.candle_refuel.actions).toEqual([
++    { key: "o0", kind: "HEAL", charges_after_action_reference: 1 },
++    { key: "o1", kind: "SMITH", charges_after_action_reference: 1 },
++    { key: "o2", kind: "KINDLE", charges_after_action_reference: 6 },
++  ]);
++  expect(rest.candle_refuel.source).toContain("J8PHG72DGD90");
++  expect(rest.candle_refuel.source).toContain("silent-0328");
++  expect(rest.candle_refuel.limits).toContain("其他正充能");
++  expect(rest.candle_refuel.simulation_scope).toContain("没有模拟KINDLE");
++  expect(Object.keys(options)).toContain("o2");
++  expect(decision.resolve({ pick: { type: "choice", choice: "o2", reason: "固定验证", confidence: 1 } }).intent)
++    .toEqual({ action: "choose_rest_option", option_index: 2 });
++  const after = positiveFixture.states["312606"];
++  expect(after.run.relics.find((r: any) => r.relic_id === "PUMPKIN_CANDLE").stack).toBe(6);
++  expect(after.run.current_hp).toBe(raw.run.current_hp);
++  expect(after.run.max_hp).toBe(raw.run.max_hp);
++  const absentRaw = structuredClone(raw);
++  absentRaw.run.relics = absentRaw.run.relics.filter((r: any) => r.relic_id !== "PUMPKIN_CANDLE");
++  const absent = question(absentRaw, oneshot);
++  expect(options).toEqual(absent.options);
++  const { candle_refuel, ...otherFacts } = rest;
++  expect(otherFacts).toEqual(absent.rest);
++  expect(JSON.stringify(raw)).toBe(before);
++});
++
++it("keeps one-charge refuelling unknown outside the observed ascension", () => {
++  for (const ascension of [0, 7, 9, 11, undefined]) {
++    const raw = structuredClone(positiveFixture.states["312605"]);
++    raw.run.ascension = ascension;
++    const { rest } = question(raw);
++    expect(rest.candle_refuel.actions.find((a: any) => a.kind === "KINDLE").charges_after_action_reference).toBeNull();
++  }
++});
++
+ it("keeps missing or invalid charges unknown and does not invent refuelling results", () => {
+   for (const stack of [null, undefined, -1, 1.5, "0", NaN]) {
+     const raw = board(); raw.run.relics[0].stack = stack;

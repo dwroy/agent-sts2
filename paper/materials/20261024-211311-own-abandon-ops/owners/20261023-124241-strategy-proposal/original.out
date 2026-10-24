@@ -1,0 +1,78 @@
+已完成保留能力候选补丁，固定测试 8 项通过；尚未提交或上线。完整检查仍运行且已出现失败，live 合并预检另有 15 处冲突。
+
+已保留[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/proposal.md)、[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/report.md)及候选补丁。账本 silent-0577 为 proposed，十项父提案均保留 waiting。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261023-124241-strategy-proposal",
+  "status": "blocked",
+  "base": "996801aed46642f12ceb61a023696c4f82dd7240",
+  "runs": [
+    "TXZ6RVMQA09D", "WQZVENQ7DTRP", "02HB4L0C3C67",
+    "4D4J8USKCPAV", "F4QKG4J1AJJZ", "JLN5SK17W4FQ",
+    "LS8035TB32P3", "NB8KCF6HRGVF", "S9UZAK0JP0C0",
+    "SADL3CGYTGSR"
+  ],
+  "fixes": [],
+  "skipped": [
+    "完整沙箱检查仍运行且已出现失败，未达到提交条件",
+    "main/live基线存在15处冲突，停止合入"
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": null, "cases": null},
+  "targeted_tests": {
+    "vitest": 0,
+    "cases": 8,
+    "withdrawn_failed": 2,
+    "withdrawn_passed": 1
+  },
+  "code_proposals": [
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-04b6b430759815ed",
+    "silent-proposal-9952ee8e8df9a0fe",
+    "silent-proposal-f6672e1b64e4f6b4"
+  ],
+  "implementation_domains": ["combat", "potion"],
+  "proposal_results": [
+    {"id":"silent-proposal-92920295a648b540","state":"waiting","reason":"缺同后抽完整双战获胜对照与连战校准。"},
+    {"id":"silent-proposal-a327449c331efbc1","state":"waiting","reason":"局部血价及沙坑反例已核，缺完整胜线，不能拟统一交换阈值。"},
+    {"id":"silent-proposal-a099e89437e942bb","state":"waiting","reason":"已建立保留能力子项完成候选；检查和合入受阻，建立预测及完整联合验收仍未完成。"},
+    {"id":"silent-proposal-47910f82a1fdd98f","state":"waiting","reason":"开场死亡已核，缺完整后战胜线、留药及路线对照。"},
+    {"id":"silent-proposal-f1374df72d8e6a25","state":"waiting","reason":"资源链已重核，缺同条件早饮或留药的完整后继胜线。"},
+    {"id":"silent-proposal-38a49e6c97f31eea","state":"waiting","reason":"已有机制子实现；剩余分源、死亡相位及组合时序未完成联合验证。"},
+    {"id":"silent-proposal-ef0e38a5dbd3bc07","state":"waiting","reason":"实际回血链已核，缺同条件休息、锻造及路线对照；109局统计未重算。"},
+    {"id":"silent-proposal-7f820c02d39bfaea","state":"waiting","reason":"NHA原流已补提，完整问答未全审，缺击杀与存活推进配对。"},
+    {"id":"silent-proposal-04b6b430759815ed","state":"waiting","reason":"朝向子实现已有live祖先；油灯及其余公式的完整联合验收未完成。"},
+    {"id":"silent-proposal-9952ee8e8df9a0fe","state":"waiting","reason":"NHA资源链已重核，缺受控SL胜线与替代路线对照；110局统计未重算。"}
+  ],
+  "pending_fixes": [{
+    "id": "silent-proposal-f6672e1b64e4f6b4",
+    "ledger": "silent-0577",
+    "commit": null,
+    "patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/retention-candidate.patch"
+  }],
+  "validation_complete": false,
+  "workspace_state": "retained_with_staged_candidate",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a16721-a4ee-7f03-97f8-a025babef68e
+轮数：1；工具调用：command_execution×95 file_change×5
+token：输入 288.6k、输出 68.5k（其中推理 33.0k）、cache 读 18285.8k、cache 写 0（命中 98.4%）
+成本：未提供
+耗时：2832.8 s（墙钟）
+时间：首个事件 34.4 s、模型首个输出 38.9 s、首次工具 43.9 s、末次工具结束 2766.5 s；工具内共 1564.4 s，其余（模型生成、推理、网络）1234.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-124241）；模型的工具调用 exec×79 wait×4；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/23/rollout-2026-10-23T13-00-20-01a16721-a4ee-7f03-97f8-a025babef68e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261023-130017-89533a2f-8bc3-479e-a832-c4ecee5000cc-strategy-proposal.jsonl

@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-23T15:40:23.223630+08:00",
+  "lock": "ops/live-merge.lock",
+  "live_head": "d1f523bb166b02e4ab11a93ec5e14883c6c954a6",
+  "branch_head": "9bbc70feeb30ba7cd6a4a618ed798bec9993d3f2",
+  "common_base": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+  "incoming_paths": 12763,
+  "overlap": [
+    {
+      "path": "knowledge/catalog.json",
+      "worktree_sha256": "95c94a696c041a6649dcac8641f998beb3d484cb4f55184e65e84a7089bed3da",
+      "status": "M knowledge/catalog.json",
+      "incoming_branch_changes_path": true,
+      "live_head_blob": "252e73a5bbd776edcf3bc6f6d66aabb31e2918f0"
+    },
+    {
+      "path": "knowledge/characters/silent/v6-history.json",
+      "worktree_sha256": "3b222f11eac76bab8522795bea647a2fa310a62ca83e3276429d9d2c74d357be",
+      "status": "M knowledge/characters/silent/v6-history.json",
+      "incoming_branch_changes_path": true,
+      "live_head_blob": "5db5de6e2ece866db7701cab11b27f2ced39cb7f"
+    }
+  ],
+  "merge_attempted": false,
+  "live_mutated": false,
+  "reason": "按任务第4节保留live刷新：整支合并含任务外知识变更并与live当前刷新重叠，停止自动合入，需ops精确集成四个源码/测试叶；没有把重叠称为实际Git冲突。"
+}

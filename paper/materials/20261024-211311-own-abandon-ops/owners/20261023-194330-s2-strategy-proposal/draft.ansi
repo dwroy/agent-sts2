@@ -1,0 +1,29 @@
+ktrees/codex-strategy-silent-20261023-194330-s2/learner/runs/20261023-194339-2a9f8724-5f50-4f
+16-8ec3-5c17fdec5f12-strategy-proposal/report.md。已经实现的提案只有实际 live 祖先源码 commit
+ 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+
+消费队列最终 JSON 还须加 `proposal_results:[{"id":"<派发id>","state":"waiting","reason":"具体
+缺数据原因"}]` 和 `report:"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-2026
+1023-194330-s2/learner/runs/20261023-194339-2a9f8724-5f50-4f16-8ec3-5c17fdec5f12-strategy-pro
+posal/report.md"`；implemented/duplicate 另带实际 commit。
+
+
+工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能
+按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基
+线，再运行 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /h
+ome/dw/Projects/agent-sts2 --workspace codex-strategy-silent-20261023-194330-s2 --path <精确
+文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，
+空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交
+、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-check
+out；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 r
+estore-copies 流程操作，不更改任务状态、原线程或账号。
+
+Error: Failed to start a fresh session through the app server: thread/start failed during TUI
+ bootstrap: thread/start failed: error creating thread: failed to load AGENTS.md instructions
+ for environment `local`: fs sandbox helper failed with status exit status: 1: error building
+ bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/a
+gent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-194330/
+.aws: No such file or directory (os error 2)
+rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-194330/.codex: No 
+such file or directory (os error 2) (code -32603)
+[0m[1m[38;5;2mdw@xdwin[0m:[0m[1m[38;5;4m~/Projects/agent-sts2[0m$ 

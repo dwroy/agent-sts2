@@ -1,17 +1,17 @@
 state: clear-ok
 issue: 56
-updated: 2026-10-24T21:40:02+08:00
+updated: 2026-10-24T21:44:45+08:00
 
-进行中的事：211311原产物已核20卡/8对，三旧外部及B核退、四道各2新单元已冻入队，本轮写操作已结。
-在等谁：原自然tick/实际ultrafast与四道/2h产出；三自有旧owner缺证交主管逐项定。原格式失败保留，科学父未关。
-下一步：clear-ok/56；按6384816466新窗保守21:34:30—23:34:30核自然回执，旧窗另留；不重学/full/强tick或补在途行。原件paper/materials/20261024-211311-attention-ops/。
+进行中的事：三自有旧owner按6384926225记abandoned-unverifiable/产出0，自有槽21:42:54释放；211311 8+8已登记下一数据批pending，未发布，本轮写操作已结。
+在等谁：原自然tick及五槽/实际ultrafast/2h产出；21:43:51外部在跑0，四道各2新单元已排队。外部窗21:34:30—23:34:30保持，科学父未关。
+下一步：clear-ok/56；核自然回执并接下一数据批，不重学/full/强tick；只改未启动plan，不补在途行，见notes/ops-runtime-notes.md。原件paper/materials/20261024-211311-own-abandon-ops/。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
 #51保持：R440为69策略115rk，事件R441已核；各批自定义knowledge经验消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
-#56源d18/14叶保持；6384816466已授权退役三旧外部，四外部含原211311已核退/owner0，两自有核退，另124241/151302-s2/194330-s2缺证待主管逐项定。21131120卡8对原native完成，原rc75与补证failed/rc0围栏错保留，result/report合同独核过、未发布。ops补在途lane改租约的失误已查，以后只由原dispatch启动前登记。新8单元四道各2已排队，21:39在跑0/额度63%可请求ultra，实际tier未证；主管覆盖旧窗，新释放窗保守21:34:30至23:34:30。详见paper/materials/20261024-211311-attention-ops/。
+#56源d18/14叶保持；6384816466已授权退役三旧外部，四外部含原211311已核退/owner0，两自有核退，另124241/151302-s2/194330-s2已依6384926225记abandoned-unverifiable/产出0，自有槽21:42:54释放。21131120卡8对原native完成，原rc75与补证failed/rc0围栏错保留，result/report合同独核过、未发布。ops补在途lane改租约的失误已查，以后只由原dispatch启动前登记。新8单元四道各2已排队，21:39在跑0/额度63%可请求ultra，实际tier未证；主管覆盖旧窗，新释放窗保守21:34:30至23:34:30。详见paper/materials/20261024-211311-attention-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
@@ -43,13 +43,13 @@ updated: 2026-10-24T21:40:02+08:00
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
-未完成：#36旧三批及五旧tab缺回执继续保留，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证；ops账号不切、外部≥90依新授权；其余父与自然验收逐项见上，未清待办。
+未完成：#36旧三75原失败及五旧tab保留；三旧外部已依6384816466核退、未关tab，033643/041301/051302不重做；061302.2受阻/window-release6377757372、39/43父保留。#49 R427自然首题已入，具体查询/效率与R420分账；#20私有kit shadow至10-25 00:15:05，/new未开。#47 detailed已恢复，ops Fast原生字段未证；ops账号不切、外部≥90依新授权；其余父与自然验收逐项见上，未清待办。
 
 通知pending：16:45同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码未变不重试，000402原wrapper及根同名均缺。正式watcher_received/roy_notified仍0；已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。原文/证据/差异/下一步及R432重复回执核验见paper/materials/20261024-1645-notices-ops/；科学父与旧失败保持。
 
 本轮前完整交接见paper/materials/20261024-issue51-speed-ops/handoff-before.md；未清待办。
 
-#55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
+#55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75失败归档/tab保留，科学父不关。
 
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 

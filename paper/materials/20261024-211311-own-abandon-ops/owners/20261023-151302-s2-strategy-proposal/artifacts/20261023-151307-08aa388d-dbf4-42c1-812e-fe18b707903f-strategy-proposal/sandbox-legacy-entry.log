@@ -1,0 +1,55 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2/agent
+
+ ❯ tests/brain-agent-mode.test.ts (15 tests | 8 failed) 121ms
+   × serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 8ms
+   × mounts all six #26 tools through the same MCP and retains controller role/ascension identity 4ms
+   × uses the same engine and exact acquired results to answer after calls limit 5ms
+   × uses the same engine and exact acquired results to answer after time limit 1ms
+   × honors a configured answer reserve larger than half the question budget 1ms
+   × runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 65ms
+   × does not renew the tool allowance when the same question recovers after an engine error 6ms
+   × a previous question's delayed limit callback cannot cancel the next question 1ms
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":266.1747520000208,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":229.83991900004912,"added_prompt_bytes":1591}
+ ❯ tests/silent-candle-rest.test.ts (12 tests | 1 failed) 175ms
+   × carries the conditional fact into the V6 rest question while the KINDLE simulation stays unknown 29ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":8080,"sent_entries":2}
+ ❯ tests/ops-mod-state.test.ts (37 tests | 37 failed) 3102ms
+     × does not report ready for empty 131ms
+     × does not report ready for invalid JSON 122ms
+     × does not report ready for truncated JSON 121ms
+     × does not report ready for non-object 121ms
+     × does not report ready for unsuccessful 122ms
+     × does not report ready for missing ok 121ms
+     × does not report ready for missing data 123ms
+     × does not report ready for null data 118ms
+     × does not report ready for missing screen 120ms
+     × does not report ready for null screen 125ms
+     × does not report ready for non-string screen 123ms
+     × does not report ready for blank screen 123ms
+     × rejects HTTP 204 even with a valid-looking state body 42ms
+     × rejects HTTP 302 even with a valid-looking state body 40ms
+     × rejects HTTP 404 even with a valid-looking state body 30ms
+     × rejects HTTP 503 even with a valid-looking state body 31ms
+     × rejects curl transport failures even with a complete body 36ms
+     × reports the validated screen from one response without a second read 75ms
+     × keeps polling until an unsuccessful envelope becomes a valid state 128ms
+     × keeps fixed HTTP responses independent of inherited game instance bindings 70ms
+     × preserves a small COMBAT state envelope 72ms
+     × preserves a small CARD_SELECTION state envelope 72ms
+     × preserves a small MAP state envelope 73ms
+     × preserves the complete ASCII state beyond 20000 characters 80ms
+     × preserves the complete Chinese state beyond 20000 characters 81ms
+     × preserves the complete nested arrays state beyond 20000 characters 89ms
+     × returns an explicit error for an invalid response "" 84ms
+     × returns an explicit error for an invalid response "{broken" 80ms
+     × returns an explicit error for an invalid response "[]" 75ms
+     × returns an explicit error for an invalid response "{\"ok\":false}" 74ms
+     × returns an explicit error for an invalid response "{\"data\":{\"screen\":\"CARD_SELECTION\",\"turn\":6}}" 74ms
+     × returns an explicit error for an invalid response "{\"ok\":true}" 76ms
+     × returns an explicit error for an invalid response "{\"ok\":true,\"data\":{}}" 76ms
+     × returns an explicit error for an invalid response "{\"ok\":true,\"data\":{\"screen\":\"COMBAT\",\"value\":NaN}}" 77ms
+     × does not report success for HTTP 302 35ms
+     × does not report success for HTTP 503 30ms
+     × reports a transport failure without printing a partial state 29ms

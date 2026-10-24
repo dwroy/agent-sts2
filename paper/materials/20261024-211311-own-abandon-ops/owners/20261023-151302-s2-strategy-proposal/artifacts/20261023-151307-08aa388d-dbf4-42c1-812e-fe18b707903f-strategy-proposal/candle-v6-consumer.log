@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2/agent
+
+ ❯ tests/silent-candle-rest.test.ts (12 tests | 1 failed) 179ms
+   × carries the conditional fact into the V6 rest question while the KINDLE simulation stays unknown 28ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > carries the conditional fact into the V6 rest question while the KINDLE simulation stays unknown
+AssertionError: expected { action: 'choose_rest_option', …(1) } to deeply equal { action: 'choose_rest_option', …(1) }
+
+- Expected
++ Received
+
+  {
+    "action": "choose_rest_option",
+-   "option_index": 2,
++   "option_index": 0,
+  }
+
+ ❯ tests/silent-candle-rest.test.ts:136:6
+    134|   expect(options.o2.facts.candle_refuel.limits).toContain("未纳入模拟");
+    135|   expect(decision.resolve({ pick: { type: "choice", choice: "o2", reas…
+    136|     .toEqual({ action: "choose_rest_option", option_index: 2 });
+       |      ^
+    137|   for (const ascension of [9, 11]) {
+    138|     raw.run.ascension = ascension;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 56 passed (57)
+   Start at  15:35:52
+   Duration  7.37s (transform 2.54s, setup 460ms, import 3.33s, tests 3.17s, environment 0ms)
+

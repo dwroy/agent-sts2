@@ -1,0 +1,286 @@
+{
+  "ts": "2026-10-07T13:47:35.612Z",
+  "decision_id": "8c880109-456d-43b3-887f-04302c922d89",
+  "run_id": "WQZVENQ7DTRP",
+  "floor": 33,
+  "turn": 9,
+  "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:184:0:true\",\"event\":\"\",\"gold\":13,\"hand\":\"0:SNAKEBITE:true|1:FLECHETTES:true|2:STRIKE_SILENT:true|3:DAGGER_SPRAY:true|4:SIDESTEP:true|5:FRANTIC_ESCAPE:true|6:DEFEND_SILENT:true\",\"hp\":26,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"CUNNING_POTION:true:true|CUNNING_POTION:true:true|CUNNING_POTION:true:true\",\"powers\":\"DEXTERITY_POWER:4\",\"rewards\":\"\",\"run\":\"WQZVENQ7DTRP\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":9}",
+  "observed_ts": "2026-10-07T13:47:35.536Z",
+  "label": "combat/plan-choice+potion",
+  "jev_context": "v1",
+  "call": "ask",
+  "request": {
+    "model": "jev-latest",
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "2",
+        "floor": 33,
+        "hp": "26/80 (33%)",
+        "ascension": 10,
+        "combat_relics": [
+          "百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。",
+          "冰淇淋: 多余的能量可以留到下一回合。"
+        ],
+        "potions": [
+          "狡诈药水: 将?(数值未知)张小刀+加入你的手牌。",
+          "狡诈药水: 将?(数值未知)张小刀+加入你的手牌。",
+          "狡诈药水: 将?(数值未知)张小刀+加入你的手牌。"
+        ],
+        "notes": [
+          "card selection",
+          "floor 28: moved to RestSite",
+          "used a rest site",
+          "floor 29: moved to Monster",
+          "took a card reward",
+          "floor 30: moved to Shop",
+          "floor 31: moved to RestSite",
+          "floor 32: moved to Boss"
+        ],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "fight": "boss",
+      "situation": {
+        "turn": 9,
+        "hp": "26/80",
+        "block": 0,
+        "energy": 3,
+        "incoming_if_i_do_nothing": 22
+      },
+      "player": {
+        "hp": 26,
+        "max_hp": 80,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "powers": [
+          "敏捷 4 (敏捷会增加从卡牌中获得的格挡。)"
+        ],
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "name": "无厌沙虫",
+          "hp": "184/341",
+          "block": 0,
+          "intents": "Attack 11[font_size=18]×2[/font_size]",
+          "powers": [
+            "SANDPIT_POWER 2 = 沙坑: 无厌沙虫的能力。 (countdown: -1 every enemy turn; at 0 I die whatever my HP and block; each Frantic Escape played +1)",
+            "POISON_POWER 24 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。",
+            "STRENGTH_POWER 6 = 力量: 力量会增加攻击牌造成的伤害。",
+            "WEAK_POWER 1 = 虚弱 [debuff]: 虚弱的生物造成的攻击伤害减少25%。"
+          ]
+        }
+      ],
+      "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
+      "simulation_reference": {
+        "rollout": {
+          "available": true,
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 24,
+          "elapsed_ms": 2.0250990001950413,
+          "random_potion_shared_ms": 0,
+          "degraded": [],
+          "ranking": "best",
+          "best": "plan1",
+          "tied": [],
+          "tied_total": 0,
+          "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
+        },
+        "options": [
+          {
+            "key": "plan1",
+            "unmodelled_cards": [
+              "侧步"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 0,
+            "sampled_deaths": 24,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan2",
+            "unmodelled_cards": [
+              "侧步"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 0,
+            "sampled_deaths": 24,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan3",
+            "unmodelled_cards": [
+              "侧步"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 0,
+            "sampled_deaths": 24,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan4",
+            "unmodelled_cards": [
+              "侧步"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 0,
+            "sampled_deaths": 24,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan5",
+            "unmodelled_cards": [
+              "侧步"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 24,
+            "sampled_wins": 0,
+            "sampled_deaths": 24,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          }
+        ],
+        "random_potions": []
+      },
+      "potion_context": {
+        "slots": "3/3 used (belt full: a potion reward after this fight is wasted unless one is drunk)",
+        "act_boss": "this fight",
+        "potion_cost": "boss fight: potions cost 0 here (the fight they are kept for)",
+        "potion_cost_zero": [
+          "CUNNING_POTION: 0 (the potion table did not load)"
+        ]
+      },
+      "whole_fight_sim": "each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, 1200 samples per line on the same random numbers (0.9 s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error). rollout_best is the line with the highest simulated win rate (lines within 2 standard errors of it count as tied), then the least HP lost when won (median); the 5-turn rollout's numbers stay for reference",
+      "whole_fight_sim_trust": "低可信 (low trust): the simulator is not validated on this boss (validation fights from turn 1 (21): calibrated Brier 0.154 over 0.150 (1.25x the overall 0.120)). Its numbers are shown only because this fight is an SL retry, to help find another approach; no option is ranked by them.",
+      "previous_attempts": {
+        "note": "SL retry: this fight was reloaded from its start (the game's save from entering the room) because the earlier attempt(s) below reached a certain death. The deck, the draws and the enemy moves are the same as long as the plays are the same, so playing the same way loses the same way: look for a different line (when to block, which enemy to kill first, when to drink which potion, which cards to set up). Information, not an order: the options and their numbers are unchanged and you still choose. The draw pile comes in the same order whatever you play (a card drawn earlier just arrives earlier), until the discard pile is reshuffled: known_draws lists the next cards when they are known.",
+        "this_attempt": "attempt 3 of at most 6",
+        "attempts": [
+          {
+            "attempt": 1,
+            "ended": "certain death at the end of T9 with 13 HP + 0 block against 30 incoming from 无厌沙虫 (Attack 15x2) (the fight was reloaded before the enemy turn)",
+            "potions_drunk": "T9 狡诈药水, T9 狡诈药水, T9 狡诈药水",
+            "turns": [
+              "T1: 56 HP; 无厌沙虫 341/341; played 背刺+ -> 无厌沙虫, 后空翻, 灵动步法, 灵动步法",
+              "T2: 56 HP; 无厌沙虫 326/341; played 狂乱逃离, 迷雾+",
+              "T3: 44 HP; 无厌沙虫 320/341; played 生存者, 中和+ -> 无厌沙虫, 狂乱逃离, 斗篷与匕首, 计算下注",
+              "T4: 43 HP; 无厌沙虫 311/341; played 侧步, 致命毒药+ -> 无厌沙虫, 咕嘟冒泡 -> 无厌沙虫, 投掷匕首 -> 无厌沙虫, 中和+ -> 无厌沙虫",
+              "T5: 43 HP; 无厌沙虫 278/341; played 致命毒药 -> 无厌沙虫, 防御, 防御, 狂乱逃离",
+              "T6: 43 HP; 无厌沙虫 254/341; played 致命毒药 -> 无厌沙虫, 狂乱逃离, 狂乱逃离",
+              "T7: 25 HP; 无厌沙虫 226/341; played 防御, 尖啸, 小刀 -> 无厌沙虫, 杀灭",
+              "T8: 13 HP; 无厌沙虫 183/341; played 后空翻, 飞镖 -> 无厌沙虫, 打击 -> 无厌沙虫",
+              "T9: 13 HP; 无厌沙虫 131/341; played 投掷匕首 -> 无厌沙虫, 杀灭, 致命毒药+ -> 无厌沙虫, potion 狡诈药水, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, potion 狡诈药水, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, potion 狡诈药水, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫"
+            ]
+          },
+          {
+            "attempt": 2,
+            "ended": "certain death at the end of T11 with 12 HP + 9 block against 27 incoming from 无厌沙虫 (Attack 27) (the fight was reloaded before the enemy turn)",
+            "potions_drunk": "T11 狡诈药水, T11 狡诈药水, T11 狡诈药水",
+            "turns": [
+              "T1: 56 HP; 无厌沙虫 341/341; played 背刺+ -> 无厌沙虫, 后空翻, 灵动步法, 灵动步法",
+              "T2: 56 HP; 无厌沙虫 326/341; played 狂乱逃离, 迷雾+",
+              "T3: 44 HP; 无厌沙虫 320/341; played 生存者, 尖啸, 中和+ -> 无厌沙虫, 斗篷与匕首, 计算下注",
+              "T4: 44 HP; 无厌沙虫 311/341; played 侧步, 咕嘟冒泡 -> 无厌沙虫, 狂乱逃离, 狂乱逃离",
+              "T5: 44 HP; 无厌沙虫 298/341; played 防御, 致命毒药 -> 无厌沙虫, 防御, 致命毒药 -> 无厌沙虫",
+              "T6: 44 HP; 无厌沙虫 276/341; played 狂乱逃离, 狂乱逃离, 打击 -> 无厌沙虫, 中和+ -> 无厌沙虫",
+              "T7: 26 HP; 无厌沙虫 245/341; played 防御, 小刀 -> 无厌沙虫, 生存者, 防御",
+              "T8: 26 HP; 无厌沙虫 221/341; played 杀灭, 迷雾+",
+              "T9: 26 HP; 无厌沙虫 184/341; played 侧步, 狂乱逃离, 防御",
+              "T10: 13 HP; 无厌沙虫 160/341; played 防御, 生存者, 中和+ -> 无厌沙虫, 致命毒药 -> 无厌沙虫, 咕嘟冒泡 -> 无厌沙虫",
+              "T11: 12 HP; 无厌沙虫 119/341; played 防御, 狂乱逃离, 打击 -> 无厌沙虫, potion 狡诈药水, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, potion 狡诈药水, potion 狡诈药水, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫, 小刀+ -> 无厌沙虫"
+            ]
+          }
+        ]
+      },
+      "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
+      "deepseek_plan": "DeepSeek's run plan (F27; advice, not orders): Accelerated poison with stacked Dexterity and retained defensive answers — Avoid optional elites and favor recovery. Add poison acceleration rather than more application, strengthen Dexterity-backed blocking, and remove Strikes. Heal while vulnerable; smith core powers once safely healthy. | boss prep: Recover HP, upgrade Footwork, seek poison acceleration and efficient block. Retain defensive answers, cover heavy attacks with Weak, and play escapes before sand expires.",
+      "experience": {
+        "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
+        "lessons": [
+          "[boss:THE_INSATIABLE | confidence high, n=14] 沙虫沙坑与攻击分别核，延长沙坑不等挡攻击；未来能力/毒不预支。机制：沙坑归零判死、逃离实加1，毒按真实结算/剩血兑现，持续增益须实建。搭配：当前来袭、血池与可活输出窗口共同验收。决定胜负的战斗：14支持局42试10赢，真正重打10场38试6赢，单组件胜因未控（n=14）。典型案例：MCT1GPTL8D35 A10胜试T7双逃离仍损21、T9毒杀9血免22攻击；YF0LXT1QSTGG A10首试T11余67敌血/22毒未结算、4血11挡对37判死，第二次T1扣41→48、T8实胜余20，初期药水/后抽/动作同变，不单归一张牌或运气。"
+        ]
+      },
+      "mechanics_experience": {
+        "note": "lessons from past runs about the mechanics in this fight: our power cards and buffs, the enemies' own powers (experience base): evidence, not orders",
+        "lessons": [
+          "[card:FOOTWORK | confidence high, n=61] 步法普通/升级建2/3敏捷，逐张挡牌兑现、不追补已有挡。机制：基础挡加当前敏捷再核脆弱，临时敏捷、被动挡另算。搭配：多张挡牌及重放重复受益，能力本身无挡；持有第二张不等已建立。决定胜负的战斗：61支持局，局部收益不等整战胜因（n=61）。典型案例：KV0JHNJCKXLS A10恶魔末T2建2敏，13毒蜃景15挡加覆甲3盖18；T7防御7对36损29，T8重放防御14比零敏10多4仍少2挡。751FN9QM9MHQ异鱼T3先得8挡后建敏不追补，末轮无挡牌。",
+          "[card:WELL_LAID_PLANS | confidence med, n=2] 计划妥当让本局未打出的手牌跨回合保留，收益在条件就绪后才兑现。机制：牌文为回合结束不再丢弃手牌，打出建立WELL_LAID_PLANS=1；只确定本局实际版本，不套用其他游戏的保留数量。搭配：保留咕嘟冒泡直到目标有毒，也需支付建立能力的费用与当回合生存代价。决定胜负的战斗：A0族母获胜线使用保留与补毒；多次失败线也有能力，单卡胜因是观察（n=2）。典型案例：1HC609GTLGN3 F17/6 T4建立，T7/T11目标3/8毒时使用咕嘟冒泡到12/17，T12靠毒收尾。 PU80F84P6HPN A10蟹T1计划妥当+建立1层，跨轮实保留触媒/无尽刀刃/终结技等未打牌；四轮无毒/敏捷建立，终敌余316而死。保留≠施放或满足触发条件；A0保留补毒胜例与A10未兑现败例并存，未隔离能力整战胜因。"
+        ]
+      }
+    },
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"飞镖 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":39,\"enemies_after\":\"无厌沙虫 145 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":39,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~106, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 39; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan2": "{\"plays\":\"侧步, then 狂乱逃离, then 防御\",\"result\":\"survives with 13/80 HP before healing\",\"hp_lost\":13,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"block_gained\":9,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":13,\"hp_after_pct\":16,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~112, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 24; T2: hp -11.6 [0-22], dmg 28.6 [23-45], alive 13/24, won 0/24; T3: hp -24.5 [0-37], dmg 36.2 [22-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan3": "{\"plays\":\"侧步, then 飞镖 -> 无厌沙虫, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":34,\"enemies_after\":\"无厌沙虫 150 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":34,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~111, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 34; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan4": "{\"plays\":\"打击 -> 无厌沙虫, then 侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":30,\"enemies_after\":\"无厌沙虫 154 HP, Weak 1, 中毒 23\",\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~115, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 30; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "plan5": "{\"plays\":\"侧步, then 狂乱逃离\",\"result\":\"survives with 4/80 HP before healing\",\"hp_lost\":22,\"damage_dealt\":24,\"enemies_after\":\"无厌沙虫 160 HP, Weak 1, 中毒 23\",\"energy_unused\":1,\"sandpit_after_enemy_turn\":2,\"unmodelled_cards\":\"侧步\",\"hp_after\":4,\"hp_after_pct\":5,\"dmg\":24,\"lethal_now\":\"no\",\"enemy_threat_next\":30,\"setup_turn\":false,\"scaling_gained\":\"lasting value 3\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 26, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~121, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 22)\",\"rollout_turns\":\"T1 exact: hp -22, dmg 24; T2: hp -12 [0-22], dmg 28.3 [23-45], alive 6/24, won 0/24; T3: hp -28.8 [18-37], dmg 41.5 [36-48], alive 0/24, won 0/24; T4: over (alive 0/24, won 0/24); T5: over (alive 0/24, won 0/24)\",\"history_estimate\":\"further HP loss 26, win 0% (this encounter n=8; estimate from boss fights n=350, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T10 (dead in 100%); 1200 samples\",\"potion_cost\":\"fight HP loss 26; potions used 0; potion cost 0 HP (potion table, this act's held value); total 26\"}",
+          "p0": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p1": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}",
+          "p2": "{\"plays\":\"drink 狡诈药水 first: 将?(数值未知)张小刀+加入你的手牌。; effect not simulated, then re-plan the turn\",\"simulated\":\"no: this potion's effect is not simulated, so no HP or damage numbers for it\",\"offered\":\"always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers\",\"note\":\"the cheapest card plan alone: hp -13 this turn\",\"potion_cost\":\"drinking it costs 0 (the potion table did not load)\",\"rollout\":\"not rolled out: this potion's effect is not modelled, the turn is re-planned after drinking\"}"
+        }
+      }
+    }
+  },
+  "request_id": "req_01a1169eafd87288879f2dcb28f109c5",
+  "latency_ms": 604,
+  "input_tokens": 8659,
+  "output_tokens": 82,
+  "answers": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan2",
+      "probabilities": {
+        "p0": 0.07,
+        "plan2": 0.68,
+        "plan3": 0.01,
+        "plan4": 0,
+        "plan5": 0.01,
+        "plan1": 0.17,
+        "p1": 0.03,
+        "p2": 0.03
+      },
+      "confidence": 0.63,
+      "raw": {
+        "type": "choice",
+        "choice": "plan2",
+        "confidence": 0.63,
+        "probabilities": {
+          "p0": 0.07,
+          "plan2": 0.68,
+          "plan3": 0.01,
+          "plan4": 0,
+          "plan5": 0.01,
+          "plan1": 0.17,
+          "p1": 0.03,
+          "p2": 0.03
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2/agent
+
+ ❯ tests/ops-mod-state.test.ts (37 tests | 1 failed | 36 skipped) 38ms
+     × rejects HTTP 204 even with a valid-looking state body 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-mod-state.test.ts > launch-game mod readiness > rejects HTTP 204 even with a valid-looking state body
+Error: spawnSync bash EPERM
+ ❯ runBlock tests/ops-mod-state.test.ts:34:18
+     32|   writeFileSync(next, nextBody ?? body);
+     33|   writeFileSync(calls, "");
+     34|   const result = spawnSync("bash", ["-c", `
+       |                  ^
+     35| OPS="$1"; MOD=http://unused.invalid; fixture_response="$2"; fixture_ca…
+     36| python3() {
+ ❯ launch tests/ops-mod-state.test.ts:18:10
+ ❯ tests/ops-mod-state.test.ts:88:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 36 skipped (37)
+   Start at  15:41:16
+   Duration  628ms (transform 351ms, setup 408ms, import 20ms, tests 38ms, environment 0ms)
+
