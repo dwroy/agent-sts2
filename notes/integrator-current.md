@@ -1,4 +1,26 @@
 state: clear-ok
+issue: 27
+updated_at: 2026-10-25T04:20:23+08:00
+
+进行中的事：按Roy本轮要求完成16条真实接收/用户可见通知回执冻结及15条实际CLI登记尝试，评论6389079882逐字回读；CLI拒绝导致正式watcher_received/roy_notified仍0，不能报告更新成功。材料paper/materials/20261025-issue27-role-receipts/，原生assistant逐条16 ID通知是实际用户可见原件，issue评论未作ACK。原ops提醒rc0仅投递非ACK。本角色无在途检查/模型/游戏/full/发布。
+
+在等谁：原ops/CLI owner修15条历史task/request/thread/scope兼容，实际每条rc2为unknown learning request/ordinary notification scope must be explicit；未伪造父或直接改notice/其他角色声明。原owner找回000402同SHA wrapper日志，两原路径仍缺，保持pending且CLI0。47源/32原ops投递窗、16身份/原文/ops回执/正式字段均独立读回；真实送达和正式登记分账，Roy已读/同意/ACK未证，科学父保持。
+
+下一步：只在来源门修复有实据后用同一ID与本轮真实逐条receipt经原CLI写watcher_received，独立读回后再写roy_notified；确定性拒绝不重复尝试，不用issue评论代ACK。#36自然恢复1/超时defer5已核但人工草稿及异常合法处置/seal待原ops，#60工程接收及#58原局/兼容源码发布沿原ops。旧开发会话停止保持，不为运行等项复开，不重复full。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 27
+updated_at: 2026-10-25T04:19:31+08:00
+
+进行中的事：按Roy本轮要求逐条登记16条历史通知的本角色接收/用户可见通知真实回执；实际原生用户可见消息已冻结，issue评论不作ACK。材料paper/materials/20261025-issue27-role-receipts/。
+
+在等谁：15条来源身份范围校验旧阻塞仍在；000402原日志缺失保持pending，不尝试补造。
+
+下一步：只经原CLI逐条登记并独立读回，拒绝则留实际rc/原因及pending；不代Roy已读/同意，不关科学父，保#36及#60原运行待项。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 36
 updated_at: 2026-10-25T04:00:32+08:00
 
