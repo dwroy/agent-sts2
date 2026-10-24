@@ -7,7 +7,7 @@
 import { chmodSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain } from "./legacy-brain.js";
@@ -241,7 +241,9 @@ describe("the claude program: found, checked before play, and rested when it can
     writeFileSync(bad, `#!/bin/sh\necho "Invalid API key" >&2\nexit 3\n`);
     chmodSync(bad, 0o755);
     expect(await checkClaudeBin(bad)).toEqual({ ok: false, error: "exited 3: Invalid API key" });
-    const missing = await checkClaudeBin(join(dir, "no-such-claude"));
+    // checkClaudeBin runs in tmpdir(); keep this controlled missing path short so
+    // its bounded diagnostic retains ENOENT even under a long TMPDIR.
+    const missing = await checkClaudeBin(`./${relative(tmpdir(), join(dir, "no-such-claude"))}`);
     expect(missing.ok).toBe(false);
     expect(!missing.ok && missing.error).toMatch(/could not start: spawn .*ENOENT/);
     const slow = join(dir, "version-slow.sh");

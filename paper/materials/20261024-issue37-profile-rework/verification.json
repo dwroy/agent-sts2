@@ -1,0 +1,316 @@
+{
+  "original_actual_full": {
+    "files": 673,
+    "passed": 6562,
+    "failed": 8,
+    "historical_skips": 2,
+    "sha256": "ccb80fd81490386b0c0458bf38f07e526e84427c590f40de4a8882efc3f3e8eb",
+    "reference": "paper/materials/20261024-issue37-actual-full-ops/check-state.json"
+  },
+  "original_main_full": {
+    "files": 683,
+    "passed": 6661,
+    "failed": 0,
+    "historical_skips": 2,
+    "source": "070cac9b586767d063ff34434f31a86174b26ab5"
+  },
+  "reproduction": {
+    "baseline": {
+      "passed": 0,
+      "failed": 8,
+      "not_selected_by_name_filter": 14,
+      "sha256": "b655307ca2bb92c3ab8a21c9f095aecede1f700bdf40a51e00c9869fa8242ada",
+      "tests": [
+        {
+          "file": "agent-board-poll.test.ts",
+          "name": "keeps the minute dispatcher entry separate from stall and behind explicit ops activation",
+          "status": "failed"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine runs claude -p with only our context: no settings, no built-in tools, no MCP but ours, a clean environment",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine picks the model per question kind, pins the opus alias to its full id and reports the model that answered",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine puts the re-ask after the question and maps an option name to its key",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine recognises a used-up quota, a rate limit and a lost login as engine failures with a rest",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine the environment a CLI agent inherits holds no keys",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude answers in the v3 shape with a brain note naming the engine",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude a used-up Claude quota falls back to DeepSeek at once and logs why",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude an answer still invalid after the re-ask is the loop's answered-but-unusable error; a run plan keeps its format check",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why",
+          "status": "failed"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start a program that does not start is an unavailable failure with a rest (not a silent per-question error)",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start preflight: a failed check marks Claude unavailable; with no fallback its questions fail at once without starting it",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start preflight: nothing is checked when no configuration asks Claude",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "runAgent: the agent's whole process group, and a call that always ends an abort kills what the agent started too (a child holding its output), and the call ends at once",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "runAgent: the agent's whole process group, and a call that always ends an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-view.test.ts",
+          "name": "renders and follows fixed brain logs with redaction, title protection and isolated lifecycle",
+          "status": "failed"
+        },
+        {
+          "file": "check-imports.test.ts",
+          "name": "relative imports all resolve",
+          "status": "failed"
+        },
+        {
+          "file": "learner-tabs.test.ts",
+          "name": "reclaims only verified terminal learner tabs with the current native verifier",
+          "status": "failed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure ships every literal repo script referenced by the wrapper, including both task routes",
+          "status": "failed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure publishes the paired wrapper seal and stall recycler with its project scripts",
+          "status": "failed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure rejects the exact old unpublished seal reference and any omitted required script",
+          "status": "failed"
+        }
+      ]
+    },
+    "repaired": {
+      "passed": 8,
+      "failed": 0,
+      "not_selected_by_name_filter": 14,
+      "sha256": "791926c1eeececd0f9819d2ca301e6dac3e89d372b99d183ed927b1988c2bc2c",
+      "tests": [
+        {
+          "file": "agent-board-poll.test.ts",
+          "name": "keeps the minute dispatcher entry separate from stall and behind explicit ops activation",
+          "status": "passed"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine runs claude -p with only our context: no settings, no built-in tools, no MCP but ours, a clean environment",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine picks the model per question kind, pins the opus alias to its full id and reports the model that answered",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine puts the re-ask after the question and maps an option name to its key",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine recognises a used-up quota, a rate limit and a lost login as engine failures with a rest",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "claude engine the environment a CLI agent inherits holds no keys",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude answers in the v3 shape with a brain note naming the engine",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude a used-up Claude quota falls back to DeepSeek at once and logs why",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the loop's brain with BRAIN_ENGINE=claude an answer still invalid after the re-ask is the loop's answered-but-unusable error; a run plan keeps its format check",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why",
+          "status": "passed"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start a program that does not start is an unavailable failure with a rest (not a silent per-question error)",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start preflight: a failed check marks Claude unavailable; with no fallback its questions fail at once without starting it",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "the claude program: found, checked before play, and rested when it cannot start preflight: nothing is checked when no configuration asks Claude",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "runAgent: the agent's whole process group, and a call that always ends an abort kills what the agent started too (a child holding its output), and the call ends at once",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-claude.test.ts",
+          "name": "runAgent: the agent's whole process group, and a call that always ends an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed",
+          "status": "skipped"
+        },
+        {
+          "file": "brain-view.test.ts",
+          "name": "renders and follows fixed brain logs with redaction, title protection and isolated lifecycle",
+          "status": "passed"
+        },
+        {
+          "file": "check-imports.test.ts",
+          "name": "relative imports all resolve",
+          "status": "passed"
+        },
+        {
+          "file": "learner-tabs.test.ts",
+          "name": "reclaims only verified terminal learner tabs with the current native verifier",
+          "status": "passed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure ships every literal repo script referenced by the wrapper, including both task routes",
+          "status": "passed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure publishes the paired wrapper seal and stall recycler with its project scripts",
+          "status": "passed"
+        },
+        {
+          "file": "learner-wrapper-scripts.test.ts",
+          "name": "learner wrapper published script closure rejects the exact old unpublished seal reference and any omitted required script",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "source_provenance": {
+    "game_base": "ee0680a9b0955b5ce5371597bc8411dce4ca0bcb",
+    "original_product_tree": "ad207cf421088819badffec458231d74788c2dd9",
+    "host_source": "a4cc9b0eba109fa4ea676e506f38e0f0679ac73c",
+    "validation_snapshot": "fcae10a72d6d492a8cf6edc19a8f00dbc2585b46",
+    "validation_tree": "06762ec0581e59a441d42dab5ca3ce569ce8140f",
+    "validation_only_not_release": true
+  },
+  "fixture_additions": [
+    {
+      "path": ".agents/board.yaml",
+      "source": "a4cc9b0eba109fa4ea676e506f38e0f0679ac73c",
+      "sha256": "ba126b05ef1869bb8bf9787eb38e6e85892feb0a81bc3477312278b06441ec8e"
+    },
+    {
+      "path": "agent/tests/herdr-workspace-fixture.ts",
+      "source": "a4cc9b0eba109fa4ea676e506f38e0f0679ac73c",
+      "sha256": "a31baa440fcb133204ea5ba111fb78a70be6784719e71695684a6b2b66e69d59"
+    }
+  ],
+  "frozen_input_comparison": {
+    "original_input_files": 2760,
+    "original_owner_tree_changes": [],
+    "repaired_profile_changed_original_paths": [
+      "agent/tests/brain-claude.test.ts"
+    ],
+    "extra_fixture_paths": [
+      ".agents/board.yaml",
+      "agent/tests/herdr-workspace-fixture.ts"
+    ],
+    "all_nine_product_leaves_unchanged": true,
+    "frozen_dependencies_checked": 1417,
+    "dependency_drift": [],
+    "original_input_manifest_sha256": "d7af5969d40f39da34d78e0e7ebc9f7997c86c89590394fdd74e6169bd7eb5db",
+    "dependency_manifest_sha256": "80a944ccfa11e4de52c0023d60a3a20cbf18e312b6d344fd06107cce4440ce9c"
+  },
+  "checks": {
+    "development_production_tsc_rc": 0,
+    "profile_production_tsc_rc": 0,
+    "profile_tools_tsc_rc": 0,
+    "directed_python_tests": 123,
+    "directed_python_rc": 0,
+    "full_runs": 0,
+    "model_or_game_calls": 0
+  },
+  "release_limits": {
+    "profile_knowledge_is_old_R429_for_reproduction_only": true,
+    "next_actual_profile_must_preserve_R430_and_new_refreshes": true,
+    "actual_profile_full_still_required": true,
+    "live_stop_or_other_sessions_changed": false
+  },
+  "production_parity": {
+    "agent/src/reflex/jev/client.ts": {
+      "pre25_identical": true,
+      "sha256": "a5f8bf8f80b9e4b46b796342f1ff6b168ced52b53e44b483ef4b2a5d15028bad"
+    },
+    "agent/src/eye/jev-prompt-log.ts": {
+      "pre25_identical": true,
+      "sha256": "709fa8abe7a15834c59a38a9be59d23ae107b3ab748cb865d3468001da193cad"
+    }
+  }
+}
