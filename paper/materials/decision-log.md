@@ -6811,3 +6811,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T01:03:07+08:00 [ops] #51原C5持久worker1487883/birth28580454已按57 begin，原play1198864/1198875与autoplay1245890的pidfd自然等待，无learn/refresh/live锁，无LLM_DRAIN/新模型/full/tick/游戏。七对候选固定读回及14账本check0，尚未发/分配版本；只原worker接写入和release，FIFO有界续接保原once失败。原件paper/materials/20261025-wake-0043-ops/publication-worker-intake.json、20261025-issue51-mixed-c5-ops/。
 
 - 2026-10-25T01:12:10+08:00 [ops] 0104六事件核收：原C5 waiting无锁/主管6387024406实收不代Roy；D六新文字/六不可加载研究rk、A五情境3新2更/一同ID与C5串行保反证。001311原dataset1次rc0后attention，命中并行C5两contradict，原五复盘18更新/两提案留原链；已有生成blob冻结不重dataset/finish/合入。#56参数合同过、实际tier未知，等C5自然收尾核runtime。issue51评论6387142273读回。原件paper/materials/20261025-wake-0104-ops/。
+
+- 2026-10-25T01:36:17+08:00 [ops] 接Roy/lead58/60：保C5原事务，就绪58独立660b2e50c/anchor8a5b8be6唯一full由集成员核，60固定5d7bc13c3留下一批；不重集成/full。UVEX实际F17/T9、01:01后118动作/71968B，pidfd等1198864及原报告，未触发恢复。SQLite只准备：本地3.51.3、实际live8/764与隔离main9/765分账，C5后冻原字节、旧writer单入口、pre60含58回退与真实候选闭环；环境三端接线待原owner确认。58评论6387293252/60评论6387394548实际读回。原件paper/materials/20261025-issue58-60-runtime-intake-ops/。

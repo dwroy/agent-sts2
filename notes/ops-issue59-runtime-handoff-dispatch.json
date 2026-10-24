@@ -96,7 +96,8 @@
       "intake": "paper/materials/20261025-wake-0104-ops/candidate-intake.json",
       "metadata_currently_absent": true,
       "preserve_original_products": true,
-      "new_worker_started": false
+      "new_worker_started": false,
+      "priority": "after ready source58/source60 cut; no legacy effective writer after SQLite switch"
     },
     {
       "batch": "20261025-004756-strategy-proposal",
@@ -104,7 +105,8 @@
       "intake": "paper/materials/20261025-wake-0104-ops/candidate-intake.json",
       "metadata_currently_absent": true,
       "preserve_original_products": true,
-      "new_worker_started": false
+      "new_worker_started": false,
+      "priority": "after ready source58/source60 cut; no legacy effective writer after SQLite switch"
     }
   ],
   "ordinary_001311_after_C5": {
@@ -115,5 +117,20 @@
     "frozen_existing_outputs": "paper/materials/20261025-wake-0104-ops/dataset-existing-output-manifest.json",
     "own_append_pieces": "paper/materials/20261025-wake-0104-ops/postmortem-own-append-pieces.json",
     "next": "controlled record commit only after original gate release; no dataset/ordinary_close/finish/model replay; scientific parents remain open"
+  },
+  "runtime_source_publication_priority": {
+    "authority": [
+      6387228077,
+      6387275096,
+      6387288956
+    ],
+    "order": [
+      "original C5 unchanged",
+      "ready source58 with original unique full",
+      "source60 next composition/natural migration",
+      "remaining pure content through sole effective publisher"
+    ],
+    "intake": "paper/materials/20261025-issue58-60-runtime-intake-ops/migration-cutover-plan.json",
+    "C5_worker_modified": false
   }
 }
