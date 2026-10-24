@@ -1,0 +1,7 @@
+复盘批次 20261024-214311（4CR2N26QAJAV,Q7HBKHZTSPJ8,FVWXPGMA2DBQ,NYX17B18TBWG,7UEFJY5Z4Y85）结束：exit 3（codex 不可用，或 key 隔离自检没过）。
+已有复盘：无；还没有：4CR2N26QAJAV,Q7HBKHZTSPJ8,FVWXPGMA2DBQ,NYX17B18TBWG,7UEFJY5Z4Y85（4CR2N26QAJAV,Q7HBKHZTSPJ8,FVWXPGMA2DBQ,NYX17B18TBWG,7UEFJY5Z4Y85 调度器 1 小时后重派，每局最多 3 次）。
+学习者的回报（最后有 json 块）：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261024-214311.out；stderr：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261024-214311.err。
+学习账本（paper/materials/learning/ledger.jsonl）：。没有条目的局：无。
+代码提案链：未运行：学习者失败且无完整回报或已写复盘；保留原失败与复盘重试。
+按「学习闭环」处理回报：新的纯 bug 里阻塞性的按「卡死」的修法，其他追加到 notes/fix-queue-v4.md；打法或机制上的发现不用你处理。然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。
+exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。
