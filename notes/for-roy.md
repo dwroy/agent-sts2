@@ -5182,3 +5182,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T11:24:16+08:00 [ops/#37] 已接#37评论6379266602并沿原件核验：原唯一full实际682文件、6651过/1败/2跳，production/tools两tsc0及Python123过；原完整JSON的SHA核同，仍记失败不改绿。唯一失败为包装层固定Ran 15 tests计数，新增后实际16项；最小修复仅改正整数计数匹配，原状态/超时/原生断言及Python用例未删。revision3八叶anchor fa16f1805991/tree ac0ba106ebc0逐blob/SHA核同，最新原回执停在冻结前refresh锁EAGAIN、该修订full0。唯一窗口继续归原37集成员，等待原刷新自然完成后重核实际live/469知识并续冻续验；ops不抢锁、杀进程、另full或发布091302。104301三叶、101315两叶及55静态候选均不纳本八叶、不借其结果。091302真源审计/source_commit=null、旧失败及科学父保持；无新模型、对局或发布。
 原件：paper/materials/20261024-issue37-window-1123-ops/verification.json；paper/materials/20261024-issue37-r428-integrator/revision2/checks.json、revision3/assembly.json、revision3/freeze-attempt1.json。
+
+- 2026-10-24T11:56:24+08:00 [ops/#51] 114313已核done/rc0，为原外部用药r2单元首次自然完成，首native提示SHA与f7bf输入绑定、high/workspace-write/network=false核同；service_tier字段缺失，不冒fast已生效。81项原产物SHA、报告/result及单元processed回执一致。新增1条Silent A10/v0.111.0终局持药代理策略候选，447/1247对166/492仅观察分层，其他build可反向，不推漏喝致死/早喝收益；自有3局五场只作旁账，own支持0、完整自有/外部局均0。精确时机、相邻Boss留药收益与rk继续缺证。无源码/正式知识/账本修改，tsc/vitest均null；原干净checkout已自然回收，分支与待发布scratch保留，不重finish或清理。候选已留原发布队列，待37唯一窗实际释放后接精确入库/实际消费者，正式发布/自然采用/收益仍0；另两决策单元只沿原自然调度。原科学父保持。
+原件：paper/materials/20261024-strategy-114313-ops/verification.json、publication-queue.json、report.md、native-execution-context.json。

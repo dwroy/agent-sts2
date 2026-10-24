@@ -1,12 +1,18 @@
 state: in-flight
-issue: 37
-updated: 2026-10-24T11:24:16+08:00
+issue: 51
+updated: 2026-10-24T11:56:24+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#37原唯一full已实际结束，682文件6651过/1败/2跳，两tsc0/Python123过；JSON SHA7c462b00…595核同，按失败留档。最小计数修复revision3八叶anchor fa16f18059918c7fe96e911761966e689d3e678f/tree ac0ba106ebc0aad708f7957dd30bee577061c8c2已逐blob核同；原11:23冻结回执refresh锁EAGAIN、该修订full0。paper/materials/20261024-issue37-window-1123-ops/。
-在等谁：原refresh_driver自然完成并释放knowledge-refresh.lock，原37集成员仍持同一唯一窗口，尚未释放；由其核实际R428/469知识新冻结再续tsc/Python/第二次full。104301三叶、101315工具两叶及55静态候选均在本次八叶外，不借结果或抢窗。
-下一步：等原37自然回报，核revision3精确输入/知识/退出；旧6651过1败不能作通过，091302仍不发布/source_commit=null，原failed/rc0/EPERM/EROFS/retry未知与科学父保。ops不另full/模型/发布、不终止刷新或改冻结。104301原full终态未知/11可见失败/22冲突、注册pending待此窗实际释放后协调。
+进行中的事：#51用药r2原单元114313已自然done/rc0，首native11:44:48/冻结输入f7bf…fc50与high、workspace-write/network=false核同，tier缺失不冒fast生效。新增1终局持药代理策略候选，正式发布/消费者/自然采用0，81产物SHA核同；原checkout已回收，分支/scratch保留。候选及发布待办见paper/materials/20261024-strategy-114313-ops/verification.json、publication-queue.json。
+在等谁：原37集成员继续持同一唯一检查/发布窗，释放后ops接用药候选正式源/账本/版本及实际消费者；不借37当前八叶检查。原调度器依次接休息路线、冷启动自然单元，不强派。精确用药时机/相邻Boss留药收益/rk与完整三输入流派剧本仍缺证，由原owner续验；原27四条、48/36自然回执及其他父按下文保留。
+下一步：原窗释放后只按原候选SHA精确增量入库并保最新live策略；固定消费者ID/version/来源/证据、自有支持0与自然查询/收益分账。447/1247对166/492仅终局字段代理，其他build反向，不拟药水阈值或因果收益；无新代码/补测/模型/finish/清理。本单元不是48普通模板采用，旧刀009/Boss不续派，旧008不倒补三输入。
+
+原输入边界：54三manifest/132叶及r2三规格保持；用药114313已原生完成，休息路线/冷启动仍待原自然回执，旧008候选只有原外部双输入。原件paper/materials/20261024-input-format-r2-ops/、20261024-strategy-094803-ops/。
+
+#27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，main30/live26仅文件数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
+
+#37窗口仍保：原6651过/1败/2跳按失败留档；新八叶fa16f1805991/treeac0ba106ebc0的原冻结前EAGAIN/full0及后续控制权归原37，旧失败SHA与八叶逐blob核验见paper/materials/20261024-issue37-window-1123-ops/。104301原failed/rc0/full最终退出未知、11可见失败与22冲突保留，0581原提案注册pending，不冒正式waiting或上线；两类候选均待该窗口实际释放后协调。
 
 其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。50 R423已发布且首自然5题更新/落盘/后4题读回核过，15固定消费者与准入释放原件在paper/materials/20261024-issue50-r422-ops/；后两幕/检查点/F48-F49/SL重启/学习/收益待，不重发布。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
 
@@ -22,7 +28,7 @@ updated: 2026-10-24T11:24:16+08:00
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
-#54新数据包已交并实际冻：原builds-v1 ac5f0d…852保持，decision-fields-v1 e9d1e6…78f、own-build-statistics-v1 a078c5…e64；Z2/KF9排除、无BP9、版本unknown/SL/节点代理/缺帧限制保持。三个决策单元已注册为可自然派输入，native本轮0。旧刀009仍held，未派旧Boss；postmortem/experience整局模板原T10:03:15不变，普通strategy模板已核宿主main09f3、首新native待，不热切任何在途任务/账号/权限。
+#54新数据包已交并实际冻：原builds-v1 ac5f0d…852保持，decision-fields-v1 e9d1e6…78f、own-build-statistics-v1 a078c5…e64；Z2/KF9排除、无BP9、版本unknown/SL/节点代理/缺帧限制保持。三个决策单元原冻结时native0；用药114313现已自然完成1候选，另两项待原自然回执。旧刀009仍held，未派旧Boss；postmortem/experience整局模板原T10:03:15不变，普通strategy模板已核宿主main09f3、首新native待，不热切任何在途任务/账号/权限。
 
 原37历史97490e3854d组合已被revision2/3沿原窗口接续：091302净12/经验SHA32e27b…与source_commit=null合同保持，revision2失败结果/2263源码夹具/1688依赖/469知识前后同均留档；revision3八叶因refresh锁暂未完成新冻结，不代新冻结成功。详6379266602及paper/materials/20261024-issue37-r428-integrator/revision3/。37→20含39/43和科学父保持。
 
