@@ -26958,6 +26958,599 @@
           "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution."
         }
       ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-joint-budget",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "shop.stock"
+          },
+          {
+            "op": "exists",
+            "field": "shop.prices"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-joint-budget",
+        "unit": "label"
+      },
+      "label_en": "Purchases and removal can exhaust the same shop budget",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "MGA0CZDDKC0P",
+            "floor": 11
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 14
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.35,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-joint-budget"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json",
+          "sha256": "b1d08e9de750ed5bfbcafdb9fadbe6385510f76fd8cb426ea8b98b6a1304e2ad",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-affordable-stop",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "shop.stock"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-affordable-stop",
+        "unit": "label"
+      },
+      "label_en": "Affordable stock does not establish intent to buy",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "QNTW139MGECA",
+            "floor": 24
+          },
+          {
+            "run_id": "9663Y88TYK73",
+            "floor": 3
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.35,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-affordable-stop"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json",
+          "sha256": "182b4c7673251bf1468a2da9015269c0eb3d054f33e3c60968e7ae1d6b2810a2",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-golden-reserve",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "contains",
+            "field": "player.relics",
+            "value": "SEAL_OF_GOLD"
+          },
+          {
+            "op": "exists",
+            "field": "player.gold"
+          },
+          {
+            "op": "exists",
+            "field": "shop.stock"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-golden-reserve",
+        "unit": "label"
+      },
+      "label_en": "Seal of Gold gives saved gold a combat use",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 39
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 37
+          },
+          {
+            "run_id": "0YQJ9D1MC4NK",
+            "floor": 23
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.35,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-golden-reserve"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json",
+          "sha256": "90ececabfeb7293080ff1623b015ff241d4341844a3e4233ca609c0feeee8cd4",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-curse-removal",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "NORMALITY"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "INJURY"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CLUMSY"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "REGRET"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SHAME"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "POOR_SLEEP"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DEBT"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DOUBT"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "SPORE_MIND"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-curse-removal",
+        "unit": "label"
+      },
+      "label_en": "Paid curse removal competes with other current targets",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0QDRNCRMC8BU",
+            "floor": 24
+          },
+          {
+            "run_id": "PZRSP3EL4K6B",
+            "floor": 21
+          },
+          {
+            "run_id": "25226ZFLNR1J",
+            "floor": 31
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.35,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-curse-removal"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json",
+          "sha256": "48bc807ca1067c6cee22e143ad759ff8ac45e3625ac29929ff2c64787b1906f7",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-nonbasic-removal",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "TORIC_TOUGHNESS"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "TACTICIAN"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "MEMENTO_MORI"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "INFINITE_BLADES"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "FAN_OF_KNIVES"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "METAMORPHOSIS"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "PRECISE_CUT"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "FINISHER"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "KNIFE_TRAP"
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-nonbasic-removal",
+        "unit": "label"
+      },
+      "label_en": "Paid removal can target nonbasic cards",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "HSX4HYATB4E2",
+            "floor": 36
+          },
+          {
+            "run_id": "FETDVL1P59B9",
+            "floor": 20
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 6
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.22,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-nonbasic-removal"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json",
+          "sha256": "9ec1ee44f46e85787b36827466c205df36acf2e0543c319039a79400445bc1c2",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 3,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-shop-upgrade-aware-removal",
+      "version": 1,
+      "applies_to": "shop",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "STRIKE_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.upgraded",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "STRIKE_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.upgraded",
+                  "value": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-shop-observed-upgrade-aware-removal",
+        "unit": "label"
+      },
+      "label_en": "Mixed Strike upgrades require separate removal target comparisons",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 14
+          },
+          {
+            "run_id": "YF0LXT1QSTGG",
+            "floor": 20
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [
+        "silent-shop-upgrade-aware-removal"
+      ],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json",
+          "sha256": "0a984777fa63993c73ff8e84f913caa350b8dd7dc3ef8dd497ffc32aed5fc0ed",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+          }
+        }
+      ]
     }
   ]
 }

@@ -5042,6 +5042,195 @@
       "evidence_status": "conflict",
       "formal_publication": "pending",
       "consumer_readback": "pending"
+    },
+    {
+      "id": "silent-brain-shop-joint-budget",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "购买与删牌各自买得起时，先比较同一笔金币能完成的整套方案，再决定把预算给哪边。证据局100金币买51金币翻越撑击后剩49，原100删牌已不可付；另一局162金币先删100后仍能买52药。A10无重试证据购买互斥125机会/84局、选择删牌28/27；重试或判死组522/280、142/127。\n范围：Silent A10/自有版本unknown；只证明预算互斥与实际执行，不证明买牌或删牌更好，不固定删牌优先。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "MGA0CZDDKC0P",
+          "floor": 11,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "NB8KCF6HRGVF",
+          "floor": 14,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/1",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.35
+    },
+    {
+      "id": "silent-brain-shop-affordable-stop",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "有可负担商品时也把离店留金列入比较，先分清库存为空、报价超金币和主动不买，别把打折当购买理由。证据局42金币面对25金币打折群蛇仍离店，金币保持42；113金币面对100删牌和37精准仍离店。A10无重试证据可负担价格代理离店74机会/53局、全价不可负担143/82；重试或判死组328/188、650/300；明确留金理由子集分别9/8、32/30。\n范围：Silent A10/自有版本unknown；价格代理不保证药栏等合法条件。原理由仅表意图，未证留金收益，也非打折牌一律不买。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "QNTW139MGECA",
+          "floor": 24,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9663Y88TYK73",
+          "floor": 3,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/1",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.35
+    },
+    {
+      "id": "silent-brain-shop-golden-reserve",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "已持SEAL_OF_GOLD时，把保留金币的战斗用途与本店补强一起比较，避免因为商品买得起就花尽，也不设统一留金线。证据局76金币原样离店；同局另一店仍先买78金币残影，203→125。A10无重试证据有可负担价格代理仍离店5机会/3局、实购2/2；重试或判死组57/24、97/27。\n范围：仅Silent A10/自有版本unknown且实际持黄金印；原遗物牌文含花金币获能量但数值占位未知，不能算固定回合预算。两组局重叠，未证留金胜率收益。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "25226ZFLNR1J",
+          "floor": 39,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "25226ZFLNR1J",
+          "floor": 37,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/1",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0YQJ9D1MC4NK",
+          "floor": 23,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/2",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.35
+    },
+    {
+      "id": "silent-brain-shop-curse-removal",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "付费删牌可用且当前确有可删诅咒时，把其当前牌文造成的限制与基础牌、购物的取舍一起比较，别默认删打击。两局实际各付100移除NORMALITY，151→51与189→89；牌文记录每回合不能打出超过3张牌。A10无重试证据删诅咒5机会/5局；重试或判死组24/24。持其他诅咒却删非诅咒另有8/8与31/28，说明目标不可一概而论。\n范围：Silent A10/自有版本unknown，先核实际可删目标；不含不可删诅咒的假设。NORMALITY两例均终败，未证删诅咒因果收益或必优先。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0QDRNCRMC8BU",
+          "floor": 24,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "PZRSP3EL4K6B",
+          "floor": 21,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/1",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "25226ZFLNR1J",
+          "floor": 31,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/2",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.35
+    },
+    {
+      "id": "silent-brain-shop-nonbasic-removal",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "当前非基础牌的费用、条件或用途不再合适时，也把它列入付费删牌比较，和基础牌、购买及离店一起审查。实际各付100删TORIC_TOUGHNESS或TACTICIAN，328→228、204→104；前者当前2费，后者当前3费且牌文有奇巧，不据名字补机制。A10无重试证据非基础非诅咒移除1机会/1局；重试或判死组9/9，十局最终均败。\n范围：Silent A10/自有版本unknown，仅提示扩展真实目标比较，不固定删除这些牌、不把旧理由或模型推断当收益。基本牌删除另账，不用稀疏样本排名。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "HSX4HYATB4E2",
+          "floor": 36,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "FETDVL1P59B9",
+          "floor": 20,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/1",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "VPW8YH7A4QFM",
+          "floor": 6,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/2",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.22
+    },
+    {
+      "id": "silent-brain-shop-upgrade-aware-removal",
+      "version": "2026-10-24.1",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "同时持有升级和未升级打击、准备付费删牌时，按每张实际费用与牌文分别比较目标，不只按同一ID或升级号决定。证据局付100删未升级打击而留升级版，牌文6/9伤；反例局当前打击却为0费9/12伤并删了MEMENTO_MORI。A10无重试证据混持后删牌4机会/3局，均删未升级打击；重试或判死组20/17中13/10删未升级打击，另7机会选择其他目标。\n范围：Silent A10/自有版本unknown，费用和牌文以当前快照为准；样本终局均败，未证保留升级牌或删打击的收益。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "NB8KCF6HRGVF",
+          "floor": 14,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json#/0",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "YF0LXT1QSTGG",
+          "floor": 20,
+          "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json#/1",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.25
     }
   ]
 }
