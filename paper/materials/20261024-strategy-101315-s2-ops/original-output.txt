@@ -1,0 +1,43 @@
+已核验十局均为已结束的 Silent A10。12条经验的提案链接齐全，11个账本附件已读回；两提案保留 `waiting`，原经验批次仍缺来源提交。未改源码、未合入、未运行 tsc/vitest；工作树干净，gitleaks 通过。
+
+[报告](learner/runs/20261024-101320-75af67eb-5a40-42a9-8dd0-17083e5d6be4-strategy-proposal/report.md) · [提案附件](learner/runs/20261024-101320-75af67eb-5a40-42a9-8dd0-17083e5d6be4-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261024-101315-s2-strategy-proposal",
+  "base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "runs": ["2PQK67ULZY90", "J2VR2DFJG8K4", "J5E7A3MS9NSH", "0NMF36KX3F7Y", "559UJVNHZ5NM", "U6JELGQTBMHN", "9W38TRGPJW9Q", "NRZAYVRMM7M0", "KCA04Q3SEYTF", "DGLWTQGRAT1T"],
+  "fixes": [],
+  "skipped": ["原经验缺来源提交；保留failed/rc0和未发布身份，不重复登记提案或扩展旧bug任务"],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": ["silent-proposal-d8b438b597e9fb6c", "silent-proposal-ff01313ae5fb351a"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-d8b438b597e9fb6c",
+      "state": "waiting",
+      "reason": "12条经验与11账本链接齐全；原经验批次来源提交为空，尚无足够对照证据支持新增行为规则。"
+    },
+    {
+      "id": "silent-proposal-ff01313ae5fb351a",
+      "state": "waiting",
+      "reason": "已复核超时但实际回血及41次选择、33次回血、共792血；原经验草稿仍缺可审计来源提交，单次超时不足以制定重试策略。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315-s2/learner/runs/20261024-101320-75af67eb-5a40-42a9-8dd0-17083e5d6be4-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a16baf-3620-7342-98a1-412cf820b832
+轮数：1；工具调用：无
+token：输入 146.4k、输出 25.9k（其中推理 6558）、cache 读 4548.1k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：996.3 s（墙钟）
+时间：首个事件 995.5 s、模型首个输出 995.5 s、首次工具 —、末次工具结束 —；工具内共 0.0 s，其余（模型生成、推理、网络）0.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315-s2）；模型的工具调用 exec×44；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T10-13-27-01a16baf-3620-7342-98a1-412cf820b832.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261024-101320-75af67eb-5a40-42a9-8dd0-17083e5d6be4-strategy-proposal.jsonl

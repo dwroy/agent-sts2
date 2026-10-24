@@ -6566,3 +6566,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T10:23:22+08:00 [ops] #38补记生产周期616ab747的12次live-merge持锁合计0.472598秒/最长0.404293秒，与414.431秒计算分账；1项固定锁测试通过，原at不冒实测墙钟起止，评论6378708477交主管核关；#18并#45。原件 paper/materials/20261024-issue38-lock-timing-ops/verification.json。
 
 - 2026-10-24T10:32:10+08:00 [ops] #36核101315原报告缺JSON块，身份一致/14回链通过，独立ops格式附录经原只读审计通过；waiting登记因原learn.lock busy未写，保failed/rc0/queue pending/retention deferred，评论6378786453；原件 paper/materials/20261024-strategy-101315-ops/apply-blocked.json。
+
+- 2026-10-24T10:34:29+08:00 [ops] #36核101315二组done/rc0、40产物/11账本/两waiting及原checkout回收；同自然唤醒原guard登记第一组0293 waiting一行，保第一组failed/rc0与两经验源缺commit，未发布/full/模型；原件 paper/materials/20261024-strategy-101315-s2-ops/verification.json、previous-group-resolution.json；评论6378809337。

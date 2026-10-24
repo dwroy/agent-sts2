@@ -1,12 +1,12 @@
 state: in-flight
 issue: 36
-updated: 2026-10-24T10:32:10+08:00
+updated: 2026-10-24T10:34:29+08:00
 
 #38实测持锁补记评论6378708477已交主管核关；#18并45。完整回执paper/materials/20261024-issue38-lock-timing-ops/；其余待办如下保留。
 
-进行中的事：101315原061302补链格式问题已核，原报告缺JSON块；另存ops来源校验补充件，原no_change/unassigned_proof/links只读通过，14根账本回链核同，未改源码/游戏/原报告及failed/rc0。一次waiting登记取原learn.lock busy拒绝，队列新增0、仍pending、retention deferred。
-在等谁：原ops在下一自然唤醒、原learn.lock释放后接101315唯一受保护resolve；原061302缺source commit未解决，不补造。#46仍等今天13:46:30满24h；#54字段/自有四表/同流派完整局、#51剧本消费者合同及#37唯一full窗口原owner接续。
-下一步：101315沿.artifacts/ops-strategy-101315-20261024/resolve.py一次登记原0293 waiting，保原failed/rc0/未实现和科学父；不重finish/full/模型/强回收，实登记后再核原retention合同。#46到门后核精确[T,T+24h) complete=true、各类分配/实际工作量/积压并与106基线同口径；停派/外部优先/手动停局分账不算节省。原件paper/materials/20261024-strategy-101315-ops/apply-blocked.json及delivery-receipt.json；36评论6378786453已POST/GET核同。
+进行中的事：101315二组核done/rc0、40产物/11账本附件、原两提案实际waiting，原checkout已回收/归档SHA核同，保scratch/报告/分支。此自然唤醒第一组原learn.lock即时可得，原guarded resolve已实际登记0293 waiting一行，三提案均waiting；第一组failed/rc0及旧busy记录不改，不重resolve/finish/模型/full。
+在等谁：原36收尾合同核第一组独立审计附录与retention（仍deferred），不把它冒原batch done；061302/091302原经验源commit缺失与原检查/发布继续。#46今天13:46:30满24h；#54字段/自有四表/完整局、#51消费者合同、#37唯一full由原owner接续。
+下一步：101315第一组已登记，无需再运行resolve.py；原原始报告/out/result未改，格式附录/已追加waiting守卫回执见paper/materials/20261024-strategy-101315-ops/resolution.json。二组无需重finish/回收，原12经验未正式发布，沿#37窗口及实际源身份接续。#46到门后核精确24h complete=true/各类工作量积压/106同口径，停派或停局不算节省。新回执paper/materials/20261024-strategy-101315-s2-ops/verification.json、retention-manifest.json、previous-group-resolution.json；36评论6378809337。
 
 恢复去重已核：原autoplay/play及首局BP9C8K9NSRZ0保持，未重启；手动Z2排除、原ENOBUFS保留，细节沿下文恢复回执。
 
