@@ -1,0 +1,1298 @@
+{
+  "id": "silent-external-poison-build-playbook-c1",
+  "version": "0.1.0-candidate",
+  "kind": "knowledge",
+  "title": "毒相关ID簇1：前缀可转向、逐幕资源与后场审查剧本",
+  "source": "external:sts2fun",
+  "character": "silent",
+  "ascension": 10,
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "natural_adoption": "pending",
+  "runs": [],
+  "own_support_runs": [],
+  "confidence": 0.3,
+  "provenance": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "query_version": "issue54-builds-v1-frozen-6a254692c7c6",
+    "design": "observational",
+    "build_manifest": {
+      "path": "knowledge/external/sts2fun/builds-v1/manifest.json",
+      "bytes": 1197,
+      "sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852"
+    }
+  },
+  "input_manifest": {
+    "path": "paper/materials/20261024-issue51-builds-ops/issue51-build-playbook-poison-008.json",
+    "bytes": 10365,
+    "sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f"
+  },
+  "filters": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; v0.111; terminal-deck cluster 1 for retrospective study only",
+  "naming": "核完8簇后选择簇1：高权重四ID含显式POISON文本，且代表轨迹记录同组ID的多种取得顺序。仅为毒相关ID组的操作名称；未获牌效/机制文本，不证明唯一毒流、纯毒打法或簇5不是毒相关。",
+  "core_ids": [
+    "ACCELERANT",
+    "BOUNCING_FLASK",
+    "DEADLY_POISON",
+    "SNAKEBITE"
+  ],
+  "cluster_selection": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/page-inventory.json",
+    "sha256": "b35eaea18120de512fe957b32358566c6078508368d99c4e9e4a7cb9484d5b21",
+    "pointer": ""
+  },
+  "present_time_use": "当前已观察到上述ID时可阅读本剧本。事后簇号、终局牌组和胜负不能当当前触发器。正文前缀条件不能完整由现有strategy schema表达，故仅knowledge草稿，不扩schema、不生成可执行触发器。",
+  "observations": [
+    {
+      "id": "core-identity",
+      "direction": "毒相关ID可作构筑候选标签，不以终局簇号锁定当前打法。",
+      "magnitude": "簇1终局DEADLY_POISON 130/223=58.30%，SNAKEBITE 142/223=63.68%；整局胜42/223=18.83%。",
+      "scope": "Silent A10/v0.111单人有效非弃局无modifier上传记录；终局描述代理，无牌效或因果判断。",
+      "denominator": {
+        "n": 223,
+        "unit": "uploaded_query_rows",
+        "independent_players": null,
+        "independent_natural_runs": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/archetypes-v0.111-c1-o0.json",
+          "sha256": "5e7710f635ca5120c149cc808a9eaee8b2b9a221085e2955ebc7469262692ed4",
+          "pointer": "/rows/0"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 2,
+          "example": "projection-67064be025992be3",
+          "nodes": [
+            3,
+            4
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+            "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/2",
+            "/rows/0/examples/0/timeline/3"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 2,
+          "example": "projection-b47197e675bcc56b",
+          "nodes": [
+            3,
+            5,
+            8
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+            "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/2",
+            "/rows/0/examples/1/timeline/4",
+            "/rows/0/examples/1/timeline/7"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "core-pair-direction",
+      "direction": "核心共现有正反向，搭配只作探索性候选，不下固定三件套命令。",
+      "magnitude": "ACCELERANT+BOUNCING_FLASK胜8/27、负6/27，出现率差+7.41pp/q=.877；BOUNCING_FLASK+DEADLY_POISON 6/27对6/27，0pp；ACCELERANT+DEADLY_POISON 8/27对11/27，-11.11pp/q=1。BACKFLIP+LEG_SWEEP 13/27对5/27，+29.63pp/q=.792。",
+      "scope": "同簇同版本、末幕相同且终止节点差≤3的无放回配对；终局共现代理，不是胜率增益，双方均<100。",
+      "denominator": {
+        "n": 27,
+        "unit": "matched_pairs",
+        "winner_rows": 27,
+        "loser_rows": 27,
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/combinations-v0.111-c1-o0.json",
+          "sha256": "c08f5f17474caafd8785549ab537f2aba9231a8a84bbcec16b7b205228840318",
+          "pointer": "/rows/13"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/combinations-v0.111-c1-o500.json",
+          "sha256": "fb40eb88493f90a3c8a70e08a0a4b7db394a9af53439e5cfb35f7352e6e5d791",
+          "pointer": "/rows/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/combinations-v0.111-c1-o760.json",
+          "sha256": "5fa5de8278472ae851e22e06f42b9ab226fd3dbc8ff1616b8d6593ab40981587",
+          "pointer": "/rows/10"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/combinations-v0.111-c1-o980.json",
+          "sha256": "30a389e6a6c9a2e70127e4e3076eba19dc1d7348282fcbe81aa90a1c79f0f827",
+          "pointer": "/rows/15"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/combinations-v0.111-c1-o1040.json",
+          "sha256": "7d9e3e95d5a772e87ce739aa6697f1aa57386bb47cf7e077703a784995a540f2",
+          "pointer": "/rows/8"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 6,
+          "example": "projection-66f51e61b86f3029",
+          "nodes": [
+            24,
+            30,
+            31,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+            "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/23",
+            "/rows/0/examples/0/timeline/29",
+            "/rows/0/examples/0/timeline/30",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 3,
+          "example": "projection-59420de19fd0b489",
+          "nodes": [
+            2,
+            3,
+            6,
+            9
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+            "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/1",
+            "/rows/0/examples/1/timeline/2",
+            "/rows/0/examples/1/timeline/5",
+            "/rows/0/examples/1/timeline/8"
+          ]
+        },
+        {
+          "page_offset": 2,
+          "example": "projection-67064be025992be3",
+          "nodes": [
+            36,
+            39,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+            "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/35",
+            "/rows/0/examples/0/timeline/38",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "order-and-pivot",
+      "direction": "按当前已得前缀保留转向余地，早拿多张核心不构成成型或安全证明。",
+      "magnitude": "前5节点至少两种四核心ID：胜7/10、负5/10，出现率差+20pp；平均种数双方同为1.6，差0；首5节点零核心的胜例1/10。",
+      "scope": "20条选定代表轨迹，记录拿牌/所得/变形前缀代理；非完整牌组，不输出最佳拿牌顺序或转向时点。",
+      "denominator": {
+        "n": 20,
+        "unit": "selected_unique_content_rows",
+        "winner_rows": 10,
+        "loser_rows": 10,
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/derived-statistics.json",
+          "sha256": "f2747d898def633dcf4889d962e48a832c4aa62c9c1f0b3fad255484493c3bda",
+          "pointer": "/early5"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+          "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+          "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o1.json",
+          "sha256": "d73fb67e210741a1526b6ed1d4e28168c89f4b2c2dff7ce406613a8a68fed756",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o1.json",
+          "sha256": "d73fb67e210741a1526b6ed1d4e28168c89f4b2c2dff7ce406613a8a68fed756",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+          "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+          "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+          "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+          "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+          "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+          "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o5.json",
+          "sha256": "ce7564a11b7a95d6f313eda49cce1ba5aa599e5fe306c57093cb36cf2f0a6859",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o5.json",
+          "sha256": "ce7564a11b7a95d6f313eda49cce1ba5aa599e5fe306c57093cb36cf2f0a6859",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+          "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+          "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+          "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+          "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+          "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+          "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o9.json",
+          "sha256": "124174075568d3c49c5949b5fcf5f7f264f459345018d2cc7f15922b01b4d718",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o9.json",
+          "sha256": "124174075568d3c49c5949b5fcf5f7f264f459345018d2cc7f15922b01b4d718",
+          "pointer": "/rows/0/examples/1"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 1,
+          "example": "projection-6f1a785fb54b4210",
+          "nodes": [
+            1,
+            5,
+            20,
+            21,
+            23,
+            35,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o1.json",
+            "sha256": "d73fb67e210741a1526b6ed1d4e28168c89f4b2c2dff7ce406613a8a68fed756",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/0",
+            "/rows/0/examples/0/timeline/4",
+            "/rows/0/examples/0/timeline/19",
+            "/rows/0/examples/0/timeline/20",
+            "/rows/0/examples/0/timeline/22",
+            "/rows/0/examples/0/timeline/34",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 3,
+          "example": "projection-59420de19fd0b489",
+          "nodes": [
+            2,
+            3,
+            4,
+            6,
+            9
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+            "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/1",
+            "/rows/0/examples/1/timeline/2",
+            "/rows/0/examples/1/timeline/3",
+            "/rows/0/examples/1/timeline/5",
+            "/rows/0/examples/1/timeline/8"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "act-checkpoints",
+      "direction": "幕末参照同时看已得核心和防护代理，缺三件套不等于应继续强追。",
+      "magnitude": "41条终局还原一致胜例：幕1/2末六核心副本中位3→4，正block副本代理8→9；前三质心牌组合仅8/41观察到成型，33/41未成，另1/42胜例排除。",
+      "scope": "只描述事后已观察下一幕且终局还原一致的胜例；六核心包含NEUTRALIZE，不能读成毒牌数或通过门槛。",
+      "denominator": {
+        "n": 41,
+        "unit": "terminal_consistent_winner_rows",
+        "all_winners": 42,
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/timeline-v0.111-c1-o0.json",
+          "sha256": "a6569c23ac27692404d1d1e764c8a8bb752118a010b569199f0920f6cf6db68a",
+          "pointer": "/rows/0"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 0,
+          "example": "projection-40ed0656498ebe5e",
+          "nodes": [
+            17,
+            33,
+            36,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+            "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/16",
+            "/rows/0/examples/0/timeline/32",
+            "/rows/0/examples/0/timeline/35",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 3,
+          "example": "projection-59420de19fd0b489",
+          "nodes": [
+            6,
+            9
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+            "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/5",
+            "/rows/0/examples/1/timeline/8"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "failure-and-remedy",
+      "direction": "拿到核心后仍要重看沿途资源；受伤、治疗和休息分别记账，补救收益未知。",
+      "magnitude": "代表负例终止幕1/2/3为5/10、4/10、1/10；INFESTED_PRISMS记录总受伤胜均18.9(n=10)、负均30.4(n=5)，差-11.5HP；胜例受伤最大60仍后续胜。",
+      "scope": "选择性代表轨迹；精英暴露分母不同、整局结局含未来信息，仅资源消耗代理，不能指定更安全路线或某张补牌因果收益。",
+      "denominator": {
+        "n": 15,
+        "unit": "selected_prisms_records",
+        "winner_rows": 10,
+        "loser_rows": 5,
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/derived-statistics.json",
+          "sha256": "f2747d898def633dcf4889d962e48a832c4aa62c9c1f0b3fad255484493c3bda",
+          "pointer": "/prisms"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+          "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+          "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o1.json",
+          "sha256": "d73fb67e210741a1526b6ed1d4e28168c89f4b2c2dff7ce406613a8a68fed756",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o1.json",
+          "sha256": "d73fb67e210741a1526b6ed1d4e28168c89f4b2c2dff7ce406613a8a68fed756",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+          "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o2.json",
+          "sha256": "461336e0de33512f0ed206339f99df271971fbf8f3480be40ae9479cee547a13",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+          "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+          "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+          "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+          "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o5.json",
+          "sha256": "ce7564a11b7a95d6f313eda49cce1ba5aa599e5fe306c57093cb36cf2f0a6859",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o5.json",
+          "sha256": "ce7564a11b7a95d6f313eda49cce1ba5aa599e5fe306c57093cb36cf2f0a6859",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+          "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+          "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+          "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+          "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+          "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+          "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+          "pointer": "/rows/0/examples/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o9.json",
+          "sha256": "124174075568d3c49c5949b5fcf5f7f264f459345018d2cc7f15922b01b4d718",
+          "pointer": "/rows/0/examples/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o9.json",
+          "sha256": "124174075568d3c49c5949b5fcf5f7f264f459345018d2cc7f15922b01b4d718",
+          "pointer": "/rows/0/examples/1"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 4,
+          "example": "projection-92f2215255e10258",
+          "nodes": [
+            24,
+            25
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+            "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/23",
+            "/rows/0/examples/1/timeline/24"
+          ]
+        },
+        {
+          "page_offset": 6,
+          "example": "projection-2b90dbf512a7fd29",
+          "nodes": [
+            28,
+            29,
+            30
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o6.json",
+            "sha256": "d17503e80ed5b0af9c902a21b6ba278a9dd81025ab8a54a5e0a55f94d912dd1b",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/27",
+            "/rows/0/examples/1/timeline/28",
+            "/rows/0/examples/1/timeline/29"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 4,
+          "example": "projection-f9ea71f22071a180",
+          "nodes": [
+            25,
+            29,
+            30,
+            31,
+            32,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o4.json",
+            "sha256": "1a1dc72fff5e56d587f778dc32d855595791c357c02e1404bda38cdd19629c41",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/24",
+            "/rows/0/examples/0/timeline/28",
+            "/rows/0/examples/0/timeline/29",
+            "/rows/0/examples/0/timeline/30",
+            "/rows/0/examples/0/timeline/31",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        },
+        {
+          "page_offset": 7,
+          "example": "projection-4b3d02ee3f2115c0",
+          "nodes": [
+            27,
+            33
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+            "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/26",
+            "/rows/0/examples/1/timeline/32"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "boss-preparation",
+      "direction": "Boss准备分开核前节点HP与本节点代价，不从通过代理承诺安全。",
+      "magnitude": "KAISER_CRAB通过代理21/31=67.74%，总受伤均37.29HP；KNOWLEDGE_DEMON 22/27=81.48%，均22.78HP，相差13.74pp/14.51HP，组别有重叠且非等价比较。",
+      "scope": "簇1/v0.111上传Boss记录；真实入场与净损失全缺，不排名克制；同场景指向已有Boss ID。",
+      "denominator": {
+        "groups": [
+          {
+            "boss": "ENCOUNTER.CEREMONIAL_BEAST_BOSS",
+            "n": 24,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS",
+            "n": 36,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.SOUL_FYSH_BOSS",
+            "n": 35,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.THE_KIN_BOSS",
+            "n": 22,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.VANTOM_BOSS",
+            "n": 19,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.WATERFALL_GIANT_BOSS",
+            "n": 31,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.KAISER_CRAB_BOSS",
+            "n": 31,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+            "n": 27,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.THE_INSATIABLE_BOSS",
+            "n": 40,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.AEONGLASS_BOSS",
+            "n": 45,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.QUEEN_BOSS",
+            "n": 42,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "boss": "ENCOUNTER.TEST_SUBJECT_BOSS",
+            "n": 38,
+            "unit": "uploaded_query_rows"
+          }
+        ],
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/2"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/3"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/4"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/5"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/6"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o0.json",
+          "sha256": "fd62ccdcf1be98abba6e3996d83a76614da0b77ea1a06f49867bde6c54665c64",
+          "pointer": "/rows/7"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o8.json",
+          "sha256": "1f71271e7f10269adb9f67698c70cfb1a76817705257e781fc1840a47612f9c0",
+          "pointer": "/rows/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o8.json",
+          "sha256": "1f71271e7f10269adb9f67698c70cfb1a76817705257e781fc1840a47612f9c0",
+          "pointer": "/rows/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o8.json",
+          "sha256": "1f71271e7f10269adb9f67698c70cfb1a76817705257e781fc1840a47612f9c0",
+          "pointer": "/rows/2"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o8.json",
+          "sha256": "1f71271e7f10269adb9f67698c70cfb1a76817705257e781fc1840a47612f9c0",
+          "pointer": "/rows/3"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 3,
+          "example": "projection-adacc9b017954650",
+          "nodes": [
+            32,
+            33
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+            "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/31",
+            "/rows/0/examples/0/timeline/32"
+          ]
+        },
+        {
+          "page_offset": 0,
+          "example": "projection-40ed0656498ebe5e",
+          "nodes": [
+            32,
+            33
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+            "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/31",
+            "/rows/0/examples/0/timeline/32"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 7,
+          "example": "projection-4b3d02ee3f2115c0",
+          "nodes": [
+            32,
+            33
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o7.json",
+            "sha256": "6303a7165f8017d2fadc659b90239e4f24336dbaa94fdec5ff5364b374282220",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/31",
+            "/rows/0/examples/1/timeline/32"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "sequential-boss-preparation",
+      "direction": "已记录连Boss路径要给后场保留审查项，前场通过不能代后场完成。",
+      "magnitude": "AEONGLASS→QUEEN后场终止3/9、终局胜6/9；QUEEN→AEONGLASS后场终止3/14、终局胜11/14；后场前节点HP均37.44/48.21，仅量级代理。",
+      "scope": "簇1/v0.111的已观察第三幕路径；按路径原分母分列，不累计或推断最佳顺序，未知后场不作已失败。",
+      "denominator": {
+        "groups": [
+          {
+            "path": [
+              "ENCOUNTER.AEONGLASS_BOSS",
+              "ENCOUNTER.QUEEN_BOSS"
+            ],
+            "n": 9,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.AEONGLASS_BOSS",
+              "ENCOUNTER.TEST_SUBJECT_BOSS"
+            ],
+            "n": 9,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.AEONGLASS_BOSS"
+            ],
+            "n": 4,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.QUEEN_BOSS",
+              "ENCOUNTER.AEONGLASS_BOSS"
+            ],
+            "n": 14,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.QUEEN_BOSS",
+              "ENCOUNTER.TEST_SUBJECT_BOSS"
+            ],
+            "n": 8,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.QUEEN_BOSS"
+            ],
+            "n": 3,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.TEST_SUBJECT_BOSS",
+              "ENCOUNTER.AEONGLASS_BOSS"
+            ],
+            "n": 9,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.TEST_SUBJECT_BOSS",
+              "ENCOUNTER.QUEEN_BOSS"
+            ],
+            "n": 8,
+            "unit": "uploaded_query_rows"
+          },
+          {
+            "path": [
+              "ENCOUNTER.TEST_SUBJECT_BOSS"
+            ],
+            "n": 4,
+            "unit": "uploaded_query_rows"
+          }
+        ],
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o0.json",
+          "sha256": "a47f22ccd0d087c5924fb9d94242ce224b5929278ca23b5b07201c8d8eb43534",
+          "pointer": "/rows/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o0.json",
+          "sha256": "a47f22ccd0d087c5924fb9d94242ce224b5929278ca23b5b07201c8d8eb43534",
+          "pointer": "/rows/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o0.json",
+          "sha256": "a47f22ccd0d087c5924fb9d94242ce224b5929278ca23b5b07201c8d8eb43534",
+          "pointer": "/rows/2"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o0.json",
+          "sha256": "a47f22ccd0d087c5924fb9d94242ce224b5929278ca23b5b07201c8d8eb43534",
+          "pointer": "/rows/3"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o4.json",
+          "sha256": "69be5e571b10f5957bccdfbcd66e1aad6b20354a4bc8319dbdba7d1238218590",
+          "pointer": "/rows/0"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o4.json",
+          "sha256": "69be5e571b10f5957bccdfbcd66e1aad6b20354a4bc8319dbdba7d1238218590",
+          "pointer": "/rows/1"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o4.json",
+          "sha256": "69be5e571b10f5957bccdfbcd66e1aad6b20354a4bc8319dbdba7d1238218590",
+          "pointer": "/rows/2"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o4.json",
+          "sha256": "69be5e571b10f5957bccdfbcd66e1aad6b20354a4bc8319dbdba7d1238218590",
+          "pointer": "/rows/3"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/boss-semantics-v0.111-c1-o8.json",
+          "sha256": "fecf1a52c8701d9e551d94aca5e55e1b2e04f72cfbccd5e74b28b7779d535dfa",
+          "pointer": "/rows/0"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 3,
+          "example": "projection-adacc9b017954650",
+          "nodes": [
+            47,
+            48,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o3.json",
+            "sha256": "64f93db62ab63536d084d56f99a9ec6f3a238f67362475249a020ff35032ab16",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/46",
+            "/rows/0/examples/0/timeline/47",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        },
+        {
+          "page_offset": 0,
+          "example": "projection-40ed0656498ebe5e",
+          "nodes": [
+            47,
+            48,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o0.json",
+            "sha256": "dd9a8e121276862fa39f419c88aaaaab15f91ddab4f11987605bb74430f239d4",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/46",
+            "/rows/0/examples/0/timeline/47",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 8,
+          "example": "projection-b38c65acc7c26588",
+          "nodes": [
+            47,
+            48
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+            "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/46",
+            "/rows/0/examples/1/timeline/47"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    },
+    {
+      "id": "jev-hp-budget",
+      "direction": "Jev可参考分场受伤与治疗的观察范围；可承受净损和安全HP预算保持unknown。",
+      "magnitude": "AEONGLASS记录总受伤0–97HP(n=45)，治疗0–40HP；胜例前节点92、本节点受伤97/治疗34/末HP29，另一负例TEST_SUBJECT前节点80/受伤80/末HP0；不是可共用血线。",
+      "scope": "仅附观察先验，不接求解器、不设阈值、不改出牌/药水/SL/终局规则；当前真HP、牌组及药水仍需本系统现场信息。",
+      "denominator": {
+        "n": 45,
+        "unit": "uploaded_AEONGLASS_records",
+        "independent_players": null
+      },
+      "refs": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/matchups-v0.111-c1-o8.json",
+          "sha256": "1f71271e7f10269adb9f67698c70cfb1a76817705257e781fc1840a47612f9c0",
+          "pointer": "/rows/1"
+        }
+      ],
+      "support": [
+        {
+          "page_offset": 5,
+          "example": "projection-9a01895b898a7417",
+          "nodes": [
+            47,
+            48,
+            49
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o5.json",
+            "sha256": "ce7564a11b7a95d6f313eda49cce1ba5aa599e5fe306c57093cb36cf2f0a6859",
+            "pointer": "/rows/0/examples/0"
+          },
+          "outcome": 1,
+          "node_refs": [
+            "/rows/0/examples/0/timeline/46",
+            "/rows/0/examples/0/timeline/47",
+            "/rows/0/examples/0/timeline/48"
+          ]
+        }
+      ],
+      "counterexamples": [
+        {
+          "page_offset": 8,
+          "example": "projection-b38c65acc7c26588",
+          "nodes": [
+            47,
+            48
+          ],
+          "page": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/pages/representative-timelines-v0.111-c1-o8.json",
+            "sha256": "1146ccd39e5b39610ceee498dc07177993d1358adbb760215ca14951bd143dce",
+            "pointer": "/rows/0/examples/1"
+          },
+          "outcome": 0,
+          "node_refs": [
+            "/rows/0/examples/1/timeline/46",
+            "/rows/0/examples/1/timeline/47"
+          ]
+        }
+      ],
+      "source": "external:sts2fun",
+      "version": "v0.111",
+      "collected_at": "2026-10-21",
+      "input_sha256": "9056a6ad671d68fd8f423d3e4ac3a72de55514597bfd1e90186a135b0ef0757f",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "build_manifest_sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+        "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+        "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+        "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+        "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+        "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+        "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+        "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+      ],
+      "own_support_runs": [],
+      "runs": []
+    }
+  ],
+  "existing_id_references": [
+    "silent-brain-kin-priest-exit-window",
+    "silent-brain-vantom-two-stage-preparation",
+    "silent-brain-crab-surviving-part-budget",
+    "silent-brain-knowledge-demon-external-tail-budget",
+    "silent-brain-test-subject-external-tail-budget",
+    "silent-brain-act1-deadly-poison-prefix-context",
+    "silent-brain-bouncing-flask-external-prefix-context",
+    "silent-brain-accelerant-external-prefix-context"
+  ],
+  "evidence_conflict_status": "unassessed across scopes; positive and negative associations both retained",
+  "limitations": [
+    "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+    "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+    "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+    "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+    "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+    "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+    "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+    "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+  ],
+  "safe_hp_threshold": null,
+  "jev_allowable_net_loss": null,
+  "actual_entry_snapshot": null,
+  "between_boss_snapshot": null,
+  "strategy_schema_changed": false,
+  "code_proposal_required": false,
+  "code_scope": "No combat/potion/SL/terminal rule or source change; descriptive construction knowledge only"
+}
