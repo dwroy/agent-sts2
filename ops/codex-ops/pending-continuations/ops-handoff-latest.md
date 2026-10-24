@@ -1,20 +1,20 @@
 state: in-flight
-issue: 51
-updated: 2026-10-25T02:09:04+08:00
+issue: 58
+updated: 2026-10-25T02:17:29+08:00
 
-进行中的事：原UVEX F21败退/terminal/report已核；C5写前75未入脚本，原owner1487883/birth28580454在FIFO无锁等接续；58的22叶已验就绪。
-在等谁：原refresh_driver1911775/birth28945638持刷新锁、成本1911793/funnel1911863排队；v6-history→combo-metrics在算。最终取锁仍忙，未发continue。
-下一步：刷新自然释放后仅原FIFO单次continue，核C5发布/读回/release，立即58优先不等60，再broker恢复autoplay；保原75，禁重worker/模型/full/强tick或先开局。
+进行中的事：C5原FIFO单次续接已R447；58精确22叶已R448，知识/开关核同、准入均释放。broker已恢复RR2VYNL5FUUU，自然首题尚无模型受理。
+在等谁：RR2首题usage88%≥80%门拦下，15工具已组装但accepted=false/native空；请求high与brain xhigh要求分列，ENOBUFS commit=null保留，不热切/改阈值/换号。
+下一步：沿原运行owner核用量门/下自然启动xhigh合同，再核58原计划落盘/后继消费与计算复用；60下一自然批，原失败/科学父/候选保留，不重full/模型或热迁移。
 
 #59：28/35/48/50已可恢复停会话，20/36由集成员停并交ops接runtime；原父/树/日志/恢复入口保留，见paper/materials/20261025-issue59-ops/handoff-table.json。56参数/实际tier分账、57自然窗及58/60必要运行未验，不代关闭。
 
-#58/60：58已按6387524419核main7779695a、anchor8a5b8be6/treecfb6ad71、full6618/0/2/tsc0及原worker退场；22源/合同叶正式、main、宿主、check后像同，16生产差异全在包内，另465验证快照差异不部署。C5后先58不等60；发布/自然运行尚未验，源码包与接续清单见paper/materials/20261025-issue58-source-ready-ops/。60源5d7bc13c3仍下一批；冻结/回退/唯一入口与实际live8文档/764、main多archetypes边界沿paper/materials/20261025-issue58-60-runtime-intake-ops/runtime-acceptance-and-migration.md，最终以C5后实际叶为准，runtime未建。新局/调度/完成环境同源问题交60 owner；实际pre60回退要含58/C5，固定probe/绑定不代自然命中/收益。
+#58/60：58已精确22叶R448/live d0d9da100，原full6618/0/2/tsc0复用、source/知识/catalog/开关读回过；465验证快照差异及60未混入。C5先R447/c32ff342、116策略/165rk、14账本/7+7+7过，原75保留，两准入释放。实际发布及RR2自然首题usage门、请求high/原生未证、ENOBUFS边界见paper/materials/20261025-c5-r447-r448-close-ops/。完整原scope/科学父见本轮handoff-before.md；自然计划/计算验收未过，未释放58开发。60源5d7bc13c3仍下一批，迁移冻结/回退/环境单入口沿issue58-60-runtime-intake-ops/runtime-acceptance-and-migration.md；实际pre60须含R447/R448，runtime未建。
 
 #50三幕后继旧窗口/达标线/冷恢复/终局父保持；原完整回执与排除口径见paper/materials/20261025-wake-0104-ops/handoff-before.md#50本轮已结及issue6384464793，未新增发布/改策略。
 
 #35原R422/041301与自然跨层/冷恢复/溢出/收益待办、ENOBUFS/null/R419失败保持，沿paper/materials/20261025-issue58-source-ready-ops/handoff-before.md原段与issue35-checkpoint-1648-ops接续。
 
-#51保持：R446已114策略160rk，C7五对2新3更新/10投影核同，R445等旧原件保留；两条描述confidence.25→.30按原稿保留，旧证据/conflict不改，watcher原会话已agent_prompted转Roy，非ACK。历批正式knowledge消费者、正文自动门/完整剧本/Plan、自然收益及科学父待。C182343用户可见6383409246非本人ACK，不代旧notice。
+#51现R447已116策略/165描述rk，C5七对2新5更、14投影读回过；原R446/更早所有knowledge/rk与反证/失败保持。原文/来源分母、正式knowledge/完整剧本/Plan、自然采用/收益及科学父仍待，不借固定tool读回关父。
 #56按6386401629启动参数过、actual tier未知单列；C011301原生high/原沙箱rc0、5对3新2补充和composer告警原件见paper/materials/20261025-strategy-011301-ops/。D014301原生rc0、5新文字/5不可加载事件rk，95局106机会/外部51cell分账、双百例比较0、watcher实收/转Roy6387679266已核、非Roy ACK；452原日志窗口SHA核同，见paper/materials/20261025-strategy-014301-ops/。两批均候选非发布/收益，挂就绪58/60后，原吞吐窗不重置，C5结后回56收敛。
 
 #0104：D六事件文字/六不可加载rk、C3五情境3新2更，一对与C5同ID不得覆反证，串行挂在就绪源码58/60后。001311五复盘18更新/两提案，dataset1次rc0因并行C5的0764/5反证attention；已有blob/own-append，后续只受控记录，不重生成/finish。通知6387142273/主管C5实收6387024406不代Roy/ACK，原件paper/materials/20261025-wake-0104-ops/。

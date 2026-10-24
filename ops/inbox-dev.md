@@ -6906,3 +6906,13 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 原UVEX已自然F21败退，终态/report核同，未重跑。C5写前75，publication-state/publish.once未生成，未写源码/知识。原owner1487883/birth28580454、准入与脚本SHA核同，原FIFO无锁等。实际阻塞是刷新锁：1911775原refresh_driver持有，1911793成本刷新、1911863全局funnel排队；子链combo-metrics实际计算。两项候选依赖未变。最终接续前检查仍取不到刷新锁，未发送continue、未另建worker或轮询等待。原刷新自然释放后只沿原FIFO单次续接，保留75原件；核C5实际发布/工具账本读回及release后立即接58已验22叶源码，不等60，再沿原broker恢复autoplay。无play属于准入窗口；未写STOP、强tick、杀刷新、先开局或冒发布/验收。
 
 证据：paper/materials/20261025-c5-boundary-0205-ops/。
+
+### 2026-10-25T02:12:57+08:00 [ops] V6-R448 #58源码实际上线
+
+旧行为：计划输出每题重述/更新，计算与当前工具能力说明按旧链。新行为：实际ToolDef能力说明、原计划省略/null/相等复用，route/build独立更新及依赖失效重算；仅22原核源码叶。证据：原唯一full6618/0/2、tsc0，660b2e50c/main7779695a及实际source-readback.json；未引入游戏新机制或未核数据。预期减少重复计划和计算，实际提示/工具、计划落盘与后继消费、自然计算复用待首新局，不以查询数下降判收益。回退仅按本次实际parent恢复本22叶（后像未再改时），保C5及后续知识/版本历史。原C5先结，知识/catalog/开关字节保持，60未混入。原件paper/materials/20261025-issue58-natural-publication-ops/。
+
+### 2026-10-25T02:17:29+08:00 [ops] R447/R448已发，恢复首题受用量门阻塞
+
+刷新释放后仅原FIFO单续，旧75保留。R447的7+7+7查询/14账本过，116策略/165rk；2新5更、confidence0.25与两冲突保留，固定读回不代自然收益。随后58实际R448精确22叶上线，原full6618/0/2/tsc0复用，最新知识/catalog/开关不变，未夹60；两准入均已释放。已沿原broker恢复autoplay，首自然局RR2VYNL5FUUU/F1，15项工具已组装。但首题用量门报7日88%≥80%，accepted=false、无原生请求回执；请求high（旧UVEX亦high），与大脑xhigh要求分列，不能称实际档位。ENOBUFS commit=null保留，源码以live/22叶核。未调阈值/换号或热切在途；计划落盘/后继读回/计算复用及自然采用仍阻塞。回退仅本次前像，保后续知识/历史/父。
+
+证据：paper/materials/20261025-c5-r447-r448-close-ops/。

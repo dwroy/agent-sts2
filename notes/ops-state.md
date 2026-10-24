@@ -1,7 +1,7 @@
 state: in-flight
-issue: 51
-updated: 2026-10-25T02:09:04+08:00
+issue: 58
+updated: 2026-10-25T02:17:29+08:00
 
-进行中的事：原UVEX F21败退/terminal/report已核；C5写前75未入脚本，原owner1487883/birth28580454在FIFO无锁等接续；58的22叶已验就绪。
-在等谁：原refresh_driver1911775/birth28945638持刷新锁、成本1911793/funnel1911863排队；v6-history→combo-metrics在算。最终取锁仍忙，未发continue。
-下一步：刷新自然释放后仅原FIFO单次continue，核C5发布/读回/release，立即58优先不等60，再broker恢复autoplay；保原75，禁重worker/模型/full/强tick或先开局。
+进行中的事：C5原FIFO单次续接已R447；58精确22叶已R448，知识/开关核同、准入均释放。broker已恢复RR2VYNL5FUUU，自然首题尚无模型受理。
+在等谁：RR2首题usage88%≥80%门拦下，15工具已组装但accepted=false/native空；请求high与brain xhigh要求分列，ENOBUFS commit=null保留，不热切/改阈值/换号。
+下一步：沿原运行owner核用量门/下自然启动xhigh合同，再核58原计划落盘/后继消费与计算复用；60下一自然批，原失败/科学父/候选保留，不重full/模型或热迁移。
