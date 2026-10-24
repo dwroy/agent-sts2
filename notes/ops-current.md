@@ -1,10 +1,10 @@
 state: in-flight
 issue: 55
-updated: 2026-10-24T13:24:02+08:00
+updated: 2026-10-24T13:27:40+08:00
 
 #38持锁补记6378708477已交主管核关；#18并45。原件paper/materials/20261024-issue38-lock-timing-ops/。
 
-进行中的事：#55 P0源91fd612628已按精确12叶与实际R428/469知识隔离组装，树f097264c9c17；两tsc0、唯一full在途，worker2127112/birth24358644，当前状态以paper/materials/20261024-issue55-r428-ops/check-state.json为准。两次写前锁失败/full0保留，原锁自然续接才启动一次full；未发布，不借37失败/夹101315。
+进行中的事：#55 P0源91fd612628已按精确12叶与实际R428/469知识隔离组装，树f097264c9c17；两tsc0、唯一full在途，worker2127112/birth24358644，当前状态以paper/materials/20261024-issue55-r428-ops/check-state.json为准。13:24两返回仅旧写前锁失败/full0，当前唯一full1未终态；未发布，不借37失败/夹101315。
 在等谁：原55单窗实际终态后，ops接自然边界精确12叶发布/编号/固定工具读回，流派模型测试fixture不冒live部署。20源f5f390c141三生产叶已核，按6380255093排55实际发布后同批部署并记真实T/24h窗。37旧独占发布等待已按6380220657撤销，科学父/原失败保留；不另起full。
 下一步：55结果事件只核原JSON/冻结输入/锁释放，失败保留实际阶段，成功按原事务发布并验自然逐题命中/时延。51已按6380207972报旧1/2/2未达标，三506自有补证单元排原队列，等真实native/5～10情境候选及独立消费者；不强派/tick/凑数。46完整门13:46:30、48原观察门18:19:29不提前。
 
@@ -22,6 +22,8 @@ updated: 2026-10-24T13:24:02+08:00
 
 #37原6651过/1败/2跳及revision3未新冻结/full保留，6379307722独占发布等待已按6380220657撤销；不借原失败覆盖55/20。104301三叶failed/rc0/full退出未知、11可见失败/22冲突、0581注册pending保留；101315两叶独立待验，未夹55。paper/materials/20261024-issue37-window-1123-ops/。
 
+131302无新源码；tsc0/31定向过、6未选。报告/out同，e61ce508与live175源码/验证路径异，empty guard未过，原failed/rc0/deferred保留；22旧提交祖先不代live采用，不重finish/full/模型。paper/materials/20261024-fix-131302-ops/。
+
 其他在途：101301复盘记录9fa6a1ebf、dataset6ec09732e已分别持久化；0604/3477原fix链及5项仅自有整局候选仍开放。50 R423已发布且首自然5题更新/落盘/后4题读回核过，15固定消费者与准入释放原件在paper/materials/20261024-issue50-r422-ops/；后两幕/检查点/F48-F49/SL重启/学习/收益待，不重发布。fix工具两叶树1a1d9dbea1daf87597c30056cf71f69c6a71db91及host43定向过保留，54 r2三规格/132叶冻结与原008输入边界不改。
 
 094803毒008已核done/rc0、91页/20轨迹/713节点、原native退场及106份原字节归档；1份knowledge剧本候选，非正式StrategyEntry/rk，发布/消费者/自然采用0，branch/scratch保留。只读原外部双输入，不能因54新三manifest冻结而倒补已读；完整剧本消费者合同待51 owner核，27/27未达100、BH0、机制/安全HP未知与原科学父保持。paper/materials/20261024-strategy-094803-ops/。
@@ -34,7 +36,6 @@ updated: 2026-10-24T13:24:02+08:00
 
 #54原三manifest/132叶与原008双输入边界保持，版本unknown/SL/代理及Z2/KF9排除不变。新506补证仅换当前物理分片pin并守原名单/切点，无BP9/新局。postmortem/experience模板T10:03:15，普通MD09f3首native仍待。paper/materials/20261024-input-format-r2-ops/。
 
-37原revision2的2263输入/1688依赖/469知识核同仍按失败保留；6379266602同窗，revision3冻结/续验由原owner。
 
 Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
