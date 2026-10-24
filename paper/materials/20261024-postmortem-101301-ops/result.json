@@ -1,0 +1,41 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "Q7SFDZSJLULD",
+    "EQLB6SK9W9H7"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "EQLB6SK9W9H7",
+      "where": "agent/src/hand/screens/shop.ts:48",
+      "what": "开店前按列表自动丢弃仍合法可用的污浊药水，移除兑换/保留选择；实际金币89→89，兑换金额与胜负收益未知",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0604"
+    ],
+    "updated": [
+      "silent-0017",
+      "silent-0020",
+      "silent-0046",
+      "silent-0278",
+      "silent-0352",
+      "silent-0570"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-3477e3a0ce08a7c6",
+    "silent-proposal-25538ce7891b7d15"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-101320-cf99629d-d335-4914-8d46-c886cdcfa3fa-postmortem/report.md"
+}

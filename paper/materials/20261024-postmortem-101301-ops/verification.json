@@ -1,0 +1,71 @@
+{
+  "recorded_at": "2026-10-24T10:44:45+08:00",
+  "original_byte_refs_verified": 2520,
+  "critical_numbers": [
+    {
+      "run": "Q7SFDZSJLULD",
+      "entry_hp_maxhp_terminal_hp_block_incoming": [
+        41,
+        76,
+        15,
+        13,
+        28
+      ],
+      "original_bytes_verified": true
+    },
+    {
+      "run": "EQLB6SK9W9H7",
+      "entry_hp_maxhp_terminal_hp_block_incoming": [
+        33,
+        70,
+        26,
+        12,
+        38
+      ],
+      "original_bytes_verified": true
+    }
+  ],
+  "poison_dose_actions": 8,
+  "shop_gold_before_after": [
+    89,
+    89
+  ],
+  "lesson_title_counts": {
+    "Q7SFDZSJLULD": 1,
+    "EQLB6SK9W9H7": 1
+  },
+  "ledger_find": [
+    {
+      "run": "Q7SFDZSJLULD",
+      "exit": 0,
+      "ids": [
+        "silent-0020",
+        "silent-0278",
+        "silent-0352"
+      ]
+    },
+    {
+      "run": "EQLB6SK9W9H7",
+      "exit": 0,
+      "ids": [
+        "silent-0017",
+        "silent-0020",
+        "silent-0046",
+        "silent-0352",
+        "silent-0570",
+        "silent-0604"
+      ]
+    }
+  ],
+  "ledger_check": {
+    "exit": 0,
+    "stdout": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 604 item(s), 0 problem(s)\n",
+    "stderr": ""
+  },
+  "scope": "只验证授权已结束两局；未访问游戏、外部原库或其他局原始记录。未改生产代码/正式策略/rk，未运行不必要的运行时代码全检。",
+  "limitations": [
+    "原文SHA机械核回不等于模型通读每道题，完整题面5题，逐项见question-coverage。",
+    "全日志扫描中的历史坏JSON/未知identity不归入本批样本；本批Jev均显式run_id且精确decision_id关联。",
+    "来源源码戳缺失，当前live引用只为现存路径定位，不认证原局commit。"
+  ]
+}

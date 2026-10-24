@@ -5170,3 +5170,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-24T11:01:12+08:00 [ops] #36 修复回调/宿主续接
 
 已核101315修复批failed/rc0：两叶24KB封包候选未提交，净树1a1d9dbea1da已冻；原完整130/124及58项可见失败保留，独立宿主定向2文件43项过，不代full。原37已冻结37六叶＋091302净12，明确覆盖51/54/36宿主代码；本工具候选不混入、不另起full，dirty树/root scratch及归属阻塞保留。36三运行叶实际root同main293ef，三旧75只读分类与错rc拒绝核同，无finish/重派。48实际模板同main09f3，104301旧native未带新段，首新加载T/产物待。首派前修正三决策规格的scratch字面占位符，另存r2、3构造/3渲染通过，10:55:38原锁接回；旧规格与132数据SHA不改、三单元未开模型。回执已回36/37/48/54，当前待办已更新。原件：paper/materials/20261024-fix-101315-ops/verification.json、continuations.json。
+
+- 2026-10-24T11:06:45+08:00 [ops/postmortem] 101301两局复盘Q7SFDZSJLULD、EQLB6SK9W9H7已核done/rc0，原native退场及封存SHA一致；两节lessons、9条账本追加（7个ID）和2条原提案按实际字节选出，保留并行记录。整局/流派模板已自然产出5项剧本/rk候选，仅本批自有完整局，人类可比偏离、三输入完整性及正式发布/消费者均待，不能计为48新普通模板采用。新非阻塞0604商店前弃仍可用污浊药水已入原fix队列，复用3477提案，不另派或制定用药规则；原帧核回89金不变，兑换金额/收益未知。账本原check已过；本次追加当前只读check回执后沿原paper-dataset写锁注册唯一一次--no-raw，实际结果与受控生成提交由原worker回报，未完成不冒rc0。37原净组合唯一full归属不动，源commit=null及旧失败保留，不新增模型/full/游戏/finish；原严格回收与科学父不关闭。
+原件：paper/materials/20261024-postmortem-101301-ops/records-review.json、report.md；dataset续接见paper/materials/20261024-postmortem-101301-dataset-ops/。
