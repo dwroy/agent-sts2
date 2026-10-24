@@ -57,13 +57,44 @@ backup 使用 SQLite 一致性备份 API，不能只复制正在使用的 `.sqli
 
 ## 学习与完成回调
 
-由 ops 在新任务自然启动边界给原调度/launcher 配置 `STS2_KNOWLEDGE_RUNTIME`；不向已运行模型添加该变量。`learner/lib/knowledge-runtime.ts` 为已登记、未带代码实现/专门研究/提案修复身份的 `experience-update`、`strategy-proposal` 附加本合同，令内容任务 `merge=no`、scratch 位于本树 `learner/runs/`。模型必须从数据库基线取正式内容，不能拿旧 Git 经验覆盖新知识；最终报告带 `knowledge_candidate` 绝对路径、原 base、`commit=null`、`merged=null`、`code_proposals` 与空 `implementation_domains`。
+由 ops 在新任务自然启动边界启用下节的本地控制文件，程序向原调度/launcher 传递 `STS2_KNOWLEDGE_RUNTIME`；不向已运行模型添加该变量。`learner/lib/knowledge-runtime.ts` 为已登记、未带代码实现/专门研究/提案修复身份的 `experience-update`、`strategy-proposal` 附加本合同，令内容任务 `merge=no`、scratch 位于本树 `learner/runs/`。模型必须从数据库基线取正式内容，不能拿旧 Git 经验覆盖新知识；最终报告带 `knowledge_candidate` 绝对路径、原 base、`commit=null`、`merged=null`、`code_proposals` 与空 `implementation_domains`。
 
 `ops/learner_checks.py` 在原完成入口调用 `ops/knowledge_runtime.py`。程序核原 batch/角色、scratch、干净 Git 树和不变 HEAD，再复用代码提案登记与经验→代码提案义务检查。纯知识不要求源码 commit；需要实现出牌/药水/SL/终局规则的仍形成原提案，不能借候选执行代码。外部/回刷继续通过原 `report_proof` 的冻结来源、原生消费、逐 ID 去向与真实产物核验，每个变化必须等于原已核 artifact；新增引用文档由原 owner 另审，不能用一个候选夹带未核内容。
 
 成功记录 `knowledge_publication`（知识版本/源码/候选SHA）、`knowledge_attempts`，发 `knowledge-done` 事件。原外部/回刷 dispositions 继续进入原 reconcile，不重置 owner/失败/退役证据。发布失败或结果不明时保留 `knowledge_pending`、`state=awaiting_review` 与实际原 rc，避免通用失败重试新开模型；由原 `recheck` 入口以同 ID 查询/续接。数据发布事实不代账本 shipped/生产读回/自然收益或父要求验收；原 ledger 和通知沿原 owner、原 CLI 更新，不代其他角色 ACK。
 
 未附带 runtime 候选的旧批次仍走原通道，防止热改在途合同。ops 最终切换前须完成原在途发布的结算和停写边界，禁止两套发布器同时被宣称为有效知识源。
+
+## 调度、学习完成与新局的统一配置入口
+
+`ops/production-runtime.sh` 只由新局脚本读取，单独在其中 export 或给 broker 客户端加前缀，不能证明父调度已继承。正式接线使用本实例忽略目录中的 **`ops/codex-ops/knowledge-runtime.json`**（有 `CODEX_OPS_DIR` 时是该目录下同名文件）。由原 ops 在源码组合/迁移通过、旧写者结算后的自然切点原子写入；开发不创建生产控制文件。示例路径须替换为本实例绝对根：
+
+```json
+{
+  "schema": "knowledge-runtime-control-v1",
+  "root": "/absolute/project-root",
+  "enabled": true,
+  "runtime_dir": "/absolute/project-root/data/knowledge-runtime"
+}
+```
+
+缺文件为默认关闭；原显式环境调用在无控制文件时继续可用。有控制文件时新自然入口以该文件为准；`enabled=false` 关闭新入口。必须绑定实际实例根，目录在该实例解析后的 `data/` 子目录内，不能选 data 根本身。解析器拒绝未知字段、损坏 JSON、异根、越界路径、symlink/非普通控制文件及超4KB内容；不执行配置文本、不创建目录或打开数据库。项目自有挂载/容量/WAL库与迁移核验仍按原 ops 门执行。
+
+原调用链现在明确如下：
+
+- 父调度：`ops/codex-ops-learn.py` 的原 `tick/dispatch/write/boss-check` CLI 在原 handler/状态事务之前只读解析配置，更新该进程的环境；即使原 shell 调度循环长期存在，每个自然 Python 入口仍会重读，不需要修改共享服务或账号。`status/request-merge/core-notify` 保持原检查/通知路径，不因控制文件损坏而失去检查入口。损坏配置在需要准入的入口返回78，不启动任务。
+- 启动与完成：原 `learner_jobs.start_learner` 的 setsid、Herdr命令宿主和原生TUI三种传递路径本已继承/白名单传递 `STS2_*`，无需改宿主或 wrapper。父进程传下 runtime 目录、实例根、控制 SHA 和来源标识；原 wrapper → `learner_entry.py` → launcher 继续继承同一份选择。普通写批次与复盘派发在启动前选择配置，将完整 `knowledge-runtime-selection-v1` 写入原 batch 的 `knowledge_runtime`，连同原注册事务落盘/fsync；包含 enabled/disabled、directory、root、control SHA 和来源。`finish/recheck` 不在新进程入口重读当前控制来选库；有 runtime 候选时必须从原 batch 的持久记录恢复，并仅在该回调作用域内设置环境，随后还原调用者环境。因此即使新进程未继承旧环境、控制已切 B/disabled/损坏，也先沿原 A 查询同 ID 真实结果。关闭状态同样持久保存，不能热转为新 runtime。旧无此记录且无 runtime 候选的报告沿原合同；若声称 runtime 候选却缺原绑定或身份冲突，则 held/awaiting_review，不猜目录、不按当前控制补填旧记录。
+- 新局：原 `ops/run.sh` 在读取原 production-runtime 后、游戏准入前调用相同解析器，从同一控制文件取得目录与 SHA，再沿原单局 `launch` 绑定。既有游戏进程不重读；同局恢复仍核原日志 binding。新自然入口关闭配置不改变已启动模型/游戏的环境，切换前必须沿原发布/写者边界结算，不能用控制开关当作停止在途任务。
+
+控制原文 SHA 以 `STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256` 传递，实例根和来源分别为 `STS2_KNOWLEDGE_RUNTIME_ROOT` / `STS2_KNOWLEDGE_RUNTIME_SOURCE`。launcher 的原 `learner_launch.knowledge_runtime`、完成回报 `knowledge_publication.runtime_control_sha256`、新局 `knowledge.runtime_control_sha256` 都记录该 SHA，供 ops 对照实际父进程/原回执；不记录全环境、凭据或共享 home。仅配置存在或这些字段出现仍不代真实生产继承/自然消费验收。
+
+只读预检（输出安全 shell export/unset，不启用配置、不打开 DB）：
+
+```bash
+nice -n 19 python3 ops/knowledge_runtime_env.py --root "$ROOT" --state-dir "$ROOT/ops/codex-ops"
+```
+
+固定测试覆盖原 CLI main 的 handler 前选择、关闭/缺失、错误配置暂缓、三种原启动传递、shell 引号路径、dispatch_write 持久化选择、fresh-process A→B/A→disabled 回查、原 disabled/未捕获→enabled 不重绑及下一自然入口采用新值。另有 `ops/tests/knowledge_runtime_recheck_probe.py` 使用编译后的真实 CLI 与独立 Node/SQLite 进程，在隔离 A/B 库实际提交后模拟丢失结果，再清空继承环境恢复 finish/recheck：同 ID 回到 A 原版本，A仅迁移+一次发布/B仅迁移，通知不重复。该 probe 只固定 Git 身份，不模拟 SQLite 发布。所有夹具不执行生产 tick、模型、游戏或打开生产库。真实三端 SHA/代码/知识版本、原生学习产物与自然局读回仍由原 ops 在部署后核收。
 
 ## 自然边界切换与回退
 

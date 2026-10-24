@@ -154,6 +154,7 @@ export interface RunConfigRow {
   knowledge: {
     runtime_version?: string;
     runtime_binding?: string;
+    runtime_control_sha256?: string;
     prefix: "off" | "full";
     /** The ascension the prompt was rendered for (the run's). */
     ascension: number | null;
@@ -408,6 +409,8 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
     experience_version: experienceVersion(knowledgeDir),
     ...(runtimeKnowledgeIdentity() ? { runtime_version: runtimeKnowledgeIdentity()!.version } : {}),
     ...(runtimeKnowledgeIdentity() && process.env["STS2_KNOWLEDGE_RUN_KEY"] ? { runtime_binding: process.env["STS2_KNOWLEDGE_RUN_KEY"] } : {}),
+    ...(runtimeKnowledgeIdentity() && /^[a-f0-9]{64}$/.test(process.env["STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256"] ?? "")
+      ? { runtime_control_sha256: process.env["STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256"] } : {}),
   };
   if (!brain) return { ...out, error: "no brain (no DeepSeek client): no system prompt is sent" };
   if (prefix !== "full") {

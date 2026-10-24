@@ -8,6 +8,10 @@ set -u
 if [ -f "$ROOT/ops/production-runtime.sh" ]; then
   . "$ROOT/ops/production-runtime.sh" || exit 78
 fi
+knowledge_runtime_exports=$(nice -n 19 python3 "$OPS/knowledge_runtime_env.py" --root "$ROOT" \
+  --state-dir "${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}") || exit 78
+eval "$knowledge_runtime_exports"
+unset knowledge_runtime_exports
 # Drain only at admission. Never use STOP, which cancels an in-flight brain request.
 nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" admit-game --pid "$$" >/dev/null || {
   echo "game admission held; next play deferred" >&2

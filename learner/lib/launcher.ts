@@ -511,6 +511,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
   log({
     type: "learner_launch",
+    ...(deps.env.STS2_KNOWLEDGE_RUNTIME ? { knowledge_runtime: { directory: deps.env.STS2_KNOWLEDGE_RUNTIME,
+      control_sha256: /^[a-f0-9]{64}$/.test(deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 ?? "") ? deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 : null } } : {}),
     ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
     ts: started.toISOString(),
     engine: request.engine,

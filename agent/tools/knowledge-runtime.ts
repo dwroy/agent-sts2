@@ -1,6 +1,6 @@
 /** CLI shared by runtime completion callbacks and ops. No production paths are implicit. */
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { KnowledgeStore, importFiles, auditApprovedChanges, type Candidate } from "../src/knowledge/runtime/store.js";
 
@@ -19,6 +19,10 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   try { console.log(JSON.stringify({ current: store.current(), restored: true })); } finally { store.close(); } return;
  }
  const readonly = ["current", "query", "status", "backup", "verify", "export"].includes(command ?? "");
+ if (command === "complete") {
+  const database = join(required("runtime"), "knowledge.sqlite");
+  if (!existsSync(database) || !lstatSync(database).isFile() || lstatSync(database).isSymbolicLink()) throw new Error("original runtime database is unavailable; do not initialize or rebind completion");
+ }
  const store = new KnowledgeStore(required("runtime"), { readOnly: readonly });
  let result: unknown;
  try {

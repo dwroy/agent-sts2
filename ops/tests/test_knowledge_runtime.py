@@ -1,11 +1,15 @@
 """Isolated completion callback controls; no production database or source publication."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).parents[1]))
 
 SPEC = importlib.util.spec_from_file_location("knowledge_runtime", Path(__file__).parents[1] / "knowledge_runtime.py")
 runtime = importlib.util.module_from_spec(SPEC)
@@ -22,7 +26,9 @@ class CompletionTests(unittest.TestCase):
         self.path = self.tree / "learner/runs/fixed/knowledge-candidate.json"
         self.path.parent.mkdir(parents=True)
         self.path.write_text(json.dumps({"id": "fixed", "character": "silent"}))
-        self.batch = {"worktree": str(self.tree), "character": "silent"}
+        self.batch = {"worktree": str(self.tree), "character": "silent", "knowledge_runtime": {
+            "schema": "knowledge-runtime-selection-v1", "root": str(self.root), "enabled": True,
+            "directory": "/isolated/runtime", "control_sha256": "a" * 64, "source": "explicit"}}
         self.report = {"task": "experience-update", "knowledge_candidate": str(self.path), "base": "a" * 40,
                        "commit": None, "merged": None, "implementation_domains": []}
         self.events, self.inbox = [], []
@@ -96,6 +102,48 @@ class CompletionTests(unittest.TestCase):
             runtime.run_key("MAP", "MISSING00001", "different-session", log)
         with self.assertRaises(ValueError):
             runtime.run_key("UNKNOWN", "", "different-session", log)
+
+    def test_fresh_recheck_uses_persisted_a_after_unknown_result_with_b_or_disabled(self):
+        from learner_checks import recheck_write_batch
+        self.batch["knowledge_runtime"].update(directory=str(self.root / "data/runtime-a"), source="control")
+        self.batch.update(task="experience-update", rc=0)
+        receipt = {"candidate": "fixed", "version": "K1-" + "b" * 64}
+        git_results = [subprocess.CompletedProcess([], 0, stdout=""),
+                       subprocess.CompletedProcess([], 0, stdout="a" * 40),
+                       subprocess.CompletedProcess([], 0, stdout="a" * 40)]
+        with patch.object(runtime.subprocess, "run", side_effect=git_results + [subprocess.TimeoutExpired(["node"], 120)]):
+            self.finish()
+        saved = json.dumps(self.batch)
+        directory = self.root / "ops/codex-ops"
+        out = directory / "learner"
+        out.mkdir(parents=True)
+        (out / "fixed.out").write_text(json.dumps(self.report))
+        for enabled in (True, False):
+            with self.subTest(enabled=enabled):
+                (directory / "knowledge-runtime.json").write_text(json.dumps({"schema": "knowledge-runtime-control-v1", "root": str(self.root),
+                    "enabled": enabled, "runtime_dir": str(self.root / "data/runtime-b")}))
+                batch = json.loads(saved)
+                with patch.dict(os.environ, {}, clear=True), patch.dict(sys.modules, {"knowledge_runtime": runtime}), patch.object(runtime.subprocess, "run", side_effect=git_results + [subprocess.CompletedProcess([], 0, stdout=json.dumps(receipt))]) as run:
+                    self.assertEqual(recheck_write_batch("fixed", batch, str(self.root), str(out), lambda *a: None, self.inbox.append), 0)
+                    command = run.call_args.args[0]
+                    self.assertEqual(command[command.index("--runtime") + 1], str(self.root / "data/runtime-a"))
+                    self.assertEqual(command[command.index("--id") + 1], "fixed")
+                    self.assertNotIn("STS2_KNOWLEDGE_RUNTIME", os.environ)
+                self.assertEqual(batch["knowledge_runtime"], json.loads(saved)["knowledge_runtime"])
+                self.assertEqual(batch["knowledge_attempts"][0]["error"], "TimeoutExpired")
+                self.assertEqual(batch["knowledge_publication"]["runtime_control_sha256"], "a" * 64)
+
+    def test_disabled_or_uncaptured_batch_is_not_rebound_to_new_enabled_runtime(self):
+        for captured in (True, False):
+            if captured:
+                self.batch["knowledge_runtime"].update(enabled=False, directory=None, source="disabled")
+            else:
+                self.batch.pop("knowledge_runtime", None)
+            with patch.dict(os.environ, {"STS2_KNOWLEDGE_RUNTIME": str(self.root / "data/runtime-b")}), patch.object(runtime.subprocess, "run") as run:
+                self.finish()
+                run.assert_not_called()
+                self.assertEqual(self.batch["state"], "awaiting_review")
+                self.assertEqual(os.environ["STS2_KNOWLEDGE_RUNTIME"], str(self.root / "data/runtime-b"))
 
 
 if __name__ == "__main__":

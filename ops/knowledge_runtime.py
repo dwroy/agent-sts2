@@ -52,6 +52,20 @@ def audit_proposals(report, batch, body, before, root):
 
 
 def complete(batch_id, batch, report, rc, root, enqueue, inbox):
+    if report.get("knowledge_candidate") is None:
+        return False
+    from knowledge_runtime_env import bound_batch
+    try:
+        with bound_batch(root, batch):
+            return _complete(batch_id, batch, report, rc, root, enqueue, inbox)
+    except (OSError, ValueError, TypeError, KeyError):
+        batch.update(state="awaiting_review", rc=rc, report=report, knowledge_pending=True)
+        batch.setdefault("knowledge_attempts", []).append({"state": "pending", "error": "original_runtime_binding_unavailable"})
+        inbox(f"知识批次 {batch_id} 缺原持久runtime绑定；保留原合同/产物，不按当前控制或环境重绑。")
+        return True
+
+
+def _complete(batch_id, batch, report, rc, root, enqueue, inbox):
     candidate = report.get("knowledge_candidate")
     if candidate is None:
         return False
@@ -110,7 +124,9 @@ def complete(batch_id, batch, report, rc, root, enqueue, inbox):
         receipt = json.loads(result.stdout)
         if receipt.get("candidate") != batch_id or not re.fullmatch(r"K1-[a-f0-9]{64}", receipt.get("version", "")):
             raise ValueError("invalid publisher receipt")
-        batch.update(state="done", rc=rc, report=report, knowledge_publication={**receipt, "candidate_sha256": hashlib.sha256(raw).hexdigest()},
+        control_sha = os.environ.get("STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256", "")
+        batch.update(state="done", rc=rc, report=report, knowledge_publication={**receipt, "candidate_sha256": hashlib.sha256(raw).hexdigest(),
+                     "runtime_control_sha256": control_sha if re.fullmatch(r"[a-f0-9]{64}", control_sha) else None},
                      checks_pending=False)
         batch.pop("knowledge_pending", None)
         batch.setdefault("knowledge_attempts", []).append({"state": "published", "version": receipt["version"]})

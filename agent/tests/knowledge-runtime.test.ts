@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, expect, it, vi } from "vitest";
@@ -10,6 +10,7 @@ import { experienceMatches } from "../src/brain/tools/query-guidance.js";
 import { setKnowledgeCharacter } from "../src/knowledge/files.js";
 import { reflex, vocab } from "./v6-fixtures.js";
 import { runtimeLearningInstructions } from "../../learner/lib/knowledge-runtime.js";
+import { main as runtimeMain } from "../tools/knowledge-runtime.js";
 
 const dirs: string[] = [], handles: KnowledgeStore[] = [];
 afterEach(() => { handles.splice(0).forEach(s => { if (s.db.isOpen) s.close(); }); dirs.splice(0).forEach(d => rmSync(d, { recursive: true, force: true })); setKnowledgeCharacter(null); vi.unstubAllEnvs(); });
@@ -79,6 +80,12 @@ it("retains the producer input on SQLITE_BUSY and accepts the same submission af
  try { expect(() => b.submit(c)).toThrow(/locked|busy/i); }
  finally { a.db.exec("ROLLBACK"); }
  expect(b.submit(c).id).toBe(c.id); b.validate(c.id); expect(b.publish(c.id)).toBe(b.current());
+});
+
+it("does not initialize an absent original database during completion recovery", async () => {
+ const missing = join(directory(), "original-runtime-unavailable");
+ await expect(runtimeMain(["complete", "--runtime", missing, "--candidate", "unused-fixture"])).rejects.toThrow("original runtime database is unavailable");
+ expect(existsSync(missing)).toBe(false);
 });
 
 it("rolls back interrupted publication atomically, recovers the same prepared snapshot, and backs up consistently", async () => {
