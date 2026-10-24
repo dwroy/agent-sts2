@@ -6876,3 +6876,5 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 原输入停留告警保留；副本核原线程/turn完成、摘要及SHA，实际session-ended/rc0、stderr空，原生进程及wrapper原PID/birth已退出，未控制/回收原pane或改原回执。瀑布巨兽5对文字/rk为3新情境、2补充，投影4新策略ID、1更新、5新rk及1旧经验补充；不将新ID当新发现。旧高可信机制、rest confidence0.4与原证据保留。242外部上传战斗仅背景，双臂均≥100比较0，不称收益。仅格式过，正式发布/生产读回0。原生high/原沙箱已核，actual tier=null。01:13注册、01:14受理、01:33完成证明C5等待期候选准入/完成，不代自然采用。保C5→就绪58→60下一批；候选串行挂后，不重模型/full/强tick。
 
 证据：paper/materials/20261025-strategy-011301-ops/。
+
+- 2026-10-25T01:48:56+08:00 [watcher] #58工程接收/可发布：main 7779695a839a8fd094575350db7e32a3111bcd79、22叶正式后像/独立读回及Windows SSH远端核同，唯一full 678文件/6618过/0败/2原跳、tsc0；公开回帖https://github.com/dwroy/agent-sts2/issues/58#issuecomment-6387524419原文核同，一行已投原ops（非已读/ACK）。58优先C5后下一源码窗口，60后续独立批次不阻58，复用匹配full不重跑；58核实际提示/工具/旧计划后继/独立更新与计算复用，60按docs/knowledge-runtime.md核冻结已发布叶/回退/停旧写和真实候选→事务→知识版→生产tools正负例→自然局、同ID幂等/同局绑定。必要运行归原ops，长期效果归runtime；本角色未动live/STOP/生产DB/环境/在途，不代ACK/科学父或开发释放。原ops请纳入自己的ops-current短清单；材料paper/materials/20261025-issue58-60-composition-integrator/。
