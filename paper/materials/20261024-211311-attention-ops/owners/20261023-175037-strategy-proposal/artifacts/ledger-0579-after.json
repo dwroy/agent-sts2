@@ -1,0 +1,75 @@
+{
+ "id": "silent-0579",
+ "ts": "2026-10-23T15:11:07+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "静默A10感染棱柱的单行动题incoming_damage_after_this漏算所选技能新触发的污染。F27T6防御8挡选项报净损5，实打污染0→6、意图13→19，扣8挡应损11；该数字低报6。当前live agent/src/reflex/combat.ts:163从旧incoming减新增挡，没有加入技能引起的新来袭。修正是已核机制的题面算术，不据本局调整药时、SL或证明整场可赢。",
+ "first_run": "HD6BM39PYL21",
+ "prior": "unknown",
+ "prior_runs": [],
+ "prior_note": "本角色账本用单步／单行动／incoming_damage_after_this／污染等词检索，旧silent-0130为已修重复扣挡，0168为污染机制；更早静默复盘未核同一单步污染漏算。只认本批最早核实，不能从有限检索宣称此前从未发生或一直做错。",
+ "status": "proposed",
+ "evidence": [
+  {
+   "run": "HD6BM39PYL21",
+   "floor": 27,
+   "turn": 6,
+   "role": "support",
+   "note": "完整原题d476130b与d497860：c5防御incoming_damage_after_this=5，chosen play_card index5，completed、gate_reject缺省；s516545→516546 HP10不变、挡0→8、污染0→6、意图13→19，净损应11。随后ab4dd43c蛇咬再污染6→12、意图19→25。当前live b49984b7d716e02d8a2f3e324f66ebf68fa1b5a7 combat.ts:163仍存在同算式；开局commit未知。",
+   "added": "2026-10-23T15:11:07+08:00"
+  }
+ ],
+ "where": {
+  "lessons": [
+   "HD6BM39PYL21"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/HD6BM39PYL21-proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-154301/learner/runs/20261023-154307-ac105fdc-128d-45e9-8b46-1983b36f3ee3-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-174301/learner/runs/20261023-174307-1c30415f-d53c-4c68-ac9e-67228d7f82c1-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-175037/learner/runs/20261023-175044-4d0e01b4-fea9-412f-99b6-63a04ddcd628-strategy-proposal/proposal.md"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-23T15:11:07+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-23T15:15:21+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-23T16:06:42+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-23T16:24:37+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-23T17:57:52+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-23T18:04:58+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "代码提案 silent-proposal-08f9b6f1658b5d7b → task=strategy-proposal；Roy-2026-10-07-learning",
+  "20261023-154301-strategy-proposal：独立seek核d476130b/ab4dd43c/c06d624d及states516545–516550，已写限Silent A10单行动攻击分量修正与固定回归；沿原silent-proposal-08f9b6f1658b5d7b，不增重复ID；未上线、不标shipped，测试与提交待实核。",
+  "20261023-154301-strategy-proposal停点：三叶候选candidate.patch已写，定向9过；撤生产源码3败6过，恢复9过；tsc0/gitleaks0。完整沙箱已出现brain-agent-mode 8败、ops-mod-state 37败，尚无终局rc，不满足代码提交前exit0门；不修改排除名单、不将全部错误认作策略失败。常规live合并预检15冲突，三叶只读apply-check0；未提交/未实际合入/无版本，不标implemented或shipped，原silent-proposal-08f9b6f1658b5d7b保持waiting语义。报告与完整失败/在途日志保存在本批scratch，交原ops核宿主检查与精确集成，不另建ID。",
+  "20261023-174301-strategy-proposal普通批只读复核原0579：完整原题d476130b/ab4dd43c、精确decisions497860/497861、states516545–516552均seek核SHA；当前攻击分量5→11及11→17偏差成立，非实扣血/胜线。原154301三叶与ops冻结SHA相同，source_commit=null，原完整沙箱45失败无终局/未live，沿原silent-proposal-08f9b6f1658b5d7b等待原宿主检查，不另写修复/不新增ID/不重计support或repeat。报告=/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-174301/learner/runs/20261023-174307-1c30415f-d53c-4c68-ac9e-67228d7f82c1-strategy-proposal/report.md；本批源码零差异、无测试/提交/合入，不标implemented/shipped。",
+  "20261023-175037-strategy-proposal普通批复核：HD6BM39PYL21 F27T6完整原题d476130b及后继六题、精确decisions497860–497865、states516545–516552按原字节核SHA；5→11/11→17为当前攻击分量，不是已扣HP或胜线。原154301候选三叶与ops1637冻结SHA全同、source_commit仍null、完整检查待原宿主，不重开发/不新ID/不重计support或repeat。当前base与live的combat.ts原blob同cad6686e；本批源码零差异、无测试/提交/合入/版本，不标implemented/shipped。报告=/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-175037/learner/runs/20261023-175044-4d0e01b4-fea9-412f-99b6-63a04ddcd628-strategy-proposal/report.md"
+ ]
+}

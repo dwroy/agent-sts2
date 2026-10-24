@@ -1,0 +1,1672 @@
+{
+  "ts": "2026-10-23T06:04:26.229Z",
+  "decision_id": "54bb4afc-8c55-4ac6-ab28-e0d1d17d9f39",
+  "run_id": "Q3R929GHT14R",
+  "floor": 37,
+  "turn": 6,
+  "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:36:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:STRIKE_SILENT:true|1:DEADLY_POISON:true|2:SURVIVOR:true|3:DASH:true|4:ECHOING_SLASH:true\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+  "observed_ts": "2026-10-23T06:04:25.896Z",
+  "label": "combat/plan-choice",
+  "jev_context": null,
+  "call": "ask",
+  "request": {
+    "model": "typesafe/jev-1.14",
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "3",
+        "floor": 37,
+        "hp": "27/70 (39%)",
+        "gold": 111,
+        "ascension": 10,
+        "deck": "30 cards | 9 attacks / 18 skills / 2 powers | 9 upgraded | 1 curses/statuses | avg cost 1",
+        "relics": [
+          "蛇之戒指",
+          "轰鸣海螺",
+          "纸鹤",
+          "五轮书",
+          "金刚杵",
+          "摆动球",
+          "美味饼干",
+          "天选芝士",
+          "准备背包",
+          "古钱币",
+          "珠宝盒"
+        ],
+        "relic_effects": [
+          "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+          "纸鹤: 有虚弱状态的敌人造成的伤害降低40%而非25%。",
+          "五轮书: 你每将?(数值未知)张牌加入你的牌组时，回复?(数值未知)点生命。",
+          "金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。",
+          "摆动球: 每?(数值未知)个回合，抽?(数值未知)张牌",
+          "美味饼干: 拾起时，升级?(数值未知)张牌。",
+          "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+          "准备背包: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "古钱币: 拾起时，获得?(数值未知)金币。"
+        ],
+        "potions": [],
+        "notes": [
+          "used a rest site",
+          "floor 32: moved to Boss",
+          "took a card reward",
+          "floor 33: moved to Ancient",
+          "event choice (诺奴佩普)",
+          "floor 34: moved to Monster",
+          "floor 35: moved to Monster",
+          "floor 36: moved to Monster"
+        ],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "fight": "monster",
+      "situation": {
+        "turn": 6,
+        "hp": "27/70",
+        "block": 0,
+        "energy": 3,
+        "incoming_if_i_do_nothing": 39
+      },
+      "player": {
+        "hp": 27,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "powers": [
+          "力量 -5 [debuff] (力量会增加攻击牌造成的伤害。)",
+          "余像 1 (你每打出一张牌，都获得1点格挡。)",
+          "涂毒 1 (每当你造成未被格挡的伤害时，给予1层中毒。)",
+          "敏捷 -4 [debuff] (敏捷会增加从卡牌中获得的格挡。)"
+        ],
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "name": "失落之物",
+          "hp": "36/99",
+          "block": 0,
+          "intents": "Attack 9[font_size=18]×2[/font_size]",
+          "powers": [
+            "POSSESS_STRENGTH_POWER 1 = 抢夺力量: 被击杀时，将偷窃的所有力量返还给玩家。",
+            "POISON_POWER 6 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。",
+            "STRENGTH_POWER 4 = 力量: 力量会增加攻击牌造成的伤害。"
+          ]
+        },
+        {
+          "name": "遗忘之物",
+          "hp": "90/111",
+          "block": 12,
+          "intents": "Attack 21",
+          "powers": [
+            "POSSESS_SPEED_POWER 1 = 抢夺速度: 被击杀时，将偷窃的所有敏捷返还给玩家。",
+            "DEXTERITY_POWER 6 = 敏捷: 敏捷会增加从卡牌中获得的格挡。",
+            "POISON_POWER 5 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。"
+          ]
+        }
+      ],
+      "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
+      "simulation_reference": {
+        "rollout": {
+          "available": true,
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "elapsed_ms": 245.64160199998878,
+          "random_potion_shared_ms": 0,
+          "degraded": [],
+          "ranking": "best",
+          "best": "plan1",
+          "tied": [],
+          "tied_total": 0,
+          "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
+        },
+        "options": [
+          {
+            "key": "plan1",
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 8,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan2",
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 8,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          }
+        ],
+        "random_potions": []
+      },
+      "potion_context": {
+        "slots": "0/2 used",
+        "act_boss": "in 11 floors (floor 48)"
+      },
+      "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
+      "experience": {
+        "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
+        "lessons": [
+          "[hallway:THE_LOST | confidence high, n=10] 失落/遗忘抢夺会重复削减玩家力敏，取得步法不等已有正敏捷。机制：已见每次各减2、失落增2力/遗忘增2敏；当前总值含其他来源，失落退场返还本局被夺力量，施毒仍可结算；未见周期不外推。搭配：负力逐击减攻击、负敏逐张减卡牌挡，剩血/敌挡分核。决定胜负的战斗：10支持局，固定目标序整战因果未控（n=10）。典型案例：5PM6JAQG6FNQ两次抢夺力敏各−4，一步法仅敏−2；HEMND3SMQYB8 A10 F39力敏先各−2、后敏−4/−6，T4仅2挡对13攻实损11；再生回2使净损9，毒仍可结算。取得步法尚未建立，不给正敏或固定先杀序。"
+        ]
+      },
+      "open_book": {
+        "schema": "open-book-context-v1",
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "limits": "外部机械资料，与实盘证据分账；当前 mod 优先。升级 facts.upgrade 是增量；进阶阈值未知。资料存在不证明模拟已支持。省略项可按 kind/id 查询本地库。",
+        "sources": [
+          {
+            "key": "monsters:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/monsters.json",
+            "sha256": "7c378bbdeb4120e52335e2840f87ce85d3b597370ba4fd531a2fd7a99beeaee1",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "monsters:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/monsters.json",
+            "sha256": "26ae64c6b60bbbc19c6fa9eb14b11f6156786545674511edd97c6fedbd263c05",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "cards:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+            "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "cards:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+            "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+            "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+            "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          }
+        ],
+        "entries": [
+          {
+            "kind": "monsters",
+            "id": "THE_FORGOTTEN",
+            "name": "遗忘之物",
+            "aliases": [
+              "The Forgotten"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "monsters:eng",
+              "monsters:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "type": "Normal",
+              "min_hp": 106,
+              "max_hp": null,
+              "min_hp_ascension": 111,
+              "max_hp_ascension": null,
+              "moves": [
+                {
+                  "id": "MIASMA",
+                  "name": "瘴气",
+                  "intent": "Debuff + Defend + Buff",
+                  "powers": [
+                    {
+                      "power_id": "DEXTERITY",
+                      "target": "self",
+                      "amount": 2
+                    }
+                  ],
+                  "block": 8
+                },
+                {
+                  "id": "DREAD",
+                  "name": "恐惧",
+                  "intent": "Attack"
+                }
+              ],
+              "encounters": [
+                {
+                  "encounter_id": "THE_LOST_AND_FORGOTTEN_NORMAL",
+                  "encounter_name": "失落与遗忘之物",
+                  "room_type": "Monster",
+                  "act": "Act 3 - Glory",
+                  "is_weak": false
+                }
+              ],
+              "innate_powers": [
+                {
+                  "power_id": "POSSESS_SPEED",
+                  "amount": 1
+                }
+              ],
+              "attack_pattern": {
+                "type": "cycle",
+                "initial_move": "MIASMA",
+                "states": [
+                  {
+                    "id": "MIASMA",
+                    "type": "move",
+                    "move_id": "MIASMA"
+                  },
+                  {
+                    "id": "DREAD",
+                    "type": "move",
+                    "move_id": "DREAD"
+                  }
+                ],
+                "description": "Always uses 瘴气"
+              }
+            },
+            "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+          },
+          {
+            "kind": "monsters",
+            "id": "THE_LOST",
+            "name": "失落之物",
+            "aliases": [
+              "The Lost"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "monsters:eng",
+              "monsters:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "type": "Normal",
+              "min_hp": 93,
+              "max_hp": null,
+              "min_hp_ascension": 99,
+              "max_hp_ascension": null,
+              "moves": [
+                {
+                  "id": "DEBILITATING_SMOG",
+                  "name": "致残雾霾",
+                  "intent": "Debuff + Buff",
+                  "powers": [
+                    {
+                      "power_id": "STRENGTH",
+                      "target": "self",
+                      "amount": 2
+                    }
+                  ]
+                },
+                {
+                  "id": "EYE_LASERS",
+                  "name": "眼部激光",
+                  "intent": "Attack",
+                  "damage": {
+                    "normal": 4,
+                    "ascension": 5,
+                    "hit_count": 2
+                  }
+                }
+              ],
+              "encounters": [
+                {
+                  "encounter_id": "THE_LOST_AND_FORGOTTEN_NORMAL",
+                  "encounter_name": "失落与遗忘之物",
+                  "room_type": "Monster",
+                  "act": "Act 3 - Glory",
+                  "is_weak": false
+                }
+              ],
+              "innate_powers": [
+                {
+                  "power_id": "POSSESS_STRENGTH",
+                  "amount": 1
+                }
+              ],
+              "attack_pattern": {
+                "type": "cycle",
+                "initial_move": "DEBILITATING_SMOG",
+                "states": [
+                  {
+                    "id": "DEBILITATING_SMOG",
+                    "type": "move",
+                    "move_id": "DEBILITATING_SMOG"
+                  },
+                  {
+                    "id": "EYE_LASERS",
+                    "type": "move",
+                    "move_id": "EYE_LASERS"
+                  }
+                ],
+                "description": "Always uses 致残雾霾"
+              }
+            },
+            "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+          },
+          {
+            "kind": "cards",
+            "id": "DASH",
+            "name": "冲刺",
+            "aliases": [
+              "Dash"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 2,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "damage": 10,
+              "block": 10,
+              "vars": {
+                "Damage": 10,
+                "Block": 10
+              },
+              "upgrade": {
+                "damage": "+3",
+                "block": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "keywords": []
+            },
+            "description": "获得10点格挡。\n造成10点伤害。",
+            "description_en": "Gain 10 Block.\nDeal 10 damage.",
+            "upgraded_description": "获得13点格挡。\n造成13点伤害。",
+            "upgraded_description_en": "Gain 13 Block.\nDeal 13 damage."
+          },
+          {
+            "kind": "cards",
+            "id": "SURVIVOR",
+            "name": "生存者",
+            "aliases": [
+              "Survivor"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "Self",
+              "color": "silent",
+              "block": 8,
+              "vars": {
+                "Block": 8
+              },
+              "upgrade": {
+                "block": "+3"
+              },
+              "type": "Skill",
+              "rarity": "Basic",
+              "keywords": []
+            },
+            "description": "获得8点格挡。\n丢弃1张牌。",
+            "description_en": "Gain 8 Block.\nDiscard 1 card.",
+            "upgraded_description": "获得11点格挡。\n丢弃1张牌。",
+            "upgraded_description_en": "Gain 11 Block.\nDiscard 1 card."
+          },
+          {
+            "kind": "cards",
+            "id": "STRIKE_SILENT",
+            "name": "打击",
+            "aliases": [
+              "Strike"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "damage": 6,
+              "vars": {
+                "Damage": 6
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Basic",
+              "keywords": []
+            },
+            "description": "造成6点伤害。",
+            "description_en": "Deal 6 damage.",
+            "upgraded_description": "造成9点伤害。",
+            "upgraded_description_en": "Deal 9 damage."
+          },
+          {
+            "kind": "cards",
+            "id": "DEADLY_POISON",
+            "name": "致命毒药",
+            "aliases": [
+              "Deadly Poison"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "vars": {
+                "PoisonPower": 5,
+                "Poison": 5
+              },
+              "upgrade": {
+                "poison": "+2"
+              },
+              "powers_applied": [
+                {
+                  "power": "Poison",
+                  "amount": 5,
+                  "power_key": "Poison"
+                }
+              ],
+              "type": "Skill",
+              "rarity": "Common",
+              "keywords": []
+            },
+            "description": "给予5层中毒。",
+            "description_en": "Apply 5 Poison.",
+            "upgraded_description": "给予7层中毒。",
+            "upgraded_description_en": "Apply 7 Poison."
+          },
+          {
+            "kind": "cards",
+            "id": "ECHOING_SLASH",
+            "name": "回响斩击",
+            "aliases": [
+              "Echoing Slash"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AllEnemies",
+              "color": "silent",
+              "damage": 10,
+              "vars": {
+                "Damage": 10
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "keywords": []
+            },
+            "description": "对所有敌人造成10点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "description_en": "Deal 10 damage to ALL enemies.\nRepeat this effect for each enemy killed.",
+            "upgraded_description": "对所有敌人造成13点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "upgraded_description_en": "Deal 13 damage to ALL enemies.\nRepeat this effect for each enemy killed."
+          },
+          {
+            "kind": "relics",
+            "id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "aliases": [
+              "Ring of the Snake"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在每场战斗开始时，额外抽2张牌。",
+            "description_en": "At the start of each combat, draw 2 additional cards.",
+            "facts": {
+              "rarity_key": "Starter",
+              "pool": "silent"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOMING_CONCH",
+            "name": "轰鸣海螺",
+            "aliases": [
+              "Booming Conch"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在精英战的战斗开始时，额外抽2张牌并获得[energy:1]。",
+            "description_en": "At the start of Elite combats, draw 2 additional cards and gain [energy:1].",
+            "facts": {
+              "rarity_key": "Ancient",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "PAPER_KRANE",
+            "name": "纸鹤",
+            "aliases": [
+              "Paper Krane"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "有虚弱状态的敌人造成的伤害降低40%而非25%。",
+            "description_en": "Enemies with Weak deal 40% less damage to you rather than 25%.",
+            "facts": {
+              "rarity_key": "Rare",
+              "pool": "silent",
+              "merchant_price": {
+                "base": 275,
+                "min": 234,
+                "max": 316
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "aliases": [
+              "Book of Five Rings"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "你每将5张牌加入你的牌组时，回复20点生命。",
+            "description_en": "Every 5 cards you add to your Deck, heal 20 HP.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          }
+        ],
+        "conflicts": [],
+        "missing": [],
+        "omitted": 10
+      },
+      "jev_decision_contract": {
+        "schema": "silent-combat-decision-v1",
+        "responsibility": "只在原合法候选中选择当前战斗方案；计算、完整样本/信任闸及执行保护由代码负责。turn_model是当轮代价与终态摘要；boss_evaluation是同Boss窗口的条件模拟摘要。完整动作轨迹和统计分层仅审计落盘。",
+        "unknown": "缺失保持缺失/null，不补0；模型未校准不因样本完整而可信。S不是胜率，rankingEligible=false不得用于可信排序。原候选顺序、药水代价、机制限制、学习经验和执行保护保持。"
+      }
+    },
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"focus\":\"失落之物, 遗忘之物\",\"plays\":\"冲刺+ -> 失落之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":20,\"enemies_after\":\"失落之物 21 HP, 中毒 6; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~76, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 7/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\",\"rollout_best\":true,\"turn_model\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":20,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"],\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"ec7e10e60a82c2d5a9d2aa8d75dfc19ffef96960fdfff9ec9945554bbfabf5b6\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"energy_paid\":3,\"prefix_energy_paid\":3,\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"}}}",
+          "plan2": "{\"plays\":\"冲刺+ -> 遗忘之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":11,\"enemies_after\":\"失落之物 30 HP, 中毒 5; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~78, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 6/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\",\"turn_model\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":11,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"],\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"e70560748987be2c6be726de293ac922c7f2b43884acddf8f8c62656a27d7007\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"energy_paid\":3,\"prefix_energy_paid\":3,\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"}}}"
+        }
+      }
+    }
+  },
+  "decision_projection": {
+    "schema": "silent-combat-decision-v1",
+    "sourceSha256": "a0fd9f7c3e292535b8231f7c095f3c6fda3c5b76ac2c10137e8e6dbd3888164c",
+    "originalBytes": 25861,
+    "projectedBytes": 22611,
+    "sources": [
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.schema",
+        "source": "quantitative_turn.schema"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.source",
+        "source": "quantitative_turn.source"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.kind",
+        "source": "quantitative_turn.kind"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.window",
+        "source": "quantitative_turn.window"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.damage_hp",
+        "source": "quantitative_turn.damage_hp"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.block_gained",
+        "source": "quantitative_turn.block_gained"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.hp_after",
+        "source": "quantitative_turn.hp_after"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.energy_left",
+        "source": "quantitative_turn.energy_left"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.planned_actions",
+        "source": "quantitative_turn.planned_actions"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.planned_card_actions",
+        "source": "quantitative_turn.planned_card_actions"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.complete_combinations",
+        "source": "quantitative_turn.complete_combinations"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.limits",
+        "source": "quantitative_turn.limits"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.unknown_cards",
+        "source": "quantitative_turn.unknown_cards"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.model",
+        "source": "quantitative_turn.realization.model"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.fingerprint",
+        "source": "quantitative_turn.realization.fingerprint"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.evidence",
+        "source": "quantitative_turn.realization.evidence"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.kind",
+        "source": "quantitative_turn.realization.kind"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.complete_line",
+        "source": "quantitative_turn.realization.complete_line"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.energy_paid",
+        "source": "quantitative_turn.realization.energy_paid"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.prefix_energy_paid",
+        "source": "quantitative_turn.realization.prefix_energy_paid"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.complete_combinations",
+        "source": "quantitative_turn.realization.complete_combinations"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.delayed_damage",
+        "source": "quantitative_turn.realization.delayed_damage"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.delayed_block",
+        "source": "quantitative_turn.realization.delayed_block"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.unknown",
+        "source": "quantitative_turn.realization.unknown"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan1",
+        "field": "turn_model.realization.limits",
+        "source": "quantitative_turn.realization.limits"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.schema",
+        "source": "quantitative_turn.schema"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.source",
+        "source": "quantitative_turn.source"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.kind",
+        "source": "quantitative_turn.kind"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.window",
+        "source": "quantitative_turn.window"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.damage_hp",
+        "source": "quantitative_turn.damage_hp"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.block_gained",
+        "source": "quantitative_turn.block_gained"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.hp_after",
+        "source": "quantitative_turn.hp_after"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.energy_left",
+        "source": "quantitative_turn.energy_left"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.planned_actions",
+        "source": "quantitative_turn.planned_actions"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.planned_card_actions",
+        "source": "quantitative_turn.planned_card_actions"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.complete_combinations",
+        "source": "quantitative_turn.complete_combinations"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.limits",
+        "source": "quantitative_turn.limits"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.unknown_cards",
+        "source": "quantitative_turn.unknown_cards"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.model",
+        "source": "quantitative_turn.realization.model"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.fingerprint",
+        "source": "quantitative_turn.realization.fingerprint"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.evidence",
+        "source": "quantitative_turn.realization.evidence"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.kind",
+        "source": "quantitative_turn.realization.kind"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.complete_line",
+        "source": "quantitative_turn.realization.complete_line"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.energy_paid",
+        "source": "quantitative_turn.realization.energy_paid"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.prefix_energy_paid",
+        "source": "quantitative_turn.realization.prefix_energy_paid"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.complete_combinations",
+        "source": "quantitative_turn.realization.complete_combinations"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.delayed_damage",
+        "source": "quantitative_turn.realization.delayed_damage"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.delayed_block",
+        "source": "quantitative_turn.realization.delayed_block"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.unknown",
+        "source": "quantitative_turn.realization.unknown"
+      },
+      {
+        "question": "plan",
+        "candidate": "plan2",
+        "field": "turn_model.realization.limits",
+        "source": "quantitative_turn.realization.limits"
+      }
+    ]
+  },
+  "decision_evidence": {
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "3",
+        "floor": 37,
+        "hp": "27/70 (39%)",
+        "gold": 111,
+        "ascension": 10,
+        "deck": "30 cards | 9 attacks / 18 skills / 2 powers | 9 upgraded | 1 curses/statuses | avg cost 1",
+        "relics": [
+          "蛇之戒指",
+          "轰鸣海螺",
+          "纸鹤",
+          "五轮书",
+          "金刚杵",
+          "摆动球",
+          "美味饼干",
+          "天选芝士",
+          "准备背包",
+          "古钱币",
+          "珠宝盒"
+        ],
+        "relic_effects": [
+          "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+          "纸鹤: 有虚弱状态的敌人造成的伤害降低40%而非25%。",
+          "五轮书: 你每将?(数值未知)张牌加入你的牌组时，回复?(数值未知)点生命。",
+          "金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。",
+          "摆动球: 每?(数值未知)个回合，抽?(数值未知)张牌",
+          "美味饼干: 拾起时，升级?(数值未知)张牌。",
+          "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+          "准备背包: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "古钱币: 拾起时，获得?(数值未知)金币。"
+        ],
+        "potions": [],
+        "notes": [
+          "used a rest site",
+          "floor 32: moved to Boss",
+          "took a card reward",
+          "floor 33: moved to Ancient",
+          "event choice (诺奴佩普)",
+          "floor 34: moved to Monster",
+          "floor 35: moved to Monster",
+          "floor 36: moved to Monster"
+        ],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "fight": "monster",
+      "situation": {
+        "turn": 6,
+        "hp": "27/70",
+        "block": 0,
+        "energy": 3,
+        "incoming_if_i_do_nothing": 39
+      },
+      "player": {
+        "hp": 27,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "powers": [
+          "力量 -5 [debuff] (力量会增加攻击牌造成的伤害。)",
+          "余像 1 (你每打出一张牌，都获得1点格挡。)",
+          "涂毒 1 (每当你造成未被格挡的伤害时，给予1层中毒。)",
+          "敏捷 -4 [debuff] (敏捷会增加从卡牌中获得的格挡。)"
+        ],
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "name": "失落之物",
+          "hp": "36/99",
+          "block": 0,
+          "intents": "Attack 9[font_size=18]×2[/font_size]",
+          "powers": [
+            "POSSESS_STRENGTH_POWER 1 = 抢夺力量: 被击杀时，将偷窃的所有力量返还给玩家。",
+            "POISON_POWER 6 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。",
+            "STRENGTH_POWER 4 = 力量: 力量会增加攻击牌造成的伤害。"
+          ]
+        },
+        {
+          "name": "遗忘之物",
+          "hp": "90/111",
+          "block": 12,
+          "intents": "Attack 21",
+          "powers": [
+            "POSSESS_SPEED_POWER 1 = 抢夺速度: 被击杀时，将偷窃的所有敏捷返还给玩家。",
+            "DEXTERITY_POWER 6 = 敏捷: 敏捷会增加从卡牌中获得的格挡。",
+            "POISON_POWER 5 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。"
+          ]
+        }
+      ],
+      "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
+      "simulation_reference": {
+        "rollout": {
+          "available": true,
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "elapsed_ms": 245.64160199998878,
+          "random_potion_shared_ms": 0,
+          "degraded": [],
+          "ranking": "best",
+          "best": "plan1",
+          "tied": [],
+          "tied_total": 0,
+          "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
+        },
+        "options": [
+          {
+            "key": "plan1",
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 8,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          },
+          {
+            "key": "plan2",
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 8,
+            "note": "当轮含未建模牌，数字未覆盖其全部效果。"
+          }
+        ],
+        "random_potions": []
+      },
+      "potion_context": {
+        "slots": "0/2 used",
+        "act_boss": "in 11 floors (floor 48)"
+      },
+      "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
+      "experience": {
+        "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
+        "lessons": [
+          "[hallway:THE_LOST | confidence high, n=10] 失落/遗忘抢夺会重复削减玩家力敏，取得步法不等已有正敏捷。机制：已见每次各减2、失落增2力/遗忘增2敏；当前总值含其他来源，失落退场返还本局被夺力量，施毒仍可结算；未见周期不外推。搭配：负力逐击减攻击、负敏逐张减卡牌挡，剩血/敌挡分核。决定胜负的战斗：10支持局，固定目标序整战因果未控（n=10）。典型案例：5PM6JAQG6FNQ两次抢夺力敏各−4，一步法仅敏−2；HEMND3SMQYB8 A10 F39力敏先各−2、后敏−4/−6，T4仅2挡对13攻实损11；再生回2使净损9，毒仍可结算。取得步法尚未建立，不给正敏或固定先杀序。"
+        ]
+      },
+      "open_book": {
+        "schema": "open-book-context-v1",
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "limits": "外部机械资料，与实盘证据分账；当前 mod 优先。升级 facts.upgrade 是增量；进阶阈值未知。资料存在不证明模拟已支持。省略项可按 kind/id 查询本地库。",
+        "sources": [
+          {
+            "key": "monsters:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/monsters.json",
+            "sha256": "7c378bbdeb4120e52335e2840f87ce85d3b597370ba4fd531a2fd7a99beeaee1",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "monsters:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/monsters.json",
+            "sha256": "26ae64c6b60bbbc19c6fa9eb14b11f6156786545674511edd97c6fedbd263c05",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "cards:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+            "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "cards:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+            "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+            "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+            "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          }
+        ],
+        "entries": [
+          {
+            "kind": "monsters",
+            "id": "THE_FORGOTTEN",
+            "name": "遗忘之物",
+            "aliases": [
+              "The Forgotten"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "monsters:eng",
+              "monsters:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "type": "Normal",
+              "min_hp": 106,
+              "max_hp": null,
+              "min_hp_ascension": 111,
+              "max_hp_ascension": null,
+              "moves": [
+                {
+                  "id": "MIASMA",
+                  "name": "瘴气",
+                  "intent": "Debuff + Defend + Buff",
+                  "powers": [
+                    {
+                      "power_id": "DEXTERITY",
+                      "target": "self",
+                      "amount": 2
+                    }
+                  ],
+                  "block": 8
+                },
+                {
+                  "id": "DREAD",
+                  "name": "恐惧",
+                  "intent": "Attack"
+                }
+              ],
+              "encounters": [
+                {
+                  "encounter_id": "THE_LOST_AND_FORGOTTEN_NORMAL",
+                  "encounter_name": "失落与遗忘之物",
+                  "room_type": "Monster",
+                  "act": "Act 3 - Glory",
+                  "is_weak": false
+                }
+              ],
+              "innate_powers": [
+                {
+                  "power_id": "POSSESS_SPEED",
+                  "amount": 1
+                }
+              ],
+              "attack_pattern": {
+                "type": "cycle",
+                "initial_move": "MIASMA",
+                "states": [
+                  {
+                    "id": "MIASMA",
+                    "type": "move",
+                    "move_id": "MIASMA"
+                  },
+                  {
+                    "id": "DREAD",
+                    "type": "move",
+                    "move_id": "DREAD"
+                  }
+                ],
+                "description": "Always uses 瘴气"
+              }
+            },
+            "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+          },
+          {
+            "kind": "monsters",
+            "id": "THE_LOST",
+            "name": "失落之物",
+            "aliases": [
+              "The Lost"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "monsters:eng",
+              "monsters:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "type": "Normal",
+              "min_hp": 93,
+              "max_hp": null,
+              "min_hp_ascension": 99,
+              "max_hp_ascension": null,
+              "moves": [
+                {
+                  "id": "DEBILITATING_SMOG",
+                  "name": "致残雾霾",
+                  "intent": "Debuff + Buff",
+                  "powers": [
+                    {
+                      "power_id": "STRENGTH",
+                      "target": "self",
+                      "amount": 2
+                    }
+                  ]
+                },
+                {
+                  "id": "EYE_LASERS",
+                  "name": "眼部激光",
+                  "intent": "Attack",
+                  "damage": {
+                    "normal": 4,
+                    "ascension": 5,
+                    "hit_count": 2
+                  }
+                }
+              ],
+              "encounters": [
+                {
+                  "encounter_id": "THE_LOST_AND_FORGOTTEN_NORMAL",
+                  "encounter_name": "失落与遗忘之物",
+                  "room_type": "Monster",
+                  "act": "Act 3 - Glory",
+                  "is_weak": false
+                }
+              ],
+              "innate_powers": [
+                {
+                  "power_id": "POSSESS_STRENGTH",
+                  "amount": 1
+                }
+              ],
+              "attack_pattern": {
+                "type": "cycle",
+                "initial_move": "DEBILITATING_SMOG",
+                "states": [
+                  {
+                    "id": "DEBILITATING_SMOG",
+                    "type": "move",
+                    "move_id": "DEBILITATING_SMOG"
+                  },
+                  {
+                    "id": "EYE_LASERS",
+                    "type": "move",
+                    "move_id": "EYE_LASERS"
+                  }
+                ],
+                "description": "Always uses 致残雾霾"
+              }
+            },
+            "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+          },
+          {
+            "kind": "cards",
+            "id": "DASH",
+            "name": "冲刺",
+            "aliases": [
+              "Dash"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 2,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "damage": 10,
+              "block": 10,
+              "vars": {
+                "Damage": 10,
+                "Block": 10
+              },
+              "upgrade": {
+                "damage": "+3",
+                "block": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "keywords": []
+            },
+            "description": "获得10点格挡。\n造成10点伤害。",
+            "description_en": "Gain 10 Block.\nDeal 10 damage.",
+            "upgraded_description": "获得13点格挡。\n造成13点伤害。",
+            "upgraded_description_en": "Gain 13 Block.\nDeal 13 damage."
+          },
+          {
+            "kind": "cards",
+            "id": "SURVIVOR",
+            "name": "生存者",
+            "aliases": [
+              "Survivor"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "Self",
+              "color": "silent",
+              "block": 8,
+              "vars": {
+                "Block": 8
+              },
+              "upgrade": {
+                "block": "+3"
+              },
+              "type": "Skill",
+              "rarity": "Basic",
+              "keywords": []
+            },
+            "description": "获得8点格挡。\n丢弃1张牌。",
+            "description_en": "Gain 8 Block.\nDiscard 1 card.",
+            "upgraded_description": "获得11点格挡。\n丢弃1张牌。",
+            "upgraded_description_en": "Gain 11 Block.\nDiscard 1 card."
+          },
+          {
+            "kind": "cards",
+            "id": "STRIKE_SILENT",
+            "name": "打击",
+            "aliases": [
+              "Strike"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "damage": 6,
+              "vars": {
+                "Damage": 6
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Basic",
+              "keywords": []
+            },
+            "description": "造成6点伤害。",
+            "description_en": "Deal 6 damage.",
+            "upgraded_description": "造成9点伤害。",
+            "upgraded_description_en": "Deal 9 damage."
+          },
+          {
+            "kind": "cards",
+            "id": "DEADLY_POISON",
+            "name": "致命毒药",
+            "aliases": [
+              "Deadly Poison"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "vars": {
+                "PoisonPower": 5,
+                "Poison": 5
+              },
+              "upgrade": {
+                "poison": "+2"
+              },
+              "powers_applied": [
+                {
+                  "power": "Poison",
+                  "amount": 5,
+                  "power_key": "Poison"
+                }
+              ],
+              "type": "Skill",
+              "rarity": "Common",
+              "keywords": []
+            },
+            "description": "给予5层中毒。",
+            "description_en": "Apply 5 Poison.",
+            "upgraded_description": "给予7层中毒。",
+            "upgraded_description_en": "Apply 7 Poison."
+          },
+          {
+            "kind": "cards",
+            "id": "ECHOING_SLASH",
+            "name": "回响斩击",
+            "aliases": [
+              "Echoing Slash"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AllEnemies",
+              "color": "silent",
+              "damage": 10,
+              "vars": {
+                "Damage": 10
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "keywords": []
+            },
+            "description": "对所有敌人造成10点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "description_en": "Deal 10 damage to ALL enemies.\nRepeat this effect for each enemy killed.",
+            "upgraded_description": "对所有敌人造成13点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "upgraded_description_en": "Deal 13 damage to ALL enemies.\nRepeat this effect for each enemy killed."
+          },
+          {
+            "kind": "relics",
+            "id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "aliases": [
+              "Ring of the Snake"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在每场战斗开始时，额外抽2张牌。",
+            "description_en": "At the start of each combat, draw 2 additional cards.",
+            "facts": {
+              "rarity_key": "Starter",
+              "pool": "silent"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOMING_CONCH",
+            "name": "轰鸣海螺",
+            "aliases": [
+              "Booming Conch"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在精英战的战斗开始时，额外抽2张牌并获得[energy:1]。",
+            "description_en": "At the start of Elite combats, draw 2 additional cards and gain [energy:1].",
+            "facts": {
+              "rarity_key": "Ancient",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "PAPER_KRANE",
+            "name": "纸鹤",
+            "aliases": [
+              "Paper Krane"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "有虚弱状态的敌人造成的伤害降低40%而非25%。",
+            "description_en": "Enemies with Weak deal 40% less damage to you rather than 25%.",
+            "facts": {
+              "rarity_key": "Rare",
+              "pool": "silent",
+              "merchant_price": {
+                "base": 275,
+                "min": 234,
+                "max": 316
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "aliases": [
+              "Book of Five Rings"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "你每将5张牌加入你的牌组时，回复20点生命。",
+            "description_en": "Every 5 cards you add to your Deck, heal 20 HP.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          }
+        ],
+        "conflicts": [],
+        "missing": [],
+        "omitted": 10
+      }
+    },
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"focus\":\"失落之物, 遗忘之物\",\"plays\":\"冲刺+ -> 失落之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":20,\"enemies_after\":\"失落之物 21 HP, 中毒 6; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":20,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"ec7e10e60a82c2d5a9d2aa8d75dfc19ffef96960fdfff9ec9945554bbfabf5b6\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DASH\":1,\"SURVIVOR\":1},\"effect_resolutions\":{\"DASH\":1,\"SURVIVOR\":1},\"energy_paid\":3,\"prefix_energy_paid\":3,\"established_before\":{\"energy\":3,\"hp\":27,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"SURVIVOR\",\"DASH\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":27,\"block\":15,\"damage\":8,\"blockGained\":15,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":true,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":28,\"poison\":7,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[\"弃牌选择未确定\"]},\"actions\":[{\"card\":\"DASH\",\"target\":0,\"cost\":2,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":1,\"hp_after\":27,\"block_after\":10,\"damage_hp\":8,\"block_gained\":10,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"SURVIVOR\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":27,\"block_after\":15,\"damage_hp\":0,\"block_gained\":5,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":true}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"]},\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~76, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_turns\":\"T1 exact: hp -24, dmg 20; T2: hp -0 [0-0], dmg 19.9 [10-25], alive 8/8, won 0/8; T3: hp -9.8 [1-29], dmg 7.5 [3-18], alive 1/8, won 0/8; T4: hp -0 [0-0], dmg 6 [6-6], alive 1/8, won 0/8; T5: hp -7 [7-7], dmg 17 [17-17], alive 0/8, won 0/8\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 7/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\",\"rollout_best\":true}",
+          "plan2": "{\"plays\":\"冲刺+ -> 遗忘之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":11,\"enemies_after\":\"失落之物 30 HP, 中毒 5; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":11,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"e70560748987be2c6be726de293ac922c7f2b43884acddf8f8c62656a27d7007\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DASH\":1,\"SURVIVOR\":1},\"effect_resolutions\":{\"DASH\":1,\"SURVIVOR\":1},\"energy_paid\":3,\"prefix_energy_paid\":3,\"established_before\":{\"energy\":3,\"hp\":27,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"SURVIVOR\",\"DASH\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":27,\"block\":15,\"damage\":0,\"blockGained\":15,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":true,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[\"弃牌选择未确定\"]},\"actions\":[{\"card\":\"DASH\",\"target\":1,\"cost\":2,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":1,\"hp_after\":27,\"block_after\":10,\"damage_hp\":0,\"block_gained\":10,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"SURVIVOR\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":27,\"block_after\":15,\"damage_hp\":0,\"block_gained\":5,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":true}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"]},\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~78, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_turns\":\"T1 exact: hp -24, dmg 11; T2: hp -0 [0-0], dmg 19 [9-25], alive 8/8, won 0/8; T3: hp -11.8 [1-30], dmg 14.9 [8-19], alive 1/8, won 0/8; T4: hp -0 [0-0], dmg 6 [6-6], alive 1/8, won 0/8; T5: hp -7 [7-7], dmg 17 [17-17], alive 0/8, won 0/8\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 6/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\"}"
+        }
+      }
+    }
+  },
+  "request_id": null,
+  "latency_ms": 2163,
+  "input_tokens": 9632,
+  "output_tokens": 34,
+  "answers": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan1",
+      "probabilities": {
+        "plan1": 0.97,
+        "plan2": 0.03
+      },
+      "confidence": 0.94,
+      "raw": {
+        "choice": "plan1",
+        "confidence": 0.94,
+        "probabilities": {
+          "plan1": 0.97,
+          "plan2": 0.03
+        },
+        "type": "choice"
+      }
+    }
+  }
+}

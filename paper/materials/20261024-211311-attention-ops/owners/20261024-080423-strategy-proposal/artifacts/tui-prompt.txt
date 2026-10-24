@@ -1,0 +1,142 @@
+[learner-batch:67004075-6b62-4e73-9d97-1e5c3ed922d4]
+【启动器说明（codex）】任务说明里的工具名是通用叫法，在这里这样对应：Read = 用只读的 shell 命令看文件（sed -n '起,止p'、head、tail；大文件不许整份输出），Grep = rg 或 grep，Glob = rg --files、ls 或 find，Bash = shell 命令，Edit / Write = apply_patch（或 shell 写文件）。
+本任务允许的工具：Read、Grep、Glob、Bash、Edit、Write。沙箱：工作目录、项目目录和临时目录可写，不联网；key 文件和 .env 读不到。
+
+# 外部来源专线
+
+本批角色 silent，真实调度ID 20261024-080423-strategy-proposal，工作树 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-080423，项目根 /home/dw/Projects/agent-sts2，临时产出 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-080423/learner/runs/20261024-080447-2e09e130-72e4-40ed-b25a-9ba67b7bf285-strategy-proposal。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
+
+只读冻结的、已脱敏聚合 JSON 与发布契约，不读原始数据库、逐玩家数据或玩家标识，不下载新数据。游戏知识只能来自这些证据，不从预训练知识补齐。来源统一 external:sts2fun；逐结论记录版本、采集日期、输入 SHA、独立样本分母、观察性限制、反例和缺口。v0.111 与 v0.107–v0.110 分 cohort 统计，不能混算；本系统 live 证据另账，runs=[]，不得补局号或把玩家聚合冒成本系统验证。
+
+按 work_spec 的有界单批主题提炼 knowledge/strategy/rk 候选。先核 #27/#28/#42 冻结契约，命中同场景就合并候选/指向既有ID，冲突保留本系统与外部两条证据和适用条件。rk 保留可复盘条件与缺口；#50 双Boss准备度要求照绑定规格交付。只在 scratch 保存真实候选和来源账本；每条写 formal_publication=pending、consumer_readback=pending。正式发布仍沿既有发布锁、学习账本、消费者读回和后续自然采用流程，候选完成不关闭科学父。不改源码/正式知识、不合入 main/live；HEAD 保持 dispatch_base。
+
+所有 unit_ids 逐项写具体处置和缺证理由，允许 waiting；不得捏造发布、读回、收益或样本。保存 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-080423/learner/runs/20261024-080447-2e09e130-72e4-40ed-b25a-9ba67b7bf285-strategy-proposal/report.md，最后输出同一 JSON：task=strategy-proposal、character=silent、batch=真实ID、base=dispatch_base、runs=[]、fixes=[]、merged=null、tests={tsc:null,vitest:null,cases:null}、report=报告绝对路径、external_source=绑定plan_id、input_sha256=冻结manifest SHA、external_results=[{id:unit_id,state:processed或waiting,destinations:[{kind:knowledge或strategy或rk或merged-into,id:目标ID,path:scratch中真实候选文件绝对路径}],reason:具体理由}]。processed 表示候选已落盘且至少一个去向；waiting 的 destinations=[]。不得把启动参数或请求档位当原生已采用档位，使用量/耗时以原启动回执与运行记录为准。
+
+
+本批冻结身份（路径相对 project_root）：
+{
+  "batch": "20261024-080423-strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-080423",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "plan_id": "issue51-deck-outcomes-003",
+  "source": "external:sts2fun",
+  "input_manifest": {
+    "path": "paper/materials/20261024-issue51-p0-0802-ops/issue51-deck-outcomes-003.json",
+    "bytes": 5015,
+    "sha256": "25f26e48fc4b7633c2111734c84a81e0a280b3e04b1137f9404db6a7d031ffc8"
+  },
+  "work_spec": {
+    "path": "paper/materials/20261024-issue51-p0-0802-ops/issue51-deck-outcomes-003.md",
+    "bytes": 1730,
+    "sha256": "5fc463b44c1de83e25f2b3c0e72428674f65852ce58b70595a1b67e19ed51575"
+  },
+  "topic": "knowledge",
+  "provenance": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "query_version": "ops-safe-deck-outcomes-v1",
+    "query": {
+      "path": "paper/materials/20261024-issue51-p0-0802-ops/safe-deck-projection.sql",
+      "bytes": 909,
+      "sha256": "edf83629a2a21ae388e37a2109a9959f16860da7b5e1bf4144e05a1c21d1849d"
+    },
+    "export_receipt": {
+      "path": "paper/materials/20261024-issue51-p0-0802-ops/deck-export-receipt.json",
+      "bytes": 2332,
+      "sha256": "ee2fbf34059c41873071d9675ece3c267c60a209a9c3aae4c031ebe51e4f53f0"
+    },
+    "design": "observational"
+  },
+  "entry_ids": [
+    "external-terminal-deck-outcome-001"
+  ],
+  "all_entry_ids": [
+    "external-terminal-deck-outcome-001"
+  ],
+  "dispatch_runs": [],
+  "cohorts": [
+    {
+      "version": "v0.107",
+      "sample_count": 2932,
+      "sample_denominator": 2932,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/deck-outcomes-v0.107.json",
+          "bytes": 5049319,
+          "sha256": "7fcef1f28e9baad65c15f7e3ffe6293bafc7b7859b6640a3ba1957c3d86d47e8"
+        }
+      ]
+    },
+    {
+      "version": "v0.108",
+      "sample_count": 683,
+      "sample_denominator": 683,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/deck-outcomes-v0.108.json",
+          "bytes": 1271062,
+          "sha256": "8cc633412169077179392bca9e1e31365954e21711c010d4439b5c29e0c3b00e"
+        }
+      ]
+    },
+    {
+      "version": "v0.109",
+      "sample_count": 583,
+      "sample_denominator": 583,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/deck-outcomes-v0.109.json",
+          "bytes": 1123918,
+          "sha256": "7aaaab21bd033678900acf84b1070ec403f1c073b2300b99f37bac46a0066f74"
+        }
+      ]
+    },
+    {
+      "version": "v0.110",
+      "sample_count": 411,
+      "sample_denominator": 411,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/deck-outcomes-v0.110.json",
+          "bytes": 803841,
+          "sha256": "0e6de9118e39076b4b6e6d540bbd0658ef215fdd0d5dcb6fe42b4e0ea0e0d5da"
+        }
+      ]
+    },
+    {
+      "version": "v0.111",
+      "sample_count": 1739,
+      "sample_denominator": 1739,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/deck-outcomes-v0.111.json",
+          "bytes": 3271025,
+          "sha256": "f6ad58f6078cd21013918e3bf09ff37e11c4db10ab1313bce1902734c7c36522"
+        }
+      ]
+    }
+  ],
+  "retry_generation": 0,
+  "dispatch_base": "94f75074442698061cb7b344f46e0097d028e3a1"
+}
+# #51 Roy晨间方法调整，第1项独立批：牌组层面胜率
+
+原指令6377208558，先1/2/5，每项一批独立闭环；本批只做第1项，不等路线、双Boss精确楼层或药水快照。核authorization.json原文。本批source=external:sts2fun，Silent A10，design=observational，v0.111与v0.107–v0.110逐版本分账；各组用自己的n，不将外部分母计自有支持。runs=[]。
+
+冻结数据包含终局牌组原始ID与张数聚合、牌组张数/单卡精确重数分层的胜负和各幕Boss到达数、终局多重集合交叉聚合以及原升级字段的可用值计数。先产出能算的牌组情境→构筑目标观察性候选。允许按有证据的特征、可复核统计聚类；类型/诅咒/流派机制映射缺失则注明unknown或跳过该特征，不能整批waiting。不要用名字或预训练知识补分类。终局牌组是结果之后的特征，不能冒充第二幕末或决策时牌组；任何早期构筑目标均标“终局牌组代理/观察性关联”，不转为因果收益、固定优先级或安全阈值。保持原选择偏差、SL未知、死亡删失和缺玩家调整的限制。样本不足的子组保留n和限制，不提升confidence。
+
+交付external-terminal-deck-outcome-001的具体去向和来源账本：strategy/knowledge候选先落scratch，按#27/#42契约包含版本、SHA、样本与observational/代理说明；复用旧场景ID。源码和正式知识不改、不合main/live。正式上线/实际消费者/自然采用另由原链推进，不代科学父完成。首单实际native/high/workspace-write须原启动与原生日志，不以参数冒称。第2/5项另批，不在本批扩大到原DB、下载或自有新局。
+
+
+工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace codex-strategy-silent-20261024-080423 --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。
