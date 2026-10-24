@@ -1,10 +1,10 @@
 {
-  "at": "2026-10-24T19:21:08+08:00",
-  "phase": "waiting-original-natural-terminal",
+  "at": "2026-10-24T20:19:26+08:00",
+  "phase": "published-registered-readback-notified-admission-released",
   "issue": 37,
   "worker_pid": 3828459,
   "worker_birth": "26539693",
-  "published": false,
+  "published": true,
   "new_full_model_or_game": 0,
   "held_locks": [],
   "boundary": {
@@ -18,5 +18,37 @@
     "prefix_bytes": 56650,
     "prefix_sha256": "992005094d9328cc0aaf229f39aa26d6cb5ee454d094b4672d13a19319498d08",
     "wait": "original PID/birth pidfd natural terminal only; no signals, keys or game requests"
-  }
+  },
+  "waiting_lock": "ops/live-merge.lock",
+  "live_lock_acquired_at": "2026-10-24T20:19:17+08:00",
+  "T": "2026-10-24T20:19:18+08:00",
+  "publication_parent": "afee4d735a2487c3a5fafa19a21545aa5328f748",
+  "behavior": {
+    "parent": "afee4d735a2487c3a5fafa19a21545aa5328f748",
+    "commit": "c76b12b2d294ab3184bfa76a1850f3e46f48a16f",
+    "tree": "6a9517e2dec0c038a95b311c9b6b9f4412416662",
+    "paths": [
+      "agent/src/eye/jev-prompt-log.ts",
+      "agent/src/reflex/jev/client.ts",
+      "agent/tests/jev-decision-projection.test.ts",
+      "agent/tests/open-book.test.ts",
+      "agent/tests/v6-combat-entries.test.ts",
+      "docs/open-book.md",
+      "agent/tools/v6/combat-entry-replay.ts",
+      "agent/tests/learner-launch-failures.test.ts",
+      "ops/tests/test_reclaim_gates.py"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/861aadd152f64abab9ca891528b55b0e/manifest.json",
+      "manifest_sha256": "1e1ed690f2f9f581a77918f42ba6c3d785baf30cbed2a25d718831bb783d4542",
+      "scanned_leaves": 9,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    },
+    "parallel_staged_paths_preserved": []
+  },
+  "release_id": "V6-R438",
+  "live": "069fd0107a1f16ec958e10af8dc49d7a612c6ec8",
+  "live_lock_seconds": 9.034283602959476,
+  "live_lock_released_at": "2026-10-24T20:19:26+08:00"
 }

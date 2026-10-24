@@ -1,12 +1,12 @@
-state: in-flight
-issue: 37
-updated: 2026-10-24T19:25:12+08:00
+state: clear-ok
+issue: 51
+updated: 2026-10-24T20:24:54+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#37净37+20唯一full6600/0/2、main efc1a537九叶核同。新自然worker3828459/birth26539693已绑自有准入，未发布/不持发布锁；原play3770028/birth26491853、autoplay1245890仅等自然终局，不干预对局。
-在等谁：原终局后worker发布/登记/读回/释准入，再核首自然Jev无开卷/错误；若原autoplay自然退出则沿原broker恢复。#20三宿主源/缓存及19:13自然allocation核同，原24h/kit/未知与科学父保持。
-下一步：in-flight/37，不清会话/重派/full；保R435–R437及后来知识，旧51八叶/091302排除。原件paper/materials/20261024-issue37-runtime-publication-ops/publication-state.json、host-natural-loading.json，issue37:6383608873/20:6383609255。
+进行中的事：本轮写操作已结。#51 drain回执6384186254：自然等待可派冻结候选，独立对局门/短锁建议另立issue；现全局双门/普通merge=live不能绕，不扩56。
+在等谁：主管排开发、原自然学习新单元回执。原37已V6-R438/069fd010，锁9.034s/20:19:26释门；原自动循环续7RDXHY68SMWF，首F2/T1无开卷/配对完成已核，ENOBUFS/null不倒填。
+下一步：核自然学习/后续Jev及20原24h/kit，不强tick/full/模型/开局。九叶/518知识、61策略109rk保持，旧51八叶/091302排除。原件paper/materials/20261024-issue51-publication-drain-audit-ops/analysis.md、publication-r438-return-verification.json、first-natural-jev.json；20宿主自然加载/科学父保持。
 
 #50本轮已结：三自然晚层局143落盘/140后继、18检查点/15后继；F48三/F49一/0胜只为选样，原首W546/ENOBUFS-null不改。BP9/P4学习读取已核，冷重启/回退及达标线正式入库待，issue6383251914；paper/materials/20261024-issue50-resume-1834-ops/。
 
