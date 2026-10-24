@@ -1,18 +1,19 @@
-state: clear-ok
-issue: 51
-updated: 2026-10-24T19:10:25+08:00
+state: in-flight
+issue: 37
+updated: 2026-10-24T19:25:12+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：R437/184318返回已核同原提交/登记/三类各6读回/12shipped及原658检查0；61策略/109rk，原worker已退，锁40.41s于19:07:13释放，R435/R436与复用原证据保持。
-在等谁：51原学习owner的六自定义knowledge经验映射/消费者、自然采用收益及科学父，#56四道P0；原接收/Roy通知pending，不代ACK。粗谓词不代预算/删牌合法。
-下一步：clear-ok/51，无未完ops写事务；不重发/工具/full/模型。原issue6383465220，本返回paper/materials/20261024-issue51-r437-return-ops/verification.json；完整发布见issue51-shop-paired-ops/。
+进行中的事：#37净37+20唯一full6600/0/2、main efc1a537九叶核同。新自然worker3828459/birth26539693已绑自有准入，未发布/不持发布锁；原play3770028/birth26491853、autoplay1245890仅等自然终局，不干预对局。
+在等谁：原终局后worker发布/登记/读回/释准入，再核首自然Jev无开卷/错误；若原autoplay自然退出则沿原broker恢复。#20三宿主源/缓存及19:13自然allocation核同，原24h/kit/未知与科学父保持。
+下一步：in-flight/37，不清会话/重派/full；保R435–R437及后来知识，旧51八叶/091302排除。原件paper/materials/20261024-issue37-runtime-publication-ops/publication-state.json、host-natural-loading.json，issue37:6383608873/20:6383609255。
 
 #50本轮已结：三自然晚层局143落盘/140后继、18检查点/15后继；F48三/F49一/0胜只为选样，原首W546/ENOBUFS-null不改。BP9/P4学习读取已核，冷重启/回退及达标线正式入库待，issue6383251914；paper/materials/20261024-issue50-resume-1834-ops/。
 
 #35并行：R422原四终局84快照/100题/12同战SL核同，041301终态19/19/24/21消费；输出截断不代全历史。等原自动对局自然重启/跨层/超40溢出及学习/收益证据，沿原窗口核，不造场景；ENOBUFS/null、旧R419 lost full及父保持。原件paper/materials/20261024-issue35-natural-learning-ops/及checkpoint-1648-ops/。
 
-#51并行保持：R434/T18:12:30实发6对，47策略/91rk、12shipped/626检查0、锁35.58s已释；描述tag比较建议0，剧本/第7对/自然采用收益待。新6382974399/6382976033要求4类别+独立自有1槽，当前仅2策略槽/外部单道，P0点6383016491交主管。A181311已发R435，C182343已发R436/原native high及沙箱已核，仅手动新增C1；fast请求/实际tier未知。B20～25已冻、旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权换codex1、磁盘≤80停新派仍待代码。旧8叶3:1部署授权取消，源稿/旧full保留；A/C/D均done、D184318已发R437，按原retention门，不重派/回收，R430八ID自然命中非收益，旧005/008不改。506/28窗口/18局反向分层守界，满批或2h先到串行发布，无新计时器。paper/materials/20261024-issue51-four-lanes-ops/及issue51-r434-return-ops/。
+#51保持：R435/R436/R437已实发，61策略/109rk；六自定义knowledge经验映射/消费者、完整剧本/第7对、自然采用收益及科学父待。R434原六对/35.58s与旧结果保留，R430八ID自然命中非收益；旧005/008不改。C182343原角色接收/用户可见转Roy6383409246已核，非本人ACK/不代旧notice。
+新6382974399/6382976033四类别+独立自有1槽待56；当前原2策略槽/外部自动单道不冒四道。A/C/D原high/沙箱/tier未知，手动仅C1；B20～25已冻/旧单牌held，D商店→遗物→事件；≤70ultrafast、>70fast两道、90原授权codex1、磁盘≤80停新派待代码，不热切/扩权限。旧8叶3:1源稿/旧full保留而部署授权取消。A/C/D已done按原retention门；506/28窗口/18局反向分层守界，满批或2h先到串行发布，不开计时器。原件paper/materials/20261024-issue51-four-lanes-ops/及issue51-shop-paired-ops/。
 
 164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
@@ -24,7 +25,7 @@ updated: 2026-10-24T19:10:25+08:00
 
 #51三原候选仍仅代理/外部关联，旧版本反向及描述知识消费者缺口保持，不硬转rk/StrategyEntry。paper/materials/20261024-strategy-{114313,121311,124312}-ops/。
 
-#37新37/20/51冻结R433组合full18:14:31终态：6600过/0败/2跳，两tsc0、原worker3312093已退/锁释；勿另full。旧13败/profile8败/main6661原件各保留。旧8叶3:1因新令不部署；原owner核源交付与R434/其他知识漂移、九产品叶及首自然Jev，091302 source=null/净12/.2排除不夹。paper/materials/20261024-issue37-20-51-runtime-integrator/full-state.json。
+#37旧含废止51八叶的R433组合6600/0/2及13败/profile8败/main6661原件保留、不借绿；新净37+20交付见首段，旧3:1/091302 source=null/净12/.2排除。原件paper/materials/20261024-issue37-20-51-runtime-integrator/；新issue37-20-r434-integrator/。
 
 131302 fix及两补链：原failed/rc0/tsc0/31定向、175源差/empty guard未过；两补链done/0293 waiting，各14where-only/1处置未重复分母；14正式经验未入，061302缺源/101315旧失败保持。paper/materials/20261024-fix-131302-ops/及strategy-131302{,-s2}-ops/。
 

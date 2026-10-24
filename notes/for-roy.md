@@ -5344,3 +5344,10 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 本轮仅处理184318原发布返回。publication-state、publication、实际消费者及原verification/账本检查回执，与受控提交9af6f5b3逐字节同；main/live原提交为当前祖先，R437登记对应原behavior，当前三知识叶另存SHA与是否同原叶观察，不覆盖后来知识。原扫描manifest的SHA、2新扫/2复用/零全拷贝核同。61策略/109rk、六文字/六构筑摘要/六完整读回及12shipped、原658项检查0保持，未重跑任何工具或账本检查。原worker的PID/birth已退出，原锁40.413秒于19:07:13释放，不声称其他事务当前无锁。R435/R436与满药栏复用保护原证明保持；六粗谓词真只证明已列当前事实，不代预算、可删资格或收益。六自定义knowledge正式经验映射/消费者、自然采用收益与科学父仍待原owner；原集成员提醒不代接收/Roy已知，不代ACK。本轮未重发/full/模型/额外局，交接clear-ok/51，#56后续另接。
 
 原件：paper/materials/20261024-issue51-r437-return-ops/verification.json；原发布paper/materials/20261024-issue51-shop-paired-ops/publication.json，issue51评论6383465220。
+
+
+### 2026-10-24T19:25:12+08:00 [ops] #37/#20净组合交付与新自然发布登记
+
+已核两交付评论、main efc1a537、原九产品叶/九live前像和新唯一full6600过/0败/2跳、两tsc0/Python62；只认原R434冻结，不借旧含51八叶full或冒当前整树已测。旧51八叶/091302源null及净12排除，旧failed/rc0保留。20三宿主源码/新缓存核同，19:13自然分配已捕获main/live边界，未强制tick/complete/reclaim，原24h/kit和旧未知不清。新worker3828459绑原play3770028及birth/console，自有准入登记后仅pidfd等自然终局，不持发布锁等待、不干预对局。随后原锁内精确发九叶，保R435–R437及后续知识/绑定/开关；实际发布、准入释放、必要的broker恢复及首自然Jev读回仍待，交接in-flight/37。本轮未另full/模型/局。C182343原角色接收与用户可见转Roy回执SHA已核，不改原pending、不代本人ACK或其他17通知；科学父仍开。
+
+原件：paper/materials/20261024-issue37-runtime-publication-ops/preflight.json、publication-state.json、host-natural-loading.json、notice51-role-receipts-verified.json；issue37评论6383608873/20评论6383609255。
