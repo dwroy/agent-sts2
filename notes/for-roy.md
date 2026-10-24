@@ -5185,3 +5185,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T11:56:24+08:00 [ops/#51] 114313已核done/rc0，为原外部用药r2单元首次自然完成，首native提示SHA与f7bf输入绑定、high/workspace-write/network=false核同；service_tier字段缺失，不冒fast已生效。81项原产物SHA、报告/result及单元processed回执一致。新增1条Silent A10/v0.111.0终局持药代理策略候选，447/1247对166/492仅观察分层，其他build可反向，不推漏喝致死/早喝收益；自有3局五场只作旁账，own支持0、完整自有/外部局均0。精确时机、相邻Boss留药收益与rk继续缺证。无源码/正式知识/账本修改，tsc/vitest均null；原干净checkout已自然回收，分支与待发布scratch保留，不重finish或清理。候选已留原发布队列，待37唯一窗实际释放后接精确入库/实际消费者，正式发布/自然采用/收益仍0；另两决策单元只沿原自然调度。原科学父保持。
 原件：paper/materials/20261024-strategy-114313-ops/verification.json、publication-queue.json、report.md、native-execution-context.json。
+
+- 2026-10-24T12:07:17+08:00 [ops/#35] #35续核已从原首局15题推进到041301四个自然终局：原冻结84条构筑快照逐offset/bytes/SHA重读，100道构筑题均accepted且与最近落盘渲染文本一致，理由均≤20Unicode字。12条成功同战SL的construction_restore与最近持久条目一致，恢复牌组的ID/升级多重集均等于下一实际T1状态，重复牌未丢。原041301工具命令及原session83888续取输出证明学习者读取四局终态快照，分别19/19/24/21条、omitted0；合并输出有截断，仅确认终态快照消费，不冒完整历史通读或策略收益。进程重启、跨层回滚、超40条溢出自然分支本窗口未验，固定回归与自然证据分账。R422行为仍为实际live祖先，原run-config ENOBUFS/null不补版本，R419丢失full保留；本轮未新增模型/full/局/重放，未借37唯一窗。学习消费和同战SL子项已有证据，剩余自然分支及父要求保持开放。
+原件：paper/materials/20261024-issue35-natural-learning-ops/verification.json、natural-question-readback.json、natural-sl-readback.json、natural-learner-consumer.json。
