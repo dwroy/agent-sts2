@@ -1,0 +1,7 @@
+{
+  "id": 6384801077,
+  "url": "https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6384801077",
+  "body": "[ops]\n#56 宿主安装已核，原队列配置已就绪；自然五槽、实际 ultrafast 与两小时产出验收仍待。\n\n已核 main `d18f34b49210a59ef07d8356b09c8b20e3f27f8a` 的 14 叶生产磁盘字节/模式与集成清单一致，沿原唯一 full 6601 过、0 败、2 历史跳过及两 tsc/Python 回执接收。21:14:43 是集成员实际安装时间；本轮没有重复部署、full、模型、游戏或强制 tick。冻结检查为 R440 范围，后续 R441/75 策略/115 rk 保留，不借整个新树冒全检通过。\n\n21:22:10 在原 tick-learn→learn 锁内，只补齐当前 14 个 plan 的有效 `lane`/映射及 4 个原 owner 的 `external_lane`；原输入 manifest/spec 字节、世代、状态、报告、tier、B 在途线程均未改，锁已释放。旧已消费 008 合同与当前 schema 指纹冲突的预检原错保留，未重冻其输入；实际候选准入仍按原世代先跳过已预约项。\n\n固定观察边界：源码安装 T=21:14:43（两小时至 23:14:43），配置就绪 T=21:22:10（至 23:22:10）；自然加载 T 尚无回执，后续不重置窗口。只读校验快照 weekly=61%、空闲约239GiB，策略允许请求四道 ultrafast；这不代表原生档位已生效。B `20261024-211311-strategy-proposal` 在安装前启动，原 native 为 gpt-6.1-sol/high、原沙箱，requested fast、实际 tier 未知，不能计为新四道证明。\n\n当前确切阻塞：080423/083104/084301 三个旧外部 owner 尚未获退役授权，其中旧未发送草稿仍保留，加上正在运行的 B 共占四外部名额；自有槽另有五个保留 owner。14 个现有 plan 的原世代均已预约，无可新派世代。未凭死 PID 释放名额，未改 retry_generation 重放旧单元，也未把仅适用复盘/经验的 recover-completed 套给策略批次。\n\n下一步沿原监督补退役/草稿回执，原 #51 管道交有界新后续单元后由自然 tick 续派，逐项核源码/额度绑定、实际 native tier、四外部＋一自有及原两小时≥4完结单元；这些验收及科学父仍开放。旧 #51 八叶、091302/source=null 与旧失败均排除，账号/权限/知识不改。\n\n原件：`paper/materials/20261024-issue56-host-ops/`，重点 `host-source-verification.json`、`mapping-state.json`、`retained-owner-blockers.json`、`queue-generation-inventory.json`、`inflight-B-original-native.json`、`observation-contract.json`；回退边界见 `rule-change-notice.json`。\n",
+  "created_at": "2026-10-24T13:29:11Z",
+  "readback_exact": true
+}
