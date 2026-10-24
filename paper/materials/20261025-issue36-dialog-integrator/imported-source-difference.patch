@@ -1,0 +1,15 @@
+--- frozen-full/eval/brain_source.py
++++ current-main/eval/brain_source.py
+@@ -96,10 +96,10 @@
+             "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"}
+ 
+ 
+-def load_sources(logs, run_ids=(), limit=None):
++def load_sources(logs, run_ids=(), limit=None, rows=None):
+     # Retain only classification fields, so multi-hundred-MB prompts/answers do not accumulate in memory.
+     by_run = collections.defaultdict(list)
+-    for row in jsonl(Path(logs) / "brain.jsonl", limit):
++    for row in jsonl(Path(logs) / "brain.jsonl", limit) if rows is None else rows:
+         rid = row.get("run_id")
+         if not rid:
+             continue

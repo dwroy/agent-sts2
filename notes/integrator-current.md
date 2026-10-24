@@ -1,4 +1,26 @@
 state: clear-ok
+issue: 36
+updated_at: 2026-10-25T06:02:33+08:00
+
+进行中的事：#36本轮可做核验已完成，评论6390080177远端逐字读回，原ops提醒rc0仅投递。五原pane当前无配额模态/空输入框、原session/turn/完整任务/前台PIDbirth/sol-high及中文标题均核同；历史Keep current model由ops原回执承担，非本角色目击。五份75和deferral与04:00逐字相同，监督已退/native保留，learn awaiting_review/rc空，无finished/recovery/seal。021310复盘默认只读recover-completed实际rc0/eligible-for-identity-check/apply=false，原状态/产物不变；主根27项目模块可导入且同HEAD，26同旧full，eval/brain_source已提交统计缓存差异单列。17叶原full精确复用，新full0。原对局视图已自然更名E6JPL2W7HUTD，与run-config同；本角色无在途检查/模型/游戏/发布。材料paper/materials/20261025-issue36-dialog-integrator/。
+
+在等谁：原ops接021310原SHA13064849…，重新核fresh部署/身份/输入/租约后按主根受控恢复合同留真实recovery/finish/后续seal及回收证据；另四批修复/策略不在现恢复入口范围，须原ops给合法处置或经审查支持入口，不改task或套复盘恢复。历史人工草稿身份缺原件仍待验，旧三75已显式退役不重开旧合同。#36及科学父开放；#20/#36已停止开发会话继续保父/树/证据/账号线程，不复开等runtime。
+
+下一步：原ops交新事务/处置证据后只读核同原身份、归档旧75、实际终态/授权和seal；未执行不称恢复完成。#60 R448源码兼容候选生产tsc缺两依赖/四冲突仍沿原发布-集成链待解决，旧full不冒新候选；#58自然usage/终态待项以原ops当前原件为准，本轮只核E6视图不替代迁移/科学验收。#27五组15历史CLI兼容待原source/CLI owner，000402同SHA原wrapper缺失保持pending，正式watcher0/roy0不改；review43/39/36/20沿原owner/运行门，无新源码不重复集成。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 36
+updated_at: 2026-10-25T05:59:27+08:00
+
+进行中的事：接04:00原核验及ops04:04五弹窗处置原件，正在只读核当前原pane、完整native身份/模型/任务、原五75持久defer和17叶检查覆盖。原件与本角色新核验分账；本轮材料paper/materials/20261025-issue36-dialog-integrator/。
+
+在等谁：原ops接五异常批次合法处置/原seal；人工草稿来源仍未证。#20/#36开发会话可恢复停止继续保原树/父/证据/账号线程，不复开。
+
+下一步：独立读回ops新证据，明确弹窗处理和批次待验各自结论，回原#36及原ops；不按键/重放/finish，不另full。#27历史CLI兼容/000402原log与#60R448源码兼容、#58自然运行原等待保留。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 27
 updated_at: 2026-10-25T05:18:17+08:00
 
