@@ -5240,3 +5240,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T15:30:34+08:00 [ops] 本轮核131301原dataset938ba222实际祖先与14生成叶提交对象/SHA，rc0及唯一尝试保持；回收仍因未入受测live经验deferred，未重dataset/finish。144312原批done/rc0/无源码，out、result、report、原生终态及退场seal核同；11冻结分片、11选定原始帧与506白名单边界通过。交付5情境：新增4、旧持药ID更新1，四own一mixed/unassessed，自有383个A10支持局不当通读局；当前live解析器5条格式过，非生产工具读回。三机制后继各百局以上，商店191机会局/25换购确认局、Boss桥接48局分账；无因果收益、安全HP或最优留瓶数。原学习checkout已由原回收器收走、分支和待证scratch保留，未再回收。五候选逐项SHA登记原发布队列，正式入库/消费者/自然采用均0；沿37实际组合检查后的原发布通道核源、账本、精确入库与工具，独立rk缺口不挡文字策略，科学父保留。未开模型、游戏或新full。
 原件paper/materials/20261024-strategy-144312-ops/verification.json、publication-queue.json、postmortem131301-dataset-event-readback.json。
+
+- 2026-10-24T16:05:26+08:00 [ops] 154311原休息/路线补证批done/rc0、无源码，out/result/report及原生终态/退场seal核同；原49项产物、11冻结分片与六流原前缀一致，14个候选证据行有界SHA复核通过。实际交付5个既有稳定ID更新，新增0/更新5/复用0；四个经验目标附同ID策略文字投影，不拆成9条，merged-into只是目标处置而非已合入。当前live解析器5条离线格式过；13局只是模型抽核见证，不冒全聚合或整局通读。自有unknown与外部v0.111.0分账，四own一mixed/unassessed；第一幕451/309局组间重叠，添火仅8局、帐篷仅14局，未走分支无同局反事实，路线净变化不是毛伤或安全线。原共享知识/账本/代码未改，正式发布/消费者/自然采用均0；已逐ID/SHA登记待发布，精确合并时保原内容与证据，经验/策略/rk消费者另验。原回收器已收checkout，分支及待证scratch保留；本轮不重finish/模型/清理。首个零新增批不自动扩题/续派，原沙箱tsx限制及科学父保留；37在途实际检查不另起。
+原件paper/materials/20261024-strategy-154311-ops/verification.json、publication-queue.json、bounded-evidence-readback.json、current-parser-validation.json。

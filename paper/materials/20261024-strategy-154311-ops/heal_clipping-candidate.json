@@ -1,0 +1,60 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-rest-buffer-observation",
+      "version": "2026-10-24-own-rest-route-002",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ]
+      },
+      "strategy": "休息题若当前缺血小于面板回复，按实际缺口、增上限和附带收益比较回血/具名升级。Silent A10、版本unknown：此类565次/258局，实选HEAL163次/128局；其中最大HP未变的145次/118局，实际回复均等于缺口，含2次回0。另18次伴随上限变化，不能套旧上限；满血题面也可能附带药水收益，回0不等于选项无用。适用：当前HEAL和SMITH合法；这是已执行后继观察，不给统一血线、固定优先级或其他进阶结论。",
+      "source": "own",
+      "confidence": 0.4,
+      "evidence": [
+        {
+          "type": "own",
+          "run": "L704TLETMZBM",
+          "floor": 40,
+          "ref": "logs/decisions.jsonl@613651054+13124;sha256=4d859171f0429dee10d789e8890c60935caf3b87063bb21c390cb05f4a30610d",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "JLN5SK17W4FQ",
+          "floor": 32,
+          "ref": "logs/decisions.jsonl@565010807+11227;sha256=ac9c8f9d952e3b7da473d6122ce16ff53a24fc42fa0865445ce44502e90d098d",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "UMVLWER4CD98",
+          "floor": 7,
+          "ref": "logs/decisions.jsonl@631073355+13707;sha256=5a5b1f4e4dc86756c76448ac484b1a25f02e9b99b269621fadc70ef0685e5033",
+          "role": "support"
+        }
+      ],
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "natural_adoption": "pending",
+      "audit_ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/learner/runs/20261024-154405-88073fe8-19ea-495d-ae90-2a1696c9b015-strategy-proposal/scratch/source-ledger.json#silent-rest-buffer-observation",
+      "scope_notice": "仅Silent A10；自有游戏版本unknown；当前合同不能强制进阶/遗物/路线备选谓词，正文条件必须人工核。"
+    }
+  ],
+  "candidate_disposition": "update",
+  "merge_target": {
+    "kind": "knowledge",
+    "id": "silent-rest-buffer-observation",
+    "baseline_file": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-154311/knowledge/characters/silent/experience.json",
+      "bytes": 352061,
+      "sha256": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2"
+    },
+    "preserve_existing_content_and_evidence": true,
+    "projection_counted_as_separate_knowledge": false
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

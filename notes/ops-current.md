@@ -1,12 +1,14 @@
 state: in-flight
-issue: 50
-updated: 2026-10-24T15:58:37+08:00
+issue: 51
+updated: 2026-10-24T16:05:26+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#50工程已发布V6-R423，15固定消费者/自有准入释放原件保持，原登记提交仍为当前live祖先。首自然结束局W546CNAWY3RG/Silent A10已核20题落盘、19后继、F15/F16两检查点；41原窗口SHA本轮核同。早期五题只是子集，独立局仍1，F21失败/未达F48-F49，原ENOBUFS/null不补写。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
-在等谁：等原自然对局的第二/三幕检查点、SL/进程重启及F48/F49；等#48/#51原学习owner真实入库、消费者及终局收益证据。工程/字段可用、计划成功读回、批次结束均不代机制校准、学习效果或收益，科学父保留。
-下一步：原自然事件后按局号/题号/版本/offset-SHA核请求→回答→落盘→下一题读回，检查点/跨幕/SL重启分别计数；发布与自然消费、终局收益分账。旧ready/预写锁失败仅历史，不重启旧publisher，不新开局/模型/模拟/full；37原在途检查保持。
+进行中的事：#51原154311休息/路线补证已核done/rc0/无源码，49产物、11片/六前缀、14原证据行及原生退场一致。5旧ID更新、0新增；四经验目标的同ID策略投影不额外计数，merged-into非已合入。现行解析器5条格式过；正式发布/消费/自然采用0。paper/materials/20261024-strategy-154311-ops/。
+在等谁：等原发布owner精确保内容/证据合并、登记真实源/账本/发布与各消费者；37实际组合检查保持。添火8局/帐篷14局、路线反事实/安全HP与跨版本机制缺口保留，独立rk缺口不挡文字候选，科学父不关。
+下一步：按publication-queue逐ID/SHA接原发布与生产kb_strategies读回，经验/策略/rk和自然收益分账；首个零新增批不自动扩题/续派。原checkout已由原回收器收走，分支及待证scratch保留，不重模型/finish/清理/full。
+
+#50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
 #51 144312五情境4新1更已核，11片/11原帧、原生退场及格式过；5条待原发布，383支持局非通读，换购25/桥接48局，不冒收益。原checkout已回收、待证scratch/分支留。131301原dataset938ba222/14叶再核，回收deferred不变。paper/materials/20261024-strategy-144312-ops/。
 
@@ -44,11 +46,10 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-issue50-checkpoint-1549-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-strategy-154311-ops/handoff-before.md；未清未完成项。
 
-46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
 
-#46完整窗116对106/+9.43%已交、waiting自然消费/节省未证；20三叶T14:49:42至次日同刻待24h，36旧三75监督保留；55工程已关、科学父仍开。
+#55工程已关；20三叶T14:49:42至次日同刻待完整24h，36旧三75监督保留，科学父不关。
 
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
