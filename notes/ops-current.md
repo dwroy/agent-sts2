@@ -1,12 +1,12 @@
 state: in-flight
-issue: 46
-updated: 2026-10-24T10:27:39+08:00
+issue: 36
+updated: 2026-10-24T10:32:10+08:00
 
 #38实测持锁补记评论6378708477已交主管核关；#18并45。完整回执paper/materials/20261024-issue38-lock-timing-ops/；其余待办如下保留。
 
-进行中的事：#46已发布后的24h实际分配量验收仍开放；原T=10-23 13:46:30，五叶发布live b0c3f412133b，原唯一full655文件/6333过/2skip。当前仅更新交接，不提前生成分配比较、重发源码或重跑检查。#51毒008候选/自有对照与消费者、#37检查窗口等原事项继续。
-在等谁：#46等原观察窗口于今天13:46:30满24h，由原ops在到期后的自然唤醒核全量回执；不另建计时器。#54原owner交字段审计/自有四表与同流派完整局，#51原发布owner接剧本消费者，#37原owner协调唯一full；旧通知正式角色ACK仍待原watcher。
-下一步：到门后沿已部署worktree_allocation_report核精确[T,T+24h)且complete=true，核全类别分配、实际局量、pending/repair/专题/续跑/retry和waiting积压，与原106基线同口径比较；停派、外部优先、手动停局时段分账，不算节省，不以静态68/天估计验收。到门前保持父开放，沿原调度器接真实新事件。原件paper/materials/20261024-issue46-gate-readback-ops/receipt.json。
+进行中的事：101315原061302补链格式问题已核，原报告缺JSON块；另存ops来源校验补充件，原no_change/unassigned_proof/links只读通过，14根账本回链核同，未改源码/游戏/原报告及failed/rc0。一次waiting登记取原learn.lock busy拒绝，队列新增0、仍pending、retention deferred。
+在等谁：原ops在下一自然唤醒、原learn.lock释放后接101315唯一受保护resolve；原061302缺source commit未解决，不补造。#46仍等今天13:46:30满24h；#54字段/自有四表/同流派完整局、#51剧本消费者合同及#37唯一full窗口原owner接续。
+下一步：101315沿.artifacts/ops-strategy-101315-20261024/resolve.py一次登记原0293 waiting，保原failed/rc0/未实现和科学父；不重finish/full/模型/强回收，实登记后再核原retention合同。#46到门后核精确[T,T+24h) complete=true、各类分配/实际工作量/积压并与106基线同口径；停派/外部优先/手动停局分账不算节省。原件paper/materials/20261024-strategy-101315-ops/apply-blocked.json及delivery-receipt.json；36评论6378786453已POST/GET核同。
 
 恢复去重已核：原autoplay/play及首局BP9C8K9NSRZ0保持，未重启；手动Z2排除、原ENOBUFS保留，细节沿下文恢复回执。
 
@@ -16,7 +16,7 @@ updated: 2026-10-24T10:27:39+08:00
 
 本轮091302经验：原.3未提交/未发布，failed/rc0/missing source commit/EROFS/EPERM/retry未知保持。43原产物SHA、24账本追加（11旧ID）及2原提案核同；净候选12项+catalog已由实际R428/.1固定为树b4ad4beeadbddc7e6b6477202b5ba28099d79af1，12候选旧加载/实际生产代码工具读回及check-experience预检通过。保245总项/244 active、学习者文字/证据；7项含原.2继承补证，另7无关.2变更排除，原.2/.3/patch保留。真实source_commit仍null，材料记录commit不冒源提交；原full未有可采用终态，本轮full0，未新增经验批模型或发布号。原37窗口交接评论6378383090：由原owner协调净组合完整检查或明确组合，已冻结则保旧输入，未交窗不另起full。正式经验仍.1，科学父不关。paper/materials/20261024-experience-091302-ops/。
 
-#23本轮接续：原发布已核，不重发。09:39累计155历史回收/311分配，05:15后2/21、近24h16历史（15当前缺失且分支可核）/123；disk约24h净减107.15GiB，验收仍失败。新增#49发布树/091302策略checkout已核分支与归档，旧同路径重分配不混算。一次原只读plan返回eligible=0，未手动apply或删除。等原owner补身份/dirty/归属/入库，#46完整门13:46:30；手动停局期单列，不提前归因改善。下一步沿原worker结算保护、原窗口到期再验；Roy已明确恢复自动对局/full0保持。paper/materials/20261024-issue23-resume-0936-ops/。
+#23仍验收失败：09:39累计历史回收155/分配311、近24h16/123；原只读plan eligible0，保护条件/worker≤4，不手动删除/派清理模型。等原owner补归属及原窗口验收，停局期单列；原件paper/materials/20261024-issue23-resume-0936-ops/。
 
 #51实际发布V6-R428/live02eb468f8728b47ccbc22f39f14e5b2db1580971，090927新增20/更新毒药1，081200三ID保留，去重23精确ID生产工具读回通过。*宽查询24KB限制已记fix，其他main4条待发布，正式经验仍.1；发布不代科学收益。原件paper/materials/20261024-090927-strategy-result-ops/。
 
@@ -24,7 +24,7 @@ updated: 2026-10-24T10:27:39+08:00
 
 后续原链：#51新流派按新输入交付后的自然派发接续；0 BH显著组合、上传行非独立玩家、终局还原不证中间节点、Boss/HP代理与缺快照限制保持。#37已交回原061302窗口，须冻结实际R428/.1及最新main/知识，未发布.2排除；此次不启动full，原37→20父顺序和科学父保持。#51/#54/#37实际评论与GET核同见delivery-receipts.json。
 
-Roy P0恢复已执行：原关引导V6-R427八叶在当前R428逐字节核同，未重复发布。09:56:33原autoplay-start已移除STOP，autoplay1245890/play1246535均实际root/live-agent；首自动run_id BP9C8K9NSRZ0（09:56:43），已自然首题。手动窗08:38:01—09:56:28关闭，Z2KBGZQMSRV5整局保守排除/learning_excluded=true/retry_at=None保持，手动局原日志及排除不消；恢复后自动局按真实来源入学习。首局run-config git status ENOBUFS/commit=null原错误保留，不能冒版本戳成功；批准八叶/实际PID与cwd独立绑定，49自然查询/效率等另验。notes/roy-manual-play.json现autoplay-running，2学习位置只指此前停局期，不覆盖原在局调度政策；Regent仍原停点。原件paper/materials/20261024-roy-resume-ops/。旧“保持STOP/等Roy恢复”被本轮明确恢复覆盖，切勿按旧停点停掉新自动局。
+Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f8；原R427关引导八叶在R428核同、不重发布。旧STOP等待已被明确恢复覆盖，勿停新循环。手动窗08:38:01—09:56:28，Z2KBGZQMSRV5整局排除/learning_excluded/retry_at=None保持；首局git status ENOBUFS/commit=null原错不冒版本戳。notes/roy-manual-play.json为autoplay-running，2学习位置仅原停局期、不覆盖在局政策；Regent仍暂停。原件paper/materials/20261024-roy-resume-ops/。
 
 未完成清单：#37冻结实际R428/.1及最新main唯一检查→20父含39/43，当前full0；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通经验显式提炼合同待owner，原18冻结/244别名不改。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35学习自然消费、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 

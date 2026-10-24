@@ -5154,3 +5154,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-24T10:23:22+08:00 [ops] #38 收尾
 
 按主管收尾要求，已将现有生产回执的live-merge实际持锁时长补回#38。最近完整周期616ab747刷新414.431秒，12次发布写入合计持锁0.472598秒，最长history为0.404293秒、catalog为0.063521秒；等待与worker锁时长独立，不把整轮计算误计为发布锁。原计时行逐条冻结offset/bytes/SHA并核对应步骤，main/live发布器边界源码相同。现有固定临时锁测试1项通过，确认计算完成后才等发布锁，无生产刷新或源码/full/模型/游戏改动。原at只是解锁后记录时刻，无独立墙钟起止字段，不倒算伪造；实测秒数及口径明确保留。结果已POST/GET核同交主管关单；#18并入#45，不另起。原件：paper/materials/20261024-issue38-lock-timing-ops/verification.json、production-timing-originals.json、delivery-receipt.json。
+
+### 2026-10-24T10:32:10+08:00 [ops] #36 101315回调
+
+101315为原061302提案补链，未改源码/live。已核原报告缺机器JSON块导致身份审计拒绝；result与最终输出的身份字段及提案处置一致，reason/skipped原措辞差异分别保留。原报告、结果、输出已按字节归档且未修改，另存带来源校验的ops格式补充件，原no_change/unassigned_proof/links只读检查通过。14条根账本回链及原0293提案来源核同，不改既有status/version；真实基线干净、原native退役可核。一次waiting登记在取learn.lock前受busy拒绝，队列新增0，注册仍pending，学习者意见waiting，原failed/rc0、061302缺source commit及retention deferred均保持。已在36交真实回执与受锁保护的续接脚本，下次自然唤醒再接；不重finish/模型/full或强回收，不冒正式发布/科学完成。原件：paper/materials/20261024-strategy-101315-ops/read-only-proof.json、apply-blocked.json、delivery-receipt.json。

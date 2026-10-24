@@ -1,0 +1,63 @@
+已核验十局身份、原始证据及14条经验/账本链接，并追加本批回链。原提案保留 waiting：证据不足以新增策略规则。未改源码、未合入 live；账本检查和 gitleaks 通过，工作树干净。
+
+[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315/learner/runs/20261024-101320-4c237120-d379-4fed-b7c1-1cc2238ffa5b-strategy-proposal/report.md) · [提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315/learner/runs/20261024-101320-4c237120-d379-4fed-b7c1-1cc2238ffa5b-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261024-101315-strategy-proposal",
+  "base": "d93277a95c4c894ccc946193a399228ed92cdae2",
+  "runs": [
+    "2PQK67ULZY90",
+    "J2VR2DFJG8K4",
+    "S5GZG328S1LN",
+    "4JS3T2UNKPVM",
+    "WQB3YYNTRB2L",
+    "BXU0CKWKH2RU",
+    "U5W7NUE925NK",
+    "75DAD6GBWEU1",
+    "U1JMSKC80LQE",
+    "W9610N90MMCT"
+  ],
+  "fixes": [],
+  "skipped": [
+    "缺当前机制缺陷的固定复现及新策略的受控支持，保持原行为；原批缺源码提交的审计失败保留。"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-0293de647a6db596"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-0293de647a6db596",
+      "state": "waiting",
+      "reason": "14项链接齐全。弃牌失效提示已存在；墨影换线多损5血，但原线亦败。缺强保牌、禁探索、药时或路线新规则的充分证据，待新局补证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315/learner/runs/20261024-101320-4c237120-d379-4fed-b7c1-1cc2238ffa5b-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a16baf-362a-7522-bc21-585aebb58f8c
+轮数：1；工具调用：无
+token：输入 151.6k、输出 22.2k（其中推理 2910）、cache 读 4256.9k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：947.3 s（墙钟）
+时间：首个事件 944.9 s、模型首个输出 944.9 s、首次工具 —、末次工具结束 —；工具内共 0.0 s，其余（模型生成、推理、网络）2.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-101315）；模型的工具调用 exec×44；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T10-13-27-01a16baf-362a-7522-bc21-585aebb58f8c.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261024-101320-4c237120-d379-4fed-b7c1-1cc2238ffa5b-strategy-proposal.jsonl

@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-24T10:31:39+08:00",
+  "issue": 36,
+  "id": 6378786453,
+  "url": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6378786453",
+  "body": "[ops]\n101315原061302提案补链回调已核。旧批保留failed/rc0及 `unassigned source identities differ from the preserved report`；其直接原因是原report.md没有机器JSON代码块，非0293提案ID改变。result.json与原final/out的身份字段、proposal id/state/commit一致，reason/skipped措辞差异原样保留；原report/out/result均未修改。\n\n已在原scratch另存显式标注ops机械格式附录的 `ops-format-supplement.md`：原report字节前缀+原result.json逐字节块，原件/SHA均归档。沿原 `unassigned_proof` / `no_change` / `links` 只读核验通过，真实d93277a95c4c基线干净、原native退役可核、14条根账本回链核同，未改status/version、未创造代码或知识发布。\n\n**正式waiting写入尚未完成。** 一次调用原resolve入口在取得原learn.lock时NB拒绝（busy），尚未写任何队列行/批次状态；当前提案注册仍pending，学习者处置为waiting，retention仍原deferred。未删锁、等位轮询、重finish、关tab或另派模型。下次原自然唤醒可沿已备 `.artifacts/ops-strategy-101315-20261024/resolve.py` 在原锁释放后一次登记；不把格式修复冒本批done，更不能补造061302缺失的source commit或经验发布成功。\n\n生产行为保持，tsc/vitest/cases均原null，full/新模型/游戏/版本均0；科学父继续开放。原件 `paper/materials/20261024-strategy-101315-ops/{read-only-proof,apply-blocked,source-manifest}.json`、originals/、ledger-own-rows.jsonl。",
+  "post_get_equal": true
+}
