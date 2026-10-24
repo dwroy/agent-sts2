@@ -1,0 +1,17 @@
+[watcher] #27 05:13重复唤醒：已给出可复现的历史来源兼容合同，交原CLI/source责任链；本轮没有再试生产ACK，16条正式watcher_received/roy_notified仍0。
+
+15条核成五组：#4三条、#13四条、#14一条、#27 B1三条/B2四条。已核每组原log/input/message SHA、单一launch/正常退出/原线程、15条唯一完整原文匹配及token，原ops投递和冻结真实receipt/evidence仍核同。B1/B2同request/task但batch/thread/tree/input及整份questions SHA各异；B2原七条仅index 3–6是本轮四条。
+
+**不是仅加task白名单即可。** 当前`--source`纯函数验源仍在V6 task门拒绝；按原件/源码还有三处后续不兼容：
+
+- 五组真实冻结输入在指定`.artifacts`目录，非现有普通V6输入布局；schema分别为原elite、issue-learning及issue27 v1/v2。
+- #13/#14原launch prompt无request ID，但`params.evidence`精确路径及冻结输入含request/task/batch/character/worktree，需历史研究专用合同绑定，不能补写旧prompt；#27无input.worktree，由原launch两处树绑定。
+- 15条都是完整源文件的一项（#14为`findings[0]`），当前“整文件在单条message中”检查全部false。需保完整源文件SHA，再核显式pointer/唯一完整条目/全部键值及有则原ID，不能只比finding片段或改原message。
+
+具体路径：[处理合同/验收/待执行CLI顺序](https://github.com/dwroy/agent-sts2/blob/main/paper/materials/20261025-issue27-source-compat/README.md)、[五组来源与15条逐项SHA/index/receipt审计](https://github.com/dwroy/agent-sts2/blob/main/paper/materials/20261025-issue27-source-compat/source-audit.json)。建议原CLI owner加窄的历史issue研究source分支，仍用`ack --source`，保现有V6/R4/proposal/feature/legacy门；拒绝既有父/scope冲突，验源成功不返回科学父。固定夹具应验五组正例与跨B1/B2、改SHA/条目/线程/布局、错误角色/前置阶段等负例及失败原子性，按仓库代码检查后交原集成/发布链。#8已关闭，其R4交付不含本批；不要冒其已有支持或重开旧线程代交付。#4 source候选已从原启动只读推导，等原source owner回核；其余原source复用。
+
+兼容有实际源码/验收/部署SHA后，watcher才用已冻结真实receipt、同ID和owner核准来源逐条登记watcher_received，独立读回后再roy_notified；原ops_forwarded不重写，旧rc2保留。原ops核来源并交原CLI开发责任链/主管安排代码任务，勿临时放宽生产校验或由ops代研发派活。
+
+000402单列：原注册父仍blocked，两原wrapper路径仍缺，所需原SHA `b1be2be174208edcafe23f3e0e47f4236560577c2752b6a02f88bd094755a765`。等原wrapper/archive owner找回同字节并核launch/thread；不走无父研究兼容、不用native/raw state/新wrapper替代。无原件继续pending，CLI0。
+
+本轮未改notice、父request、CLI、ops状态/live/知识/任何ACK，未开模型/局/full。方案、issue评论及原ops提醒均不是角色ACK或Roy已读/同意，科学父不完成。等待五组来源核准及CLI兼容交付；000402独立等原日志。

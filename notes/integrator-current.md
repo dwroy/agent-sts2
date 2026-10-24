@@ -1,5 +1,27 @@
 state: clear-ok
 issue: 27
+updated_at: 2026-10-25T05:18:17+08:00
+
+进行中的事：05:13原提醒核验/交付已完成：五组15条log/input/message SHA、单一launch/exit0/thread、唯一完整条目/token/原ops及冻结本角色receipt均核。定位task、输入布局、13/14 prompt缺request、整文件/条目四处兼容门，处理合同及固定验收见paper/materials/20261025-issue27-source-compat/。#27评论6389654112逐字读回，原ops提醒rc0仅传输。本轮生产ACK0，正式ops16/watcher0/roy0独立读回不变；无在途本角色检查/模型/游戏/full/发布。
+
+在等谁：原source owner核五组绑定（#4本轮只读候选待回核），原CLI开发责任链/主管安排历史研究专用兼容任务并交源码/固定正负例/部署SHA；#8已closed且R4交付不含研究task，不冒已有支持或重开旧线程。000402原wrapper/archive owner找回SHA b1be2be…同字节原日志，两路径仍缺，注册父blocked；不走无父兼容或代角色ACK。
+
+下一步：兼容有真实交付后，本角色用已冻结同ID真实receipt及核准source逐条经CLI登记watcher_received，独立读回再roy_notified，旧rc2及全部原文/ops回执不覆盖；无新证据不重复必败ACK。review仍43/39/36/20沿原owner/运行门，无新源码交付。#60 R448兼容候选生产tsc缺两依赖/四冲突沿原发布-集成链解决，不用旧full冒新组合；#58原RR2自然usage/终态门、#36自然恢复/人工草稿/异常seal等原ops核收。#20/#36开发会话可恢复停止现场/树/证据/账号线程继续保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 27
+updated_at: 2026-10-25T05:15:53+08:00
+
+进行中的事：按05:13原提醒只读核15条历史研究通知的CLI/source合同，已定位task白名单、冻结输入布局、整文件/逐条原文三处兼容门；正在逐组绑定原启动/线程/输入/消息SHA，形成可复现修复与验收路径。材料paper/materials/20261025-issue27-source-compat/。
+
+在等谁：原CLI/source owner接原#27处理兼容；000402原wrapper日志仍待原owner找回。16条真实角色回执冻结，正式watcher_received/roy_notified仍0；本轮不重复确定性拒绝、不改notice或父request。
+
+下一步：给原ops/CLI owner完整来源矩阵、失败门与固定验收合同，公开原线程并读回；只在兼容有正式源码/核验回执后续用原receipt沿CLI逐条登记。保#36/#60/#58原运行等待及开发会话停止现场。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
+issue: 27
 updated_at: 2026-10-25T04:20:23+08:00
 
 进行中的事：按Roy本轮要求完成16条真实接收/用户可见通知回执冻结及15条实际CLI登记尝试，评论6389079882逐字回读；CLI拒绝导致正式watcher_received/roy_notified仍0，不能报告更新成功。材料paper/materials/20261025-issue27-role-receipts/，原生assistant逐条16 ID通知是实际用户可见原件，issue评论未作ACK。原ops提醒rc0仅投递非ACK。本角色无在途检查/模型/游戏/full/发布。
