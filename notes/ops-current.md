@@ -1,18 +1,17 @@
 state: in-flight
-issue: 37
-updated: 2026-10-24T15:30:34+08:00
+issue: 48
+updated: 2026-10-24T15:35:22+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
-进行中的事：#37原main070cac9b full6661/0败/2跳、两tsc0/Python157及实际R429九叶两tsc0/57定向分账；15非目标运行差异/72知识保持。已在写源前终止自有临时发布2585296，R429/九叶前像未变、自有准入释，未打断对局。唯一实际运行组合full worker2593100/birth25094291已登记，15:24核持integrator-full-check锁、等原知识刷新锁，full0；无生产发布锁。原件paper/materials/20261024-issue37-actual-full-ops/。
-在等谁：原刷新owner2589445自然释放后冻结实际知识/宿主运行输入，执行一次本实际组合完整检查；原main full不重跑、不借57定向代full、不动其他锁。主库固定知识/宿主测试夹具仅验证、不发布；091302 source=null及净12经验不夹。原临时publisher已撤销不可重启，原play/autoplay无信号。
-下一步：完整检查终态由原worker排事件，通过后新建严格绑定本输入的自然发布事务，核九叶/最新知识/编号/绑定/工具/准入释放，首新局Jev另验。#46完整窗116对106/+9.43%已交、自然waiting消费/节省未证；131301数据集938ba222原rc0/14叶核同，回收因未入受测live经验deferred。20三叶T14:49:42至次日同刻/36旧三75保留；55工程已关，科学父保持，48门18:19:29。
+进行中的事：#48普通提炼MD已合09f3a443b、宿主SHA4af34c5e核同；整局首单元issue48-whole-run-cluster6-a10-001仍在原尾队列，队列字节与激活后相同，旧首六/18输入held，0/244。9R916WW0V65N/A10/簇6仅定位，语义须学习者确认。原件paper/materials/20261024-issue48-checkpoint-1534-ops/readback.json。
+在等谁：等原调度按普通/外部/已有重任务优先自然派发整局单元，及首个未绑定职责的普通Silent自然批；合入后现有批均外部/补链，不计新合同native加载，首T/映射产物仍null。旧104301failed/rc0及原提示不改，派发/夹具不代学习或消费。
+下一步：原自然启动后核实际first prompt/输入绑定/新1.4映射及逐ID去向，策略/rk/完整剧本分别核源、发布、消费者和自然采用；18:19:29完整24h门不重置，外部优先/停派/手动局分账。只记本轮状态，不另起模型/full/tick或改队列；37原在途检查保持。
 
 #51 144312五情境4新1更已核，11片/11原帧、原生退场及格式过；5条待原发布，383支持局非通读，换购25/桥接48局，不冒收益。原checkout已回收、待证scratch/分支留。131301原dataset938ba222/14叶再核，回收deferred不变。paper/materials/20261024-strategy-144312-ops/。
 
 #51三原决策：114313新1策略，121311新1策略+1描述知识，124312新1策略+1描述知识；160产物/143页、四代表172节点原生核同，自有完整局0；<3均已报主管。现按6380207972新三独立补证单元冻结506名单/原六切点/11当前分片硬链接，来源/正式renderer夹具/gitleaks0；不改旧processed/rc0，不强派/凑5～10。paper/materials/20261024-issue51-own-fallback-ops/，原候选各publication-queue保留。
 
-#48整局首单元issue48-whole-run-cluster6-a10-001已原尾队列登记，六旧ID及9R916WW0V65N/A10/统计簇6仅元数据分组；source/正式渲染夹具过，未派模型、0/244。旧首六/18输入held，普通MD首native仍待，外部批次不借验收。paper/materials/20261024-issue48-whole-run-ops/。
 
 #28续接保留：R425工程/旧85条保持；四已读局376题内153个第一二幕Boss/elite诊断题已冻，完整Plan/同种子矩阵0、98旧非空开卷键原样保留。新reflex来源稿、合法capture与独立预注册留出待原学习/开发/实验owner；off/真实两臂/A-B/科学父不提前，未新派模型。paper/materials/20261024-issue28-scientific-readiness-ops/。
 
@@ -22,7 +21,7 @@ updated: 2026-10-24T15:30:34+08:00
 
 #27保留：首批3自有R412已发布，各n=1；二批5外部在main，当前live刀刃情境1.1.0已有，其余4待原窗后精确发布，main30/live26仅文件数。自然相关题/正式ACK与Roy可见证明仍待，原6378677980核收不代ACK；状态未变不重复主管收件箱。证据.artifacts/ops-issue27-checkpoint-20261024/library-presence-readback.json及paper/materials/20261024-1016-notices-ops/。
 
-#37旧full6651/1/2与revision4 6660/1/2、各预检/路径失败完整保留；revision5 full6661/0/2已源核同，检查锁已释。104301/101315候选未夹；当前实际组合完整检查见上，091302真源和科学父仍待。原件paper/materials/20261024-issue37-r428-integrator/revision5/及20261024-issue37-r429-ops/。
+#37仍在途：原main070cac9b full6661/0败/2跳及R429两tsc/57定向分账；15运行/72知识漂移保留。临时发布2585296已写源前撤销/自有准入释；实际组合full2593100/birth25094291于15:24核持检查锁等原刷新2589445，full0/生产锁未持，仅原worker终态排事件；通过后新自然事务及首局Jev，不重启旧publisher。091302 source=null/净12不夹，旧6651/1/2、R4 6660/1/2/预检失败保留。paper/materials/20261024-issue37-actual-full-ops/及20261024-issue37-r429-ops/。
 
 131302 fix failed/rc0/deferred保留：tsc0/31定向、6未选；与live175源路径异，empty guard未过。两个131302补链各done，0293 waiting；各14where-only/1处置、s2原文58/本批69核同，不重复科学分母，14正式经验增量未入；061302缺源commit/101315旧失败及回收门保留。非48/51新单元。原件paper/materials/20261024-fix-131302-ops/、20261024-strategy-131302-s2-ops/、20261024-strategy-131302-ops/。
 
@@ -45,9 +44,11 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 
 通知pending：13:13同16原文/32旧投递/3旧实收SHA核同；15原CLI身份/范围拒绝代码SHA未变不重试，000402原wrapper及根同名均缺；正式watcher_received/roy_notified仍0。已向原sts2-integrator同pane/session一次agent_prompted提醒，不代已读/Roy可见、不重复27主管收件箱。完整原文/证据/差异/下一步见paper/materials/20261024-1313-notices-ops/notice-handoff.json、verification.json；科学父与旧失败保持。
 
-本轮前完整交接见paper/materials/20261024-strategy-144312-ops/handoff-before.md；未清未完成项。
+本轮前完整交接见paper/materials/20261024-issue48-checkpoint-1534-ops/handoff-before.md；未清未完成项。
 
 46完整窗/类别/积压原件paper/materials/20261024-issue46-complete-window-ops/comparison.json，原106基线SHA保持。
+
+#46完整窗116对106/+9.43%已交、waiting自然消费/节省未证；20三叶T14:49:42至次日同刻待24h，36旧三75监督保留；55工程已关、科学父仍开。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
