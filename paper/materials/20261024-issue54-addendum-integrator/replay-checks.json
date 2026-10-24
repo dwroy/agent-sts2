@@ -1,0 +1,65 @@
+{
+  "decision-reproducibility": {
+    "command": [
+      "python3",
+      "-B",
+      "eval/sts2fun_decision_fields.py",
+      "--db",
+      "/home/dw/Projects/agent-sts2/data/external/sts2fun/sts2_public.db",
+      "--identity-receipt",
+      "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-p0-0802-ops/deck-export-receipt.json",
+      "--provenance",
+      "knowledge/external/sts2fun/silent-a10.json",
+      "--cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-decision-cache-v3",
+      "--output",
+      "knowledge/external/sts2fun/decision-fields-v1",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 11.909965991973877
+  },
+  "own-reproducibility": {
+    "command": [
+      "python3",
+      "-B",
+      "eval/own_build_stats.py",
+      "--cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-own-cache-v2",
+      "--external",
+      "knowledge/external/sts2fun/builds-v1",
+      "--external-cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-safe-cache",
+      "--catalog",
+      "/home/dw/Projects/agent-sts2/data/game-data.json",
+      "--output",
+      "knowledge/characters/silent/build-statistics-v1",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 44.70761847496033
+  },
+  "independent-verification": {
+    "command": [
+      "python3",
+      "-B",
+      "eval/verify_own_build_stats.py",
+      "--own-cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-own-cache-v2",
+      "--own-root",
+      "knowledge/characters/silent/build-statistics-v1",
+      "--external",
+      "knowledge/external/sts2fun/builds-v1",
+      "--external-cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-safe-cache",
+      "--decision-cache",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-54-external-build-stats/data/external/issue54-decision-cache-v3",
+      "--decision-root",
+      "knowledge/external/sts2fun/decision-fields-v1",
+      "--receipt",
+      "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue54-addendum-integrator/independent-verification.json"
+    ],
+    "exit": 0,
+    "seconds": 24.88109040260315
+  }
+}

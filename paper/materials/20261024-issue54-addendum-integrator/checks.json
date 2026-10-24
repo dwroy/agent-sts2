@@ -1,0 +1,30 @@
+{
+  "tsc": {
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit": 0,
+    "seconds": 1.0880343914031982
+  },
+  "directed": {
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/external-build-stats.test.ts",
+      "tests/external-stats-tools.test.ts",
+      "tests/reward-external-stats.test.ts",
+      "tests/external-strategy-evidence.test.ts",
+      "tests/own-build-stats.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--no-file-parallelism"
+    ],
+    "exit": 0,
+    "seconds": 10.070712566375732
+  }
+}
