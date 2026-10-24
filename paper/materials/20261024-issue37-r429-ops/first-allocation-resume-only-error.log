@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue37-r429-20261024/prepare-check.py", line 12, in <module>
+    p=subprocess.run(['nice','-n','19','python3',str(R/'ops/worktree_checkout.py'),str(R),str(W),'ee0680a9b0955b5ce5371597bc8411dce4ca0bcb','--require-node','--resume'],capture_output=True);(A/'allocation.stdout').write_bytes(p.stdout);(A/'allocation.stderr').write_bytes(p.stderr);assert p.returncode==0,'isolated checkout allocation failed'
+                                                                                                                                                                                                                                                                                                 ^^^^^^^^^^^^^^^
+AssertionError: isolated checkout allocation failed
