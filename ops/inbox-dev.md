@@ -6626,3 +6626,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T17:20:48+08:00 [ops] 164302单次dataset启动补充：原锁正由普通策略164315的no-raw构建3138135持有；首worker3143860在取锁前返回BlockingIOError，实际build0，失败原件保留。已登记唯一续接3147286/birth25814489按内核flock等原锁，实际构建仍只允许1次、不借别批结果、不轮询或另开模型。四节/13账本/2提案及新非阻塞显示bug已由9f6fa4fa提交，dataset实际结果和回收门待原回调。
 原件paper/materials/20261024-postmortem-164302-dataset-ops/prelock-resume-proof.json、launch.json。
+
+- 2026-10-24T17:37:08+08:00 [ops/dataset] 164302四局复盘唯一受控dataset --no-raw实际结束，rc0且source_checks_passed=true，原锁内冻结生成字节SHA与Git blob，成本保持独立来源切点。四节lessons、13条账本、两条原pending提案及非阻塞遗物文字显示bug队列已先受控提交；没有新增打法规则或重复派模型。7项整局/剧本与rk候选仍缺完整三输入，477请求只完整读8题及4错误的原范围保留，不冒全题通读或收益。历史源码/release未知不回填当前live，原报告md无机器块与out/result的bug描述长短差异各存原件；身份/证据/记录独立核同，不改旧字节。仅一次原build_locked，不重试dataset/finish/full/模型/对局；论文记录完成不代正式经验发布、自然采用或科学父关闭，回收继续原门。R430–R433及37原失败/源null独立保持。
+原件：paper/materials/20261024-postmortem-164302-dataset-ops/result.json、generated-manifest.json、record-commit.json。

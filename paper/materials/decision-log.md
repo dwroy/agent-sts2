@@ -6679,3 +6679,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T17:22:20+08:00 [ops] 164302旧registered-before-lock失败回调核同，首实际build0；唯一3147286/25814489仍在3138135原dataset内核锁后等待，无结果，不重开dataset/模型/full或重复通知。9f6fa4fa记录/0ed4acd1续接及回收科学门保持。paper/materials/20261024-postmortem-164302-prelock-return-ops/。
 
 - 2026-10-24T17:25:37+08:00 [ops] 按Claude纠正陈旧ops-state：前台写事务已收尾，ops-state/ops-current及保护源同步clear-ok/#27；164302独立后台续接/原锁及全部科学父、自然/通知门保留，不开新会话或重派。每任务边界同步状态与issue。paper/materials/20261024-ops-state-sync/。
+
+- 2026-10-24T17:37:08+08:00 [ops] 原164302四局复盘受控dataset rc0、源检查true，冻结实际生成叶并仅提交自有记录；不重finish/模型/full，回收及科学父门保留。原件paper/materials/20261024-postmortem-164302-dataset-ops/。
