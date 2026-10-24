@@ -13,3 +13,5 @@
 按#59工程可接收/可发布，实际安装与远端回执另补。原ops沿#58之后原发布链复用本full；自然切点重新冻结当时真实已发布叶/pre60回退点，结算旧writer并保持唯一有效writer，实际import/verify再启控制，核调度/launcher/完成/新局控制SHA和原batch选择。合法候选→事务→知识版本→生产tools正负例→自然局、同ID仅一发布和同局恢复原绑定由原ops实际核收。历史8/764、9/765及本批469叶都不能代切点迁移白名单。
 
 DB查询耗时与kb_reflex整体约197ms旧瓶颈分列，未宣称整体提速或自然采用/收益。长期学习验收归runtime；必要运行核收后的#59会话释放归原ops，保父/树/日志/恢复身份。旧失败、反证/confidence、通知ACK和科学父继续保留。本角色未改live/STOP/生产DB/控制/原在途，不运行模型/游戏/tick。
+
+实际集成/安装：main 6970b9fb29c677201700c498acf3e71b2179b533，2026-10-25T03:31:25+08:00—2026-10-25T03:31:25+08:00原锁内安装27叶；物理/提交后像同正式来源，独立读回及Windows SSH远端核同。公开工程结论https://github.com/dwroy/agent-sts2/issues/60#issuecomment-6388588489远端逐字核同，issue open/waiting-release；原ops w1H:p8一行提醒有agent_prompted回执，仅证输入投递，不代已读/ACK。集成时live仍d0d9da10063c623f3036a6910e83f4ae3c30c06e，本角色未分配行为号、写生产知识/控制或执行开发释放；后续运行与实际发布状态由原ops维护。

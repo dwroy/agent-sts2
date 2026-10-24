@@ -1,3 +1,16 @@
+state: clear-ok
+issue: 60
+updated_at: 2026-10-25T03:32:07+08:00
+
+# 集成员当前交接
+
+进行中的事：本轮#60正式7af8ef5a7工程已接收/可发布；main精确集成6970b9fb29c677201700c498acf3e71b2179b533并Windows SSH远端核同，27叶物理/提交后像独立核同。修正组合唯一本批full 679文件/6628过/0败/2原跳、tsc0，原25生产叶独立Python19原件复用，开发补交Py16+13/TS4原件核同；原worker/锁/2788输入/1417依赖/index/tree/result独立核同。公开回帖6388588489逐字读回，一行已投原ops w1H:p8（仅agent_prompted、非ACK）。材料paper/materials/20261025-issue60-fixture-composition-integrator/。本角色无在途full/安装/模型/游戏事务。
+
+在等谁：原ops接58之后原源码发布链，复用本批full不重跑；集成前像live=d0d9da10063c623f3036a6910e83f4ae3c30c06e含R447/R448，记录时观察HEAD=d0d9da10063c623f3036a6910e83f4ae3c30c06e，后续发布由原ops核。原ops在自然切点冻结真实已发布叶/pre60回退点、结算旧writer并保唯一有效写者，核三端控制SHA/原batch持久选择/实际import-verify与合法候选→事务→知识版本→生产tools正负例→自然局消费，同ID只一发布/同局恢复原绑定。469物理知识叶仅本批时点；135统计夹具和465验证快照差异绝不作生产迁移白名单。58自然usage门/实际计划后继/计算复用等原运行待项不因60工程通过而完成。
+
+下一步：有具体运行源码缺陷沿原#60开发树/账号线程退修；必要运行核收及#59可恢复释放由原ops核空闲/身份/树/日志，长期学习/采用收益归runtime。SQLite查询毫秒级不代表rk整个工具约197ms旧瓶颈消失；旧反证/confidence/失败/ACK与科学父继续开放。#36/#20已可恢复停并保父/树/恢复身份，#28/#35/#48/#50归ops；#51原文转Roy历史和#27 CLI身份/000402缺log/正式ACK保持。未动live/STOP/生产DB/控制/在途或其他角色状态，不强tick/finish。
+
+本轮上一检查点（原文保留）：
 state: in-flight
 issue: 60
 updated_at: 2026-10-25T03:31:18+08:00
