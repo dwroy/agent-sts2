@@ -6552,3 +6552,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T09:32:56+08:00 [ops] 核091302 fix无源但139路径漂移空修复门拒绝/failed-rc0及root-scratch归属deferred；strategy两提案18账本补链、R424实际18项同，pending保持/无新发布，原checkout已回收、scratch保留。full0/STOP不变。paper/materials/20261024-091302-callbacks-ops/verification.json。
 
 - 2026-10-24T09:43:11+08:00 [ops] #23继续核收：累计155历史回收/311分配，近24h16历史（15当前物理/分支）/123；disk净减107.15GiB，可持续仍失败，原worker/保护/STOP保持，不提前验#46。paper/materials/20261024-issue23-resume-0936-ops/audit.json。
+
+- 2026-10-24T09:51:19+08:00 [ops] 091302经验12项候选R428净树b4ad4bee已冻结并12项候选工具回读，原failed/rc0/unknown保留、source_commit=null，交37原检查窗/full0；按既有51授权原writer派毒008/094803，实际high及沙箱首任务核同，fast服务字段unknown，STOP不变。paper/materials/20261024-experience-091302-ops/。
