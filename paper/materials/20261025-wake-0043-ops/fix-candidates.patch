@@ -1,0 +1,151 @@
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index b7c6b7c47..2daa129e9 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -293,19 +293,39 @@ export function parseGitStatus(text: string, worktree: string): CodeInfo {
+   };
+ }
+ 
+-/** HEAD, branch and changed tracked files of the checkout at `root` (one git call, no secrets in its environment). */
++/** HEAD, branch and changed tracked files; bounded probes retain provenance when status fails. */
+ export function codeInfo(root: string = REPO_ROOT): CodeInfo {
+   const worktree = basename(root);
++  const options = {
++    encoding: "utf8" as const,
++    timeout: 10_000,
++    stdio: ["ignore", "pipe", "ignore"] as ["ignore", "pipe", "ignore"],
++    env: { PATH: process.env["PATH"] ?? "/usr/bin:/bin", HOME: process.env["HOME"] ?? "/", LC_ALL: "C" },
++  };
+   try {
+-    const out = execFileSync("git", ["-C", root, "status", "--porcelain=v2", "--branch", "--untracked-files=no"], {
+-      encoding: "utf8",
+-      timeout: 10_000,
+-      stdio: ["ignore", "pipe", "ignore"],
+-      env: { PATH: process.env["PATH"] ?? "/usr/bin:/bin", HOME: process.env["HOME"] ?? "/", LC_ALL: "C" },
+-    });
++    const out = execFileSync("git", ["-C", root, "status", "--porcelain=v2", "--branch", "--untracked-files=no"], options);
+     return parseGitStatus(out, worktree);
+   } catch (error) {
+-    return { commit: null, code: null, dirty: null, dirty_files: [], branch: null, worktree, error: `git status failed: ${error instanceof Error ? error.message.split("\n")[0] : String(error)}`.slice(0, 200) };
++    const result: CodeInfo = { commit: null, code: null, dirty: null, dirty_files: [], branch: null, worktree,
++      error: `git status failed: ${error instanceof Error ? error.message.split("\n")[0] : String(error)}`.slice(0, 200) };
++    const probe = (...args: string[]): string => execFileSync("git", ["-C", root, ...args], { ...options, maxBuffer: 4096 }).trim();
++    try {
++      const head = probe("rev-parse", "--verify", "HEAD");
++      if (!/^[0-9a-f]{40,64}$/.test(head)) return result;
++      result.commit = head;
++      try { result.branch = probe("symbolic-ref", "--quiet", "--short", "HEAD") || null; } catch { /* Detached or unavailable. */ }
++      // --quiet bounds output independently of the number or length of changed paths.
++      try {
++        probe("diff", "--quiet", "--no-ext-diff", "HEAD", "--");
++        result.dirty = false;
++      } catch (failure) {
++        if (typeof failure === "object" && failure !== null && "status" in failure && failure.status === 1) result.dirty = true;
++      }
++      // Do not join probes from different publication commits into one source identity.
++      if (probe("rev-parse", "--verify", "HEAD") !== head) return { ...result, commit: null, branch: null, dirty: null };
++      result.code = result.dirty === null ? null : `${head.slice(0, 7)}${result.dirty ? "+dirty" : ""}`;
++    } catch { /* Preserve the original status failure and every independently verified field. */ }
++    return result;
+   }
+ }
+ 
+diff --git a/agent/tests/run-config-git-failure.test.ts b/agent/tests/run-config-git-failure.test.ts
+new file mode 100644
+index 000000000..a7e58ecfe
+--- /dev/null
++++ b/agent/tests/run-config-git-failure.test.ts
+@@ -0,0 +1,54 @@
++import { execFileSync } from "node:child_process";
++import { beforeEach, expect, it, vi } from "vitest";
++import { codeInfo } from "../src/eye/run-config.js";
++
++vi.mock("node:child_process", async (original) => ({
++  ...await original<typeof import("node:child_process")>(), execFileSync: vi.fn(),
++}));
++
++const head = "1234567890abcdef1234567890abcdef12345678";
++let dirty: boolean | "unavailable";
++let finalHead: string;
++let detached: boolean;
++let unavailableHead: boolean;
++
++beforeEach(() => {
++  dirty = true; finalHead = head; detached = false; unavailableHead = false;
++  let headReads = 0;
++  vi.mocked(execFileSync).mockReset().mockImplementation((_file, args, options) => {
++    const command = (args as string[]).slice(2);
++    if (command[0] === "status") throw new Error("spawnSync git ENOBUFS");
++    expect(options).toMatchObject({ maxBuffer: 4096, timeout: 10_000 });
++    if (command[0] === "rev-parse") {
++      if (unavailableHead) throw new Error("not a repository");
++      return headReads++ === 0 ? head : finalHead;
++    }
++    if (command[0] === "symbolic-ref") {
++      if (detached) throw Object.assign(new Error("detached"), { status: 1 });
++      return "live\n";
++    }
++    expect(command).toEqual(["diff", "--quiet", "--no-ext-diff", "HEAD", "--"]);
++    if (dirty) throw Object.assign(new Error("diff failed"), { status: dirty === true ? 1 : 128 });
++    return "";
++  });
++});
++
++// R417: all sixteen configuration rows from eight runs lost their source identity.
++it("retains verified HEAD and bounded dirty provenance after status ENOBUFS", () => {
++  expect(codeInfo("/fixed/live")).toEqual({ commit: head, code: "1234567+dirty", branch: "live",
++    dirty: true, dirty_files: [], worktree: "live", error: "git status failed: spawnSync git ENOBUFS" });
++});
++
++it("distinguishes clean detached HEAD, unavailable dirty state and unavailable HEAD", () => {
++  dirty = false; detached = true;
++  expect(codeInfo("/fixed/live")).toMatchObject({ commit: head, code: "1234567", branch: null, dirty: false });
++  dirty = "unavailable";
++  expect(codeInfo("/fixed/live")).toMatchObject({ commit: head, code: null, dirty: null });
++  unavailableHead = true;
++  expect(codeInfo("/fixed/live")).toMatchObject({ commit: null, code: null, dirty: null });
++});
++
++it("rejects mixed source identities when HEAD changes between bounded probes", () => {
++  finalHead = "a".repeat(40);
++  expect(codeInfo("/fixed/live")).toMatchObject({ commit: null, code: null, branch: null, dirty: null });
++});
+diff --git a/agent/src/knowledge/relic-values.ts b/agent/src/knowledge/relic-values.ts
+index 8ae5f47ae..b83e94efe 100644
+--- a/agent/src/knowledge/relic-values.ts
++++ b/agent/src/knowledge/relic-values.ts
+@@ -39,6 +39,8 @@ export const RELIC_VALUES: Record<string, Record<string, number>> = {
+ export function fillRelicText(relicId: string, text: string): string {
+   const values = RELIC_VALUES[relicId] ?? {};
+   const filled = text.replace(/\{([A-Za-z]+)(?::([A-Za-z]+)\((\d*)\))?\}/g, (_whole, name: string, format: string | undefined, arg: string | undefined) => {
++    // The prefix draws a unit icon after a quantity already present in the template.
++    if (name === "energyPrefix" && format === "energyIcons") return "点能量";
+     const value = arg ? Number(arg) : values[name];
+     if (value === undefined) return UNKNOWN_VALUE;
+     if (format === "energyIcons") return `${value}点能量`;
+diff --git a/agent/tests/relic-energy-prefix.test.ts b/agent/tests/relic-energy-prefix.test.ts
+new file mode 100644
+index 000000000..07de50735
+--- /dev/null
++++ b/agent/tests/relic-energy-prefix.test.ts
+@@ -0,0 +1,20 @@
++import { expect, it } from "vitest";
++import { fillRelicText } from "../src/knowledge/relic-values.js";
++
++// P4ZBYNW92PPK F48 T3, silent-0617: preserve the explicit quantity and unknown Energy.
++it("renders the recorded Spiked Gauntlets cost as one energy without duplicating the icon count", () => {
++  const template = "在每回合开始时获得{Energy:energyIcons()}。能力牌的耗能增加[blue]1[/blue]{energyPrefix:energyIcons(1)}。";
++  expect(fillRelicText("SPIKED_GAUNTLETS", template)).toBe("在每回合开始时获得?(数值未知)。能力牌的耗能增加1点能量。");
++});
++
++it("preserves zero and multi-digit quantities preceding the unit icon", () => {
++  expect(fillRelicText("FIXTURE", "0{energyPrefix:energyIcons(1)}；12{energyPrefix:energyIcons(1)}"))
++    .toBe("0点能量；12点能量");
++});
++
++it("preserves ordinary energy amounts, measured Ironclad values and unknown placeholders", () => {
++  expect(fillRelicText("LANTERN", "获得{Energy:energyIcons()}。" )).toBe("获得1点能量。");
++  expect(fillRelicText("FIXTURE", "获得{Energy:energyIcons(2)}。" )).toBe("获得2点能量。");
++  expect(fillRelicText("BURNING_BLOOD", "回复{Heal}点生命。" )).toBe("回复6点生命。");
++  expect(fillRelicText("FIXTURE", "获得{Unknown}。" )).toBe("获得?(数值未知)。");
++});

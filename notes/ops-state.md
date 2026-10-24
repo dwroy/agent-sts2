@@ -1,8 +1,8 @@
-state: clear-ok
-issue: 59
-updated: 2026-10-25T00:47:25+08:00
+state: in-flight
+issue: 51
+updated: 2026-10-25T01:00:23+08:00
 
-进行中的事：四会话已可恢复释放，58/60 active/working，实际4/5，本轮无未完成写事务。
-在等谁：主管复核59，57新自然事务/56真实tier及学习自然父未验。
-下一步：20/36 runtime已归ops，未重控；恢复资料见59材料。A七对未发，按next-publication-A233359.json接57新门，不重模型/full/tick。
+进行中的事：0043五事件已核；C5原worker1487883/birth28580454已begin，waiting无锁等原局/报告；未发。
+在等谁：原对局/报告自然终态及发布门，231317源码三候选待唯一宿主检查；004301零模型保原retry。
+下一步：核20261025-issue51-mixed-c5-ops/worker-state及原control.fifo；不新worker/重批/full/模型。56按6386401629核fast参数过。
 

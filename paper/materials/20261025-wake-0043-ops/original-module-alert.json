@@ -1,0 +1,863 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-24T16:40:02.555563+00:00",
+  "run_id": "UVEXNP9HCMAY",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 4862167175,
+      "end": 4895641966,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-24T14:25:17.539Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 1617512958,
+      "end": 1650975704,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-24T10:41:18.983Z"
+    },
+    "plans": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 11527783,
+      "end": 15718513,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-23T04:36:42.880Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 3559273,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete": true,
+  "construction": {
+    "missing_route": 2,
+    "predicted": 7
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 9,
+    "evaluation_attached": 9,
+    "evaluation_missing": 0,
+    "brain_evaluation": 10,
+    "accepted_evaluation": 6,
+    "accepted_choice_with_evaluation": 5,
+    "plan_due": 10,
+    "accepted_structured_plan": 6,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 6,
+    "plan_readback": 9,
+    "checkpoint_review_due": 4,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 7
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "s_readiness": {
+    "mode": "shadow",
+    "expected": 7,
+    "produced": 7,
+    "missing": 0,
+    "eligible": 7,
+    "low_trust": 0,
+    "sign_rejected": 0,
+    "brain_delivered": 0,
+    "brain_accepted": 0,
+    "ms_max": 1.3165540000190958,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+  },
+  "s_combat_rank": {
+    "mode": "shadow",
+    "expected": 0,
+    "produced": 0,
+    "used": 0,
+    "fallback": 0,
+    "missing": 0,
+    "shadow_produced": 0,
+    "shadow_invalid": 0,
+    "fallback_reasons": {},
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+  },
+  "build_ranking": {
+    "mode": "shadow",
+    "expected": 7,
+    "produced": 7,
+    "missing": 0,
+    "brain_delivered": 0,
+    "brain_accepted": 0,
+    "choices": 4,
+    "overrides": 0,
+    "reasons_present": 0,
+    "missing_reasons": 0,
+    "target_pending": 0,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+  },
+  "computation": {
+    "attempts": 8,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "adaptive": {
+    "mode": "on",
+    "observed": 7,
+    "produced": 7,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 7,
+    "budgeted_partial": 0,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666666,
+      "p90": 0.6666666666666666
+    },
+    "candidate_samples": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "candidate_rounds": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stop_counts": {
+      "leader": 10,
+      "eliminated": 35,
+      "indifferent": 7
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "b3": {
+    "attempts": 8,
+    "skipped": 0,
+    "produced_dpr": 4,
+    "coverage": 0.5,
+    "failures": {
+      "no_complete_dpr": 3
+    },
+    "unsupported": 1,
+    "applicable_attempts": 7,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 40,
+      "unsupported": 7,
+      "with_dpr": 23,
+      "missing_dpr": 10
+    },
+    "applicable_coverage": 0.5714285714285714,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 100,
+    "ms_max": 3681
+  },
+  "brain": {
+    "observed_questions": 9,
+    "questions_with_dpr": 8,
+    "accepted_with_dpr": 4,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "global_build": {
+    "mode": "shadow",
+    "expected": 7,
+    "covered": 7,
+    "missing": 0,
+    "invalid_shadow": 0,
+    "observations": 7,
+    "memo_hits": 0,
+    "current_dependency_unknown": 0,
+    "service_failures": 0,
+    "partial": 7,
+    "unknown": 0,
+    "budgeted_partial": 0,
+    "unknown_reasons": {
+      "校准 Brier 0.171192，高于整体 0.107560 的 1.25 倍 0.134451; 模拟每回合被打穿的血是实际的 1.33 倍": 7,
+      "模拟每回合被打穿的血是实际的 1.38 倍": 7,
+      "校准 Brier 0.139196，高于整体 0.107560 的 1.25 倍 0.134451": 7,
+      "Act3_quality_gate_and_production_trust_unknown": 21,
+      "offered_candidate_not_modeled": 1
+    },
+    "longest_missing_streak": 0,
+    "wall_ms": {
+      "n": 7,
+      "p50": 4.0,
+      "p90": 6.600000000000001,
+      "max": 9
+    },
+    "computation_wall_ms": {
+      "n": 7,
+      "p50": 4.0,
+      "p90": 6.600000000000001,
+      "max": 9
+    },
+    "memo_wall_ms": {
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "max": null
+    },
+    "future_target_wall_ms": {
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "max": null
+    },
+    "evidence": [],
+    "alert": false,
+    "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+    "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+  },
+  "alert": true,
+  "failures": [
+    {
+      "ts": "2026-10-24T16:23:31.527Z",
+      "decision": "c430e06a-dec8-4c47-b50d-6bf13a5ea7bb",
+      "floor": 6,
+      "label": "reward/card",
+      "reason": "no_complete_dpr",
+      "source": {
+        "offset": 4894659561,
+        "length": 149745,
+        "sha256": "99d6cffe9f471bd5b0b80c4b34903ef3ba1ddee6750dc66c7c24fa527c817697"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          15.23,
+          13.32,
+          13.16
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 18,
+        "deadlineMs": 10990.751176999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 1482,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10990.714920000057,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 58,
+            "chunksPlanned": 52,
+            "chunksDispatched": 52,
+            "chunksCompleted": 52,
+            "outcomesCompleted": 400
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1541,
+        "workers": 24
+      },
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-24T16:28:42.379Z",
+      "decision": "4f830a11-edde-44c1-a12b-0ea70935dfac",
+      "floor": 7,
+      "label": "rest/choose",
+      "reason": "no_complete_dpr",
+      "source": {
+        "offset": 4894813983,
+        "length": 316623,
+        "sha256": "dc88d961341c2e4cea53f0b2646e1d5a428e710c7da58320837afb30d48d0b1e"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          5.37,
+          9.06,
+          11.44
+        ],
+        "decks": 11,
+        "options": 10,
+        "deckCards": 19,
+        "deadlineMs": 10987.484448999981,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 3598,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10987.333079999895,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 70,
+            "chunksPlanned": 143,
+            "chunksDispatched": 143,
+            "chunksCompleted": 143,
+            "outcomesCompleted": 1100
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 3655,
+        "workers": 24
+      },
+      "error": null,
+      "candidates": {
+        "observed": 2,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 2
+      }
+    },
+    {
+      "ts": "2026-10-24T16:35:38.400Z",
+      "decision": "6098436b-e457-4635-abbc-f2b613b0b98a",
+      "floor": 8,
+      "label": "reward/card",
+      "reason": "no_complete_dpr",
+      "source": {
+        "offset": 4895481277,
+        "length": 155969,
+        "sha256": "bae5f1b993d2732b7e9984aae146da9b32eb1de745badc438f1fee12241c96ef"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.09,
+          6,
+          9.21
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10991.780218000058,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 1570,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10991.733441000106,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 69,
+            "chunksPlanned": 52,
+            "chunksDispatched": 52,
+            "chunksCompleted": 52,
+            "outcomesCompleted": 400
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1623,
+        "workers": 24
+      },
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "ts": "2026-10-24T16:09:23.920Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.18,
+        5.88,
+        13.34
+      ],
+      "decks": 1,
+      "options": 0,
+      "deckCards": 13,
+      "deadlineMs": 10891.488493,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 300,
+        "elapsedMs": 963,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10891.164677,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 11,
+          "firstReplyMs": 429,
+          "chunksPlanned": 38,
+          "chunksDispatched": 38,
+          "chunksCompleted": 38,
+          "outcomesCompleted": 300
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 300,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 983,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:11:42.215Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.22,
+        5.25,
+        12.06
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 13,
+      "deadlineMs": 10990.453615000006,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 697,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10990.319814999995,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 38,
+          "chunksPlanned": 52,
+          "chunksDispatched": 52,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 400
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 726,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:12:40.867Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.7,
+        5.02,
+        11.66
+      ],
+      "decks": 15,
+      "options": 15,
+      "deckCards": 14,
+      "deadlineMs": 10956.553199999995,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 2869,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10956.51095299999,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 37,
+          "chunksPlanned": 195,
+          "chunksDispatched": 195,
+          "chunksCompleted": 195,
+          "outcomesCompleted": 1500
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 3098,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:14:17.464Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.64,
+        5.06,
+        10.97
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 16,
+      "deadlineMs": 10990.084669000003,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1321,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10989.948283999984,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 50,
+          "chunksPlanned": 52,
+          "chunksDispatched": 52,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 400
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1355,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:16:04.591Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        17.72,
+        10,
+        12.17
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 17,
+      "deadlineMs": 10991.52644300001,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1475,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10991.49541600002,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 63,
+          "chunksPlanned": 52,
+          "chunksDispatched": 52,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 400
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1547,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:23:31.527Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        15.23,
+        13.32,
+        13.16
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 18,
+      "deadlineMs": 10990.751176999998,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1482,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10990.714920000057,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 58,
+          "chunksPlanned": 52,
+          "chunksDispatched": 52,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 400
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1541,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:28:42.379Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        5.37,
+        9.06,
+        11.44
+      ],
+      "decks": 11,
+      "options": 10,
+      "deckCards": 19,
+      "deadlineMs": 10987.484448999981,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 3598,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10987.333079999895,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 70,
+          "chunksPlanned": 143,
+          "chunksDispatched": 143,
+          "chunksCompleted": 143,
+          "outcomesCompleted": 1100
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 3655,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-24T16:35:38.400Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.09,
+        6,
+        9.21
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 19,
+      "deadlineMs": 10991.780218000058,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1570,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10991.733441000106,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 69,
+          "chunksPlanned": 52,
+          "chunksDispatched": 52,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 400
+        }
+      },
+      "boss": "LAGAVULIN_MATRIARCH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1623,
+      "workers": 24
+    }
+  ],
+  "unsupported": [
+    {
+      "ts": "2026-10-24T16:09:23.920Z",
+      "decision": "1f2b14c1-b0de-4538-ad14-c3c7e9e97ec6",
+      "floor": 1,
+      "label": "event/choose",
+      "source": {
+        "offset": 4892555443,
+        "length": 51799,
+        "sha256": "2eb2daf0e9b32bd893eb731846575af111b171b6ac7f75d95c06c2cc940dbda7"
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o2": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    }
+  ],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged.",
+  "queue_name": "1792860002555563008-module-health.md"
+}

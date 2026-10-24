@@ -5486,3 +5486,15 @@ f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源�
 
 ### 2026-10-25T00:50:09+08:00 [ops] #59工程/runtime分离与逐项释放收尾
 旧流程等待父issue及长期效果全部完结后回收开发会话；按Roy在#59的新授权，工程已接收、必要运行核收且无返工的空闲会话可先可恢复停止。本轮仅操作28/35/48/50，四项原生退出与tab缺席已读回，原树/分支/日志及父issue保留，未complete或删树。20/36沿集成员真实停用回执接runtime负责人，未重发控制。58/60已由主管经原入口启动并实际working，核验时开发4/5；未改容量、账号、模型或对局。AGENTS及协作两文档已同步规则；具体代码返工仍恢复原线程/原树。原件paper/materials/20261025-issue59-ops/handoff-table.json及sessions/各项恢复脚本。57新事务自然验收、56真实tier和知识/效果父仍待原owner，不以腾位宣称通过；A七对待发布计划已落盘，未写main/live。
+
+
+### 2026-10-25T00:59:14+08:00 [ops] 231317两普通源码批核收，原失败与候选保留
+两批native末回合和原绑定已核，均正常返回rc0，但调度原状态仍failed。fix保留run-config溯源与遗物重复数字两项补丁：tsc0、定向6过、撤码各2败；完整检查缺最终rc且已有失败，现原测试进程0。策略保原167b蜡烛1→6的三入口候选，定向12过，知识v6-history三方冲突与完整失败均保留。十原提案全部waiting，0328仅proposed；没有源码提交、live合入或新版本，其他九项证据不足范围不外推。已沿原修复ID补候选/检查续接，不重复派同题或重full、改沙箱；沙箱限制只认原栈已证部分，其余失败不概括归因。原件paper/materials/20261025-wake-0043-ops/source-candidate-handoff.json及两报告。
+
+
+### 2026-10-25T00:59:14+08:00 [ops] #56档位新裁决与004301未启动回执
+已读主管6386401629，旧native service_tier=null阻塞被新验收合同覆盖。233358/233359的external-launch请求/有效fast与实际tui启动命令-c service_tier=fast一致，原生绑定/模型high和原沙箱证明沿用，启动参数档位验收通过；不再等不存在的原生tier字段。004301虽已分配C道原树及candidate_mode merge=no，但原not-started回执models_started=0，stderr只有EAGAIN、没有可核具体争用锁，原rc1/失败/retry及输入SHA保留，未冒key隔离失败或提案缺失。D/A仍实际native接受，不热切、重finish或强tick。剩余runtime收敛/完成单元与原吞吐窗分账。原件paper/materials/20261025-wake-0043-ops/issue56-new-authority-and-runtime.json。
+
+
+### 2026-10-25T01:00:23+08:00 [ops] A233359候选异议与发布前核验
+七对=2新情境+5同ID更新、5新rk+2更新，真实新增2未达3，不冒5条新增目标。原通知与证据/差异/下一步已实际投issue51评论6387005047，并向原watcher会话实发提醒；仅运输回执，不代watcher/Roy确认。自有赢家缺外部前三ID完整bundle，三齐组件组败且外部有不齐赢家，原学习者据此否定“质心bundle为必要或充分胜利条件”，不推出单牌有害；两旧unassessed改conflict，confidence仍0.25、旧证据保留。独立核8决策/7状态SHA；三代理时间戳不等所指原行，牌组按升级表示及HP/金币/遗物核同，原稿未改。固定生产工具7+7+7和账本14投影check0，正式发布/原题回放7/完整剧本消费者/自然收益仍分账待验。原件paper/materials/20261025-issue51-mixed-c5-ops/。

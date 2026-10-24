@@ -1,0 +1,27 @@
+{
+  "external_launch": {
+    "batch": "20261024-233359-strategy-proposal",
+    "source": "issue51-remaining-build-003-20261024-r56-stock",
+    "external_tier": {
+      "requested": "fast",
+      "effective": "fast",
+      "weekly_used_percent": 76,
+      "sample_observed_at": "2026-10-24T15:35:01.686Z",
+      "reason": "weekly_over_70",
+      "observed_service_tier": null
+    },
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-233359",
+    "log": "/home/dw/Projects/agent-sts2/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal.jsonl",
+    "codex_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "input_sha256": "a30b34f35888ffcb968adb7c6646c7458b6b5a28b5a8a9103adf2dfdfebb8f61",
+    "prompt_sha256": "a30b34f35888ffcb968adb7c6646c7458b6b5a28b5a8a9103adf2dfdfebb8f61",
+    "command_sha256": "9e8b0b8881ba1db66a44494b0ac93511623ef4a0e7780415c8f1149e4202bf40",
+    "lease": "29ba269f87f189122c1826d19bd1a07a3ce9ad730b0bc5b36ddbd368e8f768b7"
+  },
+  "tui_script_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/tui.sh",
+  "script_sha256": "558e0648a7e267353f2ad14ccf2ab5c326dfb330e4358c243afd1c9d2ff4f879",
+  "tier_command_lines": [
+    "exec env -i HOME=/home/dw PATH=/home/dw/Projects/agent-sts2/ops:/home/dw/.local/node/bin:/usr/local/bin:/usr/bin:/bin:/home/dw/.local/node/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/tmp/arg0-linux/codex-arg0uFXLf5:/home/dw/.local/node/bin:/home/dw/.local/bin:/home/dw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin LANG=C.UTF-8 LC_ALL=C.UTF-8 LC_CTYPE=C.UTF-8 TERM=xterm-256color COLORTERM= CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner RUST_LOG=warn,codex_otel.trace_safe=info STS2_CODEX_LEARNER_BIN=/home/dw/.local/node/bin/codex STS2_WORKSPACE=/home/dw/Projects/agent-sts2 CODEX_OPS_ROOT=/home/dw/Projects/agent-sts2 LEARNER_BATCH_ID=20261024-233359-strategy-proposal LEARNER_STATE_FILE=/home/dw/Projects/agent-sts2/ops/codex-ops/learn.json LEARNER_CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner LEARNER_EXTERNAL_SOURCE=issue51-remaining-build-003-20261024-r56-stock LEARNER_EXTERNAL_SERVICE_TIER=fast nice -n 19 /home/dw/Projects/agent-sts2/ops/codex-learner.sh --cd /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-233359 -c 'default_permissions=\"learner\"' -c 'permissions.learner.filesystem={ \":root\" = \"read\", \"glob_scan_max_depth\" = 8, \":project_roots\" = { \".\" = \"write\" }, \":tmpdir\" = \"write\", \":slash_tmp\" = \"write\", \"/home/dw/Projects/agent-sts2\" = { \".\" = \"write\", \"**/.env\" = \"none\", \"**/*.env\" = \"none\" }, \"/home/dw/Projects/agent-sts2/.git\" = \"write\", \"/home/dw/Projects/agent-sts2/.git/hooks\" = \"read\", \"/home/dw/Projects/agent-sts2/.git/config\" = \"read\", \"/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261024-233359\" = \"write\", \"/home/dw/Projects/agent-sts2/agent/node_modules\" = { \".\" = \"read\", \"**/.env\" = \"none\", \"**/*.env\" = \"none\" }, \"/home/dw/Projects/agent-sts2/data/logdb-venv\" = { \".\" = \"read\", \"**/.env\" = \"none\", \"**/*.env\" = \"none\" }, \"/home/dw\" = { \".sts2-jev-env*\" = \"none\", \".jev_api_keys\" = \"none\", \".deepseek_api_key\" = \"none\" }, \"/home/dw/.codex3/auth.json\" = \"none\", \"/home/dw/.jev_api_keys\" = \"none\", \"/home/dw/.deepseek_api_key\" = \"none\", \"/home/dw/.sts2-jev-env-m1\" = \"none\", \"/home/dw/.sts2-jev-env-v3\" = \"none\", \"/home/dw/.sts2-jev-env.m1-0925.bak\" = \"none\", \"/home/dw/.sts2-jev-env.openrouter.bak\" = \"none\", \"/home/dw/.codex/auth.json\" = \"none\" }' --model gpt-6.1-sol -c 'approval_policy=\"never\"' -c 'web_search=\"disabled\"' -c 'model_reasoning_effort=\"high\"' -c 'service_tier=\"fast\"' -c model_context_window=512000 -c model_auto_compact_token_limit=460800 -c allow_login_shell=false -c skills.include_instructions=false -c skills.bundled.enabled=false -c check_for_update_on_startup=false -c 'history.persistence=\"none\"' -c analytics.enabled=false --disable hooks --disable memories --disable plugins --disable apps --disable multi_agent --disable image_generation --disable browser_use --disable computer_use --disable goals --disable view_image --disable skill_search --disable tool_suggest --disable sleep_tool --disable shell_snapshot --disable workspace_dependencies --disable in_app_browser --disable daemon_auto_start --disable unbounded_connection_retries --no-daemon"
+  ],
+  "native_tier_field_not_required_by_authority": 6386401629
+}
