@@ -5400,3 +5400,7 @@ ops核查：本批6描述遭遇配对已实际V6-R436入库并固定工具读回
 
 ### 2026-10-24T21:57:15+08:00 [ops] #56 C/D结束回调去重
 214312/13均为上一轮not-started/finish75的结束通知。已核failed/rc75及原wrapper退出；stderr和未启动证明与归档字节/SHA一致，shared.retired仍通过。out/TUI缺失、前置注册超时和proposal_audit_errors=[]保留，不记提案缺失、学习产出或live合入。本轮未重复finish、重派、模型/full/tick、回收或改在途行。A/B沿上轮原生接受继续，实际ultrafast未证；自有214311待原监督无自动续派结算，56原子注册/长锁修复、211311 8+8下一批及科学父保持，原窗不重置。交接仍clear-ok。原件paper/materials/20261024-214312-214313-callback-ops/verification.json，原结算1ad6d689。
+
+
+### 2026-10-24T22:14:55+08:00 [ops] V6-R442 两单牌批18对已发布
+211311原8对与214315正常20卡10对合发，策略75→93、rk115→133，36投影账本0679～0714 shipped/check0，不算36发现。T22:10:29，live53eb8013；18策略、18构筑rk/18完整rk及题型/A11/跨角色负例真实读回过，旧知识/词汇/开关保持。新旧正文/证据/预期影响/逐ID回退详见rule-change-notice.json：仅增描述情境/tag，不提供已验证数值拿牌或因果收益；18正式经验消费者、自然采用/收益和科学父保持。原failed/rc75与补证failed/rc0不改，未重学/full/游戏/tick。刷新锁竞争原错已存，源写前续接；发布锁105.273秒、22:12:05释放，worker已退。211311旧窗前完成不凑新窗产出，214315已核1单元；tier未知。原件paper/materials/20261024-issue51-two-card-batches-ops/。

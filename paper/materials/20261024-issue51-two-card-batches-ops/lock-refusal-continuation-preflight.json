@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-24T22:10:20+08:00",
+  "original_phase": {
+    "at": "2026-10-24T22:08:52+08:00",
+    "phase": "stopped-at-actual-stage",
+    "worker_pid": 306436,
+    "worker_birth": "27545976",
+    "published": false,
+    "new_full_model_game_tick": 0,
+    "held_locks": [],
+    "source_write_started": false,
+    "waiting_lock": "ops/knowledge-refresh.lock",
+    "error": "BlockingIOError(11, 'Resource temporarily unavailable')"
+  },
+  "all_target_and_dependency_preimages_same": true,
+  "checks": [
+    {
+      "tag": "main",
+      "path": "knowledge/characters/silent/strategy-entries.json",
+      "same": true
+    },
+    {
+      "tag": "main",
+      "path": "knowledge/characters/silent/reflex.json",
+      "same": true
+    },
+    {
+      "tag": "main",
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "same": true
+    },
+    {
+      "tag": "live",
+      "path": "knowledge/characters/silent/strategy-entries.json",
+      "same": true
+    },
+    {
+      "tag": "live",
+      "path": "knowledge/characters/silent/reflex.json",
+      "same": true
+    },
+    {
+      "tag": "live",
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "same": true
+    },
+    {
+      "path": "knowledge/characters/silent/build-cores.json",
+      "dependency_same": true
+    },
+    {
+      "path": "knowledge/characters/silent/direction-cards.json",
+      "dependency_same": true
+    },
+    {
+      "path": ".worktrees/live/knowledge/characters/silent/build-cores.json",
+      "dependency_same": true
+    },
+    {
+      "path": ".worktrees/live/knowledge/characters/silent/direction-cards.json",
+      "dependency_same": true
+    }
+  ],
+  "no_source_or_live_write_before_continuation": true,
+  "model_or_full_replay": false
+}

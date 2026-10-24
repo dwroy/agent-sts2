@@ -1,0 +1,651 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-wail-duration",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "PIERCING_WAIL"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-wail-duration-tag",
+        "unit": "label"
+      },
+      "label_en": "Single turn strength loss versus repeated protection",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 9
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 11
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理443/431；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-draw-discard-budget",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "PREPARED"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "ACROBATICS"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DAGGER_THROW"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-draw-discard-budget-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare draw counts with discard and energy costs",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U8K28UUGYP3U",
+            "floor": 4
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 7
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理445/370；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-block-time-and-shiv",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "CLOAK_AND_DAGGER"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DEFLECT"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DODGE_AND_ROLL"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-block-time-and-shiv-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare current block with delayed block and generated cards",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "CRK2HNYKSCZC",
+            "floor": 6
+          },
+          {
+            "run_id": "U8K28UUGYP3U",
+            "floor": 5
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理534/224；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-two-cost-defense",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "LEG_SWEEP"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DASH"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-two-cost-defense-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare weakness and block with immediate attack and block",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 7
+          },
+          {
+            "run_id": "QNTW139MGECA",
+            "floor": 3
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理335/247；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-retained-source-budget",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "SNAKEBITE"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-retained-source-budget-tag",
+        "unit": "label"
+      },
+      "label_en": "Retained poison source still requires energy and protection",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U8K28UUGYP3U",
+            "floor": 6
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 12
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理519/107；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-burst-versus-setup",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "ADRENALINE"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "AFTERIMAGE"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-burst-versus-setup-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare one use resources with recurring setup",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "P5HT1272P5SB",
+            "floor": 8
+          },
+          {
+            "run_id": "VPW8YH7A4QFM",
+            "floor": 33
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理172/160；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-discard-payload",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "HIDDEN_DAGGERS"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "CALCULATED_GAMBLE"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-discard-payload-tag",
+        "unit": "label"
+      },
+      "label_en": "Different discard payloads require different hand budgets",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "QNTW139MGECA",
+            "floor": 8
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 7
+          }
+        ],
+        "n_support": 2,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理305/186；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-attack-target-and-time",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "ECHOING_SLASH"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "RICOCHET"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "BACKSTAB"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-attack-target-and-time-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare group repeat conditions with random hits and opening damage",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 3
+          },
+          {
+            "run_id": "NB8KCF6HRGVF",
+            "floor": 4
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-211411-8325fedc-02a5-4da6-8812-ced6019575ac-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理323/110；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        }
+      ]
+    }
+  ]
+}
