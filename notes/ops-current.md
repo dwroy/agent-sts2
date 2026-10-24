@@ -1,6 +1,6 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T10:15:00+08:00
+updated: 2026-10-24T10:17:52+08:00
 
 进行中的事：094803完成回报核实/归档，正式发布与消费者仍待接续；原自动局继续。
 在等谁：原51发布owner核剧本消费者合同，54交自有四表与字段审计，37原唯一检查窗口。
@@ -26,7 +26,7 @@ Roy P0恢复已执行：原关引导V6-R427八叶在当前R428逐字节核同，
 
 未完成清单：#37冻结实际R428/.1及最新main唯一检查→20父含39/43，当前full0；061302 .2未发布，原受阻/window-release6377757372保留。#36原080423/083104/084301缺finish/retirement合同，保批/pane/原native，不能重放/改task/强关；其余五旧tab缺回执，原033643/041301/051302已收尾不重做。#46完整24h门13:46:30、#48门18:19:29不提前；#48普通经验显式提炼合同待owner，原18冻结/244别名不改。#23回收可持续验收失败，原worker≤4，不派清理模型；#50后两幕/F48-F49/SL重启/终局及学习、#35学习自然消费、#49 R427自然首题已进入，具体题面/查询证据待核；旧R420效率读回不混。#20 kit一天shadow至10-25 00:15:05，/new未启；#47 detailed已恢复，自动局按原入口继续。ops Fast原生字段未证不热切，codex1不切。
 
-09:13同16学习通知已核16原文/32投递/旧watcher接收并实提醒原session；15ACK来源兼容仍拒绝、000402原wrapper缺失，正式watcher_received/Roy可见pending，不代ACK/不假称Roy已知；#27状态无变化不重复主管收件箱。paper/materials/20261024-0913-notices-ops/。所有科学父、旧failed/rc0/EPERM/EROFS/retry未知及丢失full保持。
+10:16同16学习通知再次核16原文/32投递/旧watcher实际接收原件；内容不变，15ACK来源合同仍拒绝、000402原wrapper仍缺，正式watcher_received/roy_notified均0继续pending。原sts2-integrator同pane/session一次herdr提醒返回agent_prompted，不能代收到或Roy已知；#27未变不重复主管收件箱，不重拒绝CLI。paper/materials/20261024-1016-notices-ops/verification.json、notice-handoff.json、watcher-reminder.json；旧09:13原件保留。所有科学父、旧failed/rc0/EPERM/EROFS/retry未知及丢失full保持。
 
 以上简表之外的逐项原待办/历史路径完整保留paper/materials/20261024-090927-strategy-result-ops/handoff-before.md；只有沿当前事件需要时查原件，不全文重读handoff/decision-log。当前回执：#51评论6378188756，#54评论6378189200，#37评论6378189629，POST/GET全文核同。新输入原件paper/materials/20261024-issue51-builds-ops/；发布原件paper/materials/20261024-090927-strategy-result-ops/。没有sleep/轮询等待或另派模型，交回原调度器。
 

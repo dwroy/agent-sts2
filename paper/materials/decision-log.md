@@ -6560,3 +6560,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T10:05:21+08:00 [ops] #51两模板整局/流派主线及决策类型1/2/3自然生效，source4e9e94e827a9/main745ddfc5ff5e，四渲染/铁甲全文等价，毒008绑定不变、旧未派刀009待三输入重冻；#54字段/自有四表待原owner，无代码/full/模型。paper/materials/20261024-issue51-whole-run-ops/。
 
 - 2026-10-24T10:15:00+08:00 [ops] #51 核094803报告-only候选1、91页/20轨迹/713节点及原retirement，正式发布/消费者0；原自动局BP9C8K9NSRZ0/live02eb468f8仍在，不重复start/full；原件 paper/materials/20261024-strategy-094803-ops/verification.json。
+
+- 2026-10-24T10:17:52+08:00 [ops] 核同16学习通知/32原投递，15来源ACK合同及000402缺wrapper阻塞保持，正式后两阶段0；原watcher同session提醒agent_prompted，不代Roy已知，#27未变不重复主管收件箱；原件 paper/materials/20261024-1016-notices-ops/verification.json。

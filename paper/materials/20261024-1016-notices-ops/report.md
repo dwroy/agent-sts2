@@ -1,0 +1,3 @@
+# 2026-10-24T10:17:52+08:00 [ops] 同16通知核验
+
+本轮16条学习通知与09:13原文相同，逐项核问题、旧观点差异、证据及下一步；16份ops_forwarded回执和两收件箱32段原始投递字节/SHA均核同，旧watcher实际接收原件也保持。15条仍受原ACK来源/任务身份合同限制，CLI源码SHA未变，不重复执行已拒绝命令或伪造来源；000402原wrapper仍缺，不以同名文件替代。正式watcher_received、roy_notified均0，原通知继续pending；旧当前局账本rc0与冻结清单rc1分开，不能据此关闭科学父。已核原sts2-integrator同pane/session，通过原herdr追加一次一行提醒，实际transport返回agent_prompted；发送/排队不代收到或Roy已知。初次空闲状态核验遇会话已转working，未发送，随后沿同原会话提醒成功，无重复投递。#27无状态变化，按主管指示不重复写主管收件箱；完整细节及回执落本材料，已更新ops-current。未起full/模型/游戏或改任何角色确认。原件：paper/materials/20261024-1016-notices-ops/verification.json、notice-handoff.json、watcher-reminder.json。
