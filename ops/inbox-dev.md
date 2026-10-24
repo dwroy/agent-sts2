@@ -6818,3 +6818,23 @@ f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装
 f623宿主10叶后像再次核同，原6604/0/2与tsc0原件保持，无新源码待发布。6个自然原生turn的提示/身份及high/原沙箱核同；A/B均已done/rc0，补丁后两完成在原两小时窗后独立记账，不回填原6个补丁前完成。00:00:19开放模型0自有/0外部，另1个终态fix wrapper收尾；不改在途行。当前79%适用两道fast，A/B请求/有效参数fast但原生tier仍null，不能据参数验收实际档位。已评论6386380750并读回，#56保持open改blocked，明确等原owner交绑定session/turn的原生或真实请求服务档回执；不造四道ultrafast或改账号。已核ops积压，原依赖/科学父保持；下一可推进是#51 A233359七对，转原串行发布。原件paper/materials/20261024-issue56-resume-ops/acceptance-checkpoint.json。
 
 - 2026-10-25T00:10:45+08:00 [watcher] #57主机源已精确安装/main 905a5edbe88924e77a515fc3e84d4972b941f736（正式f7a8a2627，完整677文件/6607过/0败/2原跳、tsc0；回帖https://github.com/dwroy/agent-sts2/issues/57#issuecomment-6386462700）。旧规则：新发布等局时依赖全局LLM_DRAIN而挡候选；新接口：仅下一笔原owner持久worker用PUBLICATION_ADMISSION begin/waiting→无锁等原局/报告→write/publishing→核验→release，waiting只放行冻结merge=no候选，三开局入口受同门；原事务和PAUSE/ACCOUNT_DRAIN/旧未知LLM_DRAIN不转换。证据/原输出/30叶安装读回见paper/materials/20261024-issue57-composition-integrator/；预期减少发布等待对候选的阻断，未验自然收益。按Roy已批#59，本轮工程接收/可发布，未发现代码返工；原ops复用匹配组合full不重跑，接实际加载/基本消费者冒烟/异常恢复必要运行核收与会话可恢复释放判定；长期学习与效果归runtime/学习者，不再挂研发完成门，保留原树/分支/原始日志。原ops请纳入自己的ops-current短清单，按docs/publication-admission.md核T/owner-birth/token、真实候选完成、发布前新局0及release后自然续局；内部写入体不重取原flock。回退由原owner保留marker/失败回执，恢复本批源码前核原事务；若恢复不识别发布门的旧开局入口，须ops先建立原LLM_DRAIN保护。live/R446、在途/账号/权限不改，issue仍waiting-release；不代ACK、科学父或#20共享MAS/原观察窗验收。
+
+
+### 2026-10-25T00:28:21+08:00 [ops] #59单项可恢复释放#28
+主管已核收工程原件，本轮仅核原生与会话门：PID/birth/session/turn/cwd及原末回合≥5分钟、空输入、无额外命令/模型/测试/写事务均通过。旧Codex升级后的叶helper已按父子身份核同，不因旧路径改名误判在途。已保存固定HEAD/分支、未提交delta/产物、原账号目录/恢复命令、原始日志入口与终端尾日志；原生退出及tab缺席实际读回。只释放原空闲会话，原树/分支/日志及父issue保留；未调用complete/删树，runtime续接引用挡自动回收。runtime由ops接，学习者管知识效果；未验：Plan/同种子矩阵、合法留出、原开关off与效果。当前实际开发会话5，上限5不改，原57事务及A七对待发布保持。原件paper/materials/20261025-issue59-ops/sessions/28/release-state.json。
+
+
+### 2026-10-25T00:30:59+08:00 [ops] #59单项可恢复释放#35
+主管已核收工程原件，本轮仅核原生与会话门：PID/birth/session/turn/cwd及原末回合≥5分钟、空输入、无额外命令/模型/测试/写事务均通过。旧Codex升级后的叶helper已按父子身份核同，不因旧路径改名误判在途。已保存固定HEAD/分支、未提交delta/产物、原账号目录/恢复命令、原始日志入口与终端尾日志；原生退出及tab缺席实际读回。只释放原空闲会话，原树/分支/日志及父issue保留；未调用complete/删树，runtime续接引用挡自动回收。runtime由ops接，学习者管知识效果；未验：冷重启/跨层恢复/超40条及长期效果。当前实际开发会话5，上限5不改，原57事务及A七对待发布保持。原件paper/materials/20261025-issue59-ops/sessions/35/release-state.json。
+
+
+### 2026-10-25T00:33:47+08:00 [ops] #59单项可恢复释放#48
+主管已核收工程原件，本轮仅核原生与会话门：PID/birth/session/turn/cwd及原末回合≥5分钟、空输入、无额外命令/模型/测试/写事务均通过。旧Codex升级后的叶helper已按父子身份核同，不因旧路径改名误判在途。已保存固定HEAD/分支、未提交delta/产物、原账号目录/恢复命令、原始日志入口与终端尾日志；原生退出及tab缺席实际读回。只释放原空闲会话，原树/分支/日志及父issue保留；未调用complete/删树，runtime续接引用挡自动回收。runtime由ops接，学习者管知识效果；未验：旧回刷0/244、自然消费/收益及24h吞吐。当前实际开发会话5，上限5不改，原57事务及A七对待发布保持。原件paper/materials/20261025-issue59-ops/sessions/48/release-state.json。
+
+
+### 2026-10-25T00:36:14+08:00 [ops] #59单项可恢复释放#50
+主管已核收工程原件，本轮仅核原生与会话门：PID/birth/session/turn/cwd及原末回合≥5分钟、空输入、无额外命令/模型/测试/写事务均通过。旧Codex升级后的叶helper已按父子身份核同，不因旧路径改名误判在途。已保存固定HEAD/分支、未提交delta/产物、原账号目录/恢复命令、原始日志入口与终端尾日志；原生退出及tab缺席实际读回。只释放原空闲会话，原树/分支/日志及父issue保留；未调用complete/删树，runtime续接引用挡自动回收。runtime由ops接，学习者管知识效果；未验：正式双Boss达标线、冷恢复、终局效果；新规划接口归#58。当前实际开发会话4，上限5不改，原57事务及A七对待发布保持。原件paper/materials/20261025-issue59-ops/sessions/50/release-state.json。
+
+
+### 2026-10-25T00:50:09+08:00 [ops] #59工程/runtime分离与逐项释放收尾
+旧流程等待父issue及长期效果全部完结后回收开发会话；按Roy在#59的新授权，工程已接收、必要运行核收且无返工的空闲会话可先可恢复停止。本轮仅操作28/35/48/50，四项原生退出与tab缺席已读回，原树/分支/日志及父issue保留，未complete或删树。20/36沿集成员真实停用回执接runtime负责人，未重发控制。58/60已由主管经原入口启动并实际working，核验时开发4/5；未改容量、账号、模型或对局。AGENTS及协作两文档已同步规则；具体代码返工仍恢复原线程/原树。原件paper/materials/20261025-issue59-ops/handoff-table.json及sessions/各项恢复脚本。57新事务自然验收、56真实tier和知识/效果父仍待原owner，不以腾位宣称通过；A七对待发布计划已落盘，未写main/live。
