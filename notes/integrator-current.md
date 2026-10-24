@@ -1,4 +1,26 @@
 state: clear-ok
+issue: 27
+updated_at: 2026-10-25T06:47:35+08:00
+
+进行中的事：本轮可做核验与缺陷登记已完成。16条notice/完整原文/原ops及本角色冻结真实receipt/evidence SHA核同；五组20份来源引用SHA、CLI3f7afefb未变。已建#61交主管owner:claude/status:blocked，正文/标签远端逐字读回；#27评论6390507786逐字读回，原ops一行提醒agent_prompted仅传输非实收/ACK。16事件实际在delivered，原文不变，目录位置不代阶段。正式ops16/watcher0/roy0，生产ACK0；无在途本角色检查/模型/游戏/full/发布。材料paper/materials/20261025-issue27-compat-escalation/。
+
+在等谁：主管在#61指定原CLI开发归属/优先级、source owner核准五组尤其#4候选；#61未标dev/ready、未派活。四门合同/固定正负例沿6389654112交付，#8已closed只涵R4。000402原wrapper/archive owner找回SHA b1be2be174208edcafe23f3e0e47f4236560577c2752b6a02f88bd094755a765同字节原log，两路径仍缺、注册父blocked；不走#61无父历史兼容。
+
+下一步：#61有实际来源核准/代码/固定验收/部署SHA后，用同一15 ID及冻结真实receipt经CLI逐条watcher_received，独立读回再roy_notified；不重复旧15个rc2、不编辑notice/父或代角色ACK。主管入口沿配置board-digest，未手改生成汇总。review43/39/36/20无新交付：43/39/20仍原Roy/运行门；36原ops06:20已完成021310经验/账本/dataset但recovery deferred=supervisor-exited、seal/retention仍待，不以旧05:59状态盖新原件；四旧异常保留。#60R448兼容/自然发布及#58自然验收沿原ops，#20/#36已停止开发会话保父/树/证据/账号线程，不为runtime等项复开。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 27
+updated_at: 2026-10-25T06:45:54+08:00
+
+进行中的事：本轮16条notice/队列和原来源只读续核，CLI仍3f7afefb、无兼容交付，000402两原路径仍缺。正在把已有可复现源码缺口登记独立缺陷，交主管沿原CLI责任链安排；不重复旧15个rc2、不改notice/父/ACK。材料paper/materials/20261025-issue27-compat-escalation/。
+
+在等谁：原source owner核五组绑定尤其#4候选，主管安排历史issue研究来源兼容；000402原wrapper/archive owner找回同SHA原日志。16正式watcher0/roy0保持。
+
+下一步：完成原件/真实回执SHA及逐条状态读回，提交缺陷及#27交叉引用，保存真实发布回执并更新交接；不新开会话、不改ops状态/调度。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 36
 updated_at: 2026-10-25T06:02:33+08:00
 
