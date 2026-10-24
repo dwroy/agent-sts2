@@ -46,6 +46,30 @@ class CompletionGate(unittest.TestCase):
         self.assertEqual(value["output"]["sha256"], tui.digest(self.output))
         self.assertFalse(value["artifacts"]["out_pending_wrapper_flush"])
 
+    def test_final_failed_producer_is_only_a_hold_never_completion_authority(self):
+        self.value.update(state="needs-attention", retirement_authorized=False)
+        self.value["result"].update(code=75, stopped=False, reason="retirement-unverified")
+        self.log.write_text(json.dumps({"type":"learner_summary", "exit_code":75, "summary":{"sessionId":"thread"}}) + "\n")
+        self.value["artifacts"]["sha256"] = tui.digest(self.log)
+        self.save()
+        before = self.receipt.read_bytes()
+        self.assertTrue(tui.verification_blocked(self.receipt, "75"))
+        with self.assertRaises(ValueError):
+            tui.verified_code(self.receipt, self.output, "75")
+        self.assertEqual(self.receipt.read_bytes(), before)
+        for change in (dict(state="native-accepted"), dict(retirement_authorized=True),
+                       dict(result=dict(self.value["result"], code=0)), dict(result=dict(self.value["result"], stopped=True)),
+                       dict(artifacts=dict(self.value["artifacts"], summary=False)),
+                       dict(artifacts=dict(self.value["artifacts"], sha256="0"*64))):
+            with self.subTest(change=change):
+                self.receipt.write_text(json.dumps(dict(self.value, **change)))
+                self.assertFalse(tui.verification_blocked(self.receipt, "75"))
+        self.save()
+        self.assertFalse(tui.verification_blocked(self.receipt, "0"))
+        self.log.write_text(json.dumps({"type":"learner_summary", "exit_code":0, "summary":{"sessionId":"thread"}}) + "\n")
+        self.value["artifacts"]["sha256"] = tui.digest(self.log); self.save()
+        self.assertFalse(tui.verification_blocked(self.receipt, "75"))
+
     def test_bounded_agent_name_stays_bound_to_full_label_pane_and_cwd(self):
         self.value.update(label="learner-20261023-021302-s2-strategy-proposal", pane="w1:p2", agent_name_version=1)
         binding = json.dumps([self.value["label"], self.value["pane"], str(self.root)], ensure_ascii=False, separators=(",", ":"))

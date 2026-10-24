@@ -13,6 +13,7 @@ type Row = { timestamp?: string; type?: string; payload?: Record<string, unknown
 const TRANSIENT = /at capacity|rate.?limit|stream disconnected|reconnecting|error sending request/i;
 const ACCEPTANCE_WARN_MS = 120_000;
 const ACCEPTANCE_TIMEOUT_MS = 600_000;
+const INPUT_HOLD_MS = 120_000;
 const queuedInputs = (screen: string): boolean => /^[^\w\n]*Queued follow-up inputs\b/m.test(screen.replace(/\u001b\[[0-9;]*m/g, ""));
 const emptyComposer = (screen: string): boolean => composerState(screen) === "empty" && !queuedInputs(screen);
 const sleep = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
@@ -368,6 +369,7 @@ export interface TuiOptions {
 export interface TuiResult {
   code: number;
   reason: string;
+  failure_reason?: string;
   session?: string;
   turn?: string;
   rollout?: string;
@@ -462,6 +464,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let ownershipLost = false;
   let continuation = 0;
   let retirementAuthorized = false;
+  let inputHold: { since_ms: number; deadline_ms: number; screen_sha256: string } | undefined;
   let persistedBindings = 0;
   let persistedUpdates = 0;
   let alerted = false;
@@ -481,6 +484,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       agent_name: agentName, agent_name_version: 1,
       native_context_version: 1, native_preludes: native.preludes,
       native_environment_version: 1, native_environment_updates: native.environmentUpdates,
+      input_hold: inputHold,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
       native_acceptance_warn_at_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_WARN_MS,
       native_acceptance_deadline_ms: submittedAt === undefined ? undefined : submittedAt + ACCEPTANCE_TIMEOUT_MS,
@@ -550,6 +554,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         const value = Number(readFileSync(pidfile, "utf8").trim());
         if (Number.isSafeInteger(value) && value > 1) { pid = value; ownerBirth = birth(pid); save("started"); }
       }
+      if (pid && !ownerBirth) { result.reason = "startup-process-unavailable"; break; }
       if (!(await samePane())) { uncertain = true; attention("learner pane identity changed; original session retained"); break; }
       const agentResult = await h(["agent", "get", o.pane]);
       const agent = agentResult.result?.agent as Record<string, unknown> | undefined;
@@ -584,6 +589,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       if (native.accepted && native.progress !== progress) { retries = 0; progress = native.progress; retryAt = undefined; alerted = false; }
       if (!o.lease?.current()) { ownershipLost = true; uncertain = true; attention("learner lease changed; completion and automatic continuation disabled"); break; }
       if (native.foreignActivity) {
+        result.reason = "foreign-native-activity";
         ownershipLost = true; attention("unbound native/human turn; keep original session and supervision"); break;
       }
       // Prompt delivery can return while its paste is still visible and before the native file exists.
@@ -599,10 +605,37 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         attention("learner native acceptance timed out; keep original session; no task replay"); break;
       }
       if (!awaitingNative && currentScreen.ok && queuedInputs(currentScreen.stdout)) {
+        result.reason = "queued-input";
         ownershipLost = true; attention("queued follow-up inputs; keep original session and supervision"); break;
       }
       if (!awaitingNative && currentScreen.ok && composerState(currentScreen.stdout) === "text") {
-        ownershipLost = true; attention("unsent human draft; keep original session and supervision"); break;
+        // A redraw can briefly expose an old transcript prompt as the last visible glyph.
+        // Keep reading the original native turn; text never authorizes a prompt, keys or finish.
+        if (!inputHold) {
+          inputHold = { since_ms: now(), deadline_ms: now() + INPUT_HOLD_MS,
+            screen_sha256: createHash("sha256").update(currentScreen.stdout).digest("hex") };
+          o.log({ type: "learner_tui_input_hold", ...inputHold, session: native.session, turn: native.turn,
+            native_open: native.open, agent_status: current?.agent_status });
+          save("input-held");
+          attention("learner composer contains text; observing original session without control until it clears or the input-hold deadline");
+        }
+        if (now() >= inputHold.deadline_ms || cancelled || (o.timeoutMs !== undefined && now() - started >= o.timeoutMs)) {
+          result.reason = "pending-input-timeout"; ownershipLost = true; break;
+        }
+        await pause(o.pollMs ?? 1000);
+        continue;
+      }
+      if (inputHold) {
+        if (!currentScreen.ok || !emptyComposer(currentScreen.stdout)) {
+          if (now() >= inputHold.deadline_ms || cancelled || (o.timeoutMs !== undefined && now() - started >= o.timeoutMs)) {
+            result.reason = "pending-input-timeout"; ownershipLost = true; break;
+          }
+          await pause(o.pollMs ?? 1000);
+          continue;
+        }
+        o.log({ type: "learner_tui_input_resumed", since_ms: inputHold.since_ms, at_ms: now(), session: native.session, turn: native.turn });
+        inputHold = undefined;
+        save("native-observation-resumed");
       }
       if (native.successful() && finalIdle && caughtUp && !uncertain) { result = { ...result, code: 0, reason: "native-task-complete" }; break; }
       const transient = native.accepted && finalIdle && caughtUp &&
@@ -712,7 +745,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
     process.removeListener("SIGINT", onSignal); process.removeListener("SIGTERM", onSignal);
   }
   result = { ...result, session: native.session, turn: native.turn, rollout, message: native.message, usage: native.totalUsage(), ...(native.error ? { error: native.error.slice(0, 2000) } : {}) };
-  if (!result.stopped) { result.code = 75; result.reason = "retirement-unverified"; attention("learner TUI retirement unverified; finish and reclamation forbidden"); }
+  if (!result.stopped) { result.failure_reason = result.reason; result.code = 75; result.reason = "retirement-unverified"; attention("learner TUI retirement unverified; finish and reclamation forbidden"); }
   else if (result.code !== 0) attention("learner TUI ended exceptionally; preserve original evidence for ops review");
   save(result.stopped ? "session-ended" : "needs-attention", { result });
   return result;

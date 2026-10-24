@@ -342,6 +342,27 @@ def verified_code(path, output, launcher_rc):
     return code
 
 
+def verification_blocked(path, launcher_rc):
+    """A final failed producer cannot become verified by polling it; this grants only a hold."""
+    raw = Path(path).read_bytes()
+    receipt = json.loads(raw)
+    result, artifacts = receipt.get("result", {}), receipt.get("artifacts", {})
+    if (int(launcher_rc) != 75 or receipt.get("state") != "needs-attention"
+            or result.get("code") != 75 or result.get("reason") != "retirement-unverified"
+            or result.get("stopped") is not False or receipt.get("retirement_authorized") is not False
+            or artifacts.get("summary") is not True or digest(artifacts["log"]) != artifacts.get("sha256")):
+        return False
+    last = None
+    with open(artifacts["log"]) as source:
+        for line in source:
+            row = json.loads(line)
+            if row.get("type") == "learner_summary":
+                last = row
+    return (bool(last) and last.get("exit_code") == 75
+            and last.get("summary", {}).get("sessionId") == result.get("session")
+            and Path(path).read_bytes() == raw)
+
+
 def finished(state, batch, path, output, launcher_rc, supervisor):
     """Record the original finish transaction; tab retirement belongs to the #20 adapter."""
     code = verified_code(path, output, launcher_rc)
@@ -414,13 +435,14 @@ def apply_deferrals(state, directory):
             if isinstance(owner_birth, str) and process_birth(record["supervisor"]["pid"]) == owner_birth:
                 continue
             attention(directory, record["batch"], "recovery")
-        batch.update(state="awaiting_review", review_required="recovery-supervisor-exited" if record.get("wait_for_owner_exit") is True else "tui-verification-timeout",
+        reason = "terminal-unverified-receipt" if record.get("reason") == "terminal-unverified-receipt" else "tui-verification-timeout"
+        batch.update(state="awaiting_review", review_required="recovery-supervisor-exited" if record.get("wait_for_owner_exit") is True else reason,
                      deferred_at=record["at"], verification_deferred=str(path))
         changed = True
     return changed
 
 
-def defer(state, batch, path, output, launcher_rc, supervisor):
+def defer(state, batch, path, output, launcher_rc, supervisor, *, terminal_unverified=False):
     """Release only our scheduler lease; preserve the native receipt, model and original demand."""
     state = Path(state)
     directory = state.parent
@@ -440,7 +462,7 @@ def defer(state, batch, path, output, launcher_rc, supervisor):
             raise ValueError("deferral belongs to another supervisor")
     else:
         record = {"schema": "learner-verification-deferred-v1", "batch": batch,
-            "at": dt.datetime.now().astimezone().isoformat(), "reason": "tui-verification-timeout",
+            "at": dt.datetime.now().astimezone().isoformat(), "reason": "terminal-unverified-receipt" if terminal_unverified else "tui-verification-timeout",
             "supervisor": {"pid": supervisor, "birth": fields[19]}, "launcher_rc": int(launcher_rc),
             "receipt": str(path), "output": str(output), "finish_authorized": False,
             "retirement_authorized": False, "automatic_replay_authorized": False,
@@ -465,7 +487,7 @@ def defer(state, batch, path, output, launcher_rc, supervisor):
         record["inbox_notice"] = "sending"
         persist(record_path, record)
         with (directory / "inbox-claude.md").open("a") as inbox:
-            inbox.write(f"- {record['at']} [dev #36 wrapper] 学习批次 {batch} 回执核验超时，监督退出、原批次待核；原产物/回执/pane保留，不自动重派原任务、不认完成，见 learner/{record_path.name}。\n")
+            inbox.write(f"- {record['at']} [dev #36 wrapper] 学习批次 {batch} 回执核验未通过（{record['reason']}），监督退出、原批次待核；原产物/回执/pane保留，不自动重派原任务、不认完成，见 learner/{record_path.name}。\n")
             inbox.flush()
             os.fsync(inbox.fileno())
         record["inbox_notice"] = "written"
@@ -728,12 +750,16 @@ def main(argv):
             verify(*argv[1:])
         elif argv[0] == "verified-code" and len(argv) == 4:
             print(verified_code(*argv[1:]))
+        elif argv[0] == "verification-blocked" and len(argv) == 3:
+            return 0 if verification_blocked(*argv[1:]) else 75
         elif argv[0] == "finished" and len(argv) == 7:
             finished(*argv[1:])
         elif argv[0] == "attention" and len(argv) == 4:
             attention(*argv[1:])
-        elif argv[0] == "defer" and len(argv) == 7:
-            defer(*argv[1:])
+        elif argv[0] == "defer" and len(argv) in (7, 8):
+            if len(argv) == 8 and argv[7] != "--terminal-unverified":
+                return 2
+            defer(*argv[1:7], terminal_unverified=len(argv) == 8)
         elif argv[0] == "close" and len(argv) == 6:
             close(*argv[1:])
         elif argv[0] == "recover-completed" and len(argv) in (5, 6):

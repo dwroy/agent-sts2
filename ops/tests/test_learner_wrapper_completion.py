@@ -285,6 +285,29 @@ print("original fixed output")
         self.assertIsNone(jobs.dispatch_write(state, str(self.root), str(REPO / "ops"), "experience-update", "silent",
                                              ["FIXTURE000001"], "original-key", "ops", lambda _: False, "20261023-130000"))
 
+    def test_final_unverified_producer_defers_without_polling_or_changing_original_failure(self):
+        env = self.timeout_fixture()
+        self.value.update(state="needs-attention", retirement_authorized=False)
+        self.value["result"].update(code=75, reason="retirement-unverified", stopped=False)
+        self.log.write_text(json.dumps({"type":"learner_summary", "exit_code":75, "summary":{"sessionId":"thread"}}) + "\n")
+        self.value["artifacts"]["sha256"] = tui.digest(self.log)
+        self.save()
+        # The old wrapper reaches this trap after its first failed verify. The new one must never sleep.
+        (self.root / "home/.local/node/bin/sleep").write_text('#!/usr/bin/python3\nimport os,signal\nos.kill(os.getppid(),signal.SIGTERM)\n')
+        initial = self.root / "ops/fixture-initial.py"
+        initial.write_text(initial.read_text() + '\nraise SystemExit(75)\n')
+        before = self.receipt.read_bytes()
+        result = self.run_wrapper(dict(env, LEARNER_TUI_VERIFY_TIMEOUT_S="300"))
+        self.assertEqual(result.returncode, 75)
+        self.assertEqual(self.receipt.read_bytes(), before)
+        batch = json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]
+        self.assertEqual(batch["state"], "awaiting_review")
+        self.assertEqual(batch["review_required"], "terminal-unverified-receipt")
+        self.assertNotIn("finished", batch)
+        self.assertNotIn("rc", batch)
+        self.assertNotIn("wrapper", json.loads(self.receipt.read_text()))
+        self.assertFalse((self.root / "seal-args.json").exists())
+
     def test_pending_hold_survives_lock_contention_without_infinite_wait(self):
         self.prepare()
         state_file = self.directory / "learn.json"
@@ -320,6 +343,19 @@ print("original fixed output")
         self.assertLess(time.monotonic() - started, 6)
         self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "awaiting_review")
         self.assertTrue((self.directory / "inbox-claude.md").is_file())
+
+    def test_hung_terminal_classifier_cannot_extend_the_existing_verification_deadline(self):
+        env = self.timeout_fixture()
+        helper = self.root / "ops/learner_tui.py"
+        helper.write_text(helper.read_text().replace('if __name__ == "__main__":',
+            'if __name__ == "__main__" and sys.argv[1:2] == ["verification-blocked"]: time.sleep(60)\nif __name__ == "__main__":'))
+        started = time.monotonic()
+        self.assertEqual(self.run_wrapper(env).returncode, 75)
+        self.assertLess(time.monotonic() - started, 6)
+        self.assertEqual(json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["state"], "awaiting_review")
+        record = json.loads((self.directory / "learner" / (self.batch + ".verification-deferred.json")).read_text())
+        self.assertEqual(record["reason"], "tui-verification-timeout")
+        self.assertFalse(record["finish_authorized"])
 
     def test_deferral_does_not_take_over_another_supervisor_or_duplicate_notice(self):
         self.prepare()
