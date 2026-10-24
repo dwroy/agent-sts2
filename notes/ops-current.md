@@ -1,10 +1,10 @@
 state: clear-ok
-issue: 56
-updated: 2026-10-24T23:08:48+08:00
+issue: 51
+updated: 2026-10-24T23:11:19+08:00
 
-进行中的事：R446及10投影读回已核；f623十叶/原full终态核同，6385788435回执，本轮写已结。
-在等谁：原自然T/五槽/tier；旧214311/备单，C7 watcher/Roy ACK、剧本/回放/科学父。
-下一步：不强tick/finish/重派，保原23:30/23:34:30窗，原pending续核。原件paper/materials/20261024-issue56-registration-host-readback-ops/。
+进行中的事：R446原回调与发布/登记/5对生产原件核同，仅去重；原worker/锁已退，未重发或重跑，本轮写已结。
+在等谁：C7 watcher/Roy ACK、1剧本父/5原回放/科学父；56原自然T/五槽/tier、旧214311/备单，原窗不变。
+下一步：clear-ok/51，原pending自然续核，不强tick/finish/重派。原件paper/materials/20261024-issue51-c7-publication-return-ops/。
 
 #50本轮已结：新7UE/7RDX两终局52落盘/50后继、3检查点/3后继，F45/F11败；CH2未终态不纳完整局。旧三晚层143/140及18/15、原W54620/19/五题子集不改，不合无偏胜率。元数据8个A10胜标记不代原3局已验证口径，KF9排除/版本SL入场证据待owner对齐；不重开旧双Boss单元。达标线ID/实际消费者、冷重启/回退及科学父待。原件paper/materials/20261024-issue50-resume-2047-ops/，issue6384464793。
 
@@ -54,9 +54,9 @@ Roy P0已于09:56:33原autoplay-start恢复，首自动BP9C8K9NSRZ0/live02eb468f
 #23仍待：原代码发布、可持续验收未过；09:39的155/311、近24h16/123/空间-107.15GiB及旧plan0仅旧观测。#46完整窗116对106已交，waiting自然消费/节省未证；等45/原owner结算保护项及原限4worker新回执，20明日14:49:42完整窗独立。paper/materials/20261024-issue23-checkpoint-1544-ops/receipt.json。
 
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-24T22:50:55+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 bcba22af3fb1eb9cd5a86b0362e287c930133ee15a6bd8ff50652dfcd16f7a8a
-main 6b52fa4a6e61281d599be62773174a9a1df0d3da
-live 09291d1005bb50ef2fa69083b9397a7f449127f1；登记 release 见 current.json.release（不代表检查绿或实际采用）。
+生成：2026-10-24T23:10:06+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 418e3904ce99068db9442ca400828beacb35bc53ccf02d560a4dc2bb9d1d2e2a
+main 61f743e29bc906c447f3fae16b87cb190aee35a2
+live 487ce58924ff9e511cfbf76bfaad73608d310de3；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
@@ -64,8 +64,8 @@ live 09291d1005bb50ef2fa69083b9397a7f449127f1；登记 release 见 current.json.
 - active_batches：在途 2；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 17；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
-- queued_events：队列 3；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
-- not_marked_completed_transactions：未标 completed 287；保留未知/失败与原件引用，不推定活进程或成功。
+- queued_events：队列 1；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
+- not_marked_completed_transactions：未标 completed 288；保留未知/失败与原件引用，不推定活进程或成功。
 - historical_lost：历史 8；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。
 首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。

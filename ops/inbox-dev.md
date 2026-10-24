@@ -6792,3 +6792,7 @@ A221314原无已接受turn/候选，旧rc75和运输submitted=true归档，新�
 
 ### 2026-10-24T23:04:47+08:00 [ops] #56 宿主安装核同，自然验收待
 f6238c412原10叶已逐项核宿主物理SHA与main提交一致，22:58:04安装回执及远端交付原件核同；唯一full6604过/0败/2历史跳、tsc0、结果SHA/原worker退出与正式AST同一证据核收，未重跑或重部署。当前安装后注册批次0、逐批屏障文件0，实际完整自然加载T/五槽同时运行/原生ultrafast均未证；旧tier=null不冒生效。外部22计划当前可派新世代0（r56六正常完成、C/D两原未起模型失败），自有214311原awaiting_review且supervisor退，未强finish或升世代。原23:30兜底/21:34:30—23:34:30窗不重置；已完成6单元均补丁前产出，不作修复效果。待原自然事务及原owner处理旧自有/备单，已向主管报具体阻塞，不强tick/模型。原件paper/materials/20261024-issue56-registration-host-readback-ops/。
+
+
+### 2026-10-24T23:11:19+08:00 [ops] R446原回调已去重
+23:10回调与原发布/登记/实际消费者、祖先和扫描manifest SHA核同：T22:57:03、live487ce589，原5策略/5摘要rk/5完整rk读回及10投影不重计。原worker退出、持锁32.166秒并于22:57:32释放的证据保留。本轮仅登记去重，未重发/finish/派发/消费者探针/full/模型/游戏/tick，未重复提醒watcher。两条confidence0.25→0.30仍仅原学习者描述赋值，旧证据/conflict、原失败及前置帧代理限制保持；原watcher传输不代接收/Roy ACK，1剧本父/5原回放/自然收益/科学父待。56原f623安装后的自然T/五槽/tier、旧214311/备单与原23:30/23:34:30窗仍pending，不借回调刷新。原件paper/materials/20261024-issue51-c7-publication-return-ops/callback-verification.json。
