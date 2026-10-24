@@ -40,7 +40,11 @@ class Project:
         workspaces.checked_tree(self.root, row["branch"])
         main = retention.git(self.root, "rev-parse", "refs/heads/main").decode().strip()
         live = retention.git(self.root / ".worktrees/live", "rev-parse", "HEAD").decode().strip()
-        return workspaces.acceptance(self.root, Path(row["worktree"]), row["source"], main, live, row["base"])
+        record = workspaces.allocation_record(self.root, self.directory, Path(row["worktree"]))
+        if record and record["base"] != row["base"]:
+            raise ValueError("session allocation baseline differs")
+        return workspaces.acceptance(self.root, Path(row["worktree"]), row["source"], main, live, row["base"],
+                                     record.get("publication_boundaries") if record else None)
 
     def reclaimed(self, row):
         manifest = self.directory / "retention/worktree-archives" / (row["branch"] + ".manifest.json")

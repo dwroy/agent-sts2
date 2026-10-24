@@ -139,7 +139,17 @@ class AllocationResume(unittest.TestCase):
         self.assertEqual(result['resume_history'][0]['error'], original['error'])
         self.assertTrue((self.tree / 'agent/node_modules').is_symlink())
         self.assertEqual((self.tree / 'agent/node_modules').resolve(), self.root / 'agent/node_modules')
-        self.assertEqual(checkout.resume(self.root, self.directory, self.tree, self.base, require_node=True)['state'], 'allocated')
+        boundaries=result['publication_boundaries']
+        self.assertEqual(boundaries['main']['commit'],self.base)
+        self.assertIsNone(boundaries['live'])
+        self.git('commit','--allow-empty','-m','main advanced after first allocation')
+        repeated=checkout.resume(self.root, self.directory, self.tree, self.base, require_node=True)
+        self.assertEqual(repeated['state'], 'allocated')
+        self.assertEqual(repeated['publication_boundaries'],boundaries)
+        legacy=json.loads(self.receipt.read_text());legacy.pop('publication_boundaries')
+        checkout.retention.atomic(self.receipt,legacy)
+        old=checkout.resume(self.root,self.directory,self.tree,self.base,require_node=True)
+        self.assertNotIn('publication_boundaries',old)
 
     def test_noninteractive_missing_node_fails_allocate_and_retains_specific_reason(self):
         self.provider()

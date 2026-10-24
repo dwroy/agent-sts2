@@ -100,11 +100,44 @@ it("registers a precise #24 aggregate then retrieves it in the actual prompt and
   }
 });
 
-it("keeps the existing published own library and its retrieved bytes unchanged", () => {
-  const raw = JSON.parse(readFileSync("../knowledge/characters/silent/strategy-entries.json", "utf8"));
+function fixedOwnEntry(): StrategyEntry {
+  return { id: "fixture-own-byte-contract", version: "fixture-1", trigger: { question_types: ["card_reward"], acts: [1] },
+    strategy: "仅格式验收：自有记录原样返回，不提供游戏策略。", source: "own", confidence: 0.4,
+    evidence: [{ run: "SILENT000001", floor: 4 }, { run: "SILENT000001", floor: 5 },
+      { run: "SILENT000002", floor: 4, role: "contradict" }] };
+}
+
+it("keeps fixed own retrieved bytes unchanged alongside an external entry", () => {
+  const raw = { ...fixture, entries: [fixedOwnEntry(), fixture.entries[0]!] };
+  const before = JSON.stringify(raw);
   const lib = parseStrategyLibrary(raw);
   expect(lib).toEqual(raw);
-  const result = retrieveStrategies(lib, "rest/plan", { act: 1, floor: 4, act_boss: "THE_KIN_BOSS" });
-  expect(result.length).toBeGreaterThan(0);
-  for (const e of result) expect(JSON.stringify(e)).toBe(JSON.stringify(raw.entries.find((r: StrategyEntry) => r.id === e.id)));
+  const result = retrieveStrategies(lib, "reward/card", { act: 1 });
+  expect(result).toHaveLength(2);
+  const own = result.find(e => e.source === "own")!;
+  expect(JSON.stringify(own)).toBe(JSON.stringify(raw.entries[0]));
+  expect(own).not.toHaveProperty("evidence_summary");
+  expect(own).not.toHaveProperty("limitation_notice");
+  expect(JSON.stringify(raw)).toBe(before);
+});
+
+it.each(["external", "mixed"] as const)("keeps fixed %s original fields and independent evidence denominators with limitation notices", source => {
+  const external = parseStrategyLibrary(structuredClone(fixture)).entries[0]!;
+  const ev = external.evidence[0]!;
+  if (ev.type !== "external_aggregate") throw new Error("invalid fixed external fixture");
+  const entry: StrategyEntry = source === "external" ? external : { ...external, source: "mixed", evidence_status: "conflict",
+    evidence: [...fixedOwnEntry().evidence, ...external.evidence] };
+  const raw = { ...fixture, entries: [entry] };
+  const before = JSON.stringify(raw);
+  const result = retrieveStrategies(parseStrategyLibrary(raw), "reward/card", { act: 1 });
+  expect(result).toHaveLength(1);
+  const { evidence_summary, limitation_notice, ...original } = result[0]!;
+  expect(JSON.stringify(original)).toBe(JSON.stringify(entry));
+  expect(evidence_summary).toEqual({ own_runs: source === "external" ? 0 : 2, own_support_runs: source === "external" ? 0 : 1,
+    external: [{ source: "external:sts2fun", version: "v0.111", dataset_sha256: ev.dataset_sha256,
+      statistic: "skip.rate", denominator: { n: 13307, unit: "rewards" } }] });
+  expect(limitation_notice).toContain("非因果");
+  expect(limitation_notice).toContain("外部分母不计本系统验证");
+  expect(result[0]!.evidence_status).toBe(entry.evidence_status);
+  expect(JSON.stringify(raw)).toBe(before);
 });
