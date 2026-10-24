@@ -6532,3 +6532,5 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 - 2026-10-24T12:35:25+08:00 [ops/#46] #46从原24h观察停点继续复核：当前仍早于2026-10-24 13:46:30，原T为10-23 13:46:30，保持精确半开[T,T+24h)，未调用分配报告器或生成截断窗口比较。原完整前24h基线complete=true/成功分配106的SHA核同，未重跑；宿主waiting_round、record_waiting_round、dispatch、dispatch_one四函数AST均等原发布，10新局或6小时、每轮最多2批合同保持。当前proposal_rechecks仍无轮次水印，不能称分支已实际节省。到门后再按原已部署报告器核complete=true、全类别分配、局量、pending/repair/专项/续跑/retry和waiting积压；legacy/restore、静态68/日估计分开，学习停派/51优先占用及Roy手动停局不算效率收益。已保留精确命令和验收条件供原自然唤醒接续，不新增计时器/提醒进程/轮询。未重发源码、改调度、分配版本或启动full/模型/游戏，37唯一窗及46父保持。
 原件：paper/materials/20261024-issue46-gate-1233-ops/receipt.json；paper/materials/20261024-issue46-gate-readback-ops/receipt.json。
+
+- 2026-10-24T12:54:59+08:00 [ops] #48已将一个整局分组首单元排入原后置队列：按旧首优先证据顺序选A10局9R916WW0V65N，以簇6作元数据定位，六个旧ID原文不变。冻结外部四统计有界页/代表对和自有整局投影，来源、正式渲染夹具及gitleaks均通过；统计页未读范围、版本unknown/SL/代理限制明列，不由ops命名流派或补游戏结论。原首六任务及18输入继续held，244条仍0/244；原priority_hold继续让普通/外部/已有重任务先行，未启动模型、强制tick或full。首轮准备触及页数上限rc1及已退出进程的TERM未送达均留档。后续三批均绑定外部，普通MD首个native T/映射产物仍null，旧104301failed/rc0不改；124312仅见done元数据，终态原件另接。等原调度自然空位及学习者确认语义/候选，正式发布/消费者/收益分账，18:19观察门与37唯一窗、科学父保持。原件paper/materials/20261024-issue48-whole-run-ops/。
