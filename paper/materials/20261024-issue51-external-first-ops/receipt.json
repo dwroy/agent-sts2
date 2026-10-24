@@ -1,0 +1,179 @@
+{
+  "at": "2026-10-24T08:16:12+08:00",
+  "authority": 6377338624,
+  "priority": "pending external before all new own postmortems/experience/fixes; no alternation",
+  "candidate": {
+    "at": "2026-10-24T08:15:01+08:00",
+    "anchor": "a0b9272c39ec5e6c745a444bb759335a355817c9",
+    "tree": "899f9c164c876022c8327d84239a4dc517287ab2",
+    "paths": [
+      {
+        "path": "docs/external-strategy-source.md",
+        "sha256": "fa8010bf493b554e8830ba3178f22f22ca58d52ebc68d19f77546debd91e7f53",
+        "preimage": "d07210bbb8b535952f4680f6013f9edd38899ad9"
+      },
+      {
+        "path": "ops/codex-ops-learn.py",
+        "sha256": "a700697aa2264083da63d0c6aca97fe99dc37f9f24a52a26d0be9113da142a2a",
+        "preimage": "40211b9c73411dcff27553cd092ec33fcafeb648"
+      },
+      {
+        "path": "ops/learner_jobs.py",
+        "sha256": "71e743bce4bf0115ea774b88360030adf6a22a46b6b68f2722136ae83d0c988d",
+        "preimage": "941911d4ffc88483daa71c117dc21627cca2e300"
+      },
+      {
+        "path": "ops/tests/test_strategy_external.py",
+        "sha256": "d4dd5d7dcbd6574866a32070ef4cfe1a173a3079d7a7612e621ae22d9271718b",
+        "preimage": "d20043fe8dd297f469678b9ed8b48807553ecbfc"
+      }
+    ],
+    "authority": 6377338624,
+    "scope": "host dispatch only; no in-flight task, account, permission or game knowledge change"
+  },
+  "targeted_checks": {
+    "at": "2026-10-24T08:15:01+08:00",
+    "tree": "899f9c164c876022c8327d84239a4dc517287ab2",
+    "observed_commands": [
+      {
+        "command": "python3 ops/tests/test_strategy_external.py",
+        "rc": 0,
+        "tests": 18
+      },
+      {
+        "command": "python3 ops/tests/test_strategy_priority.py",
+        "rc": 0,
+        "tests": 7
+      },
+      {
+        "command": "python3 ops/tests/test_strategy_backfill.py",
+        "rc": 0,
+        "tests": 20
+      }
+    ],
+    "source_changed_since_commands": false,
+    "official_production_tsc_full": "pending unique original supervisor"
+  },
+  "actual_check_phase": {
+    "at": "2026-10-24T08:15:03+08:00",
+    "phase": "waiting-knowledge-lock",
+    "worker_pid": 740068,
+    "worker_birth": "22543367",
+    "new_full_runs": 0,
+    "model_calls": 0,
+    "main_merged": false,
+    "live_written": false
+  },
+  "deployment": {
+    "at": "2026-10-24T08:15:35+08:00",
+    "phase": "waiting-original-candidate-check-worker",
+    "worker_pid": 747375,
+    "worker_birth": "22546569",
+    "deployed": false,
+    "new_full_models_games_ticks": 0
+  },
+  "first_actual_external_native": {
+    "at": "2026-10-24T08:13:03+08:00",
+    "batch": "20261024-081200-strategy-proposal",
+    "external_source": "issue51-card-picks-004",
+    "actual_native_proof": {
+      "session": "01a16b40-360c-79b3-8220-7159c8ff9240",
+      "turn": "01a16b40-9b8b-76e0-81ff-88fcdacfe3e0",
+      "started_at": "2026-10-24T00:12:38.705Z",
+      "prompt_sha256": "8923a0f5c30cf58a47d651159cccddbbf1f1a328b32927fe4d279144dea3e5cd",
+      "service_tier": null,
+      "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T08-12-12-01a16b40-360c-79b3-8220-7159c8ff9240.jsonl",
+      "prefix_bytes": 126073,
+      "prefix_sha256": "86645029824ba08a0ed5a45b06abb144aba86bb1094d86a93c0a4bf133dead6d"
+    },
+    "requested_tier_is_not_observed_tier": true,
+    "first_080423_receipt_unchanged": true,
+    "progress": {
+      "schema": 1,
+      "cursor": 1,
+      "entries": {
+        "external-reward-prefix-outcomes-001": {
+          "status": "started",
+          "attempts": [
+            "20261024-081200-strategy-proposal"
+          ],
+          "batch": "20261024-081200-strategy-proposal"
+        }
+      },
+      "plans": {
+        "issue51-deck-outcomes-003": {
+          "attempts": [
+            {
+              "batch": "20261024-080423-strategy-proposal",
+              "registered_at": 1792800279.0405314,
+              "state": "awaiting_review",
+              "input_manifest_sha256": "25f26e48fc4b7633c2111734c84a81e0a280b3e04b1137f9404db6a7d031ffc8",
+              "work_spec_sha256": "5fc463b44c1de83e25f2b3c0e72428674f65852ce58b70595a1b67e19ed51575",
+              "entry_ids": [
+                "external-terminal-deck-outcome-001"
+              ],
+              "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-080423",
+              "finished": null,
+              "rc": null,
+              "elapsed_seconds": null
+            }
+          ],
+          "state": "unverified-start"
+        },
+        "issue51-card-picks-004": {
+          "attempts": [
+            {
+              "batch": "20261024-081200-strategy-proposal",
+              "registered_at": 1792800721.1795275,
+              "state": "started",
+              "input_manifest_sha256": "cdd7b01edcd6beba1957ebed33c713c8847a625003caa7bd14628fabbf719744",
+              "work_spec_sha256": "5f1ea490215e423df4ffcfded69f29e3cc2217fa1bccd0f36a04e314997eb27d",
+              "entry_ids": [
+                "external-reward-prefix-outcomes-001"
+              ],
+              "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-081200",
+              "native": {
+                "session": "01a16b40-360c-79b3-8220-7159c8ff9240",
+                "turn": "01a16b40-9b8b-76e0-81ff-88fcdacfe3e0",
+                "started_at": "2026-10-24T00:12:38.705Z",
+                "prompt_sha256": "8923a0f5c30cf58a47d651159cccddbbf1f1a328b32927fe4d279144dea3e5cd",
+                "service_tier": null,
+                "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T08-12-12-01a16b40-360c-79b3-8220-7159c8ff9240.jsonl",
+                "prefix_bytes": 126073,
+                "prefix_sha256": "86645029824ba08a0ed5a45b06abb144aba86bb1094d86a93c0a4bf133dead6d"
+              },
+              "observed_at": 1792800781.8630722,
+              "started_at": "2026-10-24T00:12:38.705Z",
+              "tier_decision": {
+                "requested": "ultrafast",
+                "effective": "ultrafast",
+                "weekly_used_percent": 15,
+                "sample_observed_at": "2026-10-24T00:12:10.399Z",
+                "reason": "weekly_within_70",
+                "observed_service_tier": null
+              },
+              "usage_log": "/home/dw/Projects/agent-sts2/learner/runs/20261024-081206-0e654611-e0a4-4f31-86dd-e86b3bfe5c54-strategy-proposal.jsonl",
+              "observed_service_tier": null
+            }
+          ],
+          "state": "started"
+        }
+      },
+      "total": 2,
+      "processed": 0,
+      "remaining": 2
+    }
+  },
+  "first_unsubmitted_080423_retained": true,
+  "waiting_knowledge_lock_owner": {
+    "pid": 718777,
+    "birth": "22523194",
+    "script": ".worktrees/live/knowledge/builders/refresh_driver.py"
+  },
+  "automatic_policy_deployed": false,
+  "effective_at": null,
+  "new_models_games_ticks_for_this_policy_check": 0,
+  "issue49": "query-guidance waiting original integrator exact handoff; no premature publication",
+  "issue37_full": 0,
+  "issue37_released": false
+}

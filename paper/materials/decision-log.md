@@ -6526,3 +6526,13 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T08:40:00+08:00 [Claude] 转 Roy：#51 改为按流派整局学构筑组合——统计层（#54：流派、组合、成型时间线、克制）+ 学习层（一个流派一个剧本，先毒流、刀刃流）；单牌学习保留并改进（合并版本、样本≥100、条目写短）；#51 学习批次用 ultrafast；外部学习优先于自有经验；关闭 #49 查询引导；R419 经验暂不回退。
 
 - 2026-10-24T08:46:23+08:00 [ops] 按Roy P0停止autoplay/play并保留STOP及游戏进程；手动窗口/边界局排除学习，学习继续使用原两位置容量，只有Roy明确说开才恢复。paper/materials/20261024-roy-manual-ops/handover-readback.json。
+
+- 2026-10-24 08:16 [ops] Roy6377338624取消交替：外部优先于新复盘/经验/修复；四叶候选45定向过，唯一宿主检查740068等原K锁、续接747375待真结果后部署并报T。081200外部真实native首回合08:12:38已核，首080423未提交现场保持；37未释放，49查询引导待原交付。paper/materials/20261024-issue51-external-first-ops/receipt.json。
+
+- 2026-10-24T08:18:55+08:00 [ops] #51外部优先四叶受测后精确部署宿主main 587a18d588873913676c36dc853c561133f0fb7d，实际导入/只读策略核同，下个原tick加载；未改游戏live/知识/账号/权限，081200原生证据另账，科学父保留。paper/materials/20261024-issue51-external-first-ops/deployment.json。
+
+- 2026-10-24T08:24:31+08:00 [ops] V6-R426 #51三条外部拿牌策略数据正式发布及4次实际工具固定读回通过；live加3/main加2改1，原完整证据和其他知识保留，自然脑查询0/父开放。paper/materials/20261024-51-strategy/publication.json。
+
+- 2026-10-24T08:49:09+08:00 [ops] V6-R427 #49精确8叶关闭策略/rk查询引导，实际15工具/两工具读回及知识保持；tsc0/123定向/full0按Roy，STOP保持，自然首题待恢复。paper/materials/20261024-issue49-guidance-off-ops/publication.json。
+
+- 2026-10-24T08:50:39+08:00 [ops] 核08:40十四回调；061302原发布受阻已退出并在37正式交回窗口；49实际R427，两个策略TUI恢复缺口交36保现场；Roy STOP与手动局排除保持。paper/materials/20261024-0840-callbacks-ops/receipt.json。
