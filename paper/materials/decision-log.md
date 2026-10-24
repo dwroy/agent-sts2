@@ -6554,3 +6554,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T09:43:11+08:00 [ops] #23继续核收：累计155历史回收/311分配，近24h16历史（15当前物理/分支）/123；disk净减107.15GiB，可持续仍失败，原worker/保护/STOP保持，不提前验#46。paper/materials/20261024-issue23-resume-0936-ops/audit.json。
 
 - 2026-10-24T09:51:19+08:00 [ops] 091302经验12项候选R428净树b4ad4bee已冻结并12项候选工具回读，原failed/rc0/unknown保留、source_commit=null，交37原检查窗/full0；按既有51授权原writer派毒008/094803，实际high及沙箱首任务核同，fast服务字段unknown，STOP不变。paper/materials/20261024-experience-091302-ops/。
+
+- 2026-10-24T10:05:21+08:00 [ops] 按Roy P0核R427关引导8叶仍在R428，原autoplay-start09:56:33恢复/PID1245890，首局BP9C8K9NSRZ0；手动窗关闭、Z2整局排除，版本戳ENOBUFS原错误保留，无新发布/full。paper/materials/20261024-roy-resume-ops/。
+
+- 2026-10-24T10:05:21+08:00 [ops] #51两模板整局/流派主线及决策类型1/2/3自然生效，source4e9e94e827a9/main745ddfc5ff5e，四渲染/铁甲全文等价，毒008绑定不变、旧未派刀009待三输入重冻；#54字段/自有四表待原owner，无代码/full/模型。paper/materials/20261024-issue51-whole-run-ops/。
