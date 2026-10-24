@@ -2,6 +2,7 @@
 import { readFileSync, statSync } from "node:fs";
 import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
 import type { BrainRequest } from "../brain/types.js";
+import type { ArchetypeBinding, ArchetypeMatch } from "./strategy-archetypes.js";
 
 export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan", "fight_plan"] as const;
 export type QuestionType = typeof QUESTION_TYPES[number];
@@ -37,6 +38,7 @@ export interface StrategyEntry {
     hp_ratio?: Range;
     deck_size?: Range;
     deck_cards?: { name: string; count: Range }[];
+    archetype?: ArchetypeBinding;
   };
   strategy: string;
   evidence: StrategyEvidence[];
@@ -143,7 +145,12 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
     if (!object(entry) || !text(entry["id"]) || ids.has(entry["id"]) || !text(entry["version"]) || !text(entry["strategy"]) || Buffer.byteLength(entry["strategy"], "utf8") > STRATEGY_LIMITS.textBytes || !finite(entry["confidence"]) || entry["confidence"] < 0 || entry["confidence"] > 1) throw new Error("invalid strategy entry");
     ids.add(entry["id"]);
     const t = entry["trigger"];
-    if (!object(t) || !only(t, ["question_types", "acts", "floor", "bosses", "hp_ratio", "deck_size", "deck_cards"]) || !Array.isArray(t["question_types"]) || !t["question_types"].length || !t["question_types"].every((q) => QUESTION_TYPES.includes(q as QuestionType))) throw new Error("invalid strategy trigger");
+    if (!object(t) || !only(t, ["question_types", "acts", "floor", "bosses", "hp_ratio", "deck_size", "deck_cards", "archetype"]) || !Array.isArray(t["question_types"]) || !t["question_types"].length || !t["question_types"].every((q) => QUESTION_TYPES.includes(q as QuestionType))) throw new Error("invalid strategy trigger");
+    const a = t["archetype"];
+    if (a !== undefined && (!object(a) || !only(a, ["model_sha256", "version", "clusters"])
+      || !text(a["model_sha256"]) || !/^[a-f0-9]{64}$/.test(a["model_sha256"]) || !text(a["version"])
+      || !Array.isArray(a["clusters"]) || !a["clusters"].length || a["clusters"].length > 10
+      || !a["clusters"].every(c => Number.isInteger(c) && c >= 0 && c < 10))) throw new Error("invalid strategy archetype");
     if (t["acts"] !== undefined && (!Array.isArray(t["acts"]) || !t["acts"].length || !t["acts"].every((a) => Number.isInteger(a) && a >= 1 && a <= 3))) throw new Error("invalid strategy acts");
     if (t["bosses"] !== undefined && (!Array.isArray(t["bosses"]) || !t["bosses"].length || !t["bosses"].every(text))) throw new Error("invalid strategy bosses");
     for (const k of ["floor", "deck_size", "hp_ratio"]) if (t[k] !== undefined && !range(t[k], 0, k === "hp_ratio" ? 1 : Infinity)) throw new Error("invalid strategy range");
@@ -178,17 +185,26 @@ export function questionTypes(label: string, payload: unknown): QuestionType[] {
 function within(value: number | undefined, r: Range | undefined): boolean {
   return !r || value !== undefined && (r.min === undefined || value >= r.min) && (r.max === undefined || value <= r.max);
 }
-/** Names/counts only; no inferred archetypes or card-value rules. */
+/** Exact IDs/display names and counts only; no card-value or semantic inference. */
 export function deckCounts(raw: unknown): Map<string, number> | null {
   if (!(typeof raw === "string" || Array.isArray(raw))) return null;
   const counts = new Map<string, number>();
-  for (const line of (Array.isArray(raw) ? raw.map(String) : raw.split("\n"))) {
+  for (const value of (Array.isArray(raw) ? raw : raw.split("\n"))) {
+    if (object(value)) {
+      for (const key of new Set([value["card_id"], value["name"]].filter(text))) counts.set(key, (counts.get(key) ?? 0) + 1);
+      continue;
+    }
+    const line = String(value);
     const match = /^(?:(\d+)x )?(.+?)(?: \(|:|$)/.exec(line.trim());
-    if (match) counts.set(match[2]!, (counts.get(match[2]!) ?? 0) + Number(match[1] ?? 1));
+    if (match) {
+      const full = match[2]!;
+      const id = /^(?:CARD\.)?([A-Z][A-Z0-9_]*)(?:\+\d*)?(?: (.+))?$/.exec(full);
+      for (const key of new Set([full, ...(id ? [id[1]!, ...(id[2] ? [id[2]] : [])] : [])])) counts.set(key, (counts.get(key) ?? 0) + Number(match[1] ?? 1));
+    }
   }
   return counts;
 }
-export function retrieveStrategies(library: StrategyLibrary, label: string, payload: unknown): StrategyEntry[] {
+export function retrieveStrategies(library: StrategyLibrary, label: string, payload: unknown, archetype?: ArchetypeMatch | null): StrategyEntry[] {
   if (!object(payload)) return [];
   const brief = object(payload["run_brief"]) ? payload["run_brief"] : {};
   const facts = object(payload["facts"]) ? payload["facts"] : {};
@@ -199,7 +215,8 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
   const hp = /^(\d+)\s*\/\s*(\d+)(?:\s|$)/.exec(String(get("hp")));
   const ratio = hp && Number(hp[2]) > 0 ? Number(hp[1]) / Number(hp[2]) : undefined;
   const deck = deckCounts(get("deck"));
-  const size = number("deck_size") ?? (deck ? [...deck.values()].reduce((a, b) => a + b, 0) : undefined);
+  const rawDeck = get("deck");
+  const size = number("deck_size") ?? (deck ? (Array.isArray(rawDeck) ? rawDeck : String(rawDeck).split("\n")).reduce((n: number, value: unknown) => n + (typeof value === "string" ? Number(/^(\d+)x /.exec(value.trim())?.[1] ?? 1) : 1), 0) : undefined);
   const types = questionTypes(label, payload);
   const specificity = (e: StrategyEntry) => Object.keys(e.trigger).length + (e.trigger.deck_cards?.length ?? 0);
   return library.entries.filter((e) => {
@@ -207,7 +224,9 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
     return t.question_types.some((q) => types.includes(q)) && (!t.acts || t.acts.includes(number("act") ?? -1))
       && (!t.bosses || t.bosses.includes(String(get("act_boss") ?? get("boss") ?? "")))
       && within(number("floor"), t.floor) && within(ratio, t.hp_ratio) && within(size, t.deck_size)
-      && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)));
+      && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)))
+      && (!t.archetype || !!archetype && t.archetype.model_sha256 === archetype.model_sha256
+        && t.archetype.version === archetype.version && t.archetype.clusters.includes(archetype.cluster));
   }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id)).map(presentStrategy);
 }
 

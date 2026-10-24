@@ -6597,3 +6597,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T12:54:59+08:00 [ops] #48冻结并在原尾队列登记一个A10整局分组六ID单元，source/正式renderer夹具/gitleaks0；旧首六held、244仍0/244，普通首native待。原priority_hold/37窗不变，不启动模型/full/tick；准备页数上限旧rc1留档。原件paper/materials/20261024-issue48-whole-run-ops/。
 
 - 2026-10-24T12:59:02+08:00 [ops] 124312冷启动外部单元done/rc0，160产物/143页/四代表172节点原生读回核同；新增1策略+1描述知识，三子项partial-waiting。正式发布/消费者0，等37释窗及独立知识消费者门；保旧失败/原retention，不补测/finish/模型，科学父保持。原件paper/materials/20261024-strategy-124312-ops/。
+
+- 2026-10-24T13:09:29+08:00 [watcher] #55 P0按源67d189cce563在main1a5fbd320426独立重基，精确12叶；tsc0/8文件115定向过、2809输入前后同/full0。实际live外部策略全元数据24KB错误已复现，候选前三16958字节、8页完整22条且原字段同；只修检索/分页/流派合同/命中报告，不写知识。交原ops实际发布/固定读回/自然逐题验收；live缺固定模型和未正式绑定段落分账。按Claude新规则review依P0>P1>P2同级交付先后，解除37未起新full的旧独占发布等待，后续20回收自理；旧full失败与科学父保留。材料paper/materials/20261024-issue55-integrator/priority/。

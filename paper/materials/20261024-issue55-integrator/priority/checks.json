@@ -1,0 +1,47 @@
+{
+  "started_at": "2026-10-24T13:07:47+08:00",
+  "full_runs": 0,
+  "commands": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "returncode": 0,
+      "seconds": 3.3176047829911113
+    },
+    {
+      "name": "directed",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/strategy-context.test.ts",
+        "tests/strategy-entries.test.ts",
+        "tests/brain-query-guidance.test.ts",
+        "tests/brain-query-efficiency.test.ts",
+        "tests/brain-agent-report.test.ts",
+        "tests/external-strategy-evidence.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "tests/brain-agent-provenance.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--testTimeout=60000",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.artifacts/integrator55-context-20261024/priority/directed.json"
+      ],
+      "returncode": 0,
+      "seconds": 16.72521008498734
+    }
+  ],
+  "inputs_count": 2809,
+  "inputs_unchanged": true,
+  "finished_at": "2026-10-24T13:08:07+08:00",
+  "passed": true
+}
