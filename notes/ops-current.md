@@ -1,6 +1,6 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T09:11:53+08:00
+updated: 2026-10-24T09:17:25+08:00
 
 进行中的事：Roy P0手动接管优先。08:38开始暂停，沿原停止入口停止autoplay302180；play-stop返回0，08:45宿主scope核play/autoplay均0，游戏进程保留，不发送游戏按键/API动作。Claude所建ops/STOP保留。notes/roy-manual-play.json及paper/materials/20261024-roy-manual-ops/handover-readback.json为回执。任何旧“无play沿broker恢复”授权在本手动窗口暂停；只有Roy明确说开才能恢复。
 
@@ -18,7 +18,7 @@ updated: 2026-10-24T09:11:53+08:00
 
 08:40十四回调已沿原件逐项核，#51状态变化回6377758254；旧拒绝/failed-rc0/冻结输入/草稿和科学父均保留，不再重复派发或发布。08:16/18/24旧自有记录、ledger-own/shipped逐己追加纳本轮受控记录提交，禁止全add共享记录。当前三个恢复阻塞（080423/083104/084301）交#36原owner；工作树与原生会话留存；#49净组合W已原complete登记accepted，实际回收仍交原调度器。
 
-其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、18原件/244/首6生产source通过，实际0/244，普通模板显式提炼合同待原集成员核，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。06:13原16通知/32投递核同、同一空闲watcher实际提醒已发，回执20261024-0613-notices-ops/，旧watcher实际接收存在，formal ACK兼容/Roy可见回执及000402原wrapper仍缺，未变不重复主管收件箱或代ACK。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
+其余未完成事项: #36新033643/041301/051302三tab原封存/原stall关tab及物理缺席已核，05:26历史对局视图读回同5ZT1SKS66C1N且样例gitleaks0；五旧tab（131316缺wrapper，151302-s2/194330-s2缺native绑定，174301/175037策略超恢复入口）等原36/20合同owner，不能强关/改task/造proof。051302无新源、定向27/Python21过，但main/live146既有源差未过empty guard，failed/0和root-scratch归属deferred保留，不空合并。041301四复盘/27账本/3提案记录d8a9839b、dataset一次rc0/14生成叶/四局标记及提交daead9已核；原plan retained/postmortem not settled，0581/0461及入库/retention门保留。234301旧dataset bcce9fdf与双旧tab回收已核，不重dataset/finish。#23截至05:15累计153历史回收/290分配，近24h16（物理/分支15）/108，磁盘净减101.54GiB，原worker限4/只读plan0，验收仍失败，等原owner结算；#46至10-24 13:46:30才核完整24h，禁提前截断比较/趋势，原106基线不重做。#48 enabled true、18原件/244/首6生产source通过，实际0/244，普通模板显式提炼合同待原集成员核，24h门18:19:29。#50 R423发布及首结束20计划/19后继/幕1两检查点已核，F21败未达48/49，后两幕/SL重启/终局/学习仍待。#49 R420两结束43题读回可交主管核收，旧18局520/521保持，非空rk自然场景待。#35学习消费待闭环，#47已恢复detailed。09:13原16通知/32真实投递/16项旧watcher实际接收核同，已实际提醒同一原session（非角色ACK/Roy可见）。只读默认ACK范围15项仍拒绝、CLI字节未变，000402所有权可识别但原wrapper/同名根副本缺失；不补造/改身份/代ACK。新回执paper/materials/20261024-0913-notices-ops/；旧67证据核验链保留，本轮未重扫，旧冻结ledger rc1与既有ops current583 rc0分账。formal接收/Roy可见待原角色；#27状态未变不重复主管收件箱。#20 kit观察至10-25 00:15:05，/new不启；ops Fast原生请求回执待核，不热切。其他原件沿pending-continuations/issue保留，不等待或轮询新事件。
 
 # 运维当前清单（调度器生成；索引模式）
 生成：2026-10-22T18:38:22+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 66d355e22260a795ce461c821c93eb15a96d84111e6042156ac05f9a8d155f3e
