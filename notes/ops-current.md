@@ -1,6 +1,6 @@
 state: in-flight
 issue: 51
-updated: 2026-10-24T17:41:35+08:00
+updated: 2026-10-24T17:44:16+08:00
 
 #38锁时长6378708477待主管核关；#18并45。
 
@@ -14,7 +14,7 @@ updated: 2026-10-24T17:41:35+08:00
 
 #50仍待：R423登记提交当前live祖先，15固定消费者/准入原件保持；首结束局W546CNAWY3RG已20落盘/19后继/F15-F16两检查点，41原窗口核同，独立局1、五题为子集、F21败/ENOBUFS-null保留。等后两幕/SL重启/F48-F49及48/51学习入库/消费者/收益，不重发布。paper/materials/20261024-issue50-checkpoint-1549-ops/readback.json。
 
-164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；唯一续接17:37:08 rc0/14叶、实际提交2fbf8be6祖先及14 blob/SHA已核，首锁前失败/build0保留。未重dataset/finish/模型，回收/科学父待原门。paper/materials/20261024-postmortem-164302-dataset-ops/及本轮background-dataset-return-observed.json。
+164302复盘4节/13账本/2提案及1显示bug已9f6fa4fa；dataset rc0/唯一1次/14叶提交2fbf8be6祖先及blob核同，原SHA证明保持。原回收deferred，只读准入仍postmortem not settled；原bugs/待实际经验入库门保留，未重dataset/finish/模型或强清。paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json。
 
 131301数据集938ba222/14叶rc0、回收deferred；R430十ID/四经验消费者缺口保持。paper/materials/20261024-issue51-ten-candidates-publication-ops/。
 

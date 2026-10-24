@@ -5275,3 +5275,6 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 
 ### 2026-10-24T17:42:37+08:00 [ops] #51 提速与补缺四项
 已沿6382572399把7个未启动单元重冻进原队列，毒流/刀流/遭遇要求文字策略和rk候选同产；旧批次、进度、权限与506冻结范围保持，模型/强制tick均0。提速八叶已在隔离工作树完成：外部申请ultrafast、周额度超过70%退fast，未知也fast并报告；队列非空连续外部，最多三外部插一普通，无需求继续。tsc0、Python22及TS15过，完整检查0、未合源/部署，当前不能称档位或节奏生效。17:40安全采样47%；精确补丁交原集成员唯一窗口，提醒仅agent_prompted。旧005保留failed/rc0及报告差异；毒008一描述候选，正式发布/消费者均0。#51评论6382668616已逐字读回；三份state/current已据实in-flight/51，待实际检查、源提交、宿主及自然native读回。顺核164302唯一dataset rc0/14提交叶2fbf8be6，无重建/finish/模型；回收和科学父仍待。原件paper/materials/20261024-issue51-speed-ops/。
+
+### 2026-10-24T17:44:16+08:00 [ops] 164302 dataset返回与原回收门核验
+已核本批四局原唯一dataset实际rc0、构建1次、14生成叶，提交2fbf8be663a3cabe2ac1b23e5b506b334da118ef为当前main祖先；14个提交blob逐一与冻结清单核同，沿用上一轮已核的同提交原字节SHA，不借其他批次结果。原锁前失败/构建0与唯一续接回执分别保留，不改旧阶段。原复盘仍done/rc0，四节、13账本及两提案记录不重复追加；显示bug和7份剧本/rk候选不冒已修或正式入库。本轮只读调用原准入门，实际仍返回postmortem not settled；原请求deferred及其字节未变。dataset与记录提交不能替代本角色已完整检查的live经验入库、候选消费者或科学父验收；现场继续由原调度回收门保留，未手动完成、删除或启动清理。未重dataset/finish/模型/full。三份交接同步，#51八叶源修改仍in-flight/51等待原集成员唯一完整窗口，不因本回执清除。原件paper/materials/20261024-postmortem-164302-dataset-return-ops/verification.json；原result/generated-manifest/record-commit保持。
