@@ -1,5 +1,15 @@
 state: in-flight
 issue: 62
+updated_at: 2026-10-25T12:56:43+08:00
+
+进行中的事：#62固定f56c9f238ab6e8939a356c54b6115555bd0a8030已审查，80叶隔离候选0168b672a69d7cbedc04ad81f1cdc4621a2591a9，ROOT验证锚9c81d7877a697d51e782f938393cf57c09185103，实际LIVE兼容锚0c5f165c97bc5d65790f0b1b3606ea3142dc032c；2856输入/1417依赖/335运行叶冻结，原12差异及已接收59三运行叶保留，实际main614687462/live18f8980未动。材料paper/materials/20261025-issue62-combination-integrator/。新K隔离迁移/ToolHost探针exit0：8文档/904条/9原字段与负例、旧新绑定和回退均同，热50次P95最大0.161ms；首轮非Silent未注册kb_reflex夹具预期错误已原件保留并按真实角色合同修正；另一次错误cwd缺tsx的启动失败保留，未运行产品/改源码。唯一full已12:56:21启动4161058/birth32869369（exec99029），nice19/single fork/原integrator-full-check锁；ROOT生产/运行及LIVE生产tsc0、CLI严格tsc0、ROOT6文件61过、LIVE2适用文件28过。外置CLI配置缺node类型和误选LIVE的ROOT-only learner测试两次预检失败原件保留，未改产品/重跑已过项；无失败full、不重复旧59。
+在等谁：#59原ops事务issue59-sixleaf-natural-20261025仍waiting原自然终局/报告，原4100584/birth32744881/无持锁，禁改其冻结包、门、FIFO或上线；#62只隔离核验，工程main实际集成按原59事务释放后接，生产迁移/覆盖/回退交原ops。#63原开发仍在途；#64新独立codex1已接原58合同缺陷，6393638679为8场景定向通过/尚无固定交付，不抢树或强绑等待。
+下一步：核新K82b9的v1→v2/两文件增量/旧新绑定和9条原字段、负例；原窗口ROOT双tsc、LIVE生产tsc、CLI严格tsc、两侧定向后唯一full，绿后独立核输入/依赖/真实退出/锁，精确清单交ops。#64交付后沿原队列核其固定组合、不夹59；原58已释放登记不假重开/跨账号resume。
+#60本轮121312独立核收6393615442已远端逐字读回：9源/80日志实际切片/8叶不可变源及生产原tools回执同、只读DB唯一release/publish；K1-82b9d1291069c6034fc79147879991a5b51837ca9d173bdcd837baac7c5bb569，策略128（4新+1原项补证）、rk169（4新），旧123策略/165rk与其余6叶保留；12:50新K自然绑定0，旧2RNS保持fa912。五去向扣复用四项、两自有均败/SL与39外部统计不混、各百例比较0，反向证据已本会话实际转告Roy，不代其他角色ACK/收益。材料paper/materials/20261025-knowledge121312-integrator/。#64核收6393615605已逐字读回，材料paper/materials/20261025-issue64-integrator-intake/；五内部原件SHA同。#62队列核收6393618425已逐字读回。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 62
 updated_at: 2026-10-25T12:41:16+08:00
 
 进行中的事：#36本轮独立核收已完成，6393540809远端逐字读回。六旧tab/pane当前均缺席、43原进程均实退，38归档SHA同，六业务登记仍awaiting_review且无退休事件；两native仅追加原turn旧测试failed/130，原前缀保留，人工草稿身份仍未验。当前自然view标题同2RNSPP20YLWY；#36原17叶+brain_view等于最新#59 full固定输入，8TS281过，新full0。材料paper/materials/20261025-issue36-ui-handoff-integrator/。原#36开发继续可恢复停止，021310不重复处置，旧批业务原ops承接，封存兼容原#63继续。
