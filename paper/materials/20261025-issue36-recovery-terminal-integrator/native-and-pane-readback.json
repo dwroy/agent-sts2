@@ -1,0 +1,820 @@
+{
+  "at": "2026-10-25T08:02:33+08:00",
+  "rows": [
+    {
+      "batch": "20261025-021310",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-021310-postmortem.tui.json",
+        "bytes": 9148,
+        "sha256": "db8982cfcfb211301f33ddc0194cb83ae7907724bbfdd8c90a4858043f97b02d"
+      },
+      "native": {
+        "session": "01a16f1e-a14e-7393-8e24-1e4dc4ec3e60",
+        "turn": "01a16f1f-0835-7a61-8b01-7a171d4afbb7",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-14-00-01a16f1e-a14e-7393-8e24-1e4dc4ec3e60.jsonl",
+            "bytes": 7059,
+            "sha256": "bb036682dd07794499143d67722aeb8d992e591bcd296e8ed02b1dea8632b19a",
+            "offset": 103952,
+            "actual": {
+              "turn_id": "01a16f1f-0835-7a61-8b01-7a171d4afbb7",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-14-00-01a16f1e-a14e-7393-8e24-1e4dc4ec3e60.jsonl",
+            "bytes": 24113,
+            "sha256": "b2836b3a7bcd467286cc17d3da851ee7ccd83b0c98fd3d01fdad898317167814",
+            "offset": 115449,
+            "canonical_text_sha256": "ec99411b9ddf0503119e7176bcd7c3ed4f379b80eeed3dc0422f52eddffde282"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-14-00-01a16f1e-a14e-7393-8e24-1e4dc4ec3e60.jsonl",
+            "bytes": 2890,
+            "sha256": "1de3397b1e6f670afd0dd832913ac3616b7040450c8c83b97420af10ebce0fcd",
+            "offset": 2118805,
+            "at": "2026-10-24T18:48:56.397Z",
+            "message_sha256": "08a62854bd6d2cce81e1b2c8c046c49bc47ec62533d5d81af2d1e34d84f865b3"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-14-00-01a16f1e-a14e-7393-8e24-1e4dc4ec3e60.jsonl",
+        "bytes": 2121695,
+        "sha256": "8370cfda38bf87e024d9ff866d023fac0605bd3cb441326906ec9634da68c6ea"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a16f1e-a14e-7393-8e24-1e4dc4ec3e60",
+      "turn": "01a16f1f-0835-7a61-8b01-7a171d4afbb7",
+      "pid": 1933202,
+      "birth": "29016920",
+      "current_birth": null,
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 0,
+        "reason": "recovered-native-task-complete",
+        "failure_reason": "pending-input-timeout",
+        "stopped": true
+      },
+      "state": "session-ended",
+      "retirement_authorized": true,
+      "batch_record": {
+        "state": "done",
+        "rc": 0,
+        "finished": "2026-10-25 06:04",
+        "pid": 2829473,
+        "pane": "w1H:pF4",
+        "task": null,
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-021310.verification-deferred.json",
+        "tui_recovery": {
+          "version": 1,
+          "archive": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c",
+          "origin_sha256": "130648492824e4dc20fcaa951d9b86679e188ed184ae9e44dcddd7b3994d3e70",
+          "supervisor": {
+            "pid": 2829473,
+            "birth": "30398946"
+          },
+          "liveness_guard": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c.verification-deferred.json"
+        }
+      },
+      "pane": {
+        "pane_id": "w1H:pF4",
+        "tab_id": "w1H:tF1",
+        "terminal_id": "term_65e9a0cb02b16167",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-021310-postmortem"
+      },
+      "agent": {
+        "agent": null,
+        "agent_status": "not-found-after-native-exit",
+        "name": null,
+        "foreground_cwd": null
+      },
+      "process": {
+        "foreground_process_group_id": 1931006,
+        "shell_pid": 1931006
+      },
+      "foreground": [
+        {
+          "pid": 1931006,
+          "name": "bash",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        }
+      ],
+      "screen_sha256": "51374a2068aad220e394ddcc35b5957bddc37fa0707d56d45ad121d4682420b1",
+      "composer": "none",
+      "quota_modal_visible": false,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-021310-postmortem.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-021310.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {}
+    },
+    {
+      "batch": "20261025-024302-fix-batch",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-024302-fix-batch.tui.json",
+        "bytes": 6859,
+        "sha256": "ebd4da4c1aeb97c7239a45e632c7c4919490a5c861d87395c030104b3afd3124"
+      },
+      "native": {
+        "session": "01a16f3a-0635-7792-b8b2-be68791e531a",
+        "turn": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+            "bytes": 7557,
+            "sha256": "53471f91f1105b49ce884553e7c5b6688e35c784c1408a039b9bde78b7b0b0f2",
+            "offset": 104963,
+            "actual": {
+              "turn_id": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+              "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+            "bytes": 13193,
+            "sha256": "16ae7e3777296d13a1615c71e126f07159580b6fd469e6a051211075e746d98c",
+            "offset": 117218,
+            "canonical_text_sha256": "75afccc57b09fc5ca225d34624b5dcb0ba2be0ee14827c4ee35150a7f427bbe1"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+            "bytes": 4360,
+            "sha256": "e4cb8f97bffe859b11adeac909faddeb51f54965de01cc186c52cad0ee6f5fb9",
+            "offset": 2788209,
+            "at": "2026-10-24T19:25:04.001Z",
+            "message_sha256": "10b569fabf2374816911af82a814f43cd7ab2321608b74bdb18ce53396d8a2b0"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+        "bytes": 2792569,
+        "sha256": "0d7d47acdd7e9abb46a6237eed944a05b32b4b1cd9434fb74a148fd19efb308c"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a16f3a-0635-7792-b8b2-be68791e531a",
+      "turn": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+      "pid": 2105388,
+      "birth": "29194348",
+      "current_birth": "29194348",
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 75,
+        "reason": "retirement-unverified",
+        "failure_reason": "pending-input-timeout",
+        "stopped": false
+      },
+      "state": "needs-attention",
+      "retirement_authorized": false,
+      "batch_record": {
+        "state": "awaiting_review",
+        "rc": null,
+        "finished": null,
+        "pid": 2103377,
+        "pane": "w1H:pF8",
+        "task": "fix-batch",
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-024302-fix-batch.verification-deferred.json",
+        "tui_recovery": null
+      },
+      "pane": {
+        "pane_id": "w1H:pF8",
+        "tab_id": "w1H:tF5",
+        "terminal_id": "term_65e9a78c557f516b",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-024302-fix-batch"
+      },
+      "agent": {
+        "agent": "codex",
+        "agent_status": "done",
+        "name": "learner-87bb92af5eb105b13fa6e78e",
+        "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302"
+      },
+      "process": {
+        "foreground_process_group_id": 2105388,
+        "shell_pid": 2103326
+      },
+      "foreground": [
+        {
+          "pid": 2105388,
+          "name": "node",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302"
+        },
+        {
+          "pid": 2105411,
+          "name": "codex",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302"
+        },
+        {
+          "pid": 2108652,
+          "name": "powershell.exe",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302"
+        }
+      ],
+      "screen_sha256": "847d54f9456671e4b18c5fd2f4c8a37cf99d8440796377a0b70ea66f0844f579",
+      "composer": "empty",
+      "quota_modal_visible": false,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-024302-fix-batch.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-024302-fix-batch.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {},
+      "deferral": {
+        "path": "ops/codex-ops/learner/20261025-024302-fix-batch.verification-deferred.json",
+        "bytes": 1063,
+        "sha256": "5151c4195ca8dc88cdad8ac9ed4a1a8d509a15f5d6808a4486ffb8caa6b01904"
+      },
+      "deferral_authorizations": {
+        "finish_authorized": false,
+        "retirement_authorized": false,
+        "automatic_replay_authorized": false
+      },
+      "receipt_unchanged_since_0600": true,
+      "deferral_unchanged_since_0400": true
+    },
+    {
+      "batch": "20261025-024302-s2-strategy-proposal",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-024302-s2-strategy-proposal.tui.json",
+        "bytes": 7997,
+        "sha256": "3d88f7a51259d3fd760f244f6b876833b14dd510655510ac47f0c5c5178fa018"
+      },
+      "native": {
+        "session": "01a16f39-af1b-7d53-a9ab-0005c52ce800",
+        "turn": "01a16f3a-9257-73d0-9c51-9b2eb1cfc67b",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-33-01a16f39-af1b-7d53-a9ab-0005c52ce800.jsonl",
+            "bytes": 7605,
+            "sha256": "a3dd16918f84e75b3189f1a26972b410d0e8471b49e638541e91adee3fda19a0",
+            "offset": 105078,
+            "actual": {
+              "turn_id": "01a16f3a-9257-73d0-9c51-9b2eb1cfc67b",
+              "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302-s2",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-33-01a16f39-af1b-7d53-a9ab-0005c52ce800.jsonl",
+            "bytes": 27976,
+            "sha256": "1c38eafc699271f75598cac0d6ab39ec1014f11abe5d5eedfad005e003104258",
+            "offset": 117413,
+            "canonical_text_sha256": "d72444ebcab779ac0a707ed746b9337e447180483bf1c82b2da5534c8f97cb64"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-33-01a16f39-af1b-7d53-a9ab-0005c52ce800.jsonl",
+            "bytes": 5455,
+            "sha256": "318e49299bf2667d477999e25dbf278274cfe1f065bafaf8f1a913da6b17de08",
+            "offset": 1988721,
+            "at": "2026-10-24T19:04:16.537Z",
+            "message_sha256": "051d2660c4b2e48b8f94a673b8dd5f07e6e54b430ec490d30399424152146f88"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-33-01a16f39-af1b-7d53-a9ab-0005c52ce800.jsonl",
+        "bytes": 1994176,
+        "sha256": "ee4595bed8d05552527234c4ef9804c34782d0b6044f7deb12c649cf96e316ea"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a16f39-af1b-7d53-a9ab-0005c52ce800",
+      "turn": "01a16f3a-9257-73d0-9c51-9b2eb1cfc67b",
+      "pid": 2104918,
+      "birth": "29194093",
+      "current_birth": "29194093",
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 75,
+        "reason": "retirement-unverified",
+        "failure_reason": "pending-input-timeout",
+        "stopped": false
+      },
+      "state": "needs-attention",
+      "retirement_authorized": false,
+      "batch_record": {
+        "state": "awaiting_review",
+        "rc": null,
+        "finished": null,
+        "pid": 2103129,
+        "pane": "w1H:pF7",
+        "task": "strategy-proposal",
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.verification-deferred.json",
+        "tui_recovery": null
+      },
+      "pane": {
+        "pane_id": "w1H:pF7",
+        "tab_id": "w1H:tF4",
+        "terminal_id": "term_65e9a78aa869c16a",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-024302-s2-strategy-proposal"
+      },
+      "agent": {
+        "agent": "codex",
+        "agent_status": "done",
+        "name": "learner-0539b90522ff35a0f795c4f6",
+        "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302-s2"
+      },
+      "process": {
+        "foreground_process_group_id": 2104918,
+        "shell_pid": 2103078
+      },
+      "foreground": [
+        {
+          "pid": 2104918,
+          "name": "node",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302-s2"
+        },
+        {
+          "pid": 2104968,
+          "name": "codex",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302-s2"
+        },
+        {
+          "pid": 2105470,
+          "name": "powershell.exe",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302-s2"
+        }
+      ],
+      "screen_sha256": "b0a19d6d93d897fd97589b47e977140f45a60f33b06b8f3797a57dcc83c93c0d",
+      "composer": "empty",
+      "quota_modal_visible": false,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-024302-s2-strategy-proposal.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {},
+      "deferral": {
+        "path": "ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.verification-deferred.json",
+        "bytes": 1442,
+        "sha256": "ac4da9ae270d14ce5641cc59c5c9e562ab40008b9952b2da9ee1213941aea2f2"
+      },
+      "deferral_authorizations": {
+        "finish_authorized": false,
+        "retirement_authorized": false,
+        "automatic_replay_authorized": false
+      },
+      "receipt_unchanged_since_0600": true,
+      "deferral_unchanged_since_0400": true
+    },
+    {
+      "batch": "20261025-024302-strategy-proposal",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-024302-strategy-proposal.tui.json",
+        "bytes": 7844,
+        "sha256": "a2c5e94a206a3e34d769261fabb67c1ff34d753225b7e96ac4a8d24a1290214b"
+      },
+      "native": {
+        "session": "01a16f39-a922-7203-b580-ecd034877494",
+        "turn": "01a16f3a-97d5-7932-87c3-731f4be02f13",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-32-01a16f39-a922-7203-b580-ecd034877494.jsonl",
+            "bytes": 7587,
+            "sha256": "99ebe12f9d2f4b4b88f87069eeea9b836e83ae6d76dd187f8788b8237fe9b337",
+            "offset": 105039,
+            "actual": {
+              "turn_id": "01a16f3a-97d5-7932-87c3-731f4be02f13",
+              "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-32-01a16f39-a922-7203-b580-ecd034877494.jsonl",
+            "bytes": 28204,
+            "sha256": "947a80b72cfc6e0e197573478e0871bc2411d4ea3f4b3e11e59af0d143b5c577",
+            "offset": 117344,
+            "canonical_text_sha256": "b1c5e734072360cd19c94753b58a84d6d6605c83b66baffdaf22d93b9c2302a7"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-32-01a16f39-a922-7203-b580-ecd034877494.jsonl",
+            "bytes": 5314,
+            "sha256": "bf0a8427974d732d18df15da613ae4c330248b165decd8362998a500a133412e",
+            "offset": 1964418,
+            "at": "2026-10-24T18:58:37.645Z",
+            "message_sha256": "d71c73ccde7e8d70158c2af326dab6b55dbf46a6979e3f6ade26b713cd964616"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-32-01a16f39-a922-7203-b580-ecd034877494.jsonl",
+        "bytes": 1969732,
+        "sha256": "653b596f0c2e9c74e6febfbdcc85448949a2c0c00793189174b07ebb797d2986"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a16f39-a922-7203-b580-ecd034877494",
+      "turn": "01a16f3a-97d5-7932-87c3-731f4be02f13",
+      "pid": 2104813,
+      "birth": "29194075",
+      "current_birth": "29194075",
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 75,
+        "reason": "retirement-unverified",
+        "failure_reason": "pending-input-timeout",
+        "stopped": false
+      },
+      "state": "needs-attention",
+      "retirement_authorized": false,
+      "batch_record": {
+        "state": "awaiting_review",
+        "rc": null,
+        "finished": null,
+        "pid": 2102883,
+        "pane": "w1H:pF6",
+        "task": "strategy-proposal",
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-024302-strategy-proposal.verification-deferred.json",
+        "tui_recovery": null
+      },
+      "pane": {
+        "pane_id": "w1H:pF6",
+        "tab_id": "w1H:tF3",
+        "terminal_id": "term_65e9a788f6858169",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-024302-strategy-proposal"
+      },
+      "agent": {
+        "agent": "codex",
+        "agent_status": "done",
+        "name": "learner-dcfea0e3883eb84e4c644737",
+        "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302"
+      },
+      "process": {
+        "foreground_process_group_id": 2104813,
+        "shell_pid": 2102815
+      },
+      "foreground": [
+        {
+          "pid": 2104813,
+          "name": "node",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302"
+        },
+        {
+          "pid": 2104840,
+          "name": "codex",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302"
+        },
+        {
+          "pid": 2105239,
+          "name": "powershell.exe",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-024302"
+        }
+      ],
+      "screen_sha256": "5981392a509b5c0b7816281c4ae43664330e0f0d9ed9787606cdf46c13f66e8d",
+      "composer": "empty",
+      "quota_modal_visible": false,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-024302-strategy-proposal.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-024302-strategy-proposal.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {},
+      "deferral": {
+        "path": "ops/codex-ops/learner/20261025-024302-strategy-proposal.verification-deferred.json",
+        "bytes": 1526,
+        "sha256": "fa55103b30ed6ce4db62b218dba1630922058ea11a9047700502fb7b8cef457d"
+      },
+      "deferral_authorizations": {
+        "finish_authorized": false,
+        "retirement_authorized": false,
+        "automatic_replay_authorized": false
+      },
+      "receipt_unchanged_since_0600": true,
+      "deferral_unchanged_since_0400": true
+    },
+    {
+      "batch": "20261025-031302-strategy-proposal",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-031302-strategy-proposal.tui.json",
+        "bytes": 4898,
+        "sha256": "98e693e705a5698e443fa8a811b3a23d45ee37466da3efe2be93e581390c0578"
+      },
+      "native": {
+        "session": "01a16f54-e2e2-70d3-a053-0fe3a03ffa0d",
+        "turn": "01a16f55-51a0-7df2-9cb5-31b461004bcf",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T03-13-16-01a16f54-e2e2-70d3-a053-0fe3a03ffa0d.jsonl",
+            "bytes": 7587,
+            "sha256": "b7152fa78269ba1a5c0b72bc816160c1dbb8de27ac688d7d0e683cecbac4cdc7",
+            "offset": 105038,
+            "actual": {
+              "turn_id": "01a16f55-51a0-7df2-9cb5-31b461004bcf",
+              "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-031302",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T03-13-16-01a16f54-e2e2-70d3-a053-0fe3a03ffa0d.jsonl",
+            "bytes": 28255,
+            "sha256": "d9ba5d51f72b39622fd7e6bd424a491a83e2a3665497377b015e7f963cf6f313",
+            "offset": 117343,
+            "canonical_text_sha256": "b42eadb77f43ddc37944daa643b3f534b0b2eb49268b8d5f28702044ac82fec2"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T03-13-16-01a16f54-e2e2-70d3-a053-0fe3a03ffa0d.jsonl",
+            "bytes": 2365,
+            "sha256": "d573ae23a73243b487a74b7e4c335471ad8c0a304fbe04db547d993f57ad3139",
+            "offset": 2283368,
+            "at": "2026-10-24T19:42:25.050Z",
+            "message_sha256": "9acc51b452b6abae1588e38ec9cec985470440589bbbaa9e9520ba10ce84b00e"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T03-13-16-01a16f54-e2e2-70d3-a053-0fe3a03ffa0d.jsonl",
+        "bytes": 2285733,
+        "sha256": "97c4e6e70c8f7a04f7d627fd64204064cdf7970b70c83bc1920582e5d460a006"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a16f54-e2e2-70d3-a053-0fe3a03ffa0d",
+      "turn": "01a16f55-51a0-7df2-9cb5-31b461004bcf",
+      "pid": 2334836,
+      "birth": "29372513",
+      "current_birth": "29372513",
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 75,
+        "reason": "retirement-unverified",
+        "failure_reason": "pending-input-timeout",
+        "stopped": false
+      },
+      "state": "needs-attention",
+      "retirement_authorized": false,
+      "batch_record": {
+        "state": "awaiting_review",
+        "rc": null,
+        "finished": null,
+        "pid": 2334050,
+        "pane": "w1H:pF9",
+        "task": "strategy-proposal",
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-031302-strategy-proposal.verification-deferred.json",
+        "tui_recovery": null
+      },
+      "pane": {
+        "pane_id": "w1H:pF9",
+        "tab_id": "w1H:tF6",
+        "terminal_id": "term_65e9ae30cb2ed16c",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-031302-strategy-proposal"
+      },
+      "agent": {
+        "agent": "codex",
+        "agent_status": "done",
+        "name": "learner-f6633340a7781bae9079b0ce",
+        "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-031302"
+      },
+      "process": {
+        "foreground_process_group_id": 2334836,
+        "shell_pid": 2333999
+      },
+      "foreground": [
+        {
+          "pid": 2334836,
+          "name": "node",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-031302"
+        },
+        {
+          "pid": 2334861,
+          "name": "codex",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-031302"
+        },
+        {
+          "pid": 2335096,
+          "name": "powershell.exe",
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-031302"
+        }
+      ],
+      "screen_sha256": "c9c0c4411f38345a93ce55fbbc63e59fa858db196c67ea9b6d7d3db36da2a6a4",
+      "composer": "empty",
+      "quota_modal_visible": false,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-031302-strategy-proposal.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-031302-strategy-proposal.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {},
+      "deferral": {
+        "path": "ops/codex-ops/learner/20261025-031302-strategy-proposal.verification-deferred.json",
+        "bytes": 1208,
+        "sha256": "bb7073a12fb1d7aabcbd924bf3805377c983723db760c26220e3ee2b90d33f8a"
+      },
+      "deferral_authorizations": {
+        "finish_authorized": false,
+        "retirement_authorized": false,
+        "automatic_replay_authorized": false
+      },
+      "receipt_unchanged_since_0600": true,
+      "deferral_unchanged_since_0400": true
+    },
+    {
+      "batch": "20261025-071302",
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261025-071302-postmortem.tui.json",
+        "bytes": 5134,
+        "sha256": "31f9f4784afb740a85724e558a79d17892956fc7b40602b40a03d4fc82d8394e"
+      },
+      "native": {
+        "session": "01a17030-7997-7b82-9070-b842eb8273c5",
+        "turn": "01a17030-da83-7443-ab02-4b83fc02b01b",
+        "context": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T07-13-07-01a17030-7997-7b82-9070-b842eb8273c5.jsonl",
+            "bytes": 7059,
+            "sha256": "e55ee1db142698d302670e0b7693cbd15e5c7bd23487db0857523f41b69d5e6d",
+            "offset": 103951,
+            "actual": {
+              "turn_id": "01a17030-da83-7443-ab02-4b83fc02b01b",
+              "cwd": "/home/dw/Projects/agent-sts2",
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "service_tier": null
+            }
+          }
+        ],
+        "prompt": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T07-13-07-01a17030-7997-7b82-9070-b842eb8273c5.jsonl",
+            "bytes": 24113,
+            "sha256": "f592dbba8bbbf77600165302622436da55b686e51bc37e10aed5077d08c1737b",
+            "offset": 115448,
+            "canonical_text_sha256": "678e3b52a1fdda482592522269ba4347ebdf3c861494b2f08fbc0b7b4825db7f"
+          }
+        ],
+        "terminal": [
+          {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T07-13-07-01a17030-7997-7b82-9070-b842eb8273c5.jsonl",
+            "bytes": 2723,
+            "sha256": "9a4a1f5aa865d5c874c96867893cb50e366e2ff045a27e333d030f97e7ebf05e",
+            "offset": 2106500,
+            "at": "2026-10-24T23:28:29.454Z",
+            "message_sha256": "14b43e5dab84880dc6ea1bebd309d7c00d5a11a988313379ce8d70280197663a"
+          }
+        ]
+      },
+      "native_file": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T07-13-07-01a17030-7997-7b82-9070-b842eb8273c5.jsonl",
+        "bytes": 2109223,
+        "sha256": "9a272d33c9f04e6f6ba14af116e76a56e11f3ef3074e374784d27eb7a6a5a02f"
+      },
+      "native_reconstruction_verified": true,
+      "session": "01a17030-7997-7b82-9070-b842eb8273c5",
+      "turn": "01a17030-da83-7443-ab02-4b83fc02b01b",
+      "pid": 3073267,
+      "birth": "30811599",
+      "current_birth": "30811599",
+      "current_supervisor_birth": null,
+      "result": {
+        "code": 75,
+        "reason": "retirement-unverified",
+        "failure_reason": "pending-input-timeout",
+        "stopped": false
+      },
+      "state": "needs-attention",
+      "retirement_authorized": false,
+      "batch_record": {
+        "state": "awaiting_review",
+        "rc": null,
+        "finished": null,
+        "pid": 3072950,
+        "pane": "w1H:pFB",
+        "task": null,
+        "review_required": "terminal-unverified-receipt",
+        "verification_deferred": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-071302.verification-deferred.json",
+        "tui_recovery": null
+      },
+      "pane": {
+        "pane_id": "w1H:pFB",
+        "tab_id": "w1H:tF8",
+        "terminal_id": "term_65e9e3d0a32c216e",
+        "workspace_id": "w1H",
+        "label": "learner-20261025-071302-postmortem"
+      },
+      "agent": {
+        "agent": "codex",
+        "agent_status": "done",
+        "name": "learner-6b730e9efd046e33d7bbc6b9",
+        "foreground_cwd": "/home/dw/Projects/agent-sts2"
+      },
+      "process": {
+        "foreground_process_group_id": 3073267,
+        "shell_pid": 3072899
+      },
+      "foreground": [
+        {
+          "pid": 3073267,
+          "name": "node",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        },
+        {
+          "pid": 3073291,
+          "name": "codex",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        },
+        {
+          "pid": 3073462,
+          "name": "powershell.exe",
+          "cwd": "/home/dw/Projects/agent-sts2"
+        }
+      ],
+      "screen_sha256": "b05668c5350bdacf4fff0e9605810df3b0e843ce575c5bcc15fca12c30d2e3aa",
+      "composer": "text",
+      "quota_modal_visible": true,
+      "queued_followup_visible": false,
+      "seal_files": [
+        {
+          "path": "ops/codex-ops/learner/learner-20261025-071302-postmortem.tab-retirement.json",
+          "exists": false
+        },
+        {
+          "path": "ops/codex-ops/learner/20261025-071302.tab-retirement.json",
+          "exists": false
+        }
+      ],
+      "retirement_events": {},
+      "deferral": {
+        "path": "ops/codex-ops/learner/20261025-071302.verification-deferred.json",
+        "bytes": 949,
+        "sha256": "42708e089e98310fcfb8806af591e807683c1c1a0f40b5308bec38b561b6a7e5"
+      },
+      "deferral_authorizations": {
+        "finish_authorized": false,
+        "retirement_authorized": false,
+        "automatic_replay_authorized": false
+      }
+    }
+  ],
+  "screens_gitleaks_rc": 0,
+  "control_or_recovery_executed": false
+}

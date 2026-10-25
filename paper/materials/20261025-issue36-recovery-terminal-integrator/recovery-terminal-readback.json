@@ -1,0 +1,109 @@
+{
+  "at": "2026-10-25T08:02:33+08:00",
+  "canonical": {
+    "path": "ops/codex-ops/learner/learner-20261025-021310-postmortem.tui.json",
+    "bytes": 9148,
+    "sha256": "db8982cfcfb211301f33ddc0194cb83ae7907724bbfdd8c90a4858043f97b02d"
+  },
+  "archive": [
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/completed.tui.json",
+      "bytes": 8880,
+      "sha256": "72e200f5a9da47b55d1435e14c3618a873450a78d55eff8168b2bb4b92513409"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/completion.jsonl",
+      "bytes": 360,
+      "sha256": "a6ef2539c8632d947a7d2d217817dd2c8640008c1ef8df56a3513931653887d4"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/native.jsonl",
+      "bytes": 2121695,
+      "sha256": "8370cfda38bf87e024d9ff866d023fac0605bd3cb441326906ec9634da68c6ea"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/original.out",
+      "bytes": 3416,
+      "sha256": "56a81c955139f32f20b06b8f85c3adca71841d3ed669edb7f7a6345c97ff5883"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/original.registration.json",
+      "bytes": 3250,
+      "sha256": "27ea81ca0ede26832e4cf5847f96903bcc7c0884cdab468af49352c8d3c75a7f"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/original.tui.json",
+      "bytes": 5301,
+      "sha256": "130648492824e4dc20fcaa951d9b86679e188ed184ae9e44dcddd7b3994d3e70"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c/recovery.json",
+      "bytes": 612,
+      "sha256": "5ab5aa0153ce0d7249bcead2b6f74bf6909e106e952aa80911143b23ec5746fd"
+    }
+  ],
+  "original_registration_state": "awaiting_review",
+  "original_75_preserved": true,
+  "native_bytes_unchanged": true,
+  "old_output_preserved_as_prefix": true,
+  "wrapper_exact_batch_sha256": "4e0ed2eade0a6d2cc0fb8aad966576f84d02c496038e5c780b9361309ae5560e",
+  "wrapper": {
+    "version": 1,
+    "batch": "20261025-021310",
+    "state": "done",
+    "rc": 0,
+    "launcher_rc": 0,
+    "finished": "2026-10-25 06:04",
+    "supervisor": {
+      "pid": 2829473,
+      "birth": "30398946"
+    },
+    "batch_sha256": "4e0ed2eade0a6d2cc0fb8aad966576f84d02c496038e5c780b9361309ae5560e"
+  },
+  "recovery_journal": {
+    "schema": "learner-tui-completed-recovery-v1",
+    "batch": "20261025-021310",
+    "phase": "finished",
+    "origin_sha256": "130648492824e4dc20fcaa951d9b86679e188ed184ae9e44dcddd7b3994d3e70",
+    "supervisor": {
+      "pid": 2829473,
+      "birth": "30398946"
+    },
+    "controls": [
+      {
+        "key": "ctrl+c",
+        "at": "2026-10-25T06:04:20.540526+08:00"
+      }
+    ],
+    "native_sha256": "8370cfda38bf87e024d9ff866d023fac0605bd3cb441326906ec9634da68c6ea",
+    "archive": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c",
+    "original_output_sha256": "56a81c955139f32f20b06b8f85c3adca71841d3ed669edb7f7a6345c97ff5883"
+  },
+  "guard": {
+    "file": {
+      "path": "ops/codex-ops/learner/20261025-021310.recovery-0b234e736bae4b23a5a0c55491eee62c.verification-deferred.json",
+      "bytes": 4047,
+      "sha256": "75715b1de7aff158192cded7f0ecaea7feede988fa47d9ff424aea83ffa58705"
+    },
+    "armed_at": "2026-10-25T06:04:20.033932+08:00",
+    "captured_registration_state": "running",
+    "wait_for_owner_exit": true,
+    "applies_to_current_row": false,
+    "current_row_state": "done",
+    "recovery_attention_exists": false,
+    "incorrect_archive_child_path_exists": false
+  },
+  "source": {
+    "path": "ops/learner_tui.py",
+    "bytes": 46691,
+    "sha256": "c96480ca4679d406157db6b925af5068f02026be783fa3cabc2b2a7d52b08617"
+  },
+  "completion_verified": true,
+  "historical_ops_apply_admission": {
+    "path": "paper/materials/20261025-issue36-ops/ops-response.md",
+    "bytes": 2441,
+    "sha256": "7e03bcf2c6ddf7b31503da4248c6c540b7a114ad0210bbae0a41aa2c727cd65a"
+  },
+  "historical_apply_authorization_or_fresh_precontrol_sampling_retroactively_proven": false,
+  "seal_or_reclaim_authorized": false
+}

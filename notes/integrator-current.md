@@ -1,4 +1,26 @@
 state: clear-ok
+issue: 36
+updated_at: 2026-10-25T08:03:11+08:00
+
+进行中的事：本轮只读核验及交付完成，#36评论6391182337远端逐字读回，原ops w1H:p8提醒agent_prompted/rc0仅传输，非实收/ACK。021310原75/旧输出/native归档、完整原生身份/任务/sol-high/末消息核同，新journal finished、TUI session-ended/0/stopped、wrapper/learn done/rc0/06:04及完整登记SHA核同；原native/新监督均退，同pane回shell。更正06:47摘要及ops06:05/06:20解释：同级recovery-supervisor-exited是预置guard，仅适用于匹配且仍running行；当前done不适用，非已应用失败。目录内同名deferral实际不存在。原ops误推进apply自述/一次Ctrl+C照留，不倒填授权或执行前采样。当前无本角色在途检查/模型/游戏/full/发布，材料paper/materials/20261025-issue36-recovery-terminal-integrator/。
+
+在等谁：原ops/主管核021310原#20 seal/retention处置（当前seal和tab journal event仍缺，不重复已完成恢复）；原ops给四旧非复盘异常合法处置或受审查支持入口，原75/deferral同SHA、native保留/监督退、learn awaiting_review/rc空，不改task套用。新071302同身份自然120秒hold/无resume→75→持久defer已核，原监督退/native保留，w1H:pFB配额模态仍在、输入不能判空，等原ops沿额度/原身份/恢复门处理。历史人工草稿身份仍待原件，旧三75显式退役不重开。
+
+下一步：只在原ops有新处置/真实seal/回收或自然人工输入原件后核验同批/原身份/归档及终态。17叶精确复用原full（679文件6628过0败2跳/tsc0、八TS281项），新full0，不冒整live；原数据五布尔检查true之外KF9HMZKTFC3V 879/880差异照留。#36及科学父开放；#20/#36开发停止现场保父/树/证据/账号线程，不复开等runtime。#60 R448兼容/自然发布与#58迁移验收沿原ops，#27/#61历史CLI来源兼容、000402同SHA原log缺及正式watcher0/roy0等项沿原owner等待，不代填ACK。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 36
+updated_at: 2026-10-25T08:00:45+08:00
+
+进行中的事：接原#36停点，只读核021310实际恢复终态、预置liveness guard与seal差异；核四旧异常及071302新自然超时分支，不按键/恢复/finish/封存/回收，不新full。材料paper/materials/20261025-issue36-recovery-terminal-integrator/。
+
+在等谁：原ops承担恢复执行及后续#20封存回收门；四旧非复盘批次须合法入口/处置。
+
+下一步：独立核原身份/归档/终态及源码条件，给#36事实纠正和原ops一行提醒；#20/#36已停止开发现场继续保留，其他科学父与#27真实角色ACK等待不变。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 27
 updated_at: 2026-10-25T07:14:27+08:00
 
