@@ -1,5 +1,16 @@
 state: in-flight
 issue: 63
+updated_at: 2026-10-25T13:28:09+08:00
+
+进行中的事：#62固定f56c9f238/候选0168b672a唯一full688文件6711过/0败/2原跳、四tsc0/ROOT61/LIVE28，13:22独立输入/依赖/runtime/tree/index/原worker退出及锁核收通过。475 ToolHost/3022原字段事实覆盖已闭环6393721673；终态/精确ROOT80、运行兼容17、实际LIVE安装16（排除ROOT-only knowledge-runtime.test.ts）6393873027已逐字回读，原ops单行提醒agent_prompted非ACK。记录main1c03c1c5c3af43e37fa6ddd473bf1d8bebcc60dc已Windows SSH推送并远端核同，实际main/LIVE源码未安装本候选，禁止重full。
+当前#63固定f95114df3/候选ee029e2ee/ROOT锚965653f6d/树b23aa2ed3，2850输入/1417依赖/326运行叶。原62退出/锁核收后鲜准入，三tsc0/LIVE策略定向0；ROOT定向36过1败，check-imports原JSON只显示两未解析字符串、省略具体值。原件preflight-1保留；相同环境仅失败项1过0败、两显式扫描空、2850输入未变，未改源码/夹具/依赖，首败原因仍未知不假称已修复；诊断--expand不支持的启动rc1/未跑测试亦登记。保留其余预检绿，不重复；13:26:21启动本项唯一full PID87368/birth33050991、exec42851、nice19/single fork/原integrator-full-check.lock，新full1/失败或中断full0，default+JSON双输出。6393914051已逐字回读，实时以paper/materials/20261025-issue63-combination-integrator/full-state.json为准。三原样本候选配套seal_proof只读通过，原状态/日志/tab及生产两叶前后同，实际封存/回收0。
+在等谁：本角色盯63唯一full终态；原ops持59冻结自然事务，最新6393813274为原局/完整报告/autoplay已结束，但原refresh_driver PID12582/birth32959029持knowledge-refresh.lock，原worker4100584/birth32744881写前Errno11、仍waiting/FIFO、publish.once及publication-state未创建。原ops沿busy事件接同FIFO，无抢锁/kill/轮询/另事务，本角色不碰门/冻结源码。62/63代码精确main集成须等59事务释放，原ops后续新事务实际部署/登记/双通知及必要运行核收；生产reader前鲜备份、按届时actual current仅extend核准三缺失源并实际ToolDef，保最新知识/全部旧绑定/schema2历史，不旧Git或隔离备份覆盖。
+#64已接固定bc80005598d615516a36e3824f8bdba7e65356b3（6393868395）：8源码/测试文档叶及实际ROOT前像、15原日志/5原58证据/issue29基线blob大小SHA均核同；独立intake在paper/materials/20261025-issue64-fixed-integrator，公开6393914226逐字回读，已列63后最早就绪窗口。开发单次sandbox原1败及定向补验/全部首败与130保留，不冒full绿；不重开已释放58。60独立运行/自然消费，27沿原61/日志责任链继续，不相互前置。
+下一步：63full终态独立核2850输入/1417依赖/326 runtime/tree/index/worker实退与原锁；失败固定原件按代码/部署/夹具归因、由codex1续原63树，绿即交ops宿主OPS/实际verifier根learner_tabs.py+learner_tui.py配套部署/三原样本逐项真实seal/recover/tick、退出/空输入/tab缺席，符合一项即释放，保原线程/账号/树/日志/产物/科学父。59原事务释放后精确main源码集成62/已通过63，64按届时实际组合冻结唯一适用full；原ops实际部署及运行核收，不代他角色ACK/自然采用/收益。当前本角色生产/游戏/发布写入0，无新增监听/计时器/模型或并发full。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
 updated_at: 2026-10-25T13:22:44+08:00
 
 进行中的事：#62固定f56c9f238/候选0168b672a唯一full真实exit0，688文件/6711过/0败/2原跳；ROOT生产/runtime、LIVE生产、CLI严格四tsc0，ROOT6文件61过、LIVE2适用文件28过。13:22:01独立核原4161058/birth32869369实退、原锁可获取、2856输入/1417依赖/335运行叶及tree/index条目flags同，结果SHA74024cb8fc4cfcd5255806311908da057807847321d028cf6076792a500dcb3c。两预检首败保留，无失败/中断full。终态及准确ROOT80/兼容17/实际LIVE安装16（排除ROOT-only knowledge-runtime.test.ts）清单6393873027已逐字回读，原ops w1H:p8单行提醒agent_prompted仅传输非ACK；材料paper/materials/20261025-issue62-combination-integrator/deployment-handoff.json。真实CLI及475 ToolHost/3022原字段事实覆盖已闭环6393721673，生产仍须对实际current鲜备份/仅补核准缺失三源/真实工具读回再切reader，保后续知识、所有旧局与schema2历史，不用隔离K/备份或旧Git覆盖。
