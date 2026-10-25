@@ -1,10 +1,10 @@
 state: in-flight
 issue: 27
-updated_at: 2026-10-25T09:48:03+08:00
+updated_at: 2026-10-25T09:49:54+08:00
 
-进行中的事：#60实际ROOT/LIVE入口与旧full范围核验已由60dde6c17合main并推送，评论6392070531；ops已独立读回双入口合同，实际宿主20项差异仍待适用检查，生产未动。#27 high两叶窄改已预核；原sandbox现已终态rc1：633文件5867测试过，2文件2测试失败，原件保留，不报全绿。
-在等谁：原ops修正新增用例后account-drain硬编码16→17，并按Git同字节恢复隔离树缺失的历史issue29材料（基线对象存在），交固定source SHA与修后检查回执。评论6392117535逐字读回，一行提醒已送达传输层，未代已读/ACK。原检查3391111/birth31678036已退出；本角色未重开full。
-下一步：沿主管6392062140接固定源码/最终检查后核验合main；随后与ops冻结#60实际ROOT宿主与LIVE游戏组合，完成适用检查再沿自然发布。换号与补丁核验并行，首脑/学习自然消费者回执由ops续核。review队列43/39/36/20无新源码，仍沿原runtime/父门；#27通知历史/#61及000402原log门保留，不代ACK/科学父完成。材料paper/materials/20261025-issue27-high-integrator/；本角色隔离树/历史失败原件均保留。
+进行中的事：已接ops新交付6392128681，独立核3叶窄diff及定向2文件3测试全过。account-drain断言16→17已修；issue29材料与基线c1d92481 Git对象逐字相同，SHA256 8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef。原rc1/两失败原件保留。源码仍未提交，不冒固定SHA或必需检查通过。
+在等谁：原ops必需sandbox重跑PID3434621/birth31747070、nice19/2worker仍运行，等待终态及固定source SHA；本角色未重跑或抢窗口。首脑/学习自然消费者回执仍等ops。#60材料60dde6c17已推送、双入口合同ops已读回；实际宿主20项差异仍待适用检查，生产未动。
+下一步：沿主管6392062140接终态和固定源码，复核三叶SHA/原件后合main；随后协调#60实际ROOT/LIVE组合适用检查及自然发布。review43/39/36/20仍原runtime/父门，无新源码；#27通知历史/#61与000402原log门保留，不代ACK/科学父完成。证据paper/materials/20261025-issue27-high-integrator/corrected-pre-review.json，隔离树与失败原件保留。
 
 ---
 

@@ -6873,3 +6873,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T09:42:44+08:00 [watcher] #60 R448兼容续核实际ROOT/LIVE双入口：27宿主叶同源、13游戏叶补丁apply-check0、其余14宿主叶已装；game全src仅9个#60叶差异。发现旧full外宿主launcher114→129叶（5旧变化+15新增），CLI formats亦不同，收窄6388588489覆盖范围，不冒当前组合全绿；当前宿主tsc0/TS10/Py19过，首CLI参数失败原件保留。评论6392070531逐字回读、ops提醒agent_prompted仅传输；无源码/live/DB/control写或新full。主管#27 6392062140的high放行检查在途，优先接该源码核验，#60待实际输入合同/适用检查；材料paper/materials/20261025-issue60-runtime-closure-integrator/。
 
 - 2026-10-25T09:48:03+08:00 [watcher] #27 high放行两叶预核：模型/tier边界保持，仅high/xhigh；原sandbox终态rc1，633文件5867测试过、2文件2测试失败。定位新增test后account-drain仍硬编码16（实际17），以及隔离树缺Git基线已有issue29材料；交原ops窄修/精确恢复，待固定SHA及修后检查，不合未通过源码。评论6392117535逐字回读、ops一行提醒仅传输；无新full/生产写，#60实际ROOT/LIVE宿主20差异检查续待。review43/39/36/20仍原runtime/父门。材料paper/materials/20261025-issue27-high-integrator/。
+
+- 2026-10-25T09:49:54+08:00 [watcher] #27接6392128681并独立核修后三叶diff、account-drain16→17及issue29原件与基线Git同字节/SHA；定向2文件3测试过，原失败保留。必需sandbox3434621/birth31747070、nice19/2worker仍在跑，源码未提交，等终态和固定SHA后合main；本角色不重开检查/生产事务。证据paper/materials/20261025-issue27-high-integrator/corrected-pre-review.json。
