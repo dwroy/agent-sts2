@@ -6,8 +6,8 @@ assert not F.exists()
 a=json.loads((M/'assembly.json').read_text());before=subprocess.check_output(['git','-C',str(L),'rev-parse','HEAD'],text=True).strip()
 tracked=subprocess.check_output(['git','-C',str(L),'ls-files','-z']).decode().split('\0');rows=[]
 for n in tracked:
-    selected=(n.startswith(('agent/src/','agent/tests/','agent/tools/','learner/lib/','learner/tasks/','ops/tests/','knowledge/builders/')) or (n.startswith(('agent/','learner/','ops/','eval/')) and n.count('/')==1 and Path(n).suffix in {'.ts','.py','.json','.mjs','.js'}))
-    if not selected or Path(n).suffix not in {'.ts','.py','.json','.mjs','.js','.md','.txt'}:continue
+    selected=(n.startswith(('agent/src/','agent/tests/','agent/tools/','learner/lib/','learner/tasks/','ops/tests/','ops/codex/','knowledge/builders/')) or n.startswith('knowledge/') or (n.startswith(('agent/','learner/','ops/','eval/')) and n.count('/')==1 and Path(n).suffix in {'.ts','.py','.json','.mjs','.js'}))
+    if not selected or Path(n).suffix not in {'.ts','.py','.json','.mjs','.js','.md','.txt','.csv','.tsv'}:continue
     assert 'third_party/' not in n and not Path(n).name.startswith('.env')
     p=L/n
     if not p.is_file():continue

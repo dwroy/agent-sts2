@@ -5,6 +5,8 @@ assert json.loads((M/'terminal-readback.json').read_text())['accepted']
 s=dict(at=now(),phase='preflight',pid=os.getpid(),birth=Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],nice=os.getpriority(os.PRIO_PROCESS,0),full_runs=0,model_calls=0,production_operations=0)
 def save(): (M/'actual-live-consumer-state.json').write_text(json.dumps(s,indent=2)+'\n')
 def verify():
+    actual_paths={str(p.relative_to(F)) for p in F.rglob('*') if p.is_file() and not p.is_symlink() and 'node_modules' not in p.parts and '.cache' not in p.relative_to(F).parts}
+    assert actual_paths=={x['path'] for x in d['inputs']}, ('fixture input set drift', sorted(actual_paths-{x['path'] for x in d['inputs']}))
     for x in d['inputs']:
         p=F/x['path'];assert sha(p.read_bytes())==x['sha256'] and p.stat().st_mode&0o777==x['mode'],x['path']
     assert subprocess.check_output(['git','-C',str(L),'rev-parse','HEAD'],text=True).strip()==d['actual_live']
