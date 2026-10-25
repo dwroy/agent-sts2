@@ -9,10 +9,10 @@ import { validate } from "../../v6/schema.js";
 
 export type Row = Record<string, any>;
 export const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
-export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json"]);
+export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json"]);
 export const ARCHETYPE_PATH = "external/sts2fun/builds-v1/archetypes.json";
 export function allowedPath(path: string): boolean {
-  return path === "common/shared-experience.json" || path === ARCHETYPE_PATH
+  return path === "common/shared-experience.json" || path === "common/open-book.json" || path === ARCHETYPE_PATH
     || /^characters\/[a-z0-9_]+\/[a-z-]+\.json$/.test(path) && MIGRATED_NAMES.has(path.split("/")[2]!);
 }
 export function rows(body: Row): Row[] { return Array.isArray(body.entries) ? body.entries : [{ id: "$document", ...body }]; }
@@ -26,6 +26,28 @@ function retains(before: unknown, after: unknown): boolean {
   return before === after;
 }
 const nonempty = (s: unknown) => typeof s === "string" && s.trim().length > 0;
+const identity = (e: Row): string => e.id && ["cards", "relics", "monsters", "events"].includes(e.kind) ? `${e.kind}:${e.id}` : String(e.id ?? e.direction ?? e.attempt ?? "");
+
+/** Core combos, card contributions and vocabulary members carry evidence below the top-level entry. */
+function preserveNested(before: unknown, after: unknown): void {
+  if (Array.isArray(before)) {
+    for (const [index, item] of before.entries()) {
+      const next = object(item) && identity(item) ? (Array.isArray(after) ? after.find(v => object(v) && identity(v) === identity(item)) : undefined)
+        : Array.isArray(after) ? after[index] : undefined;
+      if (object(item) && identity(item) && next === undefined) throw new Error(`cannot delete published child: ${identity(item)}`);
+      preserveNested(item, next);
+    }
+  } else if (object(before)) {
+    const next = object(after) ? after : {};
+    for (const [key, value] of Object.entries(before)) {
+      if (["evidence", "sources", "counterexamples", "contradicting", "shared"].includes(key)) {
+        if (!retains(value, next[key])) throw new Error(`published nested evidence must be preserved: ${key}`);
+      } else if (key === "n_contradict" && Number(next[key] ?? 0) < Number(value)) throw new Error("published nested counterevidence count must be preserved");
+      else if (key === "evidence_status" && value === "conflict" && next[key] !== "conflict") throw new Error("published nested conflict must be preserved");
+      else preserveNested(value, next[key]);
+    }
+  }
+}
 
 /** Validate with the consumers' schemas, then check the complete release's cross-file references. */
 export function validateDocuments(files: Record<string, string>): void {
@@ -37,6 +59,21 @@ export function validateDocuments(files: Record<string, string>): void {
     parsed[path] = body;
     const name = path.split("/").at(-1), character = path.split("/")[1];
     if (name === "shared-experience.json") parseSharedExperience(body, path);
+    else if (name === "open-book.json") {
+      const ids = new Set();
+      if (body.schema !== "open-book-v1" || !object(body.sources) || !Array.isArray(body.entries)) throw new Error(`invalid open-book: ${path}`);
+      for (const e of body.entries) {
+        const key = `${e.kind}:${e.id}`;
+        if (!object(e) || !["cards", "relics", "monsters", "events"].includes(e.kind) || !/^[A-Z][A-Z0-9_]{0,99}$/.test(e.id)
+          || !nonempty(e.name) || !Array.isArray(e.aliases) || !e.aliases.every(nonempty) || !Array.isArray(e.provenance)
+          || !e.provenance.length || !e.provenance.every((p: unknown) => {
+            const source = typeof p === "string" ? body.sources.sources?.[p] : null;
+            return object(source) && /^https:\/\//.test(source.url) && /^[a-f0-9]{64}$/.test(source.sha256) && nonempty(source.license);
+          }) || ids.has(key)
+          || e.source !== "external:spire-codex" || e.game_version !== "v0.111.0" || !object(e.facts)) throw new Error(`invalid entity fact: ${path}/${key}`);
+        ids.add(key);
+      }
+    }
     else if (name === "experience.json") {
       if (!nonempty(body.version) || !Array.isArray(body.entries)) throw new Error(`invalid experience: ${path}`);
       const ids = new Set();
@@ -49,6 +86,7 @@ export function validateDocuments(files: Record<string, string>): void {
         ids.add(e.id);
       }
     } else if (name === "strategy-entries.json") {
+      if (body.character !== character) throw new Error(`cross-character strategy document: ${path}`);
       if (Buffer.byteLength(text) > STRATEGY_LIMITS.fileBytes) throw new Error("strategy document exceeds consumer byte limit");
       parseStrategyLibrary(body);
     }
@@ -81,12 +119,14 @@ export function validateUpdate(before: Record<string, string>, after: Record<str
   for (const [path, text] of Object.entries(before)) {
     const old = JSON.parse(text) as Row, next = JSON.parse(after[path] ?? "null") as Row | null;
     if (!next) throw new Error(`cannot delete published document: ${path}`);
-    if (!Array.isArray(old.entries)) continue;
-    const current = new Map(rows(next).map(e => [e.id, e]));
+    if (old.sources !== undefined && !retains(old.sources, next.sources)) throw new Error(`published source manifest must be preserved: ${path}`);
+    if (!Array.isArray(old.entries)) { preserveNested(old, next); continue; }
+    const current = new Map(rows(next).map(e => [identity(e), e]));
     for (const entry of rows(old)) {
-      const changed = current.get(entry.id);
+      const changed = current.get(identity(entry));
       if (!changed) throw new Error(`retire instead of deleting published entry: ${entry.id}`);
       if (JSON.stringify(entry) === JSON.stringify(changed)) continue;
+      preserveNested(entry, changed);
       if (!retains(evidenceRows(entry), evidenceRows(changed))
         || !retains(entry.sources ?? [], changed.sources ?? []) || !retains(entry.counterexamples ?? [], changed.counterexamples ?? [])
         || (entry.contradicting ?? []).some((e: unknown) => !(changed.contradicting ?? []).includes(e))

@@ -1,0 +1,680 @@
+{
+  "version": "K1-45cbc05b04e2a31184dca03e428dda9170779efbd6a0660d75e01d59f85a8f2c",
+  "note": "100 sequential hot measurements after one cold ToolHost call; DB query is bounded first page, full tool includes exhaustion, dynamic matching, output and host audit; no LLM/network",
+  "results": [
+    {
+      "name": "kb_experience",
+      "input": {
+        "relevant": true
+      },
+      "fresh_process": {
+        "total_ms": 531.8621209999983,
+        "tool_ms": 74.78042600000003,
+        "isError": false,
+        "output_bytes": 19905,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 106.54254899999796,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 3.8424959999974817,
+        "p95_ms": 6.3843030000025465,
+        "max_ms": 14.194970000000467
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 11.744829999999638,
+        "p95_ms": 17.205996000000596,
+        "max_ms": 28.173627000000124
+      },
+      "returned": 9,
+      "total_matches": 10,
+      "output_bytes": 19905,
+      "returned_ids": [
+        "silent-kin-poison-sl-observation",
+        "silent-bygone-effigy-wake-strength",
+        "silent-byrdonis-strength-multihit-observation",
+        "silent-gardener-skittish-shield",
+        "silent-jaxfruit-strength-vulnerable-observation",
+        "silent-terror-eel-vigor-vulnerable",
+        "silent-vine-shambler-tangled-cost-window",
+        "silent-act-transition-missing-hp-heal",
+        "silent-rest-buffer-observation"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "keyword": "启动"
+      },
+      "fresh_process": {
+        "total_ms": 242.76976099999956,
+        "tool_ms": 4.12080499999999,
+        "isError": false,
+        "output_bytes": 23875,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 2.205896000003122,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.3954410000005737,
+        "p95_ms": 0.6760800000010931,
+        "max_ms": 0.8505470000018249
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.9733280000000377,
+        "p95_ms": 1.6006520000009914,
+        "max_ms": 2.6360789999998815
+      },
+      "returned": 11,
+      "total_matches": 15,
+      "output_bytes": 23875,
+      "returned_ids": [
+        "silent-act-transition-missing-hp-heal",
+        "silent-aeonglass-artifact-growth-sl",
+        "silent-afterimage-per-card-block",
+        "silent-axebot-stock-phase-budget",
+        "silent-core-dexterity-defense-observation",
+        "silent-diamond-diadem-opening-retention",
+        "silent-double-boss-resource-handoff",
+        "silent-eternal-armor-finite-plating",
+        "silent-fight-me-upgraded-dual-strength",
+        "silent-footwork-block",
+        "silent-nightmare-next-turn-copies"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 56,
+          "detail": "SEARCH item_grams USING COVERING INDEX sqlite_autoindex_item_grams_1 (gram=?)"
+        },
+        {
+          "id": 53,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 62,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 108,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 111,
+          "parent": 108,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 122,
+          "parent": 108,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 131,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_strategies",
+      "input": {
+        "query": "*"
+      },
+      "fresh_process": {
+        "total_ms": 247.30852500000037,
+        "tool_ms": 11.120848000000024,
+        "isError": false,
+        "output_bytes": 14274,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 4.005902999997488,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.35023399999772664,
+        "p95_ms": 0.6482319999995525,
+        "max_ms": 1.1874919999972917
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.5851660000007541,
+        "p95_ms": 1.0760000000009313,
+        "max_ms": 1.3395329999984824
+      },
+      "returned": 3,
+      "total_matches": 6,
+      "output_bytes": 14274,
+      "returned_ids": [
+        "silent-brain-kin-priest-exit-window",
+        "silent-brain-blade-flexible-formation-review",
+        "silent-brain-potion-buff-before-relevant-cards"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 56,
+          "detail": "SEARCH item_terms USING COVERING INDEX item_term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 54,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 63,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 109,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 112,
+          "parent": 109,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 123,
+          "parent": 109,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 132,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_reflex",
+      "input": {
+        "query": "*"
+      },
+      "fresh_process": {
+        "total_ms": 260.48927099999855,
+        "tool_ms": 9.770685999999984,
+        "isError": false,
+        "output_bytes": 23143,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 8.458866000000853,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 1.2906540000003588,
+        "p95_ms": 1.8832609999990382,
+        "max_ms": 4.443841000000248
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 2.89503600000171,
+        "p95_ms": 4.665093999999954,
+        "max_ms": 6.058423000002222
+      },
+      "returned": 7,
+      "total_matches": 164,
+      "output_bytes": 23143,
+      "returned_ids": [
+        "silent-encounter-rk-ceremonial-cry-output-versus-next-defense",
+        "silent-encounter-rk-ceremonial-plow-weaken-block",
+        "silent-encounter-rk-crab-active-side-leg-sweep",
+        "silent-encounter-rk-decimillipede-split-poison",
+        "silent-encounter-rk-demon-slap-wail-block",
+        "silent-encounter-rk-effigy-sleep-footwork",
+        "silent-encounter-rk-insatiable-bite-block-and-weaken"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_open_book",
+      "input": {
+        "query": "ABUNDANCE"
+      },
+      "fresh_process": {
+        "total_ms": 240.2108380000027,
+        "tool_ms": 7.152735000000007,
+        "isError": false,
+        "output_bytes": 3496,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 3.973095999997895,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.3829920000025595,
+        "p95_ms": 0.6418230000017502,
+        "max_ms": 1.0648409999994328
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.3850109999984852,
+        "p95_ms": 0.6113269999987097,
+        "max_ms": 1.234822999998869
+      },
+      "returned": 1,
+      "total_matches": 1,
+      "output_bytes": 3496,
+      "returned_ids": [
+        "ABUNDANCE"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 132,
+          "detail": "SCAN item_search VIRTUAL TABLE INDEX 0:M2"
+        },
+        {
+          "id": 52,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 61,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 107,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 110,
+          "parent": 107,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 121,
+          "parent": 107,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 130,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_build_cores",
+      "input": {
+        "query": "*"
+      },
+      "fresh_process": {
+        "total_ms": 239.86910499999794,
+        "tool_ms": 6.173173999999989,
+        "isError": false,
+        "output_bytes": 9416,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 4.240850999998656,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 3.061033000001771,
+        "p95_ms": 4.2024190000011,
+        "max_ms": 5.190042000001995
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 3.239639999999781,
+        "p95_ms": 4.475439000001643,
+        "max_ms": 5.0464759999995294
+      },
+      "returned": 4,
+      "total_matches": 4,
+      "output_bytes": 9416,
+      "returned_ids": [
+        "D",
+        "P",
+        "R",
+        "S"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_build_combos",
+      "input": {
+        "query": "*"
+      },
+      "fresh_process": {
+        "total_ms": 293.9657420000003,
+        "tool_ms": 10.402979000000016,
+        "isError": false,
+        "output_bytes": 17664,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 7.266250000000582,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 3.9878129999997327,
+        "p95_ms": 5.136282999999821,
+        "max_ms": 7.840977000003477
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 4.573660000001837,
+        "p95_ms": 5.824296999999206,
+        "max_ms": 6.902116000001115
+      },
+      "returned": 5,
+      "total_matches": 17,
+      "output_bytes": 17664,
+      "returned_ids": [
+        "D-flask-sweep",
+        "D-fumes-backflip",
+        "D-observed-union-fbc4b776",
+        "D-toxin-backflip",
+        "P-flask-afterimage"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_vocab",
+      "input": {
+        "query": "*"
+      },
+      "fresh_process": {
+        "total_ms": 307.14692399999694,
+        "tool_ms": 10.218481999999995,
+        "isError": false,
+        "output_bytes": 10426,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 3.5936540000002424,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 1.1154669999996258,
+        "p95_ms": 1.629598999999871,
+        "max_ms": 5.0784029999995255
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 1.8378489999995509,
+        "p95_ms": 2.5048940000015136,
+        "max_ms": 3.22164000000339
+      },
+      "returned": 12,
+      "total_matches": 101,
+      "output_bytes": 10426,
+      "returned_ids": [
+        "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+        "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+        "silent-encounter-rk-crab-active-side-leg-sweep-tag",
+        "silent-encounter-rk-decimillipede-split-poison-tag",
+        "silent-encounter-rk-demon-slap-wail-block-tag",
+        "silent-encounter-rk-effigy-sleep-footwork-tag",
+        "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+        "silent-encounter-rk-insatiable-salivate-escape-tag",
+        "silent-encounter-rk-kin-beam-wail-window-tag",
+        "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+        "silent-encounter-rk-matriarch-sleep-setup-tag",
+        "silent-encounter-rk-vantom-slippery-defense-draw-tag"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    }
+  ]
+}

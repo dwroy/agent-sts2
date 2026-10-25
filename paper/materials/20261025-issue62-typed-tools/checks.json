@@ -1,0 +1,67 @@
+{
+  "role": "dev #62",
+  "baseline": "32c6b922a07963227ff86fd0b27d85014cd5f769",
+  "code_source_drift": [],
+  "source_manifest_sha256": "92731b04b3f2d20f6748f2237c8ae608b6ae107a659502b11ba0c1b095cf308c",
+  "production_tsc": {
+    "exit_code": 0,
+    "via": "tools/test-sandbox.sh; initial and fixture recheck"
+  },
+  "cli_tsc": {
+    "exit_code": 0,
+    "log": "tool-tsc-delivery.log"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files": 7,
+    "passed": 87,
+    "log": "targeted-delivery.log"
+  },
+  "sandbox_initial": {
+    "exit_code": 1,
+    "files_passed": 635,
+    "tests_passed": 5884,
+    "files_failed": 1,
+    "tests_failed": 1,
+    "cause": "baseline sparse fixture missing; check-imports only",
+    "log": "sandbox.log"
+  },
+  "fixture_recheck": {
+    "exit_code": 0,
+    "threads_imports_passed": 1,
+    "fork_paths_and_imports_files": 2,
+    "fork_paths_and_imports_passed": 12,
+    "log": "sandbox-fixture-recheck.log",
+    "original_failure_retained": true
+  },
+  "final_deployment_full": {
+    "status": "pending integrator actual composition",
+    "request": "issue62 comment6392991760",
+    "not_claimed_by_dev": true
+  },
+  "runtime": {
+    "owner": "original ops",
+    "production_migration": false,
+    "natural_consumption_not_claimed": true,
+    "issue60_continues_independently": true
+  },
+  "published_source_at_handoff": {
+    "version": "K1-fa912eafff5ba568bd3000f269fcd58438f377bf3a856d28908662b8af910ea0",
+    "documents": 8,
+    "strategies": 124,
+    "added_ids": 8,
+    "conflict": 7,
+    "unassessed": 1,
+    "all_original_fields_equal": true,
+    "max_tool_hot_p95_ms": 0.440945999998803,
+    "only_isolated_v1_upgrade_and_candidate_publication": true,
+    "production_current_command_read_only": true,
+    "proof": "current-release-readback.json"
+  },
+  "handoff_import_paths_recheck": {
+    "exit_code": 0,
+    "threads_imports_passed": 1,
+    "fork_paths_and_imports_passed": 12,
+    "log": "sandbox-handoff-recheck.log"
+  }
+}

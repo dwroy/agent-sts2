@@ -1,5 +1,6 @@
 /** Production knowledge surface: fixed files and selectors, no logs, SQL, paths or network. */
 import { createHash } from "node:crypto";
+import { resolve } from "node:path";
 import { knowledgeCharacter } from "../../knowledge/files.js";
 import { loadExperience } from "../../knowledge/experience.js";
 import { recordKnowledgeQuerySource, withKnowledgeQuerySources } from "../../knowledge/query-sources.js";
@@ -11,6 +12,8 @@ import { selectRelevantExperience } from "./query-guidance.js";
 import { strategyTool } from "./strategy-tool.js";
 import { reflexKnowledgeTool } from "./reflex-knowledge.js";
 import { externalStatsTools } from "./external-stats-tools.js";
+import { businessKnowledgeTools, typedKnowledgeTool } from "./typed-knowledge.js";
+import { runtimeKnowledgeRoot } from "../../knowledge/runtime-paths.js";
 import { knowledgeTools } from "./kb-tools.js";
 import { validateInput } from "./validate.js";
 import type { ToolContext, ToolDef, ToolResult } from "./types.js";
@@ -120,6 +123,7 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
     knowledgeCharacter() === "silent" ? strategyTool() : queryTool("kb_strategies", "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。", () => bounded([], [], { status: "empty" })),
     ...(knowledgeCharacter() === "silent" ? [reflexKnowledgeTool()] : []),
     ...externalStatsTools(),
+    ...(/\/snapshots\/K1-[a-f0-9]{64}$/.test(resolve(runtimeKnowledgeRoot(_ctx.knowledgeDir))) ? businessKnowledgeTools() : []),
   ];
-  return tools.map(tool => ({ ...tool, description: `${tool.description} ${PLANNING_USES[tool.name] ?? ""}`.trim() }));
+  return tools.map(typedKnowledgeTool).map(tool => ({ ...tool, description: `${tool.description} ${PLANNING_USES[tool.name] ?? ""}`.trim() }));
 }

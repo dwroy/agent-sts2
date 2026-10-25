@@ -1,12 +1,13 @@
 /** Read-only snapshot routing. No filesystem or SQLite access in the gameplay path resolver. */
-import { join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 
-const migrated = new Set(["experience.json", "shared-experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json"]);
+const migrated = new Set(["experience.json", "shared-experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json"]);
 // Captured at process startup. A publication never switches an already-running reader.
 const snapshot = process.env["STS2_KNOWLEDGE_SNAPSHOT"];
 const version = process.env["STS2_KNOWLEDGE_VERSION"];
-if (snapshot && (!snapshot.startsWith("/") || !/^K1-[a-f0-9]{64}$/.test(version ?? ""))) throw new Error("invalid runtime knowledge binding");
+if (Boolean(snapshot) !== Boolean(version) || snapshot && (!snapshot.startsWith("/") || !/^K1-[a-f0-9]{64}$/.test(version ?? "")
+  || basename(snapshot) !== version || basename(dirname(snapshot)) !== "snapshots")) throw new Error("invalid runtime knowledge binding");
 
 export function runtimeKnowledgeIdentity(): { version: string; snapshot: string } | null {
   return snapshot && version ? { version, snapshot } : null;
