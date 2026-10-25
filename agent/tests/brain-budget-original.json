@@ -1,0 +1,654 @@
+{
+  "question_id": "mvnwgysm-2141672-3",
+  "label": "reward/card",
+  "options": {
+    "card0": "{\"card\":\"偏折\",\"type\":\"Skill\",\"rarity\":\"Common\",\"cost\":0,\"text\":\"获得4点格挡。\",\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=97 过本幕boss 70% 均终层29.1 / 给了没拿 n=152 过本幕boss 80% 均终层33；第2幕 拿了 n=57 过本幕boss 49% 均终层38.6 / 给了没拿 n=80 过本幕boss 56% 均终层38.8；第3幕 拿了 n=32 过本幕boss 6% 均终层46.1 / 给了没拿 n=27 过本幕boss 0% 均终层47.1\",\"card_value_v2\":{\"act_hp_saved\":-2.21,\"error_scale\":143.63,\"boss\":{\"hp_loss\":39.23,\"hp_saved\":-0.06,\"win\":0.8073,\"win_change\":-0.0695},\"cores\":[],\"more_cores\":0,\"unknown\":[]},\"id\":\"DEFLECT\",\"quantitative_fight\":{\"samples\":100,\"raw_win_mc_interval95\":[3.469446951953614e-18,0.03699349820698568],\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":100,\"valid\":100,\"missing\":0,\"reference\":{\"myHp\":51,\"bossHp\":250,\"startTurn\":1,\"enemyIds\":[\"WATERFALL_GIANT\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":100,\"mean\":-0.02570748790794315,\"sd\":0.011701400026541006,\"meanSe\":0.0011701400026541005,\"p10\":-0.03682666666666667,\"median\":-0.021699999999999997,\"p90\":-0.015379999999999996,\"min\":-0.10285714285714284,\"max\":-0.011200000000000002},\"observedSubset\":{\"n\":100,\"mean\":-0.02570748790794315,\"sd\":0.011701400026541006,\"meanSe\":0.0011701400026541005,\"p10\":-0.03682666666666667,\"median\":-0.021699999999999997,\"p90\":-0.015379999999999996,\"min\":-0.10285714285714284,\"max\":-0.011200000000000002},\"myDpr\":{\"n\":100,\"mean\":7.875096211475367,\"sd\":0.8583574512152229,\"meanSe\":0.08583574512152228,\"p10\":6.8623529411764705,\"median\":7.811764705882353,\"p90\":9.015,\"min\":5.823529411764706,\"max\":10},\"enemyDpr\":{\"n\":100,\"mean\":2.917601510446076,\"sd\":0.6128420402873571,\"meanSe\":0.06128420402873571,\"p10\":2.55,\"median\":2.55,\"p90\":3.4,\"min\":2.04,\"max\":7.285714285714286},\"paired\":{\"difference\":{\"n\":100,\"mean\":0.0019903569863782143,\"sd\":0.010376672866883865,\"meanSe\":0.0010376672866883865,\"p10\":-0.010575000000000005,\"median\":0.001299999999999999,\"p90\":0.014746666666666675,\"min\":-0.03550802139037433,\"max\":0.022933333333333333},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":0,\"mean\":null,\"sd\":null,\"meanSe\":null,\"p10\":null,\"median\":null,\"p90\":null,\"min\":null,\"max\":null},\"died\":{\"n\":100,\"mean\":-0.02570748790794315,\"sd\":0.011701400026541006,\"meanSe\":0.0011701400026541005,\"p10\":-0.03682666666666667,\"median\":-0.021699999999999997,\"p90\":-0.015379999999999996,\"min\":-0.10285714285714284,\"max\":-0.011200000000000002},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\",\"modelTrust\":\"existing_boss_gate\",\"modelTrustReason\":null},\"damage_hp\":{\"n\":100,\"mean\":141.31,\"p10\":110.9,\"p90\":172.10000000000002,\"meanSe\":2.4013756579313137},\"simulated_turns\":{\"n\":100,\"mean\":18,\"p10\":15,\"p90\":20,\"meanSe\":0.27228921047557897},\"first_turn_damage\":{\"n\":100,\"mean\":11.249999999999993,\"p10\":6,\"p90\":18,\"meanSe\":0.47934614556990784},\"later_damage\":{\"n\":100,\"mean\":130.05999999999995,\"p10\":103.7,\"p90\":157.3,\"meanSe\":2.2805200541042643},\"effective_damage_per_turn\":{\"n\":100,\"mean\":7.875096211475367,\"p10\":6.8623529411764705,\"p90\":9.015,\"meanSe\":0.08583574512152228},\"damage_per_turn_won\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_effective_damage_per_turn\":{\"difference\":{\"n\":100,\"mean\":0.20031341926757534,\"sd\":1.0401868130468295,\"meanSe\":0.10401868130468295,\"p10\":-1.0583333333333325,\"median\":0.1416666666666666,\"p90\":1.555000000000001,\"min\":-2.333333333333334,\"max\":2.500000000000001},\"unmatchedBase\":0,\"unmatchedOption\":0},\"damage_per_turn_died\":{\"n\":100,\"mean\":7.875096211475367,\"p10\":6.8623529411764705,\"p90\":9.015,\"meanSe\":0.08583574512152228},\"damage_curve\":[{\"turn\":1,\"damage\":{\"n\":100,\"mean\":11.249999999999993,\"sd\":4.793461455699078,\"meanSe\":0.47934614556990784,\"p10\":6,\"median\":12,\"p90\":18,\"min\":0,\"max\":21}},{\"turn\":2,\"damage\":{\"n\":100,\"mean\":7.1400000000000015,\"sd\":5.456938868833131,\"meanSe\":0.5456938868833131,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":3,\"damage\":{\"n\":100,\"mean\":5.8000000000000025,\"sd\":2.4037008503093262,\"meanSe\":0.24037008503093263,\"p10\":4,\"median\":4,\"p90\":10,\"min\":0,\"max\":12}},{\"turn\":4,\"damage\":{\"n\":100,\"mean\":11.850000000000005,\"sd\":4.7362240426122355,\"meanSe\":0.47362240426122354,\"p10\":6,\"median\":12,\"p90\":18,\"min\":0,\"max\":21}},{\"turn\":5,\"damage\":{\"n\":100,\"mean\":5.9399999999999995,\"sd\":5.008719669463716,\"meanSe\":0.5008719669463716,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":18}},{\"turn\":6,\"damage\":{\"n\":100,\"mean\":7.950000000000004,\"sd\":4.075982870871314,\"meanSe\":0.4075982870871314,\"p10\":3,\"median\":6,\"p90\":15,\"min\":0,\"max\":18}},{\"turn\":7,\"damage\":{\"n\":100,\"mean\":6.360000000000001,\"sd\":4.9594721126712304,\"meanSe\":0.49594721126712304,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":8,\"damage\":{\"n\":99,\"mean\":5.959595959595958,\"sd\":2.4240259643621545,\"meanSe\":0.24362377593541443,\"p10\":4,\"median\":6,\"p90\":10,\"min\":0,\"max\":14}},{\"turn\":9,\"damage\":{\"n\":99,\"mean\":12.42424242424242,\"sd\":4.998144368093449,\"meanSe\":0.5023324096058776,\"p10\":6,\"median\":12,\"p90\":18,\"min\":0,\"max\":21}},{\"turn\":10,\"damage\":{\"n\":99,\"mean\":5.7272727272727275,\"sd\":5.285363273708339,\"meanSe\":0.5311989957459106,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":11,\"damage\":{\"n\":99,\"mean\":7.2424242424242395,\"sd\":4.924099232017288,\"meanSe\":0.49489059342662195,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":12,\"damage\":{\"n\":98,\"mean\":6,\"sd\":5.187216642366632,\"meanSe\":0.5239880090430229,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}}],\"dpr_scope\":\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\",\"hp_loss\":{\"n\":100,\"mean\":51,\"p10\":51,\"p90\":51,\"meanSe\":0},\"turns_won_only\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_hp_loss_difference\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":100,\"valid\":8,\"missing\":92,\"energy_paid\":{\"n\":8,\"mean\":40.75,\"p10\":31.3,\"p90\":53.2,\"meanSe\":4.00780488547035},\"manual_actions\":{\"n\":8,\"mean\":52.125,\"p10\":40.8,\"p90\":68.5,\"meanSe\":5.065420233589425},\"effect_resolutions\":{\"n\":8,\"mean\":52.125,\"p10\":40.8,\"p90\":68.5,\"meanSe\":5.065420233589425},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":100,\"mean\":164.38999999999993,\"p10\":121.9,\"p90\":200.10000000000002,\"meanSe\":3.497817356956516},\"potions_used\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":100,\"mean\":-10.25,\"p10\":-23,\"p90\":-1,\"meanSe\":0.8482155958066893}},\"boss_sim\":\"打本幕 boss（瀑布巨兽，A10）的模拟：当前牌组胜率 31%；选这个 31%（+0 ± 0），赢局掉血中位 —，约 20 回合；boss 平均剩血 161（当前牌组 168，−6.4 ± 2）（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；提前淘汰，n=100；差值对同前缀基准）\",\"boss_sim_win_tied_with\":[\"card1\",\"card2\",\"skip\"],\"boss_sim_win_tie_note\":\"本次模拟与card1、card2、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+    "card1": "{\"card\":\"突然一拳\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"text\":\"造成8点伤害。 给予1层虚弱。\",\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=170 过本幕boss 72% 均终层30 / 给了没拿 n=100 过本幕boss 80% 均终层32.2；第2幕 拿了 n=40 过本幕boss 35% 均终层35.5 / 给了没拿 n=96 过本幕boss 54% 均终层38.1；第3幕 拿了 n=17 过本幕boss 0% 均终层47 / 给了没拿 n=32 过本幕boss 3% 均终层47.7\",\"card_value_v2\":{\"act_hp_saved\":3.05,\"error_scale\":143.63,\"boss\":{\"hp_loss\":38.62,\"hp_saved\":0.55,\"win\":0.8181,\"win_change\":-0.0588},\"cores\":[],\"more_cores\":0,\"unknown\":[]},\"id\":\"SUCKER_PUNCH\",\"quantitative_fight\":{\"samples\":100,\"raw_win_mc_interval95\":[3.469446951953614e-18,0.03699349820698568],\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":100,\"valid\":100,\"missing\":0,\"reference\":{\"myHp\":51,\"bossHp\":250,\"startTurn\":1,\"enemyIds\":[\"WATERFALL_GIANT\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":100,\"mean\":-0.017055035064935064,\"sd\":0.009978439741661417,\"meanSe\":0.0009978439741661416,\"p10\":-0.02624,\"median\":-0.014999999999999993,\"p90\":-0.009579999999999995,\"min\":-0.09485714285714285,\"max\":-0.004639999999999998},\"observedSubset\":{\"n\":100,\"mean\":-0.017055035064935064,\"sd\":0.009978439741661417,\"meanSe\":0.0009978439741661416,\"p10\":-0.02624,\"median\":-0.014999999999999993,\"p90\":-0.009579999999999995,\"min\":-0.09485714285714285,\"max\":-0.004639999999999998},\"myDpr\":{\"n\":100,\"mean\":9.467218018419487,\"sd\":0.84310510552698,\"meanSe\":0.084310510552698,\"p10\":8.549545454545456,\"median\":9.297058823529412,\"p90\":10.538823529411765,\"min\":8.05,\"max\":12},\"enemyDpr\":{\"n\":100,\"mean\":2.8011192640692646,\"sd\":0.5731934441250244,\"meanSe\":0.057319344412502436,\"p10\":2.55,\"median\":2.55,\"p90\":3.4,\"min\":2.04,\"max\":7.285714285714286},\"paired\":{\"difference\":{\"n\":100,\"mean\":0.0106428098293863,\"sd\":0.008968955569557801,\"meanSe\":0.0008968955569557801,\"p10\":-0.003108000000000005,\"median\":0.011000000000000001,\"p90\":0.022046666666666683,\"min\":-0.009250000000000001,\"max\":0.02906666666666667},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":0,\"mean\":null,\"sd\":null,\"meanSe\":null,\"p10\":null,\"median\":null,\"p90\":null,\"min\":null,\"max\":null},\"died\":{\"n\":100,\"mean\":-0.017055035064935064,\"sd\":0.009978439741661417,\"meanSe\":0.0009978439741661416,\"p10\":-0.02624,\"median\":-0.014999999999999993,\"p90\":-0.009579999999999995,\"min\":-0.09485714285714285,\"max\":-0.004639999999999998},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\",\"modelTrust\":\"existing_boss_gate\",\"modelTrustReason\":null},\"damage_hp\":{\"n\":100,\"mean\":175.65999999999997,\"p10\":148,\"p90\":202.10000000000002,\"meanSe\":2.17382128747949},\"simulated_turns\":{\"n\":100,\"mean\":18.670000000000005,\"p10\":15,\"p90\":20,\"meanSe\":0.25228451150927744},\"first_turn_damage\":{\"n\":100,\"mean\":13.649999999999999,\"p10\":6,\"p90\":20,\"meanSe\":0.582119950150857},\"later_damage\":{\"n\":100,\"mean\":162.00999999999996,\"p10\":137,\"p90\":187.20000000000002,\"meanSe\":2.1025955580681894},\"effective_damage_per_turn\":{\"n\":100,\"mean\":9.467218018419487,\"p10\":8.549545454545456,\"p90\":10.538823529411765,\"meanSe\":0.084310510552698},\"damage_per_turn_won\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_effective_damage_per_turn\":{\"difference\":{\"n\":100,\"mean\":1.7924352262116972,\"sd\":1.0384819707953155,\"meanSe\":0.10384819707953155,\"p10\":0.46352941176470525,\"median\":1.8249999999999997,\"p90\":3.105000000000001,\"min\":-0.25,\"max\":4.6499999999999995},\"unmatchedBase\":0,\"unmatchedOption\":0},\"damage_per_turn_died\":{\"n\":100,\"mean\":9.467218018419487,\"p10\":8.549545454545456,\"p90\":10.538823529411765,\"meanSe\":0.084310510552698},\"damage_curve\":[{\"turn\":1,\"damage\":{\"n\":100,\"mean\":13.649999999999999,\"sd\":5.821199501508571,\"meanSe\":0.582119950150857,\"p10\":6,\"median\":14,\"p90\":20,\"min\":0,\"max\":23}},{\"turn\":2,\"damage\":{\"n\":100,\"mean\":8.92,\"sd\":5.361064269434765,\"meanSe\":0.5361064269434765,\"p10\":0,\"median\":8.5,\"p90\":17,\"min\":0,\"max\":23}},{\"turn\":3,\"damage\":{\"n\":100,\"mean\":6.759999999999999,\"sd\":3.085056848353974,\"meanSe\":0.3085056848353974,\"p10\":4,\"median\":6,\"p90\":12,\"min\":0,\"max\":14}},{\"turn\":4,\"damage\":{\"n\":100,\"mean\":15.349999999999996,\"sd\":4.493260947173437,\"meanSe\":0.4493260947173437,\"p10\":9,\"median\":15,\"p90\":20,\"min\":0,\"max\":23}},{\"turn\":5,\"damage\":{\"n\":100,\"mean\":6.329999999999999,\"sd\":4.74619464796416,\"meanSe\":0.474619464796416,\"p10\":0,\"median\":8,\"p90\":12,\"min\":0,\"max\":17}},{\"turn\":6,\"damage\":{\"n\":100,\"mean\":9.500000000000002,\"sd\":4.608950449117916,\"meanSe\":0.4608950449117916,\"p10\":6,\"median\":9,\"p90\":15,\"min\":0,\"max\":23}},{\"turn\":7,\"damage\":{\"n\":100,\"mean\":8.169999999999998,\"sd\":4.514969489924543,\"meanSe\":0.45149694899245435,\"p10\":2.700000000000001,\"median\":8,\"p90\":15,\"min\":0,\"max\":23}},{\"turn\":8,\"damage\":{\"n\":99,\"mean\":7.1313131313131315,\"sd\":2.697869396115994,\"meanSe\":0.2711460763727109,\"p10\":4,\"median\":6,\"p90\":10,\"min\":4,\"max\":16}},{\"turn\":9,\"damage\":{\"n\":99,\"mean\":15.38383838383838,\"sd\":4.322950312250318,\"meanSe\":0.4344728537298188,\"p10\":9,\"median\":15,\"p90\":20,\"min\":6,\"max\":23}},{\"turn\":10,\"damage\":{\"n\":99,\"mean\":6.828282828282827,\"sd\":5.62617861400995,\"meanSe\":0.5654522262482662,\"p10\":0,\"median\":8,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":11,\"damage\":{\"n\":99,\"mean\":7.7979797979797985,\"sd\":4.147730626080543,\"meanSe\":0.4168626126719713,\"p10\":0,\"median\":8,\"p90\":12.400000000000006,\"min\":0,\"max\":23}},{\"turn\":12,\"damage\":{\"n\":99,\"mean\":7.888888888888889,\"sd\":4.515029072812784,\"meanSe\":0.4537774955171587,\"p10\":0,\"median\":8,\"p90\":14.200000000000003,\"min\":0,\"max\":17}}],\"dpr_scope\":\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\",\"hp_loss\":{\"n\":100,\"mean\":51,\"p10\":51,\"p90\":51,\"meanSe\":0},\"turns_won_only\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_hp_loss_difference\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":100,\"valid\":1,\"missing\":99,\"energy_paid\":{\"n\":1,\"mean\":42,\"p10\":42,\"p90\":42,\"meanSe\":null},\"manual_actions\":{\"n\":1,\"mean\":48,\"p10\":48,\"p90\":48,\"meanSe\":null},\"effect_resolutions\":{\"n\":1,\"mean\":48,\"p10\":48,\"p90\":48,\"meanSe\":null},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":100,\"mean\":147.91000000000003,\"p10\":103.8,\"p90\":172.10000000000002,\"meanSe\":2.9987234657838036},\"potions_used\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":100,\"mean\":-9.209999999999999,\"p10\":-17.1,\"p90\":-1,\"meanSe\":0.6654982184708528}},\"boss_sim\":\"打本幕 boss（瀑布巨兽，A10）的模拟：当前牌组胜率 31%；选这个 31%（+0 ± 0），赢局掉血中位 —，约 20 回合；boss 平均剩血 129（当前牌组 168，−39.1 ± 2）（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；达到上限，n=100；差值对同前缀基准）\",\"boss_sim_win_tied_with\":[\"card0\",\"card2\",\"skip\"],\"boss_sim_win_tie_note\":\"本次模拟与card0、card2、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+    "card2": "{\"card\":\"带毒刺击\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"text\":\"造成6点伤害。 给予3层中毒。\",\"in_deck\":0,\"outcome_stats\":\"A10 第1幕 拿了 n=236 过本幕boss 79% 均终层32 / 给了没拿 n=57 过本幕boss 74% 均终层31.7；第2幕 拿了 n=52 过本幕boss 56% 均终层38.6 / 给了没拿 n=88 过本幕boss 48% 均终层37.8；第3幕 拿了 n=11 过本幕boss 0% 均终层47.4 / 给了没拿 n=54 过本幕boss 7% 均终层47\",\"card_value_v2\":{\"act_hp_saved\":5.52,\"error_scale\":143.63,\"boss\":{\"hp_loss\":36.52,\"hp_saved\":2.66,\"win\":0.939,\"win_change\":0.0622},\"cores\":[],\"more_cores\":0,\"unknown\":[]},\"id\":\"POISONED_STAB\",\"quantitative_fight\":{\"samples\":100,\"raw_win_mc_interval95\":[3.469446951953614e-18,0.03699349820698568],\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":100,\"valid\":100,\"missing\":0,\"reference\":{\"myHp\":51,\"bossHp\":250,\"startTurn\":1,\"enemyIds\":[\"WATERFALL_GIANT\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":100,\"mean\":-0.02187688526506173,\"sd\":0.01149391353132876,\"meanSe\":0.001149391353132876,\"p10\":-0.03209846153846154,\"median\":-0.020133333333333336,\"p90\":-0.012426666666666666,\"min\":-0.09314285714285714,\"max\":0.0004000000000000045},\"observedSubset\":{\"n\":100,\"mean\":-0.02187688526506173,\"sd\":0.01149391353132876,\"meanSe\":0.001149391353132876,\"p10\":-0.03209846153846154,\"median\":-0.020133333333333336,\"p90\":-0.012426666666666666,\"min\":-0.09314285714285714,\"max\":0.0004000000000000045},\"myDpr\":{\"n\":100,\"mean\":11.098665861915864,\"sd\":1.435645801811187,\"meanSe\":0.1435645801811187,\"p10\":9.424519230769231,\"median\":11.108333333333334,\"p90\":13,\"min\":7.466666666666667,\"max\":16.133333333333333},\"enemyDpr\":{\"n\":100,\"mean\":3.379848984348984,\"sd\":0.5334118190243947,\"meanSe\":0.05334118190243947,\"p10\":2.8333333333333335,\"median\":3.4,\"p90\":3.4,\"min\":2.55,\"max\":7.285714285714286},\"paired\":{\"difference\":{\"n\":100,\"mean\":0.005820959629259629,\"sd\":0.0112764047206173,\"meanSe\":0.00112764047206173,\"p10\":-0.006934230769230767,\"median\":0.005942857142857142,\"p90\":0.01952,\"min\":-0.03133333333333333,\"max\":0.032400000000000005},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":0,\"mean\":null,\"sd\":null,\"meanSe\":null,\"p10\":null,\"median\":null,\"p90\":null,\"min\":null,\"max\":null},\"died\":{\"n\":100,\"mean\":-0.02187688526506173,\"sd\":0.01149391353132876,\"meanSe\":0.001149391353132876,\"p10\":-0.03209846153846154,\"median\":-0.020133333333333336,\"p90\":-0.012426666666666666,\"min\":-0.09314285714285714,\"max\":0.0004000000000000045},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\",\"modelTrust\":\"existing_boss_gate\",\"modelTrustReason\":null},\"damage_hp\":{\"n\":100,\"mean\":170.19000000000003,\"p10\":134.9,\"p90\":199.3,\"meanSe\":2.824985742343569},\"simulated_turns\":{\"n\":100,\"mean\":15.360000000000003,\"p10\":15,\"p90\":18,\"meanSe\":0.18830450302259333},\"first_turn_damage\":{\"n\":100,\"mean\":13.979999999999999,\"p10\":6,\"p90\":21,\"meanSe\":0.6123278978990379},\"later_damage\":{\"n\":100,\"mean\":156.21,\"p10\":126,\"p90\":188,\"meanSe\":2.697035222220687},\"effective_damage_per_turn\":{\"n\":100,\"mean\":11.098665861915864,\"p10\":9.424519230769231,\"p90\":13,\"meanSe\":0.1435645801811187},\"damage_per_turn_won\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_effective_damage_per_turn\":{\"difference\":{\"n\":100,\"mean\":3.423883069708071,\"sd\":1.5568446923166308,\"meanSe\":0.15568446923166307,\"p10\":1.3529411764705872,\"median\":3.5869281045751635,\"p90\":5.214117647058824,\"min\":0.13333333333333375,\"max\":7.683333333333334},\"unmatchedBase\":0,\"unmatchedOption\":0},\"damage_per_turn_died\":{\"n\":100,\"mean\":11.098665861915864,\"p10\":9.424519230769231,\"p90\":13,\"meanSe\":0.1435645801811187},\"damage_curve\":[{\"turn\":1,\"damage\":{\"n\":100,\"mean\":13.979999999999999,\"sd\":6.1232789789903785,\"meanSe\":0.6123278978990379,\"p10\":6,\"median\":15,\"p90\":21,\"min\":0,\"max\":24}},{\"turn\":2,\"damage\":{\"n\":100,\"mean\":8.94,\"sd\":6.290637583911603,\"meanSe\":0.6290637583911602,\"p10\":0,\"median\":9,\"p90\":18,\"min\":0,\"max\":24}},{\"turn\":3,\"damage\":{\"n\":100,\"mean\":7.759999999999999,\"sd\":2.985216097959266,\"meanSe\":0.29852160979592657,\"p10\":5,\"median\":7,\"p90\":13,\"min\":2,\"max\":15}},{\"turn\":4,\"damage\":{\"n\":100,\"mean\":16.75,\"sd\":4.353971831221546,\"meanSe\":0.43539718312215464,\"p10\":11,\"median\":17,\"p90\":22,\"min\":2,\"max\":24}},{\"turn\":5,\"damage\":{\"n\":100,\"mean\":7.620000000000002,\"sd\":5.564643072583587,\"meanSe\":0.5564643072583587,\"p10\":1,\"median\":7,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":6,\"damage\":{\"n\":100,\"mean\":10.209999999999996,\"sd\":4.862337219108033,\"meanSe\":0.48623372191080333,\"p10\":2,\"median\":10,\"p90\":16.10000000000001,\"min\":1,\"max\":25}},{\"turn\":7,\"damage\":{\"n\":100,\"mean\":9.180000000000005,\"sd\":5.156892024614764,\"meanSe\":0.5156892024614763,\"p10\":1.9000000000000004,\"median\":10,\"p90\":15.100000000000009,\"min\":0,\"max\":25}},{\"turn\":8,\"damage\":{\"n\":99,\"mean\":8.686868686868685,\"sd\":2.720468389467357,\"meanSe\":0.273417360663202,\"p10\":6,\"median\":8,\"p90\":12,\"min\":4,\"max\":19}},{\"turn\":9,\"damage\":{\"n\":99,\"mean\":18.151515151515152,\"sd\":4.472965587871014,\"meanSe\":0.44954995621635213,\"p10\":12,\"median\":18,\"p90\":23.200000000000003,\"min\":7,\"max\":29}},{\"turn\":10,\"damage\":{\"n\":99,\"mean\":9.171717171717173,\"sd\":6.047499743173349,\"meanSe\":0.6077965929659589,\"p10\":2,\"median\":9,\"p90\":17.200000000000003,\"min\":0,\"max\":22}},{\"turn\":11,\"damage\":{\"n\":99,\"mean\":9.424242424242426,\"sd\":5.0891860322887625,\"meanSe\":0.5114824411339196,\"p10\":2,\"median\":10,\"p90\":16.200000000000003,\"min\":0,\"max\":21}},{\"turn\":12,\"damage\":{\"n\":98,\"mean\":10.061224489795922,\"sd\":5.700092830733698,\"meanSe\":0.5757963277149459,\"p10\":2,\"median\":11,\"p90\":17,\"min\":0,\"max\":24}}],\"dpr_scope\":\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\",\"hp_loss\":{\"n\":100,\"mean\":51,\"p10\":51,\"p90\":51,\"meanSe\":0},\"turns_won_only\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_hp_loss_difference\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":100,\"valid\":1,\"missing\":99,\"energy_paid\":{\"n\":1,\"mean\":42,\"p10\":42,\"p90\":42,\"meanSe\":null},\"manual_actions\":{\"n\":1,\"mean\":48,\"p10\":48,\"p90\":48,\"meanSe\":null},\"effect_resolutions\":{\"n\":1,\"mean\":48,\"p10\":48,\"p90\":48,\"meanSe\":null},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":100,\"mean\":126.29999999999997,\"p10\":102,\"p90\":158.3,\"meanSe\":2.3184155160476525},\"potions_used\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":100,\"mean\":-6.610000000000003,\"p10\":-14.1,\"p90\":0,\"meanSe\":0.6080096689821286}},\"boss_sim\":\"打本幕 boss（瀑布巨兽，A10）的模拟：当前牌组胜率 31%；选这个 31%（+0 ± 0），赢局掉血中位 —，约 15 回合；boss 平均剩血 124（当前牌组 168，−43.6 ± 2.6）（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；达到上限，n=100；差值对同前缀基准）\",\"boss_sim_win_tied_with\":[\"card0\",\"card1\",\"skip\"],\"boss_sim_win_tie_note\":\"本次模拟与card0、card1、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+    "skip": "{\"card\":\"skip\",\"note\":\"take no card\",\"card_value_v2\":{\"act_hp_saved\":0,\"error_scale\":0,\"boss\":{\"hp_loss\":39.18,\"hp_saved\":0,\"win\":0.8768,\"win_change\":0},\"cores\":[],\"more_cores\":0,\"unknown\":[]},\"quantitative_fight\":{\"samples\":100,\"raw_win_mc_interval95\":[3.469446951953614e-18,0.03699349820698568],\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":100,\"valid\":100,\"missing\":0,\"reference\":{\"myHp\":51,\"bossHp\":250,\"startTurn\":1,\"enemyIds\":[\"WATERFALL_GIANT\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":100,\"mean\":-0.027697844894321366,\"sd\":0.010482232349360843,\"meanSe\":0.0010482232349360843,\"p10\":-0.03661333333333333,\"median\":-0.02704705882352941,\"p90\":-0.017959999999999993,\"min\":-0.09942857142857142,\"max\":-0.01072},\"observedSubset\":{\"n\":100,\"mean\":-0.027697844894321366,\"sd\":0.010482232349360843,\"meanSe\":0.0010482232349360843,\"p10\":-0.03661333333333333,\"median\":-0.02704705882352941,\"p90\":-0.017959999999999993,\"min\":-0.09942857142857142,\"max\":-0.01072},\"myDpr\":{\"n\":100,\"mean\":7.674782792207791,\"sd\":0.8309040036289217,\"meanSe\":0.08309040036289217,\"p10\":6.714545454545455,\"median\":7.733333333333333,\"p90\":8.486666666666668,\"min\":5.8,\"max\":10.857142857142858},\"enemyDpr\":{\"n\":100,\"mean\":2.9782457792207784,\"sd\":0.6104723137752127,\"meanSe\":0.06104723137752127,\"p10\":2.55,\"median\":3,\"p90\":3.4,\"min\":2.04,\"max\":7.285714285714286},\"paired\":{\"difference\":{\"n\":100,\"mean\":0,\"sd\":0,\"meanSe\":0,\"p10\":0,\"median\":0,\"p90\":0,\"min\":0,\"max\":0},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":0,\"mean\":null,\"sd\":null,\"meanSe\":null,\"p10\":null,\"median\":null,\"p90\":null,\"min\":null,\"max\":null},\"died\":{\"n\":100,\"mean\":-0.027697844894321366,\"sd\":0.010482232349360843,\"meanSe\":0.0010482232349360843,\"p10\":-0.03661333333333333,\"median\":-0.02704705882352941,\"p90\":-0.017959999999999993,\"min\":-0.09942857142857142,\"max\":-0.01072},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\",\"modelTrust\":\"existing_boss_gate\",\"modelTrustReason\":null},\"damage_hp\":{\"n\":100,\"mean\":134.2000000000001,\"p10\":112.7,\"p90\":159.10000000000002,\"meanSe\":1.935317685925117},\"simulated_turns\":{\"n\":100,\"mean\":17.64,\"p10\":15,\"p90\":20,\"meanSe\":0.2768947581134519},\"first_turn_damage\":{\"n\":100,\"mean\":12.540000000000003,\"p10\":6,\"p90\":18,\"meanSe\":0.4831337100826042},\"later_damage\":{\"n\":100,\"mean\":121.65999999999997,\"p10\":101.9,\"p90\":147.10000000000002,\"meanSe\":1.916711198428656},\"effective_damage_per_turn\":{\"n\":100,\"mean\":7.674782792207791,\"p10\":6.714545454545455,\"p90\":8.486666666666668,\"meanSe\":0.08309040036289217},\"damage_per_turn_won\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_effective_damage_per_turn\":{\"difference\":{\"n\":100,\"mean\":0,\"sd\":0,\"meanSe\":0,\"p10\":0,\"median\":0,\"p90\":0,\"min\":0,\"max\":0},\"unmatchedBase\":0,\"unmatchedOption\":0},\"damage_per_turn_died\":{\"n\":100,\"mean\":7.674782792207791,\"p10\":6.714545454545455,\"p90\":8.486666666666668,\"meanSe\":0.08309040036289217},\"damage_curve\":[{\"turn\":1,\"damage\":{\"n\":100,\"mean\":12.540000000000003,\"sd\":4.831337100826042,\"meanSe\":0.4831337100826042,\"p10\":6,\"median\":12,\"p90\":18,\"min\":0,\"max\":21}},{\"turn\":2,\"damage\":{\"n\":100,\"mean\":6.720000000000001,\"sd\":4.938163074003788,\"meanSe\":0.49381630740037885,\"p10\":0,\"median\":6,\"p90\":12.300000000000026,\"min\":0,\"max\":21}},{\"turn\":3,\"damage\":{\"n\":100,\"mean\":5.440000000000002,\"sd\":2.5118708066887026,\"meanSe\":0.25118708066887024,\"p10\":4,\"median\":4,\"p90\":10,\"min\":0,\"max\":14}},{\"turn\":4,\"damage\":{\"n\":100,\"mean\":12.360000000000001,\"sd\":4.578209256903839,\"meanSe\":0.4578209256903839,\"p10\":6,\"median\":12,\"p90\":18,\"min\":0,\"max\":21}},{\"turn\":5,\"damage\":{\"n\":100,\"mean\":4.590000000000002,\"sd\":4.461043497984423,\"meanSe\":0.44610434979844227,\"p10\":0,\"median\":3,\"p90\":9,\"min\":0,\"max\":15}},{\"turn\":6,\"damage\":{\"n\":100,\"mean\":7.019999999999999,\"sd\":4.3110850775013185,\"meanSe\":0.4311085077501319,\"p10\":0,\"median\":6,\"p90\":15,\"min\":0,\"max\":21}},{\"turn\":7,\"damage\":{\"n\":100,\"mean\":6.149999999999998,\"sd\":4.619622180536963,\"meanSe\":0.4619622180536963,\"p10\":0,\"median\":6,\"p90\":12,\"min\":0,\"max\":15}},{\"turn\":8,\"damage\":{\"n\":99,\"mean\":5.27272727272727,\"sd\":2.0889318714683736,\"meanSe\":0.20994555243259114,\"p10\":4,\"median\":4,\"p90\":10,\"min\":0,\"max\":10}},{\"turn\":9,\"damage\":{\"n\":99,\"mean\":14.121212121212126,\"sd\":4.640708793665756,\"meanSe\":0.46640878272400454,\"p10\":8.400000000000002,\"median\":15,\"p90\":21,\"min\":3,\"max\":21}},{\"turn\":10,\"damage\":{\"n\":99,\"mean\":4.969696969696971,\"sd\":4.775478489658894,\"meanSe\":0.4799536468064137,\"p10\":0,\"median\":3,\"p90\":9.600000000000009,\"min\":0,\"max\":21}},{\"turn\":11,\"damage\":{\"n\":99,\"mean\":6.999999999999999,\"sd\":4.412412917565858,\"meanSe\":0.44346418386919156,\"p10\":0,\"median\":6,\"p90\":12,\"min\":0,\"max\":21}},{\"turn\":12,\"damage\":{\"n\":99,\"mean\":5.484848484848486,\"sd\":4.695555076538759,\"meanSe\":0.47192104155538167,\"p10\":0,\"median\":6,\"p90\":12,\"min\":0,\"max\":21}}],\"dpr_scope\":\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\",\"hp_loss\":{\"n\":100,\"mean\":51,\"p10\":51,\"p90\":51,\"meanSe\":0},\"turns_won_only\":{\"n\":0,\"mean\":null,\"p10\":null,\"p90\":null,\"meanSe\":null},\"paired_hp_loss_difference\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"capped\":0,\"complete_combinations\":null,\"core_window\":{\"samples\":100,\"valid\":3,\"missing\":97,\"energy_paid\":{\"n\":3,\"mean\":38.666666666666664,\"p10\":24.2,\"p90\":52.2,\"meanSe\":10.170764201594904},\"manual_actions\":{\"n\":3,\"mean\":44.666666666666664,\"p10\":27,\"p90\":61.4,\"meanSe\":12.467736139510029},\"effect_resolutions\":{\"n\":3,\"mean\":44.666666666666664,\"p10\":27,\"p90\":61.4,\"meanSe\":12.467736139510029},\"combinations\":{\"discardBandages\":{},\"poisonDefense\":null,\"dexterityDefense\":null,\"shivDefense\":null,\"limits\":\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\"},\"first_core_play_when_played\":{},\"limits\":\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\"},\"block_gained\":{\"n\":100,\"mean\":155.74999999999997,\"p10\":118,\"p90\":193.10000000000002,\"meanSe\":3.385034652106178},\"potions_used\":{\"n\":100,\"mean\":0,\"p10\":0,\"p90\":0,\"meanSe\":0},\"hp_remaining\":{\"n\":100,\"mean\":-9.799999999999997,\"p10\":-19,\"p90\":-0.8999999999999915,\"meanSe\":0.7480614677925601}},\"boss_sim\":\"打本幕 boss（瀑布巨兽，A10）的模拟：不改变牌组：胜率 31%，赢局掉血中位 —，约 17 回合；boss 平均剩血 168（100 次模拟，校准后；当前牌组胜率很低，胜率的差信息少；提前淘汰，n=100；差值对同前缀基准）\",\"boss_sim_win_tied_with\":[\"card0\",\"card1\",\"card2\"],\"boss_sim_win_tie_note\":\"本次模拟与card0、card1、card2的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}"
+  },
+  "payload": {
+    "run_brief": {
+      "character": "静默猎手",
+      "act": "1",
+      "floor": 2,
+      "hp": "51/70 (73%)",
+      "gold": 108,
+      "ascension": 10,
+      "deck": "13 cards | 6 attacks / 6 skills / 0 powers | 1 curses/statuses | avg cost 0.77",
+      "relics": [
+        "蛇之戒指",
+        "轰鸣海螺"
+      ],
+      "relic_effects": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。"
+      ],
+      "potions": [],
+      "notes": [
+        "picked a character",
+        "started a new run",
+        "event choice (涅奥)",
+        "floor 1: moved to Monster"
+      ],
+      "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+    },
+    "deck_stats": "13 cards | 6 attacks / 6 skills / 0 powers | 1 curses/statuses | avg cost 0.77",
+    "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。",
+    "facts": {
+      "act": 1,
+      "floor": 2,
+      "floors_to_act_boss": 15,
+      "ascension": 10,
+      "hp": "51/70 (73%)",
+      "gold": 108,
+      "act_boss": "WATERFALL_GIANT_BOSS",
+      "deck_size": 13,
+      "deck_profile": "13 张 (攻击 6/技能 6/能力 0/诅咒或状态 1) | 升级 0 | 平均费用 0.77 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+      "deck": [
+        "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+        "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+        "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+        "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+        "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。"
+      ],
+      "relics": [
+        "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+        "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。"
+      ],
+      "potions": [],
+      "potion_slots": "0/2 used",
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "boss": "瀑布巨兽，A10：瀑布巨兽 250 血",
+        "entry_hp": "51/70：按当前血量（本幕还没有路线计划）",
+        "current_deck": "胜率 31%（校准后；原始 0%），赢局掉血中位 —，赢局约 17 回合，输的样本中位死在第 17 回合",
+        "samples": "限时完成：基准n=100，原始胜率MC95%区间0–4%（不含模型偏差）；候选各用实际n/共同前缀，目标300；误差为配对标准误，n<2时unknown；用时 1.0 秒",
+        "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+        "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺",
+        "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 31.2%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+      },
+      "your_run_plan": null,
+      "card_value_v2": {
+        "model": "41a8ec79809b23d50f7d914c531566643603b060b3b7b5799cf191b8b47b83ec",
+        "remaining": {
+          "hallway": 4.5576923076923075,
+          "elite": 1.0653846153846154,
+          "boss": 0.8461538461538461
+        },
+        "route_source": "observed_remaining_fights_conditional_on_reaching_floor",
+        "note": "增量多在误差范围内，仅供参考。act_hp_saved为本幕剩余战斗相对跳过预计少掉的血（正值少掉血）；error_scale为整场留出误差累计尺度，不是增量置信区间。boss为本幕Boss预计掉血、相对跳过少掉血、胜率及胜率变化（0–1概率单位），按当前HP/资源条件预测，不预测沿路存活。cores列最多两个推进组合的补牌数及还差几张；unknown条件未核实，不代表成型或收益。观察数据有历史选择混杂；null为未知；不据此强制排序。"
+      },
+      "run_constraints": {
+        "id": "roy-20261013-v5-no-deck-cap",
+        "max_permanent_cards": null,
+        "activation": "V5: Roy removed the fixed permanent deck-size limit",
+        "requirement": "V5没有固定牌数上限。按核心兑现、稀释、伤害/回合、升级替代及过渡存活权衡拿牌、跳牌和删牌；牌数不是目标，也不因达到30张而禁止获取。"
+      },
+      "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。",
+      "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+      "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-25T20:57:56，A10 共 504 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 504 局）：到达第1幕的局过第1幕boss 73% (n=504)，到达第2幕的局过第2幕boss 45% (n=368)，到达第3幕的局过第3幕boss 5% (n=167)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。",
+      "construction_evaluation": {
+        "schema": "construction-evaluation-v1",
+        "character": "silent",
+        "run": "4Q6S5ZUKHJH7",
+        "floor": 2,
+        "label": "reward/card",
+        "coreCatalog": [
+          {
+            "id": "P",
+            "name": "施毒触媒与持续防御",
+            "candidate": true,
+            "requirements": [
+              {
+                "id": "poison",
+                "any": [
+                  {
+                    "id": "BOUNCING_FLASK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "CORROSIVE_WAVE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "DEADLY_POISON",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "ENVENOM",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "NOXIOUS_FUMES",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "OUTBREAK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "POISONED_STAB",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "accelerant",
+                "any": [
+                  {
+                    "id": "ACCELERANT",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "defense",
+                "any": [
+                  {
+                    "id": "AFTERIMAGE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "FOOTWORK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "MIRAGE",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              }
+            ],
+            "evidence": {
+              "runs": [
+                "T082DRCUHRRD",
+                "ZZMYZ5UBCG72",
+                "LLYSRQQ35AVW",
+                "HNX4A2WBC34W"
+              ],
+              "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+              "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+            }
+          },
+          {
+            "id": "D",
+            "name": "叠敏捷多挡与持续输出",
+            "candidate": true,
+            "requirements": [
+              {
+                "id": "dexterity",
+                "any": [
+                  {
+                    "id": "FOOTWORK",
+                    "kind": "card"
+                  }
+                ],
+                "count": 2,
+                "distinct": false
+              },
+              {
+                "id": "block",
+                "any": [
+                  {
+                    "id": "BACKFLIP",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "DASH",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "LEG_SWEEP",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "output",
+                "any": [
+                  {
+                    "id": "BOLAS",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "BOUNCING_FLASK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "CORROSIVE_WAVE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "DEADLY_POISON",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "ENVENOM",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "MAUL",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "NOXIOUS_FUMES",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "OUTBREAK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "POISONED_STAB",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "SPEEDSTER",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              }
+            ],
+            "evidence": {
+              "runs": [
+                "1HC609GTLGN3",
+                "K3676LU8B0UH",
+                "4Y94N8RDPGPM",
+                "25226ZFLNR1J"
+              ],
+              "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+              "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+            }
+          },
+          {
+            "id": "S",
+            "name": "小刀供给增益与逐牌防御",
+            "candidate": true,
+            "requirements": [
+              {
+                "id": "supply",
+                "any": [
+                  {
+                    "id": "BLADE_DANCE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "CLOAK_AND_DAGGER",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "FAN_OF_KNIVES",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "HIDDEN_DAGGERS",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "INFINITE_BLADES",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "LEADING_STRIKE",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "gain",
+                "any": [
+                  {
+                    "id": "ACCURACY",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "PHANTOM_BLADES",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "HELICAL_DART",
+                    "kind": "relic"
+                  },
+                  {
+                    "id": "KUNAI",
+                    "kind": "relic"
+                  },
+                  {
+                    "id": "SHURIKEN",
+                    "kind": "relic"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "defense",
+                "any": [
+                  {
+                    "id": "AFTERIMAGE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "FOOTWORK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "DAUGHTER_OF_THE_WIND",
+                    "kind": "relic"
+                  },
+                  {
+                    "id": "HELICAL_DART",
+                    "kind": "relic"
+                  },
+                  {
+                    "id": "KUNAI",
+                    "kind": "relic"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              }
+            ],
+            "evidence": {
+              "runs": [
+                "KAY522KT5NXR",
+                "CSBR5CRDWQNB",
+                "2SU6XN2AEJRD",
+                "YF0LXT1QSTGG"
+              ],
+              "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+              "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+            }
+          },
+          {
+            "id": "R",
+            "name": "抽弃循环与遗物攻防收益",
+            "candidate": true,
+            "requirements": [
+              {
+                "id": "discard",
+                "any": [
+                  {
+                    "id": "ACROBATICS",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "CALCULATED_GAMBLE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "DAGGER_THROW",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "HAND_TRICK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "PREPARED",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "SURVIVOR",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "TOOLS_OF_THE_TRADE",
+                    "kind": "card"
+                  }
+                ],
+                "count": 2,
+                "distinct": true
+              },
+              {
+                "id": "key-discard",
+                "any": [
+                  {
+                    "id": "ACROBATICS",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "CALCULATED_GAMBLE",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "HAND_TRICK",
+                    "kind": "card"
+                  },
+                  {
+                    "id": "TOOLS_OF_THE_TRADE",
+                    "kind": "card"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              },
+              {
+                "id": "relic",
+                "any": [
+                  {
+                    "id": "TINGSHA",
+                    "kind": "relic"
+                  },
+                  {
+                    "id": "TOUGH_BANDAGES",
+                    "kind": "relic"
+                  }
+                ],
+                "count": 1,
+                "distinct": false
+              }
+            ],
+            "evidence": {
+              "runs": [
+                "1LMBFGSMCWKU",
+                "25226ZFLNR1J",
+                "L704TLETMZBM"
+              ],
+              "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+              "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+            }
+          }
+        ],
+        "simulationStatus": "unavailable",
+        "boss": "WATERFALL_GIANT",
+        "simulationSamples": 100,
+        "simulationError": null,
+        "options": {
+          "current": {
+            "inventory": {
+              "cards": 13,
+              "upgraded": 0,
+              "gold": 108,
+              "hp": 51,
+              "maxHp": 70
+            },
+            "inventoryDelta": {
+              "cards": 0,
+              "upgraded": 0,
+              "gold": 0,
+              "hp": 0,
+              "maxHp": 0
+            },
+            "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+            "fight": null
+          },
+          "card0": {
+            "inventory": {
+              "cards": 14,
+              "upgraded": 0,
+              "gold": 108,
+              "hp": 51,
+              "maxHp": 70
+            },
+            "inventoryDelta": {
+              "cards": 1,
+              "upgraded": 0,
+              "gold": 0,
+              "hp": 0,
+              "maxHp": 0
+            },
+            "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+            "fight": null
+          },
+          "card1": {
+            "inventory": {
+              "cards": 14,
+              "upgraded": 0,
+              "gold": 108,
+              "hp": 51,
+              "maxHp": 70
+            },
+            "inventoryDelta": {
+              "cards": 1,
+              "upgraded": 0,
+              "gold": 0,
+              "hp": 0,
+              "maxHp": 0
+            },
+            "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+            "fight": null
+          },
+          "card2": {
+            "inventory": {
+              "cards": 14,
+              "upgraded": 0,
+              "gold": 108,
+              "hp": 51,
+              "maxHp": 70
+            },
+            "inventoryDelta": {
+              "cards": 1,
+              "upgraded": 0,
+              "gold": 0,
+              "hp": 0,
+              "maxHp": 0
+            },
+            "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+            "fight": null
+          },
+          "skip": {
+            "inventory": {
+              "cards": 13,
+              "upgraded": 0,
+              "gold": 108,
+              "hp": 51,
+              "maxHp": 70
+            },
+            "inventoryDelta": {
+              "cards": 0,
+              "upgraded": 0,
+              "gold": 0,
+              "hp": 0,
+              "maxHp": 0
+            },
+            "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+            "fight": null
+          }
+        },
+        "limits": "复用本题既有boss条件模拟，不新增整战或未来路线模拟；升级、拿牌、删牌的战斗差与组件集齐率分列。DPR按完整战斗含准备轮统计，配对差保留未匹配分母；模型偏差、未建机制和完整核心资格不因采样通过而消失。"
+      }
+    },
+    "run_plan_task": {
+      "trigger": "start",
+      "act_boss_clock": {
+        "boss": "WATERFALL_GIANT",
+        "boss_hp": 250,
+        "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+        "boss_hp_parts": [
+          "WATERFALL_GIANT"
+        ],
+        "boss_enemies": [
+          {
+            "enemy": "WATERFALL_GIANT",
+            "hp": 250,
+            "hp_samples": 71,
+            "hp_from_ascension": 10,
+            "hp_estimated": false,
+            "attacks": [
+              {
+                "move": "EXPLODE_MOVE",
+                "per_hit": 44,
+                "hits": 1,
+                "basis": "base",
+                "samples": 70,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "PRESSURE_GUN_MOVE",
+                "per_hit": 23,
+                "hits": 1,
+                "basis": "base",
+                "samples": 101,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "PRESSURE_UP_MOVE",
+                "per_hit": 14,
+                "hits": 1,
+                "basis": "base",
+                "samples": 77,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "RAM_MOVE",
+                "per_hit": 11,
+                "hits": 1,
+                "basis": "base",
+                "samples": 112,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              },
+              {
+                "move": "STOMP_MOVE",
+                "per_hit": 16,
+                "hits": 1,
+                "basis": "base",
+                "samples": 131,
+                "from_ascension": 10,
+                "estimated": false,
+                "scaled_through_ascension": 10
+              }
+            ]
+          }
+        ],
+        "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+        "deck_damage_per_turn_estimate": null,
+        "hp_loss_per_turn": null,
+        "survivable_turns": null,
+        "gap_per_turn": null,
+        "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+      },
+      "due_because": "建立本局终局计划",
+      "current_plan": null,
+      "v6_direction_task": {
+        "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+      },
+      "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。",
+      "endgame_plan_required": true
+    }
+  },
+  "question": "Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. 若需真人样本背景，可任选 external_stats_card 按候选 id 与当前幕 act 查 Silent A10（v0.111）的拿取率与胜率关联，或 external_stats_skip 查本幕跳过率；结果仅为观察统计、非因果，与题内自有 outcome_stats 分账。 boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock. 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若本题更新run_plan，必须给construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。 本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。 已有构筑路线和爬楼路线继续复用；路线未实质改变，不因下一道题重写完整计划或重算整条路线。结合当前牌组、遗物、HP、金币、药水、遭遇与机会，判断相较现有路线值得修改、预期有助于本局胜率后才改线；理由可含不确定性，不编造胜率提升数值。两类路线可分别调整，仅更新和重算实际受影响部分；普通状态变化只使依赖该状态的数值失效。无构筑计划时在同一答案给完整 run_plan（含 endgame）；已有计划时可省略 run_plan，确需调整只给变更字段及 change_reason（当前情况、旧/新取舍与预期收益），endgame 也只给受影响字段。幕末 endgame_checkpoint 要求的检查在 run_plan.endgame.checkpoint 作答，检查本身不要求换路线。计划是本局假设，不是知识规则；依据、可信度和未知须分清，达标线只引用已发布条目，不自行补伤害/防御/血量门槛。 在同一 JSON 中给 run_plan，原计划字段格式：{\"archetype\": \"<the deck direction, max 12 words>\", \"want\": [card ids to pick when offered, most important first, max 6], \"avoid\": [card ids not to take, max 6], \"remove\": [card ids in the deck to remove first, max 3], \"block_target\": <number of block cards the deck should hold by the act boss>, \"elites\": \"seek\" | \"normal\" | \"avoid\", \"rest\": \"heal\" | \"smith\" | \"auto\", \"boss_prep\": \"<max 30 words: what to have ready for the act boss>\", \"summary\": \"<max 40 words: the plan in plain words>\"}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。\n本题有 57 条相关策略/剧本可查。\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；主题仅筛明确标签，unknown不是库中没有知识，覆盖计数不当适用知识；不自动拓宽或重试刷库。构筑与爬楼路线分别判断，路线不变继续复用，不因分类更新重算。\n{\"schema\":\"brain-query-cues-v3\",\"question_type\":\"act_plan\",\"experience\":{\"status\":\"ok\",\"count\":40,\"entries\":[{\"id\":\"silent-accelerant-triggers\",\"title\":\"触媒\",\"scope\":\"card:ACCELERANT\"},{\"id\":\"silent-accuracy-shiv-scaling\",\"title\":\"精准\",\"scope\":\"card:ACCURACY\"},{\"id\":\"silent-afterimage-per-card-block\",\"title\":\"余像\",\"scope\":\"card:AFTERIMAGE\"},{\"id\":\"silent-bouncing-flask-poison\",\"title\":\"弹跳药瓶\",\"scope\":\"card:BOUNCING_FLASK\"},{\"id\":\"silent-calculated-gamble-upgraded-hand-reset\",\"title\":\"计算下注\",\"scope\":\"card:CALCULATED_GAMBLE\"},{\"id\":\"silent-corrosive-wave-draw-poison\",\"title\":\"腐蚀波\",\"scope\":\"card:CORROSIVE_WAVE\"}],\"omitted\":34,\"tool\":\"kb_experience\",\"input\":{\"relevant\":true}},\"strategies\":{\"status\":\"ok\",\"count\":57,\"tool\":\"kb_strategies\",\"input\":{\"query\":\"*\",\"limit\":3}},\"external_stats\":{\"source\":\"external:sts2fun\",\"version\":\"v0.111\",\"status\":\"ok\",\"optional\":true,\"dataset_sha256\":\"88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07\",\"candidate_cards\":3,\"matched_cards\":3,\"cards\":[{\"id\":\"DEFLECT\",\"count\":1,\"input\":{\"id\":\"DEFLECT\",\"act\":1}},{\"id\":\"SUCKER_PUNCH\",\"count\":1,\"input\":{\"id\":\"SUCKER_PUNCH\",\"act\":1}},{\"id\":\"POISONED_STAB\",\"count\":1,\"input\":{\"id\":\"POISONED_STAB\",\"act\":1}}],\"omitted_cards\":0,\"tools\":[{\"tool\":\"external_stats_card\",\"count\":1,\"input\":{\"id\":\"DEFLECT\",\"act\":1}},{\"tool\":\"external_stats_skip\",\"count\":1,\"input\":{\"act\":1}},{\"tool\":\"external_stats_deck_size\",\"count\":19,\"input\":{\"scope\":\"all\"}},{\"tool\":\"external_stats_encounter\",\"count\":1,\"input\":{\"id\":\"WATERFALL_GIANT_BOSS\",\"act\":1}},{\"tool\":\"external_stats_clusters\",\"count\":4,\"input\":{\"scope\":\"reached_act3\",\"k\":4,\"seed\":24}},{\"tool\":\"external_stats_cooccurrence\",\"count\":85,\"input\":{\"card\":\"DEFLECT\",\"scope\":\"reached_act3\"}}],\"note\":\"外部Silent A10真人样本背景，由你自行决定是否查询；卡牌/跳过表是奖励机会统计，不是商店购买率。仅描述关联、非因果，与自有验证分账；聚类/共现不作构筑方向依据。\"}}"
+}

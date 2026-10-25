@@ -1,0 +1,71 @@
+{
+  "initial_production_tsc": {
+    "failed": 2,
+    "reason": "active.cancelled inferred as literal false; fixed with explicit active-turn type"
+  },
+  "new_fixture_first": {
+    "files": 1,
+    "passed": 4,
+    "failed": 4,
+    "reason": "3 tests omitted Brain.request plan validator; 1 omitted H1 scope and entered historical outage wait"
+  },
+  "fixed_fixture_before_expansion": {
+    "files": 1,
+    "passed": 8,
+    "failed": 0
+  },
+  "broad_sandbox": {
+    "files": 641,
+    "passed_files": 638,
+    "failed_files": 3,
+    "passed_tests": 5928,
+    "failed_tests": 3,
+    "exit": 1,
+    "seconds": 1264.58,
+    "log": "sandbox.log",
+    "inputs": "sandbox-inputs.json",
+    "failures": [
+      {
+        "test": "check-imports",
+        "cause": "tracked issue29 sparse fixture absent; restored original HEAD bytes",
+        "evidence": "sparse-fixture.json"
+      },
+      {
+        "test": "codex-cache-engine",
+        "cause": "new pre-abort guard also applied to historical physical probe; narrowed to knowledgeAgent only"
+      },
+      {
+        "test": "ordinary-close-isolation",
+        "cause": "unchanged subprocess fixture hit original 15000ms timeout; no causal environment claim, no timeout change"
+      }
+    ]
+  },
+  "original_two_module_negative": {
+    "exit": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 13,
+    "log": "baseline-negative.log",
+    "observed": {
+      "attempts": 0,
+      "native_receipt": null,
+      "tool_calls": []
+    }
+  },
+  "shutdown_candidate_negative": {
+    "exit": 13,
+    "log": "shutdown-negative-runtime.log",
+    "readback": "shutdown-readback.json"
+  },
+  "shutdown_fixture_setup_failure": {
+    "exit": 1,
+    "log": "shutdown-negative.log",
+    "reason": "initial .ts helper interpreted as CJS; switched helper extension to .mts, no product change"
+  },
+  "shutdown_fixed_positive": {
+    "exit": 0,
+    "log": "shutdown-positive.log",
+    "readback": "shutdown-readback.json"
+  },
+  "final_combination_full": "pending original integrator, no second broad/full run"
+}

@@ -1,0 +1,8 @@
+import original from "../../agent/vitest.config.ts";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+const router = fileURLToPath(new URL("../../agent/src/brain/router.ts", import.meta.url));
+const agent = fileURLToPath(new URL("../../agent/src/brain/engines/knowledge-agent.ts", import.meta.url));
+const before = new Map([[router, readFileSync(new URL("./router.ts", import.meta.url), "utf8")], [agent, readFileSync(new URL("./knowledge-agent.ts", import.meta.url), "utf8")]]);
+export default { ...original, cacheDir: fileURLToPath(new URL("./vite-cache", import.meta.url)),
+plugins: [{ name: "fixed-before70-source", enforce: "pre", load(id) { return before.get(id.split("?")[0]); } }] };

@@ -1,5 +1,6 @@
 import type { BrainObserver } from "./live-view.js";
 import type { BrainNativeReceipt } from "./run-profile.js";
+import type { BrainEvidence } from "./evidence.js";
 /**
  * V4 brain contract (docs/v4-architecture.md §2).
  *
@@ -50,6 +51,9 @@ export interface AnswerSpec {
 }
 
 export interface BrainRequest {
+  /** Process-owned evidence journal, shared by phases and re-asks; never sent to a model. */
+  evidence?: BrainEvidence;
+  evidencePhase?: "query" | "answer" | "reask";
   /** Local read-only stream observer; never included in model input or run configuration. */
   observe?: BrainObserver;
   label: string;
@@ -123,6 +127,9 @@ export interface BrainUsage {
 }
 
 export interface ToolCallRecord {
+  callId?: string;
+  threadId?: string;
+  turnId?: string;
   name: string;
   input: unknown;
   /** Full tool output as returned to the model (kept for replay). */
