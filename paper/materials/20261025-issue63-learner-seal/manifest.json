@@ -1,0 +1,74 @@
+{
+  "issue": 63,
+  "base": "062cd855366bd0a8d3f4f8b61286e98990db4058",
+  "source_leaves": [
+    {
+      "path": "ops/learner_tabs.py",
+      "role": "production",
+      "before_blob": "4ec85c5cb22a9790e0675297bfd0531af4f912bb",
+      "after_blob": "964f6f9bf33d5995017b51585b22c49a28122708",
+      "sha256": "a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2"
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "role": "production",
+      "before_blob": "a1eded666ff2af823e52265aa782101e895804fa",
+      "after_blob": "ca640806e313d0ff5af0adb28b8065e2bbc9be02",
+      "sha256": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c"
+    },
+    {
+      "path": "ops/tests/test_learner_tabs.py",
+      "role": "fixed-test",
+      "before_blob": "0710a9cb710b5a0939a365a96f742422551a1eb1",
+      "after_blob": "58a742a5ccc5f11560c14184a36befbcc138b87e",
+      "sha256": "65e276a35f00daa7ffd055216ec3e0b683d77908905ca82c99ec4f4f53497080"
+    },
+    {
+      "path": "ops/tests/test_learner_wrapper_completion.py",
+      "role": "fixed-test",
+      "before_blob": "3fccf1f4d1524335e0690ec35a80affc2a52377e",
+      "after_blob": "53b65cf3cc47be85e8ea95a92dc4aefbd4c6d1a4",
+      "sha256": "aff08103eab22506b712c4a2a536b1504ae02c1b61f1da4554b145ae67bc4403"
+    },
+    {
+      "path": "ops/tests/fixtures/issue63-seal-failures.json",
+      "role": "fixed-test",
+      "before_blob": null,
+      "after_blob": "cc6cbc77dbc0aeb8d9fb583df1567395a0c6f5d2",
+      "sha256": "39f39163dd763c8855de4d9dada8284140bd6d6fcc4939a8c3d8a930e8ba53b3"
+    }
+  ],
+  "production_deployment": [
+    "ops/learner_tabs.py",
+    "ops/learner_tui.py"
+  ],
+  "wrapper": "ops/codex-ops-learner.sh seal (unchanged)",
+  "consumer": "ops/codex-ops.sh stall -> learner_tabs.py tick (unchanged)",
+  "test_source_unchanged_since_sandbox": true,
+  "log_sha256": {
+    "paths-final.log": "26811f88dd43f23fd87b672109f606de1611dc5ba17a1d2dca175f1fe5dacf2e",
+    "sandbox.log": "c81347499d8a37bc934e3c75c4c05548afc32f752584bf997351f01822fcadd6",
+    "targeted-final.log": "75d071fec84cf42c7a521e3e0bf4bdabd1f71e0c0ab004d72e89df5d6a47c36b"
+  },
+  "checks": {
+    "production_tsc_rc": 0,
+    "sandbox_first_rc": 1,
+    "sandbox_first_passed": 5874,
+    "sandbox_first_failed": 1,
+    "baseline_fixture_restored": true,
+    "targeted_final_rc": 0,
+    "targeted_files": 4,
+    "targeted_tests": 6,
+    "paths_rc": 0,
+    "paths_tests": 11
+  },
+  "final_composition_full": "pending original integrator; do not reuse other issue full",
+  "runtime_samples": [
+    "20261025-101312-strategy-proposal",
+    "20261025-114312-strategy-proposal",
+    "20261025-121312-strategy-proposal"
+  ],
+  "runtime_actual_seal_reclaim": "pending original ops after tested deployment; release each eligible sample immediately",
+  "production_mutations": false,
+  "game_behavior_change": false
+}

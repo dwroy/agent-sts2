@@ -1,5 +1,6 @@
 """Real shell wrapper with frozen receipts and a finish stub; no model or Herdr calls."""
 import json
+import hashlib
 import importlib.util
 import os
 from pathlib import Path
@@ -94,6 +95,85 @@ raise SystemExit(int(os.environ.get("FIXTURE_SEAL_RC","0")))
         self.assertEqual(json.loads((self.root / "seal-args.json").read_text())[-2:], ["--batch", self.batch])
         self.assertEqual(self.attention_files(), [])
         self.assertEqual(self.receipt.stat().st_mode & 0o777, 0o600)
+
+    def test_real_sessions_seal_then_fresh_process_reclaim(self):
+        env = self.prepare()
+        (self.root / ".agents").mkdir()
+        shutil.copy2(REPO / ".agents/board.yaml", self.root / ".agents/board.yaml")
+        label = self.value["label"]
+        self.receipt = self.directory / "learner" / (label + ".tui.json")
+        env["LEARNER_TUI_RECEIPT"] = str(self.receipt)
+        account = self.directory / "accounts/codex1"
+        home = account / "learner"; home.mkdir(parents=True)
+        personal = self.root / "fixture-user"
+        target = personal / ".codex1/sessions/2026/10/25"; target.mkdir(parents=True)
+        session = "01a170d6-0818-7fe1-8976-9f00546d39c1"
+        native = target / ("rollout-2026-10-25T10-13-57-" + session + ".jsonl")
+        native.write_text(self.native.read_text().replace('"thread"', '"' + session + '"'))
+        (home / "sessions").symlink_to(target.parents[2])
+        logical = str(home / "sessions/2026/10/25" / native.name)
+        (account / "profile.json").write_text(json.dumps(dict(engine="codex", account="codex1", learner_home=str(home))))
+        name_binding = json.dumps([label, self.value["pane"], str(self.root)], ensure_ascii=False, separators=(",", ":"))
+        self.value.update(session=session, turn="turn", rollout=logical, agent_name_version=1,
+                          agent_name="learner-" + hashlib.sha256(name_binding.encode()).hexdigest()[:24])
+        self.value["result"].update(session=session, rollout=logical)
+        self.log.write_text("".join(json.dumps(r)+"\n" for r in [
+            dict(type="learner_launch", engine="codex", cwd=str(self.root), params=dict(batch=self.batch)),
+            dict(type="learner_tui_session", pane="w1:p2", session=session, rollout=logical),
+            dict(type="learner_summary", exit_code=0, summary=dict(sessionId=session))]))
+        self.value["artifacts"]["sha256"] = tui.digest(self.log)
+        self.save()
+        pane = dict(self.value["identity"], revision=1)
+        (self.directory / "herdr.json").write_text(json.dumps(dict(workspace_label="sts2-run", workspace_id="w1",
+            panes={label:dict(pane_id="w1:p2", title=label)})))
+        # The real wrapper invokes the real recycler with a fixed terminal/process adapter.
+        # No model, production Herdr, finish/replay or publication is involved.
+        shim = f'''import sys,json
+from pathlib import Path
+sys.path.insert(0,{str(REPO / "ops")!r})
+import learner_tabs as tabs
+root=Path({str(self.root)!r})
+pane={pane!r}
+label={label!r}
+def herdr(*args):
+    present=not (root/"closed").exists()
+    if args[:2]==("workspace","list"): return dict(workspaces=[dict(workspace_id="w1",label="sts2-run")])
+    if args[:2]==("tab","list"): return dict(tabs=[dict(tab_id="w1:t2",label=label,pane_count=1)] if present else [])
+    if args[:2]==("pane","list"): return dict(panes=[pane] if present else [])
+    if args[:2]==("pane","get"): return dict(pane=pane)
+    if args[:2]==("pane","process-info"): return dict(process_info=dict(shell_pid=333,foreground_process_group_id=333,foreground_processes=[]))
+    if args[:2]==("tab","close"):
+        assert present
+        with (root/"closed").open("a") as f: f.write("closed\\n")
+        return {{}}
+    raise AssertionError(args)
+original=tabs.birth
+tabs.birth=lambda pid:"123" if pid==333 else original(pid)
+tabs.account_sessions=lambda _:root/"fixture-user"
+tabs.issue_session.herdr=herdr
+tabs.issue_session.process_children=lambda _:set()
+tabs.issue_session.run=lambda args:b"dw@fixture:~$ " if "visible" in args else b"fixed tail\\n"
+raise SystemExit(tabs.main())
+'''
+        (self.root / "ops/learner_tabs.py").write_text(shim)
+        result = self.run_wrapper(env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        seal = self.directory / "learner" / (label + ".tab-retirement.json")
+        proof = json.loads(seal.read_text())
+        self.assertEqual(proof["authority"], "batch")
+        self.assertIn("sessions_mapping", proof["files"]["rollout"])
+        supervisor = json.loads((self.directory / "learn.json").read_text())["batches"][self.batch]["pid"]
+        self.assertFalse(Path(f"/proc/{supervisor}").exists())
+        before = (self.directory / "learn.json").read_bytes()
+        for expected in ("reclaimed", None):
+            check = subprocess.run(["python3", str(self.root / "ops/learner_tabs.py"), "tick", "--root", str(self.root)],
+                                   env=env, capture_output=True, text=True, timeout=10)
+            self.assertEqual(check.returncode, 0, check.stderr)
+            rows = json.loads(check.stdout)["results"]
+            self.assertEqual(rows[0]["state"] if rows else None, expected)
+        self.assertEqual((self.root / "closed").read_text().splitlines(), ["closed"])
+        self.assertEqual((self.directory / "learn.json").read_bytes(), before)
+        self.assertTrue(native.is_file())
 
     def test_zero_model_refusal_is_terminal_code_three_not_success(self):
         env = self.prepare()
