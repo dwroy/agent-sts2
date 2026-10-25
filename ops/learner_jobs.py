@@ -429,8 +429,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     import strategy_external_jobs as external_jobs
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    import external_stock
     if publication_gate.learners_held(root, directory):
+        if character == "silent":
+            external_stock.maintain(state, root, alive, admission_reason="publication_hold")
         return {"dispatched": None, "admission_hold": True}
+    if character == "silent":
+        external_stock.maintain(state, root, alive,
+            admission_reason=None if jobs_allowed(root, directory) else "disk_capacity")
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
     four_lane_mode = character == "silent" and (external_ready or bool(external_jobs.active_external(state, alive)))
