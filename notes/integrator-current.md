@@ -1,4 +1,13 @@
 state: clear-ok
+issue: 59
+updated_at: 2026-10-25T10:48:26+08:00
+
+进行中的事：#59指定13个旧unknown学习tab已全部实际关闭，13关/0切号/0待关；逐项先存尾日志、原批次/TUI/原生UUID或缺失说明、树/分支/HEAD与恢复指针，核bash空输入/无子进程、同终端/session或原树后台活动，再在原锁下按精确tab关闭。每项tab_not_found/pane_not_found及原shell出生退出，再独立list核消失；13条learn业务行与快照一致。生命周期仅ui-closed/explicit-ui-closed，不代batch done/retired/shipped，不删树/complete/finish/replay。公开6392630589逐字读回，原ops一行提醒agent_prompted，仅传输不代ACK。材料paper/materials/20261025-issue59-old-tabs-integrator/，原尾日志/快照ops/codex-ops/learner-tab-ui-closures/issue59-20261025-1047/<batch>/；gitleaks0，无代码改动/新full。
+在等谁：本角色无在途命令/检查/关闭事务；原ops承接13批的原失败/abandoned-unverifiable、租约/处置与学习业务，必要时codex1新会话沿原指针接续、不跨号resume。214312/214313原树关闭前已缺，前后相同，原external-not-started/registration指针保留。tF3–tF8仅ops，新C tF9/pFC、发布tFA/pFD、对局/autoplay/ops均未操作，#60自然发布与#20首C封存路径兼容仍原owner。
+下一步：仅接主管/ops新实证或本轮回执异常；不重复关闭，不因UI退出关闭科学父或改retention。原树/分支/日志/业务限制沿原账；本角色当前可结束本轮。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 36
 updated_at: 2026-10-25T10:43:25+08:00
 
