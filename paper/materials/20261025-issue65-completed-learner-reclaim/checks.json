@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-25T15:08:38.741003+08:00",
+  "base": "de78668debde8814cbadfc312efa8efb53e6dd2a",
+  "source_files": {
+    "ops/learner_tabs.py": "c4f9ddd749361f785e29a4311d98e5e734242e80fd741194487889892bce5910",
+    "ops/tests/test_learner_tabs.py": "1f4f50f89d02a2b9a380292aa377ab4c3fa634cd3ba09ae697c24f3e018b89a5",
+    "docs/learner-tab-sessions.md": "0553577ab70c9c5b8dbcfb8fed246d6c01bd47323ddce9fc321c4277fec9ee34",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/readback.py": "9c0a952fb5c3e2e438b273cfb64d739579a31b611af16f87254d67ce58db9ec6"
+  },
+  "required_verifier": {
+    "path": "ops/learner_tui.py",
+    "sha256": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c",
+    "changed": false
+  },
+  "checks": {
+    "sandbox": {
+      "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh",
+      "rc": 0,
+      "tsc": 0,
+      "main_files": 636,
+      "main_tests": 5891,
+      "paths_files": 1,
+      "paths_tests": 11,
+      "workers": 1,
+      "nice": 19,
+      "log": ".artifacts/issue65/sandbox.log",
+      "log_sha256": "fa1743ba4c82508c1fca0d539b9457f4bca845e6b985ed6562d3ce9013e89a52"
+    },
+    "final_python": {
+      "command": "python3 -B -m unittest ops.tests.test_learner_tabs ops.tests.test_learner_tui ops.tests.test_learner_wrapper_completion",
+      "rc": 0,
+      "tests": 176,
+      "tabs_cases": 129,
+      "nice": 19,
+      "log": ".artifacts/issue65/python-final.log",
+      "log_sha256": "fc61c10dd1059f203a11ad35ee4a494f6f9be7ad1dbc94305694a18727211abe",
+      "note": "Final source rechecked after the small error-classification text adjustment during sandbox."
+    },
+    "baseline": {
+      "expected": "original wrapper/ops binding rejection; scheduler retained",
+      "rc": 0,
+      "log": ".artifacts/issue65/baseline-reproduction.log",
+      "log_sha256": "03e24c01c212741d0116d979d04e9a097086ba6b191c1fee700e38df48704424",
+      "first_harness": {
+        "rc": 1,
+        "reason": "Harness expected scheduler to throw instead of retain; corrected assertion, original output retained.",
+        "log": ".artifacts/issue65/baseline-harness-first.log",
+        "log_sha256": "3bc83d9a83904704342be7880514d0d4d82c373b842217e611f6b66d298bd10d"
+      }
+    },
+    "frozen_original": {
+      "schema": "issue65-frozen-original-readback-v1",
+      "batch": "20261025-134331-fix-batch",
+      "handoff_manifest_sha256": "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192",
+      "source_documents_verified": 6,
+      "frozen_originals_verified": 5,
+      "business_row_sha256": "16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56",
+      "business_state": "failed",
+      "rc": 0,
+      "binding_kind": "ordinary-fix-v1",
+      "original_native_verifier_passed": true,
+      "production_seal_reclaim_close_calls": 0,
+      "scope": "frozen binding and native stream; full seal only in synthetic fixed tests"
+    },
+    "preflight_imports": {
+      "initial_unresolved": [
+        "agent/tests/v6-build-core.test.ts: ../../.cache/",
+        "agent/tests/v6-infrastructure.test.ts: ../../.cache/",
+        "agent/tools/issue29-deepseek-stream.test.ts: ../../paper/materials/issue29-brain-speed/results.jsonl"
+      ],
+      "resolution": "Create rebuildable .cache; restore exact existing HEAD issue29 blob, no fixture change or exclusion.",
+      "restored_fixture_sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
+    },
+    "diff_check": 0
+  },
+  "production_seal_close_or_live_changes": 0,
+  "runtime_acceptance": "Pending integrator applicable combination after64 and original ops deployment/reclamation."
+}

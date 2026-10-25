@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-25T16:57:38+08:00",
+  "issue": 65,
+  "state": "CHECKS_ACCEPTED_MAIN_INTEGRATED_RUNTIME_PENDING",
+  "developer": "a7242c20e82088f9c8b1351cc33bb9337b398e17",
+  "base": "de78668debde8814cbadfc312efa8efb53e6dd2a",
+  "candidate": "5492a2792448c11511bd3bc0c6c19e954ca5c414",
+  "main_integrated": true,
+  "checks_pending": false,
+  "scope": "host learner tab compatibility only; no game knowledge or behavior release",
+  "target_root": "/home/dw/Projects/agent-sts2",
+  "actual_ops_root": "/home/dw/Projects/agent-sts2/ops",
+  "state_dir": "/home/dw/Projects/agent-sts2/ops/codex-ops",
+  "host_leaf": {
+    "path": "ops/learner_tabs.py",
+    "preimage_sha256": "a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2",
+    "integrated_sha256": "c4f9ddd749361f785e29a4311d98e5e734242e80fd741194487889892bce5910",
+    "bytes": 49798
+  },
+  "required_unchanged_verifier": {
+    "path": "ops/learner_tui.py",
+    "sha256": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c"
+  },
+  "all_fixed_delivery_paths": [
+    "docs/learner-tab-sessions.md",
+    "ops/learner_tabs.py",
+    "ops/tests/test_learner_tabs.py",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/checks.json",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/frozen-original-readback.json",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/readback.py",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/report.md",
+    "paper/materials/decision-log.md"
+  ],
+  "patch": "paper/materials/20261025-issue65-combination-integrator/host-tabs-only.patch",
+  "patch_sha256": "32d9039a27818d2b3b874bfabdc4c122bd9695067c6273f16fd8983e7a095132",
+  "backup": "paper/materials/20261025-issue65-combination-integrator/host-tabs-before.py",
+  "backup_sha256": "a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2",
+  "original_handoff_manifest": "paper/materials/20261025-issue65-original-handoff-ops/manifest.json",
+  "original_handoff_manifest_sha256": "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192",
+  "original_batch": "20261025-134331-fix-batch",
+  "original_business_row_sha256": "16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56",
+  "business_state_must_remain": "failed/rc0",
+  "runtime_owner": "original ops",
+  "acceptance": [
+    "fresh actual host tabs/tui SHA and imported script root; original scheduler transaction boundary, no hot replacement of in-flight seals",
+    "original receipt and five artifacts remain byte-identical to retained originals; original business row unchanged",
+    "fresh original native/supervisor exit, exact shell/pane identity, retirement authority, empty input and no foreground/background work",
+    "original recover-seal read-only eligibility, then same reviewed evidence with --apply; immutable seal/readback and idempotence",
+    "original stall tick reclaims only eligible identity; preserve uncertain sending event and inspect authoritative outcome before retry",
+    "actual tab absence, original native/supervisor/shell exit, event done and exact host mapping removal; worktree/branch/logs retained",
+    "subsequent original ordinary-fix samples individually fresh-checked; no old63 three or released developer replays"
+  ],
+  "rollback": "restore only host learner_tabs.py preimage; preserve unchanged63 learner_tui.py, all seals/journals/receipts/logs/failed history and trees; old reader may conservatively retain new proof",
+  "live_files_to_install": [],
+  "game_release_id_to_allocate": false,
+  "no_complete_delete": true,
+  "scientific_parents_remain_open": [
+    60,
+    61,
+    62
+  ],
+  "main_parent": "e97d56027ec3c1e13dbb9d0263f2bc6999a389b7",
+  "actual_live_preserved": "86b31b7a57c9325d220b2b3eab41a97761e545cc",
+  "full_result_sha256": "bcd68f82e8986d00f25be0489ca3bcdfe33cfeae32fddbb1e45da57543a077f8",
+  "full_counts": {
+    "files": 689,
+    "passed": 6727,
+    "failed": 0,
+    "skipped": 2
+  },
+  "production_operations": 0
+}

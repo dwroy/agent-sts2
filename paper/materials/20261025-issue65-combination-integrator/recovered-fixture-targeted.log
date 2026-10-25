@@ -1,0 +1,48 @@
+TAP version 13
+# (node:947089) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SSE splits preserve UTF-8 decoded text, CRLF, heartbeats and first token timing
+ok 1 - SSE splits preserve UTF-8 decoded text, CRLF, heartbeats and first token timing
+  ---
+  duration_ms: 1.396275
+  type: 'test'
+  ...
+# Subtest: usage-only final event and multiline JSON data are accepted
+ok 2 - usage-only final event and multiline JSON data are accepted
+  ---
+  duration_ms: 0.204404
+  type: 'test'
+  ...
+# Subtest: early disconnect is rejected even after a finish reason
+ok 3 - early disconnect is rejected even after a finish reason
+  ---
+  duration_ms: 0.366403
+  type: 'test'
+  ...
+# Subtest: partial trailing event and provider error cannot masquerade as successful stream
+ok 4 - partial trailing event and provider error cannot masquerade as successful stream
+  ---
+  duration_ms: 0.173897
+  type: 'test'
+  ...
+# Subtest: persistent claims count interrupted calls and refuse the next call at limit
+ok 5 - persistent claims count interrupted calls and refuse the next call at limit
+  ---
+  duration_ms: 1.509235
+  type: 'test'
+  ...
+# Subtest: frozen sample preserves all failures, disjoint unique controls and alternating order
+ok 6 - frozen sample preserves all failures, disjoint unique controls and alternating order
+  ---
+  duration_ms: 3.187142
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 965.015639

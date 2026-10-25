@@ -71,6 +71,41 @@ def account_sessions(root):
     return Path(pwd.getpwuid(os.getuid()).pw_dir)
 
 
+def ordinary_fix_binding(root, directory, receipt, launch, matches, log):
+    """Recognize the original ordinary fix writer, which never rendered params.batch."""
+    batch = receipt.get("label", "").removeprefix("learner-")
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-fix-batch", batch):
+        raise ValueError("native sessions original account/thread binding missing")
+    row = load(safe_path(root, directory / "learn.json"))["batches"][batch]
+    params = launch["params"]
+    character = row.get("character")
+    if not isinstance(character, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", character):
+        raise ValueError("native sessions ordinary fix character binding missing")
+    worktree = str(root / ".worktrees" / ("codex-fix-" + character + "-" + batch.removesuffix("-fix-batch")))
+    if (row.get("task") != "fix-batch" or row.get("learner_task", "fix-batch") != "fix-batch"
+            or row.get("feature_request") or row.get("boss_sim")
+            or launch.get("task") != "fix-batch" or launch.get("transport") != "herdr-interactive"
+            or row.get("worktree") != worktree or receipt.get("cwd") != worktree
+            or row.get("pane") != receipt.get("pane") or batch_label(batch, row) != receipt.get("label")
+            or params.get("worktree") != worktree or params.get("project_root") != str(root)
+            or params.get("character") != character):
+        raise ValueError("native sessions ordinary fix registration differs")
+    # The central log and scratch share the launcher's unique timestamp/UUID stem.
+    stem = log.stem
+    if (log.parent != root / "learner/runs" or log.suffix != ".jsonl"
+            or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}-fix-batch", stem)
+            or params.get("scratch") != str(log.with_suffix(""))):
+        raise ValueError("native sessions ordinary fix artifact binding differs")
+    safe_path(root, params["scratch"])
+    bindings, submissions = receipt.get("bindings", []), receipt.get("submissions", [])
+    if (len(matches) != 1 or not bindings or not submissions or not matches[0].get("marker")
+            or matches[0]["marker"] != bindings[0].get("marker")
+            or matches[0]["marker"] != submissions[0].get("marker")):
+        raise ValueError("native sessions ordinary fix prompt binding missing")
+    return dict(kind="ordinary-fix-v1", batch=batch, character=character, worktree=worktree,
+                scratch=params["scratch"], marker=matches[0]["marker"])
+
+
 def native_evidence(root, directory, receipt):
     """Read only the original rollout; the general repository path guard stays strict."""
     path = Path(receipt["result"]["rollout"])
@@ -122,9 +157,16 @@ def native_evidence(root, directory, receipt):
                and r.get("pane") == receipt.get("pane") and r.get("session") == session and r.get("rollout") == str(path)]
     if (len(launches) != 1 or launches[0].get("engine") != "codex"
             or launches[0].get("cwd") != receipt.get("cwd")
-            or launches[0].get("params", {}).get("batch") != receipt["label"].removeprefix("learner-").removesuffix("-postmortem")
+            or not isinstance(launches[0].get("params"), dict)
             or not matches):
         raise ValueError("native sessions original account/thread binding missing")
+    params = launches[0]["params"]
+    launch_binding = None
+    if "batch" in params:
+        if params["batch"] != receipt["label"].removeprefix("learner-").removesuffix("-postmortem"):
+            raise ValueError("native sessions original account/thread binding missing")
+    else:
+        launch_binding = ordinary_fix_binding(root, directory, receipt, launches[0], matches, log)
     # Never traverse the link: open the approved target with O_NOFOLLOW at every level.
     raw, leaf_identity = read_regular(target.joinpath(*parts[3:]))
     if (file_identity(link.lstat()) != before or os.readlink(link) != str(target)
@@ -132,6 +174,8 @@ def native_evidence(root, directory, receipt):
         raise ValueError("native sessions mapping changed during read")
     mapping = dict(version=1, account=parts[0], link=before, target=str(target), leaf=leaf_identity,
                    profile_sha256=hashlib.sha256(profile_raw).hexdigest(), profile_identity=profile_identity)
+    if launch_binding is not None:
+        mapping["launch_binding"] = launch_binding
     return dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest(), sessions_mapping=mapping), raw
 
 

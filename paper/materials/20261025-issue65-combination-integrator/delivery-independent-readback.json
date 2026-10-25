@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-25T16:25:11+08:00",
+  "fixed_commit": "a7242c20e82088f9c8b1351cc33bb9337b398e17",
+  "source_sha256": {
+    "ops/learner_tabs.py": "c4f9ddd749361f785e29a4311d98e5e734242e80fd741194487889892bce5910",
+    "ops/tests/test_learner_tabs.py": "1f4f50f89d02a2b9a380292aa377ab4c3fa634cd3ba09ae697c24f3e018b89a5",
+    "docs/learner-tab-sessions.md": "0553577ab70c9c5b8dbcfb8fed246d6c01bd47323ddce9fc321c4277fec9ee34",
+    "paper/materials/20261025-issue65-completed-learner-reclaim/readback.py": "9c0a952fb5c3e2e438b273cfb64d739579a31b611af16f87254d67ce58db9ec6"
+  },
+  "developer_raw_logs_verified": {
+    "sandbox": {
+      "path": ".worktrees/issue-65-completed-learner-reclaim/.artifacts/issue65/sandbox.log",
+      "bytes": 26524,
+      "sha256": "fa1743ba4c82508c1fca0d539b9457f4bca845e6b985ed6562d3ce9013e89a52"
+    },
+    "final_python": {
+      "path": ".worktrees/issue-65-completed-learner-reclaim/.artifacts/issue65/python-final.log",
+      "bytes": 277,
+      "sha256": "fc61c10dd1059f203a11ad35ee4a494f6f9be7ad1dbc94305694a18727211abe"
+    },
+    "baseline": {
+      "path": ".worktrees/issue-65-completed-learner-reclaim/.artifacts/issue65/baseline-reproduction.log",
+      "bytes": 5619,
+      "sha256": "03e24c01c212741d0116d979d04e9a097086ba6b191c1fee700e38df48704424"
+    },
+    "first_harness": {
+      "path": ".worktrees/issue-65-completed-learner-reclaim/.artifacts/issue65/baseline-harness-first.log",
+      "sha256": "3bc83d9a83904704342be7880514d0d4d82c373b842217e611f6b66d298bd10d",
+      "rc": 1,
+      "reason": "Harness expected scheduler to throw instead of retain; corrected assertion, original output retained."
+    }
+  },
+  "required_actual_host_verifier": {
+    "path": "ops/learner_tui.py",
+    "sha256": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c",
+    "changed": false
+  },
+  "scope_review": "ordinary missing batch only; exact registration/worktree/log/scratch/first native marker; explicit wrong/null and other tasks remain reject; old guards retained",
+  "independent_python_rc": 0,
+  "independent_python_tests": 176,
+  "independent_original_readback": {
+    "schema": "issue65-frozen-original-readback-v1",
+    "batch": "20261025-134331-fix-batch",
+    "handoff_manifest_sha256": "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192",
+    "source_documents_verified": 6,
+    "frozen_originals_verified": 5,
+    "business_row_sha256": "16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56",
+    "business_state": "failed",
+    "rc": 0,
+    "binding_kind": "ordinary-fix-v1",
+    "original_native_verifier_passed": true,
+    "production_seal_reclaim_close_calls": 0,
+    "scope": "frozen binding and native stream; full seal only in synthetic fixed tests"
+  },
+  "full_still_in_progress": true,
+  "real_seal_reclaim_close_calls": 0
+}

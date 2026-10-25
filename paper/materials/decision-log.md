@@ -7020,3 +7020,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T15:12:07+08:00 [watcher] #64唯一full689文件/6727过/0败/2跳及三tsc0，原worker退出/检查锁释放/冻结SHA核同后精确main8efc532325b5e7f0f413a114f8de1001fd4ba2fb并WindowsSSH推送核远端；原issue6394745496部署差量清单逐字核回并唤醒原ops，等待新发布事务及自然路线runtime回执，未写LIVE；#60冻结缺口6394588461及新增40题39KB6394639375独核记录同存，13目标未命中/新关键词空分账，65独立、旧63三例不重回收。
 
 - 2026-10-25T15:12:36+08:00 [watcher] #64交付/通知及60独核记录6732c8fee61cfad06cef56d74cdec519e6244f12已推送；原ops pane w1H:p8实际working，尚无新issue接收或发布回执，runtime沿原ops继续，工程不重full。
+
+- 2026-10-25T15:08:38+08:00 [dev #65] 普通fix无params.batch的原启动布局兼容交付待review：仅字段缺席且原task/角色/pane/按批次worktree/项目根/日志-scratch UUID stem/首prompt marker均核同才走ordinary-fix-v1；显式错batch、专题/未知布局及原账号/路径/native/产物/忙会话/不确定关闭门继续保留。原交接六材料/五原件SHA及冻结原生核验通过，failed/rc0不改；基线wrapper/ops原拒绝与scheduler保留已复现，首harness误期待异常保留。tsc0、sandbox636文件5891过及paths11过、最终回收/native/wrapper固定176项过；仅本树单worker/nice19，不抢原64部署组合full。源码生产差量仅tabs，依赖原63 verifier；原集成员按64优先接适用组合，原ops部署后沿同一原样本真实封存/回收；未改live/STOP/账号/知识/历史/其他会话，不重放旧三例、不分配游戏号。合同docs/learner-tab-sessions.md，材料paper/materials/20261025-issue65-completed-learner-reclaim/。
+
+- 2026-10-25T16:57:38+08:00 [watcher] #65固定a7242c20精确八叶/decision追加delta集成当前main；本项唯一full689文件/6727过/0败/2跳、三tsc0、宿主Python176项及原五件/普通fix绑定/native只读核通过；两次组装前发布锁/HEAD推进阻碍原件保留，full仅一轮；退出守卫原full-stopped因隔离LIVE冷夹具被原storage sweep回收，原件不改，恢复固定blob后六项实际读取及全部输入/树/索引核同，另记fixture-recovery-acceptance；保当前62知识、63 verifier及64已发布内容；原ops接同一134331原样本宿主核收/封存/回收/退出/tab缺席，旧63三例不重放，59产品候选和60自然父项独立。

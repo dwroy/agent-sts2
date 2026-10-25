@@ -6,12 +6,29 @@
 
 - 原运行根的原 state-dir 下存在 `accounts/<codex账号>/profile.json`，engine/account/learner_home 精确对应账号的 `learner` 目录；profile 与账号目录本身不得经过软链。
 - 唯一允许的软链是该目录的 `sessions`，原始 link 文本精确指向操作系统当前用户 home 下 `.<同账号>/sessions`。不使用当前账号选择器、环境中的 CODEX_HOME，也不搜索其他账号。其他布局继续保留待核。
-- 原 rollout 为 `YYYY/MM/DD/rollout-时间-原session UUID.jsonl`，原 receipt/result 的 session/turn/rollout 一致。原产物日志 SHA 匹配，且唯一 learner_launch 的 cwd/batch/engine 和 learner_tui_session 的 pane/session/rollout 对应原批次。
+- 原 rollout 为 `YYYY/MM/DD/rollout-时间-原session UUID.jsonl`，原 receipt/result 的 session/turn/rollout 一致。原产物日志 SHA 匹配，且唯一 learner_launch 的 cwd/engine 和 learner_tui_session 的 pane/session/rollout 对应原批次。显式 `params.batch` 必须对应原批次；普通 fix 无此字段时只按下述 #65 合同核验。
 - 目标路径从 `/` 开始逐层以 `O_NOFOLLOW` 打开，叶子必须是普通文件；不通过软链本身读取。读取中检查文件身份稳定，原生核验与终态检查读取同一份字节，不改写 receipt 的路径。
 
 封存证明保存原逻辑路径、SHA、profile 内容和文件身份、sessions 软链身份、目标文件及目录身份。封存末尾、恢复复核和关闭 tab 前均重新验证；同目标重建软链、换 profile、嵌套/叶子软链、路径逃逸、异账号/线程、产物变化继续阻止关闭。当前证据只能证明当前映射与登记一致；没有历史 inode 回执时不倒填“从启动起未替换”。
 
 原任务终态、wrapper PID/start 绑定、原生终态、实际 pane、空输入、前后台额外进程及不确定关闭回执门保持。通用路径、账号配置、凭据、原日志、批次绑定及知识发布不由本功能修改。
+
+## 普通 fix 的原启动绑定（#65）
+
+普通 `fix-batch` 模板没有使用 `{{batch}}`，启动器只将模板实际引用的参数写入 `learner_launch.params`；因此原普通 fix 日志合法缺少 `params.batch`。不能补写原日志，也不能让其他任务缺字段时一概通过。
+
+只有字段完全缺席时才检查 `ordinary-fix-v1`：
+
+- 原 label 精确为 `learner-YYYYMMDD-HHMMSS-fix-batch`。原 `learn.json` 同批行的 task 为 fix-batch、learner_task 缺席或同名，无 feature_request/boss_sim；character、pane、worktree 与原 receipt/launch 一致。工作树须为原 wrapper 规定的 `.worktrees/codex-fix-<角色>-<批次时间>`。
+- 唯一 launch 的 engine=codex、task=fix-batch、transport=herdr-interactive、cwd 与原工作树一致。params 的 worktree/project_root/character 必须逐项对应原登记，不用当前账号选择器或新派发推断。
+- 原日志位于本项目 `learner/runs/YYYYMMDD-HHMMSS-<UUID>-fix-batch.jsonl`；scratch 精确为同目录同 stem，仍拒绝软链和越界。
+- 唯一匹配的 learner_tui_session 保持原 pane/session/rollout，并带 receipt 第一项 bindings/submissions 的同一 marker。后续完整原生核验仍验证 prompt SHA、turn 顺序及终态。
+
+显式 batch 即使为 null、空串或错误值也不能退到此分支；不支持的专题/其他任务布局继续保留。封存的 sessions_mapping 只为这个分支新增 launch_binding 证明，原显式 batch 和无软链封存格式保持；恢复、关闭前重核同一证明。原批次 failed/rc0 只表示业务验收失败，不妨碍有合法处置权的 UI 释放，也不因释放改成 done 或入库成功。
+
+#65 交付仅修改 `ops/learner_tabs.py` 生产叶，依赖已部署 #63 的 `ops/learner_tui.py` stream 核验接口；ops 核实际宿主两叶及适用组合后再装新 tabs 叶，不覆盖已冻结 #64 包。沿原 recover-seal / stall tick 接同一原134331样本，逐项鲜核后封存、释放及核 tab/PID 缺席；不重放原 #63 三例。部署和实际回收由原 ops 验收，固定夹具不代真实关闭。不满足门禁仍保留，原树和产物删除继续交 retention。
+
+回退 #65 时将 tabs 叶恢复到部署前固定版本，并保留 #63 配套 verifier、所有失败和新 seal/journal 原件。新分支证明仍会被旧逻辑保守拒绝，不删除证明来重放动作。无游戏行为或知识变更，不分配游戏 release_id。
 
 ## 部署闭包与接续
 

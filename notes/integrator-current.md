@@ -1,4 +1,99 @@
 state: in-flight
+issue: 65
+updated_at: 2026-10-25T16:57:37+08:00
+
+进行中的事：#65固定a7242c20适用组合已核收：唯一full于16:51:11退出0，689文件/6727过/0败/2跳，三tsc0、Python176过、原件只读核0。原退出full-stopped因16:48:39 storage thin仅回收隔离LIVE一份冷夹具，原状态/prepare journal/实际漂移不改；沿原materialize恢复锚点blob后，六项固定回归实际读取G夹具通过，全部ROOT2865/LIVE1785/依赖1417、ROOT索引语义及两树内容树核同，独立核原worker779440退出、检查锁可用、检查树无余进程。记录fixture-recovery-acceptance.json/terminal-readback.json，full仍仅一次。正在精确main集成与推送，尚未由ops声明实际部署/回收。
+
+在等谁：main交付由本角色立即完成；原ops接同一134331原样本宿主单叶兼容部署、实际封存/回收/退出/tab缺席及精确host映射移除，保failed/rc0、原五件/备份/日志/树。64实际R452、新K及原门/UI释放已独核，60自然验收继续。未发现65产品源码失败，无开发返工；不等64自然发布、不重放63旧三例、不夹59产品候选。
+
+下一步：原锁精确集成八叶及decision追加、Windows SSH推送并核远端后，回65明确宿主tabs新SHA c4f9ddd7…5910及63 verifier ea239942…9cc1c、补丁/回退和原样本清单，提醒原ops。必要runtime后按59可恢复释放65闲置开发UI，保原线程/树/日志/恢复入口，不complete/delete。66优先分类、schema、索引与tools；67最小接线8d6e4b021已独核，待66固定提交精确组合，不等67全包。原materialize因稀疏冷路径较多耗时，已完成；首个定向入口误假定G含tools测试源，原路径错误日志保留后改用固定W模块/G数据的派生测试，断言原样。
+
+最新独核 2026-10-25T16:32:14+08:00：已将#60新K发布/工具、#64实际R452/原门释放和闲置UI释放独核分别回6395439703/6395439880，作者/正文远端核同。实际LIVE七叶SHA、唯一R452登记、原消费41过JSON SHA均核同；64五个原PID及原pane已缺席、树HEAD/原生日志/恢复入口保留。新旧K快照11文件仅一条策略改动、其他127条同，旧/新工具条目匹配各自快照；原后继自然31题切片SHA及23KB输出核同，仍旧K、13目标/新正确策略命中0，不代自然采用/收益。14条分类映射的13旧项null、新项原分类字段缺席、全部正式候选null，内容由原学习运营据证修订。独核脚本两次stderr解析/字段存在性假设错误原件保留，修正读取后通过，非生产/代码失败。记录runtime60-64-independent-readback.json。#65三tsc0、Python176过及原五件只读核0，唯一full继续同一worker，无需重冻。#66主管6395371177要求分类helper最小接线独立交付；#67固定8d6e4b021（三代码叶+decision追加）已独核接口和当前66 helper字节一致，回66/6395398028并远端核同，纳入66匹配组合、不夹65、不等67全包；原66 helper字节须最终提交再次核同。决定及责任已追加本角色decision-log。
+
+后继自然证据补核 2026-10-25T16:40:37+08:00：已读ops66/6395451097，原1631窗口7题切片逐偏移/字节/SHA核同（runtime60-successor1631-readback.json）；原ops报5次KB均新K、14目标正确策略仍0。门扉9条提示但只查经验DOORS空，单关键牌意图仍未证；休息4条提示且0策略调用，原rest-buffer比较范围有自然机会，隐式采用/收益未知。内容仍原学习运营，66仅源码合同，不强查/扩适用/重跑检查。
+
+恢复入口：paper/materials/20261025-issue65-combination-integrator/{assembly.json,source-inputs.json,runtime-inputs.json,delivery-leaves.json,full-state.json}；.artifacts/integrator65-combination-20261025/{check-full.py,finalize.mjs,worker-console.log}；原manifest及五原件备份仍沿20261025-issue65-original-handoff-ops。W=.worktrees/integrator65-combination-20261025，G=.worktrees/integrator65-runtime-combination-20261025。无模型/对局/生产写/封存回收/其他会话控制。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 65
+updated_at: 2026-10-25T16:04:25+08:00
+
+进行中的事：已接#65本轮交接维护，重新读原issue，最新交付仍为开发6394727914，暂无新增返工或最终核收回执。固定提交a7242c20e82088f9c8b1351cc33bb9337b398e17，分支issue-65-completed-learner-reclaim，原树.worktrees/issue-65-completed-learner-reclaim；生产差量仅ops/learner_tabs.py，依赖已部署#63的ops/learner_tui.py stream接口。合同仅允许原普通fix的params.batch完全缺席且原登记/任务/角色/pane/批次命名工作树/项目根/唯一日志与scratch stem/首个原生marker全匹配；错误或null batch、其他任务缺字段及未知布局仍拒绝，原身份/终态/处置权/产物/忙输入/额外进程和幂等保护保持。开发报告生产tsc0、sandbox636文件5891过、paths11过及最终回收/native/wrapper组合176过；这些仍为开发自测，尚未由本角色完成固定源码与产物逐SHA独核、最终组合检查、main集成或宿主部署，不冒最终已绿。
+
+在等谁：开发交付已经到，当前下一责任在本角色核固定交付、原证据及实际ROOT/LIVE/宿主依赖并接适用最终组合，不再等原63开发、旧三样本或重复自测。原manifest/handoff两件SHA曾于6394527647独核，原134331业务failed/rc0、五原件/备份、精确拒绝及账号线程保持；本轮不冒重新全核。通过适用检查和部署后，原ops沿同一20261025-134331-fix-batch/pFK原样本鲜核实际封存、回收、进程退出、tab缺席和宿主映射移除；尚未完成，不代ops填验收。#64工程唯一full已绿并精确main8efc5323；本角色上轮15:52读到原worker15:39记录原局已自然退出、等待原owner续行，未见新部署回执；这是上轮原件状态，本轮未重新核发布门或进程。
+
+下一步：先独核a7242c20精确源码/测试/文档/检查原件与冻结manifest、原业务行及备份SHA，保首个harness断言修正、稀疏输入恢复和原失败历史；鲜核实际宿主tabs/tui前像、#63配套及唯一检查门，沿原队列冻结适用组合并执行必要检查。通过后精确main集成，交原ops部署/回退清单及同一原样本运行核收；失败保原件沿65原线程和原树续修。#64原发布优先且不夹65，不等待其稀有自然改线/恢复；#59原四叶产品候选独立，不纳入65。旧63三例和已释放开发登记不重放，不补原batch、不伪重开UI、不直接操作生产seal/reclaim或live/STOP；#60自然消费、#61来源兼容/缺wrapper、#62首题816原件缺口继续独立保父，不作为65新前置。
+
+恢复入口：#65/6394727914、6394485809、6394527647；固定提交内paper/materials/20261025-issue65-completed-learner-reclaim/{report.md,checks.json,frozen-original-readback.json}及docs/learner-tab-sessions.md；宿主原交接paper/materials/20261025-issue65-original-handoff-ops/{manifest.json,handoff.md}，原独核paper/materials/20261025-fix134331-integrator/{readback.py,independent-readback.json}。本轮仅重新读取issue并维护本角色交接，未启动代码改动、测试/full、模型/对局、生产写、发布/回收或其他会话控制。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 64
+updated_at: 2026-10-25T15:52:31+08:00
+
+进行中的事：已接#64本轮交接维护，重新读取原issue，最新仍为原ops6394840959及本角色6394849158；工程唯一full689文件/6727过/0败/2跳、三tsc0，LIVE定向41过、ROOT整组复验53过，源码已精确main8efc532325b5e7f0f413a114f8de1001fd4ba2fb并推送，原首败及原因未知记录保留。本轮新增读到原ops公开worker-state.json在15:39:04更新为awaiting-original-owner-continuation，reason为“原play自然退出，待原报告齐及鲜核写入前阶段”，published=false、held_locks=[]；因此不再把仍等play退出写成当前状态。该项是原worker记录，不是本轮独立PID/原报告核验，未见新部署/发布号回执。preparation-complete.json和ops-current顶部仍是15:22旧等待阶段，与新worker记录分账保留，不改他人交接。
+
+在等谁：原ops核同一自然局F1WN4HMR0N1Z的实际退出及原报告齐，鲜核原worker/门阶段、最新知识与源码闭包，仅经原FIFO接续原publication-admission事务；已入写体禁止重放。原owner issue64-route-reason-natural-20261025、worker671470/birth33722880及play532397/birth33593823只作原身份指针，本轮不代其仍存活或实际退出声明。本角色等原ops实际部署提交、release_id、七叶逐SHA及固定消费者结果后独核；最新知识current与旧局K绑定分账保留，不恢复旧current。工程不用再等开发、不重full，也不以60/62/65或59候选为部署前置。
+
+下一步：原ops沿已备七叶精确差量和部署后固定检查/编号/双通知完成原事务，回真实终态；本角色收到后核实际LIVE提交、release、保护差异及运行消费者。真实reasoned change持久化并被路线消费者读回、omission/null/keep/重复路线复用、构筑change_reason独立及同局恢复仍待原自然证据，未发生保持pending，不代采用或收益。必要工程及运行核收后沿59逐项核空闲64开发可恢复释放，保原树/分支/日志/恢复入口和科学父，不complete/delete。#65固定交付a7242c20已到，下一工程责任仍由本角色按原队列独核适用组合，不夹64冻结包、不受稀有自然场景阻挡；#59四叶候选独立，旧63三例与已释放UI不重放。
+
+恢复入口：paper/materials/20261025-issue64-combination-integrator/{deployment-handoff.json,handoff.md,live-seven-leaf.patch,terminal-readback.json,main-integration.json,ops-admission-independent-readback.json}；原ops公开paper/materials/20261025-issue64-natural-publication-ops/{final-admission.json,preparation-complete.json,worker-state.json,record.md}。最后实际门/PID独核仍为15:23:54/6394849158，本轮只新读15:39:04状态文件；不混作新鲜进程验收。本轮仅只读回执与维护本角色交接，无测试/full、模型/对局、生产写、FIFO信号、门重建、回收或其他会话控制。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
+updated_at: 2026-10-25T15:42:50+08:00
+
+进行中的事：已接#63本轮交接维护，重读原issue至6394340752及独立#65最新固定交付6394727914。原#63工程已接收并精确集成main a94f8244ae71f5838ecdc506bbf2d94176938904；原唯一full687文件/6695过/0败/2跳、三tsc0及跨目录限制沿原记录保留，不外推当前整树。14:06独核6394222723已收原三样本101312/pFC、114312/pFG、121312/pFH实际封存/回收、宿主映射移除、三tab及原native/supervisor/shell退出，原业务行及五原件/备份SHA核同、树保留。原63开发UI已可恢复释放，原分支/树f95114df313e4e2b65b8acd5fc5339cc46a2fbae、原session与原生日志/终端尾日志保留；本轮不冒重新查询这些进程或重新验收旧三例。
+
+在等谁：原63工程与旧三样本必要运行闭包已经完成，不再记为等63开发或等旧三例回收。后继普通fix批20261025-134331-fix-batch/pFK缺原launch.params.batch，原63 reader拒绝的实际错误native sessions original account/thread binding missing及14:21:37独核原件保留；原业务failed/rc0不改写，原pane、wrapper首败、日志、回执、树和两候选保留。该窄化兼容现由独立#65承接，固定提交a7242c20e82088f9c8b1351cc33bb9337b398e17已交；下一责任在本角色独核交付并冻结适用组合，不等原63开发重开。适用检查、集成与宿主部署后，原ops再对同一134331原样本鲜核封存/回收/退出/tab缺席及映射移除，本角色不代其声明已完成。
+
+下一步：沿原队列核#65固定源码、原证据及实际ROOT/LIVE/宿主依赖和唯一检查门，接适用最终组合；通过后精确main集成并交原ops部署及同一原样本runtime清单，失败保原件沿65原线程/树续修。不得补写原launch.batch、伪恢复已释放63 UI、重跑63旧full或重复回收旧三例。#59原134331四叶产品候选独立核，不夹65补丁；#64已绿并精确main8efc5323，原ops发布事务等待自然边界，最后独核15:23:54/6394849158，非本轮新鲜进程结论，不重full、不重建门或打断原局。#60自然消费/13目标缺口、#61来源兼容/缺wrapper、#62首题816原件缺口继续独立保父，不作65工程新前置。
+
+恢复入口：#63/6394222723、6394313303、6394340752；paper/materials/20261025-issue63-combination-integrator/{runtime-independent-readback.json,runtime-probe.py}与paper/materials/20261025-fix134331-integrator/{readback.py,independent-readback.json}。原63开发session 01a17152-7547-7a33-8214-12a5f02bd617，恢复说明.artifacts/ops-issue59-63-release-20261025/sessions/63/continue-codex1.md，仅沿受支持原owner入口恢复，不伪注册。新65交付原树.worktrees/issue-65-completed-learner-reclaim及固定提交内paper/materials/20261025-issue65-completed-learner-reclaim/{report.md,checks.json,frozen-original-readback.json}。本轮仅维护本角色交接，无代码改动、测试/full、生产写、模型/对局、封存回收、complete/删除或其他会话控制。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 36
+updated_at: 2026-10-25T15:29:34+08:00
+
+进行中的事：已接#36本轮交接维护，重新读原issue最新评论，末条仍为本角色6393540809，无新增36源码交付或返工指令。沿该已核记录：021310实际恢复/封存/tab回收已验；六旧学习UI tF3–tF8/pF6–pFB关闭已独立核收、43原进程退出、38份归档大小/SHA核同，六业务登记仍awaiting_review，原75/defer及候选/树/分支/产物保留。两native追加的是原turn旧测试failed/exit130记录，不是测试通过。071302配额框处置仅核保存证据及关闭终态，历史人工草稿身份仍未验。本轮不冒重新查询六tab/43进程或全量业务登记，以上均为6393540809已验历史。原#36工程会话继续可恢复停止，不为runtime父项重启。
+
+在等谁：六旧批业务/候选及失败后续由原ops承接，历史人工草稿验收等待真实原件；不套用不支持的恢复入口，不改task或手填完成。原#20/36 sessions软链封存缺口已由#63工程接收、main集成及原三样本运行闭包完成，不能继续记为等63开发；新普通fix缺launch.params.batch的窄化兼容已分到独立#65，固定交付a7242c20e82088f9c8b1351cc33bb9337b398e17/6394727914已到，当前下一责任在本角色核固定交付及实际组合，之后原ops接同一134331原样本实际封存/回收/退出/tab缺席，不代其已验，不重放63旧三例或已释放开发登记。
+
+下一步：#36只接原ops业务处置/合法恢复回执或人工草稿原件后作对应独核，保父issue、科学限制、原失败与恢复授权分账；无新证据不重复恢复/封存/关tab/finish/retire/replay，也不重跑已验full或复开原开发。当前可推进工程仍按原队列核#65交付、#59独立四叶宿主候选，不把36旧runtime等待或稀有场景加为前置；#64已绿并精确main8efc5323，原发布门waiting/等自然边界的独核回6394849158，原ops续原事务，本角色不发continue、不重建门或打断原局。#60自然消费/目标未命中、#61来源兼容/缺wrapper、#62首题816原件缺口继续独立保留。
+
+恢复入口：#36/6393540809与原ops6392668122；paper/materials/20261025-issue36-ui-handoff-integrator/{report.md,independent-readback.json,071302-dialog-evidence.json,game-view-readback.json}，021310原恢复/封存记录仍沿20261025-issue36-recovery-terminal-integrator及20261025-issue36-seal-integrator。原687文件/6695过/0败/2跳、三tsc0与八TS281项只记当时精确输入覆盖，不外推当前整树/live；本轮未启动测试/full/模型/对局/生产写/回收/其他会话控制，仅更新本角色交接。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 64
+updated_at: 2026-10-25T15:23:54+08:00
+
+进行中的事：已接原ops6394840959，15:23独核本项原publication-admission门owner issue64-route-reason-natural-20261025实际waiting，原worker671470/birth33722880与原play532397/birth33593823均在且身份核同；原自然局F1WN4HMR0N1Z继续。七上线叶实际LIVE前像、ROOT后像与已备写体后像逐SHA核同，四工程证据及四准备脚本SHA核同。未部署、未分发布号，不重full；此前main8efc5323与唯一full689文件/6727过/0败/2跳、三tsc0核收保持。worker-state旧reason仍为首建门短锁忙，当前真实门waiting及15:22:53准备完成回执分账，不覆盖旧失败或把其误作仍未建门。
+
+在等谁：原ops原worker等同一原局自然终止且原报告齐；之后由原ops鲜核实际阶段/最新知识/闭包，只经原FIFO接续原事务，已入写体禁止重放。本角色等实际部署/发布号/固定消费者结果及后续自然改线、复用和恢复回执，再独核runtime；不发继续信号、不重建门、不打断原局或重复发布。当前知识已自然推进K1-4511332a…，原F1WN仍绑定K04b03，保最新current与旧局绑定分账；不恢复旧current。
+
+下一步：原ops在自然边界执行已备七叶精确差量、实际部署固定检查、编号及双通知，回实际终态后本角色核release/live提交、逐叶SHA、保护差异与自然消费者；无自然改线/恢复则保runtime待办，不代采用或收益。#65交付a7242c20已到，下一工程责任仍由本角色按原队列独核并接适用组合，不夹64冻结包、也不以64稀有自然场景作新前置；#59四叶候选独立，旧#63三例和已释放登记不重放。#60/#61/#62科学父与原缺口独立保留。
+
+恢复入口：paper/materials/20261025-issue64-natural-publication-ops/{final-admission.json,preparation-complete.json,worker-state.json,publication-admission.json,record.md}；本角色只读核验paper/materials/20261025-issue64-combination-integrator/ops-admission-independent-readback.json。本轮无full/模型/对局/生产写/开关/回收/其他会话控制；原发布事务与FIFO完全归原ops。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 65
+updated_at: 2026-10-25T15:15:35+08:00
+
+进行中的事：已接#65并读原issue最新开发交付6394727914、ops原证据交接6394485809及固定报告。开发固定提交a7242c20e82088f9c8b1351cc33bb9337b398e17，分支issue-65-completed-learner-reclaim，原树.worktrees/issue-65-completed-learner-reclaim；生产差量仅ops/learner_tabs.py，依赖已部署#63的ops/learner_tui.py stream接口。普通fix只有原params.batch完全缺席且原登记/任务/角色/pane/按批次命名的工作树/项目根/唯一日志stem/首个原生marker均匹配才走新绑定；显式错误或null、其他任务缺字段、专题及未知布局仍保留，身份/原生终态/处置权/产物/忙输入/额外进程等保护门保持。本角色当前仅接交付与边界记录，尚未完成65源码/产物逐SHA独核、最终组合检查、main集成或宿主部署，不把开发自测当最终绿。
+
+在等谁：开发交付已到，下一责任环节在本角色独核固定提交/原证据与实际ROOT、LIVE、宿主依赖并沿原队列接适用完整检查，不再等重复开发或已验旧三例。开发报告生产tsc0、sandbox636文件5891项通过、paths补充11项及最后回收/native/wrapper组合176项通过；这些是开发自测待独核，首次复现harness断言修正与稀疏输入恢复历史保留。适用交付核收部署后，由原ops接同一134331原pane/receipt逐项实核封存、回收、退出、tab缺席及host映射移除；不代ops声明已验。#64已先行完成本角色唯一full689文件/6727过/0败/2跳及三tsc0、源码main8efc532325b5e7f0f413a114f8de1001fd4ba2fb已推送，终态/清单回6394745496；原ops已唤醒且上次实际working，当前issue尚无其新部署回执，不重full、不把65夹入64冻结包。
+
+下一步：先独核a7242c20的精确源码/测试/文档/检查回执和原manifest、原业务行及冻结副本SHA，保failed/rc0历史；鲜核实际宿主tabs/tui前像、#63依赖及唯一检查门，按原队列冻结65适用组合，必要检查通过后精确main集成并交原ops部署/回退与同一原样本runtime清单。失败保原件并沿65原线程/树接修。旧#63三例和已释放开发登记不重放，不补原batch、不伪重开UI、不直接操作生产seal/reclaim或改live/STOP；#59原134331四叶产品候选仍归59，按原队列独立核验，不纳入65补丁。#60运行/学习及13目标未命中、#61来源兼容/缺wrapper、#62首题816原件缺口均独立保留，不作为65工程的新前置。
+
+恢复入口：issue65/6394727914；固定提交内paper/materials/20261025-issue65-completed-learner-reclaim/{report.md,checks.json,frozen-original-readback.json}及docs/learner-tab-sessions.md；原证据paper/materials/20261025-issue65-original-handoff-ops/{manifest.json,handoff.md}，两原SHA上轮已核1b233098…9192/155e776c…c3f3，本轮不冒重新全核。当前读回main a6767d51efe6a06717037af28300bf4837dd5643，LIVE e9a468882a4fe1da2b1b721f0271b82f6083b002。本轮仅更新本角色交接笔记，无代码/测试/full/生产写/模型/对局/回收/其他会话控制。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 64
 updated_at: 2026-10-25T15:12:36+08:00
 
