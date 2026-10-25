@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-25T20:07:40+08:00",
+  "state": "CHECKS_ACCEPTED_MAIN_INTEGRATED_RUNTIME_PENDING",
+  "developer": "a3638d6f147b58a3b306032e0ed7d9df57f2a6cf",
+  "developer_base": "a6767d51efe6a06717037af28300bf4837dd5643",
+  "candidate": "70f33163b527030f44c10b2b4b301194b50d88de",
+  "checked_root_tree": "e8c4cfe0034c489894ff78ed1411a74806f8505c",
+  "checked_live_tree": "bfd368f79997d31f42e75d8c34061dfd15581ea2",
+  "actual_live_baseline": "86b31b7a57c9325d220b2b3eab41a97761e545cc",
+  "runtime_leaves": [
+    {
+      "path": "agent/src/brain/tools/classification-feedback.ts",
+      "preimage_sha256": null,
+      "installed_sha256": "48f2578ee409e6408d1f711c61ca72777703050dd2c9bcb75afb80ac25f5b4c9",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/brain/tools/query-guidance.ts",
+      "preimage_sha256": "d6f5bc8e8563082ebf4b150ac0593a7b994047543fee0264ea340c2e0acc707b",
+      "installed_sha256": "4a3b440b00dc14c2b12314d812e9be299214cd1bb027c02601b058a4bd7a550d",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/brain/tools/typed-knowledge.ts",
+      "preimage_sha256": "5a4fa4b5753771fa0466118b6cc7a405f46c4cd7d8ae670d0888d008e9576daa",
+      "installed_sha256": "5822d4cd96cbc989c65308e9a810960c5ef0c163120aedd5d3e8b5276381d24f",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/classification-schema.ts",
+      "preimage_sha256": null,
+      "installed_sha256": "9697410d4026fa31b725e879de4803dcefb227dd414977fb474f756431ec65b3",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/classification.ts",
+      "preimage_sha256": null,
+      "installed_sha256": "ac9d8aeee7321eaa8a8dab75093d611d3ed1750616d0923c44ace391647370a9",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/projection.ts",
+      "preimage_sha256": "557b1a7f530be602f8da73eb3609da4e01d1719b5868b8ab6f3c5b7bf7448d69",
+      "installed_sha256": "63c131b4a0181f61a5c71bdc33de9a8494a2d406d215cfe113396e2d7bdf6d95",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/reader.ts",
+      "preimage_sha256": "b07685fbb32b624cb819a25ae51221ad8fc977be9e7e3dfb3d0fd4b476af7a5d",
+      "installed_sha256": "88311cf955cdab1a55674281b1b94d4c429ae0c90ab08790d59242449491719a",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/schema.ts",
+      "preimage_sha256": "e1bcf9fa88e60d85c6d7ab4c59e5c0417b727afd5212c2c1041337eb6841d6f4",
+      "installed_sha256": "f85c20e757696e0f586536f21b05cf17ffbabbbb44bb086b8aec5ac184784919",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/store.ts",
+      "preimage_sha256": "7f253461465be3815bc1db9324723c9759cc9603a3432576a8a251893954f07c",
+      "installed_sha256": "023029f48345bb4fcaf03b12d587d8fdbd0e56c928218865c9b46c05c0a75874",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/validation.ts",
+      "preimage_sha256": "17c114259db5153c1abbc96c97bf5285771bc0d4ff21bb71b4366c4505861a58",
+      "installed_sha256": "cad966003520d51d7c92fb94298b219e3eca77638faaff32d2b0fc39a379e8d5",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/tools/knowledge-runtime.ts",
+      "preimage_sha256": "cb8b24b7ad7225d96cd385785b543621ded53c588a36dfe925cf545d0af2d2d7",
+      "installed_sha256": "31ff4d2c5a45934ea1541fa41c51f7f8b3ad0798385d74de84d990ed59ff6da6",
+      "mode": "100644"
+    }
+  ],
+  "runtime_patch": "paper/materials/20261025-issue66-combination-integrator/live-runtime-exact.patch",
+  "runtime_patch_sha256": "39666b67407d2be574eb479bf3e9343259df453ab70935590a0b825a6b22f14b",
+  "host_learning_leaves": [
+    "learner/lib/knowledge-classification.ts",
+    "learner/lib/knowledge-runtime.ts"
+  ],
+  "host_learning_contract": "minimal67 already included; preserve later67 operational early-return and run.sh data_launch hunks; no repeated cherry-pick",
+  "root_only": "tests/fixtures/audit CLI/docs/materials stay ROOT; archetypes test fixture is not runtime deployment leaf",
+  "publication_owner": "original ops via publication-admission and natural boundary; K1 unchanged by source upgrade",
+  "sqlite_upgrade": {
+    "old_schema": 2,
+    "new_schema": 3,
+    "backup": "old matching CLI backup via SQLite API before source replacement; record backup SHA, current K1, candidates/events/revisions/bindings and member SHA",
+    "install": "11 matching runtime source/CLI leaves, then new knowledge-runtime.ts init against same runtime path with unique writer",
+    "verification": "same existing K1, revisions, candidates, events, bindings, exact members; classification tables empty/unknown until real evidence-backed candidate published; old/new natural bindings and actual ToolDef version/coverage/empty reasons separately",
+    "rollback": "schema2 reader cannot open schema3; preserve new runtime/history and restore pre-upgrade consistent backup to a NEW directory with matching old CLI/source, then restore original binding/entry under original ops contract; new CLI restore upgrades to schema3"
+  },
+  "release_id_owner": "ops under original live lock after actual source commit; no id allocated by integrator",
+  "formal_content_owner": "original learner with evidence and stable target SHA; no synthetic tags deployed",
+  "runtime_acceptance_pending": true,
+  "scientific_parents_open": [
+    60,
+    62,
+    27,
+    61
+  ],
+  "production_operations": 0,
+  "main_integrated": true,
+  "main_parent": "1207293b2711907d78ea70518f619812e2a4a43c",
+  "actual_live_preserved": "86b31b7a57c9325d220b2b3eab41a97761e545cc",
+  "checks_pending": false,
+  "full_result_sha256": "42583dae2135b14ba508e4515e3991a2ae09021a63f182799291e83a8ef2d94c",
+  "full_counts": {
+    "files": 690,
+    "passed": 6739,
+    "failed": 0,
+    "skipped": 2
+  }
+}

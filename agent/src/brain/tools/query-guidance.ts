@@ -107,12 +107,13 @@ export async function attachQueryGuidance(req: BrainRequest): Promise<BrainReque
       omitted: Math.max(0, result.length - CUE_LIMIT) };
   } catch { experience = { status: "unavailable", count: null, entries: [] }; }
   const external = externalStatsQueryHints(ctx);
-  const strategyCount = strategyMatches(ctx).entries.length;
+  const strategies = strategyMatches(ctx), strategyCount = strategies.entries.length;
   const strategyHint = strategyCount > 0 ? `\n本题有 ${strategyCount} 条相关策略/剧本可查。` : "";
   const cues = { schema: "brain-query-cues-v3", question_type: kind,
     experience: { ...experience, ...(typeof experience["count"] === "number" && experience["count"] > 0 ? { tool: "kb_experience", input: { relevant: true } } : {}) },
+    ...(strategyCount > 0 ? { strategies: { status: strategies.status, count: strategyCount, tool: "kb_strategies", input: { query: "*", limit: 3 } } } : {}),
     ...(external ? { external_stats: external } : {}) };
-  return { ...req, question: `${req.question}${strategyHint}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；结果为空或预算结束后不重试刷库。\n${JSON.stringify(cues)}` };
+  return { ...req, question: `${req.question}${strategyHint}\n\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；主题仅筛明确标签，unknown不是库中没有知识，覆盖计数不当适用知识；不自动拓宽或重试刷库。构筑与爬楼路线分别判断，路线不变继续复用，不因分类更新重算。\n${JSON.stringify(cues)}` };
 }
 
 /** Only successful, actually returned entries count as hits; cues and model prose never count. */

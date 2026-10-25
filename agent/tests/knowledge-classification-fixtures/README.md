@@ -1,0 +1,5 @@
+# #66 冻结检索回归
+
+strategies.json 为原 K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4 的128条正式策略原字节，SHA256 d8a1a53d9fafa31324046cebe18a61f3cbd269a4f3431ca36acb8e1804b35b0f。startup.json 仅保留原首题检索输入与原日志切片指针，没有模型回答或新标签。
+
+来源为 #60/6394570207 与独核6394588461；完整冻结输入SHA 164dce9e638db5cfaf6f563d4087b33df0bc264df5976de2a77893102fc1c36d，详细出处见 paper/materials/20261025-issue66-classification/frozen-provenance.json。只作为固定测试数据，不是新增知识发布。合成分类标签仅在测试函数的格式夹具中产生。

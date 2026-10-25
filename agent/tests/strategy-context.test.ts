@@ -102,14 +102,15 @@ it("skips a whole oversized entry so smaller matches remain queryable and valida
   for (const input of [{ query: "*", limit: 7 }, { query: "*", offset: -1 }, { query: "*", path: "/unused" }]) expect((await host.call("kb_strategies", input)).isError).toBe(true);
 });
 
-it("offers exactly one optional count sentence for nonempty matches and never injects script content or IDs", async () => {
+it("offers one optional count and executable tool input without script content or IDs", async () => {
   const { ctx, library } = fixture();
   const req = { label: ctx.label!, system: "fixed", question: "fixed", payload: ctx.payload, options: { a: null }, toolContext: ctx,
     knowledge: { mode: "tools" as const }, spec: pickSpec(ctx.label!, { a: null }) };
   expect((await attachQueryGuidance(req)).question).not.toContain("相关策略/剧本可查");
   library([entry()]); const guided = await attachQueryGuidance(req);
   expect(guided.question.match(/本题有 1 条相关策略\/剧本可查。/g)).toHaveLength(1);
-  expect(guided.question).not.toMatch(/fixture-entry|FIXTURE_TEXT_ONLY|kb_strategies|先查|先调用/);
+  expect(guided.question).not.toMatch(/fixture-entry|FIXTURE_TEXT_ONLY|先查|先调用/);
+  expect(JSON.parse(guided.question.split("\n").at(-1)!).strategies).toMatchObject({ count: 1, tool: "kb_strategies", input: { query: "*", limit: 3 } });
   expect((await attachQueryGuidance({ ...req, knowledge: { mode: "full" } })).question).toBe("fixed");
 });
 

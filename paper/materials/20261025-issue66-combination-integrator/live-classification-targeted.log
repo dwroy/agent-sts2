@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator66-runtime-combination-20261025/agent
+
+(node:1570371) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1570580) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1570724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1571033) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1571041) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/strategy-context.test.ts (8 tests | 2 failed) 136ms
+   × returns only the nearest model-bound playbook sections and all ordinary context constraints still apply 9ms
+   × fails closed for missing/corrupt geometry but leaves ordinary entries available; missing libraries stay empty 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-context.test.ts > returns only the nearest model-bound playbook sections and all ordinary context constraints still apply
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.worktrees/integrator66-runtime-combination-20261025/knowledge/external/sts2fun/builds-v1/archetypes.json' -> '/home/dw/Projects/agent-sts2/.artifacts/integrator66-combination-20261025/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/strategy-context-qzafLI/external/sts2fun/builds-v1/archetypes.json'
+ ❯ copyModel tests/strategy-context.test.ts:33:121
+     31|   const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
+     32|   const call = async (input = { query: "*" } as Record<string, unknown…
+     33|   const copyModel = () => { const target = join(dir, ARCHETYPES_FILE);…
+       |                                                                                                                         ^
+     34|   return { ctx, path, library, host, call, copyModel };
+     35| }
+ ❯ tests/strategy-context.test.ts:45:68
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/strategy-context.test.ts > fails closed for missing/corrupt geometry but leaves ordinary entries available; missing libraries stay empty
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.worktrees/integrator66-runtime-combination-20261025/knowledge/external/sts2fun/builds-v1/archetypes.json' -> '/home/dw/Projects/agent-sts2/.artifacts/integrator66-combination-20261025/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/strategy-context-6BEN4W/external/sts2fun/builds-v1/archetypes.json'
+ ❯ copyModel tests/strategy-context.test.ts:33:121
+     31|   const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
+     32|   const call = async (input = { query: "*" } as Record<string, unknown…
+     33|   const copyModel = () => { const target = join(dir, ARCHETYPES_FILE);…
+       |                                                                                                                         ^
+     34|   return { ctx, path, library, host, call, copyModel };
+     35| }
+ ❯ tests/strategy-context.test.ts:75:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 81 passed (83)
+   Start at  19:27:57
+   Duration  15.28s (transform 3.15s, setup 593ms, import 3.89s, tests 10.15s, environment 1ms)
+

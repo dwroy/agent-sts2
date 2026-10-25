@@ -151,6 +151,9 @@ it("checks approved external artifacts and supplies runtime instructions only to
  const state = join(dir, "state.json"); writeFileSync(state, JSON.stringify({ batches: { fixture: { character: "silent" } } }));
  const env = { STS2_KNOWLEDGE_RUNTIME: s.root, LEARNER_BATCH_ID: "fixture", LEARNER_STATE_FILE: state, CODEX_OPS_ROOT: dir };
  const prompt = runtimeLearningInstructions(env, "experience-update", "silent", dir);
+ expect(prompt).toContain("characters/silent/classification.json");
+ expect(prompt).toContain("classification-draft");
+ expect(runtimeLearningInstructions(env, "strategy-proposal", "silent", dir)).toContain("knowledge-classification-v1");
  expect(prompt).toContain(s.current()); expect(prompt).toContain("knowledge_candidate"); expect(prompt).toContain("不commit/merge");
  expect(runtimeLearningInstructions({}, "experience-update", "silent", dir)).toBe("");
  expect(runtimeLearningInstructions(env, "fix-batch", "silent", dir)).toBe("");

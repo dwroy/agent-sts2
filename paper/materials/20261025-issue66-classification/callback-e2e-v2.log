@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_registered_callback_publishes_classification_once_and_preserves_binding (test_knowledge_classification.ClassificationCompletion.test_registered_callback_publishes_classification_once_and_preserves_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-66-knowledge-classification/ops/tests/test_knowledge_classification.py", line 69, in test_registered_callback_publishes_classification_once_and_preserves_binding
+    self.assertEqual(batch["state"], "done", inbox)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'awaiting_review' != 'done'
+- awaiting_review
++ done
+ : ['知识批次 fixed 发布待核：JSONDecodeError；保留原候选，以同一ID查实际结果后重试，不改源码/live或反证。']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.823s
+
+FAILED (failures=1)

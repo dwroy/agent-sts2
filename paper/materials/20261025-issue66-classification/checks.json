@@ -1,0 +1,56 @@
+{
+  "production_tsc": {
+    "exit": 0,
+    "log": "production-tsc-final.log"
+  },
+  "scoped_tool_tsc": {
+    "exit": 0,
+    "config": "tsconfig.tools.json",
+    "log": "scoped-tools-tsc-final.log"
+  },
+  "targeted": {
+    "exit": 0,
+    "files": 8,
+    "passed": 103,
+    "log": "targeted-after-sandbox.log"
+  },
+  "original_completion_e2e": {
+    "exit": 0,
+    "passed": 1,
+    "log": "callback-final.log"
+  },
+  "sandbox_first": {
+    "exit": 1,
+    "files_passed": 634,
+    "files_failed": 4,
+    "passed": 5895,
+    "failed": 16,
+    "log": "sandbox.log",
+    "resolution": "empty cue shape compatibility; nonempty cue tests aligned to #66; original sparse fixture restored, then 103 targeted passed"
+  },
+  "sandbox_final": {
+    "state": "passed",
+    "exit": 0,
+    "files": 638,
+    "passed": 5911,
+    "failed": 0,
+    "duration_seconds": 1259.43,
+    "fork_paths_files": 1,
+    "fork_paths_passed": 11,
+    "workers": 1,
+    "nice": 19,
+    "log": "sandbox-final.log",
+    "original_first_failure_preserved": true
+  },
+  "final_combination": "original integrator owns exact ROOT/LIVE combination full check and exit/input verification; no production deployment by developer",
+  "boundaries": "isolated fixed data only; no model/game/network gameplay calls; no production database/control/live/STOP/accounts changes",
+  "performance": {
+    "full_tool_hot_p95_target_ms": 50,
+    "real_max_p95_ms": 1.3608759999988251,
+    "scale_max_p95_ms": 13.411265999995521,
+    "real_log": "performance-final/real-performance.json",
+    "scale_log": "performance-final/scale-performance.json",
+    "cold_basis": "new readonly reader/ToolHost; process modules and OS cache not cleared",
+    "passes_target": true
+  }
+}

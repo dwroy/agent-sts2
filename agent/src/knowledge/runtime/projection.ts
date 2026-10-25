@@ -2,9 +2,8 @@ import { createHash } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import { evidenceRows, object, type Row } from "./validation.js";
 
-export const BUSINESS_TYPES = ["experience", "strategy", "reflex", "core", "combo", "direction", "vocab", "fact"] as const;
-export type BusinessType = typeof BUSINESS_TYPES[number];
-export const TOPICS = ["startup", "boss", "double_boss", "build_route", "climb_route"] as const;
+import { TOPICS, type BusinessType } from "./classification.js";
+export { BUSINESS_TYPES, TOPICS, type BusinessType } from "./classification.js";
 const json = (v: unknown) => JSON.stringify(v);
 const array = (v: unknown): any[] => Array.isArray(v) ? v : [];
 
