@@ -129,7 +129,9 @@ it("preserves existing strategy/reflex/experience tools, matching and negative c
  const tools = [strategyTool(), reflexKnowledgeTool()];
  for (const tool of tools) {
   const actual = await tool.run({ query: "*" }, ctx), original = await tool.run({ query: "*" }, { ...ctx, knowledgeDir: legacy });
-  expect(JSON.parse(actual.text)).toEqual(JSON.parse(original.text));
+  expect(JSON.parse(actual.text).entries).toEqual(JSON.parse(original.text).entries);
+  expect(JSON.parse(actual.text).status).toEqual(JSON.parse(original.text).status);
+  if (tool.name === "kb_strategies") expect(JSON.parse(actual.text).sources[0]).toMatchObject({ knowledge_version: v, sha256: JSON.parse(original.text).library_sha256 });
   expect(Buffer.byteLength(actual.text)).toBeLessThanOrEqual(24000);
   expect(JSON.parse((await tool.run({ query: "nonexistent" }, ctx)).text).entries).toEqual([]);
  }

@@ -2,7 +2,8 @@
 import { readFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { knowledgeCharacter, knowledgeFile } from "../../knowledge/files.js";
-import { loadExperience, offeredOn, relevance, type SliceInput } from "../../knowledge/experience.js";
+import { loadExperience, offeredOn, relevance, type SliceInput, type ExperienceEntry } from "../../knowledge/experience.js";
+import { indexedKnowledge } from "../../knowledge/runtime/reader.js";
 import { actThreatIds } from "../../knowledge/monster-db.js";
 import { parseStrategyLibrary, questionTypes, retrieveStrategies, STRATEGY_LIMITS } from "../../knowledge/strategy-entries.js";
 import { matchStrategyArchetype } from "../../knowledge/strategy-archetypes.js";
@@ -16,7 +17,7 @@ const record = (v: unknown): Record<string, unknown> => v && typeof v === "objec
 const CUE_LIMIT = 6;
 const identity = (v: string) => Array.from(v).slice(0, 100).join("");
 
-function questionFacts(ctx: ToolContext): Record<string, unknown> {
+export function questionFacts(ctx: ToolContext): Record<string, unknown> {
   const p = record(ctx.payload), rawRun = record(record(ctx.state)["run"]);
   const contexts = [record(p["facts"]), p, record(p["run_state"]), record(p["run_plan_task"]), record(p["run_brief"])];
   const get = (key: string) => contexts.map(c => c[key]).find(v => v !== undefined && v !== null);
@@ -31,6 +32,15 @@ function questionFacts(ctx: ToolContext): Record<string, unknown> {
 /** Read-only kb_strategies selector. Missing and invalid libraries stay explicit. */
 export function strategyMatches(ctx: ToolContext) {
   if (knowledgeCharacter() !== "silent") return { entries: [], sources: [], status: "empty" };
+  const reader = indexedKnowledge(ctx.knowledgeDir);
+  if (reader) {
+    const items = reader.all({ type: "strategy", character: knowledgeCharacter(), ascension: ctx.ascension,
+      questions: questionTypes(ctx.label ?? "", ctx.payload) });
+    const library = { schema: "brain-strategies-v1" as const, character: "silent" as const, entries: items.map(e => e.value) as ReturnType<typeof parseStrategyLibrary>["entries"] };
+    const archetype = library.entries.some(e => e.trigger.archetype) ? matchStrategyArchetype(ctx) : undefined;
+    return { entries: retrieveStrategies(library, ctx.label ?? "", { ...record(ctx.payload), facts: questionFacts(ctx) }, archetype?.match),
+      sources: reader.sources(items), status: "ok", library_sha256: reader.fileDigest(`characters/${knowledgeCharacter()}/strategy-entries.json`), archetype };
+  }
   const path = knowledgeFile(ctx.knowledgeDir, "strategy-entries.json");
   let raw: string;
   try {
@@ -47,9 +57,9 @@ export function strategyMatches(ctx: ToolContext) {
 }
 
 /** Reuse the published experience relevance rules; never infer a new gameplay rule from a cue. */
-export function selectRelevantExperience(ctx: ToolContext) {
-  recordKnowledgeQuerySource("experience.json");
-  recordKnowledgeQuerySource("shared-experience.json");
+export function selectRelevantExperience(ctx: ToolContext, candidates?: ExperienceEntry[]) {
+  const reader = candidates ? null : indexedKnowledge(ctx.knowledgeDir);
+  if (!reader && !candidates) { recordKnowledgeQuerySource("experience.json"); recordKnowledgeQuerySource("shared-experience.json"); }
   const raw = record(ctx.state), p = record(ctx.payload), facts = questionFacts(ctx);
   const act = Number(facts["act"]);
   const offered = offeredOn({ raw } as GameState, ctx.options);
@@ -63,12 +73,17 @@ export function selectRelevantExperience(ctx: ToolContext) {
   const input: SliceInput = { label: ctx.label ?? "", act, asc: ctx.ascension,
     bossId: String(facts["act_boss"] ?? "") || null,
     offered, enemies, threats: act >= 1 && act <= 3 ? actThreatIds(act, ctx.ascension) : [] };
-  return loadExperience(ctx.knowledgeDir).map(entry => ({ entry, tier: relevance(entry, input) }))
+  return (candidates ?? (reader ? reader.all({ type: "experience", character: knowledgeCharacter(), ascension: ctx.ascension }).map(e => e.value) as ExperienceEntry[] : loadExperience(ctx.knowledgeDir))).map(entry => ({ entry, tier: relevance(entry, input) }))
     .filter((v): v is { entry: typeof v.entry; tier: number } => v.tier !== null)
     .sort((a, b) => a.tier - b.tier || a.entry.id.localeCompare(b.entry.id)).map(v => v.entry);
 }
 
 export async function experienceMatches(ctx: ToolContext) {
+  const reader = indexedKnowledge(ctx.knowledgeDir);
+  if (reader) {
+    const items = reader.all({ type: "experience", character: knowledgeCharacter(), ascension: ctx.ascension });
+    return { result: selectRelevantExperience(ctx, items.map(e => e.value) as ExperienceEntry[]), sources: reader.sources(items) };
+  }
   return withKnowledgeQuerySources(ctx.knowledgeDir, async () => selectRelevantExperience(ctx));
 }
 

@@ -4,6 +4,10 @@ import { createHash } from "node:crypto";
 import { chmodSync, closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { SCHEMA, SCHEMA_VERSION } from "./schema.js";
+import { TYPED_SCHEMA } from "./typed-schema.js";
+import { projectRevision } from "./projection.js";
+import { safeSQLiteVersion } from "./sqlite-version.js";
+export { safeSQLiteVersion } from "./sqlite-version.js";
 import { allowedPath, ARCHETYPE_PATH, MIGRATED_NAMES, object, rows, evidenceRows, validateDocuments, validateUpdate, type Row } from "./validation.js";
 
 export const digest = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -48,16 +52,11 @@ function durable(path: string, text: string | Buffer): void {
 }
 function syncDir(path: string): void { const fd = openSync(path, "r"); try { fsyncSync(fd); } finally { closeSync(fd); } }
 
-export function safeSQLiteVersion(version: string): boolean {
-  const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
-  return major > 3 || major === 3 && (minor > 51 || minor === 51 && patch >= 3 || minor === 50 && patch >= 7 || minor === 44 && patch >= 6);
-}
-
 /** Discover only published leaves. Pending directories, original logs and frozen evidence are never imported. */
 export function importFiles(root: string): Record<string, string> {
   const result: Record<string, string> = {};
   const add = (path: string) => { if (existsSync(join(root, path))) result[path] = readFileSync(join(root, path), "utf8"); };
-  add("common/shared-experience.json"); add(ARCHETYPE_PATH);
+  add("common/shared-experience.json"); add("common/open-book.json"); add(ARCHETYPE_PATH);
   for (const character of readdirSync(join(root, "characters"))) {
     if (!/^[a-z0-9_]+$/.test(character) || !statSync(join(root, "characters", character)).isDirectory()) continue;
     for (const name of MIGRATED_NAMES) add(`characters/${character}/${name}`);
@@ -69,7 +68,7 @@ export function importFiles(root: string): Record<string, string> {
 export class KnowledgeStore {
  readonly db: DatabaseSync;
  readonly root: string;
- constructor(root: string, options: { readOnly?: boolean } = {}) {
+ constructor(root: string, options: { readOnly?: boolean; migrationFailpoint?: () => void } = {}) {
   this.root = resolve(root);
   if (!options.readOnly) mkdirSync(this.root, { recursive: true, mode: 0o700 });
   // All callers must use a host-local runtime directory; refuse common WSL network/Windows mounts.
@@ -82,10 +81,18 @@ export class KnowledgeStore {
     this.db.exec("PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;");
     if (!options.readOnly) {
       this.db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;");
-      this.db.exec(SCHEMA);
-      const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
-      if (old && Number(old["value"]) !== SCHEMA_VERSION) throw new Error("unsupported knowledge schema");
-      this.db.prepare("INSERT OR IGNORE INTO metadata VALUES('schema',?)").run(String(SCHEMA_VERSION));
+      this.transaction(() => {
+        this.db.exec(SCHEMA);
+        const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
+        const schema = old ? Number(old["value"]) : 1;
+        if (![1, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
+        if (schema === 1) {
+          this.db.exec(TYPED_SCHEMA);
+          for (const row of this.db.prepare("SELECT * FROM revisions ORDER BY revision").iterate()) projectRevision(this.db, row);
+          options.migrationFailpoint?.();
+          this.db.prepare("INSERT INTO metadata VALUES('schema',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String(SCHEMA_VERSION));
+        }
+      });
       chmodSync(join(this.root, "knowledge.sqlite"), 0o600);
     }
   } catch (error) { this.db.close(); throw error; }
@@ -108,7 +115,7 @@ export class KnowledgeStore {
     || !candidate.source?.trim() || !object(candidate.files) || !Object.keys(candidate.files).length) throw new Error("invalid candidate envelope");
   for (const [path, text] of Object.entries(candidate.files)) {
     if (!allowedPath(path) || typeof text !== "string" || candidate.character !== "migration"
-      && !(path.startsWith(`characters/${candidate.character}/`) || candidate.character === "common" && path === "common/shared-experience.json")) throw new Error("candidate character/path mismatch");
+      && !(path.startsWith(`characters/${candidate.character}/`) || candidate.character === "common" && ["common/shared-experience.json", "common/open-book.json"].includes(path))) throw new Error("candidate character/path mismatch");
   }
   const body = canonical(candidate), hash = digest(body);
   if (Buffer.byteLength(body) > 32 * 1024 * 1024) throw new Error("candidate exceeds 32MB");
@@ -224,6 +231,7 @@ export class KnowledgeStore {
   for (const [category, term] of e.terms) this.db.prepare("INSERT OR IGNORE INTO terms VALUES(?,?,?)").run(e.revision, category, term);
   for (const [ordinal, ev] of e.evidence.entries()) this.db.prepare("INSERT INTO evidence VALUES(?,?,?,?,?,?)").run(e.revision, ordinal, ev.role ?? "support", ev.source ?? null, ev.dataset_sha256 ?? ev.evidence_sha256 ?? null, JSON.stringify(ev));
   this.db.prepare("INSERT INTO body_search VALUES(?,?)").run(e.revision, e.payload);
+  projectRevision(this.db, e);
  }
  rollback(version: string, request: string): string {
   const row = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(version);

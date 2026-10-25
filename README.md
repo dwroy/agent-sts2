@@ -53,7 +53,7 @@ V5 增加独立[构筑模块](docs/v5-construction.md)：未来成型概率先�
 
 ## 运行
 
-需要 Node ≥ 20（本机装在 `~/.local/node/bin`）和 Python 3。
+当前组合使用 Node 22.23.3（本机装在 `~/.local/node/bin`）和 Python 3。#62 知识工具使用内置 `node:sqlite`，历史 Node 20 不适用；SQLite 必须包含 WAL-reset 修复，启动检查见 [知识 runtime](docs/knowledge-runtime.md)。不需要安装新的数据库包。
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH

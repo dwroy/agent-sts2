@@ -3,6 +3,9 @@ import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { KnowledgeStore, importFiles, auditApprovedChanges, type Candidate } from "../src/knowledge/runtime/store.js";
+import { SCHEMA_VERSION } from "../src/knowledge/runtime/schema.js";
+import { KnowledgeReader } from "../src/knowledge/runtime/reader.js";
+import { BUSINESS_TYPES, type BusinessType } from "../src/knowledge/runtime/projection.js";
 
 export async function main(argv = process.argv.slice(2)): Promise<void> {
  const [command, ...rest] = argv;
@@ -18,7 +21,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   const store = KnowledgeStore.restore(required("backup"), required("runtime"));
   try { console.log(JSON.stringify({ current: store.current(), restored: true })); } finally { store.close(); } return;
  }
- const readonly = ["current", "query", "status", "backup", "verify", "export"].includes(command ?? "");
+ const readonly = ["current", "query", "typed-query", "status", "backup", "verify", "export"].includes(command ?? "");
  if (command === "complete") {
   const database = join(required("runtime"), "knowledge.sqlite");
   if (!existsSync(database) || !lstatSync(database).isFile() || lstatSync(database).isSymbolicLink()) throw new Error("original runtime database is unavailable; do not initialize or rebind completion");
@@ -27,7 +30,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
  let result: unknown;
  try {
   switch (command) {
-   case "init": result = { schema: 1, current: store.current() }; break;
+   case "init": result = { schema: SCHEMA_VERSION, current: store.current() }; break;
    case "current": result = { version: store.current() }; break;
    case "export": {
     const all = store.files(required("version"));
@@ -39,6 +42,24 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
    case "import": {
     const candidate: Candidate = { schema: "knowledge-candidate-v1", id: required("id"), base: null, character: "migration", source: required("source"), files: importFiles(required("knowledge")) };
     store.submit(candidate); store.validate(candidate.id); result = { version: store.publish(candidate.id) }; break;
+   }
+   case "extend": {
+    const base = required("base"), prior = store.files(base);
+    // Add newly covered documents only; an old Git checkout cannot overwrite runtime revisions.
+    const files = Object.fromEntries(Object.entries(importFiles(required("knowledge"))).filter(([path]) => !(path in prior)));
+    if (!Object.keys(files).length) throw new Error("no additional published documents in this frozen input");
+    const candidate: Candidate = { schema: "knowledge-candidate-v1", id: required("id"), base, character: "migration", source: required("source"), files };
+    store.submit(candidate); store.validate(candidate.id); result = { version: store.publish(candidate.id), added: Object.keys(files) }; break;
+   }
+   case "typed-query": {
+    const type = required("type"); if (!(BUSINESS_TYPES as readonly string[]).includes(type)) throw new Error("unknown business type");
+    const reader = new KnowledgeReader(required("runtime"), required("version"));
+    try { result = reader.query({ type: type as BusinessType, character: required("character"),
+      ...(flags["ascension"] ? { ascension: Number(flags["ascension"]) } : {}),
+      ...(flags["text"] ? { text: flags["text"] } : {}), ...(flags["entity"] ? { entity: flags["entity"] } : {}),
+      ...(flags["topic"] ? { topic: flags["topic"] } : {}), ...(flags["category"] ? { category: flags["category"] } : {}),
+      ...(flags["limit"] ? { limit: Number(flags["limit"]) } : {}), ...(flags["offset"] ? { offset: Number(flags["offset"]) } : {}) });
+    } finally { reader.close(); } break;
    }
    case "submit": result = store.submit(JSON.parse(readFileSync(required("candidate"), "utf8")) as Candidate); break;
    case "validate": result = store.validate(required("id")); break;
@@ -75,7 +96,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     if (command === "launch") {
      if (!child.length) throw new Error("launch requires -- <program> [args]");
      const binding = result as { version: string; snapshot: string };
-     // Close the publisher handle before the child starts. Gameplay gets files only.
+     // Close the publisher handle before launch; tools can open only a version-bound read-only connection.
      store.close();
      const proc = spawn(child[0]!, child.slice(1), { stdio: "inherit", env: { ...process.env,
       STS2_KNOWLEDGE_SNAPSHOT: binding.snapshot, STS2_KNOWLEDGE_VERSION: binding.version, STS2_KNOWLEDGE_RUN_KEY: required("run") } });
@@ -85,7 +106,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     break;
    }
    case "backup": await store.backup(required("destination")); result = { backup: resolve(flags["destination"]!) }; break;
-   default: throw new Error("commands: init/import/submit/validate/publish/complete/status/current/query/verify/bind/launch/rollback/backup/restore");
+   default: throw new Error("commands: init/import/extend/submit/validate/publish/complete/status/current/query/typed-query/verify/bind/launch/rollback/backup/restore");
   }
   const text = JSON.stringify(result);
   if (flags["receipt"]) writeFileSync(flags["receipt"], text + "\n", { mode: 0o600 });

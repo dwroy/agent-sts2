@@ -1,0 +1,127 @@
+{
+  "version": "K1-eb7cf735a426f87760f0a0523b8fa96f2ce49050dc26a4d2263bf3e0eacff075",
+  "entries": 10000,
+  "import_ms": 39018.081661,
+  "source": "synthetic format only; not game evidence",
+  "results": [
+    {
+      "name": "kb_experience",
+      "input": {
+        "id": "fixture-09999"
+      },
+      "fresh_process": {
+        "total_ms": 484.96943499999907,
+        "tool_ms": 13.52702800000003,
+        "isError": false,
+        "output_bytes": 1224,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 2.3010170000052312,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.11304099999688333,
+        "p95_ms": 0.20433399999456014,
+        "max_ms": 0.6233530000026803
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.13440000000264263,
+        "p95_ms": 0.24534200000198325,
+        "max_ms": 20.621978999995918
+      },
+      "returned": 1,
+      "total_matches": 1,
+      "output_bytes": 1224,
+      "returned_ids": [
+        "fixture-09999"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=? AND original_id=?)"
+        },
+        {
+          "id": 39,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 47,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "relevant": true
+      },
+      "fresh_process": {
+        "total_ms": 541.0673160000006,
+        "tool_ms": 260.25668699999994,
+        "isError": false,
+        "output_bytes": 10349,
+        "os_file_cache": "not dropped"
+      },
+      "cold_tool_ms": 199.7411590000047,
+      "hot_db": {
+        "n": 30,
+        "p50_ms": 1.4872279999981401,
+        "p95_ms": 2.010659999999916,
+        "max_ms": 3.0670700000046054
+      },
+      "hot_tool": {
+        "n": 30,
+        "p50_ms": 179.0375270000004,
+        "p95_ms": 204.55942900000082,
+        "max_ms": 207.57882699999755
+      },
+      "returned": 12,
+      "total_matches": 10000,
+      "output_bytes": 10349,
+      "returned_ids": [
+        "fixture-00000",
+        "fixture-00001",
+        "fixture-00002",
+        "fixture-00003",
+        "fixture-00004",
+        "fixture-00005",
+        "fixture-00006",
+        "fixture-00007",
+        "fixture-00008",
+        "fixture-00009",
+        "fixture-00010",
+        "fixture-00011"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 45,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    }
+  ]
+}

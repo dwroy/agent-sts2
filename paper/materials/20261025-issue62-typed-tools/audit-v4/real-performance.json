@@ -1,0 +1,624 @@
+{
+  "version": "K1-45cbc05b04e2a31184dca03e428dda9170779efbd6a0660d75e01d59f85a8f2c",
+  "note": "100 sequential hot measurements after one cold ToolHost call; DB query is bounded first page, full tool includes exhaustion, dynamic matching, output and host audit; no LLM/network",
+  "results": [
+    {
+      "name": "kb_experience",
+      "input": {
+        "relevant": true
+      },
+      "cold_tool_ms": 96.08810900000026,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 4.08048300000155,
+        "p95_ms": 10.060183999998117,
+        "max_ms": 18.606674000002386
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 12.885331000001315,
+        "p95_ms": 20.886600999998336,
+        "max_ms": 41.34016899999915
+      },
+      "returned": 9,
+      "total_matches": 10,
+      "output_bytes": 19905,
+      "returned_ids": [
+        "silent-kin-poison-sl-observation",
+        "silent-bygone-effigy-wake-strength",
+        "silent-byrdonis-strength-multihit-observation",
+        "silent-gardener-skittish-shield",
+        "silent-jaxfruit-strength-vulnerable-observation",
+        "silent-terror-eel-vigor-vulnerable",
+        "silent-vine-shambler-tangled-cost-window",
+        "silent-act-transition-missing-hp-heal",
+        "silent-rest-buffer-observation"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "keyword": "启动"
+      },
+      "cold_tool_ms": 3.291842999999062,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.8786540000000969,
+        "p95_ms": 2.126532000002044,
+        "max_ms": 3.7223160000030475
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 2.059124999999767,
+        "p95_ms": 5.359483000000182,
+        "max_ms": 287.15223200000037
+      },
+      "returned": 11,
+      "total_matches": 15,
+      "output_bytes": 23875,
+      "returned_ids": [
+        "silent-act-transition-missing-hp-heal",
+        "silent-aeonglass-artifact-growth-sl",
+        "silent-afterimage-per-card-block",
+        "silent-axebot-stock-phase-budget",
+        "silent-core-dexterity-defense-observation",
+        "silent-diamond-diadem-opening-retention",
+        "silent-double-boss-resource-handoff",
+        "silent-eternal-armor-finite-plating",
+        "silent-fight-me-upgraded-dual-strength",
+        "silent-footwork-block",
+        "silent-nightmare-next-turn-copies"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 56,
+          "detail": "SEARCH item_grams USING COVERING INDEX sqlite_autoindex_item_grams_1 (gram=?)"
+        },
+        {
+          "id": 53,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 62,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 108,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 111,
+          "parent": 108,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 122,
+          "parent": 108,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 131,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_strategies",
+      "input": {
+        "query": "*"
+      },
+      "cold_tool_ms": 10.226034999999683,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 1.003923999996914,
+        "p95_ms": 1.9696619999995164,
+        "max_ms": 4.171696000001248
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 1.67289399999936,
+        "p95_ms": 4.734064000000217,
+        "max_ms": 10.736260000001494
+      },
+      "returned": 3,
+      "total_matches": 6,
+      "output_bytes": 14274,
+      "returned_ids": [
+        "silent-brain-kin-priest-exit-window",
+        "silent-brain-blade-flexible-formation-review",
+        "silent-brain-potion-buff-before-relevant-cards"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 56,
+          "detail": "SEARCH item_terms USING COVERING INDEX item_term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 54,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 63,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 109,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 112,
+          "parent": 109,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 123,
+          "parent": 109,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 132,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_reflex",
+      "input": {
+        "query": "*"
+      },
+      "cold_tool_ms": 20.749039999998786,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 3.7545739999986836,
+        "p95_ms": 8.980612999999721,
+        "max_ms": 12.85402499999691
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 8.225792000001093,
+        "p95_ms": 13.409201999998913,
+        "max_ms": 31.92655999999988
+      },
+      "returned": 7,
+      "total_matches": 164,
+      "output_bytes": 23143,
+      "returned_ids": [
+        "silent-encounter-rk-ceremonial-cry-output-versus-next-defense",
+        "silent-encounter-rk-ceremonial-plow-weaken-block",
+        "silent-encounter-rk-crab-active-side-leg-sweep",
+        "silent-encounter-rk-decimillipede-split-poison",
+        "silent-encounter-rk-demon-slap-wail-block",
+        "silent-encounter-rk-effigy-sleep-footwork",
+        "silent-encounter-rk-insatiable-bite-block-and-weaken"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_open_book",
+      "input": {
+        "query": "ABUNDANCE"
+      },
+      "cold_tool_ms": 7.739328999999998,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.6629799999973329,
+        "p95_ms": 1.3379529999983788,
+        "max_ms": 2.78901599999881
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.7129359999998996,
+        "p95_ms": 1.2932419999997364,
+        "max_ms": 1.8994970000021567
+      },
+      "returned": 1,
+      "total_matches": 1,
+      "output_bytes": 3496,
+      "returned_ids": [
+        "ABUNDANCE"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 40,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 43,
+          "parent": 40,
+          "notused": 132,
+          "detail": "SCAN item_search VIRTUAL TABLE INDEX 0:M2"
+        },
+        {
+          "id": 52,
+          "parent": 40,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 61,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 107,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 110,
+          "parent": 107,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 121,
+          "parent": 107,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 130,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_build_cores",
+      "input": {
+        "query": "*"
+      },
+      "cold_tool_ms": 13.633555000000342,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 9.585985000001529,
+        "p95_ms": 12.590914000000339,
+        "max_ms": 17.58960500000103
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 10.273543999999674,
+        "p95_ms": 13.969451000000845,
+        "max_ms": 22.2662679999994
+      },
+      "returned": 4,
+      "total_matches": 4,
+      "output_bytes": 9416,
+      "returned_ids": [
+        "D",
+        "P",
+        "R",
+        "S"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_build_combos",
+      "input": {
+        "query": "*"
+      },
+      "cold_tool_ms": 13.551053999999567,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 9.225789000000077,
+        "p95_ms": 14.737774000001082,
+        "max_ms": 19.2882239999999
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 10.335599999998522,
+        "p95_ms": 14.173018999998021,
+        "max_ms": 17.211468000001332
+      },
+      "returned": 5,
+      "total_matches": 17,
+      "output_bytes": 17664,
+      "returned_ids": [
+        "D-flask-sweep",
+        "D-fumes-backflip",
+        "D-observed-union-fbc4b776",
+        "D-toxin-backflip",
+        "P-flask-afterimage"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_vocab",
+      "input": {
+        "query": "*"
+      },
+      "cold_tool_ms": 2.435585999999603,
+      "hot_db": {
+        "n": 100,
+        "p50_ms": 0.976994000000559,
+        "p95_ms": 1.3966939999991155,
+        "max_ms": 2.1262400000014168
+      },
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 1.3987340000021504,
+        "p95_ms": 2.4569940000001225,
+        "max_ms": 4.170507000002544
+      },
+      "returned": 12,
+      "total_matches": 101,
+      "output_bytes": 10426,
+      "returned_ids": [
+        "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+        "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+        "silent-encounter-rk-crab-active-side-leg-sweep-tag",
+        "silent-encounter-rk-decimillipede-split-poison-tag",
+        "silent-encounter-rk-demon-slap-wail-block-tag",
+        "silent-encounter-rk-effigy-sleep-footwork-tag",
+        "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+        "silent-encounter-rk-insatiable-salivate-escape-tag",
+        "silent-encounter-rk-kin-beam-wail-window-tag",
+        "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+        "silent-encounter-rk-matriarch-sleep-setup-tag",
+        "silent-encounter-rk-vantom-slippery-defense-draw-tag"
+      ],
+      "errors": [],
+      "cold_error": false,
+      "query_plan": [
+        {
+          "id": 14,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 37,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 83,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 2"
+        },
+        {
+          "id": 86,
+          "parent": 83,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 97,
+          "parent": 83,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 106,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    }
+  ]
+}

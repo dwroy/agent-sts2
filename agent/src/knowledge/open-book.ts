@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { KNOWLEDGE_DIR, workspaceRoot } from "../core/paths.js";
 import { characterKey, knowledgeCharacter } from "./files.js";
+import { runtimeKnowledgeRoot } from "./runtime-paths.js";
 
 type Row = Record<string, unknown>;
 export type ReferenceKind = "cards" | "relics" | "monsters" | "events";
@@ -26,7 +27,9 @@ const validId = (id: string) => /^[A-Z][A-Z0-9_]{0,99}$/.test(id);
 const bytes = (value: unknown) => Buffer.byteLength(JSON.stringify(value), "utf8");
 
 export function loadOpenBook(directory = KNOWLEDGE_DIR): Library {
-  const overlay = directory === KNOWLEDGE_DIR ? join(workspaceRoot(), "data/external/open-book/catalog/knowledge") : null;
+  const bound = runtimeKnowledgeRoot(directory);
+  const overlay = bound === directory && !/\/snapshots\/K1-[a-f0-9]{64}$/.test(bound) && directory === KNOWLEDGE_DIR ? join(workspaceRoot(), "data/external/open-book/catalog/knowledge") : null;
+  directory = bound;
   const groups = ["common", "characters/silent"].map((scope) => [...(overlay ? [join(overlay, scope, "open-book.json")] : []), join(directory, scope, "open-book.json")]);
   const stamp = groups.flat().map((path) => { try { const s = statSync(path); return `${path}:${s.ino}:${s.size}:${s.mtimeMs}`; } catch { return `${path}:missing`; } }).join("/");
   const prior = cache.get(directory);

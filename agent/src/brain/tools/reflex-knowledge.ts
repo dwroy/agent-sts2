@@ -16,7 +16,7 @@ type Filter = { query: string; applies_to?: string };
 const sha = (s: string) => createHash("sha256").update(s).digest("hex");
 
 /** A planning query may read construction knowledge, never substitute combat-line advice for it. */
-function constructionTypes(ctx: ToolContext): readonly string[] | null {
+export function constructionTypes(ctx: ToolContext): readonly string[] | null {
   if (ctx.label === "fight-plan") return null;
   const types = questionTypes(ctx.label ?? "", ctx.payload);
   if (types.includes("act_plan") || types.includes("event")) return ["card_pick", "potion", "rest", "shop"];
