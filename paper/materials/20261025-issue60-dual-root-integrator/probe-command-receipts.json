@@ -1,0 +1,155 @@
+{
+  "commands": [
+    {
+      "step": "build",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node .artifacts/integrator60-dual-root-20261025/build-probes.cjs > paper/materials/20261025-issue60-dual-root-integrator/probe-build.log 2>&1",
+      "chunk_id": "98665c",
+      "wall_time_seconds": 0.238703561,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "prepare",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node .artifacts/integrator60-dual-root-20261025/prepare.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed > paper/materials/20261025-issue60-dual-root-integrator/probe-prepare.log 2>&1",
+      "chunk_id": "5daba2",
+      "wall_time_seconds": 0.000015129,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "import",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node .artifacts/integrator60-dual-root-20261025/cli.mjs import --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --knowledge /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/legacy --id fixture-migration --source fixture:dual-root > paper/materials/20261025-issue60-dual-root-integrator/probe-cli-import.json 2> paper/materials/20261025-issue60-dual-root-integrator/probe-cli-import.stderr",
+      "chunk_id": "88d430",
+      "wall_time_seconds": 0.000012369,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "launcher",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node .artifacts/integrator60-dual-root-20261025/launcher.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 > paper/materials/20261025-issue60-dual-root-integrator/probe-launcher.json 2> paper/materials/20261025-issue60-dual-root-integrator/probe-launcher.stderr",
+      "chunk_id": "ecb6fc",
+      "wall_time_seconds": 0.00001242,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "game-original",
+      "cmd": "STS2_WORKSPACE=/home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025 exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs launch --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --run FIXTURE_ORIGINAL --code d0d9da10063c623f3036a6910e83f4ae3c30c06e -- /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/game.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 legacy > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-original.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-original.stderr",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator60-runtime-closure-20261025/agent",
+      "chunk_id": "ea7772",
+      "wall_time_seconds": 0.002298148,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "complete-1",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs complete --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --candidate /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/next-candidate.json --id fixture-next --code d0d9da10063c623f3036a6910e83f4ae3c30c06e > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-complete-1.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-complete-1.stderr",
+      "chunk_id": "4c0f80",
+      "wall_time_seconds": 0.000012329,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "complete-2",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs complete --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --candidate /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/next-candidate.json --id fixture-next --code d0d9da10063c623f3036a6910e83f4ae3c30c06e > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-complete-2.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-complete-2.stderr",
+      "chunk_id": "c64479",
+      "wall_time_seconds": 0.000014109,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "game-old-after-publish",
+      "cmd": "STS2_WORKSPACE=/home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025 exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs launch --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --run FIXTURE_ORIGINAL --code d0d9da10063c623f3036a6910e83f4ae3c30c06e -- /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/game.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 legacy > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-old-after-publish.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-old-after-publish.stderr",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator60-runtime-closure-20261025/agent",
+      "chunk_id": "6fed68",
+      "wall_time_seconds": 0.00544498,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "game-new-after-publish",
+      "cmd": "STS2_WORKSPACE=/home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025 exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs launch --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --run FIXTURE_NEW --code d0d9da10063c623f3036a6910e83f4ae3c30c06e -- /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/game.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-6d4405dbb6a2d415b744591c320805acae5602201ed0c1c0999913e82f8fed40 legacy-next > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-new-after-publish.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-new-after-publish.stderr",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator60-runtime-closure-20261025/agent",
+      "chunk_id": "f03ac8",
+      "wall_time_seconds": 0.000181649,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "rollback-1",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs rollback --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --version K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 --request fixture-rollback > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-rollback-1.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-rollback-1.stderr",
+      "chunk_id": "e45945",
+      "wall_time_seconds": 0.000012989,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "rollback-2",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs rollback --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --version K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 --request fixture-rollback > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-rollback-2.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-rollback-2.stderr",
+      "chunk_id": "689740",
+      "wall_time_seconds": 0.000012489,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "game-new-after-rollback",
+      "cmd": "STS2_WORKSPACE=/home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025 exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs launch --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --run FIXTURE_AFTER_ROLLBACK --code d0d9da10063c623f3036a6910e83f4ae3c30c06e -- /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/game.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4 legacy > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-new-after-rollback.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-new-after-rollback.stderr",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator60-runtime-closure-20261025/agent",
+      "chunk_id": "caffae",
+      "wall_time_seconds": 0.000013589,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "game-existing-after-rollback",
+      "cmd": "STS2_WORKSPACE=/home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025 exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs launch --runtime /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed/runtime --run FIXTURE_NEW --code d0d9da10063c623f3036a6910e83f4ae3c30c06e -- /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/game.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed K1-6d4405dbb6a2d415b744591c320805acae5602201ed0c1c0999913e82f8fed40 legacy-next > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-existing-after-rollback.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-game-existing-after-rollback.stderr",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator60-runtime-closure-20261025/agent",
+      "chunk_id": "65f8d3",
+      "wall_time_seconds": 0.000013969,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "inspect",
+      "cmd": "exec nice -n 19 /home/dw/.local/node/bin/node /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/prepare.mjs /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/dual-root-fixed inspect > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-inspect.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-inspect.stderr",
+      "chunk_id": "504c32",
+      "wall_time_seconds": 0.000014629,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "recheck-prepare",
+      "cmd": "exec nice -n 19 /usr/bin/python3 -B /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/ops/tests/knowledge_runtime_recheck_probe.py --node /home/dw/.local/node/bin/node --cli /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-recheck-prepare.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-recheck-prepare.stderr",
+      "chunk_id": "03997e",
+      "wall_time_seconds": 0.35915676,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "step": "recheck-recover",
+      "cmd": "exec env -u STS2_KNOWLEDGE_RUNTIME -u STS2_KNOWLEDGE_ROOT -u STS2_KNOWLEDGE_CONTROL_SHA256 -u STS2_KNOWLEDGE_SOURCE nice -n 19 /usr/bin/python3 -B /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/ops/tests/knowledge_runtime_recheck_probe.py --node /home/dw/.local/node/bin/node --cli /home/dw/Projects/agent-sts2/.artifacts/integrator60-dual-root-20261025/cli.mjs --recover /home/dw/Projects/agent-sts2/.worktrees/integrator60-dual-root-20261025/.cache/knowledge-recheck-nfog2nhz > /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-recheck-recover.json 2> /home/dw/Projects/agent-sts2/paper/materials/20261025-issue60-dual-root-integrator/probe-recheck-recover.stderr",
+      "chunk_id": "6220a5",
+      "wall_time_seconds": 0.445847286,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ],
+  "v1": "K1-557bd0b7188d279fd80c7002a0a39715747b234f742dd0c437483d282888f8f4",
+  "v2": "K1-6d4405dbb6a2d415b744591c320805acae5602201ed0c1c0999913e82f8fed40"
+}
