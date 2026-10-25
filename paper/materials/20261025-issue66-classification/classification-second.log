@@ -1,0 +1,24 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-66-knowledge-classification/agent
+
+(node:791828) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/knowledge-classification.test.ts (11 tests | 1 failed) 1231ms
+   × keeps old classifications unknown and separates strict filter misses 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/knowledge-classification.test.ts > keeps old classifications unknown and separates strict filter misses
+SyntaxError: Unexpected token 'o', "topic 只能是 ""... is not valid JSON
+ ❯ Object.call tests/knowledge-classification.test.ts:33:183
+
+ ❯ tests/knowledge-classification.test.ts:41:114
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  16:27:47
+   Duration  2.51s (transform 932ms, setup 328ms, import 807ms, tests 1.23s, environment 0ms)
+

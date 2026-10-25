@@ -1,4 +1,6 @@
 /** Host-local publisher. The gameplay process never imports this writable adapter. */
+import { CLASSIFICATION_SCHEMA } from "./classification-schema.js";
+import { projectClassifications } from "./classification.js";
 import { DatabaseSync, backup } from "node:sqlite";
 import { createHash } from "node:crypto";
 import { chmodSync, closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
@@ -56,7 +58,7 @@ function syncDir(path: string): void { const fd = openSync(path, "r"); try { fsy
 export function importFiles(root: string): Record<string, string> {
   const result: Record<string, string> = {};
   const add = (path: string) => { if (existsSync(join(root, path))) result[path] = readFileSync(join(root, path), "utf8"); };
-  add("common/shared-experience.json"); add("common/open-book.json"); add(ARCHETYPE_PATH);
+  add("common/classification.json"); add("common/shared-experience.json"); add("common/open-book.json"); add(ARCHETYPE_PATH);
   for (const character of readdirSync(join(root, "characters"))) {
     if (!/^[a-z0-9_]+$/.test(character) || !statSync(join(root, "characters", character)).isDirectory()) continue;
     for (const name of MIGRATED_NAMES) add(`characters/${character}/${name}`);
@@ -85,10 +87,14 @@ export class KnowledgeStore {
         this.db.exec(SCHEMA);
         const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
         const schema = old ? Number(old["value"]) : 1;
-        if (![1, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
+        if (![1, 2, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
         if (schema === 1) {
           this.db.exec(TYPED_SCHEMA);
           for (const row of this.db.prepare("SELECT * FROM revisions ORDER BY revision").iterate()) projectRevision(this.db, row);
+        }
+        if (schema < 3) {
+          this.db.exec(CLASSIFICATION_SCHEMA);
+          projectClassifications(this.db, this.db.prepare("SELECT revision FROM revisions WHERE kind='classification'").all().map(r => String(r.revision)));
           options.migrationFailpoint?.();
           this.db.prepare("INSERT INTO metadata VALUES('schema',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String(SCHEMA_VERSION));
         }
@@ -115,7 +121,7 @@ export class KnowledgeStore {
     || !candidate.source?.trim() || !object(candidate.files) || !Object.keys(candidate.files).length) throw new Error("invalid candidate envelope");
   for (const [path, text] of Object.entries(candidate.files)) {
     if (!allowedPath(path) || typeof text !== "string" || candidate.character !== "migration"
-      && !(path.startsWith(`characters/${candidate.character}/`) || candidate.character === "common" && ["common/shared-experience.json", "common/open-book.json"].includes(path))) throw new Error("candidate character/path mismatch");
+      && !(path.startsWith(`characters/${candidate.character}/`) || candidate.character === "common" && ["common/shared-experience.json", "common/open-book.json", "common/classification.json"].includes(path))) throw new Error("candidate character/path mismatch");
   }
   const body = canonical(candidate), hash = digest(body);
   if (Buffer.byteLength(body) > 32 * 1024 * 1024) throw new Error("candidate exceeds 32MB");
@@ -193,6 +199,7 @@ export class KnowledgeStore {
       this.db.prepare("INSERT INTO release_files VALUES(?,?,?)").run(version, path, digest(text));
     }
     for (const entry of revisions) this.insertRevision(version, entry);
+    projectClassifications(this.db, revisions.filter(e => e.kind === "classification").map(e => String(e.revision)));
     failpoint?.();
     this.db.prepare("INSERT INTO metadata VALUES('current',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(version);
     this.db.prepare("UPDATE candidates SET status='published',version=? WHERE id=?").run(version, id);

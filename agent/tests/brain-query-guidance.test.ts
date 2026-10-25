@@ -36,13 +36,14 @@ function fixture(label = "reward/card") {
 }
 const answer = (): BrainAnswer => ({ engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 10, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] });
 
-it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s offers a strategy count without mandatory strategy/rk guidance and retains experience cues", async label => {
+it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s offers optional strategy tool/input guidance and retains experience cues", async label => {
   const { req, ctx } = fixture(label), before = JSON.stringify(req.payload);
   const result = await attachQueryGuidance(req);
   const cues = JSON.parse(result.question.split("\n").at(-1)!);
-  expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
+  expect(cues.strategies).toMatchObject({ status: "ok", count: 1, tool: "kb_strategies", input: { query: "*", limit: 3 } }); expect(cues).not.toHaveProperty("rk");
   expect(result.question).toContain("本题有 1 条相关策略/剧本可查。");
-  expect(result.question).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).not.toMatch(/kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).toContain("只按非空线索及需要查询");
   expect(result.system).toContain("kb_strategies"); expect(result.system).toContain("kb_reflex");
   expect(result.system).not.toContain("查相关策略与 rk 后");
   expect(result.tools!.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex"]));

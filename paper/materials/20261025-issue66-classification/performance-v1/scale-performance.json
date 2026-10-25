@@ -1,0 +1,597 @@
+{
+  "entries": 10000,
+  "classifications": 100,
+  "import_ms": 33680.145231,
+  "basis": "same #62 10000-row scale; synthetic partial coverage; not gameplay evidence",
+  "results": [
+    {
+      "name": "kb_experience",
+      "input": {
+        "id": "fixture-09999"
+      },
+      "version": "K1-fca061e084fb8c72fa11d275b3afd0f100b1e7abaaff7ebaaea32bdce59dad2d",
+      "cold_tool_ms": 37.873876999998174,
+      "cold_basis": "new readonly SQLite reader and ToolHost; process/module/OS file cache uncontrolled",
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.06089600000268547,
+        "p95_ms": 0.08938299999863375,
+        "max_ms": 0.21279400000639725
+      },
+      "hot_sql_page": {
+        "n": 100,
+        "p50_ms": 0.13603000000148313,
+        "p95_ms": 0.20605499999510357,
+        "max_ms": 0.44826499999908265
+      },
+      "output_bytes": 1791,
+      "returned": 1,
+      "total_matches": 1,
+      "coverage": {
+        "scope": {
+          "total": 10000,
+          "classified": 0,
+          "unknown": 10000
+        },
+        "filter_pool": {
+          "total": 1,
+          "classified": 0,
+          "unknown": 1
+        },
+        "requested_topic": null,
+        "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余显式筛选，移除topic；均未验证动态条件，不含其他角色"
+      },
+      "empty_reasons": [],
+      "query_plan": [
+        {
+          "id": 16,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=? AND original_id=?)"
+        },
+        {
+          "id": 41,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 87,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 90,
+          "parent": 87,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 101,
+          "parent": 87,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 110,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH c USING INDEX classification_item (item=?) LEFT-JOIN"
+        },
+        {
+          "id": 118,
+          "parent": 0,
+          "notused": 0,
+          "detail": "CORRELATED SCALAR SUBQUERY 1"
+        },
+        {
+          "id": 122,
+          "parent": 118,
+          "notused": 39,
+          "detail": "SEARCH cp USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 135,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "relevant": true
+      },
+      "version": "K1-fca061e084fb8c72fa11d275b3afd0f100b1e7abaaff7ebaaea32bdce59dad2d",
+      "cold_tool_ms": 270.09369400000287,
+      "cold_basis": "new readonly SQLite reader and ToolHost; process/module/OS file cache uncontrolled",
+      "hot_tool": {
+        "n": 30,
+        "p50_ms": 11.617248000002292,
+        "p95_ms": 13.607132999997702,
+        "max_ms": 15.06749999999738
+      },
+      "hot_sql_page": {
+        "n": 30,
+        "p50_ms": 1.476658999999927,
+        "p95_ms": 1.9306560000040918,
+        "max_ms": 2.060604999998759
+      },
+      "output_bytes": 11485,
+      "returned": 12,
+      "total_matches": 10000,
+      "coverage": {
+        "scope": {
+          "total": 10000,
+          "classified": 0,
+          "unknown": 10000
+        },
+        "filter_pool": {
+          "total": 10000,
+          "classified": 0,
+          "unknown": 10000
+        },
+        "requested_topic": null,
+        "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余显式筛选，移除topic；均未验证动态条件，不含其他角色"
+      },
+      "empty_reasons": [],
+      "query_plan": [
+        {
+          "id": 16,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 39,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 85,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 88,
+          "parent": 85,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 99,
+          "parent": 85,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 108,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH c USING INDEX classification_item (item=?) LEFT-JOIN"
+        },
+        {
+          "id": 116,
+          "parent": 0,
+          "notused": 0,
+          "detail": "CORRELATED SCALAR SUBQUERY 1"
+        },
+        {
+          "id": 120,
+          "parent": 116,
+          "notused": 39,
+          "detail": "SEARCH cp USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 133,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "topic": "startup"
+      },
+      "version": "K1-a791be4019881a413c89e1f640054447ad2b660011cd8710eec38ea80781189e",
+      "cold_tool_ms": 96.13971599999786,
+      "cold_basis": "new readonly SQLite reader and ToolHost; process/module/OS file cache uncontrolled",
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.7212660000004689,
+        "p95_ms": 1.1547179999979562,
+        "max_ms": 18.158353999999235
+      },
+      "hot_sql_page": {
+        "n": 100,
+        "p50_ms": 16.08737299999484,
+        "p95_ms": 18.894422999997914,
+        "max_ms": 21.06350000000384
+      },
+      "output_bytes": 18844,
+      "returned": 12,
+      "total_matches": 100,
+      "coverage": {
+        "scope": {
+          "total": 10000,
+          "classified": 100,
+          "unknown": 9900
+        },
+        "filter_pool": {
+          "total": 10000,
+          "classified": 100,
+          "unknown": 9900
+        },
+        "requested_topic": "startup",
+        "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余显式筛选，移除topic；均未验证动态条件，不含其他角色"
+      },
+      "empty_reasons": [],
+      "query_plan": [
+        {
+          "id": 16,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 39,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 85,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 88,
+          "parent": 85,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 99,
+          "parent": 85,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 108,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH c USING INDEX classification_item (item=?) LEFT-JOIN"
+        },
+        {
+          "id": 116,
+          "parent": 0,
+          "notused": 0,
+          "detail": "CORRELATED SCALAR SUBQUERY 1"
+        },
+        {
+          "id": 120,
+          "parent": 116,
+          "notused": 39,
+          "detail": "SEARCH cp USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 138,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 4"
+        },
+        {
+          "id": 141,
+          "parent": 138,
+          "notused": 56,
+          "detail": "SEARCH item_terms USING COVERING INDEX item_term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 153,
+          "parent": 138,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 166,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 6"
+        },
+        {
+          "id": 171,
+          "parent": 166,
+          "notused": 56,
+          "detail": "SEARCH ct USING COVERING INDEX classification_term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 179,
+          "parent": 166,
+          "notused": 45,
+          "detail": "SEARCH cp EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 190,
+          "parent": 166,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 200,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "entity": "别名fixture-09900"
+      },
+      "version": "K1-a791be4019881a413c89e1f640054447ad2b660011cd8710eec38ea80781189e",
+      "cold_tool_ms": 52.12319800000114,
+      "cold_basis": "new readonly SQLite reader and ToolHost; process/module/OS file cache uncontrolled",
+      "hot_tool": {
+        "n": 100,
+        "p50_ms": 0.18668600000091828,
+        "p95_ms": 0.27536000000691274,
+        "max_ms": 0.42848899999808054
+      },
+      "hot_sql_page": {
+        "n": 100,
+        "p50_ms": 4.9647859999968205,
+        "p95_ms": 6.325012000001152,
+        "max_ms": 7.492117000001599
+      },
+      "output_bytes": 2405,
+      "returned": 1,
+      "total_matches": 1,
+      "coverage": {
+        "scope": {
+          "total": 10000,
+          "classified": 100,
+          "unknown": 9900
+        },
+        "filter_pool": {
+          "total": 1,
+          "classified": 1,
+          "unknown": 0
+        },
+        "requested_topic": null,
+        "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余显式筛选，移除topic；均未验证动态条件，不含其他角色"
+      },
+      "empty_reasons": [],
+      "query_plan": [
+        {
+          "id": 16,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 42,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 6"
+        },
+        {
+          "id": 45,
+          "parent": 42,
+          "notused": 56,
+          "detail": "SEARCH item_terms USING COVERING INDEX item_term_lookup (category=?)"
+        },
+        {
+          "id": 54,
+          "parent": 42,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 5"
+        },
+        {
+          "id": 60,
+          "parent": 54,
+          "notused": 55,
+          "detail": "SEARCH f USING COVERING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 81,
+          "parent": 54,
+          "notused": 45,
+          "detail": "SEARCH t USING COVERING INDEX sqlite_autoindex_item_terms_1 (item=? AND category=? AND term=?)"
+        },
+        {
+          "id": 90,
+          "parent": 54,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 102,
+          "parent": 54,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 117,
+          "parent": 42,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 130,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 8"
+        },
+        {
+          "id": 135,
+          "parent": 130,
+          "notused": 66,
+          "detail": "SEARCH ct USING COVERING INDEX classification_term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 155,
+          "parent": 130,
+          "notused": 45,
+          "detail": "SEARCH cp EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 166,
+          "parent": 130,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 177,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 223,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 226,
+          "parent": 223,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 237,
+          "parent": 223,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 246,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH c USING INDEX classification_item (item=?) LEFT-JOIN"
+        },
+        {
+          "id": 254,
+          "parent": 0,
+          "notused": 0,
+          "detail": "CORRELATED SCALAR SUBQUERY 1"
+        },
+        {
+          "id": 258,
+          "parent": 254,
+          "notused": 39,
+          "detail": "SEARCH cp USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 271,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    },
+    {
+      "name": "kb_experience",
+      "input": {
+        "relevant": true
+      },
+      "version": "K1-a791be4019881a413c89e1f640054447ad2b660011cd8710eec38ea80781189e",
+      "cold_tool_ms": 294.0447719999938,
+      "cold_basis": "new readonly SQLite reader and ToolHost; process/module/OS file cache uncontrolled",
+      "hot_tool": {
+        "n": 30,
+        "p50_ms": 12.381061000000045,
+        "p95_ms": 17.989299000000756,
+        "max_ms": 18.29471700000431
+      },
+      "hot_sql_page": {
+        "n": 30,
+        "p50_ms": 1.4556200000006356,
+        "p95_ms": 2.1952450000026147,
+        "max_ms": 2.195569000003161
+      },
+      "output_bytes": 12100,
+      "returned": 12,
+      "total_matches": 10000,
+      "coverage": {
+        "scope": {
+          "total": 10000,
+          "classified": 100,
+          "unknown": 9900
+        },
+        "filter_pool": {
+          "total": 10000,
+          "classified": 100,
+          "unknown": 9900
+        },
+        "requested_topic": null,
+        "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余显式筛选，移除topic；均未验证动态条件，不含其他角色"
+      },
+      "empty_reasons": [],
+      "query_plan": [
+        {
+          "id": 16,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH b USING INDEX business_order (type=? AND character=?)"
+        },
+        {
+          "id": 39,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_revisions_1 (revision=?)"
+        },
+        {
+          "id": 85,
+          "parent": 0,
+          "notused": 0,
+          "detail": "LIST SUBQUERY 3"
+        },
+        {
+          "id": 88,
+          "parent": 85,
+          "notused": 56,
+          "detail": "SEARCH terms USING COVERING INDEX term_lookup (category=? AND term=?)"
+        },
+        {
+          "id": 99,
+          "parent": 85,
+          "notused": 0,
+          "detail": "CREATE BLOOM FILTER"
+        },
+        {
+          "id": 108,
+          "parent": 0,
+          "notused": 62,
+          "detail": "SEARCH c USING INDEX classification_item (item=?) LEFT-JOIN"
+        },
+        {
+          "id": 116,
+          "parent": 0,
+          "notused": 0,
+          "detail": "CORRELATED SCALAR SUBQUERY 1"
+        },
+        {
+          "id": 120,
+          "parent": 116,
+          "notused": 39,
+          "detail": "SEARCH cp USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        },
+        {
+          "id": 133,
+          "parent": 0,
+          "notused": 45,
+          "detail": "SEARCH p EXISTS USING COVERING INDEX sqlite_autoindex_release_entries_1 (version=? AND revision=?)"
+        }
+      ]
+    }
+  ]
+}

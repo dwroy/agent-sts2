@@ -106,3 +106,6 @@ nice -n 19 python3 ops/knowledge_runtime_env.py --root "$ROOT" --state-dir "$ROO
 6. 数据回退用 rollback 切旧知识版，仅影响下一新绑定；已有局继续原绑定。源码回退/恢复旧发布器只在自然边界取消 snapshot/runtime 配置并核旧文件来源，防止同时使用两个有效通道。数据库损坏则先保留原库/WAL/失败材料，用 backup restore 到新目录核验，再沿原实例自然边界切目录；不抹去候选和原失败。
 
 生产最小闭环、新局/重启自动绑定的真实日志与原父要求均由 ops 在切换时实际读回。工程交付不关闭这些运行验收项。
+
+
+#66 追加 schema3 显式分类元数据、候选与空因反馈；schema1/2原修订和K1保持。当前 reader/升级、分类操作和诊断口径以[显式知识分类合同](knowledge-classification.md)为准。

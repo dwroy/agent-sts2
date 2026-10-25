@@ -57,3 +57,6 @@ node --import tsx tools/knowledge-runtime.ts extend --runtime "$RUNTIME" \
 角色隔离对铁甲同样适用：经验只取铁甲与正式公共经验，不读取静默专属内容。绑定 SQLite 后开卷工具也按公共+当前角色取数；旧开卷加载器固定附带的静默专属100条不再对铁甲开放。这是按本 issue 跨角色隔离验收收窄只读知识面，不修改铁甲的游戏规则、参数或执行代码；实际行为影响仍由 ops 核自然调用。
 
 CLI 只读诊断另有 `typed-query --runtime ... --version ... --character ... --type experience --text 路线`，支持 `--entity/--topic/--category/--ascension/--limit/--offset`。诊断和固定工具回放不代生产真实调用。
+
+
+#66 追加 schema3 显式分类元数据、候选与空因反馈；schema1/2原修订和K1保持。当前 reader/升级、分类操作和诊断口径以[显式知识分类合同](knowledge-classification.md)为准。

@@ -1,3 +1,4 @@
+import { validateClassifications, validateTopics } from "./classification.js";
 import { createHash } from "node:crypto";
 import { parseStrategyLibrary, STRATEGY_LIMITS } from "../strategy-entries.js";
 import { ARCHETYPES_SHA256 } from "../strategy-archetypes.js";
@@ -9,10 +10,10 @@ import { validate } from "../../v6/schema.js";
 
 export type Row = Record<string, any>;
 export const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
-export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json"]);
+export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "classification.json"]);
 export const ARCHETYPE_PATH = "external/sts2fun/builds-v1/archetypes.json";
 export function allowedPath(path: string): boolean {
-  return path === "common/shared-experience.json" || path === "common/open-book.json" || path === ARCHETYPE_PATH
+  return path === "common/classification.json" || path === "common/shared-experience.json" || path === "common/open-book.json" || path === ARCHETYPE_PATH
     || /^characters\/[a-z0-9_]+\/[a-z-]+\.json$/.test(path) && MIGRATED_NAMES.has(path.split("/")[2]!);
 }
 export function rows(body: Row): Row[] { return Array.isArray(body.entries) ? body.entries : [{ id: "$document", ...body }]; }
@@ -58,6 +59,8 @@ export function validateDocuments(files: Record<string, string>): void {
     if (!object(body)) throw new Error(`invalid document: ${path}`);
     parsed[path] = body;
     const name = path.split("/").at(-1), character = path.split("/")[1];
+    if (name === "classification.json") continue;
+    for (const e of Array.isArray(body.entries) ? body.entries : []) if (e.topics !== undefined) validateTopics(e.topics);
     if (name === "shared-experience.json") parseSharedExperience(body, path);
     else if (name === "open-book.json") {
       const ids = new Set();
@@ -101,6 +104,7 @@ export function validateDocuments(files: Record<string, string>): void {
     }
   }
   for (const [path, body] of Object.entries(parsed)) {
+    if (path.endsWith("/classification.json")) validateClassifications(path, body, files);
     if (!path.endsWith("/reflex.json")) continue;
     const prefix = path.slice(0, -"reflex.json".length);
     const cores = parsed[prefix + "build-cores.json"]?.entries ?? [];
@@ -126,6 +130,7 @@ export function validateUpdate(before: Record<string, string>, after: Record<str
       const changed = current.get(identity(entry));
       if (!changed) throw new Error(`retire instead of deleting published entry: ${entry.id}`);
       if (JSON.stringify(entry) === JSON.stringify(changed)) continue;
+      if (path.endsWith("/classification.json") && JSON.stringify([entry.target.path, entry.target.type, entry.target.id, entry.target.parent_id]) !== JSON.stringify([changed.target.path, changed.target.type, changed.target.id, changed.target.parent_id])) throw new Error("classification identity cannot be rebound");
       preserveNested(entry, changed);
       if (!retains(evidenceRows(entry), evidenceRows(changed))
         || !retains(entry.sources ?? [], changed.sources ?? []) || !retains(entry.counterexamples ?? [], changed.counterexamples ?? [])

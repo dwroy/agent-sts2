@@ -1,3 +1,4 @@
+import { classificationTargets, classificationDigest } from "../src/knowledge/runtime/classification.js";
 /** CLI shared by runtime completion callbacks and ops. No production paths are implicit. */
 import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -21,7 +22,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   const store = KnowledgeStore.restore(required("backup"), required("runtime"));
   try { console.log(JSON.stringify({ current: store.current(), restored: true })); } finally { store.close(); } return;
  }
- const readonly = ["current", "query", "typed-query", "status", "backup", "verify", "export"].includes(command ?? "");
+ const readonly = ["current", "query", "typed-query", "classification-draft", "status", "backup", "verify", "export"].includes(command ?? "");
  if (command === "complete") {
   const database = join(required("runtime"), "knowledge.sqlite");
   if (!existsSync(database) || !lstatSync(database).isFile() || lstatSync(database).isSymbolicLink()) throw new Error("original runtime database is unavailable; do not initialize or rebind completion");
@@ -50,6 +51,21 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     if (!Object.keys(files).length) throw new Error("no additional published documents in this frozen input");
     const candidate: Candidate = { schema: "knowledge-candidate-v1", id: required("id"), base, character: "migration", source: required("source"), files };
     store.submit(candidate); store.validate(candidate.id); result = { version: store.publish(candidate.id), added: Object.keys(files) }; break;
+   }
+   case "classification-draft": {
+    const version = required("version"), character = required("character"), path = required("path"), all = store.files(version);
+    if (!/^[a-z0-9_]+$/.test(character) || !(character === "common" ? path.startsWith("common/") : path.startsWith(`characters/${character}/`)) || !all[path]) throw Error("classification draft role/path mismatch");
+    const target = classificationTargets(path, JSON.parse(all[path]!)).find(e => e.type === required("type") && e.id === required("entry") && e.parent_id === flags["parent"]);
+    if (!target) throw Error("classification target is unavailable or ambiguous; specify original parent/kind");
+    const metaPath = character === "common" ? "common/classification.json" : `characters/${character}/classification.json`;
+    const body = JSON.parse(all[metaPath] ?? JSON.stringify({ schema: "knowledge-classification-v1", character, entries: [] }));
+    const prior = body.entries.find((e: any) => e.target.path === path && e.target.type === target.type && e.target.id === target.id && e.target.parent_id === target.parent_id);
+    const entry = { ...(prior ?? { id: required("classification-id"), topics: [], entities: [], aliases: [], evidence: [], rationale: "" }),
+     target: { path, type: target.type, id: target.id, ...(target.parent_id ? { parent_id: target.parent_id } : {}), sha256: classificationDigest(target.value) } };
+    body.entries = prior ? body.entries.map((e: any) => e === prior ? entry : e) : [...body.entries, entry];
+    result = { schema: "knowledge-candidate-v1", id: required("id"), base: version, character, source: required("source"), files: { [metaPath]: JSON.stringify(body) } };
+    if (flags["destination"]) writeFileSync(flags["destination"], JSON.stringify(result, null, 2), { flag: "wx", mode: 0o600 });
+    break;
    }
    case "typed-query": {
     const type = required("type"); if (!(BUSINESS_TYPES as readonly string[]).includes(type)) throw new Error("unknown business type");
@@ -106,7 +122,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     break;
    }
    case "backup": await store.backup(required("destination")); result = { backup: resolve(flags["destination"]!) }; break;
-   default: throw new Error("commands: init/import/extend/submit/validate/publish/complete/status/current/query/typed-query/verify/bind/launch/rollback/backup/restore");
+   default: throw new Error("commands: init/import/extend/submit/validate/publish/complete/status/current/query/typed-query/classification-draft/verify/bind/launch/rollback/backup/restore");
   }
   const text = JSON.stringify(result);
   if (flags["receipt"]) writeFileSync(flags["receipt"], text + "\n", { mode: 0o600 });

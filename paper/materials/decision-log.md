@@ -7020,3 +7020,9 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T15:12:07+08:00 [watcher] #64唯一full689文件/6727过/0败/2跳及三tsc0，原worker退出/检查锁释放/冻结SHA核同后精确main8efc532325b5e7f0f413a114f8de1001fd4ba2fb并WindowsSSH推送核远端；原issue6394745496部署差量清单逐字核回并唤醒原ops，等待新发布事务及自然路线runtime回执，未写LIVE；#60冻结缺口6394588461及新增40题39KB6394639375独核记录同存，13目标未命中/新关键词空分账，65独立、旧63三例不重回收。
 
 - 2026-10-25T15:12:36+08:00 [watcher] #64交付/通知及60独核记录6732c8fee61cfad06cef56d74cdec519e6244f12已推送；原ops pane w1H:p8实际working，尚无新issue接收或发布回执，runtime沿原ops继续，工程不重full。
+
+- 2026-10-25T16:25:40+08:00 [dev #67] 按主管6395371177先固定#66分类helper与既有runtime知识合同最小注入：helper取原#66已登记接口原字节，已登记experience/strategy真实合同包含classification.json/classification-draft指引，未启用及代码任务不注入；生产tsc0/knowledge-runtime定向10过。独立三叶可先接#66最终组合，不等#67运营/刷新全包；正式分类schema/tools仍归66，未改生产/知识/发布号，不冒组合full或自然消费完成。
+
+- 2026-10-25T17:04:36+08:00 [dev #66] 正式K1显式分类工程：schema3角色/common元数据按原type/ID/parent/目标SHA同候选原子校验与索引，旧无标签保持unknown；ToolDef增加绑定版覆盖/空因，非空策略线索给可选tool/input，空线索保持原形状与两路线复用。精确接67最小8d6e4b021三叶/helper原字节，不等运营全包。生产/本项CLI tsc0、八文件103定向与真实原完成回调1过；首轮sandbox638/5895过/16败保留，空线索兼容及旧断言修正、原Git稀疏夹具恢复后待第二轮最终自测/原集成组合。分类内容由原学习者维护，未改正式知识/生产库/main/live/STOP/账号/发布号或他会话，runtime读回/采用/收益父保持。合同docs/knowledge-classification.md，材料paper/materials/20261025-issue66-classification/。
+
+- 2026-10-25T17:27:27+08:00 [dev #66] 最终冻结组合自测通过：生产/本项CLI tsc0，八文件103定向、真实原完成回调1过，第二轮sandbox638文件/5911过/0败并fork路径11过、脚本exit0；首轮638/5895过/16败原件保留，13新线索旧断言/2空线索兼容/1原Git稀疏夹具均已分项复验。完整tool热P95真实最高1.362ms/万条13.412ms，冷耗时另账；性能源码/27交付叶SHA与67helper原字节核同。交原集成精确组合full及ops自然schema3升级/真实分类发布读回，未改main/live/正式知识/运行配置或分配发布号，采用/收益与科学父仍开放。见paper/materials/20261025-issue66-classification/{report.md,checks.json,delivery-leaves.json}。

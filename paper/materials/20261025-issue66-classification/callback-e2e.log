@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_registered_callback_publishes_classification_once_and_preserves_binding (test_knowledge_classification.ClassificationCompletion.test_registered_callback_publishes_classification_once_and_preserves_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-66-knowledge-classification/ops/tests/test_knowledge_classification.py", line 69, in test_registered_callback_publishes_classification_once_and_preserves_binding
+    self.assertEqual(batch["state"], "done", inbox)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'awaiting_review' != 'done'
+- awaiting_review
++ done
+ : ['知识批次 fixed 缺原持久runtime绑定；保留原合同/产物，不按当前控制或环境重绑。']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.839s
+
+FAILED (failures=1)

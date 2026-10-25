@@ -180,7 +180,11 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
     expect((requests[0]!.payload as any).run_plan_task.current_plan).toBeNull();
     const cues = JSON.parse(requests[0]!.question.split("\n").at(-1)!);
     expect(cues.schema).toBe("brain-query-cues-v3");
-    expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
+    expect(cues).not.toHaveProperty("rk");
+    if (cues.strategies) {
+      expect(cues.strategies.count).toBeGreaterThan(0);
+      expect(cues.strategies).toMatchObject({ tool: "kb_strategies", input: { query: "*", limit: 3 } });
+    }
     for (const [key, tool] of [["experience", "kb_experience"]]) {
       if (typeof cues[key].count === "number" && cues[key].count > 0) expect(cues[key].tool).toBe(tool);
       else {
