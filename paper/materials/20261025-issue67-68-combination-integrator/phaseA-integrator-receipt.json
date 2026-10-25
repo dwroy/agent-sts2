@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-25T20:54:46+08:00",
+  "comment": {
+    "url": "https://github.com/dwroy/agent-sts2/issues/67#issuecomment-6397898784",
+    "body": "[watcher] 已独核 6397866656 的实际 postmortem 运营准入（20:52 CST），不是仅核准备清单。\n\n- 生产控制 SHA `1ff1352b39aab21d8fbd472d47c59407befe23825379c6bb541aa2a759b78534` 与原激活记录相同；实际 capture 仅 `postmortem`，refresh=[]、methods={}、managed_paths=[]。宿主完整 pin `51c289c573c59ac0c0b7ecda1d7ae035712927bd` 的14叶核同，ROOT交付232叶未变，queue/heavy仍off。\n- 生产 SQLite 和初始备份均只读核得 integrity=ok、DELETE；completions/records/objects/data_releases/data_bindings 均0。备份实际是139264字节的 SQLite 文件，SHA `b1f698db052fe25cb0d30bdc0818e7b110278eb776afe46e916c2ca5ffd13a23`；原备份清单 files=[] 是对文件作目录遍历，不能据此判为无备份。原件保留。\n- 实际 LIVE 仍 `86b31b7a57c9325d220b2b3eab41a97761e545cc` / V6-R452。ops准入原件中67的11叶已备，source_body_started=false、gate_created=false；这与首真实批分项待核，不报已上线。66原FIFO/worker仍归原ops，本次不重放或替代其事务。\n\n下一步仍是原合法 postmortem launch绑定→真实完成入库→原文本/去重消费者读回及同ID幂等。固定refresh另按6397849457补三LIVE builder（原22+3=25）、实际方法重算/seed及原writer自然结算后核启用；不阻挡postmortem运营准入。校准执行/方法根为已安装ROOT，输出保原batch树。67不等68真实shadow/active，未出现类型及科学父保留pending。\n\n证据：`paper/materials/20261025-issue67-68-combination-integrator/phaseA-independent-readback.json`、`phaseA-ops-receipt.json`；接力已更新。原唯一full692文件/6744过/0败/2跳及三tsc0不重跑；本次无生产写、无新批/对局/回收。\n",
+    "user": {
+      "login": "dwroy",
+      "name": "dwroy",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/1374130?v=4",
+      "id": 1374130
+    },
+    "id": 6397898784,
+    "pull_request_review_id": null,
+    "in_reply_to_id": null,
+    "created_at": null,
+    "updated_at": null,
+    "review": null,
+    "side": null,
+    "line": null,
+    "start_line": null,
+    "path": null,
+    "body_html": "<p dir=\"auto\">[watcher] 已独核 6397866656 的实际 postmortem 运营准入（20:52 CST），不是仅核准备清单。</p>\n<ul dir=\"auto\">\n<li>生产控制 SHA <code class=\"notranslate\">1ff1352b39aab21d8fbd472d47c59407befe23825379c6bb541aa2a759b78534</code> 与原激活记录相同；实际 capture 仅 <code class=\"notranslate\">postmortem</code>，refresh=[]、methods={}、managed_paths=[]。宿主完整 pin <code class=\"notranslate\">51c289c573c59ac0c0b7ecda1d7ae035712927bd</code> 的14叶核同，ROOT交付232叶未变，queue/heavy仍off。</li>\n<li>生产 SQLite 和初始备份均只读核得 integrity=ok、DELETE；completions/records/objects/data_releases/data_bindings 均0。备份实际是139264字节的 SQLite 文件，SHA <code class=\"notranslate\">b1f698db052fe25cb0d30bdc0818e7b110278eb776afe46e916c2ca5ffd13a23</code>；原备份清单 files=[] 是对文件作目录遍历，不能据此判为无备份。原件保留。</li>\n<li>实际 LIVE 仍 <code class=\"notranslate\">86b31b7a57c9325d220b2b3eab41a97761e545cc</code> / V6-R452。ops准入原件中67的11叶已备，source_body_started=false、gate_created=false；这与首真实批分项待核，不报已上线。66原FIFO/worker仍归原ops，本次不重放或替代其事务。</li>\n</ul>\n<p dir=\"auto\">下一步仍是原合法 postmortem launch绑定→真实完成入库→原文本/去重消费者读回及同ID幂等。固定refresh另按6397849457补三LIVE builder（原22+3=25）、实际方法重算/seed及原writer自然结算后核启用；不阻挡postmortem运营准入。校准执行/方法根为已安装ROOT，输出保原batch树。67不等68真实shadow/active，未出现类型及科学父保留pending。</p>\n<p dir=\"auto\">证据：<code class=\"notranslate\">paper/materials/20261025-issue67-68-combination-integrator/phaseA-independent-readback.json</code>、<code class=\"notranslate\">phaseA-ops-receipt.json</code>；接力已更新。原唯一full692文件/6744过/0败/2跳及三tsc0不重跑；本次无生产写、无新批/对局/回收。</p>"
+  },
+  "author_verified": "dwroy",
+  "exact_body_readback": true
+}
