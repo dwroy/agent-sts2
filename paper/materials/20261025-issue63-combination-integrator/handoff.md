@@ -1,3 +1,11 @@
+# #63 工程与三原样本运行核收
+
+更新时间 2026-10-25T14:06:54+08:00。ops6394210629已由本角色独立核收，公开6394222723逐字回读。三原样本均实际ops-recovery封存、journal done/reclaimed、host映射移除，原tab/native/监督/shell缺席；三原业务行与每例五份原件/封存/备份SHA同、原树保留。原63开发UI已恢复性释放，registry waiting-worktree，原五idle PID及tab缺席，固定树/分支f95114df3、原线程/账号/2498321字节日志前缀SHA、终端尾与恢复入口均核同，研发余1。原登记锁拒绝发生于pre-stop，原失败及独立有界接续保留；未重放操作、重开UI、complete/删除或关闭科学父。历史空输入/无额外任务按原审计核同，已停止界面不重开倒查。
+
+实际两叶/旧备份SHA与main a94f8244及固定交付同，LIVE e9a468882/R451保持。原唯一687/6695/0/2、三tsc0及首次定向/62前冻结限制继续，未重full。runtime-independent-readback.json保存全部原件/原生/业务行/封存/journal/恢复独核，runtime-probe.py只读，runtime-public-receipt.json保存公开原件。下一组合沿64，不把历史完整检查视为新组合绿；60自然学习/收益及61原来源缺口独立。
+
+上一部署交接（原文保留）：
+
 # #63 固定组合终态与部署交接
 
 更新时间 2026-10-25T14:01:11+08:00。固定开发 `f95114df313e4e2b65b8acd5fc5339cc46a2fbae`、隔离候选 `ee029e2eed3832d0fb72df7b24eb52a3e83c16a9`。原唯一full于13:53:05终态：687文件/6695过/0败/2原跳，三适用tsc0、LIVE定向0。13:53:14独立核原PID87368/birth33050991实退、原检查锁可取，2850 ROOT输入/1417依赖/326运行叶及树、index条目/flags未变。full SHA `63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13`。原始index字节的stat缓存变化已记录，不冒原字节相同。

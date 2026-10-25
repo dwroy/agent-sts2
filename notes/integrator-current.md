@@ -1,5 +1,29 @@
 state: in-flight
 issue: 63
+updated_at: 2026-10-25T14:06:54+08:00
+
+进行中的事：#63工程与三原样本必要runtime核收已闭合。ops6394210629经14:06:12独核，公开6394222723逐字读回：三例ops-recovery seal/摘要、journal done/reclaimed、host映射移除、原tab及native/监督/shell缺席；三业务行及每例五原件/封存/备份SHA同、原树保留。宿主OPS/verifier配套实际SHA与main a94f8244及固定交付同，LIVE e9a468882/R451保持。原开发UI已恢复性释放，registry waiting-worktree，五原idle PID/tab缺席；固定f95114df3树/分支、原session/codex1 home/2498321字节日志前缀/原生sol-high task_complete、终端尾和标准恢复入口均核同，研发tab余1。首次登记锁pre-stop拒绝/原once/有界接续保留，实际操作未重放。
+
+在等谁：本项无在途工程返工，必要三例runtime不再待ops；未来自然边界由ops继续观察、知识/效果由learner维护，科学父保持。#61兼容交付等主管指定原CLI开发与五组source owner核准，正式两阶段登记仍各0；000402缺wrapper等原archive owner。#62首题原始816字节历史缺口保持，清理前持久留证改进等主管/原brain owner独立登记，后继原生切片已独核。#60自然学习采用/收益与#27科学缺口独立。
+
+下一步：保存本轮准确回执/独核/交接记录后，沿原队列为#64固定bc80005598/补充合同2a11e1d4c鲜核实际62+63组合、ROOT/LIVE前像及依赖，保LIVE测试历史差量，再接原唯一适用完整窗口；当前64 full未启动、不借旧绿/不重62或63 full。#63首次ROOT36/1原因未知、补验1/0、诊断启动失败、index stat字节变化及62前冻结限制保持。无本角色在途模型/测试/发布/对局/监听/计时器，不complete/删除/重学/伪重开或代其他角色ACK。
+
+恢复入口：paper/materials/20261025-issue63-combination-integrator/{runtime-independent-readback.json,runtime-probe.py,runtime-public-receipt.json,deployment-handoff.json}；原开发.artifacts/ops-issue59-63-release-20261025/sessions/63/continue-codex1.md，按主管可支持的标准入口核原树无写者后接续，保原历史。原完整检查full SHA63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
+updated_at: 2026-10-25T14:05:18+08:00
+
+进行中的事：先按用户要求落本检查点，再独核ops6394210629：三原学习tab据报已实际封存回收，原63开发UI据报恢复性释放，研发余1；这些仍为待本角色独核的ops声明，不倒填已验。main a94f8244精确交付、记录f0ad3d389已Windows SSH推送/远端核同，原唯一full687/6695/0/2保持，不重跑。
+
+在等谁：本角色读原issue与原ops材料，核配套两叶实际解析/SHA、三样本原身份/封存操作/退出/tab缺席和开发UI退出及恢复资料；缺证沿原ops补，不重复seal或关闭。#61兼容等主管/原CLI及source owner，000402缺wrapper等原archive owner；#62首题原件缺口及持久留证改进沿原责任链，#60运行独立。
+
+下一步：独核通过后把逐项事实和限制回原63 issue，更新本文件及准确记录；保原线程/账号/树/日志/产物/科学父，不complete/删除/重学或重开UI。再沿原队列准备#64实际62+63组合，当前64 full未启动。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
 updated_at: 2026-10-25T14:01:11+08:00
 
 进行中的事：#63原锁自然释放后14:00:17已精确集成main a94f8244ae71f5838ecdc506bbf2d94176938904（父d33d13a66），Windows SSH推送并远端核同；18固定交付叶及开发decision追加delta准确集成，保#62实际源码和并行记录。14:00:28独立读回18叶与固定交付/提交同字节，LIVE HEAD e9a468882a4fe1da2b1b721f0271b82f6083b002未改。公开6394174977逐字回读，原ops w1H:p8鲜核身份后单行提醒agent_prompted，仅传输非runtime ACK。原唯一full687/6695/0/2、三tsc0及13:53:14退出/锁/冻结核收保持；未重full、未打断130597。
