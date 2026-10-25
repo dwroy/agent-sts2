@@ -124,6 +124,190 @@ class LearnerTabs(unittest.TestCase):
         else:
             mock = patch.object(tabs, "native_verifier", return_value=lambda r:None); mock.start(); self.addCleanup(mock.stop)
 
+    def mapped_sessions(self, recovery=False, sample=None):
+        """Projection of both #20 original seal failures; no game text or credentials."""
+        evidence = self.recovery_fixture() if recovery else None
+        if not recovery:
+            self.started()
+        relative = (Path(sample["rollout_relative"]).relative_to("ops/codex-ops/accounts/codex1/learner/sessions")
+                    if sample else Path("2026/10/25/rollout-2026-10-25T10-13-57-01a170d6-0818-7fe1-8976-9f00546d39c1.jsonl"))
+        session = relative.name[-42:-6]
+        source = self.files / "native.jsonl"
+        raw = source.read_text().replace('"session"', '"' + session + '"')
+        account = self.directory / "accounts/codex1"
+        home = account / "learner"; home.mkdir(parents=True)
+        personal_tmp = tempfile.TemporaryDirectory(); self.addCleanup(personal_tmp.cleanup)
+        personal = Path(personal_tmp.name)
+        target = personal / ".codex1/sessions"
+        target.mkdir(parents=True)
+        self.target = target
+        self.native = target / relative
+        self.native.parent.mkdir(parents=True); self.native.write_text(raw)
+        self.link = home / "sessions"; self.link.symlink_to(target)
+        self.receipt.update(session=session, turn="turn", rollout=str(self.link / self.native.relative_to(target)))
+        self.receipt["result"].update(session=session, rollout=self.receipt["rollout"])
+        log = self.files / "launch.jsonl"
+        rows = [dict(type="learner_launch", engine="codex", cwd=str(self.tree), params=dict(batch=self.batch)),
+                dict(type="learner_tui_session", pane=self.row["pane"], session=session, rollout=self.receipt["rollout"]),
+                dict(type="learner_summary", exit_code=0, summary=dict(sessionId=session))]
+        log.write_text("".join(json.dumps(r)+"\n" for r in rows))
+        self.receipt["artifacts"]["sha256"] = tabs.sha(log)
+        self.profile = account / "profile.json"
+        tabs.atomic(self.profile, dict(engine="codex", account="codex1", learner_home=str(home)))
+        self.write_receipt()
+        mock = patch.object(tabs, "account_sessions", return_value=personal); mock.start(); self.addCleanup(mock.stop)
+        return evidence
+
+    def test_both_original_failure_projections_reproduce_and_recover(self):
+        data = json.loads((Path(__file__).parent / "fixtures/issue63-seal-failures.json").read_bytes())
+        self.assertEqual(len(data["samples"]), 2)
+        for sample in data["samples"]:
+            with self.subTest(batch=sample["batch"]):
+                fixture = LearnerTabs()
+                fixture.fixture_batch = sample["batch"]
+                fixture.fixture_label = "learner-" + sample["batch"]
+                fixture.setUp()
+                try:
+                    fixture.mapped_sessions(sample=sample)
+                    with self.assertRaisesRegex(ValueError, sample["original_error"]):
+                        tabs.safe_path(fixture.root, fixture.receipt["rollout"])
+                    fixture.seal()
+                    self.assertEqual(fixture.tick()[0]["state"], "reclaimed")
+                    self.assertEqual(fixture.tick(), [])
+                    self.assertEqual(sum(c[:2] == ("tab", "close") for c in fixture.calls), 1)
+                finally:
+                    fixture.doCleanups()
+
+    def test_original_sessions_failure_then_wrapper_seal_and_reclaim(self):
+        self.mapped_sessions()
+        # This is the original #20 failure, retained as the strict general guard.
+        with self.assertRaisesRegex(ValueError, "symlink path retained"):
+            tabs.safe_path(self.root, self.receipt["rollout"])
+        before = (self.directory / "learn.json").read_bytes()
+        self.seal()
+        proof = tabs.load(self.files / (self.label + ".tab-retirement.json"))
+        self.assertEqual(proof["files"]["rollout"]["sessions_mapping"]["account"], "codex1")
+        # Re-instantiation exercises persisted proof readback, then only one close.
+        self.worker = tabs.LearnerTabs(self.root, self.directory, herdr=self.herdr)
+        self.assertEqual(self.tick()[0]["state"], "reclaimed")
+        self.assertEqual(self.tick(), [])
+        self.assertFalse(self.present)
+        self.assertEqual(sum(c[:2] == ("tab", "close") for c in self.calls), 1)
+        self.assertEqual(before, (self.directory / "learn.json").read_bytes())
+        self.assertTrue(self.native.is_file()); self.assertTrue(self.tree.is_dir())
+
+    def test_original_sessions_failure_recovered_by_ops_and_scheduler(self):
+        for mode in ("ops", "scheduler"):
+            with self.subTest(mode=mode):
+                # Independent fixture, including terminal process absence and empty pane.
+                fixture = LearnerTabs(); fixture.setUp()
+                try:
+                    evidence = fixture.mapped_sessions(recovery=True)
+                    if mode == "ops":
+                        fixture.worker.dry = True
+                        self.assertEqual(fixture.worker.recover_seal(fixture.batch, evidence)["state"], "eligible")
+                        self.assertFalse((fixture.files / (fixture.label + ".tab-retirement.json")).exists())
+                        fixture.worker.dry = False
+                        fixture.worker.recover_seal(fixture.batch, evidence)
+                    else:
+                        fixture.scheduler_finish()
+                    self.assertEqual(fixture.tick()[0]["state"], "reclaimed")
+                    self.assertEqual(fixture.tick(), [])
+                finally:
+                    fixture.doCleanups()
+
+    def test_sessions_path_and_identity_negative_gates(self):
+        self.mapped_sessions()
+        good_receipt = copy.deepcopy(self.receipt)
+        good_profile = self.profile.read_bytes()
+        native_raw = self.native.read_bytes()
+        log = self.files / "launch.jsonl"; log_raw = log.read_bytes()
+        for bad in ("unknown-account", "wrong-profile", "profile-link", "unknown-target", "leaf-link", "nested-link",
+                    "wrong-thread", "wrong-turn", "wrong-pane", "missing-bindings", "missing-end", "partial-line",
+                    "unbound-log", "changed-log", "live-native", "busy", "draft", "extra-child"):
+            with self.subTest(bad=bad):
+                self.receipt = copy.deepcopy(good_receipt)
+                self.profile.unlink(missing_ok=True); self.profile.write_bytes(good_profile)
+                self.link.unlink(); self.link.symlink_to(self.target)
+                if self.native.is_symlink(): self.native.unlink()
+                self.native.write_bytes(native_raw)
+                self.screen = b"dw@host:~/fixture$ "
+                log.write_bytes(log_raw)
+                self.births.pop(444, None)
+                self.info["foreground_process_group_id"] = 333
+                context = patch.object(tabs.issue_session, "process_children", return_value=set())
+                if bad == "unknown-account": self.profile.unlink()
+                if bad == "wrong-profile": tabs.atomic(self.profile, dict(engine="codex", account="codex3", learner_home=str(self.link.parent)))
+                if bad == "profile-link": self.profile.unlink(); self.profile.symlink_to(log)
+                if bad == "unknown-target": self.link.unlink(); self.link.symlink_to(self.files)
+                if bad == "leaf-link": self.native.unlink(); self.native.symlink_to(self.files / "native.jsonl")
+                if bad == "nested-link":
+                    moved = self.target / "moved"; self.native.parent.rename(moved)
+                    self.native.parent.symlink_to(moved)
+                if bad == "wrong-thread": self.receipt["result"]["session"] = "00000000-0000-0000-0000-000000000000"
+                if bad == "wrong-turn": self.receipt["result"]["turn"] = "foreign"
+                if bad == "wrong-pane": self.receipt["pane"] = "wR:p2"
+                if bad == "missing-bindings": self.receipt["bindings"] = []
+                if bad == "missing-end": self.native.write_bytes(b"\n".join(native_raw.splitlines()[:-1])+b"\n")
+                if bad == "partial-line": self.native.write_bytes(native_raw.rstrip(b"\n"))
+                if bad == "unbound-log":
+                    log.write_text(log_raw.decode().replace('"learner_tui_session"', '"foreign"'))
+                    self.receipt["artifacts"]["sha256"] = tabs.sha(log)
+                if bad == "changed-log": log.write_bytes(log_raw+b"{}\n")
+                if bad == "live-native": self.births[444] = "native-birth"
+                if bad == "busy": self.info["foreground_process_group_id"] = 555
+                if bad == "draft": self.screen = b"dw@host:~/fixture$ echo human"
+                if bad == "extra-child": context = patch.object(tabs.issue_session, "process_children", return_value={"777"})
+                self.write_receipt()
+                with context, self.assertRaises((ValueError, OSError)):
+                    self.worker.seal(self.batch)
+                self.assertTrue(self.present)
+                self.assertFalse((self.files / (self.label + ".tab-retirement.json")).exists())
+                if bad == "nested-link":
+                    self.native.parent.unlink(); moved.rename(self.native.parent)
+        self.assertFalse(any(c[:2] == ("tab", "close") for c in self.calls))
+
+    def test_sealed_mapping_replacement_and_preclose_race_are_retained(self):
+        self.mapped_sessions(); self.seal()
+        self.link.unlink(); self.link.symlink_to(self.target)
+        self.assertEqual(self.tick()[0]["state"], "retained")
+        self.assertTrue(self.present)
+
+    def test_mapping_changed_after_tail_read_never_closes(self):
+        self.mapped_sessions(); self.seal()
+        original = tabs.issue_session.run
+        def replaced(argv):
+            result = original(argv)
+            if "recent-unwrapped" in argv:
+                self.link.unlink(); self.link.symlink_to(self.target)
+            return result
+        with patch.object(tabs.issue_session, "run", side_effect=replaced):
+            self.assertEqual(self.tick()[0]["state"], "retained")
+        self.assertTrue(self.present)
+        self.assertFalse(any(c[:2] == ("tab", "close") for c in self.calls))
+
+    def test_recovery_retry_preserves_original_seal_and_does_not_close(self):
+        evidence = self.mapped_sessions(recovery=True)
+        self.worker.recover_seal(self.batch, evidence)
+        seal = self.files / (self.label + ".tab-retirement.json")
+        before = seal.read_bytes()
+        self.worker = tabs.LearnerTabs(self.root, self.directory, herdr=self.herdr)
+        self.worker.recover_seal(self.batch, evidence)
+        self.assertEqual(before, seal.read_bytes())
+        self.assertTrue(self.present)
+        self.assertEqual(self.tick()[0]["state"], "reclaimed")
+        self.assertEqual(self.tick(), [])
+
+    def test_sessions_mapping_replaced_during_verification_never_seals(self):
+        self.mapped_sessions()
+        verifier = tabs.native_verifier(self.root)
+        def replaced(receipt, **kwargs):
+            verifier(receipt, **kwargs)
+            self.link.unlink(); self.link.symlink_to(self.target)
+        with patch.object(tabs, "native_verifier", return_value=replaced), self.assertRaises(ValueError):
+            self.worker.seal(self.batch)
+        self.assertTrue(self.present)
+
     def test_completed_native_receipts_reclaimed(self):
         self.started(); self.seal()
         self.assertEqual(self.tick()[0]["state"], "reclaimed")

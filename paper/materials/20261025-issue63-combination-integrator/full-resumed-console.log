@@ -1,0 +1,1231 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator63-combination-20261025/agent
+
+ ✓ tests/screens.test.ts (153 tests) 468ms
+ ✓ tests/turn-solver.test.ts (137 tests) 390ms
+ ✓ tests/rollout.test.ts (86 tests) 3433ms
+     ✓ an illusion killed comes back at full HP: the fight goes on until the real enemy dies (FA82 F27)  314ms
+ ✓ tests/batch-b.test.ts (43 tests) 2053ms
+     ✓ the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again  1402ms
+ ✓ tests/sl-explore.test.ts (33 tests) 37535ms
+     ✓ recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte  11980ms
+     ✓ VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so  6107ms
+     ✓ every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's  6540ms
+     ✓ the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not  11949ms
+     ✓ the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion  554ms
+ ✓ tests/brain-codex.test.ts (31 tests) 10636ms
+     ✓ after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken  1634ms
+     ✓ a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)  2168ms
+     ✓ stalled twice: the question fails as a timeout and the fallback answers it  2144ms
+     ✓ the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked  1513ms
+     ✓ a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it  1510ms
+ ✓ tests/sl-early.test.ts (42 tests) 126ms
+ ✓ tests/learner-herdr.test.ts (88 tests) 10308ms
+     ✓ does not certify retirement when the delayed fixture child misses its bounded real exit  2041ms
+     ✓ bounds persistent input and records its original cause without authorizing retirement  2666ms
+     ✓ retains an owned TUI that does not exit after verified keys, without force killing it  635ms
+ ✓ tests/sl-explore-gaps.test.ts (22 tests) 693ms
+ ✓ tests/sl.test.ts (42 tests) 71ms
+ ✓ tests/route-review.test.ts (27 tests) 2553ms
+     ✓ one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it  629ms
+     ✓ a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route  448ms
+ ✓ tests/learner.test.ts (47 tests) 834ms
+ ✓ tests/brain-codex-session.test.ts (25 tests) 6978ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1100ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  353ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  329ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2162ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  396ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  812ms
+ ✓ tests/build-decider.test.ts (28 tests) 3901ms
+     ✓ a card reward is decided by DeepSeek, logged as decider deepseek with its reason; Jev is not asked  471ms
+     ✓ combat still goes to Jev: no DeepSeek call, even on a near-guess  1638ms
+     ✓ card reward with keep (or no route): recorded in the card row only; the next map follows the plan  399ms
+ ✓ tests/brain-codex-usage.test.ts (21 tests) 3039ms
+     ✓ fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program  1110ms
+     ✓ a server that stays up after its answer is killed after the grace; the answer stands  338ms
+     ✓ usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes  310ms
+ ✓ tests/boss-clock.test.ts (34 tests) 118ms
+ ✓ tests/target-options.test.ts (24 tests) 25369ms
+     ✓ shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap  3247ms
+     ✓ Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)  1115ms
+     ✓ gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies  1111ms
+     ✓ rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them  2612ms
+     ✓ is deterministic: the same board gives the same options and the same kill-order numbers  2365ms
+     ✓ stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first  1607ms
+     ✓ every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act  11094ms
+     ✓ the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged  519ms
+     ✓ orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives  623ms
+     ✓ The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left  425ms
+ ✓ tests/v6-room.test.ts (42 tests) 2284ms
+   ✓ local scripted loop dispatches one shop Jev choice and no brain request  482ms
+ ✓ tests/sl-explore-canon.test.ts (14 tests) 2397ms
+     ✓ every answer's resolution and point, recording and with a deviation, as 08ec8f9  1566ms
+     ✓ code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)  455ms
+ ✓ tests/sl-explore-potion.test.ts (18 tests) 869ms
+     ✓ attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards  560ms
+ ✓ tests/batch-f.test.ts (28 tests) 235ms
+ ✓ tests/execution-gate.test.ts (17 tests) 1174ms
+     ✓ a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed  475ms
+ ✓ tests/sl-explore-whole.test.ts (17 tests) 2707ms
+     ✓ every answer's resolution and point, recording, deviating and avoiding, as e0fa69b  1941ms
+ ✓ tests/run-plan-merge.test.ts (19 tests) 6410ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  1062ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  617ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1185ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  661ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  592ms
+     ✓ the run start rides on the run's first question (no plan yet)  525ms
+     ✓ the real client reads the run plan from the answer, or from its own object after it  1170ms
+ ✓ tests/ops-herdr.test.ts (28 tests) 41869ms
+     ✓ new learner tabs follow the live ops pane when workspace labels are duplicated  1225ms
+     ✓ shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit  5640ms
+     ✓ shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit  5645ms
+     ✓ run, reuse, busy, status, stop; only its own labels  2117ms
+     ✓ --close-on-exit: the pane closes when the job ends and its last lines are kept  3226ms
+     ✓ brain viewer follows fixed logs across runs, reuses its tab and restarts independently  4461ms
+     ✓ starts the TUI once, prompts, reads the turn's answer and tokens from the session file  822ms
+     ✓ other arguments (a new key file, another effort): the idle TUI is restarted  1288ms
+     ✓ waits for both shell exit and registry retirement before starting the replacement  1762ms
+     ✓ retries a short name-release race only after rechecking that the pane and name are free  1667ms
+     ✓ defers a persistent name conflict without duplicate prompts or another stop  1277ms
+     ✓ defers a competing name conflict without duplicate prompts or another stop  1145ms
+     ✓ defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent  2219ms
+     ✓ a turn that does not end in time is interrupted with esc (124); the TUI stays  5379ms
+     ✓ a startup dialog (agent_not_ready) defers without answering it  378ms
+     ✓ a post-mortem batch runs in its own pane, reports as before, and the pane closes  3120ms
+     ✓ herdr unavailable: the batch starts with setsid as before  391ms
+ ✓ tests/batch-c.test.ts (27 tests) 3596ms
+     ✓ Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code  1916ms
+     ✓ the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained  1388ms
+ ✓ tests/outcome-asc.test.ts (16 tests) 177ms
+ ✓ tests/brain-router.test.ts (30 tests) 6070ms
+     ✓ a timeout aborts the engine and falls back  1006ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2012ms
+     ✓ a timeout between answers starts the count over  2009ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1005ms
+ ✓ tests/batch-g.test.ts (22 tests) 563ms
+ ✓ tests/oneshot-shop.test.ts (51 tests) 2307ms
+     ✓ shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row  1039ms
+     ✓ shop: a price change under the plan re-asks once, with what was bought  307ms
+ ✓ tests/run-journal.test.ts (19 tests) 174ms
+ ✓ tests/loop.test.ts (21 tests) 14050ms
+     ✓ plays through a scripted fight and stops when the run ends  577ms
+     ✓ after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4)  3292ms
+     ✓ does not re-ask Jev while the board is unchanged  3758ms
+     ✓ skips the Jev call when the board moves while it is still planning  3757ms
+     ✓ the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)  328ms
+     ✓ keeps going when more runs were requested  389ms
+ ✓ tests/batch-j.test.ts (21 tests) 8797ms
+     ✓ the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then)  3782ms
+     ✓ the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it  3576ms
+     ✓ the logged F17 T3 board (Brew and one empty slot): "2 random potions", re-planned with them; no "effect not simulated"  348ms
+     ✓ the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated")  429ms
+ ✓ tests/batch-e.test.ts (19 tests) 1051ms
+     ✓ "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option  508ms
+ ✓ tests/fight-plan.test.ts (28 tests) 302ms
+ ✓ tests/fix-queue-v4-fix2.test.ts (20 tests) 904ms
+     ✓ ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0)  432ms
+ ✓ tests/journal-replay.test.ts (10 tests) 4369ms
+     ✓ gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan  1292ms
+     ✓ after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so  1215ms
+     ✓ restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review  426ms
+     ✓ a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)  844ms
+     ✓ without the replay (the old behaviour) the restarted loop re-plans the route with an empty history  426ms
+ ✓ tests/batch-m.test.ts (27 tests) 328ms
+ ✓ tests/potion-cost.test.ts (26 tests) 1619ms
+     ✓ free, the potion-free line's later turns drink the potion; at a high cost they never do  392ms
+     ✓ hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line  343ms
+     ✓ merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)  320ms
+ ✓ tests/sl-replay-plays.test.ts (9 tests) 1354ms
+     ✓ the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line  332ms
+     ✓ SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here  360ms
+ ✓ tests/batch-i.test.ts (19 tests) 4698ms
+     ✓ the logged F19 T1 board (VTRE, Thieving Hopper 19 x1): the drink is a simulated line, not "effect not simulated"  301ms
+     ✓ logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)  3358ms
+     ✓ the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns  676ms
+ ✓ tests/batch-h.test.ts (13 tests) 1164ms
+     ✓ the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so  454ms
+     ✓ Jev's "Stone Armor, Liquid Memories, Bash+ from it": the drink notes Bash+, the screen takes Bash+ (not asked), and Bash+ is played next  313ms
+ ✓ tests/card-conditions.test.ts (21 tests) 861ms
+ ✓ tests/sl-explore-where.test.ts (19 tests) 32ms
+ ✓ tests/fix-queue-v4.test.ts (20 tests) 166ms
+ ✓ tests/potions-jev-call.test.ts (15 tests) 4098ms
+     ✓ logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies  3331ms
+ ✓ tests/passive-pieces.test.ts (20 tests) 2319ms
+     ✓ Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block  360ms
+     ✓ the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off  608ms
+     ✓ unset, the solver is as before: the logged boards' plans are the same with the fields absent  709ms
+ ✓ tests/brain-knowledge.test.ts (15 tests) 158ms
+ ✓ tests/death-move-rules.test.ts (16 tests) 152ms
+ ✓ tests/batch-l.test.ts (26 tests) 318ms
+ ✓ tests/sl-retry.test.ts (19 tests) 50ms
+ ✓ tests/mechanics-step1.test.ts (27 tests) 219ms
+ ✓ tests/rollout-live.test.ts (139 tests) 55088ms
+     ✓ a drink-first potion option says it is not rolled out  397ms
+     ✓ up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)  12010ms
+     ✓ the controlled clock: every logged board's rollout stays inside the budget  16190ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (v1)  384ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (off)  347ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (v1)  536ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (off)  515ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: fn0h-f33-t2 (v1)  301ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: fn0h-f33-t2 (off)  314ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (v1)  673ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (off)  638ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (v1)  481ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (off)  475ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t3-illusion-dead (v1)  305ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t3-illusion-dead (off)  312ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (v1)  726ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (off)  600ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (v1)  369ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (off)  356ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (v1)  404ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (off)  384ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (v1)  361ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (off)  342ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (v1)  560ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (off)  549ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (v1)  1240ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (off)  1287ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: xmy2-f17-t1 (v1)  313ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (v1)  432ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (off)  415ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (v1)  360ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (off)  312ms
+     ✓ logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left  1098ms
+     ✓ the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it  1321ms
+     ✓ the dead Parafright's hit next turn is in every line's enemy_threat_next  1174ms
+ ✓ tests/v6-card-pick.test.ts (24 tests) 2022ms
+   ✓ loop routes known cards to Jev, then the original brain on failure (success)  557ms
+ ✓ tests/fix-queue-v4-fix6.test.ts (17 tests) 605ms
+     ✓ YVWAWAPXJXGV F40 T1: the lines before Enthralled is played are the lines after it (logged: every lock gone, energy 8 -> 6), Enthralled first  389ms
+ ✓ tests/brain-claude.test.ts (15 tests) 3385ms
+     ✓ with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded  727ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2033ms
+ ✓ tests/sl-revive-judge.test.ts (14 tests) 54ms
+ ✓ tests/potions-step1.test.ts (24 tests) 624ms
+ ✓ tests/v6-prompt-summary.test.ts (14 tests) 4260ms
+   ✓ consumes known provider rows for all published R2 combos without replacing large snapshots with unknown  682ms
+   ✓ retains all 17 real metric snapshots for numeric validation and full content-addressed audit  400ms
+   ✓ bounds the real published shop prompt and preserves legal choices plus the leading combo  736ms
+   ✓ keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file  915ms
+   ✓ keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan  845ms
+   ✓ preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid  304ms
+ ✓ tests/gkb-render.test.ts (26 tests) 114ms
+ ✓ tests/sl-judge-bounds.test.ts (25 tests) 41ms
+ ✓ tests/route-next-rest.test.ts (14 tests) 27ms
+ ✓ tests/thief-cost.test.ts (11 tests) 6690ms
+     ✓ every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)  5276ms
+     ✓ no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off  487ms
+     ✓ the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn  416ms
+ ✓ tests/sl-early-planner.test.ts (15 tests) 4758ms
+     ✓ Z7D7 F28 T6: a random potion (Gambler's Brew) held: its samples are chance, so not early  3885ms
+     ✓ the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them  549ms
+ ✓ tests/monster-db-context.test.ts (17 tests) 89ms
+ ✓ tests/sl-draws-offtop.test.ts (15 tests) 69ms
+ ✓ tests/ops-codex.test.ts (12 tests) 7116ms
+     ✓ round trip: codex-ops-do.sh -> broker -> actions script -> answer and exit code  3261ms
+     ✓ victories, a new ascension, a post-mortem batch with a fake learner, the 10-pending inbox line  793ms
+     ✓ a failed batch is retried later; dispatch refuses unknown runs and a second batch  916ms
+     ✓ wakes once per cause, waits before the next wake, forgets the cause when OK  1760ms
+ ✓ tests/compute-memo.test.ts (11 tests) 51752ms
+     ✓ the same question and every resolution as without it; the board planned again comes from it, rollout and B2  12275ms
+     ✓ on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again  6996ms
+     ✓ a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo  11886ms
+     ✓ a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept  9678ms
+     ✓ the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo  7528ms
+     ✓ with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut  3377ms
+ ✓ tests/potion-mc.test.ts (19 tests) 2374ms
+     ✓ logged boards: the combat question is the same twice (the samples are seeded per board)  997ms
+     ✓ logged boards holding a random potion: its option has the distribution, the shares and the re-plan note  785ms
+     ✓ with the rollout on, the option's rollout facts are the median sample's line's  440ms
+ ✓ tests/boss-sim.test.ts (16 tests) 3741ms
+     ✓ is deterministic under a seed, and another seed changes it  545ms
+     ✓ runs on worker threads with exactly the serial numbers  1082ms
+     ✓ the live solver and 5-turn rollout give the numbers they gave before B1.5  328ms
+     ✓ redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP  526ms
+     ✓ kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers  607ms
+ ✓ tests/run-config.test.ts (14 tests) 778ms
+     ✓ the loop writes one row on the run's first state, next to its decision log  623ms
+ ✓ tests/thief.test.ts (11 tests) 9498ms
+     ✓ every logged thief board's decision is the pre-change one, byte for byte  7333ms
+     ✓ the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death  405ms
+     ✓ the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options  371ms
+     ✓ no thief_context, no thief fact, no thief log  595ms
+ ✓ tests/boss-lines-planner.test.ts (8 tests) 104571ms
+     ✓ BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte  13943ms
+     ✓ P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent  14444ms
+     ✓ a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log  3977ms
+     ✓ BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why  6007ms
+     ✓ BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers  31162ms
+     ✓ an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question  32312ms
+     ✓ turn 1: the fight plan from the best line's samples  2556ms
+ ✓ tests/batch-n.test.ts (15 tests) 3997ms
+       ✓ empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered  628ms
+       ✓ an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan)  1648ms
+       ✓ an empty reply takes the plan its reasoning drafted in one call  1584ms
+ ✓ tests/brain-deepseek.test.ts (12 tests) 73ms
+ ✓ tests/mech-move-rules.test.ts (13 tests) 69ms
+ ✓ tests/oneshot-act-start.test.ts (20 tests) 3048ms
+     ✓ one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step  1007ms
+     ✓ an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route  611ms
+     ✓ a random outcome: two calls (the joint question, then the review), the review keeping the route  596ms
+     ✓ the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix  591ms
+ ✓ tests/v6-card-option-loop.test.ts (6 tests) 13912ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (fixed clocks)  5912ms
+   ✓ keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator (fixed clocks)  4801ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (solver budget exhausted)  1490ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (sampling budget exhausted)  1283ms
+   ✓ warms numeric B through the real brain reward loop without a separate request or foreground B fill  417ms
+ ✓ tests/sl-any-draw.test.ts (13 tests) 855ms
+ ✓ tests/jev-experience.test.ts (16 tests) 141ms
+ ✓ tests/sl-retry-planner.test.ts (9 tests) 63351ms
+     ✓ every logged retry board's decision is 3488dc5's, byte for byte  12016ms
+     ✓ VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry  12442ms
+     ✓ JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+  699ms
+     ✓ known draws the pile does not hold: none used, the decision as with the switch off  6262ms
+     ✓ the rollout runs 24 samples (frozen clock: the whole schedule); the log says so  17750ms
+     ✓ a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual  6309ms
+     ✓ B2 on a retried boss fight runs the compute's samples a line  1246ms
+     ✓ a retry step that throws leaves the decision exactly as with both switches off  6610ms
+ ✓ tests/v6-direction-runtime.test.ts (20 tests) 314ms
+ ✓ tests/codex-only-brain.test.ts (36 tests) 896ms
+     ✓ rest outage resumes the same real screen question and dispatches once  510ms
+ ✓ tests/template-target.test.ts (12 tests) 12754ms
+     ✓ rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's  790ms
+     ✓ rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's  447ms
+     ✓ F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it  503ms
+     ✓ the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte  10707ms
+ ✓ tests/mech-rules.test.ts (12 tests) 81ms
+ ✓ tests/asc-band-facts.test.ts (8 tests) 95ms
+ ✓ tests/build-facts-audit.test.ts (20 tests) 1138ms
+     ✓ shop/plan with the boss simulation: facts, not scores; every option still listed  504ms
+ ✓ tests/v6-card-results.test.ts (21 tests) 105ms
+ ✓ tests/human-pace-sampling.test.ts (17 tests) 556ms
+ ✓ tests/thief-rollout.test.ts (11 tests) 86ms
+ ✓ tests/mech-move-planner.test.ts (8 tests) 10121ms
+     ✓ MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte  3217ms
+     ✓ MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off  2211ms
+     ✓ on, reading the rules fails: the switch off (fail safe), the Crab's back attack included  2085ms
+     ✓ on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)  632ms
+     ✓ NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind  1267ms
+     ✓ Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it  360ms
+ ✓ tests/brain-agent-mode.test.ts (15 tests) 334ms
+ ✓ tests/asc-amounts.test.ts (12 tests) 31ms
+ ✓ tests/death-move-planner.test.ts (8 tests) 29564ms
+     ✓ MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte  9121ms
+     ✓ MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off  7193ms
+     ✓ on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before  1357ms
+     ✓ on, a monster DB without the ally-death counters (built before them): as before  6377ms
+     ✓ on, reading the rules fails: the switch off (fail safe)  1547ms
+     ✓ 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next  884ms
+     ✓ Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next  2801ms
+ ✓ tests/brain-specs.test.ts (11 tests) 19ms
+ ✓ tests/endgame-plan.test.ts (31 tests) 6057ms
+   ✓ codex, F1, normal: construction answers update the next question, survive restart and keep #35 / #49  954ms
+   ✓ codex, F31, normal: construction answers update the next question, survive restart and keep #35 / #49  466ms
+   ✓ codex, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49  467ms
+   ✓ codex, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49  458ms
+   ✓ codex, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49  453ms
+   ✓ codex, F5, reuse: construction answers update the next question, survive restart and keep #35 / #49  489ms
+   ✓ deepseek, F1, normal: construction answers update the next question, survive restart and keep #35 / #49  452ms
+   ✓ deepseek, F31, normal: construction answers update the next question, survive restart and keep #35 / #49  446ms
+   ✓ deepseek, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49  442ms
+   ✓ deepseek, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49  454ms
+   ✓ deepseek, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49  443ms
+   ✓ deepseek, F5, reuse: construction answers update the next question, survive restart and keep #35 / #49  472ms
+ ✓ tests/sl-draws-pommel.test.ts (10 tests) 66ms
+ ✓ tests/jev-context.test.ts (15 tests) 159ms
+ ✓ tests/brain-reflex-knowledge.test.ts (13 tests) 152ms
+ ✓ tests/silent-sl-resource-comparison.test.ts (11 tests) 649ms
+   ✓ logs the replay comparison through the real planner while keeping the reference line's dispatched action  324ms
+ ✓ tests/boss-sim-build.test.ts (14 tests) 9921ms
+     ✓ common random numbers: the same deck twice differs by exactly 0; runs repeat sample for sample  570ms
+     ✓ the worker pool gives the serial runner's samples; a mixture takes each sample from one member  543ms
+     ✓ card reward: every option's boss_sim line, facts.act_boss_sim at the clock's place, the note; nothing dropped  586ms
+     ✓ a low-confidence boss (the Kaiser Crab here) is marked, with why; a relic the fight does not model is not simulated  5490ms
+     ✓ rest site: resting projects a higher entry HP; each smith option upgrades its card  919ms
+     ✓ cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Roy 2026-10-02)  731ms
+     ✓ off: DeepSeek's card reward question byte for byte as the screen built it; on: the same question plus the simulation  678ms
+ ✓ tests/fix-queue-v4-fix3.test.ts (14 tests) 1733ms
+     ✓ FSPKJAYY3ET6 F39 T1 without Throwing Axe (block 0): Inflame then Bash loses 6 + the 14 attack  368ms
+     ✓ FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2)  412ms
+     ✓ not after a card was played this turn, nor on a later turn, nor without the relic  712ms
+ ✓ tests/v6-potions.test.ts (20 tests) 776ms
+   ✓ unknown slot projections return to the original brain and preserve its discard fields  503ms
+ ✓ tests/open-book.test.ts (20 tests) 638ms
+     ✓ prioritizes choices, bounds crowded prompts, and reports omitted entries  499ms
+ ✓ tests/sl-explore-second.test.ts (7 tests) 228ms
+ ✓ tests/deepseek-cache-layout.test.ts (11 tests) 104ms
+ ✓ tests/multi-character.test.ts (14 tests) 162ms
+ ✓ tests/oneshot-rest-event.test.ts (16 tests) 1399ms
+     ✓ rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step  541ms
+     ✓ event: remove 2 named in the answer's cards; both picks are plan steps  364ms
+ ✓ tests/brain-query-guidance.test.ts (16 tests) 137ms
+ ✓ tests/silent-hidden-daggers-selection.test.ts (15 tests) 2489ms
+   ✓ delivers conditional facts on frozen frame 432593 after clearing the executable memo  415ms
+   ✓ updates the second discard from selected copies while retaining the conditional generated steps  364ms
+   ✓ transports the real loop's source decision to both legal Jev discard requests  1336ms
+ ✓ tests/thief-facts.test.ts (10 tests) 11ms
+ ✓ tests/mech-rules-planner.test.ts (5 tests) 4811ms
+     ✓ with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte  2184ms
+     ✓ on, but a monster DB without the observed data: the same  1231ms
+     ✓ on, and reading the rules fails: the same (fail safe)  1048ms
+ ✓ tests/fix-queue-v4-shrink.test.ts (14 tests) 3322ms
+     ✓ XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2  2350ms
+     ✓ four logged boards with Weak, Strength or Howl from Beyond  474ms
+ ✓ tests/brain-live.test.ts (12 tests) 154ms
+ ✓ tests/brain-plan-reuse.test.ts (9 tests) 75ms
+ ✓ tests/silent-double-boss.test.ts (12 tests) 368ms
+ ✓ tests/lizard-tail.test.ts (10 tests) 61ms
+ ✓ tests/sl-giant-judge.test.ts (13 tests) 148ms
+ ✓ tests/batch-k.test.ts (9 tests) 3379ms
+     ✓ the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's  3142ms
+ ✓ tests/sl-explore-b2.test.ts (5 tests) 102649ms
+     ✓ a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's  32141ms
+     ✓ Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often  8550ms
+     ✓ a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch  39198ms
+     ✓ Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks  7791ms
+     ✓ The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would  14967ms
+ ✓ tests/brain-loop.test.ts (8 tests) 2012ms
+     ✓ BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine  692ms
+     ✓ BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale)  587ms
+ ✓ tests/v6-projection-runtime.test.ts (14 tests) 607ms
+(node:118888) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/knowledge-runtime.test.ts (10 tests) 581ms
+ ✓ tests/external-stats-tools.test.ts (34 tests) 6556ms
+     ✓ cooccurrence: paginates whole rows under hard cap; out-of-range is explicit  4985ms
+ ✓ tests/v6-card-input-bridge.test.ts (14 tests) 844ms
+   ✓ routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev  627ms
+ ✓ tests/global-build.test.ts (18 tests) 29ms
+ ✓ tests/v6-request-factory.test.ts (8 tests) 316ms
+ ✓ tests/construction-integration.test.ts (8 tests) 33ms
+ ✓ tests/silent-paper-krane.test.ts (15 tests) 473ms
+ ✓ tests/v6-combat-entries.test.ts (31 tests) 175ms
+ ✓ tests/build-sim-cancellation.test.ts (10 tests) 17ms
+ ✓ tests/brain-agent-provenance.test.ts (16 tests) 2016ms
+   ✓ labels a catalogue reconstruction as a compatible view with its actual catalogue hash  647ms
+ ✓ tests/learner-startup-recovery.test.ts (26 tests) 1539ms
+     ✓ caps persistent pre-session failures at two additional attempts  519ms
+ ✓ tests/combat-entry-replay.test.ts (8 tests) 110ms
+ ✓ tests/giant-blast-terminal.test.ts (8 tests) 426ms
+ ✓ tests/potion-equivalents.test.ts (15 tests) 102ms
+ ✓ tests/silent-simulation-reference.test.ts (11 tests) 190ms
+ ✓ tests/core-realization.test.ts (10 tests) 364ms
+ ✓ tests/gkb-tools.test.ts (18 tests) 36ms
+ ✓ tests/v6-predicate-context.test.ts (40 tests) 35ms
+ ✓ tests/pile-power-cost.test.ts (7 tests) 824ms
+     ✓ the draw pile's Unmovable 3, Demon Form 4, Inflame 2: no sample plays a Power at 1 energy (one played Inflame at 1)  567ms
+ ✓ tests/v6-projection.test.ts (16 tests) 131ms
+ ✓ tests/sl-inferno-judge.test.ts (16 tests) 28ms
+ ✓ tests/inferno-planner.test.ts (5 tests) 469ms
+ ✓ tests/deepseek.test.ts (12 tests) 95ms
+ ✓ tests/boss-lines.test.ts (11 tests) 3091ms
+     ✓ every line on the same seeds: the same line twice is the same, sample by sample; serial and pool agree  1956ms
+     ✓ the deadline: the samples every line finished, the same ones for every line, and the count in the text  502ms
+     ✓ B2's and B3's pools never hold workers at once: each one starting its workers releases the other's; the released one starts again on its next run  612ms
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":208.16208600000004,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":184.032694,"added_prompt_bytes":1591}
+ ✓ tests/v6-brain-card-value-loop.test.ts (9 tests) 7009ms
+   ✓ adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2  1537ms
+   ✓ adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3  875ms
+   ✓ keeps the original brain question when missing  748ms
+   ✓ keeps the original brain question when corrupt  768ms
+   ✓ keeps the original brain question when timeout  725ms
+   ✓ keeps the original brain question when no-combat  620ms
+   ✓ checks the real 450ms preparation boundary after 449ms of loading  455ms
+   ✓ checks the real 450ms preparation boundary after 450ms of loading  615ms
+   ✓ checks the real 450ms preparation boundary after 451ms of loading  663ms
+ ✓ tests/turn-start-settle.test.ts (5 tests) 430ms
+     ✓ Inferno up: the first action is not sent on the stale board; the re-read after 500 ms re-plans on the settled one  404ms
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.769s
+
+OK
+ ✓ tests/strategy-external.test.ts (17 tests) 2645ms
+   ✓ external admission, source proof, original writer gates and retirement use fixed aggregates  1927ms
+ ✓ tests/silent-whistle.test.ts (9 tests) 158ms
+ ✓ tests/silent-rest-sim-hp.test.ts (9 tests) 52ms
+ ✓ tests/knowledge-check-facts.test.ts (9 tests) 131ms
+ ✓ tests/sl-loop.test.ts (4 tests) 13368ms
+     ✓ SL on: the certain death is not played; the fight is reloaded and attempt 2 is played with attempt 1 in Jev's question  608ms
+     ✓ SL_RELOAD_EARLY: every line dies with nothing left to chance: reloaded before the least-loss line's first card; off: after the line  12331ms
+ ✓ tests/codex-cache-probe.test.ts (10 tests) 39ms
+ ✓ tests/v6-direction-provider.test.ts (4 tests) 57ms
+ ✓ tests/silent-bullet-time.test.ts (12 tests) 527ms
+ ✓ tests/f48-joint-integration.test.ts (13 tests) 570ms
+ ✓ tests/named-card-facts.test.ts (11 tests) 28ms
+ ✓ tests/human-pace-card-shadow.test.ts (11 tests) 149ms
+ ✓ tests/act-route-candidates.test.ts (7 tests) 35ms
+ ✓ tests/route-map.test.ts (12 tests) 13ms
+ ✓ tests/silent-opening.test.ts (8 tests) 198ms
+ ✓ tests/silent-apotheosis-malaise.test.ts (8 tests) 89ms
+ ✓ tests/silent-axe-identity.test.ts (10 tests) 28ms
+ ✓ tests/silent-crab-potion.test.ts (27 tests) 285ms
+ ✓ tests/silent-permafrost.test.ts (12 tests) 681ms
+   ✓ PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defends give 21 Block and zero loss  321ms
+ ✓ tests/boss-sim-gaps.test.ts (8 tests) 86ms
+ ✓ tests/route-chain.test.ts (7 tests) 14ms
+ ✓ tests/experience.test.ts (10 tests) 125ms
+ ✓ tests/silent-build-win-ties.test.ts (7 tests) 60ms
+ ✓ tests/continuation-failure-b2-worker.test.ts (6 tests) 279ms
+ ✓ tests/insatiable-sandpit.test.ts (7 tests) 4914ms
+     ✓ the rollout's turn 2 starts at Sandpit 4 with up to 3 Escapes drawn, and some samples are eaten by turn 5  1505ms
+     ✓ off: as before, no count in any later turn and fewer deaths  1765ms
+     ✓ the loop's switch (DecisionEnv.sandpitStart, config SANDPIT_START) wins over rollout-live's default  1360ms
+ ✓ tests/silent-hidden-daggers.test.ts (6 tests) 125ms
+ ✓ tests/v6-direction-plan.test.ts (8 tests) 96ms
+ ✓ tests/silent-razor-snakebite.test.ts (14 tests) 215ms
+ ✓ tests/prefix-facts.test.ts (9 tests) 336ms
+ ✓ tests/v6-infrastructure.test.ts (15 tests) 54ms
+ ✓ tests/silent-loss-reference.test.ts (6 tests) 161ms
+ ✓ tests/free-offer.test.ts (5 tests) 76ms
+ ✓ tests/silent-battle-trance.test.ts (12 tests) 216ms
+ ✓ tests/card-value.test.ts (12 tests) 42ms
+ ✓ tests/deepseek-consistency.test.ts (12 tests) 122ms
+ ✓ tests/silent-demon-input.test.ts (24 tests) 142ms
+ ✓ tests/silent-apotheosis-reference.test.ts (7 tests) 3429ms
+   ✓ labels random potion forecasts and unsimulated potions separately in F45's real question  1216ms
+   ✓ bounds F45's real potion forecast work with 0 ms host pauses  1055ms
+   ✓ bounds F45's real potion forecast work with 10000 ms host pauses  782ms
+ ✓ tests/strategy-context.test.ts (8 tests) 162ms
+ ✓ tests/thief-card-value.test.ts (10 tests) 10597ms
+     ✓ three decks on the same seeds: with the card, without it, with it at 10 HP less; the facts' numbers are the run's  679ms
+     ✓ on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none  9904ms
+ ✓ tests/silent-serpent-form.test.ts (18 tests) 188ms
+ ✓ tests/sl-sandpit-judge.test.ts (10 tests) 149ms
+ ✓ tests/silent-sl-comparison.test.ts (5 tests) 135ms
+ ✓ tests/silent-sloth-replay.test.ts (14 tests) 153ms
+ ✓ tests/silent-selection-audit.test.ts (8 tests) 175ms
+ ✓ tests/silent-reward-addition.test.ts (10 tests) 163ms
+ ✓ tests/passive-pieces-planner.test.ts (1 test) 21183ms
+     ✓ boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan  21182ms
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 212ms
+ ✓ tests/construction-log.test.ts (7 tests) 95ms
+ ✓ tests/construction.test.ts (12 tests) 140ms
+ ✓ tests/silent-potion-reference.test.ts (12 tests) 169ms
+ ✓ tests/silent-reattach.test.ts (8 tests) 299ms
+ ✓ tests/jev-prompt-log.test.ts (6 tests) 701ms
+     ✓ one row per Jev request next to the decision log, with the decision row's decision_id and request id  600ms
+ ✓ tests/silent-kin-progress.test.ts (16 tests) 2080ms
+ ✓ tests/paths.test.ts (11 tests) 54ms
+ ✓ tests/silent-tough-bandages.test.ts (10 tests) 173ms
+ ✓ tests/v6-room-prompt-budget.test.ts (3 tests) 714ms
+   ✓ keeps every shop action and its continuation after trimming, with full unknown/audit rows  658ms
+ ✓ tests/rollout-best-added.test.ts (4 tests) 4675ms
+     ✓ the rollout's best line is added, last and marked, when code did not show it  4324ms
+ ✓ tests/mcp-server.test.ts (6 tests) 35ms
+ ✓ tests/silent-kunai.test.ts (8 tests) 169ms
+ ✓ tests/build-rank.test.ts (13 tests) 47ms
+ ✓ tests/learner-strategy-scratch.test.ts (5 tests) 183ms
+ ✓ tests/required-boss-evaluation.test.ts (9 tests) 84ms
+ ✓ tests/v6-direction-rides.test.ts (11 tests) 153ms
+ ✓ tests/human-pace-budget.test.ts (8 tests) 29ms
+ ✓ tests/potion-card-cost.test.ts (3 tests) 1031ms
+     ✓ its samples no longer play the Power free; without the relic, as before (Inflame played free)  1012ms
+ ✓ tests/silent-random-poison.test.ts (14 tests) 184ms
+ ✓ tests/silent-paper-krane-beam.test.ts (6 tests) 160ms
+ ✓ tests/silent-discard-snapshot.test.ts (21 tests) 22ms
+ ✓ tests/silent-helical-dart.test.ts (7 tests) 178ms
+ ✓ tests/learner-character.test.ts (15 tests) 30ms
+ ✓ tests/v6-supply.test.ts (13 tests) 81ms
+ ✓ tests/boss-sim-b4.test.ts (5 tests) 108ms
+ ✓ tests/silent-summon-coverage.test.ts (9 tests) 495ms
+ ✓ tests/silent-cloak-generation.test.ts (7 tests) 123ms
+ ✓ tests/silent-blade-dance.test.ts (8 tests) 138ms
+ ✓ tests/v6-formats.test.ts (14 tests) 15ms
+ ✓ tests/boss-sim-b5.test.ts (7 tests) 59ms
+ ✓ tests/learner-tui-reconciliation.test.ts (52 tests) 25ms
+ ✓ tests/silent-sandpit-discard.test.ts (12 tests) 112ms
+ ✓ tests/silent-held-loss.test.ts (7 tests) 213ms
+ ✓ tests/v6-build-core.test.ts (17 tests) 39ms
+ ✓ tests/silent-burst.test.ts (9 tests) 79ms
+ ✓ tests/silent-smoggy-selection.test.ts (20 tests) 44ms
+ ✓ tests/route-projection.test.ts (9 tests) 125ms
+ ✓ tests/silent-upgraded-blade-dance.test.ts (6 tests) 118ms
+ ✓ tests/v6-projection-input.test.ts (6 tests) 236ms
+ ✓ tests/silent-dodge-roll.test.ts (14 tests) 141ms
+ ✓ tests/v6-history-targets.test.ts (11 tests) 39ms
+ ✓ tests/v6-history-pack.test.ts (7 tests) 397ms
+     ✓ builds through the production CLI from hash-frozen inputs and rejects changed bytes  355ms
+ ✓ tests/knowledge-text.test.ts (9 tests) 21ms
+ ✓ tests/jev-decision-projection.test.ts (5 tests) 41ms
+ ✓ tests/silent-phase-current.test.ts (19 tests) 251ms
+ ✓ tests/rollout-ties.test.ts (5 tests) 156ms
+ ✓ tests/knowledge-check-a8w-facts.test.ts (4 tests) 11ms
+ ✓ tests/reward-external-stats.test.ts (15 tests) 66ms
+ ✓ tests/learner-herdr-ownership.test.ts (4 tests) 418ms
+ ✓ tests/silent-giant-potion.test.ts (8 tests) 191ms
+ ✓ tests/strategy-entries.test.ts (7 tests) 26ms
+ ✓ tests/silent-storm-hand-boundary.test.ts (21 tests) 331ms
+ ✓ tests/global-build-integration.test.ts (12 tests) 917ms
+ ✓ tests/silent-shackling-weak.test.ts (10 tests) 161ms
+ ✓ tests/v6-construction-safety.test.ts (12 tests) 33ms
+ ✓ tests/silent-strangle.test.ts (9 tests) 85ms
+ ✓ tests/v6-formation-table.test.ts (8 tests) 40ms
+ ✓ tests/silent-paels-legion.test.ts (12 tests) 302ms
+ ✓ tests/silent-poison-win-search.test.ts (10 tests) 148ms
+ ✓ tests/silent-crusher-facing.test.ts (10 tests) 205ms
+ ✓ tests/build-rank-integration.test.ts (10 tests) 1049ms
+   ✓ retains every supported candidate identity for u6ru-f22-shop/open  528ms
+ ✓ tests/silent-snakebite-discard.test.ts (20 tests) 109ms
+ ✓ tests/learner-native-prelude.test.ts (65 tests) 22ms
+ ✓ tests/silent-hp-guard-audit.test.ts (5 tests) 158ms
+ ✓ tests/route-event.test.ts (5 tests) 102ms
+ ✓ tests/global-build-b3.test.ts (6 tests) 60ms
+ ✓ tests/config.test.ts (16 tests) 17ms
+ ✓ tests/silent-wither-replay.test.ts (10 tests) 170ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":8052,"sent_entries":2}
+ ✓ tests/v6-card-pick-reflex.test.ts (4 tests) 120ms
+ ✓ tests/v6-completed-core-peek.test.ts (22 tests) 136ms
+ ✓ tests/silent-humidifier-rest.test.ts (10 tests) 128ms
+ ✓ tests/jev-context-limit.test.ts (5 tests) 44ms
+ ✓ tests/silent-apotheosis.test.ts (6 tests) 81ms
+ ✓ tests/codex-cache-engine.test.ts (5 tests) 43ms
+ ✓ tests/jev-retry.test.ts (6 tests) 524ms
+     ✓ retries a 520 and keeps playing, logging each retry  497ms
+ ✓ tests/brain-run-profile.test.ts (7 tests) 26ms
+ ✓ tests/enchant-text.test.ts (4 tests) 26ms
+ ✓ tests/codex-usage-recovery.test.ts (18 tests) 21ms
+ ✓ tests/silent-kusarigama.test.ts (8 tests) 444ms
+ ✓ tests/silent-upgraded-mirage-zero.test.ts (21 tests) 118ms
+ ✓ tests/silent-tail-resource.test.ts (10 tests) 84ms
+ ✓ tests/ops-mod-state.test.ts (37 tests) 2240ms
+ ✓ tests/silent-controlled-opening.test.ts (7 tests) 23ms
+ ✓ tests/shared-experience.test.ts (8 tests) 73ms
+ ✓ tests/brain-query-efficiency.test.ts (9 tests) 10612ms
+   ✓ reward/card gives truthful optional external lookup counts and executable inputs without statistics  5320ms
+   ✓ shop/plan gives truthful optional external lookup counts and executable inputs without statistics  5230ms
+ ✓ tests/silent-route-relic.test.ts (6 tests) 83ms
+ ✓ tests/silent-escape-plan.test.ts (8 tests) 124ms
+ ✓ tests/silent-candle-rest.test.ts (8 tests) 110ms
+ ✓ tests/silent-cunning.test.ts (5 tests) 245ms
+ ✓ tests/knowledge-check-a8w-guides.test.ts (6 tests) 57ms
+ ✓ tests/silent-deck-cap.test.ts (9 tests) 37ms
+ ✓ tests/silent-tungsten-rod.test.ts (6 tests) 196ms
+ ✓ tests/ops-autoplay-reload.test.ts (16 tests) 1199ms
+ ✓ tests/global-build-observer.test.ts (6 tests) 37ms
+ ✓ tests/required-boss-lines.test.ts (7 tests) 256ms
+ ✓ tests/silent-apotheosis-snakebite.test.ts (6 tests) 58ms
+ ✓ tests/silent-selection-dispatch.test.ts (13 tests) 181ms
+ ✓ tests/learner-tui-observation.test.ts (11 tests) 98ms
+ ✓ tests/v6-t6-dedup.test.ts (6 tests) 12ms
+ ✓ tests/silent-calculated-gamble-upgraded.test.ts (9 tests) 50ms
+ ✓ tests/sl-giant-final-resources.test.ts (32 tests) 44ms
+ ✓ tests/human-pace-direction.test.ts (6 tests) 24ms
+ ✓ tests/logdb.test.ts (8 tests) 8543ms
+     ✓ passes tests/logdb_test.py (without the venv only the extractor tests run)  6006ms
+     ✓ turns failures into isError with the reason  1099ms
+     ✓ answers SQL over the derived tables  688ms
+     ✓ refuses writes and files outside the database  399ms
+ ✓ tests/ops-autoplay-console.test.ts (7 tests) 4884ms
+     ✓ tails existing history, new lines, and the next run; stops its viewer on exit  2045ms
+     ✓ keeps following writes when the current alias first appears as an empty file  2639ms
+ ✓ tests/v6-card-value.test.ts (5 tests) 1923ms
+   ✓ caches only the same deck, offers, resources, HP, floor and selected route; cached results cannot be mutated  917ms
+   ✓ leaves novel cards and unobserved visible Bosses unknown and freezes the model for the run  454ms
+ ✓ tests/learner-empty-fix.test.ts (20 tests) 5836ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"fixes":null}  310ms
+     ✓ does not accept a failed learner or evidence from a different worktree  502ms
+     ✓ still schedules and runs full checks for a real merge, preserving full-suite failure reporting  796ms
+ ✓ tests/v6-combo-simulation.test.ts (6 tests) 380ms
+     ✓ verifies exact raw bytes before evaluating a batch and rejects a changed source  367ms
+ ✓ tests/v6-direction-prompt.test.ts (5 tests) 49ms
+ ✓ tests/s-combat-rank.test.ts (14 tests) 53ms
+ ✓ tests/silent-apotheosis-poisoned-stab.test.ts (6 tests) 170ms
+ ✓ tests/silent-enchanted-afterimage.test.ts (8 tests) 5073ms
+   ✓ s398960: the live input gives ten immediate Block, not seven or eleven  1574ms
+   ✓ s399084: the live input gives ten immediate Block, not seven or eleven  1182ms
+   ✓ F39 and held-out F45 full prefixes retain the measured twelve and twenty Block  1033ms
+   ✓ unobserved modifiers, missing trigger and replays keep the old Block and expose uncertainty  396ms
+   ✓ the later-turn rollout uses the same guarded effect without renewing Permafrost  487ms
+ ✓ tests/brain-codex-watchdog.test.ts (3 tests) 101ms
+ ✓ tests/silent-boss-phase.test.ts (14 tests) 203ms
+ ✓ tests/silent-discard-plan.test.ts (9 tests) 59ms
+ ✓ tests/silent-akabeko-skewer.test.ts (12 tests) 2137ms
+ ✓ tests/silent-apotheosis-neutralize.test.ts (6 tests) 123ms
+ ✓ tests/codex-paid-credit-policy.test.ts (19 tests) 159ms
+ ✓ tests/silent-poison.test.ts (8 tests) 769ms
+   ✓ the next phase clears old poison and only receives the new Fumes application  364ms
+ ✓ tests/silent-tent-rest.test.ts (7 tests) 461ms
+ ✓ tests/silent-apotheosis-deadly-poison.test.ts (6 tests) 144ms
+ ✓ tests/silent-wither-visible.test.ts (17 tests) 283ms
+ ✓ tests/learner-herdr-launcher.test.ts (5 tests) 331ms
+ ✓ tests/silent-phantom-blades.test.ts (6 tests) 246ms
+ ✓ tests/silent-phase-reference.test.ts (6 tests) 234ms
+ ✓ tests/strategy-no-change-path.test.ts (24 tests) 263ms
+ ✓ tests/silent-boss-facts.test.ts (8 tests) 16ms
+ ✓ tests/silent-mirage.test.ts (9 tests) 125ms
+ ✓ tests/silent-single-action-sandpit.test.ts (15 tests) 156ms
+ ✓ tests/brain-agent-codex.test.ts (1 test) 166ms
+ ✓ tests/silent-expertise.test.ts (5 tests) 76ms
+ ✓ tests/schema.test.ts (17 tests) 16ms
+ ✓ tests/continuation-failure.test.ts (5 tests) 83ms
+ ✓ tests/silent-finale-selection.test.ts (9 tests) 64ms
+ ✓ tests/silent-tuning-fork.test.ts (5 tests) 531ms
+ ✓ tests/learner-jobs.test.ts (4 tests) 729ms
+     ✓ one pending run launches experience-update; busy, completed and early retries do not launch it again  301ms
+ ✓ tests/silent-survivor-discard.test.ts (5 tests) 224ms
+ ✓ tests/human-pace-shadow-loop.test.ts (2 tests) 1176ms
+   ✓ keeps silent actual questions, choices, gates and worker requests equal with shadow enabled  978ms
+ ✓ tests/silent-sapping.test.ts (4 tests) 54ms
+ ✓ tests/silent-poison-held.test.ts (9 tests) 128ms
+ ✓ tests/quantitative.test.ts (7 tests) 30ms
+ ✓ tests/silent-hp-recovery.test.ts (6 tests) 81ms
+ ✓ tests/silent-selection-turn.test.ts (15 tests) 146ms
+ ✓ tests/silent-selection-observation.test.ts (16 tests) 113ms
+ ✓ tests/silent-ghost-potion.test.ts (9 tests) 212ms
+ ✓ tests/f48-joint-shadow.test.ts (16 tests) 99ms
+ ✓ tests/silent-apotheosis-accelerant.test.ts (7 tests) 61ms
+ ✓ tests/silent-stock-note.test.ts (12 tests) 249ms
+ ✓ tests/silent-serpent-mirage-replay.test.ts (15 tests) 293ms
+ ✓ tests/human-pace-reuse.test.ts (5 tests) 177ms
+ ✓ tests/silent-snakebite.test.ts (11 tests) 80ms
+ ✓ tests/v6-card-reward-scope.test.ts (24 tests) 743ms
+   ✓ leaves generic/event rewards on the exact original brain question and action  671ms
+ ✓ tests/silent-skittish.test.ts (4 tests) 156ms
+ ✓ tests/silent-single-action-weak.test.ts (8 tests) 42ms
+ ✓ tests/ascension-audit-path.test.ts (19 tests) 1183ms
+ ✓ tests/sl-giant-phase.test.ts (16 tests) 32ms
+ ✓ tests/knowledge-catalog.test.ts (6 tests) 1005ms
+ ✓ tests/silent-frail-dexterity.test.ts (3 tests) 137ms
+ ✓ tests/silent-apotheosis-footwork.test.ts (6 tests) 88ms
+ ✓ tests/batch-d.test.ts (5 tests) 952ms
+     ✓ every line reads damage 0 and names the husk, not 999,999,889 HP  614ms
+ ✓ tests/ops-stall-recovery.test.ts (7 tests) 2988ms
+     ✓ does not flag a single failed action followed by a current decision  316ms
+     ✓ requires repeated unreachable requests and stale decisions, and clears on recovery  897ms
+     ✓ keeps real stuck-loop, gate and silence alerts  1252ms
+     ✓ checks the real script and deterministically verifies startup beyond the former five-second limit  407ms
+ ✓ tests/silent-strangle-upgraded.test.ts (9 tests) 116ms
+ ✓ tests/silent-selection-execution.test.ts (8 tests) 23ms
+ ✓ tests/adaptive-completion.test.ts (2 tests) 165ms
+ ✓ tests/silent-sl-poison-stun.test.ts (8 tests) 25ms
+ ✓ tests/rest-pantograph.test.ts (4 tests) 143ms
+ ✓ tests/v6-reflex-contrast.test.ts (4 tests) 19ms
+ ✓ tests/silent-stun-gap.test.ts (6 tests) 102ms
+ ✓ tests/silent-caltrops.test.ts (7 tests) 74ms
+ ✓ tests/silent-daughter-wind.test.ts (4 tests) 208ms
+ ✓ tests/codex-saving.test.ts (7 tests) 464ms
+ ✓ tests/silent-gardener-skittish.test.ts (12 tests) 100ms
+ ✓ tests/human-pace-sl-budget.test.ts (7 tests) 65ms
+ ✓ tests/shop-removal-preview.test.ts (7 tests) 103ms
+ ✓ tests/v6-combat-planner.test.ts (2 tests) 7414ms
+   ✓ actual off planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank  4960ms
+   ✓ actual v1 planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank  2451ms
+ ✓ tests/adaptive-wiring.test.ts (4 tests) 472ms
+ ✓ tests/mod-client.test.ts (9 tests) 561ms
+     ✓ times out instead of hanging  313ms
+ ✓ tests/silent-fasten-upgrade.test.ts (6 tests) 89ms
+ ✓ tests/route-boss-unknown.test.ts (6 tests) 16ms
+ ✓ tests/silent-fasten.test.ts (7 tests) 118ms
+ ✓ tests/silent-slippery-poison.test.ts (7 tests) 36ms
+ ✓ tests/silent-reattach-reset.test.ts (3 tests) 227ms
+ ✓ tests/human-pace-strict-combat-stall.test.ts (3 tests) 737ms
+   ✓ dispatches one legal combat action through both gates when the budget expires before request  648ms
+ ✓ tests/silent-precise-cut.test.ts (6 tests) 84ms
+ ✓ tests/silent-apotheosis-survivor.test.ts (4 tests) 50ms
+ ✓ tests/learner-native-environment.test.ts (55 tests) 59ms
+ ✓ tests/radiant-tincture.test.ts (4 tests) 259ms
+ ✓ tests/instance-binding.test.ts (9 tests) 34ms
+ ✓ tests/adaptive-shadow.test.ts (6 tests) 64ms
+ ✓ tests/run-plan.test.ts (7 tests) 24ms
+ ✓ tests/silent-apotheosis-backflip.test.ts (4 tests) 88ms
+ ✓ tests/human-pace-comparison.test.ts (3 tests) 372ms
+ ✓ tests/damage.test.ts (10 tests) 33ms
+ ✓ tests/v6-build-core-pooled.test.ts (6 tests) 33ms
+ ✓ tests/silent-observed-intervals.test.ts (7 tests) 60ms
+ ✓ tests/silent-route-projection.test.ts (5 tests) 19ms
+ ✓ tests/silent-gamble-least-loss.test.ts (7 tests) 232ms
+ ✓ tests/knowledge-check-a8w-builder.test.ts (1 test) 120ms
+ ✓ tests/v6-direction-pairs.test.ts (3 tests) 195ms
+ ✓ tests/broker-response-persistence.test.ts (4 tests) 85ms
+ ✓ tests/silent-potion-targets.test.ts (4 tests) 699ms
+ ✓ tests/silent-shadowmeld.test.ts (6 tests) 39ms
+ ✓ tests/adaptive-range.test.ts (4 tests) 1506ms
+   ✓ B3 ranges reproduce full-run samples exactly and reuse the same live pool  311ms
+   ✓ B2 actual adaptive results retain every candidate and exactly their full-run prefixes  960ms
+ ✓ tests/build-rank-loop.test.ts (1 test) 863ms
+   ✓ reasks a missing override reason, dispatches once, and records the actual accepted reason  861ms
+ ✓ tests/human-pace-l2-preparation.test.ts (2 tests) 667ms
+   ✓ leaves 90s for the real L2 after B3 and G2=off, and accepts its 89s answer  603ms
+ ✓ tests/jsonl-boundary-recovery.test.ts (25 tests) 89ms
+ ✓ tests/v6-precompute.test.ts (4 tests) 10ms
+ ✓ tests/eval.test.ts (5 tests) 15889ms
+     ✓ passes tests/eval_metrics_test.py (without the venv only the algorithm tests run)  8617ms
+     ✓ passes tests/eval_calibration_test.py (without the venv only the algorithm tests run)  6286ms
+     ✓ prints the unchanged bossClock of each logged board, at the HP given, and the estimate at the real length  456ms
+     ✓ tools/eval/strength-sources.ts prints the same ids as JSON  512ms
+ ✓ tests/card-upgrade-text.test.ts (4 tests) 386ms
+   ✓ passes actual logged text-only upgraded faces into the synthetic opening without mutating the source  325ms
+ ✓ tests/silent-survivor-sandpit-discard.test.ts (9 tests) 64ms
+ ✓ tests/human-pace-strict-pick-stall.test.ts (3 tests) 762ms
+   ✓ dispatches one legal selection through both gates when the budget expires before request  654ms
+ ✓ tests/continuation-failure-b2-planner.test.ts (1 test) 2846ms
+   ✓ actual B2 combat planner logs the separate reference but sends neither payload nor whole-fight numbers after zero-sample degradation  2844ms
+ ✓ tests/silent-vambrace-frail.test.ts (6 tests) 59ms
+ ✓ tests/silent-selection-terminal.test.ts (20 tests) 16ms
+ ✓ tests/potion-unmeasured.test.ts (6 tests) 54ms
+ ✓ tests/silent-rod-sandpit.test.ts (18 tests) 35ms
+ ✓ tests/fight-value.test.ts (5 tests) 78ms
+ ✓ tests/build-health.test.ts (7 tests) 385ms
+ ✓ tests/v6-target-values.test.ts (4 tests) 75ms
+ ✓ tests/silent-flechettes.test.ts (4 tests) 116ms
+ ✓ tests/silent-boss-calibration.test.ts (5 tests) 15ms
+ ✓ tests/ops-stall-between-runs.test.ts (6 tests) 4818ms
+     ✓ accepts the 7X58 F24 finalized console while its report runs at 439 seconds  520ms
+     ✓ still flags a finalized run with no report process  414ms
+     ✓ does not let an unrelated report hide a quiet active or unfinished run  1893ms
+     ✓ keeps the stale-decision bound for a report that does not finish  698ms
+     ✓ keeps stuck-loop and repeated unreachable alerts during report overlap  1115ms
+ ✓ tests/human-pace-animation-reserve.test.ts (1 test) 631ms
+   ✓ excludes repeated exhausted-budget animation polls and skips non-combat direction loading  629ms
+ ✓ tests/silent-selection-potions.test.ts (5 tests) 67ms
+ ✓ tests/silent-abrasive.test.ts (5 tests) 149ms
+ ✓ tests/silent-dagger-sandpit-discard.test.ts (9 tests) 65ms
+ ✓ tests/human-pace-loop.test.ts (2 tests) 861ms
+   ✓ activates H1 only for silent and dispatches exactly once through the existing gates  805ms
+ ✓ tests/reward-special.test.ts (5 tests) 16ms
+ ✓ tests/silent-single-action-block.test.ts (4 tests) 39ms
+ ✓ tests/learner-paths.test.ts (4 tests) 26ms
+ ✓ tests/subscription-usage.test.ts (5 tests) 16ms
+ ✓ tests/silent-lethal-continuation.test.ts (2 tests) 103ms
+ ✓ tests/s-decision.test.ts (8 tests) 12ms
+ ✓ tests/silent-precise-cut-seven.test.ts (5 tests) 110ms
+ ✓ tests/v6-off-equivalence.test.ts (9 tests) 347ms
+ ✓ tests/learner-raw-report.test.ts (15 tests) 2272ms
+     ✓ recognizes a raw completion only after verifying its live ancestor  341ms
+     ✓ rechecks raw output while preserving the original failure and requiring every source ancestor  341ms
+ ✓ tests/v6-draft.test.ts (18 tests) 634ms
+   ✓ CLI accepts a frozen-context draft and rejects missing coverage without writes  620ms
+ ✓ tests/human-pace-adaptive.test.ts (7 tests) 19ms
+ ✓ tests/v5-deck-budget.test.ts (6 tests) 84ms
+ ✓ tests/s-readiness-integration.test.ts (4 tests) 1000ms
+     ✓ shadow records diagnostics while leaving the original question exactly unchanged  548ms
+ ✓ tests/v6-card-face.test.ts (3 tests) 266ms
+ ✓ tests/v6-projection-entries.test.ts (2 tests) 61ms
+ ✓ tests/v6-route-entry.test.ts (4 tests) 13ms
+ ✓ tests/silent-apotheosis-upgraded.test.ts (3 tests) 86ms
+ ✓ tests/shop-potions.test.ts (6 tests) 213ms
+ ✓ tests/silent-sl-beetle.test.ts (19 tests) 42ms
+ ✓ tests/v6-chain-log.test.ts (2 tests) 55ms
+ ✓ tests/deck-profile.test.ts (3 tests) 11ms
+ ✓ tests/v6-projection-progress.test.ts (4 tests) 94ms
+ ✓ tests/human-pace-sl-loop.test.ts (3 tests) 989ms
+   ✓ reserves Jev and uses the actual Boss budget on a retry only for silent  825ms
+ ✓ tests/content-store.test.ts (3 tests) 929ms
+   ✓ deduplicates frozen evidence and simulation results without changing their bytes or reuse contract  503ms
+ ✓ tests/computation-failure-b3.test.ts (7 tests) 695ms
+ ✓ tests/blocked-experience-repair.test.ts (18 tests) 2769ms
+ ✓ tests/silent-sl-calendar-poison.test.ts (15 tests) 25ms
+ ✓ tests/silent-plain-blade-dance-a0.test.ts (3 tests) 58ms
+ ✓ tests/silent-anticipate.test.ts (4 tests) 59ms
+ ✓ tests/silent-thief-unknown.test.ts (7 tests) 24ms
+ ✓ tests/silent-precise-cut-strength.test.ts (6 tests) 60ms
+ ✓ tests/core-window.test.ts (4 tests) 138ms
+ ✓ tests/silent-strangle-ly.test.ts (6 tests) 101ms
+ ✓ tests/construction-log-loop.test.ts (2 tests) 1183ms
+   ✓ codex: two construction decisions make two requests and persist short reasons  1022ms
+ ✓ tests/v6-history-byte-metadata.test.ts (11 tests) 23ms
+ ✓ tests/rollout-live-clock.test.ts (4 tests) 276ms
+ ✓ tests/jev-context-recovery.test.ts (2 tests) 57ms
+ ✓ tests/cards-view-memo.test.ts (4 tests) 157ms
+ ✓ tests/mittens-exhaust.test.ts (7 tests) 115ms
+ ✓ tests/silent-snakebite-preview.test.ts (7 tests) 59ms
+ ✓ tests/batch-c-illusion.test.ts (2 tests) 1411ms
+     ✓ the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses  873ms
+     ✓ the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses  536ms
+ ✓ tests/silent-boss-weak.test.ts (8 tests) 63ms
+ ✓ tests/silent-test-subject-phase.test.ts (3 tests) 117ms
+ ✓ tests/ops-redaction.test.ts (3 tests) 670ms
+     ✓ reports archive and scanner failures even when the dataset succeeds, retaining every retry log  653ms
+ ✓ tests/silent-boss-clock.test.ts (3 tests) 37ms
+ ✓ tests/computation-failure-loop.test.ts (1 test) 719ms
+   ✓ dispatches exactly once after two required runner failures and a failed degraded attempt  718ms
+ ✓ tests/silent-envenom.test.ts (4 tests) 41ms
+ ✓ tests/silent-snecko-fumes.test.ts (2 tests) 64ms
+ ✓ tests/ops-deferred.test.ts (3 tests) 536ms
+ ✓ tests/v6-direction-decision.test.ts (21 tests) 18ms
+ ✓ tests/learner-self-check.test.ts (6 tests) 888ms
+ ✓ tests/silent-malaise.test.ts (4 tests) 37ms
+ ✓ tests/silent-haze.test.ts (6 tests) 67ms
+ ✓ tests/v6-prompt-summary-perf.test.ts (4 tests) 2566ms
+   ✓ measures fixed shop summary construction  1525ms
+   ✓ measures fixed rest summary construction  501ms
+ ✓ tests/continuation-retaliation.test.ts (15 tests) 1750ms
+     ✓ CEN1Z8HEU7NM F40 'selection/remove' returns a first-fight loss instead of attempting a dead continuation  340ms
+     ✓ CEN1Z8HEU7NM F40 'shop/plan' returns a first-fight loss instead of attempting a dead continuation  306ms
+ ✓ tests/ascension-observed.test.ts (1 test) 243ms
+ ✓ tests/codex-fast.test.ts (5 tests) 14ms
+ ✓ tests/learner-instance.test.ts (4 tests) 128ms
+ ✓ tests/boss-damage-tools.test.ts (2 tests) 168ms
+ ✓ tests/outcome-stats-refresh.test.ts (3 tests) 17ms
+ ✓ tests/v1mf-bugfix.test.ts (4 tests) 2495ms
+     ✓ the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn  873ms
+     ✓ choosing a line with a later drink keeps it in the line; the cut-short board re-plans it (XMK1 F33 T3)  1545ms
+ ✓ tests/move-model-damage.test.ts (3 tests) 8ms
+ ✓ tests/third-party.test.ts (5 tests | 2 skipped) 111ms
+ ✓ tests/v6-frozen-route.test.ts (3 tests) 26ms
+ ✓ tests/event-settle.test.ts (1 test) 74ms
+ ✓ tests/silent-upgraded-malaise.test.ts (4 tests) 61ms
+ ✓ tests/monster-db.test.ts (4 tests) 216ms
+ ✓ tests/silent-corrosive-wave.test.ts (4 tests) 41ms
+ ✓ tests/human-pace-card-policy.test.ts (6 tests) 10ms
+ ✓ tests/learner-strategy.test.ts (2 tests) 175ms
+ ✓ tests/ops-host-recovery.test.ts (5 tests) 518ms
+   ✓ recovers original and resumed segments once with the original report implementation  388ms
+ ✓ tests/computation-failure.test.ts (3 tests) 21ms
+ ✓ tests/construction-support.test.ts (7 tests) 11ms
+ ✓ tests/potion-refresh-climb.test.ts (5 tests) 399ms
+ ✓ tests/legacy-brain-notes.test.ts (2 tests) 15ms
+ ✓ tests/discovery.test.ts (6 tests) 161ms
+ ✓ tests/brain-agent-report.test.ts (3 tests) 11ms
+ ✓ tests/silent-poison-cap.test.ts (4 tests) 15ms
+ ✓ tests/silent-poison-coverage.test.ts (7 tests) 25ms
+ ✓ tests/learner-fallback-checks.test.ts (2 tests) 112ms
+ ✓ tests/learner-stdio-view.test.ts (4 tests) 846ms
+ ✓ tests/human-pace-shadow-observer.test.ts (2 tests) 131ms
+ ✓ tests/waterfall-giant.test.ts (2 tests) 166ms
+ ✓ tests/v6-appearance.test.ts (3 tests) 2675ms
+     ✓ checks fixed raw observations with the production Python collector  1144ms
+     ✓ rejects invented zeros, double counts, missing rarity, unsupported scope and tampered distributions  1370ms
+ ✓ tests/silent-obscura-summon.test.ts (3 tests) 43ms
+ ✓ tests/silent-pounce-coverage.test.ts (4 tests) 55ms
+ ✓ tests/learner-wrapper-scripts.test.ts (3 tests) 10ms
+ ✓ tests/combat-state-divergence.test.ts (5 tests) 124ms
+ ✓ tests/temp-lifecycle.test.ts (5 tests) 278ms
+ ✓ tests/brain-agent-loop.test.ts (6 tests) 1438ms
+   ✓ codex: rest uses the selected agent with no direct key  741ms
+ ✓ tests/knowledge-check-guides.test.ts (2 tests) 72ms
+ ✓ tests/full-rollout-facts-fixture.test.ts (1 test) 261ms
+ ✓ tests/silent-maul.test.ts (4 tests) 40ms
+ ✓ tests/silent-upgraded-wave.test.ts (3 tests) 35ms
+ ✓ tests/brain-codex-usage-contract.test.ts (1 test) 21ms
+ ✓ tests/silent-poison-dominance.test.ts (6 tests) 5ms
+ ✓ tests/opening-value.test.ts (3 tests) 70ms
+ ✓ tests/learner-keycheck-retry.test.ts (8 tests) 615ms
+ ✓ tests/silent-queen-ally-strength.test.ts (3 tests) 66ms
+ ✓ tests/continuation-failure-worker.test.ts (1 test) 97ms
+ ✓ tests/adaptive-sampler.test.ts (3 tests) 19ms
+ ✓ tests/v6-card-route-scope.test.ts (5 tests) 1049ms
+   ✓ keeps noncombat selection/add on the original V5 brain path without a V6 handover  855ms
+ ✓ tests/ops-mod-state-broker.test.ts (6 tests) 16ms
+ ✓ tests/v6-start.test.ts (1 test) 228ms
+ ✓ tests/v6-direction-fastpath.test.ts (3 tests) 3219ms
+   ✓ claims all rewards and executes a complete shop plan without direction work between steps  1463ms
+   ✓ off retains every execution action and question byte for byte and never calls the provider  1594ms
+ ✓ tests/silent-knife-trap.test.ts (3 tests) 25ms
+ ✓ tests/continuation-failure-b3.test.ts (1 test) 231ms
+ ✓ tests/silent-shadow-step.test.ts (3 tests) 28ms
+ ✓ tests/quantitative-log-extract.test.ts (2 tests) 13ms
+ ✓ tests/learning-ledger-metadata.test.ts (1 test) 121ms
+ ✓ tests/v6-direction-backoff.test.ts (3 tests) 8ms
+ ✓ tests/v6-card-results-input.test.ts (2 tests) 20ms
+ ✓ tests/deepseek-prompt-dump.test.ts (1 test) 327ms
+   ✓ streams backward to the latest model combat question without reading the whole log  325ms
+ ✓ tests/human-pace-jev.test.ts (4 tests) 12ms
+ ✓ tests/ops-assist.test.ts (3 tests) 79ms
+ ✓ tests/silent-phase-sequences.test.ts (4 tests) 13ms
+ ✓ tests/lock.test.ts (5 tests) 17ms
+ ✓ tests/learning-ledger.test.ts (4 tests) 3967ms
+     ✓ passes tests/learning_ledger_test.py  2257ms
+     ✓ the ledger file is valid JSONL as committed  1700ms
+ ✓ tests/silent-aeonglass-intensity.test.ts (3 tests) 66ms
+ ✓ tests/boss-margin-attribution.test.ts (5 tests) 49ms
+ ✓ tests/s-decision-tools.test.ts (3 tests) 11ms
+ ✓ tests/ops-rollout-file.test.ts (2 tests) 819ms
+     ✓ reads beyond Node's maximum string size without truncating or altering the session  807ms
+ ✓ tests/codex-cache-observation.test.ts (4 tests) 10ms
+ ✓ tests/game-data-cache.test.ts (2 tests) 13ms
+ ✓ tests/fake-herdr-process.test.ts (1 test) 211ms
+ ✓ tests/continuation-diagnostics.test.ts (3 tests) 66ms
+ ✓ tests/rollout-held-potion.test.ts (2 tests) 1734ms
+     ✓ preserves later-use facts with 0 ms host pauses  1039ms
+     ✓ preserves later-use facts with 10000 ms host pauses  693ms
+ ✓ tests/required-build-worker.test.ts (3 tests) 57ms
+ ✓ tests/silent-calculated-gamble.test.ts (2 tests) 23ms
+ ✓ tests/boss-trust.test.ts (2 tests) 9ms
+ ✓ tests/v6-prompt-projection.test.ts (2 tests) 10ms
+ ✓ tests/silent-potion-provenance.test.ts (4 tests) 7ms
+ ✓ tests/silent-expose.test.ts (2 tests) 25ms
+ ✓ tests/silent-metamorphosis.test.ts (4 tests) 57ms
+ ✓ tests/nova-jev.test.ts (4 tests) 47ms
+ ✓ tests/silent-afterimage.test.ts (3 tests) 27ms
+ ✓ tests/silent-footwork.test.ts (2 tests) 35ms
+ ✓ tests/outcome-stats.test.ts (2 tests) 179ms
+ ✓ tests/knowledge-check-a8w-experience.test.ts (1 test) 69ms
+ ✓ tests/learner-learning-flow.test.ts (3 tests) 9ms
+ ✓ tests/silent-upgrade-preview.test.ts (4 tests) 5ms
+ ✓ tests/v6-direction-fastpath-benchmark.test.ts (1 test) 3013ms
+   ✓ keeps the V5 shop request and execution budget without standalone direction work  3009ms
+ ✓ tests/combat-jev.test.ts (3 tests) 1922ms
+     ✓ RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation  776ms
+     ✓ a low-confidence hallway pick below code's rank 1 stands (no fallback to code)  1121ms
+ ✓ tests/pinned-shared-experience.test.ts (2 tests) 7ms
+ ✓ tests/fixture-http.test.ts (2 tests) 15ms
+ ✓ tests/historical-run-constraints.test.ts (4 tests) 24ms
+ ✓ tests/ascension-audit-report.test.ts (12 tests) 154ms
+ ✓ tests/fixture-command.test.ts (4 tests) 270ms
+ ✓ tests/loop-time-cap.test.ts (4 tests) 1852ms
+   ✓ keeps map and combat deadline assertions independent of a 0ms host pause  1077ms
+   ✓ keeps map and combat deadline assertions independent of a 10000ms host pause  447ms
+ ✓ tests/worktree-storage.test.ts (2 tests) 6623ms
+   ✓ evicts only idle Git copies and restores SHA verified original inputs without completing failed tasks  6612ms
+ ✓ tests/rollout-deadline.test.ts (2 tests) 49ms
+ ✓ tests/learner-retention.test.ts (16 tests) 9520ms
+   ✓ reclaims only settled learner copies: test_published_source_reclaims_copies_and_restores_exact_bytes_and_branch  924ms
+   ✓ reclaims only settled learner copies: test_numeric_uuid_scratch_reclaims_and_restores_verified_bytes  813ms
+   ✓ reclaims only settled learner copies: test_numeric_uuid_keeps_publication_active_owner_and_path_guards  488ms
+   ✓ reclaims only settled learner copies: test_unpublished_source_or_incomplete_check_is_retained  387ms
+   ✓ reclaims only settled learner copies: test_failed_lost_and_active_batches_are_not_deleted  354ms
+   ✓ reclaims only settled learner copies: test_legacy_report_does_not_abort_sweep_or_delete_its_data  499ms
+   ✓ reclaims only settled learner copies: test_pending_report_data_does_not_consume_reclamation_limit  851ms
+   ✓ reclaims only settled learner copies: test_original_thread_even_completed_is_protected  331ms
+   ✓ reclaims only settled learner copies: test_learner_requests_cleanup_idempotently_and_full_admission_controls_deletion  1061ms
+   ✓ reclaims only settled learner copies: test_unfinished_or_failed_exit_never_requests_self_cleanup  352ms
+   ✓ reclaims only settled learner copies: test_dirty_worktree_unknown_ignored_file_and_other_role_are_retained  487ms
+   ✓ reclaims only settled learner copies: test_symlink_and_secret_named_file_are_never_read_or_deleted  604ms
+   ✓ reclaims only settled learner copies: test_leases_capacity_and_archive_corruption_prevent_unsafe_cleanup  1128ms
+   ✓ reclaims only settled learner copies: test_report_only_reclaims_checkout_but_keeps_pending_process_data  629ms
+   ✓ reclaims only settled learner copies: test_postmortem_requires_experience_ingestion_and_not_just_a_done_report  602ms
+ ✓ tests/learner-report-resources.test.ts (4 tests) 726ms
+ ✓ tests/learner-check-locks.test.ts (4 tests) 6794ms
+     ✓ releases the state lock for full checks and preserves concurrent updates when recording results  387ms
+     ✓ preserves real lock assertions after a six-second launcher delay  6276ms
+ ✓ tests/silent-regret.test.ts (2 tests) 22ms
+ ✓ tests/end-turn-guard-sources.test.ts (3 tests) 10ms
+ ✓ tests/test-blocks.test.ts (2 tests) 8ms
+ ✓ tests/record.test.ts (1 test) 45ms
+ ✓ tests/regent-launch-solo.test.ts (3 tests) 292ms
+ ✓ tests/codex-abort-fixture.test.ts (1 test) 9ms
+ ✓ tests/unassigned-proposal-resolution.test.ts (18 tests) 9538ms
+   ✓ unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason  421ms
+   ✓ unassigned proposal: completion_records_resolution_before_marking_done  435ms
+   ✓ unassigned proposal: rejects_foreign_missing_or_changed_original_registration  470ms
+   ✓ unassigned proposal: rejects_unbound_malformed_and_outside_report_without_any_append  458ms
+   ✓ unassigned proposal: verifies_all_dispositions_before_appending_any  393ms
+   ✓ unassigned proposal: failure_preserves_live_merge_fact_and_original_registry  402ms
+   ✓ unassigned proposal: inflight_dispatched_waiting_cannot_reopen_verified_resolution  409ms
+   ✓ unassigned proposal: legacy_empty_and_dispatched_strict_coverage_are_unchanged  383ms
+   ✓ unassigned proposal: preserves_output_scope_when_markdown_has_equivalent_prose  416ms
+   ✓ unassigned proposal: waiting_link_repair_completes_without_live_merge_or_recursive_repair  564ms
+   ✓ unassigned proposal: waiting_link_repair_rejects_unknown_or_changed_registration_atomically  466ms
+   ✓ unassigned proposal: waiting_link_repair_rejects_changed_report_dirty_source_and_false_claims  687ms
+   ✓ unassigned proposal: waiting_link_repair_preserves_previously_published_resolution  445ms
+   ✓ unassigned proposal: no_source_repair_cannot_claim_implemented_or_duplicate_without_live_ancestry  402ms
+   ✓ unassigned proposal: resolves_narrow_publication_without_inventing_source_ancestry  692ms
+   ✓ unassigned proposal: rejects_narrow_publication_without_matching_host_receipt  1006ms
+   ✓ unassigned proposal: rejects_narrow_source_or_live_drift_before_any_resolution  756ms
+   ✓ unassigned proposal: rejects_narrow_registration_report_and_proposal_identity_changes  725ms
+ ✓ tests/file-escalation.test.ts (2 tests) 133ms
+ ✓ tests/ascension-audit-output-fixture.test.ts (2 tests) 8ms
+ ✓ tests/loop-consumer-fixed-transport.test.ts (2 tests) 679ms
+   ✓ runs a serialized historical question and action without listening sockets  666ms
+ ✓ tests/v6-combo-metrics.test.ts (2 tests) 980ms
+     ✓ passes fixed-data tests for raw evidence, censoring, sampling and unknowns  652ms
+     ✓ produces metrics accepted by the real build-core-v1 consumer contract  326ms
+ ✓ tests/learner-check-continuation.test.ts (3 tests) 1355ms
+   ✓ retains long parameterized failure names in an exact bounded host supplement  628ms
+   ✓ binds host supplements to original coverage and exact sources without repeating full checks  723ms
+ ✓ tests/knowledge-check-cards.test.ts (2 tests) 5ms
+ ✓ tests/pricing.test.ts (6 tests) 6ms
+ ✓ tests/tsconfig-scope.test.ts (1 test) 151ms
+ ✓ tests/strategy-concurrency.test.ts (2 tests) 508ms
+     ✓ claims disjoint inputs, retains active ownership and bootstraps the second slot  502ms
+ ✓ tests/learning-requests.test.ts (2 tests) 473ms
+   ✓ learning requirements survive report completion, interruptions and disagreements  465ms
+ ✓ tests/legacy-refresh-incremental.test.ts (6 tests) 10160ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_legacy_incremental.py  999ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_refresh_pipeline.py  3406ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_refresh_entrypoints.py  4215ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 agent/tests/report_incremental_test.py  546ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: /home/dw/Projects/agent-sts2/.worktrees/integrator63-combination-20261025/data/logdb-venv/bin/python knowledge/builders/test_potion_incremental.py  741ms
+ ✓ tests/core-build-jobs.test.ts (2 tests) 536ms
+     ✓ checks frozen history, isolated writers, completion proofs and one-time notifications  530ms
+ ✓ tests/research-scheduling-fixture.test.ts (2 tests) 8ms
+ ✓ tests/silent-boss-calibration-board.test.ts (1 test) 4ms
+ ✓ tests/questions.test.ts (6 tests) 8ms
+ ✓ tests/knowledge-check-a8w-cards.test.ts (1 test) 5ms
+ ✓ tests/shared-tools.test.ts (2 tests) 1470ms
+   ✓ attaches only matching pinned tools and retains all private/foreign copies  1460ms
+ ✓ tests/learner-retention-legacy.test.ts (1 test) 2514ms
+   ✓ binds legacy root experience artifacts to the original launch, thread and checked publication  2511ms
+ ✓ tests/v6-frozen-input.test.ts (1 test) 17ms
+ ✓ tests/ops-eval-metrics.test.ts (22 tests) 17ms
+ ✓ tests/cost-accounting.test.ts (2 tests) 734ms
+   ✓ accounts fixed component data, subset tokens, resets and cumulative events without network (TMPDIR set: true)  375ms
+   ✓ accounts fixed component data, subset tokens, resets and cumulative events without network (TMPDIR set: false)  356ms
+ ✓ tests/extract-evidence.test.ts (2 tests) 149ms
+ ✓ tests/ops-current-events.test.ts (2 tests) 39070ms
+   ✓ guards ordinary completion, records, source changes and short checklist using fixed local inputs  39064ms
+ ✓ tests/adaptive-replay.test.ts (1 test) 8ms
+ ✓ tests/codex-stall-fixture.test.ts (1 test) 12ms
+ ✓ tests/learner-retention-uuid.test.ts (1 test) 1489ms
+   ✓ accepts numeric UUID scratch identities with publication and ownership guards  1487ms
+ ✓ tests/learner-live-tasks.test.ts (2 tests) 11ms
+ ✓ tests/ordinary-close-isolation.test.ts (6 tests) 18449ms
+   ✓ isolates ordinary completion with the original guards: test_candidate_source_failure_does_not_poison_valid_peer  4990ms
+   ✓ isolates ordinary completion with the original guards: test_predataset_attention_reenters_original_guards_with_failure_history  4299ms
+   ✓ isolates ordinary completion with the original guards: test_any_dataset_side_effect_marker_prevents_attention_reentry  325ms
+   ✓ isolates ordinary completion with the original guards: test_postdataset_candidate_failure_is_isolated_and_never_replayed  3582ms
+   ✓ isolates ordinary completion with the original guards: test_final_git_candidate_guard_rejects_only_its_own_private_record  4922ms
+   ✓ isolates ordinary completion with the original guards: test_reclaimed_worktree_cannot_fall_back_to_enclosing_main_git  328ms
+ ✓ tests/feature-notice-registration.test.ts (1 test) 314ms
+   ✓ binds feature producer provenance to the original native notice and preserves independent actor receipts  312ms
+ ✓ tests/feature-notice-ack.test.ts (1 test) 295ms
+ ✓ tests/boss-sim-notice-registration.test.ts (1 test) 332ms
+   ✓ binds B4 notices to original evidence, native delivery tokens and independent exact-text receipts  330ms
+ ✓ tests/feature-root-event-notice.test.ts (1 test) 406ms
+   ✓ registers bound root event logs and rejects wrong launch ownership, paths, SHA and delivery proofs  404ms
+ ✓ tests/python-cache-retention.test.ts (1 test) 2442ms
+   ✓ reclaims only tracked-source Python caches and retains unknown bytecode, links and active owners  2440ms
+ ✓ tests/global-build-health.test.ts (1 test) 101ms
+ ✓ tests/v6-history-refresh-exclusions.test.ts (1 test) 10194ms
+   ✓ keeps a complete exclusion manifest and all frozen-source publication guards  10192ms
+ ✓ tests/legacy-continuation-notice-ack.test.ts (1 test) 266ms
+ ✓ tests/regent-launch-inspect.test.ts (2 tests) 127ms
+ ✓ tests/jev-cost.test.ts (1 test) 193ms
+ ✓ tests/report-plan-costs.test.ts (1 test) 287ms
+ ✓ tests/regent-startup-check.test.ts (1 test) 308ms
+   ✓ confines startup checks to a fixed, argument-free Regent action  306ms
+ ✓ tests/combat-rationale.test.ts (1 test) 5ms
+ ✓ tests/learner-cherry-pick-recheck.test.ts (1 test) 3411ms
+   ✓ rechecks an exact narrow publication without inventing source ancestry or rewriting failures  3409ms
+ ✓ tests/component-usage.test.ts (1 test) 3458ms
+   ✓ syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures  3457ms
+ ✓ tests/learner-retention-fixture.test.ts (17 tests) 12ms
+ ✓ tests/strategy-implementation-continuation.test.ts (1 test) 2382ms
+   ✓ resumes the frozen implementation once while preserving waiting proposals and bounded failure history  2380ms
+ ✓ tests/account-drain.test.ts (2 tests) 2204ms
+   ✓ validates drain lifecycle: test_account_drain.py  391ms
+   ✓ validates drain lifecycle: test_llm_handoff.py  1810ms
+ ✓ tests/strategy-implementation.test.ts (1 test) 2856ms
+   ✓ binds the approved implementation through the existing broker and host before model start  2855ms
+ ✓ tests/sandbox-entry.test.ts (2 tests) 122ms
+ ✓ tests/fight-value-observe.test.ts (1 test) 347ms
+     ✓ passes tests/fight_value_observe_test.py  344ms
+ ✓ tests/global-build-fixed-inputs.test.ts (13 tests) 1695ms
+   ✓ keeps the actual xljq-f5-reward/reward question and current C1/C2/P2 facts identical to off  420ms
+   ✓ keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off  529ms
+ ✓ tests/silent-boss-calibration-cli.test.ts (1 test) 14ms
+ ✓ tests/boss-sim-home.test.ts (1 test) 242ms
+ ✓ tests/boss-sim-automation.test.ts (1 test) 568ms
+   ✓ checks B4/B5 triggers, leases, retries, completion and acceptance with fixed fixtures  566ms
+ ✓ tests/paper-dataset-git.test.ts (1 test) 999ms
+   ✓ pins Git export and verification to one ref snapshot and fails the CLI on source mismatches  998ms
+ ✓ tests/ops-action-list.test.ts (1 test) 5ms
+ ✓ tests/rollout-ties-fixture.test.ts (6 tests) 180ms
+ ✓ tests/strategy-path-startup.test.ts (25 tests) 237ms
+ ✓ tests/learning-roles.test.ts (4 tests) 6ms
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.687s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 6.431s
+
+OK
+ ✓ tests/publication-admission.test.ts (2 tests) 7691ms
+   ✓ publication waiting isolates candidate learning, game admission and publication writers  1018ms
+   ✓ composes real publication admission with the per-batch registration barrier  6671ms
+ ✓ tests/v6-publication-task-link.test.ts (1 test) 3382ms
+   ✓ registers exact V6 publication and study tasks while preserving evidence guards  3380ms
+ ✓ tests/ledger-publication-baseline.test.ts (1 test) 937ms
+   ✓ rejects physical/Git ledger status drift atomically while preserving history and unrelated items  934ms
+ ✓ tests/strategy-research-scheduling.test.ts (10 tests) 9193ms
+   ✓ frozen research group 1 takes the next slot and starts only after its actual registration is saved  774ms
+   ✓ frozen research group 2 takes the next slot and starts only after its actual registration is saved  949ms
+   ✓ frozen research group 3 takes the next slot and starts only after its actual registration is saved  572ms
+   ✓ frozen research group 4 takes the next slot and starts only after its actual registration is saved  739ms
+   ✓ frozen research group 5 takes the next slot and starts only after its actual registration is saved  710ms
+   ✓ frozen research group 6 takes the next slot and starts only after its actual registration is saved  874ms
+   ✓ frozen research group 7 takes the next slot and starts only after its actual registration is saved  586ms
+   ✓ frozen research group 8 takes the next slot and starts only after its actual registration is saved  723ms
+   ✓ frozen research group 9 takes the next slot and starts only after its actual registration is saved  2043ms
+   ✓ frozen research group 10 takes the next slot and starts only after its actual registration is saved  1218ms
+ ✓ tests/ledger-rerelease.test.ts (1 test) 210ms
+ ✓ tests/learner-herdr-receipts.test.ts (1 test) 9073ms
+   ✓ gates interactive learner retirement and launch identity on fixed persisted receipts  9072ms
+ ✓ tests/agent-board-poll.test.ts (1 test) 382ms
+   ✓ keeps the minute dispatcher entry separate from stall and behind explicit ops activation  381ms
+ ✓ tests/brain-view.test.ts (1 test) 515ms
+   ✓ renders and follows fixed brain logs with redaction, title protection and isolated lifecycle  514ms
+ ✓ tests/learner-tabs.test.ts (1 test) 9574ms
+   ✓ reclaims only verified terminal learner tabs with the current native verifier  9572ms
+ ✓ tests/postmortem-failure-audit.test.ts (1 test) 449ms
+     ✓ reports verified pre-model refusals without guessing key failure and preserves audit and retry limits  447ms
+ ✓ tests/ledger-repeats.test.ts (1 test) 285ms
+ ✓ tests/monster-terminal-hp.test.ts (1 test) 182ms
+ ✓ tests/build-facts-audit-fixture.test.ts (21 tests) 1625ms
+     ✓ shop/plan with the boss simulation: facts, not scores; every option still listed  649ms
+ ✓ tests/boss-damage-attempts.test.ts (1 test) 221ms
+ ✓ tests/learner-launch-failures.test.ts (1 test) 2539ms
+   ✓ nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure  2537ms
+ ✓ tests/ordinary-notice-ack.test.ts (1 test) 245ms
+ ✓ tests/brain-decision-dataset.test.ts (1 test) 146ms
+ ✓ tests/autoplay-marker-failure.test.ts (1 test) 1231ms
+   ✓ preserves terminal exits without a durable marker and retains the existing explicit recovery hold  1230ms
+ ✓ tests/brain-card-distill.test.ts (1 test) 196ms
+ ✓ tests/disk-admission.test.ts (1 test) 652ms
+   ✓ enforces approved capacity gates in the original tick and only at a finished-run boundary  650ms
+ ✓ tests/manual-notice-ack.test.ts (1 test) 428ms
+   ✓ authenticates original manual V6 notice sources and preserves independent role and scope guards  427ms
+ ✓ tests/ops-current-budget.test.ts (1 test) 316ms
+   ✓ bounds growing ops checklists with complete hash-linked authority, failures and event sources  314ms
+ ✓ tests/paper-dataset-publication.test.ts (1 test) 237ms
+ ✓ tests/learner-registration-barrier.test.ts (1 test) 496ms
+   ✓ waits for saved scheduler registration before starting a learner and stops on lock timeout  494ms
+ ✓ tests/learner-report-fixes-shape.test.ts (1 test) 235ms
+ ✓ tests/check-imports.test.ts (1 test) 271ms
+ ✓ tests/prior-delivery-proofs.test.ts (1 test) 343ms
+   ✓ rechecks immutable prior delivery proofs before ordinary ACKs and registered completion  341ms
+ ✓ tests/cadence-no-change.test.ts (1 test) 6506ms
+   ✓ settles registered empty cadence reviews and preserves source, parent and retention guards  6504ms
+ ✓ tests/external-build-stats.test.ts (1 test) 457ms
+   ✓ reconstructs and validates external build statistics with deterministic private-field exclusion  455ms
+ ✓ tests/learner-entry.test.ts (1 test) 5454ms
+   ✓ recovers only the registered pre-session shared-main config import failure and preserves its evidence  5452ms
+..
+----------------------------------------------------------------------
+Ran 2 tests in 3.277s
+
+OK
+ ✓ tests/learner-registration-pipeline.test.ts (1 test) 3435ms
+   ✓ publishes all four external registrations and the own batch before subsequent source validation  3433ms
+ ✓ tests/paper-snapshot-capacity.test.ts (1 test) 233ms
+ ✓ tests/worktree-retention.test.ts (1 test) 20678ms
+   ✓ retires only verified workspaces and recovers preserved artifacts after interruptions  20676ms
+ ✓ tests/reclaim-gates.test.ts (1 test) 9778ms
+   ✓ protects real runtime identities while retiring inherited bindings and main-only reports  9776ms
+ ✓ tests/record-manifest.test.ts (1 test) 1110ms
+   ✓ scans exact frozen leaves without expanding record or knowledge copies  1107ms
+ ✓ tests/proposal-recheck.test.ts (1 test) 222ms
+ ✓ tests/strategy-research.test.ts (1 test) 1756ms
+   ✓ manual research requires its bound request, frozen evidence and a clean report-only tree  1754ms
+ ✓ tests/disk-capacity.test.ts (1 test) 217ms
+ ✓ tests/broker-request-write.test.ts (1 test) 216ms
+ ✓ tests/own-build-stats.test.ts (1 test) 297ms
+ ✓ tests/calibration-dispatch-fixtures.test.ts (1 test) 484ms
+   ✓ dispatches fixed feature fixtures while retaining missing-tree guards  483ms
+ ✓ tests/strategy-backfill.test.ts (1 test) 522ms
+   ✓ admits frozen backfill only after normal work and consumes actual native starts once  520ms
+ ✓ tests/strategy-priority.test.ts (1 test) 439ms
+   ✓ defers unlaunchable calibration/audits and retains runnable priority, leases, sources and native cursors  437ms
+ ✓ tests/global-build-funnel.test.ts (1 test) 245ms
+ ✓ tests/learner-preserved-report.test.ts (1 test) 234ms
+ ✓ tests/module-health.test.ts (1 test) 150ms
+ ✓ tests/adaptive-health.test.ts (1 test) 111ms
+ ✓ tests/sim-wait.test.ts (1 test) 96ms
+
+ Test Files  687 passed (687)
+      Tests  6695 passed | 2 skipped (6697)
+   Start at  13:26:21
+   Duration  1602.36s (transform 22.20s, setup 51.39s, import 159.71s, tests 1287.02s, environment 96ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/paper/materials/20261025-issue63-combination-integrator/full.json

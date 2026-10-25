@@ -153,7 +153,7 @@ def policy_identity(payload):
                       ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def reconstruct_native(receipt):
+def reconstruct_native(receipt, *, source=None):
     """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
     result = receipt["result"]
     bindings = receipt.get("bindings", [])
@@ -184,7 +184,7 @@ def reconstruct_native(receipt):
     restricted_policy, open_turn = False, False
     updates = []
     environment_ids = set()
-    with open(result["rollout"]) as source:
+    with (open(result["rollout"]) if source is None else contextlib.nullcontext(source)) as source:
         for line in source:
             if not line.endswith("\n"):
                 raise ValueError("native record is not durably complete")
@@ -286,8 +286,8 @@ def reconstruct_native(receipt):
     return updates
 
 
-def verify_native(receipt):
-    updates = reconstruct_native(receipt)
+def verify_native(receipt, *, source=None):
+    updates = reconstruct_native(receipt, source=source)
     if updates is None:
         return
     if (updates and receipt.get("native_environment_version") != 1) or receipt.get("native_environment_updates", []) != updates:

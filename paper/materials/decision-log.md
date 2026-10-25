@@ -6997,3 +6997,11 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T13:36:44+08:00 [watcher] #64固定bc80005598/补充合同2a11e1d4c：隔离实际LIVE七叶补丁及逆向精确恢复通过，四生产/两新增测试同固定源码，session配套测试保既存ROOT/LIVE差异；公开6393983628。新增测试/full及生产写入0，63原唯一full继续，窗口退出核收后再冻结实际62/63组合。见paper/materials/20261025-issue64-fixed-integrator/live-delta-applicability.json。
 
 - 2026-10-25T13:44:52+08:00 [watcher] #62实际V6-R451新局5K2E6HYNAAG1绑定/两题accepted真实SQL经验6与3来源及开发UI释放独立核同，公开6394034350；首题原turn_context路径缺失，保原SHA/切片指针并交原ops定位，不冒原生档位独核、不重发题或重开UI。原工程结论不变；63原唯一full继续、64下一窗口。见paper/materials/20261025-issue62-combination-integrator/natural-runtime-release-readback.json。
+
+- 2026-10-25T13:01:41+08:00 [dev #63] sessions映射封存候选：原profile/同账号固定目标/原log-session绑定及逐层no-follow读原字节，通用safe_path不变；seal/recover/reclaim复核link/profile/文件与目录身份，保PID/空输入/忙pane/不确定操作门。两原失败脱敏夹具及真实wrapper→退出→新进程回收覆盖，三原样本候选完整seal_proof只读通过，未seal/close。生产tsc0；sandbox634文件5874过/1基线稀疏夹具缺失失败，原blob精确恢复后定向4文件6项及paths11全过，首败保留；最终组合full待原集成员。统一交付三例，原ops测后配套部署两生产叶并逐项真实回收，不等其他样本/科学父；未改live/STOP/账号/原状态/游戏知识或发布号。合同docs/learner-tab-sessions.md，材料paper/materials/20261025-issue63-learner-seal/。
+
+- 2026-10-25T13:52:26+08:00 [watcher] #62后继自然shop题mvne69l3-107318-12持久816字节/原brain及native_receipt两种SHA/turn/model/effort独核sol高档，另四保留切片同；五临时原路径均缺席，首题原816字节缺口与历史记录保持，公开6394105992。清理前原始回执行持久留证交主管沿原brain适配器owner另列任务，不夹63/64或重开62UI；原63唯一full继续。见paper/materials/20261025-issue62-combination-integrator/natural-successor-independent-readback.json。
+
+- 2026-10-25T13:57:16+08:00 [watcher] #63唯一full687文件/6695过/0败/2跳、三tsc0，13:53:14独立原worker实退/锁释放/冻结输入及语义index同；终态6394135873及配套部署清单已交ops，main等待原retention持有live-merge.lock，首败与62前冻结边界保留。#61补核6394142791：16原通知及两阶段本人回执同，独立冻结账本770/0，正式登记各0/ACK0；15来源兼容等主管与source owner、000402原wrapper缺口继续，原575/rc1不改写。
+
+- 2026-10-25T14:00:17+08:00 [watcher] #63固定f95114df3精确18原叶及开发decision追加delta集成当前main，原687/6695/0/2及独立退出核收通过；保#62实际源码与全部并行记录，宿主OPS/实际verifier配套两叶SHA同，LIVE游戏树未改；原ops接三样本实际seal/recover/tick及逐项释放，#64接下一组合。

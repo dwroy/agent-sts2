@@ -1,11 +1,13 @@
-# #63 固定组合交接
+# #63 固定组合终态与部署交接
 
-更新时间 2026-10-25T13:11:21+08:00。已接固定开发 `f95114df313e4e2b65b8acd5fc5339cc46a2fbae`，隔离候选 `ee029e2eed3832d0fb72df7b24eb52a3e83c16a9`，ROOT锚 `965653f6df0cd1a7ef23751f26730212105f26d1`、树 `b23aa2ed324474009521c36c6d189ff3b119f40a`。2850 ROOT输入/1417依赖/326运行叶冻结，issue29历史原件SHA已与基线精确核同。原#62已13:22终态独立核退/锁释放，鲜核通过后启动本组合预检PID81864/birth33026764（exec79286），当前root-targeted、新full数0，后续以full-state.json为准；不借旧绿覆盖本次差量。
+更新时间 2026-10-25T13:55:39+08:00。固定开发 `f95114df313e4e2b65b8acd5fc5339cc46a2fbae`、隔离候选 `ee029e2eed3832d0fb72df7b24eb52a3e83c16a9`。原唯一full于13:53:05终态：687文件/6695过/0败/2原跳，三适用tsc0、LIVE定向0。13:53:14独立核原PID87368/birth33050991实退、原检查锁可取，2850 ROOT输入/1417依赖/326运行叶及树、index条目/flags未变。full SHA `63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13`。原始index字节的stat缓存变化已记录，不冒原字节相同。
 
-19交付叶精确SHA/前像在deployment-draft.json；生产闭包仅ops/learner_tabs.py与ops/learner_tui.py，必须配套安装到实际宿主OPS和原verifier根，无LIVE游戏源码差量。保原59已接收三运行叶与原12处ROOT/LIVE差异，沿原59运行兼容镜像鲜跑本组合适用检查，不借其历史结果。原59发布事务等待自然终态时，不修改其冻结源码、门、FIFO或夹包；实际源码集成及原ops部署按原事务释放后接。
+ROOT首次定向36过1败，check-imports两字符串在原JSON被省略，原因未知。相同输入仅失败项补验1过0败及两次显式扫描空；不支持--expand的诊断启动失败也保留。未改源码/夹具/依赖，未重full。本full冻结早于#62实际部署，不能代62上线后全组合；#62实际334适用runtime叶另有独立核收。
 
-三原样本101312/pFC、114312/pFG、121312/pFH在候选两叶配套下完整seal_proof独立只读通过，材料original-samples-readonly.json。实际宿主两源码、原状态/日志/回收账、tab前后保持，seal/save/tick/reclaim/close动作0；不冒生产已封存或回收。原ops必须在适用检查通过、实际配套部署后，沿原recover-seal/stall入口逐项核退出/空输入/无额外任务/真实封存与tab缺席，符合一项即释放。生产前鲜核身份和输入，当前只读通过不能代替后续现场门。
+精确19交付叶前后像见deployment-handoff.json；decision-log只追加开发delta，不覆盖当前记录。现main尚未集成，live-merge.lock由原learner_retention.py PID130597/birth33154991持有；不打断、不绕锁。原59/62发布门已释放，不能把历史等待门当现状。
 
-原开发sandbox首轮634文件/5874过/1文件1项失败为历史稀疏夹具；原件保留，精确恢复后定向4文件6项及paths11过，不拼为一次full绿。通用safe_path、普通路径、原seal/未知操作/忙pane/额外子进程守卫保持。实际回退只还原精确原生产两叶，保后续seal/回收回执/日志/绑定/知识，不修改业务行或绕门。
+生产闭包仅宿主OPS及实际原verifier根的`ops/learner_tabs.py`+`ops/learner_tui.py`两叶配套，无LIVE游戏源码差量。tabs新SHA a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2；tui新SHA ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c。原ops鲜核实际根/备份旧配套/新SHA与实际verifier解析，不盲复制到LIVE游戏树。
 
-#62检查与事实覆盖沿原队列继续；#64固定交付后接最早窗口；#60运行/科学父独立。原开发树、线程、账号、产物与首败保留，不重学、不重发、不代他角色ACK。
+候选配套下三原样本101312/pFC、114312/pFG、121312/pFH完整seal_proof只读通过，原状态/日志/tab保持，生产封存/回收0。实际配套部署后由原ops逐项沿原recover-seal/stall tick入口鲜核原生终态、PID/birth实退、空输入、无额外命令/模型/写事务，再核真实seal/reclaim/退出/tab缺席；符合一项即释放，逐项写回原因或缺证。未知动作先权威读回不盲重放。保原任务、线程、账号、树、日志、产物、首败及科学父，不complete/删除/重学/改绑定/重新发布。
+
+回退仅还原实际已备份旧两叶且确认无后续源码变化，保新封存/回收回执、所有日志/知识/业务状态，重新读回实际根SHA；不绕守卫。#64接后续最早窗口、#60运行及#27/#61责任链独立继续，不代其他角色ACK。
