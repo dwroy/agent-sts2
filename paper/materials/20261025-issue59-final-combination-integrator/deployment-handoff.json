@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-25T11:28:19+08:00",
+  "status": "prepared; one final combination full in flight; not admission to deploy yet",
+  "candidate_commit": "0b491370c8a27c34a3ee1ca51909431137ba927c",
+  "candidate_parent": "32c6b922a07963227ff86fd0b27d85014cd5f769",
+  "live_base": "18f8980daabe0a520247fabd45ceca7ce70f466b",
+  "leaves": [
+    {
+      "path": "ops/codex-ops-learn.py",
+      "preimage_sha256": "7b761200dfaca7119f4ed9e4b21259c2e289ecc6d7201011a6c1fbd898ac9a41",
+      "source_sha256": "fcd3b5a0cad8a535c8061e3536f96e714238e62a334d2a9a36ed93de55ba4a76",
+      "integrated_sha256": "e557579ddfbbc42eaa6d0079ec1eab9217a09c0a68d96130c20e897a64d4ada4",
+      "bytes": 40188,
+      "source_equal": false,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "ops/tests/test_postmortem_completion.py",
+      "preimage_sha256": "485849a4202ff652a1af7e516edcc829fe8ce82cb73f384736e0b27e45d5515b",
+      "source_sha256": "da19cf08a8b233e37dd42d5f05d797a6e2465c0533f2b80680ae0aa1ff515bc2",
+      "integrated_sha256": "da19cf08a8b233e37dd42d5f05d797a6e2465c0533f2b80680ae0aa1ff515bc2",
+      "bytes": 9549,
+      "source_equal": true,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "agent/tests/postmortem-failure-audit.test.ts",
+      "preimage_sha256": "8add185603fe71574ef1aa785cb9e8e2c335d444e389d603332a69dbdcb60512",
+      "source_sha256": "7c6f6a12ea2f77ab105631a012fd5fdfd40a98dc408a8ef23523cee17e4b4bc1",
+      "integrated_sha256": "7c6f6a12ea2f77ab105631a012fd5fdfd40a98dc408a8ef23523cee17e4b4bc1",
+      "bytes": 540,
+      "source_equal": true,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "preimage_sha256": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+      "source_sha256": "45ca9e18dc449aa5e7e0a6f4fcf3f2918ca034a69e11694201ea3c9e60ea5411",
+      "integrated_sha256": "45ca9e18dc449aa5e7e0a6f4fcf3f2918ca034a69e11694201ea3c9e60ea5411",
+      "bytes": 370899,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    },
+    {
+      "path": "agent/tests/silent-paels-legion.test.ts",
+      "preimage_sha256": "acde1e9f386e2e2ffc0f9489e46d6b4b980f4aee2254be95febdc6606b5307ff",
+      "source_sha256": "699289a4da85dbf14e5c3bac01a69e27e6ad105a936303535a86d833808c5be0",
+      "integrated_sha256": "699289a4da85dbf14e5c3bac01a69e27e6ad105a936303535a86d833808c5be0",
+      "bytes": 7808,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    },
+    {
+      "path": "agent/tests/silent-paels-legion-evidence.json",
+      "preimage_sha256": "768d4ccc72d3e8c03ec27dcc4e390c366a313f0d99594f710f4a38d3e585fa8c",
+      "source_sha256": "2f4162e8b6e664a4b02c0eddea1479a1511118dab3ec4d522720190c1a8755d5",
+      "integrated_sha256": "2f4162e8b6e664a4b02c0eddea1479a1511118dab3ec4d522720190c1a8755d5",
+      "bytes": 177242,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    }
+  ],
+  "game_exact_patch": "game-exact.patch",
+  "host_exact_patch": "host-exact.patch",
+  "production_behavior_leaves": [
+    "agent/src/reflex/combat-plan.ts"
+  ],
+  "existing_root_live_differences": "root-live-existing-differences.json; preserve 12 existing production leaves",
+  "checks": "full-state.json/full.json after terminal readback; prior13 targeted/ROOT dual tsc; current LIVE production tsc0/12 fixed strategy tests",
+  "publication_owner": "original ops; publication-admission #57 contract; allocate release_id only after actual LIVE commit under original lock",
+  "knowledge_boundary": "no knowledge data or DB mutation in these six leaves; retain current K binding and old disabled-bound batches",
+  "rollback": "revert only the six exact deltas in their respective ROOT/LIVE roots, preserving later upstream changes and current knowledge binding; ops release record",
+  "old_rule": "Silent A10 with two Dexterity declined the existing Pael Legion preview, like other nonzero Dexterity",
+  "new_rule": "accept only original learner evidence condition: Silent A10 + exactly two Dexterity + original plain DEFEND_SILENT / relic / state gates; keep A0/A7/A9/A11 and Ironclad equivalent",
+  "rule_evidence": "original learner silent-proposal-aafb1318550a5c2c; Q7HBKHZTSPJ8 A10 F33 a4 T5; fixed readback in prior candidates-integrator/fixed-evidence-readback.json",
+  "host_behavior": "EXIT3 cause display only: classify exact receipt-bound pre-model timeout; preserve failure/retry/authorization and runtime gates",
+  "deployment_notifications": "after actual behavior publication, ops records decision-log/eval release and notes/for-roy.md + ops/inbox-dev.md old/new/evidence/impact/rollback",
+  "do_not": [
+    "finish/retire/replay original awaiting_review/75 batches",
+    "replay #60 worker/FIFO/import",
+    "replace original source trees or delete logs",
+    "close scientific parent requirements"
+  ]
+}

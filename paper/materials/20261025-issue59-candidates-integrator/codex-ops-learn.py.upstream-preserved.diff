@@ -1,0 +1,39 @@
+diff --git a/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302/ops/codex-ops-learn.py b/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/ops/codex-ops-learn.py
+index 53fb48cf8..3ba6c5163 100644
+--- a/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261025-024302/ops/codex-ops-learn.py
++++ b/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/ops/codex-ops-learn.py
+@@ -46,6 +46,7 @@ import ops_current  # noqa: E402
+ import external_learning_policy
+ import disk_admission  # noqa: E402
+ import publication_gate  # noqa: E402
++import knowledge_runtime_env  # noqa: E402
+ from learner_tui import apply_deferrals  # noqa: E402
+ from learner_checks import read_report  # noqa: E402
+ 
+@@ -209,10 +210,12 @@ def dispatch(state, runs, character, reason):
+     batch_id = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+     out_dir = os.path.join(DIR, "learner")
+     os.makedirs(out_dir, exist_ok=True)
++    knowledge_runtime = knowledge_runtime_env.capture(ROOT, DIR)
+     pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
+                               ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
+     state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character,
+-                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR)}
++                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR),
++                                 "knowledge_runtime": knowledge_runtime}
+     if pane:
+         state["batches"][batch_id]["pane"] = pane
+     for run in runs:
+@@ -714,6 +717,12 @@ def main():
+     parser.add_argument("--rc", type=int, default=1)
+     args = parser.parse_args()
+     args.character = character_key(args.character) or "silent"
++    if args.command in ("tick", "dispatch", "write", "boss-check"):
++        try:
++            knowledge_runtime_env.apply(ROOT, DIR)
++        except (OSError, ValueError, TypeError, KeyError):
++            print(json.dumps({"state": "held", "reason": "invalid_knowledge_runtime_control"}))
++            return 78
+     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
+                "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check,
+                "core-notify": cmd_core_notify}[args.command]

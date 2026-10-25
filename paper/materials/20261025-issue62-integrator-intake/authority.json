@@ -1,0 +1,93 @@
+{
+  "issue": {
+    "issue": {
+      "url": "https://github.com/dwroy/agent-sts2/issues/62",
+      "title": "知识库分类型业务表与 LLM tools 直连索引查询（#60 后续）",
+      "issue_number": 62,
+      "body": "[lead] 按 Roy 已确认方案，补齐 SQLite 知识库分类型业务表和 LLM tools 直连索引查询；#60 的真实学习入库与自然局验收继续推进。\n\n## 目标与范围\n\n在 SQLite + JSON + 索引基础上，使用共享的修订、版本、候选、证据与运行绑定记录，以及明确字段、约束和索引的业务扩展表。统计继续使用 DuckDB。\n\n业务类型覆盖经验、策略、reflex规则、构筑核心/组合、词表/别名、已发布实体机制事实。启动、Boss、双Boss、构筑路线、爬楼路线属于可多选主题，不按主题复制知识。分类只能来自已有明确内容；未知保留未知，不由开发者创造游戏知识。\n\n先列出已发布源→业务类型/表/原ID的映射与覆盖清单，说明尚未迁移内容。保留原ID、角色/公共范围、来源/游戏版本、置信度、支持与反证、争议和退役状态。新增类型投影从已有修订回填，不要求重学；未发布材料不得混入正式库。\n\n## tools\n\n- 保留现有 kb_experience、kb_strategies、kb_reflex 名称及旧参数兼容，增加必要的可选主题/实体筛选；实体类工具按覆盖清单接入。\n- 工具实际调用类型化只读查询服务，使用固定参数SQL和索引；LLM只传结构化参数，无任意SQL工具。不能整库扫描后用数据库查询耗时代替工具耗时。\n- 知识版本、角色、进阶由运行上下文绑定。索引召回后保留原动态适用性判断，分页/limit不得漏掉后续适用条目。\n- 返回条目ID、知识版本、来源、证据/反证与限制；兼容既有消费者。失败不得静默换版或返回未绑定数据。\n- 缓存按知识版本隔离，避免重复解析校验整套核心/词表；动态牌组、HP等条件仍按题判断。保持#58的按需查询、计划复用及两类路线独立更新。\n\n## 验收\n\n1. 增量迁移和回填幂等、失败原子、可备份恢复。逐类型核对条数、ID、原内容、关系、支持与反证及查询正负例；明确报告差异。\n2. 覆盖旧库升级、新候选入库发布、旧局旧版/新局新版、回退保留历史和候选、重启及并发只读，核实际部署组合。\n3. 从真实ToolDef验证到索引查询、适用性过滤和有界输出；包含短中文、别名、无匹配、跨角色排除、公共范围及分页稳定性。\n4. 分别报告冷启动、热查询、真实及放大数据规模、索引计划、DB和整个tool耗时。完整tool热P95目标<50ms（不含LLM/网络）；未达明确说明，不以单次值代替。\n5. 完成项目规定的类型检查、定向验证和固定最终组合完整回归；提供schema、迁移映射、tools示例、覆盖清单、检查结果及上线/回退说明。旧版本通过结果不能覆盖新差量。\n\n## 协作与交付\n\n新开发沿项目标准入口使用独立会话和工作树。开发负责实现与自测，集成角色核最终组合，ops负责自然边界发布和真实运行验收；已通过适用检查后尽快上线。\n\n#60 已有版本的真实学习候选→入库→发布→工具读取→自然局消费并行继续，本项不成为其新前置，不重复已有迁移/发布。开发不直接修改运行中的生产库；知识内容仍由学习流程产生。工程与必要运行核收后释放空闲开发会话，长期效果归runtime。\n",
+      "state": "open",
+      "user": {
+        "login": "dwroy",
+        "name": "dwroy",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/1374130?v=4",
+        "id": 1374130
+      },
+      "assignees": null,
+      "labels": [
+        {
+          "name": "owner:dev",
+          "color": "5319e7",
+          "description": "a fresh dev session per issue (Codex in herdr)"
+        },
+        {
+          "name": "P1",
+          "color": "d93f0b",
+          "description": "high"
+        },
+        {
+          "name": "type:feature",
+          "color": "a2eeef",
+          "description": "new behavior"
+        },
+        {
+          "name": "status:in-progress",
+          "color": "1d76db",
+          "description": "someone is working on it"
+        },
+        {
+          "name": "area:learning",
+          "color": "bfd4f2",
+          "description": "learning loop and refresh"
+        },
+        {
+          "name": "area:brain",
+          "color": "5319e7",
+          "description": "对局大脑题面、指令与工具"
+        }
+      ],
+      "milestone": null,
+      "state_reason": null,
+      "comments": 1,
+      "created_at": "2026-10-25T03:29:22Z",
+      "updated_at": "2026-10-25T03:30:20Z",
+      "closed_at": null,
+      "display_url": "https://github.com/dwroy/agent-sts2/issues/62",
+      "display_title": "知识库分类型业务表与 LLM tools 直连索引查询（#60 后续）"
+    },
+    "url": "https://github.com/dwroy/agent-sts2/issues/62",
+    "title": "知识库分类型业务表与 LLM tools 直连索引查询（#60 后续）",
+    "display_url": "https://github.com/dwroy/agent-sts2/issues/62",
+    "display_title": "知识库分类型业务表与 LLM tools 直连索引查询（#60 后续）"
+  },
+  "comments": {
+    "comments": [
+      {
+        "url": "https://github.com/dwroy/agent-sts2/issues/62#issuecomment-6392971301",
+        "body": "[ops] 已派 issue-62：工作树 `.worktrees/issue-62-knowledge-typed-tools`，pane `wJ:p1J2`、tab `wJ:t1H0`，基线 `32c6b922a07963227ff86fd0b27d85014cd5f769`；独立 Codex 会话，启动参数 gpt-6.1-sol/high（实际档位由原生回执验收）。\n\n<!-- issue-session:62:4c32603dffd005d6b288 -->\n",
+        "user": {
+          "login": "dwroy",
+          "name": "dwroy",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/1374130?v=4",
+          "id": 1374130
+        },
+        "id": 6392971301,
+        "pull_request_review_id": null,
+        "in_reply_to_id": null,
+        "created_at": null,
+        "updated_at": null,
+        "review": null,
+        "side": null,
+        "line": null,
+        "start_line": null,
+        "path": null,
+        "body_html": "<p dir=\"auto\">[ops] 已派 issue-62：工作树 <code class=\"notranslate\">.worktrees/issue-62-knowledge-typed-tools</code>，pane <code class=\"notranslate\">wJ:p1J2</code>、tab <code class=\"notranslate\">wJ:t1H0</code>，基线 <code class=\"notranslate\">32c6b922a07963227ff86fd0b27d85014cd5f769</code>；独立 Codex 会话，启动参数 gpt-6.1-sol/high（实际档位由原生回执验收）。</p>\n"
+      }
+    ],
+    "url": "https://github.com/dwroy/agent-sts2/issues/62",
+    "title": "dwroy/agent-sts2 Issue #62 comments",
+    "display_url": "https://github.com/dwroy/agent-sts2/issues/62",
+    "display_title": "dwroy/agent-sts2 Issue #62 comments"
+  }
+}
