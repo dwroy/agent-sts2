@@ -1,4 +1,17 @@
 state: in-flight
+issue: 60
+updated_at: 2026-10-25T14:14:57+08:00
+
+进行中的事：#60 ops6394272248已14:14:06独核，公开6394282116远端逐字核同。5K2终局F33失败/32 accepted，23实际KB输出均K04b03/status ok、去重21组；策略2次首题同参数只1独立机会，后31题无策略查询、8题rest/plan不能判无适用。114312八新增及121312四新增一更新13目标正确版本/完整内容与后继K同，返回命中0、答案显式ID引用0，采用/因果收益仍未验。39原切片/四快照/SQL候选发布各1及全部旧绑定核同；原autoplay106717/birth33091291身份保持、旧play107318缺席，同一冻结上限WBDA两题accepted/3实际KB输出仍无目标命中，LIVE e9a468882/R451保持。无产品查询/模型/局/发布/full或学习接管。
+
+在等谁：原ops沿原自然消费者接具体ID/version/source及实际引用，learner维护知识/效果；父要求开放，不能将空策略返回判库空/无适用，亦不能由零显式ID断言无隐式使用。#63三原样本及开发UI已核收6394222723，原恢复资料保留、不再待seal。#61仍等主管指定原CLI及五组source owner核准，000402缺wrapper等原archive owner；#62首题原始816缺口保持，持久留证改进等主管/原brain owner独立登记。#64实际组合独立，不成为60前置。
+
+下一步：保存本轮独核记录后回原#64固定bc80005598/补充合同2a11e1d4c队列，鲜核实际62+63组合与ROOT/LIVE前像，保LIVE测试历史差量，接唯一适用检查窗口；当前64 full未启动。60只沿自然事件接收后继，不新增轮询/强查/开局/重发布或重固定工具检查。原brain无runtime_version、run-config ENOBUFS、终局code=current限制保持；版本来自原输出/配置/SQL，不补历史，不以失败推知识因果。当前无本角色在途测试/发布/对局/监听/计时器。14:14:57原live-merge.lock仍由learner_retention.py sweep --apply --limit 4的PID317649持有，本轮记录已落盘、尚未提交或推送，不打断/绕过。待其自然释放后按.artifacts/integrator60-natural1413-20261025/commit-records.py接原精确记录事务（未执行/无私有index），成功再Windows SSH推送核远端。
+
+恢复入口：paper/materials/20261025-issue60-natural1413-integrator/{readback.py,independent-readback.json,public-receipt.json}；冻结brain1710342490–1714459433，SHA b6bcc2a7857e808a31cb085a2d3daafcdb92fc5c1b3a902d50787b6d261746e1。63/61/62/64原检查点如下保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 63
 updated_at: 2026-10-25T14:06:54+08:00
 
