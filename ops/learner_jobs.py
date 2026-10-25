@@ -311,10 +311,17 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False):
     directory = publication_gate.directory(root)
     if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
         return None
+    web_contract = None
+    if public_web:
+        if (public_web is not True or task != "strategy-proposal" or character != "silent" or reason != "ops" or runs
+                or research_request or implementation_request or backfill_source or external_source):
+            return None
+        from public_web_jobs import contract
+        web_contract = contract(root)
     if external_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(external_source, str) or not ID.fullmatch(external_source)
@@ -394,6 +401,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     ordinary_baseline = baseline(root, state_dir)
     from knowledge_runtime_env import capture
     knowledge_runtime = capture(root, state_dir)
+    if public_web and not knowledge_runtime.get("enabled"):
+        return None
     from learning_runtime import capture as capture_operational
     operational_runtime = capture_operational(root, state_dir, task)
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
@@ -403,6 +412,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
                                  "knowledge_runtime": knowledge_runtime, "operational_runtime": operational_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
+    if web_contract:
+        state["batches"][batch_id]["public_web"] = web_contract
     if external_source:
         state["batches"][batch_id]["external_source"] = external_source
     elif backfill_source:

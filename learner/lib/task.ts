@@ -44,6 +44,8 @@ export interface TaskSpec {
   path: string;
   title: string;
   tools: TaskTool[];
+  /** Explicit public STS2 research; shell network remains disabled. */
+  publicWeb?: "sts2";
   timeoutMin?: number;
   maxTurns?: number;
   /** model.<engine>: the task's model per engine (a plain `model:` would reach every engine, so there is none). */
@@ -155,6 +157,9 @@ export function parseTask(text: string, name: string, path: string): TaskSpec {
         if (!(TASK_TOOLS as readonly string[]).includes(tool)) throw new LearnerUsageError(`${path}: 不认识的工具「${tool}」，可用：${TASK_TOOLS.join(", ")}`);
         if (!spec.tools.includes(tool as TaskTool)) spec.tools.push(tool as TaskTool);
       }
+    } else if (key === "public_web") {
+      if (value !== "sts2") throw new LearnerUsageError(`${path}: public_web 只支持 sts2`);
+      spec.publicWeb = value;
     } else if (key === "timeout_min") spec.timeoutMin = positiveInt(value, key, path);
     else if (key === "max_turns") spec.maxTurns = positiveInt(value, key, path);
     else if (key === "model" || key === "effort") throw new LearnerUsageError(`${path}: 「${key}」要按引擎写：${TASK_ENGINES.map((engine) => `${key}.${engine}`).join(" / ")}`);

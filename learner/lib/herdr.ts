@@ -259,7 +259,7 @@ export class NativeBatch {
       }
       return;
     }
-    if (row.type === "response_item" && /^(function_call|custom_tool_call|local_shell_call)$/.test(String(p.type))) this.progress++;
+    if (row.type === "response_item" && /^(function_call|custom_tool_call|local_shell_call|web_search_call)$/.test(String(p.type))) this.progress++;
     if (row.type === "event_msg" && p.type === "error") this.error = String(p.message ?? p.error ?? "native error");
     if (row.type === "token_usage_record" && p.turn_id === this.turn) {
       this.usage = (p.turn_token_usage ?? p.usage) as Record<string, unknown> | undefined;

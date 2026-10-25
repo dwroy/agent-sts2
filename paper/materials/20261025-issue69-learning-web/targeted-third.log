@@ -1,0 +1,126 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/agent
+
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/learner-jobs.test.ts (4 tests | 3 failed) 385ms
+     × an open fix queue launches one fix job, and a busy worktree launches none 125ms
+     × one pending run launches experience-update; busy, completed and early retries do not launch it again 127ms
+     × routes real learners through the original herdr command host while preserving other settings 131ms
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/external-strategy-evidence.test.ts (43 tests | 1 failed) 23ms
+   × registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool 5ms
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2317570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-strategy-evidence.test.ts > registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool
+Error: ENOENT: no such file or directory, open './tests/external-strategy-data/frozen-skip-aggregate.json'
+ ❯ tests/external-strategy-evidence.test.ts:56:15
+     54|   // Check the copied statistic/denominator against the existing #24 f…
+     55|   const dataPath = "./tests/external-strategy-data/frozen-skip-aggrega…
+     56|   const raw = readFileSync(dataPath, "utf8"), data = JSON.parse(raw);
+       |               ^
+     57|   const table = data.tables.skip, row = table.rows.find((r: unknown[])…
+     58|   expect(ev.dataset_sha256).toBe(data.provenance.database_sha256);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/learner-jobs.test.ts > automatic learner write jobs > an open fix queue launches one fix job, and a busy worktree launches none
+AssertionError: Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+    m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/../ops/learner_jobs.py'
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-jobs.test.ts:49:42
+     47| `;
+     48|     const result = spawnSync("python3", ["-B", "-c", script], { encodi…
+     49|     expect(result.status, result.stderr).toBe(0);
+       |                                          ^
+     50|     const data = JSON.parse(result.stdout);
+     51|     expect(data.a.fixes).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/learner-jobs.test.ts > automatic learner write jobs > one pending run launches experience-update; busy, completed and early retries do not launch it again
+AssertionError: Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+                                               ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/../ops/learner_jobs.py'
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ scenario tests/learner-jobs.test.ts:27:40
+     25| `;
+     26|   const result = spawnSync("python3", ["-B", "-c", script, name], { en…
+     27|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     28|   return JSON.parse(result.stdout);
+     29| }
+ ❯ tests/learner-jobs.test.ts:59:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/learner-jobs.test.ts > learner TUI fallback policy > routes real learners through the original herdr command host while preserving other settings
+AssertionError: Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+    m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/../ops/learner_jobs.py'
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-jobs.test.ts:102:42
+    100| `;
+    101|     const result = spawnSync("python3", ["-B", "-c", script], { encodi…
+    102|     expect(result.status, result.stderr).toBe(0);
+       |                                          ^
+    103|     const value = JSON.parse(result.stdout);
+    104|     expect(value.pid).toBe(123);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 6 passed (8)
+      Tests  4 failed | 155 passed (159)
+   Start at  22:56:47
+   Duration  15.09s (transform 1.18s, setup 623ms, import 1.74s, tests 11.83s, environment 1ms)
+

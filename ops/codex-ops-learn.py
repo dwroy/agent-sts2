@@ -576,6 +576,14 @@ def cmd_finish(args):
 
 def cmd_write(args):
     state = load_state()
+    if getattr(args, "public_web", False):
+        if args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request:
+            return 2
+        result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
+                                "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
+        save_state(state)
+        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        return 0 if result else 1
     if getattr(args, "request", ""):
         import strategy_implementation_jobs
         if args.task != "strategy-proposal" or args.runs:
@@ -741,9 +749,12 @@ def main():
     parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
     parser.add_argument("--runs", default="")
     parser.add_argument("--request", default="")
+    parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
     parser.add_argument("--batch", default="")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
+    if args.public_web and args.command != "write":
+        parser.error("--public-web requires write")
     args.character = character_key(args.character) or "silent"
     if args.command in ("tick", "dispatch", "write", "boss-check"):
         try:

@@ -34,10 +34,11 @@ import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
+import { publicWebEvent, publicWebPermission } from "./public-web.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
 import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
-import { runLearnerTui, type TuiResult } from "./herdr.js";
+import { NativeRows, runLearnerTui, type TuiResult } from "./herdr.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
 export const REPO = REPO_ROOT;
@@ -423,6 +424,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       cwd,
       projectRoot: deps.projectRoot,
       tools: spec.tools,
+      ...(spec.publicWeb ? { publicWeb: publicWebPermission(spec, options.engine, character, cwd, deps.projectRoot, deps.env) } : {}),
       // Commits need the main checkout's git directory (a worktree's metadata lives there): writable, its hooks and
       // config read-only, as the ops session's profile (2026-10-04: fix-batch could not merge main, ORIG_HEAD.lock).
       extraRules: learnerGitRules(deps.projectRoot, cwd),
@@ -511,9 +513,21 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   mkdirSync(scratch, { recursive: true });
   mkdirSync(deps.runsDir, { recursive: true });
   const started = deps.now();
-  const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
+  const log = (event: Record<string, unknown>): void => {
+    appendFileSync(logPath, `${JSON.stringify(event)}\n`);
+    captureWeb(event);
+  };
+  const captureWeb = (event: Record<string, unknown>): void => {
+    const web = request.publicWeb ? publicWebEvent(event) : undefined;
+    if (web) {
+      appendFileSync(join(scratch, "public-web-events.jsonl"), `${JSON.stringify(web)}\n`);
+      if (deps.env.LEARNER_HERDR_PANE) tracker.feed(JSON.stringify(event));
+    }
+  };
   log({
     type: "learner_launch",
+    ...(request.publicWeb ? { public_web: { schema: "public-web-research-v1", requested: "live", observed: null,
+      shell_network: false, native_events: join(scratch, "public-web-events.jsonl"), sources: join(scratch, "public-web-sources.json") } } : {}),
     ...(prepared.operationalRuntime ? { operational_runtime: prepared.operationalRuntime } : {}),
     ...(deps.env.STS2_KNOWLEDGE_RUNTIME ? { knowledge_runtime: { directory: deps.env.STS2_KNOWLEDGE_RUNTIME,
       control_sha256: /^[a-f0-9]{64}$/.test(deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 ?? "") ? deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 : null } } : {}),
@@ -572,6 +586,27 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   let signal: NodeJS.Signals | null = null;
   let tui: TuiResult | undefined;
   const interactive = request.engine === "codex" && !!deps.env.LEARNER_HERDR_PANE;
+  const nativeWebRows = request.publicWeb && !interactive ? new NativeRows() : undefined;
+  let nativeWebPath: string | undefined, nativeWebSession = false, nativeWebPrompt = false, nativeWebFailed = false;
+  const drainNativeWeb = (): void => {
+    if (!nativeWebRows || nativeWebFailed || !tracker.summary.sessionId) return;
+    nativeWebPath ??= findRollout(learnerCodexHome(deps.env), tracker.summary.sessionId);
+    if (!nativeWebPath) return;
+    try {
+      while (!nativeWebRows.atEnd(nativeWebPath)) for (const row of nativeWebRows.read(nativeWebPath)) {
+        const p = row.payload ?? {};
+        if (row.type === "session_meta") nativeWebSession = p.id === tracker.summary.sessionId && p.cwd === request.cwd;
+        const text = row.type === "event_msg" && p.type === "user_message" ? String(p.message ?? "")
+          : row.type === "response_item" && p.type === "message" && p.role === "user" && Array.isArray(p.content)
+            ? p.content.map((part: { text?: unknown }) => String(part.text ?? "")).join("\n") : undefined;
+        if (text !== undefined) nativeWebPrompt = text.replace(/\r\n/g, "\n").trimEnd() === command.stdin.replace(/\r\n/g, "\n").trimEnd();
+        if (nativeWebSession && nativeWebPrompt && publicWebEvent(row as Record<string, unknown>)) log(row as Record<string, unknown>);
+      }
+    } catch {
+      nativeWebFailed = true;
+      log({ type: "public_web_native_unavailable", reason: "original native web stream unavailable; preserve pending provenance" });
+    }
+  };
   if (interactive) {
     const receipt = deps.env.LEARNER_TUI_RECEIPT;
     const label = deps.env.LEARNER_HERDR_LABEL;
@@ -645,6 +680,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
             } catch { /* Preserve the original stream; non-JSON lines cannot acknowledge a resume. */ }
           }
           const event = tracker.feed(line, ms());
+          if (event && request.publicWeb) {
+            captureWeb(event);
+            drainNativeWeb();
+          }
           const progress = event && progressLine(request.engine, event);
           if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
         });
@@ -670,6 +709,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
         attemptChild.on("close", (code, sig) => done([code, sig]));
       });
       await Promise.all([stdoutDone, stderrDone]);
+      drainNativeWeb();
       child = undefined;
       const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
       log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,

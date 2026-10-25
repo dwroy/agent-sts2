@@ -52,6 +52,22 @@ def audit_proposals(report, batch, body, before, root):
 
 
 def complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=False):
+    if batch.get("public_web") and report.get("knowledge_candidate") is None:
+        try:
+            from public_web_jobs import source_proof
+            if rc != 0 or not report.get("limitations"):
+                raise ValueError("no-content web report requires successful completion and explicit limitations")
+            proof = source_proof(root, batch_id, batch, report, None)
+            audit_proposals(report, batch, {}, {}, root)
+            previous_proof = batch.get("public_web_proof")
+            batch.update(state="done", rc=rc, report=report, public_web_proof=proof, checks_pending=False)
+            batch.pop("knowledge_pending", None)
+            if previous_proof != proof:
+                enqueue("knowledge-done", f"公开研究 {batch_id} 无可发布增量；来源/失败保留，未发布知识，父要求继续。")
+        except (OSError, ValueError, TypeError, KeyError, subprocess.SubprocessError):
+            batch.update(state="awaiting_review", rc=rc, report=report, knowledge_pending=True)
+            inbox(f"公开研究 {batch_id} 无增量回报待核；原来源/失败保留，不补造完成。")
+        return True
     if report.get("knowledge_candidate") is None:
         return False
     from knowledge_runtime_env import bound_batch
@@ -86,6 +102,10 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=
             raise ValueError("invalid candidate file")
         raw = path.read_bytes()
         body = json.loads(raw)
+        web_proof = None
+        if batch.get("public_web"):
+            from public_web_jobs import source_proof
+            web_proof = source_proof(root, batch_id, batch, report, body)
         if body.get("id") != batch_id or body.get("character") != batch["character"]:
             raise ValueError("candidate does not match original batch/character")
         # A content callback cannot smuggle executable changes around the source pipeline.
@@ -135,6 +155,8 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=
                      "runtime_control_sha256": control_sha if re.fullmatch(r"[a-f0-9]{64}", control_sha) else None},
                      checks_pending=False)
         batch.pop("knowledge_pending", None)
+        if web_proof:
+            batch["public_web_proof"] = web_proof
         batch.setdefault("knowledge_attempts", []).append({"state": "published", "version": receipt["version"]})
         if proof:
             kind = "external" if batch.get("external_source") else "backfill"

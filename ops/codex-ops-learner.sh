@@ -28,6 +28,7 @@ source_kind=backfill
 external_tier=""
 unset LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
 backfill_task_file=""
+public_web_task_file=""
 if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
     && { [[ "$7" =~ ^(backfill|external):[a-z0-9][a-z0-9._-]{0,119}$ ]] || [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
@@ -239,7 +240,15 @@ else
   if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
     learner_effort=xhigh
   fi
-  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
+  # Read only the original registration, after checkout and before selecting the task template.
+  if [ "$task" = strategy-proposal ] && [ "$audit_ready" = 1 ]; then
+    if ! (flock -w 120 8) 8> "$registration_lock"; then exit 75; fi
+    public_web_registered=$(nice -n 19 python3 -c 'import json,sys; b=json.load(open(sys.argv[1]))["batches"][sys.argv[2]]; print("yes" if "public_web" in b else "no")' "$DIR/learn.json" "$batch") || exit 2
+    if [ "$public_web_registered" = yes ]; then
+      public_web_task_file=$(nice -n 19 python3 "$OPS/public_web_jobs.py" "$ROOT" "$DIR" "$batch" "$character" "$worktree" 2>> "$err") || exit 2
+    fi
+  fi
+  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${public_web_task_file:-${backfill_task_file:-${implementation_task_file:-$learner_task}}}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$task" = mechanics-audit ] || [ "$task" = experience-asc-audit ]; then args+=(--set "batch=$batch"); fi
   if [ "$learner_task" = silent-historical-core-builds ]; then
@@ -249,6 +258,8 @@ else
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   elif [ "$task" = ascension-audit ]; then
     args+=(--set "runs=$runs" --set "target_ascension=$level" --set "previous_ascension=$previous")
+  elif [ -n "$public_web_task_file" ]; then
+    args+=(--set merge=no)
   elif [ "$source_kind" != external ] && [ "$learner_task" != silent-historical-core-builds ]; then
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
