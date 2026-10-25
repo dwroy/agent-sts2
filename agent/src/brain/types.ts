@@ -32,6 +32,8 @@ export interface AnswerSpec {
   kind: "pick" | "plan";
   /** JSON Schema of the answer object (JSON mode instruction, tool schema, --json-schema, --output-schema). */
   schema: JsonSchema;
+  /** A changed route needs its own reason; schema adapters must preserve that optional field. */
+  routeReasonOnChange?: boolean;
   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
   validate(answer: unknown): string[];
   /**

@@ -616,6 +616,7 @@ export interface BrainConfig {
     /**
      * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
+     * A question requiring a route-change reason preserves the optional field regardless of this legacy setting.
      */
     routeReason: "drop" | "keep";
     /**

@@ -1,0 +1,325 @@
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index dfbb59d6d..0c1c011bd 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -382,15 +382,16 @@ export function closeCutAnswer(text: string): { json: Record<string, unknown>; t
+  * (2026-10-03, RNTVAT76BPV0 / J4S28FRQKD7G: 7 of 27 live calls at high stalled; the replayed ones streamed route_reason
+  * as an endless chain of single characters, 「稳。好。走。保。…」, after a short phrase):
+  * - routeReason "drop" (BRAIN_CODEX_ROUTE_REASON, default): no route_reason field (it is only logged: the route review's
+- *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS.
++ *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS. A question whose
++ *   contract requires a reason on a changed route preserves the optional field even with "drop".
+  * - maxFieldChars (BRAIN_CODEX_MAX_FIELD_CHARS, default 600): every free-text string (no enum) gets that maxLength,
+  *   which OpenAI's strict mode enforces while it samples: a runaway in any text field ends there. Logged answers' longest
+  *   single field is ~180 characters; the act route ~90.
+  * DeepSeek's and Claude's schemas and every prompt stay as they are.
+  */
+-export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean }): StrictSchema | null {
++export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean; routeReasonOnChange?: boolean }): StrictSchema | null {
+   let schema = kindSchema;
+-  if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
++  if (opts.routeReason === "drop" && !opts.routeReasonOnChange && schema.properties?.["route_reason"]) {
+     const { route_reason: _dropped, ...properties } = schema.properties;
+     schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
+   }
+@@ -1024,7 +1025,7 @@ export class CodexEngine implements BrainEngine {
+     mkdirSync(this.stateDir, { recursive: true });
+     const entry = await this.catalog(model, effort, env);
+     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
+-    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
++    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern, routeReasonOnChange: req.spec.routeReasonOnChange });
+     const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
+     const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
+     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
+diff --git a/agent/src/brain/specs.ts b/agent/src/brain/specs.ts
+index 58f96fe82..7a18f08c6 100644
+--- a/agent/src/brain/specs.ts
++++ b/agent/src/brain/specs.ts
+@@ -162,6 +162,7 @@ export function pickSpec(label: string, options: Record<string, string | null>,
+     label,
+     kind: "pick",
+     schema: { type: "object", properties, required, additionalProperties: false },
++    ...(reviewMap && endgamePlanningTask(st) ? { routeReasonOnChange: true } : {}),
+     ...(route || ranking ? { reask: true } : {}),
+     validate(answer: unknown): string[] {
+       if (!isObject(answer)) return ["the answer is not a JSON object"];
+diff --git a/agent/src/brain/types.ts b/agent/src/brain/types.ts
+index 7304e5d4f..48c9d3987 100644
+--- a/agent/src/brain/types.ts
++++ b/agent/src/brain/types.ts
+@@ -32,6 +32,8 @@ export interface AnswerSpec {
+   kind: "pick" | "plan";
+   /** JSON Schema of the answer object (JSON mode instruction, tool schema, --json-schema, --output-schema). */
+   schema: JsonSchema;
++  /** A changed route needs its own reason; schema adapters must preserve that optional field. */
++  routeReasonOnChange?: boolean;
+   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
+   validate(answer: unknown): string[];
+   /**
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 26f806765..7f5126ee9 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -616,6 +616,7 @@ export interface BrainConfig {
+     /**
+      * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
+      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
++     * A question requiring a route-change reason preserves the optional field regardless of this legacy setting.
+      */
+     routeReason: "drop" | "keep";
+     /**
+diff --git a/agent/tests/brain-codex-session.test.ts b/agent/tests/brain-codex-session.test.ts
+index b0f9cdc53..e3e4ee02c 100644
+--- a/agent/tests/brain-codex-session.test.ts
++++ b/agent/tests/brain-codex-session.test.ts
+@@ -9,7 +9,7 @@ import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, wr
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+-import { afterEach, describe, expect, it } from "vitest";
++import { afterEach, describe, expect, it, vi } from "vitest";
+ 
+ import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
+ import { CodexEngine, catalogEntry, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
+@@ -17,6 +17,16 @@ import { pickSpec, stableSchema } from "../src/brain/specs.js";
+ import type { BrainRequest } from "../src/brain/types.js";
+ import { loadConfig } from "../src/core/config.js";
+ import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
++import { Brain, agentSystemPrompt } from "../src/brain/brain.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { loadRunPlan } from "../src/memory/run-plan.js";
++import { readRunLogs, replayRun } from "../src/memory/journal-replay.js";
++import * as buildSim from "../src/sim/build-sim-facts.js";
++import { mainMenuPayload, testKnowledge } from "./scenarios.js";
++import { envelope } from "./support.js";
++import { changedRoute, constructionPatch, initialPlan, initialRoute, previousRoute, routeBoard, routeReason } from "./route-reason-fixture.js";
+ 
+ const dir = mkdtempSync(join(tmpdir(), "fake-codex-session-"));
+ 
+@@ -37,6 +47,8 @@ interface Script {
+   /** Threads thread/list returns (the sweep). */
+   stale?: Event[];
+   revertFails?: boolean;
++  /** Enforce the supplied strict output format before emitting each scripted answer. */
++  strictAnswers?: boolean;
+ }
+ 
+ interface Req {
+@@ -109,7 +121,29 @@ for await (const line of createInterface({ input: process.stdin })) {
+         if (current !== turnId) return;
+         if (e.__sleep) { await new Promise((ok) => setTimeout(ok, e.__sleep)); continue; }
+         if (e.__die) process.exit(9);
+-        send(JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId)));
++        const event = JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId));
++        if (script.strictAnswers && event.params?.item?.type === "agentMessage") {
++          // Fill nullable slots exactly as a strict structured-output response would; reject unknown fields.
++          const check = (schema, value) => {
++            const types = Array.isArray(schema.type) ? schema.type : [schema.type];
++            const type = value === null ? "null" : Array.isArray(value) ? "array" : typeof value;
++            if (!types.includes(type) && !(type === "number" && types.includes("integer") && Number.isInteger(value))) throw Error("strict type mismatch");
++            if (schema.enum && !schema.enum.includes(value)) throw Error("strict enum mismatch");
++            if (type === "object") {
++              for (const key of Object.keys(value)) if (!Object.hasOwn(schema.properties, key)) throw Error("strict unknown field: " + key);
++              for (const key of schema.required) {
++                if (!Object.hasOwn(value, key)) value[key] = null;
++                check(schema.properties[key], value[key]);
++              }
++            }
++            if (type === "array") value.forEach(item => check(schema.items, item));
++            if (type === "string" && ((schema.maxLength && Array.from(value).length > schema.maxLength) || (schema.pattern && !new RegExp(schema.pattern).test(value)))) throw Error("strict string constraint");
++          };
++          const answer = JSON.parse(event.params.item.text);
++          check(p.outputSchema, answer);
++          event.params.item.text = JSON.stringify(answer);
++        }
++        send(event);
+       }
+     })();
+   } else send({ id: msg.id, error: { code: -32601, message: "unknown " + msg.method } });
+@@ -586,3 +620,79 @@ it("knowledge session isolation failures stay unavailable and never dispatch exe
+   await expect(engine.decide(request())).rejects.toMatchObject({ kind: "unavailable" });
+   expect(fake.execs()).toBe(0);
+ });
++
++
++for (const scenario of ["change", "construction-only", "both", "omit", "keep", "repeat", "missing-reason", "invalid-route"] as const) {
++  it(`#64 strict session through persistence and restored route consumer: ${scenario}`, async () => {
++    setKnowledgeCharacter("silent");
++    const change = ["change", "both", "missing-reason", "invalid-route"].includes(scenario);
++    const construction = ["construction-only", "both", "missing-reason"].includes(scenario);
++    const answer = { choice: "card0", reason: "格式选择",
++      ...(scenario === "omit" || scenario === "construction-only" ? {} : { route: scenario === "keep" ? "keep" : scenario === "repeat" ? previousRoute : scenario === "invalid-route" ? "r99c0" : changedRoute }),
++      ...(change && scenario !== "missing-reason" ? { route_reason: routeReason } : {}),
++      ...(construction ? { run_plan: constructionPatch } : {}) };
++    const fake = fakeSession(`route-reason-${scenario}`, { strictAnswers: true, turns: [
++      answering({ route: initialRoute, reason: "格式初始路线", run_plan: initialPlan }), answering(answer), answering(answer),
++    ] });
++    const { engine } = sessionEngine(fake, { knowledgeAgent: true, env: { BRAIN_CODEX_ROUTE_REASON: "drop", BRAIN_CODEX_ROUTE_PATTERN: "on" } });
++    const cfg = loadConfig({ BRAIN_RUN_CONFIG: JSON.stringify({ engine: "codex", effort: "high" }), BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off", BUILD_DECIDER: "deepseek" });
++    cfg.log.decisionLog = join(fake.state, "decisions.jsonl");
++    cfg.runPlanLog = join(fake.state, "run-plans.jsonl");
++    cfg.fightPlanLog = join(fake.state, "fight-plans.jsonl");
++    const rows: BrainLogRow[] = [];
++    const brain = new Brain(new BrainRouter({ config: { ...cfg.brain, log: null }, knowledgeAgent: true, engine: () => engine, log: r => rows.push(r) }), { systemPrompt: agentSystemPrompt(routeBoard("reward")) });
++    // The admission gate is unchanged; only the expensive projection is supplied as a completed fixed fixture.
++    const sim = vi.spyOn(buildSim, "withBossSim").mockImplementation(async decision => ({ decision,
++      record: { samples: 1, requested: 1, completion: { status: "complete" } } }));
++    const actions: unknown[] = [];
++    const sequence = [routeBoard("initial"), routeBoard("reward"), routeBoard("next"), mainMenuPayload()];
++    let position = 0;
++    const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, init) => {
++      if (String(url).endsWith("/state")) return Response.json(envelope(sequence[position]));
++      const action = JSON.parse(String(init?.body)); actions.push(action); position++;
++      return Response.json(envelope({ action: action.action, status: "completed", stable: true, message: "fixed", state: sequence[position] }));
++    }) as typeof fetch });
++    const jev = { ask: vi.fn().mockRejectedValue(new Error("no fixture Jev reply")) };
++    const run = (maxDecisions: number) => runLoop({ config: cfg, mode: "play", client, brain, jev: jev as any, knowledge: testKnowledge,
++      buildSim: {} as buildSim.BuildSimSetup, maxDecisions, maxMinutes: 1, pollIntervalMs: 0 });
++    try {
++      const firstStats = await run(2);
++      expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.map(r => ({ error: r.error, problems: r.problems })) })).toBe(2);
++      const requests = fake.requests().filter(r => r.method === "turn/start");
++      const schema = requests[1]!.params.outputSchema;
++      expect(schema).toMatchObject({ additionalProperties: false, properties: { route_reason: { type: ["string", "null"], maxLength: 60 } } });
++      expect(schema.required).toContain("route_reason");
++      const prompt = JSON.parse(requests[1]!.params.input[0].text);
++      expect(prompt.question).toContain("route_reason");
++      expect(prompt.state.route_review.plan).toContain("r1c0");
++      expect(prompt.state.route_review.plan_facts).toBeDefined();
++      expect(rows[1]!.answer).toMatchObject({ choice: "card0" });
++      const validChange = change && !["missing-reason", "invalid-route"].includes(scenario);
++      expect(requests).toHaveLength(validChange || !change ? 2 : 3);
++      const records = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
++      const pick = records.find(r => r.label === "reward/card");
++      expect(pick.route_review.outcome).toBe(validChange ? "change" : change ? "invalid" : "keep");
++      const routeChanges = records.filter(r => r.label === "map/route-change");
++      expect(routeChanges).toHaveLength(validChange ? 1 : 0);
++      if (validChange) {
++        expect(pick.deepseek.route_reason).toBe(routeReason);
++        expect(routeChanges[0]).toMatchObject({ journal: { reason: routeReason }, route_plan: { why: `card-reward review: ${routeReason}` } });
++      }
++      if (scenario === "missing-reason") {
++        expect(rows[1]!.problems?.join()).toContain("route_reason");
++        expect(pick.deepseek).not.toHaveProperty("route_reason");
++      }
++      const stored = loadRunPlan(cfg.runPlanLog, "ROUTE_CONTRACT_FIXTURE", 1)!;
++      expect(stored.endgame?.core).toBe(initialPlan.endgame.core);
++      expect(stored.endgame?.resources).toBe(construction ? constructionPatch.endgame.resources : initialPlan.endgame.resources);
++      const replay = replayRun(readRunLogs({ states: join(fake.state, "states.jsonl"), decisions: cfg.log.decisionLog, runPlans: cfg.runPlanLog }, "ROUTE_CONTRACT_FIXTURE"), testKnowledge);
++      expect(replay.routePlan!.path.map(n => `r${n.row}c${n.col}`).join(" ")).toBe(validChange ? changedRoute : initialRoute);
++      if (validChange) expect(replay.routePlan!.why).toContain(routeReason);
++      // A fresh loop has no screen memory: production recovery must read the persisted route before following it.
++      expect((await run(1)).acts).toBe(1);
++      expect(actions.at(-1)).toEqual({ action: "choose_map_node", option_index: validChange ? 1 : 0 });
++      expect(fake.requests().filter(r => r.method === "turn/start")).toHaveLength(requests.length);
++      expect(readFileSync(cfg.log.decisionLog, "utf8")).toContain('"label":"map/route-follow"');
++    } finally { sim.mockRestore(); setKnowledgeCharacter(null); }
++  }, 30_000);
++}
+diff --git a/agent/tests/route-reason-fixture.ts b/agent/tests/route-reason-fixture.ts
+new file mode 100644
+index 000000000..7ec70e507
+--- /dev/null
++++ b/agent/tests/route-reason-fixture.ts
+@@ -0,0 +1,29 @@
++/** Synthetic interface data only; no strategy, live response or measured game result. */
++import { input } from "./route-fixture.js";
++import { rewardCardPayload } from "./scenarios.js";
++
++export const initialRoute = "r0c1 r1c0 r2c0 r3c1 r4c1 r5c1";
++export const previousRoute = "r1c0 r2c0 r3c1 r4c1 r5c1";
++export const changedRoute = "r1c2 r2c1 r3c1 r4c1 r5c1";
++export const routeReason = "当前资源变化，比较原路后选择另一分支，预期改善胜率，效果未知";
++export const constructionPatch = { endgame: { resources: "格式资源更新" }, change_reason: "当前资源变化，局部更新构筑假设，预期有利，效果未知" };
++export const initialPlan = { archetype: "格式方向", want: [], avoid: [], remove: [], block_target: 0, elites: "normal", rest: "auto",
++  construction: { primary: "uncommitted", alternatives: [], checkpoint: 4, reason: "格式未知", pivot_if: "新证据" },
++  boss_prep: "未知", summary: "格式计划", endgame: { core: "格式核心", gaps: "未知", scaling_damage: "未知", sustainable_defense: "未知", resources: "未知", win_condition: "未知", checkpoint: "" } };
++
++export function routeBoard(kind: "initial" | "reward" | "next", character = "SILENT", ascension = 10) {
++  const raw = rewardCardPayload();
++  raw.run_id = "ROUTE_CONTRACT_FIXTURE";
++  raw.run = { ...raw.run as object, character_id: character, ascension, act_id: "0", floor: kind === "initial" ? 0 : 1,
++    current_hp: kind === "initial" ? 70 : 40, max_hp: 80, relics: [], potions: [] };
++  if (kind === "reward") return raw;
++  raw.screen = "MAP";
++  raw.available_actions = ["choose_map_node", "save_and_quit"];
++  raw.reward = null;
++  const nodes = input().nodes;
++  const available = kind === "initial" ? [{ row: 0, col: 1 }] : [{ row: 1, col: 0 }, { row: 1, col: 2 }];
++  raw.map = { nodes: nodes.map(n => ({ ...n, node_type: n.type, visited: kind !== "initial" && n.row === 0 })),
++    current_node: kind === "initial" ? null : { row: 0, col: 1 }, boss_node: { row: 4, col: 1 }, second_boss_node: { row: 5, col: 1 },
++    available_nodes: available.map((n, index) => ({ ...n, index, node_type: nodes.find(v => v.row === n.row && v.col === n.col)!.type })) };
++  return raw;
++}
+diff --git a/agent/tests/route-reason-schema.test.ts b/agent/tests/route-reason-schema.test.ts
+new file mode 100644
+index 000000000..8cd1f2103
+--- /dev/null
++++ b/agent/tests/route-reason-schema.test.ts
+@@ -0,0 +1,64 @@
++/** Strict-format contract and legacy-scope controls; fixed interface data only. */
++import { expect, it } from "vitest";
++import { codexKindSchema, codexSchema, dropNulls } from "../src/brain/engines/codex.js";
++import { pickSpec } from "../src/brain/specs.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeRoutePlan, routeBlockState } from "../src/hand/screens/route-plan.js";
++import { ROUTE_REVIEW_NOTE, withRouteReview } from "../src/hand/screens/route-review.js";
++import { endgameQuestion, endgameTask } from "../src/memory/endgame-plan.js";
++import { buildRouteMap } from "../src/sim/route-map.js";
++import type { AskDecision } from "../src/memory/types.js";
++import { costs, input } from "./route-fixture.js";
++import { env } from "./oneshot-support.js";
++import { changedRoute, previousRoute, routeBoard, routeReason } from "./route-reason-fixture.js";
++
++const map = buildRouteMap(input());
++const review = routeBlockState({ map, plan: previousRoute.split(" "), start: { hp: 40, max: 80 }, costs });
++const payload = (character = "SILENT", ascension = 10) => {
++  const state = parseGameState(routeBoard("reward", character, ascension));
++  return { route_review: review, ...(endgameQuestion(state, "reward/card") ? { run_plan_task: endgameTask(state, "reward/card", true) } : {}) };
++};
++
++it.each(["used", "all"] as const)("keeps the changed-route reason in %s fields with either field order and text cap", fields => {
++  const spec = pickSpec("reward/card", { a: null }, payload());
++  expect(spec.routeReasonOnChange).toBe(true);
++  expect(spec.schema.required).not.toContain("route_reason");
++  for (const reasonLast of [false, true]) for (const maxFieldChars of [600, 20, null]) {
++    const kind = codexKindSchema(spec, { fields, reasonLast });
++    const strict = codexSchema(kind, { routeReason: "drop", routeReasonOnChange: spec.routeReasonOnChange, maxFieldChars, routePattern: true })!;
++    expect((strict.properties as any).route_reason).toMatchObject({ type: ["string", "null"] });
++    expect((strict.properties as any).route_reason.maxLength).toBe(maxFieldChars === null ? undefined : Math.min(maxFieldChars, 60));
++    expect(strict.additionalProperties).toBe(false);
++    expect(dropNulls({ choice: "a", reason: "格式", route: null, route_reason: null, run_plan: null }, kind)).toEqual({ choice: "a", reason: "格式" });
++    expect(spec.softValidate?.({ choice: "a", route: changedRoute, route_reason: routeReason })).toEqual([]);
++  }
++});
++
++it("leaves the legacy drop/keep schemas unchanged outside the existing target contract", () => {
++  for (const [character, ascension] of [["IRONCLAD", 10], ["SILENT", 9], ["SILENT", 11], ["REGENT", 10]] as const) {
++    const spec = pickSpec("reward/card", { a: null }, payload(character, ascension));
++    expect(spec.routeReasonOnChange).toBeUndefined();
++    const kind = codexKindSchema(spec, { fields: "used", reasonLast: false });
++    expect((codexSchema(kind, { routeReason: "drop", maxFieldChars: 600 })!.properties as any).route_reason).toBeUndefined();
++    expect((codexSchema(kind, { routeReason: "keep", maxFieldChars: 600 })!.properties as any).route_reason).toMatchObject({ maxLength: 60 });
++  }
++  const noReview = pickSpec("reward/card", { a: null }, { run_plan_task: payload().run_plan_task });
++  expect(noReview.routeReasonOnChange).toBeUndefined();
++});
++
++it.each([undefined, null, "", "   ", 12])("rejects a changed route with unusable reason %j in validation and the consumer", route_reason => {
++  const spec = pickSpec("reward/card", { a: null }, payload());
++  const answer = { choice: "a", route: changedRoute, route_reason, run_plan: { change_reason: routeReason } };
++  expect(spec.softValidate?.(answer).join()).toContain("route_reason");
++  const e = env(routeBoard("reward"));
++  const plan = makeRoutePlan(e, map, previousRoute.split(" "), { hp: 40, max: 80 }, costs);
++  e.screenMemory.routePlan = plan;
++  const decision: AskDecision = { kind: "ask", label: "reward/card", state: {}, questions: {},
++    deepseek: { question: "pick", baseline: { kind: "act", label: "fixture", intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式" } },
++    resolve: () => ({ intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式", confidence: null, fallback: false }) };
++  const reviewed = withRouteReview(e, decision, { kind: "card", state: review, note: ROUTE_REVIEW_NOTE, map, plan, remaining: previousRoute.split(" "), costs });
++  if (reviewed.kind !== "ask") throw Error("fixture");
++  const result = reviewed.resolve({ pick: { type: "choice", choice: "a", probabilities: { a: 1 }, confidence: 1, raw: answer } });
++  expect(result.routeReview?.outcome).toBe("invalid"); result.apply?.();
++  expect(e.screenMemory.routePlan).toBe(plan);
++});

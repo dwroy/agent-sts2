@@ -102,6 +102,8 @@ Silent A10 的终局目标继续从第一幕面向 F48→F49 连胜。初次建�
 
 爬楼继续使用原 `RoutePlan`、代码逐节点执行和合法性检查。普通复核题可省略 route 或给 `keep`，重复相同节点序列也复用原计划；真实改线才给合法新节点序列及 `route_reason`，结合当前情况说明取舍和预期收益。初始路线、路线失效、幕初随机结果的一次复核沿原入口处理；两类路线分别调整。非目标角色/进阶保留原控制与日志语义。
 
+Silent A10 的改线题在严格 Codex 输出格式中保留可空的 `route_reason`，即使历史配置为 `BRAIN_CODEX_ROUTE_REASON=drop`；默认文本上限仍为 60 字符。不改线可给 null，解析后等同省略。理由只随真实改线进入路线记录，构筑的 `run_plan.change_reason` 不代替它；字段存在不表示代码能验证理由语义或胜率收益。
+
 Silent A10 的 `routeBlockState` 按实际依赖分别缓存 `plan_facts`、`next_rest` 和初始 `candidate_routes`。地图/当前位置/可达性/飞行靴、剩余节点与房间代价参与键，HP/maxHP、连续战斗数、休息选项及文字说明按各自消费者参与；金币、牌组等仍随当前事实更新，经 `routeCosts` 实际改变的回血/房间模型也会失效。仅休息选项变化不重算无关的 next_rest；重复题且依赖未变不再计算同一整段投影/枚举替代线。缓存不落盘，冷启动重新核算当前数值；不拿原计划投影冒充当前HP。缓存数据复制后交题面，不能被消费者修改污染。
 
 沿原自然局读取 `brain.jsonl` 和 `run-plans.jsonl`，报告 `planning_questions` 列实际查库、路线/构筑变更理由、`route_calculation` 复用/失效原因、答案JSON字符数、原文字符数、输出token及整题耗时。`run_plan_merge`/`plan_update` 记录 reused/updated/checkpoint 与变更字段；合法执行仍核 decisions 的 route_review、route-change及后继读回。报告的 accepted 只证明接口接受，不能代实际落盘/采用或决策质量；缺字段/空样本保持未知。ops 在自然发布边界核实际提示SHA/工具清单与消费者、恢复后，继续观察自然决策质量与原 #50 达标线/终局效果；不为本项增开局或以查询次数下降单独验收。

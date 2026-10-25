@@ -1,0 +1,134 @@
+{
+  "base": "614687462eaed74a0264f29730b73e883e2b25ee",
+  "nice": 19,
+  "workers": 1,
+  "production_tsc": {
+    "exit_code": 0,
+    "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit",
+    "log": ".artifacts/issue64/production-tsc.log"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files": 7,
+    "tests_passed": 150,
+    "log": ".artifacts/issue64/targeted-final.log"
+  },
+  "sandbox_first": {
+    "exit_code": 1,
+    "files_passed": 635,
+    "files_failed": 1,
+    "tests_passed": 5882,
+    "tests_failed": 1,
+    "log": ".artifacts/issue64/sandbox.log",
+    "command": ".artifacts/issue64/sandbox-command.json",
+    "only_failure": "check-imports: sparse checkout lacks existing baseline paper/materials/issue29-brain-speed/results.jsonl"
+  },
+  "corrected_import_and_paths": {
+    "exit_code": 0,
+    "files": 2,
+    "tests_passed": 12,
+    "log": ".artifacts/issue64/import-paths-final.log",
+    "materialization": "materialized-import.json"
+  },
+  "test_tsc_diagnostic": {
+    "exit_code": 1,
+    "new_test_regions_diagnostics": 0,
+    "scope": "Non-production baseline diagnostics retained, including old unused import and SessionTurn fixtures in brain-codex-session.test.ts."
+  },
+  "final_combination_full": "pending original integrator; no second single all-green full claimed",
+  "failures_retained": {
+    "targeted_first": {
+      "exit_code": 1,
+      "tests_passed": 148,
+      "tests_failed": 2,
+      "reasons": [
+        "old child tsx resolution with repository-root cwd",
+        "new legacy fixture erroneously carrying an endgame task"
+      ]
+    },
+    "initial_fixture_debug": "session/debug*.log retained; fixed required construction and engine admission fixture fields",
+    "capture_first": {
+      "exit_code": 130,
+      "pid": 4161344,
+      "reason": "Stopped only own replay to replace repeated whole-log reads with bounded offset reads; no original evidence was modified."
+    },
+    "first_materialization": "wrong agent cwd; exact duplicate removed after byte comparison, corrected and import/paths rerun; original failure output retained"
+  },
+  "logs": [
+    {
+      "path": ".artifacts/issue64/debug.log",
+      "bytes": 4193,
+      "sha256": "cbb33326d05115991ceb36011e868847d7d378128582555e3f65bf70fb710b2e"
+    },
+    {
+      "path": ".artifacts/issue64/debug2.log",
+      "bytes": 4193,
+      "sha256": "bb7bdf63683fa787d02414996c795e64f077505ec2145aa6fe820fbe4aff42ec"
+    },
+    {
+      "path": ".artifacts/issue64/debug3.log",
+      "bytes": 56227,
+      "sha256": "9680b842bafcce52da7f8f9d31aada8835074680898b527051ab4af73b219392"
+    },
+    {
+      "path": ".artifacts/issue64/debug4.log",
+      "bytes": 151179,
+      "sha256": "7243be886dcf24d0ef7cba7f47d7d4c513c310bc3bc2d3d89fa25ab6a02be756"
+    },
+    {
+      "path": ".artifacts/issue64/debug5.log",
+      "bytes": 275,
+      "sha256": "764dc96e647105ce76ca39e7450d0da7f5af079d94a351acc2ab2622856a3b88"
+    },
+    {
+      "path": ".artifacts/issue64/import-paths-final.log",
+      "bytes": 263,
+      "sha256": "7a07493754a5299f8ac4e6c82361678c710697900d5dc6a1fd4fe8722cda24e9"
+    },
+    {
+      "path": ".artifacts/issue64/import-paths-wrong-cwd.log",
+      "bytes": 1032,
+      "sha256": "7b1acef91c93a5d416c4749ad066d83079dcac6edd663d80d03c48100785cfd5"
+    },
+    {
+      "path": ".artifacts/issue64/matrix.log",
+      "bytes": 275,
+      "sha256": "a8f2f78b05c648fe7bf69a22220d64e81ac7ee68628bbaf327f911ed9bf212dd"
+    },
+    {
+      "path": ".artifacts/issue64/production-tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".artifacts/issue64/sandbox-command.json",
+      "bytes": 2960,
+      "sha256": "1823f5d4aeca5d522cc6bfeb74502864206b61f155117c0eb06fcba51a0feebe"
+    },
+    {
+      "path": ".artifacts/issue64/sandbox.log",
+      "bytes": 2029,
+      "sha256": "fbe401b439940d01e23f29c616765e5c2094e443cc71928fbddff2a2bf780fb1"
+    },
+    {
+      "path": ".artifacts/issue64/session.log",
+      "bytes": 2654,
+      "sha256": "e81122decc557f200cb9af6cbb61134602ef9014d1b578db514b36d71e6b4b37"
+    },
+    {
+      "path": ".artifacts/issue64/targeted-final.log",
+      "bytes": 267,
+      "sha256": "97b79b8ccc7a8a39365949f7e3f58d60b75b42455183049a260ad4762a17ad0a"
+    },
+    {
+      "path": ".artifacts/issue64/targeted-first.log",
+      "bytes": 3248,
+      "sha256": "00b663438593029a63983df1d44507cc58ecd4d343788345bfabd63d213cab15"
+    },
+    {
+      "path": ".artifacts/issue64/test-tsc-diagnostic.log",
+      "bytes": 269500,
+      "sha256": "908aa883810b619ee679d9886bd67b81dbc3a37dd6186b93f7472841f3757d73"
+    }
+  ]
+}

@@ -382,15 +382,16 @@ export function closeCutAnswer(text: string): { json: Record<string, unknown>; t
  * (2026-10-03, RNTVAT76BPV0 / J4S28FRQKD7G: 7 of 27 live calls at high stalled; the replayed ones streamed route_reason
  * as an endless chain of single characters, 「稳。好。走。保。…」, after a short phrase):
  * - routeReason "drop" (BRAIN_CODEX_ROUTE_REASON, default): no route_reason field (it is only logged: the route review's
- *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS.
+ *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS. A question whose
+ *   contract requires a reason on a changed route preserves the optional field even with "drop".
  * - maxFieldChars (BRAIN_CODEX_MAX_FIELD_CHARS, default 600): every free-text string (no enum) gets that maxLength,
  *   which OpenAI's strict mode enforces while it samples: a runaway in any text field ends there. Logged answers' longest
  *   single field is ~180 characters; the act route ~90.
  * DeepSeek's and Claude's schemas and every prompt stay as they are.
  */
-export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean }): StrictSchema | null {
+export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean; routeReasonOnChange?: boolean }): StrictSchema | null {
   let schema = kindSchema;
-  if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
+  if (opts.routeReason === "drop" && !opts.routeReasonOnChange && schema.properties?.["route_reason"]) {
     const { route_reason: _dropped, ...properties } = schema.properties;
     schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
   }
@@ -1024,7 +1025,7 @@ export class CodexEngine implements BrainEngine {
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
-    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
+    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern, routeReasonOnChange: req.spec.routeReasonOnChange });
     const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
     const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.

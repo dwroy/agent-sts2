@@ -1,4 +1,72 @@
 state: in-flight
+issue: 64
+updated_at: 2026-10-25T15:11:11+08:00
+
+进行中的事：#64唯一full已通过689文件/6727过/0败/2跳，三tsc0、LIVE定向2文件41过、ROOT同冻结输入复验4文件53过。15:11:02独核原PID462248/birth33517440已退出、原检查锁可取得，ROOT2861/LIVE1785/依赖1417逐SHA未变，索引条目/flags与树未变。首轮ROOT导入定向52过/1败及原因未知原件保留，不倒改为全程无失败。现在沿原授权执行固定bc80005598精确main集成；当前尚未集成/发布。
+
+在等谁：由本角色立即核实际ROOT/LIVE前像并原锁合main、Windows SSH推送读回，继由原ops按新publication-admission事务接七文件差量部署及自然改线/复用/持久恢复。65独立新会话兼容、59四叶候选后置；60新增40题/39KB已独核回6394639375，目标未命中与新关键词空另账，不作64前置。
+
+下一步：执行已备integrate-fixed.py，核实际提交与逐叶后像并推送核远端；马上回64终态及准确部署/回退清单并原ops一行提醒。未写LIVE、无发布号分配/对局/模型/回收，无需重full。终态原件paper/materials/20261025-issue64-combination-integrator/{full-state.json,full.json,terminal-readback.json}。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 64
+updated_at: 2026-10-25T15:06:44+08:00
+
+进行中的事：#64唯一完整检查已于14:44:06实际进入full-running，真实node worker PID462248/birth33517440，nice19/maxWorkers1/no-file-parallelism，实际持ops/integrator-full-check.lock，new_full_runs=1。原14:42:08控制worker454118在ROOT定向check-imports失败后已退出，full次数0；三tsc均0、LIVE2文件41过，ROOT首次4文件52过/1败原件保留。冻结源码SHA无变化，单独check-imports、同原环境及整组复验均过，整组4文件53过/0败；首次两未解析引用原因尚未确认，不伪归已修。依据未变冻结输入及通过复验继续唯一full，不覆盖首败或借旧full绿。
+
+在等谁：本角色盯当前PID462248唯一full终态，不为其他非前置后移。固定交付bc80005598d615516a36e3824f8bdba7e65356b3；ROOT de78668debde8814cbadfc312efa8efb53e6dd2a/LIVE e9a468882a4fe1da2b1b721f0271b82f6083b002，两独立树已冻结ROOT2861、LIVE1785输入及1417依赖；候选1632e004e8caafdeb8cdd366adf0577e6f974809，保当前62知识、63宿主修复及LIVE会话测试历史差异。绿后交原ops新事务自然部署及改线/复用/持久恢复验收；失败保原件区分代码/实际部署/夹具并沿64原树接修。60冻结缺口已独核34原题/四原配置/三快照/九源码，回6394588461；新增40题/39KB原件核同回6394639375，目标未命中、VAKUU无topic关键词空另账，不外推旧语义；主题覆盖/按需线索由主管接原开发链，分类交学习运营，FYSH消费者off交runtime对齐，不夹64。65新会话独立接6394485809原普通fix绑定兼容；旧63三例不重回收，59四叶宿主兜底排64之后。60自然观察、61责任链、62首题816缺口/持久留证独立，不作64前置。
+
+下一步：只跟当前worker和full-state/原始日志，不重跑在途。终态核退出/锁/结果及冻结ROOT/LIVE/依赖/索引语义，绿后原锁精确main集成、Windows SSH推送读回并立即给ops四生产叶/七叶精确差量、历史差异与回退清单；失败沿原64树接修。当前无准入阻碍，未集成64、未发布、无生产写/模型/对局/回收/监听/计时器。
+
+恢复入口：paper/materials/20261025-issue64-combination-integrator/{assembly.json,full-start-readback.json,full-state.json,full-resume-console.log,preflight-first-state.json,root-targeted.json,root-targeted-diagnostic.json,import-original-env.json}；.artifacts/integrator64-combination-20261025/{check-full.py,check-full-original.py,finalize.mjs,full.once,full-context.json}。ROOT anchor21ab764256919854685a9dba374902eea718ffc2 / LIVE anchorb42683cddfd37d70c1371266b2bb4e6342a01a04，两树不得重组；检查原始shell exec session57151。原开发树.worktrees/issue-64-route-reason-schema只读。
+
+state: in-flight
+issue: 64
+updated_at: 2026-10-25T14:42:29+08:00
+
+进行中的事：已读主管6394466091并实际接#64唯一最终组合检查。当前main de78668debde8814cbadfc312efa8efb53e6dd2a、LIVE e9a468882a4fe1da2b1b721f0271b82f6083b002，开发固定bc80005598d615516a36e3824f8bdba7e65356b3。ROOT/LIVE隔离树已标准分配并冻结，候选1632e004e8caafdeb8cdd366adf0577e6f974809，ROOT anchor21ab764256919854685a9dba374902eea718ffc2、LIVE anchorb42683cddfd37d70c1371266b2bb4e6342a01a04；实际ROOT2861输入、LIVE1785输入、依赖1417逐SHA核同，精确17叶交付；LIVE七叶补丁SHA7cf22129d5e9c212fd7d0585584d5b48b31a18f94b3276194f0a87ae3ebfc2a9，保历史会话测试差异、当前62知识及63宿主修复。原issue29夹具精确blob已物化。14:42:08启动真实nice19单worker控制进程PID454118/birth33505856，持ops/integrator-full-check.lock；当前阶段deployed-route-reason-targeted，production_tsc_rc=0，new_full_runs=0。本句仅声明实际阶段，不冒称full已开始或绿。
+
+在等谁：本角色直接盯当前worker完成ROOT/LIVE生产tsc、ROOT运行tsc、必要定向及唯一full；不用再等主管授权或其他非前置。绿后立即精确main集成并交原ops按新publication-admission事务自然部署及改线/复用/持久恢复验收；失败保原件区分代码/实际部署/夹具并沿64原树接修。#65独立新会话接普通fix封存绑定兼容，原ops6394485809已核；旧63三例不重回收、不伪重开。原134331四叶产品候选仍归59，排64之后且不夹冻结包。#60自然观察、#61责任链和62首题缺口/持久留证独立，不作64前置。
+
+下一步：只跟PID454118与当前full-state/原始日志，不重跑在途；full真实exec后回issue启动回执，终态核退出、锁、固定输入/依赖/索引语义与结果。绿后原锁精确集成并Windows SSH推送核远端，给ops四生产叶/七叶差量及历史差异与原路回退清单；不碰发布或对局。当前未集成64、无生产写、无模型/对局/回收/监听/计时器，发布准入文件当前缺席不沿用旧owner。
+
+恢复入口：paper/materials/20261025-issue64-combination-integrator/{assembly.json,delivery-leaves.json,source-inputs.json,runtime-inputs.json,full-state.json,full-console.log}；.artifacts/integrator64-combination-20261025/{assemble.py,check-full.py,finalize.mjs}。两棵.worktrees/integrator64-{combination,runtime-combination}-20261025保留，不重执行assemble.py。原开发树.worktrees/issue-64-route-reason-schema只读；原失败材料仍在20261025-issue64-fixed-integrator及原开发产物。
+
+检查进度：2026-10-25T15:06:44+08:00，同一PID462248仍full-running，已完成486文件，当前失败标记0，终态未出；不重跑在途，无部署/回收。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 62
+updated_at: 2026-10-25T14:37:28+08:00
+
+进行中的事：本轮按用户要求更新#62任务边界；已重新读原issue最新回执，末条仍为本人6394105992，没有新的返工/部署或责任人回执。#62工程及必要运行核收已完成：原完整检查688文件/6711过/0败/2跳、四tsc0，V6-R451实际发布及生产SQL消费已独核6393950418/6394034350；登记LIVE e9a468882a4fe1da2b1b721f0271b82f6083b002、知识K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4均为原核收记录，不冒本轮重新核生产。原开发UI已释放，原树/分支/f56c9f238/session及恢复资料保留，registry waiting-worktree。后继自然题原生切片已独核6394105992；首题原始816字节仍缺，二者分账，不把后继补成首题。
+
+在等谁：主管沿原brain适配器owner另行登记清理前持久留存原始回执行的任务/责任人，目前原issue未见该回执。原ops继续实际runtime与自然消费，learner维护知识/效果；#60具体新知识ID的自然命中/采用/收益独立，不作为62工程待上线项。首题原offset69256/816字节/SHA3349dff506702f3ca0455a45df4013fb23b7319c98a8d085555ad10a5bff9c98及原定位记录保持：ops已明确当时仅保存摘要与偏移，限定检索未找回，不再以重复找回首题或重发题目阻原已接收工程。若后续确有原件，由原ops交精确来源/字节/SHA供本角色另行核收。#64仍由本角色接固定组合核验，不再等待62或63既有工程；134331四叶宿主检查排64之后，pFK兼容沿原63 owner标准入口，互不夹包。
+
+下一步：保原首缺口及所有原始记录，接主管对持久留证独立任务的实际登记/owner回执，再按其固定交付核清理前保存字节、来源与SHA及正负边界；不改62/63/64包或主检出代码，不伪resume/register重开已释放62 UI。若真正收到首题原件，只独核原线程/turn/offset/长度/SHA并另存补充，不改原失败定位、不用后继替代，不倒填具体删除时点。当前无需重跑62 full、重发布、重做SQL固定探针或停止/关闭旧UI；后继自然运行事件沿原ops责任链接收。继续原#64固定bc80005598/补充合同2a11e1d4c的实际ROOT/LIVE组合准备，原64检查点保留下方，64组合树及full截至本角色上次检查均未启动；本轮只更新交接，无测试/模型/对局/发布/生产/释放/监听/计时器动作。
+
+证据与限制：后继shop/plan题mvne69l3-107318-12实际accepted，session01a17194-7add-7c52-8de6-2bbd56a54d2d/turn01a17194-7ae7-71d3-b271-70677f4cf0b8，持久turn_context816字节SHA0fc545069cdc5b622b463d0fb8c99586edb741ff2b777ca108c7f147d16497b7，去换行SHA565301efd797b691ca00b0aff54fc9e6652ccbc92c3e6b1d3f6ca95277abd1c2与原brain回执同，可核该后继sol/high。五原切片已持久核收，临时原rollout均缺席；thread依据brain及ops session_meta索引，turn_context自身无thread_id。存在revert/delete/退出清理机制不证明首题历史删除时点。run-config原git status ENOBUFS导致code字段空、startup显式主题筛选空及科学父限制保持。
+
+恢复入口：paper/materials/20261025-issue62-combination-integrator/{natural-runtime-release-readback.json,natural-successor-independent-readback.json,native-successor-probe.py,native-successor-public-receipt.json}；原ops持久字节paper/materials/20261025-issue62-native-evidence-ops/natural-successor-turn-context.jsonl，检索/源码边界gap-and-successor-readback.json。原开发恢复.artifacts/ops-issue59-62-release-20261025/sessions/62/，仅按主管可支持的标准入口接原树与历史，不complete/删除或关闭科学父。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 64
+updated_at: 2026-10-25T14:25:31+08:00
+
+进行中的事：已转回#64固定交付最终组合核验。固定开发bc80005598d615516a36e3824f8bdba7e65356b3、补充合同2a11e1d4c5791ed4a193398aaeb959f065150adc已独核接收，原公开6393914226及LIVE保差量6393983628保持。修复范围为AnswerSpec.routeReasonOnChange经实际Codex严格schema携带可选/nullable/max60 route_reason，保建设change_reason与路线独立、旧复用/预算/角色边界；四生产叶及三配套测试按原base-to-source差量集成。当前尚未分配64组合树、未启动本角色64定向/tsc/full、未集成或发布64，不以开发检查冒充最终组合。上轮#59/#63记录de78668debde8814cbadfc312efa8efb53e6dd2a已Windows SSH推送并核远端，同含60记录4a5d1015；原“待推送”被此覆盖。
+
+在等谁：64当前待本角色鲜核实际ROOT/LIVE、依赖与唯一完整检查门后推进，不再等原63完整检查或原三样本封存；63原full687文件/6695过/0败/2跳及三例runtime早已核收，不重跑，不冒为64组合绿。通过后交原ops按新publication-admission事务核实际部署/发布号及自然消费者；当前无已取得检查锁或发布门的声明。主管/原63 source owner另接普通fix缺launch.params.batch的窄化绑定兼容，修后原ops同一pFK/原receipt实核；不夹64，pFK/failed-rc0/原树与日志保持。134331四叶最终宿主检查排64之后。#60知识自然采用/收益由原ops/learner继续，非64前置；#61等主管指定原CLI及五source owner，000402缺wrapper等原archive owner；#62首题816原件缺口保留，持久留证改进等主管/原brain owner独立任务。
+
+下一步：①鲜核当下ROOT/LIVE及62已部署+63已接收源码、原64叶前像/固定交付/依赖和检查门，沿ops/worktree_checkout.py分配独立组合树，保现行知识与并行记录。②按固定差量组装准确组合，特别保LIVE brain-codex-session.test.ts历史差异（其补丁后SHA466d8855e94f4a06d2c2c701747880cfc53deb96e39a761dfe2033a376a4c5dd，不整叶覆盖为ROOT开发840840fd…8768）；原七叶补丁SHA7cf22129d5e9c212fd7d0585584d5b48b31a18f94b3276194f0a87ae3ebfc2a9。③固定输入/依赖/运行环境，在唯一适用窗口做ROOT/LIVE必要定向、生产tsc与一次完整检查，nice及进程限制沿原合同；不借旧绿、不重已过62/63 full。④终态独核退出/锁/冻结SHA；失败保原件并区分代码/实际部署/夹具，再由codex1沿原树修；通过则原锁精确main集成、Windows SSH推送核远端，交ops准确实际部署清单及原59/58 runtime责任链。不得把134331候选夹入64或以产物适用性代检查。
+
+原失败与边界：开发tsc0、定向7文件150过、八strict fake-appserver实际engine/router/冷恢复回放已核；开发首次sandbox636文件635过/1败，原历史issue29夹具稀疏缺失，精确恢复原blob b84d95c5185941eec143cbcf2966d5770309cca5后仅补验2文件12过，不能称已有全绿full。原148过/2败、130及诊断失败各自保留。原issue29夹具SHA8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef。解释语义、自然实际变更/持久恢复采用、收益仍属后续运行验收；不重开58或关闭科学父。当前本角色无在途测试/模型/对局/发布/监听/计时器。
+
+恢复入口：paper/materials/20261025-issue64-fixed-integrator/{fixed-delivery-intake.json,developer-integration-contract.json,live-delta-applicability.json,fixed-delivery-report.md,live-delta-probe.py}；.artifacts/integrator64-fixed-intake-20261025/含原七叶差量镜像/精确后像，check-live-delta.py已执行且原目标目录非空，不原样重跑覆盖。原开发树.worktrees/issue-64-route-reason-schema只读。后续组装/检查脚本可参照既有62/63方案，使用新的64目录，不重放旧已执行脚本。59/63新兼容证据paper/materials/20261025-fix134331-integrator/；完整历史检查点如下原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 63
 updated_at: 2026-10-25T14:22:32+08:00
 

@@ -162,6 +162,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     label,
     kind: "pick",
     schema: { type: "object", properties, required, additionalProperties: false },
+    ...(reviewMap && endgamePlanningTask(st) ? { routeReasonOnChange: true } : {}),
     ...(route || ranking ? { reask: true } : {}),
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
