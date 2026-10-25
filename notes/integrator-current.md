@@ -1,12 +1,12 @@
 state: in-flight
 issue: 65
-updated_at: 2026-10-25T16:57:37+08:00
+updated_at: 2026-10-25T16:58:22+08:00
 
-进行中的事：#65固定a7242c20适用组合已核收：唯一full于16:51:11退出0，689文件/6727过/0败/2跳，三tsc0、Python176过、原件只读核0。原退出full-stopped因16:48:39 storage thin仅回收隔离LIVE一份冷夹具，原状态/prepare journal/实际漂移不改；沿原materialize恢复锚点blob后，六项固定回归实际读取G夹具通过，全部ROOT2865/LIVE1785/依赖1417、ROOT索引语义及两树内容树核同，独立核原worker779440退出、检查锁可用、检查树无余进程。记录fixture-recovery-acceptance.json/terminal-readback.json，full仍仅一次。正在精确main集成与推送，尚未由ops声明实际部署/回收。
+进行中的事：#65固定a7242c20适用组合已核收：唯一full于16:51:11退出0，689文件/6727过/0败/2跳，三tsc0、Python176过、原件只读核0。原退出full-stopped因16:48:39 storage thin仅回收隔离LIVE一份冷夹具，原状态/prepare journal/实际漂移不改；沿原materialize恢复锚点blob后，六项固定回归实际读取G夹具通过，全部ROOT2865/LIVE1785/依赖1417、ROOT索引语义及两树内容树核同，独立核原worker779440退出、检查锁可用、检查树无余进程。记录fixture-recovery-acceptance.json/terminal-readback.json，full仍仅一次。已精确main 32d719584a91d03bf6477a2c89a433d200b66d09并经Windows SSH推送，远端逐SHA核同；实际ROOT tabs已为c4f9ddd7…5910、原63 tui未变，LIVE仍86b31b7a未动。尚未由ops声明原样本实际封存/回收。
 
-在等谁：main交付由本角色立即完成；原ops接同一134331原样本宿主单叶兼容部署、实际封存/回收/退出/tab缺席及精确host映射移除，保failed/rc0、原五件/备份/日志/树。64实际R452、新K及原门/UI释放已独核，60自然验收继续。未发现65产品源码失败，无开发返工；不等64自然发布、不重放63旧三例、不夹59产品候选。
+在等谁：main交付已经完成，下一责任交原ops；原ops接同一134331原样本宿主单叶兼容部署、实际封存/回收/退出/tab缺席及精确host映射移除，保failed/rc0、原五件/备份/日志/树。64实际R452、新K及原门/UI释放已独核，60自然验收继续。未发现65产品源码失败，无开发返工；不等64自然发布、不重放63旧三例、不夹59产品候选。
 
-下一步：原锁精确集成八叶及decision追加、Windows SSH推送并核远端后，回65明确宿主tabs新SHA c4f9ddd7…5910及63 verifier ea239942…9cc1c、补丁/回退和原样本清单，提醒原ops。必要runtime后按59可恢复释放65闲置开发UI，保原线程/树/日志/恢复入口，不complete/delete。66优先分类、schema、索引与tools；67最小接线8d6e4b021已独核，待66固定提交精确组合，不等67全包。原materialize因稀疏冷路径较多耗时，已完成；首个定向入口误假定G含tools测试源，原路径错误日志保留后改用固定W模块/G数据的派生测试，断言原样。
+下一步：回65交准确清单并提醒原ops；已完成原锁精确集成八叶及decision追加、Windows SSH推送及远端核同，明确宿主tabs新SHA c4f9ddd7…5910及63 verifier ea239942…9cc1c、补丁/回退和原样本清单，提醒原ops。必要runtime后按59可恢复释放65闲置开发UI，保原线程/树/日志/恢复入口，不complete/delete。66优先分类、schema、索引与tools；67最小接线8d6e4b021已独核，待66固定提交精确组合，不等67全包。原materialize因稀疏冷路径较多耗时，已完成；首个定向入口误假定G含tools测试源，原路径错误日志保留后改用固定W模块/G数据的派生测试，断言原样。
 
 最新独核 2026-10-25T16:32:14+08:00：已将#60新K发布/工具、#64实际R452/原门释放和闲置UI释放独核分别回6395439703/6395439880，作者/正文远端核同。实际LIVE七叶SHA、唯一R452登记、原消费41过JSON SHA均核同；64五个原PID及原pane已缺席、树HEAD/原生日志/恢复入口保留。新旧K快照11文件仅一条策略改动、其他127条同，旧/新工具条目匹配各自快照；原后继自然31题切片SHA及23KB输出核同，仍旧K、13目标/新正确策略命中0，不代自然采用/收益。14条分类映射的13旧项null、新项原分类字段缺席、全部正式候选null，内容由原学习运营据证修订。独核脚本两次stderr解析/字段存在性假设错误原件保留，修正读取后通过，非生产/代码失败。记录runtime60-64-independent-readback.json。#65三tsc0、Python176过及原五件只读核0，唯一full继续同一worker，无需重冻。#66主管6395371177要求分类helper最小接线独立交付；#67固定8d6e4b021（三代码叶+decision追加）已独核接口和当前66 helper字节一致，回66/6395398028并远端核同，纳入66匹配组合、不夹65、不等67全包；原66 helper字节须最终提交再次核同。决定及责任已追加本角色decision-log。
 
