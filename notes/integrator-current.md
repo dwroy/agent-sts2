@@ -1,14 +1,27 @@
 state: in-flight
+issue: 70
+updated_at: 2026-10-26T00:23:39+08:00
+
+进行中的事：#69唯一full终态694文件/6752过/0败/2原允许跳、双tsc0/宿主423过、worker2567407退出及原锁释放、4162输入/1417依赖/index/tree保持已独核；精确47交付叶main6656f6d0af6e274acbbb82248bb1882909147b28经Windows ssh.exe push核同，ROOT13叶安装清单已回69/6400071686交ops，LIVE源码0叶/仍V6-R454。#70 P0固定39c9b14c7已接实际69 main组合candidate60a57a9a989440c84df695eccfb80b326784e37b，验证anchor1fc22c3c8a4d7e06e2b331906b06c960be32b8e4；自有树.worktrees/integrator70-combination-20261026，4166输入/1417依赖冻结。双tsc0/宿主423过，唯一full于00:20:31实际启动，worker2754069/birth36967794/nice19/PTY78761，原ops/integrator-full-check.lock；new_full_runs=1，终态未到，不重跑/热换输入；实际启动已回70/6400121736、dwroy逐字读回。ROOT+LIVE九生产叶含新增brain/evidence.ts；真实LIVE基线隔离夹具已于00:24:42固定，十一脑消费者探针准备齐但未执行，待full自然释放后串行核。
+
+在等谁：先等该70唯一full自然终态，随后串行核实际LIVE消费闭包；绿后精确main/push与九叶清单交原ops自然边界部署/编号及下一普通题验收，不等68真实shadow/active。#69等ops首合法真实联网单元搜索/打开→来源→K1发布→生产本地工具读回，自然采用/收益分账，不自行派学习/开游戏。#65原234303/pFX仍working，bootstrap创建时戳与原生行差1ms导致初始来源拒绝已独核6400084304；交原63/65来源owner最小兼容后继，原turn/日志/现场保留，不关tab/重放/补finish。四postmortem缺params.batch另账。#61仍16旧notice/正式ACK各0，原来源兼容与000402两wrapper缺失责任链保持。
+
+下一步：70只接worker2754069终态，独核退出/锁/冻结/index/tree；失败固定证据分代码/部署/自有夹具后续原树，不重复full。准备并在唯一full后串行执行实际LIVE基线加九精确叶的隔离固定消费者探针；绿后原K→L锁精确集成main/push、九叶部署清单含evidence.ts，原失败全部保留，不拿离线绿代后端/自然性能。51/231305新K的35引用、四题13原始切片（9尝试/4完成工具、均300秒未接受）已独核；四项学习限制及旧Boss反证已实际双箱追加/本角色转Roy，6400084017与70/6400084553已逐字读回，未代Roy本人已读或正式ACK。69/51/65及70稳定角色记录后续私有index保并行精确提交/Windows推送。科学父、原树/分支/原生日志和研究保留，不complete/delete/停其他tab。
+
+恢复入口：paper/materials/20261025-issue69-combination-integrator/{terminal-readback.json,main-integration.json,main-push-readback.json,deployment-handoff.json,final-public-receipt.json}；paper/materials/20261025-issue70-integrator/{assembly.json,full-state.json,new-four-questions-public-receipt.json}；.artifacts/integrator70-combination-20261026/{check.py,finalize.mjs,read-terminal.py}；51 paper/materials/20261026-issue51-231305-integrator/；65 paper/materials/20261026-issue65-midnight-integrator/。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。下方保留上一检查点原文。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 69
-updated_at: 2026-10-26T00:03:00+08:00
+updated_at: 2026-10-26T00:04:30+08:00
 
 进行中的事：#61本轮核收已完成并回6399642742，144重复仍16原notice/正式ACK各0，兼容及000402阻塞保留。按本角色review积压接#69固定97cf364d9，已合成自有candidate b4bc0783545d09fa4744bddd5152774713d3941e；双tsc0、宿主18模块423项通过，唯一full于23:50:02启动，worker2567407/birth36780984/nice19/PTY62757，自有树.worktrees/integrator69-combination-20261025，锁ops/integrator-full-check.lock。4162输入/1417依赖冻结，ROOT13生产叶/LIVE源码0叶，不重跑或换输入。启动已回69/6399758555且gitleaks0/dwroy逐字读回；full尚无终态；跨日00:03只读输出仍在推进，未见失败头，原worker继续。本人首前置误列2个不存在Python测试模块导致425总计2加载错，423实际项过，原日志/脚本/终态保留preflight-attempt1，修清单复验423过，源码未改；开发原稀疏夹具首败也保留。
 
-在等谁：当前等该唯一full自然终态；#70 P0原开发树.worktrees/issue-70-brain-budget-evidence、wJ:p1JA/t1J8仍未交固定SHA（最新评论6399235734），保下一空闲检查窗口优先，原预算/模型/账号/档位/在途发布不动。#69工程绿后等原ops接精确ROOT部署及一个合法真实单元搜索/打开→来源→K1发布→生产工具读回，普通自然局另核采用/收益；缓存A原231305已自然启动，后继done/0线索归原ops新回执，不以69/68作前置。#61等主管指定CLI开发及五组来源owner核准，000402交原archive owner，两原wrapper路径仍缺指定SHA，不补ACK。#67首221302运营completion/重复回调已核，outcome自然消费及UI释放、#65四postmortem绑定缺口原链继续；#68真实shadow/撤旧writer/active分阶段待核，不成70/69门。
+在等谁：当前等该唯一full自然终态；#70 P0已交固定39c9b14c7eacdc58242b5c51eba79f7341564094（dev6399857617），42交付叶/41 manifest项及原树HEAD/工作字节核同、九ROOT+LIVE生产叶，与69源叶无重叠；已回6399907340并核dwroy逐字正文。原树.worktrees/issue-70-brain-budget-evidence、wJ:p1JA/t1J8，下一空闲唯一检查窗口优先，原预算/模型/账号/档位/在途发布不动。#69工程绿后等原ops接精确ROOT部署及一个合法真实单元搜索/打开→来源→K1发布→生产工具读回，普通自然局另核采用/收益；缓存A原231305已自然启动，后继done/0线索归原ops新回执，不以69/68作前置。#61等主管指定CLI开发及五组来源owner核准，000402交原archive owner，两原wrapper路径仍缺指定SHA，不补ACK。#67首221302运营completion/重复回调已核，outcome自然消费及UI释放、#65四postmortem绑定缺口原链继续；#68真实shadow/撤旧writer/active分阶段待核，不成70/69门。
 
-下一步：只盯worker2567407终态，独核结果/输入依赖/index/tree及worker退出/原锁释放。失败固定证据分自有夹具/产品/部署，产品返原69树；绿后沿K→L原锁精确main/push，保并行脏记录，ROOT13叶SHA清单立即交ops，不分游戏行为号、不启queue/tick/authority或验收游戏。随后先接已齐70固定包；无交付则等原70开发。科学父/原树分支/原生日志研究全部保留，不complete/delete/停其他tab。
+下一步：只盯worker2567407终态，独核结果/输入依赖/index/tree及worker退出/原锁释放。失败固定证据分自有夹具/产品/部署，产品返原69树；绿后沿K→L原锁精确main/push，保并行脏记录，ROOT13叶SHA清单立即交ops，不分游戏行为号、不启queue/tick/authority或验收游戏。随后立即接已齐70固定包39c9b14c7的实际main匹配组合唯一检查及ROOT/LIVE闭包，保开发原广域三败/退出夹具首败、最终13/184及导入12原件，离线绿不代自然性能。科学父/原树分支/原生日志研究全部保留，不complete/delete/停其他tab。
 
-跨日记录：00:00待提交#61/#70/既有#67角色记录扫描通过，但原live-merge.lock由PID2626477占用，提交按原门退出75，未改main/index；00:02原owner已自然退出且该锁无owner，不触碰原事务。唯一full锁仍归worker2567407。
+跨日记录：00:00待提交#61/#70/既有#67角色记录扫描通过，但原live-merge.lock由PID2626477占用，提交按原门退出75，未改main/index；00:02原owner已自然退出且该锁无owner，不触碰原事务。唯一full锁仍归worker2567407。 #61/#70及既有67角色记录随后已于00:03提交460b65a834b198f2fb55ca6c155a54aac1d5f197，经Windows ssh.exe push并核远端main同，#61 records-push-readback.json已保存；该提交只含角色记录，不变69代码输入。
 
 恢复入口：paper/materials/20261025-issue69-combination-integrator/{assembly.json,review-contract.json,full-state.json,start-public-receipt.json}；.artifacts/integrator69-combination-20261025/{check.py,finalize.mjs,read-terminal.py,integrate.py}；#61 paper/materials/20261025-issue61-wake2255-integrator/{independent-readback.json,public-receipt.json}；#70 paper/materials/20261025-issue70-integrator/initial-evidence-readback.json。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD；原前置顶层全文保存在69材料handoff-before-full-summary.md，下方历史原文保留。
 
