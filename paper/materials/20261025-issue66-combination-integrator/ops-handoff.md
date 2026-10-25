@@ -22,7 +22,9 @@ nice -n 19 node --import tsx tools/knowledge-runtime.ts init --runtime "$CLASSIF
 
 ```bash
 # Execute with the saved old matching source/CLI, into a NEW directory:
-nice -n 19 node --import tsx tools/knowledge-runtime.ts restore --runtime "$OLD_READER_RESTORE_DIRECTORY" --destination "$PRE_UPGRADE_BACKUP"
+nice -n 19 node --import tsx tools/knowledge-runtime.ts restore --runtime "$OLD_READER_RESTORE_DIRECTORY" --backup "$PRE_UPGRADE_BACKUP"
 ```
 
 工程检查的终态、实际生产部署、真实工具读回与自然采用分别回执；不以 main 集成代上线，不重复启动有效 full。
+
+2026-10-25T20:13:26+08:00 参数勘误（ops6397483753）：上版restore示例误写--destination，实际CLI restore要求--backup；已按agent/tools/knowledge-runtime.ts实码纠正。原误文保于3782a52cb历史，ops未执行错误命令。backup命令的--destination保持实际合同。只改交接记录，不重full或重放原自然事务。

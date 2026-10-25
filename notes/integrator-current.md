@@ -1,5 +1,31 @@
 state: in-flight
 issue: 68
+updated_at: 2026-10-25T20:16:58+08:00
+
+进行中的事：66源码3782a52cb与记录13047734d已push/远端核同；ops6397483753/原worker1786862只等W29C原局自然终态，11叶/两注入、备份/schema3/工具写体已备，尚未上线。restore示例已纠正--backup，6397491702及67/68启动回执6397496313/6397496543均远端逐字核同。67 ced73d377+68 fcd84d2ae实际ROOT13047734d/LIVE86b31b组合freeze v2（ROOT3129/LIVE1795/依赖1417、完整pin51c十四叶）前置全通过：宿主415项、真实混合K1/运营SQLite、LIVE七文件90项、三tsc0。仅自有Python复制夹具一行补依赖，原415项414过1败/ModuleNotFoundError及独立复现保留，原开发冻结未改。原nice19 worker1815703/birth35490682于20:14:26进入本新组合唯一full，PID连续exec Node并继承ops/integrator-full-check.lock，new_full_runs=1，未重66full。
+
+在等谁：本角色等当前唯一full终态，非等开发新交付；原三tsc只因Python夹具变化且TS/依赖冻结不变而复用原0证明。ops仅接66原自然局/原FIFO，已入写体禁重放，67/68工程不等66自然发布。无新代码返工等待；queue/heavy仍off、旧writer仍原authority，未进入shadow/active。
+
+下一步：仅收原PTY73124终态；通过后运行terminal-readback.py独核worker/子进程退出、锁释放、ROOT/LIVE/依赖SHA+mode/link、索引语义和树，再按最新main/LIVE精确集成、Windows ssh.exe push并交ops。失败保原证据区分代码/部署/夹具续修。66上线/分类内容/自然消费由ops与原学习者分账接续；60/62/61科学父保留，不complete/delete树/分支/线程/日志。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{full-state.json,full-start-readback.json,assembly.json,preflight-attempt1/}；.artifacts/integrator67-68-combination-20261025/check-full-v2.py、terminal-readback.py（PTY73124；full.once已建立，严禁重启在途）。66交接paper/materials/20261025-issue66-combination-integrator/ops-handoff.md及ops-handoff-receipt-readback.json。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 68
+updated_at: 2026-10-25T20:13:55+08:00
+
+进行中的事：66精确main3782a52cb/记录13047734d均已Windows ssh.exe推送并核远端，原ops6397483753/worker1786862接原自然局/FIFO，未部署冒上线；restore示例参数错误已按实码改--backup并回6397491702，ops未执行错命令。67 ced73d377+68 fcd84d2ae实际ROOT13047734d/LIVE86b31b组合已冻结（3129/1795输入、1417依赖、pin51c十四叶），三tsc0。首宿主415项414过1败为旧Scheduler复制夹具漏board_queue_pin，独立原错/补齐off已复现；原失败preflight-attempt1保留。自有隔离树只补一测试叶，新候选b4f5f5df/anchor dd0f4beb/freezev2，真实nice19 worker1815703/birth35490682持原full门，现host-and-learning-runtime、new_full_runs=0。
+
+在等谁：本角色等当前新组合前置/唯一full终态，不在开发等新冻结；仅Python夹具变更复用源码依赖不变的三tsc0。ops只接66自然终态发布/备份schema3与工具，工程不等自然局，不重66full。原68后台FD闭环/after67两叶已核，未改开发树/分支/冻结。
+
+下一步：收当前v2宿主/混合SQLite/实际D1消费者前置，适用全通过后才唯一ROOTfull；失败保原证据分类续修，通过独核退出/锁/输入mode/link/依赖/索引/树再精确main并交ops。queue/heavy仍off、旧writer仍原authority，真实shadow/active沿原阶段合同，60/62/61科学父保留。保所有树/分支/session/账号/日志，不complete/delete。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{assembly.json,full-state.json,preflight-attempt1/,scheduler-fixture-exact.patch,scheduler-fixture-closure-readback.json}；.artifacts/integrator67-68-combination-20261025/check-full-v2.py（PTY73124）；66交接paper/materials/20261025-issue66-combination-integrator/ops-handoff.md。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 68
 updated_at: 2026-10-25T20:08:53+08:00
 
 进行中的事：66原唯一组合full终态及独核全通过（690文件/6739过/0败/2跳、三tsc0、完成回调0、LIVE83过）；原K刷新/成本/漏斗事务自然完成后已精确集成main 3782a52cb111d0c9e47095208ffb3c0c3af82a1a，69候选叶逐字节核同、mode0644、索引无暂存、实际LIVE保持86b31b7a。Windows ssh.exe push已exit0，远端main逐字核同3782a52cb，立即交ops精确11叶/ROOT两注入、备份升级回退及实际工具读回。
