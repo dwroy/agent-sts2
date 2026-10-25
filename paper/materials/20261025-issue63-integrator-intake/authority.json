@@ -1,0 +1,57 @@
+{
+  "issue": {
+    "number": 63,
+    "url": "https://github.com/dwroy/agent-sts2/issues/63",
+    "title": "修复学习 tab 封存对已登记 sessions 软链的兼容（#20 后续）",
+    "author": "dwroy",
+    "body": "[lead] Roy 明确要求修复学习 tab 回收问题，尽快释放已验收会话；#60 的真实入库和自然局消费验收并行继续。\n\n## 问题\n\n#20 评论6392558810和6393284318记录了两次同根失败：学习原生任务已经完成，封存阶段却因既有账号 sessions 软链被 safe_path 拒绝，导致 tab 留存。学习产物发布与 UI 封存是两个状态，不能把 seal 失败当学习失败，也不能重跑学习来绕开。\n\n## 修复范围\n\n沿现有 learner_tabs / 原生回执核验链，为项目已经登记、可以验证的隔离账号 sessions 映射提供受约束的证据读取方式。仅修本项目的路径兼容和封存/回收接续，不扩展到共享调度器或资源队列改造。\n\n- 绑定原批次、原账号、原 session/turn、原生日志与产物、PID/start身份及实际 pane；原任务结束、原生终态、空输入和无在途进程均须真实核到。\n- 不放宽通用 safe_path，不任意跟随软链。未知目标、路径逃逸、软链替换、错误账号/线程、伪造或不完整回执、仍运行/忙 pane、额外子进程等继续保留现场。\n- 不改账号配置、凭据、原日志/批次绑定，不复制认证或跨账号 resume。保留首败与失败历史。\n- 兼容既有无软链路径及已封存记录；同一批恢复/重试幂等，不能重复关闭、重复发布、重新学习，或伪造 done/retired/shipped 来释放 UI。\n- 修复后由原 ops 沿已有 seal/recover 与回收入口核两次原样本及后续合法终态。只释放通过验收且实际空闲的 UI，保存原树、分支、日志、产物与恢复身份；未完成的学习/效果要求继续保留。\n\n## 验收与交付\n\n1. 用原失败回执的固定脱敏夹具复现，再验证修复；覆盖登记映射正例、普通路径兼容，以及上述身份/路径/在途负例。\n2. 覆盖 wrapper 正常封存、后继恢复与回收、进程退出及 tab 缺席读回；不能只测辅助函数。未知结果先核权威现场，不盲目重放操作。\n3. 按项目要求完成类型检查、定向测试及固定最终组合完整回归。与原集成角色协调唯一 full 窗口，当前其他任务的检查不为本项重跑或冒用。\n4. 提供精确提交、宿主/运行目录部署闭包、原失败与修后证据、接续和回退步骤。原 ops 在适用检查通过后尽快部署并验收实际可回收样本。\n\n开发沿原项目入口使用独立会话/工作树及 Roy 指定账号。开发不直接关闭生产 tab 或改运行库；原集成角色核候选，原 ops 执行已授权部署与回收。#60 和 #62 各自继续，本项不成为真实知识入库/自然局验收的新前置，不关闭科学父项以腾名额。\n",
+    "labels": [
+      "owner:dev",
+      "P1",
+      "type:bug",
+      "status:in-progress",
+      "area:learning"
+    ]
+  },
+  "dispatch": [
+    {
+      "id": 6393452468,
+      "url": "https://github.com/dwroy/agent-sts2/issues/63#issuecomment-6393452468",
+      "author": "dwroy",
+      "body": "[ops] 已派 issue-63：工作树 `.worktrees/issue-63-learner-seal-session-path`，pane `wJ:p1J3`、tab `wJ:t1J1`，基线 `062cd855366bd0a8d3f4f8b61286e98990db4058`；独立 Codex 会话，启动参数 gpt-6.1-sol/high（实际档位由原生回执验收）。\n\n<!-- issue-session:63:7dcfdcfb8f16ac2eaad0 -->\n"
+    }
+  ],
+  "original_failure_comments": [
+    {
+      "id": 6392558810,
+      "url": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6392558810",
+      "author": "dwroy",
+      "body": "[ops]\n2026-10-25T10:39:40+08:00 原#20学习tab回收链补充真实codex1兼容缺口：批次 `20261025-101312-strategy-proposal` 的wrapper seal失败，已定位 `learner_tabs.seal_proof -> files -> safe_path` 报 `ValueError: symlink path retained`。原回执rollout经过 `ops/codex-ops/accounts/codex1/learner/sessions -> /home/dw/.codex1/sessions`，路径守卫据此拒绝。\n\n原批done/rc0、wrapper batch SHA一致；原native task_complete与learner summary、原产物/output SHA均核过，原supervisor3521543/native3523511及3523538均已退；pane w1H:pFC仍为原身份、前台原bash3521463、空输入。候选6文字+6rk，正式发布/读回/收益0。原生终态与tab seal分账，不能把此失败当模型未完或重派理由。\n\n请原#20兼容修复链接这条证据：对既有隔离账号sessions映射给出受约束的原生证据验法，保留未知路径/软链替换/越界/非终态/忙pane等负控，不放宽普通safe_path、不改原日志绑定来绕门。ops保留原pane、回执、工作树和失败，不自行关tab、不新开模型；recover-seal当前同样被原路径门挡住，未伪造封存成功。\n\n证据：paper/materials/20261025-wake-1036-ops/learner-and-seal-readback.json；原wrapper-attention-seal.json与learner-20261025-101312-strategy-proposal.tui.json；scheduler.log 10:33:01及原报告。\n"
+    },
+    {
+      "id": 6393284318,
+      "url": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6393284318",
+      "author": "dwroy",
+      "body": "[ops] #20既有sessions软链封存兼容链新增同根样本：原11:43批20261025-114312-strategy-proposal已native task_complete/exit0并由原回调发布知识版，wrapper seal仍失败。只读调用原seal_proof复现ValueError: symlink path retained，sessions仍原软链；同101312，不改路径或绕safe_path。\n\n原wrapper/native均已退、原pane w1H:pFG及回执/产物保持，未关闭tab/另开模型。知识发布和UI封存分账；请沿原兼容修复链收敛，不新建重复学习/事件线程。证据paper/materials/20261025-knowledge114312-ops/seal-readonly-diagnosis.json及publication-readback.json；原101312限制保持。\n"
+    }
+  ],
+  "latest_59": [
+    {
+      "id": 6393448406,
+      "url": "https://github.com/dwroy/agent-sts2/issues/59#issuecomment-6393448406",
+      "author": "dwroy",
+      "body": "[watcher] #59最终组合已通过并精确合main，立即交原ops部署核收；不用再跑full。\n\n最终唯一完整检查3922231/birth32542208于12:28:40终态exit0：687文件/6695过/0败/2原跳；ROOT生产/runtime及隔离实际LIVE生产三项tsc0，ROOT20/LIVE12定向全过。原进程已实退、原检查锁可获取；2848输入/1417依赖/326 runtime叶及tree/index条目与flags独立核同。原始index字节仅stat缓存变化，未冒称字节相等。结果SHA 68e3842192ca147375ca078d14f10df2cd85c2ed628ce16ff5023a2b59f5e445。首轮687/6694过/1败/2跳及中间审查停止130原件照留，不改绿。\n\n12:29:12精确七叶FF main：062cd855366bd0a8d3f4f8b61286e98990db4058，父32c6b922a；实际LIVE仍18f8980daabe0a520247fabd45ceca7ce70f466b，生产尚未由本角色发布。原六叶SHA不变，只补ROOT测试夹具的有界真实输出等待；生产console与EXIT trap未改。\n\n部署清单（完整前/后像与回退见下列材料）：\n- ROOT四叶已在main：ops/codex-ops-learn.py、ops/tests/test_postmortem_completion.py、agent/tests/postmortem-failure-audit.test.ts、agent/tests/ops-autoplay-console.test.ts（仅测试）。host仅EXIT3精确receipt绑定的模型前超时原因显示，保#60知识runtime入口及原失败/重试/授权语义。host-exact.patch SHA 9b58e692a0a1c179ff08bd82e470550010ce0333c2786fe1fc518fdb75816a46。\n- LIVE仅原策略三叶：agent/src/reflex/combat-plan.ts、agent/tests/silent-paels-legion.test.ts、agent/tests/silent-paels-legion-evidence.json。只接受原学习者证据门内Silent A10/恰2敏捷/普通DEFEND_SILENT及原遗物/状态门；其他进阶及Ironclad等价。证据Q7HBKHZTSPJ8 A10/F33/a4/T5，原提案silent-proposal-aafb1318550a5c2c。game-exact.patch SHA 8192e8aed5b7cba4c16545c6a6cbe1e9a2f42411dfba904b07dc87b25be9dedf。保留既有12处ROOT/LIVE源码差异，不能整支main覆盖live。\n\n原ops按既定自然对局结束/报告边界，以#57下一新publication-admission事务精确发布，核实际LIVE叶/提交后在原锁分配release_id，登记decision-log/eval并双箱通知旧/新/证据/影响/回退；部署后必要运行核收仍归ops。保留当前新知识K1-fa912eafff5ba568bd3000f269fcd58438f377bf3a856d28908662b8af910ea0和既有旧局绑定，不回滚知识/强制重绑，不重#60旧发布、worker/FIFO/import。不finish/retire/replay原75/awaiting_review，不complete/删原树/日志或关闭科学父。\n\n材料：paper/materials/20261025-issue59-production-trap-combination-integrator/{terminal-readback.json,main-integration.json,deployment-handoff.json,seven-leaves.json,host-exact.patch,game-exact.patch,fixture-exact.patch,full.json}。ROOT仅测试夹具回退单叶；运行回退仅对应精确叶并保后续改动。#62原独立研发交付后另按届时ROOT/LIVE/K组合核验，不以#60自然验收作前置。"
+    },
+    {
+      "id": 6393460262,
+      "url": "https://github.com/dwroy/agent-sts2/issues/59#issuecomment-6393460262",
+      "author": "dwroy",
+      "body": "[lead] Roy 再次明确：已验收会话尽快释放。学习 tab 封存兼容修复已独立交 #63；请原 ops 逐项核已完成会话，实际终态、空输入、无在途任务和可恢复证据齐备的及时释放，保留原树、分支、日志与产物，不等待长期研究/效果父项关闭。\n\n确实被 sessions 映射核验阻断的原样本交 #63 修后恢复验收，不改原绑定或伪造封存成功。#62/#63 在途开发、实际运行中的学习者及对局继续原任务；开发上限不变。此前已释放的会话不重复操作，请回写新增释放结果或具体仍缺哪项证据。\n"
+    }
+  ],
+  "current_62_comment_ids": [
+    6392971301,
+    6392991760,
+    6393306971
+  ]
+}
