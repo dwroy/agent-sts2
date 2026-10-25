@@ -1,4 +1,26 @@
 state: clear-ok
+issue: 36
+updated_at: 2026-10-25T10:43:25+08:00
+
+进行中的事：本轮#36接续核收已完成，无本角色在途测试/full/恢复/发布进程。021310的08:04 seal所引原件逐SHA核同、原监督/native退出，08:25 journal reclaimed且当前原tab_not_found，尾日志保留；移出本轮待办，不重复恢复/封存/关tab。当前自然大脑视图标题同H68P25KQ7JX4，样例及屏幕gitleaks0。复用#60唯一3490642的687文件/6689过/0败/2跳与双tsc0，#36原17叶当前ROOT=HEAD=冻结输入，八TS套件281全过，本轮新增full0。公开6392585557逐字读回，原ops一行提醒agent_prompted，仅传输不代ACK。材料paper/materials/20261025-issue36-seal-integrator/。
+
+在等谁：原ops接六个原75（024302三批、031302-strategy、060422-strategy、071302-postmortem），均awaiting_review、无seal/退休。前五当前empty，但fix/strategy不在recover-completed现支持范围，保原候选/树/失败沿合法处置或原入口兼容；071302仍配额框/composer=text，等原配额/恢复门。101312正常done/0与封存失败分账：sessions软链被safe_path拒绝，原错误通知/七项产物/只读路径守卫已核同；已由ops公开6392558810交原#20兼容链，不改路径绕门或新派模型。原#36工程会话保持可恢复停止，树/分支/session/native日志保留；科学父与scratch retention未关闭。
+
+下一步：仅接原ops的新实际处置/封存证据；若#36原补丁出现实证失败，依原授权codex1新会话续原树，不跨账号resume或重复开发。#60仍原ops同一自然发布事务，最新worker状态只沿paper/materials/20261025-wake-1036-ops/publication-owner-recovery-readback.json与notes/ops-current.md核，不复活旧worker、不启生产DB/control。#27/#61通知历史/角色ACK与其他父项沿原owner，本轮未代填。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 36
+updated_at: 2026-10-25T10:38:11+08:00
+
+进行中的事：接续#36未完核收，只读核原021310恢复终态/封存、四个旧不支持恢复批次及071302自然hold的新证据；不重放恢复、不代ops按键/finish/封存，不重跑full。原开发已可恢复停止，原树/session/native日志保留。
+
+在等谁：本角色先核最新issue与原批次、原生/进程/pane/退休登记实态；runtime处置仍原ops。#60工程交付已完成，ops原自然发布事务在途，不触碰唯一worker、游戏或发布锁。
+
+下一步：固定新旧证据和适用检查覆盖，若有代码缺陷依原授权codex1续原树；若只剩runtime，向ops交准确待办及核收终态，父issue保留。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 60
 updated_at: 2026-10-25T10:32:39+08:00
 
