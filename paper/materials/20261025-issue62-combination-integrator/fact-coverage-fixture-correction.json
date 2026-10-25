@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-25T13:02:48+08:00",
+  "classification": "probe expectation; release identity hashes parent,candidate id,and source files",
+  "original_error": "expected ops candidate K but actual independent CLI uses different candidate id",
+  "successful_restore_and_extend_retained": true,
+  "restart_or_product_source_change": false,
+  "correction": "resume existing isolated runtime; compare original parent and all manifest document SHAs; new own K retained; no repeated restore/extend",
+  "additional_preserved_failures": [
+    {
+      "path": ".artifacts/integrator62-combination-20261025/fact-coverage-probe-resume.log",
+      "cause": "wrong cwd could not resolve tsx, before product execution"
+    },
+    {
+      "path": ".artifacts/integrator62-combination-20261025/fact-coverage-probe-resume-agent.log",
+      "cause": "probe queried candidate/parent fields absent from snapshot manifest; corrected to authoritative releases table"
+    }
+  ],
+  "final_probe": "fact-coverage-probe-resume-2.mjs exit0; same restored/extended runtime retained"
+}

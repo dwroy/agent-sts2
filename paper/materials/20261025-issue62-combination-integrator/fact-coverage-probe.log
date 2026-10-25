@@ -1,0 +1,20 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'K1-92ffac596b2731699a174ec4e53f6c6126143c76c0dde2fd2958f0a7ba31561a'
+- 'K1-f95afea465a9104a5ce3362d0893a629635dd015ee2aef7582aaf5c6cf9d43a5'
+
+    at <anonymous> (/home/dw/Projects/agent-sts2/.artifacts/integrator62-combination-20261025/fact-coverage-probe.mjs:31:8) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'K1-92ffac596b2731699a174ec4e53f6c6126143c76c0dde2fd2958f0a7ba31561a',
+  expected: 'K1-f95afea465a9104a5ce3362d0893a629635dd015ee2aef7582aaf5c6cf9d43a5',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.3
