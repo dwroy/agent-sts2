@@ -1,4 +1,14 @@
 state: in-flight
+issue: 60
+updated_at: 2026-10-25T10:01:46+08:00
+
+进行中的事：#27 high三叶固定来源9f25e8b2d7c816ad5f4b83abe794a75762cd8250已独立核SHA与原件，必需sandbox重跑rc0：tsc及635文件5869测试、fork1文件11测试通过；原失败保留，不冒无排除full。现精确合main，释放检查窗给#60实际ROOT/LIVE双入口组合。
+在等谁：本角色推进#60真实14宿主/13游戏叶及launcher/CLI/finish/game传递依赖冻结与适用检查，之后交原ops自然发布；原ops负责#56/#58停止、10:13真实首批codex1学习回执及生产迁移。#57仅由本角色已可恢复停止：原tab/5进程退场，f7a8a262树/分支/原生日志和codex3/learner身份保留，登记waiting-worktree，未complete/删除/关父。证据paper/materials/20261025-issue57-release-integrator/recoverable-stop.json。
+下一步：完成#27合main/记录推送后立即冻结实际组合并启动唯一适用检查；#57停止回执交#59。#60生产控制/DB/live未动，旧6628仅旧profile；#27通知历史/#61及000402原log/角色ACK门保留，不代科学完成。
+
+---
+
+state: in-flight
 issue: 27
 updated_at: 2026-10-25T09:49:54+08:00
 

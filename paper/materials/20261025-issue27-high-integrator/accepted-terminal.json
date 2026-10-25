@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-25T10:01:46+08:00",
+  "source_commit": "9f25e8b2d7c816ad5f4b83abe794a75762cd8250",
+  "base": "c1d92481aa9d4250c99095e6c5e6135d7e938314",
+  "integration_preimage_main": "af62bf31ba9afe2b94d53020dd049932537ebdc9",
+  "files": [
+    {
+      "path": "agent/tests/account-drain.test.ts",
+      "sha256": "67a7d53b1421986a7c535422def090847e944caf04204f98a6c9c5cad759944e"
+    },
+    {
+      "path": "ops/llm_switch.py",
+      "sha256": "a991f11a078710e83c90799b5e49c809498f761d3772e9b56b956348f6366b5a"
+    },
+    {
+      "path": "ops/tests/test_llm_handoff.py",
+      "sha256": "11a84518c9299a11852bba03896bb54a4b41df3f3417730dbc23373627cb7d62"
+    }
+  ],
+  "required_check": {
+    "command": "bash tools/test-sandbox.sh",
+    "exit_code": 0,
+    "tsc_passed": true,
+    "files": 636,
+    "tests": 5880,
+    "first_phase_files": 635,
+    "first_phase_tests": 5869,
+    "fork_phase_files": 1,
+    "fork_phase_tests": 11,
+    "fixed_exclusions_preserved": true,
+    "full_unexcluded_claimed": false,
+    "log": "paper/materials/20261025-codex1-high-handoff/test-sandbox-recheck.log",
+    "log_sha256": "15545bf2d0e4ea0594f3371676b2d7979c88b69f3ad781c0d368f11d52c822df",
+    "worker_pid": 3434621,
+    "worker_absent": true
+  },
+  "old_failed_run_preserved": true,
+  "fixture_restored_from_original_git": true,
+  "new_full_runs": 0,
+  "live_or_account_mutations": false
+}

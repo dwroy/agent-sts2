@@ -124,6 +124,16 @@ class Protocol(unittest.TestCase):
             profile.update(engine="codex", model=old_model)
             with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
 
+    def test_profile_effort_policy_allows_high_without_other_fallbacks(self):
+        profile = dict(engine="codex", account="fixture", model="gpt-6.1-sol", effort="high", service_tier="default",
+                       learner_home="/unavailable", brain_home="/unavailable", handoff="notes/test.md")
+        for effort in ("high", "xhigh"):
+            with self.subTest(effort=effort), self.assertRaisesRegex(ValueError, "auth|home|login"):
+                validate_profile({**profile, "effort": effort})
+        for changes in ({"effort": "medium"}, {"effort": "low"}, {"service_tier": "fast"}):
+            with self.subTest(changes=changes), self.assertRaisesRegex(ValueError, "model policy"):
+                validate_profile({**profile, **changes})
+
     def test_auxiliary_dispatch_stops_before_reconcile(self):
         self.tx.begin()
         manager = Assist(self.root, self.tx.runtime)
