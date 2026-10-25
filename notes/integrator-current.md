@@ -1,5 +1,18 @@
 state: in-flight
 issue: 64
+updated_at: 2026-10-25T15:12:07+08:00
+
+进行中的事：#64工程最终组合已通过并精确合main 8efc532325b5e7f0f413a114f8de1001fd4ba2fb（parent de78668debde8814cbadfc312efa8efb53e6dd2a），Windows ssh.exe推送后实际远端核同。唯一full689文件/6727过/0败/2跳、三tsc0、LIVE定向2文件41过、ROOT四文件复验53过；原worker462248/birth33517440退出、检查锁释放、ROOT2861/LIVE1785/依赖1417冻结SHA及索引条目/flags/树核同。首轮导入定向52过/1败原件及原因未知保留。16整叶+decision追加delta精确集成，实际LIVE仍e9a468882a4fe1da2b1b721f0271b82f6083b002，未由本角色写生产/分配发布号。
+
+在等谁：原ops接新publication-admission事务鲜核实际LIVE前像，按deployment-handoff.json/handoff.md及live-seven-leaf.patch部署四生产文件/三配套测试，保62知识、63宿主内容及LIVE会话测试历史差异。原issue64回执6394745496已逐字读回；15:11经herdr对鲜核身份ops w1H:p8/t8发送一行“#64 轮到你”，运输回执agent_prompted，仅此不冒接收/上线。自然reasoned change持久化/路线消费、omission/null/keep/重复路线复用、构筑独立及同局恢复由ops继续，稀有命中/语义/收益父项保留。
+
+下一步：提交并推送本次准确交付/通知回执及60独核记录，接原ops部署/新发布号和实际消费者回执后独核必要runtime。工程无需第二轮full、不等60/62/65非前置；65新兼容独立，旧63三例不重回收；59原134331四叶宿主兜底按原队列后续接。60原缺口6394588461与新增40题/39KB6394639375已独核回issue，13目标未命中/VAKUU无topic关键词空另账，主题覆盖/消费者off沿主管责任链，不擅改运行开关。61来源兼容/缺wrapper与62首题816原件缺口继续保留。
+
+恢复入口：paper/materials/20261025-issue64-combination-integrator/{main-integration.json,main-independent-readback.json,main-public-receipt.json,deployment-handoff.json,handoff.md,terminal-readback.json,full-state.json,full.json}；原开发bc80005598/补充2a11e1d4与原树保留，失败恢复原线程/树，不重复开发。本轮无模型/对局/回收/监听/计时器。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 64
 updated_at: 2026-10-25T15:11:11+08:00
 
 进行中的事：#64唯一full已通过689文件/6727过/0败/2跳，三tsc0、LIVE定向2文件41过、ROOT同冻结输入复验4文件53过。15:11:02独核原PID462248/birth33517440已退出、原检查锁可取得，ROOT2861/LIVE1785/依赖1417逐SHA未变，索引条目/flags与树未变。首轮ROOT导入定向52过/1败及原因未知原件保留，不倒改为全程无失败。现在沿原授权执行固定bc80005598精确main集成；当前尚未集成/发布。
