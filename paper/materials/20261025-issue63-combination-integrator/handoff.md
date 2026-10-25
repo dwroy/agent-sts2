@@ -1,10 +1,10 @@
 # #63 固定组合终态与部署交接
 
-更新时间 2026-10-25T13:55:39+08:00。固定开发 `f95114df313e4e2b65b8acd5fc5339cc46a2fbae`、隔离候选 `ee029e2eed3832d0fb72df7b24eb52a3e83c16a9`。原唯一full于13:53:05终态：687文件/6695过/0败/2原跳，三适用tsc0、LIVE定向0。13:53:14独立核原PID87368/birth33050991实退、原检查锁可取，2850 ROOT输入/1417依赖/326运行叶及树、index条目/flags未变。full SHA `63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13`。原始index字节的stat缓存变化已记录，不冒原字节相同。
+更新时间 2026-10-25T14:01:11+08:00。固定开发 `f95114df313e4e2b65b8acd5fc5339cc46a2fbae`、隔离候选 `ee029e2eed3832d0fb72df7b24eb52a3e83c16a9`。原唯一full于13:53:05终态：687文件/6695过/0败/2原跳，三适用tsc0、LIVE定向0。13:53:14独立核原PID87368/birth33050991实退、原检查锁可取，2850 ROOT输入/1417依赖/326运行叶及树、index条目/flags未变。full SHA `63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13`。原始index字节的stat缓存变化已记录，不冒原字节相同。
 
 ROOT首次定向36过1败，check-imports两字符串在原JSON被省略，原因未知。相同输入仅失败项补验1过0败及两次显式扫描空；不支持--expand的诊断启动失败也保留。未改源码/夹具/依赖，未重full。本full冻结早于#62实际部署，不能代62上线后全组合；#62实际334适用runtime叶另有独立核收。
 
-精确19交付叶前后像见deployment-handoff.json；decision-log只追加开发delta，不覆盖当前记录。现main尚未集成，live-merge.lock由原learner_retention.py PID130597/birth33154991持有；不打断、不绕锁。原59/62发布门已释放，不能把历史等待门当现状。
+精确19交付叶前后像见deployment-handoff.json；decision-log只追加开发delta，不覆盖当前记录。原learner_retention.py PID130597/birth33154991自然释放锁后，14:00:17已沿原锁精确集成main a94f8244ae71f5838ecdc506bbf2d94176938904，经Windows SSH推送/远端核同。14:00:28全部18叶实际与提交/固定交付同字节，LIVE HEAD e9a468882a4fe1da2b1b721f0271b82f6083b002未改。公开回执6394174977逐字读回，原ops单行提醒agent_prompted仅传输非runtime ACK。main-integration.json及main-independent-readback.json保存准确事务与叶读回。原59/62发布门已释放，不能把历史等待门当现状。
 
 生产闭包仅宿主OPS及实际原verifier根的`ops/learner_tabs.py`+`ops/learner_tui.py`两叶配套，无LIVE游戏源码差量。tabs新SHA a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2；tui新SHA ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c。原ops鲜核实际根/备份旧配套/新SHA与实际verifier解析，不盲复制到LIVE游戏树。
 

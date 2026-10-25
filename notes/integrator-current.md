@@ -1,5 +1,18 @@
 state: in-flight
 issue: 63
+updated_at: 2026-10-25T14:01:11+08:00
+
+进行中的事：#63原锁自然释放后14:00:17已精确集成main a94f8244ae71f5838ecdc506bbf2d94176938904（父d33d13a66），Windows SSH推送并远端核同；18固定交付叶及开发decision追加delta准确集成，保#62实际源码和并行记录。14:00:28独立读回18叶与固定交付/提交同字节，LIVE HEAD e9a468882a4fe1da2b1b721f0271b82f6083b002未改。公开6394174977逐字回读，原ops w1H:p8鲜核身份后单行提醒agent_prompted，仅传输非runtime ACK。原唯一full687/6695/0/2、三tsc0及13:53:14退出/锁/冻结核收保持；未重full、未打断130597。
+
+在等谁：ops已报告备份及三样本鲜核齐，现接宿主OPS/实际原verifier解析根learner_tabs.py+learner_tui.py配套实际读回，并对101312/pFC、114312/pFG、121312/pFH逐项seal/recover/stall tick、退出/空输入/tab缺席，符合一项即释放；本角色实际seal/reclaim/关tab动作0，不代其ACK。保原线程/账号/树/日志/产物/研究和科学父，不complete/删除/重学。#61最新16条两箱/本人32回执及冻结账本770项0问题独核6394142791已随本次main保存，正式登记仍各0，等主管指定原CLI开发/五组source owner核准；000402原wrapper缺件由原archive owner负责。#62后继原生816切片独核6394105992已保存，首题816原字节缺口保持，持久保存改进等主管/原brain owner独立登记。
+
+下一步：收到ops实际runtime回执后独核每个样本原身份、两叶解析/SHA、操作回执及退出/tab缺席，未知结果先权威读回。#64固定bc80005598/补充合同2a11e1d4c按实际62+已接受63冻结下一适用组合，保实际LIVE测试历史差量、原唯一检查门；当前未启动64 full，不借旧绿、不重62/63 full。63首败ROOT36/1原因未知、失败项1/0补验、--expand启动失败和index stat字节变化均保留；63 full冻结早于62实际部署，不冒其上线后全组合。#60自然采用/收益与#27/#61科学责任链独立。
+
+恢复入口：paper/materials/20261025-issue63-combination-integrator/{deployment-handoff.json,main-integration.json,main-independent-readback.json,main-public-receipt.json,terminal-readback.json}；固定开发f95114df313e4e2b65b8acd5fc5339cc46a2fbae，full SHA63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13。当前无本角色在途模型/对局/发布/监听/计时器或full。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
 updated_at: 2026-10-25T13:57:16+08:00
 
 进行中的事：#63唯一full已13:53:05终态687文件/6695过/0败/2跳，三tsc0、LIVE定向0；13:53:14独立核原87368/birth33050991实退、检查锁释放、2850输入/1417依赖/326运行叶、树/index条目flags同，full SHA63fd926e5dde80b49df631a780a03df44fcef8d1217943acccd4d13eb7e9bf13。终态/准确19叶与宿主OPS+实际verifier根两叶配套清单6394135873已逐字读回，原ops单行提醒agent_prompted仅传输非ACK。当前main尚未集成：live-merge.lock由原learner_retention.py PID130597/birth33154991持有，按原回收运行，不打断/绕锁。该任务已从62树转63树稀疏整理；原独核终态先于后续回收，固定提交/证据保留，不据此重跑full。
