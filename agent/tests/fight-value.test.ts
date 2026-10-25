@@ -90,7 +90,14 @@ describe("fight value (offline stub)", () => {
         const path = join(dir, name);
         if (statSync(path).isDirectory()) walk(path);
         // rollout.ts and rollout-live.ts (facts for Jev, never the ranking: tests/rollout.test.ts) are the allowed readers.
-        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && !path.endsWith("rollout.ts") && !path.endsWith("rollout-live.ts") && readFileSync(path, "utf8").includes("fight-value")) offenders.push(path);
+        else if (path.endsWith(".ts") && !path.endsWith("fight-value.ts") && !path.endsWith("rollout.ts") && !path.endsWith("rollout-live.ts")) {
+          const source = readFileSync(path, "utf8");
+          // The D1 resolver registers filenames; imports or uses outside that
+          // exact registry still violate the original reader restriction.
+          const content = path === join(ROOT, "src", "knowledge", "runtime-data.ts")
+            ? source.replace(/const names = new Set\(\[[\s\S]*?\]\);/, "") : source;
+          if (content.includes("fight-value")) offenders.push(path);
+        }
       }
     };
     walk(join(ROOT, "src"));

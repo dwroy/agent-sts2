@@ -84,6 +84,33 @@ class MinuteEntry(unittest.TestCase):
         self.assertIn('--poll',execute.call_args.args[1]); self.assertIn('--dry-run',execute.call_args.args[1])
         self.assertFalse(adapter.control_path(self.board).exists())
 
+    def test_queue_only_requires_complete_pin_when_explicitly_enabled(self):
+        adapter.queue_installation(self.board)
+        self.board.data['dispatcher']['merge_queue'] = dict(enabled=False)
+        adapter.queue_installation(self.board)
+        self.board.data['dispatcher']['merge_queue'] = dict(enabled=True)
+        with patch.object(adapter, 'verify_queue_kit', side_effect=ValueError('incomplete pin')) as verify:
+            with self.assertRaises(ValueError):
+                adapter.set_mode(self.board, 'on')
+            verify.assert_called_once_with(self.root, self.settings['install'])
+        self.assertFalse(adapter.control_path(self.board).exists())
+
+    def test_queue_cannot_exec_mixed_installation_even_for_dry_run(self):
+        config = self.board.data
+        config['dispatcher']['merge_queue'] = dict(enabled=True)
+        (self.root / '.agents/board.yaml').write_text(json.dumps(config))
+        with patch.object(adapter, 'verify_queue_kit', side_effect=ValueError('mixed')) as verify, \
+                patch.object(adapter.os, 'execv') as execute:
+            self.assertEqual(self.main('--poll', '--dry-run')[0], 1)
+            verify.assert_called_once()
+            execute.assert_not_called()
+
+    def test_malformed_queue_enable_does_not_silently_keep_old_entry(self):
+        for value in (True, dict(enabled='true'), dict(enabled=1)):
+            self.board.data['dispatcher']['merge_queue'] = value
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                adapter.queue_installation(self.board)
+
     def test_retention_off_is_forwarded_and_minute_entry_has_no_stall_jobs(self):
         adapter.set_mode(self.board,'on','minute'); os.environ['CODEX_OPS_RETENTION']='off'
         with patch.object(adapter.os,'execv') as execute:

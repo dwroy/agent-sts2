@@ -7,9 +7,11 @@ import { classificationLearningInstructions } from "./knowledge-classification.j
 
 export function runtimeLearningInstructions(env: NodeJS.ProcessEnv, task: string, character: string, scratch: string, projectRoot = PROJECT_ROOT): string {
  const runtime = env["STS2_KNOWLEDGE_RUNTIME"];
- if (!runtime || !["experience-update", "strategy-proposal"].includes(task)) return "";
+ if (!runtime || !["experience-update", "strategy-proposal", "experience-asc-audit"].includes(task)) return "";
+ if (!["experience-update", "strategy-proposal"].includes(task) && (!env["LEARNER_BATCH_ID"] || !env["LEARNER_STATE_FILE"])) return "";
  if (!env["LEARNER_BATCH_ID"] || !env["LEARNER_STATE_FILE"]) throw new Error("runtime learning requires an original registered batch");
  const batch = JSON.parse(readFileSync(env["LEARNER_STATE_FILE"], "utf8")).batches[env["LEARNER_BATCH_ID"]];
+ if (!["experience-update", "strategy-proposal"].includes(task) && !(task === "experience-asc-audit" && batch?.operational_runtime?.enabled && batch.operational_runtime.entries?.includes(task))) return "";
  if (!batch || batch.character !== character || batch.implementation_request || batch.research_request || batch.proposal_ids?.length || batch.proposal_repair) return "";
  const store = new KnowledgeStore(resolve(runtime), { readOnly: true });
  let version: string | null;

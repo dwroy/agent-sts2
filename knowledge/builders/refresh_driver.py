@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime, timezone
 import fcntl
+import hashlib
 import importlib.util
 import json
 import os
@@ -49,8 +50,10 @@ def step(ops_root, name, argv):
     stamp = datetime.now(timezone.utc).isoformat()
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
     try:
+        lease_fd = os.environ.get('STS2_FIXED_DATA_LOCK_FD')
         code = subprocess.run([str(a) for a in argv], check=False,
-                              env={**os.environ, 'STS2_REFRESH_STEP': name}).returncode
+                              env={**os.environ, 'STS2_REFRESH_STEP': name},
+                              pass_fds=(int(lease_fd),) if lease_fd else ()).returncode
     except OSError:
         code = 127
         print('knowledge-refresh step could not start: ' + name, file=sys.stderr)
@@ -74,18 +77,29 @@ def main():
     p.add_argument('--fight-value', action='store_true')
     p.add_argument('--all', action='store_true', help='normal and fight-value in one serialized worker')
     p.add_argument('--idle', action='store_true', help='ops-verified idle training boundary')
+    p.add_argument('--only-producer', choices=['monster-db', 'card-upgrades', 'outcome', 'construction-opportunities', 'room-costs', 'boss-damage', 'potion-equivalents', 'v6-history', 'fight-value', 'event-pages', 'move-model'], help='explicit original fixed producer; no new cadence')
+    p.add_argument('--request', help='stable identity for a newly authorized explicit data refresh')
     p.add_argument('--queue-entered', action='store_true', help=argparse.SUPPRESS)
     args = p.parse_args()
+    if args.request and (len(args.request) > 120 or not args.request.isascii() or not all(c.isalnum() or c in '_.:+-' for c in args.request)):
+        p.error('invalid data request identity')
     root = args.ops_root.resolve()
     if args.character and (not args.character.isascii() or not args.character.replace('_', '').isalnum()):
         p.error('invalid character id')
     if not args.queue_entered:
         # The exec/queue boundary can change PID. Keep the report hook's PID
         # and a cycle identity so natural per-run receipts remain joinable.
-        os.environ['STS2_REFRESH_CYCLE'] = uuid.uuid4().hex
+        os.environ['STS2_REFRESH_CYCLE'] = args.request or uuid.uuid4().hex
         os.environ['STS2_REFRESH_ORIGIN_PID'] = str(os.getpid())
         os.environ['STS2_REFRESH_REQUESTED_MONOTONIC'] = str(time.monotonic())
         os.environ['STS2_REFRESH_REQUESTED_AT'] = datetime.now(timezone.utc).isoformat()
+        control = Path(os.environ.get('CODEX_OPS_DIR') or root / 'ops/codex-ops') / 'learning-runtime.json'
+        receipt = root / 'data/learning-runtime-launches' / (hashlib.sha256(os.environ['STS2_REFRESH_CYCLE'].encode()).hexdigest() + '.json')
+        if control.exists() or receipt.exists():
+            sys.path.insert(0, str(root / 'ops'))
+            from learning_runtime_data import bind_launch
+            bind_launch(root, ROOT, os.environ['STS2_REFRESH_CYCLE'],
+                        dict(character=args.character, fight_value=args.fight_value, all=args.all, idle=args.idle, only_producer=args.only_producer))
         command = [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:], '--queue-entered']
         queued, status = queue_command(root, command)
         print('knowledge-refresh heavy queue: ' + status, flush=True)
@@ -105,11 +119,35 @@ def main():
         acquired = time.monotonic()
         failed = []
         def run(name, argv):
-            if step(root, name, argv):
+            if args.only_producer and name not in ('catalog',) and name.split(':')[0] != args.only_producer:
+                return
+            control = Path(os.environ.get('CODEX_OPS_DIR') or root / 'ops/codex-ops') / 'learning-runtime.json'
+            if not control.exists() and not os.environ.get('STS2_REFRESH_SELECTION_FILE'):
+                if step(root, name, argv):
+                    failed.append(name)
+                return
+            sys.path.insert(0, str(root / 'ops'))
+            from learning_runtime_data import refresh_step
+            producer = name.split(':')[0]
+            own = name.split(':')[1:] or characters
+            from learning_runtime_data import OUTPUTS
+            try:
+                if producer in OUTPUTS:
+                    identity = os.environ.get('STS2_REFRESH_CYCLE', uuid.uuid4().hex) + ':' + name
+                    with refresh_step(root, ROOT, name, own, identity) as receipt:
+                        code = 0 if receipt and receipt.get('already_completed') else step(root, name, argv)
+                        if receipt is not None:
+                            receipt['rc'] = code
+                else:
+                    code = step(root, name, argv)
+                if code:
+                    failed.append(name)
+            except (OSError, ValueError, RuntimeError) as error:
                 failed.append(name)
+                print('fixed refresh retained: ' + name + ' (' + type(error).__name__ + ')', file=sys.stderr)
         def build(name, *argv):
             return [sys.executable, BUILDERS / (name + '.py'), *argv]
-        if not args.fight_value or args.all:
+        if not args.fight_value or args.all or args.only_producer:
             run('monster-db', build('build-monster-db', '--quiet', '--move-model-out', ROOT / 'knowledge/common/move-model.json'))
             run('monster-db-check', build('monster-db-check'))
             run('card-upgrades', build('build-card-upgrades'))
@@ -125,9 +163,13 @@ def main():
                 run('potion-equivalents:'+c, ['bash', BUILDERS / 'refresh-potion-equivalents.sh', '--character', c])
                 if c == 'silent':
                     run('v6-history:'+c, build('refresh-v6-history', '--root', ROOT, '--ops-root', root, '--character', c))
-        if args.fight_value or args.all:
+        if args.fight_value or args.all or args.only_producer == 'fight-value':
             for c in characters:
                 run('fight-value:'+c, build('build-fight-value', 'all', '--character', c, *(['--idle'] if args.idle else [])))
+        if args.only_producer == 'event-pages':
+            run('event-pages', [ROOT / 'data/logdb-venv/bin/python', BUILDERS / 'build-event-pages.py'])
+        elif args.only_producer == 'move-model':
+            run('move-model', build('build-move-model'))
         run('catalog', build('build-catalog', '--knowledge-root', ROOT / 'knowledge'))
         held = time.monotonic()-acquired
     with (root / 'ops/refresh-timing.jsonl').open('a') as out:

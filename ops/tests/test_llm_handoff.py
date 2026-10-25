@@ -156,7 +156,12 @@ class Protocol(unittest.TestCase):
 
     def test_brain_selector_is_passed_to_next_play(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "run.sh", "publication_gate.py", "knowledge_runtime_env.py"): shutil.copy(ROOT / "ops" / name, ops / name)
+        for name in ("paths.sh", "run.sh", "publication_gate.py", "knowledge_runtime_env.py", "learning_runtime_launch.py",
+                     "learning_runtime.py", "learning_runtime_data.py", "learning_runtime_store.py",
+                     "board_heavy.py", "board_queue_pin.py", "issue_session_support.py"):
+            shutil.copy(ROOT / "ops" / name, ops / name)
+        (self.root / ".agents").mkdir()
+        shutil.copy(ROOT / ".agents/board.yaml", self.root / ".agents/board.yaml")
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"
@@ -173,6 +178,7 @@ class Protocol(unittest.TestCase):
         result = subprocess.run(["bash", str(ops / "run.sh")], env=env, capture_output=True, text=True, timeout=5)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.root / "observed").read_text(), str(home))
+        self.assertFalse((self.root / "data/learning-runtime/learning.sqlite").exists())
         (self.tx.runtime / "brain-home").write_text("relative\n")
         (self.root / "observed").unlink()
         refused = subprocess.run(["bash", str(ops / "run.sh")], env=env, capture_output=True, timeout=5)

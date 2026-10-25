@@ -1,4 +1,43 @@
 state: in-flight
+issue: 67
+updated_at: 2026-10-25T20:41:37+08:00
+
+进行中的事：原67/68唯一full已实际exit0，692文件/6744过/0败/2跳，三tsc0、415宿主、真实混合K1/运营SQLite、LIVE90项通过；20:41:19 terminal-readback独核原worker1815703/birth35490682及子进程退出、full门可用、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link及索引/树不变。开发固定ced73d377/fcd84d2ae未改，首复制夹具失败及补一叶后恢复完整保留。现推进原K→L锁序内精确集成232 ROOT叶、保LIVE原像，Windows ssh.exe push后立即交ops67采用。
+
+在等谁：已无full或开发新包等待；main若遇原知识/发布锁只等原事务自然释放，不重full。66原自然worker1786862/W29C事务仍原owner，最后已核LIVE86b31b7a/R452；67工程与采用不等68真实shadow/active或旧writer撤权。queue/heavy仍off，旧manual writer原authority保持；必要上线及自然新入口由原ops接。
+
+下一步：执行原integrate-fixed.py（若锁忙exit75，保原waiting），鲜核原像只允许已测66后像差量；核全部232叶字节/mode、实际ROOT十三method，再Windows ssh.exe push/远端核同，立即issue67/68回终态和ROOT232/LIVE66十一+67十一/宿主51c十四叶精确部署合同，原ops逐入口自然结算/备份/init/seed/原合同接续，不重放66 FIFO或升级。后续新纯复盘/审计及固定refresh实际合同→SQLite/D1→下游读回、回调幂等/旧局旧批绑定另核；未自然出现项runtime pending，不关60/61/62科学父、不complete/delete树或停止其他会话。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{terminal-readback.json,full-state.json,deployment-handoff.json,ops-handoff.md,expected-method-fingerprints.json}；.artifacts/integrator67-68-combination-20261025/{integrate-fixed.py,push-main.py}。result SHA256 18542deb92c4697697c707e338bdd2e200eabf7110870e5dee1dcd28f5c16128；full.once仅一份，不重启。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 67
+updated_at: 2026-10-25T20:28:10+08:00
+
+进行中的事：已接主管#67/6397609340：本角色仅收当前67/68唯一full，不重跑，不以68真实shadow/active或旧writer撤权作67采用前置。原nice19 worker1815703/birth35490682（PTY73124）仍持原full门、phase=full-running/new_full_runs=1；宿主415、LIVE消费者90、真实混合K1/运营SQLite及三tsc0。固定67 ced73d377+68 fcd84d2ae，v2候选b4f5f5df/ROOT树50216020/LIVE树d788ff08；原Python复制夹具漏board_queue_pin导致的首前置失败及独立复现保留，补齐一叶后通过，原开发冻结未改。正在整理逐入口/ROOT-LIVE模块、固定method核验和回退的精确清单。
+
+在等谁：只等原唯一full自然终态；无新开发包等待。ops接当前66原worker1786862/W29C自然边界，刚读worker-state仍waiting-original-natural-terminal，实际LIVE86b31b7a/R452未变；不代发FIFO、不抢其写体。67采用在组合绿和必要部署准入后立即交ops，不等待68 shadow/active、不等待学习自然稀有场景。68 queue/heavy仍off、旧人工writer原authority继续合法，后续撤权按原独立阶段合同。
+
+下一步：接PTY73124退出；绿后运行原terminal-readback.py独核原PID/子进程退出、full门释放、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link、索引和树，鲜核最新main/LIVE差异后精确集成、Windows ssh.exe push、给ops67逐入口采用清单和终态。运行核收另等原新合法postmortem/audit及固定refresh合同→SQLite/D1发布→下游读回；重放同回执成功/旧batch绑定保留，未自然出现类型继续pending，不关60/61/62科学父，不complete/delete树/分支/session/日志或停止其他会话。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/；.artifacts/integrator67-68-combination-20261025/terminal-readback.py；原full.once已建，严禁重启。启动回执67/6397532962、68/6397533193，66/6397537932；session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 36
+updated_at: 2026-10-25T20:22:33+08:00
+
+进行中的事：本轮按#36要求先更新任务边界；已重新读取该issue评论，末条仍为watcher6393540809，无新#36交付/返工。沿原已核记录：021310恢复/封存/tab回收已验，六旧学习UI tF3–tF8/pF6–pFB实际关闭、43原进程退出、38归档SHA/大小核同，六业务仍awaiting_review，75/defer及候选/树/分支/产物保留；两native的旧测试failed/exit130不算通过，071302历史人工草稿身份仍未验。本轮没有重新核六tab/43进程/归档，不把历史核收冒鲜核。原#36开发继续可恢复停止。全局在途工程为#67 ced73d377+#68 fcd84d2ae实际组合：前置宿主415、LIVE消费者90、真实混合SQLite全过，三tsc0；本轮实核唯一full PID1815703/birth35490682仍nice19运行、持原integrator-full-check.lock，phase=full-running、new_full_runs=1，未重启。
+
+在等谁：#36六批业务/候选及旧失败后续等原ops合法处置，人工草稿验收等真实原件，不以UI关闭替代业务完成。原sessions软链兼容已沿#63工程/实际三样本闭环，后继缺launch.params.batch的旧两fix已由#65工程/实际宿主及自动封存回收闭环（6395757193），不再等旧63/65或重放旧样本。本角色当前等#67/#68原唯一full终态，不等新开发包；#66已精确main/push3782a52cb，勘误750566fd1已推送/远端核同，ops6397483753/原worker1786862接自然局/原FIFO，按最后已核停点尚未部署，本轮未刷新其写体阶段。#60自然采用/收益、#61来源兼容/缺wrapper、#62首题816字节缺口继续归各原责任链。
+
+下一步：#36仅在原ops业务处置/合法恢复回执或人工草稿原件到达后核同批身份、字节和终态；无新原件不恢复/封存/关tab/finish/retire/replay或复开原开发，不重full。工程只收原PTY73124终态；通过后运行原terminal-readback.py核worker/子进程退出、锁释放、ROOT/LIVE/依赖SHA+mode/link、索引/树，再鲜核最新main/LIVE精确集成并交ops；失败固定证据分类续修。queue/heavy仍off、旧writer未撤，shadow/active仍按原阶段合同；不代发66 FIFO/启生产，不关科学父，不complete/delete原树/分支/线程/账号/日志/研究。
+
+恢复入口：#36/6393540809、原ops6392668122，paper/materials/20261025-issue36-ui-handoff-integrator/{report.md,independent-readback.json,071302-dialog-evidence.json,game-view-readback.json}；021310恢复/封存沿20261025-issue36-recovery-terminal-integrator及20261025-issue36-seal-integrator。当前工程paper/materials/20261025-issue67-68-combination-integrator/{full-state.json,full-start-readback.json,assembly.json,preflight-attempt1/}、.artifacts/integrator67-68-combination-20261025/terminal-readback.py（PTY73124；full.once已建，禁重启）；启动回执67/6397532962、68/6397533193，66/6397537932。原#36绿只属于当时固定输入，不外推当前整树；本轮仅交接文档，无新测试/full/生产写/回收/模型/对局或其他会话控制。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 68
 updated_at: 2026-10-25T20:16:58+08:00
 
@@ -9,6 +48,8 @@ updated_at: 2026-10-25T20:16:58+08:00
 下一步：仅收原PTY73124终态；通过后运行terminal-readback.py独核worker/子进程退出、锁释放、ROOT/LIVE/依赖SHA+mode/link、索引语义和树，再按最新main/LIVE精确集成、Windows ssh.exe push并交ops。失败保原证据区分代码/部署/夹具续修。66上线/分类内容/自然消费由ops与原学习者分账接续；60/62/61科学父保留，不complete/delete树/分支/线程/日志。
 
 恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{full-state.json,full-start-readback.json,assembly.json,preflight-attempt1/}；.artifacts/integrator67-68-combination-20261025/check-full-v2.py、terminal-readback.py（PTY73124；full.once已建立，严禁重启在途）。66交接paper/materials/20261025-issue66-combination-integrator/ops-handoff.md及ops-handoff-receipt-readback.json。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮收尾回执（2026-10-25T20:18:11+08:00）：restore勘误/启动停点记录750566fd1已Windows ssh.exe push exit0，远端main逐字核同；66/6397537932及新组合full启动67/6397532962、68/6397533193均dwroy逐字读回。原full仍phase=full-running、PID1815703/birth35490682、new_full_runs=1，未见终态，严禁重启；下次只接原PTY73124/终态与原terminal-readback.py。ops原自然事务继续，未代发FIFO/部署/启queue。勘误推送原件paper/materials/20261025-issue66-combination-integrator/handoff-correction-push-readback.json。
 
 本轮上一检查点（原文保留）：
 state: in-flight

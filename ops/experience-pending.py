@@ -45,10 +45,15 @@ if os.path.exists(runs_path):
         if isinstance(row, dict) and row.get("run_id"):
             of[row["run_id"]] = run_character(row)
 ids = [run for run in ids if of.get(run, LEGACY) == character]
+from learning_runtime import recorded_runs
+ids = list(dict.fromkeys([*ids, *sorted(recorded_runs(ROOT, os.environ.get("CODEX_OPS_DIR"), character))]))
 folded = set()
 library = os.path.join(LIVE, f"knowledge/characters/{character}/experience.json")
 # A character without a library yet (the Silent before its first fold): nothing folded.
-exp = json.load(open(library, encoding="utf8")) if character == LEGACY or os.path.exists(library) else {"entries": []}
+from learning_runtime_data import formal_document
+exp = formal_document(ROOT, f"characters/{character}/experience.json")
+if exp is None:
+    exp = json.load(open(library, encoding="utf8")) if character == LEGACY or os.path.exists(library) else {"entries": []}
 for entry in exp["entries"]:
     folded.update(entry.get("evidence") or [])
     folded.update(entry.get("contradicting") or [])

@@ -71,6 +71,35 @@ def main(argv=None):
     p.add_argument("--force", action="store_true", help="rerun unchanged trigger; does not move the split")
     p.add_argument("--object-store", help="immutable input/result object directory; default shared by repository worktrees")
     args = p.parse_args(argv)
+    # Only a newly registered runtime batch can take this path; legacy/manual
+    # calibrations retain their original publication contract.
+    if os.environ.get("LEARNER_BATCH_ID") and os.environ.get("LEARNER_STATE_FILE") and not os.environ.get("STS2_FIXED_DATA_LEASE"):
+        batch_id = os.environ["LEARNER_BATCH_ID"]
+        batch = json.loads(Path(os.environ["LEARNER_STATE_FILE"]).read_text())["batches"][batch_id]
+        selected = batch.get("operational_runtime", {})
+        if selected.get("enabled") and "silent-boss-calibration" in selected.get("entries", []):
+            if batch.get("learner_task") != "silent-boss-calibration" or batch.get("character") != "silent" or batch.get("state") != "running":
+                raise ValueError("fixed calibration requires its original running batch")
+            from learning_runtime_data import refresh_step
+            from learning_runtime import selection
+            chosen = selection(selected["root"], batch)
+            target_root = Path(batch["worktree"])
+            owner_root = Path(selected["root"])
+            if not target_root.is_absolute() or target_root.resolve() != target_root or target_root != owner_root and target_root.parent != owner_root / ".worktrees":
+                raise ValueError("fixed calibration output lost original worktree binding")
+            original_output = os.environ.get("STS2_FIXED_DATA_OUTPUT_ROOT")
+            try:
+                os.environ["STS2_FIXED_DATA_OUTPUT_ROOT"] = str(target_root)
+                with refresh_step(selected["root"], target_root, "silent-boss-calibration", ["silent"], batch_id + ":calibration", chosen_override=chosen, method_root=ROOT) as receipt:
+                    code = 0 if receipt.get("already_completed") else main(argv)
+                    receipt["rc"] = code
+            finally:
+                if original_output is None:
+                    os.environ.pop("STS2_FIXED_DATA_OUTPUT_ROOT", None)
+                else:
+                    os.environ["STS2_FIXED_DATA_OUTPUT_ROOT"] = original_output
+            print(json.dumps({"fixed_data": receipt}))
+            return code
     scratch = Path(args.scratch).resolve()
     scratch.mkdir(parents=True, exist_ok=True)
     previous = json.loads(Path(args.previous).read_text()) if args.previous else None
@@ -83,9 +112,10 @@ def main(argv=None):
         return 0
     if args.out:
         target = Path(args.out).resolve()
+        output_root = Path(os.environ.get("STS2_FIXED_DATA_OUTPUT_ROOT") or ROOT)
         for at in range(len(target.parts)):
             if target.parts[at] == "knowledge" and (target.parts[at + 1:] != ("characters", "silent", "boss-trust.json")
-                                                   or not target.is_relative_to(ROOT / "knowledge")):
+                                                   or not target.is_relative_to(output_root / "knowledge")):
                 p.error("only the Silent boss-trust artifact can be synchronized")
     dataset = Path(args.dataset) if args.dataset else scratch / "dataset"
     if not args.dataset:

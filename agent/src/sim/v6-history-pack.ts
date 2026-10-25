@@ -8,6 +8,8 @@ import { buildMetricSchema } from "../v6/build-core.js";
 import { v6AppearanceSchema, type V6Appearance } from "../v6/appearance.js";
 import type { V6Config } from "../v6/config.js";
 import { v6History } from "./v6-history.js";
+import { knowledgeFile } from "../knowledge/files.js";
+import { runtimeDataFile } from "../knowledge/runtime-data.js";
 
 const count = number(0, 1e9, true), ascension = number(0, 100, true);
 // Byte provenance is bounded by exact JavaScript integers, not gameplay counts.
@@ -117,9 +119,11 @@ export function loadV6HistoryPack(knowledgeDir: string, rawCharacter: string, co
   if (config.mode === "off") return { status: "disabled", path: "", reason: "V6 off" };
   const parsed = validate(characterSchema, rawCharacter);
   if (!parsed.ok) return { status: "invalid", path: "", reason: "invalid character" };
-  const character = parsed.value, path = join(knowledgeDir, "characters", character, "v6-history.json");
+  const character = parsed.value, path = knowledgeFile(knowledgeDir, "v6-history.json", character);
   try {
-    const base = realpathSync(knowledgeDir), dir = realpathSync(join(knowledgeDir, "characters", character));
+    const selected = runtimeDataFile(knowledgeDir, join("characters", character, "v6-history.json"));
+    const effectiveRoot = selected ? selected.slice(0, -join("characters", character, "v6-history.json").length - 1) : knowledgeDir;
+    const base = realpathSync(effectiveRoot), dir = realpathSync(join(effectiveRoot, "characters", character));
     const resolved = realpathSync(path), rel = relative(dir, resolved);
     if (dir !== join(base, "characters", character) || rel.startsWith("..") || isAbsolute(rel)) throw new Error("character path redirected");
     const st = statSync(resolved);

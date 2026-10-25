@@ -28,7 +28,8 @@ describe("learner self-check completion", () => {
     const result = finish(task, "a".repeat(40));
     expect(result.events.map((event: string[]) => event[0])).toEqual([task === "fix-batch" ? "fix-done" : task === "strategy-proposal" ? "strategy-done" : "experience-done", "learner-checks"]);
     expect(result.batch.checks.rc).toBe(0);
-    expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/ops/live-merge.lock", "bash"]);
+    expect(result.calls[1].slice(0, 7)).toEqual(["flock", "-F", "/fixture/ops/integrator-full-check.lock",
+      "flock", "-F", "/fixture/ops/live-merge.lock", "bash"]);
     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json --noEmit");
     expect(result.calls[1].at(-1)).toMatch(/node\s+['"]?[^;\n]*\/agent\/tools\/with-temp\.mjs['"]?\s+node_modules\/vitest\/vitest\.mjs run --maxWorkers=2/);
     expect(result.calls[1].at(-1)).not.toContain("--exclude");

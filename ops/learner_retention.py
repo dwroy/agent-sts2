@@ -20,7 +20,7 @@ import tarfile
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learner_checks import read_report
 
-BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit))?")
+BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit|mechanics-audit|experience-asc-audit))?")
 SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-)?[a-z][a-z0-9-]*")
 SHA = re.compile(r"[0-9a-f]{40}")
 SMALL = 128 * 1024
@@ -302,7 +302,25 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
             candidate = workspaces.source_admission(root, state_dir, tree, head)
             if not candidate["live_required"]:
                 document_source = candidate
-    if document_source:
+    if batch.get("operational_publication"):
+        from learning_runtime import selection
+        from learning_runtime_store import Store
+        chosen = selection(root, batch)
+        store = Store(chosen["directory"], readonly=True)
+        try:
+            receipt = store.completion(batch_id)
+            if not receipt or receipt != batch["operational_publication"] or receipt["character"] != character:
+                raise ValueError("operational receipt not backed by original database")
+            row = store.db.execute("SELECT body FROM completions WHERE id=?", (batch_id,)).fetchone()
+            preserved = json.loads(row[0])["report"]
+            if sha_file(safe_path(root, preserved["path"])) != preserved["sha256"]:
+                raise ValueError("operational report changed")
+        finally:
+            store.close()
+        if sources or report.get("merged") or batch.get("state") != "done":
+            raise ValueError("mixed source delivery still requires original publication checks")
+        proof.update(kind="recorded-operational-data", operational=receipt, no_experience_claim=True)
+    elif document_source:
         proof.update(kind="settled-report-only", no_experience_claim=True, document_source=document_source)
     elif sources:
         check = successful_checks(batch)
@@ -351,7 +369,9 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
         raise ValueError("no verified ingestion or settled outcome")
     retired = tree.parent == root / ".worktrees" and tree.name in (
         "codex-fix-" + character + "-" + batch_id.removesuffix("-fix-batch"),
-        "codex-strategy-" + character + "-" + batch_id.removesuffix("-strategy-proposal"))
+        "codex-strategy-" + character + "-" + batch_id.removesuffix("-strategy-proposal"),
+        "codex-mechanics-audit-" + character + "-" + batch_id.removesuffix("-mechanics-audit"),
+        "codex-experience-asc-audit-" + character + "-" + batch_id.removesuffix("-experience-asc-audit"))
     if tree != root and tree.parent != root / ".worktrees":
         raise ValueError("foreign runtime/worktree retained")
     if tree != root and not retired and tree.name not in ("exp", "exp-" + character):

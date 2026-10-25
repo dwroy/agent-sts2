@@ -48,6 +48,7 @@ import { resolveJevPromptLog } from "./jev-prompt-log.js";
 import { PROJECT_ROOT } from "../core/paths.js";
 import { characterKey, knowledgeFile } from "../knowledge/files.js";
 import { runtimeKnowledgeIdentity } from "../knowledge/runtime-paths.js";
+import { runtimeDataIdentity } from "../knowledge/runtime-data.js";
 import { ascensionMode, resolveTargetAscension } from "../memory/ascension-target.js";
 import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
 import { constructionMode } from "../construction/adapter.js";
@@ -152,6 +153,7 @@ export interface RunConfigRow {
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
+    fixed_data?: { version: string; directory: string; run: string; managed_paths: string[] };
     runtime_version?: string;
     runtime_binding?: string;
     runtime_control_sha256?: string;
@@ -407,6 +409,7 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
     system_sha: null,
     system_chars: null,
     experience_version: experienceVersion(knowledgeDir),
+    ...(runtimeDataIdentity() ? { fixed_data: runtimeDataIdentity()! } : {}),
     ...(runtimeKnowledgeIdentity() ? { runtime_version: runtimeKnowledgeIdentity()!.version } : {}),
     ...(runtimeKnowledgeIdentity() && process.env["STS2_KNOWLEDGE_RUN_KEY"] ? { runtime_binding: process.env["STS2_KNOWLEDGE_RUN_KEY"] } : {}),
     ...(runtimeKnowledgeIdentity() && /^[a-f0-9]{64}$/.test(process.env["STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256"] ?? "")

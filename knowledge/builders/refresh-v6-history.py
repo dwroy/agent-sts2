@@ -318,6 +318,8 @@ def refresh(root, ops_root, character, run_command=None):
             log_manifest = directory / 'logs.json'
             write(log_manifest, dict(log_byte_limits=limits, source_exclusions=receipt['source_exclusions']))
             spec = root / 'knowledge/characters' / character / 'build-cores.json'
+            if os.environ.get('STS2_FIXED_KNOWLEDGE_SNAPSHOT'):
+                spec = Path(os.environ['STS2_FIXED_KNOWLEDGE_SNAPSHOT']) / 'characters' / character / 'build-cores.json'
             has_cores = False
             if spec.exists():
                 if spec.stat().st_size > 8 * 1024 * 1024:

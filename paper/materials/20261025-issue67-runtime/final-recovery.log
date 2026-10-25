@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-67-pure-learning-runtime/agent
+
+(node:1637728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/paths.test.ts > the project root > is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them 2ms
+ ✓ tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays 1ms
+ ✓ tests/paths.test.ts > the project root > the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root 0ms
+ ✓ tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd 4ms
+ ✓ tests/paths.test.ts > paths from the environment > an absolute one is used as given 1ms
+ ✓ tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them) 1ms
+ ✓ tests/paths.test.ts > the knowledge files > every data file is where its loader looks: common/ or characters/<character>/ 2ms
+ ✓ tests/paths.test.ts > the knowledge files > nothing in the data directories is outside that map (a file a loader would not find) 1ms
+ ✓ tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt 42ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the MCP server runs this package's tsx on its own source 1ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the log database's query script is in agent/tools/logdb 0ms
+ ✓ tests/account-drain.test.ts > validates drain lifecycle: test_account_drain.py 201ms
+ ✓ tests/account-drain.test.ts > validates drain lifecycle: test_llm_handoff.py 1207ms
+ ✓ tests/check-imports.test.ts > relative imports > all resolve 147ms
+ ✓ tests/fight-value.test.ts > fight value (offline stub) > walks the trees and the encoders 2ms
+ ✓ tests/fight-value.test.ts > fight value (offline stub) > reports the most specific support cell and a confidence 1ms
+ ✓ tests/fight-value.test.ts > fight value (offline stub) > a board with no living enemy is a won fight 1ms
+ ✓ tests/fight-value.test.ts > fight value (offline stub) > reproduces the builder's golden examples from the committed model 6ms
+ ✓ tests/fight-value.test.ts > fight value (offline stub) > is read only by the rollout (rollout.ts, and rollout-live.ts for Jev's combat facts) 25ms
+ ✓ tests/learning-runtime.test.ts > completes operational products and fixed data through real SQLite without source publication 5993ms
+ ✓ tests/learning-runtime.test.ts > injects the actual dispatch contract for operational products and preserves old launches 8ms
+ ✓ tests/learning-runtime.test.ts > routes actual legacy loaders to one D1 snapshot while preserving K1 and custom-directory inputs 89ms
+ ✓ tests/learning-runtime.test.ts > rejects fixed data whose formal knowledge dependency differs from the run's bound K1 7ms
+
+ Test Files  5 passed (5)
+      Tests  23 passed (23)
+   Start at  19:39:38
+   Duration  11.75s (transform 2.66s, setup 602ms, import 2.80s, tests 7.75s, environment 0ms)
+

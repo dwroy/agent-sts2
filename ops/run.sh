@@ -102,11 +102,13 @@ case "$arm" in
   ds) export ARM=ds-only DEEPSEEK_MAX_CALLS=400 ;;
 esac
 [ -n "$arm" ] && echo "ablation arm: $arm" >> "$out"
+data_launch=(python3 "$OPS/learning_runtime_launch.py" --root "${CODEX_OPS_ROOT:-$ROOT}" --screen "$screen"
+  --run-id "${observed_run_id:-}" --session "$ts-$sha" --config-log "$LOGS/run-config.jsonl" --code "$(git rev-parse HEAD)" --)
 if [ -n "${STS2_KNOWLEDGE_RUNTIME:-}" ]; then
   knowledge_run_key=$(nice -n 19 python3 "$OPS/knowledge_runtime.py" run-key --screen "$screen" \
     --run-id "${observed_run_id:-}" --session "$ts-$sha" --config-log "$LOGS/run-config.jsonl") || exit 78
-  exec node --import tsx "$ROOT/agent/tools/knowledge-runtime.ts" launch --runtime "$STS2_KNOWLEDGE_RUNTIME" \
+  exec python3 "$OPS/board_heavy.py" --root "$ROOT" game -- "${data_launch[@]}" node --import tsx "$ROOT/agent/tools/knowledge-runtime.ts" launch --runtime "$STS2_KNOWLEDGE_RUNTIME" \
     --run "$knowledge_run_key" --code "$(git rev-parse HEAD)" -- \
     node --import tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1
 fi
-exec npx tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1
+exec python3 "$OPS/board_heavy.py" --root "$ROOT" game -- "${data_launch[@]}" npx tsx src/index.ts play --max-runs 1 --max-minutes "${MAX_MIN:-240}" "${extra[@]}" "$@" >> "$out" 2>&1

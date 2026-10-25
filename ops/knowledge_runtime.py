@@ -51,13 +51,13 @@ def audit_proposals(report, batch, body, before, root):
         raise ValueError("runtime proposal chain incomplete: " + "; ".join(errors))
 
 
-def complete(batch_id, batch, report, rc, root, enqueue, inbox):
+def complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=False):
     if report.get("knowledge_candidate") is None:
         return False
     from knowledge_runtime_env import bound_batch
     try:
         with bound_batch(root, batch):
-            return _complete(batch_id, batch, report, rc, root, enqueue, inbox)
+            return _complete(batch_id, batch, report, rc, root, enqueue, inbox, independent=independent)
     except (OSError, ValueError, TypeError, KeyError):
         batch.update(state="awaiting_review", rc=rc, report=report, knowledge_pending=True)
         batch.setdefault("knowledge_attempts", []).append({"state": "pending", "error": "original_runtime_binding_unavailable"})
@@ -65,7 +65,7 @@ def complete(batch_id, batch, report, rc, root, enqueue, inbox):
         return True
 
 
-def _complete(batch_id, batch, report, rc, root, enqueue, inbox):
+def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=False):
     candidate = report.get("knowledge_candidate")
     if candidate is None:
         return False
@@ -91,10 +91,16 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox):
         # A content callback cannot smuggle executable changes around the source pipeline.
         changed = subprocess.run(["git", "-C", str(tree), "status", "--porcelain", "--untracked-files=all"],
                                  capture_output=True, text=True, check=True, timeout=20).stdout
-        if changed.strip():
+        if changed.strip() and not independent:
             raise ValueError("source changes require original code delivery/checks")
         head = subprocess.run(["git", "-C", str(tree), "rev-parse", "HEAD"], capture_output=True, text=True, check=True, timeout=10).stdout.strip()
-        if report.get("base") != head or batch.get("candidate_mode", {}).get("dispatch_base", head) != head:
+        original = report.get("base")
+        if independent:
+            if (not isinstance(original, str) or not re.fullmatch(r"[a-f0-9]{40}", original)
+                    or subprocess.run(["git", "-C", str(tree), "merge-base", "--is-ancestor", original, head], capture_output=True, timeout=10).returncode
+                    or batch.get("candidate_mode", {}).get("dispatch_base", original) != original):
+                raise ValueError("independent knowledge lost original source baseline")
+        elif original != head or batch.get("candidate_mode", {}).get("dispatch_base", head) != head:
             raise ValueError("content task changed original dispatch HEAD")
         proof = None
         approval = None

@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 import os
+from pathlib import Path
 import re
 import subprocess
 import sys
@@ -109,7 +110,8 @@ def _start_learner(argv, root, scripts, state_dir, label, barrier=None):
         with open(pidfile, "w", encoding="utf8") as handle:
             handle.write(str(proc.pid) + "\n")
     return proc.pid, None
-WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy"}
+WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy",
+             "mechanics-audit": "codex-mechanics-audit", "experience-asc-audit": "codex-experience-asc-audit"}
 STRATEGY_WORKERS = 2  # Roy approved two independent proposal workers on 2026-10-09.
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
 # Explicit, approved templates and paths only; Roy's latest cache request has manual priority.
@@ -140,7 +142,7 @@ def external_writer(worktree):
 
 
 def available(root, task):
-    if task in ("fix-batch", "strategy-proposal"):
+    if task in ("fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"):
         # Each batch gets a fresh tree; a preserved failed candidate cannot block another job.
         return os.path.exists(os.path.join(root, ".git"))
     worktree = os.path.join(root, ".worktrees", WORKTREES[task])
@@ -161,8 +163,17 @@ def feature_worktree(state, root, learner_task, request_id, alive):
             or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
         return None
     worktree = os.path.join(root, ".worktrees", learner_task)
+    ready = not os.path.exists(worktree) or available_worktree(worktree)
+    if learner_task == "silent-boss-calibration":
+        from learning_runtime import capture, fixed_calibration_tree_available
+        selected = capture(root, os.environ.get("CODEX_OPS_DIR"), learner_task)
+        if selected.get("enabled"):
+            if any(batch.get("worktree") == worktree and alive(batch.get("pid")) for batch in state["batches"].values()):
+                return None
+            if not ready and not external_writer(worktree):
+                ready = fixed_calibration_tree_available(root, worktree, state["batches"], alive)
     if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
-            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
+            for batch in state["batches"].values()) or not ready
             or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
         return None
     return worktree
@@ -215,12 +226,15 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
         import core_build_jobs
         evidence = core_build_jobs.freeze(root, state_dir, batch_id, request["request_id"])
         extra = [evidence]
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(root, state_dir, learner_task)
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, "", character,
                               "fix-batch", worktree, learner_task, *extra], root, scripts, state_dir,
                              "learner-" + batch_id)
     batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
              "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
+    batch["operational_runtime"] = operational_runtime
     if pane:
         batch["pane"] = pane
     if extra:
@@ -380,11 +394,13 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     ordinary_baseline = baseline(root, state_dir)
     from knowledge_runtime_env import capture
     knowledge_runtime = capture(root, state_dir)
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(root, state_dir, task)
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline,
-                                 "knowledge_runtime": knowledge_runtime}
+                                 "knowledge_runtime": knowledge_runtime, "operational_runtime": operational_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     if external_source:
@@ -481,7 +497,11 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     if character != "silent":
         return None
     try:
-        with open(os.path.join(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json"), encoding="utf8") as handle:
+        from learning_runtime_data import current_file
+        path = current_file(root, os.environ.get("CODEX_OPS_DIR"), "characters/silent/boss-trust.json", legacy_root=Path(root, ".worktrees/live"))
+        if not path.is_file():
+            path = Path(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json")
+        with open(path, encoding="utf8") as handle:
             previous = json.load(handle)
         if previous.get("character") != "silent" or not previous.get("refresh"):
             return None  # The initial batch must publish before any automatic rerun.

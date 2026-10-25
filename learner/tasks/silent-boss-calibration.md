@@ -53,3 +53,5 @@ merge=live 时持有根目录 ops/live-merge.lock，等待刷新结束，先保�
 Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
 
 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+
+若 launcher 追加运营 runtime 合同，固定方法刷新由原 refresh-silent.py 的已准入 producer 自动发布 D1；`--report`改为scratch/report.md，previous读取原运营库当前D1校准，out只作核SHA的兼容视图。原 cadence、split/调参keys、模型、样本与所有准入门保持；不 commit/merge/full/造行为号。报告交 `operational_candidate`，最终task仍fix-batch，程序还核固定producer真实回执。算法、模型或方法变更继续研发；旧批次不转换。

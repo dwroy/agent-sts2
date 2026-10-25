@@ -23,3 +23,5 @@ Roy 2026-10-07 已授权学习流程C。来源新等级已结束局 {{runs}}；�
 ```json
 {"task":"ascension-audit","character":"{{character}}","level":{{target_ascension}},"runs":[],"complete":true,"coverage":["floors","combat_counts","healing","campfires","rules","assumptions"],"report":"{{scratch}}/report.md","code_proposals":[],"implementation_domains":[],"missing":[],"ledger":{"added":[],"updated":[],"check":0}}
 ```
+
+若 launcher 追加运营 runtime 合同，六项覆盖/原等级/证据/原 audit_key 核验后交 `operational_candidate`；不 merge main 或提交报告，仍保留原基线、ledger/proposal/反证与原请求。事务只结算本次观察范围，不关闭科学父项。旧无新合同批次仍走原入口。

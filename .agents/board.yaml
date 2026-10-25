@@ -43,6 +43,13 @@ dispatcher:
   poll_source: minute
   interval_minutes: 5
   minute_interval_minutes: 1
+  # Ops adopts shadow only after complete fixed-kit/project verification.
+  merge_queue: {enabled: false, config: .agents/merge-queue.json}
+  heavy:
+    enabled: false
+    running_slots: 1
+    stopped_slots: 2
+    probe: [python3, "{root}/ops/board_resources.py", --root, "{root}"]
   conversations:
     # Observe for at least one day; lead approval is required before any /new.
     mode: shadow

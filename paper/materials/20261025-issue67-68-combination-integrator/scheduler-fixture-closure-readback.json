@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-25T20:12:14+08:00",
+  "classification": "fixed test fixture missing new board_queue_pin dependency; no production code defect found",
+  "before": {
+    "rc": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.artifacts/integrator67-68-combination-20261025/scheduler-closure-repro/ops/agent_board.py\", line 12, in <module>\n    from board_queue_pin import verify as verify_queue_kit\nModuleNotFoundError: No module named 'board_queue_pin'\n"
+  },
+  "after": {
+    "rc": 0,
+    "stdout": "off\n",
+    "stderr": ""
+  },
+  "added_fixture_module": "ops/board_queue_pin.py",
+  "module_sha256": "b2770eef9abe3fedbc9da311e0155a78dc736e6a31b5ecdf721b51fcdbdfac07",
+  "production_operations": 0,
+  "new_full_runs": 0
+}

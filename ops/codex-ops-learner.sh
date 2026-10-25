@@ -18,7 +18,7 @@ if [ -n "${LEARNER_REGISTRATION_GATE:-}" ]; then
   [ "$LEARNER_REGISTRATION_GATE" = "$registration_directory/learner/registration/$batch.lock" ] || exit 2
   registration_lock="$LEARNER_REGISTRATION_GATE"
 fi
-case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
+case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit|mechanics-audit|experience-asc-audit) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 research_request=""
 implementation_request=""
@@ -125,9 +125,12 @@ elif [ "$task" = fix-batch ] && [ "$learner_task" = "$task" ]; then
 elif [ "$task" = strategy-proposal ]; then
   [ "$worktree" = "$ROOT/.worktrees/codex-strategy-$character-${batch%-strategy-proposal}" ] || exit 2
   fresh_tree=1
+elif [ "$task" = mechanics-audit ] || [ "$task" = experience-asc-audit ]; then
+  [ "$worktree" = "$ROOT/.worktrees/codex-$task-$character-${batch%-$task}" ] || exit 2
+  fresh_tree=1
 fi
 if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
-  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
+  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal|mechanics-audit|experience-asc-audit)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
   exec 9> "$DIR/learner/${worktree##*/}.lock"
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
@@ -238,6 +241,7 @@ else
   fi
   args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+  if [ "$task" = mechanics-audit ] || [ "$task" = experience-asc-audit ]; then args+=(--set "batch=$batch"); fi
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
   fi

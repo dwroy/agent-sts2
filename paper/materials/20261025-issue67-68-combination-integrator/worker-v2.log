@@ -1,0 +1,1616 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator67-68-combination-20261025/agent
+
+ ✓ tests/screens.test.ts (153 tests) 676ms
+ ✓ tests/turn-solver.test.ts (137 tests) 555ms
+ ✓ tests/rollout.test.ts (86 tests) 2987ms
+ ✓ tests/batch-b.test.ts (43 tests) 1985ms
+     ✓ the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again  1361ms
+ ✓ tests/sl-explore.test.ts (33 tests) 40533ms
+     ✓ recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte  11900ms
+     ✓ VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so  6069ms
+     ✓ every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's  6920ms
+     ✓ the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not  14755ms
+     ✓ the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion  509ms
+(node:1830654) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex.test.ts (31 tests) 10961ms
+     ✓ recognises a used-up plan (rest for the process), a rate limit, a lost login and an ignored isolation setting  327ms
+     ✓ after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken  1690ms
+     ✓ a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)  2281ms
+     ✓ stalled twice: the question fails as a timeout and the fallback answers it  2148ms
+     ✓ the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked  1509ms
+     ✓ a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it  1509ms
+(node:1831742) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-session.test.ts (33 tests) 12020ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1114ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  355ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  334ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2154ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  400ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  818ms
+   ✓ #64 strict session through persistence and restored route consumer: change  1369ms
+   ✓ #64 strict session through persistence and restored route consumer: construction-only  536ms
+   ✓ #64 strict session through persistence and restored route consumer: both  528ms
+   ✓ #64 strict session through persistence and restored route consumer: omit  517ms
+   ✓ #64 strict session through persistence and restored route consumer: keep  512ms
+   ✓ #64 strict session through persistence and restored route consumer: repeat  501ms
+   ✓ #64 strict session through persistence and restored route consumer: missing-reason  535ms
+   ✓ #64 strict session through persistence and restored route consumer: invalid-route  495ms
+ ✓ tests/sl-early.test.ts (42 tests) 116ms
+(node:1832829) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-herdr.test.ts (88 tests) 10474ms
+     ✓ does not certify retirement when the delayed fixture child misses its bounded real exit  2041ms
+     ✓ bounds persistent input and records its original cause without authorizing retirement  2681ms
+     ✓ retains an owned TUI that does not exit after verified keys, without force killing it  636ms
+ ✓ tests/sl-explore-gaps.test.ts (22 tests) 781ms
+ ✓ tests/sl.test.ts (42 tests) 105ms
+(node:1833137) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/route-review.test.ts (27 tests) 2680ms
+     ✓ one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it  667ms
+     ✓ answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek  330ms
+     ✓ a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route  446ms
+(node:1833270) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner.test.ts (47 tests) 926ms
+(node:1833421) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-decider.test.ts (28 tests) 3906ms
+     ✓ a card reward is decided by DeepSeek, logged as decider deepseek with its reason; Jev is not asked  455ms
+     ✓ combat still goes to Jev: no DeepSeek call, even on a near-guess  1632ms
+     ✓ card reward with keep (or no route): recorded in the card row only; the next map follows the plan  403ms
+(node:1833516) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-usage.test.ts (21 tests) 2998ms
+     ✓ fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program  1113ms
+     ✓ a server that stays up after its answer is killed after the grace; the answer stands  341ms
+     ✓ usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes  301ms
+ ✓ tests/boss-clock.test.ts (34 tests) 138ms
+ ✓ tests/target-options.test.ts (24 tests) 26817ms
+     ✓ shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap  3941ms
+     ✓ Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)  1471ms
+     ✓ gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies  1145ms
+     ✓ rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them  2691ms
+     ✓ is deterministic: the same board gives the same options and the same kill-order numbers  2373ms
+     ✓ stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first  1771ms
+     ✓ every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act  11251ms
+     ✓ the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged  516ms
+     ✓ orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives  634ms
+     ✓ The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left  414ms
+(node:1834768) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-room.test.ts (42 tests) 2440ms
+   ✓ local scripted loop dispatches one shop Jev choice and no brain request  487ms
+ ✓ tests/sl-explore-canon.test.ts (14 tests) 2256ms
+     ✓ every answer's resolution and point, recording and with a deviation, as 08ec8f9  1511ms
+     ✓ code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)  407ms
+ ✓ tests/sl-explore-potion.test.ts (18 tests) 791ms
+     ✓ attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards  525ms
+(node:1834896) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-f.test.ts (28 tests) 203ms
+(node:1834904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/execution-gate.test.ts (17 tests) 1209ms
+     ✓ a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed  513ms
+ ✓ tests/sl-explore-whole.test.ts (17 tests) 3272ms
+     ✓ every answer's resolution and point, recording, deviating and avoiding, as e0fa69b  2356ms
+(node:1835176) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/run-plan-merge.test.ts (19 tests) 6396ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  1044ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  625ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1187ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  658ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  585ms
+     ✓ the run start rides on the run's first question (no plan yet)  526ms
+     ✓ the real client reads the run plan from the answer, or from its own object after it  1173ms
+(node:1835403) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-herdr.test.ts (28 tests) 42414ms
+     ✓ new learner tabs follow the live ops pane when workspace labels are duplicated  1192ms
+     ✓ shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit  5579ms
+     ✓ shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit  5552ms
+     ✓ run, reuse, busy, status, stop; only its own labels  2127ms
+     ✓ --close-on-exit: the pane closes when the job ends and its last lines are kept  3205ms
+     ✓ brain viewer follows fixed logs across runs, reuses its tab and restarts independently  4409ms
+     ✓ starts the TUI once, prompts, reads the turn's answer and tokens from the session file  938ms
+     ✓ other arguments (a new key file, another effort): the idle TUI is restarted  1431ms
+     ✓ waits for both shell exit and registry retirement before starting the replacement  1954ms
+     ✓ retries a short name-release race only after rechecking that the pane and name are free  1769ms
+     ✓ defers a persistent name conflict without duplicate prompts or another stop  1383ms
+     ✓ defers a competing name conflict without duplicate prompts or another stop  1199ms
+     ✓ defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent  2342ms
+     ✓ a turn that does not end in time is interrupted with esc (124); the TUI stays  5398ms
+     ✓ a startup dialog (agent_not_ready) defers without answering it  370ms
+     ✓ a post-mortem batch runs in its own pane, reports as before, and the pane closes  3087ms
+     ✓ herdr unavailable: the batch starts with setsid as before  380ms
+(node:1839590) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-c.test.ts (27 tests) 3278ms
+     ✓ Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code  1735ms
+     ✓ the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained  1277ms
+(node:1839675) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/outcome-asc.test.ts (16 tests) 162ms
+(node:1839706) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-router.test.ts (30 tests) 6060ms
+     ✓ a timeout aborts the engine and falls back  1003ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2013ms
+     ✓ a timeout between answers starts the count over  2008ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1003ms
+ ✓ tests/batch-g.test.ts (22 tests) 439ms
+(node:1839908) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/oneshot-shop.test.ts (51 tests) 2047ms
+     ✓ shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row  928ms
+(node:1839985) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/run-journal.test.ts (19 tests) 154ms
+(node:1840029) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/loop.test.ts (21 tests) 14057ms
+     ✓ plays through a scripted fight and stops when the run ends  589ms
+     ✓ after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4)  3291ms
+     ✓ does not re-ask Jev while the board is unchanged  3758ms
+     ✓ skips the Jev call when the board moves while it is still planning  3756ms
+     ✓ the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)  301ms
+     ✓ keeps going when more runs were requested  395ms
+ ✓ tests/batch-j.test.ts (21 tests) 8000ms
+     ✓ the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then)  3496ms
+     ✓ the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it  3268ms
+     ✓ the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated")  370ms
+(node:1840666) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-e.test.ts (19 tests) 1145ms
+     ✓ "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option  594ms
+ ✓ tests/fight-plan.test.ts (28 tests) 369ms
+(node:1840779) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/fix-queue-v4-fix2.test.ts (20 tests) 887ms
+     ✓ ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0)  448ms
+(node:1840817) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/journal-replay.test.ts (10 tests) 4388ms
+     ✓ gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan  1323ms
+     ✓ after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so  1213ms
+     ✓ restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review  423ms
+     ✓ a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it)  853ms
+     ✓ without the replay (the old behaviour) the restarted loop re-plans the route with an empty history  428ms
+ ✓ tests/batch-m.test.ts (27 tests) 325ms
+ ✓ tests/potion-cost.test.ts (26 tests) 1447ms
+     ✓ free, the potion-free line's later turns drink the potion; at a high cost they never do  375ms
+     ✓ hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line  301ms
+ ✓ tests/sl-replay-plays.test.ts (9 tests) 1160ms
+     ✓ SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here  309ms
+(node:1841159) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-i.test.ts (19 tests) 4286ms
+     ✓ logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)  3066ms
+     ✓ the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns  632ms
+(node:1841247) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-h.test.ts (13 tests) 1068ms
+     ✓ the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so  434ms
+ ✓ tests/card-conditions.test.ts (21 tests) 863ms
+ ✓ tests/sl-explore-where.test.ts (19 tests) 37ms
+(node:1841321) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/fix-queue-v4.test.ts (20 tests) 158ms
+ ✓ tests/potions-jev-call.test.ts (15 tests) 6722ms
+     ✓ logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies  5668ms
+     ✓ logged potion replays keep real solver inputs and repeatable forecast budgets across host pauses  308ms
+ ✓ tests/passive-pieces.test.ts (20 tests) 2607ms
+     ✓ Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block  356ms
+     ✓ the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off  638ms
+     ✓ unset, the solver is as before: the logged boards' plans are the same with the fields absent  822ms
+     ✓ a board without any of the relic pieces (F4K88F267RCX F48 T3, the Queen) builds the same rollout input and the same rollout on and off  306ms
+     ✓ a board holding Letter Opener (7PWU4CD3QCP3 F48 T4) carries it for the later turns with the switch on, nothing with it off  313ms
+(node:1841501) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-knowledge.test.ts (15 tests) 190ms
+ ✓ tests/death-move-rules.test.ts (16 tests) 159ms
+(node:1841523) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-l.test.ts (26 tests) 401ms
+ ✓ tests/sl-retry.test.ts (19 tests) 52ms
+ ✓ tests/mechanics-step1.test.ts (27 tests) 229ms
+ ✓ tests/rollout-live.test.ts (139 tests) 57411ms
+     ✓ a drink-first potion option says it is not rolled out  431ms
+     ✓ up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)  11178ms
+     ✓ the controlled clock: every logged board's rollout stays inside the budget  21963ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (v1)  351ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: 0nzb-f25-t1-after-exhaust (off)  323ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (v1)  434ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ez2l-f48-t2 (off)  437ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (v1)  602ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: k8tc-f17-t5 (off)  578ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (v1)  521ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: kyc0-f28-t2-decimillipede (off)  417ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (v1)  585ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t4-stew (off)  547ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t5-replay (v1)  384ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: qug1-f23-t5-replay (off)  372ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (v1)  362ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: ra3q-f14-t1-margin (off)  338ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (v1)  382ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4-end (off)  388ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (v1)  351ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: v1mf-f33-t4 (off)  304ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (v1)  532ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: w8jd-f31-t3 (off)  506ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (v1)  1297ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: x7lu-f7-t1 (off)  1092ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (v1)  441ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t3b (off)  362ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (v1)  336ms
+     ✓ code's ranking, options and auto-acts are unchanged by the rollout: zy39-f23-t4 (off)  309ms
+     ✓ logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left  967ms
+     ✓ the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it  1128ms
+     ✓ the dead Parafright's hit next turn is in every line's enemy_threat_next  1031ms
+(node:1843449) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-pick.test.ts (24 tests) 1937ms
+   ✓ loop routes known cards to Jev, then the original brain on failure (success)  525ms
+ ✓ tests/fix-queue-v4-fix6.test.ts (17 tests) 553ms
+     ✓ YVWAWAPXJXGV F40 T1: the lines before Enthralled is played are the lines after it (logged: every lock gone, energy 8 -> 6), Enthralled first  363ms
+(node:1843580) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-claude.test.ts (15 tests) 3234ms
+     ✓ with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded  624ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2015ms
+(node:1843794) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/knowledge-typed-tools.test.ts (16 tests) 1459ms
+ ✓ tests/sl-revive-judge.test.ts (14 tests) 45ms
+ ✓ tests/potions-step1.test.ts (24 tests) 605ms
+(node:1843881) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-prompt-summary.test.ts (14 tests) 4515ms
+   ✓ consumes known provider rows for all published R2 combos without replacing large snapshots with unknown  682ms
+   ✓ retains all 17 real metric snapshots for numeric validation and full content-addressed audit  364ms
+   ✓ bounds the real published shop prompt and preserves legal choices plus the leading combo  766ms
+   ✓ keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file  1066ms
+   ✓ keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan  924ms
+   ✓ preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid  322ms
+ ✓ tests/gkb-render.test.ts (26 tests) 110ms
+ ✓ tests/sl-judge-bounds.test.ts (25 tests) 46ms
+ ✓ tests/route-next-rest.test.ts (14 tests) 44ms
+ ✓ tests/thief-cost.test.ts (11 tests) 13320ms
+     ✓ every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)  11847ms
+     ✓ no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off  505ms
+     ✓ the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn  434ms
+ ✓ tests/sl-early-planner.test.ts (15 tests) 4417ms
+     ✓ Z7D7 F28 T6: a random potion (Gambler's Brew) held: its samples are chance, so not early  3594ms
+     ✓ the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them  517ms
+ ✓ tests/monster-db-context.test.ts (17 tests) 95ms
+ ✓ tests/sl-draws-offtop.test.ts (15 tests) 63ms
+(node:1844829) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-codex.test.ts (12 tests) 6666ms
+     ✓ round trip: codex-ops-do.sh -> broker -> actions script -> answer and exit code  3227ms
+     ✓ victories, a new ascension, a post-mortem batch with a fake learner, the 10-pending inbox line  781ms
+     ✓ a failed batch is retried later; dispatch refuses unknown runs and a second batch  836ms
+     ✓ wakes once per cause, waits before the next wake, forgets the cause when OK  1670ms
+ ✓ tests/compute-memo.test.ts (11 tests) 55189ms
+     ✓ the same question and every resolution as without it; the board planned again comes from it, rollout and B2  11619ms
+     ✓ on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again  6555ms
+     ✓ a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo  12278ms
+     ✓ a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept  13362ms
+     ✓ the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo  7944ms
+     ✓ with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut  3418ms
+ ✓ tests/potion-mc.test.ts (19 tests) 2396ms
+     ✓ logged boards: the combat question is the same twice (the samples are seeded per board)  1054ms
+     ✓ logged boards holding a random potion: its option has the distribution, the shares and the re-plan note  786ms
+     ✓ with the rollout on, the option's rollout facts are the median sample's line's  403ms
+ ✓ tests/boss-sim.test.ts (16 tests) 6935ms
+     ✓ is deterministic under a seed, and another seed changes it  634ms
+     ✓ plays every sample to the fight's end and no further  506ms
+     ✓ runs on worker threads with exactly the serial numbers  2027ms
+     ✓ the live solver and 5-turn rollout give the numbers they gave before B1.5  688ms
+     ✓ the rollout ignores the whole-fight-only turn relics; unset knobs give the solver no knob  308ms
+     ✓ redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP  1574ms
+     ✓ kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers  599ms
+(node:1850134) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/run-config.test.ts (14 tests) 769ms
+     ✓ the loop writes one row on the run's first state, next to its decision log  619ms
+ ✓ tests/thief.test.ts (11 tests) 9402ms
+     ✓ every logged thief board's decision is the pre-change one, byte for byte  7394ms
+     ✓ the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options  390ms
+     ✓ no thief_context, no thief fact, no thief log  577ms
+ ✓ tests/boss-lines-planner.test.ts (8 tests) 110182ms
+     ✓ BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte  20016ms
+     ✓ P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent  14636ms
+     ✓ a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log  3972ms
+     ✓ BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why  5659ms
+     ✓ BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers  30838ms
+     ✓ an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question  32293ms
+     ✓ turn 1: the fight plan from the best line's samples  2571ms
+(node:1853587) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/batch-n.test.ts (15 tests) 3991ms
+       ✓ empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered  623ms
+       ✓ an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan)  1647ms
+       ✓ an empty reply takes the plan its reasoning drafted in one call  1583ms
+(node:1853628) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-deepseek.test.ts (12 tests) 66ms
+ ✓ tests/mech-move-rules.test.ts (13 tests) 62ms
+(node:1853656) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/oneshot-act-start.test.ts (20 tests) 2965ms
+     ✓ one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step  964ms
+     ✓ an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route  600ms
+     ✓ a random outcome: two calls (the joint question, then the review), the review keeping the route  595ms
+     ✓ the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix  591ms
+(node:1853804) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-option-loop.test.ts (6 tests) 13246ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (fixed clocks)  5502ms
+   ✓ keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator (fixed clocks)  4676ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (solver budget exhausted)  1409ms
+   ✓ keeps observed candidate faces distinct through the real T0TP8S9MMU9Q F2 combat-to-reward loop and simulator (sampling budget exhausted)  1246ms
+   ✓ warms numeric B through the real brain reward loop without a separate request or foreground B fill  406ms
+ ✓ tests/sl-any-draw.test.ts (13 tests) 919ms
+     ✓ a number worked out in play (Perfected Strike's Strikes) or a relic changing a card (Pael's Legion's block) is not exact: the bound needs no line living past the draw  306ms
+ ✓ tests/jev-experience.test.ts (16 tests) 137ms
+ ✓ tests/sl-retry-planner.test.ts (9 tests) 71212ms
+     ✓ every logged retry board's decision is 3488dc5's, byte for byte  15559ms
+     ✓ VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry  10059ms
+     ✓ JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+  558ms
+     ✓ known draws the pile does not hold: none used, the decision as with the switch off  6819ms
+     ✓ the rollout runs 24 samples (frozen clock: the whole schedule); the log says so  23540ms
+     ✓ a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual  6048ms
+     ✓ B2 on a retried boss fight runs the compute's samples a line  1257ms
+     ✓ a retry step that throws leaves the decision exactly as with both switches off  7356ms
+(node:1856808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-runtime.test.ts (20 tests) 823ms
+(node:1856873) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-only-brain.test.ts (36 tests) 1661ms
+     ✓ rest outage resumes the same real screen question and dispatches once  1121ms
+ ✓ tests/template-target.test.ts (12 tests) 14393ms
+     ✓ rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's  2468ms
+     ✓ rntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's  354ms
+     ✓ rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's  453ms
+     ✓ F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it  496ms
+     ✓ the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte  10587ms
+ ✓ tests/mech-rules.test.ts (12 tests) 70ms
+ ✓ tests/asc-band-facts.test.ts (8 tests) 95ms
+(node:1857222) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-facts-audit.test.ts (20 tests) 1051ms
+     ✓ shop/plan with the boss simulation: facts, not scores; every option still listed  449ms
+ ✓ tests/v6-card-results.test.ts (21 tests) 102ms
+(node:1857326) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-sampling.test.ts (17 tests) 383ms
+ ✓ tests/thief-rollout.test.ts (11 tests) 76ms
+ ✓ tests/mech-move-planner.test.ts (8 tests) 12351ms
+     ✓ MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte  2966ms
+     ✓ MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off  2987ms
+     ✓ on, reading the rules fails: the switch off (fail safe), the Crab's back attack included  3453ms
+     ✓ on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)  762ms
+     ✓ NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind  1400ms
+     ✓ Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it  389ms
+(node:1857530) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-mode.test.ts (15 tests) 338ms
+ ✓ tests/asc-amounts.test.ts (12 tests) 32ms
+ ✓ tests/death-move-planner.test.ts (8 tests) 36779ms
+     ✓ MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte  9344ms
+     ✓ MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off  9972ms
+     ✓ on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before  4008ms
+     ✓ on, a monster DB without the ally-death counters (built before them): as before  7789ms
+     ✓ on, reading the rules fails: the switch off (fail safe)  1610ms
+     ✓ 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next  897ms
+     ✓ Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next  2858ms
+(node:1858357) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/knowledge-classification.test.ts (12 tests) 1223ms
+   ✓ replays the frozen startup gap strictly and supplies optional strategy tool input cues  587ms
+ ✓ tests/brain-specs.test.ts (11 tests) 21ms
+(node:1858382) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/endgame-plan.test.ts (31 tests) 6059ms
+   ✓ codex, F1, normal: construction answers update the next question, survive restart and keep #35 / #49  938ms
+   ✓ codex, F31, normal: construction answers update the next question, survive restart and keep #35 / #49  453ms
+   ✓ codex, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49  467ms
+   ✓ codex, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49  468ms
+   ✓ codex, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49  454ms
+   ✓ codex, F5, reuse: construction answers update the next question, survive restart and keep #35 / #49  484ms
+   ✓ deepseek, F1, normal: construction answers update the next question, survive restart and keep #35 / #49  445ms
+   ✓ deepseek, F31, normal: construction answers update the next question, survive restart and keep #35 / #49  441ms
+   ✓ deepseek, F1, future-only: construction answers update the next question, survive restart and keep #35 / #49  451ms
+   ✓ deepseek, F9, rollback: construction answers update the next question, survive restart and keep #35 / #49  445ms
+   ✓ deepseek, F1, other-run: construction answers update the next question, survive restart and keep #35 / #49  445ms
+   ✓ deepseek, F5, reuse: construction answers update the next question, survive restart and keep #35 / #49  511ms
+ ✓ tests/sl-draws-pommel.test.ts (10 tests) 57ms
+ ✓ tests/jev-context.test.ts (15 tests) 151ms
+(node:1858620) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-reflex-knowledge.test.ts (13 tests) 142ms
+ ✓ tests/silent-sl-resource-comparison.test.ts (11 tests) 658ms
+   ✓ logs the replay comparison through the real planner while keeping the reference line's dispatched action  330ms
+(node:1858641) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/boss-sim-build.test.ts (14 tests) 9283ms
+     ✓ common random numbers: the same deck twice differs by exactly 0; runs repeat sample for sample  549ms
+     ✓ the worker pool gives the serial runner's samples; a mixture takes each sample from one member  463ms
+     ✓ a low-confidence boss (the Kaiser Crab here) is marked, with why; a relic the fight does not model is not simulated  5366ms
+     ✓ rest site: resting projects a higher entry HP; each smith option upgrades its card  958ms
+     ✓ cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Roy 2026-10-02)  743ms
+     ✓ off: DeepSeek's card reward question byte for byte as the screen built it; on: the same question plus the simulation  693ms
+ ✓ tests/fix-queue-v4-fix3.test.ts (14 tests) 1725ms
+     ✓ FSPKJAYY3ET6 F39 T1 without Throwing Axe (block 0): Inflame then Bash loses 6 + the 14 attack  369ms
+     ✓ FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2)  389ms
+     ✓ not after a card was played this turn, nor on a later turn, nor without the relic  726ms
+(node:1858994) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-potions.test.ts (20 tests) 785ms
+   ✓ unknown slot projections return to the original brain and preserve its discard fields  509ms
+(node:1859067) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/open-book.test.ts (20 tests) 671ms
+     ✓ prioritizes choices, bounds crowded prompts, and reports omitted entries  526ms
+ ✓ tests/sl-explore-second.test.ts (7 tests) 221ms
+(node:1859228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-query-guidance.test.ts (16 tests) 119ms
+ ✓ tests/deepseek-cache-layout.test.ts (11 tests) 113ms
+ ✓ tests/multi-character.test.ts (14 tests) 163ms
+(node:1859272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/oneshot-rest-event.test.ts (16 tests) 1446ms
+     ✓ rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step  574ms
+     ✓ event: remove 2 named in the answer's cards; both picks are plan steps  364ms
+(node:1859523) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-hidden-daggers-selection.test.ts (15 tests) 2477ms
+   ✓ delivers conditional facts on frozen frame 432593 after clearing the executable memo  435ms
+   ✓ updates the second discard from selected copies while retaining the conditional generated steps  334ms
+   ✓ transports the real loop's source decision to both legal Jev discard requests  1340ms
+ ✓ tests/thief-facts.test.ts (10 tests) 11ms
+ ✓ tests/mech-rules-planner.test.ts (5 tests) 4758ms
+     ✓ with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte  2088ms
+     ✓ on, but a monster DB without the observed data: the same  1281ms
+     ✓ on, and reading the rules fails: the same (fail safe)  1068ms
+ ✓ tests/fix-queue-v4-shrink.test.ts (14 tests) 3324ms
+     ✓ XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2  2351ms
+     ✓ four logged boards with Weak, Strength or Howl from Beyond  474ms
+(node:1860052) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-live.test.ts (12 tests) 139ms
+(node:1860065) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-plan-reuse.test.ts (9 tests) 83ms
+(node:1860073) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-double-boss.test.ts (12 tests) 369ms
+ ✓ tests/lizard-tail.test.ts (10 tests) 51ms
+ ✓ tests/sl-giant-judge.test.ts (13 tests) 155ms
+ ✓ tests/batch-k.test.ts (9 tests) 3411ms
+     ✓ the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's  3165ms
+ ✓ tests/sl-explore-b2.test.ts (5 tests) 96416ms
+     ✓ a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's  32394ms
+     ✓ Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often  8083ms
+     ✓ a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch  36733ms
+     ✓ Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks  7217ms
+     ✓ The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would  11988ms
+(node:1866405) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/knowledge-runtime.test.ts (10 tests) 484ms
+(node:1866416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-loop.test.ts (8 tests) 1980ms
+     ✓ BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine  676ms
+     ✓ BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale)  583ms
+(node:1866585) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-projection-runtime.test.ts (14 tests) 605ms
+ ✓ tests/external-stats-tools.test.ts (34 tests) 6047ms
+     ✓ cooccurrence: paginates whole rows under hard cap; out-of-range is explicit  4770ms
+(node:1866696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-input-bridge.test.ts (14 tests) 842ms
+   ✓ routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev  631ms
+ ✓ tests/global-build.test.ts (18 tests) 31ms
+(node:1866750) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-request-factory.test.ts (8 tests) 299ms
+ ✓ tests/construction-integration.test.ts (8 tests) 29ms
+ ✓ tests/silent-paper-krane.test.ts (15 tests) 432ms
+ ✓ tests/v6-combat-entries.test.ts (31 tests) 150ms
+ ✓ tests/build-sim-cancellation.test.ts (10 tests) 16ms
+(node:1866813) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-provenance.test.ts (16 tests) 2179ms
+   ✓ labels a catalogue reconstruction as a compatible view with its actual catalogue hash  751ms
+(node:1866825) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-startup-recovery.test.ts (26 tests) 1793ms
+     ✓ caps persistent pre-session failures at two additional attempts  533ms
+ ✓ tests/combat-entry-replay.test.ts (8 tests) 182ms
+ ✓ tests/giant-blast-terminal.test.ts (8 tests) 1249ms
+     ✓ the Test Subject's Respawn, a Decimillipede segment's Reattach and Dead, the Eye With Teeth's Revive: a living one attacks every turn  711ms
+ ✓ tests/potion-equivalents.test.ts (15 tests) 230ms
+ ✓ tests/silent-simulation-reference.test.ts (11 tests) 399ms
+ ✓ tests/core-realization.test.ts (10 tests) 422ms
+ ✓ tests/gkb-tools.test.ts (18 tests) 41ms
+ ✓ tests/v6-predicate-context.test.ts (40 tests) 39ms
+ ✓ tests/pile-power-cost.test.ts (7 tests) 2081ms
+     ✓ syntheticBossStart from the A4PW run: its draw pile's Pyre+ 3, Cruelty 2; without the relic 2, 1  578ms
+     ✓ the draw pile's Unmovable 3, Demon Form 4, Inflame 2: no sample plays a Power at 1 energy (one played Inflame at 1)  1349ms
+ ✓ tests/v6-projection.test.ts (16 tests) 149ms
+ ✓ tests/sl-inferno-judge.test.ts (16 tests) 32ms
+ ✓ tests/inferno-planner.test.ts (5 tests) 507ms
+ ✓ tests/deepseek.test.ts (12 tests) 96ms
+ ✓ tests/boss-lines.test.ts (11 tests) 3098ms
+     ✓ every line on the same seeds: the same line twice is the same, sample by sample; serial and pool agree  1955ms
+     ✓ the deadline: the samples every line finished, the same ones for every line, and the count in the text  514ms
+     ✓ B2's and B3's pools never hold workers at once: each one starting its workers releases the other's; the released one starts again on its next run  612ms
+(node:1868078) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":191.39658799999995,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":163.75404900000012,"added_prompt_bytes":1591}
+ ✓ tests/v6-brain-card-value-loop.test.ts (9 tests) 6557ms
+   ✓ adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2  1417ms
+   ✓ adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3  817ms
+   ✓ keeps the original brain question when missing  689ms
+   ✓ keeps the original brain question when corrupt  728ms
+   ✓ keeps the original brain question when timeout  622ms
+   ✓ keeps the original brain question when no-combat  598ms
+   ✓ checks the real 450ms preparation boundary after 449ms of loading  435ms
+   ✓ checks the real 450ms preparation boundary after 450ms of loading  616ms
+   ✓ checks the real 450ms preparation boundary after 451ms of loading  633ms
+(node:1868192) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/turn-start-settle.test.ts (5 tests) 420ms
+     ✓ Inferno up: the first action is not sent on the stale board; the re-read after 500 ms re-plans on the settled one  402ms
+(node:1868228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 0.737s
+
+OK
+ ✓ tests/strategy-external.test.ts (17 tests) 1575ms
+   ✓ external admission, source proof, original writer gates and retirement use fixed aggregates  876ms
+ ✓ tests/silent-whistle.test.ts (9 tests) 160ms
+ ✓ tests/silent-rest-sim-hp.test.ts (9 tests) 48ms
+ ✓ tests/knowledge-check-facts.test.ts (9 tests) 121ms
+(node:1868387) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/sl-loop.test.ts (4 tests) 15633ms
+     ✓ SL on: the certain death is not played; the fight is reloaded and attempt 2 is played with attempt 1 in Jev's question  633ms
+     ✓ SL on without a reload: the decision rows and Jev's questions are SL off's, plus the sl_* fields  335ms
+     ✓ SL_RELOAD_EARLY: every line dies with nothing left to chance: reloaded before the least-loss line's first card; off: after the line  14484ms
+(node:1869553) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-cache-probe.test.ts (10 tests) 29ms
+ ✓ tests/v6-direction-provider.test.ts (4 tests) 64ms
+ ✓ tests/silent-bullet-time.test.ts (12 tests) 548ms
+(node:1869684) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/f48-joint-integration.test.ts (13 tests) 641ms
+ ✓ tests/named-card-facts.test.ts (11 tests) 28ms
+(node:1869871) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-card-shadow.test.ts (11 tests) 143ms
+ ✓ tests/act-route-candidates.test.ts (7 tests) 38ms
+ ✓ tests/route-map.test.ts (12 tests) 11ms
+ ✓ tests/silent-opening.test.ts (8 tests) 204ms
+ ✓ tests/silent-apotheosis-malaise.test.ts (8 tests) 86ms
+ ✓ tests/silent-axe-identity.test.ts (10 tests) 24ms
+ ✓ tests/silent-crab-potion.test.ts (27 tests) 253ms
+(node:1870179) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-permafrost.test.ts (12 tests) 357ms
+ ✓ tests/boss-sim-gaps.test.ts (8 tests) 87ms
+ ✓ tests/route-chain.test.ts (7 tests) 16ms
+ ✓ tests/experience.test.ts (10 tests) 114ms
+ ✓ tests/silent-build-win-ties.test.ts (7 tests) 50ms
+ ✓ tests/continuation-failure-b2-worker.test.ts (6 tests) 263ms
+ ✓ tests/insatiable-sandpit.test.ts (7 tests) 4439ms
+     ✓ the rollout's turn 2 starts at Sandpit 4 with up to 3 Escapes drawn, and some samples are eaten by turn 5  1410ms
+     ✓ off: as before, no count in any later turn and fewer deaths  1486ms
+     ✓ the loop's switch (DecisionEnv.sandpitStart, config SANDPIT_START) wins over rollout-live's default  1303ms
+ ✓ tests/silent-hidden-daggers.test.ts (6 tests) 115ms
+(node:1870555) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-plan.test.ts (8 tests) 85ms
+ ✓ tests/silent-razor-snakebite.test.ts (14 tests) 198ms
+(node:1870619) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/prefix-facts.test.ts (9 tests) 308ms
+(node:1870675) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-infrastructure.test.ts (15 tests) 57ms
+ ✓ tests/silent-loss-reference.test.ts (6 tests) 149ms
+ ✓ tests/free-offer.test.ts (5 tests) 66ms
+(node:1870792) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-context.test.ts (8 tests) 149ms
+ ✓ tests/silent-battle-trance.test.ts (12 tests) 218ms
+ ✓ tests/card-value.test.ts (12 tests) 44ms
+ ✓ tests/deepseek-consistency.test.ts (12 tests) 106ms
+ ✓ tests/silent-demon-input.test.ts (24 tests) 136ms
+ ✓ tests/silent-apotheosis-reference.test.ts (7 tests) 3272ms
+   ✓ labels random potion forecasts and unsimulated potions separately in F45's real question  1159ms
+   ✓ bounds F45's real potion forecast work with 0 ms host pauses  937ms
+   ✓ bounds F45's real potion forecast work with 10000 ms host pauses  789ms
+(node:1871268) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/thief-card-value.test.ts (10 tests) 9570ms
+     ✓ three decks on the same seeds: with the card, without it, with it at 10 HP less; the facts' numbers are the run's  640ms
+     ✓ on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none  8918ms
+ ✓ tests/silent-serpent-form.test.ts (18 tests) 177ms
+ ✓ tests/sl-sandpit-judge.test.ts (10 tests) 143ms
+ ✓ tests/silent-sl-comparison.test.ts (5 tests) 126ms
+ ✓ tests/silent-sloth-replay.test.ts (14 tests) 148ms
+ ✓ tests/silent-selection-audit.test.ts (8 tests) 173ms
+ ✓ tests/silent-reward-addition.test.ts (10 tests) 169ms
+ ✓ tests/passive-pieces-planner.test.ts (1 test) 28120ms
+     ✓ boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan  28119ms
+(node:1876215) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 227ms
+ ✓ tests/construction-log.test.ts (7 tests) 100ms
+ ✓ tests/construction.test.ts (12 tests) 139ms
+ ✓ tests/silent-potion-reference.test.ts (12 tests) 179ms
+ ✓ tests/silent-reattach.test.ts (8 tests) 324ms
+(node:1876364) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/jev-prompt-log.test.ts (6 tests) 796ms
+     ✓ one row per Jev request next to the decision log, with the decision row's decision_id and request id  693ms
+ ✓ tests/silent-kin-progress.test.ts (16 tests) 2276ms
+   ✓ reaches the actual Jev plan question (v1=false) while preserving options and their numeric rankings  326ms
+(node:1876911) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/paths.test.ts (11 tests) 78ms
+ ✓ tests/silent-tough-bandages.test.ts (10 tests) 250ms
+(node:1877210) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-room-prompt-budget.test.ts (3 tests) 858ms
+   ✓ keeps every shop action and its continuation after trimming, with full unknown/audit rows  803ms
+ ✓ tests/rollout-best-added.test.ts (4 tests) 5336ms
+     ✓ the rollout's best line is added, last and marked, when code did not show it  4942ms
+ ✓ tests/mcp-server.test.ts (6 tests) 32ms
+ ✓ tests/silent-kunai.test.ts (8 tests) 333ms
+ ✓ tests/build-rank.test.ts (13 tests) 162ms
+(node:1877509) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-strategy-scratch.test.ts (5 tests) 431ms
+     ✓ binds both strategy slots to separate worktree reports accepted by the unchanged no-change gate  315ms
+ ✓ tests/required-boss-evaluation.test.ts (9 tests) 181ms
+(node:1877575) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-rides.test.ts (11 tests) 415ms
+(node:1877721) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-budget.test.ts (8 tests) 57ms
+ ✓ tests/potion-card-cost.test.ts (3 tests) 3074ms
+     ✓ its samples no longer play the Power free; without the relic, as before (Inflame played free)  3030ms
+ ✓ tests/silent-random-poison.test.ts (14 tests) 428ms
+ ✓ tests/silent-paper-krane-beam.test.ts (6 tests) 356ms
+ ✓ tests/silent-discard-snapshot.test.ts (21 tests) 53ms
+ ✓ tests/silent-helical-dart.test.ts (7 tests) 426ms
+(node:1878679) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-character.test.ts (15 tests) 48ms
+ ✓ tests/v6-supply.test.ts (13 tests) 225ms
+ ✓ tests/boss-sim-b4.test.ts (5 tests) 236ms
+ ✓ tests/silent-summon-coverage.test.ts (9 tests) 1259ms
+   ✓ reaches the real off Jev question while preserving every option and action  316ms
+   ✓ reaches the real v1 Jev question while preserving every option and action  311ms
+ ✓ tests/silent-cloak-generation.test.ts (7 tests) 262ms
+ ✓ tests/silent-blade-dance.test.ts (8 tests) 317ms
+ ✓ tests/v6-formats.test.ts (14 tests) 31ms
+ ✓ tests/boss-sim-b5.test.ts (7 tests) 135ms
+(node:1879138) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-tui-reconciliation.test.ts (52 tests) 46ms
+(node:1879214) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-sandpit-discard.test.ts (12 tests) 220ms
+ ✓ tests/silent-held-loss.test.ts (7 tests) 477ms
+ ✓ tests/v6-build-core.test.ts (17 tests) 96ms
+ ✓ tests/silent-burst.test.ts (9 tests) 180ms
+ ✓ tests/silent-smoggy-selection.test.ts (20 tests) 106ms
+ ✓ tests/route-projection.test.ts (9 tests) 247ms
+ ✓ tests/silent-upgraded-blade-dance.test.ts (6 tests) 139ms
+(node:1879502) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-projection-input.test.ts (6 tests) 242ms
+ ✓ tests/silent-dodge-roll.test.ts (14 tests) 159ms
+ ✓ tests/v6-history-targets.test.ts (11 tests) 37ms
+ ✓ tests/v6-history-pack.test.ts (7 tests) 398ms
+     ✓ builds through the production CLI from hash-frozen inputs and rejects changed bytes  362ms
+ ✓ tests/knowledge-text.test.ts (9 tests) 15ms
+ ✓ tests/jev-decision-projection.test.ts (5 tests) 36ms
+ ✓ tests/silent-phase-current.test.ts (19 tests) 256ms
+ ✓ tests/rollout-ties.test.ts (5 tests) 149ms
+ ✓ tests/knowledge-check-a8w-facts.test.ts (4 tests) 7ms
+ ✓ tests/reward-external-stats.test.ts (15 tests) 58ms
+(node:1879927) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-herdr-ownership.test.ts (4 tests) 419ms
+ ✓ tests/silent-giant-potion.test.ts (8 tests) 179ms
+(node:1879961) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-entries.test.ts (7 tests) 27ms
+ ✓ tests/silent-storm-hand-boundary.test.ts (21 tests) 332ms
+(node:1879990) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/global-build-integration.test.ts (12 tests) 1471ms
+   ✓ keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off  525ms
+ ✓ tests/silent-shackling-weak.test.ts (10 tests) 349ms
+(node:1880181) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-construction-safety.test.ts (12 tests) 77ms
+ ✓ tests/silent-strangle.test.ts (9 tests) 164ms
+ ✓ tests/v6-formation-table.test.ts (8 tests) 68ms
+ ✓ tests/silent-paels-legion.test.ts (12 tests) 649ms
+   ✓ A10 F33 T8: the complete observed line gains sixteen plus eight Block and loses six HP  312ms
+ ✓ tests/silent-poison-win-search.test.ts (10 tests) 303ms
+ ✓ tests/silent-crusher-facing.test.ts (10 tests) 417ms
+(node:1880517) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-rank-integration.test.ts (10 tests) 1998ms
+   ✓ shadow keeps every original question byte-identical while recording code groups  433ms
+   ✓ retains every supported candidate identity for u6ru-f22-shop/open  852ms
+ ✓ tests/silent-snakebite-discard.test.ts (20 tests) 222ms
+(node:1880643) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-native-prelude.test.ts (65 tests) 31ms
+ ✓ tests/silent-hp-guard-audit.test.ts (5 tests) 354ms
+(node:1880658) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/route-event.test.ts (5 tests) 224ms
+ ✓ tests/learning-runtime.test.ts (4 tests) 5680ms
+   ✓ completes operational products and fixed data through real SQLite without source publication  5586ms
+(node:1881326) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/global-build-b3.test.ts (6 tests) 46ms
+ ✓ tests/config.test.ts (16 tests) 14ms
+(node:1881341) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-wither-replay.test.ts (10 tests) 162ms
+(node:1881350) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":8058,"sent_entries":2}
+ ✓ tests/v6-card-pick-reflex.test.ts (4 tests) 111ms
+(node:1881358) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-completed-core-peek.test.ts (22 tests) 129ms
+ ✓ tests/silent-humidifier-rest.test.ts (10 tests) 105ms
+ ✓ tests/jev-context-limit.test.ts (5 tests) 44ms
+ ✓ tests/silent-apotheosis.test.ts (6 tests) 76ms
+(node:1881412) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-cache-engine.test.ts (5 tests) 38ms
+(node:1881420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/jev-retry.test.ts (6 tests) 529ms
+     ✓ retries a 520 and keeps playing, logging each retry  502ms
+(node:1881498) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-run-profile.test.ts (7 tests) 22ms
+ ✓ tests/enchant-text.test.ts (4 tests) 28ms
+(node:1881530) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-usage-recovery.test.ts (18 tests) 15ms
+ ✓ tests/silent-kusarigama.test.ts (8 tests) 662ms
+ ✓ tests/silent-upgraded-mirage-zero.test.ts (21 tests) 253ms
+ ✓ tests/silent-tail-resource.test.ts (10 tests) 162ms
+ ✓ tests/ops-mod-state.test.ts (37 tests) 4979ms
+ ✓ tests/silent-controlled-opening.test.ts (7 tests) 44ms
+ ✓ tests/shared-experience.test.ts (8 tests) 154ms
+(node:1882089) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-query-efficiency.test.ts (9 tests) 16536ms
+   ✓ reward/card gives truthful optional external lookup counts and executable inputs without statistics  7842ms
+   ✓ shop/plan gives truthful optional external lookup counts and executable inputs without statistics  8561ms
+ ✓ tests/silent-route-relic.test.ts (6 tests) 156ms
+ ✓ tests/silent-escape-plan.test.ts (8 tests) 208ms
+ ✓ tests/silent-candle-rest.test.ts (8 tests) 225ms
+ ✓ tests/silent-cunning.test.ts (5 tests) 487ms
+   ✓ the actual planner supplies character evidence and builds all three deterministic potion slots  381ms
+ ✓ tests/knowledge-check-a8w-guides.test.ts (6 tests) 129ms
+ ✓ tests/silent-deck-cap.test.ts (9 tests) 100ms
+ ✓ tests/silent-tungsten-rod.test.ts (6 tests) 402ms
+   ✓ F48 T7: the complete observed line survives at two HP after three reduced losses  303ms
+(node:1882471) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-autoplay-reload.test.ts (16 tests) 1984ms
+ ✓ tests/global-build-observer.test.ts (6 tests) 41ms
+ ✓ tests/required-boss-lines.test.ts (7 tests) 243ms
+ ✓ tests/silent-apotheosis-snakebite.test.ts (6 tests) 53ms
+(node:1882565) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-selection-dispatch.test.ts (13 tests) 177ms
+(node:1882573) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-tui-observation.test.ts (11 tests) 101ms
+ ✓ tests/v6-t6-dedup.test.ts (6 tests) 12ms
+ ✓ tests/silent-calculated-gamble-upgraded.test.ts (9 tests) 47ms
+ ✓ tests/sl-giant-final-resources.test.ts (32 tests) 38ms
+ ✓ tests/human-pace-direction.test.ts (6 tests) 16ms
+ ✓ tests/logdb.test.ts (8 tests) 7928ms
+     ✓ passes tests/logdb_test.py (without the venv only the extractor tests run)  5523ms
+     ✓ turns failures into isError with the reason  1095ms
+     ✓ answers SQL over the derived tables  623ms
+     ✓ refuses writes and files outside the database  371ms
+ ✓ tests/ops-autoplay-console.test.ts (7 tests) 4917ms
+     ✓ tails existing history, new lines, and the next run; stops its viewer on exit  2059ms
+     ✓ keeps following writes when the current alias first appears as an empty file  2656ms
+ ✓ tests/v6-card-value.test.ts (5 tests) 3206ms
+   ✓ caches only the same deck, offers, resources, HP, floor and selected route; cached results cannot be mutated  1443ms
+   ✓ uses future selected-route counts and the observed enemy distribution; keeps next Boss separate from current-act rank  391ms
+   ✓ leaves novel cards and unobserved visible Bosses unknown and freezes the model for the run  745ms
+   ✓ admits only on/brain rewards with observed combat provenance, keeping other roles and modes unchanged  381ms
+ ✓ tests/learner-empty-fix.test.ts (20 tests) 9324ms
+     ✓ closes a clean, checked batch whose existing sources are in live without scheduling a retry or full checks  403ms
+     ✓ does not accept an empty report when Git evidence is dirty  426ms
+     ✓ does not accept an empty report when Git evidence is new-output  407ms
+     ✓ does not accept an empty report when Git evidence is unshipped  431ms
+     ✓ does not accept an empty report when Git evidence is not-ancestor  407ms
+     ✓ does not accept an empty report when Git evidence is status-error  399ms
+     ✓ does not accept an empty report when Git evidence is missing-head  460ms
+     ✓ does not accept an empty report when Git evidence is timeout  420ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"fixes":[{"commit":"dddddddddddddddddddddddddddddddddddddddd"}]}  436ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"commit":"dddddddddddddddddddddddddddddddddddddddd"}  398ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"fixes":null}  430ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"base":"main"}  414ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":1,"vitest":0,"cases":2068}}  410ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":1,"cases":2068}}  432ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":{"tsc":0,"vitest":0,"cases":0}}  416ms
+     ✓ keeps new output or missing/failed checks pending for repair: {"tests":null}  403ms
+     ✓ does not treat experience-update as an empty fix  437ms
+     ✓ does not treat strategy-proposal as an empty fix  421ms
+     ✓ does not accept a failed learner or evidence from a different worktree  927ms
+     ✓ still schedules and runs full checks for a real merge, preserving full-suite failure reporting  833ms
+ ✓ tests/v6-combo-simulation.test.ts (6 tests) 700ms
+     ✓ verifies exact raw bytes before evaluating a batch and rejects a changed source  679ms
+ ✓ tests/v6-direction-prompt.test.ts (5 tests) 89ms
+ ✓ tests/s-combat-rank.test.ts (14 tests) 111ms
+ ✓ tests/silent-apotheosis-poisoned-stab.test.ts (6 tests) 105ms
+ ✓ tests/silent-enchanted-afterimage.test.ts (8 tests) 2689ms
+   ✓ s398960: the live input gives ten immediate Block, not seven or eleven  790ms
+   ✓ s399084: the live input gives ten immediate Block, not seven or eleven  579ms
+   ✓ F39 and held-out F45 full prefixes retain the measured twelve and twenty Block  676ms
+(node:1884506) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-watchdog.test.ts (3 tests) 92ms
+ ✓ tests/silent-boss-phase.test.ts (14 tests) 148ms
+(node:1884606) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-discard-plan.test.ts (9 tests) 39ms
+ ✓ tests/silent-akabeko-skewer.test.ts (12 tests) 704ms
+ ✓ tests/silent-apotheosis-neutralize.test.ts (6 tests) 56ms
+(node:1884794) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-paid-credit-policy.test.ts (19 tests) 15ms
+ ✓ tests/silent-poison.test.ts (8 tests) 87ms
+ ✓ tests/silent-tent-rest.test.ts (7 tests) 188ms
+ ✓ tests/silent-apotheosis-deadly-poison.test.ts (6 tests) 54ms
+ ✓ tests/silent-wither-visible.test.ts (17 tests) 191ms
+(node:1884988) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-herdr-launcher.test.ts (5 tests) 222ms
+ ✓ tests/silent-phantom-blades.test.ts (6 tests) 139ms
+ ✓ tests/silent-phase-reference.test.ts (6 tests) 152ms
+ ✓ tests/strategy-no-change-path.test.ts (24 tests) 205ms
+ ✓ tests/silent-boss-facts.test.ts (8 tests) 13ms
+ ✓ tests/silent-mirage.test.ts (9 tests) 95ms
+ ✓ tests/silent-single-action-sandpit.test.ts (15 tests) 183ms
+(node:1885234) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-codex.test.ts (1 test) 196ms
+ ✓ tests/silent-expertise.test.ts (5 tests) 96ms
+ ✓ tests/schema.test.ts (17 tests) 21ms
+ ✓ tests/continuation-failure.test.ts (5 tests) 91ms
+ ✓ tests/silent-finale-selection.test.ts (9 tests) 86ms
+ ✓ tests/silent-tuning-fork.test.ts (5 tests) 639ms
+(node:1885419) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-jobs.test.ts (4 tests) 1168ms
+     ✓ an open fix queue launches one fix job, and a busy worktree launches none  418ms
+     ✓ one pending run launches experience-update; busy, completed and early retries do not launch it again  505ms
+ ✓ tests/silent-survivor-discard.test.ts (5 tests) 295ms
+(node:1885576) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-shadow-loop.test.ts (2 tests) 1848ms
+   ✓ keeps silent actual questions, choices, gates and worker requests equal with shadow enabled  1603ms
+ ✓ tests/silent-sapping.test.ts (4 tests) 86ms
+ ✓ tests/silent-poison-held.test.ts (9 tests) 191ms
+ ✓ tests/quantitative.test.ts (7 tests) 39ms
+ ✓ tests/silent-hp-recovery.test.ts (6 tests) 107ms
+ ✓ tests/silent-selection-turn.test.ts (15 tests) 134ms
+ ✓ tests/silent-selection-observation.test.ts (16 tests) 98ms
+ ✓ tests/silent-ghost-potion.test.ts (9 tests) 259ms
+ ✓ tests/f48-joint-shadow.test.ts (16 tests) 81ms
+ ✓ tests/silent-apotheosis-accelerant.test.ts (7 tests) 53ms
+ ✓ tests/silent-stock-note.test.ts (12 tests) 233ms
+ ✓ tests/silent-serpent-mirage-replay.test.ts (15 tests) 226ms
+(node:1885951) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-reuse.test.ts (5 tests) 144ms
+ ✓ tests/silent-snakebite.test.ts (11 tests) 59ms
+(node:1885985) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-reward-scope.test.ts (24 tests) 622ms
+   ✓ leaves generic/event rewards on the exact original brain question and action  565ms
+(node:1886018) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/silent-skittish.test.ts (4 tests) 123ms
+ ✓ tests/silent-single-action-weak.test.ts (8 tests) 54ms
+ ✓ tests/ascension-audit-path.test.ts (19 tests) 1829ms
+ ✓ tests/sl-giant-phase.test.ts (16 tests) 45ms
+ ✓ tests/knowledge-catalog.test.ts (6 tests) 1688ms
+     ✓ refreshes a missing common compatible view when its catalogue changes  465ms
+     ✓ runs fixed Python source-preservation and curator tests  325ms
+ ✓ tests/silent-frail-dexterity.test.ts (3 tests) 206ms
+ ✓ tests/silent-apotheosis-footwork.test.ts (6 tests) 105ms
+ ✓ tests/batch-d.test.ts (5 tests) 141ms
+ ✓ tests/ops-stall-recovery.test.ts (7 tests) 2002ms
+     ✓ requires repeated unreachable requests and stale decisions, and clears on recovery  586ms
+     ✓ keeps real stuck-loop, gate and silence alerts  799ms
+ ✓ tests/silent-strangle-upgraded.test.ts (9 tests) 60ms
+ ✓ tests/silent-selection-execution.test.ts (8 tests) 16ms
+ ✓ tests/adaptive-completion.test.ts (2 tests) 91ms
+ ✓ tests/silent-sl-poison-stun.test.ts (8 tests) 18ms
+ ✓ tests/rest-pantograph.test.ts (4 tests) 106ms
+ ✓ tests/v6-reflex-contrast.test.ts (4 tests) 14ms
+ ✓ tests/silent-stun-gap.test.ts (6 tests) 71ms
+ ✓ tests/silent-caltrops.test.ts (7 tests) 50ms
+ ✓ tests/silent-daughter-wind.test.ts (4 tests) 152ms
+ ✓ tests/codex-saving.test.ts (7 tests) 324ms
+ ✓ tests/silent-gardener-skittish.test.ts (12 tests) 58ms
+ ✓ tests/human-pace-sl-budget.test.ts (7 tests) 45ms
+(node:1886887) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/shop-removal-preview.test.ts (7 tests) 43ms
+ ✓ tests/v6-combat-planner.test.ts (2 tests) 2793ms
+   ✓ actual off planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank  1761ms
+   ✓ actual v1 planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank  1031ms
+(node:1887003) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/adaptive-wiring.test.ts (4 tests) 444ms
+ ✓ tests/mod-client.test.ts (9 tests) 506ms
+     ✓ times out instead of hanging  315ms
+ ✓ tests/silent-fasten-upgrade.test.ts (6 tests) 91ms
+ ✓ tests/route-boss-unknown.test.ts (6 tests) 18ms
+ ✓ tests/silent-fasten.test.ts (7 tests) 98ms
+ ✓ tests/silent-slippery-poison.test.ts (7 tests) 44ms
+ ✓ tests/silent-reattach-reset.test.ts (3 tests) 350ms
+(node:1887370) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-strict-combat-stall.test.ts (3 tests) 1046ms
+   ✓ dispatches one legal combat action through both gates when the budget expires before request  936ms
+ ✓ tests/silent-precise-cut.test.ts (6 tests) 120ms
+ ✓ tests/silent-apotheosis-survivor.test.ts (4 tests) 94ms
+(node:1887479) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-native-environment.test.ts (55 tests) 83ms
+ ✓ tests/radiant-tincture.test.ts (4 tests) 291ms
+ ✓ tests/instance-binding.test.ts (9 tests) 35ms
+ ✓ tests/adaptive-shadow.test.ts (6 tests) 74ms
+ ✓ tests/run-plan.test.ts (7 tests) 26ms
+ ✓ tests/silent-apotheosis-backflip.test.ts (4 tests) 93ms
+(node:1887592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-comparison.test.ts (3 tests) 508ms
+   ✓ reuses the existing runner with a separate memo namespace and records win and S from the original paired samples  374ms
+ ✓ tests/damage.test.ts (10 tests) 33ms
+ ✓ tests/v6-build-core-pooled.test.ts (6 tests) 30ms
+ ✓ tests/silent-observed-intervals.test.ts (7 tests) 74ms
+ ✓ tests/silent-route-projection.test.ts (5 tests) 11ms
+ ✓ tests/silent-gamble-least-loss.test.ts (7 tests) 138ms
+ ✓ tests/fight-value.test.ts (5 tests) 39ms
+ ✓ tests/knowledge-check-a8w-builder.test.ts (1 test) 151ms
+ ✓ tests/v6-direction-pairs.test.ts (3 tests) 100ms
+(node:1887784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/broker-response-persistence.test.ts (4 tests) 99ms
+ ✓ tests/silent-potion-targets.test.ts (4 tests) 557ms
+ ✓ tests/silent-shadowmeld.test.ts (6 tests) 31ms
+ ✓ tests/adaptive-range.test.ts (4 tests) 4090ms
+   ✓ B3 ranges reproduce full-run samples exactly and reuse the same live pool  388ms
+   ✓ B2 actual adaptive results retain every candidate and exactly their full-run prefixes  3327ms
+   ✓ B2 ranges retain pair and sample identity in serial and persistent workers  357ms
+(node:1888031) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-rank-loop.test.ts (1 test) 1367ms
+   ✓ reasks a missing override reason, dispatches once, and records the actual accepted reason  1365ms
+(node:1888284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-l2-preparation.test.ts (2 tests) 1250ms
+   ✓ leaves 90s for the real L2 after B3 and G2=off, and accepts its 89s answer  1142ms
+(node:1888444) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/jsonl-boundary-recovery.test.ts (25 tests) 123ms
+ ✓ tests/v6-precompute.test.ts (4 tests) 19ms
+ ✓ tests/eval.test.ts (5 tests) 13528ms
+     ✓ passes tests/eval_metrics_test.py (without the venv only the algorithm tests run)  8973ms
+     ✓ passes tests/eval_calibration_test.py (without the venv only the algorithm tests run)  3876ms
+     ✓ prints the unchanged bossClock of each logged board, at the HP given, and the estimate at the real length  322ms
+     ✓ tools/eval/strength-sources.ts prints the same ids as JSON  345ms
+(node:1889059) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/card-upgrade-text.test.ts (4 tests) 229ms
+ ✓ tests/silent-survivor-sandpit-discard.test.ts (9 tests) 34ms
+(node:1889076) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-strict-pick-stall.test.ts (3 tests) 570ms
+   ✓ dispatches one legal selection through both gates when the budget expires before request  487ms
+ ✓ tests/continuation-failure-b2-planner.test.ts (1 test) 1815ms
+   ✓ actual B2 combat planner logs the separate reference but sends neither payload nor whole-fight numbers after zero-sample degradation  1813ms
+ ✓ tests/silent-vambrace-frail.test.ts (6 tests) 39ms
+ ✓ tests/silent-selection-terminal.test.ts (20 tests) 15ms
+ ✓ tests/potion-unmeasured.test.ts (6 tests) 38ms
+ ✓ tests/silent-rod-sandpit.test.ts (18 tests) 27ms
+(node:1889276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/route-reason-schema.test.ts (8 tests) 16ms
+(node:1889333) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-health.test.ts (7 tests) 260ms
+ ✓ tests/v6-target-values.test.ts (4 tests) 35ms
+ ✓ tests/silent-flechettes.test.ts (4 tests) 60ms
+ ✓ tests/silent-boss-calibration.test.ts (5 tests) 8ms
+ ✓ tests/ops-stall-between-runs.test.ts (6 tests) 3753ms
+     ✓ accepts the 7X58 F24 finalized console while its report runs at 439 seconds  306ms
+     ✓ does not let an unrelated report hide a quiet active or unfinished run  1279ms
+     ✓ keeps the stale-decision bound for a report that does not finish  744ms
+     ✓ keeps stuck-loop and repeated unreachable alerts during report overlap  923ms
+(node:1889858) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-animation-reserve.test.ts (1 test) 568ms
+   ✓ excludes repeated exhausted-budget animation polls and skips non-combat direction loading  566ms
+ ✓ tests/silent-selection-potions.test.ts (5 tests) 40ms
+ ✓ tests/silent-abrasive.test.ts (5 tests) 54ms
+ ✓ tests/silent-dagger-sandpit-discard.test.ts (9 tests) 49ms
+(node:1889960) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-loop.test.ts (2 tests) 657ms
+   ✓ activates H1 only for silent and dispatches exactly once through the existing gates  615ms
+ ✓ tests/reward-special.test.ts (5 tests) 9ms
+ ✓ tests/silent-single-action-block.test.ts (4 tests) 28ms
+(node:1890128) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-paths.test.ts (4 tests) 15ms
+(node:1890153) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/subscription-usage.test.ts (5 tests) 8ms
+ ✓ tests/silent-lethal-continuation.test.ts (2 tests) 79ms
+ ✓ tests/s-decision.test.ts (8 tests) 8ms
+ ✓ tests/silent-precise-cut-seven.test.ts (5 tests) 80ms
+(node:1890186) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-off-equivalence.test.ts (9 tests) 178ms
+ ✓ tests/learner-raw-report.test.ts (15 tests) 2978ms
+     ✓ recognizes a raw completion only after verifying its live ancestor  571ms
+     ✓ rechecks raw output while preserving the original failure and requiring every source ancestor  597ms
+ ✓ tests/v6-draft.test.ts (18 tests) 711ms
+   ✓ CLI accepts a frozen-context draft and rejects missing coverage without writes  694ms
+ ✓ tests/human-pace-adaptive.test.ts (7 tests) 28ms
+(node:1890358) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v5-deck-budget.test.ts (6 tests) 90ms
+(node:1890398) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/s-readiness-integration.test.ts (4 tests) 619ms
+     ✓ shadow records diagnostics while leaving the original question exactly unchanged  426ms
+(node:1890514) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-face.test.ts (3 tests) 351ms
+ ✓ tests/v6-projection-entries.test.ts (2 tests) 44ms
+ ✓ tests/v6-route-entry.test.ts (4 tests) 8ms
+ ✓ tests/silent-apotheosis-upgraded.test.ts (3 tests) 49ms
+ ✓ tests/shop-potions.test.ts (6 tests) 107ms
+ ✓ tests/silent-sl-beetle.test.ts (19 tests) 21ms
+ ✓ tests/v6-chain-log.test.ts (2 tests) 32ms
+ ✓ tests/deck-profile.test.ts (3 tests) 6ms
+ ✓ tests/v6-projection-progress.test.ts (4 tests) 59ms
+(node:1890748) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-sl-loop.test.ts (3 tests) 634ms
+   ✓ reserves Jev and uses the actual Boss budget on a retry only for silent  492ms
+(node:1890910) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/content-store.test.ts (3 tests) 631ms
+   ✓ deduplicates frozen evidence and simulation results without changing their bytes or reuse contract  352ms
+(node:1891056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/computation-failure-b3.test.ts (7 tests) 583ms
+ ✓ tests/blocked-experience-repair.test.ts (18 tests) 4940ms
+     ✓ still rejects missing source when output or an incomplete report is claimed: {"status":"success"}  317ms
+     ✓ still rejects missing source when output or an incomplete report is claimed: {"ledger":{"added":["silent-0001"],"proposed":[],"retired":[]}}  358ms
+     ✓ audits a real source despite blocked status and zero claimed counts  314ms
+ ✓ tests/silent-sl-calendar-poison.test.ts (15 tests) 32ms
+ ✓ tests/silent-plain-blade-dance-a0.test.ts (3 tests) 65ms
+ ✓ tests/silent-anticipate.test.ts (4 tests) 54ms
+ ✓ tests/silent-thief-unknown.test.ts (7 tests) 22ms
+ ✓ tests/silent-precise-cut-strength.test.ts (6 tests) 56ms
+ ✓ tests/core-window.test.ts (4 tests) 153ms
+ ✓ tests/silent-strangle-ly.test.ts (6 tests) 90ms
+(node:1891455) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/construction-log-loop.test.ts (2 tests) 1204ms
+   ✓ codex: two construction decisions make two requests and persist short reasons  1035ms
+ ✓ tests/v6-history-byte-metadata.test.ts (11 tests) 27ms
+ ✓ tests/rollout-live-clock.test.ts (4 tests) 357ms
+ ✓ tests/jev-context-recovery.test.ts (2 tests) 69ms
+(node:1891640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/cards-view-memo.test.ts (4 tests) 187ms
+ ✓ tests/mittens-exhaust.test.ts (7 tests) 74ms
+ ✓ tests/silent-snakebite-preview.test.ts (7 tests) 51ms
+ ✓ tests/batch-c-illusion.test.ts (2 tests) 958ms
+     ✓ the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses  593ms
+     ✓ the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses  364ms
+ ✓ tests/silent-boss-weak.test.ts (8 tests) 43ms
+ ✓ tests/silent-test-subject-phase.test.ts (3 tests) 85ms
+(node:1891734) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-redaction.test.ts (3 tests) 548ms
+     ✓ reports archive and scanner failures even when the dataset succeeds, retaining every retry log  535ms
+ ✓ tests/silent-boss-clock.test.ts (3 tests) 35ms
+(node:1891827) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/computation-failure-loop.test.ts (1 test) 677ms
+   ✓ dispatches exactly once after two required runner failures and a failed degraded attempt  675ms
+ ✓ tests/silent-envenom.test.ts (4 tests) 33ms
+ ✓ tests/learner-self-check.test.ts (6 tests) 659ms
+ ✓ tests/silent-snecko-fumes.test.ts (2 tests) 67ms
+ ✓ tests/ops-deferred.test.ts (3 tests) 542ms
+(node:1892193) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-decision.test.ts (21 tests) 24ms
+ ✓ tests/silent-malaise.test.ts (4 tests) 31ms
+ ✓ tests/silent-haze.test.ts (6 tests) 48ms
+(node:1892246) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-prompt-summary-perf.test.ts (4 tests) 1987ms
+   ✓ measures fixed shop summary construction  1187ms
+   ✓ measures fixed rest summary construction  376ms
+ ✓ tests/continuation-retaliation.test.ts (15 tests) 1423ms
+ ✓ tests/ascension-observed.test.ts (1 test) 205ms
+(node:1892312) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-fast.test.ts (5 tests) 15ms
+(node:1892340) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-instance.test.ts (4 tests) 206ms
+ ✓ tests/boss-damage-tools.test.ts (2 tests) 295ms
+ ✓ tests/outcome-stats-refresh.test.ts (3 tests) 23ms
+ ✓ tests/v1mf-bugfix.test.ts (4 tests) 2583ms
+     ✓ the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn  1345ms
+     ✓ choosing a line with a later drink keeps it in the line; the cut-short board re-plans it (XMK1 F33 T3)  1138ms
+ ✓ tests/move-model-damage.test.ts (3 tests) 8ms
+ ✓ tests/third-party.test.ts (5 tests | 2 skipped) 109ms
+(node:1892437) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-frozen-route.test.ts (3 tests) 22ms
+(node:1892447) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/event-settle.test.ts (1 test) 61ms
+ ✓ tests/silent-upgraded-malaise.test.ts (4 tests) 47ms
+ ✓ tests/monster-db.test.ts (4 tests) 133ms
+ ✓ tests/silent-corrosive-wave.test.ts (4 tests) 28ms
+ ✓ tests/human-pace-card-policy.test.ts (6 tests) 6ms
+(node:1892488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-strategy.test.ts (2 tests) 140ms
+(node:1892496) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-host-recovery.test.ts (5 tests) 392ms
+ ✓ tests/computation-failure.test.ts (3 tests) 12ms
+ ✓ tests/construction-support.test.ts (7 tests) 7ms
+ ✓ tests/potion-refresh-climb.test.ts (5 tests) 242ms
+(node:1892585) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/legacy-brain-notes.test.ts (2 tests) 13ms
+ ✓ tests/discovery.test.ts (6 tests) 148ms
+(node:1892601) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-report.test.ts (3 tests) 10ms
+ ✓ tests/silent-poison-cap.test.ts (4 tests) 13ms
+ ✓ tests/silent-poison-coverage.test.ts (7 tests) 22ms
+(node:1892735) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-fallback-checks.test.ts (2 tests) 109ms
+ ✓ tests/learner-stdio-view.test.ts (4 tests) 727ms
+(node:1892854) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/human-pace-shadow-observer.test.ts (2 tests) 111ms
+ ✓ tests/waterfall-giant.test.ts (2 tests) 128ms
+ ✓ tests/v6-appearance.test.ts (3 tests) 1820ms
+     ✓ checks fixed raw observations with the production Python collector  873ms
+     ✓ rejects invented zeros, double counts, missing rarity, unsupported scope and tampered distributions  839ms
+ ✓ tests/silent-obscura-summon.test.ts (3 tests) 25ms
+ ✓ tests/silent-pounce-coverage.test.ts (4 tests) 51ms
+ ✓ tests/learner-wrapper-scripts.test.ts (3 tests) 7ms
+ ✓ tests/combat-state-divergence.test.ts (5 tests) 95ms
+ ✓ tests/temp-lifecycle.test.ts (5 tests) 199ms
+(node:1893092) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-loop.test.ts (6 tests) 1336ms
+   ✓ codex: rest uses the selected agent with no direct key  600ms
+ ✓ tests/knowledge-check-guides.test.ts (2 tests) 114ms
+ ✓ tests/full-rollout-facts-fixture.test.ts (1 test) 333ms
+   ✓ renders full 5x8 facts, choices and logs with the future-turn simulator unavailable  330ms
+ ✓ tests/silent-maul.test.ts (4 tests) 56ms
+ ✓ tests/silent-upgraded-wave.test.ts (3 tests) 30ms
+(node:1893823) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-usage-contract.test.ts (1 test) 17ms
+ ✓ tests/silent-poison-dominance.test.ts (6 tests) 6ms
+ ✓ tests/opening-value.test.ts (3 tests) 109ms
+(node:1894229) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-keycheck-retry.test.ts (8 tests) 615ms
+ ✓ tests/silent-queen-ally-strength.test.ts (3 tests) 54ms
+ ✓ tests/continuation-failure-worker.test.ts (1 test) 84ms
+ ✓ tests/adaptive-sampler.test.ts (3 tests) 22ms
+(node:1894726) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-route-scope.test.ts (5 tests) 890ms
+   ✓ keeps noncombat selection/add on the original V5 brain path without a V6 handover  705ms
+(node:1895244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-mod-state-broker.test.ts (6 tests) 17ms
+(node:1895304) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-start.test.ts (1 test) 174ms
+(node:1895566) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-fastpath.test.ts (3 tests) 3052ms
+   ✓ claims all rewards and executes a complete shop plan without direction work between steps  1350ms
+   ✓ off retains every execution action and question byte for byte and never calls the provider  1538ms
+ ✓ tests/silent-knife-trap.test.ts (3 tests) 23ms
+(node:1896688) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/continuation-failure-b3.test.ts (1 test) 202ms
+ ✓ tests/silent-shadow-step.test.ts (3 tests) 28ms
+ ✓ tests/quantitative-log-extract.test.ts (2 tests) 13ms
+ ✓ tests/learning-ledger-metadata.test.ts (1 test) 122ms
+ ✓ tests/v6-direction-backoff.test.ts (3 tests) 8ms
+(node:1897147) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-card-results-input.test.ts (2 tests) 20ms
+ ✓ tests/deepseek-prompt-dump.test.ts (1 test) 152ms
+ ✓ tests/human-pace-jev.test.ts (4 tests) 11ms
+(node:1897516) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-assist.test.ts (3 tests) 78ms
+ ✓ tests/silent-phase-sequences.test.ts (4 tests) 9ms
+ ✓ tests/lock.test.ts (5 tests) 14ms
+ ✓ tests/learning-ledger.test.ts (4 tests) 4191ms
+     ✓ passes tests/learning_ledger_test.py  1755ms
+     ✓ the ledger file is valid JSONL as committed  2422ms
+ ✓ tests/silent-aeonglass-intensity.test.ts (3 tests) 102ms
+ ✓ tests/boss-margin-attribution.test.ts (5 tests) 59ms
+ ✓ tests/s-decision-tools.test.ts (3 tests) 13ms
+(node:1899092) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-rollout-file.test.ts (2 tests) 1939ms
+     ✓ reads beyond Node's maximum string size without truncating or altering the session  1893ms
+ ✓ tests/codex-cache-observation.test.ts (4 tests) 12ms
+ ✓ tests/game-data-cache.test.ts (2 tests) 17ms
+ ✓ tests/fake-herdr-process.test.ts (1 test) 184ms
+ ✓ tests/continuation-diagnostics.test.ts (3 tests) 55ms
+ ✓ tests/rollout-held-potion.test.ts (2 tests) 1598ms
+     ✓ preserves later-use facts with 0 ms host pauses  1064ms
+     ✓ preserves later-use facts with 10000 ms host pauses  533ms
+ ✓ tests/required-build-worker.test.ts (3 tests) 42ms
+ ✓ tests/silent-calculated-gamble.test.ts (2 tests) 18ms
+ ✓ tests/boss-trust.test.ts (2 tests) 5ms
+(node:1899701) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-prompt-projection.test.ts (2 tests) 8ms
+ ✓ tests/silent-potion-provenance.test.ts (4 tests) 6ms
+ ✓ tests/silent-expose.test.ts (2 tests) 18ms
+ ✓ tests/silent-metamorphosis.test.ts (4 tests) 44ms
+ ✓ tests/nova-jev.test.ts (4 tests) 36ms
+ ✓ tests/silent-afterimage.test.ts (3 tests) 23ms
+ ✓ tests/silent-footwork.test.ts (2 tests) 23ms
+ ✓ tests/outcome-stats.test.ts (2 tests) 138ms
+ ✓ tests/knowledge-check-a8w-experience.test.ts (1 test) 59ms
+ ✓ tests/learner-learning-flow.test.ts (3 tests) 6ms
+ ✓ tests/silent-upgrade-preview.test.ts (4 tests) 4ms
+(node:1899791) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/v6-direction-fastpath-benchmark.test.ts (1 test) 2828ms
+   ✓ keeps the V5 shop request and execution budget without standalone direction work  2824ms
+ ✓ tests/combat-jev.test.ts (3 tests) 1587ms
+     ✓ RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation  705ms
+     ✓ a low-confidence hallway pick below code's rank 1 stands (no fallback to code)  861ms
+ ✓ tests/pinned-shared-experience.test.ts (2 tests) 5ms
+ ✓ tests/fixture-http.test.ts (2 tests) 14ms
+ ✓ tests/historical-run-constraints.test.ts (4 tests) 15ms
+ ✓ tests/ascension-audit-report.test.ts (12 tests) 104ms
+ ✓ tests/fixture-command.test.ts (4 tests) 194ms
+(node:1899889) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/loop-time-cap.test.ts (4 tests) 1634ms
+   ✓ keeps map and combat deadline assertions independent of a 0ms host pause  800ms
+   ✓ keeps map and combat deadline assertions independent of a 10000ms host pause  423ms
+(node:1899940) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/worktree-storage.test.ts (2 tests) 5303ms
+   ✓ evicts only idle Git copies and restores SHA verified original inputs without completing failed tasks  5295ms
+ ✓ tests/rollout-deadline.test.ts (2 tests) 31ms
+ ✓ tests/learner-retention.test.ts (16 tests) 6400ms
+   ✓ reclaims only settled learner copies: test_published_source_reclaims_copies_and_restores_exact_bytes_and_branch  654ms
+   ✓ reclaims only settled learner copies: test_numeric_uuid_scratch_reclaims_and_restores_verified_bytes  561ms
+   ✓ reclaims only settled learner copies: test_numeric_uuid_keeps_publication_active_owner_and_path_guards  348ms
+   ✓ reclaims only settled learner copies: test_legacy_report_does_not_abort_sweep_or_delete_its_data  326ms
+   ✓ reclaims only settled learner copies: test_pending_report_data_does_not_consume_reclamation_limit  640ms
+   ✓ reclaims only settled learner copies: test_learner_requests_cleanup_idempotently_and_full_admission_controls_deletion  605ms
+   ✓ reclaims only settled learner copies: test_dirty_worktree_unknown_ignored_file_and_other_role_are_retained  363ms
+   ✓ reclaims only settled learner copies: test_symlink_and_secret_named_file_are_never_read_or_deleted  392ms
+   ✓ reclaims only settled learner copies: test_leases_capacity_and_archive_corruption_prevent_unsafe_cleanup  781ms
+   ✓ reclaims only settled learner copies: test_report_only_reclaims_checkout_but_keeps_pending_process_data  429ms
+   ✓ reclaims only settled learner copies: test_postmortem_requires_experience_ingestion_and_not_just_a_done_report  313ms
+ ✓ tests/learner-report-resources.test.ts (4 tests) 348ms
+ ✓ tests/learner-check-locks.test.ts (4 tests) 6618ms
+     ✓ preserves real lock assertions after a six-second launcher delay  6224ms
+ ✓ tests/silent-regret.test.ts (2 tests) 21ms
+ ✓ tests/end-turn-guard-sources.test.ts (3 tests) 7ms
+ ✓ tests/test-blocks.test.ts (2 tests) 7ms
+ ✓ tests/record.test.ts (1 test) 34ms
+(node:1902813) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/regent-launch-solo.test.ts (3 tests) 207ms
+(node:1902828) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-abort-fixture.test.ts (1 test) 6ms
+ ✓ tests/unassigned-proposal-resolution.test.ts (18 tests) 7011ms
+   ✓ unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason  333ms
+   ✓ unassigned proposal: completion_records_resolution_before_marking_done  307ms
+   ✓ unassigned proposal: rejects_foreign_missing_or_changed_original_registration  321ms
+   ✓ unassigned proposal: rejects_unbound_malformed_and_outside_report_without_any_append  330ms
+   ✓ unassigned proposal: verifies_all_dispositions_before_appending_any  302ms
+   ✓ unassigned proposal: failure_preserves_live_merge_fact_and_original_registry  329ms
+   ✓ unassigned proposal: inflight_dispatched_waiting_cannot_reopen_verified_resolution  321ms
+   ✓ unassigned proposal: preserves_output_scope_when_markdown_has_equivalent_prose  305ms
+   ✓ unassigned proposal: waiting_link_repair_completes_without_live_merge_or_recursive_repair  379ms
+   ✓ unassigned proposal: waiting_link_repair_rejects_unknown_or_changed_registration_atomically  371ms
+   ✓ unassigned proposal: waiting_link_repair_rejects_changed_report_dirty_source_and_false_claims  492ms
+   ✓ unassigned proposal: waiting_link_repair_preserves_previously_published_resolution  339ms
+   ✓ unassigned proposal: no_source_repair_cannot_claim_implemented_or_duplicate_without_live_ancestry  344ms
+   ✓ unassigned proposal: resolves_narrow_publication_without_inventing_source_ancestry  518ms
+   ✓ unassigned proposal: rejects_narrow_publication_without_matching_host_receipt  713ms
+   ✓ unassigned proposal: rejects_narrow_source_or_live_drift_before_any_resolution  524ms
+   ✓ unassigned proposal: rejects_narrow_registration_report_and_proposal_identity_changes  494ms
+ ✓ tests/file-escalation.test.ts (2 tests) 132ms
+ ✓ tests/ascension-audit-output-fixture.test.ts (2 tests) 7ms
+(node:1904870) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/loop-consumer-fixed-transport.test.ts (2 tests) 560ms
+   ✓ runs a serialized historical question and action without listening sockets  553ms
+ ✓ tests/v6-combo-metrics.test.ts (2 tests) 692ms
+     ✓ passes fixed-data tests for raw evidence, censoring, sampling and unknowns  437ms
+(node:1904943) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learner-check-continuation.test.ts (3 tests) 622ms
+   ✓ binds host supplements to original coverage and exact sources without repeating full checks  448ms
+ ✓ tests/knowledge-check-cards.test.ts (2 tests) 4ms
+ ✓ tests/pricing.test.ts (6 tests) 5ms
+ ✓ tests/tsconfig-scope.test.ts (1 test) 67ms
+(node:1904996) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-concurrency.test.ts (2 tests) 377ms
+     ✓ claims disjoint inputs, retains active ownership and bootstraps the second slot  372ms
+(node:1905034) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/learning-requests.test.ts (2 tests) 324ms
+   ✓ learning requirements survive report completion, interruptions and disagreements  318ms
+ ✓ tests/legacy-refresh-incremental.test.ts (6 tests) 6874ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_legacy_incremental.py  678ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_refresh_pipeline.py  2439ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_refresh_entrypoints.py  2630ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: python3 agent/tests/report_incremental_test.py  421ms
+   ✓ keeps cached statistics equivalent to full fixed evidence: /home/dw/Projects/agent-sts2/.worktrees/integrator67-68-combination-20261025/data/logdb-venv/bin/python knowledge/builders/test_potion_incremental.py  531ms
+(node:1905190) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/core-build-jobs.test.ts (2 tests) 394ms
+     ✓ checks frozen history, isolated writers, completion proofs and one-time notifications  390ms
+ ✓ tests/research-scheduling-fixture.test.ts (2 tests) 5ms
+ ✓ tests/silent-boss-calibration-board.test.ts (1 test) 4ms
+ ✓ tests/questions.test.ts (6 tests) 6ms
+ ✓ tests/knowledge-check-a8w-cards.test.ts (1 test) 3ms
+(node:1905276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/shared-tools.test.ts (2 tests) 692ms
+   ✓ attaches only matching pinned tools and retains all private/foreign copies  686ms
+ ✓ tests/learner-retention-legacy.test.ts (1 test) 1165ms
+   ✓ binds legacy root experience artifacts to the original launch, thread and checked publication  1163ms
+ ✓ tests/v6-frozen-input.test.ts (1 test) 7ms
+(node:1906171) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-eval-metrics.test.ts (22 tests) 8ms
+ ✓ tests/cost-accounting.test.ts (2 tests) 323ms
+ ✓ tests/extract-evidence.test.ts (2 tests) 94ms
+(node:1906470) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-current-events.test.ts (2 tests) 27449ms
+   ✓ guards ordinary completion, records, source changes and short checklist using fixed local inputs  27446ms
+ ✓ tests/adaptive-replay.test.ts (1 test) 7ms
+ ✓ tests/codex-stall-fixture.test.ts (1 test) 6ms
+ ✓ tests/learner-retention-uuid.test.ts (1 test) 780ms
+   ✓ accepts numeric UUID scratch identities with publication and ownership guards  779ms
+ ✓ tests/learner-live-tasks.test.ts (2 tests) 6ms
+ ✓ tests/ordinary-close-isolation.test.ts (6 tests) 12380ms
+   ✓ isolates ordinary completion with the original guards: test_candidate_source_failure_does_not_poison_valid_peer  2715ms
+   ✓ isolates ordinary completion with the original guards: test_predataset_attention_reenters_original_guards_with_failure_history  2719ms
+   ✓ isolates ordinary completion with the original guards: test_postdataset_candidate_failure_is_isolated_and_never_replayed  3092ms
+   ✓ isolates ordinary completion with the original guards: test_final_git_candidate_guard_rejects_only_its_own_private_record  3331ms
+ ✓ tests/feature-notice-registration.test.ts (1 test) 216ms
+ ✓ tests/feature-notice-ack.test.ts (1 test) 189ms
+ ✓ tests/boss-sim-notice-registration.test.ts (1 test) 192ms
+ ✓ tests/feature-root-event-notice.test.ts (1 test) 258ms
+ ✓ tests/python-cache-retention.test.ts (1 test) 1482ms
+   ✓ reclaims only tracked-source Python caches and retains unknown bytecode, links and active owners  1480ms
+ ✓ tests/global-build-health.test.ts (1 test) 69ms
+ ✓ tests/v6-history-refresh-exclusions.test.ts (1 test) 6632ms
+   ✓ keeps a complete exclusion manifest and all frozen-source publication guards  6631ms
+ ✓ tests/legacy-continuation-notice-ack.test.ts (1 test) 190ms
+(node:1917007) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/regent-launch-inspect.test.ts (2 tests) 91ms
+ ✓ tests/jev-cost.test.ts (1 test) 136ms
+ ✓ tests/report-plan-costs.test.ts (1 test) 194ms
+(node:1917033) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/regent-startup-check.test.ts (1 test) 206ms
+ ✓ tests/combat-rationale.test.ts (1 test) 3ms
+ ✓ tests/learner-cherry-pick-recheck.test.ts (1 test) 2199ms
+   ✓ rechecks an exact narrow publication without inventing source ancestry or rewriting failures  2197ms
+ ✓ tests/component-usage.test.ts (1 test) 2123ms
+   ✓ syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures  2121ms
+ ✓ tests/learner-retention-fixture.test.ts (17 tests) 8ms
+(node:1918348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-implementation-continuation.test.ts (1 test) 1554ms
+   ✓ resumes the frozen implementation once while preserving waiting proposals and bounded failure history  1553ms
+ ✓ tests/account-drain.test.ts (2 tests) 1568ms
+   ✓ validates drain lifecycle: test_llm_handoff.py  1294ms
+(node:1918746) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-implementation.test.ts (1 test) 1826ms
+   ✓ binds the approved implementation through the existing broker and host before model start  1825ms
+ ✓ tests/sandbox-entry.test.ts (2 tests) 73ms
+ ✓ tests/fight-value-observe.test.ts (1 test) 172ms
+(node:1919196) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/global-build-fixed-inputs.test.ts (13 tests) 948ms
+   ✓ keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off  313ms
+ ✓ tests/silent-boss-calibration-cli.test.ts (1 test) 7ms
+ ✓ tests/boss-sim-home.test.ts (1 test) 135ms
+ ✓ tests/boss-sim-automation.test.ts (1 test) 291ms
+ ✓ tests/paper-dataset-git.test.ts (1 test) 396ms
+   ✓ pins Git export and verification to one ref snapshot and fails the CLI on source mismatches  394ms
+(node:1919304) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/ops-action-list.test.ts (1 test) 4ms
+ ✓ tests/rollout-ties-fixture.test.ts (6 tests) 153ms
+ ✓ tests/strategy-path-startup.test.ts (25 tests) 186ms
+ ✓ tests/learning-roles.test.ts (4 tests) 5ms
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.457s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 4.558s
+
+OK
+ ✓ tests/publication-admission.test.ts (2 tests) 5398ms
+   ✓ publication waiting isolates candidate learning, game admission and publication writers  678ms
+   ✓ composes real publication admission with the per-batch registration barrier  4718ms
+ ✓ tests/v6-publication-task-link.test.ts (1 test) 1775ms
+   ✓ registers exact V6 publication and study tasks while preserving evidence guards  1774ms
+ ✓ tests/board-merge-queue.test.ts (1 test) 3613ms
+   ✓ binds queue delivery, resource leases, ROOT/LIVE projections and deployment records  3612ms
+ ✓ tests/ledger-publication-baseline.test.ts (1 test) 446ms
+   ✓ rejects physical/Git ledger status drift atomically while preserving history and unrelated items  445ms
+ ✓ tests/strategy-research-scheduling.test.ts (10 tests) 6477ms
+   ✓ frozen research group 1 takes the next slot and starts only after its actual registration is saved  456ms
+   ✓ frozen research group 2 takes the next slot and starts only after its actual registration is saved  521ms
+   ✓ frozen research group 3 takes the next slot and starts only after its actual registration is saved  391ms
+   ✓ frozen research group 4 takes the next slot and starts only after its actual registration is saved  466ms
+   ✓ frozen research group 5 takes the next slot and starts only after its actual registration is saved  537ms
+   ✓ frozen research group 6 takes the next slot and starts only after its actual registration is saved  587ms
+   ✓ frozen research group 7 takes the next slot and starts only after its actual registration is saved  383ms
+   ✓ frozen research group 8 takes the next slot and starts only after its actual registration is saved  511ms
+   ✓ frozen research group 9 takes the next slot and starts only after its actual registration is saved  1567ms
+   ✓ frozen research group 10 takes the next slot and starts only after its actual registration is saved  1054ms
+ ✓ tests/ledger-rerelease.test.ts (1 test) 166ms
+ ✓ tests/postmortem-failure-audit.test.ts (1 test) 313ms
+     ✓ reports verified pre-model refusals without guessing key failure and preserves audit and retry limits  311ms
+ ✓ tests/learner-herdr-receipts.test.ts (1 test) 7156ms
+   ✓ gates interactive learner retirement and launch identity on fixed persisted receipts  7155ms
+ ✓ tests/ledger-repeats.test.ts (1 test) 182ms
+ ✓ tests/agent-board-poll.test.ts (1 test) 369ms
+   ✓ keeps the minute dispatcher entry separate from stall and behind explicit ops activation  368ms
+ ✓ tests/brain-view.test.ts (1 test) 419ms
+   ✓ renders and follows fixed brain logs with redaction, title protection and isolated lifecycle  418ms
+ ✓ tests/learner-tabs.test.ts (1 test) 10786ms
+   ✓ reclaims only verified terminal learner tabs with the current native verifier  10785ms
+ ✓ tests/monster-terminal-hp.test.ts (1 test) 107ms
+(node:1923600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/build-facts-audit-fixture.test.ts (21 tests) 1212ms
+     ✓ shop/plan with the boss simulation: facts, not scores; every option still listed  531ms
+ ✓ tests/boss-damage-attempts.test.ts (1 test) 143ms
+ ✓ tests/learner-launch-failures.test.ts (1 test) 1723ms
+   ✓ nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure  1721ms
+ ✓ tests/ordinary-notice-ack.test.ts (1 test) 177ms
+ ✓ tests/brain-decision-dataset.test.ts (1 test) 102ms
+ ✓ tests/autoplay-marker-failure.test.ts (1 test) 828ms
+   ✓ preserves terminal exits without a durable marker and retains the existing explicit recovery hold  827ms
+ ✓ tests/brain-card-distill.test.ts (1 test) 140ms
+ ✓ tests/disk-admission.test.ts (1 test) 470ms
+   ✓ enforces approved capacity gates in the original tick and only at a finished-run boundary  469ms
+ ✓ tests/manual-notice-ack.test.ts (1 test) 325ms
+   ✓ authenticates original manual V6 notice sources and preserves independent role and scope guards  323ms
+ ✓ tests/ops-current-budget.test.ts (1 test) 192ms
+ ✓ tests/paper-dataset-publication.test.ts (1 test) 153ms
+ ✓ tests/learner-registration-barrier.test.ts (1 test) 311ms
+   ✓ waits for saved scheduler registration before starting a learner and stops on lock timeout  309ms
+ ✓ tests/learner-report-fixes-shape.test.ts (1 test) 141ms
+ ✓ tests/check-imports.test.ts (1 test) 152ms
+ ✓ tests/prior-delivery-proofs.test.ts (1 test) 206ms
+ ✓ tests/cadence-no-change.test.ts (1 test) 3299ms
+   ✓ settles registered empty cadence reviews and preserves source, parent and retention guards  3298ms
+ ✓ tests/external-build-stats.test.ts (1 test) 259ms
+ ✓ tests/learner-entry.test.ts (1 test) 5296ms
+   ✓ recovers only the registered pre-session shared-main config import failure and preserves its evidence  5295ms
+..
+----------------------------------------------------------------------
+Ran 2 tests in 2.083s
+
+OK
+ ✓ tests/learner-registration-pipeline.test.ts (1 test) 2163ms
+   ✓ publishes all four external registrations and the own batch before subsequent source validation  2162ms
+ ✓ tests/paper-snapshot-capacity.test.ts (1 test) 162ms
+ ✓ tests/worktree-retention.test.ts (1 test) 12405ms
+   ✓ retires only verified workspaces and recovers preserved artifacts after interruptions  12404ms
+ ✓ tests/reclaim-gates.test.ts (1 test) 5665ms
+   ✓ protects real runtime identities while retiring inherited bindings and main-only reports  5664ms
+ ✓ tests/record-manifest.test.ts (1 test) 614ms
+   ✓ scans exact frozen leaves without expanding record or knowledge copies  612ms
+ ✓ tests/proposal-recheck.test.ts (1 test) 161ms
+ ✓ tests/strategy-research.test.ts (1 test) 1366ms
+   ✓ manual research requires its bound request, frozen evidence and a clean report-only tree  1365ms
+ ✓ tests/disk-capacity.test.ts (1 test) 159ms
+ ✓ tests/broker-request-write.test.ts (1 test) 151ms
+ ✓ tests/own-build-stats.test.ts (1 test) 192ms
+ ✓ tests/calibration-dispatch-fixtures.test.ts (1 test) 378ms
+   ✓ dispatches fixed feature fixtures while retaining missing-tree guards  377ms
+ ✓ tests/strategy-backfill.test.ts (1 test) 382ms
+   ✓ admits frozen backfill only after normal work and consumes actual native starts once  381ms
+ ✓ tests/strategy-priority.test.ts (1 test) 401ms
+   ✓ defers unlaunchable calibration/audits and retains runnable priority, leases, sources and native cursors  400ms
+ ✓ tests/global-build-funnel.test.ts (1 test) 225ms
+ ✓ tests/learner-preserved-report.test.ts (1 test) 164ms
+ ✓ tests/module-health.test.ts (1 test) 200ms
+ ✓ tests/adaptive-health.test.ts (1 test) 86ms
+ ✓ tests/sim-wait.test.ts (1 test) 77ms
+
+ Test Files  692 passed (692)
+      Tests  6744 passed | 2 skipped (6746)
+   Start at  20:14:26
+   Duration  1594.22s (transform 22.69s, setup 48.28s, import 159.16s, tests 1287.27s, environment 79ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/paper/materials/20261025-issue67-68-combination-integrator/full.json

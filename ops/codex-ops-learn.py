@@ -176,10 +176,12 @@ def finished_runs(character):
 
 
 def postmortem_ids():
+    from learning_runtime import recorded_runs
+    recorded = set().union(*(recorded_runs(ROOT, DIR, c) for c in ("ironclad", "silent", "regent")))
     if not os.path.exists(LESSONS):
-        return set()
+        return recorded
     text = re.sub(r"<!--.*?-->", "", open(LESSONS, encoding="utf8").read(), flags=re.S)
-    return set(re.findall(r"^## ([0-9A-Z]{12})", text, re.M))
+    return recorded | set(re.findall(r"^## ([0-9A-Z]{12})", text, re.M))
 
 
 def alive(pid):
@@ -211,11 +213,13 @@ def dispatch(state, runs, character, reason):
     out_dir = os.path.join(DIR, "learner")
     os.makedirs(out_dir, exist_ok=True)
     knowledge_runtime = knowledge_runtime_env.capture(ROOT, DIR)
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(ROOT, DIR, "postmortem")
     pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
                               ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
     state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character,
                                  "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR),
-                                 "knowledge_runtime": knowledge_runtime}
+                                 "knowledge_runtime": knowledge_runtime, "operational_runtime": operational_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     for run in runs:
@@ -460,6 +464,13 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    if batch.get("task", "postmortem") == "postmortem":
+        report = read_report(os.path.join(DIR, "learner", args.batch + ".out"))
+        from learning_runtime import complete as complete_operational
+        if complete_operational(args.batch, batch, report, args.rc, ROOT, enqueue, inbox):
+            batch["finished"] = now_local()
+            save_state(state)
+            return 0
     if batch.get("learner_task") == core_build_jobs.TASK:
         if batch.get("state") in ("done", "failed") and "rc" in batch:
             return 0
@@ -625,7 +636,7 @@ def cmd_recheck(args):
     if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
         return refused("invalid-continuation")
     args.batch = batch_id
-    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-(experience-update|fix-batch|strategy-proposal|mechanics-audit|experience-asc-audit|ascension-audit))?|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
         return refused("invalid-batch")
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
@@ -640,6 +651,15 @@ def cmd_recheck(args):
                 return refused("unknown-batch")
             if batch.get("state") == "running":
                 return refused("batch-running")
+            if batch.get("task") == "ascension-audit":
+                if separator:
+                    return refused("audit-has-no-code-continuation")
+                # Keep the original lease, six coverage checks and request
+                # bookkeeping on recheck; never use generic product completion.
+                ascension_audit.finish(state, args.batch, batch.get("rc", 1), ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
+                                       proposal_check=lambda report, owner: proposal_dispatch.links(report, owner, ROOT, SCRIPTS))
+                save_state(state)
+                return 0 if batch.get("state") == "done" else 1
             owners = sorted(ident for ident, other in state["batches"].items()
                             if other.get("state") == "running" and other.get("worktree") == batch.get("worktree")) if separator else []
             if separator and owners:
@@ -662,6 +682,14 @@ def cmd_recheck(args):
                 return result
             if "fallback_checks" in batch:
                 current["fallback_checks"] = batch["fallback_checks"]
+            if report := batch.get("report"):
+                if report.get("operational_candidate") or report.get("knowledge_candidate"):
+                    for key in ("state", "rc", "report", "operational_publication", "operational_pending", "operational_attempts", "fixed_data_publication", "checks_pending", "done", "missing",
+                                "knowledge_publication", "knowledge_pending", "knowledge_attempts", "knowledge_independent_consumed", "external_result", "external_output_files", "backfill_result", "backfill_output_files"):
+                        if key in batch:
+                            current[key] = batch[key]
+                        else:
+                            current.pop(key, None)
             if batch.get("checks_pending") and result != 2:
                 current["checks_pending"] = False
                 if batch.get("fallback_checks"):
@@ -708,7 +736,7 @@ def cmd_core_notify(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
-    parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
+    parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
     parser.add_argument("--runs", default="")

@@ -82,6 +82,8 @@ agent/node_modules/.bin/tsx learner/run.ts --engine codex --task postmortem \
 
 示例先展示任务而不启动学习者；正常任务由运维调度器派发。用法、权限和安全见 [learner/README.md](learner/README.md)。
 
+纯复盘/审计与固定方法数据刷新的独立入库、逐入口切换和版本恢复见 [运营学习 runtime](docs/learning-runtime.md)；正式知识仍走原知识候选，源码改动仍走研发检查。
+
 ## 谁在这个仓库里工作
 
 - **Roy**：定目标、权限和架构；游戏知识由学习者从对局得出。已授权的学习规则变更自测通过即可上线，再通知 Roy。

@@ -1,0 +1,5 @@
+[dev #67] 已接6395855138；learner_checks两处full执行argv边界与固定8d6e4b021中的原叶一致，可沿该固定基线先做两处窄hunk，不等67全包。
+
+#67当前只在read_report、finish_write_batch开头和recheck_write_batch开头接纯运营/混合产物早返回；保留两段原源码检查执行体：首次 `subprocess.run(["flock", ..., "bash", "-c", command], ...)`，补测 `subprocess.run(["bash", "-c", FULL_CHECK_COMMAND], ...)`。#68的queued_argv必须在各自外层flock之前构造/准入；不要把pure operational/K1/D1完成或恢复拉进资源/源码检查队列。普通源码路径原锁、检查、回执保持。67后续固定提交继续保留这两个边界，集成只取68这两处差量，不整叶覆盖。
+
+另提前提示run.sh共享叶：67已在两个最终exec前增加data_launch数组（只给新局固定D1、恢复同局原D1，关闭时exec原命令）；原game-admission和K1仍在原顺序。68的game身份桥请在最终固定组合精确保留data_launch，外层包argv时不删此前缀、不改在途run/PID绑定；资源语义及桥模块仍归68。67沙箱自测在跑，结束固定后补准确叶SHA/提交；当前仅约定串行hunk边界，不冒组合通过，不写main/live/资源状态。

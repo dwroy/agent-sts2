@@ -1,0 +1,13 @@
+diff --git a/ops/tests/test_issue_session.py b/ops/tests/test_issue_session.py
+index 1cf80cf60..27a2cd8f5 100644
+--- a/ops/tests/test_issue_session.py
++++ b/ops/tests/test_issue_session.py
+@@ -958,7 +958,7 @@ class Scheduler(unittest.TestCase):
+             self.assertEqual(before, (root / 'calls').read_bytes())
+             (directory / 'PAUSE').unlink()
+             # Cron-like calls have no explicit flag; use the real control reader/launcher with a fake kit.
+-            for script in ('agent_board.py', 'issue_session_support.py'):
++            for script in ('agent_board.py', 'issue_session_support.py', 'board_queue_pin.py'):
+                 (ops / script).write_bytes((Path(resource.__file__).parent / script).read_bytes())
+             (root / '.agents').mkdir()
+             (root / '.agents/board.yaml').write_bytes((Path(resource.__file__).parents[1] / '.agents/board.yaml').read_bytes())
