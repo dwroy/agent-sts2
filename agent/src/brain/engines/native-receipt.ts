@@ -24,7 +24,7 @@ export function receiptFromRollout(text: string, threadId: string, turnId: strin
       const effort = p.effort ?? p.reasoning_effort;
       if (typeof p.model !== "string" || typeof effort !== "string") continue;
       receipt = { engine: "codex", model: p.model, effort, source: "turn_context", thread_id: threadId,
-        turn_id: turnId, sha256: createHash("sha256").update(line).digest("hex") };
+        turn_id: turnId, sha256: createHash("sha256").update(line).digest("hex"), context_line: line };
     } catch { /* A partial final line is not a receipt. */ }
   }
   return owned ? receipt : undefined;

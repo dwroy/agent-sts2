@@ -14,6 +14,8 @@ export interface BrainNativeReceipt {
   thread_id: string;
   turn_id: string;
   sha256: string;
+  /** Exact original turn_context line, captured before revert/delete; hash excludes its newline. */
+  context_line?: string;
 }
 
 export function parseBrainRunProfile(raw: string | undefined): BrainRunProfile | undefined {

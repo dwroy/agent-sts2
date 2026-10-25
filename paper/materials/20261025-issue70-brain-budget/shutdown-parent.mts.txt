@@ -1,0 +1,9 @@
+import {AppServer} from "../../agent/src/brain/engines/codex-session.ts";
+import {writeFileSync} from "node:fs";
+import {fileURLToPath} from "node:url";
+const base=fileURLToPath(new URL("./", import.meta.url));
+const server=new AppServer({bin:process.execPath,args:[base+"shutdown-child.mjs",base+process.argv[2]+".pid"],cwd:base,env:{PATH:process.env.PATH!}});
+await server.start("fixed-shutdown");
+server.close();
+await server.waitForExit();
+writeFileSync(base+process.argv[2]+".done", "child exit observed\n");
