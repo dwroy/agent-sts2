@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-25T20:56:15.510422+08:00",
+  "conclusion": "not fully learned/operationalized; completed analysis units are not full trajectory coverage or consumer acceptance",
+  "legacy_queue_totals": {
+    "total": 41,
+    "processed": 28,
+    "remaining": 13
+  },
+  "retired_plans": [
+    "issue51-deck-outcomes-003",
+    "issue51-card-picks-004",
+    "issue51-encounter-rk-005",
+    "issue51-top25-card-picks-006",
+    "issue51-dual-boss-001",
+    "issue51-act-boss-002",
+    "issue51-improved-card-picks-007"
+  ],
+  "active_plan_count": 30,
+  "active_status_counts": {
+    "processed": 28,
+    "failed": 1,
+    "waiting": 1
+  },
+  "global_lane_plan_count": 8,
+  "global_lane_status_counts": {
+    "processed": 8
+  },
+  "global_knowledge_candidate_ids_in_typed_library": {
+    "silent-external-poison-build-playbook-c1": false,
+    "silent-whole-run-blade-003": false,
+    "silent-mixed-route-c4-r56": false,
+    "silent-external-remaining-build-c7-playbook": false,
+    "silent-c5-conditional-poison-defense-playbook": false,
+    "silent-mixed-knife-defense-c3-r56": false,
+    "silent-c0-dowsing-to-abundance-context-review": false
+  },
+  "current_version_cohort": {
+    "version": "v0.111",
+    "uploaded_run_records": 1739,
+    "winning_records": 492,
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+    "independent_natural_runs_not_claimed": true
+  },
+  "poison_playbook": {
+    "id": "silent-external-poison-build-playbook-c1",
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-094803/learner/runs/20261024-094847-1af4a5ee-6bb7-4019-96f5-e9da3dcc5059-strategy-proposal/scratch/poison-playbook-candidate.json",
+    "sha256": "34b53dafdae39c8076bd2d70a4b44e5338f08d94cf6be13398fc50b872b4fd52",
+    "representative_records": 20,
+    "nodes_read": 713,
+    "status": "candidate; not current formal typed item",
+    "observations": [
+      {
+        "id": "core-identity",
+        "direction": "毒相关ID可作构筑候选标签，不以终局簇号锁定当前打法。"
+      },
+      {
+        "id": "core-pair-direction",
+        "direction": "核心共现有正反向，搭配只作探索性候选，不下固定三件套命令。"
+      },
+      {
+        "id": "order-and-pivot",
+        "direction": "按当前已得前缀保留转向余地，早拿多张核心不构成成型或安全证明。"
+      },
+      {
+        "id": "act-checkpoints",
+        "direction": "幕末参照同时看已得核心和防护代理，缺三件套不等于应继续强追。"
+      },
+      {
+        "id": "failure-and-remedy",
+        "direction": "拿到核心后仍要重看沿途资源；受伤、治疗和休息分别记账，补救收益未知。"
+      },
+      {
+        "id": "boss-preparation",
+        "direction": "Boss准备分开核前节点HP与本节点代价，不从通过代理承诺安全。"
+      },
+      {
+        "id": "sequential-boss-preparation",
+        "direction": "已记录连Boss路径要给后场保留审查项，前场通过不能代后场完成。"
+      },
+      {
+        "id": "jev-hp-budget",
+        "direction": "Jev可参考分场受伤与治疗的观察范围；可承受净损和安全HP预算保持unknown。"
+      }
+    ],
+    "present_time_use": "当前已观察到上述ID时可阅读本剧本。事后簇号、终局牌组和胜负不能当当前触发器。正文前缀条件不能完整由现有strategy schema表达，故仅knowledge草稿，不扩schema、不生成可执行触发器。",
+    "limitations": [
+      "观察性、自选上传，玩家水平、路线、遗物、SL与死亡删失混杂；独立玩家和独立自然局数未知。",
+      "终局聚类是事后标签，不能作为当前决策触发条件；代表配对主动选成10胜10负，50%不是该流派胜率。",
+      "全部18列仅指白名单节点完整；没有真实战前、场间、药水、手牌或已验证floor快照。",
+      "前节点末HP、已记录拿牌前缀、正block副本数均为代理；终局计数一致不证明中间状态准确。",
+      "版本机制改动对照未知，五版本分别保留，不把未知视为未改；不合并版本。",
+      "组合为终局出现率差，非拿牌胜率差；全族29518组合BH通过0，簇1/v0.111有1161行、每行同一27对，不可累加。",
+      "核心原ID仅支持文本命名与共现，具体牌效、攻防贡献、毒结算与安全阈值unknown。",
+      "公开FAQ未见明确数据再分发许可；仅署名的脱敏派生页/聚合候选，不分发原库。"
+    ]
+  },
+  "important_limits": [
+    "41/28/13 is legacy unit bookkeeping, not current active-plan or dataset coverage percentage",
+    "active processed and old publication-pending text do not replace current release/revision checks; several local strategy/rk IDs are now present",
+    "8 global plans are not 8 distinct archetypes or exhaustive coverage",
+    "final-deck cluster labels/outcomes cannot become current-time conditions",
+    "current extracts have missing exact battle-entry/inter-boss/hand snapshots; do not invent them"
+  ],
+  "source_reply": 6397804263
+}

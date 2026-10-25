@@ -1,0 +1,111 @@
+{
+  "id": "silent-dowsing-rod-question-task",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "P5HT1272P5SB",
+      "floor": 1,
+      "role": "support",
+      "ref": "logs/decisions.jsonl@649089103+14255;sha256=e1bd7e84f57521c66adbb2f72068f40a1d4b537895107ff095271f9cdb151156"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; cluster=0; reader offset0..4: five winners/five failures; selected complete timelines only; not all 129 uploads"
+      },
+      "statistic": {
+        "name": "selected_complete_representatives_with_recorded_DOWSING_to_ABUNDANCE",
+        "value": 1,
+        "unit": "proportion"
+      },
+      "denominator": {
+        "unit": "runs",
+        "n": 10
+      },
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+        "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+        "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+        "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+        "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+      ],
+      "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=0/pairs=0..4;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+      "role": "support"
+    }
+  ],
+  "confidence": 0.25,
+  "reused_knowledge_attachment": {
+    "id": "silent-dowsing-rod-question-task",
+    "scope": "relic:DOWSING_ROD",
+    "name": "寻龙尺",
+    "asc": [
+      0,
+      20
+    ],
+    "lesson": "寻龙尺的探寻是问号计数任务，不按即时找牌评价。机制：已见普通探寻不能打，进入5个问号后变富足；普通富足1费、消耗、三张升级能力选一入手且该轮免费，战内富足+实见0费；不外推升级任务计数。搭配：任务进度、生成、施放与实际增益分别核。决定胜负的战斗：3局任务完成与能力使用不同，路线和遗物胜因未隔离（n=3）。典型案例：2L1BNN9ZJEFU A6 F15完成；4ANT8D00TP72 A10 F22完成，沙虫首试生成毒雾+并建3、末试同牌未施而胜；P5HT1272P5SB A10 F14已成富足，F25 T8生成磨蚀+后实际施放才得1敏捷/6荆棘，T2三富足复制品未用不计三次生成收益。",
+    "evidence": [
+      "2L1BNN9ZJEFU",
+      "4ANT8D00TP72",
+      "P5HT1272P5SB"
+    ],
+    "n_support": 3,
+    "n_contradict": 0,
+    "confidence": "med",
+    "last_seen": "2026-10-07",
+    "status": "active"
+  },
+  "version": "2026-10-25-c0-r56-candidate",
+  "trigger": {
+    "question_types": [
+      "act_plan",
+      "event",
+      "rest"
+    ],
+    "acts": [
+      1,
+      2
+    ]
+  },
+  "strategy": "选寻龙尺或已持探寻/富足时，把问号任务、生成能力和已建立能力分开预算；不把未来能力当当前防护。P5HT F1牌文为不能打、进入5个?后变化；F14首记录富足1费、三升级能力选一入手且本轮免费、消耗。外部v0.111所选10轨迹均记录变化，节点8–15，5胜5败；这是代表选择，非完成率或路线收益。\n范围：Silent A10幕初/事件/营火，现场牌文与任务进度同；自有1局版本unknown且终败。原寻龙尺经验复用，不定五问号路线或升级优先级。",
+  "source": "mixed",
+  "own_support_runs": [
+    "P5HT1272P5SB"
+  ],
+  "source_commit": null,
+  "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "batch_provenance": {
+    "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+    "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+    "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+    "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+    "external_collected_at": "2026-10-21",
+    "own_game_version": "unknown",
+    "external_versions": [
+      "v0.107",
+      "v0.108",
+      "v0.109",
+      "v0.110",
+      "v0.111"
+    ],
+    "limitations": [
+      "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+      "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+      "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+      "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+      "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+    ]
+  },
+  "evidence_status": "aligned",
+  "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner"
+}

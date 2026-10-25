@@ -1,0 +1,2269 @@
+{
+  "at": "2026-10-25T13:51:44.784Z",
+  "actual_deployed_source": "5ba38052a814bfe960e3f5429b55ddfc3251eb78",
+  "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+  "base": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+  "positive_strategies": 7,
+  "positive_reflex_summaries": 5,
+  "positive_reflex_full_entry": 1,
+  "original_vocabulary_dependencies": 6,
+  "old_snapshot_absent": 13,
+  "other_role_strategies_absent": 7,
+  "other_role_reflex_tool_unexposed": 6,
+  "calls": [
+    {
+      "id": "silent-brain-poison-third-snakebite-review",
+      "type": "strategy",
+      "context_id": "silent-brain-poison-third-snakebite-review",
+      "input": {
+        "query": "silent-brain-poison-third-snakebite-review"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "confidence": 0.3,
+            "consumer_readback": "pending",
+            "evidence": [
+              {
+                "floor": 35,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=35",
+                "run": "0CLP16ZR4ZZC",
+                "type": "own"
+              },
+              {
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "denominator": {
+                  "n": 5,
+                  "unit": "runs"
+                },
+                "design": "observational",
+                "downloaded_at": "2026-10-21",
+                "filters": {
+                  "ascension": 10,
+                  "character": "silent",
+                  "criteria": "单人有效非弃局无modifier；冻结簇1、代表页0..4、赢家子组；终局出现仅作方向对照"
+                },
+                "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知",
+                "limitations": [
+                  "观察性、自选上传、非因果；按终局聚类及赢家选择含幸存偏差",
+                  "代表轨迹按前五节点近邻选择，非随机样本；节点是ordinal，不是已核floor",
+                  "中间牌组为记录前缀代理；没有真实战前全字段、回合时机或独立玩家数",
+                  "自有游戏版本unknown；同ID本地牌文不证明历史外部版本机制相同"
+                ],
+                "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=1/pairs=0..4; sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+                "source": "external:sts2fun",
+                "statistic": {
+                  "name": "selected_winner_terminal_presence_SNAKEBITE",
+                  "unit": "fraction",
+                  "value": 1
+                },
+                "type": "external_aggregate",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111"
+              }
+            ],
+            "evidence_status": "unassessed",
+            "formal_publication": "pending",
+            "id": "silent-brain-poison-third-snakebite-review",
+            "playbook_parent": "silent-external-poison-build-playbook-c1",
+            "source": "mixed",
+            "strategy": "幕3已持两张蛇咬时，蛇咬+奖励仍要与跳过比较：第三张2费保留施毒会占用怎样的启动/防护安排？0CLP16ZR4ZZC F22拿第二张、F35跳过第三张升级版，F36又拿1费致命毒药+；这些是同一A10局的不同机会，版本unknown。牌文蛇咬2费7毒、升级10毒；没有拒第三张的因果收益或普遍上限。外部代表胜例既有终局1张也有2张，不能推出固定张数。",
+            "trigger": {
+              "acts": [
+                3
+              ],
+              "deck_cards": [
+                {
+                  "count": {
+                    "min": 2
+                  },
+                  "name": "蛇咬"
+                }
+              ],
+              "question_types": [
+                "card_reward"
+              ]
+            },
+            "version": "1.0.0",
+            "evidence_summary": {
+              "own_runs": 1,
+              "own_support_runs": 1,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "selected_winner_terminal_presence_SNAKEBITE",
+                  "denominator": {
+                    "n": 5,
+                    "unit": "runs"
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "sources": [
+          {
+            "source": "mixed",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-brain-poison-third-snakebite-review",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "6a0384f8695b77a6f6eeb85f1611c71feb86ad982183d1f623e7f42e55b09917",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "8c478e79f87cfc9e35702631d89525781d6d4df91faeaf9a340f641160608bc2",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.3,
+            "evidence_status": "unassessed",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-brain-poison-third-snakebite-review",
+            "source": "mixed",
+            "version": "1.0.0",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "selected_winner_terminal_presence_SNAKEBITE",
+                "denominator": {
+                  "n": 5,
+                  "unit": "runs"
+                }
+              }
+            ]
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-brain-c3-no-confirmed-shiv-source",
+      "type": "strategy",
+      "context_id": "silent-brain-c3-no-confirmed-shiv-source",
+      "input": {
+        "query": "silent-brain-c3-no-confirmed-shiv-source"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "context_id": "C3-G1",
+            "disposition": "new",
+            "evidence": [
+              {
+                "floor": 4,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F4-reward.raw.json",
+                "role": "support",
+                "run": "1913SE84AXQF",
+                "type": "own"
+              },
+              {
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "denominator": {
+                  "n": 38,
+                  "unit": "runs"
+                },
+                "design": "observational",
+                "downloaded_at": "2026-10-21",
+                "filters": {
+                  "ascension": 10,
+                  "character": "silent",
+                  "criteria": "簇3；终止深度近邻1:1配对的负例臂；精准+幻影；赢家22/38，负例23/38；差-2.6316pp,q=1。"
+                },
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+                "limitations": [
+                  "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+                  "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+                  "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+                  "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+                ],
+                "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#version=v0.111,cluster=3,items=ACCURACY+PHANTOM_BLADES",
+                "role": "contradict",
+                "source": "external:sts2fun",
+                "statistic": {
+                  "name": "matched_loser_accuracy_phantom_present",
+                  "unit": "count",
+                  "value": 23
+                },
+                "type": "external_aggregate",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111"
+              }
+            ],
+            "evidence_status": "conflict",
+            "formal_publication": "pending",
+            "id": "silent-brain-c3-no-confirmed-shiv-source",
+            "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+            "source": "mixed",
+            "strategy": "已有回响斩击、尚未核到可靠刀源，且奖励同屏为幻影之刃/精准/背刺时，先比较刀增益的启动条件与背刺即时用途，不由终局簇预支未来小刀。1913 F4原文：幻影1费使刀保留、每回合首刀加9伤；精准1费每刀加4伤；背刺0费固有11伤并消耗。1局1次选背刺，整局仍败。外部v0.111精准+幻影终局配对胜22/38、负23/38，差-2.63pp、q=1，保留反向。\n范围：Silent A10；自有版本unknown、此前已记牌组代理，须核本题全部牌文及刀源；没有无刀源时必跳能力牌的收益结论。",
+            "trigger": {
+              "acts": [
+                1
+              ],
+              "deck_cards": [
+                {
+                  "count": {
+                    "min": 1
+                  },
+                  "name": "ECHOING_SLASH"
+                }
+              ],
+              "question_types": [
+                "card_reward"
+              ]
+            },
+            "version": "2026-10-25-c3-pending",
+            "evidence_summary": {
+              "own_runs": 1,
+              "own_support_runs": 1,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "matched_loser_accuracy_phantom_present",
+                  "denominator": {
+                    "n": 38,
+                    "unit": "runs"
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "sources": [
+          {
+            "source": "mixed",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-brain-c3-no-confirmed-shiv-source",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "c6da512f155ad6c7d48d93840129ff1f2bf182de286a2600a6e625d5ff30a664",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "2b57ec51fb3873ecc74fe3b99017d4b9783392d223a5b313c7807dd576d503df",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "conflict",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-brain-c3-no-confirmed-shiv-source",
+            "source": "mixed",
+            "version": "2026-10-25-c3-pending",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "matched_loser_accuracy_phantom_present",
+                "denominator": {
+                  "n": 38,
+                  "unit": "runs"
+                }
+              }
+            ]
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-brain-c3-random-power-realized-rest",
+      "type": "strategy",
+      "context_id": "silent-brain-c3-random-power-realized-rest",
+      "input": {
+        "query": "silent-brain-c3-random-power-realized-rest"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "context_id": "C3-G3",
+            "disposition": "new",
+            "evidence": [
+              {
+                "floor": 27,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F27-event.raw.json",
+                "role": "support",
+                "run": "1913SE84AXQF",
+                "type": "own"
+              },
+              {
+                "floor": 28,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/questions-135.json",
+                "role": "support",
+                "run": "1913SE84AXQF",
+                "type": "own"
+              },
+              {
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "denominator": {
+                  "n": 2,
+                  "unit": "runs"
+                },
+                "design": "observational",
+                "downloaded_at": "2026-10-21",
+                "filters": {
+                  "ascension": 10,
+                  "character": "silent",
+                  "criteria": "固定选择前5对中的pair0，两匿名上传均在幕2取得无尽刀刃与斗篷，1胜1败；代表选择非随机，不能当全体胜率。"
+                },
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+                "limitations": [
+                  "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+                  "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+                  "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+                  "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+                ],
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/representative-timelines-0.json#/rows/0/examples",
+                "role": "support",
+                "source": "external:sts2fun",
+                "statistic": {
+                  "name": "selected_pair_both_have_cloak_and_infinite",
+                  "unit": "count",
+                  "value": 2
+                },
+                "type": "external_aggregate",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111"
+              }
+            ],
+            "evidence_status": "unassessed",
+            "formal_publication": "pending",
+            "id": "silent-brain-c3-random-power-realized-rest",
+            "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+            "source": "mixed",
+            "strategy": "事件随机给能力牌后，在下一营火以实际已拿到的无尽刀刃重审刀源与当前血量，不把随机奖励提前当精准或余像。1913 F27选随机能力后实际得无尽；F28以40/70血休息到61（1局1次该衔接）。已核无尽原文是1费、每回合开始加1刀，与斗篷1费即时6挡加1刀分时核算；不能把未来逐回合刀或下一营火计作当前防护。F29仍损15，F31带药46→0。\n范围：Silent A10、自有版本unknown；新得牌的历史条件须正文核，不能按终局簇触发。外部选定一对同有斗篷+无尽仍1胜1败，非拿牌/回血因果收益或安全血线。",
+            "trigger": {
+              "acts": [
+                2
+              ],
+              "deck_cards": [
+                {
+                  "count": {
+                    "min": 1
+                  },
+                  "name": "INFINITE_BLADES"
+                },
+                {
+                  "count": {
+                    "min": 1
+                  },
+                  "name": "CLOAK_AND_DAGGER"
+                }
+              ],
+              "question_types": [
+                "rest"
+              ]
+            },
+            "version": "2026-10-25-c3-pending",
+            "evidence_summary": {
+              "own_runs": 1,
+              "own_support_runs": 1,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "selected_pair_both_have_cloak_and_infinite",
+                  "denominator": {
+                    "n": 2,
+                    "unit": "runs"
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "sources": [
+          {
+            "source": "mixed",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-brain-c3-random-power-realized-rest",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "24bd896bcaca2218ee53c73185056f7b7f05341e3088a86fd0fe24ccc8b0ab1b",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "efe4ce99e3529e87a780550b9fcb71442b4bb405de5500459642da59e702ad21",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-brain-c3-random-power-realized-rest",
+            "source": "mixed",
+            "version": "2026-10-25-c3-pending",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "selected_pair_both_have_cloak_and_infinite",
+                "denominator": {
+                  "n": 2,
+                  "unit": "runs"
+                }
+              }
+            ]
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-brain-c3-corrupted-echo-resource-cost",
+      "type": "strategy",
+      "context_id": "silent-brain-c3-corrupted-echo-resource-cost",
+      "input": {
+        "query": "silent-brain-c3-corrupted-echo-resource-cost"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "context_id": "C3-G4",
+            "disposition": "new",
+            "evidence": [
+              {
+                "floor": 20,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F20-event.raw.json",
+                "role": "support",
+                "run": "1913SE84AXQF",
+                "type": "own"
+              },
+              {
+                "floor": 31,
+                "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+                "role": "support",
+                "run": "1913SE84AXQF",
+                "type": "own"
+              }
+            ],
+            "evidence_status": "unassessed",
+            "formal_publication": "pending",
+            "id": "silent-brain-c3-corrupted-echo-resource-cost",
+            "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+            "source": "own",
+            "strategy": "已有回响斩击与斗篷，事件允许给攻击附腐化或变化牌时，把每次打出失去2血与增伤一起比较，不把输出提升当免费防护。1913 F20原选项明示伤害加50%和打出耗2HP，选回响（1局1次）；F31实牌文为群体15伤，较原10伤加5，并失去2血。这是牌文幅度，不是战斗收益；重复击杀链的另扣血次数未知。\n范围：Silent A10、自有版本unknown，必须核现场附魔说明和备选；不得从后来的牌文倒填当前未知效果。该局F23赢战44→40，F31终败，多资源混杂，不能归因附魔或推固定变化优先。",
+            "trigger": {
+              "acts": [
+                2
+              ],
+              "deck_cards": [
+                {
+                  "count": {
+                    "min": 1
+                  },
+                  "name": "ECHOING_SLASH"
+                },
+                {
+                  "count": {
+                    "min": 1
+                  },
+                  "name": "CLOAK_AND_DAGGER"
+                }
+              ],
+              "question_types": [
+                "event"
+              ]
+            },
+            "version": "2026-10-25-c3-pending"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-brain-c3-corrupted-echo-resource-cost",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "b28ea1aecce23b2cfbe318965cb9f20c4c90fe9afba074f6e36fb38335d0e188",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "06cc2337198f413fb11308c53840070c1583e23839252106fb63cf0a54d0b98c",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-brain-c3-corrupted-echo-resource-cost",
+            "source": "own",
+            "version": "2026-10-25-c3-pending",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c3-no-confirmed-shiv-source",
+      "type": "reflex",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-rk-c3-no-confirmed-shiv-source"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "id": "silent-rk-c3-no-confirmed-shiv-source",
+            "version": 1,
+            "applies_to": "card_pick",
+            "summary": "Compare knife scaling with immediate opening damage",
+            "confidence": 0.25,
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 4,
+                  "run_id": "1913SE84AXQF"
+                }
+              ]
+            },
+            "source_experience": []
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c3-no-confirmed-shiv-source",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "fcaebf9e3ddbaacfde0272febcbf736e3280f43f0da588d63b45beef5ed7848f",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "e43e7ec8f55c950b860bc4f1eff43f23c3fbc8e002f51384ef9d282f874eb699",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "construction_summary",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c3-random-power-realized-rest",
+      "type": "reflex",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-rk-c3-random-power-realized-rest"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "id": "silent-rk-c3-random-power-realized-rest",
+            "version": 1,
+            "applies_to": "rest",
+            "summary": "Review realized knife source and current rest resources",
+            "confidence": 0.25,
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 28,
+                  "run_id": "1913SE84AXQF"
+                }
+              ]
+            },
+            "source_experience": []
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c3-random-power-realized-rest",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "5bc25aeebf5d2b2e99769d3d6777004b3b4fe5a44c2e6f543e7db9fadf49bb4e",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "64897fbc8df7ae4fd9a0c2945dedc6c8dd8b8802d15540a28360a75d6022ef81",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "construction_summary",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c3-corrupted-echo-resource-cost",
+      "type": "reflex",
+      "context_id": "silent-rk-c3-corrupted-echo-resource-cost",
+      "input": {
+        "query": "silent-rk-c3-corrupted-echo-resource-cost"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "applies_to": "combat_line",
+            "combos": [],
+            "confidence": 0.25,
+            "cores": [],
+            "directions": [],
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 31,
+                  "run_id": "1913SE84AXQF"
+                }
+              ]
+            },
+            "id": "silent-rk-c3-corrupted-echo-resource-cost",
+            "label_en": "Review printed life cost alongside modified area damage",
+            "predicate": {
+              "args": [
+                {
+                  "arg": {
+                    "field": "card.id",
+                    "op": "eq",
+                    "value": "ECHOING_SLASH"
+                  },
+                  "field": "player.hand",
+                  "op": "any"
+                },
+                {
+                  "arg": {
+                    "args": [
+                      {
+                        "field": "action.kind",
+                        "op": "eq",
+                        "value": "card"
+                      },
+                      {
+                        "field": "card.id",
+                        "op": "eq",
+                        "value": "ECHOING_SLASH"
+                      }
+                    ],
+                    "op": "and"
+                  },
+                  "field": "option.actions",
+                  "op": "any"
+                },
+                {
+                  "field": "act",
+                  "op": "eq",
+                  "value": 2
+                }
+              ],
+              "op": "and"
+            },
+            "schema": "reflex-entry-v1",
+            "scope": {
+              "ascensions": [
+                10
+              ],
+              "character": "silent"
+            },
+            "signal": {
+              "kind": "tag",
+              "unit": "label",
+              "value": "silent-rk-c3-corrupted-echo-resource-cost-review"
+            },
+            "source_experience": [],
+            "sources": [
+              {
+                "game_version": "unknown",
+                "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+                "retrieved_at": "2026-10-25",
+                "sample": {
+                  "players": null,
+                  "runs": 1,
+                  "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+                },
+                "sha256": "2d2d84aa6f3b26820d8b770bbe9ef04de3cc857e387aae2894fbe20dd06083bb",
+                "source": "own"
+              },
+              {
+                "game_version": "v0.111",
+                "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+                "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+                "retrieved_at": "2026-10-21",
+                "sample": {
+                  "players": null,
+                  "runs": 10,
+                  "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+                },
+                "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+                "source": "external:sts2fun",
+                "url": "https://sts2.fun/static/sts2_public.db.zst"
+              }
+            ],
+            "version": 1
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c3-corrupted-echo-resource-cost",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "a1f7f619075f3395c08cca19bfcc2f40fd61662fa196461ada50647d77d0b514",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "e94276baad9a688360ed170d80be4cca834fc29efd5c7c4b42b04ad6e8606ae0",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "full_entry",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c3-rest-followup-hp-budget",
+      "type": "reflex",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-rk-c3-rest-followup-hp-budget"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "id": "silent-rk-c3-rest-followup-hp-budget",
+            "version": 1,
+            "applies_to": "rest",
+            "summary": "Budget subsequent event and winning fight health costs",
+            "confidence": 0.25,
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 7,
+                  "run_id": "02HB4L0C3C67"
+                }
+              ]
+            },
+            "source_experience": []
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c3-rest-followup-hp-budget",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f8b1e3aa1e49cb6d71f8fb5f7813adad52435bf628b8a7140a9ac3272b1d2aae",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "63f77406e009043fcf267bd1ef8bdf94fd9c715850b582fcc2a39eca0a856d8d",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "construction_summary",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-dowsing-rod-question-task",
+      "type": "strategy",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-dowsing-rod-question-task"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "batch_provenance": {
+              "external_collected_at": "2026-10-21",
+              "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+              "external_versions": [
+                "v0.107",
+                "v0.108",
+                "v0.109",
+                "v0.110",
+                "v0.111"
+              ],
+              "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+              "limitations": [
+                "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+                "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+                "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+                "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+                "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+              ],
+              "own_game_version": "unknown",
+              "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+              "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json"
+            },
+            "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "evidence": [
+              {
+                "floor": 1,
+                "ref": "logs/decisions.jsonl@649089103+14255;sha256=e1bd7e84f57521c66adbb2f72068f40a1d4b537895107ff095271f9cdb151156",
+                "role": "support",
+                "run": "P5HT1272P5SB",
+                "type": "own"
+              },
+              {
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "denominator": {
+                  "n": 10,
+                  "unit": "runs"
+                },
+                "design": "observational",
+                "downloaded_at": "2026-10-21",
+                "filters": {
+                  "ascension": 10,
+                  "character": "silent",
+                  "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; cluster=0; reader offset0..4: five winners/five failures; selected complete timelines only; not all 129 uploads"
+                },
+                "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+                "limitations": [
+                  "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+                  "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+                  "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+                  "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+                  "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+                ],
+                "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=0/pairs=0..4;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+                "role": "support",
+                "source": "external:sts2fun",
+                "statistic": {
+                  "name": "selected_complete_representatives_with_recorded_DOWSING_to_ABUNDANCE",
+                  "unit": "proportion",
+                  "value": 1
+                },
+                "type": "external_aggregate",
+                "url": "https://sts2.fun/static/sts2_public.db.zst",
+                "version": "v0.111"
+              }
+            ],
+            "evidence_status": "aligned",
+            "formal_publication": "pending",
+            "id": "silent-dowsing-rod-question-task",
+            "own_support_runs": [
+              "P5HT1272P5SB"
+            ],
+            "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner",
+            "reused_knowledge_attachment": {
+              "asc": [
+                0,
+                20
+              ],
+              "confidence": "med",
+              "evidence": [
+                "2L1BNN9ZJEFU",
+                "4ANT8D00TP72",
+                "P5HT1272P5SB"
+              ],
+              "id": "silent-dowsing-rod-question-task",
+              "last_seen": "2026-10-07",
+              "lesson": "寻龙尺的探寻是问号计数任务，不按即时找牌评价。机制：已见普通探寻不能打，进入5个问号后变富足；普通富足1费、消耗、三张升级能力选一入手且该轮免费，战内富足+实见0费；不外推升级任务计数。搭配：任务进度、生成、施放与实际增益分别核。决定胜负的战斗：3局任务完成与能力使用不同，路线和遗物胜因未隔离（n=3）。典型案例：2L1BNN9ZJEFU A6 F15完成；4ANT8D00TP72 A10 F22完成，沙虫首试生成毒雾+并建3、末试同牌未施而胜；P5HT1272P5SB A10 F14已成富足，F25 T8生成磨蚀+后实际施放才得1敏捷/6荆棘，T2三富足复制品未用不计三次生成收益。",
+              "n_contradict": 0,
+              "n_support": 3,
+              "name": "寻龙尺",
+              "scope": "relic:DOWSING_ROD",
+              "status": "active"
+            },
+            "source": "mixed",
+            "source_commit": null,
+            "strategy": "选寻龙尺或已持探寻/富足时，把问号任务、生成能力和已建立能力分开预算；不把未来能力当当前防护。P5HT F1牌文为不能打、进入5个?后变化；F14首记录富足1费、三升级能力选一入手且本轮免费、消耗。外部v0.111所选10轨迹均记录变化，节点8–15，5胜5败；这是代表选择，非完成率或路线收益。\n范围：Silent A10幕初/事件/营火，现场牌文与任务进度同；自有1局版本unknown且终败。原寻龙尺经验复用，不定五问号路线或升级优先级。",
+            "trigger": {
+              "acts": [
+                1,
+                2
+              ],
+              "question_types": [
+                "act_plan",
+                "event",
+                "rest"
+              ]
+            },
+            "version": "2026-10-25-c0-r56-candidate",
+            "evidence_summary": {
+              "own_runs": 1,
+              "own_support_runs": 1,
+              "external": [
+                {
+                  "source": "external:sts2fun",
+                  "version": "v0.111",
+                  "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                  "statistic": "selected_complete_representatives_with_recorded_DOWSING_to_ABUNDANCE",
+                  "denominator": {
+                    "n": 10,
+                    "unit": "runs"
+                  }
+                }
+              ]
+            },
+            "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+          }
+        ],
+        "sources": [
+          {
+            "source": "mixed",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-dowsing-rod-question-task",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "d55594b8029374d7da7078bf2fef67539396201150a129c9c97fab7fea6d723f",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "e5fdb0d5692e33d5dd55ca9b0176674e2631a7a6b358d69d02c628b830ad7a0a",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "aligned",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-dowsing-rod-question-task",
+            "source": "mixed",
+            "version": "2026-10-25-c0-r56-candidate",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": [
+              {
+                "source": "external:sts2fun",
+                "version": "v0.111",
+                "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+                "statistic": "selected_complete_representatives_with_recorded_DOWSING_to_ABUNDANCE",
+                "denominator": {
+                  "n": 10,
+                  "unit": "runs"
+                }
+              }
+            ]
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-fasten-defend-extra-block",
+      "type": "strategy",
+      "context_id": "silent-fasten-defend-extra-block",
+      "input": {
+        "query": "silent-fasten-defend-extra-block"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "batch_provenance": {
+              "external_collected_at": "2026-10-21",
+              "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+              "external_versions": [
+                "v0.107",
+                "v0.108",
+                "v0.109",
+                "v0.110",
+                "v0.111"
+              ],
+              "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+              "limitations": [
+                "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+                "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+                "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+                "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+                "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+              ],
+              "own_game_version": "unknown",
+              "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+              "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json"
+            },
+            "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "evidence": [
+              {
+                "floor": 21,
+                "ref": "logs/decisions.jsonl@650081059+9682;sha256=149a8091f065f30b4731557ed626498dfc26c4696aebf4cc9ece4bc28c841921",
+                "role": "support",
+                "run": "P5HT1272P5SB",
+                "type": "own"
+              }
+            ],
+            "formal_publication": "pending",
+            "id": "silent-fasten-defend-extra-block",
+            "own_support_runs": [
+              "P5HT1272P5SB"
+            ],
+            "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner",
+            "reused_knowledge_attachment": {
+              "asc": [
+                0,
+                20
+              ],
+              "confidence": "high",
+              "evidence": [
+                "4Y94N8RDPGPM",
+                "P5HT1272P5SB",
+                "HSX4HYATB4E2",
+                "DUZUBAJ3A8GP",
+                "VLZ6CCT8AQ0A"
+              ],
+              "id": "silent-fasten-defend-extra-block",
+              "last_seen": "2026-10-07",
+              "lesson": "勒紧只给“防御”额外挡，不统一增加所有挡牌或已有挡。机制：普通/升级实建4/6层，防御合基础、当前敏捷和勒紧后核脆弱。搭配：神化已施放才兑现升级6，步法逐牌收益与勒紧专属收益分账。决定胜负的战斗：5支持局，单能力整战胜因未控（n=5）。典型案例：VLZ6CCT8AQ0A A10 F43神化后勒紧+6，后空翻+仍只8+4敏=12；F45未神化，防御5+4+3敏=12，后空翻5+3=8，32血对59攻仍死。4Y94N8RDPGPM A7女王9敏/脆弱下防御⌊(5+9+4)×0.75⌋=13。",
+              "n_contradict": 0,
+              "n_support": 5,
+              "name": "勒紧",
+              "scope": "card:FASTEN",
+              "status": "active"
+            },
+            "source": "own",
+            "source_commit": null,
+            "strategy": "牌组仍有5张“防御”且店内有勒紧时，按专属对象比较它与抽牌、攻击及离店，不把所有挡牌都算受益。P5HT F21原文1费、只从“防御”额外得4挡；247金买勒紧83、杂技73、精密瞄准37，共193留54。F23战斗52→40且用火焰药水，F25仍败，不能归为该购物收益。\n范围：Silent A10幕2商店、现场牌文同；1局1店，版本unknown，牌组为此前快照代理。旧勒紧机制复用；5张防御不是每轮5张可打，也不推固定购物顺序。",
+            "trigger": {
+              "acts": [
+                2
+              ],
+              "question_types": [
+                "shop"
+              ]
+            },
+            "version": "2026-10-25-c0-r56-candidate"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-fasten-defend-extra-block",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "bd573d64f7c795a15e114eb1fbe55ced9abe22a4fd5cae4b097e79d7ddf83a18",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "275d57a0e0361ebe8e8053f4b21f422a79b1eeb980840a63bbe4468d20cb4d40",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-fasten-defend-extra-block",
+            "source": "own",
+            "version": "2026-10-25-c0-r56-candidate",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-brain-c0-upgrade-hp-trade",
+      "type": "strategy",
+      "context_id": "silent-brain-c0-upgrade-hp-trade",
+      "input": {
+        "query": "silent-brain-c0-upgrade-hp-trade"
+      },
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 135,
+            "classified": 0,
+            "unknown": 135
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "evaluated",
+          "rejected": 0,
+          "unknown": 0,
+          "limitation": "只验证原trigger；正文额外条件未求值，流派未知保留未知"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "batch_provenance": {
+              "external_collected_at": "2026-10-21",
+              "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+              "external_versions": [
+                "v0.107",
+                "v0.108",
+                "v0.109",
+                "v0.110",
+                "v0.111"
+              ],
+              "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+              "limitations": [
+                "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+                "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+                "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+                "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+                "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+              ],
+              "own_game_version": "unknown",
+              "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+              "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json"
+            },
+            "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+            "confidence": 0.25,
+            "consumer_readback": "pending",
+            "evidence": [
+              {
+                "floor": 22,
+                "ref": "logs/decisions.jsonl@650098341+15432;sha256=44de608d12c5bc345047b4c014fdf5389ad071b8aa3ec24bda4c3f7304eaa0e0",
+                "role": "support",
+                "run": "P5HT1272P5SB",
+                "type": "own"
+              }
+            ],
+            "formal_publication": "pending",
+            "id": "silent-brain-c0-upgrade-hp-trade",
+            "own_support_runs": [
+              "P5HT1272P5SB"
+            ],
+            "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner",
+            "source": "own",
+            "source_commit": null,
+            "strategy": "事件可失10血升级夜魇时，把降启动费与下一段实际HP预算一起比较；不要只因有未来营火就认定代价可承受。P5HT F22选失血升级，62→52、费用3→2；下一战52→40并用火焰药水。另一项原文回复25并加羽化，不能省略其入牌代价或声称替代必胜。\n范围：Silent A10幕2事件、现场为这两类选项；1局1机会、版本unknown，前态牌组为代理。原局终败非升级因果；外部缺完整事件备选，不能给选项收益或固定失血阈值。",
+            "trigger": {
+              "acts": [
+                2
+              ],
+              "question_types": [
+                "event"
+              ]
+            },
+            "version": "2026-10-25-c0-r56-candidate"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "strategy-entries.json",
+            "path": "characters/silent/strategy-entries.json",
+            "entry_id": "silent-brain-c0-upgrade-hp-trade",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "39a14d7d30ede0077d3e4c496589ad1b262e08505be6d8c049e580611cf7db13",
+            "sha256": "810e4d4862fbc8bffd625a51c52cf449b2cdb632d6d393f18829f6fc10077d91",
+            "item_sha256": "e67c7ee85eddd9ac911db74b021d1a03ea05670b35bc3b959e59863d8298baef",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          },
+          {
+            "entry_id": "silent-brain-c0-upgrade-hp-trade",
+            "source": "own",
+            "version": "2026-10-25-c0-r56-candidate",
+            "own_runs": 1,
+            "own_support_runs": 1,
+            "external": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c0-fasten-shop-target",
+      "type": "reflex",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-rk-c0-fasten-shop-target"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "id": "silent-rk-c0-fasten-shop-target",
+            "version": 1,
+            "applies_to": "shop",
+            "summary": "Compare Defend-specific setup with the current shop budget",
+            "confidence": 0.25,
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 21,
+                  "run_id": "P5HT1272P5SB"
+                }
+              ]
+            },
+            "source_experience": [
+              "silent-fasten-defend-extra-block"
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c0-fasten-shop-target",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "fad4149af20e9e744ad3843a49e9216363a9f2fa0134e8c06eb4a5dbbcbc6c56",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "480eaa4f4e16285d588ad86822536fb2dc142c78ed24c1b0f43449083f4b5e20",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.25,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "construction_summary",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    },
+    {
+      "id": "silent-rk-c0-unknown-room-rest",
+      "type": "reflex",
+      "context_id": "silent-dowsing-rod-question-task",
+      "input": {
+        "query": "silent-rk-c0-unknown-room-rest"
+      },
+      "output": {
+        "schema": "brain-reflex-result-v2",
+        "status": "loaded",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 174,
+            "classified": 0,
+            "unknown": 174
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "selector_only",
+          "rejected": 0,
+          "unknown": null,
+          "limitation": "仅题型过滤；predicate未求值"
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "id": "silent-rk-c0-unknown-room-rest",
+            "version": 1,
+            "applies_to": "rest",
+            "summary": "Keep unknown rooms uncertain when comparing rest and smith",
+            "confidence": 0.4,
+            "evidence": {
+              "n_contradict": 0,
+              "n_support": 1,
+              "observations": [
+                {
+                  "floor": 24,
+                  "run_id": "P5HT1272P5SB"
+                }
+              ]
+            },
+            "source_experience": [
+              "silent-route-hp-observation"
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex.json",
+            "path": "characters/silent/reflex.json",
+            "entry_id": "silent-rk-c0-unknown-room-rest",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "70fc9f560b6851c7561b85579eba8ba1f2fd05b7010daf8c0e6e46cbf7cedfe6",
+            "sha256": "2cae33d5a8130f93efbc8efd15af4f1e3f2d4a47bd92b4b8a8d38761bdcf72d6",
+            "item_sha256": "f05753a8a2480a813a924892f293c4eaa7d8228a16a5a1984946edabcbdd6448",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": 0.4,
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "representation": "construction_summary",
+        "predicate_evaluation": "not_evaluated",
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      },
+      "old_bound_snapshot": {
+        "version": "K1-4511332a5c9f786c5ef33ad6b501d062d632bf123f30508539273d1de96d1ce9",
+        "entries": []
+      },
+      "original_content_exact": true
+    }
+  ],
+  "vocabulary": [
+    {
+      "id": "silent-rk-c0-fasten-shop-target-tag",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 21,
+                "run_id": "P5HT1272P5SB"
+              }
+            ],
+            "id": "silent-rk-c0-fasten-shop-target-tag",
+            "label_en": "Compare Defend-specific setup with the current shop budget"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c0-fasten-shop-target-tag",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "0e41c41d1a22b8db57d0e4d3ecf6fe7d1f49c5892554ff9c2c007dc3738daba0",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    },
+    {
+      "id": "silent-rk-c0-unknown-room-rest-tag",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 24,
+                "run_id": "P5HT1272P5SB"
+              }
+            ],
+            "id": "silent-rk-c0-unknown-room-rest-tag",
+            "label_en": "Keep unknown rooms uncertain when comparing rest and smith"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c0-unknown-room-rest-tag",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "a73e547f72f094417a56715d70ffd9b78953c81c34881798896a2e0010123720",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    },
+    {
+      "id": "silent-rk-c3-corrupted-echo-resource-cost-review",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 31,
+                "run_id": "1913SE84AXQF"
+              }
+            ],
+            "id": "silent-rk-c3-corrupted-echo-resource-cost-review",
+            "label_en": "Review printed life cost alongside modified area damage"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c3-corrupted-echo-resource-cost-review",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "e3f955238b32ae972158cb77d9724801732f6d14a582e82625db0d99a84ac691",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    },
+    {
+      "id": "silent-rk-c3-no-confirmed-shiv-source-review",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 4,
+                "run_id": "1913SE84AXQF"
+              }
+            ],
+            "id": "silent-rk-c3-no-confirmed-shiv-source-review",
+            "label_en": "Compare knife scaling with immediate opening damage"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c3-no-confirmed-shiv-source-review",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "8084471e225865d825380e5b2b4cf7b9b05474c73cf98d582df898e92688426f",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    },
+    {
+      "id": "silent-rk-c3-random-power-realized-rest-review",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 28,
+                "run_id": "1913SE84AXQF"
+              }
+            ],
+            "id": "silent-rk-c3-random-power-realized-rest-review",
+            "label_en": "Review realized knife source and current rest resources"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c3-random-power-realized-rest-review",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "7c7239c8c68b33b8518aae46fc069037fec5ea3ed05a3b340b660e8961d788c6",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    },
+    {
+      "id": "silent-rk-c3-rest-followup-hp-budget-review",
+      "output": {
+        "schema": "brain-knowledge-result-v1",
+        "status": "ok",
+        "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+        "classification_coverage": {
+          "scope": {
+            "total": 107,
+            "classified": 0,
+            "unknown": 107
+          },
+          "filter_pool": {
+            "total": 1,
+            "classified": 0,
+            "unknown": 1
+          },
+          "requested_topic": null,
+          "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+        },
+        "dynamic_filter": {
+          "status": "not_evaluated",
+          "rejected": null,
+          "unknown": null
+        },
+        "empty_reasons": [],
+        "pagination_empty": false,
+        "entries": [
+          {
+            "evidence": [
+              {
+                "floor": 7,
+                "run_id": "02HB4L0C3C67"
+              }
+            ],
+            "id": "silent-rk-c3-rest-followup-hp-budget-review",
+            "label_en": "Budget subsequent event and winning fight health costs"
+          }
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "character": "silent",
+            "file": "reflex-vocab.json",
+            "path": "characters/silent/reflex-vocab.json",
+            "entry_id": "silent-rk-c3-rest-followup-hp-budget-review",
+            "version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+            "revision": "f22463c5a1a68eaaa8da4ac8f28dd7e9fccb000e471472bec274cc4b925cce72",
+            "sha256": "73b5601233ee7732a793f295a5084c46d4efe1d7e54674566a6db17606c6d701",
+            "item_sha256": "6e0a7b691b4a4ff18d935df52a9b6bc3284824dceede3f03720df132fb9d8b02",
+            "classification": {
+              "state": "unknown",
+              "topics": null
+            },
+            "confidence": "unknown",
+            "evidence_status": "unassessed",
+            "limits": []
+          }
+        ],
+        "total_matches": 1,
+        "offset": 0,
+        "returned": 1,
+        "omitted": 0,
+        "next_offset": null,
+        "oversized_skipped": 0,
+        "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+      }
+    }
+  ],
+  "event_context_excludes_combat_line": {
+    "schema": "brain-reflex-result-v2",
+    "status": "loaded",
+    "knowledge_version": "K1-022efa7dd777463b0b46224f43b38a7965545332782c5425a42437c8fee8693c",
+    "classification_coverage": {
+      "scope": {
+        "total": 174,
+        "classified": 0,
+        "unknown": 174
+      },
+      "filter_pool": {
+        "total": 1,
+        "classified": 0,
+        "unknown": 1
+      },
+      "requested_topic": null,
+      "basis": "绑定K1、本角色及公共、原进阶范围；filter_pool保留其余索引筛选，移除topic；均未验证动态条件，不含其他角色"
+    },
+    "dynamic_filter": {
+      "status": "selector_only",
+      "rejected": 1,
+      "unknown": null,
+      "limitation": "仅题型过滤；predicate未求值"
+    },
+    "empty_reasons": [
+      "dynamic_conditions_not_applicable",
+      "dynamic_reason_unknown"
+    ],
+    "pagination_empty": false,
+    "entries": [],
+    "sources": [],
+    "total_matches": 0,
+    "offset": 0,
+    "returned": 0,
+    "omitted": 0,
+    "next_offset": null,
+    "oversized_skipped": 0,
+    "representation": "construction_summary",
+    "predicate_evaluation": "not_evaluated",
+    "evidence_scope": "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。"
+  },
+  "scope": "fixed original-state consumer verification; neither natural brain query nor predicate/benefit proof",
+  "natural_consumption": false,
+  "production_writes_model_game_full": 0
+}

@@ -1,0 +1,83 @@
+{
+  "id": "silent-brain-c3-random-power-realized-rest",
+  "version": "2026-10-25-c3-pending",
+  "trigger": {
+    "question_types": [
+      "rest"
+    ],
+    "acts": [
+      2
+    ],
+    "deck_cards": [
+      {
+        "name": "INFINITE_BLADES",
+        "count": {
+          "min": 1
+        }
+      },
+      {
+        "name": "CLOAK_AND_DAGGER",
+        "count": {
+          "min": 1
+        }
+      }
+    ]
+  },
+  "strategy": "事件随机给能力牌后，在下一营火以实际已拿到的无尽刀刃重审刀源与当前血量，不把随机奖励提前当精准或余像。1913 F27选随机能力后实际得无尽；F28以40/70血休息到61（1局1次该衔接）。已核无尽原文是1费、每回合开始加1刀，与斗篷1费即时6挡加1刀分时核算；不能把未来逐回合刀或下一营火计作当前防护。F29仍损15，F31带药46→0。\n范围：Silent A10、自有版本unknown；新得牌的历史条件须正文核，不能按终局簇触发。外部选定一对同有斗篷+无尽仍1胜1败，非拿牌/回血因果收益或安全血线。",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "1913SE84AXQF",
+      "floor": 27,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F27-event.raw.json",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "1913SE84AXQF",
+      "floor": 28,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/questions-135.json",
+      "role": "support"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "固定选择前5对中的pair0，两匿名上传均在幕2取得无尽刀刃与斗篷，1胜1败；代表选择非随机，不能当全体胜率。"
+      },
+      "statistic": {
+        "name": "selected_pair_both_have_cloak_and_infinite",
+        "value": 2,
+        "unit": "count"
+      },
+      "denominator": {
+        "unit": "runs",
+        "n": 2
+      },
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+        "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+        "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+        "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+      ],
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/representative-timelines-0.json#/rows/0/examples",
+      "role": "support"
+    }
+  ],
+  "confidence": 0.25,
+  "evidence_status": "unassessed",
+  "source": "mixed",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+  "context_id": "C3-G3",
+  "disposition": "new"
+}

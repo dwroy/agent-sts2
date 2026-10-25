@@ -1,0 +1,66 @@
+{
+  "id": "silent-brain-poison-third-snakebite-review",
+  "version": "1.0.0",
+  "trigger": {
+    "question_types": [
+      "card_reward"
+    ],
+    "acts": [
+      3
+    ],
+    "deck_cards": [
+      {
+        "name": "蛇咬",
+        "count": {
+          "min": 2
+        }
+      }
+    ]
+  },
+  "strategy": "幕3已持两张蛇咬时，蛇咬+奖励仍要与跳过比较：第三张2费保留施毒会占用怎样的启动/防护安排？0CLP16ZR4ZZC F22拿第二张、F35跳过第三张升级版，F36又拿1费致命毒药+；这些是同一A10局的不同机会，版本unknown。牌文蛇咬2费7毒、升级10毒；没有拒第三张的因果收益或普遍上限。外部代表胜例既有终局1张也有2张，不能推出固定张数。",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "0CLP16ZR4ZZC",
+      "floor": 35,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-174311/learner/runs/20261024-174403-e4b98dd3-2432-4a85-ae0e-f26d7c15257e-strategy-proposal/scratch/original-pick-cases.json#floor=35"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "单人有效非弃局无modifier；冻结簇1、代表页0..4、赢家子组；终局出现仅作方向对照"
+      },
+      "statistic": {
+        "name": "selected_winner_terminal_presence_SNAKEBITE",
+        "value": 1.0,
+        "unit": "fraction"
+      },
+      "denominator": {
+        "unit": "runs",
+        "n": 5
+      },
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传、非因果；按终局聚类及赢家选择含幸存偏差",
+        "代表轨迹按前五节点近邻选择，非随机样本；节点是ordinal，不是已核floor",
+        "中间牌组为记录前缀代理；没有真实战前全字段、回合时机或独立玩家数",
+        "自有游戏版本unknown；同ID本地牌文不证明历史外部版本机制相同"
+      ],
+      "license": "公开来源署名；冻结材料未核明确再分发许可，仅脱敏派生统计；独立玩家未知",
+      "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=1/pairs=0..4; sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda"
+    }
+  ],
+  "source": "mixed",
+  "evidence_status": "unassessed",
+  "confidence": 0.3,
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "playbook_parent": "silent-external-poison-build-playbook-c1"
+}

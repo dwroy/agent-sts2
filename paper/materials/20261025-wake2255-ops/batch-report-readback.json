@@ -1,0 +1,565 @@
+{
+  "reports": [
+    {
+      "batch": "20261025-134302",
+      "state": "done",
+      "rc": 0,
+      "task": "postmortem",
+      "runs": [
+        "Z0X4LL0KN8C1",
+        "VLP5VE9CZS4Q",
+        "H68P25KQ7JX4",
+        "XJUMXBCFXHL7",
+        "2RNSPP20YLWY"
+      ],
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "Z0X4LL0KN8C1",
+          "VLP5VE9CZS4Q",
+          "H68P25KQ7JX4",
+          "XJUMXBCFXHL7",
+          "2RNSPP20YLWY"
+        ],
+        "skipped": [],
+        "bugs": [],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0493",
+            "silent-0020",
+            "silent-0224",
+            "silent-0553",
+            "silent-0278",
+            "silent-0372",
+            "silent-0133",
+            "silent-0083",
+            "silent-0228",
+            "silent-0023",
+            "silent-0021"
+          ],
+          "repeats": [
+            "silent-0553"
+          ],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-acbfa6ca727b56d5",
+          "silent-proposal-aaaad5392b6b3de4"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-134332-761e8cd8-43da-4773-84b8-fa437f5a0849-postmortem/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-134302.out",
+        "bytes": 4165,
+        "sha256": "ca24e37255a6a69844e13f2eb190549f570eb9eff238ada0e80cf626774456f9"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-164303",
+      "state": "done",
+      "rc": 0,
+      "task": "postmortem",
+      "runs": [
+        "5K2E6HYNAAG1",
+        "WBDA6CTM07R4",
+        "YXPPTPDMYKXN",
+        "F1WN4HMR0N1Z"
+      ],
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "5K2E6HYNAAG1",
+          "WBDA6CTM07R4",
+          "YXPPTPDMYKXN",
+          "F1WN4HMR0N1Z"
+        ],
+        "skipped": [],
+        "bugs": [],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0493",
+            "silent-0020",
+            "silent-0023",
+            "silent-0134",
+            "silent-0125",
+            "silent-0083",
+            "silent-0278",
+            "silent-0018"
+          ],
+          "repeats": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-c23c7e53b5033c31",
+          "silent-proposal-aa46ae2d5e254640"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-164339-4adbd4d6-9880-4d65-bd58-c89c17d378a3-postmortem/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-164303.out",
+        "bytes": 4555,
+        "sha256": "d5aa11585e48c11b6d622313d25a5ddb5352b37f2b46c5b96d3cbe9b0d8ef489"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-134331-fix-batch",
+      "state": "failed",
+      "rc": 0,
+      "task": "fix-batch",
+      "runs": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "2137bf50f4f88b1851225d51efb07c061d794de3",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "infra-run-config-git-status-enobufs-20261023",
+            "reason": "复用旧候选；固定红绿和最终tsc通过，但完整沙箱出现13文件59例可见失败后长时无推进，已中断退出130、无最终分母；单独复验确认listen EPERM。未满足提交前整套退出0，保留补丁，未提交/未合入"
+          },
+          {
+            "item": "silent-0617 遗物energyPrefix图标重复数字",
+            "reason": "复用旧候选；固定红绿和最终tsc通过，但完整沙箱出现13文件59例可见失败后长时无推进，已中断退出130、无最终分母；单独复验确认listen EPERM。未满足提交前整套退出0，保留补丁，未提交/未合入"
+          },
+          {
+            "item": "游戏机制/出牌/药水/SL/终局及路线策略条目（含silent-0516/0579/0581/0604）",
+            "reason": "策略类；按任务边界沿已有strategy-proposal链，不重复实现，不补游戏知识"
+          },
+          {
+            "item": "v5-dpr-health/H1在V6奖励及战斗选牌路由中的监测适配",
+            "reason": "太大；当前summarize仍按旧V5及boss_sim路径，需要原六叶候选、正式V6计算回执和负控的独立组合验收，不能按开关全豁免"
+          },
+          {
+            "item": "infra-v6-refresh-invalid-json-provenance-20261020",
+            "reason": "证据不足；原全流坏行归属和覆盖契约仍需原owner核定，不静默跳行或重写原流"
+          },
+          {
+            "item": "20261022-231302-s2账本补链接回退既有shipped及历史上线时间",
+            "reason": "太大；当前CLI仅有物理/Git前缀分歧保护，需有原发布证据的更正入口并区分真正新学习和纯补链；不直接改历史账本或伪造新shipped_at"
+          },
+          {
+            "item": "框架合后检查分段续验及外层1200秒超时处置",
+            "reason": "太大；涉及发布锁/精确树覆盖/回退和进程身份，需原框架通道独立实现，保原失败及已过分段证据"
+          },
+          {
+            "item": "调度公平性核查及arch-*独立功能/归因调查",
+            "reason": "策略类或独立功能；不属于普通fix-batch纯bug"
+          },
+          {
+            "item": "core-build-notify历史rc2的安全恢复（诊断子项已修）",
+            "reason": "证据不足；当前保留失败stdout/stderr和幂等身份，但历史是否实际送达未证，不自动重发或代称成功"
+          },
+          {
+            "item": "sandbox-glob-startup-race上游扫描/删除生命周期根因",
+            "reason": "证据不足；有界启动恢复及租约绑定子项已修，具体删除者/上游扫描身份未证，不放宽deny或更改账号权限"
+          },
+          {
+            "item": "infra-jev-base-request-budget-issue25-20261022",
+            "reason": "太大；原#25工程owner负责必要字段/投影压缩合同，不能删事实或抬预算；本批不重复实现"
+          },
+          {
+            "item": "各纯工具历史已修项的原运行/科学/送达后续",
+            "reason": "证据不足或不属源码修复；不以祖先提交替代自然读回、真实ACK或科学验收"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 130,
+          "cases": 6,
+          "case_scope": "fixed_regressions_only",
+          "full_completed": false,
+          "targeted_vitest": 0,
+          "targeted_files": 2,
+          "sandbox_blocker_vitest": 1
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-134352-49f6dd05-5c0d-4b3a-9753-57c2d6b462dd-fix-batch/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-134331-fix-batch.out",
+        "bytes": 7616,
+        "sha256": "376a404a5e4e4b381a12bb9923eb487ef0a91f29ca2fcb811c716edfe8217a82"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-142249-fix-batch",
+      "state": "failed",
+      "rc": 0,
+      "task": "fix-batch",
+      "runs": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "de78668debde8814cbadfc312efa8efb53e6dd2a",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "infra-run-config-git-status-enobufs-20261023 / silent-0617能量文字",
+            "reason": "已有134331四叶候选，原队列14:18及原ops/集成员明确要求不重复实现；待#64后宿主最终补验及原通道发布。现有源码仍有原缺口，不冒称已修。"
+          },
+          {
+            "item": "账本纯补链降级shipped及保原shipped_at恢复",
+            "reason": "已有20261023-001301四叶候选，原0042-fix-ops/receipt.json明确保留原树/候选及唯一宿主窗口；不重做或试恢复24条账本。"
+          },
+          {
+            "item": "v5-dpr-health/H1监控V6适用性与plan_reuse兼容",
+            "reason": "已有001302六叶包及原owner；队列多次要求不由后续普通批重复实现，保留300样本/unknown/真实失败门。"
+          },
+          {
+            "item": "kb_strategies来源metadata超24KB",
+            "reason": "已有101315两叶候选及原工具owner，队列要求待原检查窗口精确组合；当前SQLite/typed工具版本还需原owner核消费路径，不能盲合旧候选。"
+          },
+          {
+            "item": "普通fix原launch无batch与#63封存绑定合同兼容",
+            "reason": "原63 owner标准窄化返工，已由集成员只读复现并接管；保留原launch/线程/账户/失败，不在新fix树并行重做。"
+          },
+          {
+            "item": "sandbox-glob-startup-race上游目录生命周期、旧固定夹具宿主负载超时及未核性能归因",
+            "reason": "证据不足：既有有界恢复/租约修复已入基线；原失败不能据一次补验或当前完整绿判为根因修复，不改权限/预算/断言。继续原owner诊断。"
+          },
+          {
+            "item": "silent-0332/0365/0339/0461/0481/0487/0496/0516/0533/0535/0579/0581/0604等机制、打法及结构提案",
+            "reason": "策略类或独立结构任务；已有strategy-proposal/工程owner，普通fix批不混入，不重复登记提案、不补游戏知识。"
+          },
+          {
+            "item": "arch-funnel-guard/arch-learning-priority/arch-unified-resource-value、named-card-facts完整入口等宽项",
+            "reason": "太大：已批准的独立功能/量化父项，原owner继续，局部修复不代父项关闭。"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 31
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-142258-23a0f2ed-d45c-439b-96b8-9e37acfbbf4b-fix-batch/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-142249-fix-batch.out",
+        "bytes": 4399,
+        "sha256": "a03636fab70c4c05570f8b3caaae3e582157081baeb77c693c376b2f62847ebe"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-164339-fix-batch",
+      "state": "failed",
+      "rc": 0,
+      "task": "fix-batch",
+      "runs": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "e97d56027ec3c1e13dbb9d0263f2bc6999a389b7",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "infra-run-config-git-status-enobufs-20261023 / silent-0617遗物energyPrefix文字",
+            "reason": "已有134331冻结四叶候选；队列14:18明确不新派同题或另实现，原集成员接宿主补验/发布。当前源码仍是原前像，未修，不复制候选或覆盖原失败。"
+          },
+          {
+            "item": "20261022-231302-s2补链接降低shipped状态及原shipped_at恢复",
+            "reason": "已有001301冻结四叶候选，原0042-fix-ops回执要求保留原树和唯一宿主窗口；不重复实现或试恢复账本。物理/Git前缀保护已修，不等于此恢复项完成。"
+          },
+          {
+            "item": "v5-dpr-health/H1在V6、战斗选牌及plan_reuse中的监测兼容",
+            "reason": "太大；原001302六叶候选/原owner接续，必须核计算/送达/消费与负控，不能按V6开关全豁免或降低300样本门。"
+          },
+          {
+            "item": "kb_strategies来源metadata超24KB（当前SQLite路径）",
+            "reason": "文件读取路径91fd61262的固定分页通过；当前strategyMatches仍调用reader.sources(items)汇集全部索引项，strategy-tool仍前置拼接data.sources。旧101315候选针对agent-knowledge旧路径，不能把文件路径绿或旧两叶候选当当前SQLite路径已修。按原工具owner/冻结组合接续，不重复实现旧候选。"
+          },
+          {
+            "item": "普通fix原launch缺batch与封存绑定合同兼容",
+            "reason": "原#63/#65 owner已独立接窄化返工；原失败/线程/树保留，当前基线未包含其独立源，不在新fix树并行重做。"
+          },
+          {
+            "item": "infra-v6-refresh-invalid-json-provenance-20261020",
+            "reason": "证据不足；坏行覆盖及严格来源契约需原owner核定，不改历史流、静默跳行或伪造17组合指标。"
+          },
+          {
+            "item": "sandbox-glob-startup-race及未核根因的固定夹具负载超时",
+            "reason": "证据不足；有界启动恢复及部分固定时钟/退出夹具已修，历史全部超时和具体上游扫描/删除身份不能据此称已修；保原失败、预算及权限边界。"
+          },
+          {
+            "item": "框架合后完整检查分段续验、外层1200秒时限及回退协调",
+            "reason": "太大；涉及精确树/覆盖/锁与进程身份，交原框架通道；不以本批定向通过替代其完整验收。"
+          },
+          {
+            "item": "core-build-notify旧rc2的真实送达及恢复",
+            "reason": "证据不足；失败诊断子项已有5c92f2aaf，历史是否实际送达仍要原owner核验，不自动重放或冒称成功。"
+          },
+          {
+            "item": "silent机制/出牌/药水/SL/终局/路线提案（含0332/0339/0365/0461/0481/0487/0496/0516/0533/0535/0579/0581/0604）",
+            "reason": "策略类或独立结构任务；已有strategy-proposal链。0481当前文字仍在，限定已观察来源的修正沿686d4e759478eebb原提案；不混入普通纯工程批、不重复登记或补游戏事实。"
+          },
+          {
+            "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 精英模拟悲观偏差及named-card-facts宽项",
+            "reason": "策略类调查或太大的独立功能/科学父项，不属于本批纯bug；原owner继续，局部修复不关闭父要求。"
+          },
+          {
+            "item": "infra-jev-base-request-budget-issue25-20261022及游戏投影职责合同",
+            "reason": "太大；已有独立#25/#37工程owner及后续职责调整，原26请求的必要字段/总预算验收不能据部分上线或当前定向绿关闭，不盲合旧候选。"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 58
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-164359-10d3a5e1-4a31-42ca-8a02-223e7e36a63b-fix-batch/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-164339-fix-batch.out",
+        "bytes": 5832,
+        "sha256": "a73fef435a455d7fe91f656073b7d3c9f43cbc2c23a9516bad71ac0d510f6e48"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-181303-fix-batch",
+      "state": "failed",
+      "rc": 0,
+      "task": "fix-batch",
+      "runs": [],
+      "report": {
+        "task": "fix-batch",
+        "base": "2a77c8400b9ac13e47b353b096cb3a2d3b0b44f3",
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "infra-run-config-git-status-enobufs-20261023；silent-0617能量图标重复数字",
+            "reason": "原134331四叶候选仍未提交；ops已接管固定宿主完整检查及发布，队列明确禁止后批重复实现。本批确认旧源码仍在，保留原候选/失败。"
+          },
+          {
+            "item": "v5-dpr-health/H1/V6监测兼容",
+            "reason": "太大；原001302六叶包及plan_reuse自然回执待原组合验收，不重实现或改变300样本门。"
+          },
+          {
+            "item": "账本补链接回退shipped/历史上线时间",
+            "reason": "太大；原001301四叶候选仍原宿主集成链，不能直接改历史账本或重置shipped_at。"
+          },
+          {
+            "item": "框架合后检查分段续验/1200秒外层超时",
+            "reason": "太大；原发布锁、精确树覆盖、回退及进程身份合同需原框架闭环。"
+          },
+          {
+            "item": "core-build-notify历史rc2安全恢复",
+            "reason": "证据不足；失败诊断已有5c92f2aaf，原是否送达不明，不重发或代ACK。"
+          },
+          {
+            "item": "sandbox-glob-startup-race上游根因",
+            "reason": "证据不足；原有界恢复/租约身份子修保留，删除者和上游扫描根因未知。"
+          },
+          {
+            "item": "infra-jev-base-request-budget-issue25-20261022",
+            "reason": "太大；沿#25原字段/压缩/预算工程链，不删事实或抬预算。"
+          },
+          {
+            "item": "infra-v6-refresh-invalid-json-provenance-20261020",
+            "reason": "证据不足；已有de94aa263封存坏行排除实现，原全流来源/覆盖验收不由本批关闭。"
+          },
+          {
+            "item": "游戏机制/出牌/药水/SL/终局/路线/休息及arch-*与归因任务",
+            "reason": "策略类或独立功能；沿原strategy-proposal/来源owner，含0481/0516/0579/0581/0604，不重复登记。"
+          },
+          {
+            "item": "历史固定测试家族及通知/学习父的运行后续",
+            "reason": "证据不足；源码子项已有实现不代表历史full、真实ACK、自然采用或科学验收已完成。"
+          }
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 47,
+          "files": 8,
+          "scope": "现有修复的定向回归；未运行完整套件",
+          "full_completed": false,
+          "initial_vitest_startup": 1,
+          "initial_startup_reason": "EROFS: shared node_modules/.vite-temp; configLoader runner succeeds",
+          "python_cases": 12,
+          "python_exit": 0
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-181311-91913448-53f8-4174-a366-bab9e19d2231-fix-batch/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-181303-fix-batch.out",
+        "bytes": 4938,
+        "sha256": "cec1c25cc6902762ee9a3e276a812b00edca22b3eaf126f33ab705af2125506b"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-142249-strategy-proposal",
+      "state": "done",
+      "rc": 0,
+      "task": "strategy-proposal",
+      "runs": [
+        "FVWXPGMA2DBQ",
+        "NYX17B18TBWG",
+        "7UEFJY5Z4Y85",
+        "LBYWQ0CLRL6K",
+        "UVEXNP9HCMAY",
+        "Z0X4LL0KN8C1",
+        "VLP5VE9CZS4Q",
+        "H68P25KQ7JX4",
+        "XJUMXBCFXHL7",
+        "2RNSPP20YLWY"
+      ],
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261025-142249-strategy-proposal",
+        "base": "de78668debde8814cbadfc312efa8efb53e6dd2a",
+        "knowledge_base": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+        "runs": [
+          "FVWXPGMA2DBQ",
+          "NYX17B18TBWG",
+          "7UEFJY5Z4Y85",
+          "LBYWQ0CLRL6K",
+          "UVEXNP9HCMAY",
+          "Z0X4LL0KN8C1",
+          "VLP5VE9CZS4Q",
+          "H68P25KQ7JX4",
+          "XJUMXBCFXHL7",
+          "2RNSPP20YLWY"
+        ],
+        "fixes": [],
+        "skipped": [
+          {
+            "item": "完整流派剧本",
+            "reason": "本批缺匹配外部统计和外部代表完整局，只有自有完整轨迹；保持局部观察。"
+          },
+          {
+            "item": "新增rk及战斗规则实现",
+            "reason": "缺原Plan/完整结果矩阵/留出回放与同入口反事实；原提案链保持，未领取其他队列。"
+          }
+        ],
+        "commit": null,
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [],
+        "implementation_domains": [],
+        "proposal_results": [],
+        "ledger_ids": [
+          "silent-0771"
+        ],
+        "knowledge_candidate": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-142249/learner/runs/20261025-142300-f4c9f29e-ed3b-4b4c-895b-9a1665e9870f-strategy-proposal/knowledge-candidate.json",
+        "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-142249/learner/runs/20261025-142300-f4c9f29e-ed3b-4b4c-895b-9a1665e9870f-strategy-proposal/proposal.md",
+        "strategy_rk_map": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-142249/learner/runs/20261025-142300-f4c9f29e-ed3b-4b4c-895b-9a1665e9870f-strategy-proposal/experience-strategy-rk-map.json",
+        "counts": {
+          "new": 0,
+          "updated": 1,
+          "reused": 9,
+          "waiting": 20,
+          "new_rk": 0
+        },
+        "content_validation": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-142249/learner/runs/20261025-142300-f4c9f29e-ed3b-4b4c-895b-9a1665e9870f-strategy-proposal/content-validation.json",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-142249/learner/runs/20261025-142300-f4c9f29e-ed3b-4b4c-895b-9a1665e9870f-strategy-proposal/report.md"
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-142249-strategy-proposal.out",
+        "bytes": 3718,
+        "sha256": "760eeb74b15bc2c60e092130853b98fd2eb4bb850f09cfa648e80850a36d2649"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    },
+    {
+      "batch": "20261025-221302",
+      "state": "done",
+      "rc": 0,
+      "task": "postmortem",
+      "runs": [
+        "7HTRZEE5NDAG",
+        "W29C3NRU128Y",
+        "TGY1UKFMAT8A"
+      ],
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "7HTRZEE5NDAG",
+          "W29C3NRU128Y",
+          "TGY1UKFMAT8A"
+        ],
+        "skipped": [],
+        "bugs": [],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0493",
+            "silent-0672",
+            "silent-0353",
+            "silent-0020",
+            "silent-0418",
+            "silent-0553"
+          ],
+          "repeats": [
+            "silent-0553"
+          ],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-1e0ff6a91fa16d7f"
+        ],
+        "implementation_domains": [],
+        "coverage": {
+          "runs": 3,
+          "jev_indexed": 386,
+          "jev_full_questions": 5,
+          "v6_build": "no_match",
+          "external_three_inputs": "incomplete"
+        },
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261025-221304-7a12a3c8-d6b4-4e2c-929a-230dd1dd36da-postmortem/report.md",
+        "operational_candidate": "/home/dw/Projects/agent-sts2/learner/runs/20261025-221304-7a12a3c8-d6b4-4e2c-929a-230dd1dd36da-postmortem/operational-candidate.json",
+        "base": "50c720312d1c3fe0d3e43edb2b7e17a19a8d3e8d",
+        "commit": null,
+        "merged": null,
+        "tests": null
+      },
+      "wrapper_out": {
+        "path": "ops/codex-ops/learner/20261025-221302.out",
+        "bytes": 4163,
+        "sha256": "31d4fcb699805a403128a7eccba5516f0482c3f68f478821fa8914963bc92116"
+      },
+      "source_merge": null,
+      "business_state_not_rewritten": true
+    }
+  ],
+  "old_postmortem_no_new_bugs": true,
+  "existing_no_source_fix_reports_preserved_failed_rc0": true,
+  "ordinary_dataset": "one original command for two old postmortem events, independent from new operational callback which triggers no Git/dataset/full"
+}

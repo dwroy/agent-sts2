@@ -1,0 +1,54 @@
+{
+  "id": "silent-brain-c0-upgrade-hp-trade",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "P5HT1272P5SB",
+      "floor": 22,
+      "role": "support",
+      "ref": "logs/decisions.jsonl@650098341+15432;sha256=44de608d12c5bc345047b4c014fdf5389ad071b8aa3ec24bda4c3f7304eaa0e0"
+    }
+  ],
+  "confidence": 0.25,
+  "version": "2026-10-25-c0-r56-candidate",
+  "trigger": {
+    "question_types": [
+      "event"
+    ],
+    "acts": [
+      2
+    ]
+  },
+  "strategy": "事件可失10血升级夜魇时，把降启动费与下一段实际HP预算一起比较；不要只因有未来营火就认定代价可承受。P5HT F22选失血升级，62→52、费用3→2；下一战52→40并用火焰药水。另一项原文回复25并加羽化，不能省略其入牌代价或声称替代必胜。\n范围：Silent A10幕2事件、现场为这两类选项；1局1机会、版本unknown，前态牌组为代理。原局终败非升级因果；外部缺完整事件备选，不能给选项收益或固定失血阈值。",
+  "source": "own",
+  "own_support_runs": [
+    "P5HT1272P5SB"
+  ],
+  "source_commit": null,
+  "candidate_kind": "局部情境比较；无单卡因果或固定动作命令",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "batch_provenance": {
+    "plan_id": "issue51-remaining-build-005-20261024-r56-stock",
+    "input_manifest_sha256": "01d09977b216feee993baba5894f969aacca13284099648f935582209102352c",
+    "raw_window_receipts": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+    "external_context_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-021345/learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/source-ledger.json",
+    "external_collected_at": "2026-10-21",
+    "own_game_version": "unknown",
+    "external_versions": [
+      "v0.107",
+      "v0.108",
+      "v0.109",
+      "v0.110",
+      "v0.111"
+    ],
+    "limitations": [
+      "观察性、自选上传，玩家数及玩家内相关未知；代表按早期相似画像选取，并非随机样本。",
+      "最终牌组簇含生存及结局信息，仅作本次证据定位；不得作当前决策触发或收益估计。",
+      "外部节点序号不是已核floor；前节点末HP、拿牌还原和正block牌数均为代理。",
+      "自有A10仅1局，版本unknown；A6重试/预判局另账。局部动作及失败不能证明替代选择收益。",
+      "跨版本机制不变证据缺失，逐版本列原分母，不合并。单牌比较双方100门未满足。"
+    ]
+  },
+  "publication_eligibility": "仅描述性候选；两组各100样本门未满足；正式发布/生产读回/自然采用待原owner"
+}
