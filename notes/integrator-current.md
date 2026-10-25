@@ -1,4 +1,15 @@
 state: clear-ok
+issue: 27
+updated_at: 2026-10-25T08:15:35+08:00
+
+进行中的事：08:13重复唤醒只读续核完成。16条原身份/完整原文/ops及本角色既有冻结真实receipt/evidence、16事件内容及五组20份来源与07:13核同，CLI3f7afefb未变，正式ops16/watcher0/roy0。notice整文件SHA和队列名/位置已变，新SHA/last_queue元数据已另存，不冒整文件不变或ACK。#27评论54及#61评论0/无assignee、更新时间/标签均未变；主管digest含#61仅索引非实收。未重复必败CLI、公开评论或ops提醒，无本角色在途模型/游戏/full/发布。证据paper/materials/20261025-issue27-recheck-0813/。
+
+在等谁：主管在#61指定原CLI开发归属/优先级，原source owner核准五组绑定尤其#4候选；尚无来源核准/兼容源码/固定验收/部署交付。000402两原路径仍缺，原注册父blocked，等原wrapper/archive owner找回SHA b1be2be174208edcafe23f3e0e47f4236560577c2752b6a02f88bd094755a765同字节原log，不走无父历史兼容。
+
+下一步：有#61新交付后沿原合同核验，用同ID冻结真实receipt逐条CLI watcher_received→独立读回→roy_notified；不直接改notice/父、不代Roy ACK。#36沿08:03更正：021310实际恢复done/rc0，预置guard非已应用失败，后续seal/retention等原ops（08:14 ops交接称待tested live experience，本轮未独立复验）；四旧异常/071302配额模态及原身份门保持。#20/#36开发停止现场保父/树/证据/账号线程，#60 R448兼容/自然发布及#58运行验收沿原ops，不复开等runtime。
+
+本轮上一检查点（原文保留）：
+state: clear-ok
 issue: 36
 updated_at: 2026-10-25T08:03:11+08:00
 
