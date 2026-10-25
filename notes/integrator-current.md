@@ -1,5 +1,18 @@
 state: in-flight
 issue: 68
+updated_at: 2026-10-25T20:08:53+08:00
+
+进行中的事：66原唯一组合full终态及独核全通过（690文件/6739过/0败/2跳、三tsc0、完成回调0、LIVE83过）；原K刷新/成本/漏斗事务自然完成后已精确集成main 3782a52cb111d0c9e47095208ffb3c0c3af82a1a，69候选叶逐字节核同、mode0644、索引无暂存、实际LIVE保持86b31b7a。Windows ssh.exe push已exit0，远端main逐字核同3782a52cb，立即交ops精确11叶/ROOT两注入、备份升级回退及实际工具读回。
+
+在等谁：无代码返工或full等待，main/push已经核同，不重66full。ops接66原自然边界发布与runtime核收；67 ced73d377+68 fcd84d2ae固定已交，本角色接实际最新main/LIVE组合，不等66自然发布作新工程前置。两66自有检查树终态后已解本角色worktree锁，保树/分支/日志，不complete/delete。
+
+下一步：立即issue66/ops交接、补提交main/push原件；随即执行.artifacts/integrator67-68-combination-20261025/assemble.py，在实际匹配ROOT/LIVE冻结后接宿主/SQLite混合/消费者/三tsc及原唯一full。queue/heavy仍off，旧writer未撤权，真实shadow/active按原合同阶段接；60/62/61科学父保留。
+
+恢复入口：paper/materials/20261025-issue66-combination-integrator/main-integration.json、deployment-handoff.json、ops-handoff.md及原full/terminal原件；.artifacts/integrator66-combination-20261025/integration-transaction.json（committed）；新组合脚本.artifacts/integrator67-68-combination-20261025/。原session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 68
 updated_at: 2026-10-25T19:58:26+08:00
 
 进行中的事：66原唯一full已19:56终态690文件/6739过/0败/2跳，三tsc0、完成回调0、LIVE五文件83过；19:58独核ROOT2922/LIVE1793/依赖1417全部SHA不变、索引语义/树不变，原worker1577731/birth35238051已退出、检查树无进程、原full锁可取。现执行精确main并立即交ops，首前置夹具失败及v2修复保留。
