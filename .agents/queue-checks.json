@@ -1,0 +1,38 @@
+{
+  "schema": "sts2-queue-checks-v1",
+  "repo": "dwroy/agent-sts2",
+  "runtime_install_paths": [],
+  "root_only_prefixes": [
+    "ops/",
+    ".agents/",
+    "docs/",
+    "notes/",
+    "paper/",
+    "agent/tests/"
+  ],
+  "fixtures": [
+    "paper/materials/issue29-brain-speed/results.jsonl"
+  ],
+  "host_modules": [
+    "ops.tests.test_agent_board_poll",
+    "ops.tests.test_issue_session",
+    "ops.tests.test_worktree_storage",
+    "ops.tests.test_worktree_retention",
+    "ops.tests.test_learner_tabs",
+    "ops.tests.test_learner_tui",
+    "ops.tests.test_learner_wrapper_completion",
+    "ops.tests.test_board_queue_delivery",
+    "ops.tests.test_board_queue_resources",
+    "ops.tests.test_board_queue_checks",
+    "ops.tests.test_knowledge_runtime_env",
+    "ops.tests.test_publication_gate",
+    "ops.tests.test_report_run",
+    "ops.tests.test_board_queue_records"
+  ],
+  "consumer_commands": [],
+  "consumer_scope": "host-only policy: no game source/CLI installation leaves; original host run binding and publication regression included; non-host source requires an explicit mapping and consumer policy update",
+  "allowed_skips": [
+    "third_party/jev-sts2 checked out, it is 002e873 untouched",
+    "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
+  ]
+}

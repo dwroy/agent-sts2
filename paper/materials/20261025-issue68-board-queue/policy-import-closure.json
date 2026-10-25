@@ -1,0 +1,90 @@
+{
+  "post_test_change": "append already-tested learner_checks import dependency to frozen policy; no executable bytes changed",
+  "before_sha256": "c73ae2d227fdeda85cbbd7a16e037d24d5c34f70d709063b04ffa3c319fc5924",
+  "after_sha256": "c40d47aa4f08e387e6d086e7d228eca274d34ad9a9234de18d1b3e14a3b24013",
+  "repository_top_level_modules": [
+    "ops/board_heavy.py",
+    "ops/board_queue_checks.py",
+    "ops/board_queue_pin.py",
+    "ops/board_queue_records.py",
+    "ops/board_resources.py",
+    "ops/disk_capacity.py",
+    "ops/issue_session_support.py",
+    "ops/learner_checks.py",
+    "ops/learner_retention.py",
+    "ops/publication_gate.py",
+    "ops/shared_tools.py",
+    "ops/worktree_checkout.py"
+  ],
+  "edges": [
+    [
+      "ops/board_queue_records.py",
+      "ops/board_heavy.py"
+    ],
+    [
+      "ops/board_queue_records.py",
+      "ops/board_queue_pin.py"
+    ],
+    [
+      "ops/board_queue_records.py",
+      "ops/issue_session_support.py"
+    ],
+    [
+      "ops/board_queue_records.py",
+      "ops/publication_gate.py"
+    ],
+    [
+      "ops/board_heavy.py",
+      "ops/board_queue_pin.py"
+    ],
+    [
+      "ops/board_heavy.py",
+      "ops/issue_session_support.py"
+    ],
+    [
+      "ops/board_resources.py",
+      "ops/board_queue_pin.py"
+    ],
+    [
+      "ops/board_resources.py",
+      "ops/issue_session_support.py"
+    ],
+    [
+      "ops/board_queue_checks.py",
+      "ops/board_queue_pin.py"
+    ],
+    [
+      "ops/board_queue_checks.py",
+      "ops/issue_session_support.py"
+    ],
+    [
+      "ops/board_queue_checks.py",
+      "ops/shared_tools.py"
+    ],
+    [
+      "ops/board_queue_checks.py",
+      "ops/worktree_checkout.py"
+    ],
+    [
+      "ops/board_queue_checks.py",
+      "ops/disk_capacity.py"
+    ],
+    [
+      "ops/worktree_checkout.py",
+      "ops/learner_retention.py"
+    ],
+    [
+      "ops/worktree_checkout.py",
+      "ops/disk_capacity.py"
+    ],
+    [
+      "ops/worktree_checkout.py",
+      "ops/shared_tools.py"
+    ],
+    [
+      "ops/learner_retention.py",
+      "ops/learner_checks.py"
+    ]
+  ],
+  "unfrozen": []
+}

@@ -9,6 +9,16 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from issue_session_support import Board, atomic, locks, safe_path, stamp
+from board_queue_pin import verify as verify_queue_kit
+
+
+def queue_installation(board):
+    settings = board.data['dispatcher']
+    queue = settings.get('merge_queue', {})
+    if not isinstance(queue, dict) or type(queue.get('enabled', False)) is not bool:
+        raise ValueError('invalid merge queue configuration')
+    if queue.get('enabled', False):
+        verify_queue_kit(board.root, settings['install'])
 
 
 def control_path(board):
@@ -62,6 +72,7 @@ def set_mode(board, mode, poll_source=None):
             script = safe_path(board.root, settings['install']) / 'board.py'
             if script.is_symlink() or not script.is_file():
                 raise ValueError('kit installation required before enabling')
+            queue_installation(board)
             registry = json.loads(safe_path(board.root, settings['registry']).read_text())
             projects = registry.get('projects') if isinstance(registry, dict) else None
             if not isinstance(projects, list) or not projects:
@@ -114,6 +125,7 @@ def main():
             if any(safe_path(root, path).exists() for path in board.data['dispatcher'].get('pause_files', [])):
                 print('{"state":"paused"}'); return 0
         settings = board.data['dispatcher']
+        queue_installation(board)
         script = safe_path(root, settings['install']) / 'board.py'
         if script.is_symlink() or not script.is_file():
             raise ValueError('agent-board-kit installation missing or unsafe')
