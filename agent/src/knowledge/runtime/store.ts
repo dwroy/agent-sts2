@@ -1,3 +1,4 @@
+import { RESEARCH_SCHEMA, projectResearch } from "./build-research.js";
 /** Host-local publisher. The gameplay process never imports this writable adapter. */
 import { CLASSIFICATION_SCHEMA } from "./classification-schema.js";
 import { projectClassifications } from "./classification.js";
@@ -87,7 +88,7 @@ export class KnowledgeStore {
         this.db.exec(SCHEMA);
         const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
         const schema = old ? Number(old["value"]) : 1;
-        if (![1, 2, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
+        if (![1, 2, 3, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
         if (schema === 1) {
           this.db.exec(TYPED_SCHEMA);
           for (const row of this.db.prepare("SELECT * FROM revisions ORDER BY revision").iterate()) projectRevision(this.db, row);
@@ -95,6 +96,10 @@ export class KnowledgeStore {
         if (schema < 3) {
           this.db.exec(CLASSIFICATION_SCHEMA);
           projectClassifications(this.db, this.db.prepare("SELECT revision FROM revisions WHERE kind='classification'").all().map(r => String(r.revision)));
+        }
+        if (schema < 4) {
+          this.db.exec(RESEARCH_SCHEMA);
+          for (const row of this.db.prepare("SELECT * FROM revisions WHERE kind='build-research'").iterate()) projectResearch(this.db, row);
           options.migrationFailpoint?.();
           this.db.prepare("INSERT INTO metadata VALUES('schema',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String(SCHEMA_VERSION));
         }
@@ -238,7 +243,8 @@ export class KnowledgeStore {
   for (const [category, term] of e.terms) this.db.prepare("INSERT OR IGNORE INTO terms VALUES(?,?,?)").run(e.revision, category, term);
   for (const [ordinal, ev] of e.evidence.entries()) this.db.prepare("INSERT INTO evidence VALUES(?,?,?,?,?,?)").run(e.revision, ordinal, ev.role ?? "support", ev.source ?? null, ev.dataset_sha256 ?? ev.evidence_sha256 ?? null, JSON.stringify(ev));
   this.db.prepare("INSERT INTO body_search VALUES(?,?)").run(e.revision, e.payload);
-  projectRevision(this.db, e);
+  if (e.kind === "build-research") projectResearch(this.db, e);
+  else projectRevision(this.db, e);
  }
  rollback(version: string, request: string): string {
   const row = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(version);
@@ -274,7 +280,7 @@ export class KnowledgeStore {
   if (kind) { where.push("r.kind=?"); params.push(kind); }
   if (ascension !== undefined) {
     where.push("(r.asc_min IS NULL OR r.asc_min<=?) AND (r.asc_max IS NULL OR r.asc_max>=?)"); params.push(ascension, ascension);
-    where.push("(r.asc_min IS NULL OR r.kind NOT IN ('reflex','build-cores','direction-cards') OR r.revision IN (SELECT revision FROM terms WHERE category='ascension' AND term=?))"); params.push(String(ascension));
+    where.push("(r.asc_min IS NULL OR r.kind NOT IN ('reflex','build-cores','direction-cards','build-research') OR r.revision IN (SELECT revision FROM terms WHERE category='ascension' AND term=?))"); params.push(String(ascension));
   }
   for (const [column, value] of [["source", options.source], ["evidence_status", options.evidenceStatus]] as const) if (value) { where.push(`r.${column}=?`); params.push(value); }
   if (options.gameVersion) { where.push("(r.game_version IS NULL OR r.game_version=?)"); params.push(options.gameVersion); }

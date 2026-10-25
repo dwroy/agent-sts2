@@ -1,5 +1,7 @@
 # SQLite 知识 runtime（#60）
 
+#72 的 schema4追加独立整局构筑研究存储/索引和 `kb_build_research`，不改变旧K1/策略/rk或可执行规则；schema3仍可读旧工具。原owner核源后发布、完整结构分页、自然采用与回退合同见[整局构筑研究](build-research.md)。
+
 本模块把已发布经验、文字策略、rk 与必要的 vocab/core/流派几何引用移到宿主本地 SQLite。候选合同版本为 **1**；#62 追加的类型投影使用 schema **2**，旧库事务升级、覆盖和工具合同见[类型化查询](knowledge-typed-tools.md)。知识版本仍是 `K1-<SHA256>`，与源码发布号、条目自身版本分开。默认不启用，不修改生产数据库、live、STOP 或在途批次。
 
 数据目录使用本实例已忽略的 `data/knowledge-runtime/`，不能放在 Git 知识目录、Windows `/mnt/<盘符>` 或网络共享盘。部署者核宿主挂载类型、容量与备份目的地；路径检查拒绝常见 Windows/WSL 共享挂载，不能据此证明任意自定义挂载都是本地盘。DuckDB、Parquet、原日志与冻结证据位置保持原用途。

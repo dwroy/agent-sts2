@@ -1,3 +1,4 @@
+import { validateBuildResearch } from "./build-research.js";
 import { validateClassifications, validateTopics } from "./classification.js";
 import { createHash } from "node:crypto";
 import { parseStrategyLibrary, STRATEGY_LIMITS } from "../strategy-entries.js";
@@ -10,7 +11,7 @@ import { validate } from "../../v6/schema.js";
 
 export type Row = Record<string, any>;
 export const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
-export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "classification.json"]);
+export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "classification.json", "build-research.json"]);
 export const ARCHETYPE_PATH = "external/sts2fun/builds-v1/archetypes.json";
 export function allowedPath(path: string): boolean {
   return path === "common/classification.json" || path === "common/shared-experience.json" || path === "common/open-book.json" || path === ARCHETYPE_PATH
@@ -59,7 +60,7 @@ export function validateDocuments(files: Record<string, string>): void {
     if (!object(body)) throw new Error(`invalid document: ${path}`);
     parsed[path] = body;
     const name = path.split("/").at(-1), character = path.split("/")[1];
-    if (name === "classification.json") continue;
+    if (name === "classification.json" || name === "build-research.json") continue;
     for (const e of Array.isArray(body.entries) ? body.entries : []) if (e.topics !== undefined) validateTopics(e.topics);
     if (name === "shared-experience.json") parseSharedExperience(body, path);
     else if (name === "open-book.json") {
@@ -104,6 +105,7 @@ export function validateDocuments(files: Record<string, string>): void {
     }
   }
   for (const [path, body] of Object.entries(parsed)) {
+    if (path.endsWith("/build-research.json")) validateBuildResearch(body, path.split("/")[1]!, files);
     if (path.endsWith("/classification.json")) validateClassifications(path, body, files);
     if (!path.endsWith("/reflex.json")) continue;
     const prefix = path.slice(0, -"reflex.json".length);
@@ -131,6 +133,11 @@ export function validateUpdate(before: Record<string, string>, after: Record<str
       if (!changed) throw new Error(`retire instead of deleting published entry: ${entry.id}`);
       if (JSON.stringify(entry) === JSON.stringify(changed)) continue;
       if (path.endsWith("/classification.json") && JSON.stringify([entry.target.path, entry.target.type, entry.target.id, entry.target.parent_id]) !== JSON.stringify([changed.target.path, changed.target.type, changed.target.id, changed.target.parent_id])) throw new Error("classification identity cannot be rebound");
+      if (path.endsWith("/build-research.json")) {
+        if (entry.revision === changed.revision) throw new Error("research content change requires a new revision");
+        if (!["phases", "original", "limitations", "unknowns", "references"].every(k => retains(entry[k], changed[k]))) throw new Error("published research phases must be preserved");
+        if (!retains(entry.attachments ?? [], changed.attachments ?? [])) throw new Error("published research attachments must be preserved");
+      }
       preserveNested(entry, changed);
       if (!retains(evidenceRows(entry), evidenceRows(changed))
         || !retains(entry.sources ?? [], changed.sources ?? []) || !retains(entry.counterexamples ?? [], changed.counterexamples ?? [])

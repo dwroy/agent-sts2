@@ -1,3 +1,5 @@
+import { buildResearchTool } from "./build-research.js";
+import { indexedKnowledge } from "../../knowledge/runtime/reader.js";
 /** Production knowledge surface: fixed files and selectors, no logs, SQL, paths or network. */
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
@@ -82,6 +84,12 @@ const PLANNING_USES: Record<string, string> = {
 };
 
 export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
+  // Legacy tools report migration errors at call time; building their catalog must remain possible.
+  const research = (): ToolDef[] => {
+    if (knowledgeCharacter() !== "silent") return [];
+    try { return (indexedKnowledge(_ctx.knowledgeDir)?.schema ?? 0) >= 4 ? [buildResearchTool()] : []; }
+    catch { return []; }
+  };
   const own = knowledgeTools().filter(t => ["kb_monster", "kb_encounter", "kb_stats", "kb_old_knowledge", "kb_potion", "kb_experience"].includes(t.name)).map((original): ToolDef => {
     const tool = original.name === "kb_experience" && knowledgeCharacter() === "silent" ? { ...original,
       description: `${original.description} 本工具查经验，reflex knowledge（rk）请用kb_reflex；relevant=true可取本题相关经验（最多12条，保留来源、置信度、支持与反证），也可按id定查。`,
@@ -123,7 +131,7 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
     knowledgeCharacter() === "silent" ? strategyTool() : queryTool("kb_strategies", "查本角色已发布策略库（按本题状态匹配触发条件），query 为关键词或 *。空库返回空，保留自有/外部来源、证据和限制。", () => bounded([], [], { status: "empty" })),
     ...(knowledgeCharacter() === "silent" ? [reflexKnowledgeTool()] : []),
     ...externalStatsTools(),
-    ...(/\/snapshots\/K1-[a-f0-9]{64}$/.test(resolve(runtimeKnowledgeRoot(_ctx.knowledgeDir))) ? businessKnowledgeTools() : []),
+    ...(/\/snapshots\/K1-[a-f0-9]{64}$/.test(resolve(runtimeKnowledgeRoot(_ctx.knowledgeDir))) ? [...businessKnowledgeTools(), ...research()] : []),
   ];
   return tools.map(typedKnowledgeTool).map(tool => ({ ...tool, description: `${tool.description} ${PLANNING_USES[tool.name] ?? ""}`.trim() }));
 }
