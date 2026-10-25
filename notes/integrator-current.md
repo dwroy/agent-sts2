@@ -5,6 +5,8 @@ updated_at: 2026-10-25T12:41:16+08:00
 进行中的事：#36本轮独立核收已完成，6393540809远端逐字读回。六旧tab/pane当前均缺席、43原进程均实退，38归档SHA同，六业务登记仍awaiting_review且无退休事件；两native仅追加原turn旧测试failed/130，原前缀保留，人工草稿身份仍未验。当前自然view标题同2RNSPP20YLWY；#36原17叶+brain_view等于最新#59 full固定输入，8TS281过，新full0。材料paper/materials/20261025-issue36-ui-handoff-integrator/。原#36开发继续可恢复停止，021310不重复处置，旧批业务原ops承接，封存兼容原#63继续。
 在等谁：本轮结束前review队列鲜查发现#62已新交付6393495491，固定提交f56c9f238ab6e8939a356c54b6115555bd0a8030，原树.worktrees/issue-62-knowledge-typed-tools，原账号/线程不改；现转接原授权最终组合核验，尚未启动新full或动生产。#63仍原开发在途（6393483259），无固定最终交付，不抢其树/强绑等待。
 下一步：读#62报告/映射/当前新K证据和精确差量，鲜核ROOT/LIVE/K/依赖及#59已接收组合，冻结后沿唯一窗口完整回归；绿后精确合入/交ops按publication-admission自然边界升级与覆盖/回退核收。原#60运行验收继续独立，#59实际部署仍待原ops回执，科学父/业务失败保留。无本角色在途测试/发布进程。
+#58新回执6393548652已独立核同：五原件SHA/94原日志切片同、隔离重放与ops一致，三关键源码ROOT/LIVE同。严格schema删除route_reason与真改线校验/消费者冲突；复用对照通过。主管沿原issue_session安排codex1接原树，不跨账号resume；本角色收固定交付后组合核验，ops新事务自然部署，不夹59包。具体运行数据内部，未改源码/生产/新full。材料paper/materials/20261025-issue58-route-reason-integrator/。
+
 
 本轮上一检查点（原文保留）：
 state: clear-ok
