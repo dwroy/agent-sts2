@@ -23,6 +23,7 @@ import argparse
 from contextlib import contextmanager
 import datetime as dt
 import fcntl
+import hashlib
 import json
 import os
 import re
@@ -69,7 +70,33 @@ SILENT_BATCH_WAIT_S = 2 * 3600
 RETRY_AFTER_S = 3600
 MAX_ATTEMPTS = 3
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
-EXIT_MEANING = {0: "完成", 1: "学习者失败（结果是 error，或额度 / 登录错误）", 2: "参数或任务说明有错", 3: "codex 不可用，或 key 隔离自检没过", 124: "超时"}
+EXIT_MEANING = {0: "完成", 1: "学习者失败（结果是 error，或额度 / 登录错误）", 2: "参数或任务说明有错", 3: "启动前检查或准入失败，具体原因待核", 124: "超时"}
+
+
+def postmortem_exit_meaning(batch_id, batch, rc):
+    """Describe a known refusal only when the original no-model receipt is bound to this batch."""
+    if rc != 3:
+        return EXIT_MEANING.get(rc, "其他")
+    label = f"learner-{batch_id}-postmortem"
+    output = os.path.join(DIR, "learner", batch_id + ".out")
+    try:
+        with open(os.path.join(DIR, "learner", label + ".tui.json"), encoding="utf8") as handle:
+            receipt = json.loads(handle.read(65537))
+        result = receipt.get("result", {})
+        if (receipt.get("schema") == "learner-tui-v1" and receipt.get("label") == label
+                and receipt.get("cwd") == batch.get("worktree", ROOT)
+                and receipt.get("state") == "not-started" and receipt.get("models_started") == 0
+                and receipt.get("retirement_authorized") is True and result.get("stopped") is True
+                and result.get("code") == rc and receipt.get("submitted") is False
+                and not any(receipt.get(key) for key in ("pid", "bindings", "submissions", "session", "turn", "rollout"))
+                and not any(result.get(key) for key in ("session", "turn", "rollout"))
+                and receipt.get("output") == {"path": output, "sha256": hashlib.sha256(b"").hexdigest()}
+                and os.stat(output).st_size == 0
+                and result.get("reason") == "ops-authorized-registration-timeout-before-model"):
+            return "登记锁等待超时；已核未启动模型（not-started）"
+    except (OSError, ValueError, TypeError, AttributeError):
+        pass
+    return EXIT_MEANING[rc]
 
 
 def now_local():
@@ -507,10 +534,11 @@ def cmd_finish(args):
         log_path = match.group(1) if match else ""
     except OSError:
         pass
+    exit_meaning = postmortem_exit_meaning(args.batch, batch, args.rc)
     lines = [
-        f"复盘批次 {args.batch}（{','.join(batch['runs'])}）结束：exit {args.rc}（{EXIT_MEANING.get(args.rc, '其他')}）。",
+        f"复盘批次 {args.batch}（{','.join(batch['runs'])}）结束：exit {args.rc}（{exit_meaning}）。",
         f"已有复盘：{','.join(done) or '无'}；还没有：{','.join(missing) or '无'}"
-        + (f"（{','.join(retry_note)} 调度器 1 小时后重派，每局最多 {MAX_ATTEMPTS} 次）" if retry_note else "")
+        + (f"（{','.join(retry_note)} 本次完成时的重试快照：1 小时后重派，每局最多 {MAX_ATTEMPTS} 次；后续以当前 learn.json 的授权处置为准）" if retry_note else "")
         + "。",
         f"学习者的回报（最后有 json 块）：{out}；stderr：{err}" + (f"；完整事件流：{log_path}" if log_path else "") + "。",
         *ledger_lines(done),
@@ -520,7 +548,8 @@ def cmd_finish(args):
         "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。",
     ]
     if args.rc == 3:
-        lines.append("exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。")
+        lines.append("exit 3：" + exit_meaning
+                     + "。核对本批原始 stderr 与回执后报给开发会话，不凭退出码认定 key 或引擎故障，不要绕过预检或准入。")
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     if not ordinary_close.offer(ROOT, DIR, args.batch, batch, report, "learner-done", "\n".join(lines)):
