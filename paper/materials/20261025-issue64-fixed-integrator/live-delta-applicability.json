@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-25T13:36:08+08:00",
+  "source_commit": "bc80005598d615516a36e3824f8bdba7e65356b3",
+  "supplement_commit": "2a11e1d4c5791ed4a193398aaeb959f065150adc",
+  "supplement_sha256": "a69be241ef9c5129d9ca7101ed166adf3925d518e5f8185aafd5227bd1a691e2",
+  "actual_live_head": "e9a468882a4fe1da2b1b721f0271b82f6083b002",
+  "patch_sha256": "7cf22129d5e9c212fd7d0585584d5b48b31a18f94b3276194f0a87ae3ebfc2a9",
+  "files": [
+    {
+      "path": "agent/src/brain/types.ts",
+      "kind": "production",
+      "live_preimage_sha256": "06de54e5da6bfa22d9e12f9f39180fb825c05edbce06dd70cd17b7066ed7bc41",
+      "bounded_patch_postimage_sha256": "ced97df523e7dd6c225044eb37c3640dfa6a51fd333fe1aae17e8786f814bd5b",
+      "source_postimage_sha256": "ced97df523e7dd6c225044eb37c3640dfa6a51fd333fe1aae17e8786f814bd5b",
+      "source_postimage_equal": true
+    },
+    {
+      "path": "agent/src/brain/specs.ts",
+      "kind": "production",
+      "live_preimage_sha256": "427810476cc6f541d5883a6892d458ada3e2be7d1c237c05e1e72886e46fd327",
+      "bounded_patch_postimage_sha256": "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0",
+      "source_postimage_sha256": "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0",
+      "source_postimage_equal": true
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "kind": "production",
+      "live_preimage_sha256": "3ca4964a9aa3637ec640017643c2a8095f0a3877e151117549ac41eddbb63e1f",
+      "bounded_patch_postimage_sha256": "701a770f57fec206c0d67a5eec3a5a8a54ecfe65a43010b5294800404b0815e9",
+      "source_postimage_sha256": "701a770f57fec206c0d67a5eec3a5a8a54ecfe65a43010b5294800404b0815e9",
+      "source_postimage_equal": true
+    },
+    {
+      "path": "agent/src/core/config.ts",
+      "kind": "production",
+      "live_preimage_sha256": "cd98eb4d83c8b5bfc07f6e03342caa07f40e7521d260253d1932cb90197e6e8a",
+      "bounded_patch_postimage_sha256": "39fd22c1c212db914ace1672562e1349c4c00a14329780134fae6706d01e12eb",
+      "source_postimage_sha256": "39fd22c1c212db914ace1672562e1349c4c00a14329780134fae6706d01e12eb",
+      "source_postimage_equal": true
+    },
+    {
+      "path": "agent/tests/brain-codex-session.test.ts",
+      "kind": "test",
+      "live_preimage_sha256": "e9c261bd13adb9e5f857f31149248d9a9da3bc7d0b09e9afe81165d7317d96f3",
+      "bounded_patch_postimage_sha256": "466d8855e94f4a06d2c2c701747880cfc53deb96e39a761dfe2033a376a4c5dd",
+      "source_postimage_sha256": "840840fd3d30e6509b1224141baf0663af2b9c7612666d7b4921770e2f7f8768",
+      "source_postimage_equal": false
+    },
+    {
+      "path": "agent/tests/route-reason-schema.test.ts",
+      "kind": "test",
+      "live_preimage_sha256": null,
+      "bounded_patch_postimage_sha256": "37e3575680055b9a6517f7a588e4e48cd2ec33e622ee0212be612c7a3ccfe0e1",
+      "source_postimage_sha256": "37e3575680055b9a6517f7a588e4e48cd2ec33e622ee0212be612c7a3ccfe0e1",
+      "source_postimage_equal": true
+    },
+    {
+      "path": "agent/tests/route-reason-fixture.ts",
+      "kind": "test",
+      "live_preimage_sha256": null,
+      "bounded_patch_postimage_sha256": "71d5e66e94de8b3ca4928a91a31846af83d0fed8c62570e12ff8aaeaaaea6b40",
+      "source_postimage_sha256": "71d5e66e94de8b3ca4928a91a31846af83d0fed8c62570e12ff8aaeaaaea6b40",
+      "source_postimage_equal": true
+    }
+  ],
+  "bounded_apply_and_reverse_exact": true,
+  "actual_live_unchanged": true,
+  "production_or_developer_source_writes": 0,
+  "tests_or_full_runs": 0,
+  "scope": "Patch applicability and exact inverse in an isolated file image only; not a compatibility test result or production install.",
+  "next": "Freeze the actual ROOT/LIVE combination after the active issue63 full exits; retain the distinct LIVE session test postimage."
+}

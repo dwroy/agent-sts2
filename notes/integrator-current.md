@@ -1,11 +1,13 @@
 state: in-flight
 issue: 63
-updated_at: 2026-10-25T13:32:41+08:00
+updated_at: 2026-10-25T13:36:44+08:00
 
 进行中的事：#62实际V6-R451已上线并独立核收6393950418；ROOT a79a1a3e55精确80叶、LIVE源码026fca6bc3精确16叶/登记e9a468882a，main登记f29bb2dbb。334适用runtime输入同原已验镜像，ROOT-only knowledge-runtime.test.ts保原LIVE未安装；原59 R450三叶和既存差异保持。生产schema2/current K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4，父82b9；只加三核准源，原8文档/全部原候选、发布、event和两绑定逐项同，1074 fact payload/tool_payload全字段同原源，旧K事实0。实际LIVE36实体跨版本/角色正负例、两几何及未知绑定拒绝rc0；鲜备份SHA1501264c…496d/schema1/integrity通过，双通知在场。原62worker88243/birth33055208实退、原门release；59原门已先release，旧等待锁记录均历史。未重full/发布/生产写体。独立probe首轮错误用ID唯一键，公共974仅971不同ID，改原合同(id,kind)后1074全同，原失败脚本与回执保留，产品/库未改。原full仍688/6711/0/2、四tsc0。材料paper/materials/20261025-issue62-combination-integrator/actual-deployment-readback.json（SHAad68ea1967166df61108b914810952c9230c289981a1ba53fcc8209a3b72966c）；公开逐字读回，ops w1H:p8单行提醒agent_prompted非ACK。
 #63唯一full PID87368/birth33050991、exec42851，13:26:21启动nice19/single fork/原integrator-full-check锁，2850 ROOT/1417依赖/326兼容runtime冻结，实时full-state.json；新full1/既有失败或中断full0。三tsc0/LIVE定向0；ROOT定向36/1首败check-imports具体两字符串原JSON省略，原因未知；同环境仅失败项1过0败、两显式扫描空、输入未变，未改源码/夹具/依赖，原失败及--expand不支持启动rc1均保留，未改记原定向1为0。固定f95114df3/候选ee029e2ee/ROOT锚965653f6d/树b23aa2ed3，原三样本只读配套seal_proof过、生产封存/回收0。该full冻结在62前实际组合，62后来独立部署已鲜核334适用运行叶；不能拿63旧冻结full冒62后全部组合已验。
 在等谁：本角色接63唯一full终态/独立退出锁核；原ops接62自然reader绑定和runtime验收、按59授权核空闲开发UI后及时释放，保树/分支/账号/线程/日志/研究/科学父，不等长期学习/收益。本次独立窗口未见新自然绑定，不代其ACK/采用。64固定bc80005598/6393868395已核8源码测试文档、15日志、5原58证据及issue29基线，公开6393914226，列63后最早可用窗口；60自然消费和27原61/日志责任链独立。
 下一步：63终态核冻结输入/依赖/runtime/tree/index/原worker实退/原锁；若失败固定原件分类并由codex1续原63树，绿即精确main集成并交ops宿主OPS/实际verifier根learner_tabs.py+learner_tui.py配套部署；三原样本逐项实际seal/recover/tick、退出/空输入/tab缺席，符合一项立即释放，保原件，不complete/删除。64按届时62/已接受63实际组合冻结适用检查与唯一full，不夹旧59、不重62或63full。当前本角色无新增模型、对局、监听、计时器或并发full。
+
+补充64实际LIVE适用性（2026-10-25T13:36:44+08:00）：已核材料2a11e1d4c/6393908167并在隔离文件镜像应用、逆向精确恢复7叶原差量；4生产叶和2新增测试同固定源码，brain-codex-session保LIVE历史差异后像SHA466d8855e94f4a06d2c2c701747880cfc53deb96e39a761dfe2033a376a4c5dd，不能用ROOT测试整叶覆盖。生产/开发树写入和新增测试/full均0；6393983628已逐字读回。材料paper/materials/20261025-issue64-fixed-integrator/live-delta-applicability.json，补充合同及脚本同目录归档。13:36原63worker87368/birth33050991仍S/full-running，继续原检查；main c04efc4201记录已Windows SSH推送且远端核同。
 
 本轮上一检查点（原文保留）：
 state: in-flight

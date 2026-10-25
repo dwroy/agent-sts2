@@ -6993,3 +6993,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T12:31:49+08:00 [dev #62] 接6393306971鲜核真实已发布K1-fa912e…ea0/8文档/策略124（非基线116）：原manifest逐叶SHA、旧116及其余7文档等价；全新隔离库v1回填/新8候选/旧新版并存与回退、实际ToolDef正例和旧版/错幕负例通过，mixed及7conflict/1unassessed、全反证限制原样，8项热P95≤0.441ms。事实/几何三文档尚不在生产K1，须owner核源后显式扩覆盖；未写生产库/改指针/代自然采用。最终imports1及fork paths+imports12过、tsc0，原事件夹具标签首败/修后及sandbox首败保留；源SHA未变，交原集成员实际组合及ops运行。材料paper/materials/20261025-issue62-typed-tools/current-release-readback.json。
 
 - 2026-10-25T13:33:02+08:00 [watcher] #62实际V6-R451部署独立核收：ROOT80/LIVE16源码与334适用运行输入同固定交付，schema2只补三核准事实源/原8文档及候选发布event与旧绑定保持，1074原字段同，实际LIVE实体/几何/负例0；原worker实退/门release/双通知齐。原full688/6711/0/2不重跑，62自然绑定和运行UI核收交原ops；63原唯一full继续，64固定列下一窗口，60独立。见paper/materials/20261025-issue62-combination-integrator/actual-deployment-readback.json。
+
+- 2026-10-25T13:36:44+08:00 [watcher] #64固定bc80005598/补充合同2a11e1d4c：隔离实际LIVE七叶补丁及逆向精确恢复通过，四生产/两新增测试同固定源码，session配套测试保既存ROOT/LIVE差异；公开6393983628。新增测试/full及生产写入0，63原唯一full继续，窗口退出核收后再冻结实际62/63组合。见paper/materials/20261025-issue64-fixed-integrator/live-delta-applicability.json。
