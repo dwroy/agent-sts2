@@ -548,10 +548,10 @@ def background_statistics(command, log):
     """Share the knowledge worker's CPU slot; admission never acquires this lock."""
     env = {**os.environ, **dict.fromkeys(("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
                                         "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"), "1")}
-    from board_heavy import queued_argv
+    from board_heavy import queued_argv, resource_fds
     argv = queued_argv(ROOT, 'other', ["ionice", "-c", "3", "flock", "-F",
                         os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command])
-    return subprocess.Popen(["nice", "-n", "19", *argv], env=env,
+    return subprocess.Popen(["nice", "-n", "19", *argv], env=env, pass_fds=resource_fds(ROOT),
                             stdout=log, stderr=log, start_new_session=True)
 
 

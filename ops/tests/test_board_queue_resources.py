@@ -1,11 +1,14 @@
 """Real kernel lease inheritance and synthetic project resource observations."""
+import ast
 import contextlib
 import fcntl
 import json
 import os
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -140,6 +143,66 @@ class ResourceBridge(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'foreign'):
                 board_heavy.inherited(self.root)
         self.assertEqual(board_heavy.inherited(self.root), ())
+
+    def test_background_statistics_retains_resources_until_actual_child_exit(self):
+        self.enabled()
+        (self.root / 'ops').mkdir()
+        ident = 'b' * 32
+        for name in ('leases', 'slots', 'records'):
+            (self.machine / name).mkdir(parents=True)
+        birth = lambda pid: Path('/proc', str(pid), 'stat').read_text().rsplit(')', 1)[1].split()[19]
+        row = dict(root=str(self.root), repo=self.data['repo'], state='running', slot=0,
+                   boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
+                   runner_pid=os.getpid(), runner_start=birth(os.getpid()))
+        (self.machine / 'records' / (ident + '.json')).write_text(json.dumps(row))
+        paths = [self.machine / 'leases' / ident, self.machine / 'slots/0']
+        node = next(n for n in ast.parse((PROJECT / 'ops/report.py').read_text()).body
+                    if isinstance(n, ast.FunctionDef) and n.name == 'background_statistics')
+        namespace = dict(ROOT=str(self.root), os=os, subprocess=subprocess)
+        exec(compile(ast.Module(body=[node], type_ignores=[]), 'report.py', 'exec'), namespace)
+        ready, stop = self.root / 'ready.json', self.root / 'stop'
+        script = self.root / 'child.py'
+        script.write_text('''from pathlib import Path
+import json, os, sys, time
+root = Path(sys.argv[1])
+fds = {}
+for p in Path('/proc/self/fd').iterdir():
+    try: fds[p.name] = os.readlink(p)
+    except FileNotFoundError: pass
+(root / 'ready.json').write_text(json.dumps(fds))
+deadline = time.monotonic() + 10
+while not (root / 'stop').exists() and time.monotonic() < deadline:
+    time.sleep(.01)
+''')
+        with contextlib.ExitStack() as stack:
+            handles = [stack.enter_context(path.open('a')) for path in paths]
+            for handle in handles:
+                fcntl.flock(handle, fcntl.LOCK_EX)
+            with patch.object(board_heavy, 'verify'), (self.root / 'child.log').open('w') as log:
+                child = namespace['background_statistics']([sys.executable, str(script), str(self.root)], log)
+            try:
+                deadline = time.monotonic() + 5
+                while not ready.exists() and child.poll() is None and time.monotonic() < deadline:
+                    time.sleep(.01)
+                self.assertTrue(ready.exists())
+                inherited = json.loads(ready.read_text())
+                original_birth = birth(child.pid)
+                for handle in handles:
+                    handle.close()
+                self.assertIsNone(child.poll())
+                self.assertEqual(birth(child.pid), original_birth)
+                for path in paths:
+                    self.assertIn(str(path), inherited.values())
+                    with path.open('a') as probe:
+                        with self.assertRaises(BlockingIOError):
+                            fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            finally:
+                stop.touch()
+                self.assertEqual(child.wait(timeout=10), 0)
+            self.assertFalse(Path('/proc', str(child.pid)).exists())
+            for path in paths:
+                with path.open('a') as probe:
+                    fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
 class Probe(unittest.TestCase):

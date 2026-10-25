@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_background_statistics_retains_resources_until_actual_child_exit (ops.tests.test_board_queue_resources.ResourceBridge.test_background_statistics_retains_resources_until_actual_child_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-68-board-kit-merge-queue/ops/tests/test_board_queue_resources.py", line 195, in test_background_statistics_retains_resources_until_actual_child_exit
+    self.assertIn(str(path), inherited.values())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/tmp/tmppevodyl1/machine/leases/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' not found in dict_values(['pipe:[131261982]', '/tmp/tmppevodyl1/child.log', '/tmp/tmppevodyl1/child.log', '/tmp/tmppevodyl1/ops/knowledge-refresh.lock'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.072s
+
+FAILED (failures=1)
