@@ -1,5 +1,18 @@
 state: in-flight
 issue: 67
+updated_at: 2026-10-25T20:43:56+08:00
+
+进行中的事：67/68匹配组合唯一full已实际exit0，692文件/6744过/0败/2跳、三tsc0、415宿主、真实混合K1/运营SQLite与LIVE90项全过；20:41:19独核原worker1815703/birth35490682及子进程退出、full门可用、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link和索引/树均保持。固定ced73d377/fcd84d2ae的232 ROOT叶已精确main b3269b33388aa2fbe6ec38b982272c65d877ce72，20:42:17 Windows ssh.exe push exit0/远端核同；源码字节及mode全同、实际ROOT十三method与受测期望全同、无暂存。原夹具首失败/补一叶与开发历史失败完整保留，未重full。实际LIVE最后鲜核仍86b31b7a/R452，不能冒已部署。
+
+在等谁：已无开发新包/full/main/push等待。终态和精确ROOT232/LIVE已接66十一+67十一/host51c十四叶、逐入口及回退合同已交67/6397781918、68/6397782882，两条均dwroy逐字读回；fresh Herdr核ops/w1H:p8/cwd正确后仅提交“#67 轮到你”，返回agent_prompted，这是提醒提交不是已读ACK。原ops接67必要安装和新自然合同→运营SQLite/D1→下游运行读回；66原worker1786862/原FIFO自然事务仍原owner，不能重复升级/FIFO。67采用不等待68真实shadow/active或旧writer撤权。queue/heavy仍off、旧manual authority保持，未自然出现类型runtime pending，科学父继续。
+
+下一步：仅补提交本轮main/push/实际method/回执原件并push远端核同，不重full。沿原ops67运行回执核实际安装逐叶SHA/控制与方法、对应旧writer自然结算/备份/init/seed/原launch前绑定、真实完成回调幂等和旧局旧批原合同；不能用工程测试或首单元冒全部入口已切/自然收益，不强开学习或对局。68后续真实新请求shadow及旧writer撤权active单独按阶段合同，不升queue/heavy、不把68门转为67前置；工程和必要运行核收后按59由原ops释放空闲开发UI。保60/61/62科学父/原证据提案/树分支session日志，不complete/delete或停止其他会话。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{terminal-readback.json,main-integration.json,main-push-readback.json,deployment-handoff.json,actual-root-method-readback.json,ops-handoff.md,ops-handoff-receipt-readback.json}；.artifacts/integrator67-68-combination-20261025/{integration-transaction.json,commit-final-records.py,push-main.py}。两自有检查树仅在终态独核后解本角色worktree锁，现场保留；full.once仅一份/终态已收，不重启。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。以下历史原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 67
 updated_at: 2026-10-25T20:41:37+08:00
 
 进行中的事：原67/68唯一full已实际exit0，692文件/6744过/0败/2跳，三tsc0、415宿主、真实混合K1/运营SQLite、LIVE90项通过；20:41:19 terminal-readback独核原worker1815703/birth35490682及子进程退出、full门可用、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link及索引/树不变。开发固定ced73d377/fcd84d2ae未改，首复制夹具失败及补一叶后恢复完整保留。现推进原K→L锁序内精确集成232 ROOT叶、保LIVE原像，Windows ssh.exe push后立即交ops67采用。

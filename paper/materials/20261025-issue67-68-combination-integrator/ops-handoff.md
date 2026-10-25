@@ -1,10 +1,10 @@
 # #67采用与#68分阶段宿主交接
 
-终态独核时间：2026-10-25T20:41:37+08:00。原唯一full 692文件/6744过/0败/2跳、三tsc0、宿主415、真实混合SQLite、LIVE90项通过；原worker1815703及子进程已退出、原full锁可用、ROOT3129/LIVE1795/依赖1417的SHA+mode/link、索引/树全保持。原前置复制夹具失败及补齐单叶证明完整保留。固定67 ced73d377 / 68 fcd84d2ae；候选b4f5f5df1976cff42484faf73aa7a01b186f4348。主管67/6397609340：组合绿且必要部署准入后立即采用67，不等68真实shadow/active或旧集成员撤权。当前正推进精确main/push；生产运行另补证，不能以工程通过冒上线。
+终态独核时间：2026-10-25T20:41:37+08:00。原唯一full 692文件/6744过/0败/2跳、三tsc0、宿主415、真实混合SQLite、LIVE90项通过；原worker1815703及子进程已退出、原full锁可用、ROOT3129/LIVE1795/依赖1417的SHA+mode/link、索引/树全保持。原前置复制夹具失败及补齐单叶证明完整保留。固定67 ced73d377 / 68 fcd84d2ae；候选b4f5f5df1976cff42484faf73aa7a01b186f4348。主管67/6397609340：组合绿且必要部署准入后立即采用67，不等68真实shadow/active或旧集成员撤权。精确main b3269b33388aa2fbe6ec38b982272c65d877ce72已于20:42:17经Windows ssh.exe推送且远端核同；实际ROOT十三method与受测期望全同。生产运行另补证，不能以工程通过冒上线。
 
 ## 精确安装
 
-`deployment-handoff.json`逐叶列ROOT 232叶（含文档/固定开发产物）、LIVE 22源码/CLI叶、宿主pin 51c289c十四叶的来源blob、SHA和mode。ROOT仍由集成员精确集成；LIVE不整树覆盖。`live-runtime-exact.patch`从原86b31b7a到受测LIVE组合，前11叶是已接66，后11叶是67（10 src + boss refresh）。若66原自然事务已装，先核其11叶等于本清单66后像，再只装67十一叶；若尚未装，原ops协调原事务，不重复66升级/FIFO。`runtime-delivery.json`中的测试叶及验证用两JSON/抽取消费者测试不是部署内容。保实际LIVE其余源码、知识/数据、日志、原D1/K1绑定及并行改动。
+`deployment-handoff.json`逐叶列ROOT 232叶（含文档/固定开发产物）、LIVE 22源码/CLI叶、宿主pin 51c289c十四叶的来源blob、SHA和mode。ROOT已精确集成main b3269b333并push/远端核同；LIVE不整树覆盖。`live-runtime-exact.patch`从原86b31b7a到受测LIVE组合，前11叶是已接66，后11叶是67（10 src + boss refresh）。若66原自然事务已装，先核其11叶等于本清单66后像，再只装67十一叶；若尚未装，原ops协调原事务，不重复66升级/FIFO。`runtime-delivery.json`中的测试叶及验证用两JSON/抽取消费者测试不是部署内容。保实际LIVE其余源码、知识/数据、日志、原D1/K1绑定及并行改动。
 
 ROOT必须整套匹配：learner launcher/operational-runtime/knowledge-runtime和五task；ops learning_runtime/store/data/launch、checks/jobs/retention/ascension/dispatch/wrapper/experience-pending；builders refresh_driver/publish/v6-history。共享checks/run.sh已含68精确资源桥，配套board_heavy/resources/queue_pin及默认off配置一并来自受测组合。不要把共享叶替换成任一原开发整叶。host kit十四叶须按pin整套核验后由原ops自然安装/切换，保存旧安装与原唯一tick；不新增timer、不启queue/heavy、不撤旧合法writer，不用209项老包替代。ops只装原位置所需模块，ROOT来源与LIVE消费者来源分开核SHA。
 
