@@ -1,3 +1,23 @@
+state: in-flight
+issue: 27
+updated_at: 2026-10-25T09:42:44+08:00
+
+进行中的事：新集成员codex1会话01a170b2-a9ac-7572-be36-68152229effb已接停点。#60实际ROOT/LIVE入口审计完成并纠正旧full覆盖范围，评论6392070531逐字读回；13游戏叶/14宿主叶候选与可应用补丁已交，生产未动。按主管#27评论6392062140优先核ops的high放行补丁，已独立读2叶窄diff，尚未接固定SHA/检查终态。
+在等谁：原ops完成ops-27-codex1-high检查并提交来源/终态交付；现场Vitest3391111/birth31678036仍在跑，不抢窗口。#60实际宿主launcher114→129叶、5变化+15新增依赖超出旧full，待当前恢复事务后由本集成员/原ops冻结实际双入口合同和适用检查；不凭27直接叶相同称当前组合全绿。#27通知历史兼容/#61原source与000402原log门仍保留，换号推进不代闭环。
+下一步：接原ops high源码及检查终态，精确核SHA/原件后合main（必要live路径沿ops原门）；不重已有在途full。随后续#60宿主依赖检查与自然发布。review队列43/39/36/20仍无新源码、沿原runtime/父门，未代ACK或科学父完成。#60材料paper/materials/20261025-issue60-runtime-closure-integrator/，新隔离树保留，未complete/删树。
+
+---
+
+state: in-flight
+issue: 60
+updated_at: 2026-10-25T09:37:44+08:00
+
+进行中的事：新集成员会话01a170b2-a9ac-7572-be36-68152229effb（~/.codex1）已接续原停点，优先核#60 R448兼容闭包。已核旧唯一full及ops候选原失败，正在独立隔离树integrator60-runtime-closure-20261025核实际宿主/游戏入口与传递依赖，保留原失败，不把旧full冒新组合。
+在等谁：本角色先交实际路径与兼容闭包；原ops接自然边界发布/迁移，生产局/控制/旧writer不动。#27/#61仍待原CLI/source owner，#36/#20及43/39沿原运行门。
+下一步：形成精确部署清单和检查范围、读回当前review队列；可复用则严格绑定原full输入，源码不同则先解冲突再协调检查。材料paper/materials/20261025-issue60-runtime-closure-integrator/。不代ACK/科学父完成。
+
+---
+
 state: clear-ok
 issue: 27
 updated_at: 2026-10-25T08:45:45+08:00

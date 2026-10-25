@@ -1,0 +1,977 @@
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index b7c6b7c47..41cc72722 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -47,6 +47,7 @@ import { str, type JsonValue } from "../core/util/json.js";
+ import { resolveJevPromptLog } from "./jev-prompt-log.js";
+ import { PROJECT_ROOT } from "../core/paths.js";
+ import { characterKey, knowledgeFile } from "../knowledge/files.js";
++import { runtimeKnowledgeIdentity } from "../knowledge/runtime-paths.js";
+ import { ascensionMode, resolveTargetAscension } from "../memory/ascension-target.js";
+ import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
+ import { constructionMode } from "../construction/adapter.js";
+@@ -151,6 +152,9 @@ export interface RunConfigRow {
+   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
+     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
+   knowledge: {
++    runtime_version?: string;
++    runtime_binding?: string;
++    runtime_control_sha256?: string;
+     prefix: "off" | "full";
+     /** The ascension the prompt was rendered for (the run's). */
+     ascension: number | null;
+@@ -403,6 +407,10 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
+     system_sha: null,
+     system_chars: null,
+     experience_version: experienceVersion(knowledgeDir),
++    ...(runtimeKnowledgeIdentity() ? { runtime_version: runtimeKnowledgeIdentity()!.version } : {}),
++    ...(runtimeKnowledgeIdentity() && process.env["STS2_KNOWLEDGE_RUN_KEY"] ? { runtime_binding: process.env["STS2_KNOWLEDGE_RUN_KEY"] } : {}),
++    ...(runtimeKnowledgeIdentity() && /^[a-f0-9]{64}$/.test(process.env["STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256"] ?? "")
++      ? { runtime_control_sha256: process.env["STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256"] } : {}),
+   };
+   if (!brain) return { ...out, error: "no brain (no DeepSeek client): no system prompt is sent" };
+   if (prefix !== "full") {
+@@ -556,7 +564,8 @@ export function runConfigRow(
+     ...setup,
+     // The prompt's setup, not its sizes, a load error's wording, or the hashes of the knowledge data rendered into it
+     // (prefix_sha, system_sha: the data is refreshed between runs and re-rendered mid-run; brain.jsonl has each call's).
+-    knowledge: { prefix: knowledge.prefix, experience_version: knowledge.experience_version },
++    knowledge: { prefix: knowledge.prefix, experience_version: knowledge.experience_version,
++      ...(knowledge.runtime_version ? { runtime_version: knowledge.runtime_version } : {}) },
+   };
+   return {
+     ts: now.toISOString(),
+diff --git a/agent/src/knowledge/files.ts b/agent/src/knowledge/files.ts
+index 8b4d8dcdc..91e80b941 100644
+--- a/agent/src/knowledge/files.ts
++++ b/agent/src/knowledge/files.ts
+@@ -16,6 +16,7 @@
+ import { join } from "node:path";
+ 
+ import { KNOWLEDGE_DIR } from "../core/paths.js";
++import { runtimeKnowledgeFile } from "./runtime-paths.js";
+ 
+ export { KNOWLEDGE_DIR };
+ 
+@@ -101,5 +102,5 @@ export function knowledgeSubdir(name: string, dir: string = KNOWLEDGE_DIR, chara
+ 
+ /** The path of the knowledge file `name` (a bare file name: "room-costs.json") inside `dir` (the project's by default). */
+ export function knowledgeFile(dir: string, name: string, character: string = knowledgeCharacter()): string {
+-  return join(knowledgeSubdir(name, dir, character), name);
++  return runtimeKnowledgeFile(dir, COMMON_FILES.has(name) ? join("common", name) : join("characters", character, name));
+ }
+diff --git a/agent/src/knowledge/query-sources.ts b/agent/src/knowledge/query-sources.ts
+index 24aa0875d..058522089 100644
+--- a/agent/src/knowledge/query-sources.ts
++++ b/agent/src/knowledge/query-sources.ts
+@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
+ import { join, relative, resolve } from "node:path";
+ import { readCompatibleKnowledgeText } from "./catalog.js";
+ import { knowledgeCharacter, knowledgeFile } from "./files.js";
++import { runtimeKnowledgeIdentity, runtimeKnowledgeRoot } from "./runtime-paths.js";
+ 
+ type Row = Record<string, unknown>;
+ const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
+@@ -20,6 +21,11 @@ function input(query: Query, name: string): Input {
+   if (hit) return hit;
+   const path = knowledgeFile(query.dir, name, query.character);
+   const source: Row = { source: "own", character: query.character, file: name, path: relative(query.dir, path).split("\\").join("/") };
++  const snapshot = runtimeKnowledgeRoot(query.dir);
++  if (snapshot !== query.dir && path.startsWith(snapshot + "/")) {
++    source["knowledge_version"] = runtimeKnowledgeIdentity()?.version;
++    source["path"] = relative(snapshot, path).split("\\").join("/");
++  }
+   const result: Input = { source };
+   try {
+     let text: string, bytes: string | Buffer;
+diff --git a/agent/src/knowledge/runtime-paths.ts b/agent/src/knowledge/runtime-paths.ts
+new file mode 100644
+index 000000000..3df21b1e4
+--- /dev/null
++++ b/agent/src/knowledge/runtime-paths.ts
+@@ -0,0 +1,21 @@
++/** Read-only snapshot routing. No filesystem or SQLite access in the gameplay path resolver. */
++import { join, resolve } from "node:path";
++import { KNOWLEDGE_DIR } from "../core/paths.js";
++
++const migrated = new Set(["experience.json", "shared-experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json"]);
++// Captured at process startup. A publication never switches an already-running reader.
++const snapshot = process.env["STS2_KNOWLEDGE_SNAPSHOT"];
++const version = process.env["STS2_KNOWLEDGE_VERSION"];
++if (snapshot && (!snapshot.startsWith("/") || !/^K1-[a-f0-9]{64}$/.test(version ?? ""))) throw new Error("invalid runtime knowledge binding");
++
++export function runtimeKnowledgeIdentity(): { version: string; snapshot: string } | null {
++  return snapshot && version ? { version, snapshot } : null;
++}
++export function runtimeKnowledgeRoot(dir: string): string {
++  return snapshot && resolve(dir) === resolve(KNOWLEDGE_DIR) ? snapshot : dir;
++}
++export function runtimeKnowledgeFile(dir: string, relativePath: string): string {
++  const name = relativePath.split("/").at(-1)!;
++  const selected = migrated.has(name) || relativePath === "external/sts2fun/builds-v1/archetypes.json";
++  return join(selected ? runtimeKnowledgeRoot(dir) : dir, relativePath);
++}
+diff --git a/agent/src/knowledge/runtime/schema.ts b/agent/src/knowledge/runtime/schema.ts
+new file mode 100644
+index 000000000..d45467946
+--- /dev/null
++++ b/agent/src/knowledge/runtime/schema.ts
+@@ -0,0 +1,44 @@
++/** Schema v1: immutable revisions and releases; only candidates and the current pointer change. */
++export const SCHEMA_VERSION = 1;
++export const SCHEMA = `
++CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
++CREATE TABLE IF NOT EXISTS candidates(
++ id TEXT PRIMARY KEY, digest TEXT NOT NULL, base TEXT, body TEXT NOT NULL CHECK(json_valid(body)),
++ status TEXT NOT NULL CHECK(status IN ('submitted','validated','published')), version TEXT,
++ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
++CREATE TABLE IF NOT EXISTS releases(
++ version TEXT PRIMARY KEY, parent TEXT REFERENCES releases(version), candidate TEXT UNIQUE REFERENCES candidates(id),
++ source TEXT NOT NULL, manifest TEXT NOT NULL CHECK(json_valid(manifest)),
++ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
++CREATE TABLE IF NOT EXISTS documents(
++ digest TEXT PRIMARY KEY, path TEXT NOT NULL, body TEXT NOT NULL CHECK(json_valid(body)));
++CREATE TABLE IF NOT EXISTS release_files(
++ version TEXT NOT NULL REFERENCES releases(version), path TEXT NOT NULL, digest TEXT NOT NULL REFERENCES documents(digest),
++ PRIMARY KEY(version,path));
++CREATE TABLE IF NOT EXISTS revisions(
++ revision TEXT PRIMARY KEY, path TEXT NOT NULL, entry_id TEXT NOT NULL, character TEXT NOT NULL,
++ kind TEXT NOT NULL, source TEXT, confidence TEXT, evidence_status TEXT, asc_min INTEGER, asc_max INTEGER, game_version TEXT,
++ payload TEXT NOT NULL CHECK(json_valid(payload)));
++CREATE INDEX IF NOT EXISTS revision_scope ON revisions(character,kind,asc_min,asc_max);
++CREATE INDEX IF NOT EXISTS revision_provenance ON revisions(source,evidence_status,game_version);
++CREATE INDEX IF NOT EXISTS revision_identity ON revisions(path,entry_id);
++CREATE TABLE IF NOT EXISTS release_entries(
++ version TEXT NOT NULL REFERENCES releases(version), revision TEXT NOT NULL REFERENCES revisions(revision),
++ PRIMARY KEY(version,revision));
++CREATE INDEX IF NOT EXISTS release_entry_revision ON release_entries(revision,version);
++CREATE TABLE IF NOT EXISTS terms(
++ revision TEXT NOT NULL REFERENCES revisions(revision), category TEXT NOT NULL, term TEXT NOT NULL,
++ PRIMARY KEY(revision,category,term));
++CREATE INDEX IF NOT EXISTS term_lookup ON terms(category,term,revision);
++CREATE TABLE IF NOT EXISTS evidence(
++ revision TEXT NOT NULL REFERENCES revisions(revision), ordinal INTEGER NOT NULL, role TEXT NOT NULL,
++ source TEXT, sha256 TEXT, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(revision,ordinal));
++CREATE INDEX IF NOT EXISTS evidence_source ON evidence(source,sha256,revision);
++CREATE VIRTUAL TABLE IF NOT EXISTS body_search USING fts5(revision UNINDEXED, body, tokenize='trigram');
++CREATE TABLE IF NOT EXISTS events(
++ id INTEGER PRIMARY KEY, request TEXT UNIQUE NOT NULL, action TEXT NOT NULL, version TEXT NOT NULL REFERENCES releases(version),
++ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
++CREATE TABLE IF NOT EXISTS run_bindings(
++ run_id TEXT PRIMARY KEY, version TEXT NOT NULL REFERENCES releases(version), code TEXT NOT NULL,
++ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
++`;
+diff --git a/agent/src/knowledge/runtime/store.ts b/agent/src/knowledge/runtime/store.ts
+new file mode 100644
+index 000000000..3d3ad2f35
+--- /dev/null
++++ b/agent/src/knowledge/runtime/store.ts
+@@ -0,0 +1,295 @@
++/** Host-local publisher. The gameplay process never imports this writable adapter. */
++import { DatabaseSync, backup } from "node:sqlite";
++import { createHash } from "node:crypto";
++import { chmodSync, closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
++import { dirname, join, resolve } from "node:path";
++import { SCHEMA, SCHEMA_VERSION } from "./schema.js";
++import { allowedPath, ARCHETYPE_PATH, MIGRATED_NAMES, object, rows, evidenceRows, validateDocuments, validateUpdate, type Row } from "./validation.js";
++
++export const digest = (s: string) => createHash("sha256").update(s).digest("hex");
++export interface Candidate {
++ schema: "knowledge-candidate-v1";
++ id: string;
++ base: string | null;
++ character: string;
++ source: string;
++ files: Record<string, string>;
++}
++export interface Manifest { schema: "knowledge-release-v1"; version: string; files: Record<string, string> }
++const canonical = (value: unknown): string => {
++  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
++  if (object(value)) return `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canonical(value[k])}`).join(",")}}`;
++  return JSON.stringify(value);
++};
++
++/** External callbacks may publish only the actual artifacts verified by the original source protocol. */
++export function auditApprovedChanges(before: Record<string, string>, changes: Record<string, string>, approved: Array<{ id: string; path: string }>): void {
++  const permitted = new Set(approved.flatMap(item => {
++    const body = JSON.parse(readFileSync(item.path, "utf8")) as Row;
++    const entries = Array.isArray(body) ? body : Array.isArray(body.entries) ? body.entries : [body];
++    return entries.filter(e => e.id === item.id).map(e => canonical(e));
++  }));
++  let count = 0;
++  for (const [path, text] of Object.entries(changes)) {
++    const next = JSON.parse(text) as Row;
++    if (!Array.isArray(next.entries)) throw new Error("reference-artifact updates require owner review");
++    const old = new Map(rows(JSON.parse(before[path] ?? '{"entries":[]}') as Row).map(e => [e.id, canonical(e)]));
++    for (const entry of rows(next)) if (old.get(entry.id) !== canonical(entry)) {
++      if (!permitted.has(canonical(entry))) throw new Error(`change is absent from frozen-source artifacts: ${entry.id}`);
++      count++;
++    }
++  }
++  if (!count) throw new Error("no new content; use original no-change completion");
++}
++function durable(path: string, text: string | Buffer): void {
++  mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
++  writeFileSync(path, text, { mode: 0o600, flag: "wx" });
++  const fd = openSync(path, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
++}
++function syncDir(path: string): void { const fd = openSync(path, "r"); try { fsyncSync(fd); } finally { closeSync(fd); } }
++
++export function safeSQLiteVersion(version: string): boolean {
++  const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
++  return major > 3 || major === 3 && (minor > 51 || minor === 51 && patch >= 3 || minor === 50 && patch >= 7 || minor === 44 && patch >= 6);
++}
++
++/** Discover only published leaves. Pending directories, original logs and frozen evidence are never imported. */
++export function importFiles(root: string): Record<string, string> {
++  const result: Record<string, string> = {};
++  const add = (path: string) => { if (existsSync(join(root, path))) result[path] = readFileSync(join(root, path), "utf8"); };
++  add("common/shared-experience.json"); add(ARCHETYPE_PATH);
++  for (const character of readdirSync(join(root, "characters"))) {
++    if (!/^[a-z0-9_]+$/.test(character) || !statSync(join(root, "characters", character)).isDirectory()) continue;
++    for (const name of MIGRATED_NAMES) add(`characters/${character}/${name}`);
++  }
++  validateDocuments(result);
++  return result;
++}
++
++export class KnowledgeStore {
++ readonly db: DatabaseSync;
++ readonly root: string;
++ constructor(root: string, options: { readOnly?: boolean } = {}) {
++  this.root = resolve(root);
++  if (!options.readOnly) mkdirSync(this.root, { recursive: true, mode: 0o700 });
++  // All callers must use a host-local runtime directory; refuse common WSL network/Windows mounts.
++  const physical = realpathSync(this.root);
++  if (/^\/mnt\/(?:[a-z](?:\/|$)|wsl\/)/.test(physical) || physical.startsWith("//")) throw new Error("SQLite runtime must be on a host-local Linux filesystem");
++  this.db = new DatabaseSync(join(this.root, "knowledge.sqlite"), { readOnly: options.readOnly ?? false });
++  try {
++    const version = String(this.db.prepare("SELECT sqlite_version() AS version").get()!["version"]);
++    if (!safeSQLiteVersion(version)) throw new Error(`SQLite ${version} lacks required WAL-reset fix`);
++    this.db.exec("PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;");
++    if (!options.readOnly) {
++      this.db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;");
++      this.db.exec(SCHEMA);
++      const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
++      if (old && Number(old["value"]) !== SCHEMA_VERSION) throw new Error("unsupported knowledge schema");
++      this.db.prepare("INSERT OR IGNORE INTO metadata VALUES('schema',?)").run(String(SCHEMA_VERSION));
++      chmodSync(join(this.root, "knowledge.sqlite"), 0o600);
++    }
++  } catch (error) { this.db.close(); throw error; }
++ }
++ close(): void { this.db.close(); }
++ private transaction<T>(run: () => T): T {
++  this.db.exec("BEGIN IMMEDIATE");
++  try { const result = run(); this.db.exec("COMMIT"); return result; }
++  catch (error) { this.db.exec("ROLLBACK"); throw error; }
++ }
++ current(): string | null { return String(this.db.prepare("SELECT value FROM metadata WHERE key='current'").get()?.["value"] ?? "") || null; }
++ files(version: string | null): Record<string, string> {
++  if (version === null) return {};
++  if (!this.db.prepare("SELECT 1 FROM releases WHERE version=?").get(version)) throw new Error("unknown knowledge version");
++  return Object.fromEntries(this.db.prepare("SELECT f.path,d.body FROM release_files f JOIN documents d ON d.digest=f.digest WHERE version=? ORDER BY f.path").all(version).map(r => [String(r["path"]), String(r["body"])]));
++ }
++ submit(candidate: Candidate): Row {
++  if (candidate.schema !== "knowledge-candidate-v1" || !/^[a-zA-Z0-9_.:-]{1,160}$/.test(candidate.id)
++    || !(candidate.base === null || /^K1-[a-f0-9]{64}$/.test(candidate.base)) || !/^[a-z0-9_]+$/.test(candidate.character)
++    || !candidate.source?.trim() || !object(candidate.files) || !Object.keys(candidate.files).length) throw new Error("invalid candidate envelope");
++  for (const [path, text] of Object.entries(candidate.files)) {
++    if (!allowedPath(path) || typeof text !== "string" || candidate.character !== "migration"
++      && !(path.startsWith(`characters/${candidate.character}/`) || candidate.character === "common" && path === "common/shared-experience.json")) throw new Error("candidate character/path mismatch");
++  }
++  const body = canonical(candidate), hash = digest(body);
++  if (Buffer.byteLength(body) > 32 * 1024 * 1024) throw new Error("candidate exceeds 32MB");
++  return this.transaction(() => {
++    const old = this.db.prepare("SELECT * FROM candidates WHERE id=?").get(candidate.id);
++    if (old) { if (old["digest"] !== hash) throw new Error("idempotency key reused with different content"); return old; }
++    if (candidate.base !== null && !this.db.prepare("SELECT 1 FROM releases WHERE version=?").get(candidate.base)) throw new Error("unknown candidate base");
++    this.db.prepare("INSERT INTO candidates(id,digest,base,body,status) VALUES(?,?,?,?,'submitted')").run(candidate.id, hash, candidate.base, body);
++    return this.status(candidate.id);
++  });
++ }
++ status(id: string): Row {
++  const row = this.db.prepare("SELECT id,digest,base,status,version,created FROM candidates WHERE id=?").get(id);
++  if (!row) throw new Error("unknown candidate"); return row;
++ }
++ private prepared(id: string) {
++  const row = this.db.prepare("SELECT body FROM candidates WHERE id=?").get(id);
++  if (!row) throw new Error("unknown candidate");
++  const candidate = JSON.parse(String(row["body"])) as Candidate;
++  const before = this.files(candidate.base), files = { ...before, ...candidate.files };
++  validateDocuments(files);
++  validateUpdate(before, files);
++  const hashes = Object.fromEntries(Object.entries(files).sort(([a], [b]) => a.localeCompare(b)).map(([path, text]) => [path, digest(text)]));
++  const version = `K1-${digest(canonical({ parent: candidate.base, candidate: candidate.id, files: hashes }))}`;
++  const manifest: Manifest = { schema: "knowledge-release-v1", version, files: hashes };
++  return { candidate, files, version, manifest };
++ }
++ validate(id: string): Row {
++  const saved = this.status(id);
++  if (saved.status === "published") return saved;
++  this.prepared(id);
++  this.db.prepare("UPDATE candidates SET status='validated' WHERE id=? AND status='submitted'").run(id);
++  return this.status(id);
++ }
++ /** Write and fsync all immutable files BEFORE committing their database visibility. Orphans are safe to retry. */
++ private snapshot(manifest: Manifest, files: Record<string, string>): void {
++  const target = join(this.root, "snapshots", manifest.version);
++  if (existsSync(target)) { this.verifySnapshot(manifest); return; }
++  mkdirSync(dirname(target), { recursive: true, mode: 0o700 });
++  const stage = target + `.prepare-${process.pid}`;
++  if (existsSync(stage)) rmSync(stage, { recursive: true });
++  mkdirSync(stage, { mode: 0o700 });
++  for (const [path, text] of Object.entries(files)) { durable(join(stage, path), text); chmodSync(join(stage, path), 0o444); }
++  durable(join(stage, "manifest.json"), JSON.stringify(manifest));
++  // Child directory entries must be durable too, not just the top-level rename.
++  const syncTree = (path: string) => { for (const item of readdirSync(path, { withFileTypes: true })) if (item.isDirectory()) syncTree(join(path, item.name)); syncDir(path); };
++  syncTree(stage);
++  try { renameSync(stage, target); }
++  catch (error) { if (!existsSync(target)) throw error; rmSync(stage, { recursive: true }); }
++  syncDir(dirname(target));
++  this.verifySnapshot(manifest);
++ }
++ verifySnapshot(manifest: Manifest): string {
++  const root = join(this.root, "snapshots", manifest.version);
++  const saved = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
++  if (canonical(saved) !== canonical(manifest)) throw new Error("snapshot manifest mismatch");
++  for (const [path, hash] of Object.entries(manifest.files)) if (!allowedPath(path) || digest(readFileSync(join(root, path), "utf8")) !== hash) throw new Error(`snapshot checksum mismatch: ${path}`);
++  return root;
++ }
++ publish(id: string, failpoint?: () => void): string {
++  const status = this.status(id);
++  if (status.status === "published") return String(status.version);
++  if (status.status !== "validated") throw new Error("candidate is not validated");
++  // Validation, snapshot IO and indexing preparation happen outside the short writer transaction.
++  const { candidate, files, version, manifest } = this.prepared(id);
++  this.snapshot(manifest, files);
++  const revisions = this.indexRows(files);
++  return this.transaction(() => {
++    const status = this.status(id);
++    if (status.status === "published") return String(status.version);
++    if (candidate.base !== this.current()) throw new Error("knowledge version conflict; nothing published");
++    this.db.prepare("INSERT INTO releases(version,parent,candidate,source,manifest) VALUES(?,?,?,?,?)").run(version, candidate.base, id, candidate.source, JSON.stringify(manifest));
++    for (const [path, text] of Object.entries(files)) {
++      this.db.prepare("INSERT OR IGNORE INTO documents VALUES(?,?,?)").run(digest(text), path, text);
++      this.db.prepare("INSERT INTO release_files VALUES(?,?,?)").run(version, path, digest(text));
++    }
++    for (const entry of revisions) this.insertRevision(version, entry);
++    failpoint?.();
++    this.db.prepare("INSERT INTO metadata VALUES('current',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(version);
++    this.db.prepare("UPDATE candidates SET status='published',version=? WHERE id=?").run(version, id);
++    this.db.prepare("INSERT INTO events(request,action,version) VALUES(?,'publish',?)").run(`publish:${id}`, version);
++    return version;
++  });
++ }
++ private indexRows(files: Record<string, string>): Row[] {
++  return Object.entries(files).flatMap(([path, text]) => rows(JSON.parse(text) as Row).map(e => {
++    const payload = canonical(e), revision = digest(path + "\n" + payload);
++    const character = path.startsWith("characters/") ? path.split("/")[1]! : "common";
++    const kind = path.split("/").at(-1)!.replace(".json", "");
++    const asc = Array.isArray(e.asc) ? e.asc : e.scope?.ascensions;
++    const terms: Array<[string, string]> = [];
++    const add = (cat: string, value: unknown) => { if (typeof value === "string") terms.push([cat, value.toLowerCase()]); };
++    add("entity", e.id); add("alias", e.name); add("alias", e.label_en);
++    if (typeof e.scope === "string") { const [category, entity] = e.scope.split(":"); add("category", category); add("entity", entity); }
++    for (const q of e.trigger?.question_types ?? []) add("question", q);
++    for (const a of e.trigger?.acts ?? []) add("act", String(a));
++    for (const b of e.trigger?.bosses ?? []) add("entity", b);
++    for (const card of e.trigger?.deck_cards ?? []) add("entity", card.name);
++    for (const category of e.categories ?? []) add("category", category);
++    for (const ascension of e.scope?.ascensions ?? []) add("ascension", String(ascension));
++    if (e.applies_to) add("category", e.applies_to);
++    return { revision, path, entry_id: e.id, character, kind, payload, source: e.source ?? null, confidence: String(e.confidence ?? "unknown"),
++      evidence_status: e.evidence_status ?? "unassessed", asc_min: asc?.length ? Math.min(...asc) : null, asc_max: asc?.length ? Math.max(...asc) : null, terms,
++      game_version: e.game_version ?? e.scope?.game_version ?? null,
++      evidence: [...evidenceRows(e), ...(e.sources ?? []), ...(e.counterexamples ?? []).map((value: unknown) => ({ value, role: "contradict" })),
++        ...(e.contradicting ?? []).map((run: string) => ({ run, role: "contradict", source: "own" }))] };
++  }));
++ }
++ private insertRevision(version: string, e: Row): void {
++  const result = this.db.prepare("INSERT OR IGNORE INTO revisions VALUES(?,?,?,?,?,?,?,?,?,?,?,?)").run(e.revision, e.path, String(e.entry_id), e.character, e.kind, e.source, e.confidence, e.evidence_status, e.asc_min, e.asc_max, e.game_version, e.payload);
++  this.db.prepare("INSERT INTO release_entries VALUES(?,?)").run(version, e.revision);
++  if (!result.changes) return;
++  for (const [category, term] of e.terms) this.db.prepare("INSERT OR IGNORE INTO terms VALUES(?,?,?)").run(e.revision, category, term);
++  for (const [ordinal, ev] of e.evidence.entries()) this.db.prepare("INSERT INTO evidence VALUES(?,?,?,?,?,?)").run(e.revision, ordinal, ev.role ?? "support", ev.source ?? null, ev.dataset_sha256 ?? ev.evidence_sha256 ?? null, JSON.stringify(ev));
++  this.db.prepare("INSERT INTO body_search VALUES(?,?)").run(e.revision, e.payload);
++ }
++ rollback(version: string, request: string): string {
++  const row = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(version);
++  if (!row) throw new Error("unknown rollback version");
++  this.verifySnapshot(JSON.parse(String(row["manifest"])) as Manifest);
++  return this.transaction(() => {
++    const old = this.db.prepare("SELECT version,action FROM events WHERE request=?").get(request);
++    if (old) { if (old["version"] !== version || old["action"] !== "rollback") throw new Error("rollback request reused"); return version; }
++    this.db.prepare("UPDATE metadata SET value=? WHERE key='current'").run(version);
++    this.db.prepare("INSERT INTO events(request,action,version) VALUES(?,'rollback',?)").run(request, version);
++    return version;
++  });
++ }
++ /** Persist before launching the brain. A restart of this run reuses its original version. */
++ bind(runId: string, code: string): Row {
++  if (!runId.trim() || !code.trim()) throw new Error("run/code identity required");
++  const binding = this.transaction(() => {
++    const old = this.db.prepare("SELECT * FROM run_bindings WHERE run_id=?").get(runId);
++    if (old) return old;
++    const version = this.current(); if (!version) throw new Error("no published knowledge");
++    this.db.prepare("INSERT INTO run_bindings(run_id,version,code) VALUES(?,?,?)").run(runId, version, code);
++    return this.db.prepare("SELECT * FROM run_bindings WHERE run_id=?").get(runId)!;
++  });
++  const release = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(binding["version"]!);
++  const snapshot = this.verifySnapshot(JSON.parse(String(release!["manifest"])) as Manifest);
++  return { ...binding, snapshot, schema: SCHEMA_VERSION };
++ }
++ query(options: { version: string; character: string; kind?: string; ascension?: number; category?: string; entity?: string; text?: string; source?: string; gameVersion?: string; evidenceStatus?: string; limit?: number; offset?: number }): Row[] {
++  const { version, character, kind, ascension, category, entity, text } = options;
++  const limit = options.limit ?? 20, offset = options.offset ?? 0;
++  if (!Number.isInteger(limit) || limit < 1 || limit > 100 || !Number.isInteger(offset) || offset < 0 || offset > 10000 || (text?.length ?? 0) > 200) throw new Error("invalid query bounds");
++  const where = ["p.version=?", "r.character IN (?,'common')"], params: Array<string | number> = [version, character];
++  if (kind) { where.push("r.kind=?"); params.push(kind); }
++  if (ascension !== undefined) {
++    where.push("(r.asc_min IS NULL OR r.asc_min<=?) AND (r.asc_max IS NULL OR r.asc_max>=?)"); params.push(ascension, ascension);
++    where.push("(r.asc_min IS NULL OR r.kind NOT IN ('reflex','build-cores','direction-cards') OR r.revision IN (SELECT revision FROM terms WHERE category='ascension' AND term=?))"); params.push(String(ascension));
++  }
++  for (const [column, value] of [["source", options.source], ["evidence_status", options.evidenceStatus]] as const) if (value) { where.push(`r.${column}=?`); params.push(value); }
++  if (options.gameVersion) { where.push("(r.game_version IS NULL OR r.game_version=?)"); params.push(options.gameVersion); }
++  for (const [cat, value] of [["category", category], ["entity", entity]] as const) if (value) {
++    where.push(cat === "entity" ? "r.revision IN (SELECT revision FROM terms WHERE category IN ('entity','alias') AND term=?)"
++      : "r.revision IN (SELECT revision FROM terms WHERE category=? AND term=?)");
++    if (cat !== "entity") params.push(cat);
++    params.push(value.toLowerCase());
++  }
++  if (text) {
++    // Trigrams cannot recall two-character Chinese terms. Fall back to instr for short queries.
++    if (Array.from(text).length >= 3) { where.push("r.revision IN (SELECT revision FROM body_search WHERE body_search MATCH ?)"); params.push('"' + text.replaceAll('"', '""') + '"'); }
++    else { where.push("instr(lower(r.payload),?)>0"); params.push(text.toLowerCase()); }
++  }
++  return this.db.prepare(`SELECT r.* FROM release_entries p JOIN revisions r ON r.revision=p.revision WHERE ${where.join(" AND ")} ORDER BY r.path,r.entry_id LIMIT ? OFFSET ?`).all(...params, limit, offset);
++ }
++ async backup(destination: string): Promise<void> {
++  if (existsSync(destination)) throw new Error("backup destination already exists");
++  mkdirSync(dirname(destination), { recursive: true, mode: 0o700 });
++  await backup(this.db, destination);
++  chmodSync(destination, 0o600);
++ }
++ /** Restore into a new directory. Rebuild and verify every snapshot from the consistent SQLite backup. */
++ static restore(source: string, destination: string): KnowledgeStore {
++  if (existsSync(destination)) throw new Error("restore destination must be new; retain original runtime");
++  mkdirSync(destination, { recursive: true, mode: 0o700 });
++  durable(join(destination, "knowledge.sqlite"), readFileSync(source));
++  const store = new KnowledgeStore(destination);
++  if (store.db.prepare("PRAGMA integrity_check").get()!["integrity_check"] !== "ok") { store.close(); throw new Error("backup integrity check failed"); }
++  for (const row of store.db.prepare("SELECT version,manifest FROM releases").all()) store.snapshot(JSON.parse(String(row["manifest"])) as Manifest, store.files(String(row["version"])));
++  return store;
++ }
++}
+diff --git a/agent/src/knowledge/runtime/validation.ts b/agent/src/knowledge/runtime/validation.ts
+new file mode 100644
+index 000000000..6e93024ab
+--- /dev/null
++++ b/agent/src/knowledge/runtime/validation.ts
+@@ -0,0 +1,99 @@
++import { createHash } from "node:crypto";
++import { parseStrategyLibrary, STRATEGY_LIMITS } from "../strategy-entries.js";
++import { ARCHETYPES_SHA256 } from "../strategy-archetypes.js";
++import { parseSharedExperience } from "../shared-experience.js";
++import { validateBuildCoreFile } from "../../v6/build-core.js";
++import { directionFile, reflexFile } from "../../v6/knowledge.js";
++import { reflexVocabSchema } from "../../v6/formats.js";
++import { validate } from "../../v6/schema.js";
++
++export type Row = Record<string, any>;
++export const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
++export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json"]);
++export const ARCHETYPE_PATH = "external/sts2fun/builds-v1/archetypes.json";
++export function allowedPath(path: string): boolean {
++  return path === "common/shared-experience.json" || path === ARCHETYPE_PATH
++    || /^characters\/[a-z0-9_]+\/[a-z-]+\.json$/.test(path) && MIGRATED_NAMES.has(path.split("/")[2]!);
++}
++export function rows(body: Row): Row[] { return Array.isArray(body.entries) ? body.entries : [{ id: "$document", ...body }]; }
++export function evidenceRows(entry: Row): unknown[] {
++  return Array.isArray(entry.evidence) ? entry.evidence : object(entry.evidence) ? [entry.evidence] : [];
++}
++function retains(before: unknown, after: unknown): boolean {
++  if (Array.isArray(before)) return Array.isArray(after) && before.every(old => after.some(next => retains(old, next)));
++  if (object(before)) return object(after) && Object.entries(before).every(([key, value]) =>
++    ["n_support", "n_contradict"].includes(key) && typeof value === "number" ? Number(after[key]) >= value : retains(value, after[key]));
++  return before === after;
++}
++const nonempty = (s: unknown) => typeof s === "string" && s.trim().length > 0;
++
++/** Validate with the consumers' schemas, then check the complete release's cross-file references. */
++export function validateDocuments(files: Record<string, string>): void {
++  const parsed: Record<string, Row> = {};
++  for (const [path, text] of Object.entries(files)) {
++    if (!allowedPath(path) || Buffer.byteLength(text) > 8 * 1024 * 1024) throw new Error(`invalid document path/size: ${path}`);
++    const body: unknown = JSON.parse(text);
++    if (!object(body)) throw new Error(`invalid document: ${path}`);
++    parsed[path] = body;
++    const name = path.split("/").at(-1), character = path.split("/")[1];
++    if (name === "shared-experience.json") parseSharedExperience(body, path);
++    else if (name === "experience.json") {
++      if (!nonempty(body.version) || !Array.isArray(body.entries)) throw new Error(`invalid experience: ${path}`);
++      const ids = new Set();
++      for (const e of body.entries) {
++        if (!object(e) || !nonempty(e.id) || ids.has(e.id) || !nonempty(e.scope) || !nonempty(e.lesson)
++          || !["active", "retired"].includes(e.status) || !["low", "med", "high"].includes(e.confidence)
++          || !Array.isArray(e.asc) || e.asc.length !== 2 || !e.asc.every((n: unknown) => Number.isInteger(n) && Number(n) >= 0) || e.asc[0] > e.asc[1]
++          || !Array.isArray(e.evidence) || !(e.evidence.length || e.status === "retired" && e.contradicting?.length) || !e.evidence.every(nonempty)
++          || !Number.isInteger(e.n_support) || e.n_support < 0 || !Number.isInteger(e.n_contradict) || e.n_contradict < 0) throw new Error(`invalid experience entry: ${path}/${e.id}`);
++        ids.add(e.id);
++      }
++    } else if (name === "strategy-entries.json") {
++      if (Buffer.byteLength(text) > STRATEGY_LIMITS.fileBytes) throw new Error("strategy document exceeds consumer byte limit");
++      parseStrategyLibrary(body);
++    }
++    else if (name === "archetypes.json") {
++      if (!object(body.model) || Buffer.byteLength(text) > 200000 || createHash("sha256").update(text).digest("hex") !== ARCHETYPES_SHA256) throw new Error("invalid or incompatible archetype model");
++    } else {
++      const result = name === "build-cores.json" ? validateBuildCoreFile(body)
++        : name === "direction-cards.json" ? validate(directionFile, body)
++        : name === "reflex.json" ? validate(reflexFile, body) : validate(reflexVocabSchema, body);
++      if (!result.ok) throw new Error(`invalid ${path}: ${result.issues.join("; ")}`);
++      if (body.character !== character) throw new Error(`cross-character document: ${path}`);
++    }
++  }
++  for (const [path, body] of Object.entries(parsed)) {
++    if (!path.endsWith("/reflex.json")) continue;
++    const prefix = path.slice(0, -"reflex.json".length);
++    const cores = parsed[prefix + "build-cores.json"]?.entries ?? [];
++    const directions = new Set(cores.length ? cores.map((e: Row) => e.direction) : (parsed[prefix + "direction-cards.json"]?.entries ?? []).map((e: Row) => e.id));
++    const combos = new Set(cores.flatMap((e: Row) => e.combos.map((c: Row) => c.id)));
++    const tags = new Set(Object.values(parsed[prefix + "reflex-vocab.json"]?.dimensions ?? {}).flatMap(v => (v as Row[]).map(e => e.id)));
++    for (const entry of body.entries) {
++      if (entry.directions?.some((id: string) => !directions.has(id)) || entry.cores?.some((id: string) => !directions.has(id))
++        || entry.combos?.some((id: string) => !combos.has(id)) || entry.signal.kind === "tag" && !tags.has(entry.signal.value)) throw new Error(`incomplete reflex references: ${entry.id}`);
++    }
++  }
++}
++
++/** Revisions keep history, and an update cannot silently drop published evidence or counterexamples. */
++export function validateUpdate(before: Record<string, string>, after: Record<string, string>): void {
++  for (const [path, text] of Object.entries(before)) {
++    const old = JSON.parse(text) as Row, next = JSON.parse(after[path] ?? "null") as Row | null;
++    if (!next) throw new Error(`cannot delete published document: ${path}`);
++    if (!Array.isArray(old.entries)) continue;
++    const current = new Map(rows(next).map(e => [e.id, e]));
++    for (const entry of rows(old)) {
++      const changed = current.get(entry.id);
++      if (!changed) throw new Error(`retire instead of deleting published entry: ${entry.id}`);
++      if (JSON.stringify(entry) === JSON.stringify(changed)) continue;
++      if (!retains(evidenceRows(entry), evidenceRows(changed))
++        || !retains(entry.sources ?? [], changed.sources ?? []) || !retains(entry.counterexamples ?? [], changed.counterexamples ?? [])
++        || (entry.contradicting ?? []).some((e: unknown) => !(changed.contradicting ?? []).includes(e))
++        || Number(changed.n_contradict ?? 0) < Number(entry.n_contradict ?? 0)
++        || entry.evidence_status === "conflict" && changed.evidence_status !== "conflict") throw new Error(`published counterevidence must be preserved: ${entry.id}`);
++      // Scope changes require a separate evidence-reviewed migration, not a routine content callback.
++      for (const key of ["scope", "asc", "shared"]) if (JSON.stringify(entry[key]) !== JSON.stringify(changed[key])) throw new Error(`scope change requires owner review: ${entry.id}/${key}`);
++    }
++  }
++}
+diff --git a/agent/src/knowledge/strategy-archetypes.ts b/agent/src/knowledge/strategy-archetypes.ts
+index eea96c8c2..a64110d2f 100644
+--- a/agent/src/knowledge/strategy-archetypes.ts
++++ b/agent/src/knowledge/strategy-archetypes.ts
+@@ -1,7 +1,7 @@
+ /** Nearest geometry from #54; semantic playbook labels remain learner-owned. */
+ import { createHash } from "node:crypto";
+ import { readFileSync, statSync } from "node:fs";
+-import { join } from "node:path";
++import { runtimeKnowledgeFile } from "./runtime-paths.js";
+ import { knowledgeCharacter } from "./files.js";
+ import type { ToolContext } from "../brain/tools/types.js";
+ 
+@@ -48,7 +48,7 @@ export function strategyDeckIds(ctx: ToolContext): string[] {
+ export function matchStrategyArchetype(ctx: ToolContext) {
+   if (knowledgeCharacter() !== "silent" || ctx.ascension !== 10) return { status: "out_of_scope", match: null };
+   try {
+-    const path = join(ctx.knowledgeDir, ARCHETYPES_FILE);
++    const path = runtimeKnowledgeFile(ctx.knowledgeDir, ARCHETYPES_FILE);
+     if (statSync(path).size > 200_000) throw new Error("oversize");
+     const bytes = readFileSync(path);
+     if (createHash("sha256").update(bytes).digest("hex") !== ARCHETYPES_SHA256) throw new Error("checksum");
+diff --git a/agent/src/v6/knowledge.ts b/agent/src/v6/knowledge.ts
+index 299848370..7800de14d 100644
+--- a/agent/src/v6/knowledge.ts
++++ b/agent/src/v6/knowledge.ts
+@@ -2,6 +2,7 @@ import { readFileSync, realpathSync, statSync } from "node:fs";
+ import { join, relative, isAbsolute } from "node:path";
+ import { array, object, literal, refine, validate, type Result } from "./schema.js";
+ import { characterKey } from "../knowledge/files.js";
++import { runtimeKnowledgeRoot } from "../knowledge/runtime-paths.js";
+ import { characterSchema, directionCardSchema, reflexEntrySchema, reflexVocabSchema, type Character, type DirectionCard, type ReflexEntry, type ReflexVocab } from "./formats.js";
+ import { validateBuildCoreFile, type BuildCore } from "./build-core.js";
+ 
+@@ -26,6 +27,7 @@ export interface V6Knowledge {
+ /** No global/default character, common fallback, directory creation, cache or knowledge synthesis. */
+ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined,
+   readText: (path: string) => string = path => readFileSync(path, "utf8")): V6Knowledge {
++  knowledgeDir = runtimeKnowledgeRoot(knowledgeDir);
+   const parsed = validate(characterSchema, characterKey(rawCharacter));
+   const character = parsed.ok ? parsed.value : null;
+   function load<T>(name: string, parse: (v: unknown) => Result<T>): KnowledgeResult<T> {
+diff --git a/agent/tests/knowledge-runtime.test.ts b/agent/tests/knowledge-runtime.test.ts
+new file mode 100644
+index 000000000..c385a5ca3
+--- /dev/null
++++ b/agent/tests/knowledge-runtime.test.ts
+@@ -0,0 +1,171 @@
++import { existsSync, mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
++import { join, dirname } from "node:path";
++import { tmpdir } from "node:os";
++import { afterEach, expect, it, vi } from "vitest";
++import { KnowledgeStore, safeSQLiteVersion, auditApprovedChanges, type Candidate } from "../src/knowledge/runtime/store.js";
++import { validateDocuments } from "../src/knowledge/runtime/validation.js";
++import { strategyTool } from "../src/brain/tools/strategy-tool.js";
++import { reflexKnowledgeTool } from "../src/brain/tools/reflex-knowledge.js";
++import { experienceMatches } from "../src/brain/tools/query-guidance.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { reflex, vocab } from "./v6-fixtures.js";
++import { runtimeLearningInstructions } from "../../learner/lib/knowledge-runtime.js";
++import { main as runtimeMain } from "../tools/knowledge-runtime.js";
++
++const dirs: string[] = [], handles: KnowledgeStore[] = [];
++afterEach(() => { handles.splice(0).forEach(s => { if (s.db.isOpen) s.close(); }); dirs.splice(0).forEach(d => rmSync(d, { recursive: true, force: true })); setKnowledgeCharacter(null); vi.unstubAllEnvs(); });
++function directory() { const dir = mkdtempSync(join(tmpdir(), "knowledge-runtime-")); dirs.push(dir); return dir; }
++function store(root = directory()) { const s = new KnowledgeStore(root); handles.push(s); return s; }
++const path = "characters/silent/experience.json";
++const experience = { id: "fixture-exp", scope: "general:deck", asc: [10, 10], lesson: "仅格式测试启动路线", evidence: ["SILENT000001"], n_support: 1, n_contradict: 1, confidence: "low", last_seen: "2026-10-25", status: "active" };
++const document = (entries = [experience]) => JSON.stringify({ version: "fixture-v1", entries });
++function candidate(s: KnowledgeStore, id: string, text = document(), files: Record<string, string> = { [path]: text }): Candidate {
++ return { schema: "knowledge-candidate-v1", id, base: s.current(), character: "silent", source: "fixture:internal", files };
++}
++function publish(s: KnowledgeStore, c = candidate(s, "first")) { s.submit(c); s.validate(c.id); return s.publish(c.id); }
++
++it("uses repaired SQLite versions and preserves bytes, independent evidence, history and run bindings", () => {
++ for (const v of ["3.51.3", "3.44.6", "3.50.7", "3.52.0"]) expect(safeSQLiteVersion(v)).toBe(true);
++ for (const v of ["3.46.1", "3.51.2", "3.50.6"]) expect(safeSQLiteVersion(v)).toBe(false);
++ const s = store(), c = candidate(s, "first"), v1 = publish(s, c);
++ expect(s.files(v1)[path]).toBe(c.files[path]);
++ const binding = s.bind("FIXTURE_RUN", "a".repeat(40));
++ const v2 = publish(s, candidate(s, "next", document([{ ...experience, lesson: "格式测试修订" }])));
++ expect(s.bind("FIXTURE_RUN", "b".repeat(40)).version).toBe(v1);
++ expect(s.bind("NEXT_RUN", "b".repeat(40)).version).toBe(v2);
++ expect(readFileSync(join(String(binding.snapshot), path), "utf8")).toBe(c.files[path]);
++ expect(s.db.prepare("SELECT count(*) AS n FROM revisions").get()!.n).toBe(2);
++ expect(s.files(v1)[path]).toBe(c.files[path]);
++ expect(s.query({ version: v1, character: "ironclad" })).toEqual([]);
++ expect(s.query({ version: v1, character: "silent", ascension: 9 })).toEqual([]);
++ expect(s.query({ version: v1, character: "silent", ascension: 10, text: "启动" })).toHaveLength(1);
++ expect(s.query({ version: v1, character: "silent", text: "格式测试" })).toHaveLength(1);
++ expect(s.query({ version: v1, character: "silent", category: "general" })).toHaveLength(1);
++ expect(() => s.query({ version: v1, character: "silent", limit: 101 })).toThrow("bounds");
++});
++
++it("deduplicates duplicate callbacks even after restart/rollback, and rejects reused IDs", () => {
++ const s = store(), c = candidate(s, "first"), version = publish(s, c);
++ const other = store(s.root);
++ expect(other.submit(c).status).toBe("published");
++ expect(other.publish(c.id)).toBe(version);
++ expect(() => other.submit({ ...c, source: "different" })).toThrow("idempotency");
++ const next = publish(s, candidate(s, "next", document([{ ...experience, lesson: "格式更新" }])));
++ expect(other.rollback(version, "rollback-fixture")).toBe(version);
++ expect(other.rollback(version, "rollback-fixture")).toBe(version);
++ expect(other.publish("next")).toBe(next);
++ expect(other.current()).toBe(version);
++ expect(s.db.prepare("SELECT count(*) AS n FROM releases").get()!.n).toBe(2);
++ expect(() => s.rollback(next, "rollback-fixture")).toThrow("reused");
++});
++
++it("handles two candidate producers with CAS, without mixing candidate or reference sets", () => {
++ const a = store(), b = store(a.root); publish(a);
++ const first = candidate(a, "producer-a", document([{ ...experience, lesson: "候选A" }]));
++ const second = candidate(b, "producer-b", document([{ ...experience, lesson: "候选B" }]));
++ a.submit(first); b.submit(second); a.validate(first.id); b.validate(second.id);
++ const reader = new KnowledgeStore(a.root, { readOnly: true }); handles.push(reader);
++ reader.db.exec("BEGIN"); const before = reader.current();
++ const after = a.publish(first.id);
++ expect(reader.current()).toBe(before); reader.db.exec("COMMIT"); expect(reader.current()).toBe(after);
++ expect(() => b.publish(second.id)).toThrow("conflict");
++ expect(b.status(second.id).status).toBe("validated");
++ expect(b.files(after)[path]).toBe(first.files[path]);
++});
++
++it("retains the producer input on SQLITE_BUSY and accepts the same submission after lock release", () => {
++ const a = store(), b = store(a.root); publish(a);
++ const c = candidate(b, "busy-producer", document([{ ...experience, lesson: "并发夹具" }]));
++ b.db.exec("PRAGMA busy_timeout=1"); a.db.exec("BEGIN IMMEDIATE");
++ try { expect(() => b.submit(c)).toThrow(/locked|busy/i); }
++ finally { a.db.exec("ROLLBACK"); }
++ expect(b.submit(c).id).toBe(c.id); b.validate(c.id); expect(b.publish(c.id)).toBe(b.current());
++});
++
++it("does not initialize an absent original database during completion recovery", async () => {
++ const missing = join(directory(), "original-runtime-unavailable");
++ await expect(runtimeMain(["complete", "--runtime", missing, "--candidate", "unused-fixture"])).rejects.toThrow("original runtime database is unavailable");
++ expect(existsSync(missing)).toBe(false);
++});
++
++it("rolls back interrupted publication atomically, recovers the same prepared snapshot, and backs up consistently", async () => {
++ const s = store(); const before = publish(s), c = candidate(s, "crash", document([{ ...experience, lesson: "崩溃恢复格式测试" }]));
++ s.submit(c); s.validate(c.id);
++ expect(() => s.publish(c.id, () => { throw new Error("injected crash before pointer"); })).toThrow("injected");
++ expect(s.current()).toBe(before); expect(s.status(c.id).status).toBe("validated");
++ expect(s.db.prepare("SELECT count(*) AS n FROM releases").get()!.n).toBe(1);
++ const after = s.publish(c.id);
++ const backup = join(directory(), "backup.sqlite"); await s.backup(backup);
++ const destination = join(directory(), "restored"), restored = KnowledgeStore.restore(backup, destination); handles.push(restored);
++ expect(restored.current()).toBe(after); expect(restored.files(before)).toEqual(s.files(before));
++ expect(restored.bind("RECOVERED", "fixture").version).toBe(after);
++ expect(() => KnowledgeStore.restore(backup, destination)).toThrow("new");
++ restored.rollback(before, "restore-rollback"); expect(restored.status(c.id).status).toBe("published");
++});
++
++it("refuses missing references, scope expansion, dropped counterevidence and unpublished paths", () => {
++ const s = store(); publish(s);
++ for (const entry of [{ ...experience, evidence: ["DIFFERENT001"] }, { ...experience, n_contradict: 0 }, { ...experience, asc: [0, 20] }]) {
++  const c = candidate(s, `bad-${entry.evidence[0]}-${entry.n_contradict}-${entry.asc[0]}`, document([entry]));
++  s.submit(c); expect(() => s.validate(c.id)).toThrow();
++ }
++ expect(() => s.submit(candidate(s, "cross-role", "", { "characters/ironclad/experience.json": document() }))).toThrow("character");
++ expect(() => s.submit(candidate(s, "pending", "", { "characters/silent/pending/reflex.json": "{}" }))).toThrow();
++ const missing = { "characters/silent/reflex.json": JSON.stringify({ schema: "reflex-file-v1", character: "silent", entries: [{ ...reflex, directions: undefined, signal: { kind: "tag", value: "TEST_TAG", unit: "label" } }] }) };
++ expect(() => validateDocuments(missing)).toThrow("references");
++ expect(() => validateDocuments({ ...missing, "characters/silent/reflex-vocab.json": JSON.stringify(vocab) })).not.toThrow();
++});
++
++it("preserves existing strategy/reflex/experience tools, matching and negative controls on release snapshots", async () => {
++ setKnowledgeCharacter("silent"); const s = store();
++ const { directions: _unused, ...rk } = reflex;
++ const strategy = { schema: "brain-strategies-v1", character: "silent", entries: [{ id: "fixture-strategy", version: "fixture", trigger: { question_types: ["card_reward"], acts: [1] }, strategy: "仅格式测试", source: "own", evidence: [{ run: "SILENT000001", floor: 4, role: "contradict" }], confidence: .25 }] };
++ const files = { [path]: document(), "characters/silent/strategy-entries.json": JSON.stringify(strategy),
++  "characters/silent/reflex.json": JSON.stringify({ schema: "reflex-file-v1", character: "silent", entries: [{ ...rk, scope: { character: "silent", ascensions: [10] } }] }) };
++ const v = publish(s, candidate(s, "tools", "", files));
++ const snapshot = String(s.bind("TOOLS", "fixture").snapshot);
++ const ctx = { label: "reward/card", ascension: 10, act: 1, knowledgeDir: snapshot, logsDir: snapshot, payload: { facts: { act: 1, floor: 4 } } };
++ const legacy = directory(); for (const [path, text] of Object.entries(files)) { mkdirSync(dirname(join(legacy, path)), { recursive: true }); writeFileSync(join(legacy, path), text); }
++ const tools = [strategyTool(), reflexKnowledgeTool()];
++ for (const tool of tools) {
++  const actual = await tool.run({ query: "*" }, ctx), original = await tool.run({ query: "*" }, { ...ctx, knowledgeDir: legacy });
++  expect(JSON.parse(actual.text)).toEqual(JSON.parse(original.text));
++  expect(Buffer.byteLength(actual.text)).toBeLessThanOrEqual(24000);
++  expect(JSON.parse((await tool.run({ query: "nonexistent" }, ctx)).text).entries).toEqual([]);
++ }
++ expect(JSON.parse((await strategyTool().run({ query: "*" }, { ...ctx, label: "rest/plan" })).text).entries).toEqual([]);
++ expect(JSON.parse((await reflexKnowledgeTool().run({ query: "*" }, { ...ctx, ascension: 9 })).text).entries).toEqual([]);
++ const exp = await experienceMatches(ctx);
++ expect(exp.result).toEqual([experience]); expect(exp.result).toEqual((await experienceMatches({ ...ctx, knowledgeDir: legacy })).result);
++ expect(s.query({ version: v, character: "silent", kind: "strategy-entries" })[0]!.payload).toContain('"role":"contradict"');
++});
++
++it("checks approved external artifacts and supplies runtime instructions only to registered content tasks", () => {
++ const s = store(); publish(s); const dir = directory(), artifact = join(dir, "entry.json");
++ const entry = { ...experience, lesson: "冻结产物测试" }; writeFileSync(artifact, JSON.stringify(entry));
++ const changes = { [path]: document([entry]) };
++ expect(() => auditApprovedChanges(s.files(s.current()), changes, [{ id: entry.id, path: artifact }])).not.toThrow();
++ expect(() => auditApprovedChanges(s.files(s.current()), changes, [])).toThrow("absent");
++ const state = join(dir, "state.json"); writeFileSync(state, JSON.stringify({ batches: { fixture: { character: "silent" } } }));
++ const env = { STS2_KNOWLEDGE_RUNTIME: s.root, LEARNER_BATCH_ID: "fixture", LEARNER_STATE_FILE: state, CODEX_OPS_ROOT: dir };
++ const prompt = runtimeLearningInstructions(env, "experience-update", "silent", dir);
++ expect(prompt).toContain(s.current()); expect(prompt).toContain("knowledge_candidate"); expect(prompt).toContain("不commit/merge");
++ expect(runtimeLearningInstructions({}, "experience-update", "silent", dir)).toBe("");
++ expect(runtimeLearningInstructions(env, "fix-batch", "silent", dir)).toBe("");
++});
++
++it("pins real loader paths and provenance for a process while leaving analysis inputs outside the snapshot", async () => {
++ const s = store(), version = publish(s), bound = s.bind("PROCESS", "fixture");
++ vi.stubEnv("STS2_KNOWLEDGE_SNAPSHOT", String(bound.snapshot)); vi.stubEnv("STS2_KNOWLEDGE_VERSION", version);
++ vi.resetModules();
++ const files = await import("../src/knowledge/files.js"), paths = await import("../src/core/paths.js");
++ const provenance = await import("../src/knowledge/query-sources.js");
++ expect(files.knowledgeFile(paths.KNOWLEDGE_DIR, "experience.json", "silent")).toBe(join(String(bound.snapshot), path));
++ expect(files.knowledgeFile(paths.KNOWLEDGE_DIR, "room-costs.json", "silent")).toBe(join(paths.KNOWLEDGE_DIR, "characters/silent/room-costs.json"));
++ files.setKnowledgeCharacter("silent");
++ const queried = await provenance.withKnowledgeQuerySources(paths.KNOWLEDGE_DIR, async () => { provenance.recordKnowledgeQuerySource("experience.json"); return provenance.queryKnowledgeText(paths.KNOWLEDGE_DIR, "experience.json"); });
++ expect(queried.result).toBe(document()); expect(queried.sources[0]).toMatchObject({ knowledge_version: version, path });
++ const next = publish(s, candidate(s, "PROCESS-next", document([{ ...experience, lesson: "下一版本" }])));
++ expect(next).not.toBe(version);
++ expect(files.knowledgeFile(paths.KNOWLEDGE_DIR, "experience.json", "silent")).toBe(join(String(bound.snapshot), path));
++});
+diff --git a/agent/tools/knowledge-runtime-benchmark.ts b/agent/tools/knowledge-runtime-benchmark.ts
+new file mode 100644
+index 000000000..e40dc7039
+--- /dev/null
++++ b/agent/tools/knowledge-runtime-benchmark.ts
+@@ -0,0 +1,68 @@
++/** Fixed local migration/readback benchmark. Never takes a production runtime as an output. */
++import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { join, resolve } from "node:path";
++import { tmpdir } from "node:os";
++import { performance } from "node:perf_hooks";
++import { KnowledgeStore, importFiles, digest, type Candidate } from "../src/knowledge/runtime/store.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { strategyTool } from "../src/brain/tools/strategy-tool.js";
++import { reflexKnowledgeTool } from "../src/brain/tools/reflex-knowledge.js";
++
++const temp = mkdtempSync(join(tmpdir(), "knowledge-benchmark-"));
++const report: Record<string, unknown> = { boundary: "SQLite query + row materialization; tools timed separately; excludes LLM/network", cold: "new SQLite connection, OS page cache uncontrolled", concurrency: "two WAL connections, reader inside uncommitted writer; one process; no CPU-parallel writer claim" };
++const percentile = (times: number[]) => ({ n: times.length, p50_ms: [...times].sort((a, b) => a - b)[Math.floor(times.length * .50)], p95_ms: [...times].sort((a, b) => a - b)[Math.min(times.length - 1, Math.floor(times.length * .95))], max_ms: Math.max(...times) });
++function measure(run: () => unknown, n = 100) { const times = []; for (let i = 0; i < n; i++) { const start = performance.now(); run(); times.push(performance.now() - start); } return percentile(times); }
++try {
++ const original = importFiles(resolve(process.argv[2] ?? "../knowledge"));
++ const runtime = join(temp, "real");
++ const s = new KnowledgeStore(runtime);
++ try {
++  const c: Candidate = { schema: "knowledge-candidate-v1", id: "frozen-migration", character: "migration", source: "fixed repository published leaves", base: null, files: original };
++  const start = performance.now(); s.submit(c); s.validate(c.id); const version = s.publish(c.id);
++  report["migration_ms"] = performance.now() - start;
++  const restored = s.files(version);
++  report["migration"] = { documents: Object.keys(original).length, bytes: Object.values(original).reduce((n, t) => n + Buffer.byteLength(t), 0),
++   entries: Number(s.db.prepare("SELECT count(*) n FROM revisions").get()!.n),
++   exact_bytes: Object.entries(original).every(([path, text]) => restored[path] === text),
++   files: Object.fromEntries(Object.entries(original).map(([path, text]) => [path, digest(text)])) };
++  const queries = [
++   { kind: "experience", text: "路线" }, { kind: "experience", category: "general" },
++   { kind: "strategy-entries", text: "启动" }, { kind: "strategy-entries", entity: "BACKFLIP" },
++   { kind: "reflex", text: "boss" }, { kind: "reflex", text: "TEST_NO_MATCH" },
++  ];
++  report["real_hot"] = queries.map(q => ({ query: q, ...measure(() => s.query({ version, character: "silent", ascension: 10, ...q })) }));
++  report["real_connection_cold"] = measure(() => { const r = new KnowledgeStore(runtime, { readOnly: true }); try { r.query({ version, character: "silent", kind: "experience", text: "路线" }); } finally { r.close(); } }, 30);
++  const reader = new KnowledgeStore(runtime, { readOnly: true });
++  try {
++   const edited = { ...original }; const path = "characters/silent/experience.json";
++   edited[path] = JSON.stringify({ ...JSON.parse(original[path]!), version: "benchmark-header-only" });
++   const change: Candidate = { ...c, id: "header-only", base: version, character: "silent", files: { [path]: edited[path]! } };
++   s.submit(change); s.validate(change.id);
++   const times: number[] = [];
++   s.publish(change.id, () => { for (let i = 0; i < 100; i++) { const start = performance.now(); reader.query({ version, character: "silent", kind: "strategy-entries", text: "启动" }); times.push(performance.now() - start); } });
++   report["read_during_writer"] = percentile(times);
++  } finally { reader.close(); }
++  setKnowledgeCharacter("silent");
++  const snapshot = String(s.bind("FIXED_TOOLS", "benchmark").snapshot);
++  const ctx = { ascension: 10, act: 1, label: "reward/card", knowledgeDir: snapshot, logsDir: temp, payload: { facts: { act: 1, floor: 4, deck_size: 10 } } };
++  const tools: Record<string, unknown> = {};
++  for (const tool of [strategyTool(), reflexKnowledgeTool()]) {
++   const times = [];
++   for (let i = 0; i < 40; i++) { const start = performance.now(); await tool.run({ query: "*" }, { ...ctx, ...(tool.name === "kb_reflex" ? { label: "fight-plan" } : {}) }); times.push(performance.now() - start); }
++   tools[tool.name] = percentile(times);
++  }
++  report["snapshot_tools"] = tools;
++ } finally { s.close(); }
++ const scale = new KnowledgeStore(join(temp, "extended"));
++ try {
++  const entries = Array.from({ length: 10000 }, (_, i) => ({ id: `fixture-${i}`, scope: "general:route", asc: [10, 10],
++   lesson: `格式夹具 启动 路线 ${i}`, name: `别名${i}`, status: "active", confidence: "low", evidence: ["FIXTURE00001"], n_support: 1, n_contradict: 0, last_seen: "fixture" }));
++  const c: Candidate = { schema: "knowledge-candidate-v1", id: "extended-fixed", base: null, character: "silent", source: "synthetic format fixture", files: { "characters/silent/experience.json": JSON.stringify({ version: "fixture", entries }) } };
++  scale.submit(c); scale.validate(c.id); const version = scale.publish(c.id);
++  report["extended"] = { entries: entries.length, hot_two_character: measure(() => scale.query({ version, character: "silent", ascension: 10, kind: "experience", text: "启动" })),
++   hot_trigram: measure(() => scale.query({ version, character: "silent", kind: "experience", text: "格式夹具" })),
++   indexed_alias: measure(() => scale.query({ version, character: "silent", entity: "别名9999" })) };
++ } finally { scale.close(); }
++ const text = JSON.stringify(report, null, 2) + "\n";
++ if (process.argv[3]) writeFileSync(process.argv[3], text); else process.stdout.write(text);
++} finally { rmSync(temp, { recursive: true, force: true }); }
+diff --git a/agent/tools/knowledge-runtime.ts b/agent/tools/knowledge-runtime.ts
+new file mode 100644
+index 000000000..f056c18fa
+--- /dev/null
++++ b/agent/tools/knowledge-runtime.ts
+@@ -0,0 +1,98 @@
++/** CLI shared by runtime completion callbacks and ops. No production paths are implicit. */
++import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
++import { join, resolve } from "node:path";
++import { spawn } from "node:child_process";
++import { KnowledgeStore, importFiles, auditApprovedChanges, type Candidate } from "../src/knowledge/runtime/store.js";
++
++export async function main(argv = process.argv.slice(2)): Promise<void> {
++ const [command, ...rest] = argv;
++ const flags: Record<string, string> = {};
++ let child: string[] = [];
++ for (let i = 0; i < rest.length; i++) {
++  if (rest[i] === "--") { child = rest.slice(i + 1); break; }
++  if (!rest[i]?.startsWith("--") || !rest[i + 1] || rest[i + 1]!.startsWith("--")) throw new Error("expected --name value");
++  flags[rest[i]!.slice(2)] = rest[++i]!;
++ }
++ const required = (key: string) => { if (!flags[key]) throw new Error(`--${key} required`); return flags[key]!; };
++ if (command === "restore") {
++  const store = KnowledgeStore.restore(required("backup"), required("runtime"));
++  try { console.log(JSON.stringify({ current: store.current(), restored: true })); } finally { store.close(); } return;
++ }
++ const readonly = ["current", "query", "status", "backup", "verify", "export"].includes(command ?? "");
++ if (command === "complete") {
++  const database = join(required("runtime"), "knowledge.sqlite");
++  if (!existsSync(database) || !lstatSync(database).isFile() || lstatSync(database).isSymbolicLink()) throw new Error("original runtime database is unavailable; do not initialize or rebind completion");
++ }
++ const store = new KnowledgeStore(required("runtime"), { readOnly: readonly });
++ let result: unknown;
++ try {
++  switch (command) {
++   case "init": result = { schema: 1, current: store.current() }; break;
++   case "current": result = { version: store.current() }; break;
++   case "export": {
++    const all = store.files(required("version"));
++    const selected = flags["character"] ? Object.fromEntries(Object.entries(all).filter(([path]) =>
++      path.startsWith(`characters/${flags["character"]}/`) || path.startsWith("common/") || path.startsWith("external/"))) : all;
++    writeFileSync(required("destination"), JSON.stringify(selected), { mode: 0o600, flag: "wx" });
++    result = { version: flags["version"], exported: true }; break;
++   }
++   case "import": {
++    const candidate: Candidate = { schema: "knowledge-candidate-v1", id: required("id"), base: null, character: "migration", source: required("source"), files: importFiles(required("knowledge")) };
++    store.submit(candidate); store.validate(candidate.id); result = { version: store.publish(candidate.id) }; break;
++   }
++   case "submit": result = store.submit(JSON.parse(readFileSync(required("candidate"), "utf8")) as Candidate); break;
++   case "validate": result = store.validate(required("id")); break;
++   case "publish": result = { version: store.publish(required("id")) }; break;
++   case "complete": {
++    const candidate = JSON.parse(readFileSync(required("candidate"), "utf8")) as Candidate;
++    if (candidate.character === "migration") throw new Error("completion callbacks cannot import migrations");
++    if (flags["id"] && candidate.id !== flags["id"]) throw new Error("candidate/batch identity mismatch");
++    if (flags["approval"]) auditApprovedChanges(store.files(candidate.base), candidate.files,
++      JSON.parse(readFileSync(flags["approval"], "utf8")) as Array<{ id: string; path: string }>);
++    store.submit(candidate); store.validate(candidate.id);
++    result = { schema: "knowledge-completion-v1", candidate: candidate.id, version: store.publish(candidate.id), code: required("code") }; break;
++   }
++   case "status": result = store.status(required("id")); break;
++   case "rollback": result = { version: store.rollback(required("version"), required("request")) }; break;
++   case "query": result = store.query({ version: required("version"), character: required("character"),
++    ...(flags["kind"] ? { kind: flags["kind"] } : {}), ...(flags["text"] ? { text: flags["text"] } : {}),
++    ...(flags["entity"] ? { entity: flags["entity"] } : {}), ...(flags["category"] ? { category: flags["category"] } : {}),
++    ...(flags["source"] ? { source: flags["source"] } : {}), ...(flags["game-version"] ? { gameVersion: flags["game-version"] } : {}),
++    ...(flags["evidence-status"] ? { evidenceStatus: flags["evidence-status"] } : {}),
++    ...(flags["ascension"] ? { ascension: Number(flags["ascension"]) } : {}),
++    ...(flags["limit"] ? { limit: Number(flags["limit"]) } : {}), ...(flags["offset"] ? { offset: Number(flags["offset"]) } : {}) }); break;
++   case "verify": {
++    const files = store.files(required("version"));
++    if (flags["knowledge"]) {
++     const original = importFiles(flags["knowledge"]);
++     if (JSON.stringify(Object.keys(files).sort()) !== JSON.stringify(Object.keys(original).sort())
++       || Object.entries(original).some(([path, text]) => files[path] !== text)) throw new Error("migration readback differs from frozen source");
++    }
++    result = { version: flags["version"], documents: Object.keys(files).length, bytes: Object.values(files).reduce((n, s) => n + Buffer.byteLength(s), 0), exact_readback: true }; break;
++   }
++   case "bind": case "launch": {
++    result = store.bind(required("run"), required("code"));
++    if (command === "launch") {
++     if (!child.length) throw new Error("launch requires -- <program> [args]");
++     const binding = result as { version: string; snapshot: string };
++     // Close the publisher handle before the child starts. Gameplay gets files only.
++     store.close();
++     const proc = spawn(child[0]!, child.slice(1), { stdio: "inherit", env: { ...process.env,
++      STS2_KNOWLEDGE_SNAPSHOT: binding.snapshot, STS2_KNOWLEDGE_VERSION: binding.version, STS2_KNOWLEDGE_RUN_KEY: required("run") } });
++     const code = await new Promise<number>((ok, reject) => { proc.once("error", reject); proc.once("exit", (code, signal) => ok(code ?? (signal ? 128 : 1))); });
++     process.exitCode = code; return;
++    }
++    break;
++   }
++   case "backup": await store.backup(required("destination")); result = { backup: resolve(flags["destination"]!) }; break;
++   default: throw new Error("commands: init/import/submit/validate/publish/complete/status/current/query/verify/bind/launch/rollback/backup/restore");
++  }
++  const text = JSON.stringify(result);
++  if (flags["receipt"]) writeFileSync(flags["receipt"], text + "\n", { mode: 0o600 });
++  console.log(text);
++ } finally { if (store.db.isOpen) store.close(); }
++}
++
++if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
++ main().catch(error => { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; });
++}
+diff --git a/agent/tsconfig.knowledge-runtime.json b/agent/tsconfig.knowledge-runtime.json
+new file mode 100644
+index 000000000..ed72f1aa7
+--- /dev/null
++++ b/agent/tsconfig.knowledge-runtime.json
+@@ -0,0 +1,5 @@
++{
++  "extends": "./tsconfig.json",
++  "include": ["src/**/*.ts", "../learner/**/*.ts", "tools/knowledge-runtime.ts", "tests/knowledge-runtime.test.ts", "tools/knowledge-runtime-benchmark.ts"],
++  "exclude": ["../learner/runs/**"]
++}
