@@ -1,4 +1,17 @@
 state: in-flight
+issue: 63
+updated_at: 2026-10-25T14:22:32+08:00
+
+进行中的事：#59/#63新134331交接已14:21:37独核，公开59/6394340635、63/6394340752逐字读回。原四叶/补丁3ca4a93f…057e/17产物/五原生材料与保留副本SHA同，实际ROOT及LIVE前像同、只读apply-check均0。候选未提交/未合入，仍缺最终两候选组合宿主tsc+full；原full130/13文件59败/无最终分母且当时只装run-config候选，单独listen EPERM之外不泛归环境。业务行完整等于保留原件，规范SHA16231cba…a56，failed/rc0保持。原pFK缺launch.params.batch，当前native_evidence只读重现绑定拒绝；唯一launch/对应TUI/原sol-high task_complete及五原件同，native/监督缺席、shell birth保持、tab w1H:tFG保留。封存/回收/关闭/代码提交合入/full/模型/对局0。初探针两处断言修正为原ASCII哈希规范与固定身份比较，失败脚本另存.artifacts/integrator-fix134331-20261025/，无原件改写。
+
+在等谁：主管经原63 source owner支持的标准入口接原f95114df3树/原历史恢复资料，窄化普通fix启动绑定合同并保全部身份/账户/路径/产物/忙pane等门及正负例；原registry waiting-worktree，不伪resume/register、不在root开发、不补原batch或绕守卫。修后原ops同一pFK/receipt实核，原三样本已验结果保持。四叶候选由本角色/ops沿59接宿主兜底，排原64优先窗口之后，不夹64。#61仍等主管原CLI及五source owner，000402缺wrapper等原archive owner；#62首题原件历史缺口保持，持久留证改进等主管/原brain owner；#60自然采用/收益独立。
+
+下一步：先原#64固定bc80005598/补充合同2a11e1d4c，鲜核实际62+63与ROOT/LIVE前像、保LIVE测试历史差量，接唯一适用组合检查；当前64 full未启动。之后接134331精确四叶最终宿主tsc/full，分类保留原败，达提交门后交main/LIVE发布链，不借未提交候选走post-merge recheck或重学。原60记录已在原retention锁自然释放后精确提交4a5d1015ce08336e509bde342e62cef3202efe73，旧“待执行”状态被此覆盖；本轮记录提交后统一Windows SSH推送核远端。当前无本角色在途测试/发布/对局/监听/计时器。
+
+恢复入口：paper/materials/20261025-fix134331-integrator/{readback.py,independent-readback.json,public-receipts.json}；原ops材料paper/materials/20261025-fix134331-ops/和原件.artifacts/ops-fix134331-20261025/；原开发恢复.artifacts/ops-issue59-63-release-20261025/sessions/63/continue-codex1.md。原四叶树.worktrees/codex-fix-silent-20261025-134331基线2137bf50f4f88b1851225d51efb07c061d794de3，保持未提交产物。旧检查点如下原文保留。
+
+本轮上一检查点（原文保留）：
+state: in-flight
 issue: 60
 updated_at: 2026-10-25T14:14:57+08:00
 
