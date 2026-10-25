@@ -1,5 +1,31 @@
 state: in-flight
 issue: 63
+updated_at: 2026-10-25T13:44:52+08:00
+
+进行中的事：#62新回执6394018526已独立核收并公开6394034350：V6-R451实际新局5K2E6HYNAAG1绑定登记源码e9a468882/知识版04b03/同control SHA，两条run-config及两题accepted原brain切片大小SHA逐项同，真实SQL经验6/3条及原来源版本同；startup主题筛选空保持覆盖限制，不代新增学习ID采用/收益。原开发五idle PID实退，原tab wJ:t1H0/pane wJ:p1J2实际not_found，原生日志前缀/固定f56c9f238原树分支/恢复资料保留，登记waiting-worktree；UI释放核同，不重停/重开/complete/删除。原工程688文件/6711过/0败/2跳、四tsc0和实际部署独立核收6393950418保持，未重full/发布。#63原唯一full PID87368/birth33050991、exec42851，13:26:21启动；13:44:33核原进程仍在/full-running，未改冻结输入。#64固定bc80005598及补充合同2a11e1d4c，实际LIVE七叶补丁/精确逆向已核6393983628，下一窗口尚未启动。
+
+在等谁：原ops补#62首自然题原turn_context字节定位：natural-native-context.json所列01a1718d-2ae4-7ef2-b3d0-0e2a5a2c7552原路径当前FileNotFound，期望offset69256/816字节/SHA3349dff506702f3ca0455a45df4013fb23b7319c98a8d085555ad10a5bff9c98。run-config和brain的sol/high native_receipt一致，但本角色尚未核到原字节，不冒档位独立确认；13:42:53原ops w1H:p8单行提醒agent_prompted仅传输非ACK，不重复题目/模型或重开开发UI。run-config原code因git status ENOBUFS为空的限制保留，实际code由绑定独核。当前本角色等#63这一次full真实终态；#64等该窗口释放。#60自然学习消费/采用/收益和#27原#61/日志责任链独立，不互作前置。
+
+下一步：若ops补回原件，核精确原题/turn/模型档位及字节SHA并另存补充回执，保首缺口原件。#63原full终态后运行.artifacts/integrator63-combination-20261025/read-terminal.py，独立核冻结输入/依赖/runtime/tree/index、原worker实退与检查锁；通过即精确main集成/交ops宿主OPS与实际verifier根learner_tabs.py+learner_tui.py配套部署，三原样本逐项真实seal/recover/tick、退出/空输入/tab缺席，符合即释放，保原件，不complete/删除。失败固定原件分类，由codex1续原63树。随后按实际62及已接受63组合冻结64适用检查/唯一full，保LIVE测试既存差异，不借旧绿、不重已过full、不重开58。当前无新增模型/对局/发布/监听/计时器或并发full。
+
+恢复指针：#62材料paper/materials/20261025-issue62-combination-integrator/natural-runtime-release-readback.json，SHA041fa647d369db55b77681fd6e8aad9a6634181a1a926c0a9ee331c7e8636401；natural-runtime-public-receipt.json及natural-runtime-probe.py同目录。原释放恢复入口.artifacts/ops-issue59-62-release-20261025/sessions/62/，仅保留不用历史resume伪重开，返工沿主管标准入口。#63冻结树.worktrees/integrator63-combination-20261025、exec42851/日志.artifacts/integrator63-combination-20261025/full-resumed-console.log，材料paper/materials/20261025-issue63-combination-integrator/；首败36/1、失败项补验1/0及--expand启动失败均保留，full冻结早于62实际部署，不冒62后全组合已验。#64材料paper/materials/20261025-issue64-fixed-integrator/，保LIVE session配套测试历史差异。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
+updated_at: 2026-10-25T13:40:23+08:00
+
+进行中的事：本轮按#62提醒更新交接。#62已实际上线V6-R451并完成独立核收，回执6393950418；688文件/6711过/0败/2跳、四tsc0，生产事实覆盖、旧文档/绑定及实际工具读回已核，原发布worker退出/门释放。源码和核收记录已推远端main；最近记录提交2137bf50f4f88b1851225d51efb07c061d794de3。当前本角色唯一在途任务是#63原full：PID87368/birth33050991、exec42851，13:26:21启动，刚核原进程仍在、full-state仍full-running；未重跑或改冻结输入。#64固定bc80005598已接，补充合同2a11e1d4c和实际LIVE七叶补丁/精确逆向已核，session配套测试保历史差异，回执6393983628；下一组合检查尚未启动。
+
+在等谁：本角色等#63这一次full真实终态；原ops负责#62新自然reader绑定/运行验收，以及按#59授权核空闲开发UI后释放，保原树/分支/线程/账号/日志和研究。#62上次独立读回窗口13:31:38未见新自然绑定，本轮未重查生产，不代ops ACK或自然采用/收益。#64等当前唯一完整检查窗口释放；#60自然运行及#27原#61/日志责任链独立，不互作前置。
+
+下一步：先读paper/materials/20261025-issue63-combination-integrator/full-state.json及原exec42851结果。通过后运行.artifacts/integrator63-combination-20261025/read-terminal.py，独立核冻结输入/依赖/runtime/tree/index、原worker实退和检查锁，再精确集成main/交ops宿主OPS与实际verifier根learner_tabs.py+learner_tui.py配套部署；三原样本逐项真实seal/recover/tick、退出/空输入/tab缺席，符合即释放，保原件，不complete/删除。若失败先保存原件并区分代码/实际部署/夹具，由codex1续原63树。随后按届时实际已上线62及已接受63组合冻结64适用检查和唯一full，保LIVE测试既存差异；不借旧绿、不重62/63full、不重开58。当前无新增模型/对局/发布/监听/计时器或并发full。
+
+恢复指针：#63冻结树.worktrees/integrator63-combination-20261025；日志.artifacts/integrator63-combination-20261025/full-resumed-console.log；材料paper/materials/20261025-issue63-combination-integrator/。ROOT定向首败36过1败、失败项后续1过/原因未知及不支持--expand的启动失败均保留，不改写首败。#63 full冻结于62实际上线前，不冒其为62上线后全部组合已验。#62实际核收见paper/materials/20261025-issue62-combination-integrator/actual-deployment-readback.json；#64接收及LIVE差量见paper/materials/20261025-issue64-fixed-integrator/。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 63
 updated_at: 2026-10-25T13:36:44+08:00
 
 进行中的事：#62实际V6-R451已上线并独立核收6393950418；ROOT a79a1a3e55精确80叶、LIVE源码026fca6bc3精确16叶/登记e9a468882a，main登记f29bb2dbb。334适用runtime输入同原已验镜像，ROOT-only knowledge-runtime.test.ts保原LIVE未安装；原59 R450三叶和既存差异保持。生产schema2/current K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4，父82b9；只加三核准源，原8文档/全部原候选、发布、event和两绑定逐项同，1074 fact payload/tool_payload全字段同原源，旧K事实0。实际LIVE36实体跨版本/角色正负例、两几何及未知绑定拒绝rc0；鲜备份SHA1501264c…496d/schema1/integrity通过，双通知在场。原62worker88243/birth33055208实退、原门release；59原门已先release，旧等待锁记录均历史。未重full/发布/生产写体。独立probe首轮错误用ID唯一键，公共974仅971不同ID，改原合同(id,kind)后1074全同，原失败脚本与回执保留，产品/库未改。原full仍688/6711/0/2、四tsc0。材料paper/materials/20261025-issue62-combination-integrator/actual-deployment-readback.json（SHAad68ea1967166df61108b914810952c9230c289981a1ba53fcc8209a3b72966c）；公开逐字读回，ops w1H:p8单行提醒agent_prompted非ACK。

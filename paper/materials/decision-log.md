@@ -6995,3 +6995,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-25T13:33:02+08:00 [watcher] #62实际V6-R451部署独立核收：ROOT80/LIVE16源码与334适用运行输入同固定交付，schema2只补三核准事实源/原8文档及候选发布event与旧绑定保持，1074原字段同，实际LIVE实体/几何/负例0；原worker实退/门release/双通知齐。原full688/6711/0/2不重跑，62自然绑定和运行UI核收交原ops；63原唯一full继续，64固定列下一窗口，60独立。见paper/materials/20261025-issue62-combination-integrator/actual-deployment-readback.json。
 
 - 2026-10-25T13:36:44+08:00 [watcher] #64固定bc80005598/补充合同2a11e1d4c：隔离实际LIVE七叶补丁及逆向精确恢复通过，四生产/两新增测试同固定源码，session配套测试保既存ROOT/LIVE差异；公开6393983628。新增测试/full及生产写入0，63原唯一full继续，窗口退出核收后再冻结实际62/63组合。见paper/materials/20261025-issue64-fixed-integrator/live-delta-applicability.json。
+
+- 2026-10-25T13:44:52+08:00 [watcher] #62实际V6-R451新局5K2E6HYNAAG1绑定/两题accepted真实SQL经验6与3来源及开发UI释放独立核同，公开6394034350；首题原turn_context路径缺失，保原SHA/切片指针并交原ops定位，不冒原生档位独核、不重发题或重开UI。原工程结论不变；63原唯一full继续、64下一窗口。见paper/materials/20261025-issue62-combination-integrator/natural-runtime-release-readback.json。
