@@ -1,5 +1,18 @@
 state: in-flight
 issue: 67
+updated_at: 2026-10-25T20:49:35+08:00
+
+进行中的事：唯一67/68 full已核692文件/6744过/0败/2跳、三tsc0，原worker退出/门释放/冻结保持；源码main b3269b333及记录9a41915均已Windows ssh.exe push并核远端。ops67/6397783621已真实ACK逐入口采用及66后继兼容。本轮发现并补正固定refresh部署映射：report调用LIVE driver，原LIVE22清单遗漏三builder适配器；三叶均原ced73d377/受测ROOT字节，补充固定OPS/LIVE实际shell/driver/outcome/catalog探针首调用0/同request0，持源码发布锁仍D1成功且输出读回。原G/full冻结不变、不重full、不冒原LIVE full覆盖；最终固定refresh映射原22+3=25。#50更正正式回执6397804263已读，6397796913仅错误录入，不作事实依据。
+
+在等谁：原ops接实际LIVE/宿主安装、逐入口控制及自然批回执；postmortem运营-only不等固定refresh。固定刷新在三适配器核装、实际LIVE方法重算、有效数据seed/原writer自然结算后启用；普通刷新helper来自ROOT而方法/数据根LIVE，校准执行/方法根ROOT、输出保原batch树。66原worker1786862/自然事务仍原owner/FIFO，已测ROOT后继不得覆回旧注入；67不等68 shadow/active或撤权。科学父/未自然覆盖类型保持runtime pending。
+
+下一步：映射补正已回67/6397849457且dwroy逐字读回，fresh核ops身份后已提交一行提醒（补正本身尚无新ACK）；补正记录提交/Windows ssh.exe push终态见adapter-map-records-push-readback.json。后续仅接ops实际逐叶安装/合同→SQLite或D1→下游读回/同回执幂等，不重full/旧批/66事务。#50沿原48/50/51学习owner的原件/剩余内容和消费者链，不把旧blocked路径当从未交付，不跨号resume、不重学或改开关。68 queue/heavy off/原manual authority保持；不关科学父、不complete/delete树/session或控制其他会话。
+
+恢复入口：paper/materials/20261025-issue67-68-combination-integrator/{fixed-refresh-deployment-supplement.json,split-refresh-adapter-probe.json,latest-ops-receipts.json,ops-handoff.md,terminal-readback.json,main-integration.json,main-push-readback.json,final-records-push-readback.json}；.artifacts/integrator67-68-combination-20261025/probe-split-refresh-map.py。原full.once一份/终态已收。session01a170b2-a9ac-7572-be36-68152229effb/codex1/wJ:p1HD。
+
+本轮上一检查点（原文保留）：
+state: in-flight
+issue: 67
 updated_at: 2026-10-25T20:43:56+08:00
 
 进行中的事：67/68匹配组合唯一full已实际exit0，692文件/6744过/0败/2跳、三tsc0、415宿主、真实混合K1/运营SQLite与LIVE90项全过；20:41:19独核原worker1815703/birth35490682及子进程退出、full门可用、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link和索引/树均保持。固定ced73d377/fcd84d2ae的232 ROOT叶已精确main b3269b33388aa2fbe6ec38b982272c65d877ce72，20:42:17 Windows ssh.exe push exit0/远端核同；源码字节及mode全同、实际ROOT十三method与受测期望全同、无暂存。原夹具首失败/补一叶与开发历史失败完整保留，未重full。实际LIVE最后鲜核仍86b31b7a/R452，不能冒已部署。

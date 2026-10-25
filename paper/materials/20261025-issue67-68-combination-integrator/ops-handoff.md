@@ -1,3 +1,11 @@
+补充核收（2026-10-25T20:49:35+08:00）：原LIVE22只覆盖原消费者/CLI映射，不能单独代表固定刷新适配器齐备；前文“ROOT builders”描述漏列实际LIVE执行配套，现明确更正。`ops/report.py::refresh_knowledge`调用实际LIVE的refresh.sh→refresh_driver.py，并通过--ops-root读取ROOT的ops helper。固定刷新额外精确安装`knowledge/builders/{refresh_driver.py,refresh_publish.py,refresh-v6-history.py}`三叶，均与ced73d377及已测ROOT字节完全相同；最终源码映射为原22+3=25叶。`live-fixed-refresh-adapters.patch`及`fixed-refresh-deployment-supplement.json`列原G前像/新像SHA、来源和409方法输入。原G冻结、原22叶patch和原full证明不变，不倒填为原LIVE full覆盖。
+
+补充窄核：固定夹具独立OPS/LIVE，运行真实refresh.sh/driver/outcome builder/catalog，原源码发布锁保持占用；首调用0、同request复查0、SQLite/D1和不可变输出逐字读回，记录`split-refresh-adapter-probe.json`。这仅证明实际根路径/lease/重复回执配套，不是生产采用或重跑full。ordinary方法/数据根为实际安装LIVE；helper来自ROOT/ops；校准明确调用已安装ROOT的refresh-silent.py，method_root=ROOT而输出保原batch树。安装后必须重新计算实际方法，不照抄ROOT或夹具/投影指纹。postmortem运营-only可先采用；固定refresh在三适配器/实际方法/有效来源seed/原writer自然结算齐后逐入口准入，不等68 shadow/active。
+
+原ops已真实ACK67/6397783621，取代此前“提醒仅提交”等待。66仍原owner/原FIFO，已测ROOT后继注入不能覆回旧像。#50正式回执更正为6397804263，旧6397796913是录入错误；本角色已读dwroy原文，原两个request的限定历史交付与后继缺树、H0未merged及科学父分别保留，不恢复/重学或改rk开关。原件见`latest-ops-receipts.json`。
+
+以下原交付历史保留（上述补充覆盖部署范围遗漏）：
+
 # #67采用与#68分阶段宿主交接
 
 终态独核时间：2026-10-25T20:41:37+08:00。原唯一full 692文件/6744过/0败/2跳、三tsc0、宿主415、真实混合SQLite、LIVE90项通过；原worker1815703及子进程已退出、原full锁可用、ROOT3129/LIVE1795/依赖1417的SHA+mode/link、索引/树全保持。原前置复制夹具失败及补齐单叶证明完整保留。固定67 ced73d377 / 68 fcd84d2ae；候选b4f5f5df1976cff42484faf73aa7a01b186f4348。主管67/6397609340：组合绿且必要部署准入后立即采用67，不等68真实shadow/active或旧集成员撤权。精确main b3269b33388aa2fbe6ec38b982272c65d877ce72已于20:42:17经Windows ssh.exe推送且远端核同；实际ROOT十三method与受测期望全同。生产运行另补证，不能以工程通过冒上线。
