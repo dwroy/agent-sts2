@@ -8,7 +8,8 @@
     "docs/",
     "notes/",
     "paper/",
-    "agent/tests/"
+    "agent/tests/",
+    ".gitignore"
   ],
   "fixtures": [
     "paper/materials/issue29-brain-speed/results.jsonl"
@@ -27,12 +28,17 @@
     "ops.tests.test_knowledge_runtime_env",
     "ops.tests.test_publication_gate",
     "ops.tests.test_report_run",
-    "ops.tests.test_board_queue_records"
+    "ops.tests.test_board_queue_records",
+    "ops.tests.test_knowledge_runtime",
+    "ops.tests.test_knowledge_completion_events",
+    "ops.tests.test_knowledge_classification",
+    "ops.tests.test_public_web"
   ],
   "consumer_commands": [],
-  "consumer_scope": "host-only policy: no game source/CLI installation leaves; original host run binding and publication regression included; non-host source requires an explicit mapping and consumer policy update",
+  "consumer_scope": "Issue68 queue environment repair on main3f72590d: ROOT-only adapter/tests, zero LIVE install or test injection. Original 18 applicable host modules, three type checks and one full. ROOT fixed issue29 Git blob; LIVE fixtures explicitly empty. Stock host module resumes only when issue71 code joins the frozen combination.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
-  ]
+  ],
+  "live_fixtures": []
 }
