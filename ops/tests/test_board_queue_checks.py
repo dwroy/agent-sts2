@@ -239,6 +239,27 @@ class CandidateChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'LIVE fixture differs from Git source'):
             self.assemble()
 
+    def test_live_fixture_accepts_checkout_permissions_and_freezes_actual_mode(self):
+        name = 'paper/materials/live-consumer/input.json'
+        self.live_fixture(name)
+        source = self.live / name
+        source.chmod(0o664)
+        self.options['live_fixtures'] = [name]
+        result = self.assemble()
+        self.assertEqual((Path(result['runtime']) / name).stat().st_mode & 0o777, 0o664)
+        checks.verify_after(self.context(result))
+        source.chmod(0o644)
+        with self.assertRaisesRegex(ValueError, 'drift: live'):
+            checks.verify_after(self.context(result))
+
+    def test_live_fixture_executable_change_is_not_a_checkout_permission(self):
+        name = 'paper/materials/live-consumer/input.json'
+        self.live_fixture(name)
+        (self.live / name).chmod(0o755)
+        self.options['live_fixtures'] = [name]
+        with self.assertRaisesRegex(ValueError, 'LIVE fixture differs from Git source'):
+            self.assemble()
+
     def test_fixture_scopes_reject_invalid_and_credential_paths(self):
         for names in (None, ['same', 'same'], [1], ['/absolute'], ['../escape'], ['.env']):
             with self.subTest(names=names), self.assertRaises(ValueError):
