@@ -53,19 +53,23 @@ class PythonCacheRetention(unittest.TestCase):
             with self.subTest(name=name):
                 unknown = self.cache(f.tree, name)
                 with self.assertRaisesRegex(ValueError, 'outside bound scratch'):
-                    f.run_cleanup()
+                    retention.admission(f.root, f.directory, f.state, f.bid)
+                self.assertFalse(f.run_cleanup(False)['proof']['retire_checkout'])
                 self.assertTrue(known.exists() and unknown.exists())
                 unknown.unlink()
         link = known.with_name('fixture.cpython-314.opt-1.pyc')
         link.symlink_to(f.root / 'README.md')
         with self.assertRaisesRegex(ValueError, 'symlink'):
-            f.run_cleanup()
+            retention.admission(f.root, f.directory, f.state, f.bid)
         self.assertTrue(link.is_symlink() and known.exists())
         link.unlink()
         with patch.object(retention, 'active_cwd', return_value=True):
             with self.assertRaisesRegex(ValueError, 'active'):
                 f.run_cleanup()
         self.assertTrue(known.exists() and (f.tree / '.git').exists())
+        unknown = self.cache(f.tree, 'missing.cpython-314.pyc')
+        self.assertEqual(f.run_cleanup()['state'], 'reclaimed')
+        self.assertTrue(known.exists() and unknown.exists() and (f.tree / '.git').exists())
 
     def test_workspace_inventory_retains_unknown_cache_instead_of_discarding_it(self):
         f = WorkspaceRetention(methodName='runTest')

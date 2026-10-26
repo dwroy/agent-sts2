@@ -482,7 +482,11 @@ class WorkspaceRetention(unittest.TestCase):
         receipt = self.directory / 'retention/requests' / (batch + '.json')
         self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
         resource.retention.sweep(self.root, self.directory, True, 4)
-        self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
+        self.assertEqual(resource.retention.load(receipt)['state'], 'reclaimed')
+        self.assertFalse((scratch / 'unresolved.bin').exists())
+        resource.retention.restore(self.root, self.directory, batch)
+        self.assertEqual((scratch / 'unresolved.bin').read_bytes(), raw)
+        self.assertTrue((tree / '.git').exists())
 
 
 if __name__ == '__main__':
