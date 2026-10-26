@@ -114,6 +114,7 @@ export interface RunConfigRow {
   process: { pid: number; started: string };
   code: CodeInfo;
   brain: {
+    decision_knowledge?: NonNullable<AppConfig["brain"]["decisionKnowledge"]>;
     agent?: AppConfig["brain"]["agent"] & { mode: "knowledge-tools"; transport: "app-server" | "dsh-Nova" };
     run_profile?: BrainRunProfile;
     /** False when there is no DeepSeek client (no key): then no brain question is asked at all. */
@@ -485,6 +486,7 @@ export function runConfigRow(
   const setup = {
     ...(v6.mode !== "off" ? { v6 } : {}),
     brain: {
+      ...(brain?.router.knowledgeAgent && config.brain.decisionKnowledge?.enabled ? { decision_knowledge: config.brain.decisionKnowledge } : {}),
       ...(brain?.router.knowledgeAgent ? { agent: { ...config.brain.agent, mode: "knowledge-tools" as const, transport: actualBrain.engine === "deepseek" ? "dsh-Nova" as const : "app-server" as const } } : {}),
       ...(config.brain.runProfile ? { run_profile: config.brain.runProfile } : {}),
       active: brain !== null,
