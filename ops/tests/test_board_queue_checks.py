@@ -125,6 +125,125 @@ class CandidateChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'already exists'):
             self.assemble()
 
+    def test_view_checkout_modes_are_fixed_under_group_writable_umask(self):
+        name = 'ops/fake-herdr.py'
+        self.candidate_fixture(name, '#!/usr/bin/env python3\n')
+        (self.candidate / name).chmod(0o755)
+        checks.git(self.candidate, 'add', '--', name)
+        checks.git(self.candidate, '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', 'executable fixture')
+        self.job.update(candidate=checks.text(self.candidate, 'rev-parse', 'HEAD'),
+                        tree=checks.text(self.candidate, 'rev-parse', 'HEAD^{tree}'))
+        previous = os.umask(0o002)
+        try:
+            result = self.assemble()
+            self.assertEqual(os.umask(0o002), 0o002)
+        finally:
+            os.umask(previous)
+        fixture = Path(result['root']) / name
+        self.assertEqual(fixture.stat().st_mode & 0o777, 0o755)
+        fixture.chmod(0o755)
+        checks.verify_after(self.context(result))
+        fixture.chmod(0o775)
+        with self.assertRaisesRegex(ValueError, 'frozen tree/input/index drift: root'):
+            checks.verify_after(self.context(result))
+
+    def candidate_fixture(self, name, value='fixed ROOT fixture\n'):
+        path = self.candidate / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(value)
+        checks.git(self.candidate, 'add', '--', name)
+        checks.git(self.candidate, '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', 'ROOT fixture')
+        self.job.update(candidate=checks.text(self.candidate, 'rev-parse', 'HEAD'),
+                        tree=checks.text(self.candidate, 'rev-parse', 'HEAD^{tree}'))
+        self.options['root_only_prefixes'].append('paper/')
+
+    def live_fixture(self, name):
+        path = self.live / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('fixed LIVE fixture\n')
+        checks.git(self.live, 'add', '--', name)
+        checks.git(self.live, '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', 'LIVE fixture')
+
+    def test_root_only_fixture_uses_candidate_blob_without_requiring_live_entry(self):
+        name = 'paper/materials/issue29-brain-speed/results.jsonl'
+        self.candidate_fixture(name)
+        self.options.update(fixtures=[name], live_fixtures=[])
+        result = self.assemble()
+        self.assertEqual((Path(result['root']) / name).read_text(), 'fixed ROOT fixture\n')
+        self.assertFalse((Path(result['runtime']) / name).exists())
+        self.assertEqual(result['fixture_sources']['live'], [])
+        row = result['fixture_sources']['root'][0]
+        self.assertEqual(row['commit'], self.job['candidate'])
+        self.assertEqual(row['blob'], checks.text(self.candidate, 'rev-parse', 'HEAD:' + name))
+        # The current delivery's older host verifier also accepts this context:
+        # this ROOT-only path has no Git entry in the actual LIVE baseline.
+        self.assertTrue(checks.unchanged(Path(result['runtime']), result['runtime_inputs'], [name]))
+        checks.verify_after(self.context(result))
+        (Path(result['root']) / name).write_text('changed\n')
+        with self.assertRaisesRegex(ValueError, 'drift'):
+            checks.verify_after(self.context(result))
+
+    def test_required_root_fixture_is_not_silently_skipped(self):
+        self.options.update(fixtures=['paper/materials/absent/input.json'], live_fixtures=[])
+        with self.assertRaisesRegex(ValueError, 'required fixed fixture not materialized'):
+            self.assemble()
+
+    def test_materialized_fixture_must_match_the_declared_git_blob(self):
+        name = 'paper/materials/issue29-brain-speed/results.jsonl'
+        self.candidate_fixture(name)
+        self.options.update(fixtures=[name], live_fixtures=[])
+        original_git = checks.git
+
+        def replaced(tree, *args, **kwargs):
+            result = original_git(tree, *args, **kwargs)
+            if args[0] == 'read-tree' and (Path(tree) / name).is_file():
+                (Path(tree) / name).write_text('wrong source\n')
+            return result
+
+        with patch.object(checks, 'git', side_effect=replaced):
+            with self.assertRaisesRegex(ValueError, 'fixture differs from Git source'):
+                self.assemble()
+
+    def test_required_live_fixture_cannot_be_borrowed_from_candidate(self):
+        name = 'paper/materials/issue29-brain-speed/results.jsonl'
+        self.candidate_fixture(name)
+        self.options.update(fixtures=[name], live_fixtures=[name])
+        with self.assertRaisesRegex(ValueError, 'required fixed fixture not materialized'):
+            self.assemble()
+
+    def test_legacy_policy_keeps_both_views_required(self):
+        name = 'paper/materials/issue29-brain-speed/results.jsonl'
+        self.candidate_fixture(name)
+        self.options['fixtures'] = [name]
+        with self.assertRaisesRegex(ValueError, 'required fixed fixture not materialized'):
+            self.assemble()
+
+    def test_explicit_live_fixture_freezes_live_blob_and_detects_actual_source_drift(self):
+        name = 'paper/materials/live-consumer/input.json'
+        self.live_fixture(name)
+        self.options['live_fixtures'] = [name]
+        result = self.assemble()
+        self.assertEqual(result['fixture_sources']['live'][0]['commit'], result['live_commit'])
+        self.assertFalse((Path(result['root']) / name).exists())
+        self.assertEqual((Path(result['runtime']) / name).read_text(), 'fixed LIVE fixture\n')
+        checks.verify_after(self.context(result))
+        (self.live / name).write_text('dirty fixture\n')
+        with self.assertRaisesRegex(ValueError, 'drift: live'):
+            checks.verify_after(self.context(result))
+
+    def test_dirty_live_fixture_is_not_accepted_as_the_committed_fixture(self):
+        name = 'paper/materials/live-consumer/input.json'
+        self.live_fixture(name)
+        (self.live / name).write_text('dirty fixture\n')
+        self.options['live_fixtures'] = [name]
+        with self.assertRaisesRegex(ValueError, 'LIVE fixture differs from Git source'):
+            self.assemble()
+
+    def test_fixture_scopes_reject_invalid_and_credential_paths(self):
+        for names in (None, ['same', 'same'], [1], ['/absolute'], ['../escape'], ['.env']):
+            with self.subTest(names=names), self.assertRaises(ValueError):
+                checks.fixture_scopes(self.root, dict(fixtures=[], live_fixtures=names))
+
     def test_source_dependency_and_index_drift_are_rejected(self):
         result = self.assemble()
         context = self.context(result)

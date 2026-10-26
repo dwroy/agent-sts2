@@ -32,12 +32,12 @@ def fds():
     return value
 
 
-def git(root, *args, data=None, env=None):
+def git(root, *args, data=None, env=None, umask=-1):
     return subprocess.check_output(['git', '-c', 'submodule.recurse=false', '-c', 'diff.ignoreSubmodules=all',
                                     '-c', 'status.submoduleSummary=false',
                                     '-c', 'core.sparseCheckout=true', '-c', 'core.sparseCheckoutCone=false',
                                     '-C', str(root), *map(str, args)], input=data, stderr=subprocess.PIPE,
-                                   env=env, pass_fds=fds())
+                                   env=env, pass_fds=fds(), umask=umask)
 
 
 def text(root, *args):
@@ -167,11 +167,35 @@ def view(root, destination, commit, fixtures):
     profile = Path(text(destination, 'rev-parse', '--path-format=absolute', '--git-path', 'info/sparse-checkout'))
     profile.parent.mkdir(parents=True, exist_ok=True)
     profile.write_text(sparse_patterns(fixtures) + '!/third_party/jev-sts2\n')
-    git(destination, 'read-tree', '-mu', 'HEAD')
+    # Freeze canonical checkout permissions, independent of the caller's umask.
+    # Tests may set executable fixtures to 0755; this must not alter inputs.
+    git(destination, 'read-tree', '-mu', 'HEAD', umask=0o022)
+    sources = []
     for name in fixtures:
         path = local(destination, name)
         if not path.is_file():
             raise ValueError('required fixed fixture not materialized: ' + name)
+        entry, _, source_name = git(destination, 'ls-tree', '-z', commit, '--', name).decode().rstrip('\0').partition('\t')
+        entry = entry.split()
+        if (len(entry) != 3 or entry[0] not in ('100644', '100755') or entry[1] != 'blob'
+                or source_name != name or text(destination, 'hash-object', '--', name) != entry[2]):
+            raise ValueError('required fixed fixture differs from Git source: ' + name)
+        sources.append(dict(path=name, commit=commit, blob=entry[2], fingerprint=fingerprint(path)))
+    return sources
+
+
+def fixture_scopes(root, options):
+    # Older policies deliberately require the same fixtures in both views.
+    scopes = dict(root=options['fixtures'], live=options.get('live_fixtures', options['fixtures']))
+    for names in scopes.values():
+        if (not isinstance(names, list) or any(not isinstance(name, str) or not name
+                or Path(name).is_absolute() for name in names) or len(set(names)) != len(names)):
+            raise ValueError('explicit unique project-relative fixture lists required')
+        for name in names:
+            local(root, name)
+            if secret_name(name):
+                raise ValueError('credential path is not a validation input')
+    return scopes
 
 
 def overlay_data(source, destination, changed):
@@ -227,7 +251,8 @@ def policy(root, job):
     for name in ('runtime_install_paths', 'root_only_prefixes', 'fixtures', 'host_modules', 'consumer_commands'):
         if not isinstance(value.get(name), list):
             raise ValueError('explicit project check/mapping lists required')
-    for name in value['runtime_install_paths'] + value['fixtures']:
+    fixture_scopes(root, value)
+    for name in value['runtime_install_paths']:
         local(root, name)
         if secret_name(name):
             raise ValueError('credential path is not a validation input')
@@ -235,6 +260,7 @@ def policy(root, job):
 
 
 def assemble(root, job, options, directory):
+    scopes = fixture_scopes(root, options)
     candidate = Path(job['cwd'])
     if text(candidate, 'rev-parse', 'HEAD') != job['candidate'] or text(candidate, 'write-tree') != job['tree']:
         raise ValueError('actual candidate differs from queue job')
@@ -252,7 +278,7 @@ def assemble(root, job, options, directory):
         raise ValueError('runtime map contains leaves outside this exact candidate delta')
     live = local(root, '.worktrees/live')
     actual_live = text(live, 'rev-parse', 'HEAD')
-    before_live = snapshot(live)
+    before_live = snapshot(live, scopes['live'])
     workspace_path = root / '.agents/queue-workspace.json'
     bindings = json.loads(workspace_path.read_text()).get('gitlinks', {}) if workspace_path.exists() else {}
     for tree in (root, live):
@@ -261,9 +287,12 @@ def assemble(root, job, options, directory):
             if text(tree, 'ls-files', '--stage', '--', name) != wanted:
                 raise ValueError('actual ROOT/LIVE gitlink index differs from frozen metadata')
     w, g = directory / 'validation-root', directory / 'validation-live'
-    view(root, w, job['candidate'], options['fixtures'])
-    view(root, g, actual_live, options['fixtures'])
+    sources = dict(root=view(root, w, job['candidate'], scopes['root']),
+                   live=view(root, g, actual_live, scopes['live']))
     mirror(live, g, before_live['files'])
+    for row in sources['live']:
+        if fingerprint(local(g, row['path'])) != row['fingerprint']:
+            raise ValueError('actual LIVE fixture differs from Git source: ' + row['path'])
     overlays = dict(root=overlay_data(root, w, changed), live=overlay_data(live, g, set()))
     mapping = []
     for name in sorted(runtime):
@@ -286,12 +315,13 @@ def assemble(root, job, options, directory):
         raise ValueError('ROOT/LIVE Python providers differ')
     (w / '.worktrees').mkdir(exist_ok=True)
     (w / '.worktrees/live').symlink_to(g, target_is_directory=True)
-    if not unchanged(live, before_live):
+    if not unchanged(live, before_live, scopes['live']):
         raise ValueError('actual LIVE changed during read-only assembly')
     return dict(candidate=job['candidate'], baseline=baseline, live=str(live), live_commit=actual_live,
                 live_before=before_live, root=str(w), runtime=str(g), overlays=overlays, deployment=mapping,
-                fixtures=options['fixtures'], root_inputs=snapshot(w, options['fixtures']),
-                runtime_inputs=snapshot(g, options['fixtures']), dependencies=dependency_snapshot(modules),
+                fixtures=scopes['root'], fixture_scopes=scopes, fixture_sources=sources,
+                root_inputs=snapshot(w, scopes['root']),
+                runtime_inputs=snapshot(g, scopes['live']), dependencies=dependency_snapshot(modules),
                 python_dependencies=dependency_snapshot(python) if python else None,
                 gitlink=text(root, 'ls-tree', job['candidate'], '--', 'third_party/jev-sts2'),
                 upstream_contents_read_or_modified=False, submodule_initialized=False)
@@ -308,7 +338,9 @@ def verify_after(context):
     if text(root, 'rev-parse', 'refs/heads/main') != assembly['baseline']:
         raise ValueError('main advanced during check')
     for key, recorded in (('root', 'root_inputs'), ('runtime', 'runtime_inputs'), ('live', 'live_before')):
-        fixtures = assembly['fixtures'] if key != 'live' else ()
+        scopes = assembly.get('fixture_scopes')
+        fixtures = (scopes['root' if key == 'root' else 'live'] if scopes is not None
+                    else assembly['fixtures'] if key != 'live' else ())
         if not unchanged(Path(assembly[key]), assembly[recorded], fixtures):
             raise ValueError('frozen tree/input/index drift: ' + key)
     if dependency_snapshot(Path(assembly['dependencies']['realpath'])) != assembly['dependencies']:
