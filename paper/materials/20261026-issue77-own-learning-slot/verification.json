@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-26T17:42:17+08:00",
+  "base": "3f72590d1943914a254188b1763362bf1692d320",
+  "production_channel": "ROOT/host only; no LIVE game leaves",
+  "production_files": [
+    "ops/own_learning_slot.py",
+    "ops/external_learning_policy.py",
+    "ops/learner_jobs.py",
+    "ops/strategy_backfill_jobs.py",
+    "ops/codex-ops-learn.py"
+  ],
+  "source_sha256": {
+    "ops/own_learning_slot.py": "94c68a6f000efd57559a1dd5464804394ee27411e8f26dfa60fece99845f9835",
+    "ops/external_learning_policy.py": "f52b237d068cde0b4249d057425bdd0b92d42b415817df76dbc3a8945ebd1116",
+    "ops/learner_jobs.py": "91268fa2da5571d0d1c6a7fb13ced4e88145a67103ea1a2db0674a30de8b311b",
+    "ops/strategy_backfill_jobs.py": "e19db03a953f97fa131a291ae8970c69b29c61347404c949dcfe45de50ec7633",
+    "ops/codex-ops-learn.py": "7208e6326a839263e6aefc6d8d51d56ff9a65df1b602a975667a7c1f5e89e855",
+    "ops/tests/test_own_learning_slot.py": "153ea10b4dce7e42dec113369af5f5961d31b5e9e9baa5c6f966c6722d43ae1e",
+    "docs/own-learning-admission.md": "f22925b262080763e96a5fdb52a64080fa81bd4c28c4313562d4861f3fec405f"
+  },
+  "validation": {
+    "production_tsc": 0,
+    "python": {
+      "passed": 174,
+      "exit_code": 0
+    },
+    "sandbox_first": {
+      "passed": 5946,
+      "failed": 1,
+      "files": 644,
+      "exit_code": 1
+    },
+    "fixed_HEAD_import_and_paths": {
+      "passed": 12,
+      "files": 2,
+      "exit_code": 0
+    }
+  },
+  "read_only_final_projection_sha256": "a9b21ebe1388e162abc3c2102ecc50fd45377cdca9047fa8be0f7aa2a6a6232f",
+  "runtime_acceptance": "pending original integration/ops; no new dispatch or production installation by developer"
+}
