@@ -179,7 +179,7 @@ def stdio_registration(batch_id, batch, directory, complete=False):
     return launch, session, files[0], summary
 
 
-def retired(batch_id, batch, directory):
+def retired(batch_id, batch, directory, *, read_only=False):
     """Recovery needs a verified original exit, including wrapper pre-model failures."""
     folder = Path(directory, "learner")
     no_model = folder / (batch_id + "." + source_kind(batch) + "-not-started.json")
@@ -193,7 +193,7 @@ def retired(batch_id, batch, directory):
     tui = folder / ("learner-" + batch_id + ".tui.json")
     if tui.exists():
         from learner_tui import verified_code
-        verified_code(tui, folder / (batch_id + ".out"), batch["rc"])
+        verified_code(tui, folder / (batch_id + ".out"), batch["rc"], persist_output=not read_only)
         return
     proof = native_start(batch_id, batch, directory)
     _, session, rollout, summary = stdio_registration(batch_id, batch, directory, complete=True)

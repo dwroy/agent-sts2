@@ -1,5 +1,19 @@
 # 完成验收与现场回收
 
+## done 过程存储与运行证明（#76，Roy 2026-10-26）
+
+成功 `done/rc=0` 批次的 scratch 现在独立于知识入库、提案结算和父要求验收进行可恢复压缩。下一自然 sweep 先核原报告路径；旧报告缺路径时核原 launcher 的 task/cwd/scratch/batch 绑定，不按时间戳猜目录。运行者、宿主进程引用、工作树脏改动、租约、`learn.lock` 和共享发布锁继续阻止删除。没有原来源绑定、凭据名或陌生软链接仍保留并列原因。压缩不是接受源码、知识入库或关闭父要求；checkout 的实际删除仍须原发布和 owner 门。`failed` 继续走原验收，不扩大为 done。
+
+回收前调用原退休消费者：external/backfill 的 `retired` 和 TUI 完成校验须通过。原 launcher 事件流、各 run 的用量 JSONL、日志以及 batch/TUI/tab 回执引用的原文件留在原路径，且不进入过程归档；回执引用 checkout 内其他路径时只压缩 scratch、保留 checkout。消费者缺证或不兼容则跳过整批，`retained_summary` 记录批数和字节，不以 wrapper 退出代退休。归档仍逐文件 SHA、完整 tar 读回及删除前复核；小报告和脚本保留，`restore` 恢复原字节。原 learning-request launcher 在验证输入和恢复线程之前自动恢复原批归档；仍用原账号、线程、任务和树。恢复后无修改的过程副本可再次自然压缩，修改过的恢复材料保留为新证据。旧 `checkout_reclaimed` 回执可升级为 scratch 归档，原回执嵌入 `previous_manifest`，原分支恢复能力保留。
+
+原单个 nice 19 worker 按 done 积压将 learner 单轮名额从调用者下限动态扩到最多 128，处理满 50 秒后把余项留给下一自然 tick，不新增计时器或模型；一个正在归档的批次会完成 SHA/删除事务后才检查预算。普通开发/ops checkout 和缓存各仍最多 4。汇总扫描所有批次，按原因记录 `retained_summary.{原因}.{batches,bytes}`、预算延期和未知字节批次；共享未知 scratch 范围在同一原因内只计一次。`backlog-trends.json` 保存连续不下降窗口；某原因字节相对窗口起点增加且窗口满 24h，或主盘可用小于 150,000,000,000 字节时，向原 `inbox-claude.md` 追加一行，同组告警至多每日一次。plan 不发告警。
+
+`v6-refresh/<角色>/refresh-*` 与原 refresh/learn/publication 锁共用门：published 只保留 `receipt.json` 和各步 stdout/stderr；failed 全目录保留最近 20 个且最长 7 天，超额/过期也仅清过程文件、保留 receipt/log。原 receipt 的输入/输出 SHA 和发布身份保持，`storage_cleanup` 记录清理文件身份、字节及 prepared/completed，不将已删中间路径冒称在线证据；回退历史包需从正式 Git/发布来源恢复。无完成回执、坏绑定、活进程或未知文件链接保留。新 refresh 完成后和原 retention sweep 都会执行同一规则，所以既覆盖新增也覆盖历史 published 积压；不改正式知识值。
+
+上线由原集成/ops 完成。ops 记录 T/固定源码，并在 T+24h 读取原 `last-sweep.json`、归档 manifest、`backlog-trends.json`、refresh receipt 与磁盘采样：新 done 是否全部自然回收（逐项解释安全门延期），refresh 中间字节是否停止增长、主盘是否不再单调下降；原用量/TUI/退休消费者及道位/worker 也须真实读回。固定测试不代该运行验收，本开发不执行生产 sweep、不改 live/STOP、不关闭会话。
+
+下文保留原验收和恢复合同；其中“done 待证 scratch 原字节永久保留”及 learner 总上限四批由本节替代，知识/源码验收与 checkout 删除门不变。
+
 #67 新的原派发合同例外：携带 `operational_runtime` 且 SQLite 真实运营回执/原报告SHA核同的纯复盘或审计，运营记录本身可作为完成证明，无源码合入/full/经验提炼前置；不冒称已入正式知识。旧批次仍沿下文原合同，混合源码仍须工程发布检查。后续原请求/研究owner、进程、身份、实例、干净树、归档与恢复门全部保持；记录入库不等于已删除工作树。接口与逐入口范围见 [运营学习 runtime](learning-runtime.md)。
 
 Roy 2026-10-13 要求：学习入库后回收过程遗留数据。原调度器的 learn tick 和完整检查结束时启动一个 `nice 19` 回收进程，每轮最多处理四批；不新增定时器，不启动模型，不改变对局或学习者权限。

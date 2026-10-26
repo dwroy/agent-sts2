@@ -422,7 +422,7 @@ def register_feature_notice(root, state_dir, state, source_path, notice_id, kind
     return notice_id
 
 
-def read_request(root, path):
+def read_request(root, path, learn_locked=False, restore_original=False):
     raw = Path(path).read_bytes()
     req = json.loads(raw)
     if (req.get("schema") != "learning-request-v1" or req.get("authorized_by") != "Roy"
@@ -436,6 +436,20 @@ def read_request(root, path):
     if (not isinstance(required, list) or not required or len(set(required)) != len(required)
             or any(not isinstance(key, str) or not ID.fullmatch(key) for key in required)):
         raise ValueError("invalid acceptance requirements")
+    # Restore original done scratch before validating inputs or starting its native thread.
+    import learner_retention
+    directory = Path(os.environ.get('CODEX_OPS_DIR') or Path(root) / 'ops/codex-ops')
+    original = req.get('original_batch', '')
+    manifest = (directory / 'retention/archives' / (original + '.manifest.json')
+                if isinstance(original, str) and learner_retention.BATCH.fullmatch(original) else None)
+    if restore_original and manifest is not None and manifest.is_file():
+        saved = learner_retention.load(manifest)
+        tree = learner_retention.safe_path(Path(root), req['worktree'])
+        batch = learner_retention.load(directory / 'learn.json')['batches'][original]
+        if (Path(batch.get('worktree', '')) != tree
+                or not learner_retention.safe_path(Path(root), saved['scratch']).is_relative_to(tree / 'learner/runs')):
+            raise ValueError('original restoration binding mismatch')
+        learner_retention.restore(Path(root), directory, original, learn_locked=learn_locked)
     artifact(root, req["input"])
     tree = (Path(root) / req["worktree"]).resolve()
     if tree.parent != (Path(root) / ".worktrees").resolve() or not (tree / ".git").is_file():
@@ -629,7 +643,7 @@ def reconcile(state, root, scripts, character, alive, stamp, start, limit=2):
         state.setdefault("learning_requests", goals)
         rec = goals.setdefault(path.stem, {"id": path.stem, "state": "pending", "attempts": [], "pending_since": time.time()})
         try:
-            req, raw = read_request(root, path)
+            req, raw = read_request(root, path, learn_locked=True, restore_original=True)
             if req["character"] != character:
                 continue
             current_sha = digest(raw)

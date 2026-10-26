@@ -1,0 +1,82 @@
+{
+  "base": "3f72590d1943914a254188b1763362bf1692d320",
+  "validated_at": "2026-10-26T16:47:38+08:00",
+  "nice": 19,
+  "vitest_workers": 1,
+  "checks": [
+    {
+      "name": "sandbox-initial",
+      "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh",
+      "exit_code": 1,
+      "files_passed": 641,
+      "files_failed": 4,
+      "tests_passed": 5944,
+      "tests_failed": 4,
+      "log": "sandbox.log",
+      "scope": "initial broad scan; changes completed afterward",
+      "log_sha256": "75d57df8a143f1d6f9c85b1080ee5ffbe5b45d97de58af7afc002a2650118d1e",
+      "log_bytes": 34542
+    },
+    {
+      "name": "final-production-tsc",
+      "command": "cd agent && npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "log": "tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_bytes": 0
+    },
+    {
+      "name": "final-targeted",
+      "command": "vitest run --pool=threads --maxWorkers=1 (16 changed/consumer/failure suites)",
+      "exit_code": 0,
+      "files_passed": 16,
+      "tests_passed": 127,
+      "log": "targeted.log",
+      "log_sha256": "a80aa0a4f6a8154b9aebea9f5161e32aedbb1fff73c656ffff88237622408224",
+      "log_bytes": 1070
+    },
+    {
+      "name": "paths-fork",
+      "command": "vitest run tests/paths.test.ts --pool=forks --maxWorkers=1",
+      "exit_code": 0,
+      "files_passed": 1,
+      "tests_passed": 11,
+      "log": "paths.log",
+      "log_sha256": "2fb70c2b123c3842da28804c89efc89e2f6d040cf82bccefccc002c5cf14aece",
+      "log_bytes": 429
+    },
+    {
+      "name": "native-consumers",
+      "command": "python3 -B -m unittest discover -s ops/tests -p 'test_learner_tui*.py'",
+      "exit_code": 0,
+      "tests_passed": 37,
+      "log": "native-consumers.log",
+      "log_sha256": "c9f59737860ced2e825e80ed47e0697dbc8b937dcce7545f110d2108c6b1c72a",
+      "log_bytes": 136
+    }
+  ],
+  "initial_failures": [
+    {
+      "file": "tests/check-imports.test.ts",
+      "resolution": "fixed HEAD blob restored without changing tracked bytes",
+      "fixture": "paper/materials/issue29-brain-speed/results.jsonl",
+      "blob": "b84d95c5185941eec143cbcf2966d5770309cca5"
+    },
+    {
+      "file": "tests/python-cache-retention.test.ts",
+      "resolution": "original checkout admission refusals retained; added real compression with unknown caches/checkout preserved"
+    },
+    {
+      "file": "tests/v6-appearance.test.ts",
+      "resolution": "capture and verify fixed audit before publication; assert successful cleanup afterward"
+    },
+    {
+      "file": "tests/worktree-retention.test.ts",
+      "resolution": "done scratch follows original workspace-only reclaim; restore both original workspace and scratch through original receipts"
+    }
+  ],
+  "final_scope": "all initial failures and affected consumers passed; no claim of a final full ROOT/LIVE combination",
+  "production_sweep_executed": false,
+  "runtime_24h_acceptance": "pending original ops after deployment",
+  "source_inputs_sha256": "6af605fab21d9d4046538d543881771d734d66de47391e5fa890896265c68740"
+}

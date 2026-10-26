@@ -71,35 +71,35 @@ class LegacyRetention(fixtures.LearnerRetention):
                 self.launch['params'][key] = value
                 self.write_event()
                 with self.assertRaisesRegex(ValueError, 'launch binding'):
-                    self.run_cleanup(False)
+                    retention.admission(self.root, self.directory, self.state, self.bid)
         for key, value in [('task', 'strategy-proposal'), ('cwd', str(self.root))]:
             with self.subTest(key=key):
                 self.launch = json.loads(json.dumps(original))
                 self.launch[key] = value
                 self.write_event()
                 with self.assertRaisesRegex(ValueError, 'launch binding'):
-                    self.run_cleanup(False)
+                    retention.admission(self.root, self.directory, self.state, self.bid)
         self.launch = original
         self.write_event()
         original_output = self.output.read_text()
         for marker in ['会话：', '日志：']:
             self.output.write_text(original_output.replace(marker, 'quoted: '))
             with self.assertRaisesRegex(ValueError, 'thread/output binding'):
-                self.run_cleanup(False)
+                retention.admission(self.root, self.directory, self.state, self.bid)
         self.output.write_text(original_output)
         self.thread = '01a1131c-c66e-77f2-8098-baa45f17d82b'
         self.write_event()
         with self.assertRaisesRegex(ValueError, 'thread/output binding'):
-            self.run_cleanup(False)
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.thread = '01a1131c-c66e-77f2-8098-baa45f17d82a'
         self.write_event()
         (self.scratch / 'commit.txt').write_text('a' * 40)
         with self.assertRaisesRegex(ValueError, 'report/source binding'):
-            self.run_cleanup(False)
+            retention.admission(self.root, self.directory, self.state, self.bid)
         (self.scratch / 'commit.txt').write_text(self.head)
         (self.scratch / 'report.json').write_text(json.dumps(dict(self.report, commit='a' * 40)))
         with self.assertRaisesRegex(ValueError, 'report/source binding'):
-            self.run_cleanup(False)
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
 
     def test_legacy_requires_checks_ingestion_and_inactive_original_owner(self):
@@ -114,29 +114,29 @@ class LegacyRetention(fixtures.LearnerRetention):
         self.state['batches']['other'] = {'state': 'running', 'worktree': str(self.tree)}
         self.save_state()
         with self.assertRaisesRegex(ValueError, 'active shared owner'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         del self.state['batches']['other']
         self.batch['learning_request'] = 'original-request'
         self.save_state()
         with self.assertRaisesRegex(ValueError, 'continuation/research'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         del self.batch['learning_request']
         self.batch['checks']['rc'] = 1
         self.save_state()
         with self.assertRaisesRegex(ValueError, 'not published'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.batch['checks']['rc'] = 0
         self.save_state()
         self.log.write_text('Test running; incomplete output')
         with self.assertRaisesRegex(ValueError, 'completion summary'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.log.write_text('Test Files 1 passed\n')
         self.batch['runs'] = ['BBBBBBBBBBBB']
         self.launch['params']['runs'] = 'BBBBBBBBBBBB'
         self.write_event()
         self.save_state()
         with self.assertRaisesRegex(ValueError, 'missing from published experience'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.assertTrue((self.scratch / 'raw-states.jsonl').exists())
 
     def test_legacy_rejects_symlinked_launch_and_detects_changed_proof_before_deletion(self):
@@ -146,7 +146,7 @@ class LegacyRetention(fixtures.LearnerRetention):
         self.original_stream.rename(moved)
         self.original_stream.symlink_to(moved)
         with self.assertRaisesRegex(ValueError, 'symlink'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.original_stream.unlink()
         self.original_stream.write_bytes(event_raw)
         real_archive = retention.archive
