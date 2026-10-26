@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-72-global-build-research/agent
+
+(node:3891260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/build-research.test.ts (9 tests | 1 failed) 2724ms
+   × migrates schema3 atomically without changing prior K1, revisions or bindings; old reader needs no write 61ms
+(node:3891260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3891260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3891260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3891260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-research.test.ts > migrates schema3 atomically without changing prior K1, revisions or bindings; old reader needs no write
+Error: no such column: schema
+ ❯ tests/build-research.test.ts:121:14
+    119|  expect(buildKnowledgeTools(ctx).some(t => t.name === "kb_build_resear…
+    120|  expect(() => new KnowledgeStore(s.root, { migrationFailpoint: () => {…
+    121|  expect(s.db.prepare("SELECT value FROM metadata WHERE key=schema").ge…
+       |              ^
+    122|  const migrated = new KnowledgeStore(s.root); stores.push(migrated);
+    123|  expect(migrated.current()).toBe(version); expect(migrated.db.prepare(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 55 passed (56)
+   Start at  05:40:44
+   Duration  11.31s (transform 2.87s, setup 663ms, import 3.49s, tests 6.42s, environment 0ms)
+
