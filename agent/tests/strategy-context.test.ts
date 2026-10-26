@@ -95,10 +95,10 @@ it("pages hundreds of candidates below 24KB and does not attach the omitted entr
   expect((await call({ query: "fixture-119" })).entries[0].id).toBe("fixture-119");
 });
 
-it("skips a whole oversized entry so smaller matches remain queryable and validates pagination inputs", async () => {
+it("projects an oversized entry alongside smaller matches and validates pagination inputs", async () => {
   const { library, call, host } = fixture();
   library([{ ...entry("a-oversize"), evidence: [{ run: "FIXTURE00001", floor: 1, ref: "x".repeat(25_000) }] }, entry("z-small")]);
-  expect(await call()).toMatchObject({ entries: [{ id: "z-small" }], oversized_skipped: 1, next_offset: null });
+  expect(await call()).toMatchObject({ entries: [{ id: "a-oversize", truncated: true }, { id: "z-small" }], oversized_skipped: 0, next_offset: null });
   for (const input of [{ query: "*", limit: 7 }, { query: "*", offset: -1 }, { query: "*", path: "/unused" }]) expect((await host.call("kb_strategies", input)).isError).toBe(true);
 });
 

@@ -123,13 +123,22 @@ it("retains public lesson conditions and source roles without reading another ch
   expect(result.sources).toContainEqual(expect.objectContaining({ file: "shared-experience.json", version: "shared-fixture", sha256: expect.stringMatching(/^[a-f0-9]{64}$/) }));
 });
 
-it("bounds an oversized strategy provenance envelope without dropping evidence from a returned entry", async () => {
+it("projects oversized strategy provenance and retrieves every original evidence byte explicitly", async () => {
   const { ctx, write, strategy } = fixture();
-  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, evidence: [{ run: "FIXTURE00001", floor: 1, ref: "fixed".repeat(6000) }] }] });
+  const original = { ...strategy, evidence: [{ run: "FIXTURE00001", floor: 1, ref: "fixed".repeat(6000) }] };
+  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [original] });
   const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
   const result = await host.call("kb_strategies", { query: "*" });
-  expect(result.isError).toBe(true); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
-  expect(JSON.parse(result.text).entries).toEqual([]);
+  expect(result.isError).not.toBe(true); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
+  expect(JSON.parse(result.text)).toMatchObject({ returned: 1, entries: [{ id: original.id, trigger: original.trigger,
+    strategy: original.strategy, confidence: original.confidence, truncated: true }] });
+  let offset: number | null = 0, text = "";
+  do {
+    const page = await host.call("kb_strategies", { query: "*", detail: "full", document_id: original.id, document_offset: offset });
+    expect(page.isError).not.toBe(true); expect(Buffer.byteLength(page.text)).toBeLessThanOrEqual(24_000);
+    const parsed = JSON.parse(page.text); text += parsed.json_fragment; offset = parsed.next_document_offset;
+  } while (offset !== null);
+  expect(JSON.parse(text)).toEqual(original);
 });
 
 it("routes production guidance and records actual query identities in brain logs", async () => {
