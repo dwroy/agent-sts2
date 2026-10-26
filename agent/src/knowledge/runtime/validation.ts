@@ -7,10 +7,11 @@ import { validateBuildCoreFile } from "../../v6/build-core.js";
 import { directionFile, reflexFile } from "../../v6/knowledge.js";
 import { reflexVocabSchema } from "../../v6/formats.js";
 import { validate } from "../../v6/schema.js";
+import { parseDecisionContext } from "../decision-context.js";
 
 export type Row = Record<string, any>;
 export const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
-export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "classification.json"]);
+export const MIGRATED_NAMES = new Set(["experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "classification.json", "decision-context.json"]);
 export const ARCHETYPE_PATH = "external/sts2fun/builds-v1/archetypes.json";
 export function allowedPath(path: string): boolean {
   return path === "common/classification.json" || path === "common/shared-experience.json" || path === "common/open-book.json" || path === ARCHETYPE_PATH
@@ -77,6 +78,10 @@ export function validateDocuments(files: Record<string, string>): void {
         ids.add(key);
       }
     }
+    else if (name === "decision-context.json") {
+      if (character !== "silent") throw Error("cross-character decision context document");
+      parseDecisionContext(body);
+    }
     else if (name === "experience.json") {
       if (!nonempty(body.version) || !Array.isArray(body.entries)) throw new Error(`invalid experience: ${path}`);
       const ids = new Set();
@@ -130,6 +135,10 @@ export function validateUpdate(before: Record<string, string>, after: Record<str
       const changed = current.get(identity(entry));
       if (!changed) throw new Error(`retire instead of deleting published entry: ${entry.id}`);
       if (JSON.stringify(entry) === JSON.stringify(changed)) continue;
+      if (path.endsWith("/decision-context.json")) {
+        for (const key of ["conditions", "triggers", "review_origin"]) if (JSON.stringify(entry[key]) !== JSON.stringify(changed[key])) throw Error(`decision context scope change requires owner review: ${entry.id}/${key}`);
+        for (const key of ["evidence_refs", "denominators", "limitations", "conflicts_with"]) if (!retains(entry[key], changed[key])) throw Error(`published decision context evidence must be preserved: ${entry.id}/${key}`);
+      }
       if (path.endsWith("/classification.json") && JSON.stringify([entry.target.path, entry.target.type, entry.target.id, entry.target.parent_id]) !== JSON.stringify([changed.target.path, changed.target.type, changed.target.id, changed.target.parent_id])) throw new Error("classification identity cannot be rebound");
       preserveNested(entry, changed);
       if (!retains(evidenceRows(entry), evidenceRows(changed))
