@@ -77,6 +77,43 @@ class CompletionTests(unittest.TestCase):
             self.assertTrue(self.batch["knowledge_pending"])
             self.assertIn("同一ID查实际结果", self.inbox[0])
 
+    def test_new_receipt_reconciles_original_batch_and_event_after_lost_state_save(self):
+        from knowledge_completion_events import enqueue_once
+        receipt = {"candidate": "fixed", "publication_candidate": "continuation:fixed", "version": "K1-" + "b" * 64,
+                   "code": "d" * 40, "event_request": "complete:fixed"}
+        original = json.loads(json.dumps(self.batch))
+        calls = [subprocess.CompletedProcess([], 0, stdout=""), subprocess.CompletedProcess([], 0, stdout="a" * 40),
+                 subprocess.CompletedProcess([], 0, stdout="a" * 40), subprocess.CompletedProcess([], 0, stdout=json.dumps(receipt))]
+        directory = self.root / "ops/codex-ops"
+        def enqueue(kind, text, request=None):
+            return enqueue_once(directory, kind, text, request)
+        for _ in range(2):
+            self.batch = json.loads(json.dumps(original))
+            with patch.object(runtime.subprocess, "run", side_effect=calls):
+                runtime.complete("fixed", self.batch, self.report, 0, str(self.root), enqueue, self.inbox.append)
+            self.assertEqual(self.batch["state"], "done")
+            self.assertEqual(self.batch["knowledge_publication"]["publication_candidate"], "continuation:fixed")
+        events = list((directory / "queue").glob("*.md"))
+        self.assertEqual(len(events), 1)
+        self.assertIn("源码 " + "d" * 40, events[0].read_text())
+        (directory / "delivered").mkdir()
+        events[0].rename(directory / "delivered" / events[0].name)
+        with patch.object(runtime.subprocess, "run", side_effect=calls):
+            runtime.complete("fixed", self.batch, self.report, 0, str(self.root), enqueue, self.inbox.append)
+        self.assertEqual(list((directory / "queue").glob("*.md")), [])
+
+    def test_publisher_error_preserves_old_failure_and_only_safe_current_diagnostic(self):
+        self.batch["knowledge_attempts"] = [{"state": "pending", "error": "CalledProcessError"}]
+        failure = subprocess.CalledProcessError(1, ["node"], stderr="knowledge version conflict; nothing published\nprivate-fixture-must-not-copy")
+        calls = [subprocess.CompletedProcess([], 0, stdout=""), subprocess.CompletedProcess([], 0, stdout="a" * 40),
+                 subprocess.CompletedProcess([], 0, stdout="a" * 40), failure]
+        with patch.object(runtime.subprocess, "run", side_effect=calls):
+            self.finish()
+        self.assertEqual(self.batch["knowledge_attempts"][0], {"state": "pending", "error": "CalledProcessError"})
+        self.assertEqual(self.batch["knowledge_attempts"][1]["reason"], "base_cas_conflict")
+        self.assertNotIn("private-fixture", json.dumps(self.batch))
+        self.assertEqual(self.batch["state"], "awaiting_review")
+
     def test_legacy_output_uses_original_pipeline_and_invalid_identity_is_preserved(self):
         self.assertFalse(runtime.complete("fixed", {}, {}, 0, str(self.root), self.events.append, self.inbox.append))
         self.report["commit"] = "c" * 40

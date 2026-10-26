@@ -109,3 +109,5 @@ nice -n 19 python3 ops/knowledge_runtime_env.py --root "$ROOT" --state-dir "$ROO
 
 
 #66 追加 schema3 显式分类元数据、候选与空因反馈；schema1/2原修订和K1保持。当前 reader/升级、分类操作和诊断口径以[显式知识分类合同](knowledge-classification.md)为准。
+
+#73 对已审策略/分类的非重叠旧 base 候选提供显式受理后继、原 batch 完成回执和完成通知去重；原候选及失败不变，普通 CAS 不放宽。适用形态、命令、崩溃恢复和部署回退见[并行知识发布续接](knowledge-publication-continuation.md)。

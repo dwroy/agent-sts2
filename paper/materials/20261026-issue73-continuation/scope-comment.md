@@ -1,0 +1,1 @@
+[dev #73] 已开工，登记共享叶范围：agent/src/knowledge/runtime/{store,schema}.ts、agent/tools/knowledge-runtime.ts、ops/knowledge_runtime.py；新增独立续接合并与完成事件模块及固定测试、合同材料。基于16f66e76，保留#71/#72已有内容，#69研究合同不作本次前置；原候选/审批/失败与生产状态只读。显式受理绑定原batch、旧新base、批准delta，原completion消费后继并保CAS；不改live/STOP/账号或他人工作树。

@@ -128,7 +128,13 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=
             from strategy_backfill_jobs import report_proof
             proof = report_proof(report, batch, root)
             approval = path.with_name("runtime-source-approval.json")
-            approval.write_text(json.dumps(proof["destination_files"], ensure_ascii=False))
+            approved_text = json.dumps(proof["destination_files"], ensure_ascii=False)
+            if approval.exists():
+                if approval.read_text() != approved_text:
+                    raise ValueError("original runtime source approval changed")
+            else:
+                with approval.open("x") as handle:
+                    handle.write(approved_text)
         code = subprocess.run(["git", "-C", root, "rev-parse", "HEAD"], capture_output=True, text=True, check=True, timeout=10).stdout.strip()
         if not re.fullmatch(r"[a-f0-9]{40}", code):
             raise ValueError("unknown publisher code version")
@@ -150,6 +156,8 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=
         receipt = json.loads(result.stdout)
         if receipt.get("candidate") != batch_id or not re.fullmatch(r"K1-[a-f0-9]{64}", receipt.get("version", "")):
             raise ValueError("invalid publisher receipt")
+        if receipt.get("event_request") and receipt["event_request"] != "complete:" + batch_id:
+            raise ValueError("invalid completion event identity")
         control_sha = os.environ.get("STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256", "")
         batch.update(state="done", rc=rc, report=report, knowledge_publication={**receipt, "candidate_sha256": hashlib.sha256(raw).hexdigest(),
                      "runtime_control_sha256": control_sha if re.fullmatch(r"[a-f0-9]{64}", control_sha) else None},
@@ -162,12 +170,35 @@ def _complete(batch_id, batch, report, rc, root, enqueue, inbox, *, independent=
             kind = "external" if batch.get("external_source") else "backfill"
             batch[kind + "_result"] = proof["dispositions"]
             batch[kind + "_output_files"] = proof["destination_files"]
-        if not previous or previous.get("version") != receipt["version"]:
-            enqueue("knowledge-done", f"知识批次 {batch_id} 已事务发布 {receipt['version']}；源码 {code}；待生产工具读回及自然局消费，不代学习父验收。")
+        text = f"知识批次 {batch_id} 已事务发布 {receipt['version']}；源码 {receipt.get('code', code)}；待生产工具读回及自然局消费，不代学习父验收。"
+        if receipt.get("event_request"):
+            if not previous or previous.get("version") != receipt["version"] or not previous.get("event_enqueued"):
+                enqueue("knowledge-done", text, receipt["event_request"])
+            batch["knowledge_publication"]["event_enqueued"] = True
+        elif not previous or previous.get("version") != receipt["version"]:
+            enqueue("knowledge-done", text)
     except (ValueError, OSError, KeyError, TypeError, AttributeError, ImportError, subprocess.SubprocessError) as error:
         # A timeout is uncertain: retry complete with the SAME id, querying actual database result first.
         batch.update(state="awaiting_review", rc=rc, report=report, knowledge_pending=True)
-        batch.setdefault("knowledge_attempts", []).append({"state": "pending", "error": type(error).__name__})
+        attempt = {"state": "pending", "error": type(error).__name__}
+        if isinstance(error, subprocess.CalledProcessError):
+            # Keep bounded, nonverbatim diagnostics; never copy arbitrary child output or paths.
+            stderr = error.stderr or ""
+            if isinstance(stderr, bytes):
+                stderr = stderr.decode("utf-8", errors="replace")
+            attempt["publisher_exit"] = error.returncode
+            attempt["stderr_sha256"] = hashlib.sha256(stderr.encode()).hexdigest()
+            reason = next((tag for phrase, tag in (
+                ("knowledge version conflict", "base_cas_conflict"),
+                ("continuation approval changed", "continuation_approval_changed"),
+                ("absent from frozen-source artifacts", "source_approval_mismatch"),
+                ("dangling or stale classification", "classification_target_mismatch"),
+                ("original runtime database is unavailable", "original_runtime_unavailable"),
+            ) if phrase in stderr), "publisher_rejected")
+            attempt["reason"] = reason
+        elif isinstance(error, ValueError):
+            attempt["reason"] = "completion_validation_rejected"
+        batch.setdefault("knowledge_attempts", []).append(attempt)
         inbox(f"知识批次 {batch_id} 发布待核：{type(error).__name__}；保留原候选，以同一ID查实际结果后重试，不改源码/live或反证。")
     return True
 

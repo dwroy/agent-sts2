@@ -38,6 +38,18 @@ CREATE VIRTUAL TABLE IF NOT EXISTS body_search USING fts5(revision UNINDEXED, bo
 CREATE TABLE IF NOT EXISTS events(
  id INTEGER PRIMARY KEY, request TEXT UNIQUE NOT NULL, action TEXT NOT NULL, version TEXT NOT NULL REFERENCES releases(version),
  created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
+CREATE TABLE IF NOT EXISTS candidate_continuations(
+ original TEXT PRIMARY KEY REFERENCES candidates(id), successor TEXT UNIQUE NOT NULL REFERENCES candidates(id),
+ batch TEXT NOT NULL, old_base TEXT NOT NULL REFERENCES releases(version), new_base TEXT NOT NULL REFERENCES releases(version),
+ evidence TEXT NOT NULL CHECK(json_valid(evidence)),
+ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
+CREATE TABLE IF NOT EXISTS publication_attempts(
+ id INTEGER PRIMARY KEY, candidate TEXT NOT NULL REFERENCES candidates(id), action TEXT NOT NULL,
+ reason TEXT NOT NULL, detail_sha256 TEXT NOT NULL,
+ created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
+CREATE TABLE IF NOT EXISTS knowledge_completions(
+ original TEXT PRIMARY KEY REFERENCES candidates(id), publication TEXT UNIQUE NOT NULL REFERENCES candidates(id),
+ receipt TEXT NOT NULL CHECK(json_valid(receipt)));
 CREATE TABLE IF NOT EXISTS run_bindings(
  run_id TEXT PRIMARY KEY, version TEXT NOT NULL REFERENCES releases(version), code TEXT NOT NULL,
  created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));

@@ -3,7 +3,7 @@ import { classificationTargets, classificationDigest } from "../src/knowledge/ru
 import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
-import { KnowledgeStore, importFiles, auditApprovedChanges, type Candidate } from "../src/knowledge/runtime/store.js";
+import { KnowledgeStore, importFiles, type Candidate } from "../src/knowledge/runtime/store.js";
 import { SCHEMA_VERSION } from "../src/knowledge/runtime/schema.js";
 import { KnowledgeReader } from "../src/knowledge/runtime/reader.js";
 import { BUSINESS_TYPES, type BusinessType } from "../src/knowledge/runtime/projection.js";
@@ -23,7 +23,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   try { console.log(JSON.stringify({ current: store.current(), restored: true })); } finally { store.close(); } return;
  }
  const readonly = ["current", "query", "typed-query", "classification-draft", "status", "backup", "verify", "export"].includes(command ?? "");
- if (command === "complete") {
+ if (["complete", "admit-continuation"].includes(command ?? "")) {
   const database = join(required("runtime"), "knowledge.sqlite");
   if (!existsSync(database) || !lstatSync(database).isFile() || lstatSync(database).isSymbolicLink()) throw new Error("original runtime database is unavailable; do not initialize or rebind completion");
  }
@@ -80,14 +80,14 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
    case "submit": result = store.submit(JSON.parse(readFileSync(required("candidate"), "utf8")) as Candidate); break;
    case "validate": result = store.validate(required("id")); break;
    case "publish": result = { version: store.publish(required("id")) }; break;
+   case "admit-continuation": {
+    result = store.admitContinuation(required("id"), required("batch"), required("base"), JSON.parse(readFileSync(required("approval"), "utf8"))); break;
+   }
    case "complete": {
     const candidate = JSON.parse(readFileSync(required("candidate"), "utf8")) as Candidate;
     if (candidate.character === "migration") throw new Error("completion callbacks cannot import migrations");
     if (flags["id"] && candidate.id !== flags["id"]) throw new Error("candidate/batch identity mismatch");
-    if (flags["approval"]) auditApprovedChanges(store.files(candidate.base), candidate.files,
-      JSON.parse(readFileSync(flags["approval"], "utf8")) as Array<{ id: string; path: string }>);
-    store.submit(candidate); store.validate(candidate.id);
-    result = { schema: "knowledge-completion-v1", candidate: candidate.id, version: store.publish(candidate.id), code: required("code") }; break;
+    result = store.complete(candidate, required("code"), flags["approval"] ? JSON.parse(readFileSync(flags["approval"], "utf8")) : undefined); break;
    }
    case "status": result = store.status(required("id")); break;
    case "rollback": result = { version: store.rollback(required("version"), required("request")) }; break;
@@ -122,7 +122,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     break;
    }
    case "backup": await store.backup(required("destination")); result = { backup: resolve(flags["destination"]!) }; break;
-   default: throw new Error("commands: init/import/extend/submit/validate/publish/complete/status/current/query/typed-query/classification-draft/verify/bind/launch/rollback/backup/restore");
+   default: throw new Error("commands: init/import/extend/submit/validate/publish/admit-continuation/complete/status/current/query/typed-query/classification-draft/verify/bind/launch/rollback/backup/restore");
   }
   const text = JSON.stringify(result);
   if (flags["receipt"]) writeFileSync(flags["receipt"], text + "\n", { mode: 0o600 });

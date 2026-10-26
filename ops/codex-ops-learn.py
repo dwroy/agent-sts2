@@ -141,8 +141,11 @@ def state_lock():
             yield
 
 
-def enqueue(kind, text):
+def enqueue(kind, text, request=None):
     """An event for the ops session (ops/codex/lib.ts readQueue: <epoch ns>-<kind>.md)."""
+    if request is not None:
+        from knowledge_completion_events import enqueue_once
+        return enqueue_once(DIR, kind, text, request)
     os.makedirs(QUEUE, exist_ok=True)
     name = f"{time.time_ns()}-{kind}.md"
     tmp = os.path.join(QUEUE, "." + name)

@@ -1,3 +1,4 @@
+import { mergeApprovedDelta } from "./continuation.js";
 /** Host-local publisher. The gameplay process never imports this writable adapter. */
 import { CLASSIFICATION_SCHEMA } from "./classification-schema.js";
 import { projectClassifications } from "./classification.js";
@@ -21,6 +22,7 @@ export interface Candidate {
  source: string;
  files: Record<string, string>;
 }
+export type Approval = Array<{ id: string; path: string; sha256?: string; bytes?: number } & Row>;
 export interface Manifest { schema: "knowledge-release-v1"; version: string; files: Record<string, string> }
 const canonical = (value: unknown): string => {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
@@ -125,17 +127,24 @@ export class KnowledgeStore {
   }
   const body = canonical(candidate), hash = digest(body);
   if (Buffer.byteLength(body) > 32 * 1024 * 1024) throw new Error("candidate exceeds 32MB");
-  return this.transaction(() => {
+  return this.transaction(() => this.insertCandidate(candidate, body, hash));
+ }
+ private insertCandidate(candidate: Candidate, body = canonical(candidate), hash = digest(body)): Row {
     const old = this.db.prepare("SELECT * FROM candidates WHERE id=?").get(candidate.id);
     if (old) { if (old["digest"] !== hash) throw new Error("idempotency key reused with different content"); return old; }
     if (candidate.base !== null && !this.db.prepare("SELECT 1 FROM releases WHERE version=?").get(candidate.base)) throw new Error("unknown candidate base");
     this.db.prepare("INSERT INTO candidates(id,digest,base,body,status) VALUES(?,?,?,?,'submitted')").run(candidate.id, hash, candidate.base, body);
     return this.status(candidate.id);
-  });
  }
  status(id: string): Row {
   const row = this.db.prepare("SELECT id,digest,base,status,version,created FROM candidates WHERE id=?").get(id);
-  if (!row) throw new Error("unknown candidate"); return row;
+  if (!row) throw new Error("unknown candidate");
+  // Keep the original status/version truthful; expose publication through its explicit relation.
+  const has = (name: string) => !!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?").get(name);
+  const relation = has("candidate_continuations") ? this.db.prepare("SELECT * FROM candidate_continuations WHERE original=? OR successor=?").get(id, id) : undefined;
+  const completion = has("knowledge_completions") ? this.db.prepare("SELECT receipt FROM knowledge_completions WHERE original=? OR publication=?").get(id, id) : undefined;
+  const failures = has("publication_attempts") ? this.db.prepare("SELECT id,action,reason,detail_sha256,created FROM publication_attempts WHERE candidate=? ORDER BY id DESC LIMIT 20").all(id) : [];
+  return { ...row, ...(failures.length ? { failures } : {}), ...(relation ? { continuation: relation } : {}), ...(completion ? { completion: JSON.parse(String(completion.receipt)) } : {}) };
  }
  private prepared(id: string) {
   const row = this.db.prepare("SELECT body FROM candidates WHERE id=?").get(id);
@@ -182,8 +191,11 @@ export class KnowledgeStore {
   return root;
  }
  publish(id: string, failpoint?: () => void): string {
+  return this.publishWithCompletion(id, failpoint);
+ }
+ private publishWithCompletion(id: string, failpoint?: () => void, completion?: { original: string; code: string }): string {
   const status = this.status(id);
-  if (status.status === "published") return String(status.version);
+  if (status.status === "published") return this.transaction(() => { this.recordCompletion(id, String(status.version), completion); return String(status.version); });
   if (status.status !== "validated") throw new Error("candidate is not validated");
   // Validation, snapshot IO and indexing preparation happen outside the short writer transaction.
   const { candidate, files, version, manifest } = this.prepared(id);
@@ -191,7 +203,7 @@ export class KnowledgeStore {
   const revisions = this.indexRows(files);
   return this.transaction(() => {
     const status = this.status(id);
-    if (status.status === "published") return String(status.version);
+    if (status.status === "published") { this.recordCompletion(id, String(status.version), completion); return String(status.version); }
     if (candidate.base !== this.current()) throw new Error("knowledge version conflict; nothing published");
     this.db.prepare("INSERT INTO releases(version,parent,candidate,source,manifest) VALUES(?,?,?,?,?)").run(version, candidate.base, id, candidate.source, JSON.stringify(manifest));
     for (const [path, text] of Object.entries(files)) {
@@ -204,8 +216,89 @@ export class KnowledgeStore {
     this.db.prepare("INSERT INTO metadata VALUES('current',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(version);
     this.db.prepare("UPDATE candidates SET status='published',version=? WHERE id=?").run(version, id);
     this.db.prepare("INSERT INTO events(request,action,version) VALUES(?,'publish',?)").run(`publish:${id}`, version);
+    this.recordCompletion(id, version, completion);
     return version;
   });
+ }
+ /** Approval snapshots bind both the exact reviewed bytes and each declared artifact identity. */
+ private approvalEvidence(approved: Approval): Row[] {
+  if (!Array.isArray(approved) || !approved.length) throw Error("continuation requires original approved artifacts");
+  return approved.map(item => {
+   const raw = readFileSync(item.path), sha256 = digest(raw.toString("utf8"));
+   if (item.sha256 !== undefined && item.sha256 !== sha256 || item.bytes !== undefined && item.bytes !== raw.length) throw Error("continuation approval changed");
+   return { ...item, sha256, bytes: raw.length };
+  });
+ }
+ admitContinuation(id: string, batch: string, expected: string, approved: Approval): Row {
+  return this.attempt(id, "admit-continuation", () => this.admit(id, batch, expected, approved));
+ }
+ private admit(id: string, batch: string, expected: string, approved: Approval): Row {
+  const original = this.prepared(id), saved = this.status(id);
+  if (batch !== id || saved.status !== "validated" || !original.candidate.base || original.candidate.base === expected) throw Error("continuation requires original validated conflicting batch");
+  const evidence = this.approvalEvidence(approved);
+  const existing = saved.continuation;
+  if (existing) {
+   if (existing.new_base !== expected || canonical(JSON.parse(existing.evidence).approved) !== canonical(evidence)) throw Error("continuation admission differs from preserved relation");
+   return saved;
+  }
+  if (this.current() !== expected) throw Error("continuation current changed; nothing admitted");
+  auditApprovedChanges(this.files(original.candidate.base), original.candidate.files, approved);
+  const head = this.files(expected), merged = mergeApprovedDelta(original.candidate.character, this.files(original.candidate.base), original.candidate.files, head);
+  const all = { ...head, ...merged.files };
+  validateDocuments(all); validateUpdate(head, all); auditApprovedChanges(head, merged.files, approved);
+  const proof = { original_digest: saved.digest, approved: evidence, delta: merged.delta };
+  const successor: Candidate = { ...original.candidate, id: `continuation:${digest(canonical({ id, expected, proof }))}`, base: expected, files: merged.files };
+  return this.transaction(() => {
+   if (this.current() !== expected || this.status(id).status !== "validated") throw Error("continuation current changed; nothing admitted");
+   this.insertCandidate(successor);
+   this.db.prepare("UPDATE candidates SET status='validated' WHERE id=?").run(successor.id);
+   this.db.prepare("INSERT INTO candidate_continuations(original,successor,batch,old_base,new_base,evidence) VALUES(?,?,?,?,?,?)")
+    .run(id, successor.id, batch, original.candidate.base!, expected, canonical(proof));
+   return this.status(id);
+  });
+ }
+ complete(candidate: Candidate, code: string, approved?: Approval, failpoint?: () => void): Row {
+  return this.attempt(candidate.id, "complete", () => this.completeCandidate(candidate, code, approved, failpoint));
+ }
+ private attempt<T>(id: string, action: string, run: () => T): T {
+  try { return run(); } catch (error) {
+   const message = error instanceof Error ? error.message : String(error);
+   const reason = ["object conflict", "header change", "cannot delete", "unsupported continuation", "current changed", "version conflict", "approval changed", "absent from frozen-source", "stale classification"]
+    .find(value => message.includes(value)) ?? "publication_rejected";
+   // Logging cannot turn a failed/uncertain write into success, nor expose raw child output.
+   try {
+    if (this.db.prepare("SELECT 1 FROM candidates WHERE id=?").get(id)) this.db.prepare("INSERT INTO publication_attempts(candidate,action,reason,detail_sha256) VALUES(?,?,?,?)").run(id, action, reason, digest(message));
+   } catch { /* Keep the original failure when the writer itself is unavailable. */ }
+   throw error;
+  }
+ }
+ private completeCandidate(candidate: Candidate, code: string, approved?: Approval, failpoint?: () => void): Row {
+  if (candidate.character === "migration" || typeof code !== "string" || !code.trim()) throw Error("invalid completion identity/code");
+  this.submit(candidate);
+  const status = this.status(candidate.id), relation = status.continuation;
+  if (relation) {
+   if (relation.original !== candidate.id) throw Error("completion must retain original batch identity");
+   if (!approved || canonical(this.approvalEvidence(approved)) !== canonical(JSON.parse(relation.evidence).approved)) throw Error("continuation approval changed or unavailable");
+   const prepared = this.prepared(String(relation.successor));
+   const head = this.files(String(relation.new_base));
+   validateDocuments(prepared.files); validateUpdate(head, prepared.files);
+   auditApprovedChanges(this.files(candidate.base), candidate.files, approved);
+   auditApprovedChanges(head, prepared.candidate.files, approved);
+  } else {
+   if (approved) auditApprovedChanges(this.files(candidate.base), candidate.files, approved);
+   this.validate(candidate.id);
+  }
+  const publication = relation ? String(relation.successor) : candidate.id;
+  this.publishWithCompletion(publication, failpoint, { original: candidate.id, code });
+  return this.status(candidate.id).completion;
+ }
+ private recordCompletion(publication: string, version: string, info?: { original: string; code: string }): void {
+  if (!info) return;
+  if (this.db.prepare("SELECT 1 FROM knowledge_completions WHERE original=?").get(info.original)) return;
+  const receipt = { schema: "knowledge-completion-v1", candidate: info.original, publication_candidate: publication, version, code: info.code,
+   event_request: `complete:${info.original}`, event_time_ns: String(BigInt(Date.now()) * 1000000n) };
+  this.db.prepare("INSERT INTO knowledge_completions VALUES(?,?,?)").run(info.original, publication, JSON.stringify(receipt));
+  this.db.prepare("INSERT INTO events(request,action,version) VALUES(?,'complete',?)").run(receipt.event_request, version);
  }
  private indexRows(files: Record<string, string>): Row[] {
   return Object.entries(files).flatMap(([path, text]) => rows(JSON.parse(text) as Row).map(e => {
