@@ -1,4 +1,5 @@
 /** Production knowledge surface: fixed files and selectors, no logs, SQL, paths or network. */
+import { consumerPage, documentInputs } from "./knowledge-projection.js";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import { knowledgeCharacter } from "../../knowledge/files.js";
@@ -86,16 +87,20 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
     const tool = original.name === "kb_experience" && knowledgeCharacter() === "silent" ? { ...original,
       description: `${original.description} 本工具查经验，reflex knowledge（rk）请用kb_reflex；relevant=true可取本题相关经验（最多12条，保留来源、置信度、支持与反证），也可按id定查。`,
       inputSchema: { ...original.inputSchema, properties: { ...original.inputSchema.properties, relevant: { type: "boolean" as const, description: "按本题状态匹配经验；可与原有筛选条件同时使用" } } } } : original;
+    const schema = tool.name === "kb_experience" && knowledgeCharacter() === "silent" ? { ...tool.inputSchema,
+      properties: { ...tool.inputSchema.properties, ...documentInputs,
+        limit: { type: "integer" as const, minimum: 1, maximum: 12 }, offset: { type: "integer" as const, minimum: 0, maximum: 1000000 } } } : tool.inputSchema;
     return {
-      ...tool,
+      ...tool, inputSchema: schema,
       async run(input, ctx) {
-        if (validateInput(tool.inputSchema, input).length) return tool.run(input, ctx);
+        const errors = validateInput(schema, input);
+        if (errors.length) return { text: errors.join("; "), isError: true };
         let selected: unknown = null;
         const audit = await withKnowledgeQuerySources(ctx.knowledgeDir, async () => {
           // These selectors use the renderer's file constants; dynamic fact loaders add their actual dependencies.
           sourceFiles(tool.name, input).forEach(recordKnowledgeQuerySource);
           if (tool.name === "kb_experience") {
-            if (![input["theme"], input["id"], input["keyword"], input["relevant"]].some(Boolean)) return { text: "请提供 theme、id、keyword 或 relevant=true。", isError: true };
+            if (![input["theme"], input["id"], input["keyword"], input["relevant"]].some(Boolean) && !(input["detail"] === "full" && input["document_id"])) return { text: "请提供 theme、id、keyword 或 relevant=true。", isError: true };
             selected = (input["relevant"] === true ? selectRelevantExperience(ctx) : loadExperience(ctx.knowledgeDir)).filter(e => appliesAt(e, ctx.ascension)
               && (!input["theme"] || themeOf(e.scope) === input["theme"])
               && (!input["id"] || e.id === input["id"])
@@ -106,6 +111,9 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
         });
         const result = audit.result, sources: unknown[] = audit.sources;
         if (Array.isArray(selected)) for (const entry of selected) if (object(entry) && typeof entry["source"] === "string" && entry["source"].startsWith("external:")) sources.push({ source: entry["source"], character: knowledgeCharacter(), representation: "entry", entry_id: entry["id"], version: String(entry["version"] ?? "unknown"), sha256: sha(JSON.stringify(entry)) });
+        if (Array.isArray(selected) && knowledgeCharacter() === "silent") return consumerPage({ tool: tool.name, input, rows: selected,
+          value: e => e, sources: rows => sources.filter(s => !object(s) || !s["entry_id"] || rows.some(e => e.id === s["entry_id"])), envelope: { schema: "brain-knowledge-result-v1",
+            evidence_scope: "本角色与已发布公共经验；支持/反证/限制不计其他角色验证" } });
         if (input["relevant"] === true && Array.isArray(selected)) return bounded(selected, sources, { evidence_scope: "本角色与已发布公共经验；保留条目置信度、来源和反证，其他角色来源不计本角色验证" });
         if (Buffer.byteLength(result.text) > MAX_BYTES) return { ...envelope([], sources, { error: "结果超过24KB，请缩小关键词/进阶/幕范围后查询" }), isError: true };
         return { ...envelope(selected ?? result.text, sources, { evidence_scope: "自有知识；条目内来源/反证保持原样；其他角色来源不计本角色验证" }), ...(result.isError ? { isError: true } : {}) };
