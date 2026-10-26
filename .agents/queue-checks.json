@@ -1,7 +1,16 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [],
+  "runtime_install_paths": [
+    "knowledge/builders/refresh-v6-history.py",
+    "ops/refresh_retention.py",
+    "ops/retention_metrics.py",
+    "agent/src/brain/tools/agent-knowledge.ts",
+    "agent/src/brain/tools/knowledge-projection.ts",
+    "agent/src/brain/tools/reflex-knowledge.ts",
+    "agent/src/brain/tools/strategy-tool.ts",
+    "agent/src/brain/tools/typed-knowledge.ts"
+  ],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -9,7 +18,8 @@
     "notes/",
     "paper/",
     "agent/tests/",
-    ".gitignore"
+    ".gitignore",
+    "learner/"
   ],
   "fixtures": [
     "paper/materials/issue29-brain-speed/results.jsonl"
@@ -32,10 +42,44 @@
     "ops.tests.test_knowledge_runtime",
     "ops.tests.test_knowledge_completion_events",
     "ops.tests.test_knowledge_classification",
-    "ops.tests.test_public_web"
+    "ops.tests.test_public_web",
+    "ops.tests.test_learner_retention",
+    "ops.tests.test_legacy_learner_retention",
+    "ops.tests.test_python_cache_retention",
+    "ops.tests.test_retention_backlog",
+    "ops.tests.test_own_learning_slot"
   ],
-  "consumer_commands": [],
-  "consumer_scope": "Issue68 queue environment repair on main3f72590d: ROOT-only adapter/tests, zero LIVE install or test injection. Original 18 applicable host modules, three type checks and one full. ROOT fixed issue29 Git blob; LIVE fixtures explicitly empty. Stock host module resumes only when issue71 code joins the frozen combination.",
+  "consumer_commands": [
+    {
+      "tree": "live",
+      "cwd": ".",
+      "argv": [
+        "python3",
+        "-c",
+        "import ast, datetime as dt, pathlib, sys, tempfile, unittest\nfrom unittest.mock import patch\nfrom pathlib import Path\nview = Path.cwd().resolve()\ncandidate = view.parent / 'validation-root'\nassert view.name == 'validation-live' and candidate.is_dir()\nsys.path.insert(0, str(view / 'ops'))\nimport learner_retention as r\nimport refresh_retention\nassert Path(r.__file__).resolve().parent == view / \"ops\"\nassert Path(refresh_retention.__file__).resolve().parent == view / \"ops\"\nsource = (candidate / 'ops/tests/test_retention_backlog.py').read_text()\ntree = ast.parse(source)\nmethods = {'refresh_dir', 'test_refresh_history_and_failed_cap_and_plan', 'test_refresh_active_and_symlinked_intermediates_are_preserved'}\noriginal = next((node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == 'Backlog'))\nkept = [node for node in original.body if isinstance(node, ast.FunctionDef) and node.name in methods]\nselected = ast.Module(body=[ast.ClassDef(name='OriginalAssertions', bases=[ast.Attribute(value=ast.Name(id='unittest', ctx=ast.Load()), attr='TestCase', ctx=ast.Load())], keywords=[], body=kept, decorator_list=[])], type_ignores=[])\nast.fix_missing_locations(selected)\nnamespace = dict(unittest=unittest, dt=dt, r=r, refresh_retention=refresh_retention, patch=patch)\nexec(compile(selected, str(candidate / 'ops/tests/test_retention_backlog.py'), 'exec'), namespace)\ndef setup(self):\n    self.temp = tempfile.TemporaryDirectory(prefix='issue76-fixed-input-')\n    self.addCleanup(self.temp.cleanup)\n    self.root = Path(self.temp.name)\n    self.directory = self.root / 'ops/codex-ops'\n    self.directory.mkdir(parents=True)\ncase = namespace['OriginalAssertions']\ncase.setUp = setup\nsuite = unittest.defaultTestLoader.loadTestsFromTestCase(case)\nresult = unittest.TextTestRunner(verbosity=2).run(suite)\nraise SystemExit(0 if result.wasSuccessful() else 1)\n"
+      ]
+    },
+    {
+      "tree": "root",
+      "cwd": ".",
+      "argv": [
+        "python3",
+        "ops/own_learning_slot.py",
+        "--help"
+      ]
+    },
+    {
+      "tree": "live",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--eval",
+        "/** Synthetic fixed inputs exercise the exact isolated LIVE tools, without game data. */\nimport assert from 'node:assert/strict';\nimport {mkdtempSync, rmSync} from 'node:fs';\nimport {tmpdir} from 'node:os';\nimport {join} from 'node:path';\nimport {createHash} from 'node:crypto';\nimport {KnowledgeStore} from './src/knowledge/runtime/store.ts';\nimport {closeIndexedReaders} from './src/knowledge/runtime/reader.ts';\nimport {setKnowledgeCharacter} from './src/knowledge/files.ts';\nimport {buildKnowledgeTools} from './src/brain/tools/agent-knowledge.ts';\nimport {ToolHost} from './src/brain/tools/mcp-server.ts';\n\nasync function main() {\n const root = mkdtempSync(join(tmpdir(), 'issue78-live-fixed-'));\n const store = new KnowledgeStore(root);\n try {\n  const strategy = {id:'oversized-strategy', version:'fixture', source:'own', confidence:.25,\n   trigger:{question_types:['card_reward'], acts:[1], floor:{min:5,max:18}, deck_cards:[{name:'TEST_CARD',count:{min:1}}]},\n   strategy:'格式测试正文，非游戏知识', evidence_status:'conflict', limits:['合成夹具，不能用于游戏'],\n   evidence:[{run:'SILENT000001',floor:5,role:'support',ref:'格式证据😀\"\\\\\\n'.repeat(1000)},\n    {run:'SILENT000002',floor:6,role:'contradict',ref:'反证保持'}]};\n  const experience = {id:'oversized-experience',scope:'general:deck',asc:[0,20],lesson:'格式测试结论',status:'active',confidence:'low',\n   n_support:1000,n_contradict:1,evidence:Array.from({length:1000},(_,i)=>`SYNTHETIC_${i}`),contradicting:['COUNTEREXAMPLE'],last_seen:'2026-10-26'};\n  const reflex = {schema:'reflex-entry-v1',id:'test_reflex',version:1,applies_to:'card_pick',\n   predicate:{op:'gte',field:'player.hp',value:10},signal:{kind:'hp',value:1,se:.2,unit:'hp'},label_en:'Test format only',\n   evidence:{observations:Array.from({length:1000},(_,i)=>({run_id:`SYNTHETIC_${i}`,floor:8,turn:1})),n_support:1000,n_contradict:2},\n   confidence:.5,scope:{character:'silent',ascensions:[0]},source_experience:['TEST_EXPERIENCE']};\n  const files = {\n   'characters/silent/strategy-entries.json':JSON.stringify({schema:'brain-strategies-v1',character:'silent',entries:[strategy]}),\n   'characters/silent/experience.json':JSON.stringify({version:'fixture',entries:[experience]}),\n   'characters/silent/reflex.json':JSON.stringify({schema:'reflex-file-v1',character:'silent',entries:[reflex]}),\n  };\n  store.submit({schema:'knowledge-candidate-v1',id:'fixture',base:null,character:'migration',source:'fixture',files});\n  store.validate('fixture'); const version=store.publish('fixture');\n  const snapshot=String(store.bind('FIXTURE','fixed-code').snapshot);\n  setKnowledgeCharacter('silent');\n  const ctx={knowledgeDir:snapshot,logsDir:snapshot,ascension:0,act:1,label:'reward/card',payload:{facts:{act:1,floor:10,deck:'TEST_CARD'}}};\n  const host=new ToolHost(buildKnowledgeTools(ctx),ctx);\n  const call=async(name,input)=>{\n   const result=await host.call(name,input);\n   assert(!result.isError,result.text);assert(Buffer.byteLength(result.text)<=24000);\n   return JSON.parse(result.text);\n  };\n  const results=[];\n  for(const [tool,input,original] of [\n   ['kb_strategies',{query:strategy.id},strategy],['kb_experience',{id:experience.id},experience],['kb_reflex',{query:reflex.id},reflex],\n  ]) {\n   const projection=await call(tool,input);\n   assert.equal(projection.returned,1);assert.equal(projection.oversized_skipped,0);\n   assert.equal(projection.knowledge_version,version);\n   assert.equal(projection.entries[0].id,original.id);assert.equal(projection.entries[0].confidence,original.confidence);\n   if(tool==='kb_strategies') {\n    assert.deepEqual(projection.entries[0].trigger,strategy.trigger);\n    assert.equal(projection.entries[0].strategy,strategy.strategy);\n    assert.equal(projection.entries[0].evidence_status,'conflict');\n    assert(projection.entries[0].evidence.some(e=>e.role==='contradict'));\n   }\n   let offset=0,raw='',digest='',pages=0;\n   while(offset!==null) {\n    const p=await call(tool,{...input,detail:'full',document_id:original.id,document_offset:offset});\n    assert.deepEqual(p.entries,[{id:original.id}]);assert.equal(p.document_offset,offset);\n    digest ||= p.document_sha256;assert.equal(p.document_sha256,digest);\n    raw+=p.json_fragment;offset=p.next_document_offset;assert(++pages<100);\n   }\n   assert.equal(createHash('sha256').update(raw).digest('hex'),digest);\n   assert.deepEqual(JSON.parse(raw),original);\n   results.push({tool,returned:1,pages,bytes:Buffer.byteLength(raw),roundtrip:true});\n  }\n  for(const facts of [{act:1,floor:25,deck:'TEST_CARD'},{act:1,floor:10,deck:'OTHER_CARD'}]) {\n   ctx.payload={facts};\n   for(const detail of ['projection','full']) assert.equal((await call('kb_strategies',{query:strategy.id,detail,...(detail==='full'?{document_id:strategy.id}:{})})).returned,0);\n  }\n  ctx.payload={facts:{act:1,floor:10,deck:'TEST_CARD'}};\n  setKnowledgeCharacter('ironclad');\n  assert.equal((await call('kb_strategies',{query:strategy.id,detail:'full',document_id:strategy.id})).returned,0);\n  assert.deepEqual(store.files(version),files);\n  console.log(JSON.stringify({scope:'isolated LIVE synthetic production ToolHost',results,negatives:true,source_files_unchanged:true}));\n } finally {closeIndexedReaders();setKnowledgeCharacter(null);store.close();rmSync(root,{recursive:true,force:true});}\n}\nmain().catch(error=>{console.error(error);process.exitCode=1;});\n"
+      ]
+    }
+  ],
+  "consumer_scope": "Fixed 78+76+77 combination: ROOT candidate original tests and 23 fixed host modules; LIVE actual baseline plus 8 exact runtime patches. Original 76 refresh assertions import actual frozen G dependencies; 78 ToolHost uses fixed synthetic oversized strategy/experience/reflex inputs, <=24KB projection, full Unicode pages/SHA roundtrip, negative floor/card/character filters and unchanged store.files bytes. ROOT-only 77 CLI and original host tests. No real knowledge data write, live install, sweep, approval, slot release or active switch. 71 external-stock host test joins only with its candidate; ROOT issue29 fixture is not imposed on LIVE.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

@@ -396,6 +396,8 @@ def _cmd_tick(args):
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     report["ascension_audit"] = check_ascension_audits(state, character)
+    if character == "silent":
+        report["own_learning"] = external_learning_policy.own_status(state, alive, DIR)
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
@@ -417,6 +419,11 @@ def cmd_dispatch(args):
     if set(runs) & held:
         print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
         return 1
+    if args.character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive):
+        own = external_learning_policy.own_status(state, alive, DIR)
+        if own["busy"]:
+            print(json.dumps({"dispatched": None, "own_learning": own}, ensure_ascii=False))
+            return 1
     busy = running_batch(state)
     if busy:
         save_state(state)
@@ -585,7 +592,7 @@ def cmd_write(args):
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
                                 "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
         save_state(state)
-        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
     if getattr(args, "request", ""):
         import strategy_implementation_jobs
@@ -598,7 +605,7 @@ def cmd_write(args):
             print(json.dumps({"dispatched": None, "status": "blocked", "error": str(error)}, ensure_ascii=False))
             return 1
         save_state(state)
-        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
     if args.task in ("experience-update", "strategy-proposal"):
@@ -618,7 +625,7 @@ def cmd_write(args):
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
                                 ",".join(runs), "ops", alive, stamp)
     save_state(state)
-    print(json.dumps({"dispatched": result}, ensure_ascii=False))
+    print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
     return 0 if result else 1
 
 
@@ -723,6 +730,7 @@ def cmd_status(args):
     print(f"running batch: {busy or 'none'}; finished {args.character} runs without a post-mortem: {','.join(waiting) or 'none'}")
     print(f"ascension seen: {state['ascension']}")
     print("ascension audits: " + json.dumps(state.get("ascension_audits",{}),ensure_ascii=False))
+    print("own learning admission: " + json.dumps(external_learning_policy.own_status(state, alive, DIR), ensure_ascii=False))
     return 0
 
 

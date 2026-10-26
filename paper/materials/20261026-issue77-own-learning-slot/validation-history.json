@@ -1,0 +1,22 @@
+{
+  "issue": 77,
+  "base": "3f72590d1943914a254188b1763362bf1692d320",
+  "initial_fixed_test": {
+    "exit_code": 1,
+    "tests": 30,
+    "errors": 1,
+    "error": "test_repeated_crash_deferral_replay_does_not_complete_or_duplicate: fixture deferral lacked at; KeyError at learner_tui.apply_deferrals",
+    "scope": "8 new tests plus 22 imported fixture tests unintentionally rediscovered",
+    "correction": "Added original fixed timestamp to synthetic deferral; import fixture module rather than TestCase class. Production deferral logic unchanged."
+  },
+  "first_read_only_projection": "read-only-admission.json",
+  "first_projection_limitation": "Existing host guard rejected already absent original pane. No review batch was released by this projection. Original files were not changed.",
+  "second_read_only_projection": "read-only-admission-r2.json",
+  "final_python": {"tests": 174, "exit_code": 0, "log": "final-python-tests.log"},
+  "sandbox": {"exit_code": 1, "files_passed": 643, "files_failed": 1, "tests_passed": 5946, "tests_failed": 1, "production_tsc_exit_code": 0, "failure": "check-imports: sparse checkout lacks fixed HEAD issue29-brain-speed/results.jsonl", "log": "sandbox.log"},
+  "fixed_fixture_recheck": {"files_passed": 2, "tests_passed": 12, "exit_code": 0, "log": "cold-fixture-recheck.log", "recovery": "cold-fixture-recovery.json", "source_changes_after_sandbox": false},
+  "second_projection_scope": "Five independent review trees verified inactive; shared root remains unknown, pFX native still active, one legacy terminal numeric PID currently exists without original birth proof. This is a development read-only projection, not installed or a natural dispatch receipt.",
+  "models_started": 0,
+  "production_state_mutations": 0,
+  "sessions_controlled": 0
+}
