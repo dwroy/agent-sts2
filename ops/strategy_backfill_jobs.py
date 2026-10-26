@@ -100,7 +100,9 @@ def progress(state):
 def priority_hold(state, character, alive, normal, root=None):
     """Existing ready dispatch attempts and live heavy leases always win."""
     if normal.get("disk_capacity_hold") or normal.get("backfill_hold") or any(
-            value for key, value in normal.items() if key != "backfill_hold"):
+            value for key, value in normal.items() if key not in ("backfill_hold", "own_learning")):
+        return True
+    if normal.get("own_learning", {}).get("busy"):
         return True
     if any(batch.get("state") in ("running", "launching", "awaiting_review")
            and (alive(batch.get("pid")) or batch.get("state") == "launching")
