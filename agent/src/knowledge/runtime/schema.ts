@@ -1,5 +1,5 @@
 /** Schema v1: immutable revisions and releases; only candidates and the current pointer change. */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 export const SCHEMA = `
 CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS candidates(
