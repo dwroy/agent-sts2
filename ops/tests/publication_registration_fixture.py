@@ -39,7 +39,8 @@ class World:
         ops = self.root / 'ops'
         for name in ('paths.sh', 'codex-ops-learner.sh', 'learner_entry.py', 'codex-learner.sh',
                      'codex-fast.sh', 'codex-policy.sh', 'publication_gate.py', 'learner_registration.py',
-                     'strategy_backfill_jobs.py', 'strategy_research_jobs.py', 'external_learning_policy.py'):
+                     'strategy_backfill_jobs.py', 'strategy_research_jobs.py', 'external_learning_policy.py',
+                     'external_stock.py', 'external_stock_source.py'):
             shutil.copy2(REPO / 'ops' / name, ops / name)
         shutil.copy2(REPO / 'ops/strategy_external_jobs.py', ops / 'external_implementation.py')
         # The real source reader and ready/tier/prepare actions use a fixed quota clock.

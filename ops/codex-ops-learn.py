@@ -511,6 +511,10 @@ def cmd_finish(args):
             import strategy_external_jobs
             batch["external_finished_at"] = time.time()
             strategy_external_jobs.reconcile(state, DIR)
+            import external_stock
+            external_stock.maintain(state, ROOT, alive,
+                admission_reason="account_draining" if account_draining() else
+                    "publication_hold" if publication_gate.learners_held(ROOT, DIR) else None)
         if batch.get("backfill_source"):
             import strategy_backfill_jobs
             batch["backfill_finished_at"] = time.time()
