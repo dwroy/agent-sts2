@@ -5,12 +5,11 @@ import { basename } from "node:path";
 import { knowledgeCharacter } from "../../knowledge/files.js";
 import { loadV6Knowledge } from "../../v6/knowledge.js";
 import { questionTypes } from "../../knowledge/strategy-entries.js";
+import { consumerPage, documentInputs, PROJECTION_NOTICE } from "./knowledge-projection.js";
 import { validateInput } from "./validate.js";
 import type { ToolContext, ToolDef } from "./types.js";
 
 const APPLIES_TO = ["combat_line", "card_pick", "potion", "rest", "shop"] as const;
-const MAX_BYTES = 24_000;
-const LIMIT = 12;
 type Source = { source: string; character: string; file: string; version: string; sha256: string };
 type Filter = { query: string; applies_to?: string };
 const sha = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -50,30 +49,25 @@ export function reflexMatches(ctx: ToolContext, filter: Filter = { query: "*" })
 
 export function reflexKnowledgeTool(): ToolDef {
   const inputSchema: ToolDef["inputSchema"] = { type: "object", properties: {
+    ...documentInputs,
+    limit: { type: "integer", minimum: 1, maximum: 12 }, offset: { type: "integer", minimum: 0, maximum: 1000000 },
     query: { type: "string", description: "reflex条目ID、Boss/精英/卡牌ID等关键词；*查当前角色/进阶的全部检索候选" },
     applies_to: { type: "string", enum: [...APPLIES_TO], description: "可选：限制原条目用途，不改变条目条件" },
   }, required: ["query"], additionalProperties: false };
-  return { name: "kb_reflex", description: "按非空rk线索及需要只读查reflex.json，与经验库kb_experience独立；0匹配时跳过。query=*或ID/关键词，applies_to可缩小范围。构筑题只返回构筑相关条目的一句话摘要、原可信度/证据/来源关联，不返回combat_line或原始predicate JSON；备战题保留完整条目。来源附版本/SHA，检索不证明条件成立或Jev采用。最多12条/24KB。", inputSchema,
+  return { name: "kb_reflex", description: "按非空rk线索及需要只读查reflex.json，与经验库kb_experience独立；0匹配时跳过。query=*或ID/关键词，applies_to可缩小范围。构筑题只返回构筑相关条目的一句话摘要、原可信度/证据/来源关联，不返回combat_line或原始predicate JSON；备战题保留条目条件。来源附版本/SHA，检索不证明条件成立或Jev采用。最多12条/24KB。" + PROJECTION_NOTICE, inputSchema,
     run(input, ctx) {
       const problems = validateInput(inputSchema, input);
       if (problems.length) return { text: problems.join("; "), isError: true };
       const query = String(input["query"]).trim();
       if (!query || query.length > 200) return { text: "query must contain 1–200 characters", isError: true };
       const data = reflexMatches(ctx, { query, ...(typeof input["applies_to"] === "string" ? { applies_to: input["applies_to"] } : {}) });
-      const envelope = (entries: unknown[]) => JSON.stringify({ schema: "brain-reflex-result-v2", status: data.status,
-        sources: data.sources, entries, omitted: data.entries.length - entries.length,
-        representation: data.construction ? "construction_summary" : "full_entry",
-        predicate_evaluation: "not_evaluated", evidence_scope: "本角色已发布reflex条目；source_experience是来源关联，不是reflex命中ID；构筑摘要未展示原条件，不是无条件建议；只读检索不代表Jev采用或条件成立",
-        ...(data.status !== "loaded" ? { issues: data.issues, reason: data.reason } : {}) });
-      const entries: unknown[] = [];
-      for (const entry of data.entries.slice(0, LIMIT)) {
-        const presented = data.construction ? { id: entry.id, version: entry.version, applies_to: entry.applies_to,
-          summary: entry.label_en, confidence: entry.confidence, evidence: entry.evidence, source_experience: entry.source_experience } : entry;
-        if (Buffer.byteLength(envelope([...entries, presented])) > MAX_BYTES) break;
-        entries.push(presented);
-      }
-      const text = envelope(entries);
-      if (Buffer.byteLength(text) > MAX_BYTES) return { text: JSON.stringify({ schema: "brain-reflex-result-v2", entries: [], sources: [], error: "reflex来源元数据超过24KB，请缩小查询" }), isError: true };
-      return { text, ...(data.status === "invalid" ? { isError: true } : {}) };
+      const result = consumerPage({ tool: "kb_reflex", input, rows: data.entries, value: e => e,
+        present: entry => data.construction ? { id: entry.id, version: entry.version, applies_to: entry.applies_to,
+          summary: entry.label_en, confidence: entry.confidence, evidence: entry.evidence, source_experience: entry.source_experience } : entry,
+        sources: () => data.sources, envelope: { schema: "brain-reflex-result-v2", status: data.status,
+          representation: data.construction ? "construction_summary" : "full_entry", predicate_evaluation: "not_evaluated",
+          evidence_scope: "本角色已发布reflex条目；source_experience是来源关联；构筑摘要不是无条件建议；只读检索不代表Jev采用或条件成立",
+          ...(data.status !== "loaded" ? { issues: data.issues, reason: data.reason } : {}) } });
+      return { ...result, ...(data.status === "invalid" ? { isError: true } : {}) };
     } };
 }

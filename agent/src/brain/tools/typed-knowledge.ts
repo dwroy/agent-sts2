@@ -11,6 +11,7 @@ import { questionFacts, selectRelevantExperience } from "./query-guidance.js";
 import { constructionTypes } from "./reflex-knowledge.js";
 import { validateInput } from "./validate.js";
 import type { JsonSchema, ToolContext, ToolDef, ToolResult } from "./types.js";
+import { consumerPage, documentInputs, PROJECTION_NOTICE } from "./knowledge-projection.js";
 
 const filters: Record<string, JsonSchema> = {
  entity: { type: "string", description: "可选实体ID、中文名或明确别名" },
@@ -27,7 +28,7 @@ function runIndexed(tool: ToolDef, input: Record<string, unknown>, ctx: ToolCont
  for (const key of ["entity", "keyword", "id"])
   if (input[key] !== undefined && (typeof input[key] !== "string" || !(input[key] as string).trim() || (input[key] as string).length > 200)) throw new Error(`${key} must contain 1–200 characters`);
  if (!query || query.length > 200) throw new Error("query must contain 1–200 characters");
- if (type === "experience" && !["theme", "id", "keyword", "relevant", "entity", "topic"].some(k => input[k])) throw new Error("请提供 theme、id、keyword、relevant=true、entity 或 topic。");
+ if (type === "experience" && !["theme", "id", "keyword", "relevant", "entity", "topic"].some(k => input[k]) && !(input["detail"] === "full" && input["document_id"])) throw new Error("请提供 theme、id、keyword、relevant=true、entity 或 topic。");
  const indexedQuery: Omit<TypedQuery, "limit" | "offset"> = { type, character: knowledgeCharacter(), ascension: ctx.ascension, view: "tool",
   ...(query !== "*" ? { text: query } : {}),
   ...(input["id"] ? { id: String(input["id"]) } : {}),
@@ -88,18 +89,24 @@ function runIndexed(tool: ToolDef, input: Record<string, unknown>, ctx: ToolCont
     fits: e.value.fits, representation: "combo_summary", omitted_fields: ["metrics"] }
   : type === "reflex" && construction ? { id: e.value.id, version: e.value.version,
   applies_to: e.value.applies_to, summary: e.value.label_en, confidence: e.value.confidence, evidence: e.value.evidence, source_experience: e.value.source_experience } : e.value;
- const serialize = (rows: IndexedItem[], next: number, skipped: number) => JSON.stringify({
+ const envelope = {
   schema: type === "reflex" ? "brain-reflex-result-v2" : "brain-knowledge-result-v1", status: type === "reflex" ? "loaded" : "ok",
   knowledge_version: reader.version, classification_coverage: coverage, dynamic_filter: dynamic,
   empty_reasons: emptyReasons, pagination_empty: selected.length > 0 && offset >= selected.length,
+  ...(archetype ? { archetype } : {}), ...(type === "reflex" ? { representation: construction ? "construction_summary" : "full_entry", predicate_evaluation: "not_evaluated" } : {}),
+  evidence_scope: "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。",
+ };
+ if (["experience", "strategy", "reflex"].includes(type)) return consumerPage({ tool: tool.name, input, rows: selected,
+  value: e => input["detail"] === "full" ? JSON.parse(e.payload) : e.value, present,
+  sources: rows => reader.sources(rows), envelope, defaultLimit: type === "strategy" ? 3 : 12 });
+ const serialize = (rows: IndexedItem[], next: number, skipped: number) => JSON.stringify({
+  ...envelope,
   entries: rows.map(present), sources: [
    ...reader.sources(rows), ...rows.flatMap(e => type === "strategy" ? [{ entry_id: e.original_id, source: e.value.source, version: e.value.version, ...strategyEvidenceSummary(e.value as StrategyEntry) }] : []),
    ...rows.flatMap(e => type === "fact" ? factSources(reader, e) : []),
   ],
   total_matches: selected.length, offset, returned: rows.length, omitted: selected.length - rows.length,
   next_offset: next < selected.length ? next : null, oversized_skipped: skipped,
-  ...(archetype ? { archetype } : {}), ...(type === "reflex" ? { representation: construction ? "construction_summary" : "full_entry", predicate_evaluation: "not_evaluated" } : {}),
-  evidence_scope: "原角色与公共范围分账；检索不证明条件成立、自然采用或收益；未知主题保持未知。",
  });
  while (cursor < selected.length && kept.length < limit) {
   const next = selected[cursor]!;
@@ -127,8 +134,9 @@ function factSources(reader: KnowledgeReader, item: IndexedItem): unknown[] {
 export function typedKnowledgeTool(original: ToolDef): ToolDef {
  if (!types[original.name]) return original;
  const inputSchema = { ...original.inputSchema, properties: { ...original.inputSchema.properties, ...filters,
+  ...(["kb_experience", "kb_strategies", "kb_reflex"].includes(original.name) ? documentInputs : {}),
   ...(original.name !== "kb_strategies" ? paging : {}) } };
- return { ...original, inputSchema, description: `${original.description} SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。`,
+ return { ...original, inputSchema, description: `${original.description} SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。${["kb_experience", "kb_strategies", "kb_reflex"].includes(original.name) ? PROJECTION_NOTICE : ""}`,
   async run(input, ctx) {
    const errors = validateInput(inputSchema, input);
    if (errors.length) return { text: errors.join("; "), isError: true };
