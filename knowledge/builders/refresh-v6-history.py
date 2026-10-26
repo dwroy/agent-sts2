@@ -403,6 +403,12 @@ def refresh(root, ops_root, character, run_command=None):
         temporary = event.with_name('.' + event.name)
         temporary.write_text(f'V6 history refresh failed ({character}); previous packet retained. {receipt["error"]}\nReceipt: {directory / "receipt.json"}\n')
         os.replace(temporary, event)
+    # Use the existing worker policy after completion, never while holding refresh.lock.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'ops'))
+    from refresh_retention import sweep
+    receipt['retention'] = sweep(ops_root, ops_root / 'ops/codex-ops', apply=True)
+    # Cleanup updates this receipt itself; return that persisted audit plus the sweep summary.
+    receipt = dict(json.loads((directory / 'receipt.json').read_bytes()), retention=receipt['retention'])
     return receipt, code
 
 

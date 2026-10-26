@@ -2,6 +2,7 @@
 import copy
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -175,13 +176,23 @@ class AppearanceTest(unittest.TestCase):
             del row['state']['run']['current_hp']
             source = raw(row)
             states.write_bytes(source)
-            receipt, code = refresh.refresh(root, root, 'silent')
+            captured = {}
+            def runner(argv, **kwargs):
+                result = subprocess.run(argv, **kwargs)
+                if len(argv) >= 3 and argv[-3] == 'history' and result.returncode == 0:
+                    # Capture the fixed audit before successful publication discards intermediates.
+                    packet = json.loads(Path(argv[-2]).read_bytes())
+                    captured['audit'] = Path(packet['data']['appearance']['evidence']['path']).read_bytes()
+                return result
+            receipt, code = refresh.refresh(root, root, 'silent', runner)
             self.assertEqual(code, 0, receipt)
             pack = json.loads(target.read_bytes())
             table = pack['data']['appearance']
             self.assertEqual(table['runs'][0]['run_id'], RUN)
             self.assertEqual(next(r['probability'] for r in table['cards'] if r['source'] == 'reward'), 1)
-            audit = Path(table['evidence']['path']).read_bytes()
+            audit = captured['audit']
+            self.assertFalse(Path(table['evidence']['path']).exists())
+            self.assertEqual(receipt['storage_cleanup']['state'], 'completed')
             self.assertEqual(hashlib.sha256(audit).hexdigest(), table['evidence']['sha256'])
             refs = [r['source'] for r in map(json.loads, audit.splitlines())]
             self.assertTrue(all(r['sha256'] == hashlib.sha256(source).hexdigest() for r in refs))

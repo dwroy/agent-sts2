@@ -24,7 +24,7 @@ class LearnerRetention(unittest.TestCase):
         self.tree = self.root / '.worktrees/codex-fix-silent-20261013-010000'
         self.live = self.root / '.worktrees/live'
         self.git('init', '-b', 'main')
-        (self.root / '.gitignore').write_text('learner/runs/\nops/codex-ops/\n.worktrees/\nlogs/\n')
+        (self.root / '.gitignore').write_text('learner/runs/\nops/codex-ops/\nops/live-merge.lock\n.worktrees/\nlogs/\n')
         (self.root / 'README.md').write_text('fixture source\n')
         (self.root / 'notes').mkdir()
         (self.root / 'notes/lessons.md').write_text('## AAAAAAAAAAAA\nfixture\n')
@@ -88,7 +88,7 @@ class LearnerRetention(unittest.TestCase):
         self.assertEqual(restored['state'], 'scratch_restored')
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
         self.assertEqual(self.git('-C', str(self.tree), 'rev-parse', 'HEAD').strip(), self.head)
-        self.assertEqual(self.run_cleanup()['state'], 'already_reclaimed')
+        self.assertEqual(self.run_cleanup()['state'], 'reclaimed')
 
     def uuid_scratch(self):
         scratch = self.scratch.with_name('20261013-010001-01e4191f-d865-4ede-96cc-6135ca85542b-fix-batch')
@@ -116,7 +116,7 @@ class LearnerRetention(unittest.TestCase):
         self.report['commit'] = 'a' * 40
         self.save()
         with self.assertRaisesRegex(ValueError, 'not published'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.report['commit'] = self.head
         self.save()
         with patch.object(retention, 'active_cwd', return_value=True):
@@ -129,6 +129,8 @@ class LearnerRetention(unittest.TestCase):
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
 
     def test_unpublished_source_or_incomplete_check_is_retained(self):
+        self.batch['state'] = 'failed'  # Historical rc=0 fallback still needs publication.
+        self.save()
         self.log.write_text('Test running; truncated output')
         with self.assertRaisesRegex(ValueError, 'completion summary'):
             self.run_cleanup()
@@ -147,12 +149,16 @@ class LearnerRetention(unittest.TestCase):
                 self.run_cleanup()
         self.assertTrue((self.tree / '.git').exists())
 
-    def test_legacy_report_does_not_abort_sweep_or_delete_its_data(self):
+    def test_legacy_done_report_compacts_without_accepting_source(self):
         self.report['fixes'] = ['historical natural-language fix']
         self.save()
         result = retention.sweep(self.root, self.directory, True, 4)
-        self.assertFalse(result['results'])
-        self.assertEqual(result['retained']['legacy/malformed fixes report retained'], 1)
+        self.assertEqual(result['results'][0]['state'], 'reclaimed')
+        self.assertTrue((self.tree / '.git').exists())
+        self.assertFalse((self.scratch / 'raw-states.jsonl').exists())
+        manifest = retention.load(self.directory / 'retention/archives' / (self.bid + '.manifest.json'))
+        self.assertTrue(manifest['proof']['no_acceptance_claim'])
+        retention.restore(self.root, self.directory, self.bid)
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
 
     def test_pending_report_data_does_not_consume_reclamation_limit(self):
@@ -174,12 +180,15 @@ class LearnerRetention(unittest.TestCase):
                 self.assertEqual(result['results'][0]['state'], expected)
                 self.assertEqual(result['retained']['report-only scratch awaits experience ingestion'], 4)
 
-    def test_original_thread_even_completed_is_protected(self):
+    def test_original_thread_keeps_checkout_and_request_but_compacts_scratch(self):
         folder = self.root / 'notes/learning-requests'
         folder.mkdir()
         retention.atomic(folder / 'original.json', {'state': 'completed', 'original_batch': self.bid, 'worktree': str(self.tree)})
-        with self.assertRaisesRegex(ValueError, 'original request/thread'):
-            self.run_cleanup()
+        self.assertEqual(self.run_cleanup()['state'], 'reclaimed')
+        self.assertTrue((self.tree / '.git').exists())
+        self.assertEqual(retention.load(folder / 'original.json')['state'], 'completed')
+        retention.restore(self.root, self.directory, self.bid)
+        self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
 
     def test_learner_requests_cleanup_idempotently_and_full_admission_controls_deletion(self):
         with patch.object(retention, 'kick', return_value='started'):
@@ -190,6 +199,8 @@ class LearnerRetention(unittest.TestCase):
             self.assertEqual(retention.request_cleanup(self.root, self.directory, self.bid)['worker'], 'started')
             self.assertEqual(path.read_bytes(), original)
             self.assertTrue((self.tree / '.git').exists())
+            self.batch['state'] = 'failed'
+            self.save()
             self.log.write_text('unfinished check')
             retention.sweep(self.root, self.directory, True, 1)
             self.assertEqual(retention.load(path)['state'], 'deferred')
@@ -215,12 +226,12 @@ class LearnerRetention(unittest.TestCase):
         unknown = self.tree / 'learner/runs/another-owner.bin'
         unknown.write_bytes(b'unknown owner')
         with self.assertRaisesRegex(ValueError, 'outside bound scratch'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         unknown.unlink()
         self.batch['character'] = 'ironclad'
         self.save()
         with self.assertRaisesRegex(ValueError, 'other-character'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
 
     def test_symlink_and_secret_named_file_are_never_read_or_deleted(self):
         link = self.scratch / 'alias.jsonl'
@@ -252,14 +263,15 @@ class LearnerRetention(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'archive hash'):
             retention.restore(self.root, self.directory, self.bid)
 
-    def test_report_only_reclaims_checkout_but_keeps_pending_process_data(self):
+    def test_report_only_compacts_scratch_and_restores_checkout(self):
         self.report.update(commit=None, merged=None)
         self.save()
         result = self.run_cleanup()
-        self.assertEqual(result['state'], 'checkout_reclaimed')
+        self.assertEqual(result['state'], 'reclaimed')
         self.assertFalse((self.tree / '.git').exists())
+        self.assertFalse((self.scratch / 'raw-states.jsonl').exists())
+        self.assertEqual(retention.restore(self.root, self.directory, self.bid)['state'], 'scratch_restored')
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
-        self.assertEqual(retention.restore(self.root, self.directory, self.bid)['state'], 'checkout_restored')
 
     def test_postmortem_requires_experience_ingestion_and_not_just_a_done_report(self):
         self.bid = '20261013-020000'
@@ -272,13 +284,13 @@ class LearnerRetention(unittest.TestCase):
         self.state = {'batches': {self.bid: self.batch}}
         self.save()
         with self.assertRaisesRegex(ValueError, 'not entered'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.state['batches']['experience'] = {'task': 'experience-update', 'character': 'silent',
                                               'checks': {'rc': 0, 'merged': self.head, 'log': str(self.log)}}
         self.log.write_text('check started but no completion summary')
         self.save()
         with self.assertRaisesRegex(ValueError, 'not entered'):
-            self.run_cleanup()
+            retention.admission(self.root, self.directory, self.state, self.bid)
         self.log.write_text('Test Files 1 passed\n')
         self.save()
         self.assertEqual(self.run_cleanup()['state'], 'reclaimed')
