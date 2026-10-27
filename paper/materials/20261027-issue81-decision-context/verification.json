@@ -1,0 +1,76 @@
+{
+  "scope": "development-only; exact fixed sandbox exclusions, not queue combination full",
+  "production_tsc_exit": 0,
+  "knowledge_runtime_tsc_exit": 0,
+  "new_tests": {
+    "exit": 0,
+    "passed": 34,
+    "log": "budget-final.log"
+  },
+  "related_tests": {
+    "exit": 0,
+    "files_passed": 7,
+    "passed": 121,
+    "log": "targeted-final.log"
+  },
+  "initial_targeted": {
+    "exit": 1,
+    "passed": 29,
+    "failed": 2,
+    "log": "targeted-first.log",
+    "reason": "automatic context incorrectly depended on nonempty tool list; corrected before final validation"
+  },
+  "wide": {
+    "exit": 1,
+    "files_passed": 644,
+    "files_failed": 1,
+    "passed": 5980,
+    "failed": 1,
+    "log": "sandbox-wide.log",
+    "failure": "check-imports: baseline sparse cold issue29-brain-speed/results.jsonl absent",
+    "final_full_pass_claimed": false
+  },
+  "failure_point_and_paths": {
+    "exit": 0,
+    "files_passed": 2,
+    "passed": 12,
+    "log": "imports-paths.log",
+    "restoration": "cold-fixture-restoration.json"
+  },
+  "source_inputs_unchanged": true,
+  "logs": {
+    "budget-final.log": {
+      "sha256": "8ee9408bba0f0f4ec2507758ebc514541a442f617c49d33bb9ab4337ab572ff8",
+      "bytes": 443
+    },
+    "imports-paths.log": {
+      "sha256": "d9b7a8c7f8ef7c297f2790a747d357573714021b169be7679bd3d4e9b618180a",
+      "bytes": 443
+    },
+    "sandbox-wide.log": {
+      "sha256": "16f3f8674a1f5759ceb92b1edbae842074d73352bdda70901cf74f3a3bd45cb6",
+      "bytes": 28312
+    },
+    "targeted-final.log": {
+      "sha256": "213e7d684e4bf1faabe6bf03e36fa6fc072667c61f820b6620f8e719b127d983",
+      "bytes": 1300
+    },
+    "targeted-first.log": {
+      "sha256": "43f748a3fa1131c6a8ddef2c2d5a3a95dcad511a2eb5de0c7afc4b165d1e62ee",
+      "bytes": 1717
+    },
+    "targeted-second.log": {
+      "sha256": "24a3ce1ec697ac84942bed82c50cc2648faea1c24643d12c3fdbb802e0733c78",
+      "bytes": 1300
+    },
+    "tsc-runtime.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tsc.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "production_publication": false
+}

@@ -6,6 +6,7 @@ import { runtimeKnowledgeRoot } from "../runtime-paths.js";
 import type { Row } from "./validation.js";
 import type { BusinessType } from "./projection.js";
 import { safeSQLiteVersion } from "./sqlite-version.js";
+import { createHash } from "node:crypto";
 
 export interface TypedQuery {
  character: string; type: BusinessType; ascension?: number; text?: string; entity?: string; topic?: string; id?: string;
@@ -55,6 +56,14 @@ export class KnowledgeReader {
  }
  close(): void { this.db.close(); }
  fileDigest(path: string): string | undefined { return this.files[path]; }
+ /** Read exact release membership, never current or an editable snapshot file. */
+ document(path: string): { text: string; sha256: string } | null {
+  const expected = this.files[path];
+  if (!expected) return null;
+  const row = this.statement("SELECT d.body FROM release_files f JOIN documents d ON d.digest=f.digest WHERE f.version=? AND f.path=? AND f.digest=?").get(this.version, path, expected);
+  if (!row || typeof row["body"] !== "string" || createHash("sha256").update(row["body"]).digest("hex") !== expected) throw Error("bound knowledge document checksum mismatch");
+  return { text: row["body"], sha256: expected };
+ }
  private statement(sql: string) {
   let s = this.statements.get(sql);
   if (!s) { s = this.db.prepare(sql); this.statements.set(sql, s); }

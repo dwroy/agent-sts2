@@ -22,6 +22,7 @@
 | [学习者](../learner/README.md) | 任务、参数、权限、产物、正常派发和默认合 live |
 | [控制器包](../agent/README.md) | CLI、测试入口、有效配置和模块入口 |
 | [大脑知识工具模式](brain-agent-mode.md) | #33：Codex app-server / dsh Nova、按局配置、只读知识工具、预算与自然局验收 |
+| [决策点默认知识摘要](decision-knowledge-injection.md) | #81 待审、默认关闭：对齐 #80 候选、按 K1 绑定与字节预算送达；审阅前不集成上线 |
 | [知识显式分类](knowledge-classification.md) | #66：同K1分类元数据、学习候选、索引覆盖/空因及迁移回退 |
 | [Codex 大脑等待与战绩](codex-only-brain.md) | 原题等待、心跳/取消、成功脑局归类与统计限制 |
 | [Codex Fast](codex-fast.md) | priority 档位与配置生效边界 |
