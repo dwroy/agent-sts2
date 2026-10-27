@@ -9,14 +9,13 @@ import { characterKey, knowledgeCharacter } from "../knowledge/files.js";
 import { deckCounts, publishedObservation, retrieveStrategies, type StrategyEntry } from "../knowledge/strategy-entries.js";
 import { matchStrategyArchetype } from "../knowledge/strategy-archetypes.js";
 import { DECISION_CONTEXT_FILE, parseDecisionContext, type DecisionPoint, type DecisionContextEntry } from "../knowledge/decision-context.js";
-import { observationConsumerProjection } from "./tools/knowledge-projection.js";
 
 export interface DecisionKnowledgeConfig { enabled: boolean; bytes: number }
 const record = (v: unknown): Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 const array = (v: unknown): unknown[] => Array.isArray(v) ? v : [];
 const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
 const digest = (s: string) => createHash("sha256").update(s).digest("hex");
-const NOTICE = "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。partial_fields及truncated字段为不完整摘录，不能当完整条件或统计；全文按full_document续取。";
+const NOTICE = "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。entries保完整结论、条件、分母、反例与限制；references仅ID和标题，不代表已读正文。需要时用kb_decision_context按ID及source续取完整原件。";
 
 /** Only production decision labels; combat card choices never receive construction advice. */
 export function decisionPoints(label: string, payload: unknown, state?: unknown): DecisionPoint[] {
@@ -116,42 +115,39 @@ export function selectDecisionContext(entries: DecisionContextEntry[], ctx: Tool
   }).sort((a, b) => b.priority - a.priority || Object.keys(b.conditions).length - Object.keys(a.conditions).length || b.confidence - a.confidence || a.id.localeCompare(b.id));
 }
 
-/** Escaped JSON bytes are bounded; excerpts never split a Unicode code point. */
-function excerpt(value: unknown, budget: number): unknown {
-  if (bytes(value) <= budget) return value;
-  let text = "", size = 2;
-  for (const char of JSON.stringify(value)) {
-    const n = bytes(char) - 2;
-    if (size + n > budget) break;
-    text += char; size += n;
+/** Complete decision fields, copied verbatim; archived references remain in the scoped full document. */
+export function decisionKnowledgeEntryView(value: DecisionContextEntry | StrategyEntry, source: "decision_context" | "strategy_observation"): Record<string, unknown> {
+  const fields = ["summary", "rule_candidate", "conditions", "denominators", "counterexamples", "limitations", "conflicts_with", "triggers", "status"];
+  const full_document = { tool: "kb_decision_context", input: { detail: "full", source, document_id: value.id, document_offset: 0 } };
+  const view = { id: value.id, confidence: value.confidence, source: record(value)["source"], document_source: source, representation: "complete_decision_view", truncated: false, full_document };
+  if (source === "strategy_observation") {
+    const observation = publishedObservation(value as StrategyEntry);
+    if (!observation) throw Error("not a published observation");
+    return { ...view, trigger: (value as StrategyEntry).trigger, scope: record(value)["scope"],
+      review_observation: Object.fromEntries(fields.filter(k => Object.hasOwn(observation, k)).map(k => [k, observation[k]])),
+      condition_evaluation: "not_evaluated", applicability: "formal_trigger_only" };
   }
-  return { truncated: true, representation: "partial_json_text", json_excerpt: text };
+  const entry = value as DecisionContextEntry;
+  return { ...view, dimension: entry.dimension, priority: entry.priority, review_origin: entry.review_origin,
+    ...Object.fromEntries(fields.filter(k => Object.hasOwn(entry, k)).map(k => [k, record(entry)[k]])) };
 }
 
-function projection(entry: DecisionContextEntry, budget: number): Record<string, unknown> {
-  const refs = entry.evidence_refs;
-  const largest = [...refs].filter(r => r.type === "external_aggregate").sort((a, b) => b.denominator.n - a.denominator.n)[0];
-  const chosen = [...new Set([...refs.filter(r => r.role === "contradict").slice(-1), ...refs.slice(-1), ...(largest ? [largest] : [])])];
-  const full = { tool: "kb_decision_context", input: { detail: "full", document_id: entry.id, document_offset: 0 } };
-  const counts = { references: refs.length, own_runs: new Set(refs.filter(r => r.type === "own_run").map(r => r.run_id)).size,
-    external_references: refs.filter(r => r.type === "external_aggregate").length, contradict_references: refs.filter(r => r.role === "contradict").length };
-  // Keep the complete entry when it fits; otherwise preserve explicit lossy field paths.
-  const complete = { ...entry, truncated: false, representation: "full_entry", full_document: full };
-  if (bytes(complete) <= budget) return complete;
-  for (let scale = 700; scale >= 20; scale = Math.floor(scale / 2)) {
-    const fields = { triggers: entry.triggers, conditions: entry.conditions, summary: entry.summary, rule_candidate: entry.rule_candidate,
-      denominators: entry.denominators, counterexamples: entry.counterexamples, conflicts_with: entry.conflicts_with, limitations: entry.limitations,
-      ...(entry.details === undefined ? {} : { details: entry.details }), evidence_refs: chosen };
-    const partial = Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, excerpt(v, scale)]));
-    const view = { id: entry.id, confidence: entry.confidence, priority: entry.priority, dimension: entry.dimension,
-      partial_fields: partial, evidence_summary: counts, truncated: true, representation: "consumer_projection", original_bytes: bytes(entry),
-      omitted_fields: ["review_origin", "evidence_refs (selected only)", ...Object.entries(partial).filter(([, v]) => record(v)["truncated"] === true).map(([k]) => k)],
-      evidence_selection: "latest_array_positions_and_largest_external_denominator; contradict_first; no_strength_inference", full_document: full };
-    if (bytes(view) <= budget) return view;
+/** Titles are navigation labels only; never use a shortened title as an observation body. */
+function referenceTitle(value: DecisionContextEntry | StrategyEntry, budget = 120): string {
+  const e = record(value), observation = record(e["review_observation"]);
+  const original = String(e["name"] ?? e["summary"] ?? observation["summary"] ?? e["strategy"] ?? value.id);
+  const sentence = /^[^。！？\n]*[。！？]?/u.exec(original)?.[0] || original;
+  if (bytes(sentence) <= budget) return sentence;
+  let title = "";
+  for (const char of sentence) {
+    if (bytes(title + char + "…") > budget) break;
+    title += char;
   }
-  return { id: entry.id, confidence: entry.confidence, truncated: true, representation: "consumer_projection",
-    partial_fields: { summary: excerpt(entry.summary, 100), conditions: excerpt(entry.conditions, 80), denominators: excerpt(entry.denominators, 80) },
-    omitted_fields: Object.keys(entry).filter(k => !["id", "confidence"].includes(k)), full_document: full };
+  return title + "…";
+}
+
+export function decisionKnowledgeReference(value: DecisionContextEntry | StrategyEntry, source: "decision_context" | "strategy_observation") {
+  return { id: value.id, title: referenceTitle(value), source };
 }
 
 function boundSource(ctx: ToolContext) {
@@ -200,21 +196,25 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
       matches = matching(source, ctx);
     }
   } catch { status = "unavailable"; }
-  const entries: Record<string, unknown>[] = [];
+  let entries: Record<string, unknown>[] = [], references: Record<string, unknown>[] = [];
+  const reference = (match: Match) => decisionKnowledgeReference(match.value, match.kind);
   const envelope = () => ({ schema: "brain-decision-context-v1", status, knowledge_version: version, path, sha256,
     byte_budget: config.bytes, decision_points: decisionPoints(req.label, req.payload, ctx.state), total_matches: matches.length,
-    entries, returned: entries.length, omitted: matches.length - entries.length,
-    truncated: entries.length < matches.length || entries.some(e => e["truncated"] === true), notice: NOTICE });
-  for (const match of matches) {
-    const budget = Math.min(match.kind === "strategy_observation" ? 2400 : 6500, config.bytes - bytes(envelope()) - 32);
-    if (budget < 900) break;
-    let view: Record<string, unknown>;
-    try { view = match.kind === "decision_context" ? projection(match.value as DecisionContextEntry, budget)
-      : observationConsumerProjection(match.value, "kb_decision_context", { source: "strategy_observation" }, budget); }
-    catch { break; }
-    entries.push(view);
-    if (bytes(envelope()) > config.bytes) { entries.pop(); break; }
+    representation: "complete_entries_with_references", entries, returned: entries.length, complete_entries: entries.length, fragment_entries: 0,
+    references, reference_only_count: references.length, omitted: matches.length - entries.length,
+    omitted_references: matches.length - entries.length - references.length,
+    truncated: entries.length + references.length < matches.length, notice: NOTICE });
+  references = matches.map(reference);
+  // Keep a ranked prefix only: an oversized earlier entry cannot promote later observations.
+  for (let n = 0; n < Math.min(4, matches.length); n++) {
+    const match = matches[n]!, next = decisionKnowledgeEntryView(match.value, match.kind);
+    const previous = references;
+    entries.push(next); references = matches.slice(n + 1).map(reference);
+    if (bytes(envelope()) > config.bytes) { entries.pop(); references = previous; break; }
   }
+  // Very large candidate sets may exceed even an ID/title index; keep ranked IDs and count every omission.
+  if (bytes(envelope()) > config.bytes) references = references.map(r => ({ ...r, title: "" }));
+  while (references.length && bytes(envelope()) > config.bytes) references.pop();
   const context = envelope();
   // Payload is logged by the existing router and delivered to both engines without a tool call.
   return { ...req, payload: { ...record(req.payload), decision_knowledge: context } };

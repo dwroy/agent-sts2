@@ -162,14 +162,15 @@ it("includes upgrade/removal priorities on legal combined rest/shop questions wi
   expect(selectDecisionContext([{ ...removal, conditions: { ...removal.conditions, candidate_ids: ["FIXTURE_SHELF"] } }], shop.toolContext!)).toEqual([]);
 });
 
-it.each([2048, 4000, 8000, 24000])("bounds the entire UTF-8 envelope to %i bytes, preserving highest priority and explicit truncation", limit => {
+it.each([2048, 4000, 8000, 24000])("bounds the entire UTF-8 envelope to %i bytes, keeping oversized first content as references without promoting lower ranks", limit => {
   const large = entry("first", { priority: 100, summary: '格式中文😀"\\\n'.repeat(3000), details: { table: Array.from({ length: 2000 }, (_, n) => ({ n, text: "夹具" })) } });
   const { directory } = runtime([entry("low", { priority: 0 }), large, ...Array.from({ length: 20 }, (_, i) => entry(`many-${i}`))]);
   const result = view(request(directory), limit);
   expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(limit);
-  expect(result.total_matches).toBe(22); expect(result.returned).toBeGreaterThan(0); expect(result.entries[0].id).toBe("first");
-  expect(result.truncated).toBe(true); expect(result.entries[0].truncated).toBe(true); expect(result.entries[0].full_document).toMatchObject({ tool: "kb_decision_context" });
-  expect(result.entries[0].omitted_fields.length).toBeGreaterThan(0); expect(result.omitted).toBe(22 - result.returned);
+  expect(result.total_matches).toBe(22); expect(result.returned).toBe(0); expect(result.entries).toEqual([]);
+  expect(result.references[0]).toMatchObject({ id: "first", source: "decision_context" });
+  expect(result.fragment_entries).toBe(0); expect(result.reference_only_count + result.omitted_references).toBe(22);
+  expect(result.truncated).toBe(result.omitted_references > 0); expect(result.omitted).toBe(22);
 });
 
 it("round-trips large full documents losslessly via the same scoped, versioned fragment protocol as #78", async () => {
