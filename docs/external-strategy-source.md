@@ -1,5 +1,7 @@
 # #51 外部来源的统一策略入口
 
+#71 增加原入口的整局库存补充、覆盖游标与完整页读证；一次性缓存登记、恢复/hold、原 ops 自然验收见 [持续学习库存](external-learning-stock.md)。旧计划、来源、失败和报告合同保持；新增字段只适用于 stock 绑定。
+
 这是 #48 开发会话交付的机械入口；不生成游戏结论。科学父仍是 #51（双 Boss 同时关联 #50 第4条），父请求沿用 ops 的 `github-issue-51-external-boss-learning-20261023`，原计划见 `paper/materials/20261023-issue51-intake-ops/launch-plan.json`。
 
 ## 派发与输入冻结

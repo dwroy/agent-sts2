@@ -499,6 +499,8 @@ def report_proof(report, batch, root):
         if isinstance(candidate, dict) and candidate.get("task") == "strategy-proposal":
             saved = candidate; break
     keys = ("task", "character", "batch", "base", "runs", "fixes", "merged", "tests", kind + "_source", "input_sha256", kind + "_results")
+    if binding.get("stock"):
+        keys += ("external_reading", "external_coverage")
     if not saved or any(saved.get(k) != report.get(k) for k in keys):
         raise ValueError("backfill report differs from preserved output")
     bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
@@ -522,7 +524,13 @@ def report_proof(report, batch, root):
                 raise ValueError("backfill destination lacks its scratch artifact")
             files.append({("unit_id" if kind == "external" else "old_id"): row["id"], "kind": target["kind"], "id": target["id"],
                           "path": str(candidate), "bytes": candidate.stat().st_size, "sha256": digest(candidate.read_bytes())})
-    return {"destination_files": files, "plan_id": source_value(batch, "source"), "report_sha256": digest(path.read_bytes()), "dispositions": rows}
+    reading = None
+    if binding.get("stock"):
+        from external_stock import reading_proof
+        reading = reading_proof(root, bid, batch, report)
+        batch["external_stock_reading"] = reading
+    return {**({"stock_reading": reading} if reading else {}), "destination_files": files,
+            "plan_id": source_value(batch, "source"), "report_sha256": digest(path.read_bytes()), "dispositions": rows}
 
 
 if __name__ == "__main__":
