@@ -33,6 +33,7 @@ export function closeIndexedReaders(): void { for (const r of readers.values()) 
 
 export class KnowledgeReader {
  readonly db: DatabaseSync;
+ readonly schema: number;
  private parsed = new Map<string, Row>();
  private parsedSizes = new Map<string, number>();
  private parsedBytes = 0;
@@ -48,13 +49,43 @@ export class KnowledgeReader {
    this.db.exec("PRAGMA query_only=ON; PRAGMA busy_timeout=5000;");
    const sqlite = String(this.db.prepare("SELECT sqlite_version() version").get()!["version"]);
    if (!safeSQLiteVersion(sqlite)) throw new Error(`SQLite ${sqlite} lacks required WAL-reset fix`);
-   if (this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get()?.["value"] !== "3") throw new Error("typed knowledge schema requires owner migration");
+   this.schema = Number(this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get()?.["value"]);
+   if (![3, 4].includes(this.schema)) throw new Error("typed knowledge schema requires owner migration");
    const release = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(version);
    if (!release) throw new Error("bound knowledge version is unavailable");
    this.files = (JSON.parse(String(release["manifest"])) as { files: Record<string, string> }).files;
   } catch (error) { this.db.close(); throw error; }
  }
  close(): void { this.db.close(); }
+ /** Research uses separate indexes and is never returned through strategy/reflex selectors. */
+ research(q: { character: string; ascension: number; gameVersion?: string; id?: string; text?: string; act?: number; stage?: string; goal?: string; limit: number; offset: number }): Row[] {
+  if (this.schema < 4) throw Error("research schema requires owner migration");
+  if (!/^[a-z0-9_]+$/.test(q.character) || !Number.isInteger(q.ascension) || q.ascension < 0 || q.ascension > 20
+   || !Number.isInteger(q.limit) || q.limit < 1 || q.limit > 13 || !Number.isInteger(q.offset) || q.offset < 0 || q.offset > 1000000
+   || q.act !== undefined && (!Number.isInteger(q.act) || q.act < 1 || q.act > 3)
+   || [q.gameVersion, q.id, q.text, q.stage, q.goal].some(v => v !== undefined && (typeof v !== "string" || !v.trim() || v.length > 200))) throw Error("invalid research query bounds");
+  const where = ["r.kind='build-research'", "r.character=?", "EXISTS(SELECT 1 FROM release_entries p WHERE p.version=? AND p.revision=r.revision)",
+   "r.revision IN (SELECT revision FROM terms WHERE category='ascension' AND term=?)"], params: Array<string | number> = [q.character, this.version, String(q.ascension)];
+  if (q.gameVersion) { where.push("(r.game_version IS NULL OR r.game_version=?)"); params.push(q.gameVersion); }
+  if (q.id) { where.push("r.entry_id=?"); params.push(q.id); }
+  // Combine phase selectors on the SAME original phase, rather than mixing acts/goals across stages.
+  if (q.act !== undefined || q.stage || q.goal) {
+   for (const [category, value] of [["act", q.act === undefined ? undefined : String(q.act)], ["stage", q.stage], ["goal", q.goal]]) if (value !== undefined) {
+    where.push("r.revision IN (SELECT revision FROM research_terms WHERE category=? AND term=?)"); params.push(category!, value.toLowerCase());
+   }
+   const phase = ["1=1"];
+   if (q.act !== undefined) { phase.push("EXISTS(SELECT 1 FROM json_each(p.value,'$.acts') WHERE value=?)"); params.push(q.act); }
+   if (q.stage) { phase.push("lower(json_extract(p.value,'$.stage'))=?"); params.push(q.stage.toLowerCase()); }
+   if (q.goal) { phase.push("EXISTS(SELECT 1 FROM json_each(p.value,'$.goals') WHERE lower(value)=?)"); params.push(q.goal.toLowerCase()); }
+   where.push(`EXISTS(SELECT 1 FROM json_each(r.payload,'$.phases') p WHERE ${phase.join(" AND ")})`);
+  }
+  if (q.text) {
+   if (Array.from(q.text).length < 3) { where.push("r.revision IN (SELECT revision FROM research_grams WHERE gram=?)"); params.push(q.text.toLowerCase()); }
+   else { where.push("r.revision IN (SELECT revision FROM body_search WHERE body_search MATCH ?)"); params.push('"' + q.text.replaceAll('"', '""') + '"'); }
+  }
+  return this.statement(`SELECT r.* FROM revisions r WHERE ${where.join(" AND ")} ORDER BY r.entry_id,r.revision LIMIT ? OFFSET ?`)
+   .all(...params, q.limit, q.offset).map(raw => ({ ...raw, value: JSON.parse(String(raw.payload)), knowledge_version: this.version, sha256: this.files[String(raw.path)] }));
+ }
  fileDigest(path: string): string | undefined { return this.files[path]; }
  /** Read exact release membership, never current or an editable snapshot file. */
  document(path: string): { text: string; sha256: string } | null {

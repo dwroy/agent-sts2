@@ -1,0 +1,18 @@
+Original tool-observed terminal: exit 1, 5 files / 56 tests, 52 passed / 4 failed.
+Source baseline: main 16f66e76ad49e65df75a2efd88685b56fb86294d plus initial issue72 changes.
+Command: direct node vitest run tests/build-research.test.ts tests/knowledge-runtime.test.ts tests/knowledge-typed-tools.test.ts tests/knowledge-classification.test.ts tests/brain-plan-reuse.test.ts --pool=threads --maxWorkers=1
+Start: 05:39:59; duration: 11.56s.
+
+build-research.test.ts > migrates schema3 atomically without changing prior K1, revisions or bindings
+Error: no such column: schema (new SQL fixture lost its quotes).
+
+knowledge-classification.test.ts > upgrades schema2 transactionally without changing old revisions and restores all metadata
+Expected upgrade-failed; received table research_terms already exists.
+
+knowledge-typed-tools.test.ts > refuses an unmigrated bound runtime without falling through to files
+Error: typed knowledge schema requires owner migration; thrown during buildKnowledgeTools instead of original tool call.
+
+knowledge-typed-tools.test.ts > backfills every business type from v1 revisions and retains raw bytes and nested original identities
+Error: table research_terms already exists (old schema-reset fixture retained additive research tables).
+
+This file preserves the original observed terminal summary from the conversation; it is not a fabricated raw log or a later test replay.

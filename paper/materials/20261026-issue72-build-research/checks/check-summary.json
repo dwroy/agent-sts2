@@ -1,0 +1,49 @@
+{
+  "base": "16f66e76ad49e65df75a2efd88685b56fb86294d",
+  "production_tsc": {
+    "exit": 0,
+    "log": "checks/tsc-r2.log"
+  },
+  "runtime_cli_tsc": {
+    "exit": 0,
+    "log": "checks/tsc-cli-r2.log"
+  },
+  "targeted": {
+    "files": 6,
+    "passed": 59,
+    "failed": 0,
+    "log": "checks/targeted-r4-artifacts.log"
+  },
+  "sandbox": {
+    "files": 644,
+    "passed": 5951,
+    "failed": 0,
+    "exit": 0,
+    "log": "checks/sandbox-final.log",
+    "pool": "threads",
+    "workers": 1,
+    "fixed_exclusions": "agent/tools/test-sandbox.sh"
+  },
+  "paths": {
+    "files": 1,
+    "passed": 11,
+    "failed": 0,
+    "exit": 0,
+    "log": "checks/paths-final.log",
+    "pool": "forks",
+    "workers": 1
+  },
+  "original_053954_format_probe": {
+    "exit": 0,
+    "result": "probe-053954-final-result.json",
+    "log": "checks/probe-053954-final.log",
+    "production_publication": false,
+    "raw_data_committed": false
+  },
+  "source_freeze_unchanged": true,
+  "source_leaves": 10,
+  "shared_dependencies": 19,
+  "original_failures_preserved": true,
+  "actual_root_live_combination_pending": true,
+  "production_publication_and_natural_adoption_pending": true
+}
