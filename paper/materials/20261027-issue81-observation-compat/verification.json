@@ -1,0 +1,221 @@
+{
+  "source_sha256_unchanged": true,
+  "source_inputs": "source-inputs.json",
+  "production_tsc": {
+    "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "exit_code": 0,
+    "log": ".artifacts/issue81-r2/tsc-delivery.log"
+  },
+  "targeted": {
+    "files_passed": 10,
+    "tests_passed": 129,
+    "log": ".artifacts/issue81-r2/targeted-complete.log"
+  },
+  "sandbox_wide": {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--pool=threads",
+      "--maxWorkers=2",
+      "--exclude",
+      "tests/paths.test.ts",
+      "--exclude",
+      "tests/brain-codex.test.ts",
+      "--exclude",
+      "tests/brain-codex-session.test.ts",
+      "--exclude",
+      "tests/brain-codex-usage.test.ts",
+      "--exclude",
+      "tests/brain-claude.test.ts",
+      "--exclude",
+      "tests/brain-knowledge.test.ts",
+      "--exclude",
+      "tests/brain-loop.test.ts",
+      "--exclude",
+      "tests/route-review.test.ts",
+      "--exclude",
+      "tests/learner.test.ts",
+      "--exclude",
+      "tests/eval.test.ts",
+      "--exclude",
+      "tests/record.test.ts",
+      "--exclude",
+      "tests/batch-j.test.ts",
+      "--exclude",
+      "tests/deepseek.test.ts",
+      "--exclude",
+      "tests/batch-e.test.ts",
+      "--exclude",
+      "tests/deepseek-consistency.test.ts",
+      "--exclude",
+      "tests/build-decider.test.ts",
+      "--exclude",
+      "tests/mod-client.test.ts",
+      "--exclude",
+      "tests/batch-m.test.ts",
+      "--exclude",
+      "tests/fix-queue-v4.test.ts",
+      "--exclude",
+      "tests/execution-gate.test.ts",
+      "--exclude",
+      "tests/batch-c.test.ts",
+      "--exclude",
+      "tests/run-plan-merge.test.ts",
+      "--exclude",
+      "tests/jev-retry.test.ts",
+      "--exclude",
+      "tests/loop.test.ts",
+      "--exclude",
+      "tests/batch-n.test.ts",
+      "--exclude",
+      "tests/batch-h.test.ts",
+      "--exclude",
+      "tests/journal-replay.test.ts",
+      "--exclude",
+      "tests/discovery.test.ts",
+      "--exclude",
+      "tests/jev-prompt-log.test.ts",
+      "--exclude",
+      "tests/batch-l.test.ts",
+      "--exclude",
+      "tests/sl-loop.test.ts",
+      "--exclude",
+      "tests/potion-equivalents.test.ts",
+      "--exclude",
+      "tests/monster-db.test.ts",
+      "--exclude",
+      "tests/third-party.test.ts",
+      "--exclude",
+      "tests/logdb.test.ts",
+      "--exclude",
+      "tests/boss-damage-tools.test.ts",
+      "--exclude",
+      "tests/knowledge-check-a8w-builder.test.ts",
+      "--exclude",
+      "tests/outcome-stats.test.ts",
+      "--exclude",
+      "tests/ops-codex.test.ts",
+      "--exclude",
+      "tests/config.test.ts",
+      "--exclude",
+      "tests/route-event.test.ts",
+      "--exclude",
+      "tests/build-facts-audit.test.ts",
+      "--exclude",
+      "tests/batch-i.test.ts",
+      "--exclude",
+      "tests/oneshot-rest-event.test.ts",
+      "--exclude",
+      "tests/thief-card-value.test.ts",
+      "--exclude",
+      "tests/oneshot-act-start.test.ts",
+      "--exclude",
+      "tests/run-config.test.ts",
+      "--exclude",
+      "tests/outcome-asc.test.ts",
+      "--exclude",
+      "tests/boss-sim-build.test.ts",
+      "--exclude",
+      "tests/oneshot-shop.test.ts",
+      "--exclude",
+      "tests/batch-f.test.ts",
+      "--exclude",
+      "tests/fix-queue-v4-fix2.test.ts"
+    ],
+    "cwd": "agent",
+    "files_passed": 650,
+    "tests_passed": 6017,
+    "seconds": 731.77,
+    "native_exit_code": null,
+    "exit_note": "Final Vitest terminal reporter captured; original exec session id lost at context compaction. Exact owned runner PID162672 is absent after terminal completion; no second broad run.",
+    "log": ".artifacts/issue81-r2/sandbox-wide-final.log",
+    "scope": "Same 52 fixed exclusions as agent/tools/test-sandbox.sh; direct Node avoids retained launcher/with-temp processes to respect process budget. Not an actual ROOT/LIVE deployment combination full."
+  },
+  "paths": {
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1",
+    "files_passed": 1,
+    "tests_passed": 11,
+    "exit_code": 0,
+    "log": ".artifacts/issue81-r2/paths-final.log"
+  },
+  "preserved_history": [
+    "First oversized2048 projection and cold issue29 import failures; final targeted129 and all four real-payload replays pass.",
+    "Exact base858425 cold issue29 blob restored,211076 bytes; no fixture/content modification or tracked diff.",
+    "First own broad run interrupted after verifying own PID155381/cwd/argv when primary-scene sort needed refinement; exit130 retained.",
+    "Earlier replay harness import/observer-shape mistakes retained; final script asserts frozen input SHA/141 questions/36 documents."
+  ],
+  "logs": {
+    ".artifacts/issue81-r2/tsc-delivery.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue81-r2/targeted-complete.log": {
+      "bytes": 1808,
+      "sha256": "955d7168fc057b3faee97c09357206be590f677be08bdcbc1608dc4885daab34"
+    },
+    ".artifacts/issue81-r2/sandbox-wide-final.log": {
+      "bytes": 28020,
+      "sha256": "0f3e2b38b0290d2cdbb45d76824d30166469980cd2e67c45bea3df946d1077fd"
+    },
+    ".artifacts/issue81-r2/paths-final.log": {
+      "bytes": 441,
+      "sha256": "350048374ee62a4daacde08fd606b77631984c2b6bca346288505f803ddf45de"
+    },
+    ".artifacts/issue81-r2/targeted-first.log": {
+      "bytes": 1292,
+      "sha256": "e3e6fd5ef0c3afc1b8779b300150f439c510dd8c41271162851a729f68db3445"
+    },
+    ".artifacts/issue81-r2/targeted-final.log": {
+      "bytes": 3641,
+      "sha256": "374526e93e024677ee7d086b7abb48b3e42f0845b92471c15a1370ff5d74b570"
+    },
+    ".artifacts/issue81-r2/sandbox-wide.log": {
+      "bytes": 389,
+      "sha256": "e533515dc8b435fe6dc4fb2f2bc6611a26cd94ac2f245b7a73d6ea06a877fa22"
+    },
+    ".artifacts/issue81-r2/wide-first-owner.json": {
+      "bytes": 2878,
+      "sha256": "abd31569f48772b16871763ed6ebbf1223f5974cc99d5cc0b48228761dad5afa"
+    },
+    ".artifacts/issue81-r2/wide-first-cancelled.json": {
+      "bytes": 276,
+      "sha256": "93d8e737a0764486876b3982d2e7ea0c523035a5d30336df12ffbc1b46a2c1ee"
+    },
+    ".artifacts/issue81-r2/gitleaks-preliminary.log": {
+      "bytes": 178,
+      "sha256": "5f2ae54b3420ec06c081f6d476883300c59b475bd7dd6973adefab935e3bab5a"
+    },
+    ".artifacts/issue81-r2/cold-fixture.json": {
+      "bytes": 221,
+      "sha256": "6919ecf550d3d6141725afeb972a5ec089c65d60a718bb5def49ba16375393b7"
+    }
+  },
+  "replays": {
+    "replay-24000": {
+      "summary_sha256": "324bd38413691185d1c9674692f96d53d5d2af2d804b51225f1fcc2a00967369",
+      "questions_sha256": "e1500c24d729d0fd412eec06d1e0e2f0baf1e7e121a41e5cb5081e524a9b2af3",
+      "full_documents_sha256": "27fa17fe10cd30e45d4542a7c959080412c20915a3bcf8f3096e45abb91b1f30"
+    },
+    "replay-2048": {
+      "summary_sha256": "b24a1cc5f24aa4bb45e343203262b88c32daa891c51bc5719c7ed45acef2708b",
+      "questions_sha256": "937e6a5ffbe6c9c4ba6ef7a7723558c515a8f8f0de5f674aa0751fe9843c1b1e",
+      "full_documents_sha256": "27fa17fe10cd30e45d4542a7c959080412c20915a3bcf8f3096e45abb91b1f30"
+    },
+    "replay-new-k": {
+      "summary_sha256": "49826566a32609113e147d9e09afd117ff54a03cc31d24a481d44e1d77e2effc",
+      "questions_sha256": "bd58a7a4e4f0d73c7fcef7db49b2d4883a090684c3dc47ae85577a5d3ef7231d",
+      "full_documents_sha256": "27fa17fe10cd30e45d4542a7c959080412c20915a3bcf8f3096e45abb91b1f30"
+    },
+    "replay-old-k": {
+      "summary_sha256": "5a77f6d35e7ab1843d1b931b6f7af2ab631b652fdfd84dc6b0a2f0a4665f3b02",
+      "questions_sha256": "bd58a7a4e4f0d73c7fcef7db49b2d4883a090684c3dc47ae85577a5d3ef7231d",
+      "full_documents_sha256": "27fa17fe10cd30e45d4542a7c959080412c20915a3bcf8f3096e45abb91b1f30"
+    }
+  },
+  "gitleaks": "Preliminary staged scan exit0; final staged and public-body scan required again before commit/comment; receipts retained locally."
+}

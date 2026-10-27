@@ -35,7 +35,8 @@ export function strategyMatches(ctx: ToolContext) {
   const reader = indexedKnowledge(ctx.knowledgeDir);
   if (reader) {
     const items = reader.all({ type: "strategy", character: knowledgeCharacter(), ascension: ctx.ascension,
-      questions: questionTypes(ctx.label ?? "", ctx.payload) });
+      // Legacy published observations carry explicit route triggers outside the original question index.
+      ...(!questionTypes(ctx.label ?? "", ctx.payload).includes("map_route") ? { questions: questionTypes(ctx.label ?? "", ctx.payload) } : {}) });
     const library = { schema: "brain-strategies-v1" as const, character: "silent" as const, entries: items.map(e => e.value) as ReturnType<typeof parseStrategyLibrary>["entries"] };
     const archetype = library.entries.some(e => e.trigger.archetype) ? matchStrategyArchetype(ctx) : undefined;
     return { entries: retrieveStrategies(library, ctx.label ?? "", { ...record(ctx.payload), facts: questionFacts(ctx) }, archetype?.match),

@@ -1,6 +1,6 @@
-# 决策点默认知识摘要（#81，待审、默认关闭）
+# 决策点默认知识摘要（#81，默认关闭）
 
-本实现以 `beaa87f2c3f94f0a95f2829cb0329188d4de5ced` 为基线，只交开发分支审阅。#80 的暂停与 Roy 审阅门优先：源码、测试或交付请求存在均不授权集成、发布知识、打开开关或恢复对局。
+R1交付 `27036eae5` 已随 R457 采用，默认关闭。兼容后继基于实际组合 `858425f165e273c8db18c23964780936c3c8928b`，保留 #78/#72/#71 与 schema4。Roy 经 [#81/6433218107](https://github.com/dwroy/agent-sts2/issues/81#issuecomment-6433218107) 授权：本后继和 #80 显式分类都完成并集成后，ops 直接开启，再按原口径观察自然5局，无须再次请示。开发树不改生产开关、不启动对局；源码采用、分类发布、实际开启与自然收益分别核收。
 
 ## 开关与送达
 
@@ -8,11 +8,11 @@
 
 启用后，Silent 的生产知识工具模式在 `Brain.request` 给题面增加 `decision_knowledge`，Codex 与 DeepSeek 共用。它是上下文，不消耗工具调用。原题、候选、状态与答案格式不裁剪；预算约束整个摘要 JSON 的 UTF-8 序列化，包含来源、条件和元数据。原 router 的 payload 日志保存实际摘要，不能把生成摘要当作模型实际采用。
 
-关闭或历史配置未设置时，不读新文档、不加取回工具、不改题面或系统提示；固定测试比较这些字段的序列化字节。Ironclad 即使开关为 on 也保持原请求。
+关闭或历史配置未设置时，不作默认注入、不加取回工具；固定测试比较关闭与未配置的请求字节。Ironclad 即使开关为 on 也保持原请求。本后继获准的策略工具路由/排序单独生效，不能把“关闭注入”等同整份工具题面与 R457 字节不变。
 
 | 题目入口 | 触发 |
 | --- | --- |
-| `reward/card`、`selection/add` | 选牌 |
+| `reward/card`、`selection/add` | 选牌；战斗内 selection 不注入构筑观察 |
 | `shop/*` | 商店；现场删牌服务 available/enough_gold 且未 used 时同时查删牌 |
 | `selection/upgrade`、`selection/remove` | 升级、删牌 |
 | `run-plan` 的 start/act；普通题携带 `run_plan_task.trigger` | 开局、幕复核；hp_drop/周期复核不冒作幕初 |
@@ -32,9 +32,17 @@
 {"schema":"decision-context-v1","character":"silent","status":"published","entries":[]}
 ```
 
-它沿原 K1 candidate/validate/publish/rollback 链存储，与其他知识文档一起参与 manifest、快照、完整性及历史保留，无 SQLite schema 迁移。此提交不创建正式知识叶、不转换或发布任何 #80 候选。
+它沿原 K1 candidate/validate/publish/rollback 链存储，与其他知识文档一起参与 manifest、快照、完整性及历史保留，无 SQLite schema 迁移。开发不创建正式知识叶、不转换或发布候选。
 
-每个条目保留 #80 的 `id/dimension/triggers/conditions/summary/rule_candidate/confidence/denominators/evidence_refs/counterexamples/limitations/conflicts_with` 概念；新增 `status=active|retired`、显示 `priority=0..100` 与 `review_origin`。`details` 可保存各维的结构化表、分幕检查点、HP 目标或取舍内容，消费者不生成数值、排名或规则。
+另兼容同一 K1 的 `strategy-entries.json` 已发布观察提示：`formal_publication` 须带非空批准者、HTTPS 授权、授权/原候选 SHA、`observation_only=true` 和保留原候选标记，`review_observation` 须保条件/分母/反例/限制。仅独立 review-only 文件、pending 或缺发布证明不自动注入。字段来自已发布修订，不据 ID、日期或文字猜是否批准。
+
+兼容读取沿正式 trigger、角色及精确进阶 scope 匹配，投影逐项保 `review_observation.conditions/denominators/counterexamples/limitations/conflicts_with` 或明确标识片段。`applicability=formal_trigger_only`、`condition_evaluation=not_evaluated` 表明原文额外条件没有求值；原候选内历史 `review-only` 身份仍保留，批准观察提示不等于批准机器规则。全文按同 K1 精确 ID 无损取回，不把显示摘要写回知识。
+
+纯路线题接为 `map_route`。原策略可显式声明该题型；对历史观察格式，仅原已发布 `review_observation.triggers` 明确包含“路线”才兼容此类型，正式 acts/floor/Boss/deck 等门继续成立。普通 act_plan、营火观察、未批准草稿不会因此扩大成路线经验。topic 仍只认显式分类，unknown 不因上述路由或正文含“路线”而进入 climb_route；#80 知识维护方按原来源补齐并发布分类。
+
+策略通用排序在合法场景内先区分已批准观察、普通知识、显式 pending，再对已批准观察按当前计划主场景、题型范围窄度及当前牌组与原结构化 core_card_ids 的明确交集排序，之后沿原条件特异性、confidence、ID。交集只是相关性，不是成型阈值或卡牌价值；不改 confidence、不按批次前缀/日期/ID置顶。`kb_strategies`、默认观察注入和相关线索共用该排序，分页仍在动态筛选之后。
+
+独立 `decision-context-v1` 契约的每个条目保留 #80 的 `id/dimension/triggers/conditions/summary/rule_candidate/confidence/denominators/evidence_refs/counterexamples/limitations/conflicts_with` 概念；新增 `status=active|retired`、显示 `priority=0..100` 与 `review_origin`。`details` 可保存各维的结构化表、分幕检查点、HP 目标或取舍内容，消费者不生成数值、排名或规则。
 
 | 内容 | 正式契约 |
 | --- | --- |
@@ -51,7 +59,7 @@
 
 `observed` 是精确值比较，数组保序、对象键序不影响相等；不解释自然语言，不执行脚本，不访问路径外的历史/记忆/文件。缺失实际游戏版本、牌组、流派几何或其他受限事实就不匹配；不从外部资料的版本推定当前游戏版本。Boss入场按当前敌人 ID 或精确组合 `A+B` 查，不用旧 act_boss 时钟代当前遭遇。其他题的 Boss 过滤使用当前题面/原状态明确的 act_boss。
 
-**#80 原 `review-only` 文件及其混合文字条件不能直接当正式契约。** 审阅通过后，由知识负责人解析来源引用、保留原条件、逐条写出获准的机器条件。历史节点簇不等于当前牌组几何；原 visible-state signature、文字前提或其他未知条件没有已审定等价转换时保持候选，不删条件求匹配。这里的 `priority` 只控制显示顺序，不是卡牌价值；无合格优先级证据可以仅发布关联提示，不能由开发者补出选牌表。
+**#80 原 `review-only` 文件及其混合文字条件不能直接当 `decision-context-v1` 机器条件契约。** 审阅通过后，由知识负责人解析来源引用、保留原条件、逐条写出获准的机器条件。历史节点簇不等于当前牌组几何；原 visible-state signature、文字前提或其他未知条件没有已审定等价转换时保持候选，不删条件求匹配。这里的 `priority` 只控制显示顺序，不是卡牌价值；无合格优先级证据可以仅发布关联提示，不能由开发者补出选牌表。
 
 发布更新不能删除已有条目、来源、分母、反证、局限和冲突；退休保留原件。机器条件、触发与原审阅来源变动拒绝原 ID 更新，需要经知识负责人审阅另立 ID、退休旧条目。源码接收和 K1 发布仍是两项独立验收。
 
@@ -67,13 +75,13 @@
 {"detail":"full","document_id":"原条目ID","document_offset":0}
 ```
 
-工具同样按绑定 K1、当前角色、进阶及本题全部动态条件匹配。按 `next_document_offset` 续取到 null，拼接 `json_fragment` 后解析；每片带 `representation:full_document_fragment`、原文 SHA、K1、文档 SHA、总片数与 `encoding:concatenated-json`，小于 24KB。固定测试对中文、emoji、引号、反斜线及换行逐片无损重建。工具不接受文件路径、任意查询或写入参数。
+工具同样按绑定 K1、当前角色、进阶及本题正式动态条件匹配。兼容策略用 `source:"strategy_observation"`，独立契约可用 `source:"decision_context"`，不提供时 ID 必须唯一。按 `next_document_offset` 续取到 null，拼接 `json_fragment` 后解析；每片带 `representation:full_document_fragment`、原文 SHA、K1、对应实际文档 path/SHA、总片数与 `encoding:concatenated-json`，小于 24KB。固定测试对中文、emoji、引号、反斜线及换行逐片无损重建。工具不接受文件路径、任意查询或写入参数。
 
 ## 审阅后接续
 
-1. Roy 审阅五维包及 #78/#81，审阅前保持原暂停，不提交生产队列。
-2. 知识负责人形成具备真实来源和明确条件的正式候选，沿原 K1 链验收；不能把36条待审候选直接计为新知识。
-3. 原集成员核实际组合、完整检查与 ROOT/LIVE 叶映射；ops 在获准边界发布、登记真实源码/K1，再按授权启用开关。任何实际行为发布编号归原 ops 分配，本分支不造编号。
-4. 从原保存局/自然题记录核 run-config 开关/预算、摘要 K1/SHA/ID/字节、匹配/缺失/裁剪及实际大脑请求，再核采用。统计学习收益、50局各阶段指标仍由 #80 原负责人闭环。
+1. 原集成员核兼容后继的实际组合、完整检查与 ROOT/LIVE 叶映射，保 schema4 与各共享差量，不重放 R457 原发布。
+2. #80 显式分类已发布并经原集成员核收，新 K 为 `K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46`（[#80/6433391076](https://github.com/dwroy/agent-sts2/issues/80#issuecomment-6433391076)）。只改元数据，不改正文/置信度；对旧 K7bb 的 topic 新条目仍为0是正确保留 unknown。
+3. 两项都完成并集成后，ops 按已有 Roy 授权直接启用，不再重复请示。实际行为发布编号归原 ops 分配，本分支不造编号。
+4. 按原两报告口径核自然5局的 run-config 开关/预算、摘要 K1/SHA/ID/字节、匹配/缺失/裁剪及实际大脑请求，再核采用；离线141题读回不代自然送达或收益。50局各阶段指标仍由 #80 原负责人闭环。
 
-回退时原 ops 在获准的自然启动点关闭开关，后续请求恢复原工具题面；原 K1、候选、原始证据与历史不删除。已经运行的进程不热切参数，不由开发树改 live/STOP/PAUSE。
+回退时原 ops 在获准的自然启动点关闭开关，后续请求不再附默认摘要及其取回工具，策略查询继续使用本后继已采用的路由/排序；原 K1、候选、原始证据与历史不删除。已经运行的进程不热切参数，不由开发树改 live/STOP/PAUSE。
