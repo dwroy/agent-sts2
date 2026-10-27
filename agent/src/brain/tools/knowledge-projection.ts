@@ -1,6 +1,7 @@
 /** Bounded consumer views; source payloads and evidence are never rewritten. */
 import { createHash } from "node:crypto";
 import type { JsonSchema, ToolResult } from "./types.js";
+import { publishedObservation, type StrategyEntry } from "../../knowledge/strategy-entries.js";
 
 type Row = Record<string, any>;
 export const KNOWLEDGE_RESPONSE_BYTES = 24_000;
@@ -64,7 +65,34 @@ function evidenceSummary(e: Row) {
   denominator_notice: "引用数不是独立样本；自有/外部分账，各外部分母不求和；未选引用/局限仍在全文" };
 }
 
+/** Preserve each original observation field or explicitly mark its excerpt; the full body remains recoverable. */
+export function observationConsumerProjection(value: Row, tool: string, query: Row, budget = 6500): Row {
+ const observation = publishedObservation(value as StrategyEntry);
+ if (!observation) throw Error("not a published observation");
+ const full_document = { tool, input: { ...query, detail: "full", document_id: value.id, document_offset: 0 } };
+ const complete = { ...value, condition_evaluation: "not_evaluated", applicability: "formal_trigger_only", full_document, truncated: false };
+ if (bytes(complete) <= budget) return complete;
+ const fragment = (v: unknown, limit: number): unknown => bytes(v) <= limit ? v
+  : limit ? { truncated: true, representation: "partial_json_text", json_excerpt: prefix(JSON.stringify(v), limit) } : { truncated: true };
+ for (const scale of [600, 300, 150, 60, 0]) {
+  const fields = Object.fromEntries((scale ? ["conditions", "denominators", "counterexamples", "limitations", "conflicts_with", "summary", "rule_candidate", "triggers", "status"]
+   : ["conditions", "denominators", "counterexamples", "limitations"])
+   .filter(k => observation[k] !== undefined).map(k => [k, fragment(observation[k], scale)]));
+  const omitted = [...Object.entries(fields).filter(([,v]) => record(v) && v.truncated === true).map(([k]) => `review_observation.${k}`),
+   ...Object.keys(observation).filter(k => !Object.hasOwn(fields, k)).map(k => `review_observation.${k}`),
+   ...Object.keys(value).filter(k => !["id", "confidence", "strategy", "trigger", "review_observation"].includes(k))];
+  const result = { id: value.id, confidence: value.confidence, strategy: fragment(value.strategy, scale ? Math.max(100, scale) : 60),
+   trigger: fragment(value.trigger, scale), review_observation: fields,
+   condition_evaluation: "not_evaluated", applicability: "formal_trigger_only", representation: "consumer_projection", truncated: true,
+   ...(scale ? { evidence_summary: { references: array(value.evidence).length, full_review_evidence: array(value.full_review_evidence).length, denominators_combined: false } } : {}),
+   original_bytes: bytes(value), omitted_fields: omitted.slice(0, scale ? 12 : 4), omitted_field_count: omitted.length, full_document };
+  if (bytes(result) <= budget) return result;
+ }
+ throw Error("observation projection metadata exceeds byte budget");
+}
+
 export function consumerProjection(value: Row, tool: string, query: Row): Row {
+ if (publishedObservation(value as StrategyEntry)) return observationConsumerProjection(value, tool, query);
  if (bytes(value) <= 6500) return value;
  const ev = Array.isArray(value.evidence) ? value.evidence : array(value.evidence?.observations);
  const strongest = [...ev].filter(record).sort((a, b) => Number(b.denominator?.n ?? 0) - Number(a.denominator?.n ?? 0))[0];

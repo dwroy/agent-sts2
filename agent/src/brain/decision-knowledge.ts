@@ -5,20 +5,22 @@ import type { ToolContext, ToolDef } from "./tools/types.js";
 import { validateInput } from "./tools/validate.js";
 import { questionFacts } from "./tools/query-guidance.js";
 import { indexedKnowledge } from "../knowledge/runtime/reader.js";
-import { knowledgeCharacter } from "../knowledge/files.js";
-import { deckCounts } from "../knowledge/strategy-entries.js";
+import { characterKey, knowledgeCharacter } from "../knowledge/files.js";
+import { deckCounts, publishedObservation, retrieveStrategies, type StrategyEntry } from "../knowledge/strategy-entries.js";
 import { matchStrategyArchetype } from "../knowledge/strategy-archetypes.js";
 import { DECISION_CONTEXT_FILE, parseDecisionContext, type DecisionPoint, type DecisionContextEntry } from "../knowledge/decision-context.js";
+import { observationConsumerProjection } from "./tools/knowledge-projection.js";
 
 export interface DecisionKnowledgeConfig { enabled: boolean; bytes: number }
 const record = (v: unknown): Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 const array = (v: unknown): unknown[] => Array.isArray(v) ? v : [];
 const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
 const digest = (s: string) => createHash("sha256").update(s).digest("hex");
-const NOTICE = "仅已发布知识的有界背景；当前现场优先。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。partial_fields为不完整摘录，不能当完整条件或统计；全文按full_document续取。";
+const NOTICE = "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。partial_fields及truncated字段为不完整摘录，不能当完整条件或统计；全文按full_document续取。";
 
 /** Only production decision labels; combat card choices never receive construction advice. */
 export function decisionPoints(label: string, payload: unknown, state?: unknown): DecisionPoint[] {
+  if (label.startsWith("selection/") && record(state)["in_combat"] === true) return [];
   const p = record(payload), plan = record(p["run_plan_task"]), run = record(p["run_state"]);
   const points: DecisionPoint[] = [];
   if (label === "reward/card" || label === "selection/add") points.push("选牌");
@@ -78,7 +80,7 @@ export function selectDecisionContext(entries: DecisionContextEntry[], ctx: Tool
   const p = record(ctx.payload), fight = record(p["fight_state"]), state = record(ctx.state), run = record(state["run"]);
   const facts = questionFacts({ ...ctx, payload: { ...p, ...fight } });
   const brief = record(p["run_brief"]), givenCharacter = brief["character"] ?? record(p["facts"])["character"] ?? run["character_id"];
-  if (typeof givenCharacter === "string" && givenCharacter.toLowerCase() !== "silent") return [];
+  if (typeof givenCharacter === "string" && characterKey(givenCharacter) !== "silent") return [];
   const act = Number(facts["act"]), floor = Number(facts["floor"]);
   const version = state["game_version"] ?? p["game_version"] ?? record(p["facts"])["game_version"];
   const enemies = array(fight["enemies"] ?? p["enemies"]).map(e => record(e)["enemy_id"]).filter((v): v is string => typeof v === "string");
@@ -156,7 +158,31 @@ function boundSource(ctx: ToolContext) {
   const reader = indexedKnowledge(ctx.knowledgeDir);
   if (!reader) return null;
   const doc = reader.document(DECISION_CONTEXT_FILE);
-  return { reader, doc, entries: doc ? parseDecisionContext(JSON.parse(doc.text)).entries : [] };
+  const strategyPath = "characters/silent/strategy-entries.json", strategySha = reader.fileDigest(strategyPath);
+  return { reader, doc, entries: doc ? parseDecisionContext(JSON.parse(doc.text)).entries : [], strategyPath, strategySha,
+    strategies: strategySha ? reader.all({ type: "strategy", character: "silent", ascension: ctx.ascension, view: "tool" }) : [] };
+}
+
+type BoundSource = NonNullable<ReturnType<typeof boundSource>>;
+interface Match { value: DecisionContextEntry | StrategyEntry; kind: "decision_context" | "strategy_observation"; path: string; sha256: string }
+function matching(source: BoundSource, ctx: ToolContext): Match[] {
+  const p = record(ctx.payload), state = record(ctx.state), role = record(p["run_brief"])["character"] ?? record(state["run"])["character_id"];
+  if (ctx.label?.startsWith("selection/") && state["in_combat"] === true) return [];
+  if (knowledgeCharacter() !== "silent" || typeof role === "string" && characterKey(role) !== "silent") return [];
+  const direct: Match[] = selectDecisionContext(source.entries, ctx).map(value => ({ value, kind: "decision_context", path: DECISION_CONTEXT_FILE, sha256: source.doc!.sha256 }));
+  const candidates = source.strategies.filter(e => {
+    const scope = record(e.value["scope"]);
+    return publishedObservation(e.value as StrategyEntry)
+      && (typeof scope["character"] !== "string" || characterKey(scope["character"]) === "silent")
+      && (!Array.isArray(scope["ascensions"]) || scope["ascensions"].includes(ctx.ascension));
+  });
+  const fight = record(p["fight_state"]), facts = questionFacts({ ...ctx, payload: { ...p, ...fight } });
+  if (fight["fight"] === "boss") facts["act_boss"] = array(fight["enemies"]).map(e => record(e)["enemy_id"]).filter(v => typeof v === "string").sort().join("+");
+  const entries = candidates.map(e => e.value as StrategyEntry), archetype = entries.some(e => e.trigger.archetype) ? matchStrategyArchetype(ctx) : undefined;
+  const selected = retrieveStrategies({ schema: "brain-strategies-v1", character: "silent", entries }, ctx.label ?? "", { ...p, facts }, archetype?.match);
+  const positions = new Map(selected.map((e, i) => [e.id, i]));
+  return [...direct, ...candidates.filter(e => positions.has(e.original_id)).sort((a, b) => positions.get(a.original_id)! - positions.get(b.original_id)!)
+    .map(e => ({ value: e.value as StrategyEntry, kind: "strategy_observation" as const, path: e.path, sha256: source.reader.fileDigest(e.path)! }))];
 }
 
 export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnowledgeConfig): BrainRequest {
@@ -164,30 +190,30 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
     || !req.payload || typeof req.payload !== "object" || Array.isArray(req.payload) || !decisionPoints(req.label, req.payload, req.toolContext.state).length) return req;
   if (!Number.isSafeInteger(config.bytes) || config.bytes < 2048 || config.bytes > 24000) throw Error("invalid decision knowledge byte budget");
   const ctx = { ...req.toolContext, label: req.label, payload: req.payload, options: req.options };
-  let status = "unbound", version: string | null = null, sha256: string | null = null, matches: DecisionContextEntry[] = [];
+  let status = "unbound", version: string | null = null, sha256: string | null = null, path = DECISION_CONTEXT_FILE, matches: Match[] = [];
   try {
     const source = boundSource(ctx);
     if (source) {
-      version = source.reader.version; sha256 = source.doc?.sha256 ?? null;
-      status = source.doc ? "ok" : "missing";
-      matches = selectDecisionContext(source.entries, ctx);
+      version = source.reader.version; sha256 = source.doc?.sha256 ?? source.strategySha ?? null;
+      path = source.doc ? DECISION_CONTEXT_FILE : source.strategyPath;
+      status = sha256 ? "ok" : "missing";
+      matches = matching(source, ctx);
     }
   } catch { status = "unavailable"; }
   const entries: Record<string, unknown>[] = [];
-  const envelope = () => ({ schema: "brain-decision-context-v1", status, knowledge_version: version, path: DECISION_CONTEXT_FILE, sha256,
+  const envelope = () => ({ schema: "brain-decision-context-v1", status, knowledge_version: version, path, sha256,
     byte_budget: config.bytes, decision_points: decisionPoints(req.label, req.payload, ctx.state), total_matches: matches.length,
     entries, returned: entries.length, omitted: matches.length - entries.length,
     truncated: entries.length < matches.length || entries.some(e => e["truncated"] === true), notice: NOTICE });
-  for (const entry of matches) {
-    let view = projection(entry, Math.min(6500, config.bytes - bytes(envelope()) - 32));
+  for (const match of matches) {
+    const budget = Math.min(match.kind === "strategy_observation" ? 2400 : 6500, config.bytes - bytes(envelope()) - 32);
+    if (budget < 900) break;
+    let view: Record<string, unknown>;
+    try { view = match.kind === "decision_context" ? projection(match.value as DecisionContextEntry, budget)
+      : observationConsumerProjection(match.value, "kb_decision_context", { source: "strategy_observation" }, budget); }
+    catch { break; }
     entries.push(view);
-    if (bytes(envelope()) > config.bytes) {
-      entries.pop();
-      if (entries.length) break;
-      view = projection(entry, config.bytes - bytes(envelope()) - 32);
-      entries.push(view);
-      if (bytes(envelope()) > config.bytes) { entries.pop(); break; }
-    }
+    if (bytes(envelope()) > config.bytes) { entries.pop(); break; }
   }
   const context = envelope();
   // Payload is logged by the existing router and delivered to both engines without a tool call.
@@ -197,7 +223,7 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
 /** The same bound dynamic scope as injection; full JSON is recoverable in <24KB fragments. */
 export function decisionContextTool(): ToolDef {
   const inputSchema: ToolDef["inputSchema"] = { type: "object", properties: {
-    detail: { type: "string", enum: ["full"] }, document_id: { type: "string" },
+    detail: { type: "string", enum: ["full"] }, document_id: { type: "string" }, source: { type: "string", enum: ["decision_context", "strategy_observation"] },
     document_offset: { type: "integer", minimum: 0, maximum: 1000000 },
   }, required: ["detail", "document_id"], additionalProperties: false };
   return { name: "kb_decision_context", description: "续取本题默认知识摘要的完整条目，保留原分母、条件、反证和历史；仅绑定K1、本角色和本题匹配范围。detail=full，document_id为原ID，按next_document_offset续取，拼接json_fragment后解析。",
@@ -205,11 +231,12 @@ export function decisionContextTool(): ToolDef {
       const problems = validateInput(inputSchema, input);
       if (problems.length) return { text: problems.join("; "), isError: true };
       try {
-        if (knowledgeCharacter() !== "silent" || typeof input["document_id"] !== "string" || input["document_id"].length > 160) throw Error("invalid decision context scope/id");
+        if (knowledgeCharacter() !== "silent" || typeof input["document_id"] !== "string" || input["document_id"].length > 200) throw Error("invalid decision context scope/id");
         const source = boundSource(ctx);
-        const entry = source && selectDecisionContext(source.entries, ctx).find(e => e.id === input["document_id"]);
-        if (!source?.doc || !entry) return { text: JSON.stringify({ entries: [], status: "no_match" }) };
-        const raw = JSON.stringify(entry), parts: string[] = [];
+        const matches = source ? matching(source, ctx).filter(e => e.value.id === input["document_id"] && (!input["source"] || e.kind === input["source"])) : [];
+        if (!source || !matches.length) return { text: JSON.stringify({ entries: [], status: "no_match" }) };
+        if (matches.length !== 1) throw Error("ambiguous document identity; use source");
+        const match = matches[0]!, raw = JSON.stringify(match.value), parts: string[] = [];
         let part = "", size = 0;
         for (const char of raw) {
           const n = bytes(char) - 2;
@@ -219,8 +246,8 @@ export function decisionContextTool(): ToolDef {
         parts.push(part);
         const offset = Number(input["document_offset"] ?? 0);
         if (offset >= parts.length) throw Error("document_offset is outside this document");
-        return { text: JSON.stringify({ knowledge_version: source.reader.version, path: DECISION_CONTEXT_FILE, sha256: source.doc.sha256,
-          representation: "full_document_fragment", document_id: entry.id, document_sha256: digest(raw), encoding: "concatenated-json",
+        return { text: JSON.stringify({ knowledge_version: source.reader.version, path: match.path, sha256: match.sha256,
+          representation: "full_document_fragment", document_id: match.value.id, document_sha256: digest(raw), encoding: "concatenated-json",
           json_fragment: parts[offset], document_offset: offset, total_document_parts: parts.length,
           next_document_offset: offset + 1 < parts.length ? offset + 1 : null, truncated: parts.length > 1 }) };
       } catch { return { text: JSON.stringify({ entries: [], status: "unavailable" }), isError: true }; }

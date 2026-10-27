@@ -1,0 +1,144 @@
+{
+  "observed_knowledge_version": "K1-7bb1e922947acc2c67f738ec36aa49d9c8c445ef871581b49f9057e048a60e9d",
+  "replay_knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "budget": 2048,
+  "independent_questions": 141,
+  "with_entries": 140,
+  "outside_points": 1,
+  "missing": 0,
+  "unavailable": 0,
+  "unique_ids": [
+    "issue80-relics-ancient-phial_holster",
+    "issue80-routes-elite-branch-review",
+    "issue80-cards-leg_sweep-act1-s4",
+    "issue80-relics-event-bridge",
+    "issue80-routes-camp-compare-current-budget",
+    "issue80-relics-automatic-potion-denominator",
+    "issue80-relics-ancient-nutritious_soup",
+    "issue80-cards-blur-act2-s6",
+    "issue80-cards-backflip-act3-s6"
+  ],
+  "total_returned_entries": 140,
+  "truncated_questions": 140,
+  "max_bytes": 1719,
+  "full_documents_equal": 36,
+  "full_parts": 60,
+  "not_delivered_ids": [
+    "issue80-builds-c1",
+    "issue80-builds-c5",
+    "issue80-builds-c6",
+    "issue80-builds-c7",
+    "issue80-cards-cloak_and_dagger-act3-s6",
+    "issue80-cards-noxious_fumes-act1-s2",
+    "issue80-relics-ancient-paels_eye",
+    "issue80-relics-ancient-paels_flesh",
+    "issue80-relics-ancient-scroll_boxes",
+    "issue80-relics-ancient-toasty_mittens",
+    "issue80-relics-boss-floor-33",
+    "issue80-relics-boss-floor-48",
+    "issue80-relics-boss-floor-49",
+    "issue80-relics-event-cheese",
+    "issue80-relics-event-courier",
+    "issue80-relics-event-ornate",
+    "issue80-relics-potion-offer-stage",
+    "issue80-routes-f33-hp-review-70",
+    "issue80-routes-f48-hp-review-90",
+    "issue80-routes-paired-boss-resource-budget",
+    "issue80-routes-shop-budget-without-spend-quota",
+    "issue80-tactics-aeonglass-artifact-current-block",
+    "issue80-tactics-crab-two-side-current-budget",
+    "issue80-tactics-demon-optional-attack-recompare",
+    "issue80-tactics-insatiable-no-attack-two-energy",
+    "issue80-tactics-queen-footwork-before-following-block",
+    "issue80-tactics-subject-setup-energy-compare"
+  ],
+  "query_cases": [
+    {
+      "run": "BQ04NAFKYD78",
+      "question_id": "mvpusasq-3531344-14",
+      "original_ref": {
+        "file": "logs/brain.jsonl",
+        "offset": 1851328856,
+        "bytes": 206254,
+        "sha256": "0a804c3d8dda9a617bd4f4fb870923b7574083ee3497fbc73574134e1e8acb8c"
+      },
+      "input": {
+        "query": "*",
+        "limit": 3,
+        "topic": "climb_route"
+      },
+      "ids": [
+        "issue80-routes-camp-compare-current-budget",
+        "silent-dowsing-rod-question-task",
+        "silent-route-hp-observation"
+      ],
+      "matches": 3,
+      "next_offset": null,
+      "bytes": 18454
+    },
+    {
+      "run": "BQ04NAFKYD78",
+      "question_id": "mvpusasq-3531344-36",
+      "original_ref": {
+        "file": "logs/brain.jsonl",
+        "offset": 1854983709,
+        "bytes": 95062,
+        "sha256": "3dee0c5c9ae6bca91a989bda186052f295e13648a725a2b9ca6dd2e327c65a5c"
+      },
+      "input": {
+        "query": "*",
+        "limit": 3,
+        "topic": "climb_route"
+      },
+      "ids": [
+        "issue80-routes-camp-compare-current-budget",
+        "issue80-routes-elite-branch-review",
+        "issue80-routes-paired-boss-resource-budget"
+      ],
+      "matches": 10,
+      "next_offset": 3,
+      "bytes": 16153
+    },
+    {
+      "run": "3YTH58GLDE56",
+      "question_id": "mvpy1hs7-3754960-17",
+      "original_ref": {
+        "file": "logs/brain.jsonl",
+        "offset": 1858282828,
+        "bytes": 80158,
+        "sha256": "7b86c638e7f03423d9439b8df6eb1a82b4434f62d3f0d9024928d0f76d3cb52e"
+      },
+      "input": {
+        "query": "*",
+        "topic": "climb_route",
+        "limit": 3
+      },
+      "ids": [
+        "issue80-relics-ancient-nutritious_soup",
+        "issue80-relics-ancient-paels_eye",
+        "issue80-relics-ancient-paels_flesh"
+      ],
+      "matches": 14,
+      "next_offset": 3,
+      "bytes": 14033
+    }
+  ],
+  "sources": {
+    "observer": {
+      "path": ".artifacts/ops-issue80-use-20261027/natural-brain.jsonl",
+      "bytes": 20447989,
+      "sha256": "3497c7b3f30136322f4fdc5223f0f9531b5c70412af99631f95b6d380960b8ab"
+    },
+    "strategy_sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+    "classification_sha256": "8e509a05fb95f1aa169412cb439e6ec1fcccba9d81b25255a10f49d88d87ba9d"
+  },
+  "source_sha256": {
+    "agent/src/brain/decision-knowledge.ts": "5e751af2eca1c4ce4c117ba38f4ff5a4cd1fe8ed092c34f8047b28f5d28dd0ce",
+    "agent/src/brain/tools/knowledge-projection.ts": "2686e11c1115e69bbfb29c7284dea61a50bb7f75480630c58f611677c6141b87",
+    "agent/src/brain/tools/query-guidance.ts": "653d2a773435b63b4532397e26d667fda534babecd7c37412d10d1034aeb4645",
+    "agent/src/knowledge/strategy-entries.ts": "1bbcb01d95c7fc517acc1f3b8c2586635923ab04c4a626e8b7c643a0e3dce36a",
+    "agent/tests/decision-observations.test.ts": "6ebb7c1fc2bcc24212402492e697eacb5ce45eb1c9888bcce15a5b1e1e4ce8f1"
+  },
+  "source_unchanged": true,
+  "limits": "Offline saved payload only; original raw mod state absent. Full-document cases are synthetic formal-trigger contracts, not natural decisions or benefit evidence."
+}
