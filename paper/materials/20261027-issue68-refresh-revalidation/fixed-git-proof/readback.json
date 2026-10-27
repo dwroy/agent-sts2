@@ -1,0 +1,42 @@
+{
+  "scope": "fixed Git/consumer examples; not actual project full/shadow/publication",
+  "actual_full_started": false,
+  "production_operations": 0,
+  "cases": [
+    {
+      "scenario": "disjoint",
+      "accepted": true,
+      "reason": null,
+      "original_full_unchanged": true,
+      "actual_full_started": false
+    },
+    {
+      "scenario": "target",
+      "accepted": false,
+      "reason": "frozen tree/input/index drift: live; natural refresh intersects candidate target: knowledge/characters/silent/fixture.json",
+      "original_full_unchanged": true,
+      "actual_full_started": false
+    },
+    {
+      "scenario": "source",
+      "accepted": false,
+      "reason": "frozen tree/input/index drift: live; undeclared natural refresh path; affected set unknown: agent/package.json",
+      "original_full_unchanged": true,
+      "actual_full_started": false
+    },
+    {
+      "scenario": "fixture",
+      "accepted": false,
+      "reason": "frozen tree/input/index drift: live; strict LIVE fixture changed: knowledge/common/fixture.json",
+      "original_full_unchanged": true,
+      "actual_full_started": false
+    },
+    {
+      "scenario": "unknown",
+      "accepted": false,
+      "reason": "frozen tree/input/index drift: live; no frozen natural refresh declaration; affected set unknown",
+      "original_full_unchanged": true,
+      "actual_full_started": false
+    }
+  ]
+}

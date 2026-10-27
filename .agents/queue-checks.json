@@ -84,5 +84,102 @@
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
   ],
-  "live_fixtures": []
+  "live_fixtures": [],
+  "natural_refresh": {
+    "schema": "sts2-natural-refresh-v1",
+    "paths": [
+      {
+        "pattern": "knowledge/catalog.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/monster-db.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/move-model.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/card-upgrades.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/enemies/*/mechanics-observed.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/enemies/*/model-observed.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/common/enemies/_legacy-meta.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/characters/*/monster-records.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/characters/*/boss-damage.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/characters/*/room-costs.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/characters/*/construction-opportunities.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "knowledge/characters/*/v6-history.json",
+        "checks": [
+          "live-data-readers"
+        ]
+      },
+      {
+        "pattern": "notes/monster-db-check.md",
+        "checks": [
+          "live-data-readers"
+        ]
+      }
+    ],
+    "checks": {
+      "live-data-readers": {
+        "kind": "consumer",
+        "timeout": 180,
+        "argv": [
+          "node",
+          "--import",
+          "tsx",
+          "{root}/ops/board_refresh_readers.mjs",
+          "{view}",
+          "{changes}"
+        ]
+      }
+    }
+  }
 }

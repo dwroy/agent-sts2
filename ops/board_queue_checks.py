@@ -11,6 +11,7 @@ import stat
 import subprocess
 import sys
 import time
+from types import SimpleNamespace
 import unittest
 
 from board_queue_pin import local, sha, verify
@@ -18,6 +19,7 @@ from issue_session_support import Board, secret_name
 from shared_tools import matching
 from worktree_checkout import cold, sparse_patterns
 from disk_capacity import require_worktree_capacity
+import board_queue_refresh
 
 NAMES = ['root-tsc', 'runtime-tsc', 'live-tsc', 'host', 'consumers', 'full']
 PREFIXES = ('agent/', 'learner/', 'eval/', 'ops/', 'knowledge/', 'docs/', '.agents/', 'paper/materials/')
@@ -252,6 +254,7 @@ def policy(root, job):
         if not isinstance(value.get(name), list):
             raise ValueError('explicit project check/mapping lists required')
     fixture_scopes(root, value)
+    board_queue_refresh.policy(root, value)
     for name in value['runtime_install_paths']:
         local(root, name)
         if secret_name(name):
@@ -261,6 +264,7 @@ def policy(root, job):
 
 def assemble(root, job, options, directory):
     scopes = fixture_scopes(root, options)
+    refresh = board_queue_refresh.policy(root, options)
     candidate = Path(job['cwd'])
     if text(candidate, 'rev-parse', 'HEAD') != job['candidate'] or text(candidate, 'write-tree') != job['tree']:
         raise ValueError('actual candidate differs from queue job')
@@ -325,6 +329,7 @@ def assemble(root, job, options, directory):
     return dict(candidate=job['candidate'], baseline=baseline, live=str(live), live_commit=actual_live,
                 live_before=before_live, root=str(w), runtime=str(g), overlays=overlays, deployment=mapping,
                 fixtures=scopes['root'], fixture_scopes=scopes, fixture_sources=sources,
+                candidate_targets=sorted(changed), natural_refresh=refresh,
                 root_inputs=snapshot(w, scopes['root']),
                 runtime_inputs=snapshot(g, scopes['live']), dependencies=dependency_snapshot(modules),
                 python_dependencies=dependency_snapshot(python) if python else None,
@@ -332,7 +337,7 @@ def assemble(root, job, options, directory):
                 upstream_contents_read_or_modified=False, submodule_initialized=False)
 
 
-def verify_after(context):
+def verify_strict(context):
     root = Path(context['job']['root'])
     for name, checksum in context['job']['policy_sha256'].items():
         if sha(local(root, name).read_bytes()) != checksum:
@@ -342,7 +347,7 @@ def verify_after(context):
         raise ValueError('check executable input/provider drift')
     if text(root, 'rev-parse', 'refs/heads/main') != assembly['baseline']:
         raise ValueError('main advanced during check')
-    for key, recorded in (('root', 'root_inputs'), ('runtime', 'runtime_inputs'), ('live', 'live_before')):
+    for key, recorded in (('root', 'root_inputs'), ('runtime', 'runtime_inputs')):
         scopes = assembly.get('fixture_scopes')
         fixtures = (scopes['root' if key == 'root' else 'live'] if scopes is not None
                     else assembly['fixtures'] if key != 'live' else ())
@@ -356,10 +361,35 @@ def verify_after(context):
     if python and (dependency_snapshot(Path(python['realpath'])) != python
                    or (root / 'data/logdb-venv').resolve() != Path(python['realpath'])):
         raise ValueError('Python dependency input/provider drift')
-    for key, source in (('root', root), ('live', Path(assembly['live']))):
-        for row in assembly['overlays'][key]:
-            if fingerprint(local(source, row['path'])) != row['fingerprint']:
-                raise ValueError('actual data preimage drift')
+    for row in assembly['overlays']['root']:
+        if fingerprint(local(root, row['path'])) != row['fingerprint']:
+            raise ValueError('actual data preimage drift')
+
+
+def verify_after(context):
+    verify_strict(context)
+    assembly = context['assembly']
+    scopes = assembly.get('fixture_scopes')
+    current = snapshot(Path(assembly['live']), scopes['live'] if scopes is not None else ())
+    adapter = SimpleNamespace(**{name: globals()[name] for name in
+                              ('fingerprint', 'view', 'text', 'mirror', 'snapshot', 'unchanged', 'fds')})
+    previous = len(context.get('refresh_revalidations', []))
+    try:
+        accepted = board_queue_refresh.verify(context, current, adapter)
+        # Bounded rechecks must not mutate source, policy, tools or shared providers.
+        verify_strict(context)
+        if snapshot(Path(assembly['live']), scopes['live'] if scopes is not None else ()) != current:
+            raise ValueError('LIVE changed again after refresh revalidation')
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
+        if len(context.get('refresh_revalidations', [])) > previous:
+            board_queue_refresh.gate(context['refresh_revalidations'][-1], 'rejected', str(error))
+        raise
+    if len(context.get('refresh_revalidations', [])) > previous:
+        board_queue_refresh.gate(context['refresh_revalidations'][-1], 'accepted')
+    if accepted:
+        context['refresh_accepted'] = accepted
+    else:
+        context.pop('refresh_accepted', None)
 
 
 def command(context, name, argv, cwd, environment):

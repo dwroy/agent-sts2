@@ -1,0 +1,95 @@
+{
+  "schema": "sts2-refresh-revalidation-v1",
+  "id": "0466595fc10d475bb6b7aed536a0d823",
+  "started_at": 1793067818.0346706,
+  "candidate": "402a9a48016afdda02b045a97f01caf27a2f3dc3",
+  "baseline": "025b2cfcd93858798b78db79783bebc8523b163a",
+  "before": {
+    "head": "025b2cfcd93858798b78db79783bebc8523b163a",
+    "tree": "38b0802268a405c952de053305fb1edebb992f21",
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "sha256": "236a92f9926f9d89695f492e6375d6784a6d2083823ecaf233e68737bf58ba14",
+        "mode": 420
+      },
+      "agent/package-lock.json": {
+        "kind": "file",
+        "sha256": "5c34f32c29f2240d518eaa0d96d99f32de9865eefd4a5aab4b5d01a48459e3cf",
+        "mode": 420
+      },
+      "agent/package.json": {
+        "kind": "file",
+        "sha256": "f51ab062a0c5b7b688e16b99581fe8f01213e663d7d8bddea14263aa173847a9",
+        "mode": 420
+      },
+      "agent/src/value.ts": {
+        "kind": "file",
+        "sha256": "484cbc01ecdc71b5e4ab76a99d880fd1d7a737f324fdd50685c1bb41c79fd645",
+        "mode": 420
+      },
+      "knowledge/characters/silent/fixture.json": {
+        "kind": "file",
+        "sha256": "78146d3eb324846b88c972e003582c73f34d5d52828fe386e05a5092f4cf6255",
+        "mode": 420
+      }
+    },
+    "entries": "6336ce623c1c9531e068936695afa199035a4d071beb013e4e5a59b5f82ea1a0",
+    "flags": "ae6d75150c4cf62661dbb98e7cfe84b18c41587f5311b9c5ca127f5d077592bf"
+  },
+  "after": {
+    "head": "025b2cfcd93858798b78db79783bebc8523b163a",
+    "tree": "38b0802268a405c952de053305fb1edebb992f21",
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "sha256": "236a92f9926f9d89695f492e6375d6784a6d2083823ecaf233e68737bf58ba14",
+        "mode": 420
+      },
+      "agent/package-lock.json": {
+        "kind": "file",
+        "sha256": "5c34f32c29f2240d518eaa0d96d99f32de9865eefd4a5aab4b5d01a48459e3cf",
+        "mode": 420
+      },
+      "agent/package.json": {
+        "kind": "file",
+        "sha256": "f51ab062a0c5b7b688e16b99581fe8f01213e663d7d8bddea14263aa173847a9",
+        "mode": 420
+      },
+      "agent/src/value.ts": {
+        "kind": "file",
+        "sha256": "484cbc01ecdc71b5e4ab76a99d880fd1d7a737f324fdd50685c1bb41c79fd645",
+        "mode": 420
+      },
+      "knowledge/characters/silent/fixture.json": {
+        "kind": "file",
+        "sha256": "bd3dfc623ce2b33786621e9095aec50be51c24f118e58f078bafb4a9aaa6b0ee",
+        "mode": 420
+      }
+    },
+    "entries": "6336ce623c1c9531e068936695afa199035a4d071beb013e4e5a59b5f82ea1a0",
+    "flags": "ae6d75150c4cf62661dbb98e7cfe84b18c41587f5311b9c5ca127f5d077592bf"
+  },
+  "differences": [
+    {
+      "path": "knowledge/characters/silent/fixture.json",
+      "before": {
+        "kind": "file",
+        "sha256": "78146d3eb324846b88c972e003582c73f34d5d52828fe386e05a5092f4cf6255",
+        "mode": 420
+      },
+      "after": {
+        "kind": "file",
+        "sha256": "bd3dfc623ce2b33786621e9095aec50be51c24f118e58f078bafb4a9aaa6b0ee",
+        "mode": 420
+      }
+    }
+  ],
+  "checks": [],
+  "state": "rejected",
+  "full_runs": 0,
+  "reason": "ValueError: natural refresh intersects candidate target: knowledge/characters/silent/fixture.json",
+  "ended_at": 1793067818.0348194,
+  "gate_result": "rejected",
+  "gate_reason": "frozen tree/input/index drift: live; natural refresh intersects candidate target: knowledge/characters/silent/fixture.json"
+}

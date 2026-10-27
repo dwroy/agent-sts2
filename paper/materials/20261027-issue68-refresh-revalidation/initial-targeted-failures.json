@@ -1,0 +1,9 @@
+{
+  "tests": 32,
+  "failures": {
+    "test_disjoint_refresh_rechecks_new_data_without_mutating_old_views_or_full": "fixture patched global subprocess.Popen and intercepted strict Git readback before cache check",
+    "test_live_source_drift_remains_strict_with_refresh_enabled": "fixture changed candidate target and correctly got intersection rejection before expected unknown-path reason"
+  },
+  "source_patch_needed": false,
+  "correction": "only test setup/assertion adjusted; original tool transcript retained"
+}

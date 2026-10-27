@@ -1,7 +1,9 @@
 """Candidate-to-ROOT/LIVE mapping and input drift use tiny, real Git worktrees."""
 import json
+import importlib.util
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -264,6 +266,198 @@ class CandidateChecks(unittest.TestCase):
         for names in (None, ['same', 'same'], [1], ['/absolute'], ['../escape'], ['.env']):
             with self.subTest(names=names), self.assertRaises(ValueError):
                 checks.fixture_scopes(self.root, dict(fixtures=[], live_fixtures=names))
+
+    def refresh_contract(self, name='knowledge/characters/silent/fixture.json', script=None):
+        script = script or (
+            "import json,pathlib; p=pathlib.Path.cwd().parent / " + repr(name) + "; "
+            "assert json.loads(p.read_text())['fixed'].startswith('refreshed'); print('new bytes consumed')")
+        self.options['natural_refresh'] = dict(schema='sts2-natural-refresh-v1',
+            paths=[dict(pattern=name, checks=['actual-reader'])],
+            checks={'actual-reader': dict(kind='consumer', argv=['python3', '-c', script], timeout=5),
+                    'unaffected': dict(kind='consumer', argv=['python3', '-c', 'raise SystemExit(19)'], timeout=5)})
+
+    def refreshed(self, name='knowledge/characters/silent/fixture.json', value='refreshed'):
+        (self.live / name).write_text(json.dumps(dict(fixed=value)) + '\n')
+
+    def test_disjoint_refresh_rechecks_new_data_without_mutating_old_views_or_full(self):
+        name = 'knowledge/characters/silent/fixture.json'
+        self.refresh_contract()
+        assembly = self.assemble()
+        original = json.dumps(assembly, sort_keys=True)
+        context = {**self.context(assembly), 'checks': {'full': 'passed'}, 'full_runs': 1}
+        self.refreshed()
+        checks.verify_after(context)
+        self.assertEqual(json.dumps(assembly, sort_keys=True), original)
+        self.assertEqual(context['checks'], {'full': 'passed'})
+        self.assertEqual(context['full_runs'], 1)
+        accepted = context['refresh_accepted']
+        self.assertEqual(json.loads((Path(accepted['view']) / name).read_text())['fixed'], 'refreshed')
+        self.assertEqual(json.loads((Path(assembly['runtime']) / name).read_text())['fixed'], 'baseline')
+        event = json.loads(Path(accepted['evidence']).read_text())
+        self.assertEqual(event['state'], 'passed')
+        self.assertEqual(event['gate_result'], 'accepted')
+        self.assertEqual(event['full_runs'], 0)
+        self.assertEqual([row['id'] for row in event['checks']], ['actual-reader'])
+        self.assertEqual(event['checks'][0]['exit_code'], 0)
+        self.assertNotEqual(event['differences'][0]['before'], event['differences'][0]['after'])
+        self.assertEqual(self.git('rev-parse', 'main'), self.baseline)
+        checks.verify_after(context)
+        reused = json.loads(Path(context['refresh_revalidations'][-1]).read_text())
+        self.assertEqual(reused['state'], 'reused')
+        self.assertEqual(reused['checks'], [])
+
+    def test_refresh_intersecting_any_candidate_target_is_rejected(self):
+        name = 'knowledge/characters/silent/fixture.json'
+        self.refresh_contract()
+        self.candidate_fixture(name, '{"fixed":"candidate"}\n')
+        self.options['root_only_prefixes'].append('knowledge/')
+        context = self.context(self.assemble())
+        self.refreshed()
+        with self.assertRaisesRegex(ValueError, 'intersects candidate target'):
+            checks.verify_after(context)
+        event = json.loads(Path(context['refresh_revalidations'][-1]).read_text())
+        self.assertEqual(event['state'], 'rejected')
+        self.assertEqual(event['checks'], [])
+
+    def test_live_source_drift_remains_strict_with_refresh_enabled(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        (self.live / 'agent/package.json').write_text('{"source":"changed"}\n')
+        with self.assertRaisesRegex(ValueError, 'undeclared.*affected set unknown'):
+            checks.verify_after(context)
+
+    def test_declared_refresh_does_not_relax_fixture_freeze(self):
+        name = 'knowledge/common/fixture.json'
+        self.live_fixture(name)
+        self.options['live_fixtures'] = [name]
+        self.refresh_contract(name)
+        context = self.context(self.assemble())
+        self.refreshed(name)
+        with self.assertRaisesRegex(ValueError, 'strict LIVE fixture'):
+            checks.verify_after(context)
+
+    def test_unknown_refresh_mapping_is_rejected_with_reason(self):
+        context = self.context(self.assemble())
+        self.refreshed()
+        with self.assertRaisesRegex(ValueError, 'affected set unknown'):
+            checks.verify_after(context)
+        event = json.loads(Path(context['refresh_revalidations'][-1]).read_text())
+        self.assertIn('affected set unknown', event['reason'])
+
+    def test_failed_supplemental_reader_does_not_accept_refresh(self):
+        self.refresh_contract(script='raise SystemExit(7)')
+        context = self.context(self.assemble())
+        self.refreshed()
+        with self.assertRaisesRegex(ValueError, 'revalidation failed'):
+            checks.verify_after(context)
+        event = json.loads(Path(context['refresh_revalidations'][-1]).read_text())
+        self.assertEqual(event['checks'][0]['exit_code'], 7)
+        self.assertEqual(event['state'], 'rejected')
+        self.assertNotIn('refresh_accepted', context)
+
+    def test_refresh_changed_again_during_recheck_is_rejected(self):
+        target = self.live / 'knowledge/characters/silent/fixture.json'
+        self.refresh_contract(script='from pathlib import Path; Path(' + repr(str(target)) + ').write_text("changed again")')
+        context = self.context(self.assemble())
+        self.refreshed()
+        with self.assertRaisesRegex(ValueError, 'changed again'):
+            checks.verify_after(context)
+        self.assertNotIn('refresh_accepted', context)
+
+    def test_second_refresh_creates_new_evidence_not_a_second_full(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        self.refreshed()
+        checks.verify_after(context)
+        first = context['refresh_accepted']['evidence']
+        self.refreshed(value='refreshed-again')
+        checks.verify_after(context)
+        self.assertNotEqual(context['refresh_accepted']['evidence'], first)
+        self.assertEqual(json.loads(Path(first).read_text())['state'], 'passed')
+
+    def test_live_index_drift_is_not_a_natural_refresh(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        self.refreshed()
+        checks.git(self.live, 'add', 'knowledge')
+        with self.assertRaisesRegex(ValueError, 'metadata changed'):
+            checks.verify_after(context)
+
+    def test_refresh_policy_rejects_unknown_checks_or_implicit_full(self):
+        self.refresh_contract()
+        contract = self.options['natural_refresh']
+        contract['paths'][0]['checks'] = ['unknown']
+        with self.assertRaisesRegex(ValueError, 'affected set'):
+            self.assemble()
+        contract['paths'][0]['checks'] = ['actual-reader']
+        contract['checks']['actual-reader'] = dict(kind='vitest', files=[], timeout=5)
+        with self.assertRaisesRegex(ValueError, 'explicit affected test'):
+            self.assemble()
+
+    def test_actual_refresh_consumer_reads_fixed_data_and_rejects_invalid_new_json(self):
+        project = Path(__file__).resolve().parents[2]
+        view = self.root / 'consumer-fixture'
+        shutil.copytree(project / 'agent/tests/gkb-data/knowledge', view / 'knowledge')
+        (view / 'agent').mkdir()
+        (view / 'agent/src').symlink_to(project / 'agent/src', target_is_directory=True)
+        (view / 'agent/node_modules').symlink_to(project / 'agent/node_modules', target_is_directory=True)
+        name = 'knowledge/characters/ironclad/room-costs.json'
+        manifest = self.root / 'changes.json'
+        program = project / 'ops/board_refresh_readers.mjs'
+        def run():
+            manifest.write_text(json.dumps([dict(path=name, after=dict(sha256=checks.sha((view / name).read_bytes())))]))
+            return subprocess.run(['node', '--import', 'tsx', str(program), str(view), str(manifest)],
+                                  cwd=view / 'agent', text=True, capture_output=True, timeout=30)
+        result = run()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        consumed = json.loads(result.stdout)['consumed']
+        self.assertEqual(consumed[0]['path'], name)
+        self.assertEqual(consumed[0]['reader'], 'queryKnowledgeCatalog')
+        (view / name).write_text('{invalid new data')
+        result = run()
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_recheck_cannot_mutate_original_views_or_dependencies(self):
+        dependency = self.root / 'agent/node_modules/pinned/index.js'
+        self.refresh_contract(script='from pathlib import Path; Path(' + repr(str(dependency)) + ').write_text("modified")')
+        context = self.context(self.assemble())
+        self.refreshed()
+        with self.assertRaisesRegex(ValueError, 'dependency'):
+            checks.verify_after(context)
+        self.assertNotIn('refresh_accepted', context)
+        event = json.loads(Path(context['refresh_revalidations'][-1]).read_text())
+        self.assertEqual(event['state'], 'passed')
+        self.assertEqual(event['gate_result'], 'rejected')
+
+    def test_declared_data_mode_change_is_still_strict(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        self.refreshed()
+        (self.live / 'knowledge/characters/silent/fixture.json').chmod(0o755)
+        with self.assertRaisesRegex(ValueError, 'identity/mode'):
+            checks.verify_after(context)
+
+    def test_later_publication_can_load_checker_without_registering_sys_modules(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        self.refreshed()
+        path = Path(checks.__file__)
+        spec = importlib.util.spec_from_file_location('publication_checker_fixture', path)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+        self.assertNotIn('publication_checker_fixture', sys.modules)
+        checker.verify_after(context)
+        self.assertIn('refresh_accepted', context)
+
+    def test_tampered_accepted_view_cannot_reuse_old_supplemental_result(self):
+        self.refresh_contract()
+        context = self.context(self.assemble())
+        self.refreshed()
+        checks.verify_after(context)
+        view = Path(context['refresh_accepted']['view'])
+        (view / 'knowledge/characters/silent/fixture.json').write_text('tampered')
+        with self.assertRaisesRegex(ValueError, 'accepted refresh validation view changed'):
+            checks.verify_after(context)
 
     def test_source_dependency_and_index_drift_are_rejected(self):
         result = self.assemble()

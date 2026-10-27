@@ -1,0 +1,164 @@
+{
+  "schema": "sts2-refresh-revalidation-v1",
+  "id": "c67c7d3046434b92a6e4310b2473607c",
+  "started_at": 1793067817.4856057,
+  "candidate": "9caecb096070ec4b9ab8fa78161c1ac4abc83fde",
+  "baseline": "025b2cfcd93858798b78db79783bebc8523b163a",
+  "before": {
+    "head": "025b2cfcd93858798b78db79783bebc8523b163a",
+    "tree": "38b0802268a405c952de053305fb1edebb992f21",
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "sha256": "236a92f9926f9d89695f492e6375d6784a6d2083823ecaf233e68737bf58ba14",
+        "mode": 420
+      },
+      "agent/package-lock.json": {
+        "kind": "file",
+        "sha256": "5c34f32c29f2240d518eaa0d96d99f32de9865eefd4a5aab4b5d01a48459e3cf",
+        "mode": 420
+      },
+      "agent/package.json": {
+        "kind": "file",
+        "sha256": "f51ab062a0c5b7b688e16b99581fe8f01213e663d7d8bddea14263aa173847a9",
+        "mode": 420
+      },
+      "agent/src/value.ts": {
+        "kind": "file",
+        "sha256": "484cbc01ecdc71b5e4ab76a99d880fd1d7a737f324fdd50685c1bb41c79fd645",
+        "mode": 420
+      },
+      "knowledge/characters/silent/fixture.json": {
+        "kind": "file",
+        "sha256": "78146d3eb324846b88c972e003582c73f34d5d52828fe386e05a5092f4cf6255",
+        "mode": 420
+      }
+    },
+    "entries": "6336ce623c1c9531e068936695afa199035a4d071beb013e4e5a59b5f82ea1a0",
+    "flags": "ae6d75150c4cf62661dbb98e7cfe84b18c41587f5311b9c5ca127f5d077592bf"
+  },
+  "after": {
+    "head": "025b2cfcd93858798b78db79783bebc8523b163a",
+    "tree": "38b0802268a405c952de053305fb1edebb992f21",
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "sha256": "236a92f9926f9d89695f492e6375d6784a6d2083823ecaf233e68737bf58ba14",
+        "mode": 420
+      },
+      "agent/package-lock.json": {
+        "kind": "file",
+        "sha256": "5c34f32c29f2240d518eaa0d96d99f32de9865eefd4a5aab4b5d01a48459e3cf",
+        "mode": 420
+      },
+      "agent/package.json": {
+        "kind": "file",
+        "sha256": "f51ab062a0c5b7b688e16b99581fe8f01213e663d7d8bddea14263aa173847a9",
+        "mode": 420
+      },
+      "agent/src/value.ts": {
+        "kind": "file",
+        "sha256": "484cbc01ecdc71b5e4ab76a99d880fd1d7a737f324fdd50685c1bb41c79fd645",
+        "mode": 420
+      },
+      "knowledge/characters/silent/fixture.json": {
+        "kind": "file",
+        "sha256": "bd3dfc623ce2b33786621e9095aec50be51c24f118e58f078bafb4a9aaa6b0ee",
+        "mode": 420
+      }
+    },
+    "entries": "6336ce623c1c9531e068936695afa199035a4d071beb013e4e5a59b5f82ea1a0",
+    "flags": "ae6d75150c4cf62661dbb98e7cfe84b18c41587f5311b9c5ca127f5d077592bf"
+  },
+  "differences": [
+    {
+      "path": "knowledge/characters/silent/fixture.json",
+      "before": {
+        "kind": "file",
+        "sha256": "78146d3eb324846b88c972e003582c73f34d5d52828fe386e05a5092f4cf6255",
+        "mode": 420
+      },
+      "after": {
+        "kind": "file",
+        "sha256": "bd3dfc623ce2b33786621e9095aec50be51c24f118e58f078bafb4a9aaa6b0ee",
+        "mode": 420
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "actual-reader",
+      "argv": [
+        "python3",
+        "-c",
+        "import json,pathlib; p=pathlib.Path.cwd().parent / 'knowledge/characters/silent/fixture.json'; assert json.loads(p.read_text())['fixed'].startswith('refreshed'); print('new bytes consumed')"
+      ],
+      "cwd": "/tmp/tmpeva6v0s3/.state/batch/refresh-revalidation/c67c7d3046434b92a6e4310b2473607c/validation-live/agent",
+      "started_at": 1793067817.5180337,
+      "pid": 4145203,
+      "boot_id": "d14ae885-b73b-43b0-a5a3-33aed5f1b8b4",
+      "start": "49233319",
+      "exit_code": 0,
+      "ended_at": 1793067817.5502126
+    }
+  ],
+  "state": "passed",
+  "full_runs": 0,
+  "affected_checks": [
+    "actual-reader"
+  ],
+  "inherited_descriptors": [
+    {
+      "fd": 3,
+      "inode": 80119136,
+      "target": "/tmp/#80119136 (deleted)"
+    },
+    {
+      "fd": 4,
+      "inode": 80119137,
+      "target": "/tmp/#80119137 (deleted)"
+    },
+    {
+      "fd": 5,
+      "inode": 80119138,
+      "target": "/tmp/#80119138 (deleted)"
+    }
+  ],
+  "view": "/tmp/tmpeva6v0s3/.state/batch/refresh-revalidation/c67c7d3046434b92a6e4310b2473607c/validation-live",
+  "inputs": {
+    "head": "ac6362ba400285e50c5f447932233c794e97eb39",
+    "tree": "5528211edc7706c47898a5e11985644dd26edee6",
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "sha256": "236a92f9926f9d89695f492e6375d6784a6d2083823ecaf233e68737bf58ba14",
+        "mode": 420
+      },
+      "agent/package-lock.json": {
+        "kind": "file",
+        "sha256": "5c34f32c29f2240d518eaa0d96d99f32de9865eefd4a5aab4b5d01a48459e3cf",
+        "mode": 420
+      },
+      "agent/package.json": {
+        "kind": "file",
+        "sha256": "f51ab062a0c5b7b688e16b99581fe8f01213e663d7d8bddea14263aa173847a9",
+        "mode": 420
+      },
+      "agent/src/value.ts": {
+        "kind": "file",
+        "sha256": "5a118c800bfaf3a2cd1972f8f40208ab8c6ce08d8186d06322392dd3594eb016",
+        "mode": 420
+      },
+      "knowledge/characters/silent/fixture.json": {
+        "kind": "file",
+        "sha256": "bd3dfc623ce2b33786621e9095aec50be51c24f118e58f078bafb4a9aaa6b0ee",
+        "mode": 420
+      }
+    },
+    "entries": "9c039d1d20ea491a83199e02763035a5a4d7de883693f0824d16bffe6a297c23",
+    "flags": "ae6d75150c4cf62661dbb98e7cfe84b18c41587f5311b9c5ca127f5d077592bf"
+  },
+  "ended_at": 1793067817.5811918,
+  "gate_result": "accepted",
+  "gate_reason": null
+}
