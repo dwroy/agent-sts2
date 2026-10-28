@@ -23,7 +23,7 @@ class RegistrationPipeline(unittest.TestCase):
                     registration.checkpoint(state)
                     with self.assertRaises(BlockingIOError):fcntl.flock(probe,fcntl.LOCK_EX|fcntl.LOCK_NB)
                     state["batches"][row["batch"]].update(external_binding={"plan_id":"fixed-plan","dispatch_base":"a"*40},
-                        external_lane="A",external_policy={"service_tier":"ultrafast"})
+                        external_lane="A",external_policy={"service_tier":"default"})
                     registration.checkpoint(state)
                     fcntl.flock(probe,fcntl.LOCK_EX|fcntl.LOCK_NB)
             # A parent failure never calls persist or marks an unregistered batch complete.

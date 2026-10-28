@@ -5,8 +5,8 @@ tail_args=()
 role_effort=high
 role_tier=default
 if [ -n "${LEARNER_EXTERNAL_SERVICE_TIER:-}" ]; then
-  case "$LEARNER_EXTERNAL_SERVICE_TIER" in ultrafast|fast|default) ;; *) exit 2 ;; esac
-  # Acceleration belongs only to a registered external batch, never shared config.
+  case "$LEARNER_EXTERNAL_SERVICE_TIER" in default) ;; *) exit 2 ;; esac
+  # New external launches use normal speed and still require their original registration.
   [ -n "${LEARNER_STATE_FILE:-}" ] && [ -n "${CODEX_OPS_ROOT:-}" ] && [ -n "${LEARNER_BATCH_ID:-}" ] \
     && [ -n "${LEARNER_EXTERNAL_SOURCE:-}" ] || exit 2
   python3 "$(dirname "${BASH_SOURCE[0]}")/strategy_external_jobs.py" registered \

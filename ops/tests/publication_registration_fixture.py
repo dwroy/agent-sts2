@@ -87,7 +87,8 @@ with (file.parent/'learn.lock').open('a') as lock:
  except BlockingIOError:pass
  else:raise AssertionError('parent global transaction was released too early')
 if row.get('external_source'):
- assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='ultrafast'
+ assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='default'
+ assert args[args.index('--service-tier')+1]=='default'
  assert row['candidate_mode']=={'schema':'candidate-only-v1','merge':'no',
   'dispatch_base':row['external_binding']['dispatch_base'],'worktree':cwd}
  assert 'merge=no' in args and 'merge=live' not in args

@@ -1,0 +1,607 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent
+
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"fixture":"T0TP8S9MMU9Q-F2","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":277.42995699995663,"added_prompt_bytes":1594}
+{"fixture":"RBMEQGXPE9Z2-F3","prediction_ms":0,"computation_preparation_ms":0,"wall_preparation_ms":276.7186810000567,"added_prompt_bytes":1591}
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.493s
+
+OK
+..F.
+======================================================================
+FAIL: test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held (__main__.PublicationRegistration.test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/../ops/tests/test_publication_registration_pipeline.py", line 17, in test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held
+    world.tick(waiting=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 212, in tick
+    self.parent.cmd_tick(SimpleNamespace(character='silent'))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 370, in cmd_tick
+    return _cmd_tick(args)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 378, in _cmd_tick
+    report = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/learner_jobs.py", line 443, in check_jobs
+    external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 249, in dispatch_lanes
+    return _dispatch_lanes(state, root, scripts, character, alive, stamp, writer)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 255, in _dispatch_lanes
+    result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 286, in dispatch
+    for plan, binding in candidates(state, root, configured, occupied):
+                         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 146, in candidates
+    binding, _ = source(root, plan)
+                 ~~~~~~^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 54, in source
+    binding, spec, refs = read_source(root, plan)
+                          ~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 155, in validate
+    self.before_source()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 205, in await_previous
+    self.await_model(batch)
+    ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 195, in await_model
+    self.wait_file(path, batch)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 190, in wait_file
+    raise AssertionError('wrapper cannot progress while parent holds learn.lock: ' + (err.read_text() if err.exists() else batch))
+AssertionError: wrapper cannot progress while parent holds learn.lock: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.cache/t/s-yL9swK/tmp9zom42i0/agent/node_modules/.bin/tsx", line 19, in <module>
+    assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='ultrafast'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 10.065s
+
+FAILED (failures=1)
+ ❯ tests/publication-admission.test.ts (2 tests | 1 failed) 10915ms
+   × composes real publication admission with the per-batch registration barrier 10238ms
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+F.
+======================================================================
+FAIL: test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock (__main__.RegistrationPipeline.test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/../ops/tests/test_learner_registration_pipeline.py", line 40, in test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock
+    world.tick()
+    ~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 212, in tick
+    self.parent.cmd_tick(SimpleNamespace(character='silent'))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 370, in cmd_tick
+    return _cmd_tick(args)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 397, in _cmd_tick
+    report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/learner_jobs.py", line 443, in check_jobs
+    external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 249, in dispatch_lanes
+    return _dispatch_lanes(state, root, scripts, character, alive, stamp, writer)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 255, in _dispatch_lanes
+    result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 286, in dispatch
+    for plan, binding in candidates(state, root, configured, occupied):
+                         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 146, in candidates
+    binding, _ = source(root, plan)
+                 ~~~~~~^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 54, in source
+    binding, spec, refs = read_source(root, plan)
+                          ~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 155, in validate
+    self.before_source()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 205, in await_previous
+    self.await_model(batch)
+    ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 195, in await_model
+    self.wait_file(path, batch)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 190, in wait_file
+    raise AssertionError('wrapper cannot progress while parent holds learn.lock: ' + (err.read_text() if err.exists() else batch))
+AssertionError: wrapper cannot progress while parent holds learn.lock: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.cache/t/s-yL9swK/tmpgl4qz0cq/agent/node_modules/.bin/tsx", line 19, in <module>
+    assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='ultrafast'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.224s
+
+FAILED (failures=1)
+ ❯ tests/learner-registration-pipeline.test.ts (1 test | 1 failed) 5335ms
+   × publishes all four external registrations and the own batch before subsequent source validation 5334ms
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 0.547s
+
+OK
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2877369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-registration-pipeline.test.ts > publishes all four external registrations and the own batch before subsequent source validation
+Error: Command failed: nice -n 19 python3 -B ../ops/tests/test_learner_registration_pipeline.py
+F.
+======================================================================
+FAIL: test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock (__main__.RegistrationPipeline.test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/../ops/tests/test_learner_registration_pipeline.py", line 40, in test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock
+    world.tick()
+    ~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 212, in tick
+    self.parent.cmd_tick(SimpleNamespace(character='silent'))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 370, in cmd_tick
+    return _cmd_tick(args)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 397, in _cmd_tick
+    report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/learner_jobs.py", line 443, in check_jobs
+    external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 249, in dispatch_lanes
+    return _dispatch_lanes(state, root, scripts, character, alive, stamp, writer)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 255, in _dispatch_lanes
+    result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 286, in dispatch
+    for plan, binding in candidates(state, root, configured, occupied):
+                         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 146, in candidates
+    binding, _ = source(root, plan)
+                 ~~~~~~^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 54, in source
+    binding, spec, refs = read_source(root, plan)
+                          ~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 155, in validate
+    self.before_source()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 205, in await_previous
+    self.await_model(batch)
+    ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 195, in await_model
+    self.wait_file(path, batch)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 190, in wait_file
+    raise AssertionError('wrapper cannot progress while parent holds learn.lock: ' + (err.read_text() if err.exists() else batch))
+AssertionError: wrapper cannot progress while parent holds learn.lock: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.cache/t/s-yL9swK/tmpgl4qz0cq/agent/node_modules/.bin/tsx", line 19, in <module>
+    assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='ultrafast'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.224s
+
+FAILED (failures=1)
+
+ ❯ tests/learner-registration-pipeline.test.ts:6:10
+      4|
+      5| it("publishes all four external registrations and the own batch before…
+      6|   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/te…
+       |          ^
+      7|     encoding: "utf8", timeout: 15_000,
+      8|   })).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/publication-admission.test.ts > composes real publication admission with the per-batch registration barrier
+Error: Command failed: nice -n 19 python3 -B ../ops/tests/test_publication_registration_pipeline.py
+..F.
+======================================================================
+FAIL: test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held (__main__.PublicationRegistration.test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/../ops/tests/test_publication_registration_pipeline.py", line 17, in test_publication_waiting_starts_four_candidates_while_parent_global_lock_remains_held
+    world.tick(waiting=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 212, in tick
+    self.parent.cmd_tick(SimpleNamespace(character='silent'))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 370, in cmd_tick
+    return _cmd_tick(args)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/codex-ops-learn.py", line 378, in _cmd_tick
+    report = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/learner_jobs.py", line 443, in check_jobs
+    external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 249, in dispatch_lanes
+    return _dispatch_lanes(state, root, scripts, character, alive, stamp, writer)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 255, in _dispatch_lanes
+    result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 286, in dispatch
+    for plan, binding in candidates(state, root, configured, occupied):
+                         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 146, in candidates
+    binding, _ = source(root, plan)
+                 ~~~~~~^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/strategy_external_jobs.py", line 54, in source
+    binding, spec, refs = read_source(root, plan)
+                          ~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 155, in validate
+    self.before_source()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 205, in await_previous
+    self.await_model(batch)
+    ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 195, in await_model
+    self.wait_file(path, batch)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/publication_registration_fixture.py", line 190, in wait_file
+    raise AssertionError('wrapper cannot progress while parent holds learn.lock: ' + (err.read_text() if err.exists() else batch))
+AssertionError: wrapper cannot progress while parent holds learn.lock: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.cache/t/s-yL9swK/tmp9zom42i0/agent/node_modules/.bin/tsx", line 19, in <module>
+    assert row['external_lane'] in 'ABCD' and row['external_policy']['service_tier']=='ultrafast'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 10.065s
+
+FAILED (failures=1)
+
+ ❯ tests/publication-admission.test.ts:11:10
+      9|
+     10| it("composes real publication admission with the per-batch registratio…
+     11|   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/te…
+       |          ^
+     12|     encoding: "utf8", timeout: 30_000,
+     13|   })).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 642 passed (644)
+      Tests  2 failed | 5946 passed (5948)
+   Start at  10:25:48
+   Duration  1393.47s (transform 18.13s, setup 36.82s, import 119.92s, tests 1149.14s, environment 68ms)
+

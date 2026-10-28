@@ -24,20 +24,20 @@ it("external admission, source proof, original writer gates and retirement use f
   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_external.py"], { encoding: "utf8", timeout: 15_000 })).toBe("");
 });
 
-it.each([[0, "ultrafast"], [70, "ultrafast"], [70.01, "fast"], [85, "fast"], [85.01, "fast"], [100, "default"]])(
+it.each([[0, "default"], [70, "default"], [70.01, "default"], [89.99, "default"], [90, "default"], [100, "default"]])(
   "applies strict weekly boundary %s -> %s", (percent, expected) => {
     const decision = externalTier(usage(Number(percent)), now);
     expect(decision.effective).toBe(expected);
     expect(decision.observed_service_tier).toBeNull();
   });
 
-it("unknown, stale and ambiguous quota cannot accelerate; all weekly buckets count", () => {
+it("unknown, stale and ambiguous quota remain unknown; all weekly buckets count", () => {
   for (const sample of [null, { ...usage(5), windows: [] }, { ...usage(5), readAt: "2025-12-31T23:49:59Z" },
     { ...usage(5), readAt: "2026-01-01T00:00:01Z" }, usage(NaN), { ...usage(5), windows: [{ ...usage(5).windows[0]!, resetsAt: now.toISOString() }] }]) {
     expect(externalTier(sample, now)).toMatchObject({ effective: "default", weekly_used_percent: null, reason: "weekly_unknown" });
   }
   expect(externalTier({ ...usage(2), windows: [...usage(2).windows, ...usage(90).windows] }, now).effective).toBe("default");
-  expect(externalTier(usage(2), now, "fast").effective).toBe("fast");
+  expect(externalTier(usage(2), now).requested).toBe("default");
 });
 
 function fixture() {
@@ -61,7 +61,7 @@ function fixture() {
     const sample = quotaSnapshot(percent === null ? null : usage(percent), now);
     const digest = createHash("sha256").update(env.LEARNER_CODEX_HOME).digest("hex");
     writeFileSync(join(root, "ops/state/subscription-usage.json"), JSON.stringify({ ...sample, account_home_sha256: digest }));
-    const selected = percent !== null && percent > 70 ? "fast" : "ultrafast";
+    const selected = "default";
     const external_policy = { schema: "external-learning-policy-v1", account_home_sha256: digest,
       weekly_used_percent: percent, sample_observed_at: sample.sample_observed_at,
       service_tier: selected, workers: percent === null || percent >= 90 ? 0 : percent > 70 ? 2 : 4,
@@ -70,8 +70,8 @@ function fixture() {
     return selected;
   };
   return { root, cwd, batch, env, errors, registration, save, quota,
-    run: (tier = "ultrafast", extra: string[] = []) => main(
-      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, "--service-tier", tier, ...extra], {
+    run: (tier = "default", extra: string[] = []) => main(
+      ["--engine", "codex", "--character", "silent", "--task", task, "--cwd", cwd, "--set", `batch=${batch}`, ...(tier === "" ? [] : ["--service-tier", tier]), ...extra], {
         projectRoot: root, env, tasksDir: join(root, "tasks"), runsDir: join(root, "runs"), secretFiles: [], now: () => now,
         checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined,
         readExternalUsage: async () => { throw new Error("must reuse the unified snapshot"); },
@@ -80,7 +80,7 @@ function fixture() {
   };
 }
 
-it.each([[20, "ultrafast"], [70, "ultrafast"], [75, "fast"], [89, "fast"]])(
+it.each([[20, "default"], [70, "default"], [70.01, "default"], [89.99, "default"]])(
   "launches only the selected account with quota %s and tier %s via CLI", async (percent, expected) => {
     const f = fixture();
     f.quota(Number(percent));
@@ -102,7 +102,7 @@ it.each([[20, "ultrafast"], [70, "ultrafast"], [75, "fast"], [89, "fast"]])(
 it("unknown, exhausted, stale or replaced snapshots retain the lease without launching", async () => {
   for (const percent of [null, 90, 100]) {
     const f = fixture(); f.quota(percent);
-    expect(await f.run(percent === null ? "ultrafast" : "fast")).toBe(3);
+    expect(await f.run()).toBe(3);
     expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
   }
   for (const mutate of [
@@ -119,7 +119,9 @@ it("unknown, exhausted, stale or replaced snapshots retain the lease without lau
   expect(await ordinary.run()).toBe(2);
   const replaced = fixture(); replaced.save({ ...replaced.registration, state: "done" });
   expect(await replaced.run()).toBe(2);
-  expect(() => parseArgs(["--engine", "codex", "--task", "x", "--cwd", "/x", "--service-tier", "priority"])).toThrow();
+  for (const tier of ["priority", "fast", "ultrafast"]) {
+    expect(() => parseArgs(["--engine", "codex", "--task", "x", "--cwd", "/x", "--service-tier", tier])).toThrow();
+  }
 });
 
 it("refuses a candidate whose immutable launch binding permits live merging", async () => {
@@ -131,7 +133,7 @@ it("refuses a candidate whose immutable launch binding permits live merging", as
   expect(await f.run()).toBe(2);
   expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
   const override = fixture(); override.quota(20);
-  expect(await override.run("ultrafast", ["--set", "merge=live"])).toBe(2);
+  expect(await override.run("default", ["--set", "merge=live"])).toBe(2);
   expect(readdirSync(join(override.root, "ops/state/learner"))).toEqual([]);
 });
 
@@ -147,10 +149,35 @@ it("a refreshed common snapshot within the same tier does not strand a registere
   expect(receipt.external_tier.weekly_used_percent).toBe(21);
 });
 
+it("defaults an omitted CLI tier and rejects legacy registrations or worker-band drift without rewriting them", async () => {
+  const normal = fixture(); normal.quota(20);
+  expect(await normal.run("")).toBe(0);
+  const receipt = JSON.parse(readFileSync(join(normal.root, `ops/state/learner/${normal.batch}.external-launch.json`), "utf8"));
+  expect(receipt.external_tier).toMatchObject({ requested: "default", effective: "default", observed_service_tier: null });
+  for (const tier of ["fast", "ultrafast"]) {
+    const f = fixture(); f.quota(20);
+    const state = JSON.parse(readFileSync(f.env.LEARNER_STATE_FILE, "utf8"));
+    state.batches[f.batch].external_policy.service_tier = tier;
+    writeFileSync(f.env.LEARNER_STATE_FILE, JSON.stringify(state));
+    const before = readFileSync(f.env.LEARNER_STATE_FILE, "utf8");
+    expect(await f.run()).toBe(3);
+    expect(readFileSync(f.env.LEARNER_STATE_FILE, "utf8")).toBe(before);
+    expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
+  }
+  const changed = fixture(); changed.quota(70);
+  const path = join(changed.root, "ops/state/subscription-usage.json");
+  const sample = JSON.parse(readFileSync(path, "utf8")); sample.windows[0].used_percent = 70.01;
+  writeFileSync(path, JSON.stringify(sample));
+  expect(await changed.run()).toBe(3);
+  expect(readdirSync(join(changed.root, "ops/state/learner"))).toEqual([]);
+});
+
 it("TUI preserves only constrained source opt-in and ordinary child env drops inherited scope", () => {
-  const env = { LEARNER_EXTERNAL_SOURCE: "issue51-dual-boss-001", LEARNER_EXTERNAL_SERVICE_TIER: "ultrafast" };
+  const env = { LEARNER_EXTERNAL_SOURCE: "issue51-dual-boss-001", LEARNER_EXTERNAL_SERVICE_TIER: "default" };
   expect(learnerTuiEnv(env)).toMatchObject(env);
-  expect(learnerTuiEnv({ ...env, LEARNER_EXTERNAL_SERVICE_TIER: "arbitrary" }).LEARNER_EXTERNAL_SOURCE).toBeUndefined();
+  for (const tier of ["arbitrary", "fast", "ultrafast"]) {
+    expect(learnerTuiEnv({ ...env, LEARNER_EXTERNAL_SERVICE_TIER: tier }).LEARNER_EXTERNAL_SOURCE).toBeUndefined();
+  }
   expect(childEnv(env, "codex").LEARNER_EXTERNAL_SERVICE_TIER).toBeUndefined();
   expect(childEnv(env, "claude").LEARNER_EXTERNAL_SOURCE).toBeUndefined();
 });
