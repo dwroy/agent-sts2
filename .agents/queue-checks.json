@@ -1,12 +1,7 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [
-    "agent/src/brain/decision-knowledge.ts",
-    "agent/src/brain/tools/knowledge-projection.ts",
-    "agent/src/brain/tools/query-guidance.ts",
-    "agent/src/knowledge/strategy-entries.ts"
-  ],
+  "runtime_install_paths": [],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -46,7 +41,8 @@
     "ops.tests.test_own_learning_slot",
     "ops.tests.test_external_stock",
     "ops.tests.test_strategy_external",
-    "ops.tests.test_strategy_backfill"
+    "ops.tests.test_strategy_backfill",
+    "ops.tests.test_learner_registration_pipeline"
   ],
   "consumer_commands": [
     {
@@ -95,6 +91,23 @@
         "node_modules/tsx/dist/cli.mjs",
         "--eval",
         "/** Synthetic format contract on the isolated LIVE runtime; no production writes. */\nimport assert from 'node:assert/strict';\nimport { mkdtempSync, rmSync } from 'node:fs';\nimport { tmpdir } from 'node:os';\nimport { join } from 'node:path';\nimport { attachDecisionKnowledge, decisionContextTool } from './src/brain/decision-knowledge.ts';\nimport { questionTypes } from './src/knowledge/strategy-entries.ts';\nimport { KnowledgeStore } from './src/knowledge/runtime/store.ts';\nimport { closeIndexedReaders } from './src/knowledge/runtime/reader.ts';\nimport { setKnowledgeCharacter } from './src/knowledge/files.ts';\n\nasync function main() {\n const root = mkdtempSync(join(tmpdir(), 'issue81-live-format-'));\n const store = new KnowledgeStore(root);\n setKnowledgeCharacter('silent');\n try {\n  const entry = {\n   id: 'synthetic-observation', version: 'fixture-v1', trigger: { question_types: ['rest'], acts: [1] },\n   strategy: '\u4ec5\u5408\u6210\u683c\u5f0f\u5408\u540c\u3002', source: 'own', confidence: .25,\n   evidence: [{ run: 'SILENT000001', floor: 3 }], scope: { character: 'silent', ascensions: [10] },\n   formal_publication: { approved_by: 'fixture-owner', authorization: 'https://example.com/approval',\n    authorization_sha256: 'a'.repeat(64), source_candidate_sha256: 'b'.repeat(64),\n    observation_only: true, original_review_candidate_retained_without_edit: true },\n   review_observation: { triggers: ['\u8425\u706b', '\u8def\u7ebf'], conditions: { observable_build_conditions: '\u539f\u6587\u5b57\u6761\u4ef6\u672a\u6c42\u503c\u3002' },\n    summary: '\u5408\u6210\u6458\u8981\u3002', rule_candidate: '\u5408\u6210\u5019\u9009\u3002', denominators: { own: { unit: 'runs', n: 3 } },\n    counterexamples: [{ label: '\u5408\u6210\u53cd\u8bc1', n: 1 }], limitations: ['\u5408\u6210\u683c\u5f0f\u5408\u540c\u3002'], status: 'review-only' },\n   full_review_evidence: ['\u4e2d\u6587\ud83d\ude00\"\\\\\\n'.repeat(8000)],\n  };\n  const path = 'characters/silent/strategy-entries.json';\n  const files = { [path]: JSON.stringify({ schema: 'brain-strategies-v1', character: 'silent', entries: [entry] }) };\n  store.submit({ schema: 'knowledge-candidate-v1', id: 'fixture', base: store.current(), character: 'silent', source: 'fixture', files });\n  store.validate('fixture'); const version = store.publish('fixture');\n  const directory = join(root, 'snapshots', version);\n  const request = (label = 'rest/plan', ascension = 10) => {\n   const payload = { facts: { act: 1, floor: 3, deck: [] } };\n   return { label, payload, toolContext: { label, payload, ascension, knowledgeDir: directory, logsDir: '' },\n    knowledge: { mode: 'tools' }, system: 'fixed', options: {}, spec: { label, kind: 'pick', validate: () => [], schema: {} } };\n  };\n  for (const budget of [2048, 8000, 24000]) {\n   const value = attachDecisionKnowledge(request() as any, { enabled: true, bytes: budget }).payload as any;\n   assert.equal(value.decision_knowledge.status, 'ok');\n   assert.equal(value.decision_knowledge.knowledge_version, version);\n   assert.ok(Buffer.byteLength(JSON.stringify(value.decision_knowledge)) <= budget);\n   assert.equal(value.decision_knowledge.entries[0].id, entry.id);\n   assert.equal(value.decision_knowledge.entries[0].condition_evaluation, 'not_evaluated');\n   assert.equal(value.decision_knowledge.entries[0].applicability, 'formal_trigger_only');\n  }\n  let raw = '', offset: number | null = 0, parts = 0;\n  do {\n   const result = await decisionContextTool().run({ detail: 'full', source: 'strategy_observation', document_id: entry.id, document_offset: offset }, request().toolContext);\n   assert.ok(!result.isError); assert.ok(Buffer.byteLength(result.text) <= 24000);\n   const part = JSON.parse(result.text); assert.equal(part.knowledge_version, version);\n   raw += part.json_fragment; offset = part.next_document_offset; assert.ok(++parts < 100);\n  } while (offset !== null);\n  assert.deepEqual(JSON.parse(raw), entry);\n  for (const label of ['map/route', 'map/route-plan', 'map/route-review']) {\n   assert.deepEqual(questionTypes(label, {}), ['map_route']);\n   assert.equal((attachDecisionKnowledge(request(label) as any, { enabled: true, bytes: 8000 }).payload as any).decision_knowledge.entries[0].id, entry.id);\n  }\n  const off = request(); assert.equal(attachDecisionKnowledge(off as any, { enabled: false, bytes: 8000 }), off);\n  assert.deepEqual((attachDecisionKnowledge(request('rest/plan', 9) as any, { enabled: true, bytes: 8000 }).payload as any).decision_knowledge.entries, []);\n  setKnowledgeCharacter('ironclad'); const ironclad = request();\n  assert.equal(attachDecisionKnowledge(ironclad as any, { enabled: true, bytes: 8000 }), ironclad);\n  console.log(JSON.stringify({ scope: 'isolated LIVE synthetic observation contract', budgets: [2048, 8000, 24000], fullParts: parts, exactFullDocument: true, routeLabels: 3, negativeScopes: true, productionWrites: 0 }));\n } finally { closeIndexedReaders(); store.close(); setKnowledgeCharacter(null); rmSync(root, { recursive: true, force: true }); }\n}\nmain().catch(error => { console.error(error); process.exitCode = 1; });\n"
+      ]
+    },
+    {
+      "tree": "root",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/codex-fast.test.ts",
+        "tests/ops-codex.test.ts",
+        "tests/ops-herdr.test.ts",
+        "tests/strategy-external.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--testTimeout=60000"
       ]
     }
   ],

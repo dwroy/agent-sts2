@@ -114,7 +114,7 @@ export function defaultDeps(): LauncherDeps {
 const LEARNER_CODEX_STATE = join(tmpdir(), "jev-learner-codex-state");
 
 export const USAGE = `usage: agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task <name|path.md> --cwd <dir> [--set name=value ...]
-         [--model M] [--effort E] [--service-tier ultrafast|fast|default（仅外部来源）] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
+         [--model M] [--effort E] [--service-tier default（仅外部来源）] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
 tasks: learner/tasks/*.md (postmortem, experience-update, fix-batch, smoke)`;
 
 export interface LauncherOptions {
@@ -166,7 +166,7 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--effort": options.effort = value(); break;
       case "--service-tier": {
         const tier = value();
-        if (!["ultrafast", "fast", "default"].includes(tier)) throw new LearnerUsageError("--service-tier 只能为 ultrafast/fast/default");
+        if (tier !== "default") throw new LearnerUsageError("--service-tier 只能为 default");
         options.serviceTier = tier as ExternalTier;
         break;
       }
@@ -439,7 +439,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || rendered.values.merge !== "no" || !externalRegistration(deps.env, lease, spec.name)) {
         throw new LearnerUsageError("外部档位参数必须绑定原外部批次租约，不能用于普通任务或另开续跑");
       }
-      request.serviceTier = options.dryRun ? "default" : options.serviceTier ?? "ultrafast";
+      request.serviceTier = options.serviceTier ?? "default";
     }
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
     const storageRules = existsSync(join(deps.projectRoot, "ops/worktree_storage.py"))
@@ -501,7 +501,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 
   let externalDecision: ExternalTierDecision | undefined;
   if (deps.env.LEARNER_EXTERNAL_SOURCE) {
-    const selected = registeredExternalTier(deps.env, learnerCodexHome(deps.env), deps.now(), options.serviceTier ?? "ultrafast");
+    const selected = registeredExternalTier(deps.env, learnerCodexHome(deps.env), deps.now(), options.serviceTier ?? "default");
     if (!selected) return unavailable("外部学习统一额度快照缺失、已过期、账号不符或达到90%；保留原租约，不启动模型\n");
     externalDecision = selected;
     const lease = captureStartupLease(deps.env, deps.projectRoot, request.cwd);

@@ -1,0 +1,74 @@
+{
+  "schema": "issue77-external-default-v1",
+  "predecessor": "2eee93f7b3ae39f938941fcaa40e8b8b9c9cc034",
+  "authority": [
+    "https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6458903164",
+    "https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6458921843",
+    "https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6459185537"
+  ],
+  "unchanged_ast": {
+    "selected_home": true,
+    "workers": true,
+    "own_status": true
+  },
+  "ops_candidate": {
+    "reference": ".artifacts/ops-issue56-external-codex3-20261028/source.patch",
+    "sha256": "4fdfe9ad2307289638b1730025191ea4c1f18495f611c31660f1bcbd4146a8b0",
+    "git_apply_check": 0,
+    "applied": false,
+    "combined_runtime_verified": false,
+    "final_git_apply_check": 0
+  },
+  "source_leaves": [
+    {
+      "path": "ops/external_learning_policy.py",
+      "before_blob": "5b6b4d821fd59186635dcdc532fe7898e5192ca2",
+      "after_blob": "15b55cc5e0800679c7b2ff01f3b39208ed7549cd",
+      "mode": "100644",
+      "target": "ROOT/host and new external source worktrees; no LIVE game import",
+      "rollback": "reverse only this successor delta; preserve ops selected_home changes and historical registrations"
+    },
+    {
+      "path": "ops/codex-policy.sh",
+      "before_blob": "020db7cb4c785a134e641efb1f64b189e22cf71d",
+      "after_blob": "f5bb141902de1a4ae931d84cda81d40c5f554a4e",
+      "mode": "100644",
+      "target": "ROOT/host and new external source worktrees; no LIVE game import",
+      "rollback": "reverse only this successor delta; preserve ops selected_home changes and historical registrations"
+    },
+    {
+      "path": "learner/lib/external-source.ts",
+      "before_blob": "75a320404d7ca90a1e5a2146d8a88111bd8bfbdb",
+      "after_blob": "bb9a2f0f876ae57f5fbf22a30e655b782bb65a8c",
+      "mode": "100644",
+      "target": "ROOT/host and new external source worktrees; no LIVE game import",
+      "rollback": "reverse only this successor delta; preserve ops selected_home changes and historical registrations"
+    },
+    {
+      "path": "learner/lib/launcher.ts",
+      "before_blob": "252b246df3927fe2b6c23241194fe8909f46899f",
+      "after_blob": "c4fab748dc5b14e8751cbfa09c6b6fae22fbf21e",
+      "mode": "100644",
+      "target": "ROOT/host and new external source worktrees; no LIVE game import",
+      "rollback": "reverse only this successor delta; preserve ops selected_home changes and historical registrations"
+    },
+    {
+      "path": "learner/lib/herdr.ts",
+      "before_blob": "f8272c6f1024f47f7edd7881d3231132c850bb92",
+      "after_blob": "a940b8c10cac79ac739ba2d6b85aba4ad0b1ba72",
+      "mode": "100644",
+      "target": "ROOT/host and new external source worktrees; no LIVE game import",
+      "rollback": "reverse only this successor delta; preserve ops selected_home changes and historical registrations"
+    },
+    {
+      "path": "ops/codex/lib.ts",
+      "before_blob": "1c2835beb2a3b31513245a56a8bb459bca4479d3",
+      "after_blob": "4508844b69bf8396e10d38d38c4f8503afa13eac",
+      "mode": "100644",
+      "target": "ROOT/host ops init/resume/herdr; no LIVE game import",
+      "rollback": "reverse only this successor literal; retain account handoff and original native receipts; do not resume accelerated starts under current authority"
+    }
+  ],
+  "native_receipt_owner": "ops; developer fixtures do not establish actual native tier",
+  "production_mutated": false
+}
