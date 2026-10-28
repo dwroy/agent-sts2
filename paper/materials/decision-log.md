@@ -7136,3 +7136,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-28T10:50:13+08:00 [dev #82] 按原ops评论6458879589交原树账号安全停点：保存Spire Codex离线下载/白名单投影/DuckDB草稿及25固定测试/tsc0；沙箱650文件6017项过、1历史稀疏夹具导入败，原rc1与未到paths保留。原两回放早期分类缓存作废、全局attempt_id与当前无key15/min限制已记录，未全量下载/核导出文件SHA、未工程验收或发布。交接paper/materials/issue82-account-handoff-20261028.md，等ops在原树起codex3新UUID，不跨账号resume；issue保持in-progress，main/live/STOP/知识/账号与科学父不改。
 
 - 2026-10-28T12:32:05+08:00 [dev #82] 原树接续交Spire Codex离线API续传/分片游标/去重、私有原始修订及收据保留、v3白名单/HMAC投影和DuckDB/Boss查询，ROOT三运行叶、LIVE零叶；52首试/10重试的两冻结回放按全局attempt代数独立核源，8首试中止留分母，四Boss实际CLI/字段文本审计通过。最终Python38/tsc0/两文件Vitest2/paths11过；修订保留前固定v3沙箱651文件6018项及paths11全过，最终仅两源差量定向核，旧稀疏夹具失败/默认15秒超时/v2脱敏碰撞及断言错误均保留，不冒最终组合full。材料paper/materials/20261028-issue82-spire-codex-final/；交固定请求/原集成实际组合与ops首次全量/导出SHA/八Boss分母验收，未写main/live/STOP/正式知识或分号，不关科学父。
+
+- 2026-10-28T12:43:40.377384+08:00 [watcher] #82固定f40e29463已在独立集成树核三ROOT运行叶/两测试逐字同；候选host-only策略保26宿主/5消费者并加Python38与CLI，独核Python38、tsc0、Vitest两文件12项、CLI通过。仅准备，未submit/main/live；#77原full通过但strict LIVE冻结拒绝，保原小批优先与原件，等待冻结/顺序恢复后再接唯一最终完整检查。
