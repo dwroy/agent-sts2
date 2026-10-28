@@ -34,7 +34,7 @@ def fixture():
         dict(t='hit', src='TEST_CARD', dst='TEST_ENEMY', dmg=5, blocked=0),
         dict(t='potion_start', id='TEST_POTION', target='TEST_ENEMY'),
         dict(t='potion_used', id='TEST_POTION', target='TEST_ENEMY'),
-        dict(t='combat_end', combat_id='1.17:TEST_BOSS', attempt_id=0, turns=1, result='win', hp_lost_total=2),
+        dict(t='combat_end', combat_id='1.17:TEST_BOSS', attempt_id=0, turns=1, result='victory', hp_lost_total=2),
         dict(t='end', capture_status='complete', terminal_reason='win', final_deck=[dict(id='TEST_CARD', up=1)], final_relics=['TEST_RELIC']),
     ]
 
@@ -55,6 +55,16 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(value['events'][6]['event']['options'][1]['option_id'], 'TEST_B')
         self.assertEqual(value['run']['run_id'], pr.pseudonym(SALT, 'run', META['run_hash']))
         self.assertNotEqual(value['run']['run_id'], pr.pseudonym(b'y' * 32, 'run', META['run_hash']))
+
+    def test_player_names_matching_game_ids_only_redact_free_text(self):
+        rows = fixture()
+        rows[6]['options'][0].update(label='SILENT TEST_CARD', option_id='TEST_CARD')
+        value = pr.replay_bundle(rows, dict(META, redaction_values=['SILENT', 'TEST_CARD']), SALT, 'a' * 64)
+        self.assertEqual(value['run']['character'], 'SILENT')
+        self.assertEqual(value['events'][8]['event']['id'], 'TEST_CARD')
+        option = value['events'][6]['event']['options'][0]
+        self.assertEqual(option['option_id'], 'TEST_CARD')
+        self.assertEqual(option['label'], '[REDACTED] [REDACTED]')
 
     def test_first_zero_retry_and_unknown(self):
         for attempt, expected in [(0, 'first'), (1, 'first'), (None, 'unknown'), (-1, 'unknown')]:
@@ -201,14 +211,36 @@ class DownloadTests(unittest.TestCase):
         dest = self.root / 'dump'
         with patch.object(self.client, 'request', self.reply(b'original')):
             self.client.download(dl.BASE + '/api/test', dest)
+        original_receipt = Path(str(dest) + '.receipt.json').read_bytes()
         with patch.object(self.client, 'request', self.reply(b'', 304, {'etag': 'test-etag'})):
             self.client.download(dl.BASE + '/api/test', dest, refresh=True)
         self.assertEqual(dest.read_bytes(), b'original')
         self.assertEqual(self.calls[-1], {'If-None-Match': 'test-etag'})
+        before_replacement = Path(str(dest) + '.receipt.json').read_bytes()
         with patch.object(self.client, 'request', self.reply(b'updated')):
             receipt = self.client.download(dl.BASE + '/api/test', dest, refresh=True)
         self.assertEqual(dest.read_bytes(), b'updated')
         self.assertEqual(receipt['sha256'], dl.sha(dest))
+        previous = receipt['previous_revision']
+        self.assertEqual((dest.parent / previous['body_path']).read_bytes(), b'original')
+        self.assertEqual((dest.parent / previous['receipt_path']).read_bytes(), before_replacement)
+        # Conditional checks may update checked_at, but preserve the download timestamp.
+        archived = dl.load(dest.parent / previous['receipt_path'])
+        self.assertEqual(archived['downloaded_at'], json.loads(original_receipt)['downloaded_at'])
+        self.assertEqual(archived['sha256'], __import__('hashlib').sha256(b'original').hexdigest())
+
+    def test_corrupt_revision_archive_cannot_replace_the_current_original(self):
+        dest = self.root / 'dump'
+        with patch.object(self.client, 'request', self.reply(b'original')):
+            self.client.download(dl.BASE + '/api/test', dest)
+        digest = dl.sha(dest)
+        archive = dest.parent / 'revisions' / digest / dest.name
+        archive.parent.mkdir(parents=True)
+        archive.write_bytes(b'corrupt')
+        with patch.object(self.client, 'request', self.reply(b'updated')):
+            with self.assertRaisesRegex(ValueError, 'archive is corrupt'):
+                self.client.download(dl.BASE + '/api/test', dest, refresh=True)
+        self.assertEqual(dest.read_bytes(), b'original')
 
     def test_backoff_and_no_retry_forbidden(self):
         good = self.reply(b'ok')
@@ -226,7 +258,7 @@ class DownloadTests(unittest.TestCase):
             sleep.assert_not_called()
 
     def test_private_origin_and_page_denied(self):
-        for url in ('https://elsewhere.test/api/a', 'http://spire-codex.com/api/a', '/runs/abc', '//user@spire-codex.com/api/a'):
+        for url in ('https://elsewhere.test/api/a', 'http://spire-codex.com/api/a', '/runs/abc', '//user@spire-codex.com/api/a', '/api/../terms', '/exports/%2e%2e/terms'):
             with self.assertRaises(ValueError):
                 dl.public_url(url)
 
@@ -238,6 +270,40 @@ class DownloadTests(unittest.TestCase):
         with patch.object(dl.time, 'time', return_value=100.2), patch.object(dl.time, 'sleep') as sleep, patch.object(dl.subprocess, 'run', run):
             self.client.request(dl.BASE + '/api/test', self.root / 'body')
         self.assertAlmostEqual(sleep.call_args.args[0], 3.9)
+
+    def test_interrupted_curl_body_is_resumed(self):
+        dest = self.root / 'dump'
+        digest = __import__('hashlib').sha256(b'abcdef').hexdigest()
+        Path(str(dest) + '.chunk').write_bytes(b'abc')
+        Path(str(dest) + '.chunk.headers').write_text('HTTP/1.1 200 OK\nContent-Length: 6\nETag: test-etag\n\n')
+        dl.save(str(dest) + '.part.json', dict(url=dl.BASE + '/api/test', expected_sha256=digest, expected_bytes=6,
+                                             inflight={'url': dl.BASE + '/api/test', 'offset': 0}))
+        with patch.object(self.client, 'request', self.reply(b'def', 206, {'content-range': 'bytes 3-5/6', 'etag': 'test-etag'})):
+            self.client.download(dl.BASE + '/api/test', dest, digest, 6)
+        self.assertEqual(dest.read_bytes(), b'abcdef')
+        self.assertEqual(self.calls, [{'Range': 'bytes=3-', 'If-Range': 'test-etag'}])
+
+    def test_interrupted_append_is_idempotent_and_complete_body_needs_no_request(self):
+        dest = self.root / 'dump'
+        digest = __import__('hashlib').sha256(b'abcdef').hexdigest()
+        Path(str(dest) + '.part').write_bytes(b'abcd')
+        Path(str(dest) + '.chunk').write_bytes(b'def')
+        Path(str(dest) + '.chunk.headers').write_text('HTTP/1.1 206 Partial Content\nContent-Range: bytes 3-5/6\nETag: test-etag\n\n')
+        dl.save(str(dest) + '.part.json', dict(url=dl.BASE + '/api/test', expected_sha256=digest, expected_bytes=6,
+                                             validator='test-etag', inflight={'url': dl.BASE + '/api/test', 'offset': 3}))
+        with patch.object(self.client, 'request') as request:
+            self.client.download(dl.BASE + '/api/test', dest, digest, 6)
+            request.assert_not_called()
+        self.assertEqual(dest.read_bytes(), b'abcdef')
+
+    def test_curl_inherits_the_same_download_lock(self):
+        with dl.locked(self.root) as lease:
+            client = dl.Client(self.root, lease.fileno())
+            def run(args, **kwargs):
+                self.assertEqual(kwargs['pass_fds'], (lease.fileno(),))
+                return type('Result', (), {'stdout': b'200', 'returncode': 0})()
+            with patch.object(dl.subprocess, 'run', run):
+                client.request(dl.BASE + '/api/test', self.root / 'body')
 
     def scan(self, page_function, max_pages=None):
         def metadata(client, url, tag):
@@ -298,12 +364,17 @@ class DatabaseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             cache = root / 'cache'
-            dl.save(cache / 'projection.json', {'schema': pr.VERSION, 'exports': {}})
-            dl.save(cache / 'replays/run_test.json', bundle())
+            value = bundle()
+            path = cache / 'replays/run_test.json'
+            dl.save(path, value)
+            dl.save(cache / 'projection.json', {'schema': pr.VERSION, 'exports': {}, 'replays': {
+                value['run']['run_id']: {'path': 'replays/run_test.json', 'sha256': dl.sha(path)}}})
             result = cli.build_db(root)
             self.assertEqual(result['counts']['plays'], 1)
             self.assertEqual(cli.query(root, 'SELECT card_id,cost_paid FROM first_plays')['rows'], [('TEST_CARD', 1)])
             self.assertEqual(cli.query(root, 'SELECT count(*) FROM decisions')['rows'], [(1,)])
+            self.assertEqual(len(cli.boss_plays(root, 'TEST_BOSS')['rows']), 1)
+            self.assertEqual(cli.boss_plays(root, "TEST_BOSS' OR 1=1 --")['rows'], [])
             with self.assertRaises(ValueError):
                 cli.query(root, 'DELETE FROM runs')
             with self.assertRaises(Exception):
@@ -311,6 +382,127 @@ class DatabaseTests(unittest.TestCase):
             cli.build_db(root)
             self.assertEqual(cli.query(root, 'SELECT count(*) FROM plays')['rows'], [(1,)])
             self.assertFalse(cli.audit_cache(cache)['contains_player_identifiers'])
+
+
+class ProjectTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.index = {'runs': {}, 'exports': {}}
+        self.add_replay('single', fixture())
+
+    def add_replay(self, key, events):
+        path = self.root / 'raw' / f'{key}.ndjson'
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(''.join(json.dumps(e) + '\n' for e in events))
+        self.index['runs'][key] = dict(META, run_hash=key, path=str(path.relative_to(self.root)), sha256=dl.sha(path))
+        dl.save(self.root / 'private-index.json', self.index)
+
+    def add_export(self, rows):
+        path = self.root / 'raw/export.gz'
+        path.write_bytes(gzip.compress(''.join(json.dumps(row) + '\n' for row in rows).encode()))
+        digest = dl.sha(path)
+        dl.save(str(path) + '.receipt.json', dict(manifest_verified=True, sha256=digest,
+                                                expected_sha256=digest, expected_bytes=path.stat().st_size))
+        self.index['exports']['v0.111.0'] = 'raw/export.gz'
+        dl.save(self.root / 'private-index.json', self.index)
+
+    def test_idempotence_multiplayer_exclusion_and_exact_database_inputs(self):
+        multi = fixture()
+        multi[0]['player_count'] = 2
+        self.add_replay('multi', multi)
+        first = pr.project(self.root)
+        second = pr.project(self.root)
+        self.assertEqual((first['new_replays'], second['new_replays']), (1, 0))
+        self.assertEqual(second['exclusions'], {'multiplayer_not_projected': 1})
+        self.assertEqual((second['raw_replay_count'], second['replay_count']), (2, 1))
+        # A previous generation must not become a second run through globbing.
+        dl.save(self.root / 'cache/replays/run_stale.json', bundle())
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM runs')['rows'], [(1,)])
+        self.assertFalse(cli.audit_cache(self.root / 'cache')['contains_player_identifiers'])
+
+    def test_projected_corruption_fails_build_and_project_repairs_it(self):
+        receipt = pr.project(self.root)
+        entry = next(iter(receipt['replays'].values()))
+        path = self.root / 'cache' / entry['path']
+        original = path.read_bytes()
+        cli.build_db(self.root)
+        old_db = dl.sha(self.root / 'cache/replays.duckdb')
+        path.write_bytes(original + b' ')
+        with self.assertRaisesRegex(ValueError, 'digest mismatch'):
+            cli.build_db(self.root)
+        self.assertEqual(dl.sha(self.root / 'cache/replays.duckdb'), old_db)
+        self.assertEqual(pr.project(self.root)['new_replays'], 1)
+        self.assertEqual(path.read_bytes(), original)
+
+    def test_changed_metadata_has_a_new_immutable_projection(self):
+        old = pr.project(self.root)
+        self.index['runs']['single']['win'] = 0
+        dl.save(self.root / 'private-index.json', self.index)
+        new = pr.project(self.root)
+        old_path = next(iter(old['replays'].values()))['path']
+        new_path = next(iter(new['replays'].values()))['path']
+        self.assertNotEqual(old_path, new_path)
+        self.assertTrue((self.root / 'cache' / old_path).exists())
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT win FROM runs')['rows'], [(False,)])
+
+    def test_original_salt_is_required(self):
+        pr.project(self.root)
+        (self.root / 'private-salt').unlink()
+        with self.assertRaisesRegex(ValueError, 'original salt'):
+            pr.project(self.root)
+
+    def test_missing_header_fails_without_publishing_a_new_manifest(self):
+        pr.project(self.root)
+        before = dl.sha(self.root / 'cache/projection.json')
+        self.add_replay('broken', [dict(t='end')])
+        with self.assertRaisesRegex(ValueError, 'missing replay header'):
+            pr.project(self.root)
+        self.assertEqual(dl.sha(self.root / 'cache/projection.json'), before)
+
+    def test_export_dedup_shared_identity_nested_privacy_and_manifest_verification(self):
+        raw = dict(run_hash='single', seed='private-seed', ascension=10, win=True, build_id='v0.111.0',
+                   players=[dict(character='SILENT', deck=[dict(id='TEST_CARD')], relics=[dict(id='TEST_RELIC')])],
+                   map_point_history=[[dict(rooms=[dict(model_id={'username': 'nested-private'})], player_stats=[dict(
+                       current_hp={'steam_id': 'nested-private'}, card_choices=[dict(card=dict(id='TEST_CARD'), was_picked={'player_token': 'nested-private'})],
+                       relic_choices=[dict(choice={'discord_id': 'nested-private'}, was_picked=True)])])]])
+        other = dict(raw, ascension=9)
+        self.add_export([raw, raw, other])
+        result = pr.project(self.root)
+        self.assertEqual(result['exports']['v0.111.0']['runs'], 1)
+        text = (self.root / 'cache' / result['exports']['v0.111.0']['path']).read_text()
+        self.assertNotIn('nested-private', text)
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM export_runs JOIN runs USING(run_id)')['rows'], [(1,)])
+        self.assertEqual(pr.project(self.root)['new_replays'], 0)
+        path = self.root / 'raw/export.gz.receipt.json'
+        receipt = dl.load(path)
+        receipt['expected_sha256'] = '0' * 64
+        dl.save(path, receipt)
+        before = dl.sha(self.root / 'cache/projection.json')
+        with self.assertRaisesRegex(ValueError, 'verification'):
+            pr.project(self.root)
+        self.assertEqual(dl.sha(self.root / 'cache/projection.json'), before)
+
+    def test_cache_path_cannot_read_private_raw(self):
+        with self.assertRaises(ValueError):
+            pr.cached_path(self.root / 'cache', '../private-index.json')
+
+    def test_list_only_player_label_is_redacted_and_does_not_enter_cache(self):
+        events = fixture()
+        events[0].pop('username')
+        events[6]['options'][0]['label'] = 'visible listed-private-name'
+        self.add_replay('single', events)
+        meta = dl.metadata_row(dict(META, run_hash='single', username='listed-private-name', player_token='listed-private-token'))
+        self.index['runs']['single'].update(meta)
+        dl.save(self.root / 'private-index.json', self.index)
+        result = pr.project(self.root)
+        path = self.root / 'cache' / next(iter(result['replays'].values()))['path']
+        self.assertNotIn('listed-private', path.read_text())
+        self.assertNotIn('redaction_values', path.read_text())
 
     def test_audit_rejects_nested_identifier(self):
         with tempfile.TemporaryDirectory() as tmp:

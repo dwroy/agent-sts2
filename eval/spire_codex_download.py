@@ -44,13 +44,57 @@ def load(path, default=None):
     return json.loads(Path(path).read_text()) if Path(path).exists() else default
 
 
+def retain_revision(dest, incoming_sha):
+    """Retain replaced raw bytes and the exact original receipt before promotion."""
+    if not dest.exists():
+        return None
+    digest = sha(dest)
+    if digest == incoming_sha:
+        return None
+    archive = dest.parent / 'revisions' / digest / dest.name
+
+    def keep(source, target, expected):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists():
+            if sha(target) != expected:
+                raise ValueError('raw revision archive is corrupt; original retained')
+        else:
+            os.link(source, target)
+
+    keep(dest, archive, digest)
+    result = dict(sha256=digest, body_path=str(archive.relative_to(dest.parent)),
+                  paths_relative_to='original destination parent')
+    receipt = Path(str(dest) + '.receipt.json')
+    if receipt.exists():
+        receipt_sha = sha(receipt)
+        archived_receipt = archive.parent / 'receipts' / receipt_sha / receipt.name
+        keep(receipt, archived_receipt, receipt_sha)
+        result.update(receipt_sha256=receipt_sha, receipt_path=str(archived_receipt.relative_to(dest.parent)))
+    return result
+
+
 @contextlib.contextmanager
 def locked(root):
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     with (root / 'intake.lock').open('a') as f:
         fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        yield
+        yield f
+
+
+def read_headers(path):
+    blocks = Path(path).read_text().strip().split('\n\n') if Path(path).exists() else []
+    headers, status = {}, 0
+    for block in blocks:
+        lines = block.splitlines()
+        if lines and re.match(r'^HTTP/\S+ \d{3}', lines[0]):
+            status = int(lines[0].split()[1])
+            headers = {}
+            for line in lines[1:]:
+                if ':' in line:
+                    k, v = line.split(':', 1)
+                    headers[k.lower()] = v.strip()
+    return status, headers
 
 
 def public_url(url):
@@ -58,6 +102,9 @@ def public_url(url):
     p = urllib.parse.urlsplit(url)
     if p.scheme != 'https' or p.netloc != 'spire-codex.com' or p.fragment:
         raise ValueError('only the documented public API/export origin is allowed')
+    decoded = urllib.parse.unquote(p.path)
+    if '..' in decoded.split('/') or '\\' in decoded or any(ord(c) < 32 for c in url):
+        raise ValueError('invalid public API path')
     if not (p.path.startswith('/api/') or p.path.startswith('/exports/')) and p.path != '/openapi.json':
         raise ValueError('page mirroring is not allowed')
     return url
@@ -75,8 +122,9 @@ def retry_delay(value, attempt):
 
 class Client:
     """Caller holds intake.lock, including the persisted per-root rate limiter."""
-    def __init__(self, root):
+    def __init__(self, root, lock_fd=None):
         self.root = Path(root)
+        self.lock_fd = lock_fd
 
     def request(self, url, body, headers=None):
         url = public_url(url)
@@ -93,13 +141,9 @@ class Client:
         for k, v in (headers or {}).items():
             args += ['--header', f'{k}: {v}']
         # curl stderr/URLs may contain raw run identifiers. Keep them out of reports.
-        r = subprocess.run(args + [url], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        blocks = head.read_text().strip().split('\n\n') if head.exists() else []
-        h = {}
-        for line in (blocks[-1].splitlines() if blocks else []):
-            if ':' in line:
-                k, v = line.split(':', 1)
-                h[k.lower()] = v.strip()
+        r = subprocess.run(args + [url], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                           pass_fds=() if self.lock_fd is None else (self.lock_fd,))
+        _, h = read_headers(head)
         return int(r.stdout or 0), h, r.returncode
 
     def download(self, url, dest, expected_sha=None, expected_bytes=None, refresh=False):
@@ -123,6 +167,60 @@ class Client:
             part.unlink(missing_ok=True)
             state = dict(binding)
         chunk = Path(str(dest) + '.chunk')
+        head = Path(str(chunk) + '.headers')
+
+        def consume(status, h, offset):
+            if status == 206:
+                m = re.fullmatch(r'bytes (\d+)-(\d+)/(\d+)', h.get('content-range', ''))
+                if not m or int(m[1]) != offset or int(m[2]) < offset or int(m[2]) >= int(m[3]):
+                    raise ValueError('invalid resume Content-Range')
+                if offset and (not part.exists() or part.stat().st_size < offset):
+                    raise ValueError('partial download prefix is missing')
+                previous = state.get('validator')
+                current = h.get('etag') or h.get('last-modified')
+                if previous and current and previous != current:
+                    raise ValueError('resume validator changed')
+                state['total'] = int(m[3])
+                if chunk.exists():
+                    # Truncating to the journaled offset makes an interrupted append idempotent.
+                    with part.open('r+b' if part.exists() else 'w+b') as f, chunk.open('rb') as src:
+                        f.truncate(offset)
+                        f.seek(offset)
+                        for b in iter(lambda: src.read(1024 * 1024), b''):
+                            f.write(b)
+                        f.flush()
+                        os.fsync(f.fileno())
+            elif status == 200:
+                state['total'] = int(h['content-length']) if h.get('content-length') else None
+                if chunk.exists():
+                    os.replace(chunk, part)
+            state['validator'] = h.get('etag') or h.get('last-modified') or state.get('validator')
+            state['response_headers'] = h
+
+        def publish(h):
+            digest = sha(part)
+            if expected_sha and digest != expected_sha:
+                raise ValueError('manifest SHA mismatch; partial retained for inspection')
+            previous = retain_revision(dest, digest)
+            os.replace(part, dest)
+            receipt = dict(binding, downloaded_at=stamp(), bytes=dest.stat().st_size,
+                           sha256=digest, resolved_url=url, manifest_verified=expected_sha is not None,
+                           etag=h.get('etag'), last_modified=h.get('last-modified'), previous_revision=previous)
+            save(receipt_path, receipt)
+            chunk.unlink(missing_ok=True)
+            state_path.unlink(missing_ok=True)
+            return receipt
+
+        if state.get('inflight'):
+            url = public_url(state['inflight']['url'])
+            status, h = read_headers(head)
+            if status in (200, 206):
+                consume(status, h, state['inflight']['offset'])
+            state.pop('inflight')
+            save(state_path, state)
+        total = expected_bytes if expected_bytes is not None else state.get('total')
+        if part.exists() and total is not None and part.stat().st_size == total and (expected_sha or state.get('validator')):
+            return publish(state.get('response_headers', {}))
         for attempt in range(6):
             offset = part.stat().st_size if part.exists() else 0
             # Resume only when the object is pinned by a digest or an HTTP validator.
@@ -137,11 +235,15 @@ class Client:
                     headers['If-Modified-Since'] = old['last_modified']
             if offset and state.get('validator'):
                 headers['If-Range'] = state['validator']
+            head.unlink(missing_ok=True)
+            state['inflight'] = {'offset': offset, 'url': url}
+            save(state_path, state)
             status, h, rc = self.request(url, chunk, headers)
             if status == 304 and old and not rc:
                 old['checked_at'] = stamp()
                 save(receipt_path, old)
                 chunk.unlink(missing_ok=True)
+                state_path.unlink(missing_ok=True)
                 return old
             if status in (301, 302, 303, 307, 308):
                 # No unbounded curl redirects or off-origin requests.
@@ -150,46 +252,23 @@ class Client:
                 part.unlink(missing_ok=True)
                 continue
             if status == 206:
-                m = re.fullmatch(r'bytes (\d+)-(\d+)/(\d+)', h.get('content-range', ''))
-                if not m or int(m[1]) != offset:
-                    raise ValueError('invalid resume Content-Range')
-                state['total'] = int(m[3])
-                mode = 'ab'
+                consume(status, h, offset)
             elif status == 200:
-                mode = 'wb'
-                state['total'] = int(h['content-length']) if h.get('content-length') else None
+                consume(status, h, offset)
             elif status == 416 and expected_sha and part.exists() and sha(part) == expected_sha:
-                mode = None
+                pass
             else:
                 if status not in (0, 408, 429, 500, 502, 503, 504):
                     raise ValueError(f'public API HTTP {status}; raw response retained locally')
                 time.sleep(retry_delay(h.get('retry-after'), attempt))
                 continue
-            state['validator'] = h.get('etag') or h.get('last-modified') or state.get('validator')
-            if mode == 'wb':
-                os.replace(chunk, part)
-            elif mode:
-                with part.open(mode) as f, chunk.open('rb') as src:
-                    for b in iter(lambda: src.read(1024 * 1024), b''):
-                        f.write(b)
-                    f.flush()
-                    os.fsync(f.fileno())
+            state.pop('inflight', None)
             save(state_path, state)
             total = expected_bytes if expected_bytes is not None else state.get('total')
             if rc or (total is not None and part.stat().st_size != total):
                 time.sleep(retry_delay(None, attempt))
                 continue
-            digest = sha(part)
-            if expected_sha and digest != expected_sha:
-                raise ValueError('manifest SHA mismatch; partial retained for inspection')
-            os.replace(part, dest)
-            receipt = dict(binding, downloaded_at=stamp(), bytes=dest.stat().st_size,
-                           sha256=digest, resolved_url=url, manifest_verified=expected_sha is not None,
-                           etag=h.get('etag'), last_modified=h.get('last-modified'))
-            save(receipt_path, receipt)
-            chunk.unlink(missing_ok=True)
-            state_path.unlink(missing_ok=True)
-            return receipt
+            return publish(h)
         raise ValueError('download retry budget exhausted; resumable state retained')
 
     def json(self, url, tag):
@@ -200,15 +279,25 @@ class Client:
 
 
 def metadata_row(row):
-    # Private download index. No player object or player identifier is retained.
+    # Redaction inputs stay private alongside the raw API pages, never in the cache.
     keys = ('run_hash', 'character', 'ascension', 'build_id', 'win', 'was_abandoned')
-    return {k: row.get(k) for k in keys}
+    result = {k: row.get(k) for k in keys}
+    result['redaction_values'] = sorted({str(row[k]) for k in (
+        'username', 'player_token', 'steam_id', 'discord_id', 'email', 'player_id', 'account_id')
+        if isinstance(row.get(k), (str, int)) and not isinstance(row.get(k), bool) and str(row[k])})
+    if (not isinstance(result['build_id'], str) or not result['build_id']
+            or type(result['win']) not in (bool, int) or result['win'] not in (0, 1)
+            or (result['was_abandoned'] is not None and type(result['was_abandoned']) not in (bool, int))):
+        raise ValueError('invalid replay metadata')
+    return result
 
 
 def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
+    if max_pages is not None and (type(max_pages) is not int or max_pages < 1):
+        raise ValueError('max-pages must be a positive integer')
     root = Path(root)
-    with locked(root):
-        client = Client(root)
+    with locked(root) as lease:
+        client = Client(root, lease.fileno())
         manifest, manifest_sha = client.json(BASE + '/api/exports/runs/manifest', 'manifest')
         available = manifest['versions']
         index_path = root / 'private-index.json'

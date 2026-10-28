@@ -8,10 +8,10 @@ import sys
 
 try:
     from .spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync
-    from .spire_codex_projection import VERSION, json_lines, project
+    from .spire_codex_projection import VERSION, cached_path, json_lines, project
 except ImportError:
     from spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync
-    from spire_codex_projection import VERSION, json_lines, project
+    from spire_codex_projection import VERSION, cached_path, json_lines, project
 
 
 def js(value):
@@ -28,6 +28,15 @@ SCHEMA = {
     'decisions': 'run_id VARCHAR, combat_key VARCHAR, line INTEGER, segment INTEGER, decision_id INTEGER, decision_type VARCHAR, options JSON, outcomes JSON, details JSON',
     'events': 'run_id VARCHAR, combat_key VARCHAR, line INTEGER, turn INTEGER, kind VARCHAR, details JSON',
 }
+
+
+def insert_rows(con, name, rows, conflict=False):
+    # Bound JSON batches use DuckDB's vectorized parser instead of one transaction per row.
+    columns = [part.strip().split()[1] for part in SCHEMA[name].split(',')]
+    values = ','.join(f'CAST(j.value->>{i} AS {kind})' for i, kind in enumerate(columns))
+    suffix = ' ON CONFLICT DO NOTHING' if conflict else ''
+    for start in range(0, len(rows), 5000):
+        con.execute(f'INSERT INTO {name} SELECT {values} FROM json_each(?) j{suffix}', [js(rows[start:start + 5000])])
 
 
 def table_rows(bundle):
@@ -122,26 +131,32 @@ def build_db(root):
             con.execute('BEGIN')
             for name, columns in SCHEMA.items():
                 con.execute(f'CREATE TABLE {name} ({columns})')
-            for path in sorted((cache / 'replays').glob('run_*.json')):
+            if 'replays' not in receipt:
+                raise ValueError('exact replay projection manifest is required')
+            for rid, entry in sorted(receipt['replays'].items()):
+                path = cached_path(cache, entry['path'])
+                if sha(path) != entry['sha256']:
+                    raise ValueError('projected replay digest mismatch')
                 bundle = load(path)
-                if bundle.get('schema') != VERSION:
+                if bundle.get('schema') != VERSION or bundle['run']['run_id'] != rid:
                     raise ValueError('mixed projection versions')
                 for name, rows in table_rows(bundle).items():
                     if rows:
-                        con.executemany(f'INSERT INTO {name} VALUES ({",".join("?" for _ in rows[0])})', rows)
+                        insert_rows(con, name, rows)
                         counts[name] += len(rows)
             for export in receipt['exports'].values():
-                path = cache / export['path']
+                path = cached_path(cache, export['path'])
                 if sha(path) != export['sha256']:
                     raise ValueError('projected export digest mismatch')
                 batch = []
                 for row in json_lines(path):
                     batch.append([row['run_id'], row['build_id'], row['win'], js(row['final_deck']), js(row['final_relics']), js(row)])
                     if len(batch) == 1000:
-                        con.executemany('INSERT INTO export_runs VALUES (?,?,?,?,?,?) ON CONFLICT DO NOTHING', batch)
+                        insert_rows(con, 'export_runs', batch, conflict=True)
                         batch = []
                 if batch:
-                    con.executemany('INSERT INTO export_runs VALUES (?,?,?,?,?,?) ON CONFLICT DO NOTHING', batch)
+                    insert_rows(con, 'export_runs', batch, conflict=True)
+            counts['export_runs'] = con.execute('SELECT count(*) FROM export_runs').fetchone()[0]
             con.execute('CREATE VIEW first_combats AS SELECT * FROM combats WHERE default_eligible')
             con.execute('CREATE VIEW first_plays AS SELECT p.* FROM plays p JOIN first_combats c USING(combat_key)')
             con.execute('COMMIT')
@@ -154,7 +169,7 @@ def build_db(root):
         return result
 
 
-def query(root, sql, limit=200):
+def query(root, sql, limit=200, params=None):
     import duckdb
     con = duckdb.connect(str(Path(root) / 'cache/replays.duckdb'), read_only=True,
                          config={'threads': 1, 'memory_limit': '512MB', 'enable_external_access': False})
@@ -162,11 +177,25 @@ def query(root, sql, limit=200):
         statements = con.extract_statements(sql)
         if len(statements) != 1 or statements[0].type != duckdb.StatementType.SELECT:
             raise ValueError('one SELECT statement is required')
-        cur = con.execute(sql)
+        cur = con.execute(sql, params or [])
         rows = cur.fetchmany(limit + 1)
         return dict(columns=[x[0] for x in cur.description], rows=rows[:limit], truncated=len(rows) > limit)
     finally:
         con.close()
+
+
+def boss_plays(root, encounter, fights=10, attempt_kind='first', limit=10000):
+    if not 1 <= fights <= 100 or attempt_kind not in ('first', 'retry', 'all'):
+        raise ValueError('invalid boss play query')
+    return query(root, """WITH chosen AS (
+      SELECT c.combat_key FROM combats c JOIN runs r USING(run_id)
+      WHERE r.win AND c.encounter=? AND c.result='victory'
+        AND (c.attempt_kind=? OR ?='all')
+        AND (?<>'first' OR c.default_eligible)
+      ORDER BY c.run_id,c.floor,c.combat_key LIMIT ?
+    ) SELECT p.* FROM plays p JOIN chosen USING(combat_key)
+      ORDER BY combat_key,turn,play_order""", limit,
+      [encounter, attempt_kind, attempt_kind, attempt_kind, fights])
 
 
 def report(root):
@@ -210,6 +239,10 @@ def main():
     sub.add_parser('build-db')
     sub.add_parser('audit')
     sub.add_parser('report')
+    boss = sub.add_parser('boss-plays')
+    boss.add_argument('encounter')
+    boss.add_argument('--fights', type=int, default=10)
+    boss.add_argument('--attempt-kind', choices=('first', 'retry', 'all'), default='first')
     q = sub.add_parser('query')
     q.add_argument('sql')
     q.add_argument('--limit', type=int, default=200)
@@ -226,6 +259,8 @@ def main():
             result = audit_cache(args.root / 'cache')
         elif args.cmd == 'report':
             result = report(args.root)
+        elif args.cmd == 'boss-plays':
+            result = boss_plays(args.root, args.encounter, args.fights, args.attempt_kind)
         else:
             if not 1 <= args.limit <= 10000:
                 raise ValueError('limit must be 1..10000')
