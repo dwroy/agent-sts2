@@ -7,10 +7,10 @@ from pathlib import Path
 import sys
 
 try:
-    from .spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync
+    from .spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync, active_tombstone, tombstone_summary
     from .spire_codex_projection import VERSION, cached_path, json_lines, project
 except ImportError:
-    from spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync
+    from spire_codex_download import DEFAULT_ROOT, load, locked, save, sha, sync, active_tombstone, tombstone_summary
     from spire_codex_projection import VERSION, cached_path, json_lines, project
 
 
@@ -201,7 +201,9 @@ def boss_plays(root, encounter, fights=10, attempt_kind='first', limit=10000):
 def report(root):
     index = load(Path(root) / 'private-index.json', {})
     downloaded = collections.Counter()
-    for meta in index.get('runs', {}).values():
+    for key, meta in index.get('runs', {}).items():
+        if active_tombstone(index, key):
+            continue
         path = Path(root) / meta['path']
         downloaded['replays'] += 1
         downloaded['wins'] += int(bool(meta['win']))
@@ -215,7 +217,7 @@ def report(root):
         downloaded['export_bytes'] += receipt['bytes']
     downloaded['total_bytes'] = downloaded['replay_bytes'] + downloaded['export_bytes']
     return dict(
-        downloaded=dict(downloaded), export_verification=exports,
+        downloaded=dict(downloaded), replay_availability=tombstone_summary(index), export_verification=exports,
         scan_complete=index.get('cycle', {}).get('complete', False),
         scan_versions=index.get('cycle', {}).get('versions'),
         runs=query(root, 'SELECT build_id,count(*) AS runs,count(*) FILTER(WHERE win) AS wins FROM runs GROUP BY 1', 100),
