@@ -8,12 +8,44 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import time
 import urllib.parse
 
 BASE = 'https://spire-codex.com'
 DEFAULT_ROOT = Path('data/external/spire-codex')
+
+
+class ReplayNotFound(ValueError):
+    """A listed replay has a complete, narrowly recognized missing response."""
+    def __init__(self, evidence):
+        super().__init__('listed replay not found; private tombstone evidence retained')
+        self.evidence = evidence
+
+
+def active_tombstone(index, key):
+    return index.get('tombstones', {}).get(key, {}).get('active', False)
+
+
+def tombstone_summary(index):
+    cycle = index.get('cycle', {})
+    checked = {k for k, v in index.get('runs', {}).items()
+               if cycle.get('id') and v.get('checked_cycle') == cycle['id']}
+    missing = {k for k, v in index.get('tombstones', {}).items()
+               if cycle.get('id') and v.get('active') and v.get('checked_cycle') == cycle['id']}
+    processed = len(checked | missing)
+    return dict(tombstones=len(missing), processed_records=processed,
+                tombstone_ratio=len(missing) / processed if processed else 0,
+                consecutive_tombstones=cycle.get('tombstone_streak', 0),
+                active_tombstones=sum(bool(v.get('active')) for v in index.get('tombstones', {}).values()))
+
+
+def check_tombstone_breaker(index):
+    counts = tombstone_summary(index)
+    # Integer comparison makes exactly 1% admissible, including on resume.
+    if counts['tombstones'] * 100 > counts['processed_records'] or counts['consecutive_tombstones'] >= 5:
+        raise ValueError('tombstone circuit breaker: ' + json.dumps(counts, sort_keys=True))
 
 
 def stamp():
@@ -146,7 +178,7 @@ class Client:
         _, h = read_headers(head)
         return int(r.stdout or 0), h, r.returncode
 
-    def download(self, url, dest, expected_sha=None, expected_bytes=None, refresh=False):
+    def download(self, url, dest, expected_sha=None, expected_bytes=None, refresh=False, listed_cycle=None):
         url, dest = public_url(url), Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         receipt_path = Path(str(dest) + '.receipt.json')
@@ -168,6 +200,51 @@ class Client:
             state = dict(binding)
         chunk = Path(str(dest) + '.chunk')
         head = Path(str(chunk) + '.headers')
+
+        def missing(status, h, rc, observed_at):
+            # Only sync supplies a cycle after validating an actual list row.
+            if (not listed_cycle or status != 404 or rc or url != binding['url']
+                    or not re.fullmatch(re.escape(BASE) + r'/api/runs/[a-zA-Z0-9_-]{1,128}/replay', url)):
+                return
+            if not chunk.exists() or not head.exists():
+                raise ValueError('incomplete missing-replay response; original retained')
+            body = chunk.read_bytes()
+            if 'content-length' in h and int(h['content-length']) != len(body):
+                raise ValueError('missing-replay response byte mismatch; original retained')
+            try:
+                recognized = json.loads(body) == {'detail': 'Replay not found'}
+            except (ValueError, UnicodeError):
+                recognized = body == b'Replay not found'
+            if not recognized:
+                return
+            # Copies are essential: the next curl may truncate its output inode.
+            digests = dict(body_sha256=sha(chunk), headers_sha256=sha(head))
+            archive = self.root / 'raw/tombstones' / (digests['headers_sha256'] + '-' + digests['body_sha256'])
+            for source, name in ((chunk, 'body'), (head, 'headers')):
+                target = archive / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                if not target.exists():
+                    with target.open('xb') as dst, source.open('rb') as src:
+                        shutil.copyfileobj(src, dst)
+                        dst.flush()
+                        os.fsync(dst.fileno())
+                if sha(source) != sha(target):
+                    raise ValueError('tombstone evidence digest mismatch; original retained')
+            evidence = dict(digests, observed_at=observed_at, status=404,
+                            body_path=str((archive / 'body').relative_to(self.root)),
+                            headers_path=str((archive / 'headers').relative_to(self.root)))
+            state.pop('inflight', None)
+            state['missing_replay'] = dict(cycle=listed_cycle, evidence=evidence)
+            save(state_path, state)
+            raise ReplayNotFound(evidence)
+
+        pending = state.get('missing_replay')
+        if pending and listed_cycle and pending['cycle'] == listed_cycle:
+            for name in ('body', 'headers'):
+                if sha(self.root / pending['evidence'][name + '_path']) != pending['evidence'][name + '_sha256']:
+                    raise ValueError('tombstone evidence digest mismatch; original retained')
+            raise ReplayNotFound(pending['evidence'])
+        state.pop('missing_replay', None)
 
         def consume(status, h, offset):
             if status == 206:
@@ -214,6 +291,15 @@ class Client:
         if state.get('inflight'):
             url = public_url(state['inflight']['url'])
             status, h = read_headers(head)
+            # Legacy journals have no curl rc. Only an exact complete body length
+            # permits recovery of their frozen 404, without another request.
+            rc = state['inflight'].get('response_rc')
+            if rc is not None or (status == 404 and h.get('content-length') and chunk.exists()
+                                  and chunk.stat().st_size == int(h['content-length'])):
+                observed = state['inflight'].get('completed_at') or dt.datetime.fromtimestamp(head.stat().st_mtime, dt.timezone.utc).isoformat()
+                missing(status, h, rc or 0, observed)
+            if status == 404:
+                raise ValueError('public API HTTP 404; raw response retained locally')
             if status in (200, 206):
                 consume(status, h, state['inflight']['offset'])
             state.pop('inflight')
@@ -239,6 +325,9 @@ class Client:
             state['inflight'] = {'offset': offset, 'url': url}
             save(state_path, state)
             status, h, rc = self.request(url, chunk, headers)
+            state['inflight'].update(response_rc=rc, completed_at=stamp())
+            save(state_path, state)
+            missing(status, h, rc, state['inflight']['completed_at'])
             if status == 304 and old and not rc:
                 old['checked_at'] = stamp()
                 save(receipt_path, old)
@@ -298,23 +387,42 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
     root = Path(root)
     with locked(root) as lease:
         client = Client(root, lease.fileno())
-        manifest, manifest_sha = client.json(BASE + '/api/exports/runs/manifest', 'manifest')
-        available = manifest['versions']
         index_path = root / 'private-index.json'
         index = load(index_path, {'schema': 1, 'runs': {}, 'scans': {}})
-        index['manifest_sha256'] = manifest_sha
+        # A tripped cycle is sticky: resume cannot reset it or send more requests.
+        existing = index.get('cycle', {})
+        resuming = bool(existing and not existing.get('complete'))
+        if resuming:
+            check_tombstone_breaker(index)
+            if versions is not None and versions != existing['versions']:
+                raise ValueError('unfinished cycle versions differ; original cursor retained')
+        available = {}
+        if not resuming or any(v not in index.get('exports', {}) for v in export_versions):
+            manifest, manifest_sha = client.json(BASE + '/api/exports/runs/manifest', 'manifest')
+            available = manifest['versions']
+            index['manifest_sha256'] = manifest_sha
         for version in export_versions:
-            entry = available[version]
             if not re.fullmatch(r'[a-zA-Z0-9.-]+', version):
                 raise ValueError('invalid version')
-            dest = root / 'raw' / 'exports' / f'{version}-{entry["sha256"]}.jsonl.gz'
+            if resuming and version in index.get('exports', {}):
+                dest = root / index['exports'][version]
+                receipt = load(Path(str(dest) + '.receipt.json'))
+                if not receipt or not receipt.get('manifest_verified'):
+                    raise ValueError('original export manifest receipt missing; cursor retained')
+                entry = dict(url=receipt['url'], sha256=receipt['expected_sha256'], bytes=receipt['expected_bytes'])
+                if (not dest.exists() or sha(dest) != entry['sha256'] or receipt['sha256'] != entry['sha256']
+                        or dest.stat().st_size != entry['bytes']):
+                    raise ValueError('original export bytes/SHA mismatch; cursor retained')
+            else:
+                entry = available[version]
+                dest = root / 'raw' / 'exports' / f'{version}-{entry["sha256"]}.jsonl.gz'
             client.download(entry['url'], dest, entry['sha256'], entry['bytes'])
             index.setdefault('exports', {})[version] = str(dest.relative_to(root))
             save(index_path, index)
         # A durable cycle prevents a budgeted resume from restarting earlier builds.
         # A final unfiltered sweep discovers builds newer than the daily manifest.
         # It is subject to the same cap/splitting checks, never silently truncated.
-        versions = versions or list(available) + [None]
+        versions = existing['versions'] if resuming else (versions or list(available) + [None])
         cycle = index.get('cycle')
         if not cycle or cycle['versions'] != versions or cycle['complete']:
             cycle = dict(versions=versions, complete=False, next=0, id=stamp(),
@@ -328,7 +436,8 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
             while True:
                 if max_pages is not None and pages >= max_pages:
                     save(index_path, index)
-                    return {'complete': False, 'reason': 'page budget', 'runs_downloaded': len(index['runs'])}
+                    return dict(complete=False, reason='page budget', runs_downloaded=sum(
+                        not active_tombstone(index, k) for k in index['runs']), **tombstone_summary(index))
                 page = scan['page']
                 params = dict(character='SILENT', ascension=10, page=page, limit=100)
                 if version is not None:
@@ -353,7 +462,7 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
                     cycle['next'] += 1
                     save(index_path, index)
                     break
-                for row in rows:
+                for position, row in enumerate(rows, 1):
                     meta = metadata_row(row)
                     if meta['character'] != 'SILENT' or meta['ascension'] != 10 or (version is not None and meta['build_id'] != version):
                         raise ValueError('API returned out-of-cohort replay')
@@ -366,10 +475,34 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
                         raise ValueError('invalid raw run hash')
                     dest = root / 'raw' / 'replays' / f'{key}.ndjson'
                     prior = index['runs'].get(key)
+                    tombstone = index.get('tombstones', {}).get(key)
+                    if tombstone and tombstone['active'] and tombstone['checked_cycle'] == cycle['id']:
+                        check_tombstone_breaker(index)
+                        continue
+                    already_processed = prior and prior.get('checked_cycle') == cycle['id']
                     if prior and prior.get('checked_cycle') == cycle['id'] and dest.exists() and sha(dest) == prior['sha256']:
                         receipt = {'sha256': prior['sha256']}
                     else:
-                        receipt = client.download(f'{BASE}/api/runs/{key}/replay', dest, refresh=True)
+                        try:
+                            receipt = client.download(f'{BASE}/api/runs/{key}/replay', dest,
+                                                      refresh=True, listed_cycle=cycle['id'])
+                        except ReplayNotFound as exc:
+                            observation = dict(exc.evidence, cycle=cycle['id'], run_hash=key,
+                                               shard=cycle['next'] + 1, version=version, win=scan['win'],
+                                               page=page, position_in_page=position, list_sha256=page_sha)
+                            tombstone = index.setdefault('tombstones', {}).setdefault(key, {'observations': []})
+                            tombstone.update(active=True, checked_cycle=cycle['id'])
+                            tombstone['observations'].append(observation)
+                            cycle['tombstone_streak'] = cycle.get('tombstone_streak', 0) + 1
+                            # Commit evidence/counts before testing the breaker. The
+                            # same cycle cannot skip past a persisted trip on resume.
+                            save(index_path, index)
+                            check_tombstone_breaker(index)
+                            continue
+                    if tombstone:
+                        tombstone.update(active=False, recovered_cycle=cycle['id'])
+                    if not already_processed:
+                        cycle['tombstone_streak'] = 0
                     index['runs'][key] = dict(meta, path=str(dest.relative_to(root)), sha256=receipt['sha256'], checked_cycle=cycle['id'])
                     # Per-run commit: restarting an interrupted page reuses verified files.
                     save(index_path, index)
@@ -377,4 +510,5 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
                 save(index_path, index)
         cycle.update(complete=True, completed_at=stamp())
         save(index_path, index)
-        return {'complete': True, 'runs_downloaded': len(index['runs']), 'versions': versions}
+        return dict(complete=True, runs_downloaded=sum(not active_tombstone(index, k) for k in index['runs']),
+                    versions=versions, **tombstone_summary(index))

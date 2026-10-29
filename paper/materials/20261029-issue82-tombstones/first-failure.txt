@@ -1,0 +1,6 @@
+首轮 46 项固定测试自然失败（1 error）；未回填为通过。
+失败：test_legacy_page8_resume_reuses_782_and_export_and_frozen_404
+ValueError: not enough values to unpack (expected 3, got 0)
+Ran 46 tests in 1.219s; FAILED (errors=1)
+原因：seed_cycle 把合成成功条目指向共享 verified.ndjson，实际同步检查 canonical good-i.ndjson，导致错误进入 mocked request。修正夹具为每条 canonical 文件；生产实现未为此放宽校验。
+首轮完整输出仅在原生工具记录，本文件保留失败摘要；后续 python-r2.txt 为 47 项通过，python-r3.txt 为 49 项通过，最终新绑定源码见 python-final.txt。

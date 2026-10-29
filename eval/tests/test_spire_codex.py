@@ -170,7 +170,10 @@ class DownloadTests(unittest.TestCase):
         def request(url, body, headers=None):
             self.calls.append(headers)
             Path(body).write_bytes(content)
-            return status, h or {'content-length': str(len(content)), 'etag': 'test-etag'}, rc
+            response = h or {'content-length': str(len(content)), 'etag': 'test-etag'}
+            Path(str(body) + '.headers').write_text(
+                f'HTTP/1.1 {status} Test\n' + ''.join(f'{k}: {v}\n' for k, v in response.items()) + '\n')
+            return status, response, rc
         return request
 
     def test_resume_and_digest(self):
@@ -358,6 +361,232 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(index['cycle']['shards'][0]['page'], 1)
         self.assertFalse(index['cycle']['complete'])
 
+    def seed_cycle(self, count=200):
+        path = self.root / 'raw/replays/verified.ndjson'
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b'verified')
+        index = dict(schema=1, runs={f'good-{i}': dict(META, run_hash=f'good-{i}',
+                     path=f'raw/replays/good-{i}.ndjson', sha256=dl.sha(path), checked_cycle='original')
+                     for i in range(count)}, cycle=dict(id='original', versions=['v0.111.0'],
+                     complete=False, next=0, shards=[dict(version='v0.111.0', win=None, page=8)]))
+        for meta in index['runs'].values():
+            (self.root / meta['path']).write_bytes(b'verified')
+        dl.save(self.root / 'private-index.json', index)
+        return index
+
+    def tombstone_scan(self, rows, response=None, max_pages=1):
+        def metadata(client, url, tag):
+            if tag == 'manifest':
+                return {'versions': {'v0.111.0': {}}}, 'a' * 64
+            page = int(urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)['page'][0])
+            return dict(total=len(rows), runs=rows if page in (1, 8) else []), 'b' * 64
+        handler = response or self.reply(b'{"detail":"Replay not found"}', 404)
+        with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request', side_effect=handler):
+            return dl.sync(self.root, max_pages=max_pages, export_versions=())
+
+    def test_legacy_page8_resume_reuses_782_and_export_and_frozen_404(self):
+        index = self.seed_cycle(782)
+        export = self.root / 'raw/exports/original.gz'
+        export.parent.mkdir(parents=True)
+        export.write_bytes(b'original export')
+        dl.save(str(export) + '.receipt.json', dict(url=dl.BASE + '/exports/original.gz',
+                sha256=dl.sha(export), expected_sha256=dl.sha(export), expected_bytes=export.stat().st_size,
+                manifest_verified=True))
+        index['exports'] = {'v0.111.0': str(export.relative_to(self.root))}
+        # Default resume must retain the original shard list despite a newer manifest.
+        remaining = [f'v0.fixture-{i}' for i in range(38)] + [None]
+        index['cycle']['versions'].extend(remaining)
+        index['cycle']['shards'].extend(dict(version=v, win=None, page=1) for v in remaining)
+        dl.save(self.root / 'private-index.json', index)
+        dest = self.root / 'raw/replays/private-run-hash.ndjson'
+        body = b'{"detail":"Replay not found"}'
+        self.reply(body, 404)(dl.BASE + '/api/runs/private-run-hash/replay', Path(str(dest) + '.chunk'))
+        dl.save(str(dest) + '.part.json', dict(url=dl.BASE + '/api/runs/private-run-hash/replay',
+                expected_sha256=None, expected_bytes=None,
+                inflight=dict(url=dl.BASE + '/api/runs/private-run-hash/replay', offset=0)))
+        rows = [dict(META, run_hash=f'good-{i}') for i in range(84)] + [META]
+        def metadata(client, url, tag):
+            self.assertEqual(tag, 'list')
+            self.assertEqual(urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)['page'], ['8'])
+            return {'runs': rows, 'total': 900}, 'b' * 64
+        before = dl.sha(export)
+        with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request') as request:
+            result = dl.sync(self.root, max_pages=1)
+            request.assert_not_called()
+        self.assertEqual(dl.sha(export), before)
+        self.assertEqual((result['runs_downloaded'], result['tombstones'], result['processed_records']), (782, 1, 783))
+        after = dl.load(self.root / 'private-index.json')
+        self.assertEqual((after['cycle']['next'], after['cycle']['shards'][0]['page']), (0, 9))
+        self.assertEqual(after['cycle']['versions'], ['v0.111.0'] + remaining)
+        self.assertEqual(len(after['cycle']['shards']), 40)
+        tomb = after['tombstones'][META['run_hash']]['observations'][0]
+        self.assertEqual((tomb['page'], tomb['position_in_page'], tomb['shard']), (8, 85, 1))
+        for name in ('body', 'headers'):
+            self.assertEqual(dl.sha(self.root / tomb[name + '_path']), tomb[name + '_sha256'])
+        self.assertEqual(tomb['list_sha256'], 'b' * 64)
+        self.assertIn('observed_at', tomb)
+
+    def test_only_listed_exact_complete_404_is_a_tombstone(self):
+        for body, status, rc, headers in [
+            (b'{"detail":"Replay not found"}', 404, 0, None),
+            (b'Replay not found', 404, 0, None),
+            (b'{"detail":"Something else"}', 404, 0, None),
+            (b'{"detail":"Replay not found","extra":true}', 404, 0, None),
+            (b'{"detail":"Replay not found"}', 404, 28, None),
+            (b'{"detail":"Replay not found"}', 404, 0, {'content-length': '999'}),
+            (b'{"detail":"Replay not found"}', 503, 0, None),
+            (b'{"detail":"Replay not found"}', 429, 0, None),
+            (b'{"detail":"Replay not found"}', 0, 28, None),
+        ]:
+            with self.subTest(body=body, status=status, rc=rc, headers=headers):
+                dest = self.root / ('case-' + str(len(self.calls)))
+                with patch.object(self.client, 'request', self.reply(body, status, headers, rc)), patch.object(dl.time, 'sleep'):
+                    error = dl.ReplayNotFound if status == 404 and not rc and headers is None and body in (
+                        b'{"detail":"Replay not found"}', b'Replay not found') else ValueError
+                    with self.assertRaises(error) as caught:
+                        self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='test')
+                    self.assertEqual(isinstance(caught.exception, dl.ReplayNotFound), error is dl.ReplayNotFound)
+        for url, cycle in ((dl.BASE + '/api/runs/test/replay', None), (dl.BASE + '/api/other', 'test')):
+            with patch.object(self.client, 'request', self.reply(b'{"detail":"Replay not found"}', 404)):
+                with self.assertRaises(ValueError) as caught:
+                    self.client.download(url, self.root / ('unlisted-' + str(len(self.calls))), listed_cycle=cycle)
+                self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
+
+        redirected = [self.reply(b'', 302, {'location': '/api/runs/other/replay'}),
+                      self.reply(b'{"detail":"Replay not found"}', 404)]
+        def redirect_response(url, body, headers=None):
+            return redirected.pop(0)(url, body, headers)
+        with patch.object(self.client, 'request', redirect_response):
+            with self.assertRaises(ValueError) as caught:
+                self.client.download(dl.BASE + '/api/runs/test/replay', self.root / 'redirect', listed_cycle='test')
+            self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
+
+    def test_missing_response_journal_survives_before_index_commit_and_next_cycle_retries(self):
+        dest = self.root / 'missing'
+        with patch.object(self.client, 'request', self.reply(b'{"detail":"Replay not found"}', 404)):
+            with self.assertRaises(dl.ReplayNotFound) as first:
+                self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='one')
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaises(dl.ReplayNotFound):
+                self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='one')
+            request.assert_not_called()
+        with patch.object(self.client, 'request', self.reply(b'{"detail":"Replay not found"}', 404)):
+            with self.assertRaises(dl.ReplayNotFound):
+                self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='two')
+        self.assertEqual(len(self.calls), 2)
+        # A later successful curl must not mutate the archived 404 inode.
+        with patch.object(self.client, 'request', self.reply(b'now available')):
+            self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='three')
+        evidence = first.exception.evidence
+        self.assertEqual(dl.sha(self.root / evidence['body_path']), evidence['body_sha256'])
+
+    def test_duplicate_missing_rows_and_resume_do_not_recount_or_retry(self):
+        self.seed_cycle()
+        self.assertEqual(self.tombstone_scan([META, META])['tombstones'], 1)
+        self.assertEqual(len(self.calls), 1)
+        index = dl.load(self.root / 'private-index.json')
+        index['cycle']['shards'][0]['page'] = 8  # Simulate interruption before the page commit.
+        dl.save(self.root / 'private-index.json', index)
+        self.assertEqual(self.tombstone_scan([META])['processed_records'], 201)
+        self.assertEqual(len(self.calls), 1)
+        self.assertEqual(len(dl.load(self.root / 'private-index.json')['tombstones'][META['run_hash']]['observations']), 1)
+
+    def test_ratio_breaker_is_strict_and_sticky_on_resume(self):
+        self.seed_cycle(99)
+        result = self.tombstone_scan([META])
+        self.assertEqual(result['tombstone_ratio'], .01)
+        index = dl.load(self.root / 'private-index.json')
+        index['cycle']['shards'][0]['page'] = 8
+        dl.save(self.root / 'private-index.json', index)
+        with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+            self.tombstone_scan([META, dict(META, run_hash='missing-two')])
+        index = dl.load(self.root / 'private-index.json')
+        self.assertFalse(index['cycle']['complete'])
+        self.assertEqual(index['cycle']['shards'][0]['page'], 8)
+        with patch.object(dl.Client, 'json') as metadata, patch.object(dl.Client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+                dl.sync(self.root, export_versions=())
+            metadata.assert_not_called()
+            request.assert_not_called()
+
+    def test_five_consecutive_tombstones_trip_below_one_percent(self):
+        self.seed_cycle(600)
+        with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+            self.tombstone_scan([dict(META, run_hash=f'missing-{i}') for i in range(6)])
+        summary = dl.tombstone_summary(dl.load(self.root / 'private-index.json'))
+        self.assertEqual((summary['tombstones'], summary['consecutive_tombstones']), (5, 5))
+        self.assertLess(summary['tombstone_ratio'], .01)
+        self.assertEqual(len(self.calls), 5)
+
+    def test_a_new_success_resets_streak_but_replayed_prefix_does_not(self):
+        self.seed_cycle(1000)
+        def request(url, body, headers=None):
+            return self.reply(b'success' if '/new-success/' in url else b'{"detail":"Replay not found"}',
+                              200 if '/new-success/' in url else 404)(url, body, headers)
+        rows = [dict(META, run_hash=f'missing-{i}') for i in range(4)]
+        rows += [dict(META, run_hash='new-success')]
+        rows += [dict(META, run_hash=f'missing-{i}') for i in range(4, 8)]
+        result = self.tombstone_scan(rows, request)
+        self.assertEqual((result['tombstones'], result['consecutive_tombstones']), (8, 4))
+        index = dl.load(self.root / 'private-index.json')
+        index['cycle']['shards'][0]['page'] = 8
+        dl.save(self.root / 'private-index.json', index)
+        with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+            self.tombstone_scan([dict(META, run_hash='good-0'), dict(META, run_hash='missing-8')])
+        self.assertEqual(dl.tombstone_summary(dl.load(self.root / 'private-index.json'))['consecutive_tombstones'], 5)
+
+    def test_corrupt_original_export_stops_without_network_or_cursor_changes(self):
+        index = self.seed_cycle(1)
+        export = self.root / 'raw/export.gz'
+        export.write_bytes(b'corrupt')
+        dl.save(str(export) + '.receipt.json', dict(url=dl.BASE + '/exports/original.gz',
+                sha256='a' * 64, expected_sha256='a' * 64, expected_bytes=7, manifest_verified=True))
+        index['exports'] = {'v0.111.0': str(export.relative_to(self.root))}
+        dl.save(self.root / 'private-index.json', index)
+        before = dl.sha(self.root / 'private-index.json')
+        with patch.object(dl.Client, 'request') as request, patch.object(dl.Client, 'json') as metadata:
+            with self.assertRaisesRegex(ValueError, 'bytes/SHA mismatch'):
+                dl.sync(self.root)
+            request.assert_not_called()
+            metadata.assert_not_called()
+        self.assertEqual(dl.sha(self.root / 'private-index.json'), before)
+
+    def test_next_full_rechecks_missing_once_and_recovers_historical_success(self):
+        index = self.seed_cycle()
+        index['runs'][META['run_hash']] = dict(index['runs']['good-0'], run_hash=META['run_hash'], checked_cycle='older')
+        dl.save(self.root / 'private-index.json', index)
+        self.tombstone_scan([META])
+        self.assertTrue(dl.active_tombstone(dl.load(self.root / 'private-index.json'), META['run_hash']))
+        for response, active in ((self.reply(b'{"detail":"Replay not found"}', 404), True), (self.reply(b'restored'), False)):
+            index = dl.load(self.root / 'private-index.json')
+            index['cycle']['complete'] = True
+            # Prior checked successes are not counted in a fresh cycle; provide
+            # 100 actual listed successes before the missing row in this fixture.
+            dl.save(self.root / 'private-index.json', index)
+            def request(url, body, headers=None):
+                if '/private-run-hash/' in url:
+                    return response(url, body, headers)
+                return self.reply(b'verified')(url, body, headers)
+            rows = [dict(META, run_hash=f'good-{i}') for i in range(100)] + [META, META]
+            result = self.tombstone_scan(rows, request)
+            index = dl.load(self.root / 'private-index.json')
+            self.assertEqual(dl.active_tombstone(index, META['run_hash']), active)
+            self.assertEqual(result['tombstones'], int(active))
+            self.assertEqual(result['consecutive_tombstones'], int(active))
+        self.assertEqual(len(index['tombstones'][META['run_hash']]['observations']), 2)
+
+    def test_incomplete_legacy_404_is_not_retried_or_classified(self):
+        dest = self.root / 'missing'
+        Path(str(dest) + '.chunk').write_bytes(b'{"detail":"Replay not found"}')
+        Path(str(dest) + '.chunk.headers').write_text('HTTP/1.1 404 Not Found\nContent-Length: 999\n\n')
+        dl.save(str(dest) + '.part.json', dict(url=dl.BASE + '/api/runs/test/replay', expected_sha256=None,
+                expected_bytes=None, inflight=dict(url=dl.BASE + '/api/runs/test/replay', offset=0)))
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaises(ValueError) as caught:
+                self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='one')
+            self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
+            request.assert_not_called()
+
 
 class DatabaseTests(unittest.TestCase):
     def test_offline_database_default_first_attempt_and_safe_query(self):
@@ -404,7 +633,7 @@ class ProjectTests(unittest.TestCase):
         path.write_bytes(gzip.compress(''.join(json.dumps(row) + '\n' for row in rows).encode()))
         digest = dl.sha(path)
         dl.save(str(path) + '.receipt.json', dict(manifest_verified=True, sha256=digest,
-                                                expected_sha256=digest, expected_bytes=path.stat().st_size))
+                                                expected_sha256=digest, expected_bytes=path.stat().st_size, bytes=path.stat().st_size))
         self.index['exports']['v0.111.0'] = 'raw/export.gz'
         dl.save(self.root / 'private-index.json', self.index)
 
@@ -490,6 +719,36 @@ class ProjectTests(unittest.TestCase):
     def test_cache_path_cannot_read_private_raw(self):
         with self.assertRaises(ValueError):
             pr.cached_path(self.root / 'cache', '../private-index.json')
+
+    def test_tombstones_exclude_prior_replay_and_export_cache_and_report_denominators(self):
+        raw = dict(run_hash='single', seed='private-seed', ascension=10, win=True, build_id='v0.111.0',
+                   players=[dict(character='SILENT', deck=[], relics=[])])
+        self.add_export([raw, dict(raw, run_hash='other')])
+        original = pr.project(self.root)
+        old_path = self.root / 'cache' / original['exports']['v0.111.0']['path']
+        self.index['cycle'] = dict(id='test', complete=True)
+        self.index['tombstones'] = {'single': dict(active=True, checked_cycle='test', observations=[{'private': 'not learner input'}])}
+        dl.save(self.root / 'private-index.json', self.index)
+        result = pr.project(self.root)
+        self.assertEqual((result['replay_count'], result['raw_replay_count']), (0, 0))
+        self.assertEqual(result['exports']['v0.111.0']['runs'], 1)
+        self.assertNotEqual(result['exports']['v0.111.0']['path'], str(old_path.relative_to(self.root / 'cache')))
+        self.assertTrue(old_path.exists())
+        self.assertEqual(len(list(pr.json_lines(old_path))), 2)
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM runs')['rows'], [(0,)])
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM combats')['rows'], [(0,)])
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM export_runs')['rows'], [(1,)])
+        with patch.object(cli, 'query', return_value={}):
+            report = cli.report(self.root)
+        self.assertEqual(report['downloaded'].get('replays', 0), 0)
+        self.assertEqual(report['replay_availability']['tombstones'], 1)
+        self.assertNotIn('single', json.dumps(report))
+        self.index['tombstones']['single']['active'] = False
+        dl.save(self.root / 'private-index.json', self.index)
+        recovered = pr.project(self.root)
+        self.assertEqual(recovered['replay_count'], 1)
+        self.assertEqual(recovered['exports']['v0.111.0']['runs'], 2)
 
     def test_list_only_player_label_is_redacted_and_does_not_enter_cache(self):
         events = fixture()
