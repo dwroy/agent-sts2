@@ -1,0 +1,204 @@
+{
+  "schema": "brain-decision-context-v1",
+  "status": "ok",
+  "knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "path": "characters/silent/strategy-entries.json",
+  "sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+  "byte_budget": 8000,
+  "decision_points": [
+    "路线"
+  ],
+  "total_matches": 2,
+  "representation": "complete_entries_with_references",
+  "entries": [
+    {
+      "id": "issue80-routes-elite-branch-review",
+      "confidence": 0.35,
+      "source": "mixed",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-routes-elite-branch-review",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          1,
+          2,
+          3
+        ],
+        "question_types": [
+          "act_plan"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "外部赢家在同样已到本幕首Boss的记录中精英数较高；自有路线精英较少。这是补强机会复核依据，不证明加精英能提高胜率。",
+        "rule_candidate": "路线复核时不要因精英有血价就自动排除该支线；把已走/待走精英、实际补给、现有减损能力并列比较。第一幕2–3、第二/三幕约2个只作外部赢家分布参照，不能设为必达配额，也不能为凑数牺牲当前可验证存活。",
+        "conditions": {
+          "acts": [
+            1,
+            2,
+            3
+          ],
+          "ascension": 10,
+          "character": "silent",
+          "external_version_primary": "v0.111",
+          "observable_build_conditions": [
+            "现场合法分支、现有牌组/资源、到下一补给点的可观察路线"
+          ],
+          "own_game_version": "unknown"
+        },
+        "denominators": {
+          "external_v111_first_boss_reached_uploads_by_act": [
+            1481,
+            1038,
+            781
+          ],
+          "external_whole_run_winning_uploads_each_act": 492,
+          "own_ended_manifest": 525,
+          "own_quality_independent_runs": 523
+        },
+        "counterexamples": [
+          {
+            "external": "v0.111 第一幕0精英仍4/31整胜；2精英192/581整胜、3精英206/555、4+为47/95；各组均有失败。",
+            "table": "external_route_associations"
+          },
+          {
+            "own": "低精英窗口不证明可安全增加精英；旧路线题精英与营火两组选前HP不同，保留原限制。"
+          }
+        ],
+        "limitations": [
+          "观察性关联；路线、构筑强弱、玩家上传自选与存活/删失均混杂，未走路线反事实未知。",
+          "外部上传不是独立玩家；同局重复营火/商店/Boss位置不独立，名义Wilson区间不能修正聚类。",
+          "外部v0.111为主，旧版本分账且机制对齐未验证；自有游戏版本字段unknown，不能直接认定同版本。",
+          "终局胜负、最终到达与后来发生的SL只是事后分层，不得作为当前决策可观测特征；未使用终局牌组簇。",
+          "所有条目仅review-only，未发布、未被消费者读回、无自然收益验收。",
+          "已到Boss条件本身造成存活选择；全幕已到组与Boss前缀组均完整保留。",
+          "外部记录节点与自有楼层/房间口径不同，均数差不是可归因的路线缺口。"
+        ],
+        "conflicts_with": [
+          "knowledge/characters/silent/strategy-entries.json#silent-route-hp-observation"
+        ],
+        "triggers": [
+          "路线",
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    },
+    {
+      "id": "issue80-routes-shop-budget-without-spend-quota",
+      "confidence": 0.3,
+      "source": "external:sts2fun",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-routes-shop-budget-without-spend-quota",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          1,
+          2,
+          3
+        ],
+        "question_types": [
+          "shop",
+          "act_plan"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "首幕外部Boss前赢家/输家商店支出近同；二三幕赢家支出较高，但没有逐物价格/拒选货架反事实。",
+        "rule_candidate": "按当前货架与实际支付能力比较具体补强，不以花完金币或固定花费作路线目标。二三幕把可立即兑现的补强机会列入资源复核，同时保留不买；不要从赢家高花费直接推出应多买、应多绕商店或某个金币储备下限。",
+        "conditions": {
+          "acts": [
+            1,
+            2,
+            3
+          ],
+          "ascension": 10,
+          "character": "silent",
+          "external_version_primary": "v0.111",
+          "observable_build_conditions": [
+            "实际当前金币、当前货架与具名补缺口用途"
+          ],
+          "own_game_version": "unknown"
+        },
+        "denominators": {
+          "external_all_versions_shop_nodes": 14000,
+          "external_v111_first_boss_reached_uploads_by_act": [
+            1481,
+            1038,
+            781
+          ],
+          "own_quality_independent_runs": 523,
+          "own_spend_unit": "房间入口/出口金币净流出代理；非逐项实付"
+        },
+        "counterexamples": [
+          {
+            "external": "v0.111幕1商店累计0金币支出151/443整胜，300+金币76/233；方向不支持统一高花费目标。"
+          },
+          {
+            "own": "第三幕存在2个商店房间金币净流入，零/负净流出不能解释成没有取得物品。"
+          }
+        ],
+        "limitations": [
+          "观察性关联；路线、构筑强弱、玩家上传自选与存活/删失均混杂，未走路线反事实未知。",
+          "外部上传不是独立玩家；同局重复营火/商店/Boss位置不独立，名义Wilson区间不能修正聚类。",
+          "外部v0.111为主，旧版本分账且机制对齐未验证；自有游戏版本字段unknown，不能直接认定同版本。",
+          "终局胜负、最终到达与后来发生的SL只是事后分层，不得作为当前决策可观测特征；未使用终局牌组簇。",
+          "所有条目仅review-only，未发布、未被消费者读回、无自然收益验收。",
+          "外部bought_cards字段全缺失，普通牌取得只是代理；报价、折扣与自动免费取得不能按报价计实付。",
+          "自己的shop净流出与外部gold_spent不同口径，保留两个表，不计算混合金额差或兑换率。"
+        ],
+        "conflicts_with": [
+          "knowledge/characters/silent/experience.json#silent-lords-parasol-shop-acquisition",
+          "knowledge/characters/silent/strategy-entries.json#silent-brain-relic-membership-reprice-current-cart"
+        ],
+        "triggers": [
+          "商店",
+          "路线",
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    }
+  ],
+  "returned": 2,
+  "complete_entries": 2,
+  "fragment_entries": 0,
+  "references": [],
+  "reference_only_count": 0,
+  "omitted": 0,
+  "omitted_references": 0,
+  "truncated": false,
+  "notice": "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。entries保完整结论、条件、分母、反例与限制；references仅ID和标题，不代表已读正文。需要时用kb_decision_context按ID及source续取完整原件。"
+}

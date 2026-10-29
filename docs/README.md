@@ -30,6 +30,7 @@
 | [完成验收与现场回收](learner-retention.md) | 稀疏分配、历史副本回收、归档恢复及活动 owner 保护 |
 | [评估](eval.md) | 按版本/角色/进阶/配置的指标；首试/SL、纯 Codex 与原始口径 |
 | [日志库](logdb.md) | 增量派生、表/视图、只读查询与成本来源 |
+| [Spire Codex 回放接入](spire-codex.md) | #82：离线续传、去标识投影、DuckDB与逐Boss查询；首次全量和运行验收交ops |
 | [上游来源](third-party.md) | submodule 与代码来源边界 |
 
 ## 专题实现与历史验证

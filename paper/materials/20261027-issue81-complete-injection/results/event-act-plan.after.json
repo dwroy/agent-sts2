@@ -1,0 +1,264 @@
+{
+  "schema": "brain-decision-context-v1",
+  "status": "ok",
+  "knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "path": "characters/silent/strategy-entries.json",
+  "sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+  "byte_budget": 8000,
+  "decision_points": [
+    "事件",
+    "幕复核"
+  ],
+  "total_matches": 16,
+  "representation": "complete_entries_with_references",
+  "entries": [
+    {
+      "id": "issue80-relics-ancient-nutritious_soup",
+      "confidence": 0.35,
+      "source": "mixed",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-relics-ancient-nutritious_soup",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          2
+        ],
+        "question_types": [
+          "act_plan",
+          "event"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "NUTRITIOUS_SOUP：自有选择更集中；外部选43/122，自有选46/61。",
+        "rule_candidate": "把NUTRITIOUS_SOUP的当前完整题面、代价与同题替代项一起列为取舍候选；不沿用仅凭名称或默认固定首选。此关联不足以确认提高/降低它的选择率能提高胜率。",
+        "conditions": {
+          "act": 2,
+          "ascension": 10,
+          "boss": "按当前真实遭遇；无条件跨Boss外推禁止",
+          "character": "SILENT",
+          "game_version": "external v0.111; own unknown",
+          "observable_build_conditions": "当前题面/HP/持药/牌组可见信息，未用终局簇",
+          "option_id": "NUTRITIOUS_SOUP"
+        },
+        "denominators": {
+          "external_not_selected": {
+            "occurrences": 79,
+            "uploads": 79,
+            "winning_occurrences": 32,
+            "winning_uploads": 32
+          },
+          "external_selected": {
+            "occurrences": 43,
+            "uploads": 43,
+            "winning_occurrences": 10,
+            "winning_uploads": 10
+          },
+          "external_unit": "同版本/幕/古代人选项提供次；整局赢家分子",
+          "ordinary_relic_unpicked_denominator": "unknown",
+          "own_choice_result_unknown": 0,
+          "own_independent_run_ids": 61,
+          "own_offered": 61,
+          "own_selected": 46,
+          "own_selected_commands": 46
+        },
+        "counterexamples": [
+          "外部选后整局胜分数0.23255813953488372、未选0.4050632911392405，受替代选项和幸存者选择影响；不能作效果比较。"
+        ],
+        "limitations": [
+          "仅待Roy审阅，未发布/未采用；收益未知",
+          "外部按版本和上传行分账，无玩家校正，无因果解释",
+          "自有历史游戏版本unknown，SL/手动/删失分账；不把最终簇当当前构筑",
+          "正式旧策略ID不在本单元冻结绑定输入，ID级冲突查重unassessed"
+        ],
+        "conflicts_with": [
+          "preference-gap:NUTRITIOUS_SOUP"
+        ],
+        "triggers": [
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    },
+    {
+      "id": "issue80-relics-ancient-paels_eye",
+      "confidence": 0.35,
+      "source": "mixed",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-relics-ancient-paels_eye",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          2
+        ],
+        "question_types": [
+          "act_plan",
+          "event"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "PAELS_EYE：自有选择更集中；外部选12/109，自有选21/62。",
+        "rule_candidate": "把PAELS_EYE的当前完整题面、代价与同题替代项一起列为取舍候选；不沿用仅凭名称或默认固定首选。此关联不足以确认提高/降低它的选择率能提高胜率。",
+        "conditions": {
+          "act": 2,
+          "ascension": 10,
+          "boss": "按当前真实遭遇；无条件跨Boss外推禁止",
+          "character": "SILENT",
+          "game_version": "external v0.111; own unknown",
+          "observable_build_conditions": "当前题面/HP/持药/牌组可见信息，未用终局簇",
+          "option_id": "PAELS_EYE"
+        },
+        "denominators": {
+          "external_not_selected": {
+            "occurrences": 97,
+            "uploads": 97,
+            "winning_occurrences": 45,
+            "winning_uploads": 45
+          },
+          "external_selected": {
+            "occurrences": 12,
+            "uploads": 12,
+            "winning_occurrences": 2,
+            "winning_uploads": 2
+          },
+          "external_unit": "同版本/幕/古代人选项提供次；整局赢家分子",
+          "ordinary_relic_unpicked_denominator": "unknown",
+          "own_choice_result_unknown": 0,
+          "own_independent_run_ids": 62,
+          "own_offered": 62,
+          "own_selected": 21,
+          "own_selected_commands": 21
+        },
+        "counterexamples": [
+          "外部选后整局胜分数0.16666666666666666、未选0.4639175257731959，受替代选项和幸存者选择影响；不能作效果比较。"
+        ],
+        "limitations": [
+          "仅待Roy审阅，未发布/未采用；收益未知",
+          "外部按版本和上传行分账，无玩家校正，无因果解释",
+          "自有历史游戏版本unknown，SL/手动/删失分账；不把最终簇当当前构筑",
+          "正式旧策略ID不在本单元冻结绑定输入，ID级冲突查重unassessed"
+        ],
+        "conflicts_with": [
+          "preference-gap:PAELS_EYE"
+        ],
+        "triggers": [
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    }
+  ],
+  "returned": 2,
+  "complete_entries": 2,
+  "fragment_entries": 0,
+  "references": [
+    {
+      "id": "issue80-relics-ancient-paels_flesh",
+      "title": "PAELS_FLESH：自有选择更集中；外部选62/121，自有选61/66。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-relics-ancient-toasty_mittens",
+      "title": "TOASTY_MITTENS：自有选择更少；外部选63/109，自有选5/63。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-routes-camp-compare-current-budget",
+      "title": "外部赢家通常较少休息、较多升级；HP分层后仍是自选关联，不能把休息判成坏动作。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-routes-elite-branch-review",
+      "title": "外部赢家在同样已到本幕首Boss的记录中精英数较高；自有路线精英较少。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-routes-shop-budget-without-spend-quota",
+      "title": "首幕外部Boss前赢家/输家商店支出近同；二三幕赢家支出较高，但没有逐物价格/拒选货…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c1",
+      "title": "药瓶—触媒—致命毒药（点毒共现候选）：v0.111终局描述簇1为42/223胜；三核心齐备仅见…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c5",
+      "title": "毒雾—冒泡—触媒（毒牌共现候选）：v0.111终局描述簇5为79/238胜；三核心齐备仅见于30/…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-routes-f33-hp-review-70",
+      "title": "70%可作二幕Boss前风险复核候选，不能作安全承诺。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c6",
+      "title": "刀扇—精准—刀刃之舞（小刀共现候选）：v0.111终局描述簇6为103/272胜；三核心齐备仅…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c7",
+      "title": "触不可及—连续反弹—早有准备（奇巧/弃牌共现候选）：v0.111终局描述簇7为62/246胜；…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-relics-event-bridge",
+      "title": "SLIPPERY_BRIDGE完整题面与后继资源已核；对照选择的效果仍未知。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-relics-event-cheese",
+      "title": "ROOM_FULL_OF_CHEESE完整题面与后继资源已核；对照选择的效果仍未知。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-relics-event-courier",
+      "title": "POTION_COURIER完整题面与后继资源已核；对照选择的效果仍未知。",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-relics-event-ornate",
+      "title": "THIS_OR_THAT完整题面与后继资源已核；对照选择的效果仍未知。",
+      "source": "strategy_observation"
+    }
+  ],
+  "reference_only_count": 14,
+  "omitted": 14,
+  "omitted_references": 0,
+  "truncated": false,
+  "notice": "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。entries保完整结论、条件、分母、反例与限制；references仅ID和标题，不代表已读正文。需要时用kb_decision_context按ID及source续取完整原件。"
+}

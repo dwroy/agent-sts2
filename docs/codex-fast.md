@@ -15,3 +15,7 @@ Roy 于 2026-10-11 要求所有 Codex 默认统一为 `gpt-6-astra` / `xhigh` / 
 2026-10-23 晚 Roy 临时提速：当前核验6、发布/验收8（不计#46/#27），仅ops启动/resume的专用 `-c service_tier="ultrafast"`，推理仍high；当前事务结束且空闲时由原启动器自然resume，不热切在途。积压降到4以下时退回Fast。此项不写任何config.toml、不使用/fast，不改大脑、学习或开发的服务档。
 
 2026-10-24T01:11:18+08:00 Roy 经 Claude 更新：积压12项均等待前置、完整检查或自然读回，当前无可加速的工作；ops在下一空闲原入口恢复 Fast/high。仅恢复ops专用CLI参数，不改其他角色或共享配置，不按积压数量继续保持Ultrafast；实际采用仍须原生回执。
+
+2026-10-28 Roy 更新（[#56/6458903164](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6458903164)，#77 后继）：所有新外部学习固定 `service_tier="default"`，launcher 默认值、注册策略和包装器一致；周用量 workers 与90%拒绝规则保持。旧档位、失败和原生回执不重写，在途任务不热切。只用启动参数，不使用 `/fast`、`/ultrafast` 写配置；原生实际档位由 ops 另核。
+
+2026-10-28 后续授权（[#56/6459185537](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6459185537)）：ops 初始化、exec resume、herdr 新建与 resume 也统一 `service_tier="default"`，覆盖上述历史 fast/ultrafast 规则，默认推理仍 high。`ops/codex/lib.ts` 只改档位参数；上线后由原 herdrWake 在空闲点按新参数哈希接续，原 ops 核 cmdline/底栏及原生回执。账号切换另走原 ops 事务，brain/对局不在本改动范围。

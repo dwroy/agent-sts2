@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { readFileSync } from "node:fs";
 import type { CodexUsage } from "../../agent/src/brain/engines/codex-usage.js";
 import type { StartupLease } from "./startup-recovery.js";
-export type ExternalTier = "ultrafast" | "fast" | "default";
+export type ExternalTier = "default";
 export interface ExternalTierDecision {
   requested: ExternalTier; effective: ExternalTier;
   weekly_used_percent: number | null; sample_observed_at: string | null;
@@ -34,16 +34,14 @@ export function candidateMode(env: NodeJS.ProcessEnv): Record<string, string> | 
   try { return JSON.parse(readFileSync(env.LEARNER_STATE_FILE!, "utf8")).batches[env.LEARNER_BATCH_ID!].candidate_mode; }
   catch { return undefined; }
 }
-export function externalTier(usage: CodexUsage | null, now: Date, requested: ExternalTier = "ultrafast"): ExternalTierDecision {
+export function externalTier(usage: CodexUsage | null, now: Date, requested: ExternalTier = "default"): ExternalTierDecision {
   const observed = usage ? Date.parse(usage.readAt) : NaN;
   const fresh = Number.isFinite(observed) && now.getTime() >= observed && now.getTime() - observed <= 600_000;
   const weekly = usage?.windows.filter((w) => w.windowMins === 10080) ?? [];
   const valid = fresh && weekly.length > 0 && weekly.every((w) => Number.isFinite(w.usedPct) && w.usedPct >= 0 && w.usedPct <= 100
     && (!w.resetsAt || Date.parse(w.resetsAt) > now.getTime()));
   const used = valid ? Math.max(...weekly.map((w) => w.usedPct)) : null;
-  const cap = used === null || used >= 90 ? "default" : used > 70 ? "fast" : "ultrafast";
-  const order: ExternalTier[] = ["ultrafast", "fast", "default"];
-  return { requested, effective: order[Math.max(order.indexOf(cap), order.indexOf(requested))]!,
+  return { requested, effective: "default",
     weekly_used_percent: used, sample_observed_at: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
     reason: used === null ? "weekly_unknown" : used >= 90 ? "weekly_at_90" : used > 70 ? "weekly_over_70" : "weekly_within_70",
     observed_service_tier: null };

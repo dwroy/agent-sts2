@@ -40,7 +40,7 @@ def snapshot(root, directory, *, now=None):
         used = max(w["used_percent"] for w in weekly)
         result.update(weekly_used_percent=used, sample_observed_at=sample["sample_observed_at"],
                       account_home_sha256=digest, workers=0 if used >= 90 else 2 if used > 70 else 4,
-                      service_tier="fast" if used > 70 else "ultrafast",
+                      service_tier="default",
                       reason="switch_codex1" if used >= 90 else "weekly_over_70" if used > 70 else "weekly_within_70")
     except (OSError, ValueError, KeyError, TypeError, AttributeError, OverflowError):
         return result

@@ -8,7 +8,9 @@
 
 恢复被中断循环遗漏的局末报告可用 `bash ops/codex-ops-do.sh report-run <12位局号>`（host ops 也可直接运行 `nice -n 19 python3 ops/report_run.py <局号>`）。入口拒绝活跃 play/autoplay/report、不同或未结束的 mod 局、LLM_DRAIN/PAUSE；与 autoplay-start 共用锁。冻结该局原段与恢复段全部日志行，记录原文件 SHA/字节范围和 console 历史代码，再调用原 report 实现及角色刷新。成功后同局重复请求返回已有回执，不再记账、刷新或派发；中途已经登记但刷新失败时保留 partial 现场，不能盲目再跑。回执 `ops/codex-ops/report-runs/<局号>/receipt.json` 区分报告、主刷新退出码、后台参考/费用刷新与校准派发，不把后台启动写成已完成。
 
-2026-10-10 按 main 核对：本页的初次搭建、历史探针及资源测量保留当时口径；当前以调度器代码、learn.json、租约和完成回执为准。Codex Fast 在直接启动、resume、herdr 与学习者 wrapper 中显式设置，见 [codex-fast.md](codex-fast.md)。文档同步不修改 ops-session prompt 或运行中的进程。
+2026-10-10 按 main 核对：本页的初次搭建、历史探针及资源测量保留当时口径；当前以调度器代码、learn.json、租约和完成回执为准。当前普通速度在直接启动、resume、herdr 与学习者 wrapper 中显式设置，见 [codex-fast.md](codex-fast.md)。文档同步不修改 ops-session prompt 或运行中的进程。
+
+Roy 2026-10-28 授权（[#56/6459185537](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6459185537)）：ops init、exec resume、herdr 新建/resume 的源码参数统一 `service_tier="default"`，不再请求 fast/ultrafast；默认推理 high、原权限和账号事务保持。安装后原 herdrWake 在空闲点发现参数哈希变化时沿原流程接续，实际 cmdline/底栏及原生档位由 ops 核收，不热切在途任务、不写共享配置。
 
 Roy 2026-10-04 21:00 定：Claude 只观察和与 Roy 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
 
@@ -56,7 +58,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 ### 会话会长多大、会不会压缩
 
-- 每次 resume 都把整段历史发给模型。当前默认 GPT-6.1 Sol / xhigh / normal，显式配置窗口 512000、自动压缩阈值 460800；CLI 预留空间后的有效窗口可能更低，配置不能证明服务端的最大能力。
+- 每次 resume 都把整段历史发给模型。当前默认 GPT-6.1 Sol / high / normal，显式配置窗口 512000、自动压缩阈值 460800；CLI 预留空间后的有效窗口可能更低，配置不能证明服务端的最大能力。
 - 实测（2026-10-04，测试会话，强度 low）：第一轮（只有测试 prompt）上下文 10.5k token；一次带 4 个动作调用的叫醒后 11.8k。正式 prompt 加 AGENTS.md 和开工要读的文档，第一轮估计在 5–8 万；一次普通叫醒（看回报、记 decision-log、提交）增加几千到两万。按每天十来次叫醒，几天到一周会碰到压缩线。
 - `bash ops/codex-ops.sh status` 显示当前上下文、窗口、压缩次数和本周额度用量（从 codex 自己的会话文件读）。压缩会丢细节，所以要紧的状态都写在文件里（decision-log、fix-queue、收件箱、ops/codex-ops/learn.json），不靠会话记忆。
 

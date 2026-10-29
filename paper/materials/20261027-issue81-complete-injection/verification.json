@@ -1,0 +1,271 @@
+{
+  "source_inputs": "source-inputs.json",
+  "source_test_sha256_unchanged": true,
+  "production_tsc": {
+    "exit_code": 0,
+    "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "cwd": "agent"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files": 4,
+    "tests": 67,
+    "suites": [
+      "decision-knowledge",
+      "decision-observations",
+      "knowledge-consumer-projection",
+      "strategy-entries"
+    ]
+  },
+  "sandbox_wide": {
+    "exit_code": 1,
+    "files_passed": 649,
+    "files_failed": 1,
+    "tests_passed": 6019,
+    "tests_failed": 1,
+    "duration_seconds": 685.59,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--pool=threads",
+      "--maxWorkers=2",
+      "--exclude",
+      "tests/paths.test.ts",
+      "--exclude",
+      "tests/brain-codex.test.ts",
+      "--exclude",
+      "tests/brain-codex-session.test.ts",
+      "--exclude",
+      "tests/brain-codex-usage.test.ts",
+      "--exclude",
+      "tests/brain-claude.test.ts",
+      "--exclude",
+      "tests/brain-knowledge.test.ts",
+      "--exclude",
+      "tests/brain-loop.test.ts",
+      "--exclude",
+      "tests/route-review.test.ts",
+      "--exclude",
+      "tests/learner.test.ts",
+      "--exclude",
+      "tests/eval.test.ts",
+      "--exclude",
+      "tests/record.test.ts",
+      "--exclude",
+      "tests/batch-j.test.ts",
+      "--exclude",
+      "tests/deepseek.test.ts",
+      "--exclude",
+      "tests/batch-e.test.ts",
+      "--exclude",
+      "tests/deepseek-consistency.test.ts",
+      "--exclude",
+      "tests/build-decider.test.ts",
+      "--exclude",
+      "tests/mod-client.test.ts",
+      "--exclude",
+      "tests/batch-m.test.ts",
+      "--exclude",
+      "tests/fix-queue-v4.test.ts",
+      "--exclude",
+      "tests/execution-gate.test.ts",
+      "--exclude",
+      "tests/batch-c.test.ts",
+      "--exclude",
+      "tests/run-plan-merge.test.ts",
+      "--exclude",
+      "tests/jev-retry.test.ts",
+      "--exclude",
+      "tests/loop.test.ts",
+      "--exclude",
+      "tests/batch-n.test.ts",
+      "--exclude",
+      "tests/batch-h.test.ts",
+      "--exclude",
+      "tests/journal-replay.test.ts",
+      "--exclude",
+      "tests/discovery.test.ts",
+      "--exclude",
+      "tests/jev-prompt-log.test.ts",
+      "--exclude",
+      "tests/batch-l.test.ts",
+      "--exclude",
+      "tests/sl-loop.test.ts",
+      "--exclude",
+      "tests/potion-equivalents.test.ts",
+      "--exclude",
+      "tests/monster-db.test.ts",
+      "--exclude",
+      "tests/third-party.test.ts",
+      "--exclude",
+      "tests/logdb.test.ts",
+      "--exclude",
+      "tests/boss-damage-tools.test.ts",
+      "--exclude",
+      "tests/knowledge-check-a8w-builder.test.ts",
+      "--exclude",
+      "tests/outcome-stats.test.ts",
+      "--exclude",
+      "tests/ops-codex.test.ts",
+      "--exclude",
+      "tests/config.test.ts",
+      "--exclude",
+      "tests/route-event.test.ts",
+      "--exclude",
+      "tests/build-facts-audit.test.ts",
+      "--exclude",
+      "tests/batch-i.test.ts",
+      "--exclude",
+      "tests/oneshot-rest-event.test.ts",
+      "--exclude",
+      "tests/thief-card-value.test.ts",
+      "--exclude",
+      "tests/oneshot-act-start.test.ts",
+      "--exclude",
+      "tests/run-config.test.ts",
+      "--exclude",
+      "tests/outcome-asc.test.ts",
+      "--exclude",
+      "tests/boss-sim-build.test.ts",
+      "--exclude",
+      "tests/oneshot-shop.test.ts",
+      "--exclude",
+      "tests/batch-f.test.ts",
+      "--exclude",
+      "tests/fix-queue-v4-fix2.test.ts"
+    ],
+    "cwd": "agent",
+    "failure": "external-stock.test.ts exceeded unchanged global15000ms deadline at15258ms; its28 Python checks reported OK in15.099s. Original exit1 retained, not called final combination full.",
+    "scope": "Same52 fixed sandbox exclusions, direct Node to avoid retained launchers; actual ROOT/LIVE combination full remains original integrator responsibility."
+  },
+  "isolated_failed_file": {
+    "exit_code": 0,
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/external-stock.test.ts --pool=threads --maxWorkers=1",
+    "files": 1,
+    "tests": 1,
+    "python_checks": 28,
+    "python_seconds": 12.435,
+    "test_seconds": 12.56,
+    "timeout_unchanged_ms": 15000,
+    "unchanged_base_source_sha256": {
+      "agent/tests/external-stock.test.ts": "e397962a80ec6edadadec10d74eacc52a0f9496d066e980582137bd51a02033d",
+      "ops/tests/test_external_stock.py": "7206160ee9ff397db7c291d57190f4c8cca4217b43e2ed00af3d84cff38e1777"
+    }
+  },
+  "paths": {
+    "exit_code": 0,
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1",
+    "files": 1,
+    "tests": 11
+  },
+  "replay": {
+    "exit_code": 0,
+    "verified_original_windows": 134,
+    "accepted_unique_questions": 133,
+    "complete_field_equal_checks": 1351,
+    "full_document_occurrences": 929,
+    "full_parts": 1865,
+    "complete_per_question": {
+      "0": 15,
+      "1": 43,
+      "2": 75
+    },
+    "fragment_entries": 0,
+    "max_bytes": 7923,
+    "budget": 8000,
+    "source_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46"
+  },
+  "logs": {
+    ".artifacts/issue81-r3/tsc-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue81-r3/targeted-first.log": {
+      "bytes": 956,
+      "sha256": "0d801ccc82ba17ec39b8324e07cd55b7d886f887f85f1d2d9f0faeb6a49e79c1"
+    },
+    ".artifacts/issue81-r3/sandbox-final.log": {
+      "bytes": 29096,
+      "sha256": "60d720133686456ef69442e8c0f295d7007ab862d9d993e4abe618223c89df37"
+    },
+    ".artifacts/issue81-r3/external-stock-isolated.log": {
+      "bytes": 399,
+      "sha256": "c373cb722b4ee5c1467183786a0d4ef35852610c3306f245eef6ae594b203be3"
+    },
+    ".artifacts/issue81-r3/paths-final.log": {
+      "bytes": 442,
+      "sha256": "6fad391d96ba51436ea620791bf0c9eaf915c6dc41e8f5a8af1a48bcd24152ac"
+    },
+    ".artifacts/issue81-r3/replay-final.log": {
+      "bytes": 3282,
+      "sha256": "d7499b33818a5d6bae89a2ce21c9970cac375e5f533231e47bac699810df5bc0"
+    },
+    ".artifacts/issue81-r3/gitleaks-preliminary.log": {
+      "bytes": 178,
+      "sha256": "d76da72e3939723342ec2d07bd01128ce80b95ab5416481c7a4709224b2cc54a"
+    }
+  },
+  "result_files": {
+    "results/event-act-plan.after.json": {
+      "bytes": 10234,
+      "sha256": "1c6dcd7046da3760fc6b2df66960c03043e059be2dd67ba5d9f55e14e0640a80"
+    },
+    "results/event-act-plan.before.json": {
+      "bytes": 9877,
+      "sha256": "f752649488fd88ad1b3d4d41af9ac9271d17edbe819f1fd8c2989bd7cae56f59"
+    },
+    "results/event-act-plan.ref.json": {
+      "bytes": 281,
+      "sha256": "80cf9d180633c7e99ab91da0ba0bfa206d1aa91db85f7017d897d21f71750514"
+    },
+    "results/event-choose.after.json": {
+      "bytes": 2281,
+      "sha256": "1e8d2a6fff9147e4a3eb538135290fc0476ee081e52e810e784cc6fb2ded0af9"
+    },
+    "results/event-choose.before.json": {
+      "bytes": 10785,
+      "sha256": "e3a5146f7a5419a061ac2f832d954881a1403f5ebfb089cbba42aa515cf52bfb"
+    },
+    "results/event-choose.ref.json": {
+      "bytes": 278,
+      "sha256": "4837bad1eb231da920d8653607ab181b684bf8effa75493076b11f63193e9761"
+    },
+    "results/map-route-plan.after.json": {
+      "bytes": 8626,
+      "sha256": "a36b491094a0a20ee919966b784f553e0a0bddec9e02e97b575028b943e5bbd1"
+    },
+    "results/map-route-plan.before.json": {
+      "bytes": 7310,
+      "sha256": "b3f4b427417589666cbbea9dcebc77f05f8c3e956bc5278d433905ec7b3bd36e"
+    },
+    "results/map-route-plan.ref.json": {
+      "bytes": 280,
+      "sha256": "1757034e4ac401cf75c834c3ae53ecf3cfd4e8efedce693092c27fd5cbc0aa7a"
+    },
+    "results/questions.json": {
+      "bytes": 125862,
+      "sha256": "d5b16005c51f15978f457dd1be1f71409ca235c9bcbcb6dc4788984539d1ee40"
+    },
+    "results/reward-card.after.json": {
+      "bytes": 9123,
+      "sha256": "97533a21e7844527187f547d070d1cc8a8ada12b5a0fdf8b5aaf7d5e9f4a63aa"
+    },
+    "results/reward-card.before.json": {
+      "bytes": 10163,
+      "sha256": "6e320203c562785eb9999124fc901cc7e5b429f3b01e62861c9e016dca5ac82e"
+    },
+    "results/reward-card.ref.json": {
+      "bytes": 277,
+      "sha256": "8559d7fa8d92ed57b929964523b819d2d6ba8f05b14baefe202737f015ee7e57"
+    },
+    "results/summary.json": {
+      "bytes": 3846,
+      "sha256": "9a5b900bfc1912197568e9b4ca21dd8c115e3a43be833c4b5ace200898729813"
+    }
+  },
+  "gitleaks": "Preliminary staged exit0; final staged and public-body scans required again before delivery. Local receipts retained."
+}

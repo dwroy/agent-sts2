@@ -286,7 +286,7 @@ export function learnerTuiEnv(env: Record<string, string>): Record<string, strin
     "CHARACTER", "TARGET_ASCENSION", "WSL_INTEROP", "WSL_DISTRO_NAME", "SYSTEMROOT", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS", "REQUESTS_CA_BUNDLE"];
   const out = Object.fromEntries(names.filter((key) => env[key] !== undefined).map((key) => [key, env[key]!]));
   if (/^[a-z0-9][a-z0-9._-]{0,119}$/.test(env.LEARNER_EXTERNAL_SOURCE ?? "")
-      && ["ultrafast", "fast", "default"].includes(env.LEARNER_EXTERNAL_SERVICE_TIER ?? "")) {
+      && env.LEARNER_EXTERNAL_SERVICE_TIER === "default") {
     out.LEARNER_EXTERNAL_SOURCE = env.LEARNER_EXTERNAL_SOURCE!;
     out.LEARNER_EXTERNAL_SERVICE_TIER = env.LEARNER_EXTERNAL_SERVICE_TIER!;
   }

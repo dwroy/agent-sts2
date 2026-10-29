@@ -1,0 +1,210 @@
+{
+  "schema": "brain-decision-context-v1",
+  "status": "ok",
+  "knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "path": "characters/silent/strategy-entries.json",
+  "sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+  "byte_budget": 8000,
+  "decision_points": [
+    "路线"
+  ],
+  "total_matches": 2,
+  "entries": [
+    {
+      "id": "issue80-routes-elite-branch-review",
+      "confidence": 0.35,
+      "strategy": {
+        "truncated": true,
+        "representation": "partial_json_text",
+        "json_excerpt": "\"观察提示：外部赢家在同样已到本幕首Boss的记录中精英数较高；自有路"
+      },
+      "trigger": {
+        "acts": [
+          1,
+          2,
+          3
+        ],
+        "question_types": [
+          "act_plan"
+        ]
+      },
+      "review_observation": {
+        "conditions": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"acts\":[1,2,3],\"ascension\":10,\"character\":\"silent"
+        },
+        "denominators": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"external_v111_first_boss_reached_uploads_by_act\":[1481"
+        },
+        "counterexamples": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[{\"external\":\"v0.111 第一幕0精英仍4/31整胜；2"
+        },
+        "limitations": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"观察性关联；路线、构筑强弱、玩家上传"
+        },
+        "conflicts_with": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"knowledge/characters/silent/strategy-entries.json#silen"
+        },
+        "summary": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"外部赢家在同样已到本幕首Boss的记录中精"
+        },
+        "rule_candidate": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"路线复核时不要因精英有血价就自动排除"
+        },
+        "triggers": [
+          "路线",
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only",
+      "representation": "consumer_projection",
+      "truncated": true,
+      "evidence_summary": {
+        "references": 4,
+        "full_review_evidence": 0,
+        "denominators_combined": false
+      },
+      "original_bytes": 7926,
+      "omitted_fields": [
+        "review_observation.conditions",
+        "review_observation.denominators",
+        "review_observation.counterexamples",
+        "review_observation.limitations",
+        "review_observation.conflicts_with",
+        "review_observation.summary",
+        "review_observation.rule_candidate",
+        "review_observation.confidence",
+        "review_observation.dimension",
+        "review_observation.evidence_refs",
+        "review_observation.id",
+        "review_observation.verification_next_step"
+      ],
+      "omitted_field_count": 27,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "source": "strategy_observation",
+          "detail": "full",
+          "document_id": "issue80-routes-elite-branch-review",
+          "document_offset": 0
+        }
+      }
+    },
+    {
+      "id": "issue80-routes-shop-budget-without-spend-quota",
+      "confidence": 0.3,
+      "strategy": {
+        "truncated": true,
+        "representation": "partial_json_text",
+        "json_excerpt": "\"观察提示：首幕外部Boss前赢家/输家商店支出近同；二三幕赢家支出较高"
+      },
+      "trigger": {
+        "acts": [
+          1,
+          2,
+          3
+        ],
+        "question_types": [
+          "shop",
+          "act_plan"
+        ]
+      },
+      "review_observation": {
+        "conditions": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"acts\":[1,2,3],\"ascension\":10,\"character\":\"silent"
+        },
+        "denominators": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"external_all_versions_shop_nodes\":14000,\"external_v11"
+        },
+        "counterexamples": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[{\"external\":\"v0.111幕1商店累计0金币支出151/44"
+        },
+        "limitations": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"观察性关联；路线、构筑强弱、玩家上传"
+        },
+        "conflicts_with": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"knowledge/characters/silent/experience.json#silent-lord"
+        },
+        "summary": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"首幕外部Boss前赢家/输家商店支出近同；二"
+        },
+        "rule_candidate": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"按当前货架与实际支付能力比较具体补强"
+        },
+        "triggers": [
+          "商店",
+          "路线",
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only",
+      "representation": "consumer_projection",
+      "truncated": true,
+      "evidence_summary": {
+        "references": 2,
+        "full_review_evidence": 0,
+        "denominators_combined": false
+      },
+      "original_bytes": 8232,
+      "omitted_fields": [
+        "review_observation.conditions",
+        "review_observation.denominators",
+        "review_observation.counterexamples",
+        "review_observation.limitations",
+        "review_observation.conflicts_with",
+        "review_observation.summary",
+        "review_observation.rule_candidate",
+        "review_observation.confidence",
+        "review_observation.dimension",
+        "review_observation.evidence_refs",
+        "review_observation.id",
+        "review_observation.verification_next_step"
+      ],
+      "omitted_field_count": 27,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "source": "strategy_observation",
+          "detail": "full",
+          "document_id": "issue80-routes-shop-budget-without-spend-quota",
+          "document_offset": 0
+        }
+      }
+    }
+  ],
+  "returned": 2,
+  "omitted": 0,
+  "truncated": true,
+  "notice": "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。partial_fields及truncated字段为不完整摘录，不能当完整条件或统计；全文按full_document续取。"
+}

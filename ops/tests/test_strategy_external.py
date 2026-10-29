@@ -252,12 +252,15 @@ class External(unittest.TestCase):
         native.write_text("#!/usr/bin/python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n"); native.chmod(0o755)
         env = {**os.environ, "STS2_CODEX_LEARNER_BIN": str(native), "CODEX_OPS_ROOT": str(self.root),
                "LEARNER_STATE_FILE": str(self.directory / "learn.json"), "LEARNER_BATCH_ID": BID,
-               "LEARNER_EXTERNAL_SOURCE": PLAN, "LEARNER_EXTERNAL_SERVICE_TIER": "ultrafast"}
+               "LEARNER_EXTERNAL_SOURCE": PLAN, "LEARNER_EXTERNAL_SERVICE_TIER": "default"}
         wrapper = ["bash", str(REPO / "ops/codex-learner.sh"), "exec", "-c", 'service_tier="default"', "-"]
-        for tier in ("fast", "ultrafast", "default"):
+        result = subprocess.run(wrapper, cwd=self.tree, env=env, capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('service_tier="default"', json.loads(result.stdout))
+        for tier in ("fast", "ultrafast"):
             result = subprocess.run(wrapper, cwd=self.tree, env={**env, "LEARNER_EXTERNAL_SERVICE_TIER": tier}, capture_output=True, text=True, timeout=5)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn('service_tier="' + tier + '"', json.loads(result.stdout))
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(result.stdout, "")
         batch.update(reason="tick"); (self.directory / "learn.json").write_text(json.dumps(self.state))
         self.assertNotEqual(subprocess.run(wrapper, cwd=self.tree, env=env, capture_output=True, timeout=5).returncode, 0)
 
@@ -365,7 +368,7 @@ class External(unittest.TestCase):
 
     def test_quota_boundaries_disk_and_account_binding(self):
         self.four_plans()
-        for used, limit, tier in ((70,4,"ultrafast"), (70.01,2,"fast"), (89.99,2,"fast")):
+        for used, limit, tier in ((0,4,"default"), (70,4,"default"), (70.01,2,"default"), (89.99,2,"default")):
             self.state = {"batches": {}}; self.calls=[]; self.quota(used)
             self.assertEqual(len(self.lanes()), limit)
             self.assertTrue(all(b["external_policy"]["service_tier"] == tier for b in self.state["batches"].values()))
