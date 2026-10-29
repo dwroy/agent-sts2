@@ -9,9 +9,9 @@ from pathlib import Path
 import re
 
 try:
-    from .spire_codex_download import load, save, sha, stamp, locked
+    from .spire_codex_download import load, save, sha, stamp, locked, active_tombstone
 except ImportError:
-    from spire_codex_download import load, save, sha, stamp, locked
+    from spire_codex_download import load, save, sha, stamp, locked, active_tombstone
 
 VERSION = 'spire-codex-projection-v3'
 DENIED = re.compile(r'player|username|steam|discord|account|email|token|seed|run_hash|harmony|platform|wall_clock|start_time', re.I)
@@ -330,7 +330,9 @@ def project(root):
         salt_id = hashlib.sha256(salt).hexdigest()
         if previous and previous.get('salt_id') != salt_id:
             raise ValueError('projection salt changed; restore the original identity')
-        for meta in index['runs'].values():
+        for key, meta in index['runs'].items():
+            if active_tombstone(index, key):
+                continue
             path = root / meta['path']
             if sha(path) != meta['sha256']:
                 raise ValueError('raw replay digest mismatch')
@@ -358,6 +360,8 @@ def project(root):
             projected += 1
             included += 1
         exports = {}
+        missing = sorted(k for k in index.get('tombstones', {}) if active_tombstone(index, k))
+        availability = ('-' + hmac.new(salt, json.dumps(missing).encode(), hashlib.sha256).hexdigest()) if missing else ''
         for version, relative in index.get('exports', {}).items():
             path = root / relative
             receipt = load(Path(str(path) + '.receipt.json'))
@@ -365,7 +369,7 @@ def project(root):
             if (not receipt or not receipt['manifest_verified'] or digest != receipt['sha256']
                     or digest != receipt.get('expected_sha256') or path.stat().st_size != receipt.get('expected_bytes')):
                 raise ValueError('export manifest verification is required')
-            out = cache / 'exports' / f'{version}-{digest}-{VERSION}-{salt_id}.jsonl'
+            out = cache / 'exports' / f'{version}-{digest}-{VERSION}-{salt_id}{availability}.jsonl'
             out.parent.mkdir(exist_ok=True)
             n, seen = 0, set()
             approved = previous.get('exports', {}).get(version, {})
@@ -374,6 +378,8 @@ def project(root):
                 tmp = out.with_suffix('.tmp')
                 with tmp.open('w') as f:
                     for raw in json_lines(path):
+                        if active_tombstone(index, raw.get('run_hash')):
+                            continue
                         row = export_run(raw, salt, digest)
                         if row is not None and row['run_id'] not in seen:
                             if row['build_id'] != version:
@@ -388,7 +394,8 @@ def project(root):
                 n = sum(1 for _ in json_lines(out))
             exports[version] = dict(path=str(out.relative_to(cache)), sha256=sha(out), runs=n)
         receipt = dict(schema=VERSION, created_at=stamp(), contains_player_identifiers=False,
-                       new_replays=projected, replay_count=included, raw_replay_count=len(index['runs']),
+                       new_replays=projected, replay_count=included, raw_replay_count=sum(
+                           not active_tombstone(index, k) for k in index['runs']),
                        exclusions=dict(exclusions), exports=exports,
                        replays=replays, salt_id=salt_id)
         save(cache / 'projection.json', receipt)

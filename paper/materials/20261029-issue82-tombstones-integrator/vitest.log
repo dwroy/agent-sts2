@@ -1,0 +1,120 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-82-tombstones-integration-20261029/agent
+
+(node:2899100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/paths.test.ts (11 tests | 11 failed) 21ms
+     × is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them 5ms
+     × resolves a relative path against itself whatever the cwd; an absolute one stays 2ms
+     × the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root 1ms
+     × a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd 1ms
+     × an absolute one is used as given 3ms
+     × the defaults are the project's logs/ (where the old code root kept them) 1ms
+     × every data file is where its loader looks: common/ or characters/<character>/ 2ms
+     × nothing in the data directories is outside that map (a file a loader would not find) 1ms
+     × the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt 1ms
+     × the MCP server runs this package's tsx on its own source 1ms
+     × the log database's query script is in agent/tools/logdb 1ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 169ms
+     × all resolve 167ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "agent/tests/v6-build-core.test.ts: ../../.cache/",
++   "agent/tests/v6-infrastructure.test.ts: ../../.cache/",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/paths.test.ts > the project root > is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them
+ FAIL  tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays
+ FAIL  tests/paths.test.ts > the project root > the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root
+ FAIL  tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd
+ FAIL  tests/paths.test.ts > paths from the environment > an absolute one is used as given
+ FAIL  tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them)
+ FAIL  tests/paths.test.ts > the knowledge files > every data file is where its loader looks: common/ or characters/<character>/
+ FAIL  tests/paths.test.ts > the knowledge files > nothing in the data directories is outside that map (a file a loader would not find)
+ FAIL  tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt
+ FAIL  tests/paths.test.ts > the tool servers' and log database's defaults > the MCP server runs this package's tsx on its own source
+ FAIL  tests/paths.test.ts > the tool servers' and log database's defaults > the log database's query script is in agent/tools/logdb
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:25:25
+     23| const HERE = dirname(fileURLToPath(import.meta.url));
+     24| const cwd = process.cwd();
+     25| afterEach(() => process.chdir(cwd));
+       |                         ^
+     26|
+     27| /** Every knowledge data file a loader reads (src/knowledge/*.ts, sim/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:47:13
+     45|
+     46|   it("resolves a relative path against itself whatever the cwd; an abs…
+     47|     process.chdir(mkdtempSync(join(tmpdir(), "paths-cwd-")));
+       |             ^
+     48|     expect(fromRoot("logs/decisions.jsonl")).toBe(join(PROJECT_ROOT, "…
+     49|     expect(fromRoot("./logs/escalation")).toBe(join(PROJECT_ROOT, "log…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:81:13
+     79|
+     80|   it("a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) res…
+     81|     process.chdir(mkdtempSync(join(tmpdir(), "paths-env-")));
+       |             ^
+     82|     const config = loadConfig(env);
+     83|     const at = (rel: string) => join(PROJECT_ROOT, rel);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them)
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:106:13
+    104|
+    105|   it("the defaults are the project's logs/ (where the old code root ke…
+    106|     process.chdir(tmpdir());
+       |             ^
+    107|     const config = loadConfig({ DEEPSEEK_API_KEY: "placeholder-not-a-k…
+    108|     expect(config.log.decisionLog).toBe(join(LOGS_DIR, "decisions.json…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:138:13
+    136|
+    137|   it("the default guide and handbook (v3's system prompt) exist and re…
+    138|     process.chdir(tmpdir());
+       |             ^
+    139|     const config = loadConfig({ DEEPSEEK_API_KEY: "placeholder-not-a-k…
+    140|     expect(config.deepseek?.guideFile).toBe(knowledgeFile(KNOWLEDGE_DI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  12 failed | 1 passed (13)
+   Start at  23:09:46
+   Duration  8.21s (transform 2.06s, setup 468ms, import 2.17s, tests 5.11s, environment 0ms)
+

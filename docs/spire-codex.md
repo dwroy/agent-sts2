@@ -24,6 +24,18 @@ HTTP 下载以 `.part`、Range、If-Range 与 ETag/Last-Modified 接续；200 �
 
 同一URL返回新字节时，先把旧raw和原收据精确保存在原目标目录的 `revisions/<旧SHA>/`，再替换当前文件；新收据的 `previous_revision` 给出相对原目标父目录的旧文件/收据路径与SHA。原始文件与收据均用原inode的独立链接保留，后继写入只原子换名；旧归档若校验不符会拒绝覆盖当前原件。`report.downloaded.total_bytes` 是当前索引对象字节，不包含历史修订、元数据和重复校验传输量。
 
+### 列表存在但回放缺失（#82 / 6499780647）
+
+只有已验证的列表行所指回放接口，返回 404 且完整响应为 `{"detail":"Replay not found"}`（或精确纯文本 `Replay not found`），才记墓碑后继续。响应新增字段、不同正文、非零 curl 返回码、字节长度不符、其他接口或跳转后的 404 均不适用；429、超时、5xx 继续原退避/失败合同，SHA/字节校验失败继续停止，不能归为缺失。
+
+私有 `private-index.json.tombstones` 按原 run_hash 保留同一墓碑及历次观察，保存 cycle、分片、页、1-based页内序号、列表SHA、响应时间、头/体SHA和精确副本路径。副本在 `raw/tombstones/`，与原chunk/headers/journal均不进入学习输入。新响应按 curl 结束时间记账；旧版失败journal仅在冻结头的Content-Length与完整正文一致时离线接收，时间使用响应头文件mtime，来源原因仍未知。原失败原件保留，不补造成功回执。
+
+同轮按去重的 run 计已处理记录（已核成功与墓碑的并集）；旧索引由 `checked_cycle` 读回已核成功，不倒填782次请求。每次落墓碑先持久保存，再以整数比较：墓碑数 × 100 > 已处理记录数，或连续5个新处理run为墓碑，即停止并报 `tombstone circuit breaker`，错误只含汇总。恰好1%可继续。连续性跨页/分片/重启保存，新成功归零；同轮重复行和重读页前缀不重复计数、不重置连续性。触发后同轮接续在任何网络请求之前继续拒绝，不可手改计数/游标绕过，应交主管裁决。
+
+墓碑同轮不再请求（包括列表重复、重启和索引提交前中断）；下一次完整扫描遇到该run才自然再查一次，仍缺失沿用原墓碑并追加观察，成功则解除active标记，保留历史。未完成cycle固定原versions/shards/page和已核manifest导出，不因每日manifest变化重建分片或重下导出；原导出损坏明确停止。ops沿原参数从第1/40分片第8页恢复，页面前缀已核回放直接复用，冻结且完整的原404可离线转墓碑。开发不改生产索引/游标，不启动下载。
+
+墓碑独立于成功，既不造零值也不纳入统计分母。active墓碑即使有旧成功raw，也不进当前回放投影/表；同run整局导出行也排除，安全导出缓存按加盐可用性修订重新寻址，旧缓存与raw原样保留。`report.replay_availability` 和 download结果单列本轮 `tombstones`、`processed_records`、`tombstone_ratio`、`consecutive_tombstones` 及跨轮 `active_tombstones`；这些是采集覆盖口径，不是游戏胜率/首试分母。墓碑头、体、ID和位置仅留私有目录，公开验收只写数量/比例及限制。
+
 首次只下载 v0.111.0 导出，保持同版本研究优先。下表为 2026-10-27 manifest 的冻结压缩体积，运行时仍以新 manifest 为准；旧版本本次不自动取，需研究单元明确版本后再用 `--export-version` 显式增加，不能混入同版本分母：
 
 | 版本 | 压缩字节 | 本次安排 |

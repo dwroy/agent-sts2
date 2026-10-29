@@ -7144,3 +7144,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-28T12:43:40.377384+08:00 [watcher] #82固定f40e29463已在独立集成树核三ROOT运行叶/两测试逐字同；候选host-only策略保26宿主/5消费者并加Python38与CLI，独核Python38、tsc0、Vitest两文件12项、CLI通过。仅准备，未submit/main/live；#77原full通过但strict LIVE冻结拒绝，保原小批优先与原件，等待冻结/顺序恢复后再接唯一最终完整检查。
 
 - 2026-10-29T15:03:38.410426+08:00 [watcher] #77+#81+#82：接77/6490090884/6490126416，旧9ecc6a3b因108个LIVE输入叶漂移不可采用，旧六绿/full1/once保；新隔离树基于f11183c49组合三固定source并核96普通文件逐字同、10生产叶无交集，tsc0/7文件116定向绿/分页迁移消费者绿。精确合同6c62d4aa（27宿主8消费者、LIVE仅81单叶）准备，真实trusted未改，按77/6490228315待主管明确同步边界；未submit/新full/main/LIVE写，原ops持K。
+
+
+- 2026-10-29T23:04:47+08:00 [dev #82] 按82/6499780647原树原线程补列表回放精确404墓碑，私有头体SHA/位置/时间及跨轮历史、同轮不重试、严格超过1%或连续5条持久熔断；active墓碑排除回放/整局导出投影、DB及统计，汇总分列。合成原1/40/page8/85接续复用782回放及已核导出且无新请求，生产索引/游标与下载未动；最终Python49、tsc0、Vitest两文件2项、paths11及CLI help通过，六源SHA无漂移，初轮夹具错误保留。不冒最终组合full，ROOT三运行叶/LIVE零叶，仅准备新固定请求交原集成员小批队列；实际合入后ops沿原游标全量核收，#83仍等全量。材料paper/materials/20261029-issue82-tombstones/，未改main/live/STOP/知识/账号/配置或关其他会话。
+
+- 2026-10-29 23:13 [watcher] #82墓碑后继55bc8ba5相对f40e2946规范化至main0b80fde8；ROOT3/LIVE0，定向Python49/tsc/2+11 Vitest/CLI通过，首次环境失败原件保留；仅本批精确安装映射清空，27宿主/8消费者及strict门不变，尚未submit或新full。证据：paper/materials/20261029-issue82-tombstones-integrator/report.md。
