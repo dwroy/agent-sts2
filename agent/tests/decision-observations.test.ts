@@ -78,14 +78,13 @@ it("preserves exact noncontiguous ascension scope instead of accepting an index 
  expect(view(req).entries[0].id).toBe("gap");
 });
 
-it.each([2048, 4000, 8000, 24000])("bounds an oversized original observation to %i UTF-8 bytes and explicitly marks lost fields", budget => {
+it.each([2048, 4000, 8000, 24000])("keeps oversized original observation fields out of the %i byte envelope, with an ID/title instead of fragments", budget => {
  const e = entry("large"), review = e.review_observation!;
  for (const key of ["conditions", "denominators", "counterexamples", "limitations"]) review[key] = { original: '中文😀"\\\n'.repeat(3000) };
  const { directory } = runtime([e]); const result = view(request(directory), budget);
- expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(budget); expect(result.returned).toBe(1);
- expect(result.entries[0]).toMatchObject({ id: e.id, truncated: true, condition_evaluation: "not_evaluated" });
- for (const key of ["conditions", "denominators", "counterexamples", "limitations"]) expect(result.entries[0].review_observation).toHaveProperty(key);
- expect(result.entries[0].omitted_fields).toContain("review_observation.conditions");
+ expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(budget); expect(result.returned).toBe(0);
+ expect(result.entries).toEqual([]); expect(result.fragment_entries).toBe(0);
+ expect(result.references).toEqual([{ id: "large", title: "合成观察摘要。", source: "strategy_observation" }]);
 });
 
 it("recovers every original condition/denominator/counterexample/limit byte via the bound full-document protocol", async () => {
@@ -146,4 +145,42 @@ it("retains original observation fields in typed consumer projections, including
  expect(result.review_observation.conditions).toEqual(e.review_observation!.conditions);
  expect(result.full_document).toMatchObject({ tool: "kb_strategies", input: { detail: "full", document_id: e.id } });
  expect(result.omitted_fields).toContain("full_review_evidence");
+});
+
+
+it("includes at most four complete observations and lists every remaining ID in the same generic rank order", async () => {
+ const entries = Array.from({ length: 9 }, (_, i) => entry(`fixture-${i}`));
+ const { directory } = runtime(entries), req = request(directory), result = view(req, 24000);
+ expect(result.entries.map((e: any) => e.id)).toEqual(entries.slice(0, 4).map(e => e.id));
+ expect(result.references.map((e: any) => e.id)).toEqual(entries.slice(4).map(e => e.id));
+ expect(result).toMatchObject({ complete_entries: 4, fragment_entries: 0, reference_only_count: 5, omitted_references: 0, truncated: false });
+ for (let i = 0; i < 4; i++) {
+  expect(result.entries[i].review_observation).toEqual(entries[i]!.review_observation);
+  expect(result.entries[i].trigger).toEqual(entries[i]!.trigger);
+  expect(result.entries[i]).toMatchObject({ confidence: .25, source: "own", truncated: false });
+ }
+ const ref = result.references[0], full = JSON.parse((await decisionContextTool().run({ detail: "full", document_id: ref.id, source: ref.source }, req.toolContext!)).text);
+ expect(JSON.parse(full.json_fragment)).toEqual(entries[4]);
+ expect(JSON.stringify(result)).not.toContain("partial_json_text");
+});
+
+it("reduces the complete prefix when full original conditions and limitations consume the budget", () => {
+ const entries = Array.from({ length: 4 }, (_, i) => entry(`big-${i}`));
+ for (const e of entries) e.review_observation!.limitations = ["original limitation ".repeat(150)];
+ const { directory } = runtime(entries), result = view(request(directory));
+ expect(result.entries.length).toBe(1); expect(result.references.map((e: any) => e.id)).toEqual(["big-1", "big-2", "big-3"]);
+ expect(result.entries[0].review_observation.limitations).toEqual(entries[0]!.review_observation!.limitations);
+ expect(result.entries[0].review_observation.denominators).toEqual(entries[0]!.review_observation!.denominators);
+ expect(result.entries[0].truncated).toBe(false); expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(8000);
+});
+
+it("bounds a large Unicode ID/title index and explicitly counts any references it cannot display", () => {
+ const entries = Array.from({ length: 30 }, (_, i) => entry(`fixture-${String(i).padStart(2, "0")}-${"x".repeat(130)}`, {
+  name: '导航😀"\\'.repeat(150), review_observation: { ...entry("base").review_observation, summary: "large".repeat(3000) },
+ }));
+ const { directory } = runtime(entries), result = view(request(directory), 2048);
+ expect(result.entries).toEqual([]); expect(result.references[0].id).toBe(entries[0]!.id);
+ expect(result.omitted_references).toBeGreaterThan(0); expect(result.truncated).toBe(true);
+ expect(result.reference_only_count + result.omitted_references).toBe(30);
+ expect(Buffer.byteLength(JSON.stringify(result))).toBeLessThanOrEqual(2048);
 });

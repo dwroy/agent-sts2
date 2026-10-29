@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-28T11:59:06.244427+08:00",
+  "base": "a10a8483441f619d8367c458ab4ffa9f13e85b40",
+  "files": [
+    {
+      "path": "eval/spire_codex.py",
+      "bytes": 14438,
+      "sha256": "ff7cbff3b740670dce669d6785654956aa15a4652a8cf2d26beffc316deb9e93"
+    },
+    {
+      "path": "eval/spire_codex_download.py",
+      "bytes": 17019,
+      "sha256": "17894de23613e56c7ac6f5c65f42d2ffbc63d718f8e1b7fe718e79facb606686"
+    },
+    {
+      "path": "eval/spire_codex_projection.py",
+      "bytes": 20211,
+      "sha256": "85a5a36d7d52e2c788fa5697c5875cc709534ce52d1afeea9f7df461f9e80d9d"
+    },
+    {
+      "path": "eval/tests/test_spire_codex.py",
+      "bytes": 27427,
+      "sha256": "a4b80214b037e46b3b4700321915e88ceef66fe983e0f16eefab05ec45469680"
+    },
+    {
+      "path": "agent/tests/spire-codex.test.ts",
+      "bytes": 636,
+      "sha256": "1a21bad3ebd0d12d1abc3cfe72ae60817dea0fc0615bd25c3e7276f98efb646b"
+    }
+  ],
+  "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh --testTimeout=60000",
+  "timeout_basis": "docs/board-merge-queue.md fixed integration contract: 60-second testTimeout; subprocess limits unchanged"
+}

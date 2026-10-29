@@ -114,7 +114,7 @@ Roy/Claude 2026-10-24（#51 评论6376022286）：外部冻结单元待派时，
 
 Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）：外部学习按 A 流派剧本、B 单牌、C 遭遇战与 rk、D 其余决策四道分别登记，每道至多一个未结算批次。队列 plan 的 `lane` 是派发元数据，冻结来源清单、SHA 与样本分母不变；同道按原队列顺序续派，D 内保留商店/删牌→遗物→事件顺序。外部 pending/在途时另留一个自有学习槽，优先原复盘入口，之后走经验、提案等原路径；已有自有 owner 和审计文件锁不因拆道被释放。无外部需求时保留原普通流水线。新批次仍走原 ready/dispatch/finish、原生消费核验、未送草稿及工作树 retention；四道不授权并行写 live。
 
-现有五分钟订阅采样同时写 `ops/codex-ops/subscription-usage.json`，账号 home 的 SHA256 只用于绑定；不含凭据。调度器与 wrapper/launcher 共用这份最多十分钟的快照：周用量 ≤70% 为四道 ultrafast，>70% 且 <90% 为两道 fast，≥90% 停止新外部准入并向原 ops 队列去重请求 codex1 换号。#56 评论 6383255912 明确当前没有预检事务 ID，真实预检、drain、换号及验证归 ops，不在开发交付中切账号；不打断在途批次。未知/过期/账号不符也不准入。刷新快照但仍在同档允许已登记 checkout 继续，跨档需保留原注册并走原失败/重试门，不能重写租约。主盘可用空间 ≤80 GiB 拒绝新外部派发，原临时盘及其他容量门继续生效。service tier 仅经启动参数传入，不改共享 config。
+现有五分钟订阅采样同时写 `ops/codex-ops/subscription-usage.json`，账号 home 的 SHA256 只用于绑定；不含凭据。调度器与 wrapper/launcher 共用这份最多十分钟的快照：按 Roy 2026-10-28 授权（[#56/6458903164](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6458903164)），所有新外部批次固定 `service_tier=default`；周用量 ≤70% 仍为四道，>70% 且 <90% 仍为两道，≥90% 停止新外部准入并向原 ops 队列去重请求 codex1 换号。#56 评论 6383255912 明确当前没有预检事务 ID，真实预检、drain、换号及验证归 ops，不在开发交付中切账号；不打断在途批次。未知/过期/账号不符也不准入。刷新快照但仍在同一 workers 档允许已登记 checkout 继续，跨 workers 档或旧 fast/ultrafast 登记需保留原注册并走原失败/重试门，不能重写租约。主盘可用空间 ≤80 GiB 拒绝新外部派发，原临时盘及其他容量门继续生效。service tier 仅经启动参数传入，不改共享 config。
 
 每批 `external-launch.json` 初始区分 requested/effective 与尚未知的 observed；只有原生 turn_context 经原绑定核验后，调度器才补写 `observed_service_tier` 和对应只读证据。发布后由 ops 记录 T/源码、自然 tick 的四道+自有槽五个独立批次及实际档位，并在 [T,T+2h) 读回至少四个完成单元。固定测试和启动请求不能代这两项验收；R434 正式策略/rk、旧失败、未完成学习父要求与自然采用/收益保持分账。
 
