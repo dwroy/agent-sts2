@@ -6700,3 +6700,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-24T20:10:43+08:00 [dev #56] 接集成员退回修同道换plan绕退役门：done/failed且wrapper PID不活仍须原shared.retired，未核原生保原道及worker名额，证明齐全可续，其他空道/自有槽保持；原两例反证新增writer均0、字段不变，固定原生/未启动正控过。生产tsc0、沙箱5844全过/paths11、Python109过，冻结四叶核同；旧失败/dfd847原件保留，不部署/不改live知识或父要求，交原review。材料paper/materials/20261024-issue56-retirement-fix/。
 
 - 2026-10-24T22:29:16+08:00 [dev #56] P0注册长锁修复：原全局learn.lock事务内逐批预持发布屏障，完整PID/来源/档位行原子fsync后放行对应wrapper，120秒不变；长来源惰性选道/事务内按身份缓存一次，漂移重验，旧在途行与退役/权限门不改。实际五fixed wrapper在父全局锁仍持有时逐批拿完整注册；生产tsc0、沙箱5845过/paths11、Python445过，冻结九叶一致。交集成员23:30前核合，未合仍原ops按6385018900回退原两槽，知识/owner/自然与科学父保持；本开发未部署/改live/强tick。材料paper/materials/20261024-issue56-registration-fix/。
+
+- 2026-10-30T21:53:23+08:00 [dev #56] 按56/6523800528及20/6524090002先交学习并发配置方案：独立learning own/ext/total默认1/4/5且硬上限10，codex3 primary周窗已用>=70%或未知降总限4、仅限新准入、原tick每2h报；开发8/heavy独立，扩外部席位须保主题/来源/原owner证明，各实际启动入口共用预算。只读fetch核main1b7c652cb，保原56800c05分支；ROOT board登记归原集成员，配置10及own/ext分配归采用后ops。纯方案未改代码/生产/账号/在途状态，不冒工程或运行验收；材料paper/materials/20261030-issue56-concurrency-config/plan.md，原父要求保留。
