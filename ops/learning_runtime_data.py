@@ -4,6 +4,7 @@ The control explicitly admits a producer's method fingerprint. Changing its
 algorithm/validator requires engineering and a new admitted fingerprint.
 """
 from contextlib import contextmanager
+from datetime import datetime, timezone
 import fcntl
 import json
 import os
@@ -81,19 +82,9 @@ def bind_launch(root, code_root, request, options):
     return launch_selection(base)
 
 
-def method(root, producer):
-    root = Path(root)
-    if producer not in OUTPUTS:
-        raise ValueError("unknown fixed producer")
-    # Include helper implementations, model code and validators. Never include
-    # their generated knowledge/data, so ordinary data refreshes remain data.
-    paths = [*sorted((root / "knowledge/builders").glob("*.py")),
-             *sorted((root / "agent/src").rglob("*.ts")),
-             *sorted((root / "agent/tools/boss-sim").glob("*.py")),
-             *sorted((root / "agent/tools/boss-sim").glob("*.ts")),
-             root / "ops/learning_runtime_data.py", root / "ops/learning_runtime_store.py",
-             root / "ops/learning_runtime.py", root / "ops/knowledge_runtime_env.py"]
-    return sha(packed({"producer": producer, "inputs": {str(p.relative_to(root)): sha(checked_file(root, p)) for p in paths if p.is_file()}}).encode())
+def method(root, producer, runtime_root=None):
+    from fixed_producer_methods import method as fingerprint
+    return fingerprint(root, producer, runtime_root)
 
 
 def source_cut(root, producer=None, characters=None):
@@ -208,7 +199,6 @@ def refresh_step(root, code_root, step, characters, request, chosen_override=Non
         return
     producer = step.split(":")[0]
     method_root = Path(method_root or code_root).resolve()
-    fingerprint = method(method_root, producer)
     directory = Path(chosen["directory"])
     if not (directory / "learning.sqlite").is_file():
         raise ValueError("original fixed-data database unavailable; restore rather than reinitialize")
@@ -231,6 +221,8 @@ def refresh_step(root, code_root, step, characters, request, chosen_override=Non
                 # republish completed data under a newer method/base.
                 yield {"rc": 0, "version": previous["version"], "already_completed": True}
                 return
+            from fixed_producer_methods import manifest as method_manifest
+            fingerprint = method(method_root, producer, root)
             if chosen["methods"].get(producer) != fingerprint:
                 raise ValueError("unadmitted fixed method/consumer capability; engineering required")
             knowledge = knowledge_binding(root) if producer == "v6-history" else None
@@ -262,11 +254,12 @@ def refresh_step(root, code_root, step, characters, request, chosen_override=Non
             yield result
             if result["rc"] != 0:
                 raise ValueError("fixed producer failed; previous data retained")
-            if method(method_root, producer) != fingerprint or source_cut(code_root, producer, characters) != inputs:
+            if method(method_root, producer, root) != fingerprint or source_cut(code_root, producer, characters) != inputs:
                 raise ValueError("fixed method/knowledge inputs changed during refresh")
             provenance = {"producer": producer, "method_sha256": fingerprint, "consumer_capability": "fixed-data-v1",
                           "characters": characters, "knowledge_inputs": inputs,
-                          "method_source_root": str(method_root), "compatibility_root": str(Path(code_root).resolve()),
+                          "method_source_root": str(method_root), "method_runtime_root": str(Path(root).resolve()),
+                          "method_manifest": method_manifest(method_root, producer, root), "compatibility_root": str(Path(code_root).resolve()),
                           "knowledge_version": knowledge["version"] if knowledge else None,
                           "knowledge_dependencies": {name.removeprefix("knowledge/"): digest for name, digest in inputs.items()
                                                      if Path(name).name in ("build-cores.json",)},
@@ -277,9 +270,11 @@ def refresh_step(root, code_root, step, characters, request, chosen_override=Non
             result["version"] = base if unchanged else publish_outputs(store, request, base, paths, code_root, provenance)
             receipt = {"schema": "fixed-data-completion-v1", "request": request, "version": result["version"],
                        "status": "unchanged" if unchanged else "published", "producer": producer,
+                       "completed_at": datetime.now(timezone.utc).isoformat(),
                        "method_sha256": fingerprint, "control_sha256": chosen["control_sha256"]}
             with store.transaction():
                 store.db.execute("INSERT INTO data_attempts VALUES(?,?,?)", (request, result["version"], packed(receipt)))
+            result["status"] = receipt["status"]
             state.update(status="committed", version=result["version"])
             atomic(journal, (packed(state) + "\n").encode())
         except BaseException:

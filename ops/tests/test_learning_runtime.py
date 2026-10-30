@@ -15,6 +15,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "ops"))
+sys.path.insert(0, str(ROOT))
 import learning_runtime as runtime
 from learning_runtime_store import Store, atomic, packed, sha
 import learning_runtime_data as data
@@ -27,6 +28,8 @@ class LearningRuntimeTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix="learning-runtime-fixture-")
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        from ops.tests.fixed_producer_fixture import install
+        install(self.root)
         for name in ("learner", "ops/codex-ops/learner", "logs", "knowledge/builders", "knowledge/characters/silent", "knowledge/common", "eval", "paper/materials/learning", "agent/src"):
             (self.root / name).mkdir(parents=True, exist_ok=True)
         for name in ("learner/ledger.py", "learner/code_proposals.py", "learner/external_evidence.py", "knowledge/builders/characters.py"):
@@ -485,6 +488,8 @@ class LearningRuntimeTest(unittest.TestCase):
         jl(self.scratch / "results.jsonl", results)
         (self.scratch / "provenance.json").write_text(packed({"fixed_fixture": True, "samples": 200, "seed": 1}))
         chosen = copy.deepcopy(self.batch["operational_runtime"])
+        from ops.tests.fixed_producer_fixture import install
+        install(self.root, 'silent-boss-calibration')
         chosen["entries"].append("silent-boss-calibration")
         chosen["methods"]["silent-boss-calibration"] = data.method(self.root, "silent-boss-calibration")
         self.batch.update(task="fix-batch", learner_task="silent-boss-calibration", runs=[], operational_runtime=chosen)

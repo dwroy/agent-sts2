@@ -24,6 +24,10 @@ class EntrypointTest(unittest.TestCase):
         for source in HERE.iterdir():
             if source.suffix in ('.py', '.sh') and not source.name.startswith('test_'):
                 shutil.copyfile(source, self.builders / source.name)
+        helpers = self.ops_root / 'ops'
+        helpers.mkdir(parents=True)
+        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+            shutil.copyfile(HERE.parents[1] / 'ops' / name, helpers / name)
         learner = self.live / 'learner'
         learner.mkdir()
         shutil.copyfile(HERE.parents[1] / 'learner/evidence_identity.py', learner / 'evidence_identity.py')
@@ -36,7 +40,7 @@ class EntrypointTest(unittest.TestCase):
         # not cd or add PYTHONPATH. No parent test module or sys.path is inherited.
         self.env = {k: v for k, v in os.environ.items()
                     if not k.startswith(('PYTHON', 'STS2_REFRESH_'))}
-        self.env.update(PYTHONPATH='', PYTHONDONTWRITEBYTECODE='1',
+        self.env.update(PYTHONPATH='', PYTHONDONTWRITEBYTECODE='1', CODEX_OPS_DIR=str(self.ops_root / 'ops/codex-ops'),
                         STS2_REFRESH_OPS_ROOT=str(self.ops_root),
                         STS2_REFRESH_CACHE_DIR=str(self.ops_root / 'ops/legacy-refresh-cache'))
         for key in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS'):

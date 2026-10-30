@@ -30,7 +30,7 @@
 
 `entries` 是本次显式切换的原入口，不是用任务名字判断内容性质的硬编码白名单。可分入口部署；不在集合中的任务和旧无 `operational_runtime` 的批次继续原合同。控制禁链、限8KB、核实例根、本地 data 子目录和严格字段。缺文件关闭；损坏拒绝新准入。派发将完整选择写入原 batch，再由原 registration barrier 持久化。launcher 从该批记录注入覆盖旧提交章节的合同，不重读当前控制；完成/recheck 使用同一原目录。切 A→B/disabled 不改原批、不猜新目录；完成历史在 SQLite 与原 batch 同时保存。
 
-先显式 `init`，再启用控制；丢失原库必须恢复，完成/刷新/运行绑定不会自动重建历史。仅开启运营 entries 不影响新局。开启某个固定 producer 前，先按实际有效原数据冻结、调用 `seed` 建 D1 基线，再核 `method` 对实际安装 producer 代码根的结果并填 `methods`。method SHA 保守覆盖原构建器、模型代码、校准方法及验证适配；数据刷新不改变该 SHA，源码变化须沿工程核收后重新核明确准入，不能模型自批。首次接入不调参、不扩样本/范围、不把 Git 旧数据覆盖实际已刷新的数据。根/角色/进阶/模型和方法都留在输出与 provenance。
+先显式 `init`，再启用控制；丢失原库必须恢复，完成/刷新/运行绑定不会自动重建历史。仅开启运营 entries 不影响新局。开启某个固定 producer 前，先按实际有效原数据冻结、调用 `seed` 建 D1 基线，再核 `method` 对实际安装 producer 代码根的结果并填 `methods`。method SHA 现按 [固定 producer 准入合同](fixed-producer-admission.md) 逐 producer 固定真实代码/模型/验证依赖及 ROOT/LIVE 来源；未知动态边或缺叶拒绝，不再宽枚举整个源码目录。已启用实例的源码变化须在原工程发布同一事务核实际安装字节、CAS 准入并留回执，不能事后手改 methods 或模型自批。旧宽指纹及发布记录原样保留。首次接入不调参、不扩样本/范围、不把 Git 旧数据覆盖实际已刷新的数据。根/角色/进阶/模型和方法都留在输出与 provenance。
 
 ```bash
 nice -n 19 python3 ops/learning_runtime.py init --runtime "$DATA_RUNTIME"
