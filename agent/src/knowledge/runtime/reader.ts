@@ -50,7 +50,7 @@ export class KnowledgeReader {
    const sqlite = String(this.db.prepare("SELECT sqlite_version() version").get()!["version"]);
    if (!safeSQLiteVersion(sqlite)) throw new Error(`SQLite ${sqlite} lacks required WAL-reset fix`);
    this.schema = Number(this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get()?.["value"]);
-   if (![3, 4].includes(this.schema)) throw new Error("typed knowledge schema requires owner migration");
+   if (![3, 4, 5].includes(this.schema)) throw new Error("typed knowledge schema requires owner migration");
    const release = this.db.prepare("SELECT manifest FROM releases WHERE version=?").get(version);
    if (!release) throw new Error("bound knowledge version is unavailable");
    this.files = (JSON.parse(String(release["manifest"])) as { files: Record<string, string> }).files;
@@ -203,6 +203,6 @@ export class KnowledgeReader {
   return items.map(e => ({ source: e.source ?? e.value.source ?? "own", character: e.character, file: basename(e.path), path: e.path,
    entry_id: e.original_id, version: this.version, knowledge_version: this.version, revision: e.revision, sha256: this.files[e.path], item_sha256: e.item,
    classification: e.classification,
-   confidence: e.value.confidence ?? "unknown", evidence_status: e.evidence_status, limits: e.value.limits ?? e.value.limitations ?? [] }));
+   confidence: e.value.confidence === null ? null : e.value.confidence ?? "unknown", evidence_status: e.evidence_status, limits: e.value.limits ?? e.value.limitations ?? [] }));
  }
 }

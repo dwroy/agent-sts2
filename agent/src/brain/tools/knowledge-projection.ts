@@ -1,3 +1,4 @@
+import { strategyGrading } from "../../knowledge/strategy-grading.js";
 /** Bounded consumer views; source payloads and evidence are never rewritten. */
 import { createHash } from "node:crypto";
 import type { JsonSchema, ToolResult } from "./types.js";
@@ -81,7 +82,8 @@ export function observationConsumerProjection(value: Row, tool: string, query: R
   const omitted = [...Object.entries(fields).filter(([,v]) => record(v) && v.truncated === true).map(([k]) => `review_observation.${k}`),
    ...Object.keys(observation).filter(k => !Object.hasOwn(fields, k)).map(k => `review_observation.${k}`),
    ...Object.keys(value).filter(k => !["id", "confidence", "strategy", "trigger", "review_observation"].includes(k))];
-  const result = { id: value.id, confidence: value.confidence, strategy: fragment(value.strategy, scale ? Math.max(100, scale) : 60),
+  const g = strategyGrading(value);
+  const result = { id: value.id, confidence: value.confidence, ...(g ? { evidence_type: g.evidence_type, summary: g.summary, grading: g } : {}), strategy: fragment(value.strategy, scale ? Math.max(100, scale) : 60),
    trigger: fragment(value.trigger, scale), review_observation: fields,
    condition_evaluation: "not_evaluated", applicability: "formal_trigger_only", representation: "consumer_projection", truncated: true,
    ...(scale ? { evidence_summary: { references: array(value.evidence).length, full_review_evidence: array(value.full_review_evidence).length, denominators_combined: false } } : {}),
@@ -98,7 +100,7 @@ export function consumerProjection(value: Row, tool: string, query: Row): Row {
  const strongest = [...ev].filter(record).sort((a, b) => Number(b.denominator?.n ?? 0) - Number(a.denominator?.n ?? 0))[0];
  const chosen = [...new Set([...[...ev].reverse().filter(v => record(v) && v.role === "contradict").slice(0, 1),
   ...ev.slice(-1), ...(strongest ? [strongest] : []), ...[...ev].reverse()])].slice(0, 3);
- const essential = ["id", "trigger", "strategy", "lesson", "summary", "label_en", "confidence", "evidence_status", "scope", "asc", "status", "source", "version", "applies_to", "predicate", "signal", "source_experience", "limitation_notice", "limitations", "limits", "unknowns", "shared"];
+ const essential = ["grading", "evidence_type", "id", "trigger", "strategy", "lesson", "summary", "label_en", "confidence", "evidence_status", "scope", "asc", "status", "source", "version", "applies_to", "predicate", "signal", "source_experience", "limitation_notice", "limitations", "limits", "unknowns", "shared"];
  const fields = Object.fromEntries(essential.filter(k => value[k] !== undefined).map(k => [k, value[k]]));
  const core = bytes(fields) <= 3000 ? fields : boundedPreview(fields, 3000);
  return { ...(record(core) && !core.truncated ? core : { id: value.id, confidence: value.confidence, evidence_status: value.evidence_status, partial_fields: core }),
@@ -142,19 +144,26 @@ export function consumerPage<T>(options: {
  if (full && selected.length) {
   if (selected.length !== 1) throw Error("document_id is ambiguous within this scope");
   const row = selected[0]!, raw = JSON.stringify(value(row));
-  const parts: string[] = []; let part = "", size = 0;
-  for (const char of raw) {
-   const n = bytes(char) - 2;
-   if (size + n > 9000) { parts.push(part); part = ""; size = 0; }
-   part += char; size += n;
-  }
-  parts.push(part);
-  const start = Number(input.document_offset ?? 0);
-  if (start >= parts.length) throw Error("document_offset is outside this document");
-  const text = JSON.stringify({ ...envelope, entries: [{ id: documentId }], sources: source([row]), returned: 1, truncated: parts.length > 1,
+  const sources = source([row]);
+  const render = (parts: string[], start: number) => JSON.stringify({ ...envelope, entries: [{ id: documentId }], sources, returned: 1, truncated: parts.length > 1,
    representation: "full_document_fragment", document_id: documentId, document_sha256: createHash("sha256").update(raw).digest("hex"),
    encoding: "concatenated-json", json_fragment: parts[start], document_offset: start, total_document_parts: parts.length,
-   next_document_offset: start + 1 < parts.length ? start + 1 : null, next_offset: null });
+   next_document_offset: start + 1 < parts.length ? start + 1 : null, next_offset: null,
+   ...(start + 1 < parts.length ? { next_input: { ...query, detail: "full", document_id: documentId, document_offset: start + 1 } } : {}) });
+  const parts: string[] = [];
+  if (Buffer.byteLength(render([raw], 0)) <= KNOWLEDGE_RESPONSE_BYTES) parts.push(raw);
+  else {
+   let part = "", size = 0;
+   for (const char of raw) {
+    const n = bytes(char) - 2;
+    if (size + n > 9000) { parts.push(part); part = ""; size = 0; }
+    part += char; size += n;
+   }
+   parts.push(part);
+  }
+  const start = Number(input.document_offset ?? 0);
+  if (start >= parts.length) throw Error("document_offset is outside this document");
+  const text = render(parts, start);
   if (Buffer.byteLength(text) > KNOWLEDGE_RESPONSE_BYTES) throw Error("knowledge document metadata exceeds 24KB");
   return { text };
  }

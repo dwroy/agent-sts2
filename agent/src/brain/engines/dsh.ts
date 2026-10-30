@@ -53,6 +53,7 @@ export function dshEnv(): Record<string, string> {
 }
 
 export class DshEngine implements BrainEngine {
+  readonly preparesRequests = true;
   readonly name = "deepseek" as const;
   readonly model: string;
   constructor(private readonly config: BrainConfig, private readonly mcpUrl?: string) { this.model = config.engines.deepseek.model ?? DSH_MODEL; }
@@ -83,6 +84,7 @@ export class DshEngine implements BrainEngine {
       const patch = join(dir, "knowledge.patch.json");
       const sessions = join(root, "sessions");
       writeFileSync(patch, JSON.stringify(dshPatch(ids, req.system, this.model, effort, sessions, req.tools?.length ? this.mcpUrl : undefined)));
+      req.prepareForSend?.(req);
       const result = await this.run(["headless", "--patch", patch, "--json", "-"], cwd,
         `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal, req.observe);
       const parsed = parseAnswerText(result.text);

@@ -51,6 +51,8 @@ export interface AnswerSpec {
 }
 
 export interface BrainRequest {
+  /** Local durable exposure reservation, invoked before each newly dispatched native prompt. Never serialized. */
+  prepareForSend?: (request: BrainRequest) => void;
   /** Process-owned evidence journal, shared by phases and re-asks; never sent to a model. */
   evidence?: BrainEvidence;
   evidencePhase?: "query" | "answer" | "reask";
@@ -175,6 +177,8 @@ export interface BrainAnswer {
 }
 
 export interface BrainEngine {
+  /** This adapter reserves at its native send boundary (or forwards to one that does). */
+  readonly preparesRequests?: boolean;
   readonly name: EngineName;
   readonly model: string;
   /** One attempt (plus any repair loop the engine runs internally). The router validates and re-asks. */
