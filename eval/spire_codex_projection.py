@@ -315,27 +315,62 @@ def export_run(raw, salt, source_sha):
     return redact(result, forbidden_values(raw))
 
 
-def project(root):
+def project(root, partial=False):
     root = Path(root)
     with locked(root):
         salt = salt_for(root)
         index = load(root / 'private-index.json')
         if index is None:
             raise ValueError('download index is required')
+        cycle = index.get('cycle', {})
+        if partial and not cycle.get('id'):
+            raise ValueError('partial projection requires an identified current cycle')
+        if cycle and not cycle.get('complete') and not partial:
+            raise ValueError('unfinished cycle requires project --partial')
+        cutoff = dict(shard=cycle.get('next', 0) + 1, shards=len(cycle.get('shards', [])),
+                      page=(cycle.get('shards', [])[cycle['next']]['page']
+                            if cycle.get('next', 0) < len(cycle.get('shards', [])) else None))
         cache = root / 'cache'
         cache.mkdir(exist_ok=True)
         previous = load(cache / 'projection.json', {})
         projected, included, exclusions = 0, 0, collections.Counter()
-        replays = {}
+        replays, eligible = {}, set()
+        active_missing = sum(bool(v.get('active')) for v in index.get('tombstones', {}).values())
+        if active_missing:
+            exclusions['active_tombstone'] = active_missing
         salt_id = hashlib.sha256(salt).hexdigest()
         if previous and previous.get('salt_id') != salt_id:
             raise ValueError('projection salt changed; restore the original identity')
         for key, meta in index['runs'].items():
             if active_tombstone(index, key):
                 continue
+            if partial and meta.get('checked_cycle') != cycle['id']:
+                exclusions['not_checked_in_current_cycle'] += 1
+                continue
             path = root / meta['path']
+            if partial and any(Path(str(path) + suffix).exists() for suffix in ('.part.json', '.part', '.chunk')):
+                exclusions['inflight_replay'] += 1
+                continue
+            if partial and not path.is_file():
+                exclusions['missing_raw'] += 1
+                continue
             if sha(path) != meta['sha256']:
+                if partial:
+                    exclusions['raw_digest_mismatch'] += 1
+                    continue
                 raise ValueError('raw replay digest mismatch')
+            # Partial intake quarantines incompatible evidence; it never changes
+            # either build or passes a mismatching replay to the strict projector.
+            events = None
+            if partial:
+                events = list(json_lines(path))
+                header = next((e for e in events if e.get('t') == 'header'), None)
+                if header is None:
+                    exclusions['missing_header'] += 1
+                    continue
+                if header.get('build_id') != meta['build_id']:
+                    exclusions['replay_index_build_mismatch'] += 1
+                    continue
             rid = pseudonym(salt, 'run', meta['run_hash'])
             identity = json.dumps({k: meta.get(k) for k in ('sha256', 'build_id', 'character', 'ascension', 'win', 'was_abandoned', 'redaction_values')}, sort_keys=True)
             revision = hmac.new(salt, identity.encode(), hashlib.sha256).hexdigest()
@@ -345,9 +380,10 @@ def project(root):
             if (old and old.get('schema') == VERSION and old['run']['source_sha256'] == meta['sha256']
                     and approved.get('path') == str(out.relative_to(cache)) and approved.get('sha256') == sha(out)):
                 replays[rid] = dict(path=str(out.relative_to(cache)), sha256=sha(out))
+                eligible.add(key)
                 included += 1
                 continue
-            events = list(json_lines(path))
+            events = events if events is not None else list(json_lines(path))
             header = next((e for e in events if e.get('t') == 'header'), None)
             if header is None:
                 raise ValueError('missing replay header')
@@ -357,11 +393,15 @@ def project(root):
                 continue
             save(out, replay_bundle(events, meta, salt, meta['sha256']))
             replays[rid] = dict(path=str(out.relative_to(cache)), sha256=sha(out))
+            eligible.add(key)
             projected += 1
             included += 1
         exports = {}
         missing = sorted(k for k in index.get('tombstones', {}) if active_tombstone(index, k))
         availability = ('-' + hmac.new(salt, json.dumps(missing).encode(), hashlib.sha256).hexdigest()) if missing else ''
+        if partial:
+            scope = json.dumps(dict(partial=True, missing=missing, eligible=sorted(eligible)), sort_keys=True)
+            availability = '-' + hmac.new(salt, scope.encode(), hashlib.sha256).hexdigest()
         for version, relative in index.get('exports', {}).items():
             path = root / relative
             receipt = load(Path(str(path) + '.receipt.json'))
@@ -380,6 +420,8 @@ def project(root):
                     for raw in json_lines(path):
                         if active_tombstone(index, raw.get('run_hash')):
                             continue
+                        if partial and raw.get('run_hash') not in eligible:
+                            continue
                         row = export_run(raw, salt, digest)
                         if row is not None and row['run_id'] not in seen:
                             if row['build_id'] != version:
@@ -394,6 +436,8 @@ def project(root):
                 n = sum(1 for _ in json_lines(out))
             exports[version] = dict(path=str(out.relative_to(cache)), sha256=sha(out), runs=n)
         receipt = dict(schema=VERSION, created_at=stamp(), contains_player_identifiers=False,
+                       partial=partial, cutoff_cursor=cutoff, cycle_complete=bool(cycle.get('complete')),
+                       input_index_sha256=sha(root / 'private-index.json'),
                        new_replays=projected, replay_count=included, raw_replay_count=sum(
                            not active_tombstone(index, k) for k in index['runs']),
                        exclusions=dict(exclusions), exports=exports,

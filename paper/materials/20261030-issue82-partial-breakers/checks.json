@@ -1,0 +1,55 @@
+{
+  "source_sha256": {
+    "eval/spire_codex.py": "6469aadb2906df772f6b25756f72ce6f2b5fa49f9a3ca1ac8b51cfd01f203276",
+    "eval/spire_codex_download.py": "950edc520a0b67337e1e399b693fe8bab9020093934bdd2e8af575f3b2b6aaac",
+    "eval/spire_codex_projection.py": "f090b784842df3c32a2991e896b32c4580d17f5ec4b99d7ac3218e9670fccdf0",
+    "eval/tests/test_spire_codex.py": "7d88a5847c4474aa19bc05703ed52a843c86b181e80a31b2df4d0f77ca701299",
+    "docs/spire-codex.md": "b4a7af7a06608028537f748b93ed33c8ccf0819e7137c33e0455cd28a74f25cc"
+  },
+  "fixed_python": {
+    "rc": 0,
+    "tests": 72,
+    "log": "fixed-final72.log"
+  },
+  "actual_partial_pipeline": {
+    "rc": 0,
+    "steps": [
+      "project",
+      "build-db",
+      "audit",
+      "report"
+    ],
+    "receipt": "partial-validation-final-receipt.json"
+  },
+  "sandbox_initial": {
+    "rc": 1,
+    "tsc_rc": 0,
+    "files_passed": 650,
+    "files_failed": 1,
+    "tests_passed": 6017,
+    "tests_failed": 1,
+    "failed_file": "tests/external-stock.test.ts",
+    "reason": "Outer Vitest test timed out at 15000ms; its 28 fixed Python tests passed in 14.906s.",
+    "paths_run": false,
+    "log": "sandbox-initial-rc1.log"
+  },
+  "sandbox_targeted": {
+    "rc": 0,
+    "tsc_rc": 0,
+    "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh tests/external-stock.test.ts tests/spire-codex.test.ts --testTimeout=60000 --no-file-parallelism",
+    "thread_phase": {
+      "files": 2,
+      "tests": 2
+    },
+    "fork_phase": {
+      "files": 3,
+      "tests": 13,
+      "paths_tests": 11
+    },
+    "python_external_stock_tests": 28,
+    "python_subprocess_timeout_ms_unchanged": 20000,
+    "log": "sandbox-targeted-rc0.log"
+  },
+  "candidate_combination_full_run": false,
+  "prior_full_reused": false
+}

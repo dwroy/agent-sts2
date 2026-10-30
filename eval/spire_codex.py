@@ -35,8 +35,19 @@ def insert_rows(con, name, rows, conflict=False):
     columns = [part.strip().split()[1] for part in SCHEMA[name].split(',')]
     values = ','.join(f'CAST(j.value->>{i} AS {kind})' for i, kind in enumerate(columns))
     suffix = ' ON CONFLICT DO NOTHING' if conflict else ''
-    for start in range(0, len(rows), 5000):
-        con.execute(f'INSERT INTO {name} SELECT {values} FROM json_each(?) j{suffix}', [js(rows[start:start + 5000])])
+    statement = f'INSERT INTO {name} SELECT {values} FROM json_each(?) j{suffix}'
+    batch, size = [], 2
+    for row in rows:
+        encoded = js(row)
+        added = len(encoded.encode()) + 1
+        # Wide export rows need a byte bound as well as a row-count bound.
+        if batch and (len(batch) >= 5000 or size + added > 1024 * 1024):
+            con.execute(statement, ['[' + ','.join(batch) + ']'])
+            batch, size = [], 2
+        batch.append(encoded)
+        size += added
+    if batch:
+        con.execute(statement, ['[' + ','.join(batch) + ']'])
 
 
 def table_rows(bundle):
@@ -111,7 +122,10 @@ def audit_cache(cache):
         for x in json_lines(path):
             check(x)
             count += 1
-    return {'contains_player_identifiers': False, 'documents_audited': count}
+    result = {'contains_player_identifiers': False, 'documents_audited': count}
+    receipt = load(Path(cache) / 'projection.json', {})
+    result.update({k: receipt[k] for k in ('partial', 'replay_count', 'exclusions', 'cutoff_cursor') if k in receipt})
+    return result
 
 
 def build_db(root):
@@ -128,7 +142,6 @@ def build_db(root):
         con = duckdb.connect(str(tmp), config={'threads': 1, 'memory_limit': '512MB'})
         counts = collections.Counter()
         try:
-            con.execute('BEGIN')
             for name, columns in SCHEMA.items():
                 con.execute(f'CREATE TABLE {name} ({columns})')
             if 'replays' not in receipt:
@@ -140,10 +153,14 @@ def build_db(root):
                 bundle = load(path)
                 if bundle.get('schema') != VERSION or bundle['run']['run_id'] != rid:
                     raise ValueError('mixed projection versions')
+                # Bound transaction memory to one replay. Only the completed
+                # temporary database is published, so failed builds stay atomic.
+                con.execute('BEGIN')
                 for name, rows in table_rows(bundle).items():
                     if rows:
                         insert_rows(con, name, rows)
                         counts[name] += len(rows)
+                con.execute('COMMIT')
             for export in receipt['exports'].values():
                 path = cached_path(cache, export['path'])
                 if sha(path) != export['sha256']:
@@ -159,12 +176,13 @@ def build_db(root):
             counts['export_runs'] = con.execute('SELECT count(*) FROM export_runs').fetchone()[0]
             con.execute('CREATE VIEW first_combats AS SELECT * FROM combats WHERE default_eligible')
             con.execute('CREATE VIEW first_plays AS SELECT p.* FROM plays p JOIN first_combats c USING(combat_key)')
-            con.execute('COMMIT')
             con.execute('CHECKPOINT')
         finally:
             con.close()
         os.replace(tmp, cache / 'replays.duckdb')
         result = dict(schema=VERSION, counts=dict(counts), audit=audit, database_sha256=sha(cache / 'replays.duckdb'))
+        result.update({k: receipt[k] for k in ('partial', 'replay_count', 'exclusions', 'cutoff_cursor') if k in receipt})
+        result['projection_receipt_sha256'] = sha(cache / 'projection.json')
         save(cache / 'database.json', result)
         return result
 
@@ -205,6 +223,9 @@ def report(root):
         if active_tombstone(index, key):
             continue
         path = Path(root) / meta['path']
+        if not path.is_file():
+            downloaded['missing_raw_entries'] += 1
+            continue
         downloaded['replays'] += 1
         downloaded['wins'] += int(bool(meta['win']))
         downloaded['v0.111_replays'] += int(str(meta['build_id']).startswith('v0.111.'))
@@ -216,7 +237,13 @@ def report(root):
         exports[version] = {k: receipt[k] for k in ('bytes', 'sha256', 'expected_sha256', 'expected_bytes', 'manifest_verified')}
         downloaded['export_bytes'] += receipt['bytes']
     downloaded['total_bytes'] = downloaded['replay_bytes'] + downloaded['export_bytes']
+    projection = load(Path(root) / 'cache/projection.json', {})
+    database = load(Path(root) / 'cache/database.json', {})
+    if database.get('projection_receipt_sha256') != sha(Path(root) / 'cache/projection.json'):
+        raise ValueError('database does not match the current projection receipt')
     return dict(
+        partial=projection.get('partial', False), included_replays=projection.get('replay_count'),
+        exclusions=projection.get('exclusions'), cutoff_cursor=projection.get('cutoff_cursor'),
         downloaded=dict(downloaded), replay_availability=tombstone_summary(index), export_verification=exports,
         scan_complete=index.get('cycle', {}).get('complete', False),
         scan_versions=index.get('cycle', {}).get('versions'),
@@ -224,8 +251,7 @@ def report(root):
         combats=query(root, 'SELECT encounter,attempt_kind,count(*) AS combats,count(*) FILTER(WHERE default_eligible) AS default_eligible FROM combats GROUP BY 1,2 ORDER BY 1,2', 1000),
         attempts=query(root, 'SELECT count(*) AS total,count(*) FILTER(WHERE attempt_kind=\'first\') AS first,count(*) FILTER(WHERE attempt_kind=\'retry\') AS retry,count(*) FILTER(WHERE attempt_kind=\'unknown\') AS unknown,count(*) FILTER(WHERE result IS NULL) AS missing_result FROM combats'),
         exports=query(root, 'SELECT build_id,count(*) AS runs,count(*) FILTER(WHERE win) AS wins FROM export_runs GROUP BY 1', 100),
-        projection=load(Path(root) / 'cache/projection.json'),
-        database=load(Path(root) / 'cache/database.json'))
+        projection=projection, database=database)
 
 
 def main():
@@ -237,7 +263,10 @@ def main():
     d.add_argument('--export-version', action='append', help='default v0.111.0')
     d.add_argument('--no-export', action='store_true')
     d.add_argument('--max-pages', type=int)
-    sub.add_parser('project')
+    d.add_argument('--max-tombstone-ratio', type=float, default=0.10,
+                   help='stop when the cumulative missing fraction strictly exceeds this value (default: 0.10)')
+    projection = sub.add_parser('project')
+    projection.add_argument('--partial', action='store_true', help='only verified current-cycle replays; quarantine incompatible evidence')
     sub.add_parser('build-db')
     sub.add_parser('audit')
     sub.add_parser('report')
@@ -252,9 +281,10 @@ def main():
     try:
         if args.cmd == 'download':
             result = sync(args.root, args.version, args.max_pages,
-                          () if args.no_export else (args.export_version or ('v0.111.0',)))
+                          () if args.no_export else (args.export_version or ('v0.111.0',)),
+                          max_tombstone_ratio=args.max_tombstone_ratio)
         elif args.cmd == 'project':
-            result = project(args.root)
+            result = project(args.root, partial=args.partial)
         elif args.cmd == 'build-db':
             result = build_db(args.root)
         elif args.cmd == 'audit':

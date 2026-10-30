@@ -374,15 +374,17 @@ class DownloadTests(unittest.TestCase):
         dl.save(self.root / 'private-index.json', index)
         return index
 
-    def tombstone_scan(self, rows, response=None, max_pages=1):
+    def tombstone_scan(self, rows, response=None, max_pages=1, max_tombstone_ratio=.10):
+        cycle = dl.load(self.root / 'private-index.json', {}).get('cycle', {})
+        start = cycle['shards'][cycle['next']]['page'] if cycle and not cycle.get('complete') else 1
         def metadata(client, url, tag):
             if tag == 'manifest':
                 return {'versions': {'v0.111.0': {}}}, 'a' * 64
             page = int(urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)['page'][0])
-            return dict(total=len(rows), runs=rows if page in (1, 8) else []), 'b' * 64
+            return dict(total=len(rows), runs=rows if page == start else []), 'b' * 64
         handler = response or self.reply(b'{"detail":"Replay not found"}', 404)
         with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request', side_effect=handler):
-            return dl.sync(self.root, max_pages=max_pages, export_versions=())
+            return dl.sync(self.root, max_pages=max_pages, export_versions=(), max_tombstone_ratio=max_tombstone_ratio)
 
     def legacy_page8_resume(self, controlled_status=None):
         index = self.seed_cycle(782)
@@ -527,9 +529,9 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(len(dl.load(self.root / 'private-index.json')['tombstones'][META['run_hash']]['observations']), 1)
 
     def test_ratio_breaker_is_strict_and_sticky_on_resume(self):
-        self.seed_cycle(99)
+        self.seed_cycle(9)
         result = self.tombstone_scan([META])
-        self.assertEqual(result['tombstone_ratio'], .01)
+        self.assertEqual(result['tombstone_ratio'], .10)
         index = dl.load(self.root / 'private-index.json')
         index['cycle']['shards'][0]['page'] = 8
         dl.save(self.root / 'private-index.json', index)
@@ -564,11 +566,105 @@ class DownloadTests(unittest.TestCase):
         result = self.tombstone_scan(rows, request)
         self.assertEqual((result['tombstones'], result['consecutive_tombstones']), (8, 4))
         index = dl.load(self.root / 'private-index.json')
-        index['cycle']['shards'][0]['page'] = 8
+        index['cycle']['shards'][0]['page'] = 9
         dl.save(self.root / 'private-index.json', index)
         with self.assertRaisesRegex(ValueError, 'circuit breaker'):
             self.tombstone_scan([dict(META, run_hash='good-0'), dict(META, run_hash='missing-8')])
         self.assertEqual(dl.tombstone_summary(dl.load(self.root / 'private-index.json'))['consecutive_tombstones'], 5)
+
+    def test_page_half_gate_counts_success_and_is_sticky_across_resume(self):
+        self.seed_cycle(200)
+        def response(url, body, headers=None):
+            missing = '/missing-' in url
+            return self.reply(b'Replay not found' if missing else b'verified', 404 if missing else 200)(url, body, headers)
+        # Five nonconsecutive missing rows among nine are admissible until the
+        # tenth (successful) row makes the observed page exactly 50% missing.
+        rows = [dict(META, run_hash=f'{kind}-{i}') for i in range(5) for kind in ('missing', 'new')]
+        first = self.tombstone_scan(rows[:9], response)
+        self.assertEqual((first['pages'][0]['processed_records'], first['pages'][0]['tombstones']), (9, 5))
+        index = dl.load(self.root / 'private-index.json')
+        index['cycle']['shards'][0]['page'] = 8
+        dl.save(self.root / 'private-index.json', index)
+        with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+            self.tombstone_scan(rows + [dict(META, run_hash='never-requested')], response)
+        summary = dl.tombstone_summary(dl.load(self.root / 'private-index.json'))
+        self.assertEqual((summary['pages'][0]['processed_records'], summary['pages'][0]['tombstones']), (10, 5))
+        self.assertEqual(summary['consecutive_tombstones'], 0)
+        self.assertEqual(len(self.calls), 10)
+        with patch.object(dl.Client, 'json') as metadata, patch.object(dl.Client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+                dl.sync(self.root, export_versions=())
+            metadata.assert_not_called()
+            request.assert_not_called()
+
+    def test_page_below_half_and_duplicate_resume_counts(self):
+        self.seed_cycle(200)
+        def response(url, body, headers=None):
+            missing = '/missing-' in url
+            return self.reply(b'Replay not found' if missing else b'verified', 404 if missing else 200)(url, body, headers)
+        rows = [dict(META, run_hash=f'{kind}-{i}') for i in range(4) for kind in ('new', 'missing')]
+        rows += [dict(META, run_hash='new-4'), dict(META, run_hash='new-5')]
+        first = self.tombstone_scan(rows + rows, response)
+        self.assertEqual((first['pages'][0]['processed_records'], first['pages'][0]['tombstones']), (10, 4))
+        index = dl.load(self.root / 'private-index.json')
+        index['cycle']['shards'][0]['page'] = 8
+        dl.save(self.root / 'private-index.json', index)
+        second = self.tombstone_scan(rows, response)
+        self.assertEqual(first['pages'], second['pages'])
+        self.assertEqual(first['processed_records'], second['processed_records'])
+        self.assertEqual(len(self.calls), 10)
+        self.assertNotIn('missing-0', json.dumps(second))
+
+    def test_ratio_override_and_invalid_values_fail_before_network(self):
+        self.seed_cycle(9)
+        with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+            self.tombstone_scan([META], max_tombstone_ratio=.09)
+        self.assertEqual(self.tombstone_scan([META], max_tombstone_ratio=.10)['tombstones'], 1)
+        for value in (-.1, 1.1, float('inf'), float('nan')):
+            with patch.object(dl.Client, 'json') as metadata:
+                with self.assertRaisesRegex(ValueError, 'max-tombstone-ratio'):
+                    dl.sync(self.root, max_tombstone_ratio=value)
+                metadata.assert_not_called()
+
+    def test_cli_ratio_default_and_explicit_override(self):
+        for options, expected in (([], .10), (['--max-tombstone-ratio', '.25'], .25)):
+            with patch.object(sys, 'argv', ['spire_codex', 'download', '--no-export'] + options), \
+                    patch.object(cli, 'sync', return_value={}) as sync, patch('builtins.print'):
+                self.assertEqual(cli.main(), 0)
+                self.assertEqual(sync.call_args.kwargs['max_tombstone_ratio'], expected)
+
+    def test_legacy_page_progress_does_not_invent_denominators(self):
+        self.seed_cycle(200)
+        self.tombstone_scan([META])
+        index = dl.load(self.root / 'private-index.json')
+        del index['cycle']['page_progress']
+        index['cycle']['shards'][0]['page'] = 8
+        dl.save(self.root / 'private-index.json', index)
+        summary = dl.tombstone_summary(index)
+        self.assertIsNone(summary['pages'][0]['processed_records'])
+        result = self.tombstone_scan([META, META])
+        self.assertEqual((result['pages'][0]['processed_records'], result['pages'][0]['tombstones']), (1, 1))
+        self.assertEqual(len(self.calls), 1)
+
+    def test_original_thirteen_legacy_tombstones_resume_under_ten_percent(self):
+        index = self.seed_cycle(1208)
+        index['cycle']['shards'][0]['page'] = 13
+        index['cycle']['tombstone_streak'] = 1
+        index['tombstones'] = {f'missing-{i}': dict(active=True, checked_cycle='original',
+            observations=[dict(cycle='original', shard=1, version='v0.111.0', win=None, page=10+i%4)])
+            for i in range(13)}
+        dl.save(self.root / 'private-index.json', index)
+        original = (self.root / 'private-index.json').read_bytes()
+        for _ in range(2):
+            restored = dl.load(self.root / 'private-index.json')
+            dl.check_tombstone_breaker(restored)
+            result = dl.tombstone_summary(restored)
+            self.assertEqual((result['tombstones'], result['processed_records'], result['consecutive_tombstones']), (13, 1221, 1))
+            self.assertEqual(sum(p['tombstones'] for p in result['pages']), 13)
+            self.assertTrue(all(p['processed_records'] is None for p in result['pages']))
+            with self.assertRaisesRegex(ValueError, 'circuit breaker'):
+                dl.check_tombstone_breaker(restored, .01)
+        self.assertEqual((self.root / 'private-index.json').read_bytes(), original)
 
     def test_corrupt_original_export_stops_without_network_or_cursor_changes(self):
         index = self.seed_cycle(1)
@@ -859,6 +955,92 @@ class ProjectTests(unittest.TestCase):
         self.index['exports']['v0.111.0'] = 'raw/export.gz'
         dl.save(self.root / 'private-index.json', self.index)
 
+    def partial_cycle(self):
+        self.index['cycle'] = dict(id='current', complete=False, next=0,
+                                   shards=[dict(version='v0.111.0', win=None, page=13)])
+        for meta in self.index['runs'].values():
+            meta['checked_cycle'] = 'current'
+        dl.save(self.root / 'private-index.json', self.index)
+
+    def test_partial_cycle_quarantines_build_mismatch_and_excludes_unverified_inputs(self):
+        mismatch = fixture()
+        mismatch[0]['build_id'] = '0.1.0'
+        self.add_replay('mismatch', mismatch)
+        for key in ('stale', 'inflight', 'corrupt', 'absent', 'missing'):
+            self.add_replay(key, fixture())
+        self.partial_cycle()
+        self.index['runs']['stale']['checked_cycle'] = 'old'
+        self.index['tombstones'] = {'missing': dict(active=True, checked_cycle='current')}
+        dl.save(self.root / 'private-index.json', self.index)
+        (self.root / 'raw/inflight.ndjson.part.json').write_text('{}')
+        (self.root / 'raw/corrupt.ndjson').write_text('changed')
+        (self.root / 'raw/absent.ndjson').unlink()
+        before = dl.sha(self.root / 'private-index.json')
+        receipt = pr.project(self.root, partial=True)
+        self.assertEqual(receipt['replay_count'], 1)
+        self.assertTrue(receipt['partial'])
+        self.assertEqual(receipt['cutoff_cursor'], dict(shard=1, shards=1, page=13))
+        self.assertEqual(receipt['exclusions'], dict(active_tombstone=1, replay_index_build_mismatch=1,
+            not_checked_in_current_cycle=1, inflight_replay=1, raw_digest_mismatch=1, missing_raw=1))
+        self.assertEqual(dl.sha(self.root / 'private-index.json'), before)
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM runs')['rows'], [(1,)])
+        for result in (cli.audit_cache(self.root / 'cache'), cli.report(self.root)):
+            self.assertTrue(result['partial'])
+            self.assertEqual(result['exclusions'], receipt['exclusions'])
+            self.assertEqual(result['cutoff_cursor'], receipt['cutoff_cursor'])
+        self.assertEqual(pr.project(self.root, partial=True)['new_replays'], 0)
+        with self.assertRaisesRegex(ValueError, 'build mismatch'):
+            pr.replay_bundle(mismatch, META, SALT, 'a' * 64)
+
+    def test_partial_exports_only_include_eligible_replays_and_full_stays_strict(self):
+        mismatch = fixture()
+        mismatch[0]['build_id'] = '0.1.0'
+        self.add_replay('mismatch', mismatch)
+        raw = dict(run_hash='single', ascension=10, win=True, build_id='v0.111.0',
+                   players=[dict(character='SILENT', deck=[], relics=[])])
+        self.add_export([raw, dict(raw, run_hash='mismatch'), dict(raw, run_hash='not-downloaded')])
+        self.partial_cycle()
+        self.index['tombstones'] = {'absent': dict(active=True, checked_cycle='current')}
+        dl.save(self.root / 'private-index.json', self.index)
+        with self.assertRaisesRegex(ValueError, 'requires project --partial'):
+            pr.project(self.root)
+        partial = pr.project(self.root, partial=True)
+        self.assertEqual(partial['exports']['v0.111.0']['runs'], 1)
+        cli.build_db(self.root)
+        # A later manifest cannot silently reuse the old database scope.
+        pr.project(self.root, partial=True)
+        with self.assertRaisesRegex(ValueError, 'current projection receipt'):
+            cli.report(self.root)
+        self.index['cycle']['complete'] = True
+        dl.save(self.root / 'private-index.json', self.index)
+        with self.assertRaisesRegex(ValueError, 'build mismatch'):
+            pr.project(self.root)
+
+    def test_partial_requires_cycle_and_never_replaces_original_salt(self):
+        with self.assertRaisesRegex(ValueError, 'identified current cycle'):
+            pr.project(self.root, partial=True)
+        self.partial_cycle()
+        pr.project(self.root, partial=True)
+        salt = (self.root / 'private-salt').read_bytes()
+        pr.project(self.root, partial=True)
+        self.assertEqual((self.root / 'private-salt').read_bytes(), salt)
+
+    def test_partial_to_complete_projection_requires_fresh_database(self):
+        self.partial_cycle()
+        partial = pr.project(self.root, partial=True)
+        cli.build_db(self.root)
+        self.assertTrue(cli.report(self.root)['partial'])
+        self.index['cycle']['complete'] = True
+        dl.save(self.root / 'private-index.json', self.index)
+        complete = pr.project(self.root)
+        self.assertFalse(complete['partial'])
+        self.assertEqual(complete['replays'], partial['replays'])
+        with self.assertRaisesRegex(ValueError, 'current projection receipt'):
+            cli.report(self.root)
+        cli.build_db(self.root)
+        self.assertFalse(cli.report(self.root)['partial'])
+
     def test_idempotence_multiplayer_exclusion_and_exact_database_inputs(self):
         multi = fixture()
         multi[0]['player_count'] = 2
@@ -887,6 +1069,45 @@ class ProjectTests(unittest.TestCase):
         self.assertEqual(dl.sha(self.root / 'cache/replays.duckdb'), old_db)
         self.assertEqual(pr.project(self.root)['new_replays'], 1)
         self.assertEqual(path.read_bytes(), original)
+
+    def test_later_replay_failure_keeps_published_database_and_receipt(self):
+        pr.project(self.root)
+        cli.build_db(self.root)
+        old_db = dl.sha(self.root / 'cache/replays.duckdb')
+        old_receipt = (self.root / 'cache/database.json').read_bytes()
+        self.add_replay('second', fixture())
+        pr.project(self.root)
+        insert = cli.insert_rows
+        seen = []
+        def fail_second(con, name, rows, conflict=False):
+            if name == 'runs':
+                seen.append(rows[0][0])
+                if len(seen) == 2:
+                    raise ValueError('fixed later replay failure')
+            return insert(con, name, rows, conflict)
+        with patch.object(cli, 'insert_rows', side_effect=fail_second):
+            with self.assertRaisesRegex(ValueError, 'fixed later replay failure'):
+                cli.build_db(self.root)
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(dl.sha(self.root / 'cache/replays.duckdb'), old_db)
+        self.assertEqual((self.root / 'cache/database.json').read_bytes(), old_receipt)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM runs')['rows'], [(1,)])
+        cli.build_db(self.root)
+        self.assertEqual(cli.query(self.root, 'SELECT count(*) FROM runs')['rows'], [(2,)])
+
+    def test_large_fixed_export_rows_fit_bounded_memory_and_keep_dedup(self):
+        import duckdb
+        con = duckdb.connect(config={'threads': 1, 'memory_limit': '128MB'})
+        try:
+            con.execute('CREATE TABLE export_runs (' + cli.SCHEMA['export_runs'] + ')')
+            details = cli.js({'fixed_padding': 'x' * 16384})
+            rows = [[f'run_fixed_{i}', 'v0.111.0', True, '[]', '[]', details] for i in range(1000)]
+            cli.insert_rows(con, 'export_runs', rows, conflict=True)
+            cli.insert_rows(con, 'export_runs', rows, conflict=True)
+            self.assertEqual(con.execute('SELECT count(*) FROM export_runs').fetchone()[0], 1000)
+            self.assertEqual(con.execute("SELECT min(length(details->>'fixed_padding')) FROM export_runs").fetchone()[0], 16384)
+        finally:
+            con.close()
 
     def test_changed_metadata_has_a_new_immutable_projection(self):
         old = pr.project(self.root)

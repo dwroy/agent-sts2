@@ -34,11 +34,13 @@ HTTP 下载以 `.part`、Range、If-Range 与 ETag/Last-Modified 接续；200 �
 
 受控结果仅rc0且完整的精确404进入墓碑；rc0的200走原长度/SHA验证和回执发布。其他结果保留原游标并停止。完成响应后、墓碑或成功索引提交前中断，重启校验冻结证据并完成原结果，不重新请求；根目录第二条旧失败或新cycle不能另领额度。该额度不改变正常下一完整cycle对既有墓碑的自然重查规则。此处接续只由原ops在小批合入并核ROOT字节后执行，开发固定测试不运行生产下载，不重下已核782及导出，不更换盐、分片或游标。
 
-同轮按去重的 run 计已处理记录（已核成功与墓碑的并集）；旧索引由 `checked_cycle` 读回已核成功，不倒填782次请求。每次落墓碑先持久保存，再以整数比较：墓碑数 × 100 > 已处理记录数，或连续5个新处理run为墓碑，即停止并报 `tombstone circuit breaker`，错误只含汇总。恰好1%可继续。连续性跨页/分片/重启保存，新成功归零；同轮重复行和重读页前缀不重复计数、不重置连续性。触发后同轮接续在任何网络请求之前继续拒绝，不可手改计数/游标绕过，应交主管裁决。
+同轮按去重的 run 计已处理记录（已核成功与墓碑的并集）；旧索引由 `checked_cycle` 读回已核成功，不倒填请求。按 [#82/6515600192](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6515600192)，CLI `--max-tombstone-ratio` 默认 `0.10`，仅接受有限的 `[0,1]` 数值，累计比例**严格超过**才停，恰好10%可继续；使用精确有理数比较。连续≥5个新处理run为墓碑仍停止。此外，同一 build/win/page 已处理≥10个不同run，墓碑占比≥50%即停；成功行也检查此门，因此第10行成功后恰好5/10仍停止。每行先持久保存再检查；连续性跨页/分片/重启保存，新成功归零，同轮重复行和重读页前缀不重复计数、不重置连续性。触发后同参数接续在任何网络请求前拒绝；不手改计数/游标绕过。
 
 墓碑同轮不再请求（包括列表重复、重启和索引提交前中断）；下一次完整扫描遇到该run才自然再查一次，仍缺失沿用原墓碑并追加观察，成功则解除active标记，保留历史。未完成cycle固定原versions/shards/page和已核manifest导出，不因每日manifest变化重建分片或重下导出；原导出损坏明确停止。ops沿原参数从第1/40分片第8页恢复，页面前缀已核回放直接复用，冻结且完整的原404可离线转墓碑。开发不改生产索引/游标，不启动下载。
 
 墓碑独立于成功，既不造零值也不纳入统计分母。active墓碑即使有旧成功raw，也不进当前回放投影/表；同run整局导出行也排除，安全导出缓存按加盐可用性修订重新寻址，旧缓存与raw原样保留。`report.replay_availability` 和 download结果单列本轮 `tombstones`、`processed_records`、`tombstone_ratio`、`consecutive_tombstones` 及跨轮 `active_tombstones`；这些是采集覆盖口径，不是游戏胜率/首试分母。墓碑头、体、ID和位置仅留私有目录，公开验收只写数量/比例及限制。
+
+`download` 与 `report.replay_availability.pages` 按页列出版本、win分片、页、已处理数、墓碑数和比例。去重所需run键仅存在私有cycle中。旧索引只有墓碑位置，没有历史成功行的页归属：这些页标 `counts_scope=legacy_tombstones_only`，`processed_records/tombstone_ratio=null`，不虚构分母，也不据此触发页门；恢复页逐行核实后按 `observed_rows` 去重累计，尚未重读的原墓碑数单列 `legacy_tombstones_not_recounted`。累计分母和连续数继续从原索引精确读取。
 
 首次只下载 v0.111.0 导出，保持同版本研究优先。下表为 2026-10-27 manifest 的冻结压缩体积，运行时仍以新 manifest 为准；旧版本本次不自动取，需研究单元明确版本后再用 `--export-version` 显式增加，不能混入同版本分母：
 
@@ -68,6 +70,16 @@ RC 和更早版本不在本次默认导出范围；其回放仍沿全版本列�
 v3 的 `projection.json.replays/exports` 保存精确路径和 SHA；旧生成文件继续保留，但建库只读取当前 manifest，不用目录 glob。版本、输入字节或元数据变更生成新的寻址文件，只有全部成功后才原子发布新 manifest。原样重跑复用已批准且 SHA 核同的投影；损坏文件从原始证据重建，建库发现坏 SHA 拒绝替换旧 DB。已有缓存时盐丢失或改变会明确失败；不能生成新盐后把两个身份体系混在一起。开发期v1/v2原件保留，首次正式核收使用v3，旧分类/脱敏缓存不作为v3验证结果。
 
 下载覆盖 Silent A10 列表的全部玩家数；当前逐回合投影仅支持单人，`exclusions.multiplayer_not_projected` / `unknown_player_count` 与 `raw_replay_count`、实际 `replay_count` 分列。损坏 NDJSON、缺 header、角色/进阶/版本漂移等错误直接失败，不静默跳过。旧版本保留原 build 分账，不能推定机制相同。未知事件只记 `unsupported_events` 数量，不透传未知名称或内容；当前白名单见 `eval/spire_codex_projection.py`，扩大 schema 需升级投影版本并重建缓存。审计递归拒绝玩家标识字段；它是白名单投影后的复核，不是给原始文件开权限。
+
+## 当前 cycle 的部分安全投影（#82 / 6515844478）
+
+未完成cycle必须显式 `project --partial`；随后沿同一根顺序 `build-db`、`audit`、`report`。开发验收使用原树隔离输出，原生产raw和盐只读引用，冻结索引按原字节复制；不执行下载，不改原失败、once、盐或游标。收录条件是当前cycle的 `checked_cycle`、完整raw存在且SHA一致、无在途part/chunk/journal、不在active墓碑中，并通过原单人SILENT A10及header/index版本相等校验。
+
+部分模式将旧cycle、缺raw、在途、SHA不符、缺header、build不一致逐项记排除原因；build不一致不改任一侧版本、不补别名、不作为另一个版本的已核回放。其他解析、隐私或投影错误仍失败。当前1208局冻结输入里71局的列表build是 `v0.111.0`，回放header是 `0.1.0`，这是真实证据冲突；隔离它们仅能提供可信子集，不能宣称已解决上游版本语义。完整模式仍拒绝该冲突，恢复收录须另交主管裁决。
+
+投影、数据库、audit与report都携带 `partial: true`、收录数、排除原因和 `cutoff_cursor`（分片序号/总数/页）。投影另绑定输入索引SHA；DB绑定精确投影receipt SHA，report拒绝读取与新投影不匹配的旧DB。部分整局导出也只收已通过回放校验的run，不借静态全库导出扩大部分样本。只从当前精确manifest或DB消费，不glob历史文件；#83只读安全cache/查询结果，不读raw/private-index/salt。全量完成后仍须按原全量合同重建并核收，部分结果不代全量完成。
+
+建库保持单线程及512MB限制，在临时库内按回放提交；JSON入库批次至多5000行，并按1MiB编码字节分批（单行不拆分），整局导出分批提交。全部表和视图完成后才原子替换正式库。中途失败不替换上一份正式库或数据库收据，后继报告仍检查投影收据绑定，不能把旧DB冒充新范围。
 
 ## 表与读档口径
 
