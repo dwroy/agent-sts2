@@ -27,6 +27,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import time
@@ -133,9 +134,9 @@ def save_state(state):
 
 
 @contextmanager
-def state_lock():
+def state_lock(*, nonblocking=False):
     with open(os.path.join(DIR, "learn.lock"), "a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        fcntl.flock(lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if nonblocking else 0))
         import strategy_external_jobs
         with learner_registration.transaction(DIR, save_state), strategy_external_jobs.validation_window():
             yield
@@ -474,6 +475,10 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    # A supervisor void never becomes success/retry via a late wrapper finish.
+    if "supervisor_close" in batch:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": "supervisor_close_requires_original_receipt"}))
+        return 75
     if batch.get("task", "postmortem") == "postmortem":
         report = read_report(os.path.join(DIR, "learner", args.batch + ".out"))
         from learning_runtime import complete as complete_operational
@@ -756,9 +761,20 @@ def cmd_core_notify(args):
     return 0 if receipt.get("state") == "sent" else 1
 
 
+def cmd_close(args):
+    import learner_supervisor_close
+    try:
+        result = learner_supervisor_close.close(ROOT, DIR, load_state(), args.batch, args.verdict, save_state)
+    except (OSError, ValueError, KeyError, TypeError, IndexError, sqlite3.Error, subprocess.SubprocessError) as error:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": str(error)}, ensure_ascii=False))
+        return 75
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "close", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
@@ -766,8 +782,13 @@ def main():
     parser.add_argument("--request", default="")
     parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
     parser.add_argument("--batch", default="")
+    parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
+    if args.command == "close" and (not args.batch or not args.verdict):
+        parser.error("close requires --batch and --verdict")
+    if args.verdict and args.command != "close":
+        parser.error("--verdict requires close")
     if args.public_web and args.command != "write":
         parser.error("--public-web requires write")
     args.character = character_key(args.character) or "silent"
@@ -779,11 +800,18 @@ def main():
             return 78
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
                "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check,
-               "core-notify": cmd_core_notify}[args.command]
+               "core-notify": cmd_core_notify, "close": cmd_close}[args.command]
     os.makedirs(DIR, exist_ok=True)
     # A merge request only appends an event; full checks manage their own short state transactions.
     if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
+    if args.command == "close":
+        try:
+            with state_lock(nonblocking=True):
+                return handler(args) or 0
+        except BlockingIOError:
+            print(json.dumps({"batch": args.batch, "state": "held", "reason": "learn_state_transaction_active"}))
+            return 75
     with state_lock():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
