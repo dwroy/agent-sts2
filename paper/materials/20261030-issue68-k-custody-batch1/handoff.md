@@ -41,6 +41,7 @@ S2 窄差量为四个项目模块及四份测试：补 K 实际路径 inode 检�
 1. 在原唯一 tick 提供受配置/源码冻结且有超时、失败关闭的 project control 钩子。新封批/分配前可 defer；full 结果后可 protected/await-adoption，三租约释放而 K 续持；custodian 丢失明记 failed-custody，活后继保 orphan cleanup，不重 full。
 2. 项目原型 `board_queue_control.py --root ROOT before-seal|post-result|tick` 输出 `sts2-queue-control-v1` 决策及 epoch/job/candidate 证据。原型接口须与 owner 实交协议再绑定，不能靠 pin 元数据自称能力；新固定 manifest 显式声明 project_control_contracts，受信任 core 从冻结配置给新 job 写 project_control_contract。旧未声明作业不转换。
 3. owner 接线时须逐批固定合同，校验事件与原 job/epoch/候选；采用/失败释放响应丢失须由原持久 outcome/terminal row 幂等恢复，不能二次 seal/full 或把旧 epoch 用到新批。项目接线按实交接口再冻结，当前尚不启用。
+   还须接原 primary sync 的同 OFD 委托：51c 的 merge_queue.workspace_worker 现为 sync_lock(K)→mutation_lock(L) 独立 open/flock，开启 keeper 后会自等。不能仅加生命周期回调就开 custody，也不能先放 K 让 sync 再接回。请原 owner 给受冻结项目 source-lock provider/等价接口，传原 sync-job/authority 与真实 worker/resource 租约，让项目核同一批/原 writer 后借原 K，继续原 L、writer/queue 锁及原 CAS；不增第二 main writer。当前 publication 借用只覆盖原 publication owner 路线，原集成/active sync 的具体接线仍是联合待办，不能据组件自测冒完成。
 4. 全模块新 pin 核同、项目 delta/精确 ROOT/LIVE 映射和适用检查齐后，沿原自然窗口核收第一批；真实采用起计一天，之后再做第二批。#56 优先、本批独立于 #56/#77 接续，不等可选 scanner。
 
 原人工接力规则已在 `docs/board-merge-queue.md` 标“由自动保管取代”；新事务不保留两套并行方案，旧在途完成原合同。

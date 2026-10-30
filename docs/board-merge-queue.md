@@ -32,6 +32,8 @@ strict/部署继续原 `learn → game-admission → 借本批 K → L → D1` �
 
 共享原 owner 的接口请求见 [kit#1/6525706107](https://github.com/dwroy/agent-board-kit/issues/1#issuecomment-6525706107)。项目控制模块仅提供 `before-seal/post-result/tick` 决策原型（allow/defer/protected/failed-custody/settled）；须原 owner 用受冻结/有超时的钩子接入原唯一 tick、暂停新 seal、保 protected 终态及 orphan cleanup，并交完整新 pin 后联合核收。51c 无此能力，不能仅把 enabled 改 true。新 pin 的 `project_control_contracts` 必须显式包含 `sts2-queue-control-v1`，具体通用接口以 owner 交付核对绑定后为准；当前项目代码不是已完成现场采用。
 
+联合待办还包括 primary sync 的 K 委托：现 51c workspace_worker 会独立取得 sync_lock(K)→mutation_lock(L)，keeper 在时不能重取 K。新 pin 须有受冻结项目 source-lock provider/等价接口，带原 sync-job/authority 与真实 worker/resource 身份借同 OFD，再继续原 L、唯一 writer/queue 锁和 CAS。当前 publication 借用入口只覆盖原 publication owner；原集成与 active sync 的具体接线交双方核收，不能只加回调就开启，也不能放 K 竞抢，不能另造 main writer。
+
 回退先停新合同的 seal/刷新准入，核原 worker/borrower/后继和真实 FD、publication/#84、K 与债务到明确终态，再于原自然边界关闭 custody。不能直接 off 绕开未结 hold，不能删锁/回执或退回人工竞抢。默认 off 只表示尚未采用，不清旧事务或父项。
 
 ## 固定引擎与安装
