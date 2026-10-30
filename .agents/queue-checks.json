@@ -1,7 +1,9 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [],
+  "runtime_install_paths": [
+    "agent/src/core/config.ts"
+  ],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -207,9 +209,19 @@
         "ops/codex-ops-learn.py",
         "--help"
       ]
+    },
+    {
+      "tree": "live",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--eval",
+        "/** Isolated installed brain-tier contract; no models or production writes. */\nimport assert from 'node:assert/strict';\nimport {loadConfig,CODEX_SERVICE_TIER,ConfigError} from './src/core/config.ts';\nimport {codexConfig,sessionArgs} from './src/brain/engines/codex.ts';\nconst normal=loadConfig({});\nfor (const tier of [undefined,'default','fast','priority']) {\n const cfg=loadConfig(tier ? {BRAIN_CODEX_SERVICE_TIER:tier} : {});\n const expected=tier ?? 'default';\n assert.equal(cfg.brain.codex.serviceTier,expected);\n assert.equal(CODEX_SERVICE_TIER,'default');\n assert.deepEqual(cfg.brain.engines,normal.brain.engines);\n assert.deepEqual(cfg.jev,normal.jev);\n const opts={systemFile:'/fixture/system',catalogFile:'/fixture/catalog',stateDir:'/fixture/state',effort:'xhigh',summary:'auto',serviceTier:expected};\n assert.deepEqual(codexConfig(opts).filter(s=>s.startsWith('service_tier=')),[`service_tier=\"${expected}\"`]);\n assert.ok(sessionArgs(opts).includes(`service_tier=\"${expected}\"`));\n}\nfor(const tier of ['auto','flex','ultrafast','FAST','none','not-a-tier']) assert.throws(()=>loadConfig({BRAIN_CODEX_SERVICE_TIER:tier}),ConfigError);\nconsole.log(JSON.stringify({brainTiers:['default','fast','priority'],commonDefault:true,invalidFailClosed:true,engineEquivalent:true,productionWrites:0,modelCalls:0}));\n"
+      ]
     }
   ],
-  "consumer_scope": "Issue77 supervisor-close f877530f normalized after adopted/published issue83 r3: three ROOT/host leaves, zero LIVE leaves. Retain consumers0-12 exactly, including complete producer and installed LIVE contracts; add real ROOT close CLI help and fixed supervisor-close/recovery host fixtures. Existing six gates, full single worker, fixtures, historical skips and workspace admission unchanged. No production close or TERM.",
+  "consumer_scope": "Issue81 brain fast 68fd783d normalized on published main1b7c652c; issue77 supervisor-close already adopted. ROOT config plus producer declaration; LIVE config only. Preserve consumers0-13 and all host modules exactly; add isolated installed LIVE tier contract. Original six gates, single full worker, fixtures, historical skips and workspace admission unchanged. Two producer config input SHA/opaque-site updates change method identities; ops must use new terminal-bound admission/CAS in original publication transaction. No production configuration, models, account/home, learner/ops tier changes; natural game boundary activation only.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

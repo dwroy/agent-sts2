@@ -203,6 +203,15 @@ function sessionEngine(fake: { bin: string; state: string }, opts: { env?: Recor
 }
 
 describe("codex session mode", () => {
+  it.each(["fast", "priority"])("sends the explicit brain %s tier on thread creation and every turn", async tier => {
+    const fake = fakeSession(`tier-${tier}`, { turns: [answering({ choice: "a", reason: "fixture" }), answering({ choice: "b", reason: "fixture" })] });
+    const { engine } = sessionEngine(fake, { env: { BRAIN_CODEX_SERVICE_TIER: tier } });
+    await engine.decide(request()); await engine.decide(request());
+    const requests = fake.requests();
+    expect(requests.find(r => r.method === "thread/start")!.params.serviceTier).toBe(tier);
+    expect(requests.filter(r => r.method === "turn/start").map(r => r.params.serviceTier)).toEqual([tier, tier]);
+  });
+
   it("one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it", async () => {
     const fake = fakeSession("basic", { turns: [answering({ choice: "b", reason: "smith", route: null, cards: null }), answering({ choice: "a", reason: "heal" }, 3)] });
     const { engine, trace } = sessionEngine(fake);

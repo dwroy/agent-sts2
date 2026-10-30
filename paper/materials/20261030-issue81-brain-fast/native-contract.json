@@ -1,0 +1,59 @@
+{
+  "codex_version": "codex-cli 0.164.0",
+  "method": "Installed CLI generate-json-schema; read-only features list; zero model calls",
+  "schemas": {
+    "ThreadStartParams": {
+      "schema_sha256": "e9c6d3cc18d049bfbc0249add3808fb8e5a27e1a0b5a423767aafbc3859a9428",
+      "serviceTier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "TurnStartParams": {
+      "schema_sha256": "835e0d4ca1a0ddc4fb6db1e2b3249dd67f07c50ac2506092ba81543efc92829b",
+      "serviceTier": {
+        "description": "Override the service tier for this turn and subsequent turns.",
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    }
+  },
+  "official_fast_semantics": "https://developers.openai.com/api/docs/guides/fast-mode",
+  "valid_project_inputs": [
+    "default",
+    "fast",
+    "priority"
+  ],
+  "probe_first_attempt": "Unsupported --ignore-user-config on root features command rejected with exit2; raw receipt retained locally.",
+  "probe_corrected": [
+    {
+      "tier": "default",
+      "exit_code": 0,
+      "stdout_sha256": "170ea690852b12cacece0aa942a8e5a6b1f8bb0b233d109e070213daa3632d28",
+      "stderr": ""
+    },
+    {
+      "tier": "fast",
+      "exit_code": 0,
+      "stdout_sha256": "170ea690852b12cacece0aa942a8e5a6b1f8bb0b233d109e070213daa3632d28",
+      "stderr": ""
+    },
+    {
+      "tier": "priority",
+      "exit_code": 0,
+      "stdout_sha256": "170ea690852b12cacece0aa942a8e5a6b1f8bb0b233d109e070213daa3632d28",
+      "stderr": ""
+    },
+    {
+      "tier": "not-a-tier",
+      "exit_code": 0,
+      "stdout_sha256": "170ea690852b12cacece0aa942a8e5a6b1f8bb0b233d109e070213daa3632d28",
+      "stderr": ""
+    }
+  ],
+  "limits": "features list accepts even arbitrary strings; does not prove service eligibility or actual fast. Project whitelist rejects invalid values. Fixed fake native CLI/RPC tests prove parameter forwarding; actual native/provider tier is ops next-run acceptance."
+}

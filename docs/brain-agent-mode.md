@@ -17,6 +17,7 @@ Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产 
 | `BRAIN_ENGINE` | `codex`（生产入口） | `codex` 或 `deepseek`；后者实际使用 dsh |
 | `BRAIN_RUN_CONFIG` | 未设置 | 复用 #31 的按局 JSON；例如 `{"engine":"codex","effort":"high"}` 或 `{"engine":"deepseek","effort":"max"}`，优先于普通设置；不启动交替试验 |
 | `BRAIN_CODEX_EFFORT` | `high` | 可设置 Codex 支持的强度 |
+| `BRAIN_CODEX_SERVICE_TIER` | `default` | 仅对局脑Codex：严格允许 `default/fast/priority`，非法值拒绝配置；不改变模型或effort |
 | `BRAIN_DEEPSEEK_EFFORT` | `max` | dsh 支持 `low/high/max`，不自动逐题降低 |
 | `BRAIN_DEEPSEEK_MODEL` | `deepseek/deepseek-flash` | Nova dsh 模型 ID |
 | `BRAIN_MAX_TOOL_CALLS` | `8` | 每题最多执行的知识查询数；错误查询也计入，重问不重新发额度 |
@@ -26,6 +27,8 @@ Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产 
 | `BRAIN_AGENT_DEEPSEEK_ANSWER_MS` | `300000` | 在总预算内保留的无工具作答时间 |
 | `BRAIN_DSH_BIN` | `~/.local/bin/dsh` | 已配置 Nova 的现有启动器；不创建/修改账号或共用配置 |
 | `BRAIN_DSH_STALL_MS` | `180000` | 无流式进展的卡住检测 |
+
+`BRAIN_CODEX_SERVICE_TIER` 未设置时仍向CLI、thread/start及每轮turn/start**显式发送default**，清除线程继承的priority；不是省略参数。设置fast/priority时原值沿既有 `service_tier` / `serviceTier` 参数传递，run-config的 `brain.codex.service_tier` 记录选定值并参与配置SHA。学习/ops启动器共用的 `CODEX_SERVICE_TIER=default` 常量及其shell policy不改，战斗和DeepSeek不读此项。源码入口不等于已开启：ops沿原发布边界在下一自然局设置 `BRAIN_CODEX_SERVICE_TIER=fast`，不热切当前局，再分核Sol、xhigh和实际服务档；run-config配置声明不代原生/服务端回执。回退为下一自然启动unset或设default。fast/priority的API语义见[官方Fast模式说明](https://developers.openai.com/api/docs/guides/fast-mode)，本机协议及固定测试证据见 `paper/materials/20261030-issue81-brain-fast/`。
 
 初值理由：8 次查询容纳本题实体、经验、策略和统计的少量定向检索，避免无边界搜索；Codex 查询阶段最多180秒，DeepSeek最多600秒，分别留下120/300秒完成 JSON。DeepSeek 总预算比旧90秒大脑节奏长，完成率优先。值是工程初值，不是从游戏胜率学出的规则。预算与实际引擎/强度记录在原 run-config 的 `brain.agent`、`brain.engines` 和 human-pace 段。
 

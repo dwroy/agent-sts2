@@ -582,7 +582,7 @@ export interface BrainConfig {
     home: string;
     /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
     summary: "auto" | "concise" | "detailed" | "none";
-    /** Normal service tier for every Codex session (Roy 2026-10-11). */
+    /** BRAIN_CODEX_SERVICE_TIER: brain-only default/fast/priority; unset explicitly clears inherited priority. */
     serviceTier: string | null;
     /**
      * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
@@ -870,6 +870,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
   const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
   if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
+  const serviceTier = readEnv(env, "BRAIN_CODEX_SERVICE_TIER") ?? CODEX_SERVICE_TIER;
+  if (!["default", "fast", "priority"].includes(serviceTier)) problems.push({ field: "BRAIN_CODEX_SERVICE_TIER", message: `expected default, fast or priority, got "${serviceTier}"` });
   const stallRaw = readEnv(env, "BRAIN_CODEX_STALL_MS");
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
   const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
@@ -940,7 +942,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       bin: resolveCodexBin(env),
       home: resolveCodexHome(env),
       summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
-      serviceTier: CODEX_SERVICE_TIER,
+      serviceTier,
       stallMs,
       firstTokenMs,
       mode: modeRaw === "session" ? "session" : "exec",
