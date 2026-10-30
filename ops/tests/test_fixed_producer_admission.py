@@ -186,6 +186,59 @@ class PublicationTest(unittest.TestCase):
         gate.release(self.root, self.dest, 'issue84', self.marker['token'], os.getpid())
         self.assertFalse((self.dest / gate.MARKER).exists())
 
+    def test_terminal_consumer_details_are_accepted_without_rewriting_the_receipt(self):
+        evidence = json.loads(self.evidence.read_text())
+        evidence['checks'].update({f'consumer-{n}': 'passed' for n in range(10)})
+        raw = packed(evidence).encode()
+        self.evidence.write_bytes(raw)
+        self.ticket = admission.prepare(self.root, self.dest, self.w, self.g, self.evidence)
+        self.ticket_path.write_text(packed(self.ticket))
+        self.assertEqual(self.ticket['evidence']['sha256'], sha(raw))
+        self.assertEqual(self.evidence.read_bytes(), raw)
+        # Successful detail checks remain bound by the original receipt hash.
+        self.evidence.write_bytes(raw + b'\n')
+        with self.assertRaisesRegex(ValueError, 'receipt changed'):
+            with self.writing():
+                self.fail('must retain the exact final receipt')
+        self.evidence.write_bytes(raw)
+        with self.writing():
+            self.deploy()
+        self.assertEqual(json.loads(self.control.read_text())['methods'], self.ticket['methods'])
+        gate.release(self.root, self.dest, 'issue84', self.marker['token'], os.getpid())
+        self.assertEqual(self.evidence.read_bytes(), raw)
+
+    def test_nonpassing_consumer_details_reject_the_otherwise_successful_receipt(self):
+        evidence = json.loads(self.evidence.read_text())
+        evidence['checks'].update({f'consumer-{n}': 'passed' for n in range(10)})
+        original = self.control.read_bytes()
+        for status in ('failed', 'unavailable', 'running', 'cancelled', 'skipped', None, True):
+            with self.subTest(status=status):
+                evidence['checks']['consumer-7'] = status
+                self.evidence.write_text(packed(evidence))
+                with self.assertRaisesRegex(ValueError, 'engineering combination'):
+                    admission.checked_evidence(self.root, self.evidence, self.w, self.g, self.after)
+                self.assertEqual(self.control.read_bytes(), original)
+
+    def test_every_required_check_is_mandatory_even_with_passing_consumer_details(self):
+        evidence = json.loads(self.evidence.read_text())
+        evidence['checks'].update({f'consumer-{n}': 'passed' for n in range(10)})
+        for required in ('root-tsc', 'runtime-tsc', 'live-tsc', 'host', 'consumers', 'full'):
+            with self.subTest(required=required):
+                incomplete = copy.deepcopy(evidence)
+                del incomplete['checks'][required]
+                self.evidence.write_text(packed(incomplete))
+                with self.assertRaisesRegex(ValueError, 'engineering combination'):
+                    admission.checked_evidence(self.root, self.evidence, self.w, self.g, self.after)
+
+    def test_checks_must_be_a_mapping(self):
+        evidence = json.loads(self.evidence.read_text())
+        for invalid in (None, [], 'passed'):
+            with self.subTest(checks=invalid):
+                evidence['checks'] = invalid
+                self.evidence.write_text(packed(evidence))
+                with self.assertRaisesRegex(ValueError, 'engineering combination'):
+                    admission.checked_evidence(self.root, self.evidence, self.w, self.g, self.after)
+
     def test_interrupted_deployment_retains_marker_and_resumes_installed_only(self):
         with self.assertRaisesRegex(RuntimeError, 'fixed interruption'):
             with self.writing():

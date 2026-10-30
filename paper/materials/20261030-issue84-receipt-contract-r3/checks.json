@@ -1,0 +1,158 @@
+{
+  "checks": {
+    "tsc": {
+      "exit_code": 0,
+      "seconds": 1.025,
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ]
+    },
+    "core": {
+      "exit_code": 0,
+      "seconds": 31.108,
+      "command": [
+        "/home/dw/Projects/agent-sts2/.worktrees/issue-84-fixed-producer-admission/data/logdb-venv/bin/python",
+        "-m",
+        "unittest",
+        "ops.tests.test_fixed_producer_admission",
+        "ops.tests.test_learning_runtime",
+        "ops.tests.test_outcome_logdb",
+        "ops.tests.test_refresh_health",
+        "ops.tests.test_publication_gate"
+      ]
+    },
+    "vitest": {
+      "exit_code": 1,
+      "seconds": 21.285,
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/publication-admission.test.ts",
+        "tests/learning-runtime.test.ts",
+        "tests/check-imports.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/issue-84-fixed-producer-admission/.cache/issue84-receipt-r3/vitest-result.json"
+      ]
+    }
+  },
+  "core_tests": 74,
+  "vitest_initial": {
+    "files_passed": 2,
+    "tests_passed": 6,
+    "files_failed": 1,
+    "tests_failed": 1,
+    "cause": "Original issue29 cold Git fixture absent in sparse checkout"
+  },
+  "imports_recheck": {
+    "exit_code": 0,
+    "seconds": 1.382,
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/check-imports.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1"
+    ],
+    "cold_fixture": {
+      "path": "paper/materials/issue29-brain-speed/results.jsonl",
+      "blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+      "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef",
+      "temporary_local_view": true
+    }
+  },
+  "source_files": {
+    "ops/fixed_method_admission.py": "25adff9db3cf85919a5c19ae1f5eee7ab0833ffa7fee48b79ddb6dd3a56f7d4e",
+    "ops/tests/test_fixed_producer_admission.py": "d918b38e4df498112e9eaa585f7fae8d4d23a5056306b9e416607a81b466dac7"
+  },
+  "source_drift": [],
+  "regression_before": {
+    "exit_code": 1,
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "ops.tests.test_fixed_producer_admission.PublicationTest.test_terminal_consumer_details_are_accepted_without_rewriting_the_receipt"
+    ]
+  },
+  "actual_terminal_readback": {
+    "original_batch": "009c902bb2634bfb872b8f54dba51391",
+    "terminal_path": "ops/codex-ops/merge-queue/batches/009c902bb2634bfb872b8f54dba51391/sts2-terminal.json",
+    "terminal_sha256": "d8719222e68b026ad0af9f0ef5f520c1f8b1bb708a031669d3d96360d00a53b1",
+    "candidate": "672b7019cbf6f0940a453f761c97618842638320",
+    "checks": {
+      "root-tsc": "passed",
+      "runtime-tsc": "passed",
+      "live-tsc": "passed",
+      "host": "passed",
+      "consumers": "passed",
+      "full": "passed",
+      "consumer-0": "passed",
+      "consumer-1": "passed",
+      "consumer-2": "passed",
+      "consumer-3": "passed",
+      "consumer-4": "passed",
+      "consumer-5": "passed",
+      "consumer-6": "passed",
+      "consumer-7": "passed",
+      "consumer-8": "passed",
+      "consumer-9": "passed"
+    },
+    "full_runs": 1,
+    "accepted": true,
+    "receipt_bytes_unchanged": true,
+    "selection": {
+      "refresh": [
+        "outcome"
+      ],
+      "entries": [
+        "postmortem"
+      ]
+    },
+    "methods": {
+      "outcome": "f50b9ea3c7debe7724ad29e0d36d654791442f252ede0d6f2dc28a5fe8fdfaf9"
+    },
+    "ticket_prepared": false,
+    "publication_created": false,
+    "control_written": false,
+    "original_job_digest_fields_untouched": true
+  },
+  "production_ticket_prepared": false,
+  "production_writes": false,
+  "full_repeated": false,
+  "logs": {
+    "regression-before.log": {
+      "bytes": 1398,
+      "sha256": "7eb9cdea0e593683d5ebdf8bc690a610ca189e2921e20316a6bef6955cdb0ed1",
+      "gzip_sha256": "d249a343bd8d6f1220a74c52d793b50c618cd63247eefcb8d8a4de80d2f191bd"
+    },
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "core.log": {
+      "bytes": 1109,
+      "sha256": "16059f97bc3faa856605936db2bc48f38d9385ea75d74ae63a698f7a4186ca57",
+      "gzip_sha256": "a6dac55d0aa5b1b14ddb6e4e8ce7672c22fa47e6397ba830e75d50c54b30c457"
+    },
+    "vitest.log": {
+      "bytes": 1917,
+      "sha256": "33c3051031a455c77f5103f6b83d1b8e3456825eaab054fe743d26f2b6e5b6a9",
+      "gzip_sha256": "6cff6df4f1f8b9a94a7842ff7fb16c377c758ef979b2a6a9fb8143188c462eac"
+    },
+    "imports-recheck.log": {
+      "bytes": 265,
+      "sha256": "887e066d34586af14954aa87f42d5b3dbb10ec51d7bb45d09287ff7eb627f032",
+      "gzip_sha256": "cb006b9f070705966247b30dc1f198cb8d0c927566642bc591c5e5be1d0c00eb"
+    }
+  }
+}
