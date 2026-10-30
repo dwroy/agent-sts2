@@ -3378,7 +3378,7 @@
           ]
         },
         "code:agent/src/reflex/jev/combat-entries.ts": {
-          "sha256": "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282",
+          "sha256": "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a",
           "dependencies": [
             "code:agent/src/core/decision-budget.ts",
             "code:agent/src/core/util/json.ts",
@@ -3386,6 +3386,7 @@
             "code:agent/src/knowledge/files.ts",
             "code:agent/src/reflex/jev/predicate-context.ts",
             "code:agent/src/reflex/turn-solver.ts",
+            "code:agent/src/v6/combat-entry-selection.ts",
             "code:agent/src/v6/formats.ts",
             "code:agent/src/v6/knowledge.ts",
             "code:agent/src/v6/predicate.ts"
@@ -3393,7 +3394,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282"
+            "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a"
           ]
         },
         "code:agent/src/reflex/jev/predicate-context.ts": {
@@ -5579,6 +5580,17 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": []
+        },
+        "code:agent/src/v6/combat-entry-selection.ts": {
+          "sha256": "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2",
+          "dependencies": [
+            "code:agent/src/v6/schema.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
+          ]
         }
       }
     },
@@ -7272,7 +7284,7 @@
           ]
         },
         "code:agent/src/eye/run-config.ts": {
-          "sha256": "5b050137a26ea2de40bb68ba303f59fc5dad9ed30c7dd86812b97c4d6dbccaa1",
+          "sha256": "f8fe89cf3dbe8826308d71f5fdbe3392ec260235d73acbb062fa34c3f485b485",
           "dependencies": [
             "code:agent/src/brain/brain.ts",
             "code:agent/src/brain/engines/claude.ts",
@@ -7296,12 +7308,13 @@
             "code:agent/src/memory/ascension-target.ts",
             "code:agent/src/memory/journal-replay.ts",
             "code:agent/src/memory/run-constraints.ts",
+            "code:agent/src/v6/combat-entry-selection.ts",
             "code:agent/src/v6/config.ts"
           ],
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "5b050137a26ea2de40bb68ba303f59fc5dad9ed30c7dd86812b97c4d6dbccaa1"
+            "f8fe89cf3dbe8826308d71f5fdbe3392ec260235d73acbb062fa34c3f485b485"
           ]
         },
         "code:agent/src/hand/act/dispatch.ts": {
@@ -9143,7 +9156,7 @@
           ]
         },
         "code:agent/src/reflex/jev/combat-entries.ts": {
-          "sha256": "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282",
+          "sha256": "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a",
           "dependencies": [
             "code:agent/src/core/decision-budget.ts",
             "code:agent/src/core/util/json.ts",
@@ -9151,6 +9164,7 @@
             "code:agent/src/knowledge/files.ts",
             "code:agent/src/reflex/jev/predicate-context.ts",
             "code:agent/src/reflex/turn-solver.ts",
+            "code:agent/src/v6/combat-entry-selection.ts",
             "code:agent/src/v6/formats.ts",
             "code:agent/src/v6/knowledge.ts",
             "code:agent/src/v6/predicate.ts"
@@ -9158,27 +9172,29 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282"
+            "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a"
           ]
         },
         "code:agent/src/reflex/jev/combat-entry-projection.ts": {
-          "sha256": "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c",
+          "sha256": "bafc7a762f24e43db57c3114c3340ae0b4f9a5a242263cea506b7c3fbb996552",
           "dependencies": [
             "code:agent/src/reflex/jev/decision-projection.ts",
-            "code:agent/src/reflex/jev/questions.ts"
+            "code:agent/src/reflex/jev/questions.ts",
+            "code:agent/src/v6/combat-entry-selection.ts"
           ],
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c"
+            "bafc7a762f24e43db57c3114c3340ae0b4f9a5a242263cea506b7c3fbb996552"
           ]
         },
         "code:agent/src/reflex/jev/combat-entry-replay.ts": {
-          "sha256": "39892d528c1bc8f3e2d7d824a7ea1b6c952287b56acf68338d665fd37a9dcf56",
+          "sha256": "1be7c9899512c5523b143799143e1e7bb360231008ac201d8e8faa9dc588a039",
           "dependencies": [
             "code:agent/src/reflex/jev/combat-entries.ts",
             "code:agent/src/reflex/jev/decision-projection.ts",
             "code:agent/src/reflex/jev/questions.ts",
+            "code:agent/src/v6/combat-entry-selection.ts",
             "code:agent/src/v6/contrast-statistics.ts",
             "code:agent/src/v6/formats.ts",
             "code:agent/src/v6/knowledge.ts",
@@ -9187,7 +9203,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "39892d528c1bc8f3e2d7d824a7ea1b6c952287b56acf68338d665fd37a9dcf56"
+            "1be7c9899512c5523b143799143e1e7bb360231008ac201d8e8faa9dc588a039"
           ]
         },
         "code:agent/src/reflex/jev/compact-request.ts": {
@@ -12613,6 +12629,17 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": []
+        },
+        "code:agent/src/v6/combat-entry-selection.ts": {
+          "sha256": "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2",
+          "dependencies": [
+            "code:agent/src/v6/schema.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
+          ]
         }
       }
     },

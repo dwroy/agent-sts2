@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import { plain, safeKey, validate } from "../../v6/schema.js";
 import { reflexFile } from "../../v6/knowledge.js";
+import { replaySelectedCombatEntries } from "../../v6/combat-entry-selection.js";
 import { validateReflexVocab } from "../../v6/formats.js";
 import { contrastInterval } from "../../v6/contrast-statistics.js";
 import { combatMemory } from "./combat-entries.js";
@@ -26,6 +27,9 @@ export function prepareCombatEntryReplay(raw: unknown): ReplayPair {
   const audit = requireRow(board.v6_combat_entries, "v6_combat_entries");
   if (audit.schema !== "v6-combat-entries-audit-v1" || audit.character !== "silent" || !integer(audit.ascension)) throw Error("Silent combat audit required");
   if (!["boss", "elite"].includes(String(board.fight))) throw Error("Boss/elite replay required");
+  const context = requireRow(audit.context, "audit context");
+  if (![1, 2, 3].includes(Number(context.act)) || !Number.isInteger(context.act)
+    || context.act === 3 && board.fight !== "boss") throw Error("acts 1/2 Boss/elite or act 3 Boss replay required");
   const knowledge = requireRow(audit.knowledge, "knowledge");
   const source = requireRow(knowledge.reflex, "reflex"), vocabSource = requireRow(knowledge.vocab, "vocab");
   const file = validate(reflexFile, { schema: "reflex-file-v1", character: "silent", entries: source.entries });
@@ -34,6 +38,9 @@ export function prepareCombatEntryReplay(raw: unknown): ReplayPair {
     || source.sha256 !== replayHash(file.ok ? file.value.entries : null) || vocabSource.sha256 !== replayHash(vocab.ok ? vocab.value : null)) throw Error("invalid or changed knowledge audit");
   const tags = new Set(Object.values(vocab.value.dimensions).flat().map(m => m.id));
   if (file.value.entries.some(e => e.signal.kind === "tag" && !tags.has(e.signal.value))) throw Error("unknown vocabulary reference");
+  const selectedEntries = replaySelectedCombatEntries(file.value.entries, String(audit.character), context, audit.selection);
+  if (audit.selection !== undefined && selectedEntries.some(e => e.applies_to !== "combat_line" || !e.scope.ascensions.includes(audit.ascension as number)))
+    throw Error("combat entry selection contains out-of-scope entries");
   const questions = structuredClone(requireRow(request.questions, "questions")) as unknown as QuestionSet;
   const keys = Object.keys(questions);
   if (keys.length !== 1 || !["plan", "pick"].includes(keys[0]!)) throw Error("one frozen plan/pick question required");
@@ -47,8 +54,10 @@ export function prepareCombatEntryReplay(raw: unknown): ReplayPair {
     if (typeof text !== "string") throw Error("structured candidate facts required");
     const facts = requireRow(JSON.parse(text), "candidate"), candidate = requireRow(facts.v6_combat_entry, "candidate audit");
     if (candidate.schema !== "v6-combat-entry-audit-v1") throw Error("candidate audit missing");
-    const result = combatMemory({ entries: file.value.entries, ascension: audit.ascension, vocab: vocab.value, provenance: knowledge },
-      requireRow(candidate.context, "candidate context"));
+    const candidateContext = requireRow(candidate.context, "candidate context");
+    replaySelectedCombatEntries(file.value.entries, String(audit.character), candidateContext, audit.selection);
+    const result = combatMemory({ entries: selectedEntries, ascension: audit.ascension, vocab: vocab.value, provenance: knowledge },
+      candidateContext);
     memories[key] = result.memory;
     matched[key] = result.memory.map(m => m.id);
     unknown[key] = result.evaluated.filter(e => e.result === null).map(e => e.id);
