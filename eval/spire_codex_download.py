@@ -3,6 +3,7 @@ import contextlib
 import datetime as dt
 import email.utils
 import fcntl
+from fractions import Fraction
 import hashlib
 import json
 import os
@@ -28,6 +29,53 @@ def active_tombstone(index, key):
     return index.get('tombstones', {}).get(key, {}).get('active', False)
 
 
+def page_key(version, win, page):
+    return json.dumps([version, win, page])
+
+
+def record_page(cycle, scan, key, missing):
+    """Private run keys make page-prefix replay and duplicate rows idempotent."""
+    entry = cycle.setdefault('page_progress', {}).setdefault(
+        page_key(scan['version'], scan['win'], scan['page']),
+        dict(shard=cycle['next'] + 1, version=scan['version'], win=scan['win'],
+             page=scan['page'], records={}))
+    entry['records'][key] = missing
+
+
+def page_summary(index):
+    cycle = index.get('cycle', {})
+    pages = {}
+    # Old indexes only locate missing rows. Never invent their successful-row
+    # denominator; recount the resumed page from the verified listed prefix.
+    for key, tombstone in index.get('tombstones', {}).items():
+        if not tombstone.get('active') or tombstone.get('checked_cycle') != cycle.get('id'):
+            continue
+        for obs in tombstone.get('observations', []):
+            if obs.get('cycle') != cycle.get('id'):
+                continue
+            if not all(k in obs for k in ('shard', 'version', 'win', 'page')):
+                continue
+            identity = page_key(obs['version'], obs['win'], obs['page'])
+            entry = pages.setdefault(identity, dict(
+                **{k: obs[k] for k in ('shard', 'version', 'win', 'page')}, legacy=set()))
+            entry['legacy'].add(key)
+    for identity, progress in cycle.get('page_progress', {}).items():
+        entry = pages.setdefault(identity, dict(
+            **{k: progress[k] for k in ('shard', 'version', 'win', 'page')}, legacy=set()))
+        entry['records'] = progress['records']
+    result = []
+    for entry in pages.values():
+        legacy = entry.pop('legacy')
+        records = entry.pop('records', None)
+        processed = len(records) if records is not None else None
+        missing = sum(records.values()) if records is not None else len(legacy)
+        result.append(dict(entry, processed_records=processed, tombstones=missing,
+                           tombstone_ratio=missing / processed if processed else None,
+                           counts_scope='observed_rows' if records is not None else 'legacy_tombstones_only',
+                           legacy_tombstones_not_recounted=len(legacy - set(records or {}))))
+    return sorted(result, key=lambda p: (p['shard'], p['page']))
+
+
 def tombstone_summary(index):
     cycle = index.get('cycle', {})
     checked = {k for k, v in index.get('runs', {}).items()
@@ -38,13 +86,18 @@ def tombstone_summary(index):
     return dict(tombstones=len(missing), processed_records=processed,
                 tombstone_ratio=len(missing) / processed if processed else 0,
                 consecutive_tombstones=cycle.get('tombstone_streak', 0),
+                pages=page_summary(index),
                 active_tombstones=sum(bool(v.get('active')) for v in index.get('tombstones', {}).values()))
 
 
-def check_tombstone_breaker(index):
+def check_tombstone_breaker(index, max_tombstone_ratio=0.10):
     counts = tombstone_summary(index)
-    # Integer comparison makes exactly 1% admissible, including on resume.
-    if counts['tombstones'] * 100 > counts['processed_records'] or counts['consecutive_tombstones'] >= 5:
+    threshold = Fraction(str(max_tombstone_ratio))
+    # Exact rational comparison preserves the strictly-greater cumulative gate.
+    page_trip = any(p['processed_records'] is not None and p['processed_records'] >= 10
+                    and p['tombstones'] * 2 >= p['processed_records'] for p in counts['pages'])
+    if (counts['tombstones'] * threshold.denominator > counts['processed_records'] * threshold.numerator
+            or counts['consecutive_tombstones'] >= 5 or page_trip):
         raise ValueError('tombstone circuit breaker: ' + json.dumps(counts, sort_keys=True))
 
 
@@ -461,9 +514,15 @@ def metadata_row(row):
     return result
 
 
-def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
+def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',), max_tombstone_ratio=0.10):
     if max_pages is not None and (type(max_pages) is not int or max_pages < 1):
         raise ValueError('max-pages must be a positive integer')
+    try:
+        threshold = Fraction(str(max_tombstone_ratio))
+        if not 0 <= threshold <= 1:
+            raise ValueError()
+    except (ValueError, ZeroDivisionError):
+        raise ValueError('max-tombstone-ratio must be finite and between 0 and 1') from None
     root = Path(root)
     with locked(root) as lease:
         client = Client(root, lease.fileno())
@@ -473,7 +532,7 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
         existing = index.get('cycle', {})
         resuming = bool(existing and not existing.get('complete'))
         if resuming:
-            check_tombstone_breaker(index)
+            check_tombstone_breaker(index, threshold)
             if versions is not None and versions != existing['versions']:
                 raise ValueError('unfinished cycle versions differ; original cursor retained')
         available = {}
@@ -557,7 +616,9 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
                     prior = index['runs'].get(key)
                     tombstone = index.get('tombstones', {}).get(key)
                     if tombstone and tombstone['active'] and tombstone['checked_cycle'] == cycle['id']:
-                        check_tombstone_breaker(index)
+                        record_page(cycle, scan, key, True)
+                        save(index_path, index)
+                        check_tombstone_breaker(index, threshold)
                         continue
                     already_processed = prior and prior.get('checked_cycle') == cycle['id']
                     if prior and prior.get('checked_cycle') == cycle['id'] and dest.exists() and sha(dest) == prior['sha256']:
@@ -574,18 +635,21 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',)):
                             tombstone.update(active=True, checked_cycle=cycle['id'])
                             tombstone['observations'].append(observation)
                             cycle['tombstone_streak'] = cycle.get('tombstone_streak', 0) + 1
+                            record_page(cycle, scan, key, True)
                             # Commit evidence/counts before testing the breaker. The
                             # same cycle cannot skip past a persisted trip on resume.
                             save(index_path, index)
-                            check_tombstone_breaker(index)
+                            check_tombstone_breaker(index, threshold)
                             continue
                     if tombstone:
                         tombstone.update(active=False, recovered_cycle=cycle['id'])
                     if not already_processed:
                         cycle['tombstone_streak'] = 0
                     index['runs'][key] = dict(meta, path=str(dest.relative_to(root)), sha256=receipt['sha256'], checked_cycle=cycle['id'])
+                    record_page(cycle, scan, key, False)
                     # Per-run commit: restarting an interrupted page reuses verified files.
                     save(index_path, index)
+                    check_tombstone_breaker(index, threshold)
                 scan['page'] = page + 1
                 save(index_path, index)
         cycle.update(complete=True, completed_at=stamp())

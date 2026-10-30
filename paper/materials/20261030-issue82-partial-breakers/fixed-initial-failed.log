@@ -1,0 +1,20 @@
+..................................................E................
+======================================================================
+ERROR: test_partial_cycle_quarantines_build_mismatch_and_excludes_unverified_inputs (test_spire_codex.ProjectTests.test_partial_cycle_quarantines_build_mismatch_and_excludes_unverified_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-82-spire-codex-replays/eval/tests/test_spire_codex.py", line 961, in test_partial_cycle_quarantines_build_mismatch_and_excludes_unverified_inputs
+    for result in (cli.audit_cache(self.root / 'cache'), cli.report(self.root)):
+                                                         ~~~~~~~~~~^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-82-spire-codex-replays/eval/spire_codex.py", line 216, in report
+    downloaded['replay_bytes'] += path.stat().st_size
+                                  ~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 655, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp_vwyj83_/raw/absent.ndjson'
+
+----------------------------------------------------------------------
+Ran 67 tests in 3.504s
+
+FAILED (errors=1)
