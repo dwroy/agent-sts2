@@ -14,7 +14,7 @@ const request: EngineRequest = {
 
 describe("Shared Codex defaults across session entry points", () => {
   it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/high/normal for %s", (character) => {
-    for (const legacyTier of [undefined, "default", "priority"]) {
+    for (const legacyTier of [undefined, "default"]) {
       const config = loadConfig({ CHARACTER: character, BRAIN_CODEX_SERVICE_TIER: legacyTier });
       expect(config.brain.codex.serviceTier).toBe("default");
       expect(config.brain.engines.codex.model).toBe("gpt-6.1-sol");

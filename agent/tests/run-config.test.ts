@@ -191,15 +191,15 @@ describe("the row", () => {
     expect(written!.knowledge.error).toBeUndefined();
   });
 
-  it("records Codex's normal tier and configured context with or without an explicit environment setting", () => {
+  it("records the selected brain tier and preserves the explicit normal default", () => {
     const dir = temp(); // Both inputs must share the other configuration, including log paths.
-    const { log } = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_SERVICE_TIER: "priority", BRAIN_CODEX_MODE: "session" }, dir);
+    const { log } = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_SERVICE_TIER: "fast", BRAIN_CODEX_MODE: "session" }, dir);
     const row = log.observe(state("RUNX00000011"))!;
     expect(Object.keys(row.brain.engines)).toEqual(["codex", "deepseek"]);
-    expect(row.brain.codex).toMatchObject({ mode: "session", service_tier: "default", context_window: 512000, auto_compact_token_limit: 460800 });
+    expect(row.brain.codex).toMatchObject({ mode: "session", service_tier: "fast", context_window: 512000, auto_compact_token_limit: 460800 });
     const standard = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_ENGINE_MAP: "codex", BRAIN_CODEX_MODE: "session" }, dir).log.observe(state("RUNX00000012"))!;
     expect(standard.brain.codex!.service_tier).toBe("default");
-    expect(standard.config_sha).toBe(row.config_sha);
+    expect(standard.config_sha).not.toBe(row.config_sha);
     // Not asked: no codex block.
     expect(logOf(V4_ENV).log.observe(state("RUNX00000013"))!.brain.codex).toBeUndefined();
   });
