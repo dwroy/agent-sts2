@@ -1,5 +1,26 @@
 # #28 怪物出牌条目与离线验证
 
+## #83 第三幕与分 Boss 选择（2026-10-30）
+
+本节接 [#83 方案批准](https://github.com/dwroy/agent-sts2/issues/83#issuecomment-6515854107) 和 [逐 Boss 开启授权](https://github.com/dwroy/agent-sts2/issues/83#issuecomment-6514971942)，优先于下文 #28 历史“再请 Roy 决定”停点。工程工具交付不代表任何新条目已经验证或可开启。主管已批准同一自有首次尝试留出题的真实 Jev 两臂验证：逐条及拟开启组合的独立局等权胜率差 ≥0、掉血改善 ≥0，新增非法动作/崩溃/超时为0，完整配对结果与命中必须齐，报告95%配对区间和逐局反例；区间跨零注明“经验性不劣”。完整标准与自有模型准入见 `paper/materials/20261030-issue83-boss-calibration/plan.md`。
+
+capture/replay 现在接受第一、二幕 Boss/elite，以及第三幕 Boss；第三幕 elite、第四幕或未知/非整数幕数拒绝。manifest 的 act 与冻结审计必须一致；仍只消费原始结构化上下文和原 Plan，不生成候选或整场结果。
+
+生产由原 ops 在 K/L 自然边界同时设置：
+
+```bash
+V6_COMBAT_ENTRIES=on
+V6_COMBAT_ENTRY_SELECTION='{"AEONGLASS":["VALIDATED_ENTRY_ID_1","VALIDATED_ENTRY_ID_2"]}'
+```
+
+示例 ID 仅为占位，必须换成已通过验证、实际 K1 中存在的准确 ID。选择表仅对 Silent 生效，Boss 键只允许本任务的 `AEONGLASS`、`TEST_SUBJECT`、`THE_INSATIABLE`、`QUEEN`；匹配第三幕当前明确存活的原始实体 ID，不拿 run 的下一 Boss 或文本别名替代。一个表可分别配置多个 Boss 的 ID，库中的其他条目不自动加入；删去某个 Boss 键或置空数组只关闭它，`{}` 关闭全部本次入口。全局 off 始终不加载条目。其他角色仍保持原有行为。
+
+未设置 `V6_COMBAT_ENTRY_SELECTION` 保持原兼容行为（全局 on 加载旧完整角色库）；**不要用删除选择变量作单 Boss 回退**。空字符串、坏 JSON、通配符、未知 Boss 键、重复/非法 ID 会关闭 Silent 入口；当前 Boss 对应 ID 不存在、不是 combat_line 或不适用当前进阶也拒绝，不退到整库。选择表不授予模型可信度或条目有效性，ops 仍核准确 K1/LIVE 与已通过验证的版本；来源/版本变化须核原验证是否仍适用。
+
+run-config 新增可选 `combat_entries`（只在全局 on 或显式配置选择表时出现），记录 requested 与规范化选择/invalid 状态，并进入 config_sha。原决策审计保存实际 Boss、选中 ID 和完整知识来源 SHA；原知识文件与 SHA 不裁剪、不重写。投影拒绝拿旧选择审计套新配置。离线 capture 可加 `--selection '{"AEONGLASS":["VALIDATED_ENTRY_ID_1"]}'`，回放复用冻结选择、核对 Boss 上下文并只评估该子集；不设置仍可验证旧全库回放。改变选择会改变请求身份，必须新实验目录，不能复用原调用结果。
+
+开启/回退由原 ops 执行，登记开关值、ID、K1/LIVE、时间及开启前同口径首试基线。满10场该 Boss 首试过关率低于基线超过15pp，或出现非法动作/崩溃，直接关该 Boss 并报主管；新增超时也停接入查因。满30场报各 Boss 与 F33/F48/F49 首试过关率。下文 CLI 的 `enable_authorized:false` 表示 CLI 不控制生产开启，不覆盖本轮已给 ops 的授权。
+
 目标是由学习者按第一、二幕 Boss 和常见精英提炼 `reflex-entry-v1`，先验证再决定是否发送给 Jev。`V6_COMBAT_ENTRIES` 仍由 Roy 决定；本实现没有改默认值，没有发布条目，也没有自动启用或启动 A/B。开卷只供大脑，Jev 采用 V5 题面和候选。
 
 ## 来源合同
