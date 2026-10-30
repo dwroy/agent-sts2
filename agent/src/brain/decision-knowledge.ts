@@ -1,6 +1,7 @@
 /** Default context is an explicit, bounded read of the run's immutable K1 document. */
 import { compareGradedStrategies, gradedBodyEligible, strategyGrading } from "../knowledge/strategy-grading.js";
 import type { DecisionKnowledgeExposure } from "./decision-knowledge-exposure.js";
+import { compactStrategyDecisionView } from "./decision-knowledge-view.js";
 import { strategyEvidenceSummary } from "../knowledge/strategy-entries.js";
 import { createHash } from "node:crypto";
 import type { BrainRequest } from "./types.js";
@@ -19,6 +20,7 @@ const array = (v: unknown): unknown[] => Array.isArray(v) ? v : [];
 const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
 const digest = (s: string) => createHash("sha256").update(s).digest("hex");
 const NOTICE = "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。entries保完整结论、条件、分母、反例与限制；references仅ID和标题，不代表已读正文。需要时用kb_decision_context按ID及source续取完整原件。";
+const COMPACT_NOTICE = "正文为≤1900字节的固定决策投影：主张与形式触发不截断；关键分母、至多2条反例和限制为摘要，完整证据/额外条件见全文指针。形式触发不证明原条件全成立；自有/外部分账，关联非因果。references仅导航，不代表已读正文。";
 
 /** Only production decision labels; combat card choices never receive construction advice. */
 export function decisionPoints(label: string, payload: unknown, state?: unknown): DecisionPoint[] {
@@ -212,11 +214,14 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
       matches = matching(source, ctx);
     }
   } catch { status = "unavailable"; }
+  const compact = matches.some(m => strategyGrading(m.value));
+  const projected = new Map(matches.map(m => [m, strategyGrading(m.value)
+    ? compactStrategyDecisionView(m.value as StrategyEntry, m.kind) : { view: decisionKnowledgeEntryView(m.value, m.kind) }]));
   const render = (available: (id: string) => boolean, exposureStatus: string): BrainRequest => {
     let entries: Record<string, unknown>[] = [], references: Record<string, unknown>[] = [];
     let firstOversized = false;
     const eligible = matches.filter(m => (m.kind === "decision_context" || strategyGrading(m.value)
-      ? m.kind === "decision_context" || gradedBodyEligible(m.value) : !!publishedObservation(m.value as StrategyEntry)) && available(m.value.id));
+      ? m.kind === "decision_context" || gradedBodyEligible(m.value) : !!publishedObservation(m.value as StrategyEntry)) && projected.get(m)?.view && available(m.value.id));
     eligible.sort((a, b) => compareGradedStrategies(a.value, b.value));
     const ordinary = eligible.find(m => m.kind === "strategy");
     const position = ordinary ? eligible.indexOf(ordinary) : -1;
@@ -224,10 +229,10 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
     const reference = (m: Match) => decisionKnowledgeReference(m.value, m.kind);
     const envelope = () => ({ schema: "brain-decision-context-v1", status, knowledge_version: version, path, sha256,
       byte_budget: config.bytes, decision_points: decisionPoints(req.label, req.payload, ctx.state), total_matches: matches.length,
-      representation: "complete_entries_with_references", entries, returned: entries.length, complete_entries: entries.length, fragment_entries: 0,
+      representation: compact ? "compact_decisions_with_references" : "complete_entries_with_references", entries, returned: entries.length, complete_entries: entries.length, fragment_entries: 0,
       references, reference_only_count: references.length, omitted: matches.length - entries.length,
       omitted_references: matches.length - entries.length - references.length,
-      truncated: entries.length + references.length < matches.length, notice: NOTICE,
+      truncated: entries.length + references.length < matches.length, notice: compact ? COMPACT_NOTICE : NOTICE,
       exposure_status: exposureStatus, first_body_oversized: firstOversized,
       eligible_bodies: eligible.length, body_limit_omitted: Math.max(0, eligible.length - 4),
       body_budget_omitted: Math.min(4, eligible.length) - entries.length,
@@ -240,7 +245,7 @@ export function attachDecisionKnowledge(req: BrainRequest, config?: DecisionKnow
     };
     index();
     for (const match of eligible.slice(0, 4)) {
-      entries.push(decisionKnowledgeEntryView(match.value, match.kind)); index();
+      entries.push(projected.get(match)!.view!); index();
       // Preserve the complete ranked prefix: never skip an oversized first body.
       if (bytes(envelope()) > config.bytes) { entries.pop(); firstOversized = entries.length === 0; index(); break; }
     }

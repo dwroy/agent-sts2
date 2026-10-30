@@ -12,6 +12,9 @@ import { parseStrategyLibrary, retrieveStrategies } from "../src/knowledge/strat
 import { attachDecisionKnowledge, decisionContextTool } from "../src/brain/decision-knowledge.js";
 import { DecisionKnowledgeExposure } from "../src/brain/decision-knowledge-exposure.js";
 import { consumerPage } from "../src/brain/tools/knowledge-projection.js";
+import { compactStrategyDecisionView, strategyDecisionRule, DECISION_VIEW_BYTES } from "../src/brain/decision-knowledge-view.js";
+import { typedKnowledgeTool } from "../src/brain/tools/typed-knowledge.js";
+import { strategyTool } from "../src/brain/tools/strategy-tool.js";
 import type { BrainRequest } from "../src/brain/types.js";
 
 const roots: string[] = [], stores: KnowledgeStore[] = [], path = "characters/silent/strategy-entries.json", hash = "a".repeat(64);
@@ -116,4 +119,35 @@ it("returns fitting strategy full JSON in one response and larger Unicode JSON t
  const fitting = { id: "small", text: "中".repeat(4000) };
  const response = JSON.parse(consumerPage({ tool: "kb_strategies", input: { query: "*", detail: "full", document_id: fitting.id }, rows: [fitting], value: e => e, sources: () => [], envelope: {} }).text);
  expect(response.total_document_parts).toBe(1); expect(response.next_document_offset).toBeNull(); expect(JSON.parse(response.json_fragment)).toEqual(fitting);
+});
+
+it("projects complete claims and triggers into fixed fields with explicit evidence omissions and at most two counterexamples", () => {
+ const e = entry("compact"); e.strategy = '完整中文主张😀"\\。'.repeat(20);
+ e.grading_population = { source: "own", n: 53, unit: "independent_runs" };
+ e.counterexamples = Array.from({ length: 5 }, (_, i) => ({ run: "FIXTURE00001", floor: i + 1, detail: "反例细节".repeat(100) }));
+ e.full_review_evidence = ["完整证据".repeat(10000)];
+ const result = compactStrategyDecisionView(e, "strategy");
+ expect(result.view_bytes).toBeLessThanOrEqual(DECISION_VIEW_BYTES);
+ expect(result.view).toMatchObject({ id: e.id, representation: "compact_decision_view", rule: strategyDecisionRule(e), trigger: e.trigger,
+  denominator: "own；n=53 independent_runs；胜数=未知", counterexamples: { count: 5 } });
+ expect(result.view!.rule).toBe("单臂统计，非对照：" + e.strategy);
+ expect((result.view!.counterexamples as any).examples).toHaveLength(2);
+ expect(result.view).not.toHaveProperty("full_review_evidence");
+ const mechanism = compactStrategyDecisionView(entry("mechanism", "B+", true), "strategy").view!;
+ expect(mechanism.confidence).toBeNull(); expect(mechanism.rule).toContain("单次观察窗口");
+});
+
+it("keeps an oversized rule reference-only without silently clipping the claim", () => {
+ const e = entry("too-long"); e.strategy = "😀".repeat(600);
+ const result = compactStrategyDecisionView(e, "strategy");
+ expect(result.view).toBeUndefined(); expect(result.reason).toBe("rule_exceeds_1900"); expect(result.rule_bytes).toBeGreaterThan(1900);
+});
+
+it("resolves the compact view's actual kb_strategies pointer to the complete bound original", async () => {
+ const e = entry("pointer"); e.counterexamples = [{ detail: "只在全文保留的细节".repeat(300) }];
+ const { req } = setup([e]); const projected = view(req).entries[0];
+ expect(projected.representation).toBe("compact_decision_view");
+ const result = await typedKnowledgeTool(strategyTool()).run(projected.full_document.input, req.toolContext!);
+ expect(result.isError).toBeUndefined(); const full = JSON.parse(result.text);
+ expect(full.next_document_offset).toBeNull(); expect(JSON.parse(full.json_fragment)).toEqual(e);
 });
