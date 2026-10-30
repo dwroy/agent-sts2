@@ -33,12 +33,12 @@ function plan(value: unknown): Plan | null {
   }
   return value as unknown as Plan;
 }
-export function captureCombatEntryReplay(raw: unknown, directory: string) {
+export function captureCombatEntryReplay(raw: unknown, directory: string, selection?: string) {
   if (!plain(raw) || raw.schema !== "combat-entry-capture-input-v1" || !plain(raw.request) || !plain(raw.request.state)
     || !plain(raw.request.questions) || !plain(raw.plans)) throw Error("capture input required");
   const state = parseGameState(raw.state), request = structuredClone(raw.request);
-  const session = loadCombatEntries(state, directory, { V6_COMBAT_ENTRIES: "on" });
-  if (!session || session.character !== "silent" || ![1, 2].includes(session.act ?? -1)) throw Error("first/second act Silent knowledge/state required");
+  const session = loadCombatEntries(state, directory, { V6_COMBAT_ENTRIES: "on", V6_COMBAT_ENTRY_SELECTION: selection });
+  if (!session || session.character !== "silent" || ![1, 2, 3].includes(session.act ?? -1)) throw Error("act 1/2/3 Silent knowledge/state required");
   const board = request.state as Record<string, unknown>, questions = request.questions as Record<string, unknown>;
   const ids = Object.keys(questions), q = questions[ids[0]!];
   if (ids.length !== 1 || !["plan", "pick"].includes(ids[0]!) || !plain(q) || q.type !== "choice" || !plain(q.criteria)) throw Error("one original plan/pick choice required");
@@ -60,10 +60,10 @@ export function captureCombatEntryReplay(raw: unknown, directory: string) {
     knowledge_sha256: replayHash(session.provenance), future_predicates: "unknown_without_original_structured_simulation", outcome_generated: false } };
 }
 export function main(argv = process.argv.slice(2)) {
-  const { values: args } = parseArgs({ args: argv, options: { input: { type: "string" }, knowledge: { type: "string" }, out: { type: "string" } } });
+  const { values: args } = parseArgs({ args: argv, options: { input: { type: "string" }, knowledge: { type: "string" }, out: { type: "string" }, selection: { type: "string" } } });
   if (!args.input || !args.knowledge || !args.out) throw Error("--input frozen.json --knowledge isolated-knowledge-root --out capture.json required");
   const bytes = readFileSync(local(args.input));
-  const result = captureCombatEntryReplay(JSON.parse(bytes.toString()), local(args.knowledge));
+  const result = captureCombatEntryReplay(JSON.parse(bytes.toString()), local(args.knowledge), args.selection);
   const output = local(args.out);
   mkdirSync(resolve(output, ".."), { recursive: true });
   writeFileSync(output, JSON.stringify({ ...result, input_file_sha256: createHash("sha256").update(bytes).digest("hex") }, null, 2) + "\n", { flag: "wx", flush: true });

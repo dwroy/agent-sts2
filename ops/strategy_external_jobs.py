@@ -68,6 +68,15 @@ def queue(root):
     ids = [plan.get("plan_id") for plan in value["plans"]]
     if any(not isinstance(ident, str) or not shared.ID.fullmatch(ident) for ident in ids) or len(set(ids)) != len(ids):
         raise ValueError("invalid external source plan IDs")
+    import external_stock
+    # Operational overlay: never rewrite the original plan list or old generations.
+    try:
+        value["plans"] += external_stock.overlay(root)
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RecursionError):
+        pass  # Original plans remain usable; maintain reports the independent stock failure.
+    ids = [plan["plan_id"] for plan in value["plans"]]
+    if len(set(ids)) != len(ids):
+        raise ValueError("stock plan collides with original external queue")
     return value
 
 
@@ -125,7 +134,11 @@ def read_source(root, plan):
         shared.artifact(root, ref)
     if not manifest.get("contracts"):
         raise ValueError("external batch requires frozen publication contracts")
-    return {"request_id": REQUEST, "plan_id": plan["plan_id"], "source": "external:sts2fun",
+    stock = None
+    if "stock" in manifest:
+        import external_stock
+        stock = external_stock.validate_binding(root, plan, manifest)
+    return {**({"stock": stock} if stock else {}), "request_id": REQUEST, "plan_id": plan["plan_id"], "source": "external:sts2fun",
             "input_manifest": plan["input_manifest"], "work_spec": plan["work_spec"], "topic": manifest["topic"], "provenance": provenance,
             "entry_ids": ids, "all_entry_ids": ids, "dispatch_runs": [], "cohorts": cohorts}, spec, (
                 [plan["input_manifest"], plan["work_spec"]] + manifest["contracts"]
@@ -256,6 +269,9 @@ def _dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
         if not result:
             break
         results.append(result)
+    import external_stock
+    if character == "silent":
+        external_stock.maintain(state, root, alive)
     return results
 
 

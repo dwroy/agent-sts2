@@ -1,0 +1,29 @@
+{
+  "working_directory": "agent",
+  "production_types": ["npx", "tsc", "-p", "tsconfig.json", "--noEmit"],
+  "developer_sandbox": ["bash", "tools/test-sandbox.sh"],
+  "targeted_test_files": [
+    "tests/learner-supervisor-close.test.ts",
+    "tests/learner-tabs.test.ts",
+    "tests/learner-tui-reconciliation.test.ts",
+    "tests/learner-registration-pipeline.test.ts",
+    "tests/learner-jobs.test.ts"
+  ],
+  "host_python_modules": [
+    "ops/tests/test_learner_supervisor_close.py",
+    "ops/tests/test_own_learning_slot.py",
+    "ops/tests/test_learner_tabs.py",
+    "ops/tests/test_learner_tui_recovery.py"
+  ],
+  "real_entry_consumers": {
+    "close": "New Python fixtures use the original scheduler late-finish handler and CLI learn-lock refusal, the real closure routine, fake gh/herdr decisions, durable temp receipts, native logs and Host process-group TERM code with fake process tables/signals.",
+    "compute_admission": "Original own-learning projection consumes a durable exact original-row void receipt; repeated closure/state-save recovery are idempotent and original demand remains non-retryable.",
+    "retirement": "Existing learner-tabs and native reconciliation consumers remain applicable; no tab retirement, worktree deletion or business success is authorized by void closure."
+  },
+  "integrator_contract": "After issue-83-boss-tools-r3, normalize these three ROOT leaves on the actually adopted main; freeze applicable original host consumers and final combination checks. No reuse of old account-scope checks/full/once.",
+  "runtime_install_paths": ["ops/codex-ops-learn.py", "ops/own_learning_slot.py", "ops/learner_supervisor_close.py"],
+  "LIVE_install_paths": [],
+  "runtime_executor": "original ops after actual integration",
+  "developer_production_signals": 0,
+  "developer_production_state_writes": 0
+}

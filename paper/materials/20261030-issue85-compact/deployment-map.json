@@ -1,0 +1,300 @@
+{
+  "schema": "issue85-deployment-map-v2",
+  "source_base": "9b0cf5955d7485c93ed1baf7d94bf1d2e08e1f06",
+  "observed_main": "9b0cf5955d7485c93ed1baf7d94bf1d2e08e1f06",
+  "observed_live_head": "f6ccd3fcc79c2527acfa1ed7da183e311ec84764",
+  "production_mutations": false,
+  "leaves": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "e737bfede328c7a03f6ee0f64761bf3b984353f4",
+      "delivery_blob": "3de1fc3d7eee1a918639710e9c0fd5aebebdddec",
+      "sha256": "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b",
+      "mode": "0o644",
+      "live_observed_blob": "e737bfede328c7a03f6ee0f64761bf3b984353f4",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge-exposure.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": null,
+      "delivery_blob": "f88529cf33a7c55912955e09f63d8fe4782ade46",
+      "sha256": "f69da9609387f5473029bfd1fd88ecb64da1be76669a04763d83bc1fd814243a",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge-view.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": null,
+      "delivery_blob": "56443f877c6b5e7e4a263fef4a1dcb6962254288",
+      "sha256": "2e8a57221cbde8a36772c17f73f8b6170a9132eaafd204e3488fef32abba8fc3",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "3d1f5c976e2dcec6eac48aab81e02336a0598c40",
+      "delivery_blob": "b654f9ca4b0a210a7832c5e1f0d50ee3b9fe2669",
+      "sha256": "5ba0de31bfaad75f3a2f480a5c12d704a2f194c53aaf239b047bd97e30b693be",
+      "mode": "0o644",
+      "live_observed_blob": "3d1f5c976e2dcec6eac48aab81e02336a0598c40",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "6dc3e1a5e17e4272406d301905eaf56934f9d10c",
+      "delivery_blob": "d6230dd7146a949d75a40f5f3019b4aea8fb8c42",
+      "sha256": "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697",
+      "mode": "0o644",
+      "live_observed_blob": "6dc3e1a5e17e4272406d301905eaf56934f9d10c",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/engines/dsh.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "39f9696e20c7e77ae6d75d4048bcf21d7dc7c0eb",
+      "delivery_blob": "bcfab97a6f9cbcbcbbb95166f0f603bfe21c29d9",
+      "sha256": "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7",
+      "mode": "0o644",
+      "live_observed_blob": "39f9696e20c7e77ae6d75d4048bcf21d7dc7c0eb",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/engines/knowledge-agent.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "542dd91a6fccf3940f7927dc5de1637ee6f60398",
+      "delivery_blob": "e408d7db7fc4ac6ad78cd2af79c172b26b25dd07",
+      "sha256": "0a7e7e6b7f9bb495aefdcb651d677ef7d1a11495593c3d4ccb81740c60bc6a3b",
+      "mode": "0o644",
+      "live_observed_blob": "542dd91a6fccf3940f7927dc5de1637ee6f60398",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "f8a54be81ebe99330cec09cc9dd5b8f178faa5be",
+      "delivery_blob": "ba665547a39a9a1ca8f4ad69926c0b9a05dbd37a",
+      "sha256": "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703",
+      "mode": "0o644",
+      "live_observed_blob": "f8a54be81ebe99330cec09cc9dd5b8f178faa5be",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/tools/knowledge-projection.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "d4c3f602dec0ca1a146e2cdac06fdf6abf311dbf",
+      "delivery_blob": "84cab53f69df4c013849a2918492b98c221731fd",
+      "sha256": "d89fedc656061ec2f9f4dc451e47d3b43fef310ae51e56b5dfd559dbfc1364e8",
+      "mode": "0o644",
+      "live_observed_blob": "d4c3f602dec0ca1a146e2cdac06fdf6abf311dbf",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "f9c1785913acdc7cfb556151ed078b94d39bf7c5",
+      "delivery_blob": "6c9a9abad4fa4a3c386888a9443eee741f6eeb97",
+      "sha256": "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2",
+      "mode": "0o644",
+      "live_observed_blob": "f9c1785913acdc7cfb556151ed078b94d39bf7c5",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/reader.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "f30dddb3652eeb48616c918ebbb7a1d5a1385d3c",
+      "delivery_blob": "05941aade0593f98b7c26919af691f27ffec3c40",
+      "sha256": "f35acd3989f48cdb4a14051cd5eb285b5c6d57920e2dd0c2de95a9f565db6d5e",
+      "mode": "0o644",
+      "live_observed_blob": "f30dddb3652eeb48616c918ebbb7a1d5a1385d3c",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/schema.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "04ecd93549b6381d3b6d70424bac6c36fedb669b",
+      "delivery_blob": "feddd55d5326849da473a948a2c90da699acdab6",
+      "sha256": "09c85a6eb07c2927c40910f8f79818e1a0022bf18a96e5e16a9cc054fd83d72f",
+      "mode": "0o644",
+      "live_observed_blob": "04ecd93549b6381d3b6d70424bac6c36fedb669b",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/store.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "6cdfb4b846eedf5f94f4667340f27437930a85a1",
+      "delivery_blob": "6c18bc8d60d2c75f1da3c2efe0567ee389b2e446",
+      "sha256": "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a",
+      "mode": "0o644",
+      "live_observed_blob": "6cdfb4b846eedf5f94f4667340f27437930a85a1",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/runtime/typed-schema.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "3b144e6d7364c127f6a28321fda283eec7f5bf98",
+      "delivery_blob": "dcb677947c6717d4a2188bc080b66d523177f42c",
+      "sha256": "ae5cb7687dd61b839dc52cef899c23bfadadfc4089f6ee5be179cf898b1a22ce",
+      "mode": "0o644",
+      "live_observed_blob": "3b144e6d7364c127f6a28321fda283eec7f5bf98",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": "7395566fdd245a84469ccabd582e98d1da547656",
+      "delivery_blob": "4f1e1afa4b992daee82639d8f75d62a5a452723e",
+      "sha256": "2323a056e33f39c9cb843587b0b38ba07e3fd6d561d9fd2f1103de9672c7eebe",
+      "mode": "0o644",
+      "live_observed_blob": "7395566fdd245a84469ccabd582e98d1da547656",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/src/knowledge/strategy-grading.ts",
+      "deploy": "ROOT+LIVE",
+      "base_blob": null,
+      "delivery_blob": "6f69378af5611b214cd1378c73eaec5e91ce7677",
+      "sha256": "03389ce94e048de88d66bae5bbb712b1bbdafff9be84f3c44c6e99c4a51a9db4",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/tests/brain-budget-evidence.test.ts",
+      "deploy": "ROOT-only",
+      "base_blob": "fb5e5261cd785150a1136b3c4aaf336192aba84d",
+      "delivery_blob": "eb81074380a7ff7232e0a1bc001bdab787143c19",
+      "sha256": "547a84ec9831c42962698233c365cc79977677711d004e3e3b2f966e6265dcf3",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/tests/decision-knowledge.test.ts",
+      "deploy": "ROOT-only",
+      "base_blob": "2946cd1b4ed7023279f0c05c90d4cc23bbc651ac",
+      "delivery_blob": "a8856ccaed86c4cc95def0d64f5ea26397ecae35",
+      "sha256": "300e67b01f0aa3dfaf2eca8e5fbf7f2cb2d43b8fe6be988f5109e8a25aab6f5e",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/tests/strategy-grading.test.ts",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "dd9ec48e12ad9157aff4f711e26bc952c8e83d12",
+      "sha256": "e8ed9caa8ff96d1854352fc8d4804b3ee96f161b9d7ce7f38c726999814f21b6",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/tools/grade-strategies.ts",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "492197a1efcdeea1ea2904c214ee328a48e14f72",
+      "sha256": "952d70a5b6561d4b1913649997c25ce405f9e38c68a7a033fd58b19b8acfdecc",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "agent/tsconfig.knowledge-runtime.json",
+      "deploy": "ROOT-only",
+      "base_blob": "ed72f1aa7ef8e16720d71f7ee4314ef90b51b03d",
+      "delivery_blob": "9fe2473267d2dae10788202ce59dd3be227a1c8b",
+      "sha256": "7ac0610641624086472daefce59337d0e59308af2849498420568ad4e84f3307",
+      "mode": "0o644",
+      "live_observed_blob": "ed72f1aa7ef8e16720d71f7ee4314ef90b51b03d",
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-compact/replay.mjs",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "e0543b572dc052cc766d139f4c5210ee3e136949",
+      "sha256": "5d64b53e9ed7f5590382f047eafbd90cf4b6e04dd06e4ef5ef752034ef2abb92",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-grading/classify_checkpoint.py",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "83d0086fea3921e7d909284e23e57d363e3edd32",
+      "sha256": "fe062237f40f30ee81a462954c0f81746efea916981c500e09e6ac6f7a2ecc31",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-grading/source_audit.py",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "4917904dd5cf18eb261049c6b8ee2cf30dda5592",
+      "sha256": "4b715d3b328a40b0d01383676482666040698cf8e9bc0cd07b919e3d992d5ccf",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-grading/verify_checkpoint.py",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "41de12b555bf050ff0e1d570c41a0fda7be47465",
+      "sha256": "61586a2959d85db2592314c29d9f7f2d2930b4d96bc5250689f4a5875f08229e",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-grading/verify_hash_scopes.py",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "291dd665e77ff881abcbc74f97aef13b4ffdda7d",
+      "sha256": "4cc86e230fb5756140befd354937fcc2f595bc1bf67be4d5dbb0f3ddfd3040c7",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-implementation/replay.mjs",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "baba765c71e8a4a372f38d3f5cf3840388357aa5",
+      "sha256": "dda82ab148451a26067c6978ae3ac343dd1c2a78c0322f9e681da23049cd3734",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-implementation/sandbox-check.mjs",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "8df14a59f35bd774e3bbc0404c4c1f021dc3f353",
+      "sha256": "3aaee956d861ea5ef5c2ce3858916276cc4cf29499393e4b55c789ddf4a19ce4",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-proposal/audit.mjs",
+      "deploy": "ROOT-only",
+      "base_blob": null,
+      "delivery_blob": "03a5641d98eec0b9b4dcfcd52aa15bdc9ab40304",
+      "sha256": "7accbae6fd8918d082db85e637fd6f0a4f34e97b4a084ac2aaa5c38b383a9d6c",
+      "mode": "0o644",
+      "live_observed_blob": null,
+      "rollback": "restore exact observed preimage; remove only a newly installed leaf if absent before"
+    }
+  ],
+  "note": "r1 request superseded by supervisor 6513713188. Verify this r2 leaf map under the original publication lock. Candidate K1 and schema5 transaction remain as in r1; ROOT-only material scripts do not deploy to LIVE."
+}

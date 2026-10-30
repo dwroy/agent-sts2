@@ -55,6 +55,7 @@ import { constructionMode } from "../construction/adapter.js";
 import { constructionEvaluationEnabled } from "../construction/consumer.js";
 import { globalBuildPolicy } from "../core/global-build-config.js";
 import { v6Config, type V6Config } from "../v6/config.js";
+import { combatEntrySelectionConfig, type CombatEntrySelectionConfig } from "../v6/combat-entry-selection.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -114,6 +115,7 @@ export interface RunConfigRow {
   process: { pid: number; started: string };
   code: CodeInfo;
   brain: {
+    decision_knowledge?: NonNullable<AppConfig["brain"]["decisionKnowledge"]>;
     agent?: AppConfig["brain"]["agent"] & { mode: "knowledge-tools"; transport: "app-server" | "dsh-Nova" };
     run_profile?: BrainRunProfile;
     /** False when there is no DeepSeek client (no key): then no brain question is asked at all. */
@@ -150,6 +152,7 @@ export interface RunConfigRow {
   brain_native_receipt?: { question_id: string; receipt: BrainNativeReceipt };
   human_pace?: { schema: string; budgets: Record<keyof typeof HUMAN_PACE_BUDGETS, number>; model_effort: string; required_full_replaced: boolean };
   v6?: V6Config;
+  combat_entries?: { requested: "on" | "off"; selection: CombatEntrySelectionConfig };
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
@@ -484,7 +487,11 @@ export function runConfigRow(
     : null;
   const setup = {
     ...(v6.mode !== "off" ? { v6 } : {}),
+    ...(env["V6_COMBAT_ENTRIES"] === "on" || env["V6_COMBAT_ENTRY_SELECTION"] !== undefined
+      ? { combat_entries: { requested: env["V6_COMBAT_ENTRIES"] === "on" ? "on" as const : "off" as const,
+        selection: combatEntrySelectionConfig(env["V6_COMBAT_ENTRY_SELECTION"]) } } : {}),
     brain: {
+      ...(brain?.router.knowledgeAgent && config.brain.decisionKnowledge?.enabled ? { decision_knowledge: config.brain.decisionKnowledge } : {}),
       ...(brain?.router.knowledgeAgent ? { agent: { ...config.brain.agent, mode: "knowledge-tools" as const, transport: actualBrain.engine === "deepseek" ? "dsh-Nova" as const : "app-server" as const } } : {}),
       ...(config.brain.runProfile ? { run_profile: config.brain.runProfile } : {}),
       active: brain !== null,

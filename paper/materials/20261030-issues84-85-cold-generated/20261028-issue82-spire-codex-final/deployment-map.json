@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "baseline": "f11183c49b34595f220758ecad672d1f7514cacd",
+  "runtime_install": "ROOT only after engineering acceptance",
+  "live_leaves": [],
+  "host_daemons": [],
+  "leaves": [
+    {
+      "path": "eval/spire_codex.py",
+      "bytes": 14438,
+      "sha256": "ff7cbff3b740670dce669d6785654956aa15a4652a8cf2d26beffc316deb9e93",
+      "blob": "535cc0855aec21849879c0e51cb75aea7c7daa46",
+      "mode": "100644",
+      "baseline_blob": null,
+      "scope": "ROOT runtime only"
+    },
+    {
+      "path": "eval/spire_codex_download.py",
+      "bytes": 18268,
+      "sha256": "320367e6086327beec4d1b59eaf3984a28189b832090743e3233e77e6af0420e",
+      "blob": "db80266f418f664df4374c924babfab883ea949c",
+      "mode": "100644",
+      "baseline_blob": null,
+      "scope": "ROOT runtime only"
+    },
+    {
+      "path": "eval/spire_codex_projection.py",
+      "bytes": 20211,
+      "sha256": "85a5a36d7d52e2c788fa5697c5875cc709534ce52d1afeea9f7df461f9e80d9d",
+      "blob": "97a1a430dec54a888afd1ca63837635315f3875b",
+      "mode": "100644",
+      "baseline_blob": null,
+      "scope": "ROOT runtime only"
+    },
+    {
+      "path": "eval/tests/test_spire_codex.py",
+      "bytes": 28889,
+      "sha256": "0023a3def75330ee3ee21b143cf7771ec4c74b979c3441d523fef7fbe51109a0",
+      "blob": "d1efaaf4bad504c1b86ec60e6209d7e5f5154088",
+      "mode": "100644",
+      "baseline_blob": null,
+      "scope": "ROOT test only"
+    },
+    {
+      "path": "agent/tests/spire-codex.test.ts",
+      "bytes": 636,
+      "sha256": "1a21bad3ebd0d12d1abc3cfe72ae60817dea0fc0615bd25c3e7276f98efb646b",
+      "blob": "9e7c8d9c5856e2554e2321ca0bd4e7302652062b",
+      "mode": "100644",
+      "baseline_blob": null,
+      "scope": "ROOT test only"
+    }
+  ],
+  "checks": [
+    "data/logdb-venv/bin/python -B eval/tests/test_spire_codex.py",
+    "data/logdb-venv/bin/python eval/spire_codex.py --help",
+    "Vitest tests/spire-codex.test.ts"
+  ],
+  "rollback": "remove the exact new ROOT leaves; preserve raw/revisions/index/salt/receipts/cache"
+}

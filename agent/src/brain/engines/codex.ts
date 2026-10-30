@@ -734,7 +734,7 @@ interface CodexCall {
   entry: Json;
   kindSchema: JsonSchema;
   schema: StrictSchema | null;
-  cacheRequest: CodexCacheObservation;
+  cacheRequest?: CodexCacheObservation;
 }
 
 /** `codex app-server`'s arguments in session mode: stdio, and exec mode's isolation overrides and feature switches. */
@@ -807,6 +807,7 @@ function sessionTrace(
 /* ---- the engine -------------------------------------------------------------------------------- */
 
 export class CodexEngine implements BrainEngine {
+  readonly preparesRequests = true;
   readonly name = "codex" as const;
   /** The model's catalog entry per model slug, read once per process (`codex debug models`). */
   private readonly catalogs = new Map<string, Promise<Json>>();
@@ -1037,7 +1038,7 @@ export class CodexEngine implements BrainEngine {
     if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex call cancelled after catalog read");
     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
     const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern, routeReasonOnChange: req.spec.routeReasonOnChange });
-    const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
+    const cacheRequest = req.prepareForSend ? undefined : this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
     const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
     const usageNotes = this.usage.takeNotes();
@@ -1095,9 +1096,15 @@ export class CodexEngine implements BrainEngine {
    * asked once more (BRAIN_CODEX_STALL_RETRIES); a dead server or a broken stream restarts the session once, then
    * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
    */
+  private prepareSend(req: BrainRequest, c: CodexCall): void {
+    if (!req.prepareForSend) return;
+    req.prepareForSend(req);
+    c.cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system,
+      prompt: promptWithReask(req), schema: c.schema, serviceTier: this.opts.codex.serviceTier });
+  }
+
   private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {
     const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars, maxAnswerBlanks, acceptCut } = this.opts.codex;
-    const prompt = promptWithReask(req);
     let attempt = 1;
     let spentMs = 0;
     for (;;) {
@@ -1109,6 +1116,8 @@ export class CodexEngine implements BrainEngine {
       try {
         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
         if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex session cancelled after thread preparation");
+        this.prepareSend(req, c);
+        const prompt = promptWithReask(req);
         evidenceAttempt = this.notePhysicalCall("session", req);
         turn = await session.ask({ evidence: req.evidence, attempt: evidenceAttempt, observe: req.observe, prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
       } catch (error) {
@@ -1206,17 +1215,20 @@ export class CodexEngine implements BrainEngine {
       const schemaFile = schema ? join(work, "schema.json") : null;
       if (schemaFile) writeFileSync(schemaFile, JSON.stringify(schema), "utf8");
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
-      const stdin = promptWithReask(req);
+      this.prepareSend(req, c);
+      let stdin = promptWithReask(req);
       let attempt = 1;
       let spentMs = spentBeforeMs;
       this.notePhysicalCall("exec", req);
-      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest! });
       spentMs += outcome.ms;
       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
         attempt += 1;
+        this.prepareSend(req, c);
+        stdin = promptWithReask(req);
         this.notePhysicalCall("exec", req);
-        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest! });
         spentMs += outcome.ms;
       }
       if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");

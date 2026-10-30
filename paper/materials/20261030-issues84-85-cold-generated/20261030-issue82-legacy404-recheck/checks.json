@@ -1,0 +1,49 @@
+{
+  "fixed_inputs_only": true,
+  "production_download": false,
+  "nice": 19,
+  "max_processes": 2,
+  "final_combination_full_vitest": false,
+  "checks": [
+    {
+      "log": "python-final.txt",
+      "command": "nice -n 19 data/logdb-venv/bin/python -B eval/tests/test_spire_codex.py",
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "60 fixed tests passed",
+      "sha256": "888af56632616c7ef4410270ad96bc2e332d160cb7c3cf80dac6599258e59827"
+    },
+    {
+      "log": "tsc-final.txt",
+      "command": "nice -n 19 /home/dw/.local/node/bin/node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0,
+      "result": "rc0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "vitest-final.txt",
+      "command": "nice -n 19 /home/dw/.local/node/bin/node node_modules/vitest/vitest.mjs run tests/spire-codex.test.ts tests/check-imports.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism --testTimeout=60000",
+      "cwd": "agent",
+      "exit_code": 0,
+      "result": "2 files / 2 tests passed; includes Python 60",
+      "sha256": "51297814d25a93d772238b2d6ab3d441a6200fe511d0018b0dea3eb5c6352fa4"
+    },
+    {
+      "log": "paths-final.txt",
+      "command": "nice -n 19 /home/dw/.local/node/bin/node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1 --no-file-parallelism --testTimeout=60000",
+      "cwd": "agent",
+      "exit_code": 0,
+      "result": "11 passed",
+      "sha256": "2a981dc1f3a5b25f96d7ca123c9a6b9e833850cb4639b1d96d431b4d56089356"
+    },
+    {
+      "log": "cli-help.txt",
+      "command": "nice -n 19 data/logdb-venv/bin/python -B eval/spire_codex.py --help",
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "rc0",
+      "sha256": "87990d5769327fa32d61a062d082cc695f9b412d3718642c0089128fc6bc1693"
+    }
+  ]
+}

@@ -56,6 +56,12 @@ it.each(["off", "v1"] as const)("actual %s planner attaches role-local entries a
     return d;
   };
   vi.stubEnv("V6_COMBAT_ENTRIES", "off"); const baseline = decision(); expect(simulate).not.toHaveBeenCalled();
+  vi.stubEnv("V6_COMBAT_ENTRIES", "on"); vi.stubEnv("V6_COMBAT_ENTRY_SELECTION", '{}');
+  const excluded = decision(); expect(simulate).not.toHaveBeenCalled();
+  const excludedWire = excluded.jevView ?? excluded, baselineWire = baseline.jevView ?? baseline;
+  expect(JSON.stringify({ state: excludedWire.state, questions: excludedWire.questions }))
+    .toBe(JSON.stringify({ state: baselineWire.state, questions: baselineWire.questions }));
+  vi.stubEnv("V6_COMBAT_ENTRY_SELECTION", undefined);
   vi.stubEnv("V6_COMBAT_ENTRIES", "on"); const on = decision(); expect(simulate).toHaveBeenCalledOnce();
   const old = baseline.jevView ?? baseline, current = on.jevView ?? on;
   const projection = projectCombatDecision(current.state, current.questions)!;

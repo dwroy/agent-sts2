@@ -27,6 +27,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import time
@@ -133,9 +134,9 @@ def save_state(state):
 
 
 @contextmanager
-def state_lock():
+def state_lock(*, nonblocking=False):
     with open(os.path.join(DIR, "learn.lock"), "a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        fcntl.flock(lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if nonblocking else 0))
         import strategy_external_jobs
         with learner_registration.transaction(DIR, save_state), strategy_external_jobs.validation_window():
             yield
@@ -396,6 +397,8 @@ def _cmd_tick(args):
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     report["ascension_audit"] = check_ascension_audits(state, character)
+    if character == "silent":
+        report["own_learning"] = external_learning_policy.own_status(state, alive, DIR)
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
@@ -417,6 +420,11 @@ def cmd_dispatch(args):
     if set(runs) & held:
         print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
         return 1
+    if args.character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive):
+        own = external_learning_policy.own_status(state, alive, DIR)
+        if own["busy"]:
+            print(json.dumps({"dispatched": None, "own_learning": own}, ensure_ascii=False))
+            return 1
     busy = running_batch(state)
     if busy:
         save_state(state)
@@ -467,6 +475,10 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    # A supervisor void never becomes success/retry via a late wrapper finish.
+    if "supervisor_close" in batch:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": "supervisor_close_requires_original_receipt"}))
+        return 75
     if batch.get("task", "postmortem") == "postmortem":
         report = read_report(os.path.join(DIR, "learner", args.batch + ".out"))
         from learning_runtime import complete as complete_operational
@@ -504,6 +516,10 @@ def cmd_finish(args):
             import strategy_external_jobs
             batch["external_finished_at"] = time.time()
             strategy_external_jobs.reconcile(state, DIR)
+            import external_stock
+            external_stock.maintain(state, ROOT, alive,
+                admission_reason="account_draining" if account_draining() else
+                    "publication_hold" if publication_gate.learners_held(ROOT, DIR) else None)
         if batch.get("backfill_source"):
             import strategy_backfill_jobs
             batch["backfill_finished_at"] = time.time()
@@ -585,7 +601,7 @@ def cmd_write(args):
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
                                 "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
         save_state(state)
-        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
     if getattr(args, "request", ""):
         import strategy_implementation_jobs
@@ -598,7 +614,7 @@ def cmd_write(args):
             print(json.dumps({"dispatched": None, "status": "blocked", "error": str(error)}, ensure_ascii=False))
             return 1
         save_state(state)
-        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
     if args.task in ("experience-update", "strategy-proposal"):
@@ -618,7 +634,7 @@ def cmd_write(args):
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
                                 ",".join(runs), "ops", alive, stamp)
     save_state(state)
-    print(json.dumps({"dispatched": result}, ensure_ascii=False))
+    print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
     return 0 if result else 1
 
 
@@ -723,6 +739,7 @@ def cmd_status(args):
     print(f"running batch: {busy or 'none'}; finished {args.character} runs without a post-mortem: {','.join(waiting) or 'none'}")
     print(f"ascension seen: {state['ascension']}")
     print("ascension audits: " + json.dumps(state.get("ascension_audits",{}),ensure_ascii=False))
+    print("own learning admission: " + json.dumps(external_learning_policy.own_status(state, alive, DIR), ensure_ascii=False))
     return 0
 
 
@@ -744,9 +761,20 @@ def cmd_core_notify(args):
     return 0 if receipt.get("state") == "sent" else 1
 
 
+def cmd_close(args):
+    import learner_supervisor_close
+    try:
+        result = learner_supervisor_close.close(ROOT, DIR, load_state(), args.batch, args.verdict, save_state)
+    except (OSError, ValueError, KeyError, TypeError, IndexError, sqlite3.Error, subprocess.SubprocessError) as error:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": str(error)}, ensure_ascii=False))
+        return 75
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "close", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
@@ -754,8 +782,13 @@ def main():
     parser.add_argument("--request", default="")
     parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
     parser.add_argument("--batch", default="")
+    parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
+    if args.command == "close" and (not args.batch or not args.verdict):
+        parser.error("close requires --batch and --verdict")
+    if args.verdict and args.command != "close":
+        parser.error("--verdict requires close")
     if args.public_web and args.command != "write":
         parser.error("--public-web requires write")
     args.character = character_key(args.character) or "silent"
@@ -767,11 +800,18 @@ def main():
             return 78
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
                "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check,
-               "core-notify": cmd_core_notify}[args.command]
+               "core-notify": cmd_core_notify, "close": cmd_close}[args.command]
     os.makedirs(DIR, exist_ok=True)
     # A merge request only appends an event; full checks manage their own short state transactions.
     if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
+    if args.command == "close":
+        try:
+            with state_lock(nonblocking=True):
+                return handler(args) or 0
+        except BlockingIOError:
+            print(json.dumps({"batch": args.batch, "state": "held", "reason": "learn_state_transaction_active"}))
+            return 75
     with state_lock():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))

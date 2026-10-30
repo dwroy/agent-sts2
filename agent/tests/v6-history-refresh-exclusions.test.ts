@@ -15,5 +15,5 @@ it("keeps a complete exclusion manifest and all frozen-source publication guards
     child.on("close", (code) => { clearTimeout(timer); resolve({ code, output }); });
   });
   expect(result.code, result.output).toBe(0);
-  expect(result.output).toContain("Ran 17 tests");
+  expect(result.output).toContain("Ran 18 tests");
 }, 60_000);

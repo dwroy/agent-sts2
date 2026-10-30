@@ -3,7 +3,7 @@ import { basename, dirname, join, resolve } from "node:path";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { runtimeDataFile } from "./runtime-data.js";
 
-const migrated = new Set(["experience.json", "shared-experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json"]);
+const migrated = new Set(["experience.json", "shared-experience.json", "strategy-entries.json", "reflex.json", "reflex-vocab.json", "build-cores.json", "direction-cards.json", "open-book.json", "decision-context.json", "build-research.json"]);
 // Captured at process startup. A publication never switches an already-running reader.
 const snapshot = process.env["STS2_KNOWLEDGE_SNAPSHOT"];
 const version = process.env["STS2_KNOWLEDGE_VERSION"];

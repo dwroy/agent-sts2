@@ -1,0 +1,238 @@
+{
+  "schema": "brain-decision-context-v1",
+  "status": "ok",
+  "knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "path": "characters/silent/strategy-entries.json",
+  "sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+  "byte_budget": 8000,
+  "decision_points": [
+    "选牌"
+  ],
+  "total_matches": 6,
+  "representation": "complete_entries_with_references",
+  "entries": [
+    {
+      "id": "issue80-cards-leg_sweep-act1-s4",
+      "confidence": 0.25,
+      "source": "external:sts2fun",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-cards-leg_sweep-act1-s4",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          1
+        ],
+        "question_types": [
+          "card_reward"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "第1幕历史状态4，LEG_SWEEP：拿牌 26/70，不拿 4/36，整局胜率关联差 +26.03 个百分点。",
+        "rule_candidate": "待审条件提示：在本条件被提供该牌时，并列展示拿/不拿关联和反例；保留为进一步核对线索，不设自动优先级、胜率加分或因果收益。",
+        "conditions": {
+          "act": 1,
+          "ascension": 10,
+          "boss": null,
+          "character": "silent",
+          "observable_build": {
+            "complete_deck": false,
+            "history_model_sha256": "20c3aaf37314a9b56aa5ee31b250c8d7323327ee9fa252760ad2946e27c81213",
+            "prior_recorded_history_state": 4
+          },
+          "versions": [
+            "v0.111"
+          ]
+        },
+        "denominators": {
+          "declined": {
+            "offers": 36,
+            "uploads": 36,
+            "win_rate": 0.1111111111111111,
+            "wins": 4
+          },
+          "exact_offer_adjustment_support_gate_passed": false,
+          "external_upload_cohort": 1739,
+          "own_validation_runs": 0,
+          "picked": {
+            "offers": 70,
+            "uploads": 70,
+            "win_rate": 0.37142857142857144,
+            "wins": 26
+          }
+        },
+        "counterexamples": {
+          "declined_winners": 4,
+          "other_observable_state": null,
+          "picked_losses": 44
+        },
+        "limitations": [
+          "观察性上传记录；同玩家相关性无法从缓存校正，不把上传行当独立玩家。",
+          "首次提供按每条上传×幕×牌定义；玩家选择、备选牌、资源和生存选择仍混杂。",
+          "历史状态只用前节点已记录改牌，不是完整牌组；同节点内部动作顺序未知。",
+          "节点选择记录没有奖励批次ID；节点记录选项集只是同批选项的代理，不能认证同时提供。对该代理、历史簇、历史规模、该牌既有副本做共同支持后样本极少，未满足预设支持门。",
+          "全族探索，未做可用的玩家校正或多重比较推断；不声称显著或因果。",
+          "外部SL/重开和上传选择未知；不能用最终胜率评价单次尝试。"
+        ],
+        "conflicts_with": [
+          "issue80-cards-production-knowledge-unassessed"
+        ],
+        "triggers": [
+          "选牌"
+        ]
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    },
+    {
+      "id": "issue80-cards-noxious_fumes-act1-s2",
+      "confidence": 0.25,
+      "source": "external:sts2fun",
+      "document_source": "strategy_observation",
+      "representation": "complete_decision_view",
+      "truncated": false,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "detail": "full",
+          "source": "strategy_observation",
+          "document_id": "issue80-cards-noxious_fumes-act1-s2",
+          "document_offset": 0
+        }
+      },
+      "trigger": {
+        "acts": [
+          1
+        ],
+        "question_types": [
+          "card_reward"
+        ]
+      },
+      "scope": {
+        "ascensions": [
+          10
+        ],
+        "character": "silent"
+      },
+      "review_observation": {
+        "summary": "第1幕历史状态2，NOXIOUS_FUMES：拿牌 15/32，不拿 11/33，整局胜率关联差 +13.54 个百分点。状态6为 -20.79 个百分点，方向不同。",
+        "rule_candidate": "待审条件提示：在本条件被提供该牌时，并列展示拿/不拿关联和反例；保留为进一步核对线索，不设自动优先级、胜率加分或因果收益。",
+        "conditions": {
+          "act": 1,
+          "ascension": 10,
+          "boss": null,
+          "character": "silent",
+          "observable_build": {
+            "complete_deck": false,
+            "history_model_sha256": "20c3aaf37314a9b56aa5ee31b250c8d7323327ee9fa252760ad2946e27c81213",
+            "prior_recorded_history_state": 2
+          },
+          "versions": [
+            "v0.111"
+          ]
+        },
+        "denominators": {
+          "declined": {
+            "offers": 33,
+            "uploads": 33,
+            "win_rate": 0.3333333333333333,
+            "wins": 11
+          },
+          "exact_offer_adjustment_support_gate_passed": false,
+          "external_upload_cohort": 1739,
+          "own_validation_runs": 0,
+          "picked": {
+            "offers": 32,
+            "uploads": 32,
+            "win_rate": 0.46875,
+            "wins": 15
+          }
+        },
+        "counterexamples": {
+          "declined_winners": 11,
+          "other_observable_state": {
+            "act": 1,
+            "card": "NOXIOUS_FUMES",
+            "declined": {
+              "offers": 35,
+              "uploads": 35,
+              "win_rate": 0.4857142857142857,
+              "wins": 17
+            },
+            "difference_pp": -20.79365079365079,
+            "picked": {
+              "offers": 36,
+              "uploads": 36,
+              "win_rate": 0.2777777777777778,
+              "wins": 10
+            },
+            "state": 6,
+            "version": "v0.111"
+          },
+          "picked_losses": 17
+        },
+        "limitations": [
+          "观察性上传记录；同玩家相关性无法从缓存校正，不把上传行当独立玩家。",
+          "首次提供按每条上传×幕×牌定义；玩家选择、备选牌、资源和生存选择仍混杂。",
+          "历史状态只用前节点已记录改牌，不是完整牌组；同节点内部动作顺序未知。",
+          "节点选择记录没有奖励批次ID；节点记录选项集只是同批选项的代理，不能认证同时提供。对该代理、历史簇、历史规模、该牌既有副本做共同支持后样本极少，未满足预设支持门。",
+          "全族探索，未做可用的玩家校正或多重比较推断；不声称显著或因果。",
+          "外部SL/重开和上传选择未知；不能用最终胜率评价单次尝试。"
+        ],
+        "conflicts_with": [
+          "issue80-cards-production-knowledge-unassessed",
+          "issue80-cards-state-heterogeneity"
+        ],
+        "triggers": [
+          "选牌"
+        ]
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only"
+    }
+  ],
+  "returned": 2,
+  "complete_entries": 2,
+  "fragment_entries": 0,
+  "references": [
+    {
+      "id": "issue80-builds-c1",
+      "title": "药瓶—触媒—致命毒药（点毒共现候选）：v0.111终局描述簇1为42/223胜；三核心齐备仅见…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c5",
+      "title": "毒雾—冒泡—触媒（毒牌共现候选）：v0.111终局描述簇5为79/238胜；三核心齐备仅见于30/…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c6",
+      "title": "刀扇—精准—刀刃之舞（小刀共现候选）：v0.111终局描述簇6为103/272胜；三核心齐备仅…",
+      "source": "strategy_observation"
+    },
+    {
+      "id": "issue80-builds-c7",
+      "title": "触不可及—连续反弹—早有准备（奇巧/弃牌共现候选）：v0.111终局描述簇7为62/246胜；…",
+      "source": "strategy_observation"
+    }
+  ],
+  "reference_only_count": 4,
+  "omitted": 4,
+  "omitted_references": 0,
+  "truncated": false,
+  "notice": "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。entries保完整结论、条件、分母、反例与限制；references仅ID和标题，不代表已读正文。需要时用kb_decision_context按ID及source续取完整原件。"
+}

@@ -25,3 +25,9 @@ wrapper 监督/finish/退休证明仍按 #65/#77 由原 owner 核收；知识发
 ## 回退
 
 原 ops 暂停新的此类受理后，反向本次三个源码叶差量，保留原 approval、候选、失败记录、已提交的知识版本/完成回执和 wrapper 材料。代码回退不撤销知识 current，不删库表、不重写历史。此前已实际发布的内容如需回退，另沿原知识回退事务核收。
+
+## 当前 main 的方法闭包配套（2026-10-30 恢复）
+
+schema5 main 上的 #84 声明会核 Silent 校准真实的整套 agent/src 读取族。部署新增 approval.ts/store.ts 时，ROOT 还须配套 `ops/fixed-producer-dependencies.json` 中该 producer 的原 store SHA/静态边、approval 新节点的两条静态边/opaque SHA，以及原 refresh-silent 的显式读族边。学习 helper 仍为 ROOT 注入叶，两个发布模块按实际 ROOT/LIVE 知识 CLI 安装映射核收；不能遗漏新 import。
+
+本次固定组合逐项核 13 闭包通过、其余 12 个方法（含 outcome）不变；校准方法因原整树指纹真实包含本源码而改变，不表示执行生产校准、修改模型或提高可信度。实际发布仍由原 owner 依 #84 合同从最终唯一组合终态准备双根/方法前像材料，并在同一自然发布事务核安装与准入；不手改 control 或复用旧方法票。回退也须将这项声明与源码反向差量配套恢复，保留其他并行声明、方法/知识历史与原回执。

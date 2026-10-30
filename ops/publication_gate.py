@@ -53,7 +53,10 @@ def read(root, state_dir=None):
                 or not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,119}", str(value.get("owner")))
                 or type(value.get("pid")) is not int or value["pid"] <= 0
                 or not re.fullmatch(r"[0-9]+", str(value.get("pid_birth")))
-                or not re.fullmatch(r"[0-9a-f]{32}", str(value.get("token")))):
+                or not re.fullmatch(r"[0-9a-f]{32}", str(value.get("token")))
+                or not re.fullmatch(r"[0-9a-f]{32}", str(value.get("fixed_method_transaction", value.get("token"))))
+                or type(value.get("fixed_methods_required", False)) is not bool
+                or value.get('fixed_method_contract') not in (None, 'fixed-method-publication-v1')):
             raise ValueError("invalid marker")
         value["owner_alive"] = birth(value["pid"]) == value["pid_birth"]
         return value
@@ -119,7 +122,7 @@ def begin(root, dest, owner, pid):
             raise ValueError("publication marker already exists; preserve original owner")
         value = {"schema": "publication-admission-v1", "root": str(Path(root).resolve()),
                  "owner": owner, "pid": pid, "pid_birth": birth(pid), "token": uuid.uuid4().hex,
-                 "scope": "next-game", "phase": "waiting"}
+                 "scope": "next-game", "phase": "waiting", "fixed_method_contract": "fixed-method-publication-v1"}
         save(dest / MARKER, value)
         return value
 
@@ -164,8 +167,14 @@ def legacy_games(root, proc=Path("/proc")):
 
 def release(root, dest, owner, token, pid):
     with locks([dest / "learn.lock", dest / "game-admission.lock"]):
-        owned(root, dest, owner, token, pid)
-        (dest / MARKER).unlink()
+        value = owned(root, dest, owner, token, pid)
+        from fixed_method_admission import verify_release
+        if value.get('fixed_method_contract'):
+            with source_locks(root):
+                verify_release(root, dest, value)
+                (dest / MARKER).unlink()
+        else:
+            (dest / MARKER).unlink()  # Existing legacy transactions retain their original release contract.
 
 
 def recover(root, dest, owner, digest, pid):
@@ -183,7 +192,7 @@ def recover(root, dest, owner, digest, pid):
 
 
 @contextmanager
-def writing(root, dest, owner, token, pid):
+def writing(root, dest, owner, token, pid, method_ticket=None, resume_methods=False):
     # Acquire everything without waiting, then release learn.lock before actual I/O.
     with ExitStack() as stack:
         with locks([dest / "learn.lock", dest / "game-admission.lock"]):
@@ -191,9 +200,20 @@ def writing(root, dest, owner, token, pid):
             if global_hold(dest) or active_games(root, dest):
                 raise ValueError("publication awaits the original natural terminal boundary")
             stack.enter_context(source_locks(root))
+            from learning_runtime import capture
+            from fixed_method_admission import producers, start, finish
+            chosen = capture(root, dest)
+            if chosen.get('enabled') and producers(chosen):
+                if not value.get('fixed_method_contract'):
+                    raise ValueError('legacy publication retained; finish original transaction before a new method-aware publication')
+                stack.enter_context(locks([Path(chosen['directory']) / 'data-publication.lock']))
+            value.setdefault('fixed_method_transaction', value['token'])
+            saved = start(root, dest, value, method_ticket, resume_methods)
+            value['fixed_methods_required'] = value.get('fixed_methods_required', False) or saved is not None
             value["phase"] = "publishing"
             save(dest / MARKER, value)
         yield value
+        finish(root, dest, value, saved)
         # Success/failure both retain the marker until explicit verified release.
 
 
@@ -250,6 +270,8 @@ def main():
         if name == "recover":
             command.add_argument("--expected-sha256", required=True)
         if name == "write":
+            command.add_argument("--fixed-method-admission", type=Path)
+            command.add_argument("--resume-fixed-methods", action="store_true")
             command.add_argument("argv", nargs=argparse.REMAINDER)
     sub.add_parser("check-game")
     command = sub.add_parser("admit-game")
@@ -269,10 +291,16 @@ def main():
             result = recover(root, dest, args.owner, args.expected_sha256, args.pid)
         elif args.command == "write":
             argv = args.argv[1:] if args.argv[:1] == ["--"] else args.argv
-            if not argv:
+            if not argv and not args.resume_fixed_methods:
                 raise ValueError("publication write requires a command")
-            with writing(root, dest, args.owner, args.token, args.pid):
-                return subprocess.run(argv, close_fds=True).returncode
+            if args.resume_fixed_methods and argv:
+                raise ValueError("installed-only recovery must not replay a deployment command")
+            with writing(root, dest, args.owner, args.token, args.pid, args.fixed_method_admission, args.resume_fixed_methods):
+                if argv:
+                    code = subprocess.run(argv, close_fds=True).returncode
+                    if code:
+                        raise ValueError("deployment command failed; retain original publication and inspect before recovery")
+            return 0
         elif args.command == "admit-game":
             # save() needs the reservation directory before its atomic replacement.
             (dest / "game-admissions").mkdir(parents=True, exist_ok=True)

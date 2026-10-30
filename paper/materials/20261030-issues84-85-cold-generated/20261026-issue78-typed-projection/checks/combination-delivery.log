@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-78-typed-tool-projection/.artifacts/issue78/combination/agent
+
+(node:2520941) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/build-research.test.ts > completes a source-approved research artifact through the real K1 CLI idempotently
+{"schema":"knowledge-completion-v1","candidate":"fixture","publication_candidate":"fixture","version":"K1-c0a66438cdc442c5de04504b35b8499d8e5b600da6d23c8fdd6c4e5e044de020","code":"fixture","event_request":"complete:fixture","event_time_ns":"1793015420750000000"}
+
+stdout | tests/build-research.test.ts > completes a source-approved research artifact through the real K1 CLI idempotently
+{"schema":"knowledge-completion-v1","candidate":"fixture","publication_candidate":"fixture","version":"K1-c0a66438cdc442c5de04504b35b8499d8e5b600da6d23c8fdd6c4e5e044de020","code":"fixture","event_request":"complete:fixture","event_time_ns":"1793015420750000000"}
+
+ ✓ tests/build-research.test.ts (11 tests) 1603ms
+   ✓ paginates result lists and arbitrarily long evidence/original/stage text without skipping or truncation  796ms
+   ✓ archives addressable trajectory/availability/Markdown artifacts and bounds selection to stored JSON  321ms
+(node:2520941) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/knowledge-consumer-projection.test.ts (8 tests) 925ms
+(node:2520941) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 234ms
+(node:2520941) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/strategy-context.test.ts (8 tests) 165ms
+
+ Test Files  4 passed (4)
+      Tests  70 passed (70)
+   Start at  19:50:17
+   Duration  5.65s (transform 1.33s, setup 525ms, import 1.64s, tests 2.93s, environment 0ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.worktrees/issue-78-typed-tool-projection/.artifacts/issue78/combination-delivery.json

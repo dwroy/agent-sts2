@@ -527,6 +527,8 @@ export type KnowledgePrefixMode = "off" | "full";
 
 /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
 export interface BrainConfig {
+  /** Review-gated #81 consumer; absent in historical fixed configurations means off. */
+  decisionKnowledge?: { enabled: boolean; bytes: number };
   /** Production knowledge agent limits, frozen with the process/run configuration. */
   agent: { maxToolCalls: number; codexTotalMs: number; deepseekTotalMs: number; codexAnswerMs: number; deepseekAnswerMs: number };
   dsh: { bin: string; stallMs: number };
@@ -915,6 +917,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   for (const name of ["codex", "deepseek"] as const) if (agent[`${name}AnswerMs`] >= agent[`${name}TotalMs`]) problems.push({ field: `BRAIN_AGENT_${name.toUpperCase()}_ANSWER_MS`, message: "answer reserve must be smaller than total budget" });
   return {
     agent,
+    decisionKnowledge: { enabled: parseOnOff(readEnv(env, "BRAIN_DECISION_KNOWLEDGE"), "BRAIN_DECISION_KNOWLEDGE", problems) ?? false,
+      bytes: agentInt("BRAIN_DECISION_KNOWLEDGE_BYTES", 8000, 2048, 24000) },
     productionEngine: readEnv(env, "BRAIN_ENGINE") === null ? "codex" : engine === "deepseek" ? "deepseek" : "codex",
     dsh: { bin: readEnv(env, "BRAIN_DSH_BIN") ?? join(homedir(), ".local/bin/dsh"), stallMs: agentInt("BRAIN_DSH_STALL_MS", 180_000, 1_000, 3_600_000) },
     ...(runProfile ? { runProfile } : {}),

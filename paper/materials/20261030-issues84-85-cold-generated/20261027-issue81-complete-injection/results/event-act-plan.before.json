@@ -1,0 +1,292 @@
+{
+  "schema": "brain-decision-context-v1",
+  "status": "ok",
+  "knowledge_version": "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46",
+  "path": "characters/silent/strategy-entries.json",
+  "sha256": "780224842c5325657ea95bd98062d1fded979b5b6c3378ea501cebecc7fba0f8",
+  "byte_budget": 8000,
+  "decision_points": [
+    "事件",
+    "幕复核"
+  ],
+  "total_matches": 16,
+  "entries": [
+    {
+      "id": "issue80-relics-ancient-nutritious_soup",
+      "confidence": 0.35,
+      "strategy": {
+        "truncated": true,
+        "representation": "partial_json_text",
+        "json_excerpt": "\"观察提示：NUTRITIOUS_SOUP：自有选择更集中；外部选43/122，自有选46/61。 条"
+      },
+      "trigger": {
+        "acts": [
+          2
+        ],
+        "question_types": [
+          "act_plan",
+          "event"
+        ]
+      },
+      "review_observation": {
+        "conditions": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"act\":2,\"ascension\":10,\"boss\":\"按当前真实遭"
+        },
+        "denominators": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"external_not_selected\":{\"occurrences\":79,\"uploads\""
+        },
+        "counterexamples": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"外部选后整局胜分数0.23255813953488372、未选"
+        },
+        "limitations": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"仅待Roy审阅，未发布/未采用；收益未知\","
+        },
+        "conflicts_with": [
+          "preference-gap:NUTRITIOUS_SOUP"
+        ],
+        "summary": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"NUTRITIOUS_SOUP：自有选择更集中；外部选43/12"
+        },
+        "rule_candidate": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"把NUTRITIOUS_SOUP的当前完整题面、代价与同"
+        },
+        "triggers": [
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only",
+      "representation": "consumer_projection",
+      "truncated": true,
+      "evidence_summary": {
+        "references": 3,
+        "full_review_evidence": 0,
+        "denominators_combined": false
+      },
+      "original_bytes": 6115,
+      "omitted_fields": [
+        "review_observation.conditions",
+        "review_observation.denominators",
+        "review_observation.counterexamples",
+        "review_observation.limitations",
+        "review_observation.summary",
+        "review_observation.rule_candidate",
+        "review_observation.confidence",
+        "review_observation.dimension",
+        "review_observation.evidence_refs",
+        "review_observation.id",
+        "aliases",
+        "condition_location"
+      ],
+      "omitted_field_count": 25,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "source": "strategy_observation",
+          "detail": "full",
+          "document_id": "issue80-relics-ancient-nutritious_soup",
+          "document_offset": 0
+        }
+      }
+    },
+    {
+      "id": "issue80-relics-ancient-paels_eye",
+      "confidence": 0.35,
+      "strategy": {
+        "truncated": true,
+        "representation": "partial_json_text",
+        "json_excerpt": "\"观察提示：PAELS_EYE：自有选择更集中；外部选12/109，自有选21/62。 条件、"
+      },
+      "trigger": {
+        "acts": [
+          2
+        ],
+        "question_types": [
+          "act_plan",
+          "event"
+        ]
+      },
+      "review_observation": {
+        "conditions": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"act\":2,\"ascension\":10,\"boss\":\"按当前真实遭"
+        },
+        "denominators": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"external_not_selected\":{\"occurrences\":97,\"uploads\""
+        },
+        "counterexamples": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"外部选后整局胜分数0.16666666666666666、未选"
+        },
+        "limitations": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"仅待Roy审阅，未发布/未采用；收益未知\","
+        },
+        "conflicts_with": [
+          "preference-gap:PAELS_EYE"
+        ],
+        "summary": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"PAELS_EYE：自有选择更集中；外部选12/109，"
+        },
+        "rule_candidate": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"把PAELS_EYE的当前完整题面、代价与同题替"
+        },
+        "triggers": [
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only",
+      "representation": "consumer_projection",
+      "truncated": true,
+      "evidence_summary": {
+        "references": 3,
+        "full_review_evidence": 0,
+        "denominators_combined": false
+      },
+      "original_bytes": 6062,
+      "omitted_fields": [
+        "review_observation.conditions",
+        "review_observation.denominators",
+        "review_observation.counterexamples",
+        "review_observation.limitations",
+        "review_observation.summary",
+        "review_observation.rule_candidate",
+        "review_observation.confidence",
+        "review_observation.dimension",
+        "review_observation.evidence_refs",
+        "review_observation.id",
+        "aliases",
+        "condition_location"
+      ],
+      "omitted_field_count": 25,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "source": "strategy_observation",
+          "detail": "full",
+          "document_id": "issue80-relics-ancient-paels_eye",
+          "document_offset": 0
+        }
+      }
+    },
+    {
+      "id": "issue80-relics-ancient-paels_flesh",
+      "confidence": 0.35,
+      "strategy": {
+        "truncated": true,
+        "representation": "partial_json_text",
+        "json_excerpt": "\"观察提示：PAELS_FLESH：自有选择更集中；外部选62/121，自有选61/66。 条件"
+      },
+      "trigger": {
+        "acts": [
+          2
+        ],
+        "question_types": [
+          "act_plan",
+          "event"
+        ]
+      },
+      "review_observation": {
+        "conditions": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"act\":2,\"ascension\":10,\"boss\":\"按当前真实遭"
+        },
+        "denominators": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "{\"external_not_selected\":{\"occurrences\":59,\"uploads\""
+        },
+        "counterexamples": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"外部选后整局胜分数0.5、未选0.42372881355932"
+        },
+        "limitations": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "[\"仅待Roy审阅，未发布/未采用；收益未知\","
+        },
+        "conflicts_with": [
+          "preference-gap:PAELS_FLESH"
+        ],
+        "summary": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"PAELS_FLESH：自有选择更集中；外部选62/121，"
+        },
+        "rule_candidate": {
+          "truncated": true,
+          "representation": "partial_json_text",
+          "json_excerpt": "\"把PAELS_FLESH的当前完整题面、代价与同题替"
+        },
+        "triggers": [
+          "幕复核"
+        ],
+        "status": "review-only"
+      },
+      "condition_evaluation": "not_evaluated",
+      "applicability": "formal_trigger_only",
+      "representation": "consumer_projection",
+      "truncated": true,
+      "evidence_summary": {
+        "references": 3,
+        "full_review_evidence": 0,
+        "denominators_combined": false
+      },
+      "original_bytes": 6048,
+      "omitted_fields": [
+        "review_observation.conditions",
+        "review_observation.denominators",
+        "review_observation.counterexamples",
+        "review_observation.limitations",
+        "review_observation.summary",
+        "review_observation.rule_candidate",
+        "review_observation.confidence",
+        "review_observation.dimension",
+        "review_observation.evidence_refs",
+        "review_observation.id",
+        "aliases",
+        "condition_location"
+      ],
+      "omitted_field_count": 25,
+      "full_document": {
+        "tool": "kb_decision_context",
+        "input": {
+          "source": "strategy_observation",
+          "detail": "full",
+          "document_id": "issue80-relics-ancient-paels_flesh",
+          "document_offset": 0
+        }
+      }
+    }
+  ],
+  "returned": 3,
+  "omitted": 13,
+  "truncated": true,
+  "notice": "仅已发布知识的有界背景；当前现场优先。formal_trigger_only只验证正式触发，观察原文的额外条件未求值，不是已验证机器规则。观察性关联不作因果、固定规则或已采用；自有/外部分账，各分母不相加。partial_fields及truncated字段为不完整摘录，不能当完整条件或统计；全文按full_document续取。"
+}

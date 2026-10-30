@@ -429,8 +429,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     import strategy_external_jobs as external_jobs
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    import external_stock
     if publication_gate.learners_held(root, directory):
+        if character == "silent":
+            external_stock.maintain(state, root, alive, admission_reason="publication_hold")
         return {"dispatched": None, "admission_hold": True}
+    if character == "silent":
+        external_stock.maintain(state, root, alive,
+            admission_reason=None if jobs_allowed(root, directory) else "disk_capacity")
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
     four_lane_mode = character == "silent" and (external_ready or bool(external_jobs.active_external(state, alive)))
@@ -443,10 +449,12 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
     if publication_gate.candidates_only(root, directory):
         return {"candidate_only": True, "strategy_external": external, "backfill_hold": True}
-    if four_lane_mode and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
+    own = external_learning_policy.own_status(state, alive, directory) if four_lane_mode else None
+    if own and own["busy"]:
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
-                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
+                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None,
+                "own_learning": own}
     attempted = []
     ordinary_claimed = [False]
     def claim(result):
@@ -498,6 +506,8 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
               "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
               "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    if own is not None:
+        result["own_learning"] = own
     learner_registration.checkpoint(state)
     return result
 

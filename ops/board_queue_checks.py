@@ -291,7 +291,12 @@ def assemble(root, job, options, directory):
                    live=view(root, g, actual_live, scopes['live']))
     mirror(live, g, before_live['files'])
     for row in sources['live']:
-        if fingerprint(local(g, row['path'])) != row['fingerprint']:
+        actual = fingerprint(local(g, row['path']))
+        committed = row['fingerprint']
+        # Git records only the owner executable bit, not checkout umask bits.
+        # Full permissions remain frozen by the actual LIVE and view snapshots.
+        if (actual['kind'] != committed['kind'] or actual['sha256'] != committed['sha256']
+                or (actual['mode'] & stat.S_IXUSR) != (committed['mode'] & stat.S_IXUSR)):
             raise ValueError('actual LIVE fixture differs from Git source: ' + row['path'])
     overlays = dict(root=overlay_data(root, w, changed), live=overlay_data(live, g, set()))
     mapping = []

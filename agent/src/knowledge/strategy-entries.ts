@@ -1,10 +1,11 @@
 /** Declarative strategy retrieval. Content is maintained by learners, never inferred here. */
+import { strategyGrading, compareGradedStrategies, type StrategyGrading } from "./strategy-grading.js";
 import { readFileSync, statSync } from "node:fs";
 import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
 import type { BrainRequest } from "../brain/types.js";
 import type { ArchetypeBinding, ArchetypeMatch } from "./strategy-archetypes.js";
 
-export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan", "fight_plan"] as const;
+export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan", "fight_plan", "map_route"] as const;
 export type QuestionType = typeof QUESTION_TYPES[number];
 type Range = { min?: number; max?: number };
 export interface OwnStrategyEvidence { type?: "own"; run: string; floor: number; ref?: string; role?: "support" | "contradict" | "repeat" }
@@ -28,6 +29,8 @@ export interface ExternalAggregateEvidence {
 export type StrategyEvidence = OwnStrategyEvidence | ExternalAggregateEvidence;
 export const EXTERNAL_ONLY_CONFIDENCE_MAX = 0.49;
 export interface StrategyEntry {
+  review_observation?: Record<string, unknown>;
+  formal_publication?: unknown;
   id: string;
   version: string;
   trigger: {
@@ -44,13 +47,15 @@ export interface StrategyEntry {
   evidence: StrategyEvidence[];
   source: "own" | "mixed" | `external:${string}`;
   provenance?: { url: string; version: string; sha256: string; license: string };
-  confidence: number;
+  confidence: number | null;
+  grading?: StrategyGrading;
+  evidence_type?: string;
   evidence_status?: "aligned" | "conflict" | "unassessed";
   evidence_summary?: ReturnType<typeof strategyEvidenceSummary>;
   limitation_notice?: string;
 }
 export interface StrategyLibrary { schema: "brain-strategies-v1"; character: "silent"; entries: StrategyEntry[] }
-export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 1_048_576, libraryEntries: 500 } as const;
+export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 4_194_304, libraryEntries: 500 } as const;
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
@@ -142,7 +147,8 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
   if (!object(raw) || raw["schema"] !== "brain-strategies-v1" || raw["character"] !== "silent" || !Array.isArray(raw["entries"]) || raw["entries"].length > STRATEGY_LIMITS.libraryEntries) throw new Error("invalid strategy library header");
   const ids = new Set<string>();
   for (const entry of raw["entries"]) {
-    if (!object(entry) || !text(entry["id"]) || ids.has(entry["id"]) || !text(entry["version"]) || !text(entry["strategy"]) || Buffer.byteLength(entry["strategy"], "utf8") > STRATEGY_LIMITS.textBytes || !finite(entry["confidence"]) || entry["confidence"] < 0 || entry["confidence"] > 1) throw new Error("invalid strategy entry");
+    if (!object(entry) || !text(entry["id"]) || ids.has(entry["id"]) || !text(entry["version"]) || !text(entry["strategy"]) || Buffer.byteLength(entry["strategy"], "utf8") > STRATEGY_LIMITS.textBytes || (entry["confidence"] === null ? !strategyGrading(entry) : !finite(entry["confidence"]) || entry["confidence"] < 0 || entry["confidence"] > 1)) throw new Error("invalid strategy entry");
+    if (entry["grading"] !== undefined && !strategyGrading(entry)) throw new Error("invalid strategy grading");
     ids.add(entry["id"]);
     const t = entry["trigger"];
     if (!object(t) || !only(t, ["question_types", "acts", "floor", "bosses", "hp_ratio", "deck_size", "deck_cards", "archetype"]) || !Array.isArray(t["question_types"]) || !t["question_types"].length || !t["question_types"].every((q) => QUESTION_TYPES.includes(q as QuestionType))) throw new Error("invalid strategy trigger");
@@ -165,7 +171,7 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
     const status = entry["evidence_status"];
     if (status !== undefined && (typeof status !== "string" || !["aligned", "conflict", "unassessed"].includes(status)) || sources.size > 1 && status === undefined) throw new Error("mixed strategy needs evidence_status");
     if (external.length && evidence.some(e => e.role === "contradict") && status !== "conflict") throw new Error("contradictory evidence needs conflict status");
-    if (external.length && !own.some(e => e.role !== "contradict") && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
+    if (external.length && !own.some(e => e.role !== "contradict") && typeof entry["confidence"] === "number" && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
   }
   return raw as unknown as StrategyLibrary;
 }
@@ -174,13 +180,38 @@ export function questionTypes(label: string, payload: unknown): QuestionType[] {
   const p = object(payload) ? payload : {};
   const plan = object(p["run_plan_task"]) ? p["run_plan_task"] : {};
   const result: QuestionType[] = [];
-  if (label === "reward/card") result.push("card_reward");
+  if (label === "reward/card" || label === "selection/add") result.push("card_reward");
   else if (label.startsWith("event/")) result.push("event");
   else if (label.startsWith("rest/")) result.push("rest");
   else if (label.startsWith("shop/")) result.push("shop");
   else if (label === "fight-plan") result.push("fight_plan");
+  else if (["map/route", "map/route-plan", "map/route-review"].includes(label)) result.push("map_route");
   if (label === "event/act-plan" || label === "map/act-start" || label === "run-plan" && ["start", "act"].includes(String((object(p["run_state"]) ? p["run_state"] : p)["trigger"])) || ["start", "act"].includes(String(plan["trigger"]))) result.push("act_plan");
   return result;
+}
+
+/** Published observations retain their original conditions; this is provenance, not condition evaluation. */
+export function publishedObservation(entry: StrategyEntry): Record<string, unknown> | null {
+  const p = entry.formal_publication, observation = entry.review_observation;
+  if (strategyGrading(entry) && object(observation)) return observation;
+  return object(entry.trigger) && Array.isArray(entry.trigger.question_types) && text(entry.strategy)
+    && object(p) && p["observation_only"] === true && p["original_review_candidate_retained_without_edit"] === true
+    && text(p["approved_by"]) && text(p["authorization"]) && /^https:\/\//.test(p["authorization"])
+    && typeof p["authorization_sha256"] === "string" && /^[a-f0-9]{64}$/.test(p["authorization_sha256"])
+    && typeof p["source_candidate_sha256"] === "string" && /^[a-f0-9]{64}$/.test(p["source_candidate_sha256"])
+    && object(observation) && ["conditions", "denominators", "counterexamples", "limitations"].every(k => Object.hasOwn(observation, k)) ? observation : null;
+}
+
+/** Only a published explicit route trigger adds the route type; no topic/text/ID inference. */
+export function strategyQuestionTypes(entry: StrategyEntry): QuestionType[] {
+  const observation = publishedObservation(entry);
+  return observation && Array.isArray(observation["triggers"]) && observation["triggers"].includes("路线")
+    ? [...new Set([...entry.trigger.question_types, "map_route" as const])] : entry.trigger.question_types;
+}
+
+/** Completed, approved observations precede ordinary knowledge and explicitly pending work. */
+export function strategyPurpose(entry: StrategyEntry): number {
+  return publishedObservation(entry) ? 0 : entry.formal_publication === "pending" ? 2 : 1;
 }
 function within(value: number | undefined, r: Range | undefined): boolean {
   return !r || value !== undefined && (r.min === undefined || value >= r.min) && (r.max === undefined || value <= r.max);
@@ -218,16 +249,29 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
   const rawDeck = get("deck");
   const size = number("deck_size") ?? (deck ? (Array.isArray(rawDeck) ? rawDeck : String(rawDeck).split("\n")).reduce((n: number, value: unknown) => n + (typeof value === "string" ? Number(/^(\d+)x /.exec(value.trim())?.[1] ?? 1) : 1), 0) : undefined);
   const types = questionTypes(label, payload);
+  const primary = types.includes("act_plan") && (label === "run-plan" || label.startsWith("event/") || label === "map/act-start") ? "act_plan" : types[0];
   const specificity = (e: StrategyEntry) => Object.keys(e.trigger).length + (e.trigger.deck_cards?.length ?? 0);
+  // Explicit deck entities are relevance cues, never inferred formation thresholds or card values.
+  const observedEntities = (e: StrategyEntry) => {
+    const c = publishedObservation(e)?.["conditions"];
+    const build = object(c) && object(c["observable_build_conditions"]) ? c["observable_build_conditions"] : {};
+    return Array.isArray(build["core_card_ids"]) ? new Set(build["core_card_ids"].filter(id => typeof id === "string" && (deck?.get(id) ?? 0) > 0)).size : 0;
+  };
   return library.entries.filter((e) => {
     const t = e.trigger;
-    return t.question_types.some((q) => types.includes(q)) && (!t.acts || t.acts.includes(number("act") ?? -1))
+    return strategyQuestionTypes(e).some((q) => types.includes(q)) && (!t.acts || t.acts.includes(number("act") ?? -1))
       && (!t.bosses || t.bosses.includes(String(get("act_boss") ?? get("boss") ?? "")))
       && within(number("floor"), t.floor) && within(ratio, t.hp_ratio) && within(size, t.deck_size)
       && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)))
       && (!t.archetype || !!archetype && t.archetype.model_sha256 === archetype.model_sha256
         && t.archetype.version === archetype.version && t.archetype.clusters.includes(archetype.cluster));
-  }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id)).map(presentStrategy);
+  }).sort((a, b) => compareGradedStrategies(a, b)
+    || (strategyGrading(a)?.evidence_type === "机制事实" && strategyGrading(b)?.evidence_type === "机制事实" ? specificity(b) - specificity(a) : 0)
+    || strategyPurpose(a) - strategyPurpose(b)
+    || (strategyPurpose(a) === 0 && strategyPurpose(b) === 0
+      ? Number(primary !== undefined && strategyQuestionTypes(b).includes(primary)) - Number(primary !== undefined && strategyQuestionTypes(a).includes(primary))
+        || strategyQuestionTypes(a).length - strategyQuestionTypes(b).length || observedEntities(b) - observedEntities(a) : 0)
+    || specificity(b) - specificity(a) || (b.confidence ?? 0) - (a.confidence ?? 0) || a.id.localeCompare(b.id)).map(presentStrategy);
 }
 
 /** Total serialized UTF-8 bytes, including metadata/envelope, are bounded; never truncate evidence. */

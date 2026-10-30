@@ -40,7 +40,7 @@ def snapshot(root, directory, *, now=None):
         used = max(w["used_percent"] for w in weekly)
         result.update(weekly_used_percent=used, sample_observed_at=sample["sample_observed_at"],
                       account_home_sha256=digest, workers=0 if used >= 90 else 2 if used > 70 else 4,
-                      service_tier="fast" if used > 70 else "ultrafast",
+                      service_tier="default",
                       reason="switch_codex1" if used >= 90 else "weekly_over_70" if used > 70 else "weekly_within_70")
     except (OSError, ValueError, KeyError, TypeError, AttributeError, OverflowError):
         return result
@@ -61,18 +61,13 @@ def four_lane_mode(state, root, alive):
 
 
 def own_busy(state, alive, directory=None):
-    """One own-game lane; unknown live/unfinished owners retain the lane."""
-    if any(not b.get("external_source") and (b.get("state") in ("running", "launching", "awaiting_review")
-           or (type(b.get("pid")) is int and b["pid"] > 0 and alive(b["pid"]))) for b in state["batches"].values()):
-        return True
-    from ascension_audit import lease_busy
-    for request in state.get("ascension_audits", {}).values():
-        if request.get("state") in ("running", "launching"):
-            return True
-        if directory and type(request.get("level")) is int and request.get("character"):
-            if lease_busy(directory, request, create=False):
-                return True
-    return False
+    """Keep one own-game compute lane; pending review is independently retained."""
+    return own_status(state, alive, directory)["busy"]
+
+
+def own_status(state, alive, directory=None):
+    from own_learning_slot import snapshot as own_snapshot
+    return own_snapshot(state, alive, directory)
 
 
 def request_switch(state, directory, policy):

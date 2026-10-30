@@ -9,15 +9,15 @@ const cases = [
   "test_numeric_uuid_keeps_publication_active_owner_and_path_guards",
   "test_unpublished_source_or_incomplete_check_is_retained",
   "test_failed_lost_and_active_batches_are_not_deleted",
-  "test_legacy_report_does_not_abort_sweep_or_delete_its_data",
+  "test_legacy_done_report_compacts_without_accepting_source",
   "test_pending_report_data_does_not_consume_reclamation_limit",
-  "test_original_thread_even_completed_is_protected",
+  "test_original_thread_keeps_checkout_and_request_but_compacts_scratch",
   "test_learner_requests_cleanup_idempotently_and_full_admission_controls_deletion",
   "test_unfinished_or_failed_exit_never_requests_self_cleanup",
   "test_dirty_worktree_unknown_ignored_file_and_other_role_are_retained",
   "test_symlink_and_secret_named_file_are_never_read_or_deleted",
   "test_leases_capacity_and_archive_corruption_prevent_unsafe_cleanup",
-  "test_report_only_reclaims_checkout_but_keeps_pending_process_data",
+  "test_report_only_compacts_scratch_and_restores_checkout",
   "test_postmortem_requires_experience_ingestion_and_not_just_a_done_report",
 ] as const;
 

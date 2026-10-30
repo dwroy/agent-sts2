@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import re
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -260,12 +261,16 @@ class PipelineTest(unittest.TestCase):
     def test_normal_refresh_syncs_ops_database_before_consumers_without_new_entry(self):
         driver = load('refresh_driver')
         live = self.root / 'live'
+        helpers = self.root / 'ops'
+        helpers.mkdir(parents=True, exist_ok=True)
+        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+            shutil.copyfile(HERE.parents[1] / 'ops' / name, helpers / name)
         calls = []
         def step(_root, name, argv):
             calls.append((name, argv))
             return 0
         with patch.object(driver, 'ROOT', live), patch.object(driver, 'BUILDERS', live / 'knowledge/builders'), \
-                patch.object(driver, 'step', side_effect=step), patch.dict(os.environ), \
+                patch.object(driver, 'step', side_effect=step), patch.dict(os.environ, {'CODEX_OPS_DIR': str(self.root / 'ops/codex-ops')}), \
                 patch.object(sys, 'argv', ['refresh_driver.py', '--ops-root', str(self.root),
                                           '--character', 'silent', '--queue-entered']):
             self.assertEqual(driver.main(), 0)
