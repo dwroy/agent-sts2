@@ -7149,3 +7149,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-29T23:04:47+08:00 [dev #82] 按82/6499780647原树原线程补列表回放精确404墓碑，私有头体SHA/位置/时间及跨轮历史、同轮不重试、严格超过1%或连续5条持久熔断；active墓碑排除回放/整局导出投影、DB及统计，汇总分列。合成原1/40/page8/85接续复用782回放及已核导出且无新请求，生产索引/游标与下载未动；最终Python49、tsc0、Vitest两文件2项、paths11及CLI help通过，六源SHA无漂移，初轮夹具错误保留。不冒最终组合full，ROOT三运行叶/LIVE零叶，仅准备新固定请求交原集成员小批队列；实际合入后ops沿原游标全量核收，#83仍等全量。材料paper/materials/20261029-issue82-tombstones/，未改main/live/STOP/知识/账号/配置或关其他会话。
 
 - 2026-10-29 23:13 [watcher] #82墓碑后继55bc8ba5相对f40e2946规范化至main0b80fde8；ROOT3/LIVE0，定向Python49/tsc/2+11 Vitest/CLI通过，首次环境失败原件保留；仅本批精确安装映射清空，27宿主/8消费者及strict门不变，尚未submit或新full。证据：paper/materials/20261029-issue82-tombstones-integrator/report.md。
+
+- 2026-10-30T09:07:48+08:00 [dev #85] 按85/6512296153扩围交分级/入口/排序/全文方案待主管批：核固定K1共173条、36已批准观察与原116策略（K1中62pending/54无发布，Git文件59/57分账）；建议外部200/臂、自有30独立质量局/臂及可比方向复核，保守观察A2/B34、116当前可直接证明A0/B116，完整来源映射后再定清单，不凭引用数凑A。构筑/打法/路线资源优先、正式普通策略保位/单局正文至多3次/8000B及首条超限保持；两原全文响应10399/9538B可单次24KB无损返回，原5次未续片不冒读完。方案paper/materials/issue85-observation-grading-plan.md及20261030-issue85-proposal/；仅方案/只读测量，未改运行源码/main/live/STOP/生产知识或分号，未冒工程review/自然30局验收。
