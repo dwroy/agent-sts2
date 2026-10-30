@@ -384,7 +384,7 @@ class DownloadTests(unittest.TestCase):
         with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request', side_effect=handler):
             return dl.sync(self.root, max_pages=max_pages, export_versions=())
 
-    def test_legacy_page8_resume_reuses_782_and_export_and_frozen_404(self):
+    def legacy_page8_resume(self, controlled_status=None):
         index = self.seed_cycle(782)
         export = self.root / 'raw/exports/original.gz'
         export.parent.mkdir(parents=True)
@@ -404,27 +404,62 @@ class DownloadTests(unittest.TestCase):
         dl.save(str(dest) + '.part.json', dict(url=dl.BASE + '/api/runs/private-run-hash/replay',
                 expected_sha256=None, expected_bytes=None,
                 inflight=dict(url=dl.BASE + '/api/runs/private-run-hash/replay', offset=0)))
+        if controlled_status is not None:
+            Path(str(dest) + '.chunk.headers').write_text('HTTP/1.1 404 Not Found\nTransfer-Encoding: chunked\n\n')
+        original = {name: Path(str(dest) + suffix).read_bytes() for name, suffix in (
+            ('body', '.chunk'), ('headers', '.chunk.headers'), ('journal', '.part.json'))}
+        (self.root / 'salt').write_bytes(SALT)
+        cache = self.root / 'cache/exports/original.jsonl'
+        cache.parent.mkdir(parents=True)
+        cache.write_bytes(b'old cache')
+        preserved = {p: dl.sha(p) for p in [export, Path(str(export) + '.receipt.json'), self.root / 'salt', cache]
+                     + [self.root / meta['path'] for meta in index['runs'].values()]}
         rows = [dict(META, run_hash=f'good-{i}') for i in range(84)] + [META]
         def metadata(client, url, tag):
             self.assertEqual(tag, 'list')
             self.assertEqual(urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)['page'], ['8'])
             return {'runs': rows, 'total': 900}, 'b' * 64
-        before = dl.sha(export)
-        with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request') as request:
+        response = self.reply(body, 404) if controlled_status == 404 else self.reply(b'restored', 200)
+        self.calls.clear()
+        with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'request', side_effect=response) as request:
             result = dl.sync(self.root, max_pages=1)
-            request.assert_not_called()
-        self.assertEqual(dl.sha(export), before)
-        self.assertEqual((result['runs_downloaded'], result['tombstones'], result['processed_records']), (782, 1, 783))
+            self.assertEqual(request.call_count, int(controlled_status is not None))
+        self.assertEqual({p: dl.sha(p) for p in preserved}, preserved)
+        self.assertEqual((result['runs_downloaded'], result['tombstones'], result['processed_records']),
+                         (783, 0, 783) if controlled_status == 200 else (782, 1, 783))
         after = dl.load(self.root / 'private-index.json')
         self.assertEqual((after['cycle']['next'], after['cycle']['shards'][0]['page']), (0, 9))
         self.assertEqual(after['cycle']['versions'], ['v0.111.0'] + remaining)
         self.assertEqual(len(after['cycle']['shards']), 40)
-        tomb = after['tombstones'][META['run_hash']]['observations'][0]
-        self.assertEqual((tomb['page'], tomb['position_in_page'], tomb['shard']), (8, 85, 1))
-        for name in ('body', 'headers'):
-            self.assertEqual(dl.sha(self.root / tomb[name + '_path']), tomb[name + '_sha256'])
-        self.assertEqual(tomb['list_sha256'], 'b' * 64)
-        self.assertIn('observed_at', tomb)
+        if controlled_status is not None:
+            record = dl.load(self.root / 'legacy-404-recheck.json')
+            self.assertEqual(self.calls, [{}])
+            self.assertEqual((record['status'], record['curl_rc']), (controlled_status, 0))
+            self.assertLessEqual(record['started_at'], record['completed_at'])
+            for name, content in original.items():
+                self.assertEqual((self.root / record['originals'][name]['path']).read_bytes(), content)
+            for entry in record['response'].values():
+                self.assertEqual(dl.sha(self.root / entry['path']), entry['sha256'])
+        if controlled_status == 200:
+            self.assertEqual(dest.read_bytes(), b'restored')
+            self.assertEqual(after['runs'][META['run_hash']]['sha256'], dl.sha(dest))
+        else:
+            tomb = after['tombstones'][META['run_hash']]['observations'][0]
+            self.assertEqual((tomb['page'], tomb['position_in_page'], tomb['shard']), (8, 85, 1))
+            for name in ('body', 'headers'):
+                self.assertEqual(dl.sha(self.root / tomb[name + '_path']), tomb[name + '_sha256'])
+            self.assertEqual(tomb['list_sha256'], 'b' * 64)
+            self.assertIn('observed_at', tomb)
+            self.assertEqual(tomb['curl_rc'], 0 if controlled_status else None)
+
+    def test_legacy_page8_resume_reuses_782_and_export_and_frozen_404(self):
+        self.legacy_page8_resume()
+
+    def test_incomplete_legacy_page8_single_recheck_404_preserves_782_export_cache_salt(self):
+        self.legacy_page8_resume(404)
+
+    def test_incomplete_legacy_page8_single_recheck_200_preserves_782_export_cache_salt(self):
+        self.legacy_page8_resume(200)
 
     def test_only_listed_exact_complete_404_is_a_tombstone(self):
         for body, status, rc, headers in [
@@ -586,6 +621,193 @@ class DownloadTests(unittest.TestCase):
                 self.client.download(dl.BASE + '/api/runs/test/replay', dest, listed_cycle='one')
             self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
             request.assert_not_called()
+
+    def seed_legacy_failure(self, key='test', body=b'{"detail":"Replay not found"}', headers=None, rc=None):
+        url = dl.BASE + f'/api/runs/{key}/replay'
+        dest = self.root / 'raw/replays' / (key + '.ndjson')
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        Path(str(dest) + '.chunk').write_bytes(body)
+        Path(str(dest) + '.chunk.headers').write_text(
+            'HTTP/1.1 404 Not Found\n' + (headers or 'Transfer-Encoding: chunked\n') + '\n')
+        inflight = dict(url=url, offset=0)
+        if rc is not None:
+            inflight['response_rc'] = rc
+        dl.save(str(dest) + '.part.json', dict(url=url, expected_sha256=None, expected_bytes=None, inflight=inflight))
+        return url, dest
+
+    def test_legacy_recheck_other_results_stop_once_and_keep_cursor_and_failure(self):
+        root = self.root
+        for i, (body, status, headers, rc) in enumerate([
+            (b'rate limited', 429, None, 0), (b'unavailable', 503, None, 0),
+            (b'', 0, None, 28), (b'{"detail":"Replay not found"}', 404, None, 28),
+            (b'{"detail":"Different"}', 404, None, 0),
+            (b'{"detail":"Replay not found","extra":true}', 404, None, 0),
+            (b'redirect', 302, {'location': '/api/runs/other/replay'}, 0),
+            (b'partial', 206, {'content-range': 'bytes 0-6/7'}, 0),
+            (b'short', 200, {'content-length': '999'}, 0), (b'body', 200, None, 28),
+            (b'{"detail":"Replay not found"}', 404, {'content-length': '999'}, 0),
+        ]):
+            with self.subTest(status=status, rc=rc, body=body):
+                self.root = root / str(i)
+                self.seed_cycle()
+                _, dest = self.seed_legacy_failure(META['run_hash'])
+                originals = {p: p.read_bytes() for p in (Path(str(dest) + suffix) for suffix in ('.chunk', '.chunk.headers', '.part.json'))}
+                index_before = (self.root / 'private-index.json').read_bytes()
+                self.calls.clear()
+                with patch.object(dl.time, 'sleep') as sleep:
+                    with self.assertRaises(ValueError) as caught:
+                        self.tombstone_scan([META], self.reply(body, status, headers, rc))
+                    self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
+                    sleep.assert_not_called()
+                self.assertEqual(len(self.calls), 1)
+                with patch.object(dl.Client, 'request', side_effect=AssertionError('second request')):
+                    with self.assertRaises(ValueError):
+                        self.tombstone_scan([META])
+                self.assertEqual((self.root / 'private-index.json').read_bytes(), index_before)
+                self.assertEqual({p: p.read_bytes() for p in originals}, originals)
+                record = dl.load(self.root / 'legacy-404-recheck.json')
+                self.assertEqual((record['status'], record['curl_rc']), (status, rc))
+                self.assertIn('completed_at', record)
+                self.assertFalse(dest.exists())
+
+    def test_legacy_recheck_interrupted_request_consumes_allowance(self):
+        url, dest = self.seed_legacy_failure()
+        with patch.object(self.client, 'request', side_effect=RuntimeError('interrupted')) as request:
+            with self.assertRaisesRegex(RuntimeError, 'interrupted'):
+                self.client.download(url, dest, listed_cycle='original')
+            self.assertEqual(request.call_count, 1)
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'outcome unknown'):
+                self.client.download(url, dest, listed_cycle='original')
+            request.assert_not_called()
+        self.assertNotIn('completed_at', dl.load(self.root / 'legacy-404-recheck.json'))
+
+    def test_legacy_recheck_completed_response_recovers_without_network(self):
+        root = self.root
+        for status in (200, 404):
+            with self.subTest(status=status):
+                self.root = root / str(status)
+                url, dest = self.seed_legacy_failure()
+                client = dl.Client(self.root)
+                save = dl.save
+                def interrupt(path, value):
+                    save(path, value)
+                    if Path(path).name == 'legacy-404-recheck.json' and 'completed_at' in value:
+                        raise RuntimeError('after completed response')
+                response = self.reply(b'restored' if status == 200 else b'Replay not found', status)
+                with patch.object(client, 'request', response), patch.object(dl, 'save', interrupt):
+                    with self.assertRaisesRegex(RuntimeError, 'after completed response'):
+                        client.download(url, dest, listed_cycle='original')
+                with patch.object(client, 'request') as request:
+                    if status == 404:
+                        with self.assertRaises(dl.ReplayNotFound) as caught:
+                            client.download(url, dest, listed_cycle='original')
+                        self.assertEqual(caught.exception.evidence['curl_rc'], 0)
+                    else:
+                        client.download(url, dest, listed_cycle='original')
+                        receipt = Path(str(dest) + '.receipt.json').read_bytes()
+                        # Even loss of the old journal after publication cannot
+                        # cause a repeat while the index commit is outstanding.
+                        client.download(url, dest, refresh=True, listed_cycle='original')
+                        self.assertEqual(dest.read_bytes(), b'restored')
+                        self.assertEqual(Path(str(dest) + '.receipt.json').read_bytes(), receipt)
+                    request.assert_not_called()
+
+    def test_legacy_recheck_corrupt_evidence_cannot_be_re_requested(self):
+        url, dest = self.seed_legacy_failure()
+        with patch.object(self.client, 'request', self.reply(b'busy', 503)):
+            with self.assertRaises(ValueError):
+                self.client.download(url, dest, listed_cycle='original')
+        record = dl.load(self.root / 'legacy-404-recheck.json')
+        (self.root / record['response']['body']['path']).write_bytes(b'changed')
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'digest mismatch'):
+                self.client.download(url, dest, listed_cycle='original')
+            request.assert_not_called()
+
+    def test_legacy_recheck_allowance_is_not_per_record_or_cycle(self):
+        url, dest = self.seed_legacy_failure()
+        with patch.object(self.client, 'request', self.reply(b'Replay not found', 404)):
+            with self.assertRaises(dl.ReplayNotFound):
+                self.client.download(url, dest, listed_cycle='original')
+        # A different old failure, or an old failure in a new cycle, cannot
+        # claim another migration allowance from the same private root.
+        other_url, other_dest = self.seed_legacy_failure('other')
+        with patch.object(self.client, 'request') as request:
+            for target_url, target, cycle in ((other_url, other_dest, 'original'), (other_url, other_dest, 'next')):
+                with self.assertRaisesRegex(ValueError, 'allowance already used'):
+                    self.client.download(target_url, target, listed_cycle=cycle)
+            request.assert_not_called()
+        # Natural next-cycle handling of the original tombstone stays unchanged.
+        with patch.object(self.client, 'request', self.reply(b'restored')):
+            self.client.download(url, dest, refresh=True, listed_cycle='next')
+        self.assertEqual(dest.read_bytes(), b'restored')
+
+    def test_legacy_recheck_does_not_apply_to_other_old_failures(self):
+        for i, (body, headers, rc, cycle, endpoint) in enumerate([
+            (b'different', None, None, 'one', None),
+            (b'{"detail":"Replay not found"}', None, 28, 'one', None),
+            (b'Replay not found', 'Content-Length: 999\n', None, 'one', None),
+            (b'Replay not found', None, None, None, None),
+            (b'Replay not found', None, None, 'one', '/api/other'),
+        ]):
+            with self.subTest(i=i):
+                url, dest = self.seed_legacy_failure(str(i), body, headers, rc)
+                if endpoint:
+                    state_path = Path(str(dest) + '.part.json')
+                    state = dl.load(state_path)
+                    state['url'] = state['inflight']['url'] = url = dl.BASE + endpoint
+                    dl.save(state_path, state)
+                with patch.object(self.client, 'request') as request:
+                    with self.assertRaises(ValueError) as caught:
+                        self.client.download(url, dest, listed_cycle=cycle)
+                    self.assertNotIsInstance(caught.exception, dl.ReplayNotFound)
+                    request.assert_not_called()
+                self.assertFalse((self.root / 'legacy-404-recheck.json').exists())
+
+    def test_legacy_recheck_200_still_requires_pinned_sha(self):
+        url, dest = self.seed_legacy_failure()
+        state_path = Path(str(dest) + '.part.json')
+        state = dl.load(state_path)
+        state['expected_sha256'] = '0' * 64
+        dl.save(state_path, state)
+        with patch.object(self.client, 'request', self.reply(b'wrong body')):
+            with self.assertRaisesRegex(ValueError, 'SHA mismatch'):
+                self.client.download(url, dest, expected_sha='0' * 64, listed_cycle='original')
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'SHA mismatch'):
+                self.client.download(url, dest, expected_sha='0' * 64, listed_cycle='original')
+            request.assert_not_called()
+        self.assertFalse(dest.exists())
+
+    def test_legacy_recheck_200_still_requires_pinned_size(self):
+        url, dest = self.seed_legacy_failure()
+        state_path = Path(str(dest) + '.part.json')
+        state = dl.load(state_path)
+        state['expected_bytes'] = 999
+        dl.save(state_path, state)
+        with patch.object(self.client, 'request', self.reply(b'wrong size')):
+            with self.assertRaisesRegex(ValueError, 'unsuccessful'):
+                self.client.download(url, dest, expected_bytes=999, listed_cycle='original')
+        with patch.object(self.client, 'request') as request:
+            with self.assertRaisesRegex(ValueError, 'unsuccessful'):
+                self.client.download(url, dest, expected_bytes=999, listed_cycle='original')
+            request.assert_not_called()
+        self.assertFalse(dest.exists())
+
+    def test_legacy_recheck_200_matching_old_raw_cleans_failed_journal(self):
+        url, dest = self.seed_legacy_failure()
+        # The old successful revision and failed refresh can coexist.
+        dest.write_bytes(b'restored')
+        dl.save(str(dest) + '.receipt.json', dict(url=url, sha256=dl.sha(dest), downloaded_at='old'))
+        receipt = Path(str(dest) + '.receipt.json').read_bytes()
+        with patch.object(self.client, 'request', self.reply(b'restored')):
+            self.client.download(url, dest, refresh=True, listed_cycle='original')
+        self.assertEqual(Path(str(dest) + '.receipt.json').read_bytes(), receipt)
+        self.assertFalse(Path(str(dest) + '.part.json').exists())
+        with patch.object(self.client, 'request', self.reply(b'next revision')):
+            self.client.download(url, dest, refresh=True, listed_cycle='next')
+        self.assertEqual(dest.read_bytes(), b'next revision')
 
 
 class DatabaseTests(unittest.TestCase):
