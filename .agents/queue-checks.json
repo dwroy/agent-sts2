@@ -1,27 +1,7 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [
-    "agent/src/brain/brain.ts",
-    "agent/src/brain/decision-knowledge-exposure.ts",
-    "agent/src/brain/decision-knowledge-view.ts",
-    "agent/src/brain/decision-knowledge.ts",
-    "agent/src/brain/engines/codex.ts",
-    "agent/src/brain/engines/dsh.ts",
-    "agent/src/brain/engines/knowledge-agent.ts",
-    "agent/src/brain/router.ts",
-    "agent/src/brain/tools/knowledge-projection.ts",
-    "agent/src/brain/types.ts",
-    "agent/src/knowledge/runtime/reader.ts",
-    "agent/src/knowledge/runtime/schema.ts",
-    "agent/src/knowledge/runtime/store.ts",
-    "agent/src/knowledge/runtime/typed-schema.ts",
-    "agent/src/knowledge/strategy-entries.ts",
-    "agent/src/knowledge/strategy-grading.ts",
-    "knowledge/builders/build-outcome-stats.py",
-    "knowledge/builders/outcome_logdb.py",
-    "knowledge/builders/refresh_driver.py"
-  ],
+  "runtime_install_paths": [],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -173,7 +153,7 @@
       ]
     },
     {
-      "tree": "live",
+      "tree": "root",
       "cwd": "agent",
       "argv": [
         "node",
@@ -183,7 +163,7 @@
       ]
     }
   ],
-  "consumer_scope": "Fixed combined #84 a3211f2c + approved #85 r2 50d8c223: 19 exact ROOT+LIVE leaves; inherited 27 host modules and all eight original consumers preserved. Observation fixture upgraded to approved formal grading/compact representation while retaining budgets, full Unicode roundtrip, route labels, off/role/ascension negatives. Add fixed logdb producer 70 and isolated LIVE schema4->5 atomic migration/null confidence/history/binding preservation plus durable repeated-question/restart/K1 limit3/B-minus full query. No production writes, enabling or scientific replay.",
+  "consumer_scope": "Issue84 receipt contract r3 on adopted672b7019: ROOT helper and tests only, LIVE zero leaves. All ten consumer checks retained; consumer9 schema5 fixture runs on actual ROOT code already adopted, not old LIVE. consumer8 includes new receipt regression cases. Original009c902b full1 remains binding for pending19-leaf LIVE deployment; this batch does not redeclare old LIVE as schema5.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
