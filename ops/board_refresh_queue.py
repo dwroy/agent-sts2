@@ -143,17 +143,22 @@ def submit(root, command):
     # Admission construction does no allocation; still outside R and business locks.
     queued = heavy(root, 'other', runner)
     row = dict(schema=SCHEMA, root=str(root), id=ident, actor=identity(), command=command,
-               ordinary=classify(root, command), stage='queued', requested_at=time.time(),
+               ordinary=classify(root, command), stage='deferred', admission_pending=True, requested_at=time.time(),
                admission_argv=queued, runner_argv=runner, command_started=False,
                source_cycle=os.environ.get('STS2_REFRESH_CYCLE'), bindings=bindings(root))
     path = directory(root) / 'requests' / (ident + '.json')
-    with barrier(root) as base:
-        if path.exists():
-            raise ValueError('original request retained; identity must not be replayed')
-        if (base / 'hold.json').exists():
-            row.update(stage='deferred', deferred_at=time.time())
-            debt(base, row, 'custody hold; no CPU claim or K wait')
-        atomic(path, row)
+    # Unadmitted intent is nonexecuting deferred work. A busy metadata guard
+    # must not lose an after-run request; the original tick can recover it.
+    atomic(path, row, exclusive=True)
+    try:
+        with barrier(root) as base:
+            row.update(stage='queued', admission_pending=False)
+            if (base / 'hold.json').exists():
+                row.update(stage='deferred', deferred_at=time.time())
+                debt(base, row, 'custody hold; no CPU claim or K wait')
+            atomic(path, row)
+    except BlockingIOError:
+        return 75
     if row['stage'] == 'deferred':
         return 75
     os.environ[ENV] = str(path)
@@ -243,6 +248,22 @@ def finish(root, code):
     atomic(path, row)
 
 
+def settle_unstarted(base, path, row):
+    if (row.get('command_started') or row['stage'] not in ('deferred', 'queued', 'waiting-k')
+            or row['stage'] == 'deferred' and not row.get('admission_pending') or not retired(row)):
+        return False
+    debt(base, row, 'unstarted admission retired; original tick retains compensation')
+    row.update(stage='cancelled' if row.get('cancel_intent') else 'deferred',
+               admission_pending=False, ended_at=time.time())
+    atomic(path, row)
+    return True
+
+
+def recover_requests(root):
+    with barrier(root) as base:
+        return sum(settle_unstarted(base, path, row) for path, row in records(root))
+
+
 def cancellable(root, row):
     """All facts are re-read immediately before TERM; uncertainty retains the task."""
     if (not row.get('ordinary') or row.get('command_started')
@@ -319,6 +340,8 @@ def drain(root, epoch):
             raise ValueError('foreign refresh hold')
         pending, cancelled, unknown = [], [], []
         for path, row in records(root):
+            if settle_unstarted(base, path, row):
+                continue
             if row['stage'] in ('deferred', 'cancelled', 'replayed'):
                 if row.get('claims') and not retired(row):
                     pending.append(row['id'])
@@ -407,7 +430,10 @@ def main():
     args = parser.parse_args()
     os.setpriority(os.PRIO_PROCESS, 0, 19)
     command = args.command[1:] if args.command[:1] == ['--'] else args.command
-    return submit(args.root, command) if args.action == 'submit' else run(args.root, args.id)
+    try:
+        return submit(args.root, command) if args.action == 'submit' else run(args.root, args.id)
+    except BlockingIOError:
+        return 75  # The durable unstarted request is recovered by the original tick.
 
 
 if __name__ == '__main__':

@@ -91,8 +91,10 @@ def source_locks(root, custody=None):
     # Schedulers/writers own learn; durably registered readers own their batch barrier.
     # The pair never waits, and no caller acquires learn while holding these locks.
     if custody:
-        from board_queue_custody import borrow, load, alive, authorized, identity, atomic
+        from board_queue_custody import borrow, load, alive, authorized, identity, atomic, canonical
         row = load(custody['record'])
+        if row.get('k_identity'):
+            canonical(row)
         repair = custody.get('repair') is True and row['phase'] == 'failed'
         if repair and not alive(row.get('keeper', {})):
             from board_heavy import inherited
@@ -209,7 +211,7 @@ def release(root, dest, owner, token, pid):
                     from board_heavy import inherited
                     from board_queue_custody import alive
                     from board_queue_strict import after
-                    from board_queue_custody import atomic, digest, load
+                    from board_queue_custody import save_outcome, digest, load
                     binding = value['custody']
                     for path in (Path(binding['record']).parent / 'publication-children').glob('*.json'):
                         child = json.loads(path.read_text())
@@ -222,7 +224,7 @@ def release(root, dest, owner, token, pid):
                     installed = (None if failed_recovery and not value.get('custody_strict') else
                                  after(binding['record'], value['custody_strict'], (*inherited(root), *descriptors),
                                        recovery=failed_recovery))
-                    atomic(Path(binding['record']).parent / 'custody-outcome.json',
+                    save_outcome(Path(binding['record']).parent / 'custody-outcome.json',
                            dict(schema='sts2-custody-outcome-v1', epoch=binding['epoch'], job=binding['job'],
                                 candidate=row['candidate'], kind='failed' if failed_recovery else 'adopted',
                                 failure=row.get('failure') if failed_recovery else None, installed=installed,

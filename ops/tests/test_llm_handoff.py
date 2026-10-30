@@ -161,7 +161,12 @@ class Protocol(unittest.TestCase):
                      "board_heavy.py", "board_queue_pin.py", "issue_session_support.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         (self.root / ".agents").mkdir()
-        shutil.copy(ROOT / ".agents/board.yaml", self.root / ".agents/board.yaml")
+        from issue_session_support import Board
+        board = Board(ROOT).data
+        # This fixture checks the brain selector, with no shared machine installation.
+        board['dispatcher']['heavy']['enabled'] = False
+        board['dispatcher']['merge_queue'] = dict(enabled=False)
+        (self.root / ".agents/board.yaml").write_text(json.dumps(board))
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"

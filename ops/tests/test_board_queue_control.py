@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -133,6 +134,56 @@ class Control(unittest.TestCase):
             self.assertEqual((self.root / 'ops/inbox-dev.md').read_text(), first)
             self.assertIn('24h', first)
             self.assertFalse((self.root / 'machine').exists())
+
+    def test_terminal_receipt_replays_after_a_lost_release_response(self):
+        for phase, decision in (('released', 'settled'), ('failed-released', 'failed-custody')):
+            terminal = dict(phase=phase, epoch='original', job_sha256='a' * 64, outcome_sha256='b' * 64)
+            with patch.object(refresh, 'enabled', return_value=True), patch.object(custody, 'observe', return_value=terminal):
+                for _ in range(2):
+                    result = control.evaluate(self.root, 'post-result')
+                    self.assertEqual(result['decision'], decision)
+                    self.assertEqual(result['custody'], terminal)
+                self.assertEqual(control.evaluate(self.root, 'before-seal')['decision'], 'allow')
+
+    def test_failed_release_preserves_actual_adoption_outcome_and_cannot_revive(self):
+        path = self.root / '.state/batch/custody-outcome.json'
+        adopted = dict(schema='sts2-custody-outcome-v1', job='a' * 64, candidate='b' * 40,
+                       epoch='original', kind='adopted', publication_sha256='c' * 64)
+        custody.save_outcome(path, adopted)
+        failed = dict(adopted, kind='failed', failure='keeper lost after actual adoption')
+        custody.save_outcome(path, failed)
+        current = json.loads(path.read_text())
+        self.assertEqual(current['prior_outcome_sha256'], custody.digest(adopted))
+        archive = path.parent / 'custody-outcome-history' / (custody.digest(adopted) + '.json')
+        self.assertEqual(json.loads(archive.read_text()), adopted)
+        with self.assertRaisesRegex(ValueError, 'cannot be revived'):
+            custody.save_outcome(path, adopted)
+        self.assertEqual(json.loads(path.read_text()), current)
+
+    def test_busy_metadata_guard_retains_unadmitted_request_without_cpu_claim_or_loss(self):
+        source = self.put('ops/refresh-costs.py', '# fixed cost source\n')
+        command = [sys.executable, str(source), '--root', str(self.root), '--code-root', str(self.root / '.worktrees/live')]
+        script = ('import json,sys\nfrom pathlib import Path\nfrom unittest.mock import patch\n'
+                  'sys.path.insert(0,sys.argv[1])\nimport board_refresh_queue as refresh\n'
+                  'with patch("board_heavy.queued_argv",side_effect=lambda root,role,command:command):\n'
+                  ' raise SystemExit(refresh.submit(Path(sys.argv[2]),json.loads(sys.argv[3])))\n')
+        with refresh.barrier(self.root):
+            result = subprocess.run([sys.executable, '-B', '-c', script, str(PROJECT / 'ops'),
+                                     str(self.root), json.dumps(command)], capture_output=True, timeout=5)
+            self.assertEqual(result.returncode, 75, result.stderr.decode())
+        path, row = list(refresh.records(self.root))[0]
+        self.assertEqual(row['stage'], 'deferred')
+        self.assertTrue(row['admission_pending'])
+        self.assertFalse((self.root / 'machine').exists())
+        self.assertEqual(refresh.recover_requests(self.root), 1)
+        self.assertFalse(json.loads(path.read_text())['admission_pending'])
+        self.assertEqual(json.loads((refresh.directory(self.root) / 'debts' / (row['id'] + '.json')).read_text())['state'], 'pending')
+        before = path.read_bytes()
+        with patch.dict(os.environ, STS2_REFRESH_REPLAY_ID=row['id']), \
+                patch('board_heavy.queued_argv', side_effect=lambda root, role, command: command):
+            with self.assertRaises(FileExistsError):
+                refresh.submit(self.root, command)
+        self.assertEqual(path.read_bytes(), before)
 
 
 if __name__ == '__main__':

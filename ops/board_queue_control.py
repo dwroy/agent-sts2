@@ -30,6 +30,8 @@ def failed_cleanup(root, path, row):
     from publication_gate import present, directory, MARKER
     if present(directory(root) / MARKER):
         raise ValueError('original publication unfinished; preserve its owner/method recovery before K release')
+    if row.get('k_identity'):
+        custody.canonical(row)
     if custody.alive(row['worker']) or busy(path.parent / 'worker.lock'):
         return False
     if row.get('k_identity') and custody.other_holders(row):
@@ -44,9 +46,12 @@ def failed_cleanup(root, path, row):
             except (FileNotFoundError, ProcessLookupError):
                 pass
     outcome = path.parent / 'custody-outcome.json'
-    if not outcome.exists():
+    previous = json.loads(outcome.read_text()) if outcome.exists() else None
+    if previous is not None and not isinstance(previous, dict):
+        raise custody.CustodyError('unknown original outcome retained')
+    if previous is None or previous.get('kind') == 'adopted':
         result = path.parent / 'result.json'
-        custody.atomic(outcome, dict(schema='sts2-custody-outcome-v1', epoch=row['epoch'],
+        custody.save_outcome(outcome, dict(schema='sts2-custody-outcome-v1', epoch=row['epoch'],
             job=row['job_sha256'], candidate=row['candidate'], kind='failed', failure=row['failure'],
             original_result_sha256=sha(result.read_bytes()) if result.exists() else None))
     if row.get('keeper') and custody.alive(row['keeper']):
@@ -152,8 +157,15 @@ def evaluate(root, event):
         return dict(result, enabled=False)
     if event == 'tick':
         from board_download import starvation
+        result['recovered_admissions'] = refresh.recover_requests(root)
         result['alerts'] = starvation(root)
     current = custody.observe(root)
+    if current:
+        result['custody'] = current
+        if current['phase'] in custody.TERMINAL and event != 'before-seal':
+            result['decision'] = 'failed-custody' if current['phase'] == 'failed-released' else 'settled'
+            if current['phase'] == 'failed-released':
+                result['cleanup_complete'] = True
     if current is None and (refresh.directory(root) / 'hold.json').exists():
         return dict(result, decision='defer', reason='unbound refresh hold retained')
     if current and current['phase'] not in custody.TERMINAL:
@@ -163,14 +175,16 @@ def evaluate(root, event):
             result['decision'] = 'failed-custody'
             try:
                 result['cleanup_complete'] = failed_cleanup(root, path, private)
+                if result['cleanup_complete']:
+                    result['custody'] = custody.public(custody.load(path))
             except (OSError, ValueError) as error:
                 result.update(cleanup_complete=False, cleanup_reason=str(error))
         elif current['phase'] == 'awaiting-adoption':
             receipt = path.parent / 'custody-outcome.json'
             if receipt.exists():
                 try:
-                    custody.request(path, 'release', job=private['job_sha256'], outcome=str(receipt))
-                    result['decision'] = 'settled'
+                    reply, _ = custody.request(path, 'release', job=private['job_sha256'], outcome=str(receipt))
+                    result.update(decision='settled', custody=reply['custody'])
                 except (OSError, ValueError) as error:
                     result['reason'] = str(error)
             else:

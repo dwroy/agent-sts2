@@ -45,7 +45,7 @@ def alive(row):
         return False
 
 
-def atomic(path, value):
+def atomic(path, value, exclusive=False):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
@@ -56,7 +56,11 @@ def atomic(path, value):
             handle.write('\n')
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        if exclusive:
+            os.link(temporary, path)
+            temporary.unlink()
+        else:
+            os.replace(temporary, path)
         directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
         try:
             os.fsync(directory)
@@ -140,6 +144,12 @@ def address(value):
     return chr(0) + value[1:]
 
 
+def canonical(row):
+    info = local(row['root'], 'ops/knowledge-refresh.lock').stat()
+    if dict(device=info.st_dev, inode=info.st_ino) != row['k_identity']:
+        raise CustodyError('canonical K path rebound')
+
+
 def send(sock, value, descriptors=()):
     raw = json.dumps(value, sort_keys=True).encode()
     if len(raw) > 60000:
@@ -180,7 +190,7 @@ def request(path, action, **fields):
 
 def fail(path, reason):
     row = load(path)
-    if row['phase'] in TERMINAL:
+    if row['phase'] in ('failed', *TERMINAL):
         return public(row)
     row.update(phase='failed', failure=reason, failed_at=time.time(), cleanup_pending=True)
     atomic(path, row)
@@ -193,12 +203,15 @@ def observe(root):
     if current is None:
         return None
     path, row = current
+    if row['phase'] == 'failed':
+        return public(row)
     if row['phase'] == 'starting' and alive(row['worker']) and time.time() - row['created_at'] < settings(root)['handshake_seconds']:
         return public(row)
     if row['phase'] not in TERMINAL and (not row.get('keeper') or not alive(row['keeper'])):
         return fail(path, 'custodian interrupted')
     if row['phase'] not in TERMINAL:
         try:
+            canonical(row)
             descriptor(row['keeper_fd'], row['k_identity'], row['keeper']['pid'])
         except (FileNotFoundError, ProcessLookupError, CustodyError):
             return fail(path, 'custodian kernel lock lost')
@@ -216,10 +229,11 @@ def verify(context):
         fail(lease['record'], 'custodian interrupted or rebound')
         raise CustodyError('custodian interrupted or rebound; batch failed')
     try:
+        canonical(row)
         descriptor(lease['k_fd'], row['k_identity'])
         descriptor(row['keeper_fd'], row['k_identity'], row['keeper']['pid'])
     except (OSError, CustodyError) as error:
-        fail(lease['record'], 'custody kernel descriptor lost')
+        fail(lease['record'], 'custody kernel descriptor lost: ' + str(error))
         raise CustodyError('custody kernel descriptor lost; batch failed') from error
     if select.select([lease['life_fd']], [], [], 0)[0] and os.read(lease['life_fd'], 1) == b'':
         fail(lease['record'], 'custodian lifeline closed')
@@ -263,6 +277,8 @@ def start(context):
     config = settings(root)
     if not config.get('enabled', False):
         return
+    if context['job'].get('project_control_contract') != 'sts2-queue-control-v1':
+        raise CustodyError('undeclared legacy job retained; new custody requires a frozen project contract')
     from publication_gate import present, directory as publication_directory, MARKER
     if present(publication_directory(root) / MARKER):
         raise CustodyError('original publication must settle before a new custody batch')
@@ -420,6 +436,27 @@ def outcome(row, path):
     return digest(value)
 
 
+def save_outcome(path, value):
+    path = Path(path)
+    if path.exists():
+        previous = json.loads(path.read_text())
+        if previous == value:
+            return
+        if not isinstance(previous, dict) or any(previous.get(key) != value.get(key)
+                for key in ('schema', 'epoch', 'job', 'candidate')):
+            raise CustodyError('foreign prior outcome retained')
+        if previous.get('kind') == 'failed' and value.get('kind') == 'adopted':
+            raise CustodyError('failed custody cannot be revived')
+        checksum = digest(previous)
+        archive = path.parent / 'custody-outcome-history' / (checksum + '.json')
+        if archive.exists() and json.loads(archive.read_text()) != previous:
+            raise CustodyError('original outcome history changed')
+        if not archive.exists():
+            atomic(archive, previous)
+        value = dict(value, prior_outcome_sha256=checksum)
+    atomic(path, value)
+
+
 def keeper(record_path, channel_fd):
     record_path = Path(record_path)
     row = load(record_path)
@@ -452,6 +489,9 @@ def keeper(record_path, channel_fd):
             saved = load(record_path)
             if saved.get('failure'):
                 row.update(phase='failed', failure=saved['failure'], cleanup_pending=True)
+                if write_life is not None:
+                    os.close(write_life)
+                    write_life = None
             result_path = record_path.parent / 'result.json'
             if not alive(row['worker']) and row['phase'] not in ('failed', *TERMINAL):
                 result = json.loads(result_path.read_text()) if result_path.is_file() else None
@@ -473,6 +513,8 @@ def keeper(record_path, channel_fd):
                         raise CustodyError('foreign custody actor/epoch')
                     actor = identity(caller)
                     action = message.get('action')
+                    if action in ('full-start', 'borrow', 'borrowed', 'release'):
+                        canonical(row)
                     if action == 'status':
                         send(connection, dict(ok=True, custody=public(row)))
                     elif action == 'full-start':
@@ -537,7 +579,8 @@ def keeper(record_path, channel_fd):
         key.close()
         if read_life is not None:
             os.close(read_life)
-        os.close(write_life)
+        if write_life is not None:
+            os.close(write_life)
 
 
 def main():

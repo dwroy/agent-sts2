@@ -12,11 +12,15 @@
 
 `board_queue_custody.py` 的 keeper 只收到握手 socket，自行非阻塞取得原 K，通过 SCM_RIGHTS 给原 worker 同一 OFD 的 K 与管道生命线。真实 PID/start/boot、fdinfo FLOCK、dev/inode、epoch/job/candidate 和 fsync 回执全部核同后，才装配及触及 full.once。K 忙/坏握手时 full=0；保管者退出的 EOF 终止实际 Node full，原 tick 读到 `failed-custody`，保 full.once、原检查结果和活后继的 cleanup 门，不能重 full。libuv 的监视器使用单独管道读端，原高位生命线 FD 保留到 finalizer execve。
 
+新作业还必须由受信任的 kit 从冻结配置写入 `project_control_contract: sts2-queue-control-v1`，不能从 issue 自称、也不能给旧 job 补字段。开启后缺字段会在保管/full 前拒绝。K 的实际路径必须仍指向原 dev/inode；删除重建锁文件不会继承旧 FD 的证明，立即记失败并给 full EOF，原 OFD 保持到明确清理。首次失败不被后续观察改写。终态释放回执可重复读回，丢响应不再 seal/full；若实际采用已落回执而随后保管失效，旧采用事实按 SHA 留在 outcome-history，失败结算保链接，不擦除历史或复活失败。
+
 full 后三租约与 full 门随实际计算后继退场；keeper 轻量续持 K 到 strict/失败结算。资源 probe 只对已核 worker/子账退场、真实 FD 对应且无计算租约的 keeper 免计，未知仍计 legacy。K 保管者没有 main 或数据写资格。
 
 保管者丢失而原 publication 尚未结清时，失败清理保留 K/hold，先由原 owner 沿 `write --resume-fixed-methods` 核收已安装方法，禁止新的部署 argv。keeper 尚活时借原 OFD；keeper 已死时只允许原 learn/game/资源准入下非阻塞取得**失败修复用 K**，持久标 `continuous:false`，绝不恢复本批 passed/采用资格。原 strict 已入写体的还要核原受测/安装映射；未入写体的只结原 marker。保旧失败及子进程退出码，明确已完成的安装核收可绑定原失败子回执；未知 spawn intent、活写体、部分/漂移安装继续保原 owner。结算写 failed outcome 后才能自动排空。简单 off 不能绕过尚未结清的 hold。
 
 刷新先经 `board_refresh_queue.py` 的 R 元数据登记，之后才机器准入和 K；所有三个新入口一起部署后才启用。保管期新请求只能记 deferred/debt，不入 heavy。放 K 前核全登记、实际内核等待者和租约实退；只对精确同 root/源 SHA/方法控制、无子进程/其他写锁、原命令未启动的普通 all/成本/漏斗自动 TERM。running 还须 own lease+slot、wchan 和原 K 等待箭头；显式 request/cutoff/专题及旧未登记等待者保留。先 fsync 意图/债务，pidfd 精确 TERM，下一原 tick 核真退和资源释放，不能把发信号当已取消。
+
+新请求先以独占创建保存不执行的 deferred 意图，仅在 R 内获准后才转 queued。短 R 忙时返回 75，原 tick 对已实退且未启动原命令的意图收回补跑债务；自己的 request ID 不可覆盖。未获准的意图不申领 slot、不等 K；由此既不丢同局并发刷新，也不在释放屏障旁穿入计算。
 
 K 最后关闭与 R 屏障开放在同一短 R 段，R 不包计算、网络、重任务准入或等待业务锁。采用/明确失败后，原 tick 以新 ID 依次补 all→成本→漏斗，同覆盖范围普通债务合并；原取消 alias 保留，原失败/未知回执不收债，不重放不明 spawn。显式任务仍归原 owner，不用普通补跑替代其截止线。没有另一个 timer。
 

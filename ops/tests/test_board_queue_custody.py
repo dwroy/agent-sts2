@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import signal
+import select
 import subprocess
 import sys
 import tempfile
@@ -37,7 +38,7 @@ class Custody(unittest.TestCase):
         board['dispatcher']['heavy'] = dict(enabled=False, machine_state=str(self.root / 'machine'))
         self.put('.agents/board.yaml', json.dumps(board))
         self.job_path = self.root / '.state/batch/job.json'
-        self.job = dict(root=str(self.root), candidate='a' * 40)
+        self.job = dict(root=str(self.root), candidate='a' * 40, project_control_contract=control.SCHEMA)
         self.put(str(self.job_path.relative_to(self.root)), json.dumps(self.job))
         self.context = dict(job=self.job, job_path=str(self.job_path))
         self.processes = []
@@ -239,6 +240,31 @@ class Custody(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0][1]['stage'], 'deferred')
         self.assertFalse((self.root / 'machine').exists())
+
+    def test_named_k_rebinding_fails_and_eof_retires_full_without_unlocking_old_ofd(self):
+        custody.start(self.context)
+        key = self.root / 'ops/knowledge-refresh.lock'
+        key.unlink()
+        key.write_text('new inode must not inherit old proof')
+        with self.assertRaisesRegex(custody.CustodyError, 'descriptor lost'):
+            custody.verify(self.context)
+        path = Path(self.context['custody']['record'])
+        first = custody.load(path)
+        self.assertIn('canonical K', first['failure'])
+        custody.fail(path, 'later observation must not replace original failure')
+        self.assertEqual(custody.load(path)['failure'], first['failure'])
+        life = self.context['custody']['life_fd']
+        self.assertTrue(select.select([life], [], [], 4)[0])
+        self.assertEqual(os.read(life, 1), b'')
+        self.assertTrue(custody.alive(first['keeper']))
+        self.assertEqual(custody.descriptor(self.context['custody']['k_fd']), first['k_identity'])
+
+    def test_new_enabled_contract_cannot_silently_convert_an_undeclared_job(self):
+        self.context['job'] = {key: value for key, value in self.job.items() if key != 'project_control_contract'}
+        with self.assertRaisesRegex(custody.CustodyError, 'undeclared legacy job'):
+            custody.start(self.context)
+        self.assertFalse(self.processes)
+        self.assertFalse((self.root / 'ops/codex-ops/refresh-queue').exists())
 
 
 if __name__ == '__main__':
