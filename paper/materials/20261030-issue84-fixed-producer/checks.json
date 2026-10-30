@@ -1,0 +1,226 @@
+{
+  "schema": "issue84-development-checks-v1",
+  "base": "9b0cf5955",
+  "source_files": {
+    "agent/tests/v6_learning_loop_test.py": "b64415a64a03d1edb89a7d02ceec64c1a357f246c6fe9338e5f7bbd96fed8698",
+    "knowledge/builders/build-outcome-stats.py": "fa5a6b3c87efae2220419bcb9ea59e79389d90c4eb7f9c025c0536915fbe3407",
+    "knowledge/builders/outcome_logdb.py": "5a63369ed25bc1b0c47dbdc1c12cf07c61e5b4999e73474e10e2d6f8e1d578af",
+    "knowledge/builders/refresh_driver.py": "8fbdd0768ad4860022babd663c8274ddf721b77e0124c7db74746e3836ca21ee",
+    "knowledge/builders/test_refresh_entrypoints.py": "ee66d6d57fbb79eca150033e231f9238813f904c8a303f814873f15e72255b7c",
+    "knowledge/builders/test_refresh_pipeline.py": "574c0cb510d70c2fade35d0b25a6893462e958d2ac4fdce6764b0396e21a256d",
+    "ops/codex-ops.sh": "10f00205d4d4bb277c921093a0c4e2abcafa5e813debccf79a7611b859878691",
+    "ops/fixed-producer-dependencies.json": "df87c3f457e4c9ac48120ca568ff7b9e65ba84fead5edc6938bc6aeb5fb9a280",
+    "ops/fixed_method_admission.py": "e6bdb5ada3ca32df282e9367d06b7b81669b503c9e2289f15fd097d9c91443bb",
+    "ops/fixed_producer_methods.py": "ebdd6d2af3c99d052e2880e8d80c9e0c3167661557349a70738befbbf2772cc9",
+    "ops/learning_runtime_data.py": "8656efac2f3241edcaaeeb332de1d82484cba328cca514e19f48191e16b1e7c9",
+    "ops/publication_gate.py": "f8e9518621e706c934146760420b222610e917bfeb539fbdec9dae4def0ef4a4",
+    "ops/refresh_health.py": "1f39cc01727df7b910e5beb422e0603aca6d38b46d15b1ec44f711158cdc4371",
+    "ops/tests/fixed_producer_fixture.py": "c825fa530383680bb2a8e8a13da577bf4fd9cb13ebe5e94f0ba240c638378540",
+    "ops/tests/test_fixed_producer_admission.py": "a511e6226ff3dff88ef3b2e519bfc8bae0432903e0db50268f77c24a4730ae3a",
+    "ops/tests/test_learning_runtime.py": "e40d6d095abf18b1f66ff0308b8d350c07b0c29175be74ebb7762043aa02b0bb",
+    "ops/tests/test_outcome_logdb.py": "e7ae7b47f4cec1419dd5b4383ee596c5130073f9a2d0c02248b9c0c6adb6e7a5",
+    "ops/tests/test_refresh_health.py": "39cef264de2fa913414a395bcb815834b5810eaf2676460054cfcab3dc3cdc13"
+  },
+  "source_drift": [],
+  "production_tsc": {
+    "exit_code": 0,
+    "log": ".cache/issue84/tsc-final.log"
+  },
+  "core": {
+    "exit_code": 0,
+    "tests": 70,
+    "log": ".cache/issue84/core-final2.log"
+  },
+  "existing_refresh": {
+    "pipeline": 15,
+    "entrypoints": 2,
+    "v6_loop": 18,
+    "all_passed": true
+  },
+  "outcome_self_test": {
+    "exit_code": 0,
+    "scope": "original role/ascension fixed fixtures"
+  },
+  "stock_native": {
+    "exit_code": 0,
+    "tests": 28,
+    "seconds": 2.993,
+    "log": ".cache/issue84/stock-native.log"
+  },
+  "sandbox_first": {
+    "exit_code": 1,
+    "files_passed": 647,
+    "files_failed": 4,
+    "tests_passed": 6017,
+    "tests_failed": 5,
+    "failures": [
+      "missing issue29 historical fixture",
+      "external-stock wrapper timeout",
+      "two old refresh fixtures missing newly required ROOT helpers",
+      "v6 report fixture missing newly required ROOT helpers"
+    ]
+  },
+  "vitest_reports": {
+    "targeted-final": {
+      "files": 6,
+      "passed": 24,
+      "failed": 0,
+      "success": true,
+      "failures": []
+    },
+    "targeted-final2": {
+      "files": 6,
+      "passed": 23,
+      "failed": 1,
+      "success": false,
+      "failures": [
+        {
+          "file": "external-stock.test.ts",
+          "test": "replenishes anonymous stock through original dispatch, native reading and content callbacks",
+          "message": "see original log"
+        }
+      ]
+    },
+    "stock-isolated": {
+      "files": 1,
+      "passed": 0,
+      "failed": 1,
+      "success": false,
+      "failures": [
+        {
+          "file": "external-stock.test.ts",
+          "test": "replenishes anonymous stock through original dispatch, native reading and content callbacks",
+          "message": "see original log"
+        }
+      ]
+    }
+  },
+  "historical_fixture": {
+    "path": "paper/materials/issue29-brain-speed/results.jsonl",
+    "git_blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "source": "fixed HEAD original bytes"
+  },
+  "raw_logs": {
+    "admission-fifth.log": {
+      "bytes": 118,
+      "sha256": "83529352954658e654c4279f6ef1b4c220a366a70579c28217dc5c0bc9095a7e"
+    },
+    "admission-first.log": {
+      "bytes": 113,
+      "sha256": "3a187e2de0a414868c6dca507232facedda46b2425e18b07f92fbb7d46de62ad"
+    },
+    "admission-fourth.log": {
+      "bytes": 118,
+      "sha256": "7b94d244ebb618f3bd5697531bd4427fb892ab8e66d7462dc0f2354c285d813b"
+    },
+    "admission-second.log": {
+      "bytes": 113,
+      "sha256": "afe8689d37f13a81dc4560e47ab64340825b1f8a54ea7c3412acc6f0a6aa9a91"
+    },
+    "admission-sixth.log": {
+      "bytes": 118,
+      "sha256": "79e564e27bb29dd4b69699c0d500581fa609a127fc1ba2c8627df37eaf4bbd0b"
+    },
+    "admission-third.log": {
+      "bytes": 114,
+      "sha256": "4ac3d8861ccdc69ff8e04decf686c8b0b02327924131233d7261d52cd9359319"
+    },
+    "combined-first.log": {
+      "bytes": 1799,
+      "sha256": "057dce745f9ffdd6a03e9537c4754fa21b4068679c92c6124ddfad2cd6dd331c"
+    },
+    "core-final.log": {
+      "bytes": 1104,
+      "sha256": "daa781fbd291ad403d2eaed4790310a6d7607529941ca10da16f95dd89b2cde9"
+    },
+    "core-final2.log": {
+      "bytes": 1105,
+      "sha256": "d27cb01c74bffbe3663d7aea4602826eadf582f44270c9abca1071602ee163cf"
+    },
+    "entrypoints-final1.log": {
+      "bytes": 100,
+      "sha256": "c52de92058765abcbb44e19b2214634d3ec484b5943fb2983f3dfc2a239fb5e4"
+    },
+    "gate-first.log": {
+      "bytes": 112,
+      "sha256": "0f5b90128c77a24ace9bfca2f6e64f5c31d89cfd1f897f006c5e564f55e88024"
+    },
+    "gate-second.log": {
+      "bytes": 112,
+      "sha256": "76e9343d53e01d264b76b75ac6420f0bb28aa94c23002846e9d660ac13b113a0"
+    },
+    "health-final1.log": {
+      "bytes": 318,
+      "sha256": "261b51112e43caa536160e98025b05dda86a3abdf3d0543ba54c082c06d5819f"
+    },
+    "health-first.log": {
+      "bytes": 104,
+      "sha256": "d9aaab53828e01850d2ca7d85367f581da16eb6d86fdbc1c4b3dfa1e179a2d89"
+    },
+    "health-second.log": {
+      "bytes": 1759,
+      "sha256": "bea9dde789b2283b86a8ba66040e268b3e12a6593bdec58d45b5364ea8cf4f1b"
+    },
+    "health-third.log": {
+      "bytes": 315,
+      "sha256": "5ed2a7b3734ac696a40c81b71569d78c87f51ec9b472c76638c42603bcafe0d7"
+    },
+    "logdb-first.log": {
+      "bytes": 102,
+      "sha256": "0eee84248d053b40e768e694ede58feb5b3605aa34a44b72f92bcfa8b09a77cf"
+    },
+    "logdb-second.log": {
+      "bytes": 103,
+      "sha256": "5dd08bfb819870551051f3eb1362ae2aa944233667534aef37496bd458028ca2"
+    },
+    "logdb-third.log": {
+      "bytes": 103,
+      "sha256": "e2c263d30a6ffa730742a7d5a8a7aa1be9db15450b2af240af8f636b5e252fb9"
+    },
+    "pipeline-final1.log": {
+      "bytes": 8866,
+      "sha256": "f2015a3f1fa5dd552de8565f25d0bb3c4cbfd53d15e57183a474e72e187fa674"
+    },
+    "runtime-test-first.log": {
+      "bytes": 846,
+      "sha256": "47734675c3ad540b96b3e9bd3a19e13d5149a2dddbf05503fefb5d65f3f001d1"
+    },
+    "sandbox-first.log": {
+      "bytes": 46151,
+      "sha256": "d4611cbc795127784ee234834c46162b59004abd2f7b363283e993d396a9711c"
+    },
+    "stock-isolated.log": {
+      "bytes": 1439,
+      "sha256": "d40fc57e8f55943853de41ab2cfda234eb50b7c7803bac67e3b6db14328643d1"
+    },
+    "stock-native.log": {
+      "bytes": 127,
+      "sha256": "771b49ad187fdd08a106e5997595e53cff6baa5516771cf6cad8a5df525394db"
+    },
+    "targeted-final.log": {
+      "bytes": 2055,
+      "sha256": "de70aa5f67e0667c62dcbb69cecbe1318d68fab4bab5deff07bdca06ccf85f08"
+    },
+    "targeted-final2.log": {
+      "bytes": 2941,
+      "sha256": "52905a4e560c20c018611d20635f1da9ad4dd1a741f420df7068f120c071a965"
+    },
+    "tsc-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "v6-loop-final1.log": {
+      "bytes": 117,
+      "sha256": "94d0f6ea9d7241bef5c3321592fa1677925028fc2ffbcaaee2d54b597e8068da"
+    }
+  },
+  "raw_log_directory": ".cache/issue84",
+  "production_writes": false,
+  "combination_full": "pending original integrator",
+  "natural_acceptance": false,
+  "notes": [
+    "Do not use this development summary as a publication admission engineering receipt.",
+    "Original failed and superseded checks are retained; no timeout or skip policy was weakened.",
+    "Only the original combination terminal and actual installed readback can authorize methods."
+  ]
+}

@@ -539,6 +539,8 @@ class RefreshTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
+            for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+                shutil.copyfile(ROOT / 'ops' / name, root / 'ops' / name)
             # Stub unrelated historical refresh steps; execute the real shell and V6 helper/CLIs.
             b = root / 'knowledge/builders'
             for name in ('build-monster-db.py', 'monster-db-check.py', 'build-card-upgrades.py', 'build-outcome-stats.py',
@@ -573,7 +575,7 @@ class RefreshTest(unittest.TestCase):
                 wait = Mock(side_effect=AssertionError('admission waited for refresh'))
                 waits.append(wait)
                 return SimpleNamespace(pid=child.pid, wait=wait)
-            with patch.dict(os.environ, {'REFRESH_WAIT': '1', 'REFRESH_WAIT_S': '60'}), patch.object(subprocess, 'Popen', popen):
+            with patch.dict(os.environ, {'REFRESH_WAIT': '1', 'REFRESH_WAIT_S': '60', 'CODEX_OPS_DIR': str(root / 'ops/codex-ops')}), patch.object(subprocess, 'Popen', popen):
                 result = namespace['refresh_knowledge']('silent')
             self.assertTrue(all(wait.call_count == 0 for wait in waits))
             for child in spawned:

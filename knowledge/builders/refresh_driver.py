@@ -79,10 +79,16 @@ def main():
     p.add_argument('--idle', action='store_true', help='ops-verified idle training boundary')
     p.add_argument('--only-producer', choices=['monster-db', 'card-upgrades', 'outcome', 'construction-opportunities', 'room-costs', 'boss-damage', 'potion-equivalents', 'v6-history', 'fight-value', 'event-pages', 'move-model'], help='explicit original fixed producer; no new cadence')
     p.add_argument('--request', help='stable identity for a newly authorized explicit data refresh')
+    p.add_argument('--outcome-logdb', action='store_true', help='one explicit indexed outcome backfill')
+    p.add_argument('--outcome-since', help='original D1 publication cutoff for separate backfill coverage')
     p.add_argument('--queue-entered', action='store_true', help=argparse.SUPPRESS)
     args = p.parse_args()
     if args.request and (len(args.request) > 120 or not args.request.isascii() or not all(c.isalnum() or c in '_.:+-' for c in args.request)):
         p.error('invalid data request identity')
+    if args.outcome_logdb and (args.only_producer != 'outcome' or not args.request or not args.character or not args.outcome_since):
+        p.error('--outcome-logdb requires --only-producer outcome, --request, --character and --outcome-since')
+    if args.outcome_since and not args.outcome_logdb:
+        p.error('--outcome-since requires --outcome-logdb')
     root = args.ops_root.resolve()
     if args.character and (not args.character.isascii() or not args.character.replace('_', '').isalnum()):
         p.error('invalid character id')
@@ -99,7 +105,7 @@ def main():
             sys.path.insert(0, str(root / 'ops'))
             from learning_runtime_data import bind_launch
             bind_launch(root, ROOT, os.environ['STS2_REFRESH_CYCLE'],
-                        dict(character=args.character, fight_value=args.fight_value, all=args.all, idle=args.idle, only_producer=args.only_producer))
+                        dict(character=args.character, fight_value=args.fight_value, all=args.all, idle=args.idle, only_producer=args.only_producer, **(dict(outcome_logdb=True, outcome_since=args.outcome_since) if args.outcome_logdb else {})))
         command = [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:], '--queue-entered']
         queued, status = queue_command(root, command)
         print('knowledge-refresh heavy queue: ' + status, flush=True)
@@ -119,32 +125,49 @@ def main():
         acquired = time.monotonic()
         failed = []
         def run(name, argv):
-            if args.only_producer and name not in ('catalog',) and name.split(':')[0] != args.only_producer:
-                return
-            control = Path(os.environ.get('CODEX_OPS_DIR') or root / 'ops/codex-ops') / 'learning-runtime.json'
-            if not control.exists() and not os.environ.get('STS2_REFRESH_SELECTION_FILE'):
-                if step(root, name, argv):
-                    failed.append(name)
+            if args.only_producer and name not in ('catalog',) and name.split(':')[0] != args.only_producer and not (args.outcome_logdb and name.startswith('logdb-sync')):
                 return
             sys.path.insert(0, str(root / 'ops'))
-            from learning_runtime_data import refresh_step
-            producer = name.split(':')[0]
-            own = name.split(':')[1:] or characters
-            from learning_runtime_data import OUTPUTS
+            from refresh_health import observe
+            cycle = os.environ.get('STS2_REFRESH_CYCLE') or 'legacy-' + str(os.getpid())
+            def health(status, **details):
+                try:
+                    observe(root, name, cycle, status, **details)
+                except (OSError, ValueError, RuntimeError) as error:
+                    failed.append('refresh-health:' + name)
+                    print('refresh health retained: ' + name + ' (' + type(error).__name__ + ')', file=sys.stderr)
+            health('running')
+            receipt = None
+            code = 1
+            terminal_known = False
             try:
-                if producer in OUTPUTS:
-                    identity = os.environ.get('STS2_REFRESH_CYCLE', uuid.uuid4().hex) + ':' + name
-                    with refresh_step(root, ROOT, name, own, identity) as receipt:
-                        code = 0 if receipt and receipt.get('already_completed') else step(root, name, argv)
-                        if receipt is not None:
-                            receipt['rc'] = code
-                else:
+                control = Path(os.environ.get('CODEX_OPS_DIR') or root / 'ops/codex-ops') / 'learning-runtime.json'
+                if not control.exists() and not os.environ.get('STS2_REFRESH_SELECTION_FILE'):
                     code = step(root, name, argv)
+                else:
+                    from learning_runtime_data import refresh_step, OUTPUTS
+                    producer = name.split(':')[0]
+                    own = name.split(':')[1:] or characters
+                    if producer in OUTPUTS:
+                        identity = cycle + ':' + name
+                        with refresh_step(root, ROOT, name, own, identity) as receipt:
+                            code = 0 if receipt and receipt.get('already_completed') else step(root, name, argv)
+                            if receipt is not None:
+                                receipt['rc'] = code
+                    else:
+                        code = step(root, name, argv)
+                terminal_known = True
                 if code:
                     failed.append(name)
-            except (OSError, ValueError, RuntimeError) as error:
+            except Exception as error:
                 failed.append(name)
+                code = 1
+                terminal_known = True
                 print('fixed refresh retained: ' + name + ' (' + type(error).__name__ + ')', file=sys.stderr)
+            finally:
+                if terminal_known:
+                    health('failed' if code else 'succeeded', version=receipt.get('version') if receipt else None,
+                           published=bool(receipt and receipt.get('status') == 'published' and not receipt.get('already_completed')))
         def build(name, *argv):
             return [sys.executable, BUILDERS / (name + '.py'), *argv]
         if not args.fight_value or args.all or args.only_producer:
@@ -155,7 +178,11 @@ def main():
             for name, command in logdb_sync_steps(root):
                 run(name, command)
             for c in characters:
-                run('outcome:'+c, build('build-outcome-stats', '--character', c))
+                outcome = build('build-outcome-stats', '--character', c)
+                if args.outcome_logdb:
+                    outcome[0] = ROOT / 'data/logdb-venv/bin/python'
+                    outcome += ['--logdb', ROOT / 'data/logdb', '--since', args.outcome_since]
+                run('outcome:'+c, outcome)
                 if c == 'silent':
                     run('construction-opportunities:'+c, [ROOT / 'data/logdb-venv/bin/python', BUILDERS / 'build-construction-opportunities.py', '--character', c])
                 run('room-costs:'+c, build('build-room-costs', '--character', c))

@@ -78,12 +78,12 @@ def keeps_ascension(asc, ascension):
     return asc in ascension
 
 
-def read_runs(path, ascension, character=None):
+def read_runs(path, ascension, character=None, lines=None):
     """run id -> {floor, victory, ascension} for finished runs at the ascensions kept (keeps_ascension), of `character`
     alone when given (the states and decisions are then read for these runs only)."""
     runs = {}
     with open(path, "r", encoding="utf8") as handle:
-        for line in handle:
+        for line in (handle if lines is None else lines):
             try:
                 row = json.loads(line)
             except ValueError:
@@ -324,12 +324,15 @@ def table_key(run, ascension):
     return "all" if ascension == "all" else run["ascension"]
 
 
-def build(logs, ascension="band", character=None):
+def build(logs, ascension="band", character=None, indexed=None):
     """The whole file: one table per ascension kept (by_ascension), the logs read once for all of them; `character`:
     that character's runs alone (None: every run)."""
-    runs = read_runs(os.path.join(logs, "runs.jsonl"), ascension, character)
-    marks, event_choices, rest_choices = read_decisions(os.path.join(logs, "decisions.jsonl"), runs)
-    seen = read_states(os.path.join(logs, "states.jsonl"), runs, lambda run_id: table_key(runs[run_id], ascension))
+    runs = read_runs(os.path.join(logs, "runs.jsonl"), ascension, character, indexed.lines("runs") if indexed else None)
+    marks, event_choices, rest_choices = read_decisions(os.path.join(logs, "decisions.jsonl"), runs, indexed.lines("decisions") if indexed else None)
+    seen = read_states(os.path.join(logs, "states.jsonl"), runs, lambda run_id: table_key(runs[run_id], ascension),
+                       iter_states(os.path.join(logs, "states.jsonl"), indexed.lines("states")) if indexed else None)
+    if indexed:
+        indexed.count_runs(runs, {rid for rid in runs if seen["max_act"].get(rid)})
     groups = collections.defaultdict(dict)
     for run_id, run in runs.items():
         groups[table_key(run, ascension)][run_id] = run
@@ -593,6 +596,8 @@ def main(argv=None):
     parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/outcome-stats.json")
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--logdb", help="explicit frozen LogDB index input; original reducer unchanged")
+    parser.add_argument("--since", help="original prior publication cutoff for separate backfill coverage")
     args = parser.parse_args(argv)
     if args.self_test:
         return self_test()
@@ -602,7 +607,16 @@ def main(argv=None):
     if not any(run_character(row) == character for row in _run_rows(os.path.join(args.logs, "runs.jsonl"))):
         print(f"{args.out}: no {character} runs; nothing written")
         return 0
-    stats = build(args.logs, parse_ascension(args.ascension), character)
+    if args.logdb:
+        if not args.since:
+            parser.error("--logdb requires the original --since cutoff")
+        from outcome_logdb import IndexedOutcome
+        indexed = IndexedOutcome(args.logs, args.logdb, args.since)
+        with indexed.frozen():
+            stats = build(args.logs, parse_ascension(args.ascension), character, indexed)
+        stats["_source_logdb"] = indexed.receipt
+    else:
+        stats = build(args.logs, parse_ascension(args.ascension), character)
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:

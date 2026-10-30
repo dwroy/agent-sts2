@@ -249,6 +249,8 @@ case "$cmd" in
       stall)
         # Repair only the read-only log viewer at the existing cadence; never signal the controller.
         nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "${CODEX_OPS_LOGS:-$LOGS}" --state-dir "$DIR" ensure > /dev/null 2>&1 &
+        # Check stale fixed-data publications even when no new refresh cycle starts.
+        nice -n 19 python3 "$OPS/refresh_health.py" --root "$ROOT" >> "$DIR/refresh-health.log" 2>&1 || log "refresh health observation failed (see refresh-health.log)"
         tick_stall
         # Learner tabs are a project reclamation class, independent of model wakes and board/GitHub availability.
         if [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
