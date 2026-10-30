@@ -42,7 +42,7 @@ SQLite 4→5在单事务放开 strategy_details.confidence 的NOT NULL。测试�
 
 ## 自测与失败留存
 
-生产tsc与知识runtime tsc均exit0；后者显式覆盖新候选CLI。`git diff --check`通过。
+生产tsc与知识runtime tsc均exit0；后者显式覆盖新候选CLI。源码`git diff --check`通过；四份原始Vitest日志末尾空行的whitespace提示原样保留，未改日志字节。
 
 扩大回归沿原 `test-sandbox.sh` 固定排除名单，单工作线程，并用同进程加载Vitest避免再套一个Node监督进程；复现脚本 `sandbox-check.mjs`。不是原唯一发布组合的完整回归，也未冒充直接执行bash脚本。初轮652文件/6028项，6025过、3失败，原日志 `sandbox-initial.log` 完整保留：
 
