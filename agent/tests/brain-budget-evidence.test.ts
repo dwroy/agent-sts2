@@ -130,12 +130,17 @@ it("the original runaway hands completed tools straight to reserved answering wi
       server.onNotification?.("item/agentMessage/delta", { threadId: params.threadId, turnId: params.turnId, delta: cuts[0]!.text });
     } else completed(server, params, fullAnswer);
   });
+  let prepared = 0;
+  f.req.prepareForSend = req => { req.payload = { ...(req.payload as object), fixed_exposure_attempt: ++prepared }; };
   const pending = f.router.decide(f.req); await vi.advanceTimersByTimeAsync(1);
   const result = await pending;
   expect(result.agent?.fallback).toBe("stall"); expect(result.answer).toEqual(fullAnswer);
   expect(f.turns()).toBe(2); expect(f.toolRuns()).toBe(1);
   const starts = f.requests.filter(r => r.method === "turn/start");
   expect(JSON.stringify(starts[1]!.params.input)).toContain("EXACT_FIXED_RETURN");
+  expect(prepared).toBe(2);
+  expect(starts[0]!.params.input[0].text).toContain('"fixed_exposure_attempt":1');
+  expect(starts[1]!.params.input[0].text).toContain('"fixed_exposure_attempt":2');
   expect(f.rows[0]!.evidence?.attempts.map(a => a.phase)).toEqual(["query", "answer"]);
   expect(f.requests.filter(r => r.method === "thread/start").map(r => Boolean(r.params.dynamicTools))).toEqual([true, false]);
 });

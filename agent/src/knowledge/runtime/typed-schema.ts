@@ -14,7 +14,7 @@ CREATE TABLE experience_details(
  support INTEGER NOT NULL CHECK(support>=0), contradict INTEGER NOT NULL CHECK(contradict>=0));
 CREATE TABLE strategy_details(
  item TEXT PRIMARY KEY REFERENCES business_items(item), strategy TEXT NOT NULL,
- trigger_json TEXT NOT NULL CHECK(json_valid(trigger_json)), confidence REAL NOT NULL CHECK(confidence BETWEEN 0 AND 1));
+ trigger_json TEXT NOT NULL CHECK(json_valid(trigger_json)), confidence REAL CHECK(confidence BETWEEN 0 AND 1));
 CREATE TABLE reflex_details(
  item TEXT PRIMARY KEY REFERENCES business_items(item), applies_to TEXT NOT NULL,
  predicate_json TEXT NOT NULL CHECK(json_valid(predicate_json)), signal_json TEXT NOT NULL CHECK(json_valid(signal_json)));
@@ -49,4 +49,14 @@ CREATE INDEX item_evidence_source ON item_evidence(source,sha256,item);
 CREATE TABLE item_grams(
  gram TEXT NOT NULL, item TEXT NOT NULL REFERENCES business_items(item), PRIMARY KEY(gram,item));
 CREATE VIRTUAL TABLE item_search USING fts5(item UNINDEXED, body, tokenize='trigram');
+`;
+
+/** Preserve every projection row while permitting an explicitly unscored mechanism fact. */
+export const STRATEGY_NULL_CONFIDENCE_SCHEMA = `
+CREATE TABLE strategy_details_v5(
+ item TEXT PRIMARY KEY REFERENCES business_items(item), strategy TEXT NOT NULL,
+ trigger_json TEXT NOT NULL CHECK(json_valid(trigger_json)), confidence REAL CHECK(confidence BETWEEN 0 AND 1));
+INSERT INTO strategy_details_v5 SELECT * FROM strategy_details;
+DROP TABLE strategy_details;
+ALTER TABLE strategy_details_v5 RENAME TO strategy_details;
 `;
