@@ -13,7 +13,7 @@ V6_COMBAT_ENTRIES=on
 V6_COMBAT_ENTRY_SELECTION='{"AEONGLASS":["VALIDATED_ENTRY_ID_1","VALIDATED_ENTRY_ID_2"]}'
 ```
 
-示例 ID 仅为占位，必须换成已通过验证、实际 K1 中存在的准确 ID。选择表仅对 Silent 生效，Boss 键只允许本任务的 `AEONGLASS`、`TEST_SUBJECT`、`THE_INSATIABLE`、`QUEEN`；匹配第三幕当前明确存活的原始实体 ID，不拿 run 的下一 Boss 或文本别名替代。一个表可分别配置多个 Boss 的 ID，库中的其他条目不自动加入；删去某个 Boss 键或置空数组只关闭它，`{}` 关闭全部本次入口。全局 off 始终不加载条目。其他角色仍保持原有行为。
+示例 ID 仅为占位，必须换成已通过验证、实际 K1 中存在的准确 ID。选择表仅对 Silent 生效，Boss 键只允许本任务的 `AEONGLASS`、`TEST_SUBJECT`、`THE_INSATIABLE`、`QUEEN`；匹配第一至三幕当前明确存活的原始实体 ID，不拿 run 的下一 Boss 或文本别名替代。无厌沙虫在本批自有来源为第二幕，不将四个 Boss 全绑第三幕。一个表可分别配置多个 Boss 的 ID，库中的其他条目不自动加入；删去某个 Boss 键或置空数组只关闭它，`{}` 关闭全部本次入口。全局 off 始终不加载条目。其他角色仍保持原有行为。
 
 未设置 `V6_COMBAT_ENTRY_SELECTION` 保持原兼容行为（全局 on 加载旧完整角色库）；**不要用删除选择变量作单 Boss 回退**。空字符串、坏 JSON、通配符、未知 Boss 键、重复/非法 ID 会关闭 Silent 入口；当前 Boss 对应 ID 不存在、不是 combat_line 或不适用当前进阶也拒绝，不退到整库。选择表不授予模型可信度或条目有效性，ops 仍核准确 K1/LIVE 与已通过验证的版本；来源/版本变化须核原验证是否仍适用。
 

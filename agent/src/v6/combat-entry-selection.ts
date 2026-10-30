@@ -32,7 +32,8 @@ export function combatEntrySelectionConfig(raw: string | undefined): CombatEntry
 export function selectedCombatEntries<T extends { id: string }>(entries: T[], character: string, context: Record<string, unknown>,
   config: CombatEntrySelectionConfig): { entries: T[]; selection?: CombatEntrySelection } | null {
   if (character !== "silent" || config.mode === "legacy") return { entries };
-  if (config.mode === "invalid" || context.act !== 3 || !plain(context.enemies) || !Array.isArray(context.enemies.items)) return null;
+  if (config.mode === "invalid" || !Number.isInteger(context.act) || ![1, 2, 3].includes(Number(context.act))
+    || !plain(context.enemies) || !Array.isArray(context.enemies.items)) return null;
   const bosses = context.enemies.items.filter(plain).filter(e => e.alive === true && typeof e.id === "string" && BOSSES.has(e.id));
   if (bosses.length !== 1) return null;
   const boss = String(bosses[0]!.id), ids = config.bosses[boss];

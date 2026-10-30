@@ -56,8 +56,27 @@ it("never falls back for empty/unknown/inapplicable IDs, absent boss facts, non-
     expect(loadCombatEntries(state, dir, env)).toBeNull();
   }
   (state.raw.combat as Record<string, unknown>).enemies = [{ enemy_id: "AEONGLASS", is_alive: true }];
-  state.run!.act_id = "0";
+  state.run!.act_id = "3";
   expect(loadCombatEntries(state, dir, env)).toBeNull();
+});
+
+it.each([1, 2, 3])("selects the observed boss in valid act %s without assuming all targets are in act three", act => {
+  const { dir, state, env } = fixture("THE_INSATIABLE");
+  state.run!.act_id = String(act - 1);
+  const session = loadCombatEntries(state, dir, env)!;
+  expect(session.entries.map(e => e.id)).toEqual(["TEST_HP"]);
+  expect(session.selection?.boss).toBe("THE_INSATIABLE");
+  expect(session.act).toBe(act);
+  if (act === 2) {
+    const request = annotatedFrozen(dir);
+    request.state.v6_combat_entries = combatEntriesState(session, false);
+    for (const q of Object.values(request.questions)) if (q.type === "choice") for (const key of Object.keys(q.criteria)) {
+      const f = JSON.parse(q.criteria[key]!); f.v6_combat_entry = combatEntryAudit(session, fixedPlan, null, null);
+      q.criteria[key] = JSON.stringify(f);
+    }
+    expect(Object.values(prepareCombatEntryReplay(request).matched).every(ids => JSON.stringify(ids) === '["TEST_HP"]')).toBe(true);
+    expect(projectCombatDecision(request.state, request.questions, env)!.contract.schema).toBe("v6-combat-decision-v1");
+  }
 });
 
 it("preserves unconfigured and Ironclad behavior, even if Silent's selector is invalid", () => {

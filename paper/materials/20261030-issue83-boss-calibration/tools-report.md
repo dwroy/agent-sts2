@@ -5,7 +5,7 @@
 ## 行为
 
 - capture/replay 允许 act1/2 的 Boss/elite 与 act3 的 Boss；拒绝 act3 elite、未知/第四幕、幕数与审计不符。继续要求原状态、原 Plan、全候选覆盖和精确 SHA；零游戏/模拟调用。默认回放只准备两臂，真实 Jev 调用仍须原显式 `--ask`、预算和来源门。
-- 增加 `V6_COMBAT_ENTRY_SELECTION`：Silent 的精确 `Boss实体ID → 条目ID数组` JSON 表；仅本任务四个 Boss 键。匹配第三幕当前明确存活实体，拒绝 run 下一 Boss、未知/歧义实体；只向消费者提供指定且当前进阶适用的 combat_line 条目。空表/删 Boss/空数组关闭对应入口；坏配置、缺 ID、错误题型/进阶拒绝，无整库兜底。全局 `V6_COMBAT_ENTRIES=off` 优先；未配置选择变量与其他角色保持原兼容行为。
+- 增加 `V6_COMBAT_ENTRY_SELECTION`：Silent 的精确 `Boss实体ID → 条目ID数组` JSON 表；仅本任务四个 Boss 键。匹配第一至三幕当前明确存活实体，拒绝 run 下一 Boss、未知/歧义实体；只向消费者提供指定且当前进阶适用的 combat_line 条目。r1误限第三幕，后继已纠正（原自有无厌沙虫152条均第二幕）；旧r1与原检查保留，不能用r1声明四Boss均可开启。空表/删 Boss/空数组关闭对应入口；坏配置、缺 ID、错误题型/进阶拒绝，无整库兜底。全局 `V6_COMBAT_ENTRIES=off` 优先；未配置选择变量与其他角色保持原兼容行为。
 - 完整知识库、来源 SHA 和角色 scope 不改；审计另存实际 Boss/ID 子集。capture 可传 `--selection`；replay 验证并重现相同子集，逐候选上下文也须是该 Boss。投影拒绝配置与旧审计不一致。run-config 可选记录 requested/规范化选择或 invalid，并进入 config_sha；旧默认 off 不增加字段。
 - 未修改模拟器、门槛、排名、候选动作、药水规则或任何知识条目。选择开关本身不能证明条目有效，也不提升低可信模拟器。准确用法与撤回边界见 `docs/jev-encounter-reflex.md` 的 #83 节。
 
@@ -18,6 +18,10 @@ ROOT 源码七叶：`agent/src/eye/run-config.ts`、`agent/src/reflex/jev/{comba
 验证：生产 tsc、v6 工具 tsc 均退出0。最终相关七文件123项与独立 paths11项通过；含第三幕成功/错误幕与elite拒绝、四 Boss 精确子集与空/坏配置/未知ID/范围/角色隔离、真实加载/投影/无额外模拟、capture/replay 子集与原SHA、run-config身份、旧off字节等价。初轮五文件82项通过也保留。
 
 单 worker 沙箱广域652文件/6048项：650文件6046项通过、2项失败，原退出1保留。其一是原 sparse checkout 未展开的 `paper/materials/issue29-brain-speed/results.jsonl`，已从指定 f2d8e742 Git blob 恢复并核SHA；其二是本批新增测试误比较 ask 对象里的不同回调函数（显示数据相同），只把断言改为实际 state/questions 线上的逐字节比较。两项均在最终123项中通过，独立paths11项也过。沙箱后生产七源码逐SHA不变，仅该测试断言变化；不重跑21分钟广域、不把原红改写成最终组合full绿。原集成员核实际组合并接原必要完整检查。原日志、夹具恢复及逐源前后证明均在本目录，完整本地副本亦在 `.artifacts/issue83/`。
+
+### r2：第二幕选择器修正
+
+原自有 `sources.jsonl`（SHA `7e7bcb05662ca4be24f7f1607b215ebad0331567b0498ed42adc1d219c151a3d`）中无厌沙虫152条均act2，其余三个目标为act3。r1选择器误将所有目标绑act3，已主动在83/6516309521报错并通知原集成员用后继请求，不改/撤生产事务。r2仅将选择器合法幕范围改为1–3，Boss/ID/角色/范围/未知/空表/坏配置及第三幕elite拒绝均保持；补第一至三幕通用选择测试及第二幕真实加载→审计→replay/投影回归。r2生产/v6工具tsc均0、七文件126项通过，原paths11与r1原红/123结果均保留；没有重跑r2广域或冒最终组合full。r2前后源SHA另存 `tools-r2-source.json`；旧 `tools-source-final.json` 仅表示r1，不能当r2字节相同证明。
 
 ## 自有日志与外部输入接续
 
