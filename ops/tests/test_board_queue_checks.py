@@ -11,6 +11,8 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import board_queue_checks as checks
 import board_queue_admission as admission
+import board_queue_strict as strict
+import board_queue_custody as custody
 
 
 class CandidateChecks(unittest.TestCase):
@@ -71,6 +73,49 @@ class CandidateChecks(unittest.TestCase):
 
     def context(self, assembly):
         return dict(job=self.job, assembly=assembly)
+
+    def strict_fixture(self):
+        assembly = self.assemble()
+        context = dict(self.context(assembly), full_runs=1)
+        (self.directory / 'sts2-context.json').write_text(json.dumps(context))
+        (self.directory / 'full.once').touch()
+        full = self.directory / 'vitest-result.json'
+        full.write_text('{"success":true,"numFailedTests":0}')
+        evidence = dict(context, vitest=dict(sha256=checks.sha(full.read_bytes())))
+        (self.directory / 'result.json').write_text(json.dumps(dict(schema='mas-check-result-v1',
+            job=custody.digest(self.job), candidate=self.job['candidate'], outcome='passed',
+            checks=dict.fromkeys(checks.NAMES, 'passed'), evidence=evidence)))
+        record = self.directory / 'custody.json'
+        record.write_text(json.dumps(dict(schema=custody.SCHEMA, phase='awaiting-adoption',
+            job_sha256=custody.digest(self.job), candidate=self.job['candidate'])))
+        self.git('update-ref', 'refs/heads/main', self.job['candidate'], self.baseline)
+        receipt = strict.before(record, tuple(handle.fileno() for handle in self.handles))
+        target = self.live / 'agent/src/value.ts'
+        target.write_bytes((Path(assembly['runtime']) / 'agent/src/value.ts').read_bytes())
+        checks.git(self.live, 'add', '--', 'agent/src/value.ts')
+        checks.git(self.live, 'commit', '-qm', 'exact installed runtime fixture')
+        return record, receipt
+
+    def test_delegated_strict_checks_exact_installed_runtime_and_preserves_single_full(self):
+        record, receipt = self.strict_fixture()
+        result = strict.after(record, receipt, tuple(handle.fileno() for handle in self.handles))
+        self.assertEqual(result['candidate'], self.job['candidate'])
+        self.assertEqual(json.loads((self.directory / 'sts2-context.json').read_text())['full_runs'], 1)
+
+    def test_delegated_strict_rejects_unreceipted_knowledge_drift(self):
+        record, receipt = self.strict_fixture()
+        (self.live / 'knowledge/characters/silent/fixture.json').write_text('{"drift":true}')
+        with self.assertRaisesRegex(ValueError, 'LIVE bytes'):
+            strict.after(record, receipt, tuple(handle.fileno() for handle in self.handles))
+
+    def test_delegated_strict_rejects_rebound_context(self):
+        record, receipt = self.strict_fixture()
+        path = self.directory / 'sts2-context.json'
+        value = json.loads(path.read_text())
+        value['full_runs'] = 2
+        path.write_text(json.dumps(value))
+        with self.assertRaisesRegex(ValueError, 'single full'):
+            strict.after(record, receipt, tuple(handle.fileno() for handle in self.handles))
 
     def test_runtime_patch_preserves_actual_live_differences_and_main(self):
         source = self.live / 'agent/src/value.ts'

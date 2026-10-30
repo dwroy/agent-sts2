@@ -2,7 +2,33 @@
 
 本页是项目命令合同与切换手册。工程交付、真实 shadow、active/main 和实际部署分别验收。三步采用已经获批；满足前一步条件后，原负责人沿同一事务继续，不重复索要同范围批准。
 
-本树默认 `dispatcher.merge_queue.enabled=false`、`dispatcher.heavy.enabled=false`，队列配置为 shadow、review owner=integrator。原一分钟入口、五分钟 stall 委派、会话 handoff/conversations shadow 和 learner 生命周期保持。没有新 daemon、cron 或模型。#66 分类优先；#60/#67 纯知识、运营和固定方法的数据发布沿原 runtime 通道。
+本树 `dispatcher.merge_queue.enabled=true`、`dispatcher.heavy.enabled=true`，队列配置为 shadow、review owner=integrator；实际运行控制仍须原 owner 鲜核。新增第一批 `custody.enabled=false`，缺新固定 kit 生命周期接口时不得开启。原一分钟入口、五分钟 stall 委派、会话 handoff/conversations shadow 和 learner 生命周期保持。没有新 daemon、cron 或模型。#66 分类优先；#60/#67 纯知识、运营和固定方法的数据发布沿原 runtime 通道。
+
+## 第一批自动 K 保管与资源闭环（2026-10-30）
+
+批准：[68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285)，方案 `665fde83`。第一批仅保管/排空/资源；CodeSeal/DataSeal 第二批在第一批**实际采用并跑稳一天后**才实施。本批 strict 仍逐字节拒绝任何无回执知识漂移，没有 f88 的数据例外。
+
+旧人工接力规则 [77/6496035933](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6496035933)、[82/6511764132](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6511764132)、[82/6513930571](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6513930571) **由自动保管取代**。新合同中不保留“先放 K、ops 再追接、主管裁空窗”的并行路线；原未声明合同的在途批完成原事务，不热转换。
+
+`board_queue_custody.py` 的 keeper 只收到握手 socket，自行非阻塞取得原 K，通过 SCM_RIGHTS 给原 worker 同一 OFD 的 K 与管道生命线。真实 PID/start/boot、fdinfo FLOCK、dev/inode、epoch/job/candidate 和 fsync 回执全部核同后，才装配及触及 full.once。K 忙/坏握手时 full=0；保管者退出的 EOF 终止实际 Node full，原 tick 读到 `failed-custody`，保 full.once、原检查结果和活后继的 cleanup 门，不能重 full。libuv 的监视器使用单独管道读端，原高位生命线 FD 保留到 finalizer execve。
+
+full 后三租约与 full 门随实际计算后继退场；keeper 轻量续持 K 到 strict/失败结算。资源 probe 只对已核 worker/子账退场、真实 FD 对应且无计算租约的 keeper 免计，未知仍计 legacy。K 保管者没有 main 或数据写资格。
+
+保管者丢失而原 publication 尚未结清时，失败清理保留 K/hold，先由原 owner 沿 `write --resume-fixed-methods` 核收已安装方法，禁止新的部署 argv。keeper 尚活时借原 OFD；keeper 已死时只允许原 learn/game/资源准入下非阻塞取得**失败修复用 K**，持久标 `continuous:false`，绝不恢复本批 passed/采用资格。原 strict 已入写体的还要核原受测/安装映射；未入写体的只结原 marker。保旧失败及子进程退出码，明确已完成的安装核收可绑定原失败子回执；未知 spawn intent、活写体、部分/漂移安装继续保原 owner。结算写 failed outcome 后才能自动排空。简单 off 不能绕过尚未结清的 hold。
+
+刷新先经 `board_refresh_queue.py` 的 R 元数据登记，之后才机器准入和 K；所有三个新入口一起部署后才启用。保管期新请求只能记 deferred/debt，不入 heavy。放 K 前核全登记、实际内核等待者和租约实退；只对精确同 root/源 SHA/方法控制、无子进程/其他写锁、原命令未启动的普通 all/成本/漏斗自动 TERM。running 还须 own lease+slot、wchan 和原 K 等待箭头；显式 request/cutoff/专题及旧未登记等待者保留。先 fsync 意图/债务，pidfd 精确 TERM，下一原 tick 核真退和资源释放，不能把发信号当已取消。
+
+K 最后关闭与 R 屏障开放在同一短 R 段，R 不包计算、网络、重任务准入或等待业务锁。采用/明确失败后，原 tick 以新 ID 依次补 all→成本→漏斗，同覆盖范围普通债务合并；原取消 alias 保留，原失败/未知回执不收债，不重放不明 spawn。显式任务仍归原 owner，不用普通补跑替代其截止线。没有另一个 timer。
+
+排空同时只读原机器内核租约：未登记且尚未到 K 的本项目旧 other/刷新 claim 也算 unknown，不能只看 K 等待箭头。已登记 deferred 若仍握自己的 slot/lease，须等真退；原下载明确另账。保管期新登记仅写债务，不申请 slot。
+
+strict/部署继续原 `learn → game-admission → 借本批 K → L → D1` 非阻塞顺序。publication `begin --custody-record` 显式固定原批；keeper 验原 publication owner/子进程身份与 learn/game 真锁后才委托 K，borrower 不再 open/flock K。原 #84 prepare→部署/安装核验→方法 CAS→持久事务→verify_release 保持；新写体子进程显式继承 CPU/K/L/适用 D1 FD。受测 W/G、策略/工具/依赖和实际 LIVE 前像在部署前 strict；部署后逐字节、mode、index 和精确 runtime map 核同，方法核收后记 custody-outcome，再排空并放 K。未知或部分部署保原事务，resume-fixed-methods 沿原已部署恢复，不重放部署 argv。
+
+离线下载经受管 other 入口，机器现有 integrator>other 优先级不改容量。每页对象/墓碑/游标全部持久化后才读高优先级请求；yield 返回 75 与 complete:false，关闭原下载/CPU 租约。原 tick 从原 cursor 恢复；带 max-pages 的请求只续剩余页数，不重置预算。优先级事实未知也在页边界保留。24h 无页推进去重写原 dev 收件箱，请主管排期，不扩槽、不停对局。
+
+共享原 owner 的接口请求见 [kit#1/6525706107](https://github.com/dwroy/agent-board-kit/issues/1#issuecomment-6525706107)。项目控制模块仅提供 `before-seal/post-result/tick` 决策原型（allow/defer/protected/failed-custody/settled）；须原 owner 用受冻结/有超时的钩子接入原唯一 tick、暂停新 seal、保 protected 终态及 orphan cleanup，并交完整新 pin 后联合核收。51c 无此能力，不能仅把 enabled 改 true。新 pin 的 `project_control_contracts` 必须显式包含 `sts2-queue-control-v1`，具体通用接口以 owner 交付核对绑定后为准；当前项目代码不是已完成现场采用。
+
+回退先停新合同的 seal/刷新准入，核原 worker/borrower/后继和真实 FD、publication/#84、K 与债务到明确终态，再于原自然边界关闭 custody。不能直接 off 绕开未结 hold，不能删锁/回执或退回人工竞抢。默认 off 只表示尚未采用，不清旧事务或父项。
 
 ## 固定引擎与安装
 

@@ -75,6 +75,26 @@ def resource_fds(root):
     return inherited(root)
 
 
+def claims(root):
+    """Read live kernel-backed claims without initialize/publication/admission."""
+    board, config = settings(root)
+    if not config.get('enabled', False):
+        return []
+    verify(root, board.data['dispatcher']['install'])
+    kit = local(root, board.data['dispatcher']['install'])
+    sys.path.insert(0, str(kit))
+    try:
+        machine = importlib.import_module('machine')
+        engine = importlib.import_module('board')
+        if Path(machine.__file__).resolve() != kit / 'machine.py' or Path(engine.__file__).resolve() != kit / 'board.py':
+            raise ValueError('mixed machine observation modules')
+        state = machine.State(engine.Board(root))
+        state.protocol()
+        return state.rows()
+    finally:
+        sys.path.pop(0)
+
+
 def queued_argv(root, role, command):
     if role not in ('ops', 'integrator', 'learner', 'experiment', 'dev', 'other'):
         raise ValueError('unknown heavy role')

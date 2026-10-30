@@ -159,6 +159,42 @@ class ProjectionTests(unittest.TestCase):
 
 
 class DownloadTests(unittest.TestCase):
+    def test_priority_yield_commits_the_whole_page_and_resumes_same_tombstone_cursor(self):
+        calls, checkpoints = [], []
+        missing = dict(META, run_hash='private-missing-hash')
+        def metadata(client, url, tag):
+            if tag == 'manifest':
+                return {'versions': {'v0.111.0': {}}}, 'a' * 64
+            page = int(urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)['page'][0])
+            calls.append(page)
+            return dict(total=2, runs=[META, missing] if page == 1 else []), 'b' * 64
+        def download(client, url, dest, *args, **kwargs):
+            if 'private-missing-hash' in url:
+                raise dl.ReplayNotFound(dict(status=404, body_sha256='c' * 64))
+            Path(dest).parent.mkdir(parents=True, exist_ok=True)
+            Path(dest).write_bytes(b'fixed page fixture')
+            return dict(sha256=dl.sha(dest))
+        def boundary(checkpoint):
+            checkpoints.append(checkpoint)
+            return checkpoint['page'] == 2
+        with patch.object(dl.Client, 'json', metadata), patch.object(dl.Client, 'download', download):
+            yielded = dl.sync(self.root, ['v0.111.0'], export_versions=(), max_tombstone_ratio=.5,
+                              should_yield=boundary)
+            self.assertFalse(yielded['complete'])
+            self.assertEqual(yielded['reason'], 'priority yield')
+            self.assertEqual(calls, [1])
+            self.assertEqual(checkpoints[-1]['tombstones'], 1)
+            self.assertEqual(checkpoints[-1]['processed_records'], 2)
+            self.assertEqual(checkpoints[-1]['index_sha256'], dl.sha(self.root / 'private-index.json'))
+            private = dl.load(self.root / 'private-index.json')
+            cycle = private['cycle']['id']
+            self.assertEqual(private['cycle']['shards'][0]['page'], 2)
+            self.assertNotIn('private-missing-hash', json.dumps(yielded))
+            finished = dl.sync(self.root, ['v0.111.0'], export_versions=(), max_tombstone_ratio=.5)
+            self.assertTrue(finished['complete'])
+            self.assertEqual(calls, [1, 2])
+            self.assertEqual(dl.load(self.root / 'private-index.json')['cycle']['id'], cycle)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

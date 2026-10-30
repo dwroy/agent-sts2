@@ -2,7 +2,8 @@
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
   "runtime_install_paths": [
-    "agent/src/core/config.ts"
+    "knowledge/builders/refresh_driver.py",
+    "ops/refresh-costs.py"
   ],
   "root_only_prefixes": [
     "ops/",
@@ -40,6 +41,8 @@
     "ops.tests.test_board_queue_delivery",
     "ops.tests.test_board_queue_resources",
     "ops.tests.test_board_queue_checks",
+    "ops.tests.test_board_queue_custody",
+    "ops.tests.test_board_queue_control",
     "ops.tests.test_knowledge_runtime_env",
     "ops.tests.test_publication_gate",
     "ops.tests.test_report_run",
@@ -221,7 +224,7 @@
       ]
     }
   ],
-  "consumer_scope": "Issue81 brain fast 68fd783d normalized on published main1b7c652c; issue77 supervisor-close already adopted. ROOT config plus producer declaration; LIVE config only. Preserve consumers0-13 and all host modules exactly; add isolated installed LIVE tier contract. Original six gates, single full worker, fixtures, historical skips and workspace admission unchanged. Two producer config input SHA/opaque-site updates change method identities; ops must use new terminal-bound admission/CAS in original publication transaction. No production configuration, models, account/home, learner/ops tier changes; natural game boundary activation only.",
+  "consumer_scope": "Issue68 approved batch1 K custody/resource preparation on main39e48ce9. Preserve original six gates, consumers0-14, fixtures, historical skips and one full worker. Add fixed real-kernel custody/control/FD/strict regressions. ROOT owns queue/refresh/download adapters and public offline CLI; LIVE mapping is exactly refresh_driver.py and refresh-costs.py. No producer method input/declaration changed, no CodeSeal/DataSeal or natural-refresh exception. custody remains explicitly disabled until original shared kit owner supplies the reviewed lifecycle hook and a complete new pin; no existing batch conversion or production control change. This checkout is engineering preparation, not evidence of deployed adoption or the start of the one-day stability period.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

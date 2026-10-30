@@ -514,7 +514,8 @@ def metadata_row(row):
     return result
 
 
-def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',), max_tombstone_ratio=0.10):
+def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',), max_tombstone_ratio=0.10,
+         should_yield=None):
     if max_pages is not None and (type(max_pages) is not int or max_pages < 1):
         raise ValueError('max-pages must be a positive integer')
     try:
@@ -577,6 +578,15 @@ def sync(root, versions=None, max_pages=None, export_versions=('v0.111.0',), max
                     save(index_path, index)
                     return dict(complete=False, reason='page budget', runs_downloaded=sum(
                         not active_tombstone(index, k) for k in index['runs']), **tombstone_summary(index))
+                # Every entry here follows a committed cursor (including an
+                # empty page/shard split). Never interrupt object/tombstone work.
+                if should_yield is not None:
+                    checkpoint = dict(cycle=cycle['id'], shard=cycle['next'], page=scan['page'],
+                                      remaining_pages=None if max_pages is None else max_pages - pages,
+                                      index_sha256=sha(index_path), **tombstone_summary(index))
+                    if should_yield(checkpoint):
+                        return dict(complete=False, reason='priority yield', checkpoint=checkpoint,
+                                    runs_downloaded=sum(not active_tombstone(index, k) for k in index['runs']))
                 page = scan['page']
                 params = dict(character='SILENT', ascension=10, page=page, limit=100)
                 if version is not None:

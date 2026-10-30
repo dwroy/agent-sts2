@@ -17,7 +17,8 @@ if (process.pid === context.worker.pid) {
       process.execArgv[i + 1] = new URL('./board_queue_leases.mjs', import.meta.url).pathname;
   }
   const leases = process.env.MAS_QUEUE_LEASE_FDS.split(',').map(Number);
-  const descriptors = [...leases, context.full_lock_fd];
+  const descriptors = [...leases, context.full_lock_fd,
+    ...(context.custody ? [context.custody.k_fd, context.custody.life_fd] : [])];
   for (const fd of descriptors) fs.fstatSync(fd);
   if (typeof process.execve !== 'function') throw Error('installed Node must support execve for lease-preserving finalization');
   process.on('exit', code => {

@@ -1,0 +1,25 @@
+{
+  "stage": "pre-audit-source-checkpoint",
+  "tsc": 0,
+  "sandbox_exit": 1,
+  "files": {
+    "passed": 652,
+    "failed": 3,
+    "total": 655
+  },
+  "tests": {
+    "passed": 6070,
+    "failed": 3,
+    "total": 6073
+  },
+  "duration_seconds": 1379.82,
+  "source_hashes_unchanged": true,
+  "failures": [
+    "test_llm_handoff.py fixed copied config enables real heavy gate without its pin",
+    "test_agent_board_poll.py minute-only fixture inherits enabled queue without pin",
+    "check-imports: excluded HEAD fixture paper/materials/issue29-brain-speed/results.jsonl not materialized"
+  ],
+  "applicable_python": 119,
+  "extra_control_python": 8,
+  "offline_intake": 73
+}

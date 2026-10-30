@@ -4,6 +4,7 @@ import fcntl
 import argparse
 import os
 from pathlib import Path
+import sys
 
 from paths import ROOT
 from paper_dataset import component_costs
@@ -17,7 +18,7 @@ def main(root=ROOT, live=CODE_ROOT):
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            return 0
+            return 75 if os.environ.get('STS2_REFRESH_ADMISSION') else 0
         return 0 if component_costs(root=root, code_root=live) else 1
 
 
@@ -30,4 +31,9 @@ if __name__ == "__main__":
     parser.add_argument("--root", default=ROOT)
     parser.add_argument("--code-root", default=CODE_ROOT)
     args = parser.parse_args()
-    raise SystemExit(main(args.root, args.code_root))
+    code = main(args.root, args.code_root)
+    if os.environ.get('STS2_REFRESH_ADMISSION'):
+        sys.path.insert(0, str(Path(args.root) / 'ops'))
+        from board_refresh_queue import finish
+        finish(args.root, code)
+    raise SystemExit(code)

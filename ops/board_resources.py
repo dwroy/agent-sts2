@@ -87,6 +87,10 @@ def probe(root, proc=Path('/proc')):
         if (int(device[0], 16), int(device[1], 16), int(device[2])) not in inodes:
             continue
         pid = int(fields[4])
+        if proc == Path('/proc') and (root / 'ops/codex-ops/queue-custody/active.json').exists():
+            from board_queue_custody import light
+            if light(root, pid):
+                continue
         try:
             data = (proc / str(pid) / 'stat').read_text().rsplit(')', 1)[1].split()
         except FileNotFoundError:

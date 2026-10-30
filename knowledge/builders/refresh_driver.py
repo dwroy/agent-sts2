@@ -20,7 +20,10 @@ BUILDERS = ROOT / 'knowledge/builders'
 
 def queue_command(ops_root, command):
     """Use #20's exact public adapter when deployed; old installations stay explicit."""
-    adapter = ops_root / 'ops/board_heavy.py'
+    adapter = ops_root / 'ops/board_refresh_queue.py'
+    ordinary_adapter = adapter.is_file()
+    if not ordinary_adapter:
+        adapter = ops_root / 'ops/board_heavy.py'
     if not adapter.is_file():
         return command, 'legacy: issue-20 adapter not deployed'
     sys.path.insert(0, str(ops_root / 'ops'))
@@ -28,7 +31,7 @@ def queue_command(ops_root, command):
         spec = importlib.util.spec_from_file_location('refresh_board_heavy', adapter)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        queued = module.queued_argv(ops_root, 'other', command)
+        queued = module.queued_argv(ops_root, command) if ordinary_adapter else module.queued_argv(ops_root, 'other', command)
         return queued, 'enabled' if queued != command else 'disabled'
     finally:
         sys.path.pop(0)
@@ -51,9 +54,16 @@ def step(ops_root, name, argv):
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
     try:
         lease_fd = os.environ.get('STS2_FIXED_DATA_LOCK_FD')
+        inherited = ()
+        if (ops_root / 'ops/board_heavy.py').is_file():
+            sys.path.insert(0, str(ops_root / 'ops'))
+            from board_heavy import resource_fds
+            inherited = resource_fds(ops_root)
+        key_fd = os.environ.get('STS2_REFRESH_K_FD')
+        inherited = (*inherited, *((int(lease_fd),) if lease_fd else ()), *((int(key_fd),) if key_fd else ()))
         code = subprocess.run([str(a) for a in argv], check=False,
                               env={**os.environ, 'STS2_REFRESH_STEP': name},
-                              pass_fds=(int(lease_fd),) if lease_fd else ()).returncode
+                              pass_fds=inherited).returncode
     except OSError:
         code = 127
         print('knowledge-refresh step could not start: ' + name, file=sys.stderr)
@@ -121,7 +131,14 @@ def main():
     started = time.monotonic()
     requested = float(os.environ.get('STS2_REFRESH_REQUESTED_MONOTONIC', started))
     with (root / 'ops/knowledge-refresh.lock').open('a') as worker:
-        fcntl.flock(worker, fcntl.LOCK_EX)
+        sys.path.insert(0, str(root / 'ops'))
+        if (root / 'ops/board_refresh_queue.py').is_file():
+            from board_refresh_queue import inherited
+            held = inherited(root)
+        else:
+            held = None
+        if held is None:
+            fcntl.flock(worker, fcntl.LOCK_EX)
         acquired = time.monotonic()
         failed = []
         def run(name, argv):
@@ -207,7 +224,11 @@ def main():
             wall_seconds=time.monotonic()-requested,
             ended_at=datetime.now(timezone.utc).isoformat(), seconds=time.monotonic()-started,
             worker_wait_seconds=acquired-started, worker_held_seconds=held, failed_steps=failed))+'\n')
-    return 1 if failed else 0
+    code = 1 if failed else 0
+    if os.environ.get('STS2_REFRESH_ADMISSION'):
+        from board_refresh_queue import finish
+        finish(root, code)
+    return code
 
 
 if __name__ == '__main__':

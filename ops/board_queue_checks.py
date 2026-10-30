@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """STS2 candidate checks: isolated ROOT/LIVE views, frozen inputs and inherited leases."""
 import argparse
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
+from contextvars import ContextVar
 import fcntl
 import json
 import os
@@ -18,9 +19,22 @@ from issue_session_support import Board, secret_name
 from shared_tools import matching
 from worktree_checkout import cold, sparse_patterns
 from disk_capacity import require_worktree_capacity
+import board_queue_custody as custody
 
 NAMES = ['root-tsc', 'runtime-tsc', 'live-tsc', 'host', 'consumers', 'full']
 PREFIXES = ('agent/', 'learner/', 'eval/', 'ops/', 'knowledge/', 'docs/', '.agents/', 'paper/materials/')
+IO_DESCRIPTORS = ContextVar('queue-check-descriptors', default=None)
+
+
+@contextmanager
+def delegated_io(descriptors):
+    for fd in descriptors:
+        os.fstat(fd)
+    token = IO_DESCRIPTORS.set(tuple(descriptors))
+    try:
+        yield
+    finally:
+        IO_DESCRIPTORS.reset(token)
 
 
 def fds():
@@ -37,7 +51,7 @@ def git(root, *args, data=None, env=None, umask=-1):
                                     '-c', 'status.submoduleSummary=false',
                                     '-c', 'core.sparseCheckout=true', '-c', 'core.sparseCheckoutCone=false',
                                     '-C', str(root), *map(str, args)], input=data, stderr=subprocess.PIPE,
-                                   env=env, pass_fds=fds(), umask=umask)
+                                   env=env, pass_fds=fds() if IO_DESCRIPTORS.get() is None else IO_DESCRIPTORS.get(), umask=umask)
 
 
 def text(root, *args):
@@ -52,7 +66,7 @@ def identity():
 def exec_descriptors(context):
     # Keep IPC/stdout descriptors available to Vitest's fork pool. Lease fds
     # must not collide with the conventional child IPC descriptor 3.
-    originals = (*fds(), context['full_lock_fd'])
+    originals = (*fds(), context['full_lock_fd'], *custody.fds(context))
     copies = []
     for fd in originals:
         copy = fcntl.fcntl(fd, fcntl.F_DUPFD, 100)
@@ -63,6 +77,8 @@ def exec_descriptors(context):
     os.environ['MAS_QUEUE_LEASE_FDS'] = ','.join(map(str, copies[:3]))
     context['full_lock_fd'] = copies[3]
     context['lease_fds'] = copies[:3]
+    if context.get('custody'):
+        context['custody'].update(k_fd=copies[4], life_fd=copies[5])
 
 
 def fingerprint(path):
@@ -332,7 +348,8 @@ def assemble(root, job, options, directory):
                 upstream_contents_read_or_modified=False, submodule_initialized=False)
 
 
-def verify_after(context):
+def verify_after(context, expected_main=None):
+    custody.verify(context)
     root = Path(context['job']['root'])
     for name, checksum in context['job']['policy_sha256'].items():
         if sha(local(root, name).read_bytes()) != checksum:
@@ -340,7 +357,7 @@ def verify_after(context):
     assembly = context['assembly']
     if context.get('tools') and tool_snapshot() != context['tools']:
         raise ValueError('check executable input/provider drift')
-    if text(root, 'rev-parse', 'refs/heads/main') != assembly['baseline']:
+    if text(root, 'rev-parse', 'refs/heads/main') != (expected_main or assembly['baseline']):
         raise ValueError('main advanced during check')
     for key, recorded in (('root', 'root_inputs'), ('runtime', 'runtime_inputs'), ('live', 'live_before')):
         scopes = assembly.get('fixture_scopes')
@@ -372,12 +389,20 @@ def command(context, name, argv, cwd, environment):
     atomic(directory / 'sts2-progress.json', context)
     with (directory / (name + '.log')).open('ab') as log:
         process = subprocess.Popen(argv, cwd=cwd, env=dict(os.environ, **environment), stdout=log, stderr=log,
-                                   pass_fds=(*fds(), context['full_lock_fd']))
+                                   pass_fds=(*fds(), context['full_lock_fd'], *custody.fds(context)))
         row['pid'] = process.pid
         try:
             row['start'] = Path('/proc', str(process.pid), 'stat').read_text().rsplit(')', 1)[1].split()[19]
         except FileNotFoundError:
             row['start'] = None
+        while process.poll() is None:
+            try:
+                custody.verify(context)
+            except ValueError:
+                process.terminate()
+                process.wait()
+                raise
+            time.sleep(.2)
         row['exit_code'] = process.wait()
     row['ended_at'] = time.time()
     context['checks'][name] = 'passed' if row['exit_code'] == 0 else 'failed'
@@ -407,8 +432,8 @@ def run(job_path):
         fcntl.flock(lock, fcntl.LOCK_EX)
         context.update(full_lock_fd=lock.fileno(), full_lock_inode=os.fstat(lock.fileno()).st_ino)
         try:
-            from publication_gate import source_locks
-            with source_locks(root):
+            custody.start(context)
+            with custody.source_locks(context):
                 context['assembly'] = assemble(root, job, options, directory)
             w, g = Path(context['assembly']['root']), Path(context['assembly']['runtime'])
             environment = dict(PATH=str(Path.home() / '.local/node/bin') + ':' + os.environ.get('PATH', ''),
@@ -479,10 +504,13 @@ def host(context_path):
         result = directory / 'vitest-result.json'
         if result.exists() or (directory / 'full.once').exists():
             raise ValueError('full already started; inspect original lease/result instead of repeating')
+        custody.verify(context)
+        if context.get('custody'):
+            custody.request(context['custody']['record'], 'full-start')
         (directory / 'full.once').touch(exist_ok=False)
         context.update(full_runs=0, full_result=str(result), full_exec_requested_at=time.time())
         atomic(directory / 'sts2-context.json', context)
-        for fd in (*fds(), context['full_lock_fd']):
+        for fd in (*fds(), context['full_lock_fd'], *custody.fds(context)):
             os.set_inheritable(fd, True)
         env = dict(os.environ, **environment, STS2_BOARD_CHECK_CONTEXT=str(directory / 'sts2-context.json'))
         argv = ['node', '--import', str(local(root, 'ops/board_queue_finalize.mjs')),
@@ -502,6 +530,7 @@ def finalize(context_path, code):
     sys.path.insert(0, str(local(root, Board(root).data['dispatcher']['install'])))
     from merge_queue import atomic, complete_check
     try:
+        custody.verify(context)
         info = os.fstat(context['full_lock_fd'])
         if info.st_ino != context['full_lock_inode']:
             raise ValueError('inherited full lock identity changed')

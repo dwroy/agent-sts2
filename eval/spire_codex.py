@@ -257,6 +257,8 @@ def report(root):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root', type=Path, default=DEFAULT_ROOT)
+    p.add_argument('--ops-root', type=Path, default=Path(__file__).resolve().parents[1],
+                   help='original project machine-admission root')
     sub = p.add_subparsers(dest='cmd', required=True)
     d = sub.add_parser('download')
     d.add_argument('--version', action='append', help='replay build shard (default: all manifest builds)')
@@ -280,9 +282,18 @@ def main():
     args = p.parse_args()
     try:
         if args.cmd == 'download':
+            sys.path.insert(0, str(args.ops_root / 'ops'))
+            from board_download import admit, boundary, completed
+            command = [sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]]
+            admit(args.ops_root, command)
             result = sync(args.root, args.version, args.max_pages,
                           () if args.no_export else (args.export_version or ('v0.111.0',)),
-                          max_tombstone_ratio=args.max_tombstone_ratio)
+                          max_tombstone_ratio=args.max_tombstone_ratio,
+                          should_yield=lambda checkpoint: boundary(args.ops_root, command, args.root, checkpoint))
+            if result.get('reason') == 'priority yield':
+                print(js(result))
+                return 75
+            completed(args.ops_root, command, args.root, result)
         elif args.cmd == 'project':
             result = project(args.root, partial=args.partial)
         elif args.cmd == 'build-db':

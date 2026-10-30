@@ -1,0 +1,29 @@
+............................................./tmp/tmp84gd3j39/ops/report.py:111: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp84gd3j39/logs/runs.jsonl' mode='r' encoding='utf8'>
+  for line in open(path, encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../tmp/tmpte336ope/ops/report.py:111: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpte336ope/logs/runs.jsonl' mode='r' encoding='utf8'>
+  for line in open(path, encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../tmp/tmpd4dgkgzm/ops/report.py:111: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd4dgkgzm/logs/runs.jsonl' mode='r' encoding='utf8'>
+  for line in open(path, encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./tmp/tmpg04ozsoi/ops/report.py:111: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpg04ozsoi/logs/runs.jsonl' mode='r' encoding='utf8'>
+  for line in open(path, encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..E..
+======================================================================
+ERROR: test_publication_gate (unittest.loader._FailedTest.test_publication_gate)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_publication_gate
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-68-board-kit-merge-queue/ops/tests/test_publication_gate.py", line 22, in <module>
+    import test_strategy_external as external_tests
+ModuleNotFoundError: No module named 'test_strategy_external'
+
+
+----------------------------------------------------------------------
+Ran 57 tests in 8.090s
+
+FAILED (errors=1)

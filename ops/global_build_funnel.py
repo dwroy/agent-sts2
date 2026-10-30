@@ -155,6 +155,9 @@ def main():
     parser.add_argument('--character', required=True)
     args = parser.parse_args()
     print(json.dumps(run(Path(args.root).resolve(), args.character), ensure_ascii=False))
+    if os.environ.get('STS2_REFRESH_ADMISSION'):
+        from board_refresh_queue import finish
+        finish(args.root, 0)
 
 
 if __name__ == '__main__':

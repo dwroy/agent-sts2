@@ -4,13 +4,28 @@ import fs from 'node:fs';
 import path from 'node:path';
 import childProcess from 'node:child_process';
 import { syncBuiltinESMExports } from 'node:module';
+import net from 'node:net';
 
 const raw = process.env.MAS_QUEUE_LEASE_FDS;
 const contextPath = process.env.STS2_BOARD_CHECK_CONTEXT;
 if (raw && contextPath) {
   const context = JSON.parse(fs.readFileSync(contextPath, 'utf8'));
-  const descriptors = [...raw.split(',').map(Number), context.full_lock_fd];
+  const descriptors = [...raw.split(',').map(Number), context.full_lock_fd,
+    ...(context.custody ? [context.custody.k_fd, context.custody.life_fd] : [])];
   for (const fd of descriptors) fs.fstatSync(fd);
+  if (context.custody) {
+    // EOF is broadcast by the kernel to all inheritors when the keeper exits.
+    // It must terminate the original full instead of leaving checking suspended.
+    if (!fs.fstatSync(context.custody.life_fd).isFIFO()) throw Error('custody lifeline must be a kernel pipe');
+    // libuv makes a wrapped descriptor close-on-exec. Monitor a separate read
+    // end so the original inheritable capability survives finalizer execve.
+    const monitor = fs.openSync(`/proc/self/fd/${context.custody.life_fd}`, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK);
+    const lifeline = new net.Socket({ fd: monitor, readable: true, writable: false });
+    lifeline.on('end', () => process.exit(75));
+    lifeline.on('error', () => process.exit(75));
+    lifeline.resume();
+    lifeline.unref();
+  }
   function record(child, api) {
     if (!context.job_path || !child?.pid) return child;
     const directory = path.join(path.dirname(context.job_path), 'check-children');

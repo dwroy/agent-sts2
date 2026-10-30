@@ -1,6 +1,7 @@
 """Fixed publication races and real admission paths; no models or game calls."""
 import contextlib
 import copy
+import fcntl
 import hashlib
 import io
 import json
@@ -41,6 +42,81 @@ class Publication(unittest.TestCase):
 
     def write(self, value):
         return gate.writing(self.root, self.dest, value["owner"], value["token"], self.pid)
+
+    def test_custody_deployment_child_retains_cpu_k_and_l_after_parent_context_closes(self):
+        value = self.begin()
+        record = self.root / '.state/batch/custody.json'
+        record.parent.mkdir(parents=True)
+        record.write_text(json.dumps(dict(schema='sts2-k-custody-v1', phase='awaiting-adoption', candidate='a' * 40)))
+        value['custody'] = dict(record=str(record), epoch='fixture', job='b' * 64,
+                                marker=str(self.dest / gate.MARKER))
+        gate.save(self.dest / gate.MARKER, value)
+        @contextlib.contextmanager
+        def borrowed(*args, **kwargs):
+            with (self.root / 'ops/knowledge-refresh.lock').open('a') as key:
+                fcntl.flock(key, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                yield key.fileno()
+        with tempfile.TemporaryFile() as lease, tempfile.TemporaryFile() as slot:
+            fcntl.flock(lease, fcntl.LOCK_EX)
+            fcntl.flock(slot, fcntl.LOCK_EX)
+            with patch('board_queue_custody.borrow', borrowed), \
+                    patch('board_heavy.inherited', return_value=(lease.fileno(), slot.fileno())), \
+                    patch('board_queue_strict.before', return_value={'fixed': 'strict-before'}):
+                with self.write(value) as transaction:
+                    descriptors = transaction['_publication_fds']
+                    self.assertEqual(len(descriptors), 4)
+                    code = ('import json,os,pathlib,sys; fds=list(map(int,sys.argv[1:])); '
+                            'print(json.dumps([{"inode":os.fstat(fd).st_ino,"lock":pathlib.Path(f"/proc/self/fdinfo/{fd}").read_text()} for fd in fds]),flush=True); '
+                            'sys.stdin.read(1)')
+                    process = subprocess.Popen([sys.executable, '-c', code, *map(str, descriptors)],
+                        pass_fds=descriptors, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    def stop():
+                        if process.poll() is None:
+                            process.terminate()
+                        process.wait(timeout=5)
+                        for stream in (process.stdin, process.stdout, process.stderr):
+                            stream.close()
+                    self.addCleanup(stop)
+                    rows = json.loads(process.stdout.readline())
+                    self.assertTrue(all(' FLOCK ' in row['lock'] for row in rows))
+                # Parent no longer owns K/L, but the actual deployment child does.
+                with self.assertRaises(BlockingIOError):
+                    with gate.source_locks(self.root):
+                        self.fail('child protection was lost')
+                out, error = process.communicate(b'x', timeout=5)
+                self.assertEqual(process.returncode, 0, error)
+                with gate.source_locks(self.root):
+                    pass
+        saved = gate.read(self.root, self.dest)
+        self.assertNotIn('_publication_fds', saved)
+        self.assertEqual(saved['custody_strict'], {'fixed': 'strict-before'})
+
+    def test_failed_custodian_recovery_keeps_failure_and_only_settles_original_methods(self):
+        value = self.begin()
+        record = self.root / '.state/batch/custody.json'
+        record.parent.mkdir(parents=True)
+        value['custody'] = dict(record=str(record), epoch='fixture', job='b' * 64,
+                                marker=str(self.dest / gate.MARKER))
+        row = dict(schema='sts2-k-custody-v1', phase='failed', candidate='a' * 40,
+                   root=str(self.root), epoch='fixture', job_sha256='b' * 64,
+                   job_path=str(record.parent / 'job.json'), failure='custodian interrupted',
+                   keeper=dict(pid=99999999, start='0', boot_id='fixed'))
+        record.write_text(json.dumps(row))
+        gate.save(self.dest / gate.MARKER, value)
+        with self.assertRaisesRegex(ValueError, 'cannot deploy/revive'):
+            with self.write(value):
+                self.fail('failed custody must not restart deployment')
+        with tempfile.TemporaryFile() as lease, tempfile.TemporaryFile() as slot, \
+                patch('board_heavy.inherited', return_value=(lease.fileno(), slot.fileno())):
+            with gate.writing(self.root, self.dest, value['owner'], value['token'], self.pid, resume_methods=True) as recovered:
+                self.assertTrue(recovered['custody']['repair'])
+                self.assertFalse(json.loads(record.read_text())['failed_publication_recovery']['continuous'])
+            gate.release(self.root, self.dest, value['owner'], value['token'], self.pid)
+        outcome = json.loads((record.parent / 'custody-outcome.json').read_text())
+        self.assertEqual(outcome['kind'], 'failed')
+        self.assertIsNone(outcome['installed'])
+        self.assertEqual(json.loads(record.read_text())['phase'], 'failed')
+        self.assertFalse((self.dest / gate.MARKER).exists())
 
     def test_all_three_real_game_entries_refuse_publication_and_global_markers(self):
         for name in ("publication_gate.py", "paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh", "codex-ops.sh", "knowledge_runtime_env.py"):

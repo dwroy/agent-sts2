@@ -77,19 +77,41 @@ def learners_held(root, state_dir=None):
 @contextmanager
 def locks(paths):
     with ExitStack() as stack:
+        descriptors = []
         for path in paths:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             handle = stack.enter_context(open(path, "a"))
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        yield
+            descriptors.append(handle.fileno())
+        yield tuple(descriptors)
 
 
 @contextmanager
-def source_locks(root):
+def source_locks(root, custody=None):
     # Schedulers/writers own learn; durably registered readers own their batch barrier.
     # The pair never waits, and no caller acquires learn while holding these locks.
-    with locks([Path(root, "ops/knowledge-refresh.lock"), Path(root, "ops/live-merge.lock")]):
-        yield
+    if custody:
+        from board_queue_custody import borrow, load, alive, authorized, identity, atomic
+        row = load(custody['record'])
+        repair = custody.get('repair') is True and row['phase'] == 'failed'
+        if repair and not alive(row.get('keeper', {})):
+            from board_heavy import inherited
+            if not inherited(root):
+                raise ValueError('failed publication recovery requires original machine admission')
+            authorized(row, identity(), custody['marker'])
+            # This repairs the original failed publication only. It is NOT
+            # continuous custody and can never revive its full/adoption result.
+            with locks([Path(root, 'ops/knowledge-refresh.lock'), Path(root, 'ops/live-merge.lock')]) as descriptors:
+                row['failed_publication_recovery'] = dict(actor=identity(), continuous=False)
+                atomic(custody['record'], row)
+                yield descriptors
+            return
+        with borrow(root, custody['record'], custody['job'], custody['marker'], repair=repair) as key:
+            with locks([Path(root, 'ops/live-merge.lock')]) as live:
+                yield (key, *live)
+    else:
+        with locks([Path(root, "ops/knowledge-refresh.lock"), Path(root, "ops/live-merge.lock")]) as descriptors:
+            yield descriptors
 
 
 def save(path, value):
@@ -114,7 +136,7 @@ def owned(root, dest, owner, token, pid):
     return value
 
 
-def begin(root, dest, owner, pid):
+def begin(root, dest, owner, pid, custody_record=None):
     if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,119}", owner) or birth(pid) is None:
         raise ValueError("invalid publication owner")
     with locks([dest / "learn.lock", dest / "game-admission.lock"]):
@@ -123,6 +145,17 @@ def begin(root, dest, owner, pid):
         value = {"schema": "publication-admission-v1", "root": str(Path(root).resolve()),
                  "owner": owner, "pid": pid, "pid_birth": birth(pid), "token": uuid.uuid4().hex,
                  "scope": "next-game", "phase": "waiting", "fixed_method_contract": "fixed-method-publication-v1"}
+        if custody_record is not None:
+            from board_queue_custody import active, load, settings
+            from board_queue_pin import local
+            record = local(root, custody_record)
+            row = load(record)
+            current = active(root)
+            if (not settings(root).get('enabled') or not current or current[0] != record
+                    or row['root'] != str(Path(root).resolve()) or row['phase'] in ('failed', 'released', 'failed-released')):
+                raise ValueError('explicit current custody binding required')
+            value['custody'] = dict(record=str(record), epoch=row['epoch'], job=row['job_sha256'],
+                                    marker=str((dest / MARKER).resolve()))
         save(dest / MARKER, value)
         return value
 
@@ -170,8 +203,30 @@ def release(root, dest, owner, token, pid):
         value = owned(root, dest, owner, token, pid)
         from fixed_method_admission import verify_release
         if value.get('fixed_method_contract'):
-            with source_locks(root):
+            with source_locks(root, value.get('custody')) as descriptors:
                 verify_release(root, dest, value)
+                if value.get('custody'):
+                    from board_heavy import inherited
+                    from board_queue_custody import alive
+                    from board_queue_strict import after
+                    from board_queue_custody import atomic, digest, load
+                    binding = value['custody']
+                    for path in (Path(binding['record']).parent / 'publication-children').glob('*.json'):
+                        child = json.loads(path.read_text())
+                        recovered = value.get('custody_child_recovery', {}).get(path.name) == digest(child)
+                        if (child.get('state') != 'finished' or child.get('exit_code') != 0 and not recovered
+                                or child.get('actor') and alive(child['actor'])):
+                            raise ValueError('deployment child/intent unsettled; preserve original publication')
+                    row = load(binding['record'])
+                    failed_recovery = row['phase'] == 'failed' and binding.get('repair') is True
+                    installed = (None if failed_recovery and not value.get('custody_strict') else
+                                 after(binding['record'], value['custody_strict'], (*inherited(root), *descriptors),
+                                       recovery=failed_recovery))
+                    atomic(Path(binding['record']).parent / 'custody-outcome.json',
+                           dict(schema='sts2-custody-outcome-v1', epoch=binding['epoch'], job=binding['job'],
+                                candidate=row['candidate'], kind='failed' if failed_recovery else 'adopted',
+                                failure=row.get('failure') if failed_recovery else None, installed=installed,
+                                publication_sha256=digest(value)))
                 (dest / MARKER).unlink()
         else:
             (dest / MARKER).unlink()  # Existing legacy transactions retain their original release contract.
@@ -199,22 +254,79 @@ def writing(root, dest, owner, token, pid, method_ticket=None, resume_methods=Fa
             value = owned(root, dest, owner, token, pid)
             if global_hold(dest) or active_games(root, dest):
                 raise ValueError("publication awaits the original natural terminal boundary")
-            stack.enter_context(source_locks(root))
+            if value.get('custody'):
+                from board_queue_custody import load
+                if load(value['custody']['record'])['phase'] == 'failed':
+                    if not resume_methods:
+                        raise ValueError('failed custody cannot deploy/revive; original installed-only method recovery required')
+                    value['custody']['repair'] = True
+            descriptors = stack.enter_context(source_locks(root, value.get('custody')))
+            if value.get('custody'):
+                from board_heavy import inherited
+                from board_queue_strict import before
+                resources = inherited(root)
+                if not resources:
+                    raise ValueError('custody publication must inherit original resource admission')
+                descriptors = (*resources, *descriptors)
+                if not resume_methods:
+                    value['custody_strict'] = before(value['custody']['record'], descriptors)
+                elif not value.get('custody_strict') and not value['custody'].get('repair'):
+                    raise ValueError('installed recovery requires original strict receipt')
             from learning_runtime import capture
             from fixed_method_admission import producers, start, finish
             chosen = capture(root, dest)
             if chosen.get('enabled') and producers(chosen):
                 if not value.get('fixed_method_contract'):
                     raise ValueError('legacy publication retained; finish original transaction before a new method-aware publication')
-                stack.enter_context(locks([Path(chosen['directory']) / 'data-publication.lock']))
+                descriptors = (*descriptors, *stack.enter_context(locks([Path(chosen['directory']) / 'data-publication.lock'])))
             value.setdefault('fixed_method_transaction', value['token'])
             saved = start(root, dest, value, method_ticket, resume_methods)
             value['fixed_methods_required'] = value.get('fixed_methods_required', False) or saved is not None
+            if resume_methods and value.get('custody'):
+                from board_queue_custody import alive, digest
+                recovered = {}
+                for path in (Path(value['custody']['record']).parent / 'publication-children').glob('*.json'):
+                    child = json.loads(path.read_text())
+                    if child.get('state') != 'finished' or child.get('actor') and alive(child['actor']):
+                        raise ValueError('original deployment child/intent remains unsettled')
+                    recovered[path.name] = digest(child)
+                value['custody_child_recovery'] = recovered
             value["phase"] = "publishing"
             save(dest / MARKER, value)
-        yield value
+        value['_publication_fds'] = descriptors if value.get('custody') else ()
+        try:
+            yield value
+        finally:
+            value.pop('_publication_fds', None)
         finish(root, dest, value, saved)
         # Success/failure both retain the marker until explicit verified release.
+
+
+def deploy(value, argv):
+    """Journal a new custody write child before spawn; never retry unknown intent."""
+    if not value.get('custody'):
+        return subprocess.run(argv, close_fds=True).returncode
+    from board_queue_custody import atomic, digest, identity
+    import time
+    path = Path(value['custody']['record']).parent / 'publication-children' / (uuid.uuid4().hex + '.json')
+    descriptors = value['_publication_fds']
+    row = dict(schema='sts2-custody-deployment-child-v1', custody=value['custody'],
+               state='launch-intent', command_sha256=digest(argv), created_at=time.time(),
+               fd_inodes=[os.fstat(fd).st_ino for fd in descriptors])
+    atomic(path, row)
+    process = subprocess.Popen(argv, close_fds=True, pass_fds=descriptors)
+    try:
+        actor = identity(process.pid)
+    except ProcessLookupError:
+        actor = None
+    except FileNotFoundError:
+        actor = None
+    row.update(state='running', pid=process.pid, actor=actor)
+    atomic(path, row)
+    code = process.wait()
+    row.update(state='finished', exit_code=code, ended_at=time.time())
+    atomic(path, row)
+    return code
 
 
 def candidate_binding(base, tree):
@@ -269,6 +381,8 @@ def main():
             command.add_argument("--token", required=True)
         if name == "recover":
             command.add_argument("--expected-sha256", required=True)
+        if name == 'begin':
+            command.add_argument('--custody-record', type=Path)
         if name == "write":
             command.add_argument("--fixed-method-admission", type=Path)
             command.add_argument("--resume-fixed-methods", action="store_true")
@@ -284,7 +398,7 @@ def main():
     root, dest = args.root.resolve(), directory(args.root, args.state_dir)
     try:
         if args.command == "begin":
-            result = begin(root, dest, args.owner, args.pid)
+            result = begin(root, dest, args.owner, args.pid, args.custody_record)
         elif args.command == "release":
             result = release(root, dest, args.owner, args.token, args.pid)
         elif args.command == "recover":
@@ -295,9 +409,9 @@ def main():
                 raise ValueError("publication write requires a command")
             if args.resume_fixed_methods and argv:
                 raise ValueError("installed-only recovery must not replay a deployment command")
-            with writing(root, dest, args.owner, args.token, args.pid, args.fixed_method_admission, args.resume_fixed_methods):
+            with writing(root, dest, args.owner, args.token, args.pid, args.fixed_method_admission, args.resume_fixed_methods) as transaction:
                 if argv:
-                    code = subprocess.run(argv, close_fds=True).returncode
+                    code = deploy(transaction, argv)
                     if code:
                         raise ValueError("deployment command failed; retain original publication and inspect before recovery")
             return 0
