@@ -57,9 +57,10 @@ def snapshots(root, manifests):
 def checked_evidence(root, path, runtime_source, code_source, manifests):
     raw = checked_file(root, path)
     evidence = json.loads(raw)
+    checks = evidence.get('checks')
     if (evidence.get('exit_code') != 0 or evidence.get('error')
-            or set(evidence.get('checks', {})) != CHECKS
-            or any(v != 'passed' for v in evidence['checks'].values())
+            or not isinstance(checks, dict) or not CHECKS.issubset(checks)
+            or any(v != 'passed' for v in checks.values())
             or evidence.get('full_runs') != 1):
         raise ValueError('successful final engineering combination required')
     assembly = evidence['assembly']
