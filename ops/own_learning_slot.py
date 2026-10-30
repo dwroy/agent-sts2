@@ -101,6 +101,13 @@ def batch_status(batch, row, directory, alive, *, birth=process_birth, activity=
                   native=None, occupies=True, reason="owner_evidence_missing")
     stage = "supervisor_identity"
     try:
+        if "supervisor_close" in row:
+            stage = "supervisor_close"
+            from learner_supervisor_close import closed
+            if closed(batch, row, directory, birth):
+                result.update(occupies=False, reason="supervisor_voided")
+                return result
+            raise ValueError("supervisor close pointer unverified")
         # Running/launching owners keep the original reservation. Review release
         # is a separate proof, never a rewrite to failed/lost/done or a retry.
         current = birth(row.get("pid"))
@@ -178,13 +185,16 @@ def batch_status(batch, row, directory, alive, *, birth=process_birth, activity=
 
 
 def snapshot(state, alive, directory=None, **checks):
-    blockers, pending = [], []
+    blockers, pending, closed = [], [], []
     for batch, row in state["batches"].items():
         if row.get("external_source"):
             continue
         if row.get("state") not in ("running", "launching", "awaiting_review") and not alive(row.get("pid")):
             continue
         entry = batch_status(batch, row, directory, alive, **checks)
+        if entry["reason"] == "supervisor_voided":
+            closed.append(entry)
+            continue
         if row.get("state") == "awaiting_review":
             pending.append(entry)
         if entry["occupies"]:
@@ -199,7 +209,7 @@ def snapshot(state, alive, directory=None, **checks):
             locked = True
         if active or locked:
             blockers.append(dict(request=key, occupies=True, reason="ascension_owner_or_lease", state=request.get("state")))
-    return dict(schema="own-learning-slot-v1", busy=bool(blockers), blockers=blockers, pending_review=pending)
+    return dict(schema="own-learning-slot-v1", busy=bool(blockers), blockers=blockers, pending_review=pending, closed=closed)
 
 
 def main():

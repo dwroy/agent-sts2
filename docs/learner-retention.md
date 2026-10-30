@@ -124,3 +124,23 @@ Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）�
 #56 注册超时修正：新调度在原全局 `learn.lock` 事务中为每个新 wrapper 预持独立 batch 发布锁；完整 batch（含原 supervisor PID、external binding/lane/policy）原子写入并 fsync 后，才释放该批屏障。启动准备与 learner_entry 等待该批屏障，仍核原保存的 PID/batch 租约；不必等待父 tick 后续来源校验结束。全局锁继续串行化派发/finish，超时仍120秒，旧/手动 wrapper 未携带受约束新屏障时仍走原全局路径。外部来源按空道惰性选择，一次原事务内复用已校验源，仅缓存冻结 metadata；依赖文件身份变化即重验，下一事务或独立 wrapper prepare 不复用缓存。
 
 注册修正必须完整安装父 tick/learner_jobs、`learner_registration.py`、wrapper 与外部来源模块；不得只换 wrapper 后给原在途行添加屏障或元数据。先由 ops 待原自然事务退锁并核旧 wrapper 的零模型启动证明，再沿原失败/租约/世代续接，不重放旧产物或强 tick。#56 主管6385018900的23:30前合入门保持；未能完成时，原 ops 按其裁决回退到 #56 之前的调度恢复原两槽，知识、原 owner、失败和证据原样保留。恢复数量和时刻均须实际读回，不以源代码安装代自然验收。
+
+### #77 主管裁决作废收尾
+
+主管 [6519584366](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519584366) 对七批作废的裁决，以及 [6519962379](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519962379) 对空闲原生进程连同子进程组 TERM 的追加授权，由原 ops 在补丁实际合入并登记 ROOT 后执行：
+
+```bash
+nice -n 10 python3 ops/codex-ops-learn.py close \
+  --batch 20261025-234303-strategy-proposal \
+  --verdict https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519584366
+```
+
+每次只处理一个 batch。允许裁决的格式是 #77 上 dwroy 的 `[Claude]` 评论，该批的裁决行须明确写“作废收尾”；CLI 经 GitHub API 核账号、issue、评论 ID/URL、原文及内容 SHA，不从终端转述推定授权。批次必须仍在 `own_learning.blockers` 或 `pending_review` 中，且保有原 `awaiting_review` 登记；running/launching 仍走原恢复入口。已完成的同一裁决只核回执，幂等返回；完成回执已持久化而 learn.json 尚未写指针的崩溃可沿同一命令补记。
+
+原 `learn.lock` 使用非阻塞准入，同时持有原 game-admission、knowledge-refresh、live-merge、ordinary-close 和各原 D1 data-publication 锁。写入中的 publication marker、未终态的 D1 journal/未知 attempt、锁忙及身份不明均返回 75，给出保留原因，不等事务结束、不清任何旗或旧事务。原 receipt、deferral 与 learn.json 登记在锁内核 SHA/逐字段绑定；pane 缺席仅登记 `pane_absent` 例外。071302 的原登记与恢复监督器 PID 不同，仅在 pane 缺席、其余注册字段一致、两个 PID 均退出时接受，并同时保留两份身份。
+
+对仍存活的原生 Codex，核原 PID/birth、会话/cwd、最近 turn 已结束且超过 30 分钟、无新排队输入、pane/空输入与独占进程组。允许同一原生进程的子进程组；陌生进程、PID 复用、换 pane、其他工作树命令/测试/写入均保留。先持久化原登记、裁决、原件 SHA、原生日志证明及完整进程快照，再复核并对数字进程组发 TERM（子组先于原生组）；最多等 10 秒确认全部原进程退出，失败留 attention 回执，不升级 KILL。共享 ROOT 的 postmortem 由原全局写锁保护，不把其他角色的 ROOT 活动归给该批。
+
+收尾回执为 `ops/codex-ops/learner/<batch>.supervisor-close.json`，终态 `supervisor_voided`。原 batch 的 state/rc/原报告/失败/研究与父项均保留，仅增 `supervisor_close` 指针；投影列入 `own_learning.closed`，释放计算槽位，原 demand 仍禁止自动重试，迟到 finish 不会改成成功。不调用发布、重置外部计划、回收 tab/工作树、关闭科学父或启动下一批。tab 后续仍交 #65；ops 在七条实际回执和下一自然自有学习首批时间读回后另报运行验收。
+
+ROOT 运行叶须同批安装 `ops/codex-ops-learn.py`、`ops/own_learning_slot.py`、新增 `ops/learner_supervisor_close.py`，无 LIVE 叶。不得只复制 CLI 或投影文件。

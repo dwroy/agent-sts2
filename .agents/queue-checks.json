@@ -1,12 +1,7 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [
-    "agent/src/eye/run-config.ts",
-    "agent/src/reflex/jev/combat-entries.ts",
-    "agent/src/reflex/jev/combat-entry-projection.ts",
-    "agent/src/v6/combat-entry-selection.ts"
-  ],
+  "runtime_install_paths": [],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -59,7 +54,9 @@
     "ops.tests.test_external_stock",
     "ops.tests.test_strategy_external",
     "ops.tests.test_strategy_backfill",
-    "ops.tests.test_learner_registration_pipeline"
+    "ops.tests.test_learner_registration_pipeline",
+    "ops.tests.test_learner_supervisor_close",
+    "ops.tests.test_learner_tui_recovery"
   ],
   "consumer_commands": [
     {
@@ -200,9 +197,19 @@
         "--eval",
         "/** Fixed synthetic installed-selector contract; no games, knowledge or model calls. */\nimport assert from 'node:assert/strict';\nimport {combatEntrySelectionConfig,selectedCombatEntries,replaySelectedCombatEntries} from './src/v6/combat-entry-selection.ts';\nconst entries=[{id:'FIXTURE_A'},{id:'FIXTURE_B'}];\nfor (const boss of ['AEONGLASS','TEST_SUBJECT','THE_INSATIABLE','QUEEN']) for(const act of [1,2,3]) {\n const config=combatEntrySelectionConfig(JSON.stringify({[boss]:['FIXTURE_B']}));\n const context={act,enemies:{items:[{id:boss,alive:true}]}};\n const result=selectedCombatEntries(entries,'silent',context,config);\n assert.deepEqual(result?.entries,[entries[1]]);\n assert.deepEqual(replaySelectedCombatEntries(entries,'silent',context,result?.selection),[entries[1]]);\n for(const bad of [0,4,1.5,'2',undefined]) assert.equal(selectedCombatEntries(entries,'silent',{...context,act:bad},config),null);\n assert.equal(selectedCombatEntries(entries,'silent',{act,enemies:{items:[{id:boss,alive:false}]}},config),null);\n assert.deepEqual(selectedCombatEntries(entries,'ironclad',context,config)?.entries,entries);\n assert.equal(selectedCombatEntries(entries,'silent',context,combatEntrySelectionConfig('{}')),null);\n assert.deepEqual(selectedCombatEntries(entries,'silent',context,combatEntrySelectionConfig(undefined))?.entries,entries);\n}\nassert.equal(combatEntrySelectionConfig('{\"*\":[\"FIXTURE_A\"]}').mode,'invalid');\nconsole.log(JSON.stringify({fourBosses:true,validActs:[1,2,3],invalidActFailClosed:true,aliveAndExactId:true,replay:true,ironcladEquivalent:true,productionWrites:0,productionEnable:false}));\n"
       ]
+    },
+    {
+      "tree": "root",
+      "cwd": ".",
+      "argv": [
+        "python3",
+        "-B",
+        "ops/codex-ops-learn.py",
+        "--help"
+      ]
     }
   ],
-  "consumer_scope": "Issue83 r3 0bca86f7 solo after adopted issue82 candidate59503912: ROOT eight delivered source leaves including fixed producer dependency declaration, LIVE four selector/runtime leaves, global/off unchanged. Retain original applicable consumers0-10 verbatim, including complete consumer8 producer/runtime/outcome/refresh/publication checks and actual LIVE schema5 consumers. Add ROOT v6 tool tsc and exact installed LIVE selector synthetic four-Boss act1/2/3 contract from reviewed r2 integration policy. Original six required checks, approved skips, fixtures and workspace cap unchanged. Actual new full terminal required for two changed producer method identities in original publication write.",
+  "consumer_scope": "Issue77 supervisor-close f877530f normalized after adopted/published issue83 r3: three ROOT/host leaves, zero LIVE leaves. Retain consumers0-12 exactly, including complete producer and installed LIVE contracts; add real ROOT close CLI help and fixed supervisor-close/recovery host fixtures. Existing six gates, full single worker, fixtures, historical skips and workspace admission unchanged. No production close or TERM.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
