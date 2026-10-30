@@ -201,26 +201,28 @@ class Client:
         chunk = Path(str(dest) + '.chunk')
         head = Path(str(chunk) + '.headers')
 
-        def missing(status, h, rc, observed_at):
+        def recognized_missing(body):
+            try:
+                return json.loads(body) == {'detail': 'Replay not found'}
+            except (ValueError, UnicodeError):
+                return body == b'Replay not found'
+
+        def missing(status, h, rc, observed_at, response_body=chunk, response_head=head):
             # Only sync supplies a cycle after validating an actual list row.
             if (not listed_cycle or status != 404 or rc or url != binding['url']
                     or not re.fullmatch(re.escape(BASE) + r'/api/runs/[a-zA-Z0-9_-]{1,128}/replay', url)):
                 return
-            if not chunk.exists() or not head.exists():
+            if not response_body.exists() or not response_head.exists():
                 raise ValueError('incomplete missing-replay response; original retained')
-            body = chunk.read_bytes()
+            body = response_body.read_bytes()
             if 'content-length' in h and int(h['content-length']) != len(body):
                 raise ValueError('missing-replay response byte mismatch; original retained')
-            try:
-                recognized = json.loads(body) == {'detail': 'Replay not found'}
-            except (ValueError, UnicodeError):
-                recognized = body == b'Replay not found'
-            if not recognized:
+            if not recognized_missing(body):
                 return
             # Copies are essential: the next curl may truncate its output inode.
-            digests = dict(body_sha256=sha(chunk), headers_sha256=sha(head))
+            digests = dict(body_sha256=sha(response_body), headers_sha256=sha(response_head))
             archive = self.root / 'raw/tombstones' / (digests['headers_sha256'] + '-' + digests['body_sha256'])
-            for source, name in ((chunk, 'body'), (head, 'headers')):
+            for source, name in ((response_body, 'body'), (response_head, 'headers')):
                 target = archive / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 if not target.exists():
@@ -230,7 +232,7 @@ class Client:
                         os.fsync(dst.fileno())
                 if sha(source) != sha(target):
                     raise ValueError('tombstone evidence digest mismatch; original retained')
-            evidence = dict(digests, observed_at=observed_at, status=404,
+            evidence = dict(digests, observed_at=observed_at, status=404, curl_rc=rc,
                             body_path=str((archive / 'body').relative_to(self.root)),
                             headers_path=str((archive / 'headers').relative_to(self.root)))
             state.pop('inflight', None)
@@ -288,6 +290,79 @@ class Client:
             state_path.unlink(missing_ok=True)
             return receipt
 
+        recheck_path = self.root / 'legacy-404-recheck.json'
+
+        def controlled_recheck(record=None):
+            # One root-wide allowance, journaled before curl. An unknown outcome
+            # consumes it too: restarting must never send a second request.
+            if record is None:
+                if recheck_path.exists():
+                    raise ValueError('legacy 404 recheck allowance already used; original retained')
+                archive = self.root / 'raw/legacy-404-rechecks' / sha(state_path)
+                originals = {}
+                for name, source in (('body', chunk), ('headers', head), ('journal', state_path), ('part', part)):
+                    if not source.exists():
+                        continue
+                    target = archive / 'original' / name
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    if not target.exists():
+                        with source.open('rb') as src, target.open('xb') as dst:
+                            shutil.copyfileobj(src, dst)
+                            dst.flush()
+                            os.fsync(dst.fileno())
+                    if sha(source) != sha(target):
+                        raise ValueError('legacy 404 original evidence digest mismatch')
+                    originals[name] = dict(path=str(target.relative_to(self.root)), sha256=sha(target),
+                                           bytes=source.stat().st_size, mtime_ns=source.stat().st_mtime_ns)
+                response_body = archive / 'recheck/body'
+                response_body.parent.mkdir(parents=True, exist_ok=True)
+                record = dict(url=url, cycle=listed_cycle, binding=binding, started_at=stamp(), originals=originals,
+                              body_path=str(response_body.relative_to(self.root)))
+                save(recheck_path, record)
+                status, h, rc = self.request(url, response_body, {})
+                record.update(status=status, curl_rc=rc, completed_at=stamp(), response={})
+                for name, path in (('body', response_body), ('headers', Path(str(response_body) + '.headers'))):
+                    if path.exists():
+                        with path.open('rb') as stream:
+                            os.fsync(stream.fileno())
+                        record['response'][name] = dict(path=str(path.relative_to(self.root)), sha256=sha(path))
+                save(recheck_path, record)
+            if 'completed_at' not in record:
+                raise ValueError('legacy 404 recheck outcome unknown; no second request allowed')
+            if record['binding'] != binding:
+                raise ValueError('legacy 404 recheck binding changed; original retained')
+            for entry in list(record['originals'].values()) + list(record['response'].values()):
+                path = self.root / entry['path']
+                if not path.exists() or sha(path) != entry['sha256']:
+                    raise ValueError('legacy 404 recheck evidence digest mismatch; no second request allowed')
+            if set(record['response']) != {'body', 'headers'}:
+                raise ValueError('legacy 404 recheck response incomplete; no second request allowed')
+            response_body = self.root / record['response']['body']['path']
+            response_head = self.root / record['response']['headers']['path']
+            status, h = read_headers(response_head)
+            rc = record['curl_rc']
+            if status != record['status']:
+                raise ValueError('legacy 404 recheck status mismatch; original retained')
+            missing(status, h, rc, record['completed_at'], response_body, response_head)
+            if (status != 200 or rc
+                    or ('content-length' in h and response_body.stat().st_size != int(h['content-length']))
+                    or (expected_bytes is not None and response_body.stat().st_size != expected_bytes)):
+                raise ValueError('legacy 404 recheck unsuccessful; no second request allowed')
+            # Keep the immutable response and old failure; normal publication
+            # still verifies a pinned digest and retains any prior raw revision.
+            if old and sha(response_body) == old['sha256']:
+                chunk.unlink(missing_ok=True)
+                state_path.unlink(missing_ok=True)
+                return old
+            shutil.copyfile(response_body, part)
+            with part.open('rb') as stream:
+                os.fsync(stream.fileno())
+            return publish(h)
+
+        recheck = load(recheck_path)
+        if listed_cycle and recheck and recheck['url'] == url and recheck['cycle'] == listed_cycle:
+            return controlled_recheck(recheck)
+
         if state.get('inflight'):
             url = public_url(state['inflight']['url'])
             status, h = read_headers(head)
@@ -297,7 +372,12 @@ class Client:
             if rc is not None or (status == 404 and h.get('content-length') and chunk.exists()
                                   and chunk.stat().st_size == int(h['content-length'])):
                 observed = state['inflight'].get('completed_at') or dt.datetime.fromtimestamp(head.stat().st_mtime, dt.timezone.utc).isoformat()
-                missing(status, h, rc or 0, observed)
+                missing(status, h, rc, observed)
+            elif (status == 404 and rc is None and 'content-length' not in h
+                  and listed_cycle and url == binding['url']
+                  and re.fullmatch(re.escape(BASE) + r'/api/runs/[a-zA-Z0-9_-]{1,128}/replay', url)
+                  and chunk.exists() and recognized_missing(chunk.read_bytes())):
+                return controlled_recheck()
             if status == 404:
                 raise ValueError('public API HTTP 404; raw response retained locally')
             if status in (200, 206):
