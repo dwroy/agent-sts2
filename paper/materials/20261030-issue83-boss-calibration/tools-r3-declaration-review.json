@@ -1,0 +1,404 @@
+{
+  "schema": "issue83-reviewed-method-declaration-v1",
+  "contract_base": "816b4f6a94408f54a6371d8858e5846abb94056e",
+  "tools_source": "2a43add7a4ce7e9a00a6b45b4179f6471850b73a",
+  "declaration_before_sha256": "099c24846c735cdf4c6389e9e5af2eadc5bf230acefed6405d0ece3c28772f8c",
+  "declaration_after_sha256": "b5f93125c5ae5ae97d10f2f9e338654dd60e054a245df68318109987c25298f6",
+  "changes": [
+    {
+      "producer": "v6-history",
+      "identity": "code:agent/src/reflex/jev/combat-entries.ts",
+      "before": {
+        "sha256": "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282",
+        "dependencies": [
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/hand/mod/schema.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/reflex/jev/predicate-context.ts",
+          "code:agent/src/reflex/turn-solver.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/predicate.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282"
+        ]
+      },
+      "after": {
+        "sha256": "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a",
+        "dependencies": [
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/hand/mod/schema.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/reflex/jev/predicate-context.ts",
+          "code:agent/src/reflex/turn-solver.ts",
+          "code:agent/src/v6/combat-entry-selection.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/predicate.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a"
+        ]
+      }
+    },
+    {
+      "producer": "v6-history",
+      "identity": "code:agent/src/v6/combat-entry-selection.ts",
+      "before": null,
+      "after": {
+        "sha256": "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2",
+        "dependencies": [
+          "code:agent/src/v6/schema.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
+        ]
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "identity": "code:agent/src/eye/run-config.ts",
+      "before": {
+        "sha256": "5b050137a26ea2de40bb68ba303f59fc5dad9ed30c7dd86812b97c4d6dbccaa1",
+        "dependencies": [
+          "code:agent/src/brain/brain.ts",
+          "code:agent/src/brain/engines/claude.ts",
+          "code:agent/src/brain/engines/codex-usage.ts",
+          "code:agent/src/brain/knowledge.ts",
+          "code:agent/src/brain/run-profile.ts",
+          "code:agent/src/brain/types.ts",
+          "code:agent/src/construction/adapter.ts",
+          "code:agent/src/construction/consumer.ts",
+          "code:agent/src/core/config.ts",
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/global-build-config.ts",
+          "code:agent/src/core/human-pace-shadow-config.ts",
+          "code:agent/src/core/paths.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/core/util/jsonl.ts",
+          "code:agent/src/eye/jev-prompt-log.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/knowledge/runtime-data.ts",
+          "code:agent/src/knowledge/runtime-paths.ts",
+          "code:agent/src/memory/ascension-target.ts",
+          "code:agent/src/memory/journal-replay.ts",
+          "code:agent/src/memory/run-constraints.ts",
+          "code:agent/src/v6/config.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "5b050137a26ea2de40bb68ba303f59fc5dad9ed30c7dd86812b97c4d6dbccaa1"
+        ]
+      },
+      "after": {
+        "sha256": "f8fe89cf3dbe8826308d71f5fdbe3392ec260235d73acbb062fa34c3f485b485",
+        "dependencies": [
+          "code:agent/src/brain/brain.ts",
+          "code:agent/src/brain/engines/claude.ts",
+          "code:agent/src/brain/engines/codex-usage.ts",
+          "code:agent/src/brain/knowledge.ts",
+          "code:agent/src/brain/run-profile.ts",
+          "code:agent/src/brain/types.ts",
+          "code:agent/src/construction/adapter.ts",
+          "code:agent/src/construction/consumer.ts",
+          "code:agent/src/core/config.ts",
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/global-build-config.ts",
+          "code:agent/src/core/human-pace-shadow-config.ts",
+          "code:agent/src/core/paths.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/core/util/jsonl.ts",
+          "code:agent/src/eye/jev-prompt-log.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/knowledge/runtime-data.ts",
+          "code:agent/src/knowledge/runtime-paths.ts",
+          "code:agent/src/memory/ascension-target.ts",
+          "code:agent/src/memory/journal-replay.ts",
+          "code:agent/src/memory/run-constraints.ts",
+          "code:agent/src/v6/combat-entry-selection.ts",
+          "code:agent/src/v6/config.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "f8fe89cf3dbe8826308d71f5fdbe3392ec260235d73acbb062fa34c3f485b485"
+        ]
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "identity": "code:agent/src/reflex/jev/combat-entries.ts",
+      "before": {
+        "sha256": "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282",
+        "dependencies": [
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/hand/mod/schema.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/reflex/jev/predicate-context.ts",
+          "code:agent/src/reflex/turn-solver.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/predicate.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "8549b0d03703e44c354844da0d91e3a59ad4006e99ef7462c51996b5c31c0282"
+        ]
+      },
+      "after": {
+        "sha256": "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a",
+        "dependencies": [
+          "code:agent/src/core/decision-budget.ts",
+          "code:agent/src/core/util/json.ts",
+          "code:agent/src/hand/mod/schema.ts",
+          "code:agent/src/knowledge/files.ts",
+          "code:agent/src/reflex/jev/predicate-context.ts",
+          "code:agent/src/reflex/turn-solver.ts",
+          "code:agent/src/v6/combat-entry-selection.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/predicate.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a"
+        ]
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "identity": "code:agent/src/reflex/jev/combat-entry-projection.ts",
+      "before": {
+        "sha256": "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c",
+        "dependencies": [
+          "code:agent/src/reflex/jev/decision-projection.ts",
+          "code:agent/src/reflex/jev/questions.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c"
+        ]
+      },
+      "after": {
+        "sha256": "bafc7a762f24e43db57c3114c3340ae0b4f9a5a242263cea506b7c3fbb996552",
+        "dependencies": [
+          "code:agent/src/reflex/jev/decision-projection.ts",
+          "code:agent/src/reflex/jev/questions.ts",
+          "code:agent/src/v6/combat-entry-selection.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "bafc7a762f24e43db57c3114c3340ae0b4f9a5a242263cea506b7c3fbb996552"
+        ]
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "identity": "code:agent/src/reflex/jev/combat-entry-replay.ts",
+      "before": {
+        "sha256": "39892d528c1bc8f3e2d7d824a7ea1b6c952287b56acf68338d665fd37a9dcf56",
+        "dependencies": [
+          "code:agent/src/reflex/jev/combat-entries.ts",
+          "code:agent/src/reflex/jev/decision-projection.ts",
+          "code:agent/src/reflex/jev/questions.ts",
+          "code:agent/src/v6/contrast-statistics.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/schema.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "39892d528c1bc8f3e2d7d824a7ea1b6c952287b56acf68338d665fd37a9dcf56"
+        ]
+      },
+      "after": {
+        "sha256": "1be7c9899512c5523b143799143e1e7bb360231008ac201d8e8faa9dc588a039",
+        "dependencies": [
+          "code:agent/src/reflex/jev/combat-entries.ts",
+          "code:agent/src/reflex/jev/decision-projection.ts",
+          "code:agent/src/reflex/jev/questions.ts",
+          "code:agent/src/v6/combat-entry-selection.ts",
+          "code:agent/src/v6/contrast-statistics.ts",
+          "code:agent/src/v6/formats.ts",
+          "code:agent/src/v6/knowledge.ts",
+          "code:agent/src/v6/schema.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "1be7c9899512c5523b143799143e1e7bb360231008ac201d8e8faa9dc588a039"
+        ]
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "identity": "code:agent/src/v6/combat-entry-selection.ts",
+      "before": null,
+      "after": {
+        "sha256": "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2",
+        "dependencies": [
+          "code:agent/src/v6/schema.ts"
+        ],
+        "scan": "all",
+        "functions": [],
+        "opaque_sites": [
+          "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
+        ]
+      }
+    }
+  ],
+  "all_producer_manifest_checks": {
+    "monster-db": {
+      "method_sha256": "30a457fe3a3d87a229fca15e38c0e365d1fc073c4a2d9eba0c037da680409857",
+      "input_count": 11,
+      "before_method_sha256": "30a457fe3a3d87a229fca15e38c0e365d1fc073c4a2d9eba0c037da680409857",
+      "changed": false
+    },
+    "card-upgrades": {
+      "method_sha256": "a4955e7c7ea87c90f09f90a6708f2e426dc3a7b5e23d120083d0404ea3426271",
+      "input_count": 11,
+      "before_method_sha256": "a4955e7c7ea87c90f09f90a6708f2e426dc3a7b5e23d120083d0404ea3426271",
+      "changed": false
+    },
+    "outcome": {
+      "method_sha256": "f50b9ea3c7debe7724ad29e0d36d654791442f252ede0d6f2dc28a5fe8fdfaf9",
+      "input_count": 15,
+      "before_method_sha256": "f50b9ea3c7debe7724ad29e0d36d654791442f252ede0d6f2dc28a5fe8fdfaf9",
+      "changed": false
+    },
+    "construction-opportunities": {
+      "method_sha256": "2c7198e4a63a38cab9eba1c20efc5758eb3745556bb3fc237cfd63e534c3503b",
+      "input_count": 11,
+      "before_method_sha256": "2c7198e4a63a38cab9eba1c20efc5758eb3745556bb3fc237cfd63e534c3503b",
+      "changed": false
+    },
+    "room-costs": {
+      "method_sha256": "0263bcc5ad50090527e5ea6e2aba964f9ace404ff5b7caa7c6db7091ba667363",
+      "input_count": 11,
+      "before_method_sha256": "0263bcc5ad50090527e5ea6e2aba964f9ace404ff5b7caa7c6db7091ba667363",
+      "changed": false
+    },
+    "boss-damage": {
+      "method_sha256": "b1da0412b70a1630ee3ab1be80c9699469729d0f65e823bc7f2a0ecacef756c8",
+      "input_count": 11,
+      "before_method_sha256": "b1da0412b70a1630ee3ab1be80c9699469729d0f65e823bc7f2a0ecacef756c8",
+      "changed": false
+    },
+    "potion-equivalents": {
+      "method_sha256": "e6b142351d49003342d5a580ef754d3cd8c031015bfbd0f24ae9192894b83f99",
+      "input_count": 19,
+      "before_method_sha256": "e6b142351d49003342d5a580ef754d3cd8c031015bfbd0f24ae9192894b83f99",
+      "changed": false
+    },
+    "v6-history": {
+      "method_sha256": "054c92180332e589e5c3d8e462798bfb10c188de1ba887486bc23b46594835e8",
+      "input_count": 306,
+      "before_method_sha256": "56be3ed269b83282825c934a3c9e22d8f3b7ea9f049d03bf92fccb36294da653",
+      "changed": true
+    },
+    "fight-value": {
+      "method_sha256": "46cfa8defcbbca6733ac931a5844e1b8ccd0c5da7d05b1f33964a2cba8bab007",
+      "input_count": 14,
+      "before_method_sha256": "46cfa8defcbbca6733ac931a5844e1b8ccd0c5da7d05b1f33964a2cba8bab007",
+      "changed": false
+    },
+    "silent-boss-calibration": {
+      "method_sha256": "7bdb1a0f32266c8a22d0f577c0733e145100d20f88573cd483cc8a54d95406d9",
+      "input_count": 399,
+      "before_method_sha256": "7a43337c566bfb2039d3f7357e3fb3acccfc901a98e3a2cc0d734e0725aee096",
+      "changed": true
+    },
+    "move-model": {
+      "method_sha256": "ba0d202616b1cb1b40cf95a2ee5931c8745dcf64ce0fb600857b0431cb579827",
+      "input_count": 6,
+      "before_method_sha256": "ba0d202616b1cb1b40cf95a2ee5931c8745dcf64ce0fb600857b0431cb579827",
+      "changed": false
+    },
+    "event-pages": {
+      "method_sha256": "a6436dda2fd9595d6a89aecf8b0292204c224f00128610d410c7cc7e73f8c2d0",
+      "input_count": 11,
+      "before_method_sha256": "a6436dda2fd9595d6a89aecf8b0292204c224f00128610d410c7cc7e73f8c2d0",
+      "changed": false
+    },
+    "opening-value": {
+      "method_sha256": "eae164e86f6b2e7fb963b7c7cd1f0562e469ea2022c203137e0761d5bfe34af4",
+      "input_count": 14,
+      "before_method_sha256": "eae164e86f6b2e7fb963b7c7cd1f0562e469ea2022c203137e0761d5bfe34af4",
+      "changed": false
+    }
+  },
+  "production_admitted": false,
+  "final_ticket_requires_new_actual_combination_terminal": true,
+  "issue82_source_paths": [
+    "eval/spire_codex.py",
+    "eval/spire_codex_download.py",
+    "eval/spire_codex_projection.py"
+  ],
+  "issue82_closure_overlap": [],
+  "source_mapping": {
+    "agent/src/eye/run-config.ts": {
+      "sha256": "f8fe89cf3dbe8826308d71f5fdbe3392ec260235d73acbb062fa34c3f485b485",
+      "matches_tools_r2": true
+    },
+    "agent/src/reflex/jev/combat-entries.ts": {
+      "sha256": "0817e185dce4758e4e49942969e5adc10c63dd36a299ecbc99f33e80c86dac9a",
+      "matches_tools_r2": true
+    },
+    "agent/src/reflex/jev/combat-entry-projection.ts": {
+      "sha256": "bafc7a762f24e43db57c3114c3340ae0b4f9a5a242263cea506b7c3fbb996552",
+      "matches_tools_r2": true
+    },
+    "agent/src/reflex/jev/combat-entry-replay.ts": {
+      "sha256": "1be7c9899512c5523b143799143e1e7bb360231008ac201d8e8faa9dc588a039",
+      "matches_tools_r2": true
+    },
+    "agent/src/v6/combat-entry-selection.ts": {
+      "sha256": "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2",
+      "matches_tools_r2": true
+    },
+    "agent/tools/v6/capture-combat-entry-replay.ts": {
+      "sha256": "4d9db4a731eb85e2a70b7aa666a261d00639b3429ebdf0710aaa4d73110c1cbc",
+      "matches_tools_r2": true
+    },
+    "agent/tools/v6/combat-entry-replay.ts": {
+      "sha256": "411833bbf7cf47c456d497a31f8f281be6d613234105773a1d71f03ac2fdd94d",
+      "matches_tools_r2": true
+    }
+  },
+  "consumer8_before": {
+    "command": "nice -n 19 python3 -m unittest ops.tests.test_fixed_producer_admission ops.tests.test_learning_runtime",
+    "path": "paper/materials/20261030-issue83-boss-calibration/tools-r3-consumer8-before.log",
+    "sha256": "ad158877a2923408f43074b09c9897f49c54246e13b1a103c3a049c873d8f54f",
+    "bytes": 5651,
+    "exit_code": 1,
+    "tests": 44,
+    "errors": 4,
+    "original_local_path": ".artifacts/issue83/tools-r3/consumer8-before.log"
+  },
+  "consumer8_after": {
+    "command": "nice -n 19 python3 -m unittest ops.tests.test_fixed_producer_admission ops.tests.test_learning_runtime",
+    "path": "paper/materials/20261030-issue83-boss-calibration/tools-r3-consumer8-after.log",
+    "sha256": "730f4126cd01a655ca4c0899b44d44a4a8e49549bf2d99a2b6e179d838982cc6",
+    "bytes": 871,
+    "exit_code": 0,
+    "tests": 44,
+    "errors": 0,
+    "original_local_path": ".artifacts/issue83/tools-r3/consumer8-after.log"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "issue83-tested-method-material-v1",
+  "preview_only": true,
+  "production_admitted": false,
+  "tools_source": "2a43add7a4ce7e9a00a6b45b4179f6471850b73a",
+  "contract_base": "816b4f6a94408f54a6371d8858e5846abb94056e",
+  "files": {
+    "ops/fixed-producer-dependencies.json": {
+      "sha256": "b5f93125c5ae5ae97d10f2f9e338654dd60e054a245df68318109987c25298f6",
+      "bytes": 560626
+    },
+    "paper/materials/20261030-issue83-boss-calibration/tools-r3-v6-history-manifest.json": {
+      "sha256": "86c29902075621e1addb0f2405d8d6cf895577cea157c73885e328e4197cc4b7",
+      "bytes": 127804
+    },
+    "paper/materials/20261030-issue83-boss-calibration/tools-r3-silent-boss-calibration-manifest.json": {
+      "sha256": "c48ed335f7e0dbcb30e9d8d070dd90fc7e382b6b903e54796c4724482d0da084",
+      "bytes": 207969
+    }
+  },
+  "checks": {
+    "command": "nice -n 19 python3 -m unittest ops.tests.test_fixed_producer_admission ops.tests.test_learning_runtime",
+    "path": "paper/materials/20261030-issue83-boss-calibration/tools-r3-consumer8-after.log",
+    "sha256": "730f4126cd01a655ca4c0899b44d44a4a8e49549bf2d99a2b6e179d838982cc6",
+    "bytes": 871,
+    "exit_code": 0,
+    "tests": 44,
+    "errors": 0,
+    "original_local_path": ".artifacts/issue83/tools-r3/consumer8-after.log"
+  },
+  "actual_ticket_owner": "original integrator/publication owner",
+  "actual_ticket_contract": "docs/fixed-producer-admission.md",
+  "actual_ticket_requires": "new final engineering receipt: six required checks plus every detail passed; full_runs=1; candidate, ROOT/LIVE views and actual LIVE preimage exact; no use of failed e0f67bc9 result or developer test log as engineering receipt",
+  "prepare_argv": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/fixed_method_admission.py",
+    "--root",
+    "<PROJECT_ROOT>",
+    "--runtime-source",
+    "<CHECKED_ROOT>",
+    "--code-source",
+    "<CHECKED_LIVE>",
+    "--engineering-receipt",
+    "<NEW_FINAL_TERMINAL>",
+    "--output",
+    "<NEW_METHOD_TICKET>"
+  ],
+  "deployment": "ROOT declaration plus original ROOT7/LIVE4 in same publication_gate write using --fixed-method-admission; no manual control edits",
+  "rollback": "original owner restores matching source/declaration preimages and methods via new publication transaction; retain old failed batch/logs and D1 history"
+}
