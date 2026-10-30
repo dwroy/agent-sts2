@@ -230,6 +230,8 @@ it.each(["codex", "deepseek"] as const)("delivers automatic content to the %s br
     const router = new BrainRouter({ config: { ...config, engine }, knowledgeAgent: true, codexOnly: engine === "codex", log: () => {}, engine: () => ({ name: engine,
       decide: async req => { seen.push(req); return { engine, model: "fixture", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 0, usage: { inputTokens: 0, outputTokens: 0 }, toolCalls: [] }; } }) });
     const brain = new Brain(router, { systemPrompt: "fixed" }, () => []), req = request(directory);
+    req.toolContext!.logsDir = join(directory, "fixture-logs");
+    req.toolContext!.state = { ...req.toolContext!.state, run_id: "FIXTURE00001" };
     brain.setToolContext(req.toolContext!);
     await brain.choose(req.payload as Record<string, JsonValue>, "fixed question", { a: null }, { label: "reward/card" });
     return seen.at(-1)!;

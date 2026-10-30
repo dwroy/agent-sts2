@@ -8,7 +8,7 @@ import { createHash } from "node:crypto";
 import { chmodSync, closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { SCHEMA, SCHEMA_VERSION } from "./schema.js";
-import { TYPED_SCHEMA } from "./typed-schema.js";
+import { TYPED_SCHEMA, STRATEGY_NULL_CONFIDENCE_SCHEMA } from "./typed-schema.js";
 import { projectRevision } from "./projection.js";
 import { safeSQLiteVersion } from "./sqlite-version.js";
 export { safeSQLiteVersion } from "./sqlite-version.js";
@@ -90,7 +90,7 @@ export class KnowledgeStore {
         this.db.exec(SCHEMA);
         const old = this.db.prepare("SELECT value FROM metadata WHERE key='schema'").get();
         const schema = old ? Number(old["value"]) : 1;
-        if (![1, 2, 3, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
+        if (![1, 2, 3, 4, SCHEMA_VERSION].includes(schema)) throw new Error("unsupported knowledge schema");
         if (schema === 1) {
           this.db.exec(TYPED_SCHEMA);
           for (const row of this.db.prepare("SELECT * FROM revisions ORDER BY revision").iterate()) projectRevision(this.db, row);
@@ -102,6 +102,9 @@ export class KnowledgeStore {
         if (schema < 4) {
           this.db.exec(RESEARCH_SCHEMA);
           for (const row of this.db.prepare("SELECT * FROM revisions WHERE kind='build-research'").iterate()) projectResearch(this.db, row);
+        }
+        if (schema < 5) {
+          this.db.exec(STRATEGY_NULL_CONFIDENCE_SCHEMA);
           options.migrationFailpoint?.();
           this.db.prepare("INSERT INTO metadata VALUES('schema',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String(SCHEMA_VERSION));
         }
@@ -322,7 +325,7 @@ export class KnowledgeStore {
     for (const category of e.categories ?? []) add("category", category);
     for (const ascension of e.scope?.ascensions ?? []) add("ascension", String(ascension));
     if (e.applies_to) add("category", e.applies_to);
-    return { revision, path, entry_id: e.id, character, kind, payload, source: e.source ?? null, confidence: String(e.confidence ?? "unknown"),
+    return { revision, path, entry_id: e.id, character, kind, payload, source: e.source ?? null, confidence: e.confidence === null ? null : String(e.confidence ?? "unknown"),
       evidence_status: e.evidence_status ?? "unassessed", asc_min: asc?.length ? Math.min(...asc) : null, asc_max: asc?.length ? Math.max(...asc) : null, terms,
       game_version: e.game_version ?? e.scope?.game_version ?? null,
       evidence: [...evidenceRows(e), ...(e.sources ?? []), ...(e.counterexamples ?? []).map((value: unknown) => ({ value, role: "contradict" })),

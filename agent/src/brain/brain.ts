@@ -49,7 +49,7 @@ import { attachOpenBook } from "../knowledge/open-book.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { attachQueryGuidance } from "./tools/query-guidance.js";
 import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope, endgameReuse } from "../memory/endgame-plan.js";
-import { attachDecisionKnowledge, decisionContextTool } from "./decision-knowledge.js";
+import { decisionContextTool } from "./decision-knowledge.js";
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
 export function agentSystemPrompt(state?: unknown, tools: readonly ToolDef[] = buildKnowledgeTools({ ascension: 0, knowledgeDir: KNOWLEDGE_DIR, logsDir: "" })): string {
@@ -341,11 +341,11 @@ export class Brain {
       const toolContext = base.toolContext ?? (decisionContextEnabled ? this.context : null);
       const tools = decisionContextEnabled && toolContext ? [...(base.tools ?? []), decisionContextTool()] : base.tools;
       const system = agentSystemPrompt(this.context?.state, tools ?? []);
-      return attachDecisionKnowledge({ ...base, ...(tools ? { tools } : {}), system: decisionContextEnabled
+      return { ...base, ...(tools ? { tools } : {}), system: decisionContextEnabled
         ? `${system.replace("知识只从所给知识工具按需查询。", "知识来自题面默认摘要与所给知识工具。\n")}\n题面decision_knowledge为本局绑定K1的已发布背景摘要；保留其条件、分母与限制，不完整摘录不能当完整规则。知识也可继续按需查询。` : system,
         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
         ...(toolContext ? { toolContext: { ...toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
-        knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } }, this.router.config.decisionKnowledge);
+        knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
     }
     const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
     if (this.router.config.knowledgePrefix !== "full") return req;

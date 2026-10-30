@@ -1,3 +1,5 @@
+import { attachDecisionKnowledge } from "./decision-knowledge.js";
+import { DecisionKnowledgeExposure } from "./decision-knowledge-exposure.js";
 import { withoutToolCapabilities } from "./tools/capabilities.js";
 import { BrainLiveWriter, observeBrain } from "./live-view.js";
 import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
@@ -642,6 +644,7 @@ export class BrainRouter {
   }
 
   /** engine.decide within the engine's call budget (and, as the fallback, the caller's) and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
+  private readonly decisionExposure = new DecisionKnowledgeExposure();
   private async call(engine: BrainEngine, req: BrainRequest, asFallback = false): Promise<BrainAnswer> {
     if (this.codexOnly) this.wait.check();
     if (!this.budgetLeft(engine.name)) {
@@ -656,6 +659,13 @@ export class BrainRouter {
     const pace = currentDecisionBudget();
     const ms = pace ? Math.min(req.timeoutMs ?? Infinity, pace.remaining()) : req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
     if (pace && (ms ?? 0) <= 0) throw new DecisionBudgetExpired(req.label);
+    if (this.deps.config.decisionKnowledge?.enabled) {
+      req.prepareForSend = sending => {
+        Object.assign(sending, attachDecisionKnowledge(sending, this.deps.config.decisionKnowledge, this.decisionExposure));
+        req.payload = sending.payload;
+      };
+      if (!engine.preparesRequests) req.prepareForSend(req);
+    }
     let broadcast: ReturnType<BrainLiveWriter["begin"]> | undefined;
     try { broadcast = this.live?.begin(req, engine.name, engine.model,
       req.effort ?? this.deps.config.engines[engine.name].effort ?? "?", asFallback); } catch { /* display only */ }

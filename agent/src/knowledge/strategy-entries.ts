@@ -1,4 +1,5 @@
 /** Declarative strategy retrieval. Content is maintained by learners, never inferred here. */
+import { strategyGrading, compareGradedStrategies, type StrategyGrading } from "./strategy-grading.js";
 import { readFileSync, statSync } from "node:fs";
 import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
 import type { BrainRequest } from "../brain/types.js";
@@ -46,13 +47,15 @@ export interface StrategyEntry {
   evidence: StrategyEvidence[];
   source: "own" | "mixed" | `external:${string}`;
   provenance?: { url: string; version: string; sha256: string; license: string };
-  confidence: number;
+  confidence: number | null;
+  grading?: StrategyGrading;
+  evidence_type?: string;
   evidence_status?: "aligned" | "conflict" | "unassessed";
   evidence_summary?: ReturnType<typeof strategyEvidenceSummary>;
   limitation_notice?: string;
 }
 export interface StrategyLibrary { schema: "brain-strategies-v1"; character: "silent"; entries: StrategyEntry[] }
-export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 1_048_576, libraryEntries: 500 } as const;
+export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 4_194_304, libraryEntries: 500 } as const;
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const text = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
@@ -144,7 +147,8 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
   if (!object(raw) || raw["schema"] !== "brain-strategies-v1" || raw["character"] !== "silent" || !Array.isArray(raw["entries"]) || raw["entries"].length > STRATEGY_LIMITS.libraryEntries) throw new Error("invalid strategy library header");
   const ids = new Set<string>();
   for (const entry of raw["entries"]) {
-    if (!object(entry) || !text(entry["id"]) || ids.has(entry["id"]) || !text(entry["version"]) || !text(entry["strategy"]) || Buffer.byteLength(entry["strategy"], "utf8") > STRATEGY_LIMITS.textBytes || !finite(entry["confidence"]) || entry["confidence"] < 0 || entry["confidence"] > 1) throw new Error("invalid strategy entry");
+    if (!object(entry) || !text(entry["id"]) || ids.has(entry["id"]) || !text(entry["version"]) || !text(entry["strategy"]) || Buffer.byteLength(entry["strategy"], "utf8") > STRATEGY_LIMITS.textBytes || (entry["confidence"] === null ? !strategyGrading(entry) : !finite(entry["confidence"]) || entry["confidence"] < 0 || entry["confidence"] > 1)) throw new Error("invalid strategy entry");
+    if (entry["grading"] !== undefined && !strategyGrading(entry)) throw new Error("invalid strategy grading");
     ids.add(entry["id"]);
     const t = entry["trigger"];
     if (!object(t) || !only(t, ["question_types", "acts", "floor", "bosses", "hp_ratio", "deck_size", "deck_cards", "archetype"]) || !Array.isArray(t["question_types"]) || !t["question_types"].length || !t["question_types"].every((q) => QUESTION_TYPES.includes(q as QuestionType))) throw new Error("invalid strategy trigger");
@@ -167,7 +171,7 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
     const status = entry["evidence_status"];
     if (status !== undefined && (typeof status !== "string" || !["aligned", "conflict", "unassessed"].includes(status)) || sources.size > 1 && status === undefined) throw new Error("mixed strategy needs evidence_status");
     if (external.length && evidence.some(e => e.role === "contradict") && status !== "conflict") throw new Error("contradictory evidence needs conflict status");
-    if (external.length && !own.some(e => e.role !== "contradict") && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
+    if (external.length && !own.some(e => e.role !== "contradict") && typeof entry["confidence"] === "number" && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
   }
   return raw as unknown as StrategyLibrary;
 }
@@ -189,6 +193,7 @@ export function questionTypes(label: string, payload: unknown): QuestionType[] {
 /** Published observations retain their original conditions; this is provenance, not condition evaluation. */
 export function publishedObservation(entry: StrategyEntry): Record<string, unknown> | null {
   const p = entry.formal_publication, observation = entry.review_observation;
+  if (strategyGrading(entry) && object(observation)) return observation;
   return object(entry.trigger) && Array.isArray(entry.trigger.question_types) && text(entry.strategy)
     && object(p) && p["observation_only"] === true && p["original_review_candidate_retained_without_edit"] === true
     && text(p["approved_by"]) && text(p["authorization"]) && /^https:\/\//.test(p["authorization"])
@@ -260,11 +265,13 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
       && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)))
       && (!t.archetype || !!archetype && t.archetype.model_sha256 === archetype.model_sha256
         && t.archetype.version === archetype.version && t.archetype.clusters.includes(archetype.cluster));
-  }).sort((a, b) => strategyPurpose(a) - strategyPurpose(b)
+  }).sort((a, b) => compareGradedStrategies(a, b)
+    || (strategyGrading(a)?.evidence_type === "机制事实" && strategyGrading(b)?.evidence_type === "机制事实" ? specificity(b) - specificity(a) : 0)
+    || strategyPurpose(a) - strategyPurpose(b)
     || (strategyPurpose(a) === 0 && strategyPurpose(b) === 0
       ? Number(primary !== undefined && strategyQuestionTypes(b).includes(primary)) - Number(primary !== undefined && strategyQuestionTypes(a).includes(primary))
         || strategyQuestionTypes(a).length - strategyQuestionTypes(b).length || observedEntities(b) - observedEntities(a) : 0)
-    || specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id)).map(presentStrategy);
+    || specificity(b) - specificity(a) || (b.confidence ?? 0) - (a.confidence ?? 0) || a.id.localeCompare(b.id)).map(presentStrategy);
 }
 
 /** Total serialized UTF-8 bytes, including metadata/envelope, are bounded; never truncate evidence. */
