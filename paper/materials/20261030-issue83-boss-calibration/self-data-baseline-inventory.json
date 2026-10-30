@@ -1,0 +1,191 @@
+{
+  "trust_sha256": "b16f7ca9bad297683a8f245476c6cc9a80b472be023f52b92b23f926e69ed58c",
+  "source": {
+    "simulator_base": "9f4245511181c6228cf63dc44700ea28ccf35730",
+    "model_sha256": "c9f5bfecafd45698af4c8e14f929c4d41cf03afb73818d0dedc2f257c4ef858b",
+    "request_id": "roy-20261019-current-production-boss-calibration",
+    "snapshot_sha256": "0776b79aeb8090be6500805e4560a7004cd9d8769fc4f88f8198f1afe3c80443",
+    "dataset_sha256": "ba46c92dfbc17c17155752447b7eda4a1f9648f2e821b0e6e4bf4ad05dbc17d6",
+    "sources_sha256": "7e7bcb05662ca4be24f7f1607b215ebad0331567b0498ed42adc1d219c151a3d",
+    "samples": 200,
+    "seed": 1
+  },
+  "split_summary": {
+    "tune": 107,
+    "val": 551,
+    "cutoff_ts": "2026-10-06T02:46:11.648000",
+    "tune_n": 107,
+    "val_n": 551,
+    "rule": "first usable actual-outcome boss opening time by whole run, earliest ~2/3; all SL attempts of a run stay together"
+  },
+  "baseline_metrics_only_not_first_attempt_recalculation": {
+    "AEONGLASS": {
+      "name": "永世沙漏",
+      "t1": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.1945,
+        "mean_pred": 0.653,
+        "actual_win": 0.476,
+        "leak_ratio": 4.404,
+        "leak_turns": 222,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.19446469457982568,
+          "brier_limit": 0.13052270055770426,
+          "gap": 0.1766953973145785,
+          "leak_ratio": 4.4043478260869575
+        }
+      },
+      "pre": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.1988,
+        "mean_pred": 0.67,
+        "actual_win": 0.476,
+        "leak_ratio": 4.413,
+        "leak_turns": 222,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.19875479205624338,
+          "brier_limit": 0.13445059324440678,
+          "gap": 0.19376803609575632,
+          "leak_ratio": 4.413043478260867
+        }
+      }
+    },
+    "TEST_SUBJECT": {
+      "name": "实验体",
+      "t1": {
+        "n": 33,
+        "missing": 0,
+        "brier": 0.1368,
+        "mean_pred": 0.399,
+        "actual_win": 0.212,
+        "leak_ratio": 2.314,
+        "leak_turns": 129,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.13683663479627606,
+          "brier_limit": 0.13052270055770426,
+          "gap": 0.1864815420575033,
+          "leak_ratio": 2.314203730272596
+        }
+      },
+      "pre": {
+        "n": 33,
+        "missing": 0,
+        "brier": 0.1235,
+        "mean_pred": 0.371,
+        "actual_win": 0.212,
+        "leak_ratio": 2.309,
+        "leak_turns": 129,
+        "failed": [
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.12345391000188176,
+          "brier_limit": 0.13445059324440678,
+          "gap": 0.15852489043501863,
+          "leak_ratio": 2.309325681492109
+        }
+      }
+    },
+    "THE_INSATIABLE": {
+      "name": "无厌沙虫",
+      "t1": {
+        "n": 55,
+        "missing": 0,
+        "brier": 0.1327,
+        "mean_pred": 0.745,
+        "actual_win": 0.709,
+        "leak_ratio": 1.238,
+        "leak_turns": 296,
+        "failed": [
+          "brier"
+        ],
+        "admission": {
+          "brier": 0.13269786878030213,
+          "brier_limit": 0.13052270055770426,
+          "gap": 0.03553278311072883,
+          "leak_ratio": 1.2382086167800448
+        }
+      },
+      "pre": {
+        "n": 55,
+        "missing": 0,
+        "brier": 0.1392,
+        "mean_pred": 0.762,
+        "actual_win": 0.709,
+        "leak_ratio": 1.248,
+        "leak_turns": 296,
+        "failed": [
+          "brier"
+        ],
+        "admission": {
+          "brier": 0.13919585197911757,
+          "brier_limit": 0.13445059324440678,
+          "gap": 0.052980742574678774,
+          "leak_ratio": 1.248072562358277
+        }
+      }
+    },
+    "QUEEN": {
+      "name": "女王",
+      "t1": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.1849,
+        "mean_pred": 0.581,
+        "actual_win": 0.371,
+        "leak_ratio": 1.338,
+        "leak_turns": 150,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.1848686401530196,
+          "brier_limit": 0.13052270055770426,
+          "gap": 0.2091460111362209,
+          "leak_ratio": 1.3379611650485435
+        }
+      },
+      "pre": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.206,
+        "mean_pred": 0.567,
+        "actual_win": 0.371,
+        "leak_ratio": 1.474,
+        "leak_turns": 150,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "admission": {
+          "brier": 0.20597886422884956,
+          "brier_limit": 0.13445059324440678,
+          "gap": 0.19519285615761084,
+          "leak_ratio": 1.4741747572815547
+        }
+      }
+    }
+  },
+  "awaiting_original_ops_inputs": true
+}

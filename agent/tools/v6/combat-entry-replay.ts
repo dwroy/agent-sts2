@@ -16,7 +16,7 @@ const manifestSchema = object({ schema: literal("combat-entry-replay-manifest-v1
   character: literal("silent"), game_version: text(100), ascension: number(0, 100, true),
   // Freeze selection/exclusions before asking; never choose cases by the resulting improvement.
   selection: text(4000), exclusions: array(text(2000)),
-  cases: array(object({ id, run_id: id, act: number(1, 2, true), encounter: id,
+  cases: array(object({ id, run_id: id, act: number(1, 3, true), encounter: id,
     attempt: text(100), request: reference, outcomes: nullable(reference) }), 1, 100),
 });
 const hashBytes = (value: Buffer | string) => createHash("sha256").update(value).digest("hex");

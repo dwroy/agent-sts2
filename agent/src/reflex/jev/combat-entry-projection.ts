@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { projectSilentCombatDecision, type DecisionProjection } from "./decision-projection.js";
 import type { QuestionSet } from "./questions.js";
+import { combatEntrySelectionConfig, selectedCombatEntries } from "../../v6/combat-entry-selection.js";
 
 type Row = Record<string, unknown>;
 const record = (v: unknown): Row | null => v !== null && typeof v === "object" && !Array.isArray(v) ? v as Row : null;
@@ -10,6 +11,14 @@ export function projectCombatDecision(state: unknown, questions: QuestionSet, en
   const base = projectSilentCombatDecision(state, questions);
   const originalBoard = record(state), audit = record(originalBoard?.v6_combat_entries);
   if (env["V6_COMBAT_ENTRIES"] !== "on" || audit?.schema !== "v6-combat-entries-audit-v1") return base;
+  const selector = combatEntrySelectionConfig(env["V6_COMBAT_ENTRY_SELECTION"]);
+  if (selector.mode !== "legacy" && audit.character === "silent") {
+    const context = record(audit.context);
+    const known = selector.mode === "restricted" ? Object.values(selector.bosses).flat().map(id => ({ id })) : [];
+    const selected = context && selectedCombatEntries(known, "silent", context, selector);
+    // A changed deployment selection cannot reuse an audit built for another subset.
+    if (!selected?.selection || JSON.stringify(selected.selection) !== JSON.stringify(audit.selection)) return base;
+  }
   if (!["monster", "elite", "boss"].includes(String(originalBoard?.fight))) return base;
   const sources = [...(base?.contract.sources ?? [])];
   const stateSources: NonNullable<DecisionProjection["contract"]["stateSources"]> = [];

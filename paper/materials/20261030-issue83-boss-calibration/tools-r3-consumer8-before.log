@@ -1,0 +1,57 @@
+.EEE.................................E.......
+======================================================================
+ERROR: test_all_declared_producers_are_closed_on_real_sources (ops.tests.test_fixed_producer_admission.FixedMethodTest.test_all_declared_producers_are_closed_on_real_sources) (producer='v6-history')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/tests/test_fixed_producer_admission.py", line 34, in test_all_declared_producers_are_closed_on_real_sources
+    self.assertTrue(manifest(ROOT, producer, ROOT)['inputs'])
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 124, in manifest
+    raise ValueError('fixed dependency needs engineering declaration: ' + identity)
+ValueError: fixed dependency needs engineering declaration: code:agent/src/reflex/jev/combat-entries.ts
+
+======================================================================
+ERROR: test_all_declared_producers_are_closed_on_real_sources (ops.tests.test_fixed_producer_admission.FixedMethodTest.test_all_declared_producers_are_closed_on_real_sources) (producer='silent-boss-calibration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/tests/test_fixed_producer_admission.py", line 34, in test_all_declared_producers_are_closed_on_real_sources
+    self.assertTrue(manifest(ROOT, producer, ROOT)['inputs'])
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 114, in manifest
+    raise ValueError('calibration source read family needs explicit dependency declaration')
+ValueError: calibration source read family needs explicit dependency declaration
+
+======================================================================
+ERROR: test_calibration_new_actual_read_leaf_requires_declaration (ops.tests.test_fixed_producer_admission.FixedMethodTest.test_calibration_new_actual_read_leaf_requires_declaration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/tests/test_fixed_producer_admission.py", line 112, in test_calibration_new_actual_read_leaf_requires_declaration
+    method(self.root, 'silent-boss-calibration', self.root)
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 143, in method
+    return sha(packed(manifest(code_root, producer, runtime_root)).encode())
+                      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 124, in manifest
+    raise ValueError('fixed dependency needs engineering declaration: ' + identity)
+ValueError: fixed dependency needs engineering declaration: code:agent/src/eye/run-config.ts
+
+======================================================================
+ERROR: test_original_fixed_calibration_cli_publishes_data_and_operational_receipts_without_git (ops.tests.test_learning_runtime.LearningRuntimeTest.test_original_fixed_calibration_cli_publishes_data_and_operational_receipts_without_git)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/tests/test_learning_runtime.py", line 494, in test_original_fixed_calibration_cli_publishes_data_and_operational_receipts_without_git
+    chosen["methods"]["silent-boss-calibration"] = data.method(self.root, "silent-boss-calibration")
+                                                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/learning_runtime_data.py", line 87, in method
+    return fingerprint(root, producer, runtime_root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 143, in method
+    return sha(packed(manifest(code_root, producer, runtime_root)).encode())
+                      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-83-boss-first-attempt-calibration/.artifacts/issue83/tools-r3/checked-combination/ops/fixed_producer_methods.py", line 124, in manifest
+    raise ValueError('fixed dependency needs engineering declaration: ' + identity)
+ValueError: fixed dependency needs engineering declaration: code:agent/src/eye/run-config.ts
+
+----------------------------------------------------------------------
+Ran 44 tests in 26.065s
+
+FAILED (errors=4)
