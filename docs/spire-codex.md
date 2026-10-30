@@ -28,7 +28,11 @@ HTTP 下载以 `.part`、Range、If-Range 与 ETag/Last-Modified 接续；200 �
 
 只有已验证的列表行所指回放接口，返回 404 且完整响应为 `{"detail":"Replay not found"}`（或精确纯文本 `Replay not found`），才记墓碑后继续。响应新增字段、不同正文、非零 curl 返回码、字节长度不符、其他接口或跳转后的 404 均不适用；429、超时、5xx 继续原退避/失败合同，SHA/字节校验失败继续停止，不能归为缺失。
 
-私有 `private-index.json.tombstones` 按原 run_hash 保留同一墓碑及历次观察，保存 cycle、分片、页、1-based页内序号、列表SHA、响应时间、头/体SHA和精确副本路径。副本在 `raw/tombstones/`，与原chunk/headers/journal均不进入学习输入。新响应按 curl 结束时间记账；旧版失败journal仅在冻结头的Content-Length与完整正文一致时离线接收，时间使用响应头文件mtime，来源原因仍未知。原失败原件保留，不补造成功回执。
+私有 `private-index.json.tombstones` 按原 run_hash 保留同一墓碑及历次观察，保存 cycle、分片、页、1-based页内序号、列表SHA、响应时间、curl rc、头/体SHA和精确副本路径。副本在 `raw/tombstones/`，与原chunk/headers/journal均不进入学习输入。新响应按 curl 结束时间记账；旧版失败journal在冻结头的Content-Length与完整正文一致时离线接收，时间使用响应头文件mtime，未知curl rc记null，来源原因仍未知。原失败原件保留，不补造成功回执。
+
+按 [#82/6513078786](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6513078786)，仅对旧journal没有curl rc、冻结404没有Content-Length、正文精确匹配“Replay not found”的这一类不完整旧证据，增加私有根目录共用的一次受控重取额度。仍须是本轮实际列表里的原回放URL；已知curl失败、长度不符、其他正文/接口/跳转不适用。请求前复制旧正文、响应头、journal及已有part到 `raw/legacy-404-rechecks/`，保存SHA、原长度/mtime；先持久写 `legacy-404-recheck.json` 绑定URL/cycle/下载参数和开始时间，再发一次完整GET。新头/体副本、SHA、HTTP状态、curl rc和完成时间独立保存，旧失败不覆盖。无论新结果如何都不循环、退避或跟随跳转。记录已开始但结果不明时也消耗额度，重启只停下报主管，不能再请求或手改额度。
+
+受控结果仅rc0且完整的精确404进入墓碑；rc0的200走原长度/SHA验证和回执发布。其他结果保留原游标并停止。完成响应后、墓碑或成功索引提交前中断，重启校验冻结证据并完成原结果，不重新请求；根目录第二条旧失败或新cycle不能另领额度。该额度不改变正常下一完整cycle对既有墓碑的自然重查规则。此处接续只由原ops在小批合入并核ROOT字节后执行，开发固定测试不运行生产下载，不重下已核782及导出，不更换盐、分片或游标。
 
 同轮按去重的 run 计已处理记录（已核成功与墓碑的并集）；旧索引由 `checked_cycle` 读回已核成功，不倒填782次请求。每次落墓碑先持久保存，再以整数比较：墓碑数 × 100 > 已处理记录数，或连续5个新处理run为墓碑，即停止并报 `tombstone circuit breaker`，错误只含汇总。恰好1%可继续。连续性跨页/分片/重启保存，新成功归零；同轮重复行和重读页前缀不重复计数、不重置连续性。触发后同轮接续在任何网络请求之前继续拒绝，不可手改计数/游标绕过，应交主管裁决。
 
