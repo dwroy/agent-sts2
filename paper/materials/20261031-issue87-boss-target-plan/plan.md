@@ -28,6 +28,8 @@ K1 的 TEST_SUBJECT 条目包含 v0.111.0 外部 501 场/501 上传局、原来�
 
 本轮最新 14 个已结束终局全部败：F33 的 CRUSHER+ROCKET 5 条、KNOWLEDGE_DEMON 1 条，F48 AEONGLASS 与 F49 TEST_SUBJECT 各 1 条，与 issue 的描述相符。这只核对终局现状，不计算首试通过率/根因。三题 run-config 的 code 捕获都有 `git status ... ENOBUFS`，因此不凭这些记录或 `code=current` 宣称已精确绑定 R461–R463；对照发布身份还须原 ops 的发布回执补核。
 
+18:22 接到 [#83 来源草稿](https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6542179079)，本轮已按固定 `b08ac7f0f27880023b83f0e0eae701b81823fdea` 读回两份原文件并登记字节/SHA。优先 CRUSHER+ROCKET、再 KNOWLEDGE_DEMON；这两份仍是数据盘点，机制/构筑需求/K1 ID 均明示 unknown。本轮没有替 #83 逐局核完原证据，故不把其新首试计数塞进生产题面或本方案的历史回放样例。#83 特别指出那5局帝王蟹终局败的首试全是SL预测死中止，进一步说明不能称5个首试实际死亡。接口应直接容纳实际胜/实际死/预测截止/重试/unknown及own/external不同分母，后续按原owner的证据与发布身份接入；不等其完整模型校准或自然胜率父项。本轮也已从实际K1独立核到相关条目，不能因为上游草稿的K1 ID待核而抹掉这些已有目录，但单窗触发限制照旧。
+
 ## 目标身份、连战与资源
 
 二幕观察目录：`KAISER_CRAB`（实际敌人 `CRUSHER+ROCKET`）、`KNOWLEDGE_DEMON`、`THE_INSATIABLE`。三幕观察目录：`AEONGLASS`、`QUEEN`、`TEST_SUBJECT`；组合保留顺序。来源里的单 Boss 前缀不是已知只有一场，也不能把六种观察顺序当穷尽规则或均匀概率。
