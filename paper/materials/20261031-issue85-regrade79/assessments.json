@@ -1,0 +1,58 @@
+{
+  "schema": "strategy-reassessments-v1",
+  "policy_authority": [
+    "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6512421088",
+    "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6512932583",
+    "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6539128264"
+  ],
+  "source_audit": "evidence-audit.json",
+  "entries": [
+    {
+      "id": "silent-route-hp-observation",
+      "source_sha256": "5adde8b951bade4ab309b433be7c743a221cb612771b47b35a622e2eff4a10f2",
+      "grade": "B+",
+      "category": "路线资源",
+      "evidence_type": "单臂统计",
+      "single_observation_window": false,
+      "summary": "单臂统计，非对照：原自有unknown版本Silent A10的280局/524机会资源描述仍在完整历史中，当前路线复核主张未改为固定回血/精英/安全线；新增v0.111两条轨迹仅并列实例，不加入280分母或解释因果收益。",
+      "claim_population": {
+        "source": "own",
+        "n": 280,
+        "unit": "independent_runs",
+        "wins": 6,
+        "opportunities": 524,
+        "game_version": "unknown",
+        "source_sha256": "717645804aea466d8c2381ba0f7962cd8f1c194a09df1f592f92b2570eea2069",
+        "pointer": "/rest_elite_branch/all",
+        "scope_notice": "只支撑完整历史中保留的旧机会总体描述；182334外部2例另账，不将其置信度说成由280局验证。"
+      },
+      "consistency": 1,
+      "consistency_note": "限定描述保留净增/净减和选择混杂；外部恢复后耗竭/相反终局不是同一可比对照臂的方向反转，不支持固定动作收益。",
+      "rationale": "重新从已核归档原件数出280个不同自有局和524机会，满足自有10局描述门；不是从旧B+/confidence复制。当前正文的两个外部实例单独n=2，不能借历史总体把具体例子升为普遍机制；全部历史/反向窗口留存，A的可比两臂及跨版本一致性门不满足。",
+      "limitations": [
+        "支持分=0.35×280/(280+50)=0.296970，只针对保留的历史机会描述，不是新两例的可靠度/胜率/因果概率。",
+        "自有unknown版本与外部v0.111分账；524窗口不当524独立局；自有重复/SL及选择差异保留。",
+        "新增两个外部完整投影均是节点末HP代理，缺地图全备选/用药/事件菜单；不定回血动作、安全线、替代路线或恢复机制。",
+        "旧辅助定位缺口保留，不因缺文件或继承记录自动补验证；本批新增系统对局0。"
+      ]
+    },
+    {
+      "id": "silent-brain-poison-footwork-realization-review",
+      "source_sha256": "401e79a837826674a552db10ce7368870ac4c2ca0590b26677459263cfc98ebf",
+      "grade": "B−",
+      "category": "构筑组合",
+      "evidence_type": "原观察/策略（仅引用）",
+      "single_observation_window": false,
+      "summary": "仅引用：自有2局及少量外部选定案例；182334的4/10是选定赢家中幕1/2记录三签名的比例，不是齐备后的胜率或动作收益，能力是否实际建立未知。",
+      "claim_population": null,
+      "consistency": null,
+      "rationale": "新20条投影实核为10胜10负选样，幕1/2三签名前缀命中4条且都属于选定赢家；4/10小于外部50门，自有仍仅2局小于10门，旧二例不与新节点/赢家/总体池相加。没有已复核确定性牌文/动作机制，不能以机制例外给null并升B+；也不把幕3才齐的失败强算为本两幕触发的反向。",
+      "limitations": [
+        "B−保守支持分0表示未达本级正文门，不表示负效果或策略错误；只查询/引用。",
+        "原两局过首Boss只反对组件齐备必败，不证明完整循环、安全保证、启动顺序或单牌收益。",
+        "终局簇及赢家/后来所得牌不能写入当前触发；取得前缀和节点末HP不是完整实际战前/能力部署快照。",
+        "原幕1/2、持牌、题型、所有证据/反例/历史限制不改；新增自有验证0，旧版本unknown与外部v0.111不合池。"
+      ]
+    }
+  ]
+}
