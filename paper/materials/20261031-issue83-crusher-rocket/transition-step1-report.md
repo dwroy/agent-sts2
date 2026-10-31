@@ -6,6 +6,8 @@
 
 窄修候选只在整场、已核Silent A10、双实体HP219/209和Rage powers、Crusher本回合Enlarge/0block成立时，利用只读traceSteps确认Rocket出牌后仍活且毒≥剩余HP、结算后死，存活Crusher确得6力量/99block，才保留新99到下一回合。提前由卡牌杀死的对照不保留，其他方向/回合/进阶不扩大。排除未解析手牌/选牌、Howl/回合末被动随机杀等不清晰时点。短程solver一字未改；A8已知Weak+Rage多算1HP不混修。
 
-候选源码只在自有.artifacts隔离视图，patch及两叶SHA已固定：crab-poison-rage-candidate.patch / crab-poison-rage-candidate-manifest.json。生产源码/live均未安装；原Aeon WIP/测试完整保。候选生产tsc0；6个guard（实测/禁用/A9/Ironclad/坏HP/卡牌先杀）验证；原immutable isolation runner对solver/5回合输出234874字节SHA1bce9c63…完全一致。该固定字节核验不冒acceptance.py要求的已提交候选及完整源码发布检查；正式B4/B5提交身份/唯一组合检查仍待后继工程批。
+候选源码只在自有.artifacts隔离视图，patch及两叶SHA已固定：crab-poison-rage-candidate.patch / crab-poison-rage-candidate-manifest.json。生产源码/live均未安装；原Aeon WIP/测试完整保。候选生产tsc0；6个guard（实测/禁用/A9/Ironclad/坏HP/卡牌先杀）及真实双蟹short-five数值等价验证；原immutable isolation runner对solver/5回合输出234874字节SHA1bce9c63…完全一致。该固定字节核验不冒acceptance.py要求的已提交候选及完整源码发布检查；正式B4/B5提交身份/唯一组合检查仍待后继工程批。
 
 第一步结论已达到“定位并验证窄修”，不声称模型准入。C沿主管新授权紧接：先预注册唯一原始概率候选，再对已看val一次固定复验；无论结果如何保留原输出，不能换系数/候选再刷。C通过也先主管报Roy，不开关。nice19、最多两计算进程；不加full抢#77。
+
+补记：真实双蟹short-five初次严格整对象比较只差budgetNeedMs（58.7773/57.9218），是固定巨额budget下的耗时估计元数据；原r2输出保留，全部决策字段核同，详见crab-carry-guard-receipt.json。immutable runner的234874字节比较本来就逐字相同，两种证明分账。原189a2c9d3之后仅修正这一诊断说明及patch零上下文序列化，模型源码/输入/准入标准不变，C尚未开始。

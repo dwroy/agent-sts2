@@ -4,7 +4,7 @@
   "only_candidate": "scoped fixed poison-rage carry model + raw uncalibrated winProb for Silent A10 CRUSHER+ROCKET, no fitted parameters",
   "other_bosses": "retain existing approved-first70 fixed map and frozen model outputs; no effect scope expansion",
   "candidate_source_manifest": "crab-poison-rage-candidate-manifest.json",
-  "patch_sha256": "4b736cf3978605ce6eefc6aa92384a3610f16cbc3a1a9ad67b3627f053f73446",
+  "patch_sha256": "433e3879d52dbbb6817e5d24d6e7c54bb67ba28516802e6a32974a9170bf28be",
   "preregistered_before_C_outcomes": true,
   "validation_seen": true,
   "validation_label": "val已在诊断中看过；固定复验，不是全新盲测",
@@ -1478,11 +1478,12 @@
       "bytes": 150
     }
   },
-  "runner_pool_patch_sha256": "eb30a5528d5f50c5ac805c85cbf4bc617b877e66ea71d71177e902f5e85848d7",
+  "runner_pool_patch_sha256": "29fec558977dac6f023f1941f6e4088884e31f357a4d875e5591c55efae7b42f",
   "pool_equivalence_tune_check": {
     "samples": 8,
     "seed": 1,
     "all_orders": true,
     "source": ".artifacts/issue83/crusher-rocket/transition-candidate-source/pool-check-r2.log"
-  }
+  },
+  "correction_before_execution": "189a2c9d3 prereg retained; no C run began. Normalize only real-short wall-clock budgetNeedMs and use zero-context patch serialization; physics/source/inputs/criteria unchanged."
 }
