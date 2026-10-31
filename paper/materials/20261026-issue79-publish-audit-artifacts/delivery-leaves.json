@@ -1,0 +1,71 @@
+{
+  "schema": "issue79-delivery-leaves-v1",
+  "allocation_base": "3f72590d1943914a254188b1763362bf1692d320",
+  "leaves": [
+    {
+      "path": "agent/src/knowledge/runtime/approval.ts",
+      "sha256": "9ba3c58318d2ff15181eaf58930c16aedea276dc7f5761a78af7949cca145143",
+      "bytes": 3853,
+      "mode": "0o644",
+      "targets": [
+        "ROOT",
+        "knowledge CLI runtime tree: add new import dependency"
+      ]
+    },
+    {
+      "path": "agent/src/knowledge/runtime/store.ts",
+      "sha256": "9bcc909571f91c666fa72938b5645b72b25d4ed407ff7b65dc42d0e0f20d299b",
+      "bytes": 27359,
+      "mode": "0o664",
+      "targets": [
+        "ROOT",
+        "knowledge CLI runtime tree: preserve subsequent shared-leaf changes"
+      ]
+    },
+    {
+      "path": "learner/lib/knowledge-classification.ts",
+      "sha256": "3bd75d534a9da86fb37d9d25c11e9e506a77b06bad9065f5d99a1fdf9f160a69",
+      "bytes": 1564,
+      "mode": "0o664",
+      "targets": [
+        "ROOT-only learning instructions"
+      ]
+    },
+    {
+      "path": "agent/tests/knowledge-approval.test.ts",
+      "sha256": "015ad81e87a76fa8be04c9732ed5c018581a7a3ba5ce9f5c5401d4505349d46a",
+      "bytes": 8813,
+      "mode": "0o644",
+      "targets": [
+        "ROOT fixed tests; no gameplay installation required"
+      ]
+    },
+    {
+      "path": "docs/knowledge-source-approval.md",
+      "sha256": "0c78b1de75e7ee53e209424c12ac8865f1ef34e0f0fb48d8bcb2c155fc84380d",
+      "bytes": 3861,
+      "mode": "0o644",
+      "targets": [
+        "documentation"
+      ]
+    },
+    {
+      "path": "paper/materials/20261026-issue79-publish-audit-artifacts/replay.mjs",
+      "sha256": "75589717b8fbed089d5376d291d9c75e5175440135cbd790f9474595fce9acbb",
+      "bytes": 6537,
+      "mode": "0o644",
+      "targets": [
+        "read-only original inputs; isolated writes only"
+      ]
+    }
+  ],
+  "behavior_release": false,
+  "dependencies": {
+    "code": [],
+    "runtime_acceptance": [
+      "#78 full tool <=24KB",
+      "#65/#77 original wrapper supervision",
+      "#73 explicit continuation if original base is no longer current"
+    ]
+  }
+}
