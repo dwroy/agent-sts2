@@ -961,7 +961,10 @@ class Scheduler(unittest.TestCase):
             for script in ('agent_board.py', 'issue_session_support.py', 'board_queue_pin.py'):
                 (ops / script).write_bytes((Path(resource.__file__).parent / script).read_bytes())
             (root / '.agents').mkdir()
-            (root / '.agents/board.yaml').write_bytes((Path(resource.__file__).parents[1] / '.agents/board.yaml').read_bytes())
+            config = resource.retention.Board(Path(resource.__file__).parents[1]).data
+            # This fake kit exercises scheduler control, not queue-pin activation.
+            config['dispatcher']['merge_queue'] = dict(enabled=False)
+            (root / '.agents/board.yaml').write_text(json.dumps(config))
             kit = directory / 'agent-board-kit'; kit.mkdir()
             (kit / 'board.py').write_text(record + 'with p.open("a") as h: h.write("board\\n")\n')
             (directory / 'agent-board-projects.json').write_text(json.dumps({'projects': [{'root': str(root)}]}))
