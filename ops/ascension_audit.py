@@ -95,6 +95,9 @@ def dispatch(state, root, scripts, character, finished, alive, stamp, start, ava
         batch.update(state='lost',retry_at=time.time()+3600)
         if request: request.update(state='queued',retry_at=batch['retry_at'],last_failure='learner process lost; old tree and logs preserved')
     for request in requests.values():
+        from learning_concurrency import allowed
+        if not allowed(state, root, alive, directory=state_dir):
+            return None
         if request['character'] != character or request['state'] not in ('queued','failed'): continue
         if request.get('retry_at',0) > time.time(): continue
         if request['attempts'] >= 3:

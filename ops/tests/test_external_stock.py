@@ -239,7 +239,9 @@ class Stock(unittest.TestCase):
 
     def test_quota_disk_exhaustion_and_missing_source_have_distinct_reasons(self):
         self.quota(95)
-        self.assertEqual(self.maintain()['stop_reason'], 'quota:switch_codex1')
+        self.assertEqual(self.maintain()['stop_reason'], 'ready')
+        self.assertEqual(external.policy.snapshot(self.root, self.directory)['workers'], 3)
+        self.assertNotIn('external_switch_requested', self.state)
         self.quota(); self.disk_mock.return_value.free = 1
         self.assertEqual(self.maintain()['stop_reason'], 'disk_capacity')
         self.disk_mock.return_value.free = 200 * (1 << 30)

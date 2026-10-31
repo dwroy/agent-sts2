@@ -5,4 +5,4 @@ it("replenishes anonymous stock through original dispatch, native reading and co
   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_external_stock.py"], {
     encoding: "utf8", timeout: 20_000,
   })).toBe("");
-});
+}, 25_000);

@@ -63,6 +63,9 @@ def published(state):
             if (binding.get("plan_id") != saved["external_source"] or not binding.get("dispatch_base")
                     or saved.get("external_lane") not in ("A", "B", "C", "D") or not saved.get("external_policy")):
                 continue
+            if (saved["external_policy"].get("admission") == "learning-concurrency-v1"
+                    and not re.fullmatch(r"ext(?:[1-9]|10)", str(saved.get("external_slot")))):
+                continue
         if row["pid"] is not None and saved.get("pid") == row["pid"] and saved.get("state") == "running":
             row["lock"].close()
             del current["pending"][batch]

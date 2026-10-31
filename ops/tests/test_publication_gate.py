@@ -176,8 +176,10 @@ class CandidateDispatch(unittest.TestCase):
             self.assertEqual(f.state["batches"], {})
             path.unlink()
         for used in (90, None):
+            f.state = {"batches": {}}
             f.quota(used)
-            self.assertIsNone(f.dispatch())
+            self.assertIsNotNone(f.dispatch())
+        f.state = {"batches": {}}
         f.quota(20)
         with patch.object(external.policy, "external_disk_allowed", return_value=False):
             self.assertIsNone(f.dispatch())

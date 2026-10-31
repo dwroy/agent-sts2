@@ -687,6 +687,9 @@ def reconcile(state, root, scripts, character, alive, stamp, start, limit=2):
             batch_id = stamp + "-strategy-proposal"
             if batch_id in state["batches"]:
                 continue
+            from learning_concurrency import allowed
+            if not allowed(state, root, alive, directory=state_dir):
+                continue
             if req.get("account_transition", {}).get("mode") == "new-account-continuation":
                 plan = account_plan(root, state_dir, req, rec)
                 if plan["thread_id"] is None:
