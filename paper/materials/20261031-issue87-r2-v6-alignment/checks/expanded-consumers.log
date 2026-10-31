@@ -1,0 +1,68 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:1830130) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1830838) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1831009) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/silent-double-boss.test.ts (12 tests | 1 failed) 751ms
+     × keeps missing, capped and unobserved conditional outcomes unknown rather than zero 11ms
+(node:1831124) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 82ms
+   × uses P times completed W without preparing W0 and copies provider diagnostics independently 11ms
+(node:1831476) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-double-boss.test.ts > Silent observed double boss > keeps missing, capped and unobserved conditional outcomes unknown rather than zero
+AssertionError: expected { value: null, wins: +0, …(3) } to match object { value: +0, wins: +0, …(3) }
+
+- Expected
++ Received
+
+  {
+-   "reason": null,
++   "reason": "no_first_win_samples",
+    "samples": 1,
+    "unknown": 0,
+-   "value": 0,
++   "value": null,
+    "wins": 0,
+  }
+
+ ❯ tests/silent-double-boss.test.ts:123:30
+    121|     expect(noFirstWin.first.value).toBe(0);
+    122|     expect(noFirstWin.secondGivenFirstWin).toMatchObject({ value:null,…
+    123|     expect(noFirstWin.joint).toMatchObject({ value:0,wins:0,samples:1,…
+       |                              ^
+    124|     const unfinishedFirst = { ...failedFirst,sequence:{ ...failedFirst…
+    125|     expect(continuousBossResult([unfinishedFirst],1,true,true)!.joint)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > uses P times completed W without preparing W0 and copies provider diagnostics independently
+AssertionError: expected 'empirical' to be 'not_computed' // Object.is equality
+
+Expected: "not_computed"
+Received: "empirical"
+
+ ❯ tests/v6-direction-provider.test.ts:126:35
+    124|   expect(baseline.completed_win).toEqual({ value: 1, se: 0, n: r.confi…
+    125|   expect(baseline.general_win).toBeNull();
+    126|   expect(baseline.general_source).toBe("not_computed");
+       |                                   ^
+    127|   expect(vi.mocked(r.prepare).mock.calls.length).toBeGreaterThan(0);
+    128|   expect(vi.mocked(r.prepare).mock.calls.every(([, sample]) => sample.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 12 passed (14)
+      Tests  2 failed | 133 passed (135)
+   Start at  22:37:00
+   Duration  19.64s (transform 4.41s, setup 1.32s, import 7.98s, tests 8.54s, environment 2ms)
+

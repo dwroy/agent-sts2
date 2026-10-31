@@ -1,0 +1,81 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:1820552) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-projection-progress.test.ts (4 tests | 1 failed) 138ms
+   × resolves each direction catalog once and reuses act rankings at pick 90ms
+ ❯ tests/v6-history-targets.test.ts (11 tests | 1 failed) 60ms
+     × uses the map-known current Boss and retains observed candidates when the map is unknown 9ms
+(node:1821736) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1822371) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1822735) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823073) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823628) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823831) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823871) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1823892) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > uses the map-known current Boss and retains observed candidates when the map is unknown
+AssertionError: expected [ 'CEREMONIAL_BEAST', 'SOUL_FYSH' ] to deeply equal [ 'SOUL_FYSH', 'CEREMONIAL_BEAST' ]
+
+- Expected
++ Received
+
+  [
+-   "SOUL_FYSH",
+    "CEREMONIAL_BEAST",
++   "SOUL_FYSH",
+  ]
+
+ ❯ tests/v6-history-targets.test.ts:85:87
+     83|     expect(v6ProjectionTargets(c).filter(t => t.kind === "current").ma…
+     84|     c.visible = [];
+     85|     expect(v6ProjectionTargets(c).filter(t => t.kind === "current").ma…
+       |                                                                                       ^
+     86|     expect(v6ProjectionTargets(c).find(t => t.act === 2)?.boss).toBe("…
+     87|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-projection-progress.test.ts > resolves each direction catalog once and reuses act rankings at pick
+AssertionError: expected [ 'D/undefined', 'S/undefined' ] to deeply equal [ 'D/D:high', 'S/S:high' ]
+
+- Expected
++ Received
+
+  [
+-   "D/D:high",
+-   "S/S:high",
++   "D/undefined",
++   "S/undefined",
+  ]
+
+ ❯ tests/v6-projection-progress.test.ts:23:31
+     21|   visited.length = 0;
+     22|   await engine.evaluate({ ...r, phase: "pick", rankings: undefined });
+     23|   expect(visited.slice(0, 2)).toEqual(["D/D:high", "S/S:high"]);
+       |                               ^
+     24| });
+     25|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 18 passed (20)
+      Tests  2 failed | 250 passed (252)
+   Start at  22:35:38
+   Duration  22.86s (transform 3.84s, setup 2.02s, import 8.52s, tests 9.19s, environment 3ms)
+

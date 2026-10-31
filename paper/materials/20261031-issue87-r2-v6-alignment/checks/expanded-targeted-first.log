@@ -1,0 +1,427 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:1813358) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-room.test.ts (44 tests | 2 failed) 2409ms
+   × retains shop bounds while restored LIVE unknown counts still follow missing W 45ms
+   × retains rest bounds while restored LIVE unknown counts still follow missing W 25ms
+(node:1813944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1814890) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1815097) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1815207) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1815325) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-projection.test.ts (16 tests | 7 failed) 187ms
+     × uses only P times Wk and paired combat seeds, without W0 27ms
+     × shares identical completed decks within/across combinations and invalidates held resources 18ms
+     × reuses act-start absolute seeds at pick, then computes only missing larger-sample indices 9ms
+     × retains complete samples across a timed-out idle slice without changing seed indices 7ms
+     × invalidates cached samples when a caller mutates a retained prepared object between requests 5ms
+     × preserves a completed target while explicitly labeling an unknown competing combination 8ms
+     × needs no W0 when P=1, uses 100 at act start and caches the complete table 7ms
+(node:1815413) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-supply.test.ts (13 tests | 1 failed) 93ms
+   × caps picks to ranked four; evaluates all at act start and restricts brain override 8ms
+(node:1815469) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-projection-progress.test.ts (4 tests | 4 failed) 52ms
+   × visits each direction's leading combination before a second combination and reuses act rankings 33ms
+   × returns the completed target and its n while another target is structurally unknown 7ms
+   × reports a known zero relay expectation when every paired first fight is a terminal loss 8ms
+   × computes only the requested combination instead of resolving the whole catalog up front 2ms
+ ❯ tests/v6-history-targets.test.ts (11 tests | 2 failed) 48ms
+     × candidate mixtures retain unknown mass and bound cross-target uncertainty conservatively 30ms
+     × uses only the map-known current Boss while retaining historical candidates for future acts 2ms
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 48ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 30ms
+ ❯ tests/v6-chain-log.test.ts (2 tests | 1 failed) 76ms
+     × uses joint same-sample outcomes and retains missing resources as unknown 57ms
+(node:1815585) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1815670) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/v6-precompute.test.ts (4 tests | 1 failed) 14ms
+   × continues unfinished cached work only at the next explicit idle boundary 5ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-chain-log.test.ts > V6 continuous projection and explicit logs > uses joint same-sample outcomes and retains missing resources as unknown
+AssertionError: expected 0.5 to be 0.25 // Object.is equality
+
+- Expected
++ Received
+
+- 0.25
++ 0.5
+
+ ❯ tests/v6-chain-log.test.ts:37:41
+     35|     const r = chainRequest(), good = await new V6ProjectionEngine(new …
+     36|     // Lookup P=.5 multiplies the first-fight W=.5 and relay W=.25; W0…
+     37|     expect(good.entries[0]!.win?.value).toBe(.25);
+       |                                         ^
+     38|     expect(good.entries[0]!.joint_win?.value).toBeCloseTo(.125);
+     39|     expect(good.combinations[0]!.completed_joint_win?.value).not.toBe(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > candidate mixtures retain unknown mass and bound cross-target uncertainty conservatively
+AssertionError: expected 0.8125 to be close to 0.75, received difference is 0.0625, but expected 0.005
+ ❯ tests/v6-history-targets.test.ts:76:104
+     74|     r.targets=[{...r.targets[0]!,id:"a",probability:.7},{...r.targets[…
+     75|     const table=await new V6ProjectionEngine(new FixedRunner()).evalua…
+     76|     expect(table.target_mixtures.find(x=>x.option_id==="take"&&x.kind=…
+       |                                                                                                        ^
+     77|     r.targets[1]={...r.targets[1]!,unknown:"unobserved"};
+     78|     const unknown=await new V6ProjectionEngine(new FixedRunner()).eval…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > uses only the map-known current Boss while retaining historical candidates for future acts
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/v6-history-targets.test.ts:85:77
+     83|     expect(v6ProjectionTargets(c).filter(t => t.kind === "current").ma…
+     84|     c.visible = [];
+     85|     expect(v6ProjectionTargets(c).find(t => t.kind === "current")?.unk…
+       |                                                                             ^
+     86|     expect(v6ProjectionTargets(c).find(t => t.act === 2)?.boss).toBe("…
+     87|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  tests/v6-precompute.test.ts > continues unfinished cached work only at the next explicit idle boundary
+AssertionError: expected 'idle' to be 'computed' // Object.is equality
+
+Expected: "computed"
+Received: "idle"
+
+ ❯ tests/v6-precompute.test.ts:56:49
+     54|   expect((await idle.runIdle(boundary)).status).toBe("computed");
+     55|   await Promise.resolve(); expect(precompute).toHaveBeenCalledTimes(1);
+     56|   expect((await idle.runIdle(boundary)).status).toBe("computed");
+       |                                                 ^
+     57|   expect((await idle.runIdle(boundary)).status).toBe("idle");
+     58|   idle.schedule(request()); idle.invalidate();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/v6-projection-entries.test.ts:24:110
+     22|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     23|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     24|   expect(table.combinations.every(row => row.general_win === null && r…
+       |                                                                                                              ^
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+     26|   expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_sour…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  tests/v6-projection-progress.test.ts > visits each direction's leading combination before a second combination and reuses act rankings
+AssertionError: expected [ 'D/undefined', 'S/undefined' ] to deeply equal [ 'D/D:high', 'S/S:high', …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "D/D:high",
+-   "S/S:high",
+-   "D/D:low",
+-   "S/S:low",
++   "D/undefined",
++   "S/undefined",
+  ]
+
+ ❯ tests/v6-projection-progress.test.ts:19:19
+     17|   r.completionSources = [provider];
+     18|   const engine = new V6ProjectionEngine(new FixedRunner()), act = awai…
+     19|   expect(visited).toEqual(["D/D:high", "S/S:high", "D/D:low", "S/S:low…
+       |                   ^
+     20|   expect(act.entries.every(e => e.win?.n === 100 && e.combination_cove…
+     21|   visited.length = 0;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  tests/v6-projection-progress.test.ts > returns the completed target and its n while another target is structurally unknown
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-progress.test.ts:32:40
+     30|   expect(table.entries.find(e => e.target_id === target.id)?.win?.n).t…
+     31|   expect(table.entries.find(e => e.target_id === "missing")?.win).toBe…
+     32|   expect(table.telemetry.pending_work).toBe(false);
+       |                                        ^
+     33| });
+     34|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  tests/v6-projection-progress.test.ts > reports a known zero relay expectation when every paired first fight is a terminal loss
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/v6-projection-progress.test.ts:50:86
+     48|   })]), complete: [], timedOut: false, elapsedMs: 1, workers: 1 });
+     49|   const table = await new V6ProjectionEngine(runner).evaluate(r);
+     50|   expect(table.entries.every(e => e.joint_win?.value === 0 && e.joint_…
+       |                                                                                      ^
+     51|   expect(table.pick_direction_comparisons.every(e => e.joint_paired_de…
+     52|   expect(table.combinations[0]!.continuous?.secondGivenFirstWin.value)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  tests/v6-projection-progress.test.ts > computes only the requested combination instead of resolving the whole catalog up front
+AssertionError: expected [ undefined ] to deeply equal [ [ 'k0' ], [ 'k1' ], [ 'k2' ], …(1) ]
+
+- Expected
++ Received
+
+  [
+-   [
+-     "k0",
+-   ],
+-   [
+-     "k1",
+-   ],
+-   [
+-     "k2",
+-   ],
+-   [
+-     "k3",
+-   ],
++   undefined,
+  ]
+
+ ❯ tests/v6-projection-progress.test.ts:61:45
+     59|   r.completionSources = [provider];
+     60|   const table = await new V6ProjectionEngine(new FixedRunner()).evalua…
+     61|   expect(visits.map(c => c.combinationIds)).toEqual([["k0"], ["k1"], […
+       |                                             ^
+     62|   expect(table.entries[0]?.combination_coverage).toMatchObject({ catal…
+     63| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > uses only P times Wk and paired combat seeds, without W0
+AssertionError: expected { value: 0.2500000000000001, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "n": 20,
+  "se": 0.0993399267798783,
+  "value": 0.2500000000000001,
+}
+
+ ❯ tests/v6-projection.test.ts:10:73
+      8|     const runner = new FixedRunner(), engine = new V6ProjectionEngine(…
+      9|     const t = await engine.evaluate(r), skip = t.combinations[0]!, tak…
+     10|     expect(skip.completed_win?.value).toBe(1); expect(skip.general_win…
+       |                                                                         ^
+     11|     expect(skip.entry.win?.value).toBeCloseTo(.5); expect(take.entry.w…
+     12|     expect(take.entry.paired_delta?.mean).toBeCloseTo(.25); expect(tak…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > shares identical completed decks within/across combinations and invalidates held resources
+AssertionError: expected 40 to be 20 // Object.is equality
+
+- Expected
++ Received
+
+- 20
++ 40
+
+ ❯ tests/v6-projection.test.ts:20:73
+     18|   it("shares identical completed decks within/across combinations and …
+     19|     const runner = new FixedRunner(), engine = new V6ProjectionEngine(…
+     20|     const t = await engine.evaluate(r); expect(t.telemetry.simulations…
+       |                                                                         ^
+     21|     expect(t.telemetry.cache_hits).toBeGreaterThanOrEqual(2);
+     22|     r.contextDigest = "new-question-same-input";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > reuses act-start absolute seeds at pick, then computes only missing larger-sample indices
+AssertionError: expected 200 to be 100 // Object.is equality
+
+- Expected
++ Received
+
+- 100
++ 200
+
+ ❯ tests/v6-projection.test.ts:32:62
+     30|   it("reuses act-start absolute seeds at pick, then computes only miss…
+     31|     const runner = new FixedRunner(), engine = new V6ProjectionEngine(…
+     32|     expect((await engine.evaluate(r)).telemetry.simulations).toBe(100);
+       |                                                              ^
+     33|     r.phase = "pick"; r.contextDigest = "pick-question";
+     34|     const hot = await engine.evaluate(r), fresh = await new V6Projecti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > retains complete samples across a timed-out idle slice without changing seed indices
+AssertionError: expected 14 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 14
+
+ ❯ tests/v6-projection.test.ts:55:62
+     53|     };
+     54|     const r = request(), engine = new V6ProjectionEngine(runner);
+     55|     expect((await engine.evaluate(r)).telemetry.simulations).toBe(7);
+       |                                                              ^
+     56|     const resumed = await engine.evaluate(r);
+     57|     expect(resumed.telemetry.simulations).toBe(13);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > invalidates cached samples when a caller mutates a retained prepared object between requests
+AssertionError: expected 40 to be 20 // Object.is equality
+
+- Expected
++ Received
+
+- 20
++ 40
+
+ ❯ tests/v6-projection.test.ts:89:62
+     87|       if (!inputs.has(key)) inputs.set(key, prepare(t, s, o)!); return…
+     88|     };
+     89|     expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+       |                                                              ^
+     90|     for (const input of inputs.values()) input.input.solver.player.hp-…
+     91|     expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > preserves a completed target while explicitly labeling an unknown competing combination
+AssertionError: expected undefined to match object { selection: 'catalog_maximum', …(2) }
+
+- Expected:
+{
+  "evaluated_combinations": 2,
+  "pending_combinations": 0,
+  "selection": "catalog_maximum",
+}
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection.test.ts:102:43
+    100|     const complete = (await new V6ProjectionEngine(new FixedRunner()).…
+    101|     expect(complete.win).not.toBeNull();
+    102|     expect(complete.combination_coverage).toMatchObject({ selection: "…
+       |                                           ^
+    103|     provider.resolve = c => { const result = resolve(c)!;
+    104|       result.combinations[1]!.availability = { skip: null, take: null …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/19]⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > needs no W0 when P=1, uses 100 at act start and caches the complete table
+AssertionError: expected [ 'k0' ] to deeply equal [ 'k0', 'D:minimal' ]
+
+- Expected
++ Received
+
+  [
+    "k0",
+-   "D:minimal",
+  ]
+
+ ❯ tests/v6-projection.test.ts:124:113
+    122|     const r = request(), runner = new FixedRunner(), e = new V6Project…
+    123|     const t = await e.evaluate(r); expect(t.entries[0]?.win?.value).to…
+    124|     expect(runner.calls[0]?.samples).toBe(100); expect(t.act_evaluatio…
+       |                                                                                                                 ^
+    125|     expect((await e.evaluate(r)).telemetry.act_cache_hit).toBe(true);
+    126|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯
+
+ FAIL  tests/v6-room.test.ts > retains shop bounds while restored LIVE unknown counts still follow missing W
+ FAIL  tests/v6-room.test.ts > retains rest bounds while restored LIVE unknown counts still follow missing W
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/v6-room.test.ts:305:45
+    303|   entry.availability.take = .01;
+    304|   entry.expected_win_bound = { lower: 0, upper: .01, reason: "low_prob…
+    305|   expect(validateProjectionEntry(entry).ok).toBe(true);
+       |                                             ^
+    306|   recordV6Room(e, decision, join(dir, "plans.jsonl"), "low-p", {}, fal…
+    307|   const row = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "ut…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/19]⎯
+
+ FAIL  tests/v6-supply.test.ts > caps picks to ranked four; evaluates all at act start and restricts brain override
+AssertionError: expected [ 'k0', 'k1', 'k2', 'k3', 'k4', 'k5' ] to deeply equal [ 'k5' ]
+
+- Expected
++ Received
+
+  [
++   "k0",
++   "k1",
++   "k2",
++   "k3",
++   "k4",
+    "k5",
+  ]
+
+ ❯ tests/v6-supply.test.ts:54:98
+     52|   expect(s.resolve({ ...c, ranking: ["k5", "k4"] })?.combinations.map(…
+     53|   expect(s.resolve({ ...c, phase: "act" })?.combinations).toHaveLength…
+     54|   expect(s.resolve({ ...c, phase: "act", combinationIds: ["k5"] })?.co…
+       |                                                                                                  ^
+     55|   expect(s.resolve({ ...c, ranking: ["k5", "k4"], combinationIds: ["k5…
+     56|   expect(() => s.resolve({ ...c, idealOverrides: { D: ["UNLEARNED"] } …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/19]⎯
+
+
+ Test Files  8 failed | 12 passed (20)
+      Tests  19 failed | 233 passed (252)
+   Start at  22:33:32
+   Duration  22.31s (transform 3.98s, setup 1.67s, import 8.70s, tests 9.25s, environment 2ms)
+

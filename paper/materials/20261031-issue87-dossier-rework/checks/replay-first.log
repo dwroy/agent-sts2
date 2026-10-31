@@ -1,0 +1,17 @@
+node:fs:1370
+  const result = binding.mkdir(
+                         ^
+
+Error: ENOENT: no such file or directory, mkdir '/home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/paper/materials/20261031-issue87-dossier-rework/full-prompts-first'
+    at mkdirSync (node:fs:1370:26)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent/tools/boss-target-replay.ts:74:3)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: '/home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/paper/materials/20261031-issue87-dossier-rework/full-prompts-first'
+}
+
+Node.js v22.23.3

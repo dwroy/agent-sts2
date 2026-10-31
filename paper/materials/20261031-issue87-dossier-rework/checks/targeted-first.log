@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:1922656) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/boss-target.test.ts (26 tests | 1 failed) 125ms
+   × reserves every Boss M field and eligible fact before oversized O/E tails 10ms
+(node:1923043) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-target.test.ts > reserves every Boss M field and eligible fact before oversized O/E tails
+AssertionError: expected '本幕=FORMAT_C；F48=FORMAT_C→F49=unknown；…' to contain '固定攻击13(n2)'
+
+Expected: "固定攻击13(n2)"
+Received: "本幕=FORMAT_C；F48=FORMAT_C→F49=unknown；脑据实际血药分战，余量unknown。"
+
+ ❯ tests/boss-target.test.ts:89:83
+     87|   for (const row of source.rows) {
+     88|     const line = text.split("\n").find((line: string) => line.includes…
+     89|     for (const token of [...row.mechanics, "PART_2死亡后PART_1获得能力+2"]) e…
+       |                                                                                   ^
+     90|   }
+     91|   expect(text).not.toMatch(/O_SENTINEL|E_SENTINEL/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 32 passed (33)
+   Start at  22:54:21
+   Duration  3.03s (transform 2.13s, setup 789ms, import 1.73s, tests 140ms, environment 0ms)
+
