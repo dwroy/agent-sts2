@@ -2,7 +2,7 @@
 
 本批依据 [68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285) 与批准方案 665fde83，仅 K 保管/资源闭环。基线 main `39e48ce9d09248b86c0eec1bf2339c4b453ec253`，独立分支 `issue-68-k-custody-batch1`；原 665/f88 分支、历史失败及在途事务保留。
 
-状态：项目准备，默认关闭；不是已采用。共享原 owner 的生命周期接口及完整新 pin 尚待交付：[kit#1/6525706107](https://github.com/dwroy/agent-board-kit/issues/1#issuecomment-6525706107)。本树不热补 51c，不改共享安装、原唯一入口/控制或在途事务。按 2026-10-31 [68/6539642223](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223)，第一批继续接线和采用；DataSeal 暂停，CodeSeal 等 #86 方案及主管决定，旧研究保留。旧的“一天后启动第二批”不再是自动开工依据。未夹带 CodeSeal/DataSeal 或 f88 数据例外。
+状态：项目准备，默认关闭；不是已采用。共享原 owner 的生命周期接口及完整新 pin 尚待交付：[kit#1/6525706107](https://github.com/dwroy/agent-board-kit/issues/1#issuecomment-6525706107)。本树不热补 51c，不改共享安装、原唯一入口/控制或在途事务。按 2026-10-31 [68/6539642223](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223)，第一批继续接线和采用，DataSeal 暂停；随后 [86/6539967934](https://github.com/dwroy/agent-sts2/issues/86#issuecomment-6539967934) 批准 A 开工并明确现阶段不新做 CodeSeal，A 核收后再看补充。旧研究保留，旧的“一天后启动第二批”不再是自动开工依据。未夹带 CodeSeal/DataSeal 或 f88 数据例外。
 
 ## 项目实现
 
@@ -42,8 +42,10 @@ S2 窄差量为四个项目模块及四份测试：补 K 实际路径 inode 检�
 2. 项目原型 `board_queue_control.py --root ROOT before-seal|post-result|tick` 输出 `sts2-queue-control-v1` 决策及 epoch/job/candidate 证据。原型接口须与 owner 实交协议再绑定，不能靠 pin 元数据自称能力；新固定 manifest 显式声明 project_control_contracts，受信任 core 从冻结配置给新 job 写 project_control_contract。旧未声明作业不转换。
 3. owner 接线时须逐批固定合同，校验事件与原 job/epoch/候选；采用/失败释放响应丢失须由原持久 outcome/terminal row 幂等恢复，不能二次 seal/full 或把旧 epoch 用到新批。项目接线按实交接口再冻结，当前尚不启用。
    还须接原 primary sync 的同 OFD 委托：51c 的 merge_queue.workspace_worker 现为 sync_lock(K)→mutation_lock(L) 独立 open/flock，开启 keeper 后会自等。不能仅加生命周期回调就开 custody，也不能先放 K 让 sync 再接回。请原 owner 给受冻结项目 source-lock provider/等价接口，传原 sync-job/authority 与真实 worker/resource 租约，让项目核同一批/原 writer 后借原 K，继续原 L、writer/queue 锁及原 CAS；不增第二 main writer。当前 publication 借用只覆盖原 publication owner 路线，原集成/active sync 的具体接线仍是联合待办，不能据组件自测冒完成。
-4. 全模块新 pin 核同、项目 delta/精确 ROOT/LIVE 映射和适用检查齐后，沿原自然窗口核收第一批，实际运行及稳定性仍据真实回执核。第一批继续，第二批按 68/6539642223 分为 DataSeal 暂停、CodeSeal 待 #86 方案，不因第一批满一天而启动。#56 优先、本批独立于 #56/#77 接续，不等可选 scanner。
+4. 全模块新 pin 核同、项目 delta/精确 ROOT/LIVE 映射和适用检查齐后，沿原自然窗口核收第一批，实际运行及稳定性仍据真实回执核。第一批继续；DataSeal 按 68/6539642223 暂停，CodeSeal 按 86/6539967934 现阶段不新做，A 核收后再看，不因第一批满一天而启动。#56 优先、本批独立于 #56/#77 接续，不等可选 scanner。
 
 原人工接力规则已在 `docs/board-merge-queue.md` 标“由自动保管取代”；新事务不保留两套并行方案，旧在途完成原合同。
 
 2026-10-31 的 #86 原单与窄边界预核保存在 [本轮评审](../20261031-issue68-86-boundary/review.md)：迁移全闭环后代码发布的 K 职责“由入库取代”，当前在途 7ee 与原 K 保护不提前转换；#86 方案未到件时只交接口约束，不冒正式方案已审或同意实施。
+
+随后 #86 已交固定方案 892d7768，[K 窄范围复核](../20261031-issue68-86-boundary/proposal-892d7768-review.md) 已完成：原则对齐，旧事务/补跑债务、A 期 B/C 只读闭集、两阶段 source-lock provider 三项随实施到件。主管 [86/6539967934](https://github.com/dwroy/agent-sts2/issues/86#issuecomment-6539967934) 已批 A 开工，并明确现阶段不新做 CodeSeal；DataSeal 仍暂停，A 核收后再看是否需要补充。本评审不增加审批轮，也不代第一批新 pin 接线或采用。

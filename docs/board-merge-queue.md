@@ -6,7 +6,7 @@
 
 ## 第一批自动 K 保管与资源闭环（2026-10-30）
 
-批准：[68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285)，方案 `665fde83`。第一批仅保管/排空/资源，继续接线和采用。2026-10-31 [范围调整](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223) 因 [#86 统一入库](https://github.com/dwroy/agent-sts2/issues/86) **暂停 DataSeal**，CodeSeal 等 #86 方案及主管决定；先前“第一批采用并跑稳一天后实施第二批”不再触发后续开发。旧方案与研究保留。本批 strict 仍逐字节拒绝任何无回执知识漂移，没有 f88 的数据例外。
+批准：[68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285)，方案 `665fde83`。第一批仅保管/排空/资源，继续接线和采用。2026-10-31 [范围调整](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223) 因 [#86 统一入库](https://github.com/dwroy/agent-sts2/issues/86) **暂停 DataSeal**；随后 [#86 方案批准](https://github.com/dwroy/agent-sts2/issues/86#issuecomment-6539967934) 明确**现阶段不新做 CodeSeal**，迁库后保现有 strict 精确核代码/配置，A 批核收后再看是否补充。先前“第一批采用并跑稳一天后实施第二批”不再触发后续开发。旧方案与研究保留。本批 strict 仍逐字节拒绝任何无回执知识漂移，没有 f88 的数据例外。
 
 旧人工接力规则 [77/6496035933](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6496035933)、[82/6511764132](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6511764132)、[82/6513930571](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6513930571)，以及上线前临时裁决 [77/6539468421](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6539468421)，在第一批实际启用的新合同中 **由自动保管取代**。新合同中不保留“先放 K、ops 再追接、主管裁空窗”的并行路线；当前第一批尚未采用，原未声明合同的在途批完成原事务，不热转换。
 

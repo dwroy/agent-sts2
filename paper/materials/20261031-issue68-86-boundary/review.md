@@ -1,5 +1,7 @@
 # #68 与 #86：K 退役边界预核
 
+后续到件：#86 已交固定方案 `892d7768`，本会话已继续作 [正式窄范围复核](proposal-892d7768-review.md)。下文保留取件早期的预核事实，不表示方案现在仍未到件。
+
 本轮接收 [68/6539642223](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223) 及 [ops 转发](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539813507)。第一批 K 保管继续接线和采用；DataSeal 暂停，CodeSeal 等 #86 方案后由主管决定。旧研究、665fde83 方案及 33fcb6fc/200c5227 工程冻结保留。
 
 这是对 [#86 原单](https://github.com/dwroy/agent-sts2/issues/86) 的 K/发布窄接口预核：取件时该单尚无方案评论，不能称已审完 schema、选型或全量清点。A/B/C/D 清点、存储选型、消费者迁移与实施仍由原 #86 owner 完成并交主管批准。本会话不写 DB、改读路径或启用 K 保管。
