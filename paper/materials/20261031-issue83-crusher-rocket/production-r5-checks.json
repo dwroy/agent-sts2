@@ -1,0 +1,171 @@
+{
+  "schema": "issue83-production-r5-checks-v1",
+  "completed_at": "2026-10-31T13:51:24.678246+00:00",
+  "pipeline_exit": 0,
+  "full_runs": 1,
+  "tsc_exit": 0,
+  "sandbox": {
+    "test_files": 653,
+    "tests": 6076,
+    "passed": true,
+    "seconds": 1425.53
+  },
+  "paths": {
+    "test_files": 1,
+    "tests": 11,
+    "passed": true,
+    "seconds": 3.61
+  },
+  "targeted": {
+    "tests": 50,
+    "passed": true
+  },
+  "producer_consumer": {
+    "tests": 54,
+    "passed": true
+  },
+  "source_unchanged": true,
+  "sources": {
+    "at_unix": 1793452136.0750444,
+    "files": {
+      "agent/src/reflex/rollout.ts": "e606a5024fb71e54071e1cd1a75f8db5f8817ea1b8c01bc650122a0e2cac28a3",
+      "agent/src/reflex/rollout-live.ts": "2bf6d984a1d09602792f7a955da1c7d155dc1c8cc68e41ab57b063980cbf9353",
+      "agent/src/v6/combat-entry-selection.ts": "a43e6d52cc4095b7b7b953f33e17b3907b4acae4030c069322c9eaf19864f7ab",
+      "agent/tools/v6/capture-combat-entry-replay.ts": "0daf78e557732fad91bd479262edd325370880d7aa1e5de3f45620dd7ebc0715",
+      "agent/tests/combat-entry-selection.test.ts": "a30a4c957bbc12b379348950199794bddb21e8dfb18b3520d07251a38673f7a1",
+      "agent/tests/silent-crab-poison-rage-carry.test.ts": "e53d6a7432f95f9d7f604869c14bfb1169eab62c596fbcc532fbfb19f7a36b41",
+      "agent/tests/fixtures/silent-crab-poison-rage-tune.json": "7100b8f2d025b77ca8039aac926f8f850d0ff8bb63a15a08c6262deae4d73a3e",
+      "ops/fixed-producer-dependencies.json": "1b548d87bb1bc3f6a36ceccdbb4804c89863338510f54b81323ad508df073f42"
+    }
+  },
+  "transitions": {
+    "rows": 238,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "unchanged_rows": 235,
+    "changes": [
+      {
+        "key": "9TG1RP5LFAAK:33:1:7456072841",
+        "turn": 7,
+        "seed": 1,
+        "differences": [
+          {
+            "path": "/predicted_next/enemies/0/block",
+            "before": 0,
+            "after": 99
+          }
+        ]
+      },
+      {
+        "key": "9TG1RP5LFAAK:33:1:7456072841",
+        "turn": 7,
+        "seed": 2,
+        "differences": [
+          {
+            "path": "/predicted_next/enemies/0/block",
+            "before": 0,
+            "after": 99
+          }
+        ]
+      },
+      {
+        "key": "9TG1RP5LFAAK:33:1:7456072841",
+        "turn": 7,
+        "seed": 3,
+        "differences": [
+          {
+            "path": "/predicted_next/enemies/0/block",
+            "before": 0,
+            "after": 99
+          }
+        ]
+      }
+    ]
+  },
+  "B3": {
+    "samples": 32,
+    "seed": 7,
+    "before": {
+      "win": 0,
+      "win_cal": 0.3118,
+      "hp_loss_won": null,
+      "turns": 4,
+      "boss_left": 294.5
+    },
+    "after": {
+      "win": 0,
+      "win_cal": 0.3118,
+      "hp_loss_won": null,
+      "turns": 4,
+      "boss_left": 294.5
+    },
+    "numbers_unchanged": true,
+    "scope": "controlled fixed skip question from own first-tune entry resources; not a natural build question or validation observation; no posterior reselection"
+  },
+  "logs": {
+    "full-pipeline.log": {
+      "private_path": ".artifacts/issue83/production-repair/full-pipeline.log",
+      "bytes": 28691,
+      "sha256": "0b6dd6ced4ad63c756771dfb7d7483c77bd7670fbe415577bc7d265264b28714"
+    },
+    "targeted.log": {
+      "private_path": ".artifacts/issue83/production-repair/targeted.log",
+      "bytes": 3482,
+      "sha256": "7c61f5ab8f86f653236d4ac838b62a76a36ef102b60416f3e608396a1b0287ce"
+    },
+    "targeted-r2.log": {
+      "private_path": ".artifacts/issue83/production-repair/targeted-r2.log",
+      "bytes": 445,
+      "sha256": "23dc9ddbe6bd9c1a75d869890bd44f15c1d94c216cb2bf706a730012cf24494f"
+    },
+    "targeted-r3.log": {
+      "private_path": ".artifacts/issue83/production-repair/targeted-r3.log",
+      "bytes": 445,
+      "sha256": "3a4410ea606543901d2bc5395b17f07d267c6150efc188011a26a742a5d408a8"
+    },
+    "producer-consumer.log": {
+      "private_path": ".artifacts/issue83/production-repair/producer-consumer.log",
+      "bytes": 940,
+      "sha256": "2fa72806b06fcb2e17add2e3fdc6cf475e25c1dd0a394e0c77bd2266d4cedc9e"
+    },
+    "transitions-production.json": {
+      "private_path": ".artifacts/issue83/production-repair/transitions-production.json",
+      "bytes": 2826311,
+      "sha256": "03ce01163a96c7f35f37ad72028e8df42edbc3844b6c80017b11b6811f5e97af"
+    },
+    "build-before.json": {
+      "private_path": ".artifacts/issue83/production-repair/build-before.json",
+      "bytes": 127797,
+      "sha256": "29aebdceb8c98e8a0d7d37ca852b988b55f1b86e0106aa895bdf791d4a7deebd"
+    },
+    "build-after.json": {
+      "private_path": ".artifacts/issue83/production-repair/build-after.json",
+      "bytes": 127744,
+      "sha256": "701041b31c24d17ba62503cc554b84cdbbafb37b93724f6ed5dc3b6ed8198ee9"
+    },
+    "engineering-checks-completed.json": {
+      "private_path": ".artifacts/issue83/production-repair/engineering-checks-completed.json",
+      "bytes": 626,
+      "sha256": "cff3a393f669d59c9b361fa36deb84d311de073812c1d3c0167b2b4c4be58dc9"
+    },
+    "registered-pipeline.log": {
+      "private_path": ".artifacts/issue83/production-repair/registered-pipeline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "queued-full-replacement.json": {
+      "private_path": ".artifacts/issue83/production-repair/queued-full-replacement.json",
+      "bytes": 529,
+      "sha256": "a4b268714d058c01e77308372967d8c0866c640f0bb0465c3c6a379aaf73c1df"
+    },
+    "B3-knowledge-readback.json": {
+      "private_path": ".artifacts/issue83/production-repair/B3-knowledge-readback.json",
+      "bytes": 146234,
+      "sha256": "45d2947b433ee9d3e61d04842ddb6d21abdbcec156ef7c3b1bf0741de080b725"
+    }
+  },
+  "no_additional_dev_full": "83/6544100940 future final full is original merge-batch combined check"
+}

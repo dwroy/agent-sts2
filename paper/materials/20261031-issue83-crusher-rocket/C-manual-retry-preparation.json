@@ -1,0 +1,19 @@
+{
+  "schema": "issue83-C-manual-retry-preparation-v1",
+  "authorization": "83/6544100940",
+  "prepared_at": "2026-10-31T21:40:23+08:00",
+  "restored_catalog": {
+    "sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+    "bytes": 626168,
+    "path": ".artifacts/issue83/crusher-rocket/transition-candidate-source/data/game-data.json"
+  },
+  "prior_failure": "C-zero-output-failure.json",
+  "old_result_preserved": ".artifacts/issue83/crusher-rocket/C-raw-once",
+  "new_receipt_directory": ".artifacts/issue83/crusher-rocket/C-raw-manual-r1",
+  "model_candidate_seed_val": "unchanged; prereg 2ea70cb1fd24cc761203ce544c660e4fee1c228c",
+  "execution": "one manually authorized retry; original coordinator and Node runner unchanged; wrapper only changes output/receipt directory to preserve old failure",
+  "gate": "after merge batches; no resource request submitted while waiting",
+  "started": false,
+  "repeat_failure_rule": "stop and report; no second retry",
+  "report_label": "首跑因环境缺文件零输出，按83/6544100940重跑一次"
+}
