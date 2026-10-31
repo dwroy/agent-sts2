@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "ops"))
 from llm_handoff import Handoff, locked
 from llm_switch import cron_home, validate_profile, CodexAdapter
 from ops_assist import Assist
+from issue_session_support import Board
 
 
 class Protocol(unittest.TestCase):
@@ -161,7 +162,10 @@ class Protocol(unittest.TestCase):
                      "board_heavy.py", "board_queue_pin.py", "issue_session_support.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         (self.root / ".agents").mkdir()
-        shutil.copy(ROOT / ".agents/board.yaml", self.root / ".agents/board.yaml")
+        # This selector fixture has a fake launcher, not a pinned machine-slot installation.
+        config = Board(ROOT).data
+        config["dispatcher"]["heavy"]["enabled"] = False
+        (self.root / ".agents/board.yaml").write_text(json.dumps(config))
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"

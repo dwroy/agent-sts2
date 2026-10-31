@@ -86,4 +86,12 @@ retention 仅为已核 SQLite 回执增加纯运营结算证明，后面的原 o
 
 ## 部署验收清单
 
+### main 前进后的纯运营候选接续（#77）
+
+纯运营候选仍禁止未提交的受守卫源码/知识改动。若只有原 `base` 到当前 HEAD 的已提交受守卫叶变化，入口按原 `operational-candidate-v1` 登记的 `report`、逐条 `records.evidence` 文件/SHA，以及显式 `payload.knowledge_inputs` / `method_inputs` 路径→SHA 映射，核对实际读取集；候选及报告路径计入写入集。相对路径仍按原 artifact 合同的根解析，不按 knowledge 目录推断读取范围。Git rename 拆为原/新两个叶；路径相交或文件/父路径替换照旧拒绝，错误列出相交叶。缺登记、不可解析的 opaque 方法/知识 SHA、非祖先 base 及固定 calibration 缺原方法输入 manifest 都按未知相交保留，不从当前目录补造旧输入。
+
+不相交时在当前源码/数据上完整重跑原 schema、角色/局号/分母、账本/提案、证据 SHA 和原冲突/事务校验，末尾再核 HEAD 与受守卫工作区未变；这不是直接跳过候选检查。候选、报告和原 `base` 不修改。SQLite 原完成事务另存 `source_revalidation`，包括原/新 base、变化叶、输入路径/SHA/字节区间及登记位置、写入路径、空交集依据；失败仍走原 pending/submission 历史。
+
+同 ID/原字节已完成后，回调复用原持久回执，不因后续 main 前进重验、改 base 或重复写记录。各批重验上下文独立，无共享临时 base 或全局读取集。这里只调整运营归档的源码接续门；K1 发布、D1 固定方法准入、工程交付、科学父项和自然消费仍沿原合同。配套 ROOT 叶为 `ops/learning_runtime.py`、`ops/learning_runtime_store.py`、`ops/fixed-producer-dependencies.json`；两 runtime 叶的固定方法声明随源码核同，方法票据仍由原发布事务按新实际组合处理，不能沿旧票据或改在途合同。
+
 固定测试不代生产验收。原集成员核实际 #66/#67/当前生产组合的适用完整检查；ops 在原自然边界部署配套代码，逐入口开启并记实际 T/源码/控制SHA/原批合同/D1/K1/原始产物SHA。实际出现纯复盘、审计、固定统计/校准时分别读回：SQLite完成、原程序未触发Git/源码发布/full、原父项/提案/通知保持、下游原文或数据可读、重复回调同版、下一局新D1/旧局原D1。未自然出现项继续由 runtime 跟进，不强开局/重跑完成学习/伪造样本；工程和自然覆盖分开报告。
