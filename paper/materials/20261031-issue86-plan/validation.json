@@ -1,0 +1,24 @@
+{
+  "scope": "proposal and read-only audit only; no runtime implementation or migration",
+  "inventory": {
+    "unique_files": 603,
+    "classes": {"A": 232, "B": 237, "C": 134},
+    "checks": [
+      "all rows contain producer, consumers, cadence and destination",
+      "all baseline file SHA256 values match current local bytes",
+      "JSON and TSV counts agree",
+      "class totals agree with summary.json",
+      "all JSON artifacts parse",
+      "all local plan links resolve",
+      "K1 strategy document and release_entries both contain 173 entries",
+      "Git and LIVE strategy copies each contain 116 entries and neither equals K1 bytes"
+    ],
+    "result": "passed"
+  },
+  "json_baseline": "21 repeated read+parse samples per fixed Git leaf; see json-baseline.json; not a DB or end-to-end comparison",
+  "diff_check": "git diff --check passed",
+  "retained_setup_failure": "Initial git add rejected new materials outside sparse-checkout patterns (rc1); use explicit git add --sparse, without changing sparse/shared configuration. Initial staged scan covered decision-log only; rescan after staging every artifact.",
+  "runtime_checks": "not run: proposal only, no agent/learner/eval/ops/builders implementation changed; preserve sole check slot",
+  "production_operations": "short read-only K1 and D1 transactions, selected control-field readback and file metadata inspection only; no publication or migration",
+  "pending": ["supervisor proposal approval", "all implementation, database comparison, latency, fault, release and natural-consumption checks"]
+}
