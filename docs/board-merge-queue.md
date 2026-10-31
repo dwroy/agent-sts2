@@ -6,9 +6,11 @@
 
 ## 第一批自动 K 保管与资源闭环（2026-10-30）
 
-批准：[68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285)，方案 `665fde83`。第一批仅保管/排空/资源；CodeSeal/DataSeal 第二批在第一批**实际采用并跑稳一天后**才实施。本批 strict 仍逐字节拒绝任何无回执知识漂移，没有 f88 的数据例外。
+批准：[68/6525568285](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6525568285)，方案 `665fde83`。第一批仅保管/排空/资源，继续接线和采用。2026-10-31 [范围调整](https://github.com/dwroy/agent-sts2/issues/68#issuecomment-6539642223) 因 [#86 统一入库](https://github.com/dwroy/agent-sts2/issues/86) **暂停 DataSeal**，CodeSeal 等 #86 方案及主管决定；先前“第一批采用并跑稳一天后实施第二批”不再触发后续开发。旧方案与研究保留。本批 strict 仍逐字节拒绝任何无回执知识漂移，没有 f88 的数据例外。
 
-旧人工接力规则 [77/6496035933](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6496035933)、[82/6511764132](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6511764132)、[82/6513930571](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6513930571) **由自动保管取代**。新合同中不保留“先放 K、ops 再追接、主管裁空窗”的并行路线；原未声明合同的在途批完成原事务，不热转换。
+旧人工接力规则 [77/6496035933](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6496035933)、[82/6511764132](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6511764132)、[82/6513930571](https://github.com/dwroy/agent-sts2/issues/82#issuecomment-6513930571)，以及上线前临时裁决 [77/6539468421](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6539468421)，在第一批实际启用的新合同中 **由自动保管取代**。新合同中不保留“先放 K、ops 再追接、主管裁空窗”的并行路线；当前第一批尚未采用，原未声明合同的在途批完成原事务，不热转换。
+
+第 #86 单完成迁移及核收后，上述人工接力与代码发布的自动 K 保管将 **由入库取代**，K 仅保留刷新互斥职责。这个退役点须证明运行时/producer/兼容输出均不再改受冻结的代码/配置目录，并逐项交接 primary sync、strict、publication、fast 和旧债务；只把 A 类数据搬走或先把开关改 off，都不等于达成。运行中的旧 job/原 K/发布事务照原合同结算。#86 的 JSON 读路径回退须保持版本固定且位于代码树外；若恢复旧的 LIVE 就地写入，须恢复匹配的旧发布/K 合同，不能沿用无 K 的新合同。具体核对见 [#68–#86 边界评审](../paper/materials/20261031-issue68-86-boundary/review.md)。
 
 `board_queue_custody.py` 的 keeper 只收到握手 socket，自行非阻塞取得原 K，通过 SCM_RIGHTS 给原 worker 同一 OFD 的 K 与管道生命线。真实 PID/start/boot、fdinfo FLOCK、dev/inode、epoch/job/candidate 和 fsync 回执全部核同后，才装配及触及 full.once。K 忙/坏握手时 full=0；保管者退出的 EOF 终止实际 Node full，原 tick 读到 `failed-custody`，保 full.once、原检查结果和活后继的 cleanup 门，不能重 full。libuv 的监视器使用单独管道读端，原高位生命线 FD 保留到 finalizer execve。
 
