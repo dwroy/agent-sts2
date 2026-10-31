@@ -1,0 +1,161 @@
+{
+  "dossier_max_utf8_bytes": 1500,
+  "cases": [
+    {
+      "case": "act3_revealed",
+      "basis": {
+        "run_id": "8CHJ5W30Q7Z8",
+        "floor": 35,
+        "label": "reward/card",
+        "source": {
+          "path": "logs/brain.jsonl",
+          "offset": 2395675468,
+          "length": 96595,
+          "sha256": "94a8499c71cca6a57bdda33577d5a3cb43104673464db6009024bd9a569717cc"
+        },
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec"
+      },
+      "notice": "after为待审批格式设计；不是实现或模型作答；O样本严格早于原题。full bytes/latency仍待批准后真实固定回放。",
+      "before": {
+        "facts": {
+          "act": 3,
+          "floor": 35,
+          "ascension": 10,
+          "hp": "51/60 (85%)",
+          "act_boss": "TEST_SUBJECT_BOSS",
+          "potions": [
+            "SPEED_POTION 速度药水: 获得5点敏捷。在你的这个回合结束时，失去5点敏捷。"
+          ],
+          "potion_slots": "1/3 used",
+          "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+        },
+        "boss_dossier": "absent",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "answer_keys": [
+          "choice",
+          "reason",
+          "route"
+        ]
+      },
+      "after_patch": {
+        "facts.boss_dossier": "Silent A10；K=本局K1-753af285…；O=题前冻结14终局(非首试)；E=sts2.fun/v0.111.0观察(非因果)。\n二幕：KAISER_CRAB[CRUSHER+ROCKET] O终败1；KNOWLEDGE_DEMON O终败1；THE_INSATIABLE O无该终败样本。三者威胁/构筑需求unknown；K有限战斗窗可查。\n三幕：A=AEONGLASS O终败1/K制品窗口；T=TEST_SUBJECT O终败2/E总受伤p90=62(n501场)；Q=QUEEN[TORCH_HEAD_AMALGAM] O无该终败样本/K防护窗口。需求unknown。\nE已观察A→Q/A→T/Q→A/Q→T/T→A/T→Q；非完整可能集或本局揭晓。O死因unknown；未记录不等于0风险。\n细节kb_encounter/kb_monster/kb_strategies按ID；未触发K仅目录，不计适用/自动展开B−。\n本局F48=TEST_SUBJECT；F49=unknown，不锁组合。当前51/60HP、速度药1；首战余HP/药→次战输入均unknown。E受伤62非安全血线/净损；脑须给分战预算假设。",
+        "remove": "构筑题facts.act_boss_sim.boss_margin_objective及instructions中的BOSS_MARGIN_NOTE；保留其余act_boss_sim事实",
+        "answer_schema_required_add": "boss_target",
+        "run_plan.endgame": "首题写候选有序组合/缺口；已有计划增量更新；F49未知须保留"
+      },
+      "proposed_dossier_utf8_bytes": 892,
+      "boss_target_format_example": {
+        "boss_ids": [
+          "TEST_SUBJECT"
+        ],
+        "gap": "unknown：尚无适用的已发布构筑达标线",
+        "reason": "真实选项如何补缺由大脑作答；本例只展示格式，不指定拿牌或数值"
+      },
+      "wrapped_dossier_utf8_bytes": 916
+    },
+    {
+      "case": "act2_before_boss",
+      "basis": {
+        "run_id": "TBFLR466YFJG",
+        "floor": 32,
+        "label": "rest/plan",
+        "source": {
+          "path": "logs/brain.jsonl",
+          "offset": 2412977632,
+          "length": 208274,
+          "sha256": "be41782f35d53d6d91251129e1a5fc5386cde09aa3ca6626055898967859ec65"
+        },
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec"
+      },
+      "notice": "after为待审批格式设计；不是实现或模型作答；O样本严格早于原题。full bytes/latency仍待批准后真实固定回放。",
+      "before": {
+        "facts": {
+          "act": 2,
+          "floor": 32,
+          "ascension": 10,
+          "hp": "36/77 (47%)",
+          "act_boss": "KAISER_CRAB_BOSS",
+          "potions": [
+            "FLEX_POTION 肌肉药水: 获得5点力量。在你的这个回合结束时，失去5点力量。"
+          ],
+          "potion_slots": "1/2 used",
+          "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+        },
+        "boss_dossier": "absent",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "answer_keys": [
+          "choice",
+          "reason",
+          "run_plan"
+        ]
+      },
+      "after_patch": {
+        "facts.boss_dossier": "Silent A10；K=本局K1-753af285…；O=题前冻结14终局(非首试)；E=sts2.fun/v0.111.0观察(非因果)。\n二幕：KAISER_CRAB[CRUSHER+ROCKET] O终败4；KNOWLEDGE_DEMON O终败1；THE_INSATIABLE O无该终败样本。三者威胁/构筑需求unknown；K有限战斗窗可查。\n三幕：A=AEONGLASS O终败1/K制品窗口；T=TEST_SUBJECT O终败1/E总受伤p90=62(n501场)；Q=QUEEN[TORCH_HEAD_AMALGAM] O无该终败样本/K防护窗口。需求unknown。\nE已观察A→Q/A→T/Q→A/Q→T/T→A/T→Q；非完整可能集或本局揭晓。O死因unknown；未记录不等于0风险。\n细节kb_encounter/kb_monster/kb_strategies按ID；未触发K仅目录，不计适用/自动展开B−。\n已揭晓KAISER_CRAB=双体；终局组合unknown。当前36/77HP、肌肉药1；保血过F33须解释，两战预算unknown。",
+        "remove": "构筑题facts.act_boss_sim.boss_margin_objective及instructions中的BOSS_MARGIN_NOTE；保留其余act_boss_sim事实",
+        "answer_schema_required_add": "boss_target",
+        "run_plan.endgame": "首题写候选有序组合/缺口；已有计划增量更新；F49未知须保留"
+      },
+      "proposed_dossier_utf8_bytes": 829,
+      "boss_target_format_example": {
+        "boss_ids": [
+          "KAISER_CRAB"
+        ],
+        "gap": "unknown：尚无适用的已发布构筑达标线",
+        "reason": "真实选项如何补缺由大脑作答；本例只展示格式，不指定拿牌或数值"
+      },
+      "wrapped_dossier_utf8_bytes": 853
+    },
+    {
+      "case": "opening",
+      "basis": {
+        "run_id": "48LJUVW34AHT",
+        "floor": 1,
+        "label": "event/choose",
+        "source": {
+          "path": "logs/brain.jsonl",
+          "offset": 2413185906,
+          "length": 88724,
+          "sha256": "90c70097062eba60238263b22f64bc9bf6adb2e2e8c8437474593213172a4bc4"
+        },
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec"
+      },
+      "notice": "after为待审批格式设计；不是实现或模型作答；O样本严格早于原题。full bytes/latency仍待批准后真实固定回放。",
+      "before": {
+        "facts": {
+          "act": 1,
+          "floor": 1,
+          "ascension": 10,
+          "hp": "56/70 (80%)",
+          "act_boss": "LAGAVULIN_MATRIARCH_BOSS",
+          "potions": [],
+          "potion_slots": "0/2 used",
+          "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+        },
+        "boss_dossier": "absent",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "answer_keys": [
+          "choice",
+          "reason",
+          "run_plan"
+        ]
+      },
+      "after_patch": {
+        "facts.boss_dossier": "Silent A10；K=本局K1-753af285…；O=题前冻结14终局(非首试)；E=sts2.fun/v0.111.0观察(非因果)。\n二幕：KAISER_CRAB[CRUSHER+ROCKET] O终败5；KNOWLEDGE_DEMON O终败1；THE_INSATIABLE O无该终败样本。三者威胁/构筑需求unknown；K有限战斗窗可查。\n三幕：A=AEONGLASS O终败1/K制品窗口；T=TEST_SUBJECT O终败1/E总受伤p90=62(n501场)；Q=QUEEN[TORCH_HEAD_AMALGAM] O无该终败样本/K防护窗口。需求unknown。\nE已观察A→Q/A→T/Q→A/Q→T/T→A/T→Q；非完整可能集或本局揭晓。O死因unknown；未记录不等于0风险。\n细节kb_encounter/kb_monster/kb_strategies按ID；未触发K仅目录，不计适用/自动展开B−。\n本幕已知LAGAVULIN_MATRIARCH；F48/F49均unknown。当前56/70HP，无药。两战留量unknown，由脑给假设/依据。",
+        "remove": "构筑题facts.act_boss_sim.boss_margin_objective及instructions中的BOSS_MARGIN_NOTE；保留其余act_boss_sim事实",
+        "answer_schema_required_add": "boss_target",
+        "run_plan.endgame": "首题写候选有序组合/缺口；已有计划增量更新；F49未知须保留"
+      },
+      "proposed_dossier_utf8_bytes": 828,
+      "boss_target_format_example": {
+        "boss_ids": [
+          "AEONGLASS",
+          "TEST_SUBJECT",
+          "QUEEN"
+        ],
+        "gap": "unknown：尚无适用的已发布构筑达标线",
+        "reason": "真实选项如何补缺由大脑作答；本例只展示格式，不指定拿牌或数值"
+      },
+      "wrapped_dossier_utf8_bytes": 852
+    }
+  ]
+}

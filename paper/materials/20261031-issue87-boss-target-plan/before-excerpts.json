@@ -1,0 +1,509 @@
+{
+  "notice": "原始题面白名单摘录；非完整prompt。after样例尚未实现，不能称重放通过。",
+  "source_size_cutoff": 2417467647,
+  "cases": {
+    "act3_revealed": {
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 2395675468,
+        "length": 96595,
+        "sha256": "94a8499c71cca6a57bdda33577d5a3cb43104673464db6009024bd9a569717cc"
+      },
+      "run_id": "8CHJ5W30Q7Z8",
+      "ts": "2026-10-31T04:57:10.878Z",
+      "label": "reward/card",
+      "question_id": "mvvvwt3u-2582824-35",
+      "facts": {
+        "act": 3,
+        "floor": 35,
+        "ascension": 10,
+        "hp": "51/60 (85%)",
+        "act_boss": "TEST_SUBJECT_BOSS",
+        "potions": [
+          "SPEED_POTION 速度药水: 获得5点敏捷。在你的这个回合结束时，失去5点敏捷。"
+        ],
+        "potion_slots": "1/3 used",
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+      },
+      "run_plan_task": {
+        "construction_context": {
+          "character": "silent",
+          "floor": 35,
+          "coreCatalog": [
+            {
+              "id": "P",
+              "name": "施毒触媒与持续防御",
+              "candidate": true
+            },
+            {
+              "id": "D",
+              "name": "叠敏捷多挡与持续输出",
+              "candidate": true
+            },
+            {
+              "id": "S",
+              "name": "小刀供给增益与逐牌防御",
+              "candidate": true
+            },
+            {
+              "id": "R",
+              "name": "抽弃循环与遗物攻防收益",
+              "candidate": true
+            }
+          ],
+          "instruction": "构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若确需修改构筑方向，只更新construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。",
+          "future_probability_status": "not supplied by this plan context"
+        },
+        "trigger": "review",
+        "act_boss_clock": {
+          "boss": "TEST_SUBJECT",
+          "boss_hp": 636,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "TEST_SUBJECT"
+          ],
+          "boss_hp_phases": [
+            111,
+            212,
+            313
+          ],
+          "boss_hp_phases_from_ascension": 10,
+          "boss_enemies": [
+            {
+              "enemy": "TEST_SUBJECT",
+              "hp": 111,
+              "hp_samples": 71,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "BIG_POUNCE",
+                  "per_hit": 45,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 34,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "BITE_MOVE",
+                  "per_hit": 22,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 71,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "MULTI_CLAW_MOVE",
+                  "per_hit": 11,
+                  "hits": 3,
+                  "basis": "base",
+                  "samples": 139,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "PHASE3_LACERATE_MOVE",
+                  "per_hit": 11,
+                  "hits": 3,
+                  "basis": "base",
+                  "samples": 44,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "SKULL_BASH_MOVE",
+                  "per_hit": 16,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 60,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        },
+        "due_because": "复用已有计划；仅在预期有利于本局胜率时更新受影响字段",
+        "current_plan": {
+          "in": "state.facts.your_run_plan",
+          "made_in_act": 3,
+          "made_on_floor": 34,
+          "hp_then": "90%",
+          "made_because": "act"
+        },
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。",
+        "endgame_plan_required": false,
+        "plan_reuse": true
+      },
+      "old_endgame": {
+        "core": "暂以D为主线：双步法强化防守，现有毒源持续输出；完整核心与F48→F49连胜能力未知。",
+        "gaps": "仍缺稳定过牌、持续虚弱及更快毒成长，组件齐备不代表能够及时启动。",
+        "scaling_damage": "候选为毒源配ACCELERANT，或刀源配ACCURACY及收益遗物，未获得前输出兑现与成形概率未知。",
+        "sustainable_defense": "双步法配后空翻、闪躲翻滚与偏折；每场重新启动，不把格挡药当长期防守。",
+        "resources": "戒指资金在双店按实际货品补过牌、成长和药水；首店兼顾紧随的精英，必要时用药保命；F48实际余血余药承接F49，不假设中场回血。",
+        "win_condition": "两场均能及时建立成长输出与持续防守，并以F48实际剩余血量和药水接战F49，当前是否能够达成未知。",
+        "checkpoint": "部分成型：D已有双步法、后空翻、扫腿及毒雾+，本次升级强化持续防御，完整核心兑现未知；57/62无药，知识恶魔先立步法与毒雾，扫腿和中和续虚弱，尖啸防多段；仍缺稳定过牌及更快毒成长，F48→F49均需重新启动，以首战实际剩余血药接战且不假设回血，连胜能力未知。"
+      },
+      "old_sim_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+      "old_sim_present": true,
+      "old_answer_keys": [
+        "choice",
+        "reason",
+        "route"
+      ],
+      "old_payload_bytes": 31979,
+      "old_latency_ms": 37032,
+      "bound_run_config": {
+        "source": {
+          "path": "logs/run-config.jsonl",
+          "offset": 6084442,
+          "length": 8029,
+          "sha256": "7e7103dd4a908bf2d6a49434c95f32fc694b520366374aa8790c9895ca56e9d5"
+        },
+        "ts": "2026-10-31T04:15:37.845Z",
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+        "code": {
+          "commit": null,
+          "code": null,
+          "dirty": null,
+          "dirty_files": [],
+          "branch": null,
+          "worktree": "live",
+          "error": "git status failed: spawnSync git ENOBUFS"
+        },
+        "requested_brain": {
+          "model": null,
+          "effort": null,
+          "service_tier": null
+        }
+      }
+    },
+    "act2_before_boss": {
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 2412977632,
+        "length": 208274,
+        "sha256": "be41782f35d53d6d91251129e1a5fc5386cde09aa3ca6626055898967859ec65"
+      },
+      "run_id": "TBFLR466YFJG",
+      "ts": "2026-10-31T09:27:06.961Z",
+      "label": "rest/plan",
+      "question_id": "mvw4yakf-3808892-33",
+      "facts": {
+        "act": 2,
+        "floor": 32,
+        "ascension": 10,
+        "hp": "36/77 (47%)",
+        "act_boss": "KAISER_CRAB_BOSS",
+        "potions": [
+          "FLEX_POTION 肌肉药水: 获得5点力量。在你的这个回合结束时，失去5点力量。"
+        ],
+        "potion_slots": "1/2 used",
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+      },
+      "run_plan_task": {
+        "trigger": "review",
+        "act_boss_clock": {
+          "boss": "KAISER_CRAB",
+          "boss_hp": 428,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "CRUSHER",
+            "ROCKET"
+          ],
+          "boss_enemies": [
+            {
+              "enemy": "CRUSHER",
+              "hp": 219,
+              "hp_samples": 116,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "BUG_STING_MOVE",
+                  "per_hit": 10,
+                  "hits": 2,
+                  "basis": "base",
+                  "samples": 92,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "ENLARGING_STRIKE_MOVE",
+                  "per_hit": 4,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 119,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "GUARDED_STRIKE_MOVE",
+                  "per_hit": 20,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 63,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "THRASH_MOVE",
+                  "per_hit": 18,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 132,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            },
+            {
+              "enemy": "ROCKET",
+              "hp": 209,
+              "hp_samples": 125,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "LASER_MOVE",
+                  "per_hit": 47,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 91,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "PRECISION_BEAM_MOVE",
+                  "per_hit": 28,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 132,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "TARGETING_RETICLE_MOVE",
+                  "per_hit": 5,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 164,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        },
+        "due_because": "复用已有计划；仅在预期有利于本局胜率时更新受影响字段",
+        "current_plan": {
+          "in": "state.facts.your_run_plan",
+          "made_in_act": 2,
+          "made_on_floor": 31,
+          "hp_then": "47%",
+          "made_because": "hp_drop"
+        },
+        "v6_direction_task": {
+          "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+        },
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。",
+        "endgame_plan_required": false,
+        "plan_reuse": true,
+        "endgame_checkpoint": {
+          "act": 2,
+          "before_boss_floor": 33,
+          "instruction": "幕末检查：核心已成型、部分成型还是未知？还缺什么？本幕 Boss 怎么过、离 F48→F49 连胜还差什么？写明成长性输出、持续防御与两战 HP/药水依据；缺证保持未知，在 run_plan.endgame.checkpoint 明确作答。"
+        }
+      },
+      "old_endgame": {
+        "core": "以零费攻击配手里剑叠力，毒雾辅助持续输出；双Boss连战能力仍未知。",
+        "gaps": "已有毒源，主要缺持续防御和循环抽牌；不再优先添加重复施毒。",
+        "scaling_damage": "免费打击与刀舞支持手里剑成长；实际叠力速度、完整战斗输出及双Boss表现未知。",
+        "sustainable_defense": "寻找灵动步法或余像，配合抽牌、扫腿和融入暗影反复防守；消耗牌不能独撑续航。",
+        "resources": "商店按实际货架补缺，不以花完金币为目标；药水可用于当前减损，F48前再按连续两战实际消耗分配血量与药水，不假设中间回血。",
+        "win_condition": "首战后仍有第二战的启动血量与资源，持续输出和循环防御均能兑现；当前两战耗血、药耗及通关能力未知。",
+        "checkpoint": "核心部分成型：手里剑与零费攻击提供成长，双步法、多挡及融入暗影支撑持续防守；仍缺稳定抽能与升级，施放覆盖及完整循环未知。下火回血，帝王蟹注意朝向、虚弱防重击并集火一侧，肌肉药配多段爆发；59血入场仅为投影，七次低可信模拟非保证。F48→F49无回血，敏捷须每战重建；两战总耗血、药耗及次战启动余量未知，716金币留三幕补缺。"
+      },
+      "old_sim_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+      "old_sim_present": true,
+      "old_answer_keys": [
+        "choice",
+        "reason",
+        "run_plan"
+      ],
+      "old_payload_bytes": 24131,
+      "old_latency_ms": 37518,
+      "bound_run_config": {
+        "source": {
+          "path": "logs/run-config.jsonl",
+          "offset": 6143573,
+          "length": 8031,
+          "sha256": "64d28b279caf3aafad35390c471d52fd609a761988511b31698b336690d111f9"
+        },
+        "ts": "2026-10-31T08:30:11.555Z",
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+        "code": {
+          "commit": null,
+          "code": null,
+          "dirty": null,
+          "dirty_files": [],
+          "branch": null,
+          "worktree": "live",
+          "error": "git status failed: spawnSync git ENOBUFS"
+        },
+        "requested_brain": {
+          "model": null,
+          "effort": null,
+          "service_tier": null
+        }
+      }
+    },
+    "opening": {
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 2413185906,
+        "length": 88724,
+        "sha256": "90c70097062eba60238263b22f64bc9bf6adb2e2e8c8437474593213172a4bc4"
+      },
+      "run_id": "48LJUVW34AHT",
+      "ts": "2026-10-31T09:47:52.665Z",
+      "label": "event/choose",
+      "question_id": "mvw7u0s6-93736-1",
+      "facts": {
+        "act": 1,
+        "floor": 1,
+        "ascension": 10,
+        "hp": "56/70 (80%)",
+        "act_boss": "LAGAVULIN_MATRIARCH_BOSS",
+        "potions": [],
+        "potion_slots": "0/2 used",
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。"
+      },
+      "run_plan_task": {
+        "trigger": "start",
+        "act_boss_clock": {
+          "boss": "LAGAVULIN_MATRIARCH",
+          "boss_hp": 233,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "LAGAVULIN_MATRIARCH"
+          ],
+          "boss_enemies": [
+            {
+              "enemy": "LAGAVULIN_MATRIARCH",
+              "hp": 233,
+              "hp_samples": 88,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "DISEMBOWEL_MOVE",
+                  "per_hit": 10,
+                  "hits": 2,
+                  "basis": "base",
+                  "samples": 143,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "SLASH2_MOVE",
+                  "per_hit": 14,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 113,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "SLASH_MOVE",
+                  "per_hit": 21,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 156,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        },
+        "due_because": "建立本局终局计划",
+        "current_plan": null,
+        "v6_direction_task": {
+          "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+        },
+        "endgame_objective": "本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。",
+        "endgame_plan_required": true
+      },
+      "old_endgame": null,
+      "old_sim_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+      "old_sim_present": true,
+      "old_answer_keys": [
+        "choice",
+        "reason",
+        "run_plan"
+      ],
+      "old_payload_bytes": 13628,
+      "old_latency_ms": 115012,
+      "bound_run_config": {
+        "source": {
+          "path": "logs/run-config.jsonl",
+          "offset": 6151604,
+          "length": 6750,
+          "sha256": "580228acafdc2c948fcda32437ce13657e84342f5737917dc3fa8bc38873877f"
+        },
+        "ts": "2026-10-31T09:45:46.177Z",
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+        "code": {
+          "commit": null,
+          "code": null,
+          "dirty": null,
+          "dirty_files": [],
+          "branch": null,
+          "worktree": "live",
+          "error": "git status failed: spawnSync git ENOBUFS"
+        },
+        "requested_brain": {
+          "model": null,
+          "effort": null,
+          "service_tier": null
+        }
+      }
+    }
+  }
+}

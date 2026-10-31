@@ -1,0 +1,1348 @@
+{
+  "schema": "issue87-plan-sources-v1",
+  "captured_at": "2026-10-31T18:17:19.138791+08:00",
+  "base_commit": "8581aa5ff761a576fbc89b3b57237fed5a8ef0c8",
+  "knowledge": {
+    "version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+    "basis": "本局48LJUVW34AHT原run-config绑定；只读不可变快照，不宣称SQLite current。",
+    "manifest_sha256": "308aacfb10431a0b0bbcc25a8d6c05566854ebd8310e8a276aed5d03ded51df9",
+    "document": "characters/silent/strategy-entries.json",
+    "document_sha256": "e8bef3d8bcadf2a9a565be549d626607dd0cfd23a733ba8930359014e4315f8b",
+    "release_files_value": "e8bef3d8bcadf2a9a565be549d626607dd0cfd23a733ba8930359014e4315f8b",
+    "entries": [
+      {
+        "id": "silent-brain-test-subject-external-tail-budget",
+        "pointer": "/entries/44",
+        "canonical_json_sha256": "add9e27faa12a10b6f0af1b6949ff1375f46d340a36e914f7c401fe118eec34b",
+        "trigger": {
+          "question_types": [
+            "act_plan",
+            "event",
+            "rest",
+            "shop"
+          ],
+          "acts": [
+            3
+          ],
+          "bosses": [
+            "TEST_SUBJECT_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "单臂统计",
+        "strategy": "仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。",
+        "confidence": 0.31824,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-crab-two-side-current-budget",
+        "pointer": "/entries/146",
+        "canonical_json_sha256": "6d812d47a6e2ec4f03477632219b5e6661a99cfaaafd24af04e9f7d006aafa99",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 33,
+            "max": 33
+          },
+          "bosses": [
+            "CRUSHER+ROCKET",
+            "KAISER_CRAB_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；单次观察窗口：严格可见签名中双体各自真实来袭、动作后继和资源；不同条件反例不算同签名否定。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-insatiable-no-attack-two-energy",
+        "pointer": "/entries/147",
+        "canonical_json_sha256": "cd0f34a85d4075ab15fdf249f79b77eabecf498e65f7901dbef91bf1a51dfa7d",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 33,
+            "max": 33
+          },
+          "bosses": [
+            "THE_INSATIABLE",
+            "THE_INSATIABLE_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；单次观察窗口：无攻击窗口各张牌实际费用/建立后的能量；未执行线和预判截止不当真实胜负。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-demon-optional-attack-recompare",
+        "pointer": "/entries/148",
+        "canonical_json_sha256": "3587bb5142148fe71a2188a35834b979305f253936da0e8fb1b2baaf4e8bfc17",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 33,
+            "max": 33
+          },
+          "bosses": [
+            "KNOWLEDGE_DEMON",
+            "KNOWLEDGE_DEMON_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；单次观察窗口：当前已显示来袭/挡及手牌费用逐项核算；不同状态的先攻案例不推出固定先防/先攻。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-aeonglass-artifact-current-block",
+        "pointer": "/entries/149",
+        "canonical_json_sha256": "56e8b97bdd9501d14b53920c87a76567a33ff05b31db70a079f4de7c45e590fa",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 48,
+            "max": 48
+          },
+          "bosses": [
+            "AEONGLASS",
+            "AEONGLASS_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；单次观察窗口：当前神器/实挡/减攻动作的已核后继；只对原可见签名成立，不给泛化Boss杀序。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-subject-setup-energy-compare",
+        "pointer": "/entries/150",
+        "canonical_json_sha256": "4014af22ab68bfcf94d70f8805b3a83d8edca5e4c5ef5644142509bd5953be16",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 48,
+            "max": 48
+          },
+          "bosses": [
+            "TEST_SUBJECT",
+            "TEST_SUBJECT_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；单次观察窗口：同盘面两种能力启动后余能/挡原记录分别留存；建立能力不当已出刀或已得后继伤挡。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      },
+      {
+        "id": "issue80-tactics-queen-footwork-before-following-block",
+        "pointer": "/entries/151",
+        "canonical_json_sha256": "51051e74946355067fb10ee22b9c072ae964e556a3258052e6fc982d8dd78b54",
+        "trigger": {
+          "question_types": [
+            "fight_plan"
+          ],
+          "floor": {
+            "min": 48,
+            "max": 48
+          },
+          "bosses": [
+            "QUEEN+TORCH_HEAD_AMALGAM",
+            "QUEEN_BOSS"
+          ]
+        },
+        "grade": "B+",
+        "evidence_type": "机制事实",
+        "strategy": "机制事实（已从原件复核）；限定原观察窗口：先步法/先防御的原敏捷和即时挡后继；三局不同签名各列，不合成已验证必胜顺序。",
+        "confidence": null,
+        "limitations": "完整证据/反例/限制留原K1对象；此索引非批准构筑适用。"
+      }
+    ]
+  },
+  "own_terminal_window": {
+    "notice": "末14个已结束Silent A10终局记录；不是首试通过率/独立战斗分母，也不证明死因。未映射R461–R463；版本与首试待实现阶段按run-config/SL重新核。",
+    "records": [
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 548821,
+          "length": 469,
+          "sha256": "75472ea53e2fc025b9e93de952512f344ce9c42da2211c00b319002dd92de775"
+        },
+        "run_id": "GXJ6F3S8CPCB",
+        "ended": "2026-10-30T21:10:18.720Z",
+        "victory": false,
+        "floor": 9,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 9,
+        "death_enemy_ids": [
+          "TERROR_EEL"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 549290,
+          "length": 511,
+          "sha256": "bb16e1b0f364c2e3ae88f322666a83bb749f44af2aab938b50caddd36f67e442"
+        },
+        "run_id": "DNEU7N67RP35",
+        "ended": "2026-10-30T22:26:07.796Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 49,
+        "death_enemy_ids": [
+          "TEST_SUBJECT"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 549801,
+          "length": 505,
+          "sha256": "d03710ac792066446da0a52f582a543cc9cfa6151dd3a81ec62812ac07a3707b"
+        },
+        "run_id": "U7XSFRGXHD9S",
+        "ended": "2026-10-30T23:46:14.444Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 48,
+        "death_enemy_ids": [
+          "AEONGLASS"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 550306,
+          "length": 512,
+          "sha256": "ded55189af626f92f7495f69dfba3f8e1751a53cecc92b890f748f425b9dae2b"
+        },
+        "run_id": "ACR3SLMXZL6L",
+        "ended": "2026-10-31T00:12:47.280Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 17,
+        "death_enemy_ids": [
+          "KIN_FOLLOWER",
+          "KIN_PRIEST"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 550818,
+          "length": 510,
+          "sha256": "debfadee106c57e4b51c8c7bbd8ad10962785958eae6e4d3e011cb10bdcfd58f"
+        },
+        "run_id": "39H26JGK6KRH",
+        "ended": "2026-10-31T01:07:10.004Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "KNOWLEDGE_DEMON"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 551328,
+          "length": 565,
+          "sha256": "3e0b3170fe440ffb2349d314bbbd7e5253181c7512a7eeb24c08ef2175a13985"
+        },
+        "run_id": "A4KFJN6YU3BQ",
+        "ended": "2026-10-31T01:49:43.499Z",
+        "victory": false,
+        "floor": 23,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 23,
+        "death_enemy_ids": [
+          "BOWLBUG_ROCK",
+          "BOWLBUG_SILK",
+          "SLUMBERING_BEETLE"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 551893,
+          "length": 483,
+          "sha256": "360bd99996a2fd49638c33e9ca3ccedc0dfee2af14ee58e18df1cfb80a14a36d"
+        },
+        "run_id": "61YKJB1Q6CS1",
+        "ended": "2026-10-31T02:21:34.182Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 17,
+        "death_enemy_ids": [
+          "CEREMONIAL_BEAST"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 552376,
+          "length": 486,
+          "sha256": "2244227d5a0b2ecf67a907507729bfea06c79d83906315fd6793570dc44b0f2e"
+        },
+        "run_id": "JH465WASLA1C",
+        "ended": "2026-10-31T03:04:25.205Z",
+        "victory": false,
+        "floor": 30,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 30,
+        "death_enemy_ids": [
+          "INFESTED_PRISM"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 552862,
+          "length": 518,
+          "sha256": "c5adec9c36665e51bdfe2ffcc8240f670255c6d1dbccbdc05cf18ce54e7929ee"
+        },
+        "run_id": "DJ0FNHDE0DKZ",
+        "ended": "2026-10-31T04:07:44.253Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 553380,
+          "length": 492,
+          "sha256": "130760af9ac7fd922c61aae6b529d01fac6434bd1e315957fc3a8e21f722e193"
+        },
+        "run_id": "8CHJ5W30Q7Z8",
+        "ended": "2026-10-31T04:58:09.137Z",
+        "victory": false,
+        "floor": 36,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 36,
+        "death_enemy_ids": [
+          "DEVOTED_SCULPTOR"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 553872,
+          "length": 499,
+          "sha256": "c5378ab1921955ed481aa6421b25846c571043aa417c7592d83b92b866c69bd4"
+        },
+        "run_id": "4W4X62DRSTWA",
+        "ended": "2026-10-31T05:59:33.202Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 554371,
+          "length": 519,
+          "sha256": "5e9d1cf2b359943c6bfbb2ac590ec37eeec47c5b368fb72dae387b91579cafca"
+        },
+        "run_id": "QE18E5JXBUZB",
+        "ended": "2026-10-31T07:12:12.209Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 554890,
+          "length": 520,
+          "sha256": "0052fb6b06d969144c2c1efd4c36dc03ba26c330b4675ac1a5c8a60ffb580586"
+        },
+        "run_id": "Q49RJLSL7QTG",
+        "ended": "2026-10-31T08:20:28.358Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      },
+      {
+        "source": {
+          "path": "logs/runs.jsonl",
+          "offset": 555410,
+          "length": 521,
+          "sha256": "ba8969325510dbe05f4f424ef96390a7dd7a52d1b251cc1716f61573b6606b34"
+        },
+        "run_id": "TBFLR466YFJG",
+        "ended": "2026-10-31T09:44:18.900Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      }
+    ]
+  },
+  "external": {
+    "source": "external:sts2fun",
+    "local_path": "knowledge/external/sts2fun/builds-v1/boss-semantics.json",
+    "sha256": "73184712141ef8fb1facdca6f1baf95ba7da4fb5fa203cfb39afd9b50cc89a35",
+    "provenance": {
+      "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+      "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+      "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "faq": "https://sts2.fun/faq",
+      "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+      "url": "https://sts2.fun/static/sts2_public.db.zst"
+    },
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111",
+    "selected_version": "v0.111 / build_id v0.111.0",
+    "observed_ordered_paths": {
+      "ENCOUNTER.AEONGLASS_BOSS -> ENCOUNTER.QUEEN_BOSS": [
+        "/rows/354",
+        "/rows/363",
+        "/rows/372",
+        "/rows/381",
+        "/rows/390",
+        "/rows/399",
+        "/rows/408",
+        "/rows/417"
+      ],
+      "ENCOUNTER.AEONGLASS_BOSS -> ENCOUNTER.TEST_SUBJECT_BOSS": [
+        "/rows/355",
+        "/rows/364",
+        "/rows/373",
+        "/rows/382",
+        "/rows/391",
+        "/rows/400",
+        "/rows/409",
+        "/rows/418"
+      ],
+      "ENCOUNTER.AEONGLASS_BOSS": [
+        "/rows/356",
+        "/rows/365",
+        "/rows/374",
+        "/rows/383",
+        "/rows/392",
+        "/rows/401",
+        "/rows/410",
+        "/rows/419"
+      ],
+      "ENCOUNTER.QUEEN_BOSS -> ENCOUNTER.AEONGLASS_BOSS": [
+        "/rows/357",
+        "/rows/366",
+        "/rows/375",
+        "/rows/384",
+        "/rows/393",
+        "/rows/402",
+        "/rows/411",
+        "/rows/420"
+      ],
+      "ENCOUNTER.QUEEN_BOSS -> ENCOUNTER.TEST_SUBJECT_BOSS": [
+        "/rows/358",
+        "/rows/367",
+        "/rows/376",
+        "/rows/385",
+        "/rows/394",
+        "/rows/403",
+        "/rows/412",
+        "/rows/421"
+      ],
+      "ENCOUNTER.QUEEN_BOSS": [
+        "/rows/359",
+        "/rows/368",
+        "/rows/377",
+        "/rows/386",
+        "/rows/395",
+        "/rows/404",
+        "/rows/413"
+      ],
+      "ENCOUNTER.TEST_SUBJECT_BOSS -> ENCOUNTER.AEONGLASS_BOSS": [
+        "/rows/360",
+        "/rows/369",
+        "/rows/378",
+        "/rows/387",
+        "/rows/396",
+        "/rows/405",
+        "/rows/414",
+        "/rows/422"
+      ],
+      "ENCOUNTER.TEST_SUBJECT_BOSS -> ENCOUNTER.QUEEN_BOSS": [
+        "/rows/361",
+        "/rows/370",
+        "/rows/379",
+        "/rows/388",
+        "/rows/397",
+        "/rows/406",
+        "/rows/415",
+        "/rows/423"
+      ],
+      "ENCOUNTER.TEST_SUBJECT_BOSS": [
+        "/rows/362",
+        "/rows/371",
+        "/rows/380",
+        "/rows/389",
+        "/rows/398",
+        "/rows/407",
+        "/rows/416",
+        "/rows/424"
+      ]
+    },
+    "limitations": [
+      {
+        "detail": "逐build/幕/完整Boss交叉计数与冻结规则在matchups；冲突与缺失不强行判胜负",
+        "id": "result-semantics",
+        "status": "available_proxy_only"
+      },
+      {
+        "detail": "上传查询行、重复访问、相同脱敏内容和组间重叠均可核；独立玩家与同自然局重复上传未知",
+        "id": "independent-denominators",
+        "status": "partial"
+      },
+      {
+        "detail": "原白名单缓存无真实entry HP/maxHP/牌组/升级/药水快照、时钟或已核floor；不扩字段、不用推定/终局替代",
+        "id": "pre-boss-snapshot",
+        "status": "unavailable"
+      },
+      {
+        "detail": "单房间记录damage_taken/healing/end HP有效n与缺失数可核；缺真实entry，净HP损失不可核；多房间不拆",
+        "id": "cost-semantics",
+        "status": "partial"
+      },
+      {
+        "detail": "只有ID与未核历史对齐的目录正block代理；版本化机制、攻防贡献及核心牌含义未知，不从名称推断",
+        "id": "mechanisms",
+        "status": "unavailable_for_game_rules"
+      },
+      {
+        "detail": "保留样本终局牌组非空已知；原json_group_array不能区分被排除空/缺失，终局药水/精确奖励前后时点未投影",
+        "id": "snapshot-validity",
+        "status": "partial"
+      },
+      {
+        "detail": "本补包仅安全聚合，不含逐局/玩家标识；#54新授权的160代表轨迹在另一文件，不能冒充旧085327 aggregate-only已读范围",
+        "id": "privacy-and-license",
+        "status": "available_with_limits"
+      },
+      {
+        "detail": "第三幕已记录有序Boss路径/位置、上传行分母和后继缺失可核；实际F48/F49、真战前/场间快照、牌组药水及攻防准备度仍不可用",
+        "id": "issue50-fourth-requirement",
+        "status": "partial"
+      }
+    ],
+    "independent_players": "unknown; 不计或输出玩家标识",
+    "selected_uploads_v0111": {
+      "builds": {
+        "v0.111.0": 1739
+      },
+      "n": 1739,
+      "wins": 492
+    },
+    "roster_by_act_v0111": {
+      "2": [
+        "ENCOUNTER.KAISER_CRAB_BOSS",
+        "ENCOUNTER.KNOWLEDGE_DEMON_BOSS",
+        "ENCOUNTER.THE_INSATIABLE_BOSS"
+      ],
+      "3": [
+        "ENCOUNTER.AEONGLASS_BOSS",
+        "ENCOUNTER.QUEEN_BOSS",
+        "ENCOUNTER.TEST_SUBJECT_BOSS"
+      ]
+    }
+  },
+  "non_runtime_locators": [
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "8f6c2d0409eb012b14bd31e24c431ea5d9a421e7fb58c3363dfd5dc3536e704c",
+      "status": "指定base的审计定位；不是已绑定K1事实。不直接充当生产最新数据或首试率。"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "c51e0698a7382fc1b650acf0b44a52559446c10d5605be42dcb58800e8a9b9af",
+      "status": "指定base的审计定位；不是已绑定K1事实。不直接充当生产最新数据或首试率。"
+    },
+    {
+      "path": "knowledge/characters/silent/double-boss.json",
+      "sha256": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+      "status": "指定base的审计定位；不是已绑定K1事实。不直接充当生产最新数据或首试率。"
+    },
+    {
+      "path": "knowledge/characters/silent/build-statistics-v1/matchups.json",
+      "sha256": "3c24a593264afcffb537bb55673e3209cdb014c0ca85bca00cd92ae86081d5ab",
+      "status": "指定base的审计定位；不是已绑定K1事实。不直接充当生产最新数据或首试率。"
+    },
+    {
+      "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+      "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+      "status": "指定base的审计定位；不是已绑定K1事实。不直接充当生产最新数据或首试率。"
+    }
+  ],
+  "case_terminal_windows": {
+    "act3_revealed": {
+      "as_of": "2026-10-31T04:57:10.878Z",
+      "records": [
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 546265,
+            "length": 497,
+            "sha256": "522e8c3d730016f844a71c806d40b7a86139dcc35e0e09d49a07997e71754b2b"
+          },
+          "run_id": "KV2H60HKC3Y1",
+          "ended": "2026-10-30T16:34:27.586Z",
+          "victory": false,
+          "floor": 7,
+          "death_fight_floor": 7,
+          "death_enemy_ids": [
+            "GREMLIN_MERC"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 546762,
+            "length": 553,
+            "sha256": "17da36127b161c605490200bb0ccf3346343321831722716ced48b8988e04179"
+          },
+          "run_id": "WG94939TRY1Z",
+          "ended": "2026-10-30T17:46:38.714Z",
+          "victory": false,
+          "floor": 38,
+          "death_fight_floor": 38,
+          "death_enemy_ids": [
+            "CUBEX_CONSTRUCT",
+            "PUNCH_CONSTRUCT"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 547315,
+            "length": 530,
+            "sha256": "39d3991141394a9d4f99add7542215e0ded7d635e963b8ca73e4ca17c6cf1a7a"
+          },
+          "run_id": "FYAU328613V4",
+          "ended": "2026-10-30T18:26:16.449Z",
+          "victory": false,
+          "floor": 24,
+          "death_fight_floor": 24,
+          "death_enemy_ids": [
+            "PARAFRIGHT",
+            "THE_OBSCURA"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 547845,
+            "length": 491,
+            "sha256": "4ddd8dd8e1db1f931fcffdecbdccf4e1a3511902e6bc2e4b1a6f5fad37cc2dd7"
+          },
+          "run_id": "5EKFJXE5SSNX",
+          "ended": "2026-10-30T19:41:00.820Z",
+          "victory": false,
+          "floor": 48,
+          "death_fight_floor": 48,
+          "death_enemy_ids": [
+            "TEST_SUBJECT"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 548336,
+            "length": 485,
+            "sha256": "6c507368b4f03f92a37d00a35a669bef23eab5f61d7caabca56133ac126b6ea5"
+          },
+          "run_id": "R8NBP4HQLKLU",
+          "ended": "2026-10-30T20:52:19.021Z",
+          "victory": true,
+          "floor": 49,
+          "death_fight_floor": null,
+          "death_enemy_ids": null
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 548821,
+            "length": 469,
+            "sha256": "75472ea53e2fc025b9e93de952512f344ce9c42da2211c00b319002dd92de775"
+          },
+          "run_id": "GXJ6F3S8CPCB",
+          "ended": "2026-10-30T21:10:18.720Z",
+          "victory": false,
+          "floor": 9,
+          "death_fight_floor": 9,
+          "death_enemy_ids": [
+            "TERROR_EEL"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549290,
+            "length": 511,
+            "sha256": "bb16e1b0f364c2e3ae88f322666a83bb749f44af2aab938b50caddd36f67e442"
+          },
+          "run_id": "DNEU7N67RP35",
+          "ended": "2026-10-30T22:26:07.796Z",
+          "victory": false,
+          "floor": 49,
+          "death_fight_floor": 49,
+          "death_enemy_ids": [
+            "TEST_SUBJECT"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549801,
+            "length": 505,
+            "sha256": "d03710ac792066446da0a52f582a543cc9cfa6151dd3a81ec62812ac07a3707b"
+          },
+          "run_id": "U7XSFRGXHD9S",
+          "ended": "2026-10-30T23:46:14.444Z",
+          "victory": false,
+          "floor": 48,
+          "death_fight_floor": 48,
+          "death_enemy_ids": [
+            "AEONGLASS"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550306,
+            "length": 512,
+            "sha256": "ded55189af626f92f7495f69dfba3f8e1751a53cecc92b890f748f425b9dae2b"
+          },
+          "run_id": "ACR3SLMXZL6L",
+          "ended": "2026-10-31T00:12:47.280Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "KIN_FOLLOWER",
+            "KIN_PRIEST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550818,
+            "length": 510,
+            "sha256": "debfadee106c57e4b51c8c7bbd8ad10962785958eae6e4d3e011cb10bdcfd58f"
+          },
+          "run_id": "39H26JGK6KRH",
+          "ended": "2026-10-31T01:07:10.004Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "KNOWLEDGE_DEMON"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551328,
+            "length": 565,
+            "sha256": "3e0b3170fe440ffb2349d314bbbd7e5253181c7512a7eeb24c08ef2175a13985"
+          },
+          "run_id": "A4KFJN6YU3BQ",
+          "ended": "2026-10-31T01:49:43.499Z",
+          "victory": false,
+          "floor": 23,
+          "death_fight_floor": 23,
+          "death_enemy_ids": [
+            "BOWLBUG_ROCK",
+            "BOWLBUG_SILK",
+            "SLUMBERING_BEETLE"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551893,
+            "length": 483,
+            "sha256": "360bd99996a2fd49638c33e9ca3ccedc0dfee2af14ee58e18df1cfb80a14a36d"
+          },
+          "run_id": "61YKJB1Q6CS1",
+          "ended": "2026-10-31T02:21:34.182Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "CEREMONIAL_BEAST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552376,
+            "length": 486,
+            "sha256": "2244227d5a0b2ecf67a907507729bfea06c79d83906315fd6793570dc44b0f2e"
+          },
+          "run_id": "JH465WASLA1C",
+          "ended": "2026-10-31T03:04:25.205Z",
+          "victory": false,
+          "floor": 30,
+          "death_fight_floor": 30,
+          "death_enemy_ids": [
+            "INFESTED_PRISM"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552862,
+            "length": 518,
+            "sha256": "c5adec9c36665e51bdfe2ffcc8240f670255c6d1dbccbdc05cf18ce54e7929ee"
+          },
+          "run_id": "DJ0FNHDE0DKZ",
+          "ended": "2026-10-31T04:07:44.253Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        }
+      ],
+      "notice": "仅在原题之前已结束的末14终局；非首次尝试统计，不归因死因。"
+    },
+    "act2_before_boss": {
+      "as_of": "2026-10-31T09:27:06.961Z",
+      "records": [
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 548336,
+            "length": 485,
+            "sha256": "6c507368b4f03f92a37d00a35a669bef23eab5f61d7caabca56133ac126b6ea5"
+          },
+          "run_id": "R8NBP4HQLKLU",
+          "ended": "2026-10-30T20:52:19.021Z",
+          "victory": true,
+          "floor": 49,
+          "death_fight_floor": null,
+          "death_enemy_ids": null
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 548821,
+            "length": 469,
+            "sha256": "75472ea53e2fc025b9e93de952512f344ce9c42da2211c00b319002dd92de775"
+          },
+          "run_id": "GXJ6F3S8CPCB",
+          "ended": "2026-10-30T21:10:18.720Z",
+          "victory": false,
+          "floor": 9,
+          "death_fight_floor": 9,
+          "death_enemy_ids": [
+            "TERROR_EEL"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549290,
+            "length": 511,
+            "sha256": "bb16e1b0f364c2e3ae88f322666a83bb749f44af2aab938b50caddd36f67e442"
+          },
+          "run_id": "DNEU7N67RP35",
+          "ended": "2026-10-30T22:26:07.796Z",
+          "victory": false,
+          "floor": 49,
+          "death_fight_floor": 49,
+          "death_enemy_ids": [
+            "TEST_SUBJECT"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549801,
+            "length": 505,
+            "sha256": "d03710ac792066446da0a52f582a543cc9cfa6151dd3a81ec62812ac07a3707b"
+          },
+          "run_id": "U7XSFRGXHD9S",
+          "ended": "2026-10-30T23:46:14.444Z",
+          "victory": false,
+          "floor": 48,
+          "death_fight_floor": 48,
+          "death_enemy_ids": [
+            "AEONGLASS"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550306,
+            "length": 512,
+            "sha256": "ded55189af626f92f7495f69dfba3f8e1751a53cecc92b890f748f425b9dae2b"
+          },
+          "run_id": "ACR3SLMXZL6L",
+          "ended": "2026-10-31T00:12:47.280Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "KIN_FOLLOWER",
+            "KIN_PRIEST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550818,
+            "length": 510,
+            "sha256": "debfadee106c57e4b51c8c7bbd8ad10962785958eae6e4d3e011cb10bdcfd58f"
+          },
+          "run_id": "39H26JGK6KRH",
+          "ended": "2026-10-31T01:07:10.004Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "KNOWLEDGE_DEMON"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551328,
+            "length": 565,
+            "sha256": "3e0b3170fe440ffb2349d314bbbd7e5253181c7512a7eeb24c08ef2175a13985"
+          },
+          "run_id": "A4KFJN6YU3BQ",
+          "ended": "2026-10-31T01:49:43.499Z",
+          "victory": false,
+          "floor": 23,
+          "death_fight_floor": 23,
+          "death_enemy_ids": [
+            "BOWLBUG_ROCK",
+            "BOWLBUG_SILK",
+            "SLUMBERING_BEETLE"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551893,
+            "length": 483,
+            "sha256": "360bd99996a2fd49638c33e9ca3ccedc0dfee2af14ee58e18df1cfb80a14a36d"
+          },
+          "run_id": "61YKJB1Q6CS1",
+          "ended": "2026-10-31T02:21:34.182Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "CEREMONIAL_BEAST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552376,
+            "length": 486,
+            "sha256": "2244227d5a0b2ecf67a907507729bfea06c79d83906315fd6793570dc44b0f2e"
+          },
+          "run_id": "JH465WASLA1C",
+          "ended": "2026-10-31T03:04:25.205Z",
+          "victory": false,
+          "floor": 30,
+          "death_fight_floor": 30,
+          "death_enemy_ids": [
+            "INFESTED_PRISM"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552862,
+            "length": 518,
+            "sha256": "c5adec9c36665e51bdfe2ffcc8240f670255c6d1dbccbdc05cf18ce54e7929ee"
+          },
+          "run_id": "DJ0FNHDE0DKZ",
+          "ended": "2026-10-31T04:07:44.253Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 553380,
+            "length": 492,
+            "sha256": "130760af9ac7fd922c61aae6b529d01fac6434bd1e315957fc3a8e21f722e193"
+          },
+          "run_id": "8CHJ5W30Q7Z8",
+          "ended": "2026-10-31T04:58:09.137Z",
+          "victory": false,
+          "floor": 36,
+          "death_fight_floor": 36,
+          "death_enemy_ids": [
+            "DEVOTED_SCULPTOR"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 553872,
+            "length": 499,
+            "sha256": "c5378ab1921955ed481aa6421b25846c571043aa417c7592d83b92b866c69bd4"
+          },
+          "run_id": "4W4X62DRSTWA",
+          "ended": "2026-10-31T05:59:33.202Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 554371,
+            "length": 519,
+            "sha256": "5e9d1cf2b359943c6bfbb2ac590ec37eeec47c5b368fb72dae387b91579cafca"
+          },
+          "run_id": "QE18E5JXBUZB",
+          "ended": "2026-10-31T07:12:12.209Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 554890,
+            "length": 520,
+            "sha256": "0052fb6b06d969144c2c1efd4c36dc03ba26c330b4675ac1a5c8a60ffb580586"
+          },
+          "run_id": "Q49RJLSL7QTG",
+          "ended": "2026-10-31T08:20:28.358Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        }
+      ],
+      "notice": "仅在原题之前已结束的末14终局；非首次尝试统计，不归因死因。"
+    },
+    "opening": {
+      "as_of": "2026-10-31T09:47:52.665Z",
+      "records": [
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 548821,
+            "length": 469,
+            "sha256": "75472ea53e2fc025b9e93de952512f344ce9c42da2211c00b319002dd92de775"
+          },
+          "run_id": "GXJ6F3S8CPCB",
+          "ended": "2026-10-30T21:10:18.720Z",
+          "victory": false,
+          "floor": 9,
+          "death_fight_floor": 9,
+          "death_enemy_ids": [
+            "TERROR_EEL"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549290,
+            "length": 511,
+            "sha256": "bb16e1b0f364c2e3ae88f322666a83bb749f44af2aab938b50caddd36f67e442"
+          },
+          "run_id": "DNEU7N67RP35",
+          "ended": "2026-10-30T22:26:07.796Z",
+          "victory": false,
+          "floor": 49,
+          "death_fight_floor": 49,
+          "death_enemy_ids": [
+            "TEST_SUBJECT"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 549801,
+            "length": 505,
+            "sha256": "d03710ac792066446da0a52f582a543cc9cfa6151dd3a81ec62812ac07a3707b"
+          },
+          "run_id": "U7XSFRGXHD9S",
+          "ended": "2026-10-30T23:46:14.444Z",
+          "victory": false,
+          "floor": 48,
+          "death_fight_floor": 48,
+          "death_enemy_ids": [
+            "AEONGLASS"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550306,
+            "length": 512,
+            "sha256": "ded55189af626f92f7495f69dfba3f8e1751a53cecc92b890f748f425b9dae2b"
+          },
+          "run_id": "ACR3SLMXZL6L",
+          "ended": "2026-10-31T00:12:47.280Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "KIN_FOLLOWER",
+            "KIN_PRIEST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 550818,
+            "length": 510,
+            "sha256": "debfadee106c57e4b51c8c7bbd8ad10962785958eae6e4d3e011cb10bdcfd58f"
+          },
+          "run_id": "39H26JGK6KRH",
+          "ended": "2026-10-31T01:07:10.004Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "KNOWLEDGE_DEMON"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551328,
+            "length": 565,
+            "sha256": "3e0b3170fe440ffb2349d314bbbd7e5253181c7512a7eeb24c08ef2175a13985"
+          },
+          "run_id": "A4KFJN6YU3BQ",
+          "ended": "2026-10-31T01:49:43.499Z",
+          "victory": false,
+          "floor": 23,
+          "death_fight_floor": 23,
+          "death_enemy_ids": [
+            "BOWLBUG_ROCK",
+            "BOWLBUG_SILK",
+            "SLUMBERING_BEETLE"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 551893,
+            "length": 483,
+            "sha256": "360bd99996a2fd49638c33e9ca3ccedc0dfee2af14ee58e18df1cfb80a14a36d"
+          },
+          "run_id": "61YKJB1Q6CS1",
+          "ended": "2026-10-31T02:21:34.182Z",
+          "victory": false,
+          "floor": 17,
+          "death_fight_floor": 17,
+          "death_enemy_ids": [
+            "CEREMONIAL_BEAST"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552376,
+            "length": 486,
+            "sha256": "2244227d5a0b2ecf67a907507729bfea06c79d83906315fd6793570dc44b0f2e"
+          },
+          "run_id": "JH465WASLA1C",
+          "ended": "2026-10-31T03:04:25.205Z",
+          "victory": false,
+          "floor": 30,
+          "death_fight_floor": 30,
+          "death_enemy_ids": [
+            "INFESTED_PRISM"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 552862,
+            "length": 518,
+            "sha256": "c5adec9c36665e51bdfe2ffcc8240f670255c6d1dbccbdc05cf18ce54e7929ee"
+          },
+          "run_id": "DJ0FNHDE0DKZ",
+          "ended": "2026-10-31T04:07:44.253Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 553380,
+            "length": 492,
+            "sha256": "130760af9ac7fd922c61aae6b529d01fac6434bd1e315957fc3a8e21f722e193"
+          },
+          "run_id": "8CHJ5W30Q7Z8",
+          "ended": "2026-10-31T04:58:09.137Z",
+          "victory": false,
+          "floor": 36,
+          "death_fight_floor": 36,
+          "death_enemy_ids": [
+            "DEVOTED_SCULPTOR"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 553872,
+            "length": 499,
+            "sha256": "c5378ab1921955ed481aa6421b25846c571043aa417c7592d83b92b866c69bd4"
+          },
+          "run_id": "4W4X62DRSTWA",
+          "ended": "2026-10-31T05:59:33.202Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 554371,
+            "length": 519,
+            "sha256": "5e9d1cf2b359943c6bfbb2ac590ec37eeec47c5b368fb72dae387b91579cafca"
+          },
+          "run_id": "QE18E5JXBUZB",
+          "ended": "2026-10-31T07:12:12.209Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 554890,
+            "length": 520,
+            "sha256": "0052fb6b06d969144c2c1efd4c36dc03ba26c330b4675ac1a5c8a60ffb580586"
+          },
+          "run_id": "Q49RJLSL7QTG",
+          "ended": "2026-10-31T08:20:28.358Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        },
+        {
+          "source": {
+            "path": "logs/runs.jsonl",
+            "offset": 555410,
+            "length": 521,
+            "sha256": "ba8969325510dbe05f4f424ef96390a7dd7a52d1b251cc1716f61573b6606b34"
+          },
+          "run_id": "TBFLR466YFJG",
+          "ended": "2026-10-31T09:44:18.900Z",
+          "victory": false,
+          "floor": 33,
+          "death_fight_floor": 33,
+          "death_enemy_ids": [
+            "CRUSHER",
+            "ROCKET"
+          ]
+        }
+      ],
+      "notice": "仅在原题之前已结束的末14终局；非首次尝试统计，不归因死因。"
+    }
+  }
+}
