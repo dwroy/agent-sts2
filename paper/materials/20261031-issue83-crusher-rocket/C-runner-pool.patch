@@ -1,0 +1,41 @@
+--- a/agent/tools/boss-sim/backtest-runner.ts
++++ b/agent/tools/boss-sim/backtest-runner-C.ts
+@@ -32,7 +32,7 @@
+ 
+ import { makeKnowledge } from "../../src/knowledge/index.js";
+ import { parseGameState, type GameState } from "../../src/hand/mod/schema.js";
+-import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
++import { BossSimPool, BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
+ import { bossClock } from "../../src/sim/boss-clock.js";
+ import { loadFightValueModel } from "../../src/reflex/fight-value.js";
+ import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/reflex/rollout.js";
+@@ -149,6 +149,7 @@
+   };
+ }
+ 
++const pool = new BossSimPool(2);
+ async function main(): Promise<void> {
+   mkdirSync(outDir, { recursive: true });
+   const out = join(outDir, `results-${shard}.jsonl`);
+@@ -212,13 +213,13 @@
+         const simOpts = { samples, seed: seed + index * 101, scripts, damageScale, hpScale, threat, potionHold };
+         // --orders best: the best of the solver's own targets and every kill order (runBestOrder); else the Queen's.
+         if (bestOrder) {
+-          const res = await runBestOrder(runBossSim, simInput, [simLine], simOpts);
++          const res = await runBestOrder(pool.run.bind(pool), simInput, [simLine], simOpts);
+           record["order"] = res.lines[0]!.order;
+           record["orders"] = res.byOrder.map((o) => [o.order, r2(o.result.lines[0]!.winProb)]);
+           record["sim"] = { ...simFacts(res.lines[0]!), ms: Math.round(performance.now() - t) };
+         } else {
+           const order = killOrderOf(board.input);
+-          const res = runBossSim(simInput, [simLine], { ...simOpts, order });
++          const res = await pool.run(simInput, [simLine], { ...simOpts, order });
+           if (order) record["order"] = order.label;
+           record["sim"] = { ...simFacts(res.lines[0]!), ms: Math.round(performance.now() - t) };
+         }
+@@ -273,4 +274,4 @@
+   console.error(`boss-sim backtest shard ${shard}/${shards}: ${done} fights -> ${out}`);
+ }
+ 
+-await main();
++try { await main(); } finally { await pool.close(); }
