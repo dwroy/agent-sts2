@@ -125,6 +125,29 @@ Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）�
 
 注册修正必须完整安装父 tick/learner_jobs、`learner_registration.py`、wrapper 与外部来源模块；不得只换 wrapper 后给原在途行添加屏障或元数据。先由 ops 待原自然事务退锁并核旧 wrapper 的零模型启动证明，再沿原失败/租约/世代续接，不重放旧产物或强 tick。#56 主管6385018900的23:30前合入门保持；未能完成时，原 ops 按其裁决回退到 #56 之前的调度恢复原两槽，知识、原 owner、失败和证据原样保留。恢复数量和时刻均须实际读回，不以源代码安装代自然验收。
 
+## 学习并发配置（#56，2026-10-31）
+
+[6538878220 批准](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6538878220)的规则覆盖上文历史 0/2/4、90% 换号及 ultrafast/fast 调度描述：学习与研发共享 codex3 周额度，但各有独立的会话计数。学习不占开发位，不改变开发上限 8 或 heavy 机器槽；当前学习服务档保持 `default`。源码采用不自动改生产配置或恢复被暂停的队列。
+
+`.agents/board.yaml` 可增加独立顶层段，缺省为：
+
+```yaml
+learning:
+  own_slots: 1
+  external_slots: 4
+  total_limit: 5
+```
+
+own/external 接受 0–10 整数、total 接受 1–10 整数，布尔、浮点、越界、坏 YAML 或未知 learning 字段拒绝新准入。总限优先于分项和；两类都为 0 可停止新派发。未出现 learning 段时保留原无外部需求的普通流水线，外部期仍默认 own1/ext4；出现该段后所有自有入口都受 own_slots 约束。更高并发须由 ops 采用源码后按库存设置 total=10 和 own/ext 分配，并核真实回执。
+
+复用原统一快照，匹配当前学习账号 home SHA 和 `codex/primary` 的 10080 分钟周窗。新鲜（最多600秒）且已用 <70% 时使用配置总限；>=70% 或未知时总限为 `min(配置总限,4)`。未知包括读取失败、过期、账号不符、目标窗缺失/重复、坏数值，以及窗口已重置但无新样本；其他 bucket 和五小时窗不代周窗。新鲜新周期样本可自动恢复。外部期保留配置 own 席位，外部上限为 `min(external_slots,max(0,有效总限-own_slots))`，默认降档 own1/ext3。新总量门不再因90%向 ops 自动请求换号；实际账号切换仍走独立原事务。
+
+主题 A–D 与 ext1–ext10 席位分别记录：external<=4 时仍每主题一个，任意 A–D 均可轮转；显式扩到>4 后才可让同主题的不同合法 plan/unit 占不同席位。仍核来源冻结、plan/generation、unit 不重叠、原生退役与工作树独占。旧行不补写席位，按原 owner 保守占位；高编号席位缩容后仍计占用。自有 owner 沿 #77 原生终态/宿主空闲及主管作废回执核计算位，审计 batch/同一 request lease 只算一次。其他未明 owner/孤立 lease 保留。
+
+自然 tick、手动 write/dispatch、finish 后续派、feature、learning_requests 接续、审计和 boss-sim 都在启动前查同一当前 state。新 PID/launching 行在原 learn.lock 内消耗预算；完整 metadata 后原子发布 batch 屏障，120秒不变。降档或缩槽只挡新准入，不发信号、不重写状态/线程/租约；已注册 wrapper 继续核账号、服务档及原来源，不因后来的容量变化被中断。8个在途降为4时可继续显示8/4，占位降到3才可再准入一个。
+
+原 tick 首次和之后至少间隔7200秒在 `ops/codex-ops/inbox-claude.md` 追加一行，含登记为 running 且 supervisor PID 存活的在跑数/有效总限、保守占位 own/ext、配置、周已用%、降档及原因；未知另列，不冒报为模型在跑。candidate-only/暂停准入的原 tick 也报告，原报告 ID 处理追加后落盘中断的去重，报告水位另存 `learning-concurrency-report.json`；排空 tick 不重写 learn.json，正常 tick 可缓存报告水位。不新增定时器、采样或模型进程。上线/撤回仍由集成员与 ops 沿原批次执行，保留所有批次、原生证据、slot、知识和未完成父项。
+
 ### #77 主管裁决作废收尾
 
 主管 [6519584366](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519584366) 对七批作废的裁决，以及 [6519962379](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519962379) 对空闲原生进程连同子进程组 TERM 的追加授权，由原 ops 在补丁实际合入并登记 ROOT 后执行：

@@ -8,7 +8,7 @@ export type ExternalTier = "default";
 export interface ExternalTierDecision {
   requested: ExternalTier; effective: ExternalTier;
   weekly_used_percent: number | null; sample_observed_at: string | null;
-  reason: "weekly_at_90" | "weekly_over_70" | "weekly_within_70" | "weekly_unknown";
+  reason: "weekly_ge_70" | "weekly_within_70" | "weekly_unknown";
   observed_service_tier: null;
 }
 export function externalRegistration(env: NodeJS.ProcessEnv, lease: StartupLease | undefined, task: string): boolean {
@@ -37,35 +37,36 @@ export function candidateMode(env: NodeJS.ProcessEnv): Record<string, string> | 
 export function externalTier(usage: CodexUsage | null, now: Date, requested: ExternalTier = "default"): ExternalTierDecision {
   const observed = usage ? Date.parse(usage.readAt) : NaN;
   const fresh = Number.isFinite(observed) && now.getTime() >= observed && now.getTime() - observed <= 600_000;
-  const weekly = usage?.windows.filter((w) => w.windowMins === 10080) ?? [];
-  const valid = fresh && weekly.length > 0 && weekly.every((w) => Number.isFinite(w.usedPct) && w.usedPct >= 0 && w.usedPct <= 100
+  const weekly = usage?.windows.filter((w) => w.name === "codex/primary" && w.windowMins === 10080) ?? [];
+  const valid = fresh && weekly.length === 1 && weekly.every((w) => Number.isFinite(w.usedPct) && w.usedPct >= 0 && w.usedPct <= 100
     && (!w.resetsAt || Date.parse(w.resetsAt) > now.getTime()));
   const used = valid ? Math.max(...weekly.map((w) => w.usedPct)) : null;
   return { requested, effective: "default",
     weekly_used_percent: used, sample_observed_at: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
-    reason: used === null ? "weekly_unknown" : used >= 90 ? "weekly_at_90" : used > 70 ? "weekly_over_70" : "weekly_within_70",
+    reason: used === null ? "weekly_unknown" : used >= 70 ? "weekly_ge_70" : "weekly_within_70",
     observed_service_tier: null };
 }
 
-/** Reuse the scheduler's frozen decision and account-bound common snapshot. */
+/** A registered batch retains its seat across later quota/capacity changes. */
 export function registeredExternalTier(env: NodeJS.ProcessEnv, home: string, now: Date, requested: ExternalTier): ExternalTierDecision | null {
   try {
     const batch = JSON.parse(readFileSync(env.LEARNER_STATE_FILE!, "utf8")).batches[env.LEARNER_BATCH_ID!];
     const policy = batch.external_policy;
-    const sample = JSON.parse(readFileSync(join(dirname(env.LEARNER_STATE_FILE!), "subscription-usage.json"), "utf8"));
     const homeSha = createHash("sha256").update(home).digest("hex");
     if (policy?.schema !== "external-learning-policy-v1" || policy.account_home_sha256 !== homeSha
-      || sample.account_home_sha256 !== homeSha || sample.freshness !== "fresh" || sample.provider !== "codex"
-      || sample.schema_version !== 1
-      || !Array.isArray(sample.windows)) return null;
-    const decision = externalTier({ readAt: sample.sample_observed_at, windows: sample.windows.map((w: Record<string, unknown>) => ({
-      usedPct: w.stale === false && w.kind === "weekly" ? w.used_percent : NaN,
-      windowMins: w.window_minutes, resetsAt: w.resets_at,
-    })) } as CodexUsage, now, requested);
-    if (decision.weekly_used_percent === null || decision.weekly_used_percent >= 90
-      || decision.reason !== policy.reason
-      || decision.effective !== policy.service_tier || requested !== policy.service_tier
-      || policy.workers !== (decision.weekly_used_percent > 70 ? 2 : 4)) return null;
-    return decision;
+      || policy.service_tier !== "default" || requested !== policy.service_tier
+      || !Number.isInteger(policy.workers) || policy.workers < 1 || policy.workers > 10) return null;
+    let usage: CodexUsage | null = null;
+    try {
+      const sample = JSON.parse(readFileSync(join(dirname(env.LEARNER_STATE_FILE!), "subscription-usage.json"), "utf8"));
+      if (sample.account_home_sha256 === homeSha && sample.freshness === "fresh" && sample.provider === "codex"
+        && sample.schema_version === 1 && Array.isArray(sample.windows)) {
+        usage = { readAt: sample.sample_observed_at, windows: sample.windows.map((w: Record<string, unknown>) => ({
+          name: w.bucket, usedPct: w.stale === false && w.kind === "weekly" ? w.used_percent : NaN,
+          windowMins: w.window_minutes, resetsAt: w.resets_at,
+        })) } as CodexUsage;
+      }
+    } catch { /* Unknown quota constrains future admission, not this registered owner. */ }
+    return externalTier(usage, now, requested);
   } catch { return null; }
 }
