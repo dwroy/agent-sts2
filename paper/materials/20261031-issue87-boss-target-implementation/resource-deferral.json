@@ -1,0 +1,107 @@
+{
+  "requested_window": "2026-10-31T19:48:26+08:00 through 19:48:27+08:00",
+  "requested_root_lock_inode": 5925863,
+  "historical_root_lock_ownership": "unknown: no historical FD/lock sample retained by this session; neither present machine rows nor current FDs can prove it",
+  "entry": "nice19 main ops/board_heavy.py dev -- canonical sandbox; next own dev request ran unittest ops.tests.test_fixed_producer_admission",
+  "static_trace": "dev entry opens machine request/slot leases; no call to board_heavy.source_lock; the resource/admission suites use private TemporaryDirectory roots. This is static evidence, not a historical FD attestation.",
+  "claims": [
+    {
+      "id": "7bb14a377f924098b884b8c8b66d8b7d",
+      "runner_pid": 985643,
+      "runner_start": "87182103",
+      "role": "dev",
+      "task": "#87",
+      "state": "queued",
+      "queued_at": 1793447320.6853268,
+      "started_at": null,
+      "command_sha256": "c1a7e1d08164c2b8f8e4acb03155fd482b0f1f17322d81dc95b4e910f1254861",
+      "record_state_is_not_terminal_proof": true,
+      "pid_present_now": false,
+      "queued_at_cst": "2026-10-31T19:48:40.685327+08:00"
+    },
+    {
+      "id": "4cc6b84c3b8a489a8af715dfe170beb0",
+      "runner_pid": 742281,
+      "runner_start": "87004434",
+      "role": "dev",
+      "task": "#87",
+      "state": "running",
+      "queued_at": 1793445544.1263278,
+      "started_at": 1793447307.187848,
+      "command_sha256": "d2a674f3bc15af66076c8c9faa2d2d70c3b6478f667b84af44b7d1bda7344583",
+      "record_state_is_not_terminal_proof": true,
+      "pid_present_now": false,
+      "queued_at_cst": "2026-10-31T19:19:04.126328+08:00",
+      "started_at_cst": "2026-10-31T19:48:27.187848+08:00"
+    },
+    {
+      "id": "7f6d8c8b10354074a28f014039328d10",
+      "runner_pid": 729560,
+      "runner_start": "86994818",
+      "role": "dev",
+      "task": "#87",
+      "state": "running",
+      "queued_at": 1793445447.775156,
+      "started_at": 1793445678.0822272,
+      "command_sha256": "eaf96d989658c7003e1265d9ca314ec9ecebc6bf848f40ab715035d2698a8d5c",
+      "record_state_is_not_terminal_proof": true,
+      "pid_present_now": false,
+      "queued_at_cst": "2026-10-31T19:17:27.775156+08:00",
+      "started_at_cst": "2026-10-31T19:21:18.082227+08:00"
+    }
+  ],
+  "deferred_r2": {
+    "runner_pid": 985643,
+    "runner_start": "87182103",
+    "id": "7bb14a377f924098b884b8c8b66d8b7d",
+    "before": "queued, never started_at, verified own PPID/argv/start",
+    "operation": "SIGINT only this own queued runner",
+    "exit_code": 130,
+    "pid_present_after": false,
+    "resume_after": "#77 final combination check completes, per watcher 6543026385; no new heavy/full until then"
+  },
+  "evidence": [
+    {
+      "path": "ops/tests/test_fixed_producer_admission.py",
+      "sha256": "d918b38e4df498112e9eaa585f7fae8d4d23a5056306b9e416607a81b466dac7"
+    },
+    {
+      "path": "ops/tests/test_board_queue_resources.py",
+      "sha256": "74e1ed7245ed82fc8ed86d5a186455bd5f8b61b364e90f202a9ad425587d9265"
+    },
+    {
+      "path": "agent/tools/test-sandbox.sh",
+      "sha256": "62bea6563fb7d7cfe7144b604961c385502b30176608813b39fd9ec52b37277b"
+    },
+    {
+      "path": "data/issue87-implementation/sandbox-final.log",
+      "bytes": 29809,
+      "sha256": "89738185962be4ad7fee698fa304b74be71ea1e753c51a10069a090f1eee45b5"
+    },
+    {
+      "path": "data/issue87-implementation/fixed-producer-final.log",
+      "bytes": 124,
+      "sha256": "4df90e0c9f4cbe1ba891e46d3dee7545904ff6ebe4509075d876acc327f33963"
+    },
+    {
+      "path": "data/issue87-implementation/check-imports-failure-detail.log",
+      "bytes": 114,
+      "sha256": "fb78bb274805592c018dad9c285e83cf275b13b2d5c25466b6ed1d14536aab7b"
+    },
+    {
+      "path": "data/issue87-implementation/own-heavy-records-before-defer.json",
+      "bytes": 1834,
+      "sha256": "1d00eded717e8a1c4ed400f10be9c4eab733bac2d0a7916bb19282d3e07c9604"
+    },
+    {
+      "path": "data/issue87-implementation/own-r2-fds-before-defer.json",
+      "bytes": 2047,
+      "sha256": "e0abe9995466370a5d8d85338c3be393654810d0687fa5a4065ad775807c9f29"
+    },
+    {
+      "path": "data/issue87-implementation/final-r2-wrapper.log",
+      "bytes": 1115,
+      "sha256": "64d6061335b8c95044e06bcc58022c182f6db300dda2d5788b92d631e2486e9b"
+    }
+  ]
+}
