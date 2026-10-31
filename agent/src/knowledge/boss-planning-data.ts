@@ -9,11 +9,13 @@ import { indexedKnowledge } from "./runtime/reader.js";
 import { runtimeKnowledgeIdentity } from "./runtime-paths.js";
 import { runtimeDataIdentity } from "./runtime-data.js";
 import { EXTERNAL_STATS_FILE, EXTERNAL_STATS_DATA_SHA256 } from "../brain/tools/external-stats-tools.js";
-import { parseBossProfile, type PublishedBossProfile } from "./boss-profile.js";
-import { strategyGrading } from "./strategy-grading.js";
+import { parseBossProfile, type PublishedBossProfile, type BossAttemptCounts } from "./boss-profile.js";
+import { formallyGraded, strategyGrading } from "./strategy-grading.js";
 
 type Row = Record<string, unknown>;
-export interface BossPlanningRow { id: string; act: number; parts: string[]; aliases?: string[]; hp: string; mechanics: string[]; own: string; external: string; strategies: string[]; profiles: PublishedBossProfile[] }
+export interface BossPublishedMechanism { id: string; clause: string; summary: string; single_window: boolean; trigger: unknown; grading_sha256: unknown }
+export interface BossOwnCounters { first: BossAttemptCounts | null; first_version: string | null; first_cutoff: string | null; inclusive: { won: number | null; known: number | null } }
+export interface BossPlanningRow { id: string; act: number; parts: string[]; aliases?: string[]; hp: string; mechanics: string[]; own: string; ownCounters?: BossOwnCounters; publishedMechanisms?: BossPublishedMechanism[]; external: string; strategies: string[]; profiles: PublishedBossProfile[] }
 export interface BossPlanningData { rows: BossPlanningRow[]; pairs: string[][]; sources: Row[]; knowledgeVersion: string | null; setupMs: number }
 const cache = new Map<string, BossPlanningData>();
 const hash = (v: string | Buffer) => createHash("sha256").update(v).digest("hex");
@@ -25,6 +27,32 @@ function mode(values: Record<string, number> | undefined): string | null {
 }
 const n = (values: Record<string, number> | undefined) => Object.values(values ?? {}).reduce((a, b) => a + b, 0);
 const amount = (x: number) => Number.isInteger(x) ? String(x) : String(Number(x.toFixed(1)));
+
+/** Only explicitly graded facts in the bound release qualify. Never copy prior strategy advice. */
+export function publishedBossMechanisms(entries: Row[]): BossPublishedMechanism[] {
+  return entries.flatMap(entry => {
+    const g = strategyGrading(entry);
+    if (!formallyGraded(entry) || entry["confidence"] !== null || g?.evidence_type !== "机制事实") return [];
+    const body = g.summary.replace(/^机制事实（已从原件复核）[；：:]?\s*/, "");
+    // A complete source clause, never a substring cut through a condition or number.
+    const clause = body.split("；")[0]!.replace(/^单次观察窗口：/, "单窗：").replace(/^限定原观察窗口：/, "原窗：").replace(/^Silent A10/, "");
+    if (!clause.trim()) return [];
+    return [{ id: str(entry["id"]), clause, summary: g.summary, single_window: g.single_observation_window,
+      trigger: entry["trigger"], grading_sha256: asRecord(entry["formal_publication"])["grading_sha256"] }];
+  }).sort((a, b) => Number(a.single_window) - Number(b.single_window));
+}
+
+/** Legacy boss producer sets turns_won.n=len(won), not the rounded win_rate numerator. */
+export function bossOwnCounters(value: unknown, profile?: PublishedBossProfile): BossOwnCounters {
+  const r = asRecord(value), won = asRecord(r["turns_won"])["n"], known = r["n_outcome_known"];
+  const valid = Number.isSafeInteger(won) && Number.isSafeInteger(known) && Number(won) >= 0 && Number(known) >= Number(won);
+  return { first: profile?.own ?? null, first_version: profile?.own ? profile.game_version : null, first_cutoff: profile?.own ? profile.cutoff : null,
+    inclusive: { won: valid ? Number(won) : null, known: valid ? Number(known) : null } };
+}
+export function bossOwnCounterText(c: BossOwnCounters): string {
+  const f = c.first, first = f ? `${f.won ?? "unknown"}/${f.first ?? "unknown"}(死${f.died ?? "?"}预截${f.predicted_stop ?? "?"}未知${f.unknown ?? "?"}重试${f.retries ?? "?"})` : "unknown";
+  return `O首试${first}/含重试${c.inclusive.won === null ? "unknown" : `${c.inclusive.won}/${c.inclusive.known}`}`;
+}
 
 /** Use the same base damage lookup as kb_monster; never estimate an unobserved ascension here. */
 export function bossMechanics(db: MonsterDb, parts: string[]): { hp: string; tokens: string[] } {
@@ -127,8 +155,9 @@ export function loadBossPlanningData(directory: string, run: string): BossPlanni
     const profiles = matches.filter(e => strategyGrading(e)?.grade !== "B−").map(e => parseBossProfile(e["boss_profile"])).filter((v): v is PublishedBossProfile => v !== null && [id, parts.join("+")].includes(v.boss));
     const countsText = (v: NonNullable<PublishedBossProfile["own"]>) => `首${v.first ?? "?"}/胜${v.won ?? "?"}/死${v.died ?? "?"}/预截${v.predicted_stop ?? "?"}/未知${v.unknown ?? "?"}/重试${v.retries ?? "?"}`;
     const published = profiles.length === 1 ? profiles[0] : undefined;
+    const ownCounters = bossOwnCounters(record, published);
     return { id, act, parts, aliases: [id, parts.join("+"), ...parts.flatMap(p => [p, db.monsters[p]?.name?.zh ?? ""])].filter(Boolean), hp: facts.hp, mechanics: facts.tokens,
-      own: published?.own ? `OK[${published.game_version}]${countsText(published.own)}` : typeof record.win_rate === "number" && Number.isFinite(record.win_rate) && record.win_rate >= 0 && record.win_rate <= 1 ? `O胜${amount(record.win_rate * 100)}%(n${record.n_outcome_known ?? "?"})` : "Ounknown",
+      own: bossOwnCounterText(ownCounters), ownCounters, publishedMechanisms: publishedBossMechanisms(matches),
       external: published?.external.length ? published.external.map(e => `EK[${e.source}/${e.game_version}/上传]${countsText(e.counts)}`).join(";")
         : typeof ext?.["gross_damage_p90"] === "number" ? `E伤p90=${amount(ext["gross_damage_p90"])}(n${ext["gross_damage_n"] ?? "?"})` : "Eunknown",
       strategies: matches.map(e => str(e["id"])), profiles,

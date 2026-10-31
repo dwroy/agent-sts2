@@ -56,12 +56,18 @@ function preserveNested(before: unknown, after: unknown): void {
 export function validateDocuments(files: Record<string, string>): void {
   const parsed: Record<string, Row> = {};
   for (const [path, text] of Object.entries(files)) {
-    if (!allowedPath(path) || Buffer.byteLength(text) > 8 * 1024 * 1024) throw new Error(`invalid document path/size: ${path}`);
+    // Research archives accumulate complete objects; each object retains the old byte bound.
+    const research = path.endsWith("/build-research.json");
+    if (!allowedPath(path) || Buffer.byteLength(text) > (research ? 32 : 8) * 1024 * 1024) throw new Error(`invalid document path/size: ${path}`);
     const body: unknown = JSON.parse(text);
     if (!object(body)) throw new Error(`invalid document: ${path}`);
     parsed[path] = body;
     const name = path.split("/").at(-1), character = path.split("/")[1];
-    if (name === "classification.json" || name === "build-research.json") continue;
+    if (name === "build-research.json") {
+      if (Array.isArray(body.entries) && body.entries.some(e => Buffer.byteLength(JSON.stringify(e)) > 8 * 1024 * 1024)) throw Error("build research entry exceeds 8 MiB");
+      continue;
+    }
+    if (name === "classification.json") continue;
     for (const e of Array.isArray(body.entries) ? body.entries : []) if (e.topics !== undefined) validateTopics(e.topics);
     if (name === "shared-experience.json") parseSharedExperience(body, path);
     else if (name === "open-book.json") {

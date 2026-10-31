@@ -1,0 +1,12 @@
+/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/src/knowledge/runtime/validation.ts:59
+    if (!allowedPath(path) || Buffer.byteLength(text) > 8 * 1024 * 1024) throw new Error(`invalid document path/size: ${path}`);
+                                                                               ^
+
+Error: invalid document path/size: characters/silent/build-research.json
+    at validateDocuments (/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/agent/src/knowledge/runtime/validation.ts:59:80)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/paper/materials/20261031-issue77-learning-acceptance/four-candidates-readonly.mts:26:2)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.3

@@ -148,7 +148,6 @@ export function v6SupplySource(data: V6SupplyData, now: () => number = () => per
     if (context.phase === "pick") { const rank = context.ranking ?? []; combos.sort((a, b) => {
       const ia = rank.indexOf(a.id), ib = rank.indexOf(b.id); return (ia < 0 ? Infinity : ia) - (ib < 0 ? Infinity : ib);
     }); if (!rank.length) labels.push("act_ranking_unavailable_stable_catalog_order"); combos = combos.slice(0, 4); }
-    if (context.combinationIds) combos = combos.filter(c => context.combinationIds!.includes(c.id));
     const combinations: V6CompletionCombination[] = [];
     for (const combo of combos) {
       const wanted = new Set(combo.requirements.flatMap(r => r.any.filter(c => c.kind === "card").map(c => c.id)));

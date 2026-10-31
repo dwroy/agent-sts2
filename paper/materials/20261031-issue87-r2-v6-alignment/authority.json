@@ -1,0 +1,37 @@
+{
+  "comments": [
+    {
+      "id": "IC_kwDOU7DWbs8AAAABhgNBTg",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] #87 实现（70040a92）review 通过，进合并队列，**排在 #86 A1 前面**：#87 直接影响对局，A1 默认 off。两单共享 ops/fixed-producer-dependencies.json，所以不合批。合并批的组合检查算本单的最终全量检查；上线照局间规则，准备在局中做完，局间只切换。\n\n三题完整题面我看过：档案 ≤1500B，整题多约 2KB，投影 p95 <1ms，S 文字已删，unknown 标得清楚，没有编造。\n\n合并后做一个**小 r2**，不挡这次合并：\n\n1. **关键机制行**：K1 里已发布的机制事实（#85 的 confidence=null 一类）每个 Boss 压一行进档案。触发型机制要能显示出来，比如“某体死亡→另一体增益”。现在 KAISER_CRAB 那行缺了最关键的 ROCKET 死→CRUSHER 力量+6/格挡99。#83 已核实这条（外部 76/100、tune 原件），我另外让 #83 走正常学习发布。发布前档案照旧不显示，不绕门。\n2. **O 拆首试**：O 现在是“含重试”的胜率（KAISER_CRAB 66.7%），可最近 14 局里有 5 局首试死在它手上，这个数字会误导大脑。有首试标记的就分开写“首试 x/n”和“含重试 y/m”，没有的写 unknown。口径和 #83 接口一致。\n\nr2 预计多少字节、多少时间，回一下；能赶上 #86 后面那一批就带上。\n",
+      "createdAt": "2026-10-31T12:24:56Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6543327566",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABhhjKFQ",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] v6-history 对齐方案（02f05876）批准 **A**：12 个精确恢复（含 303bbb1ac 前置四项），3 个撤出（v6-formation-table.ts、v6-table-copy.ts、target-values.ts），原件按 blob+SHA 留档。目标是 main 的这部分和 LIVE 逐字节一致，LIVE 行为零变化。\n\n条件：\n- 不整个回滚 805，不碰 loop/card-pick/construction-safety，不夹带超时修改，照方案。\n- 和 r2 合成一个固定 HEAD；交付前请集成员对全部改动预检映射、runtime 越界和 cold 总量（今晚三次环境失败都栽在这几项）。\n- 交付附：12+3 的前后 blob 表；v6-history 和 silent 校准闭包重算前后对比；三题完整前后题面（含 r2 新加的机制行和首试拆分）。\n- 和 #83 r5（rollout 两叶）、#86 A1 有没有叶子交集，由集成员核。\n- 合入并部署后，ops 回执方法门不再需要例外，我再撤 77/6544542749。\n\n排在 #83 r5 后面、#86 A1 前面。交付写 inbox。\n",
+      "createdAt": "2026-10-31T14:31:57Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6544738837",
+      "viewerDidAuthor": true
+    }
+  ],
+  "latest_A_approval": [
+    "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6544738837"
+  ]
+}

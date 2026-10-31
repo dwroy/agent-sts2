@@ -12,6 +12,7 @@ import { toolCapabilities } from "../src/brain/tools/capabilities.js";
 import { agentSystemPrompt } from "../src/brain/brain.js";
 import { main as runtimeMain } from "../tools/knowledge-runtime.js";
 import { ToolHost } from "../src/brain/tools/mcp-server.js";
+import { mergeApprovedDelta } from "../src/knowledge/runtime/continuation.js";
 import { buildResearchTool } from "../src/brain/tools/build-research.js";
 import { setKnowledgeCharacter } from "../src/knowledge/files.js";
 import type { ToolContext } from "../src/brain/tools/types.js";
@@ -35,6 +36,45 @@ function fixture(id = "fixture-research") {
 function store() { const root = mkdtempSync(join(tmpdir(), "build-research-")); roots.push(root); const s = new KnowledgeStore(root); stores.push(s); return s; }
 function candidate(s: KnowledgeStore, entries = [fixture()], id = "fixture"): Candidate { return { schema: "knowledge-candidate-v1", id, base: s.current(), character: "silent", source: "fixture", files: { [path]: doc(entries) } }; }
 function publish(s: KnowledgeStore, c = candidate(s)) { s.submit(c); s.validate(c.id); return s.publish(c.id); }
+it("bounds aggregate research archives separately while retaining each original object and other document limits", () => {
+ const a = fixture("large-a"), b = fixture("large-b");
+ for (const entry of [a, b]) { entry.original.content = "x".repeat(4 * 1024 * 1024 + 1); entry.original.sha256 = digest(entry.original.content); }
+ const text = doc([a, b]); expect(Buffer.byteLength(text)).toBeGreaterThan(8 * 1024 * 1024);
+ expect(() => validateDocuments({ [path]: text })).not.toThrow();
+ a.original.content = "x".repeat(8 * 1024 * 1024); a.original.sha256 = digest(a.original.content);
+ expect(() => validateDocuments({ [path]: doc([a]) })).toThrow("entry exceeds 8 MiB");
+ const oversized = doc([]) + " ".repeat(32 * 1024 * 1024);
+ expect(() => validateDocuments({ [path]: oversized })).toThrow("path/size");
+ expect(() => validateDocuments({ "characters/silent/classification.json": text })).toThrow("path/size");
+});
+it("continues disjoint new research IDs with original approval, bytes and prior failures retained", () => {
+ const s = store(), seed = fixture("existing"), other = fixture("concurrent"), added = fixture("new-research");
+ const base = publish(s, candidate(s, [seed], "seed"));
+ const original = candidate(s, [seed, added], "original-batch"); original.base = base;
+ s.submit(original); s.validate(original.id);
+ const current = publish(s, candidate(s, [seed, other], "parallel"));
+ const approvalPath = join(s.root, "approved-original.json"); writeFileSync(approvalPath, JSON.stringify([added]));
+ const approval = [{ id: added.id, path: approvalPath }];
+ const saved = s.db.prepare("SELECT * FROM candidates WHERE id=?").get(original.id);
+ expect(() => s.complete(original, "a".repeat(40), approval)).toThrow("version conflict");
+ expect(() => s.admitContinuation(original.id, original.id, current, [])).toThrow("approved artifacts");
+ expect(() => s.admitContinuation(original.id, original.id, current, [{ ...approval[0]!, sha256: "f".repeat(64) }])).toThrow("checksum");
+ writeFileSync(approvalPath, JSON.stringify([{ ...added, revision: "unapproved" }]));
+ expect(() => s.admitContinuation(original.id, original.id, current, approval)).toThrow("absent from frozen-source");
+ expect(s.status(original.id).continuation).toBeUndefined();
+ writeFileSync(approvalPath, JSON.stringify([added]));
+ const admitted = s.admitContinuation(original.id, original.id, current, approval);
+ expect(s.admitContinuation(original.id, original.id, current, approval)).toEqual(admitted);
+ const receipt = s.complete(original, "a".repeat(40), approval);
+ expect(JSON.parse(s.files(receipt.version)[path]!).entries).toEqual([seed, other, added]);
+ expect(s.db.prepare("SELECT * FROM candidates WHERE id=?").get(original.id)).toEqual(saved);
+ expect(s.status(original.id).failures).toHaveLength(4);
+ expect(s.complete(original, "b".repeat(40), approval)).toEqual(receipt);
+ expect(() => mergeApprovedDelta("silent", { [path]: doc([seed]) }, { [path]: doc([seed, added]) }, { [path]: doc([seed, added]) })).toThrow("object conflict");
+ expect(() => mergeApprovedDelta("silent", { [path]: doc([seed]) }, { [path]: doc([{ ...seed, title: "changed" }]) }, { [path]: doc([seed]) })).toThrow("only appends");
+ expect(() => mergeApprovedDelta("silent", { [path]: doc([seed]) }, { [path]: doc([]) }, { [path]: doc([seed]) })).toThrow("delete");
+ expect(() => mergeApprovedDelta("silent", { [path]: doc([seed]) }, { [path]: JSON.stringify({ ...JSON.parse(doc([seed, added])), character: "ironclad" }) }, { [path]: doc([seed]) })).toThrow("header");
+});
 function context(s: KnowledgeStore, run = "fixture"): ToolContext { return { ascension: 10, act: 2, knowledgeDir: String(s.bind(run, "fixture").snapshot), logsDir: s.root, label: "reward/card", payload: {} }; }
 async function call(ctx: ToolContext, input: Record<string, unknown>) { const tool = buildKnowledgeTools(ctx).find(t => t.name === "kb_build_research")!; const result = await tool.run(input, ctx); expect(result.isError, result.text).toBeUndefined(); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24000); return JSON.parse(result.text); }
 

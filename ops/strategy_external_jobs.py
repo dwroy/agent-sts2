@@ -215,20 +215,20 @@ def lane(plan, binding):
 
 
 def active_external(state, alive, directory=None):
-    """Unverified native owners still reserve worker capacity after wrapper exit."""
+    """Retain semantic owners for mode/plan selection, independent of compute seats."""
     directory = directory or os.environ.get("CODEX_OPS_DIR") or str(Path(__file__).resolve().parent / "codex-ops")
     return lane_owners(state, alive, directory)
 
 
 def lane_owners(state, alive, directory):
-    """Only original retirement proof releases a terminal owner's lane."""
+    """Keep unresolved plan ownership until the original terminal retirement proof."""
     owners = []
     for bid, old in state["batches"].items():
         if not old.get("external_source"):
             continue
         if old.get("state") in ("done", "failed") and not alive(old.get("pid")):
             try:
-                shared.retired(bid, old, directory)
+                shared.retired(bid, old, directory, read_only=True)
                 continue
             except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError):
                 pass  # A dead wrapper is not proof that its native session retired.
@@ -236,11 +236,20 @@ def lane_owners(state, alive, directory):
     return owners
 
 
+def compute_owners(state, alive, directory):
+    """Semantic plan ownership remains; only verified native retirement frees compute."""
+    from own_learning_slot import batch_status
+    owners = lane_owners(state, alive, directory)
+    identities = {id(row) for row in owners}
+    return [row for bid, row in state["batches"].items() if id(row) in identities
+            and batch_status(bid, row, directory, alive).get("reason") != "verified_content_pending_review"]
+
+
 def occupied_lanes(state, configured, root, alive):
     occupied = set()
     plans = {p["plan_id"]: p for p in configured["plans"]}
     directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
-    for old in lane_owners(state, alive, directory):
+    for old in compute_owners(state, alive, directory):
         value = old.get("external_lane")
         if value not in ("A", "B", "C", "D"):
             plan = plans.get(old["external_source"])
@@ -256,12 +265,12 @@ def blocked_lanes(state, configured, root, alive):
         return occupied_lanes(state, configured, root, alive)
     # Enlarged pools retain every owner slot, while independent plans may share a topic.
     directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
-    owners = lane_owners(state, alive, directory)
+    owners = compute_owners(state, alive, directory)
     return set("ABCD") if any(b.get("external_lane") not in ("A", "B", "C", "D") for b in owners) else set()
 
 
 def slot_available(state, root, alive, directory):
-    owners = lane_owners(state, alive, directory)
+    owners = compute_owners(state, alive, directory)
     slots = [b.get("external_slot") for b in owners if b.get("external_slot") is not None]
     if (any(not isinstance(s, str) or not re.fullmatch(r"ext(?:[1-9]|10)", s) for s in slots)
             or len(set(slots)) != len(slots)):

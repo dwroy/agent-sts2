@@ -76,7 +76,7 @@ def limits(root, directory, *, now=None):
 
 def occupancy(state, alive, directory):
     from own_learning_slot import snapshot
-    from strategy_external_jobs import lane_owners
+    from strategy_external_jobs import compute_owners
     alive_owner = lambda pid: type(pid) is int and pid > 0 and alive(pid)
     own = snapshot(state, alive_owner, directory)
     # The original audit has both a batch and a request/file lease, but one owner.
@@ -86,7 +86,7 @@ def occupancy(state, alive, directory):
                   for key in [row.get("audit_key")] if key in audits
                   and audits[key].get("batch") == bid and audits[key].get("pid") == row.get("pid")}
     blockers = [b for b in own["blockers"] if "batch" in b or b.get("request") not in audit_keys]
-    external = lane_owners(state, alive_owner, directory)
+    external = compute_owners(state, alive_owner, directory)
     running = sum(b.get("state") == "running" and alive_owner(b.get("pid"))
                   for b in state["batches"].values())
     return dict(own=len(blockers), external=len(external), total=len(blockers) + len(external),

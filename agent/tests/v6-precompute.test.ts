@@ -46,15 +46,15 @@ it("does no computation when disabled or stale and recovers from a failed backgr
   await expect(idle.runIdle({ contextDigest: "context-a", isIdle: true, available_ms: 5000 })).rejects.toThrow("fixed failure");
   expect(idle.running).toBe(false); const release = await idle.acquireForeground(); release();
 });
-it("continues unfinished cached work only at the next explicit idle boundary", async () => {
+it("requires a new explicit schedule after completing an idle boundary", async () => {
   const precompute = vi.fn().mockResolvedValueOnce({ ...table, telemetry: { pending_work: true } })
     .mockResolvedValueOnce({ ...table, telemetry: { pending_work: false } });
   const idle = new V6IdlePrecomputer({ precompute }); idle.schedule(request());
   const boundary = { contextDigest: "context-a", isIdle: true, available_ms: 5000 };
   expect((await idle.runIdle(boundary)).status).toBe("computed");
   await Promise.resolve(); expect(precompute).toHaveBeenCalledTimes(1);
-  expect((await idle.runIdle(boundary)).status).toBe("computed");
   expect((await idle.runIdle(boundary)).status).toBe("idle");
+  expect(precompute).toHaveBeenCalledTimes(1);
   idle.schedule(request()); idle.invalidate();
   expect((await idle.runIdle(boundary)).status).toBe("idle");
 });

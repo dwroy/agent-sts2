@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { afterEach, expect, it } from "vitest";
 import { attachBossDossier, projectBossDossier, dossierBytes } from "../src/brain/boss-dossier.js";
 import { bossContextKey, bossTargetProblems, withBossTargetSpec, observedBossContext } from "../src/brain/boss-target.js";
-import { bossMechanics, loadBossPlanningData, type BossPlanningData } from "../src/knowledge/boss-planning-data.js";
+import { bossMechanics, loadBossPlanningData, publishedBossMechanisms, bossOwnCounters, bossOwnCounterText, type BossPlanningData } from "../src/knowledge/boss-planning-data.js";
+import { gradingDigest, type StrategyGrading } from "../src/knowledge/strategy-grading.js";
 import { parseBossProfile } from "../src/knowledge/boss-profile.js";
 import { KnowledgeStore } from "../src/knowledge/runtime/store.js";
 import { closeIndexedReaders } from "../src/knowledge/runtime/reader.js";
@@ -40,6 +41,41 @@ const payload = { facts: { act_boss_sim: { boss: "fixed", current_deck: "unchang
   run_plan_task: { plan_reuse: true } };
 const target = { boss_ids: ["FORMAT_C"], gap: "unknown，暂定缺口", reason: "固定格式依据" };
 const review = { endgame: { gaps: "FORMAT_C需求unknown", resources: "两战unknown", win_condition: "FORMAT_C→FORMAT_D候选，后场unknown" } };
+function mechanism(id: string, text: string, single = true): Record<string, any> {
+  const grading: StrategyGrading = { schema: "strategy-grading-v1", grade: "B+", category: "Boss打法", evidence_type: "机制事实",
+    summary: `机制事实（已从原件复核）；${single ? "单次观察窗口：" : ""}${text}；反证与适用限制完整保留`, single_observation_window: single,
+    basis: { checkpoint_sha256: "a".repeat(64), original_entry_sha256: "b".repeat(64), assessment_sha256: "c".repeat(64) } };
+  return { id, version: "1", strategy: grading.summary, confidence: null, evidence_type: "机制事实", grading,
+    source: "own", evidence: [{ run: "SILENT000001", floor: 33 }], trigger: { question_types: ["rest"], bosses: ["FORMAT_B_BOSS"] },
+    formal_publication: { schema: "strategy-publication-v1", status: "published", authorization: "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-123", grading_sha256: gradingDigest(grading) } };
+}
+
+it("projects only formally published unscored facts, retaining the full source and original window", () => {
+  const a = mechanism("window", "固定窗口能量3→2"), b = mechanism("trigger", "PART_2死亡后PART_1获得能力+2", false);
+  const facts = publishedBossMechanisms([a, b, { ...b, id: "pending", formal_publication: { ...b.formal_publication, status: "pending" } },
+    { ...b, id: "numeric", confidence: .3 }, { ...b, id: "bad-digest", formal_publication: { ...b.formal_publication, grading_sha256: "0".repeat(64) } },
+    { id: "mechanism-only-in-name", strategy: "不按名字猜机制", confidence: null }]);
+  expect(facts.map(f => f.id)).toEqual(["trigger", "window"]);
+  expect(facts[0]!.clause).toBe("PART_2死亡后PART_1获得能力+2"); expect(facts[0]!.summary).toContain("反证与适用限制");
+  expect(facts[1]!.clause).toBe("单窗：固定窗口能量3→2");
+});
+
+it("separates first markers from inclusive explicit win counters without reversing rounded rates", () => {
+  expect(bossOwnCounterText(bossOwnCounters({ win_rate: .667, n_outcome_known: 54 }))).toBe("O首试unknown/含重试unknown");
+  expect(bossOwnCounterText(bossOwnCounters({ win_rate: .667, n_outcome_known: 54, turns_won: { n: 36 } }))).toBe("O首试unknown/含重试36/54");
+  expect(bossOwnCounters({ n_outcome_known: 2, turns_won: { n: 3 } }).inclusive.won).toBeNull();
+  expect(bossOwnCounters({ n_outcome_known: 2, turns_won: { n: true } }).inclusive.won).toBeNull();
+});
+
+it("shows complete published conditions and separate own counters, with full limitations in audit", () => {
+  const source = { ...data, rows: data.rows.map((r, i) => ({ ...r, own: "O首试unknown/含重试1/2",
+    publishedMechanisms: publishedBossMechanisms([mechanism(`fact-${i}`, "PART_2死亡后PART_1获得能力+2", false)]) })) };
+  const result = projectBossDossier(board(32, 2, "FORMAT_B_BOSS"), payload, source), text = (result.payload.facts as any).boss_dossier;
+  expect(text).toContain("PART_2死亡后PART_1获得能力+2"); expect(text).toContain("O首试unknown/含重试1/2");
+  expect(Object.keys(result.audit.displayed_mechanism_facts)).toHaveLength(3);
+  expect(JSON.stringify(result.audit.mechanism_facts)).toContain("反证与适用限制完整保留");
+  expect(result.audit.strategy_bodies).toBe(0); expect(dossierBytes(text)).toBeLessThanOrEqual(1500);
+});
 
 it("keeps factual HP, multiple bodies and observed attacks under the full JSON byte cap; preserves sim numbers", () => {
   const result = projectBossDossier(board(), payload, data), f = result.payload["facts"] as any;
@@ -159,7 +195,8 @@ it("reads #83 counters only after the ordinary submit/validate/publish path and 
       own: { first: 3, won: 1, died: 0, predicted_stop: 1, unknown: 1, retries: 9 }, external: [], evidence_refs: ["synthetic-only"], limitations: ["format fixture"] };
     const entry = { id: "synthetic-profile", version: "1", trigger: { question_types: ["rest"], bosses: ["FORMAT_B_BOSS"] }, strategy: "仅格式夹具",
       evidence: [{ run: "SILENT000001", floor: 33 }], source: "own", confidence: .2, boss_profile: profile };
-    const doc = JSON.stringify({ schema: "brain-strategies-v1", character: "silent", entries: [entry] });
+    const fact = mechanism("published-trigger", "PART_2死亡后PART_1获得能力+2", false);
+    const doc = JSON.stringify({ schema: "brain-strategies-v1", character: "silent", entries: [entry, fact] });
     store.submit({ schema: "knowledge-candidate-v1", id: "synthetic-profile", base: store.current(), character: "silent", source: "fixture", files: { "characters/silent/strategy-entries.json": doc } });
     store.validate("synthetic-profile"); const version = store.publish("synthetic-profile"), snapshot = join(root, "snapshots", version);
     // The non-K1 fixed observations are a separate, private source fixture, with their own hashes.
@@ -168,8 +205,10 @@ it("reads #83 counters only after the ordinary submit/validate/publish path and 
     writeFileSync(join(snapshot, "characters/silent/monster-records.json"), JSON.stringify({ bosses: { FORMAT_B: { "10": { parts: { PART_1: {}, PART_2: {} }, win_rate: .5, n_outcome_known: 2 } } } }));
     const loaded = loadBossPlanningData(snapshot, "PUBLISHED_FIXTURE");
     expect(loaded.knowledgeVersion).toBe(version);
-    expect(loaded.rows[0]!.profiles).toEqual([profile]); expect(loaded.rows[0]!.own).toBe("OK[unknown]首3/胜1/死0/预截1/未知1/重试9");
-    expect(loaded.rows[0]!.strategies).toEqual(["synthetic-profile"]);
+    expect(loaded.rows[0]!.profiles).toEqual([profile]); expect(loaded.rows[0]!.own).toBe("O首试1/3(死0预截1未知1重试9)/含重试unknown");
+    expect(loaded.rows[0]!.ownCounters?.first_cutoff).toBe(profile.cutoff);
+    expect(loaded.rows[0]!.publishedMechanisms?.map(f => f.id)).toEqual(["published-trigger"]);
+    expect(loaded.rows[0]!.strategies).toEqual(["synthetic-profile", "published-trigger"]);
     expect(store.files(version)["characters/silent/strategy-entries.json"]).toBe(doc);
   } finally { closeIndexedReaders(); store.close(); }
 });

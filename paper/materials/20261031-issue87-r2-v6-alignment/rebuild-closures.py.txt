@@ -1,0 +1,54 @@
+import json,pathlib,sys,subprocess,copy
+sys.path.insert(0,str(pathlib.Path('ops').resolve()))
+from fixed_producer_methods import manifest,method,local_imports,opaque_sites
+from learning_runtime_store import packed,sha
+root=pathlib.Path('.').resolve();path=root/'ops/fixed-producer-dependencies.json';d=json.loads(path.read_text());before=copy.deepcopy(d)
+main='159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb'
+baselines={'main':json.loads(subprocess.check_output(['git','show',main+':ops/fixed-producer-dependencies.json'])),'r1':json.loads(subprocess.check_output(['git','show','70040a92:ops/fixed-producer-dependencies.json'])),'r2_before_expansion':before}
+removed={f'code:{p}' for p in ['agent/src/sim/v6-formation-table.ts','agent/src/sim/v6-table-copy.ts','agent/src/v6/target-values.ts']}
+review=[]
+for pn in ['v6-history','silent-boss-calibration']:
+ p=d['producers'][pn];initial={**d['common'],**p['inputs']};old_available={i.split(':',1)[1] for i in initial};available=old_available-{i.split(':',1)[1] for i in removed}
+ for identity in removed: p['inputs'].pop(identity,None)
+ # Preserve dynamic IO contracts, removing only genuinely withdrawn family leaves.
+ for k,v in p['contract']['dynamic_edges'].items():p['contract']['dynamic_edges'][k]=[s for s in v if 'code:'+s not in removed]
+ for identity,node in p['inputs'].items():
+  scope,name=identity.split(':',1)
+  if scope!='code':continue
+  raw=(root/name).read_bytes();deps=set(node['dependencies']);oldraw=subprocess.run(['git','show',main+':'+name],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL).stdout
+  if not oldraw:oldraw=raw
+  old_static=set() if node.get('scan')=='text' else local_imports(name,oldraw,old_available,node.get('scan')=='module',[k.split(':',1)[1] for k in deps],node.get('functions',()))
+  new_static=set() if node.get('scan')=='text' else local_imports(name,raw,available,node.get('scan')=='module',[k.split(':',1)[1] for k in deps],node.get('functions',()))
+  newdeps=(deps-{'code:'+s for s in old_static}-removed)|{next(k for k in initial if k.split(':',1)[1]==s) for s in new_static}
+  if pn=='silent-boss-calibration' and name=='agent/tools/boss-sim/refresh-silent.py':
+   actual={str(p.relative_to(root)) for p in (root/'agent/src').rglob('*.ts')};actual.update(str(p.relative_to(root)) for p in (root/'agent/tools/boss-sim').iterdir() if p.suffix in ('.ts','.py') and not p.name.startswith('test_'))
+   newdeps |= {'code:'+s for s in actual if s != name}
+   family=set(p['contract']['dynamic_edges'][name]);p['contract']['dynamic_edges'][name]=sorted(family|actual)
+   assert actual.issubset({s.split(':',1)[1] for s in newdeps} | {name})
+  prior=copy.deepcopy(node);node['dependencies']=sorted(newdeps);node['sha256']=sha(raw);node['opaque_sites']=opaque_sites(name,raw)
+  if node!=prior:review.append({'producer':pn,'path':name,'before_sha256':prior['sha256'],'sha256':node['sha256'],'added_edges':sorted(newdeps-set(prior['dependencies'])),'removed_edges':sorted(set(prior['dependencies'])-newdeps)})
+ # Keep reviewed toolchain roots along with actual entry and runtime roots.
+ nodes={**d['common'],**p['inputs']};roots=list(d['common'])+['code:'+s for s in p['contract']['entries']]+['code:agent/'+s for s in ['package.json','package-lock.json','tsconfig.json']]
+ todo=roots[:];reachable=set()
+ while todo:
+  i=todo.pop()
+  if i in reachable:continue
+  assert i in nodes,i
+  reachable.add(i);todo+=nodes[i]['dependencies']
+ pruned=set(p['inputs'])-reachable
+ for i in pruned:del p['inputs'][i]
+ review.append({'producer':pn,'removed_nodes':sorted(set(initial)-set(nodes)|pruned),'roots':roots,'reachable_nodes':len(reachable)})
+path.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+def identity(doc,pn):
+ p=doc['producers'][pn];nodes={**doc['common'],**p['inputs']};m={'schema':doc['schema'],'producer':pn,'inputs':{k:v['sha256'] for k,v in sorted(nodes.items())},'declaration':p['contract'],'edges':{k:v['dependencies'] for k,v in sorted(nodes.items())}}
+ return sha(packed(m).encode())
+result=[]
+for pn,p in d['producers'].items():
+ a=manifest(root,pn,root);current=method(root,pn,root);n={**d['common'],**p['inputs']};comparisons={}
+ for key,base in baselines.items():
+  b={**base['common'],**base['producers'][pn]['inputs']};comparisons[key]={'method':identity(base,pn),'nodes':len(b),'added_nodes':sorted(set(n)-set(b)),'removed_nodes':sorted(set(b)-set(n)),'changed_nodes':sorted(k for k in set(n)&set(b) if n[k]!=b[k]),'contract_changed':p['contract']!=base['producers'][pn]['contract']}
+ result.append({'producer':pn,'method':current,'nodes':len(n),'code_nodes':sum(k.startswith('code:') for k in n),'runtime_nodes':sum(k.startswith('runtime:') for k in n),'changed_from_main':current!=comparisons['main']['method'],'comparisons':comparisons})
+assert [r['producer'] for r in result if r['changed_from_main']]==['v6-history','silent-boss-calibration']
+out=root/'paper/materials/20261031-issue87-r2-v6-alignment/closure-recalculation.json';out.write_text(json.dumps({'status':'engineering declaration only; no production ticket, deployment or exception withdrawal','main_baseline':main,'reviewed_changes':review,'methods':result},ensure_ascii=False,indent=2)+'\n')
+(root/'data/issue87-r2/declarations-pre-expansion.json').write_text(json.dumps(before,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps([{k:r[k] for k in ['producer','method','nodes','changed_from_main']} for r in result]))

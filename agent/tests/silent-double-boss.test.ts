@@ -117,13 +117,13 @@ describe("Silent observed double boss", () => {
     expect(continuousBossResult([missingResources])!.joint.value).toBeNull();
     const failedFirst = { ...lostSecond,sequence:{ ...lostSecond.sequence!,firstWon:false,firstDied:true,secondWon:null,secondDied:null,secondEntry:null } };
     expect(continuousBossResult([failedFirst])!.joint).toMatchObject({ value:null,reason:"no_first_win_samples" });
-    const noFirstWin = continuousBossResult([failedFirst],1,true,true)!;
+    const noFirstWin = continuousBossResult([failedFirst],1,true)!;
     expect(noFirstWin.first.value).toBe(0);
     expect(noFirstWin.secondGivenFirstWin).toMatchObject({ value:null,samples:0,reason:"no_first_win_samples" });
-    expect(noFirstWin.joint).toMatchObject({ value:0,wins:0,samples:1,unknown:0,reason:null });
+    expect(noFirstWin.joint).toMatchObject({ value:null,wins:0,samples:1,unknown:0,reason:"no_first_win_samples" });
     const unfinishedFirst = { ...failedFirst,sequence:{ ...failedFirst.sequence!,firstDied:false,firstCapped:true } };
-    expect(continuousBossResult([unfinishedFirst],1,true,true)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
-    expect(continuousBossResult([failedFirst],2,true,true)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
+    expect(continuousBossResult([unfinishedFirst],1,true)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
+    expect(continuousBossResult([failedFirst],2,true)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
     expect(continuousBossResult([],0,true)!.joint).toMatchObject({ value:null,reason:"no_samples" });
     expect(continuousBossResult([fightSample({ ...input,continuation:undefined },plan,7,5)])).toBeUndefined();
   });

@@ -348,10 +348,10 @@ def maintain(state, root, alive, *, admission_reason=None):
         elif not external_disk_allowed(root):
             summary['stop_reason'] = 'disk_capacity'
         else:
-            from strategy_external_jobs import occupied_lanes, queue, active_external
+            from strategy_external_jobs import occupied_lanes, queue, compute_owners
             if 'A' in occupied_lanes(state, queue(root), root, alive):
                 summary['stop_reason'] = 'lane_owner'
-            elif len(active_external(state, alive, directory(root))) >= policy['workers']:
+            elif len(compute_owners(state, alive, directory(root))) >= policy['workers']:
                 summary['stop_reason'] = 'worker_limit'
     except FileNotFoundError:
         if not Path(root, CONTROL).exists():

@@ -1,0 +1,824 @@
+{
+  "status": "engineering declaration only; no production ticket, deployment or exception withdrawal",
+  "main_baseline": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+  "reviewed_changes": [
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/continuous-boss-result.ts",
+      "before_sha256": "f10c43b0fc9a403c0ca7ff9cf3478b5910b00d27f7d47d8dbae8156551aae358",
+      "sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-completion.ts",
+      "before_sha256": "cec96b95d31ebffdbf550d42f2cfddbc7e96ca423cac4ecf9726c1c920566bfb",
+      "sha256": "e24502f18f560253b1778316e5da782363bb0668f1982a1fa14ec544ab227dbf",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-precompute.ts",
+      "before_sha256": "875d4a7f6efeca2a7b42113af4719f9e4fd8fb7c0c3a400eec0eab663a177614",
+      "sha256": "3b3de9eb2ea29c7c565f55086ffc8c52c344ec95e5f4968c7cacb3583b4488f8",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-projection-entries.ts",
+      "before_sha256": "0d6d98744d1736dc786a75efee75cc5c85d696bab9a72bc5c9e4fc3cc3a9a34d",
+      "sha256": "700ae8a2d83fd0aa6ee98459818e403b4916a3fa163962edbb3ff0cf0c865304",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-projection.ts",
+      "before_sha256": "3eeb605aee83be4df37ed7c54f73e1f686fcf06dbb5377a6d8232315ba6d0deb",
+      "sha256": "9082db13573f415dcd31d518d2c0cdbd0ea4eb0e372ebbef2214aed29590cc60",
+      "added_edges": [],
+      "removed_edges": [
+        "code:agent/src/sim/v6-table-copy.ts"
+      ]
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-request-factory.ts",
+      "before_sha256": "bd8cc37862b3327f376071c0817d31e0eacbb80b2b797d3392c72c26381c4539",
+      "sha256": "7bef7fabf900c2285c312dc152c4e3a625121abe5cd5fb0f63afb8c6aadd9565",
+      "added_edges": [
+        "code:agent/src/sim/boss-lines.ts",
+        "code:agent/src/sim/v6-supply.ts"
+      ],
+      "removed_edges": [
+        "code:agent/src/sim/v6-formation-table.ts"
+      ]
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-supply.ts",
+      "before_sha256": "69d0f5a24b84d64b7b98862c404b91ce62a2b6713c1c6d18863649d8054b9316",
+      "sha256": "84d0f34a1e9ec087c1841566e500087ba4cf385660de8d4270713844de1c7365",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/sim/v6-targets.ts",
+      "before_sha256": "24b328b31d046324b2ed4fab511b0b692f3dfe6966e41a549e3805d43eb51de2",
+      "sha256": "924fd6ce12f645dfb58f496d59e35f25602004a447782c043496d25b6f6995bd",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/v6/formats.ts",
+      "before_sha256": "01311839e9f236f3b671cfc4c6a1092e84df0896048c2e3c58782bff81f321cb",
+      "sha256": "4daa13c7300edf44ae813d551c4d563e2f0ea4d1569ffc462e4776ff6445aef8",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "path": "agent/src/v6/log.ts",
+      "before_sha256": "488c96cd351e82f8303314b30e1f270d218a587032ecf1205a31fa1fe295c85a",
+      "sha256": "8c0cba1923310396e7bb8c639de3e61ce29979c04e376c43ccf19168b07dcb02",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "v6-history",
+      "removed_nodes": [
+        "code:agent/src/sim/v6-formation-table.ts",
+        "code:agent/src/sim/v6-table-copy.ts",
+        "code:agent/src/v6/target-values.ts"
+      ],
+      "roots": [
+        "runtime:ops/fixed_producer_methods.py",
+        "runtime:ops/knowledge_runtime_env.py",
+        "runtime:ops/learning_runtime.py",
+        "runtime:ops/learning_runtime_data.py",
+        "runtime:ops/learning_runtime_store.py",
+        "code:knowledge/builders/refresh-v6-history.py",
+        "code:agent/package.json",
+        "code:agent/package-lock.json",
+        "code:agent/tsconfig.json"
+      ],
+      "reachable_nodes": 308
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/continuous-boss-result.ts",
+      "before_sha256": "f10c43b0fc9a403c0ca7ff9cf3478b5910b00d27f7d47d8dbae8156551aae358",
+      "sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-completion.ts",
+      "before_sha256": "cec96b95d31ebffdbf550d42f2cfddbc7e96ca423cac4ecf9726c1c920566bfb",
+      "sha256": "e24502f18f560253b1778316e5da782363bb0668f1982a1fa14ec544ab227dbf",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-precompute.ts",
+      "before_sha256": "875d4a7f6efeca2a7b42113af4719f9e4fd8fb7c0c3a400eec0eab663a177614",
+      "sha256": "3b3de9eb2ea29c7c565f55086ffc8c52c344ec95e5f4968c7cacb3583b4488f8",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-projection-entries.ts",
+      "before_sha256": "0d6d98744d1736dc786a75efee75cc5c85d696bab9a72bc5c9e4fc3cc3a9a34d",
+      "sha256": "700ae8a2d83fd0aa6ee98459818e403b4916a3fa163962edbb3ff0cf0c865304",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-projection.ts",
+      "before_sha256": "3eeb605aee83be4df37ed7c54f73e1f686fcf06dbb5377a6d8232315ba6d0deb",
+      "sha256": "9082db13573f415dcd31d518d2c0cdbd0ea4eb0e372ebbef2214aed29590cc60",
+      "added_edges": [],
+      "removed_edges": [
+        "code:agent/src/sim/v6-table-copy.ts"
+      ]
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-request-factory.ts",
+      "before_sha256": "bd8cc37862b3327f376071c0817d31e0eacbb80b2b797d3392c72c26381c4539",
+      "sha256": "7bef7fabf900c2285c312dc152c4e3a625121abe5cd5fb0f63afb8c6aadd9565",
+      "added_edges": [
+        "code:agent/src/sim/boss-lines.ts",
+        "code:agent/src/sim/v6-supply.ts"
+      ],
+      "removed_edges": [
+        "code:agent/src/sim/v6-formation-table.ts"
+      ]
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-supply.ts",
+      "before_sha256": "69d0f5a24b84d64b7b98862c404b91ce62a2b6713c1c6d18863649d8054b9316",
+      "sha256": "84d0f34a1e9ec087c1841566e500087ba4cf385660de8d4270713844de1c7365",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/sim/v6-targets.ts",
+      "before_sha256": "24b328b31d046324b2ed4fab511b0b692f3dfe6966e41a549e3805d43eb51de2",
+      "sha256": "924fd6ce12f645dfb58f496d59e35f25602004a447782c043496d25b6f6995bd",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/v6/formats.ts",
+      "before_sha256": "01311839e9f236f3b671cfc4c6a1092e84df0896048c2e3c58782bff81f321cb",
+      "sha256": "4daa13c7300edf44ae813d551c4d563e2f0ea4d1569ffc462e4776ff6445aef8",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/src/v6/log.ts",
+      "before_sha256": "488c96cd351e82f8303314b30e1f270d218a587032ecf1205a31fa1fe295c85a",
+      "sha256": "8c0cba1923310396e7bb8c639de3e61ce29979c04e376c43ccf19168b07dcb02",
+      "added_edges": [],
+      "removed_edges": []
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "path": "agent/tools/boss-sim/refresh-silent.py",
+      "before_sha256": "4ce27bae9f328788a82773b6df2c8af6585db65c849749c9fcf97a306d071fa7",
+      "sha256": "4ce27bae9f328788a82773b6df2c8af6585db65c849749c9fcf97a306d071fa7",
+      "added_edges": [
+        "code:agent/src/brain/decision-knowledge-exposure.ts",
+        "code:agent/src/brain/decision-knowledge-view.ts",
+        "code:agent/src/knowledge/strategy-grading.ts",
+        "code:agent/src/v6/combat-entry-selection.ts"
+      ],
+      "removed_edges": [
+        "code:agent/src/sim/v6-formation-table.ts",
+        "code:agent/src/sim/v6-table-copy.ts",
+        "code:agent/src/v6/target-values.ts"
+      ]
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "removed_nodes": [
+        "code:agent/src/sim/v6-formation-table.ts",
+        "code:agent/src/sim/v6-table-copy.ts",
+        "code:agent/src/v6/target-values.ts"
+      ],
+      "roots": [
+        "runtime:ops/fixed_producer_methods.py",
+        "runtime:ops/knowledge_runtime_env.py",
+        "runtime:ops/learning_runtime.py",
+        "runtime:ops/learning_runtime_data.py",
+        "runtime:ops/learning_runtime_store.py",
+        "code:agent/tools/boss-sim/refresh-silent.py",
+        "code:agent/package.json",
+        "code:agent/package-lock.json",
+        "code:agent/tsconfig.json"
+      ],
+      "reachable_nodes": 402
+    }
+  ],
+  "methods": [
+    {
+      "producer": "monster-db",
+      "method": "2241faf73c8fdd594930f96377387235b680b87056c5f65325c214941f9809ac",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "2241faf73c8fdd594930f96377387235b680b87056c5f65325c214941f9809ac",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "2241faf73c8fdd594930f96377387235b680b87056c5f65325c214941f9809ac",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "2241faf73c8fdd594930f96377387235b680b87056c5f65325c214941f9809ac",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "card-upgrades",
+      "method": "0681d0f05505b996670b428b5567797609cf56862ccd6948218ce28fb2f535c0",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "0681d0f05505b996670b428b5567797609cf56862ccd6948218ce28fb2f535c0",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "0681d0f05505b996670b428b5567797609cf56862ccd6948218ce28fb2f535c0",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "0681d0f05505b996670b428b5567797609cf56862ccd6948218ce28fb2f535c0",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "outcome",
+      "method": "d5cad1d943c90cb844ece50eae87cc8f2b9ebb34d47caefb5fa0d59b02ad9b1b",
+      "nodes": 15,
+      "code_nodes": 10,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "d5cad1d943c90cb844ece50eae87cc8f2b9ebb34d47caefb5fa0d59b02ad9b1b",
+          "nodes": 15,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "d5cad1d943c90cb844ece50eae87cc8f2b9ebb34d47caefb5fa0d59b02ad9b1b",
+          "nodes": 15,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "d5cad1d943c90cb844ece50eae87cc8f2b9ebb34d47caefb5fa0d59b02ad9b1b",
+          "nodes": 15,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "construction-opportunities",
+      "method": "e0a164a91a8f42e1ef0f7db26edff4380659fd1f9b2023858a525c062e2d7346",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "e0a164a91a8f42e1ef0f7db26edff4380659fd1f9b2023858a525c062e2d7346",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "e0a164a91a8f42e1ef0f7db26edff4380659fd1f9b2023858a525c062e2d7346",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "e0a164a91a8f42e1ef0f7db26edff4380659fd1f9b2023858a525c062e2d7346",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "room-costs",
+      "method": "2365eaca2a4ba568244164a198ead6dd78216481a5e27184242ab20ba745f9bf",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "2365eaca2a4ba568244164a198ead6dd78216481a5e27184242ab20ba745f9bf",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "2365eaca2a4ba568244164a198ead6dd78216481a5e27184242ab20ba745f9bf",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "2365eaca2a4ba568244164a198ead6dd78216481a5e27184242ab20ba745f9bf",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "boss-damage",
+      "method": "6613a66252005a5a9bfa7a4564081d7755921abe9d1c7d5ca3e7d73309e894aa",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "6613a66252005a5a9bfa7a4564081d7755921abe9d1c7d5ca3e7d73309e894aa",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "6613a66252005a5a9bfa7a4564081d7755921abe9d1c7d5ca3e7d73309e894aa",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "6613a66252005a5a9bfa7a4564081d7755921abe9d1c7d5ca3e7d73309e894aa",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "potion-equivalents",
+      "method": "a308abe12139a40199b4ae31542c5d12a303de55f17b4e582481e4840307c2a8",
+      "nodes": 19,
+      "code_nodes": 14,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "a308abe12139a40199b4ae31542c5d12a303de55f17b4e582481e4840307c2a8",
+          "nodes": 19,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "a308abe12139a40199b4ae31542c5d12a303de55f17b4e582481e4840307c2a8",
+          "nodes": 19,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "a308abe12139a40199b4ae31542c5d12a303de55f17b4e582481e4840307c2a8",
+          "nodes": 19,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "v6-history",
+      "method": "dcf84f0c2230500cae60d8d5877f7380f7ef779602ed492a4d820a67785d932c",
+      "nodes": 308,
+      "code_nodes": 297,
+      "runtime_nodes": 11,
+      "changed_from_main": true,
+      "comparisons": {
+        "main": {
+          "method": "da7992afad6ae3f8b9232e8a4f605f05d1ba01a151ede54bc4fa156d72f6a28d",
+          "nodes": 306,
+          "added_nodes": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-prompt-metrics.ts",
+            "code:agent/src/brain/boss-target.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/boss-profile.ts"
+          ],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/brain/brain.ts",
+            "code:agent/src/brain/build-facts.ts",
+            "code:agent/src/brain/engines/codex.ts",
+            "code:agent/src/brain/engines/dsh.ts",
+            "code:agent/src/brain/router.ts",
+            "code:agent/src/brain/specs.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/construction/consumer.ts",
+            "code:agent/src/hand/screens/v6-room.ts",
+            "code:agent/src/memory/run-plan-merge.ts",
+            "code:agent/src/memory/run-plan-update.ts",
+            "code:agent/src/memory/run-plan.ts",
+            "code:agent/src/sim/build-sim-facts.ts",
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts"
+          ],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "77a24aab21a93ec71a2459204b9616d3385d9a51d519a4dc99387bfdaff6b34e",
+          "nodes": 311,
+          "added_nodes": [],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/hand/screens/v6-room.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/runtime/validation.ts",
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts"
+          ],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "97c8799c0465d19bce96a97340b557d28f4f1f0b98070c175758af0c24f6bbe0",
+          "nodes": 311,
+          "added_nodes": [],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts"
+          ],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "fight-value",
+      "method": "62f73361a125c8a5c9eb9f5c2d240bb1c2bf06c2774e3385ae0e5b178050dfec",
+      "nodes": 14,
+      "code_nodes": 9,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "62f73361a125c8a5c9eb9f5c2d240bb1c2bf06c2774e3385ae0e5b178050dfec",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "62f73361a125c8a5c9eb9f5c2d240bb1c2bf06c2774e3385ae0e5b178050dfec",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "62f73361a125c8a5c9eb9f5c2d240bb1c2bf06c2774e3385ae0e5b178050dfec",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "method": "e3b6ee7780407f772ab07a4cfeb4da1ca3939ac1900090f58a273aaa045a06aa",
+      "nodes": 402,
+      "code_nodes": 396,
+      "runtime_nodes": 6,
+      "changed_from_main": true,
+      "comparisons": {
+        "main": {
+          "method": "cf5667db47105aece47157c9f04df09673890803042d4b65824e7d827ee01953",
+          "nodes": 400,
+          "added_nodes": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-prompt-metrics.ts",
+            "code:agent/src/brain/boss-target.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/boss-profile.ts"
+          ],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/brain/brain.ts",
+            "code:agent/src/brain/build-facts.ts",
+            "code:agent/src/brain/engines/codex.ts",
+            "code:agent/src/brain/engines/dsh.ts",
+            "code:agent/src/brain/router.ts",
+            "code:agent/src/brain/specs.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/construction/consumer.ts",
+            "code:agent/src/hand/loop.ts",
+            "code:agent/src/hand/screens/v6-room-projection.ts",
+            "code:agent/src/hand/screens/v6-room.ts",
+            "code:agent/src/memory/run-plan-merge.ts",
+            "code:agent/src/memory/run-plan-update.ts",
+            "code:agent/src/memory/run-plan.ts",
+            "code:agent/src/sim/build-sim-facts.ts",
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts",
+            "code:agent/tools/boss-sim/refresh-silent.py"
+          ],
+          "contract_changed": true
+        },
+        "r1": {
+          "method": "2d4c9c335f963865c53e042ed647332edc95bb3b4d11ddf195107acb02973c6f",
+          "nodes": 405,
+          "added_nodes": [],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/hand/screens/v6-room-projection.ts",
+            "code:agent/src/hand/screens/v6-room.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/runtime/continuation.ts",
+            "code:agent/src/knowledge/runtime/validation.ts",
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts",
+            "code:agent/tools/boss-sim/refresh-silent.py"
+          ],
+          "contract_changed": true
+        },
+        "r2_before_expansion": {
+          "method": "adb67572acaa8f1fa2565bd8c3599a8a672fa2ef2470957656b91d4d67f8fec3",
+          "nodes": 405,
+          "added_nodes": [],
+          "removed_nodes": [
+            "code:agent/src/sim/v6-formation-table.ts",
+            "code:agent/src/sim/v6-table-copy.ts",
+            "code:agent/src/v6/target-values.ts"
+          ],
+          "changed_nodes": [
+            "code:agent/src/sim/continuous-boss-result.ts",
+            "code:agent/src/sim/v6-completion.ts",
+            "code:agent/src/sim/v6-precompute.ts",
+            "code:agent/src/sim/v6-projection-entries.ts",
+            "code:agent/src/sim/v6-projection.ts",
+            "code:agent/src/sim/v6-request-factory.ts",
+            "code:agent/src/sim/v6-supply.ts",
+            "code:agent/src/sim/v6-targets.ts",
+            "code:agent/src/v6/formats.ts",
+            "code:agent/src/v6/log.ts",
+            "code:agent/tools/boss-sim/refresh-silent.py"
+          ],
+          "contract_changed": true
+        }
+      }
+    },
+    {
+      "producer": "move-model",
+      "method": "cef702f3aab4767c3befd1369afc23c0dc2a191ffa67047388730cb97c54cfa3",
+      "nodes": 6,
+      "code_nodes": 1,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "cef702f3aab4767c3befd1369afc23c0dc2a191ffa67047388730cb97c54cfa3",
+          "nodes": 6,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "cef702f3aab4767c3befd1369afc23c0dc2a191ffa67047388730cb97c54cfa3",
+          "nodes": 6,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "cef702f3aab4767c3befd1369afc23c0dc2a191ffa67047388730cb97c54cfa3",
+          "nodes": 6,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "event-pages",
+      "method": "d159e87b7d0a6ebfc6f7577636168fffa44ee92534a59f9227d9b0d01f189685",
+      "nodes": 11,
+      "code_nodes": 6,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "d159e87b7d0a6ebfc6f7577636168fffa44ee92534a59f9227d9b0d01f189685",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "d159e87b7d0a6ebfc6f7577636168fffa44ee92534a59f9227d9b0d01f189685",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "d159e87b7d0a6ebfc6f7577636168fffa44ee92534a59f9227d9b0d01f189685",
+          "nodes": 11,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    },
+    {
+      "producer": "opening-value",
+      "method": "e884e28c2433c1fabfee1d7fea35203355c5a7139885a79bc10ba150276a7baf",
+      "nodes": 14,
+      "code_nodes": 9,
+      "runtime_nodes": 5,
+      "changed_from_main": false,
+      "comparisons": {
+        "main": {
+          "method": "e884e28c2433c1fabfee1d7fea35203355c5a7139885a79bc10ba150276a7baf",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r1": {
+          "method": "e884e28c2433c1fabfee1d7fea35203355c5a7139885a79bc10ba150276a7baf",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        },
+        "r2_before_expansion": {
+          "method": "e884e28c2433c1fabfee1d7fea35203355c5a7139885a79bc10ba150276a7baf",
+          "nodes": 14,
+          "added_nodes": [],
+          "removed_nodes": [],
+          "changed_nodes": [],
+          "contract_changed": false
+        }
+      }
+    }
+  ]
+}

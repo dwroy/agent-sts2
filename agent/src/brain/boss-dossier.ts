@@ -23,6 +23,9 @@ export interface BossDossierAudit {
   strategy_bodies: 0;
   strategy_references: Record<string, string[]>;
   published_profiles: Record<string, unknown[]>;
+  mechanism_facts: Record<string, unknown[]>;
+  displayed_mechanism_facts: Record<string, string[]>;
+  own_counters: Record<string, unknown>;
   boss_aliases: Record<string, string[]>;
   omitted_fields: number;
 }
@@ -69,22 +72,36 @@ export function projectBossDossier(raw: unknown, payload: unknown, data: BossPla
   context.review_required = !Object.keys(prior).length || bossContextKey(context) !== bossContextKey(prior);
   const finalRows = data.rows.filter(r => r.act === 3), aliases = new Map(finalRows.map((r, i) => [r.id, String.fromCharCode(65 + i)]));
   const sourceTag = (suffix: string) => str(data.sources.find(s => str(s["path"]).endsWith(suffix) && s["status"] === "ok")?.["sha256"]).slice(0, 8) || "unknown";
-  const head = `Silent A10；M基础攻击/首相HP/首见能力#${sourceTag("monster-db.json")}(自有版本unknown)，O聚合#${sourceTag("monster-records.json")}(含重试非首试)，E外部sts2fun/v0.111观察#${sourceTag("silent-a10.json")}(非因果/净损/安全线)，K本局${data.knowledgeVersion?.slice(0, 11) ?? "unknown"}目录。`;
-  const target = `本幕=${current ?? "unknown"}；F48=${first ?? "unknown"}→F49=${second ?? "unknown"}。${phase?.["first_boss_defeated"] ? "当前实际血药承接次战" : "两战血药预算/首战余量unknown，脑据facts分战"}。`;
-  const pair = data.pairs.length ? `三幕行首别名的已观察连战：${data.pairs.map(p => p.map(id => aliases.get(id) ?? id).join("→")).join("/")}；非穷尽/本局揭晓。` : "连战组合unknown。";
-  const footer = "死因/构筑需求unknown；K仅已发布目录数，正文沿原触发/曝光门；有省略，详查kb_monster/kb_encounter/kb_strategies按ID。";
-  const rows = data.rows.map(r => ({ r, pieces: [`${r.act === 3 ? aliases.get(r.id) : "二"}:${r.id}${r.parts.length > 1 ? `[${r.parts.join("+")}]` : ""} ${r.hp}`], remaining: [...r.mechanics] }));
+  const head = `Silent A10；M首相HP/基础攻/首见#${sourceTag("monster-db.json")}(版unknown)；O#${sourceTag("monster-records.json")}(首含预截/未知，总已知，分窗勿减)；K事实${data.knowledgeVersion?.slice(0, 11) ?? "unknown"}；E#${sourceTag("silent-a10.json")}(v0.111观察非净损/安全线)。`;
+  const target = `本幕=${current ?? "unknown"}；F48=${first ?? "unknown"}→F49=${second ?? "unknown"}；${phase?.["first_boss_defeated"] ? "实际血药承接次战" : "脑据实际血药分战，余量unknown"}。`;
+  const pair = data.pairs.length ? `已见连战${data.pairs.map(p => p.map(id => aliases.get(id) ?? id).join(">")).join("/")}；非穷尽/非本局揭晓。` : "连战组合unknown。";
+  const footer = "K限原窗；完整条件/反证/冲突详原工具，打法沿原门。死因/需求unknown；有省略。";
+  const rows = data.rows.map(r => ({ r, fact: r.publishedMechanisms?.[0], factShown: !!r.publishedMechanisms?.length,
+    shownFacts: r.publishedMechanisms?.[0] ? [r.publishedMechanisms[0].id] : [],
+    pieces: [`${r.act === 3 ? aliases.get(r.id) : "二"}:${r.id}${r.parts.length > 1 ? `[${r.parts.join("+")}]` : ""} ${r.hp.replace("体首HP", "体HP")}`,
+      r.publishedMechanisms?.[0] ? `K事实:${r.publishedMechanisms[0].clause}` : "K事实unknown", r.own], remaining: [...r.mechanics] }));
   const render = () => [head, target, ...rows.map(r => r.pieces.join("；")), pair, footer].join("\n");
   let omitted = 0;
+  // Preserve complete rows and explicit omissions even if a future fact clause is oversized.
+  for (const row of [...rows].reverse()) {
+    if (dossierBytes(render()) <= BOSS_DOSSIER_MAX_BYTES) break;
+    if (row.factShown) { row.pieces[1] = "K事实已发/本题省略，详原工具"; row.factShown = false; row.shownFacts = []; omitted++; }
+  }
   const add = (row: typeof rows[number], text: string) => {
     row.pieces.push(text);
     if (dossierBytes(render()) > BOSS_DOSSIER_MAX_BYTES) { row.pieces.pop(); omitted++; return false; }
     return true;
   };
-  // Reserve an observed attack/effect for every Boss before any optional statistics or directory hints.
-  for (const row of rows) add(row, row.remaining.shift() ?? "招式unknown");
   const detailOrder = [...rows.filter(r => [current, first, second].includes(r.r.id)), ...rows.filter(r => ![current, first, second].includes(r.r.id))];
-  for (const row of detailOrder) add(row, `${row.r.own}/${row.r.external}/K${data.knowledgeVersion ? row.r.strategies.length : "unknown"}`);
+  // Revealed targets can show additional complete fact clauses before optional raw move details.
+  for (const row of detailOrder.filter(r => [current, first, second].includes(r.r.id))) {
+    for (const fact of (row.r.publishedMechanisms ?? []).slice(1).filter(f => !f.single_window)) {
+      if (add(row, `K事实:${fact.clause}`)) row.shownFacts.push(fact.id);
+    }
+  }
+  // Published facts and separate own counters are mandatory; raw attacks and external tails fill remaining space.
+  for (const row of detailOrder) add(row, row.remaining.shift() ?? "招式unknown");
+  for (const row of detailOrder) add(row, `${row.r.external}/K目录${data.knowledgeVersion ? row.r.strategies.length : "unknown"}`);
   for (let i = 0; i < 2; i++) for (const row of detailOrder) {
     const token = row.remaining.shift(); if (token) add(row, token);
   }
@@ -99,6 +116,9 @@ export function projectBossDossier(raw: unknown, payload: unknown, data: BossPla
     audit: { schema: "boss-dossier-audit-v1", context, sources: data.sources, knowledge_version: data.knowledgeVersion,
       dossier_bytes: dossierBytes(text), projection_ms: performance.now() - started, cache_setup_ms: data.setupMs,
       strategy_bodies: 0, strategy_references: Object.fromEntries(data.rows.map(r => [r.id, r.strategies])),
+      mechanism_facts: Object.fromEntries(data.rows.map(r => [r.id, r.publishedMechanisms ?? []])),
+      displayed_mechanism_facts: Object.fromEntries(rows.filter(r => r.shownFacts.length).map(r => [r.r.id, r.shownFacts])),
+      own_counters: Object.fromEntries(data.rows.map(r => [r.id, r.ownCounters ?? null])),
       published_profiles: Object.fromEntries(data.rows.map(r => [r.id, r.profiles])), boss_aliases: Object.fromEntries(data.rows.map(r => [r.id, r.aliases ?? [r.id, ...r.parts]])), omitted_fields: omitted } };
 }
 export function attachBossDossier(raw: unknown, payload: unknown, label: string, directory = KNOWLEDGE_DIR) {

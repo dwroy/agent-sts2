@@ -21,7 +21,6 @@ export function v6ProjectionEntries(table: V6ProjectionTable, config: V6Config, 
       e.incomplete_source = e.win_incomplete ? "empirical" : "unknown";
       e.expected_win = e.win?.value ?? null;
       e.combo_metrics = r.summary;
-      if (r.general_source === "not_computed") e.formula = "formation_times_completed";
     }
     return e;
   });

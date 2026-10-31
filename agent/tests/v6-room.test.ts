@@ -295,18 +295,28 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
     .toEqual(d.roomEntries.find(e => e.option_id === "buy_card0" && e.combo_id === "TEST_A:min"));
   expect((afterPublish.state.core_metrics as Raw[]).find(c => c.id === "TEST_A:min")).toBeTruthy();
 });
-it.each(["shop", "rest"] as const)("logs %s low-probability bounds as known without filling W", kind => {
+it.each(["shop", "rest"] as const)("rejects undeployed %s bounds and logs LIVE unknown rows", kind => {
   on(); const dir = fixtureDir(), e = room(kind);
   const input = kind === "shop" ? v6ShopOptions(e)! : v6RestOptions(e)!;
   const decision = buildV6RoomDecision(e, input, undefined, undefined, dir);
   const entry = decision.roomEntries[0]!;
   entry.availability.take = .01;
   entry.expected_win_bound = { lower: 0, upper: .01, reason: "low_probability_not_simulated" };
+  expect(validateProjectionEntry(entry).ok).toBe(false);
+  delete (entry as unknown as Raw).expected_win_bound;
   expect(validateProjectionEntry(entry).ok).toBe(true);
   recordV6Room(e, decision, join(dir, "plans.jsonl"), "low-p", {}, false, 1);
   const row = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
-  expect(row.unknown).toEqual({ count: decision.roomEntries.length - 1, total: decision.roomEntries.length });
-  expect(row.entries[0]).toMatchObject({ win: null, expected_win_bound: { upper: .01 } });
+  expect(row.unknown).toEqual({ count: decision.roomEntries.length, total: decision.roomEntries.length });
+  expect(row.entries[0]).toMatchObject({ win: null });
+  expect(row.entries[0]).not.toHaveProperty("expected_win_bound");
+});
+it.each(["shop", "rest"] as const)("keeps restored LIVE %s prompts free of the undeployed best_by_target priority", kind => {
+  on(); const e = room(kind), dir = fixtureDir(), input = kind === "shop" ? v6ShopOptions(e)! : v6RestOptions(e)!;
+  const d = buildV6RoomDecision(e, input, undefined, undefined, dir);
+  expect(JSON.stringify(d.state)).not.toContain('"best_by_target"');
+  expect(JSON.stringify(d.questions)).not.toContain("P*W");
+  expect(JSON.stringify(d.questions)).toContain("Treat null as unknown");
 });
 it("fallback rejects a much-worse current boss, then ranks chain deltas and otherwise legally leaves/heals", () => {
   on(); const e = room("shop"), input = v6ShopOptions(e)!, t = table();

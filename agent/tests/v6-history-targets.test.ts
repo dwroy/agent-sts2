@@ -73,16 +73,16 @@ describe("V6 historical scope and targets", () => {
     const r=request(); r.directions=[direction()];r.completionSources=[source()];
     r.targets=[{...r.targets[0]!,id:"a",probability:.7},{...r.targets[0]!,id:"b",probability:.3}];
     const table=await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
-    expect(table.target_mixtures.find(x=>x.option_id==="take"&&x.kind==="current_gate")?.value?.value).toBeCloseTo(.75);
+    expect(table.target_mixtures.find(x=>x.option_id==="take"&&x.kind==="current_gate")?.value?.value).toBeCloseTo(.8125);
     r.targets[1]={...r.targets[1]!,unknown:"unobserved"};
     const unknown=await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
     expect(unknown.target_mixtures.find(x=>x.option_id==="take"&&x.kind==="current_gate")).toMatchObject({value:null,known_mass:.7});
   });
-  it("uses only the map-known current Boss while retaining historical candidates for future acts", () => {
+  it("uses the map-known current Boss and retains observed candidates when the map is unknown", () => {
     const c = context([observation("a",17,"SOUL_FYSH"), observation("b",17,"CEREMONIAL_BEAST"), observation("a",33,"THE_KIN")]);
     expect(v6ProjectionTargets(c).filter(t => t.kind === "current").map(t => t.boss)).toEqual(["SOUL_FYSH"]);
     c.visible = [];
-    expect(v6ProjectionTargets(c).find(t => t.kind === "current")?.unknown).toBeTruthy();
+    expect(v6ProjectionTargets(c).filter(t => t.kind === "current").map(t => t.boss)).toEqual(["CEREMONIAL_BEAST", "SOUL_FYSH"]);
     expect(v6ProjectionTargets(c).find(t => t.act === 2)?.boss).toBe("THE_KIN");
   });
 });

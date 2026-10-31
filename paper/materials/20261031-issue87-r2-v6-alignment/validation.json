@@ -1,0 +1,125 @@
+{
+  "checked_at": "2026-10-31T22:41:01+08:00",
+  "production_tsc": "passed",
+  "scoped_tools_learner_tsc": "passed",
+  "directed_vitest": {
+    "files": 34,
+    "tests": 387,
+    "passed": true,
+    "log": "checks/expanded-all-directed-final.log"
+  },
+  "fixed_producer_unittest": {
+    "tests": 24,
+    "passed": true,
+    "log": "checks/expanded-method-tests.log"
+  },
+  "relative_imports": "passed",
+  "brain_prepare_probe": {
+    "cases": 6,
+    "positive_jev_gate": true,
+    "type": "fixed direct call, no live trace"
+  },
+  "r1_full": {
+    "passed": 6118,
+    "total": 6119,
+    "rc": 1,
+    "only_failure": "tracked sparse issue29 fixture absent; exact original blob restored",
+    "report": "../20261031-issue87-boss-target-implementation/validation.json"
+  },
+  "pre_expansion_r2_directed": {
+    "files": 8,
+    "tests": 136,
+    "passed": true
+  },
+  "expanded_first_round": {
+    "files": 20,
+    "failed_files": 8,
+    "tests": 252,
+    "failed_tests": 19,
+    "classification": "old undeployed 303/805 assertions; originals archived, LIVE contract restored, later independent corrections retained"
+  },
+  "expanded_additional_round": {
+    "files": 14,
+    "tests": 135,
+    "failed_tests": 2,
+    "classification": "same withdrawn 303 conditional contracts, repaired; no production-byte change"
+  },
+  "cwd_retry": {
+    "old_cwd": "repository root",
+    "failure": "tsx child loader unavailable at root",
+    "resolution": "repeat exact fixed test from agent/ with existing dependency provider; no install/exclusion"
+  },
+  "final_full": "delegated to original merge combination per supervisor; no second own full",
+  "logs": [
+    {
+      "path": "checks/expanded-all-directed-final.log",
+      "bytes": 2835,
+      "sha256": "22cdeece247996c5b88397f84685953d782eaafdf15a662ee37e0a4f707d0795"
+    },
+    {
+      "path": "checks/expanded-tsc-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/expanded-tools-tsc-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/expanded-method-tests.log",
+      "bytes": 124,
+      "sha256": "5415d459bb9cbe3f7546d14717eb3a38e4690f0bd1fb67852068d672fba228ba"
+    },
+    {
+      "path": "checks/expanded-brain-gate-final.json",
+      "bytes": 1748,
+      "sha256": "3c9ad5236508d16ae5bd1209f08915ba686743a3e5fac8d13ae692546519789d"
+    },
+    {
+      "path": "checks/expanded-brain-gate-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "checks/expanded-imports-final.log",
+      "bytes": 31,
+      "sha256": "79f471c89e56ea65d632bf944ee1d38142b2825429384a2138f1a58c4b91e217"
+    },
+    {
+      "path": "checks/expanded-targeted-first.log",
+      "bytes": 19404,
+      "sha256": "20d19ebb9d509dc8448f7afc5355e955f75949f8ab18462d4266a77ac558f834"
+    },
+    {
+      "path": "checks/expanded-targeted-second.log",
+      "bytes": 3958,
+      "sha256": "89a32cc0060d356099e061cacba1997be09e5179feee130ef00a70f4d1709df4"
+    },
+    {
+      "path": "checks/expanded-consumers.log",
+      "bytes": 3333,
+      "sha256": "f064a04721f54392f0c640fa12f3266fc472b2ce12ef92b068ae4bf7a4870937"
+    },
+    {
+      "path": "checks/expanded-consumers-corrected-final.log",
+      "bytes": 1079,
+      "sha256": "476f03faf07b51c468822a0d263cae2a2646c6c86f6e215e8bbfbdb4d5b45206"
+    },
+    {
+      "path": "checks/expanded-consumer-cwd-final.log",
+      "bytes": 434,
+      "sha256": "19a65d3e36b169c56d354b7f00258f026e4991fcf8b5fef8f2b9bda7c1591425"
+    },
+    {
+      "path": "checks/targeted-final.log",
+      "bytes": 1464,
+      "sha256": "944de35249ffd20d81849fff359443262affa73bdcb9140aa2d7a0ec25075da7"
+    },
+    {
+      "path": "checks/fixture-restored.json",
+      "bytes": 372,
+      "sha256": "b6fb06b2bd34dae294664a6a4d852a2065bb9b06f7bd75e9f8653deb30fd7056"
+    }
+  ]
+}

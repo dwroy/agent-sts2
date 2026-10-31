@@ -114,7 +114,7 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
 });
 
-it("uses P times completed W without preparing W0 and copies provider diagnostics independently", async () => {
+it("keeps an unavailable empirical W0 unknown and copies provider diagnostics independently", async () => {
   const r = request(), prepare = r.prepare;
   r.phase = "act";
   r.prepare = vi.fn((target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample));
@@ -123,11 +123,11 @@ it("uses P times completed W without preparing W0 and copies provider diagnostic
   expect(baseline.entry.availability).toEqual({ take: .5, skip: .5 });
   expect(baseline.completed_win).toEqual({ value: 1, se: 0, n: r.config.samples_act });
   expect(baseline.general_win).toBeNull();
-  expect(baseline.general_source).toBe("not_computed");
+  expect(baseline.general_source).toBe("empirical");
   expect(vi.mocked(r.prepare).mock.calls.length).toBeGreaterThan(0);
-  expect(vi.mocked(r.prepare).mock.calls.every(([, sample]) => sample.cards.every(c => c.id !== "G"))).toBe(true);
+  expect(vi.mocked(r.prepare).mock.calls.some(([, sample]) => sample.cards.some(c => c.id === "G"))).toBe(true);
   const sampleIds = [...baseline.completion_sample_ids];
-  // Inject a diagnostic to check consumer copying separately from the unused W0 branch.
+  // Inject a diagnostic to check consumer copying separately from the unavailable W0 branch.
   baseline.unknown_reasons.push("unknown_opening_entry_hp_or_empirical_sample");
   const evaluation = directionEvaluationFromProjection(table, r.config, "skip");
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
@@ -138,10 +138,10 @@ it("uses P times completed W without preparing W0 and copies provider diagnostic
   expect(asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0])).toMatchObject({
     completed_results: [], unknown_reasons: ["completed_core_cache_miss"],
   });
-  // Lookup projections use P*Wk; W0 stays uncomputed rather than becoming a measured zero.
-  expect(evaluation.entries[0]).toMatchObject({ win: { value: .5, se: 0, n: r.config.samples_act },
+  // The restored LIVE mixture stays unknown without its nonzero-weight W0 estimate.
+  expect(evaluation.entries[0]).toMatchObject({ win: null,
     win_complete: baseline.completed_win, win_incomplete: null, incomplete_source: "unknown",
-    expected_win: .5, formula: "formation_times_completed" });
+    expected_win: null });
   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incomplete|availability)":/);
   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown_opening_entry_hp_or_empirical_sample");
   expect(baseline.completion_sample_ids).toEqual(sampleIds);

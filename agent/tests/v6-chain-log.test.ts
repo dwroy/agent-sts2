@@ -33,13 +33,12 @@ class ChainRunner {
 describe("V6 continuous projection and explicit logs", () => {
   it("uses joint same-sample outcomes and retains missing resources as unknown", async () => {
     const r = chainRequest(), good = await new V6ProjectionEngine(new ChainRunner()).evaluate(r);
-    // Lookup P=.5 multiplies the first-fight W=.5 and relay W=.25; W0 is not computed.
-    expect(good.entries[0]!.win?.value).toBe(.25);
-    expect(good.entries[0]!.joint_win?.value).toBeCloseTo(.125);
-    expect(good.combinations[0]!.completed_joint_win?.value).not.toBe(.5 * .25);
+    expect(good.entries[0]!.win?.value).toBe(.5);
+    expect(good.entries[0]!.joint_win?.value).toBeCloseTo(.25);
+    expect(good.entries[0]!.joint_win?.value).not.toBe(.5 * .25);
     const consumer = v6ProjectionEntries(good, r.config)[0]!;
-    expect(consumer.win?.value).toBeCloseTo(.125); expect(consumer.win_complete?.value).toBeCloseTo(.25);
-    expect(consumer.direction_value).toBeCloseTo(.125);
+    expect(consumer.win?.value).toBeCloseTo(.25); expect(consumer.win_complete?.value).toBeCloseTo(.25);
+    expect(consumer.direction_value).toBeCloseTo(.25);
     expect(good.combinations[0]!.continuous?.traces[0]?.secondEntry?.hp).toBe(20);
     const missing = await new V6ProjectionEngine(new ChainRunner(true)).evaluate(r);
     expect(missing.entries[0]!.joint_win).toBeNull();

@@ -1,7 +1,10 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [],
+  "runtime_install_paths": [
+    "agent/src/knowledge/runtime/continuation.ts",
+    "agent/src/knowledge/runtime/validation.ts"
+  ],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -257,9 +260,23 @@
         "tests/external-stock.test.ts",
         "--maxWorkers=1"
       ]
+    },
+    {
+      "tree": "root",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/build-research.test.ts",
+        "tests/learning-acceptance.test.ts",
+        "tests/knowledge-continuation.test.ts",
+        "tests/knowledge-runtime.test.ts",
+        "--maxWorkers=1"
+      ]
     }
   ],
-  "consumer_scope": "Approved #56 c0075dfa (56/6538878220) + #85 offline regrade 8985dcafa (85/6539507824; Claude explicitly approved), normalized as one ROOT-only batch on adopted main e959bea7. Exact source deltas with two fixture conflict reconciliations retaining adopted queue/heavy isolation, production board unchanged. LIVE runtime delta empty. Preserve prior consumers0-15 and host modules, add learning concurrency host and fixed ROOT concurrency/regrade consumer16. Source tests are not this candidate full. Original six gates, unique full, strict LIVE byte gate, publication and all scientific parents retained. Actual learning configuration and current-method admission/CAS remain original ops natural-boundary work; no interruption, no claimed production knowledge delivery or outcome. New explicit Claude approval 69/6540062084 and 71/6540061806 adds exact ea6d7cd3/d0579bd5 deltas to this same batch on e959bea7. Keep #56 shared learner dispatch/concurrency, #77 successor; 71 fixture child/outer60s approved source wins over adopted25s. ROOT public-web question host+consumer17 covers frozen question and namespaced-room stock; no LIVE runtime delta, no authority/capacity/data publication. All four use one candidate full.",
+  "consumer_scope": "Approved #56 c0075dfa (56/6538878220) + #85 offline regrade 8985dcafa (85/6539507824; Claude explicitly approved), normalized as one ROOT-only batch on adopted main e959bea7. Exact source deltas with two fixture conflict reconciliations retaining adopted queue/heavy isolation, production board unchanged. LIVE runtime delta empty. Preserve prior consumers0-15 and host modules, add learning concurrency host and fixed ROOT concurrency/regrade consumer16. Source tests are not this candidate full. Original six gates, unique full, strict LIVE byte gate, publication and all scientific parents retained. Actual learning configuration and current-method admission/CAS remain original ops natural-boundary work; no interruption, no claimed production knowledge delivery or outcome. New explicit Claude approval 69/6540062084 and 71/6540061806 adds exact ea6d7cd3/d0579bd5 deltas to this same batch on e959bea7. Keep #56 shared learner dispatch/concurrency, #77 successor; 71 fixture child/outer60s approved source wins over adopted25s. ROOT public-web question host+consumer17 covers frozen question and namespaced-room stock; no LIVE runtime delta, no authority/capacity/data publication. All four use one candidate full. New separately approved #77 P0 1491192665 (77/6542553156) on main caa8a545: exact source delta, ROOT nine production leaves; isolated LIVE applies only continuation.ts and validation.ts. Prior host/consumer assertions and six gates retained. Build-research total32MiB only, entry8MiB and original CAS/approval; semantic-pending compute retirement and explicit fix-batch recovery. Existing LIVE v6-room/projection declaration mismatch predates this source and remains disclosed, no declaration workaround. Source sandbox is not this combination full; original unique full/strict LIVE bytes and publication method receipts required. No research publication, replay finish, new capacity or runtime stop.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

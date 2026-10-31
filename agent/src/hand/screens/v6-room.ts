@@ -2,7 +2,7 @@
 import { join, dirname } from "node:path";
 import { V6BuildLog } from "../../v6/log.js";
 import { asRecord, str, toJsonValue, type JsonValue } from "../../core/util/json.js";
-import { currentDecisionBudget, DecisionBudget, withDecisionBudget } from "../../core/decision-budget.js";
+import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../../core/decision-budget.js";
 import type { AskDecision, Decision, DecisionEnv, ResolvedAction } from "../../memory/types.js";
 import type { AnswerSet, ChoiceAnswer } from "../../reflex/jev/answers.js";
 import { choiceQ } from "../../reflex/jev/questions.js";
@@ -10,7 +10,6 @@ import { promptProjectionEntries } from "../../v6/prompt-projection.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
 import { v6Config } from "../../v6/config.js";
 import { v6Directions } from "../../v6/direction-runtime.js";
-import { targetValueSummaries } from "../../v6/target-values.js";
 import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
 import { directionCombos } from "../../v6/direction-plan.js";
 import { validateProjectionEntries, type ProjectionEntry } from "../../v6/formats.js";
@@ -103,7 +102,7 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
           table?.combinations.find(row => row.combination_id === combo.id && row.entry.direction_id === direction
             && row.entry.combo_source === combo.source)?.summary ?? combo.metrics)) }))),
       options: compact(toJsonValue(Object.fromEntries(input.options.map(o => [o.option.key, { facts: o.option.summary, unknown_reason: o.unknown_reason,
-        best_by_target: targetValueSummaries(table, o.option.key), resources_after: o.state ? { hp: o.state.hp, max_hp: o.state.maxHp, gold: o.state.gold, deck_count: o.state.cards.length } : null,
+        resources_after: o.state ? { hp: o.state.hp, max_hp: o.state.maxHp, gold: o.state.gold, deck_count: o.state.cards.length } : null,
         projections: prioritize(entries.filter(e => e.option_id === o.option.key), plan?.direction_weights ?? {}, e => e.direction_id,
           e => e.expected_win ?? -1).map(e => {
           const row = table?.combinations.find(r => r.entry.option_id === e.option_id && r.entry.direction_id === e.direction_id
@@ -115,7 +114,7 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
       target_mixtures: toJsonValue(table?.target_mixtures ?? []),
       limitations: toJsonValue(table?.telemetry.degradation ?? [reason]),
       note: "Compare concrete decks and combinations, current-boss safety and weighted chain deltas. Null is unknown. Observational core metrics are descriptive, not causal. Potion projections require an explicit observed slot and complete modeled inventory transition; compare their holding-value entries too." },
-    questions: { pick: choiceQ(`Choose one legal ${input.kind} action using the supplied facts. Compare best_by_target current Boss P, W and P*W first, with direction weights and trust. PW_bound is only an upper bound; later unknown targets do not erase current information.`,
+    questions: { pick: choiceQ(`Choose one legal ${input.kind} action using the supplied facts. Treat null as unknown. Compare completion, expected win, uncertainty and trust for each combination.`,
       Object.fromEntries(input.options.map(o => [o.option.key, o.option.label ?? o.option.key]))),
       ...Object.assign({}, ...input.options.map(o => o.option.jev?.questions ?? {})) },
     resolve(answers): ResolvedAction {
@@ -146,16 +145,8 @@ export async function prepareV6RoomDecision(decision: Decision, env: DecisionEnv
   const ms = Math.min(5000, v6Config().budgets.pick_ms), controller = new AbortController();
   parent?.pause();
   const budget = new DecisionBudget(`V6_${decision.v6Room.kind}_projection`, "routine", parent?.now, ms, 0);
-  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    // The engine returns its partial table at its deadline. Allow bounded cleanup;
-    // a stalled/foreign provider still cannot hold the decision indefinitely.
-    const result = await withDecisionBudget(budget, () => Promise.race([
-      provider(env, decision.v6Room, { budget_ms: ms, signal: controller.signal }),
-      new Promise<never>((_, reject) => { timer = setTimeout(() => {
-        controller.abort(); reject(new Error("projection provider stalled"));
-      }, ms + Math.min(100, ms / 10)); }),
-    ]));
+    const result = await withDecisionBudget(budget, () => withinDecisionBudget("room_projection", () => provider(env, decision.v6Room, { budget_ms: ms, signal: controller.signal })));
     const report = result && "table" in result ? result : null;
     const table = report ? report.table : result as V6ProjectionTable | null;
     return buildV6RoomDecision(env, decision.v6Room, table ?? undefined, report?.reason ?? (table ? "ready" : "projection_provider_unavailable"), dir,
@@ -163,7 +154,7 @@ export async function prepareV6RoomDecision(decision: Decision, env: DecisionEnv
   } catch {
     return buildV6RoomDecision(env, decision.v6Room, undefined, "projection_failed_or_timed_out", dir);
   } finally {
-    clearTimeout(timer); controller.abort(); budget.pause(); parent?.independent(`V6_${decision.v6Room.kind}_projection`, budget, "L2"); if (running) parent?.resume();
+    controller.abort(); budget.pause(); parent?.independent(`V6_${decision.v6Room.kind}_projection`, budget, "L2"); if (running) parent?.resume();
   }
 }
 
@@ -178,6 +169,6 @@ export function recordV6Room(env: DecisionEnv, decision: V6RoomDecision, logFile
     fallback: fallback ? "missing_invalid_or_failed_jev" : null, elapsed_ms: elapsedMs,
     cache: { hits: t?.cache_hits ?? 0, misses: t?.cache_misses ?? 0 }, degradation: [...(t?.degradation ?? [decision.roomProjectionReason]), ...(decision.roomProjectionSource?.labels ?? []), ...promptBudgetLabels(decision.state),
       ...(decision.roomProjectionSource?.rejected_options.map(r => `${r.id}:${r.reason}`.slice(0, 200)) ?? [])],
-    unknown: { count: decision.roomEntries.filter(e => e.win === null && !e.expected_win_bound).length, total: decision.roomEntries.length },
+    unknown: { count: decision.roomEntries.filter(e => e.win === null).length, total: decision.roomEntries.length },
     triggers: [], merged_triggers: [], skipped_triggers: [] });
 }

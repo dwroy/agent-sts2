@@ -11,7 +11,7 @@ it("hands actual combination rows to W4 without cloning a direction maximum into
   const provider = r.completionSources[0]!, resolve = provider.resolve;
   provider.resolve = c => {
     const out = resolve(c)!; out.combinations[0]!.id = d.combos[0]!.id;
-    // Different completed outcomes make copying the direction maximum observable without W0.
+    // Different completed outcomes distinguish each combination from its direction maximum.
     for (const sample of out.combinations[1]!.samples)
       for (const option of c.options) sample.states[option.id] = state(["G"]);
     return out;
@@ -21,15 +21,18 @@ it("hands actual combination rows to W4 without cloning a direction maximum into
   const row = table.combinations.find(r => r.combination_id === "D:minimal" && r.entry.option_id === "take")!;
   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.samples_pick });
-  expect(table.combinations.every(row => row.general_win === null && row.general_source === "not_computed")).toBe(true);
+  for (const combination of table.combinations) {
+    expect(combination.general_win?.value).toBeCloseTo(.25, 14);
+    expect(combination.general_source).toBe("empirical");
+  }
   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t.probability)).toEqual([1]);
   expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition",
-    win_complete: { value: 1, n: r.config.samples_pick }, win_incomplete: null,
-    expected_win: .75, direction_value: .75, formula: "formation_times_completed" });
+    win_complete: { value: 1, n: r.config.samples_pick }, win_incomplete: { n: r.config.samples_pick },
+    expected_win: .8125, direction_value: .8125 });
   expect(entries[1]).toMatchObject({ combo_id: "k1", win_complete: { n: r.config.samples_pick },
-    win_incomplete: null, direction_value: .75, formula: "formation_times_completed" });
+    win_incomplete: { n: r.config.samples_pick }, direction_value: .8125 });
   expect(entries[1]!.win_complete!.value).toBeCloseTo(.25, 14);
-  expect(entries[1]!.expected_win).toBeCloseTo(.1875, 14);
+  expect(entries[1]!.expected_win).toBeCloseTo(.25, 14);
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [d.core], null), entries, appearedCards: [], potionIds: [], floor: 5, current: null });
   const combo = asRecord(asArray(asRecord(asArray(task["build_cores"])[0])["combos"])[0]);
   expect(combo["evaluations"]).toBeUndefined();

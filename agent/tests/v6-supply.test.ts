@@ -51,8 +51,6 @@ it("caps picks to ranked four; evaluates all at act start and restricts brain ov
   const c = context(), s = v6SupplySource(data(), () => 0); c.direction.combos = Array.from({ length: 6 }, (_, i) => ({ ...c.direction.combos[0]!, id: `k${i}` }));
   expect(s.resolve({ ...c, ranking: ["k5", "k4"] })?.combinations.map(x => x.id)).toEqual(["k5", "k4", "k0", "k1"]);
   expect(s.resolve({ ...c, phase: "act" })?.combinations).toHaveLength(6);
-  expect(s.resolve({ ...c, phase: "act", combinationIds: ["k5"] })?.combinations.map(x => x.id)).toEqual(["k5"]);
-  expect(s.resolve({ ...c, ranking: ["k5", "k4"], combinationIds: ["k5"] })?.combinations.map(x => x.id)).toEqual(["k5"]);
   expect(() => s.resolve({ ...c, idealOverrides: { D: ["UNLEARNED"] } })).toThrow();
   expect(s.resolve({ ...c, phase: "act", idealOverrides: { D: ["A"] } })?.combinations[0]?.source).toBe("brain");
   expect(s.resolve({ ...c, phase: "act", appearedCards: ["SEEN"], idealOverrides: { D: ["SEEN"] } })?.combinations[0]?.id).toBe("D:brain");

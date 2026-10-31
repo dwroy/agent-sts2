@@ -108,6 +108,17 @@ def ordinary_fix_binding(root, directory, receipt, launch, matches, log):
 
 def native_evidence(root, directory, receipt):
     """Read only the original rollout; the general repository path guard stays strict."""
+    recovery = receipt.get("recovery")
+    if recovery:
+        origin_path = safe_path(root, Path(recovery["archive"]) / "original.tui.json")
+        origin_raw, _ = read_regular(origin_path)
+        origin = json.loads(origin_raw)
+        if (origin.get("recovery") or hashlib.sha256(origin_raw).hexdigest() != recovery.get("origin_sha256")
+                or any(origin.get(k) != receipt.get(k) for k in
+                       ("label", "pane", "cwd", "pid", "birth", "agent_name", "session", "turn", "rollout", "bindings", "submissions"))):
+            raise ValueError("recovered native original binding differs")
+        evidence, raw = native_evidence(root, directory, origin)
+        return dict(evidence, recovery_origin_sha256=recovery["origin_sha256"]), raw
     path = Path(receipt["result"]["rollout"])
     try:
         safe_path(root, path)

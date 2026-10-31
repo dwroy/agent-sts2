@@ -61,8 +61,8 @@ const turnEstimate = object({ value: number(0, 10000), se: number(0, 10000), n: 
 function boundedMetricSnapshot(value: unknown): boolean {
   let nodes = 0;
   const walk = (v: unknown, depth: number): boolean => {
-    // Published pooled history snapshots reach 69,372 nodes; retain them for audit.
-    if (++nodes > 100000 || depth > 16) return false;
+    // R2's pooled 17-combination snapshots reach 21,434 nodes; retain them for audit.
+    if (++nodes > 50000 || depth > 16) return false;
     if (v === null || typeof v === "boolean") return true;
     if (typeof v === "number") return Number.isFinite(v);
     if (typeof v === "string") return v.length <= 4000;
@@ -89,41 +89,18 @@ const projectionSchema = (snapshot = metricSnapshot) => object({
   combo_id: optional(id), combo_source: optional(enumeration("build-core-v1", "construction-transition", "brain")),
   win_complete: optional(nullable(estimate)), win_incomplete: optional(nullable(estimate)),
   incomplete_source: optional(enumeration("empirical", "unknown")), expected_win: optional(nullable(probability)),
-  formula: optional(literal("formation_times_completed")),
-  expected_win_bound: optional(object({ lower: probability, upper: probability,
-    reason: enumeration("low_probability_not_simulated", "formation_impossible") })),
-  trust_details: optional(object({ n: nullable(count), brier: nullable(number(0)), bias: nullable(number(-1, 1)), passed: nullable(boolean) })),
   direction_value: optional(nullable(probability)), combo_metrics: optional(nullable(snapshot)),
-  // A completed target remains readable while other combinations/targets are pending.
-  combination_coverage: optional(object({ selection: enumeration("catalog_maximum", "computed_subset_maximum", "unknown"),
-    selected_combination_id: nullable(id), evaluated_combinations: number(0, 1000, true),
-    catalog_combinations: number(1, 1000, true), pending_combinations: number(0, 1000, true) })),
 });
 export const projectionEntrySchema = projectionSchema();
 export type ProjectionEntry = Infer<typeof projectionEntrySchema>;
 const projectionChecks = (entry: ProjectionEntry, e: string[]): void => {
   if (entry.win === null && entry.win_tier !== "unknown") e.push("win_tier: missing estimate must remain unknown");
   if (entry.paired_delta === null && entry.delta_tier !== "unknown") e.push("delta_tier: missing paired estimate must remain unknown");
-  if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.expected_win_bound, entry.combo_metrics, entry.formula].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
+  if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
   if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
   if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
   const p = entry.availability.take;
-  if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (!entry.formula && p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
-  if (entry.formula) {
-    if (entry.win_incomplete != null) e.push("win_incomplete: omitted by formation_times_completed");
-    if (entry.expected_win != null && p !== null && entry.win_complete != null
-      && Math.abs(entry.expected_win - p * entry.win_complete.value) > 1e-10) e.push("expected_win: must equal P times completed win");
-  }
-  const bound = entry.expected_win_bound;
-  if (bound && (p === null || p >= .05 || bound.lower !== 0 || bound.upper !== p || entry.expected_win != null
-    || (bound.reason === "formation_impossible") !== (p === 0))) e.push("expected_win_bound: exact low-P interval required, never a point estimate");
-  const coverage = entry.combination_coverage;
-  if (coverage) {
-    if (coverage.evaluated_combinations + coverage.pending_combinations !== coverage.catalog_combinations) e.push("combination_coverage: counts must reconcile");
-    if ((coverage.selection === "unknown") !== (coverage.selected_combination_id === null)) e.push("combination_coverage: selected combination must match selection");
-    if (coverage.selection === "catalog_maximum" && coverage.pending_combinations !== 0
-      || coverage.selection === "computed_subset_maximum" && coverage.pending_combinations === 0) e.push("combination_coverage: pending competitors must match selection");
-  }
+  if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
 };
 const checkedProjectionSchema = refine(projectionEntrySchema, projectionChecks);
 export function validateProjectionEntry(v: unknown): Result<ProjectionEntry> {

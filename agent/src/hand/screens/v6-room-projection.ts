@@ -44,7 +44,7 @@ export function bindV6RoomProjection(
     const request = { ...result.request, config: { ...result.request.config, budgets: {
       ...result.request.config.budgets, pick_ms: milliseconds } } };
     const table = await evaluate(request, { budget_ms: milliseconds, signal: context.signal });
-    if (context.signal.aborted) return null;
+    if (context.signal.aborted || remaining() <= 0) return null;
     return { table, reason: table ? "ready" : "projection_evaluation_unavailable", labels: result.labels, rejected_options: [...local, ...result.rejected_options] };
   };
 }

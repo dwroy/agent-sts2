@@ -161,6 +161,17 @@ class Stock(unittest.TestCase):
         self.assertEqual(batch, saved)
         self.assertEqual(len(self.calls), 2)
 
+    def test_content_pending_preserves_allocation_without_counting_as_inventory_worker(self):
+        batch = self.register()
+        batch.update(state='awaiting_review', knowledge_pending=True, pid=None)
+        before = copy.deepcopy(batch)
+        with patch('own_learning_slot.batch_status', return_value=dict(reason='verified_content_pending_review', occupies=False)):
+            summary = self.maintain()
+            self.assertEqual(external.compute_owners(self.state, lambda _:False, self.directory), [])
+        self.assertNotIn(summary['stop_reason'], ('lane_owner', 'worker_limit'))
+        self.assertEqual(batch, before)
+        self.assertEqual(external.lane_owners(self.state, lambda _:False, self.directory), [batch])
+
     def test_hold_disable_and_publication_gate_leave_inventory_and_bindings_untouched(self):
         self.register(); raw = (self.directory / stock.INDEX).read_bytes(); batches = copy.deepcopy(self.state['batches'])
         for changes, reason in [({'hold': True}, 'hold'), ({'hold': False, 'enabled': False}, 'disabled')]:

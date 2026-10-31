@@ -19,6 +19,8 @@ if [ "${ROOT:-}" = /home/dw/Projects/agent-sts2 ] \
   && [ "${BRAIN_ENGINE:-codex}" = codex ]; then
   export BRAIN_CODEX_EFFORT=xhigh
   export BRAIN_CODEX_SERVICE_TIER=fast
+  # Roy #81: disable only diagnostic S/G2 shadow lanes at the next run boundary.
+  export GLOBAL_BUILD_EVAL=off S_READINESS=off S_BUILD_RANK=off S_COMBAT_RANK=off
 fi
 export V6_BUILD="${V6_BUILD:-off}" V6_REFLEX="${V6_REFLEX:-off}"
 export V6_CARD_DECIDER="${V6_CARD_DECIDER:-brain}" V6_POTION_DECIDER="${V6_POTION_DECIDER:-brain}"

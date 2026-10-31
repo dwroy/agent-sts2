@@ -4,37 +4,37 @@ import { validateProjectionEntry } from "../src/v6/formats.js";
 import { v6Config } from "../src/v6/config.js";
 import { direction, FixedRunner, request, source } from "./v6-projection-fixture.js";
 describe("V6 combination expectation", () => {
-  it("uses only P times Wk and paired combat seeds, without W0", async () => {
+  it("uses P Wk+(1-P)W0, paired supply uncertainty and fixed seeds", async () => {
     const runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), r = request();
     const t = await engine.evaluate(r), skip = t.combinations[0]!, take = t.combinations[1]!;
-    expect(skip.completed_win?.value).toBe(1); expect(skip.general_win).toBeNull();
-    expect(skip.entry.win?.value).toBeCloseTo(.5); expect(take.entry.win?.value).toBeCloseTo(.75);
-    expect(take.entry.paired_delta?.mean).toBeCloseTo(.25); expect(take.entry.paired_delta!.se).toBe(0);
-    expect(t.weighted.find(x => x.option_id === "take")?.win?.value).toBeCloseTo(.75);
+    expect(skip.completed_win?.value).toBe(1); expect(skip.general_win?.value).toBeCloseTo(.25);
+    expect(skip.entry.win?.value).toBeCloseTo(.625); expect(take.entry.win?.value).toBeCloseTo(.8125);
+    expect(take.entry.paired_delta?.mean).toBeCloseTo(.1875); expect(take.entry.paired_delta!.se).toBeGreaterThan(0);
+    expect(t.weighted.find(x => x.option_id === "take")?.win?.value).toBeCloseTo(.8125);
     expect(t.entries.every(e => validateProjectionEntry(e).ok)).toBe(true);
     expect(runner.calls.every(c => c.seed === 42 && c.samples === 20)).toBe(true);
     const repeat = await engine.evaluate(r); expect(repeat.entries).toEqual(t.entries); expect(repeat.telemetry.simulations).toBe(0);
   });
   it("shares identical completed decks within/across combinations and invalidates held resources", async () => {
     const runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), r = request(); r.completionSources = [source(undefined, 2)];
-    const t = await engine.evaluate(r); expect(t.telemetry.simulations).toBe(20); expect(t.combinations).toHaveLength(4);
-    expect(t.telemetry.cache_hits).toBeGreaterThanOrEqual(2);
+    const t = await engine.evaluate(r); expect(t.telemetry.simulations).toBe(40); expect(t.combinations).toHaveLength(4);
+    expect(t.telemetry.cache_hits).toBeGreaterThanOrEqual(4);
     r.contextDigest = "new-question-same-input";
     expect((await engine.evaluate(r)).telemetry.simulations).toBe(0);
     const prepare = r.prepare;
     r.prepare = (...args) => { const p = prepare(...args)!; p.input.solver.player.hp--; return p; };
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
     r.modelVersion = "new-frozen-model";
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
   });
   it("reuses act-start absolute seeds at pick, then computes only missing larger-sample indices", async () => {
     const runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), r = request(); r.phase = "act";
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(100);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(200);
     r.phase = "pick"; r.contextDigest = "pick-question";
     const hot = await engine.evaluate(r), fresh = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
     expect(hot.telemetry.simulations).toBe(0); expect(hot.entries).toEqual(fresh.entries);
     r.config.samples_pick = 120;
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
   });
   it("keeps current paired results when the bounded cross-request cache evicts another completed input", async () => {
     const r = request();
@@ -52,9 +52,9 @@ describe("V6 combination expectation", () => {
       } return result;
     };
     const r = request(), engine = new V6ProjectionEngine(runner);
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(7);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(14);
     const resumed = await engine.evaluate(r);
-    expect(resumed.telemetry.simulations).toBe(13);
+    expect(resumed.telemetry.simulations).toBe(26);
     expect(resumed.entries).toEqual((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries);
     expect(runner.calls[1]!.stripes?.every(s => s && s.of === 20 && s.at >= 7)).toBe(true);
   });
@@ -86,29 +86,23 @@ describe("V6 combination expectation", () => {
     r.prepare = (t, s, o) => { const key = JSON.stringify([t, s]);
       if (!inputs.has(key)) inputs.set(key, prepare(t, s, o)!); return inputs.get(key)!;
     };
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
     for (const input of inputs.values()) input.input.solver.player.hp--;
-    expect((await engine.evaluate(r)).telemetry.simulations).toBe(20);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
   });
-  it("preserves a completed target while explicitly labeling an unknown competing combination", async () => {
+  it("excludes known below-threshold combinations from the eligible maximum, preserving truly unknown competitors", async () => {
     const r = request(), provider = source(undefined, 2), resolve = provider.resolve;
     provider.resolve = c => { const result = resolve(c)!;
       result.combinations[1]!.availability = { skip: 0, take: 0 };
       result.combinations[1]!.supply = { skip: Array(200).fill(false), take: Array(200).fill(false) }; return result;
     };
     r.completionSources = [provider];
-    const complete = (await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!;
-    expect(complete.win).not.toBeNull();
-    expect(complete.combination_coverage).toMatchObject({ selection: "catalog_maximum", evaluated_combinations: 2, pending_combinations: 0 });
+    expect((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!.win).not.toBeNull();
     provider.resolve = c => { const result = resolve(c)!;
       result.combinations[1]!.availability = { skip: null, take: null };
       result.combinations[1]!.supply = { skip: null, take: null }; return result;
     };
-    const partial = (await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!;
-    expect(partial.win?.n).toBe(20);
-    expect(partial.combination_coverage).toMatchObject({ selection: "computed_subset_maximum", selected_combination_id: "k0", evaluated_combinations: 1, pending_combinations: 1 });
-    expect(validateProjectionEntry(partial).ok).toBe(true);
-    expect(validateProjectionEntry({ ...partial, combination_coverage: { ...partial.combination_coverage, pending_combinations: 0 } }).ok).toBe(false);
+    expect((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!.win).toBeNull();
   });
   it("does not run combat below 5%, including zero, and keeps missing values unknown", async () => {
     const runner = new FixedRunner(), r = request(); r.completionSources = [source({ skip: 0, take: .04 })];
@@ -121,7 +115,7 @@ describe("V6 combination expectation", () => {
   it("needs no W0 when P=1, uses 100 at act start and caches the complete table", async () => {
     const r = request(), runner = new FixedRunner(), e = new V6ProjectionEngine(runner); r.phase = "act"; r.completionSources = [source({ skip: 1, take: 1 })];
     const t = await e.evaluate(r); expect(t.entries[0]?.win?.value).toBe(1); expect(t.combinations[0]?.general_win).toBeNull();
-    expect(runner.calls[0]?.samples).toBe(100); expect(t.act_evaluations).toHaveLength(1); expect(t.rankings.D).toEqual(["k0", "D:minimal"]);
+    expect(runner.calls[0]?.samples).toBe(100); expect(t.act_evaluations).toHaveLength(1); expect(t.rankings.D).toEqual(["k0"]);
     expect((await e.evaluate(r)).telemetry.act_cache_hit).toBe(true);
   });
   it("never normalizes away omitted positive brain weight", async () => {
