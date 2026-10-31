@@ -1,0 +1,23 @@
+{
+  "entries": [
+    "knowledge/builders/refresh-v6-history.py"
+  ],
+  "dynamic_edges": {
+    "knowledge/builders/refresh-v6-history.py": [
+      "knowledge/builders/build-combo-metrics.py",
+      "knowledge/builders/build-v6-history.py"
+    ],
+    "knowledge/builders/build-combo-metrics.py": [
+      "knowledge/builders/combo-prerequisites.mts",
+      "knowledge/builders/combo-simulation.mts"
+    ],
+    "knowledge/builders/build-v6-history.py": [
+      "agent/tools/v6/freeze-history.ts"
+    ],
+    "ops/learning_runtime_data.py": [
+      "ops/fixed_producer_methods.py",
+      "ops/knowledge_runtime_env.py"
+    ]
+  },
+  "unknown_dependencies": "reject; reviewed byte identity required"
+}

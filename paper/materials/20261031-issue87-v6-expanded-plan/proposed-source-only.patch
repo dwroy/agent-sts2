@@ -1,0 +1,1080 @@
+--- a/agent/src/hand/screens/v6-room.ts
++++ b/agent/src/hand/screens/v6-room.ts
+@@ -2,7 +2,7 @@
+ import { join, dirname } from "node:path";
+ import { V6BuildLog } from "../../v6/log.js";
+ import { asRecord, str, toJsonValue, type JsonValue } from "../../core/util/json.js";
+-import { currentDecisionBudget, DecisionBudget, withDecisionBudget } from "../../core/decision-budget.js";
++import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../../core/decision-budget.js";
+ import type { AskDecision, Decision, DecisionEnv, ResolvedAction } from "../../memory/types.js";
+ import type { AnswerSet, ChoiceAnswer } from "../../reflex/jev/answers.js";
+ import { choiceQ } from "../../reflex/jev/questions.js";
+@@ -10,7 +10,6 @@
+ import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
+ import { v6Config } from "../../v6/config.js";
+ import { v6Directions } from "../../v6/direction-runtime.js";
+-import { targetValueSummaries } from "../../v6/target-values.js";
+ import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
+ import { directionCombos } from "../../v6/direction-plan.js";
+ import { validateProjectionEntries, type ProjectionEntry } from "../../v6/formats.js";
+@@ -103,7 +102,7 @@
+           table?.combinations.find(row => row.combination_id === combo.id && row.entry.direction_id === direction
+             && row.entry.combo_source === combo.source)?.summary ?? combo.metrics)) }))),
+       options: compact(toJsonValue(Object.fromEntries(input.options.map(o => [o.option.key, { facts: o.option.summary, unknown_reason: o.unknown_reason,
+-        best_by_target: targetValueSummaries(table, o.option.key), resources_after: o.state ? { hp: o.state.hp, max_hp: o.state.maxHp, gold: o.state.gold, deck_count: o.state.cards.length } : null,
++        resources_after: o.state ? { hp: o.state.hp, max_hp: o.state.maxHp, gold: o.state.gold, deck_count: o.state.cards.length } : null,
+         projections: prioritize(entries.filter(e => e.option_id === o.option.key), plan?.direction_weights ?? {}, e => e.direction_id,
+           e => e.expected_win ?? -1).map(e => {
+           const row = table?.combinations.find(r => r.entry.option_id === e.option_id && r.entry.direction_id === e.direction_id
+@@ -115,7 +114,7 @@
+       target_mixtures: toJsonValue(table?.target_mixtures ?? []),
+       limitations: toJsonValue(table?.telemetry.degradation ?? [reason]),
+       note: "Compare concrete decks and combinations, current-boss safety and weighted chain deltas. Null is unknown. Observational core metrics are descriptive, not causal. Potion projections require an explicit observed slot and complete modeled inventory transition; compare their holding-value entries too." },
+-    questions: { pick: choiceQ(`Choose one legal ${input.kind} action using the supplied facts. Compare best_by_target current Boss P, W and P*W first, with direction weights and trust. PW_bound is only an upper bound; later unknown targets do not erase current information.`,
++    questions: { pick: choiceQ(`Choose one legal ${input.kind} action using the supplied facts. Treat null as unknown. Compare completion, expected win, uncertainty and trust for each combination.`,
+       Object.fromEntries(input.options.map(o => [o.option.key, o.option.label ?? o.option.key]))),
+       ...Object.assign({}, ...input.options.map(o => o.option.jev?.questions ?? {})) },
+     resolve(answers): ResolvedAction {
+@@ -146,16 +145,8 @@
+   const ms = Math.min(5000, v6Config().budgets.pick_ms), controller = new AbortController();
+   parent?.pause();
+   const budget = new DecisionBudget(`V6_${decision.v6Room.kind}_projection`, "routine", parent?.now, ms, 0);
+-  let timer: ReturnType<typeof setTimeout> | undefined;
+   try {
+-    // The engine returns its partial table at its deadline. Allow bounded cleanup;
+-    // a stalled/foreign provider still cannot hold the decision indefinitely.
+-    const result = await withDecisionBudget(budget, () => Promise.race([
+-      provider(env, decision.v6Room, { budget_ms: ms, signal: controller.signal }),
+-      new Promise<never>((_, reject) => { timer = setTimeout(() => {
+-        controller.abort(); reject(new Error("projection provider stalled"));
+-      }, ms + Math.min(100, ms / 10)); }),
+-    ]));
++    const result = await withDecisionBudget(budget, () => withinDecisionBudget("room_projection", () => provider(env, decision.v6Room, { budget_ms: ms, signal: controller.signal })));
+     const report = result && "table" in result ? result : null;
+     const table = report ? report.table : result as V6ProjectionTable | null;
+     return buildV6RoomDecision(env, decision.v6Room, table ?? undefined, report?.reason ?? (table ? "ready" : "projection_provider_unavailable"), dir,
+@@ -163,7 +154,7 @@
+   } catch {
+     return buildV6RoomDecision(env, decision.v6Room, undefined, "projection_failed_or_timed_out", dir);
+   } finally {
+-    clearTimeout(timer); controller.abort(); budget.pause(); parent?.independent(`V6_${decision.v6Room.kind}_projection`, budget, "L2"); if (running) parent?.resume();
++    controller.abort(); budget.pause(); parent?.independent(`V6_${decision.v6Room.kind}_projection`, budget, "L2"); if (running) parent?.resume();
+   }
+ }
+ 
+@@ -178,6 +169,6 @@
+     fallback: fallback ? "missing_invalid_or_failed_jev" : null, elapsed_ms: elapsedMs,
+     cache: { hits: t?.cache_hits ?? 0, misses: t?.cache_misses ?? 0 }, degradation: [...(t?.degradation ?? [decision.roomProjectionReason]), ...(decision.roomProjectionSource?.labels ?? []), ...promptBudgetLabels(decision.state),
+       ...(decision.roomProjectionSource?.rejected_options.map(r => `${r.id}:${r.reason}`.slice(0, 200)) ?? [])],
+-    unknown: { count: decision.roomEntries.filter(e => e.win === null && !e.expected_win_bound).length, total: decision.roomEntries.length },
++    unknown: { count: decision.roomEntries.filter(e => e.win === null).length, total: decision.roomEntries.length },
+     triggers: [], merged_triggers: [], skipped_triggers: [] });
+ }
+--- a/agent/src/sim/continuous-boss-result.ts
++++ b/agent/src/sim/continuous-boss-result.ts
+@@ -55,7 +55,7 @@
+ }
+ 
+ /** Raw two-stage rates never borrow a single-fight calibration or an independent second-fight rate. */
+-export function continuousBossResult(outcomes: FightSampleResult[], expectedSamples = outcomes.length, required = false, terminalFirstLossKnown = false): ContinuousBossResult | undefined {
++export function continuousBossResult(outcomes: FightSampleResult[], expectedSamples = outcomes.length, required = false): ContinuousBossResult | undefined {
+   if (!required && !outcomes.some((outcome) => outcome.sequence)) return undefined;
+   const missingSamples = Math.max(0, expectedSamples - outcomes.length);
+   const firstWins = outcomes.filter((outcome) => outcome.sequence?.firstWon);
+@@ -70,15 +70,11 @@
+   });
+   const firstReason = !expectedSamples ? "no_samples" : firstUnknown ? "missing_or_unfinished_first_samples" : null;
+   const secondReason = firstReason ?? (!firstWins.length ? "no_first_win_samples" : secondUnknown ? "missing_resources_or_unfinished_second_samples" : null);
+-  // W3 may explicitly count terminal first-fight losses as known joint failures.
+-  // Other consumers retain their original no-survivor unknown semantics.
+-  const jointReason = terminalFirstLossKnown
+-    ? firstReason ?? (secondUnknown ? "missing_resources_or_unfinished_second_samples" : null) : secondReason;
+   return {
+     schema: "continuous-boss-result-v1", scope: "raw_simulation", samples: outcomes.length, expectedSamples, missingSamples,
+     first: rate(firstWins.length, expectedSamples, firstUnknown, firstReason),
+     secondGivenFirstWin: rate(secondWins, firstWins.length, secondUnknown, secondReason),
+-    joint: rate(secondWins, expectedSamples, firstUnknown + secondUnknown, jointReason),
++    joint: rate(secondWins, expectedSamples, firstUnknown + secondUnknown, secondReason),
+     calibration: { status: "unknown", singleFightMapApplied: false }, S: { status: "unknown", value: null },
+     resourceModel: { transfer: "same_sample", rewardsBetweenFights: "unknown", actualSecondOpening: "unknown", unobservedOpeningEffects: "unknown" },
+     traces: outcomes.flatMap((outcome) => outcome.sequence ? [outcome.sequence] : []).slice(0, 3),
+--- a/agent/src/sim/v6-completion.ts
++++ b/agent/src/sim/v6-completion.ts
+@@ -73,13 +73,9 @@
+   idealOverrides?: Readonly<Record<string, readonly string[]>>;
+   appearedCards?: readonly string[];
+   ranking?: readonly string[];
+-  /** Resolve a bounded catalog slice before spending supply/combat time on another direction. */
+-  combinationIds?: readonly string[];
+ }
+ export interface V6CompletionSource {
+   kind: string; signature: string;
+-  /** Cheap deterministic ranking before the bounded combat slice; never runs supply MC. */
+-  rank?(context: V6CompletionContext): readonly string[] | null;
+   /** Bounded, synchronous preparation from immutable inputs; no I/O or simulation. */
+   resolve(context: V6CompletionContext): V6CompletionSet | null;
+ }
+--- a/agent/src/sim/v6-formation-table.ts
++++ /dev/null
+@@ -1,141 +0,0 @@
+-/** Deterministic appearance-table completion. No supply worlds or incomplete-deck fights. */
+-import type { BuildState } from "../construction/types.js";
+-import { evaluateBuildPrerequisites } from "../v6/build-core-conditions.js";
+-import { v6Complete, v6Match } from "./v6-supply.js";
+-import { v6Digest, type V6Combo, type V6CompletionContext, type V6CompletionSource } from "./v6-completion.js";
+-
+-/** Structural subset of v6-appearance-v1; the pack loader owns full validation. */
+-export interface V6FormationTable {
+-  character: string; cutoff: string; runs: readonly { run_id: string; ended: string }[];
+-  cards: readonly { source: "reward" | "shop"; rarity: string; card_id: string; n: number;
+-    probability: number | null; upgraded_appearances: number }[];
+-  remaining: readonly { from_floor: number; target_floor: number; kind: string; median: number | null }[];
+-  labels: readonly string[];
+-}
+-/** Single-copy opportunity approximation; the table does not identify duplicate-copy joints. */
+-function tail(probabilities: { p: number; n: number }[], count: number): number | null {
+-  if (!probabilities.length || probabilities.every(x => x.p === 0 || x.n === 0)) return 0;
+-  if (count === 1) return 1 - probabilities.reduce((q, { p, n }) => q * (1 - p) ** n, 1);
+-  return null;
+-}
+-function forecastable(p: NonNullable<V6Combo["prerequisites"]>): boolean {
+-  return p.op === "and" || p.op === "or" ? p.args.every(forecastable) : p.op === "not" ? forecastable(p.arg)
+-    : p.op === "any" || p.op === "all" ? p.field === "player.deck" && forecastable(p.arg)
+-      : "field" in p && ["floor", "player.gold", "player.relics", "player.deck", "card.id", "card.upgraded"].includes(p.field);
+-}
+-function condition(combo: V6Combo, state: BuildState, floor: number): boolean | null {
+-  return combo.prerequisiteResolution === "unknown" || combo.prerequisites && !forecastable(combo.prerequisites) ? null
+-    : evaluateBuildPrerequisites(combo, { floor, player: { gold: state.gold, relics: state.relics, deck: state.cards } });
+-}
+-function canonical(state: BuildState): BuildState {
+-  state.cards.sort((a, b) => a.id.localeCompare(b.id) || Number(a.upgraded) - Number(b.upgraded)); return state;
+-}
+-function combinations(c: V6CompletionContext): V6Combo[] {
+-  const result = [...c.direction.combos], override = c.idealOverrides?.[c.direction.id];
+-  if (override?.length) {
+-    const allowed = new Set([...result.flatMap(k => [...Object.keys(k.roles), ...k.requirements.flatMap(r => r.any.filter(x => x.kind === "card").map(x => x.id))]),
+-      ...c.options[0]!.state.cards.map(x => x.id), ...c.appearedCards ?? []]);
+-    if (override.some(id => !allowed.has(id))) throw new Error("brain override outside build pool or current deck");
+-    const counts = new Map<string, number>(); override.forEach(id => counts.set(id, (counts.get(id) ?? 0) + 1));
+-    const temporary: V6Combo = { id: `${c.direction.id}:brain`, source: "brain", summary: null, prerequisites: null, roles: {},
+-      requirements: [...counts].map(([id, count]) => ({ id, count, any: [{ id, kind: "card" }] })) };
+-    const matching = result.filter(k => !v6Match({ ...c.options[0]!.state, cards: override.map(id => ({ id, upgraded: true })) }, k.requirements).missing);
+-    if (matching.length && matching.every(k => k.prerequisites !== null)) temporary.prerequisites = matching.length === 1 ? matching[0]!.prerequisites
+-      : { op: "or", args: matching.map(k => k.prerequisites!) };
+-    else if (!matching.length && result.some(k => k.prerequisites !== null)) temporary.prerequisiteResolution = "unknown";
+-    result.unshift(temporary);
+-  }
+-  if (c.combinationIds) return result.filter(k => c.combinationIds!.includes(k.id));
+-  const rank = c.ranking ?? [];
+-  result.sort((a, b) => (rank.includes(a.id) ? rank.indexOf(a.id) : Infinity) - (rank.includes(b.id) ? rank.indexOf(b.id) : Infinity));
+-  return c.phase === "pick" ? result.slice(0, 4) : result;
+-}
+-export function v6FormationTableSource(data: { character: string; ascension: number; signature: string;
+-  table?: V6FormationTable; excludeRun: string; asOf: string }): V6CompletionSource {
+-  const kind = "historical_appearance_lookup_v1", table = data.table;
+-  const valid = table?.character === data.character && table.cutoff <= data.asOf
+-    && table.runs.every(r => r.run_id !== data.excludeRun && r.ended < data.asOf);
+-  const cards = new Map(table?.cards.map(c => [`${c.source}:${c.card_id}`, c]));
+-  const remaining = new Map(table?.remaining.map(r => [`${r.from_floor}:${r.target_floor}:${r.kind}`, r.median]));
+-  const lookupCache = new Map<string, ReturnType<V6CompletionSource["resolve"]>>();
+-  // Completion only changes the card signature. Reuse it across target floors,
+-  // sample counts and potion/gold alternatives; their resources stay option-local.
+-  const completedCards = new Map<string, BuildState["cards"] | null>();
+-  const complete = (state: BuildState, combo: V6Combo): BuildState | null => {
+-    const key = v6Digest([state.cards, state.relics, state.cap, combo.requirements]);
+-    if (!completedCards.has(key)) {
+-      if (completedCards.size >= 512) completedCards.delete(completedCards.keys().next().value!);
+-      completedCards.set(key, v6Complete(state, combo.requirements)?.cards ?? null);
+-    }
+-    const cards = completedCards.get(key);
+-    return cards ? { ...state, cards: cards.map(card => ({ ...card })) } : null;
+-  };
+-  const source: V6CompletionSource = { kind, signature: data.signature, resolve(c) {
+-    if (c.direction.character !== data.character || !c.direction.ascensions.includes(data.ascension)) return null;
+-    const key = v6Digest([c.direction.signature, c.direction.combos.map(k => [k.id, k.requirements, k.prerequisites, k.prerequisiteResolution]),
+-      c.options, c.target.floor, c.samples, c.phase, c.idealOverrides, c.appearedCards, c.combinationIds, c.ranking]);
+-    const hit = lookupCache.get(key); if (hit) return hit;
+-    const rows = combinations(c).map(combo => {
+-      const availability: Record<string, number | null> = {}, states: Record<string, BuildState | null> = {}, unknownReasons: Record<string, string[]> = {};
+-      const labels = ["lookup_probability_pooled_versions_and_ascensions", "independent_opportunities_and_missing_card_identities_approximation",
+-        "duplicate_missing_copies_joint_probability_unknown", "remaining_median_exposure_not_guaranteed_route",
+-        "gold_and_purchase_affordability_unmodeled", "reward_selection_conflicts_unmodeled", "signature_not_operability",
+-        "completion_adds_only_missing_cards_and_upgrades", "no_supply_mc_no_incomplete_deck_simulation",
+-        "alternative_membership_completed_by_deterministic_minimum_signature", ...table?.labels ?? []];
+-      for (const o of c.options) {
+-        const reasons: string[] = []; unknownReasons[o.id] = reasons;
+-        const completed = complete(o.state, combo);
+-        const gate = completed && condition(combo, completed, c.target.floor);
+-        states[o.id] = completed && gate === true ? canonical(completed) : null;
+-        if (gate === false) { availability[o.id] = 0; continue; }
+-        if (!completed || gate !== true) { availability[o.id] = null; reasons.push("unforecast_prerequisite_or_completion"); continue; }
+-        if (!v6Match(o.state, combo.requirements).missing) { availability[o.id] = 1; continue; }
+-        if (!valid) { availability[o.id] = null; reasons.push("missing_or_out_of_scope_appearance_table"); continue; }
+-        let p = 1;
+-        const ids = [...new Set(completed.cards.map(x => x.id))];
+-        let upgrades = 0;
+-        for (const id of ids) upgrades += Math.max(0, completed.cards.filter(x => x.id === id && x.upgraded).length - o.state.cards.filter(x => x.id === id && x.upgraded).length);
+-        const smith = remaining.get(`${o.state.floor}:${c.target.floor}:upgrade`);
+-        const canSmith = upgrades === 0 || smith != null && Math.floor(smith) >= upgrades;
+-        if (upgrades) labels.push(canSmith ? "upgrade_median_capacity_order_and_target_conflicts_unmodeled" : "direct_upgraded_offers_only_missing_smith_capacity");
+-        for (const id of ids) {
+-          const held = o.state.cards.filter(x => x.id === id), wanted = completed.cards.filter(x => x.id === id);
+-          const add = wanted.length - held.length, up = wanted.filter(x => x.upgraded).length - held.filter(x => x.upgraded).length;
+-          if (add <= 0 && up <= 0) continue;
+-          if (!canSmith && up > add) {
+-            if (smith === 0) { p = 0; break; }
+-            reasons.push("upgrade_opportunity_capacity_unknown_or_insufficient"); break;
+-          }
+-          const exposure: { p: number; n: number }[] = [], rarities = new Set<string>();
+-          for (const source of ["reward", "shop"] as const) {
+-            const n = remaining.get(`${o.state.floor}:${c.target.floor}:${source}`);
+-            if (n == null) { reasons.push(`remaining_${source}_exact_checkpoint_missing`); break; }
+-            if (!n) continue;
+-            const row = cards.get(`${source}:${id}`);
+-            if (!row || row.probability === null || !row.n || !row.rarity) { reasons.push(`appearance_${source}_${id}_missing`); break; }
+-            rarities.add(row.rarity);
+-            exposure.push({ n, p: !canSmith && up > 0 ? row.upgraded_appearances / row.n : row.probability });
+-          }
+-          if (rarities.size > 1) reasons.push("contradictory_card_rarity");
+-          if (reasons.length) break;
+-          if (add > 0) { const q = tail(exposure, add); if (q === null) { reasons.push("duplicate_missing_copies_joint_probability_unknown"); break; } p *= q; }
+-        }
+-        availability[o.id] = reasons.length ? null : Math.min(1, Math.max(0, p));
+-      }
+-      return { id: combo.id, source: combo.source, requirements: combo.requirements, summary: combo.summary, roles: combo.roles,
+-        samples: Array.from({ length: c.samples }, (_, i) => ({ id: `seed:${i}`, states })), general: [], supply: {}, availability, unknownReasons,
+-        labels: [...new Set(labels)] };
+-    });
+-    const result = { source: kind, signature: v6Digest([data.signature, c.target.floor, rows.map(r => r.id)]), combinations: rows,
+-      labels: ["formation_times_completed", "no_incomplete_case", ...table?.labels ?? []] };
+-    if (lookupCache.size >= 256) lookupCache.delete(lookupCache.keys().next().value!);
+-    lookupCache.set(key, result); return result;
+-  } };
+-  source.rank = c => {
+-    const rows = source.resolve({ ...c, phase: "act", samples: 1, combinationIds: undefined })?.combinations;
+-    if (!rows) return null;
+-    const score = (row: typeof rows[number]) => Math.max(-Infinity, ...Object.values(row.availability).filter((p): p is number => p !== null));
+-    return [...rows].sort((a, b) => score(b) - score(a)).map(r => r.id);
+-  };
+-  return source;
+-}
+--- a/agent/src/sim/v6-precompute.ts
++++ b/agent/src/sim/v6-precompute.ts
+@@ -14,10 +14,9 @@
+   schedule(request: V6ProjectionRequest): "queued" | "disabled" {
+     this.generation++;
+     if (request.config.mode === "off") { this.pending = null; return "disabled"; }
+-    const { prepare, cachedPreparation, trust, completionSources, directions, ...data } = request;
+-    // Direction metrics are immutable run-start evidence, shared with foreground work.
+-    const snapshot = { ...structuredClone(data), options: [], directions, prepare, cachedPreparation, trust, completionSources: [...completionSources] };
+-    const key = v6Digest({ ...snapshot, directions: directions.map(d => [d.id, d.signature]), prepare: undefined, trust: undefined,
++    const { prepare, trust, completionSources, ...data } = request;
++    const snapshot = { ...structuredClone(data), options: [], prepare, trust, completionSources: [...completionSources] };
++    const key = v6Digest({ ...snapshot, prepare: undefined, trust: undefined,
+       completionSources: snapshot.completionSources.map(s => [s.kind, s.signature]) });
+     this.pending = { key, request: snapshot, generation: this.generation }; return "queued";
+   }
+@@ -42,11 +41,8 @@
+     this.pending = null;
+     const active = Promise.resolve().then(async (): Promise<V6IdleResult> => {
+       const table = await this.engine.precompute(job.request);
+-      if (job.generation !== this.generation) return { status: "discarded", key: job.key };
+-      // The next existing idle boundary continues cached absolute samples. Never spin or
+-      // retry permanent missing evidence, and never overwrite a newer snapshot.
+-      if (table?.telemetry?.pending_work && !this.pending) this.pending = job;
+-      return { status: "computed", key: job.key, table };
++      return job.generation === this.generation ? { status: "computed", key: job.key, table }
++        : { status: "discarded", key: job.key };
+     });
+     this.active = active;
+     try { return await active; } finally { if (this.active === active) this.active = null; }
+--- a/agent/src/sim/v6-projection-entries.ts
++++ b/agent/src/sim/v6-projection-entries.ts
+@@ -21,7 +21,6 @@
+       e.incomplete_source = e.win_incomplete ? "empirical" : "unknown";
+       e.expected_win = e.win?.value ?? null;
+       e.combo_metrics = r.summary;
+-      if (r.general_source === "not_computed") e.formula = "formation_times_completed";
+     }
+     return e;
+   });
+--- a/agent/src/sim/v6-projection.ts
++++ b/agent/src/sim/v6-projection.ts
+@@ -1,10 +1,9 @@
+-import { copyV6Table } from "./v6-table-copy.js";
+ /** Paired combination projections. All incomplete inputs remain explicitly unknown. */
+ import type { BuildState } from "../construction/types.js";
+ import type { V6Config } from "../v6/config.js";
+ import type { ProjectionEntry } from "../v6/formats.js";
+ import type { RolloutInput } from "../reflex/rollout.js";
+-import { slimInput, type FightSampleResult } from "./boss-sim.js";
++import type { FightSampleResult } from "./boss-sim.js";
+ import type { DeckSimRunner } from "./build-sim-pool.js";
+ import { summarizeSamples } from "./quantitative-stats.js";
+ import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
+@@ -23,25 +22,21 @@
+   appearedCards?: readonly string[];
+   /** Persist the latest act-start ranking for an engine recreated by a caller. */
+   rankings?: Readonly<Record<string, readonly string[]>>;
+-  /** Foreground picks simulate the current Boss; later fights reuse idle/act cache only. */
+-  currentBossFirst?: boolean;
+   seed: number; modelVersion: string;
+   /** Includes held resources, route, frozen history/trust, current run and act identity. */
+   contextDigest: string;
+   prepare: (target: V6ProjectionTarget, state: BuildState, option?: V6ProjectionOption) => V6PreparedProjection | null;
+-  /** Read already prepared openings without constructing another optional target. */
+-  cachedPreparation?: V6ProjectionRequest["prepare"];
+-  trust: (target: V6ProjectionTarget) => { value: ProjectionEntry["trust"]; labels: string[]; details?: ProjectionEntry["trust_details"] };
++  trust: (target: V6ProjectionTarget) => { value: ProjectionEntry["trust"]; labels: string[] };
+ }
+ type Estimate = NonNullable<ProjectionEntry["win"]>;
+ type Delta = NonNullable<ProjectionEntry["paired_delta"]>;
+ type Indexed = (FightSampleResult | undefined)[];
+ type Raw = { first: (number | null)[]; joint: (number | null)[]; ids: string[] };
+-type ExpectedRaw = Raw;
++type ExpectedRaw = Raw & { formation: readonly boolean[] | null; effect: { first: number | null; joint: number | null } };
+ export interface V6CombinationProjection {
+   combination_id: string | null; entry: ProjectionEntry;
+   completion_source: V6CompletionCombination["source"] | "unknown";
+-  general_source: "empirical" | "not_computed"; scope: "combination_expectation";
++  general_source: "empirical"; scope: "combination_expectation";
+   completed_win: Estimate | null; general_win: Estimate | null;
+   completed_joint_win: Estimate | null; general_joint_win: Estimate | null;
+   formation_se: number | null; formation_n: number; summary: V6CompletionCombination["summary"];
+@@ -78,11 +73,7 @@
+   pick_direction_comparisons: V6PickDirectionComparison[];
+   targets: readonly V6ProjectionTarget[];
+   telemetry: { elapsed_ms: number; cache_hits: number; cache_misses: number; simulations: number; timed_out: number;
+-    degradation: string[]; unknown_entries: number; total_entries: number; unknown_fraction: number; act_cache_hit: boolean;
+-    /** More bounded slices can finish work; structural unknowns alone do not keep idle work queued. */
+-    pending_work?: boolean;
+-    timings_ms?: { formation_lookup: number; preparation: number; completed_single: number; completed_relay: number;
+-      aggregation_pairing: number; supply_mc: 0; incomplete_case: 0 } };
++    degradation: string[]; unknown_entries: number; total_entries: number; unknown_fraction: number; act_cache_hit: boolean };
+ }
+ function estimate(values: readonly number[]): Estimate | null {
+   const s = summarizeSamples(values); return s.mean === null || s.meanSe === null ? null : { value: s.mean, se: s.meanSe, n: s.n };
+@@ -90,25 +81,47 @@
+ function fullEstimate(values: readonly (number | null)[]): Estimate | null {
+   return values.some(x => x === null) ? null : estimate(values as number[]);
+ }
+-/** Lookup probabilities are fixed inputs; reported SE is conditional combat-seed error only. */
+-function product(k: Raw, p: number | null): ExpectedRaw {
+-  const field = (f: "first" | "joint") => k[f].map(v => p === null || v === null ? null : p * v);
+-  return { ids: k.ids, first: field("first"), joint: field("joint") };
+-}
+-function uncertainty(raw: ExpectedRaw, f: "first" | "joint"): Estimate | null { return fullEstimate(raw[f]); }
++function expected(k: Raw, g: Raw, p: number | null, formation: readonly boolean[] | null): ExpectedRaw {
++  const effect = { first: null as number | null, joint: null as number | null };
++  const field = (f: "first" | "joint") => {
++    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;
++    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null
++      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));
++  };
++  return { ids: k.ids, first: field("first"), joint: field("joint"), formation, effect };
++}
++function uncertainty(raw: ExpectedRaw, f: "first" | "joint"): Estimate | null {
++  const e = fullEstimate(raw[f]); if (!e) return null;
++  const supply = raw.formation && estimate(raw.formation.map(Number));
++  // Finite-supply error is independent of the combat seeds. Unknown effects cannot be fabricated.
++  if (supply && supply.se > 0 && raw.effect[f] === null) return null;
++  return { ...e, se: Math.hypot(e.se, (supply?.se ?? 0) * (raw.effect[f] ?? 0)) };
++}
+ function paired(a: ExpectedRaw, b: ExpectedRaw, f: "first" | "joint"): Delta | null {
+   if (a.ids.length !== b.ids.length || a.ids.some((id, i) => id !== b.ids[i]) || a[f].some((v, i) => v === null || b[f][i] === null)) return null;
+-  const e = estimate(a[f].map((v, i) => v! - b[f][i]!));
+-  return e ? { mean: e.value, se: e.se, n: e.n } : null;
+-}
+-/** Keep common combat-seed covariance across candidate targets; lookup/model error is separate. */
++  const e = estimate(a[f].map((v, i) => v! - b[f][i]!)); if (!e) return null;
++  let se = 0;
++  if (a.formation && b.formation && a.formation.length === b.formation.length) {
++    const p = a.formation.filter(Boolean).length / a.formation.length, q = b.formation.filter(Boolean).length / b.formation.length;
++    if (p > 0 && p < 1 && a.effect[f] === null || q > 0 && q < 1 && b.effect[f] === null) return null;
++    const s = estimate(a.formation.map((v, i) => (Number(v) - p) * (a.effect[f] ?? 0) - (Number(b.formation![i]) - q) * (b.effect[f] ?? 0)));
++    if (!s) return null; se = s.se;
++  } else if (a.formation || b.formation) return null;
++  return { mean: e.value, se: Math.hypot(e.se, se), n: e.n };
++}
++/** Preserve both combat-seed and supply-world covariance across candidate targets. */
+ function pairedMixture(rows: { weight: number; a: ExpectedRaw; b: ExpectedRaw }[]): Delta | null {
+   if (!rows.length) return null;
+-  const ids = rows[0]!.a.ids;
+-  if (rows.some(({ a, b }) => [a, b].some(v => v.ids.length !== ids.length
+-    || v.ids.some((id, i) => id !== ids[i]) || v.joint.some(x => x === null)))) return null;
+-  const e = estimate(ids.map((_, i) => rows.reduce((sum, r) => sum + r.weight * (r.a.joint[i]! - r.b.joint[i]!), 0)));
+-  return e ? { mean: e.value, se: e.se, n: e.n } : null;
++  const ids = rows[0]!.a.ids, worlds = rows[0]!.a.formation?.length;
++  if (!worlds || rows.some(({ a, b }) => [a, b].some(v => v.ids.length !== ids.length
++    || v.ids.some((id, i) => id !== ids[i]) || v.joint.some(x => x === null) || v.formation?.length !== worlds))) return null;
++  const combat = estimate(ids.map((_, i) => rows.reduce((sum, r) => sum + r.weight * (r.a.joint[i]! - r.b.joint[i]!), 0)));
++  const effects = rows.flatMap(r => [{ weight: r.weight, raw: r.a }, { weight: -r.weight, raw: r.b }])
++    .map(r => ({ ...r, probability: r.raw.formation!.filter(Boolean).length / worlds }));
++  if (!combat || effects.some(r => r.probability > 0 && r.probability < 1 && r.raw.effect.joint === null)) return null;
++  const supply = estimate(Array.from({ length: worlds }, (_, i) => effects.reduce((sum, r) => sum
++    + r.weight * (Number(r.raw.formation![i]) - r.probability) * (r.raw.effect.joint ?? 0), 0)));
++  return supply ? { mean: combat.value, se: Math.hypot(combat.se, supply.se), n: combat.n } : null;
+ }
+ export function v6WinTier(value: number | null, config: V6Config): ProjectionEntry["win_tier"] {
+   const t = config.win; return value === null ? "unknown" : value >= t.certain_win ? "certain_win" : value >= t.favored ? "favored"
+@@ -120,7 +133,7 @@
+   if (a > t.better_se * value.se) return value.mean > 0 ? "better" : "worse"; return "same";
+ }
+ function rawValues(outcomes: Indexed, chain: boolean, ids: string[]): Raw {
+-  const result = chain ? continuousBossResult(outcomes.filter((o): o is FightSampleResult => !!o), ids.length, true, true)! : null;
++  const result = chain ? continuousBossResult(outcomes.filter((o): o is FightSampleResult => !!o), ids.length, true)! : null;
+   return { ids, first: ids.map((_, i) => { const o = outcomes[i]; return chain ? result?.first.value == null ? null : o?.sequence ? Number(o.sequence.firstWon) : null
+     : o && !o.capped && !o.timeUp && (o.won || o.died) ? Number(o.won) : null; }),
+     joint: ids.map((_, i) => chain && result?.joint.value != null && outcomes[i]?.sequence ? Number(outcomes[i]!.sequence!.firstWon && outcomes[i]!.sequence!.secondWon === true) : null) };
+@@ -135,13 +148,12 @@
+ function period(keys: readonly string[]): number { for (let p = 1; p <= keys.length; p++) if (keys.every((key, i) => key === keys[i % p])) return p; return keys.length; }
+ export class V6ProjectionEngine {
+   private readonly samples = new Map<string, Indexed>(); private readonly acts = new Map<string, V6ProjectionTable>();
+-  private readonly rankings = new Map<string, Record<string, string[]>>();
+   constructor(private readonly runner: DeckSimRunner, private readonly now: () => number = () => performance.now(), private readonly capacity = 256) {
+     if (!Number.isSafeInteger(capacity) || capacity < 1) throw new Error("invalid V6 cache capacity");
+   }
+-  clear(): void { this.samples.clear(); this.acts.clear(); this.rankings.clear(); }
++  clear(): void { this.samples.clear(); this.acts.clear(); }
+   private remember<T>(map: Map<string, T>, key: string, value: T): void {
+-    map.delete(key); map.set(key, map === this.acts ? copyV6Table(value as V6ProjectionTable) as T : structuredClone(value)); while (map.size > this.capacity) map.delete(map.keys().next().value!);
++    map.delete(key); map.set(key, structuredClone(value)); while (map.size > this.capacity) map.delete(map.keys().next().value!);
+   }
+   async precompute(r: V6ProjectionRequest): Promise<V6ProjectionTable> { return this.evaluate({ ...r, options: [] }); }
+   async evaluate(r: V6ProjectionRequest): Promise<V6ProjectionTable> {
+@@ -151,9 +163,6 @@
+       telemetry: { elapsed_ms: 0, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], unknown_entries: 0,
+         total_entries: 0, unknown_fraction: 0, act_cache_hit: false } };
+     if (!table.enabled) return table;
+-    const timings = { formation_lookup: 0, preparation: 0, completed_single: 0, completed_relay: 0,
+-      aggregation_pairing: 0, supply_mc: 0 as const, incomplete_case: 0 as const };
+-    table.telemetry.timings_ms = timings;
+     if (!r.contextDigest || !r.modelVersion || !Number.isSafeInteger(r.seed)) throw new Error("V6 requires frozen context/model signatures and integer seed");
+     const options = [r.baseline, ...r.options];
+     for (const ids of [options.map(o => o.id), r.directions.map(d => d.id), r.targets.map(t => t.id), r.completionSources.map(s => s.kind)])
+@@ -163,39 +172,16 @@
+     const weightsValid = all.length > 0 && Object.keys(r.weights).length === all.length && all.every(d => Number.isFinite(r.weights[d.id]) && r.weights[d.id]! >= 0)
+       && Math.abs(all.reduce((sum, d) => sum + r.weights[d.id]!, 0) - 1) <= .01;
+     const n = r.phase === "act" ? r.config.samples_act : r.config.samples_pick;
+-    const actKey = r.phase === "act" ? v6Digest({ ...r, directions: all.map(d => [d.id, d.signature]), prepare: undefined, trust: undefined,
++    const actKey = r.phase === "act" ? v6Digest({ ...r, prepare: undefined, trust: undefined,
+       completionSources: r.completionSources.map(s => [s.kind, s.signature]) }) : "";
+-    if (r.phase === "act" && this.acts.has(actKey)) { const hit = copyV6Table(this.acts.get(actKey)!); hit.telemetry = { ...hit.telemetry,
+-      cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], timings_ms: timings,
+-      act_cache_hit: true, elapsed_ms: this.now() - started }; return hit; }
++    if (r.phase === "act" && this.acts.has(actKey)) { const hit = structuredClone(this.acts.get(actKey)!); hit.telemetry = { ...hit.telemetry,
++      cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], act_cache_hit: true, elapsed_ms: this.now() - started }; return hit; }
+     const available = r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms;
+     // Leave time for aggregation/serialization after the last synchronous preparation or worker result.
+     const deadline = started + Math.max(0, available - Math.min(500, available / 8));
+     const raws = new Map<V6CombinationProjection, ExpectedRaw>();
+-    const rankingKey = v6Digest([r.character, r.ascension, r.act, r.seed, r.modelVersion, all.map(d => [d.id, d.signature])]);
+-    const rankings = r.rankings ?? this.rankings.get(rankingKey);
+-    const targets = [...r.targets].sort((a, b) => Number(!!a.unknown) - Number(!!b.unknown)
+-      || ({ current: 0, future: 1, chain: 2 }[a.kind] - { current: 0, future: 1, chain: 2 }[b.kind])
+-      || (b.probability ?? -1) - (a.probability ?? -1) || a.id.localeCompare(b.id));
+-    // Complete one ranked combination per direction/target before a second one. Act start
+-    // fully evaluates only its leading two; idle/pick retain the original four-combo cap.
+-    const jobs = directions.flatMap(direction => targets.flatMap((target, ti) => {
+-      let rank = rankings?.[direction.id];
+-      if (!rank?.length) for (const source of r.completionSources) {
+-        const at = performance.now();
+-        try { const suggested = source.rank?.({ direction, options, target, samples: 1, seed: r.seed, deadline,
+-          phase: r.phase, idealOverrides: r.idealOverrides, appearedCards: r.appearedCards });
+-          if (suggested?.length) { rank = [...suggested]; break; }
+-        } catch { /* The normal provider path records a bounded failure for this target. */ }
+-        finally { timings.formation_lookup += performance.now() - at; }
+-      }
+-      rank ??= [];
+-      const ids = direction.combos.map(c => c.id);
+-      if (r.idealOverrides?.[direction.id]?.length) ids.unshift(`${direction.id}:brain`);
+-      ids.sort((a, b) => { const ai = rank.indexOf(a), bi = rank.indexOf(b);
+-        return (ai < 0 ? Infinity : ai) - (bi < 0 ? Infinity : bi); });
+-      return ids.slice(0, r.phase === "act" ? 2 : 4).map((combinationId, pass) => ({ direction, target, combinationId, pass, ti }));
+-    })).sort((a, b) => a.ti - b.ti || a.pass - b.pass || (r.weights[b.direction.id] ?? 0) - (r.weights[a.direction.id] ?? 0));
++    const jobs = directions.flatMap(direction => r.targets.map(target => ({ direction, target }))).sort((a, b) =>
++      Number(a.target.kind === "future") - Number(b.target.kind === "future") || (r.weights[b.direction.id] ?? 0) - (r.weights[a.direction.id] ?? 0));
+     let dropped: string | null = null, stage = 0;
+     const degrade = (remaining: typeof jobs) => {
+       table.telemetry.timed_out++;
+@@ -210,44 +196,35 @@
+     const preparedCache = new Map<string, V6PreparedProjection | null>();
+     // Callers may mutate a prepared object between requests; never retain its digest across requests.
+     const preparedDigests = new Map<V6PreparedProjection, string>();
+-    const resolved = new Set<string>();
+-    for (const [ji, { direction: d, target: t, combinationId }] of jobs.entries()) {
+-      // Lookup is deterministic and cheap. A spent combat allowance must never erase known P.
+-      let reason: string | null = null;
+-      const budgetReason = stage >= 3 ? "budget_remaining_unknown" : d.id === dropped ? "budget_lowest_direction_dropped"
+-        : stage >= 2 && t.kind === "future" ? "budget_future_target_dropped" : this.now() >= deadline ? "deadline_exhausted" : null;
++    for (const [ji, { direction: d, target: t }] of jobs.entries()) {
++      let reason = t.unknown ?? (stage >= 3 ? "budget_remaining_unknown" : d.id === dropped ? "budget_lowest_direction_dropped" : stage >= 2 && t.kind === "future" ? "budget_future_target_dropped" : null);
++      if (!reason && this.now() >= deadline) { reason = "deadline_exhausted"; degrade(jobs.slice(ji)); }
+       let completion = null;
+-      const lookupAt = performance.now();
+-      try { completion = resolveV6Completion({ direction: d, options, target: t, samples: n, seed: r.seed,
+-        phase: r.phase, deadline, idealOverrides: r.idealOverrides, appearedCards: r.appearedCards, ranking: rankings?.[d.id],
+-        combinationIds: [combinationId] }, r.completionSources); }
++      if (!reason) try { completion = resolveV6Completion({ direction: d, options: structuredClone(options), target: t, samples: n, seed: r.seed,
++        phase: r.phase, deadline, idealOverrides: r.idealOverrides, appearedCards: r.appearedCards, ranking: r.rankings?.[d.id] }, r.completionSources); }
+       catch (e) { reason = `completion_provider_failed:${String(e).slice(0, 160)}`; }
+-      timings.formation_lookup += performance.now() - lookupAt;
+       if (!completion?.combinations.length) reason ??= "no_combination_provider_result";
+       if (completion && new Set(completion.combinations.map(c => c.id)).size !== completion.combinations.length) reason = "duplicate_combination_id";
+       for (const c of (reason ? [null] : completion!.combinations)) {
+-        const resolvedKey = JSON.stringify([d.id, t.id, c?.id ?? combinationId]);
+-        if (resolved.has(resolvedKey)) continue;
+-        resolved.add(resolvedKey);
+-        const optional = r.currentBossFirst && t.kind !== "current";
+-        let error = reason ?? t.unknown ?? budgetReason;
++        let error = reason;
+         const ids = c?.samples.map(s => s.id) ?? Array.from({ length: n }, (_, i) => `seed:${i}`);
+-        if (c && (ids.length !== n || new Set(ids).size !== n)) error = "invalid_paired_sample_schedule";
++        if (c && (ids.length !== n || new Set(ids).size !== n || c.general.length !== n || c.general.some((s, i) => s.id !== ids[i]))) error = "invalid_paired_sample_schedule";
+         if (c && options.some(o => { const p = c.availability[o.id]; return p != null && (!Number.isFinite(p) || p < 0 || p > 1); })) error = "invalid_formation_probability";
++        if (c && options.some(o => { const p = c.availability[o.id], worlds = c.supply[o.id];
++          return p != null && (!worlds || worlds.length < 2 || worlds.some(v => typeof v !== "boolean")
++            || Math.abs(worlds.filter(Boolean).length / worlds.length - p) > 1e-10); })) error = "inconsistent_formation_worlds";
+         const prepared: (V6PreparedProjection | null)[][] = [], outcomes: Indexed[] = [], keys: string[][] = [], rowErrors: string[][] = [];
+         const inputKeys = new Map<V6PreparedProjection, string>();
+-        for (const o of options) {
+-          const p = c?.availability[o.id], skip = p == null || p < .05;
++        for (const o of options) for (const branch of ["completed", "general"] as const) {
++          const p = c?.availability[o.id], skip = branch === "completed" && (p == null || p < .05) || branch === "general" && (p == null || p < .05 || p === 1);
+           const ps: (V6PreparedProjection | null)[] = [], errors: string[] = [];
+           for (let i = 0; i < n; i++) {
+-            const state = c?.samples[i]?.states[o.id];
++            const state = (branch === "completed" ? c?.samples : c?.general)?.[i]?.states[o.id];
+             if (error || skip || !state) { ps.push(null); continue; }
+             const key = v6Digest([t, state, o.preparationKey ?? null]);
+             try { if (!preparedCache.has(key)) {
+                 if (this.now() >= deadline) { ps.push(null); continue; }
+-                const at = performance.now();
+-                try { preparedCache.set(key, optional ? r.cachedPreparation?.(t, state, o) ?? null : r.prepare(t, structuredClone(state), o)); }
+-                finally { timings.preparation += performance.now() - at; }
++                preparedCache.set(key, r.prepare(t, structuredClone(state), o));
+               }
+               const input = preparedCache.get(key) ?? null;
+               if (input && (!(input.maxHp > 0) || !(input.bossHp > 0) || !Number.isFinite(input.maxHp) || !Number.isFinite(input.bossHp)
+@@ -255,8 +232,8 @@
+               else ps.push(input);
+             } catch { ps.push(null); errors.push("target_preparation_failed"); }
+           }
+-          if (skip) errors.push("formation_below_5_percent_or_unknown_not_simulated");
+-          else if (!skip && ps.some(x => !x)) errors.push(optional ? "optional_target_not_precomputed" : "unknown_opening_entry_hp_or_empirical_sample");
++          if (skip && branch === "completed") errors.push("formation_below_5_percent_or_unknown_not_simulated");
++          else if (!skip && ps.some(x => !x)) errors.push("unknown_opening_entry_hp_or_empirical_sample");
+           prepared.push(ps); outcomes.push(Array.from({ length: n })); rowErrors.push(errors);
+           // A fight is a pure function of its exact prepared input, model and absolute seed index.
+           // Neither a new question nor 100 -> 20 samples changes an already computed fight.
+@@ -265,7 +242,7 @@
+             let key = inputKeys.get(p);
+             if (!key) {
+               let input = preparedDigests.get(p);
+-              if (!input) { input = v6Digest({ input: slimInput(p.input), maxHp: p.maxHp, bossHp: p.bossHp }); preparedDigests.set(p, input); }
++              if (!input) { input = v6Digest({ input: p.input, maxHp: p.maxHp, bossHp: p.bossHp }); preparedDigests.set(p, input); }
+               key = v6Digest([input, r.character, r.ascension, r.seed, r.modelVersion]); inputKeys.set(p, key);
+             }
+             return key;
+@@ -294,8 +271,7 @@
+         // Eviction limits future reuse, never the paired results of this active batch.
+         const fresh = new Map<string, Indexed>();
+         let timeout = false;
+-        const combatAt = performance.now();
+-        if (decks.length && this.now() < deadline && !(r.currentBossFirst && t.kind !== "current")) try {
++        if (decks.length && this.now() < deadline) try {
+           const result = await this.runner.run({ base: decks[0]!, decks, stripes, orders: [null], samples: n, seed: r.seed,
+             // Finish eligible paired samples before visiting another job. Dividing by all catalog
+             // rows, including P<5% rows, can time out every fight without completing any estimate.
+@@ -313,56 +289,41 @@
+             if (retained.some(Boolean)) { fresh.set(key, retained); this.remember(this.samples, key, retained); }
+           }
+         } catch { error = "simulation_failed"; }
+-        else if (decks.length && r.currentBossFirst && t.kind !== "current") error ??= "optional_target_not_precomputed";
+         else if (decks.length) timeout = true;
+-        if (decks.length) timings[t.kind === "chain" ? "completed_relay" : "completed_single"] += performance.now() - combatAt;
+         for (const [group, groupKeys] of keys.entries()) for (const [i, key] of groupKeys.entries())
+           if (key) outcomes[group]![i] ??= fresh.get(key)?.[i] ?? this.samples.get(key)?.[i];
+         if (timeout || this.now() >= deadline) degrade(jobs.slice(ji + 1));
+-        const expectedRows = options.map((o, i) => product(rawValues(outcomes[i]!, t.kind === "chain", ids), c?.availability[o.id] ?? null));
++        const expectedRows = options.map((o, i) => expected(rawValues(outcomes[i * 2]!, t.kind === "chain", ids), rawValues(outcomes[i * 2 + 1]!, t.kind === "chain", ids),
++          c?.availability[o.id] ?? null, c?.supply[o.id] ?? null));
+         for (const [oi, o] of options.entries()) {
+-          const entry = emptyEntry(o.id, d.id, t.id), kr = rawValues(outcomes[oi]!, t.kind === "chain", ids), er = expectedRows[oi]!;
+-          const p = c?.availability[o.id] ?? null, trust = r.trust(t);
++          const entry = emptyEntry(o.id, d.id, t.id), kr = rawValues(outcomes[oi * 2]!, t.kind === "chain", ids), gr = rawValues(outcomes[oi * 2 + 1]!, t.kind === "chain", ids), er = expectedRows[oi]!;
++          const p = c?.availability[o.id] ?? null, trust = r.trust(t), formation = c?.supply[o.id] ?? null;
+           const inCombo = !!o.card && !!c?.requirements.some(req => req.any.some(x => x.kind === "card" && x.id === o.card!.id));
+           const role = !c ? "unknown" : inCombo ? "in_combo" : d.conflict.some(x => x.id === o.card?.id) ? "conflict" : "off_combo";
+-          const row: V6CombinationProjection = { combination_id: c?.id ?? null, entry, completion_source: c?.source ?? "unknown", general_source: "not_computed", scope: "combination_expectation",
+-            completed_win: fullEstimate(kr.first), general_win: null, completed_joint_win: t.kind === "chain" ? fullEstimate(kr.joint) : null,
+-            general_joint_win: null, formation_se: null,
+-            formation_n: 0, summary: c?.summary ?? null, role, role_labels: o.card ? c?.roles[o.card.id] ?? [] : [], completion_sample_ids: c ? ids : [],
++          const row: V6CombinationProjection = { combination_id: c?.id ?? null, entry, completion_source: c?.source ?? "unknown", general_source: "empirical", scope: "combination_expectation",
++            completed_win: fullEstimate(kr.first), general_win: fullEstimate(gr.first), completed_joint_win: t.kind === "chain" ? fullEstimate(kr.joint) : null,
++            general_joint_win: t.kind === "chain" ? fullEstimate(gr.joint) : null, formation_se: formation ? estimate(formation.map(Number))?.se ?? null : null,
++            formation_n: formation?.length ?? 0, summary: c?.summary ?? null, role, role_labels: o.card ? c?.roles[o.card.id] ?? [] : [], completion_sample_ids: c ? ids : [],
+             model_labels: [...new Set([...d.limits, ...completion?.labels ?? [], ...c?.labels ?? [], ...t.labels, ...trust.labels,
+-              ...prepared[oi]!.flatMap(x => x?.labels ?? []), "raw_simulation_not_calibrated", "partial_model", "future_relics_and_potions_not_predicted", "formation_times_completed", "incomplete_win_not_computed", "se_conditional_on_lookup_probability_excludes_table_and_model_error"])],
+-            unknown_reasons: [...(error ? [error] : []), ...rowErrors[oi]!,
+-              ...(c?.unknownReasons?.[o.id] ?? [])], continuous: t.kind === "chain" ? continuousBossResult(outcomes[oi]!.filter((x): x is FightSampleResult => !!x), n, true, true)! : null };
+-          entry.trust = trust.value; if (trust.details) entry.trust_details = trust.details; entry.direction_role = v6DirectionRole(d, all, o.card); entry.availability = { take: p, skip: c?.availability[r.baseline.id] ?? null };
++              ...prepared.slice(oi * 2, oi * 2 + 2).flatMap(ps => ps.flatMap(x => x?.labels ?? [])), "raw_simulation_not_calibrated", "partial_model", "future_relics_and_potions_not_predicted"])],
++            unknown_reasons: [...(error ? [error] : []), ...rowErrors.slice(oi * 2, oi * 2 + 2).flat(),
++              ...(c?.unknownReasons?.[o.id] ?? [])], continuous: t.kind === "chain" ? continuousBossResult(outcomes[oi * 2]!.filter((x): x is FightSampleResult => !!x), n, true)! : null };
++          entry.trust = trust.value; entry.direction_role = v6DirectionRole(d, all, o.card); entry.availability = { take: p, skip: c?.availability[r.baseline.id] ?? null };
+           // Below threshold reports probability only, including exactly zero; never substitutes a simulated zero win rate.
+           entry.win = p !== null && p >= .05 ? uncertainty(er, "first") : null;
+           entry.joint_win = p !== null && p >= .05 && t.kind === "chain" ? uncertainty(er, "joint") : null;
+           entry.paired_delta = entry.win ? paired(er, expectedRows[0]!, "first") : null;
+           entry.joint_paired_delta = entry.joint_win ? paired(er, expectedRows[0]!, "joint") : null;
+-          if (c) {
+-            entry.combo_id = c.id; entry.combo_source = c.source === "build_core" ? "build-core-v1" : c.source === "brain" ? "brain" : "construction-transition";
+-            entry.formula = "formation_times_completed";
+-            entry.win_complete = t.kind === "chain" ? row.completed_joint_win : row.completed_win;
+-            entry.win_incomplete = null; entry.incomplete_source = "unknown";
+-            entry.expected_win = (t.kind === "chain" ? entry.joint_win : entry.win)?.value ?? null;
+-          }
+-          if (p !== null && p < .05) {
+-            entry.expected_win_bound = { lower: 0, upper: p, reason: p === 0 ? "formation_impossible" : "low_probability_not_simulated" };
+-            row.model_labels.push(p === 0 ? "formation_impossible_known_zero" : "low_probability_not_simulated_expected_at_most_P");
+-            // An upper bound is useful known information, never an invented conditional W or point estimate.
+-            row.unknown_reasons = row.unknown_reasons.filter(x => !x.startsWith("budget_") && x !== "deadline_exhausted"
+-              && x !== "formation_below_5_percent_or_unknown_not_simulated");
+-          }
+-          if (p === null) row.unknown_reasons.push("formation_unknown");
+-          if (!entry.win && !entry.expected_win_bound) row.unknown_reasons.push("expectation_unknown"); if (t.kind === "chain" && !entry.joint_win) row.unknown_reasons.push("continuous_joint_unknown");
++          if (p === null) row.unknown_reasons.push("formation_unknown"); else if (p < .05) row.unknown_reasons.push("formation_below_5_percent_not_simulated");
++          if (!entry.win) row.unknown_reasons.push("expectation_unknown"); if (t.kind === "chain" && !entry.joint_win) row.unknown_reasons.push("continuous_joint_unknown");
+           if (timeout) row.unknown_reasons.push("simulation_budget_exceeded");
+           const ks = c?.samples.map(s => s.states[o.id]?.cards.length); if (ks?.length && ks.every(x => x !== undefined && x === ks[0])) entry.deck_count_change = ks[0]! - r.baseline.state.cards.length;
+-          const complete = outcomes[oi]!.filter((x): x is FightSampleResult => !!x);
++          const complete = outcomes[oi * 2]!.filter((x): x is FightSampleResult => !!x);
+           if (row.completed_win) {
+             entry.turns = estimate(complete.map(x => t.kind === "chain" ? x.sequence!.firstTurns : x.turns));
+             if (t.kind !== "chain") {
+-              entry.losing_boss_hp_fraction = estimate(complete.flatMap((x, i) => !x.won ? [x.enemyHpLeft / prepared[oi]![i]!.bossHp] : []).filter(x => x >= 0 && x <= 1));
+-              entry.winning_player_hp_fraction = estimate(complete.flatMap((x, i) => x.won && x.resources ? [x.resources.hp / prepared[oi]![i]!.maxHp] : []).filter(x => x >= 0 && x <= 1));
++              entry.losing_boss_hp_fraction = estimate(complete.flatMap((x, i) => !x.won ? [x.enemyHpLeft / prepared[oi * 2]![i]!.bossHp] : []).filter(x => x >= 0 && x <= 1));
++              entry.winning_player_hp_fraction = estimate(complete.flatMap((x, i) => x.won && x.resources ? [x.resources.hp / prepared[oi * 2]![i]!.maxHp] : []).filter(x => x >= 0 && x <= 1));
+             }
+             const core = new Set(c?.requirements.flatMap(req => req.any.filter(x => x.kind === "card").map(x => x.id)) ?? []);
+             entry.core_first_cast_turn = estimate(complete.flatMap(x => { if (!x.coreWindow?.complete) return [];
+@@ -375,15 +336,10 @@
+         }
+       }
+     }
+-    const aggregateAt = performance.now();
+     this.aggregate(r, table, raws, all, options, weightsValid);
+-    timings.aggregation_pairing = performance.now() - aggregateAt;
+-    if (r.phase === "act") this.remember(this.rankings, rankingKey, table.rankings);
+     table.telemetry.elapsed_ms = this.now() - started; table.telemetry.total_entries = table.combinations.length;
+-    table.telemetry.unknown_entries = table.combinations.filter(x => !x.entry.expected_win_bound && (!x.entry.win || r.targets.find(t => t.id === x.entry.target_id)?.kind === "chain" && !x.entry.joint_win)).length;
++    table.telemetry.unknown_entries = table.combinations.filter(x => !x.entry.win || r.targets.find(t => t.id === x.entry.target_id)?.kind === "chain" && !x.entry.joint_win).length;
+     table.telemetry.unknown_fraction = table.combinations.length ? table.telemetry.unknown_entries / table.combinations.length : 1;
+-    table.telemetry.pending_work = table.telemetry.timed_out > 0 || table.combinations.some(row => row.unknown_reasons.some(reason =>
+-      reason === "supply_budget_exhausted" || reason === "unknown_opening_entry_hp_or_empirical_sample" && this.now() >= deadline));
+     if (r.phase === "act" && !table.telemetry.timed_out && table.combinations.length && !table.telemetry.unknown_entries) this.remember(this.acts, actKey, table);
+     return table;
+   }
+@@ -395,17 +351,11 @@
+       const field = t.kind === "chain" ? "joint_win" : "win";
+       const leader = [...rows].filter(x => x.entry[field]).sort((a, b) => b.entry[field]!.value - a.entry[field]!.value || String(a.combination_id).localeCompare(String(b.combination_id)))[0];
+       const entry = leader ? structuredClone(leader.entry) : emptyEntry(o.id, d.id, t.id);
+-      // Pending competitors must be explicit, but must not erase a completed target.
+-      // This is the maximum of the computed subset, not a claim about its unseen competitors.
+-      const evaluated = new Set(rows.filter(x => x.combination_id && (x.entry[field]
+-        || x.entry.availability.take !== null && x.entry.availability.take < .05)).map(x => x.combination_id)).size;
+-      const catalog = Math.max(1, d.combos.length + Number(!!r.idealOverrides?.[d.id]?.length),
+-        new Set(rows.map(x => x.combination_id).filter(Boolean)).size);
+-      const pending = catalog - evaluated;
+-      entry.combination_coverage = { selection: !leader ? "unknown" : pending ? "computed_subset_maximum" : "catalog_maximum",
+-        selected_combination_id: leader?.combination_id ?? null, evaluated_combinations: evaluated,
+-        catalog_combinations: catalog, pending_combinations: pending };
+-      if (leader) best.set(key(o.id, d.id, t.id), leader);
++      // Below-threshold combinations are deliberately excluded; unknown eligible combinations can still beat the maximum.
++      if (leader && rows.some(x => !x.entry[field] && (x.entry.availability.take === null || x.entry.availability.take >= .05))) {
++        entry.win = null; entry.joint_win = null; entry.paired_delta = null; entry.joint_paired_delta = null; entry.win_tier = "unknown"; entry.delta_tier = "unknown";
++      }
++      else if (leader) best.set(key(o.id, d.id, t.id), leader);
+       table.entries.push(entry);
+     }
+     for (const e of table.entries) {
+@@ -423,18 +373,24 @@
+         if (!used.length) return null; const ids = used[0]!.v.ids;
+         if (used.some(x => x.v.ids.some((id, i) => id !== ids[i]))) return null;
+         const f = (field: "first" | "joint") => ids.map((_, i) => used.some(x => x.v[field][i] === null) ? null : used.reduce((sum, x) => sum + x.w * x.v[field][i]!, 0));
+-        return { ids, first: f("first"), joint: f("joint") };
++        return { ids, first: f("first"), joint: f("joint"), formation: null, effect: { first: null, joint: null } };
+       };
+       const a = weightedRaw(false), b = weightedRaw(true);
+-      const value = (field: "first" | "joint"): Estimate | null => a && fullEstimate(a[field]);
+-      const difference = (field: "first" | "joint"): Delta | null => a && b ? paired(a, b, field) : null;
++      // Supply worlds are shared across directions: sum centered formation effects before computing their SE.
++      const supplySe = (field: "first" | "joint", difference: boolean): number | null => {
++        if (!a || difference && !b) return null;
++        const contributions = selected.filter(x => x.weight > 0).flatMap(x => [{ w: x.weight, raw: raw.get(x.row!)! }, ...(difference ? [{ w: -x.weight, raw: raw.get(x.baseline!)! }] : [])]);
++        const n = contributions[0]?.raw.formation?.length; if (!n || contributions.some(x => x.raw.formation?.length !== n)) return null;
++        const effects = contributions.map(x => { const p = x.raw.formation!.filter(Boolean).length / n; return { ...x, p }; });
++        if (effects.some(x => x.p > 0 && x.p < 1 && x.raw.effect[field] === null)) return null;
++        return estimate(Array.from({ length: n }, (_, i) => effects.reduce((sum, x) => sum + x.w * (Number(x.raw.formation![i]) - x.p) * (x.raw.effect[field] ?? 0), 0)))?.se ?? null;
++      };
++      const value = (field: "first" | "joint"): Estimate | null => { const e = a && fullEstimate(a[field]), se = supplySe(field, false); return e && se !== null ? { ...e, se: Math.hypot(e.se, se) } : null; };
++      const difference = (field: "first" | "joint"): Delta | null => { const e = a && b && paired(a, b, field), se = supplySe(field, true); return e && se !== null ? { ...e, se: Math.hypot(e.se, se) } : null; };
+       const row: V6WeightedProjection = { option_id: o.id, target_id: t.id, win: value("first"), joint_win: t.kind === "chain" ? value("joint") : null,
+         paired_delta: difference("first"), joint_paired_delta: t.kind === "chain" ? difference("joint") : null, known_weight: knownWeight,
+         known_weighted_value: known.reduce((sum, x) => sum + x.weight * x.row!.entry[t.kind === "chain" ? "joint_win" : "win"]!.value, 0),
+-        labels: ["max_combination_selection_descriptive_not_unbiased",
+-          ...(table.entries.some(e => e.option_id === o.id && e.target_id === t.id && e.combination_coverage?.selection === "computed_subset_maximum")
+-            ? ["computed_subset_maximum_pending_competitors"] : []),
+-          ...(!weightsValid ? ["invalid_or_incomplete_brain_weights"] : []), ...(knownWeight < .99 ? ["missing_direction_weight_not_renormalized"] : [])] };
++        labels: ["max_combination_selection_descriptive_not_unbiased", ...(!weightsValid ? ["invalid_or_incomplete_brain_weights"] : []), ...(knownWeight < .99 ? ["missing_direction_weight_not_renormalized"] : [])] };
+       table.weighted.push(row);
+       for (const e of table.entries.filter(e => e.option_id === o.id && e.target_id === t.id)) {
+         if (t.kind === "current") e.weighted_current_boss_delta = row.paired_delta; if (t.kind === "chain") e.weighted_joint_delta = row.joint_paired_delta;
+@@ -474,7 +430,7 @@
+           targets: deltas, joint_paired_delta: complete ? pairedMixture(known.map(x => ({ weight: x.target.probability!,
+             a: raw.get(x.a!)!, b: raw.get(x.b!)! }))) : null,
+           known_mass: known.reduce((sum, x) => sum + x.target.probability!, 0),
+-          labels: ["direction_minus_highest_brain_probability_direction", "same_combat_seeds_lookup_probability_fixed",
++          labels: ["direction_minus_highest_brain_probability_direction", "same_combat_seeds_and_supply_worlds",
+             "max_combination_selection_descriptive_not_unbiased", "encounter_frequency_estimation_error_not_included",
+             ...(!reference ? ["invalid_or_incomplete_brain_weights"] : []),
+             ...(!complete ? ["missing_target_mass_not_renormalized"] : [])] });
+@@ -488,13 +444,11 @@
+             combination_id: x.combination_id!, paired_delta: paired(raw.get(row)!, raw.get(x)!, "first"), joint_paired_delta: paired(raw.get(row)!, raw.get(x)!, "joint") })) });
+       }
+       for (const d of all) {
+-        const combos = [...new Set([...d.combos.map(c => c.id), ...table.combinations.filter(x => x.entry.direction_id === d.id).map(x => x.combination_id).filter((x): x is string => !!x)])];
++        const combos = [...new Set(table.combinations.filter(x => x.entry.direction_id === d.id).map(x => x.combination_id).filter((x): x is string => !!x))];
+         const score = (id: string) => { const rows = table.combinations.filter(x => x.entry.direction_id === d.id && x.combination_id === id && x.entry.option_id === r.baseline.id);
+           const chain = rows.filter(x => r.targets.find(t => t.id === x.entry.target_id)?.kind === "chain"), selected = chain.length ? chain : rows;
+-          const known = selected.filter(x => chain.length ? x.entry.joint_win : x.entry.win);
+-          if (!known.length) return -Infinity;
+-          // Rank only observed target values; missing candidate mass is never renormalized.
+-          return known.reduce((sum, x) => sum + (chain.length ? x.entry.joint_win! : x.entry.win!).value * (r.targets.find(t => t.id === x.entry.target_id)?.probability ?? 0), 0); };
++          if (selected.some(x => !(chain.length ? x.entry.joint_win : x.entry.win))) return -Infinity;
++          return selected.reduce((sum, x) => sum + (chain.length ? x.entry.joint_win! : x.entry.win!).value * (r.targets.find(t => t.id === x.entry.target_id)?.probability ?? 0), 0); };
+         table.rankings[d.id] = combos.sort((a, b) => score(b) - score(a) || a.localeCompare(b));
+       }
+     }
+--- a/agent/src/sim/v6-request-factory.ts
++++ b/agent/src/sim/v6-request-factory.ts
+@@ -11,14 +11,15 @@
+ import type { BuildCore } from "../v6/build-core.js";
+ import type { V6Config } from "../v6/config.js";
+ import type { Character } from "../v6/formats.js";
+-import { BOSS_KEYS, type BossTrustData } from "./boss-trust.js";
+-import { bossKey, type SyntheticStartOptions } from "./boss-start.js";
++import type { BossTrustData } from "./boss-trust.js";
++import { bossKeyOf } from "./boss-lines.js";
++import type { SyntheticStartOptions } from "./boss-start.js";
+ import { v6Digest, v6Directions, type V6ProjectionOption } from "./v6-completion.js";
+ import type { V6HistoryLoad } from "./v6-history-pack.js";
+ import type { V6PreparedProjection, V6ProjectionRequest } from "./v6-projection.js";
+ import { projectV6RouteEntries, type V6RouteInput, type V6RouteEntryTable } from "./v6-route-entry.js";
+ import { v6ProjectionStart } from "./v6-start.js";
+-import { v6FormationTableSource, type V6FormationTable } from "./v6-formation-table.js";
++import { v6SupplySource } from "./v6-supply.js";
+ import { v6ProjectionTargets, v6TargetTrust, type V6TargetContext } from "./v6-targets.js";
+ 
+ export type V6ProjectionChange = Exclude<BuildAction, { kind: "relic" }> | {
+@@ -95,9 +96,8 @@
+     const metric = pack.data.combo_metrics.find(m => m.id === combo.id); if (metric) combo.metrics = structuredClone(metric.metrics);
+   }
+   // One run-start factory owns its frozen supply cache across act, idle and pick requests.
+-  const supplies = new Map<string, ReturnType<typeof v6FormationTableSource>>();
++  const supplies = new Map<string, ReturnType<typeof v6SupplySource>>();
+   const openings = new Map<string, V6PreparedProjection | null>();
+-  const directionCache = new Map<number, ReturnType<typeof v6Directions>>();
+   return { create(supplied) { try {
+     const s = { ...supplied, state: parseGameState(structuredClone(supplied.state.raw)) }, run = asRecord(s.state.run?.raw);
+     const ascension = run["ascension"], floor = run["floor"], hp = run["current_hp"], maxHp = run["max_hp"], gold = run["gold"];
+@@ -117,20 +117,18 @@
+     const build: BuildState = { cards: cards.map(c => ({ id: str(c["card_id"]), upgraded: c["upgraded"] === true })),
+       relics: relics.map(r => str(r["relic_id"])), hp: hp as number, maxHp: maxHp as number, gold: gold as number,
+       floor: floor as number, cap: deckBudget(s.state)?.maximum ?? null };
+-    let directions = directionCache.get(ascension as number);
+-    if (!directions) { directions = v6Directions(character, ascension as number, templates, support, cores); directionCache.set(ascension as number, directions); }
++    const directions = v6Directions(character, ascension as number, templates, support, cores);
+     const prior = new Set(pack.data.coverage.filter(r => r.run_id !== s.runId && r.ended < s.asOf).map(r => r.run_id));
+     const observations = pack.data.observations.filter(o => prior.has(o.run_id));
+     const targetBase: V6TargetContext = { character, ascension: ascension as number, act, floor: floor as number,
+       visible: structuredClone(s.visibleBosses ?? []), observations, excludeRun: s.runId, doubleBoss };
+     if (!targetBase.visible.some(v => v.act === act) && str(run["boss_id"])) {
+-      const boss = bossKey(str(run["boss_id"])), routeFloor = s.route?.steps.find(t => t.act === act && t.type === "Boss")?.floor;
++      const boss = bossKeyOf([str(run["boss_id"])]), routeFloor = s.route?.steps.find(t => t.act === act && t.type === "Boss")?.floor;
+       const floors = [...new Set(observations.filter(o => o.act === act && o.ascension === ascension
+         && (!doubleBoss || o.floor !== doubleBoss.secondFloor)).map(o => o.floor))];
+       const bossFloor = routeFloor ?? (doubleBoss?.character === character && doubleBoss.ascension === ascension && doubleBoss.act === act
+         ? doubleBoss.firstFloor : floors.length === 1 ? floors[0] : undefined);
+-      if ((BOSS_KEYS as readonly string[]).includes(boss) && bossFloor !== undefined)
+-        targetBase.visible = [...targetBase.visible, { act, floor: bossFloor, boss }];
++      if (boss && bossFloor !== undefined) targetBase.visible = [...targetBase.visible, { act, floor: bossFloor, boss }];
+     }
+     const targets = v6ProjectionTargets(targetBase), resources = new Map<string, { raw: GameState["raw"]; context: V6TargetContext; routeHp: number | null }>();
+     const options: V6ProjectionOption[] = [], rejected_options: { id: string; reason: string }[] = [];
+@@ -158,23 +156,23 @@
+       // Absent checkpoints (including an empty route) use own historical entry HP.
+       // Explicit null entries from an unmodelled/dead route and healing still remain unknown.
+       const routeHp = s.currentRouteSignature && state.hp === build.hp ? s.currentRouteHp ?? null : null;
+-      option.preparationKey = v6Digest([raw["run"], routeEntries, routeHp, s.currentRouteSignature]);
++      option.preparationKey = v6Digest([raw, routeEntries, routeHp, s.currentRouteSignature]);
+       resources.set(option.id, { raw, context: { ...targetBase, ...(routeEntries ? { routeEntries } : {}) }, routeHp }); options.push(option);
+     }
+     const baseline = options.shift()!;
+     const historySignature = v6Digest([pack.content_sha256, s.asOf, s.runId]);
+     const supplyKey = `${historySignature}:${ascension}`;
+     let supply = supplies.get(supplyKey);
+-    if (!supply) { supply = v6FormationTableSource({ character, ascension: ascension as number,
+-      table: (pack.data as typeof pack.data & { appearance?: V6FormationTable }).appearance,
+-      excludeRun: s.runId, asOf: s.asOf, signature: historySignature });
++    if (!supply) { supply = v6SupplySource({ character, ascension: ascension as number,
++      opportunities: { ...pack.data.opportunities, rows: pack.data.opportunities.rows.filter(o => prior.has(o.run)) },
++      histories: pack.data.histories.filter(h => prior.has(h.run)), excludeRun: s.runId, asOf: s.asOf, signature: historySignature, draws: 200 });
+       if (supplies.size >= 4) supplies.delete(supplies.keys().next().value!); supplies.set(supplyKey, supply);
+     }
+     const completionSources = [supply];
+     const request: V6ProjectionRequest = { config: structuredClone(config), phase: s.phase, character, ascension: ascension as number, act,
+       baseline, options, directions, weights: structuredClone(s.weights), targets, completionSources, seed: s.seed, modelVersion,
+-      contextDigest: v6Digest({ resources: run, history: [pack.content_sha256, pack.generated_at], asOf: s.asOf, run: s.runId,
+-        directions: directions.map(d => [d.id, d.signature]), doubleBoss, trust, targets, route: s.route?.signature, options: [baseline, ...options], ideal: s.idealOverrides,
++      contextDigest: v6Digest({ raw: s.state.raw, history: [pack.content_sha256, pack.generated_at], asOf: s.asOf, run: s.runId,
++        directions, doubleBoss, trust, route: s.route?.signature, options: [baseline, ...options], ideal: s.idealOverrides,
+         appeared: s.appearedCards, rankings: s.rankings, weights: s.weights, config, seed: s.seed, modelVersion }),
+       ...(s.idealOverrides ? { idealOverrides: structuredClone(s.idealOverrides) } : {}),
+       ...(s.appearedCards ? { appearedCards: [...s.appearedCards] } : {}), ...(s.rankings ? { rankings: structuredClone(s.rankings) } : {}),
+@@ -187,10 +185,6 @@
+           currentRouteHp: resource.routeHp, doubleBoss, models }, target, completed);
+         if (openings.size >= 2048) openings.delete(openings.keys().next().value!);
+         openings.set(key, opening); return opening;
+-      }, cachedPreparation(target, completed, option = baseline) {
+-        const resource = resources.get(option.id);
+-        if (!resource) return null;
+-        return openings.get(v6Digest([option.preparationKey, target, completed])) ?? null;
+       }, trust: target => v6TargetTrust(character, ascension as number, target, trust) };
+     return { status: "ready", request, rejected_options, labels: [...pack.data.labels,
+       ...(!s.route && !s.currentRouteSignature ? ["current_route_hp_unknown"] : []),
+--- a/agent/src/sim/v6-supply.ts
++++ b/agent/src/sim/v6-supply.ts
+@@ -148,7 +148,6 @@
+     if (context.phase === "pick") { const rank = context.ranking ?? []; combos.sort((a, b) => {
+       const ia = rank.indexOf(a.id), ib = rank.indexOf(b.id); return (ia < 0 ? Infinity : ia) - (ib < 0 ? Infinity : ib);
+     }); if (!rank.length) labels.push("act_ranking_unavailable_stable_catalog_order"); combos = combos.slice(0, 4); }
+-    if (context.combinationIds) combos = combos.filter(c => context.combinationIds!.includes(c.id));
+     const combinations: V6CompletionCombination[] = [];
+     for (const combo of combos) {
+       const wanted = new Set(combo.requirements.flatMap(r => r.any.filter(c => c.kind === "card").map(c => c.id)));
+--- a/agent/src/sim/v6-table-copy.ts
++++ /dev/null
+@@ -1,7 +0,0 @@
+-/** Mutable numeric results are copied; immutable frozen audit metrics retain identity. */
+-import type { V6ProjectionTable } from "./v6-projection.js";
+-export function copyV6Table(table: V6ProjectionTable): V6ProjectionTable {
+-  const copy: V6ProjectionTable = structuredClone({ ...table, combinations: table.combinations.map(r => ({ ...r, summary: null })) });
+-  for (const [i, row] of copy.combinations.entries()) row.summary = table.combinations[i]!.summary;
+-  return copy;
+-}
+--- a/agent/src/sim/v6-targets.ts
++++ b/agent/src/sim/v6-targets.ts
+@@ -36,7 +36,7 @@
+     const visible = context.visible.find(v => v.act === act);
+     const at = rows.filter(o => o.act === act && o.floor >= context.floor && (!model || o.floor !== model.secondFloor));
+     const floor = visible?.floor ?? (at.length && at.every(o => o.floor === at[0]!.floor) ? at[0]!.floor : null);
+-    const bosses = visible ? [visible.boss] : act === context.act ? [] : [...new Set(at.filter(o => o.floor === floor).map(o => o.boss))].sort();
++    const bosses = visible ? [visible.boss] : [...new Set(at.filter(o => o.floor === floor).map(o => o.boss))].sort();
+     const kind = act === context.act ? "current" : "future";
+     if (!bosses.length || floor === null) {
+       targets.push({ id: `act${act}:unknown`, boss: "unknown", act, floor: floor ?? -1, kind, probability: null,
+@@ -104,7 +104,7 @@
+ }
+ /** Preserve the file's reason verbatim. A low-trust reason alone does not establish bias direction. */
+ export function v6TargetTrust(character: Character, ascension: number, target: V6ProjectionTarget, data: BossTrustData | null): {
+-  value: ProjectionEntry["trust"]; labels: string[]; details?: ProjectionEntry["trust_details"];
++  value: ProjectionEntry["trust"]; labels: string[];
+ } {
+   if (!data || data.character !== character) return { value: "unknown", labels: ["missing_own_character_boss_trust"] };
+   const reasons = [data.ascension_low?.b3?.[String(ascension)], data.stage_low?.b3?.[String(target.floor)]];
+@@ -120,7 +120,7 @@
+   if (target.kind === "chain") labels.push("continuous_calibration_unknown", "partial_continuation_model");
+   // Single-fight validation never certifies a continuous sequence.
+   let value: ProjectionEntry["trust"] = labels.length ? "unknown" : "trusted";
+-  const metrics = (data as BossTrustData & { bosses?: Record<string, { pre?: { n?: number; brier?: number; mean_pred?: number; actual_win?: number } }> }).bosses?.[target.boss]?.pre;
++  const metrics = (data as BossTrustData & { bosses?: Record<string, { pre?: { n?: number; mean_pred?: number; actual_win?: number } }> }).bosses?.[target.boss]?.pre;
+   if (target.kind !== "chain" && labels.length && !target.unknown && !reasons[0] && !reasons[1]
+     && labels.length === 1 && data.low_confidence_b3[target.boss] && metrics && (metrics.n ?? 0) >= data.criteria.min_fights
+     && Number.isFinite(metrics.mean_pred) && Number.isFinite(metrics.actual_win)) {
+@@ -128,10 +128,5 @@
+     value = gap > 0 ? "low_optimistic" : gap < 0 ? "low_pessimistic" : "unknown";
+     labels.push("bias_sign_from_own_pre_fight_validation_mean");
+   }
+-  return { value, labels, details: {
+-    n: Number.isSafeInteger(metrics?.n) ? metrics!.n! : null,
+-    brier: Number.isFinite(metrics?.brier) ? metrics!.brier! : null,
+-    bias: Number.isFinite(metrics?.mean_pred) && Number.isFinite(metrics?.actual_win) ? metrics!.mean_pred! - metrics!.actual_win! : null,
+-    passed: target.kind === "chain" || target.unknown ? null : value === "trusted",
+-  } };
++  return { value, labels };
+ }
+--- a/agent/src/v6/formats.ts
++++ b/agent/src/v6/formats.ts
+@@ -61,8 +61,8 @@
+ function boundedMetricSnapshot(value: unknown): boolean {
+   let nodes = 0;
+   const walk = (v: unknown, depth: number): boolean => {
+-    // Published pooled history snapshots reach 69,372 nodes; retain them for audit.
+-    if (++nodes > 100000 || depth > 16) return false;
++    // R2's pooled 17-combination snapshots reach 21,434 nodes; retain them for audit.
++    if (++nodes > 50000 || depth > 16) return false;
+     if (v === null || typeof v === "boolean") return true;
+     if (typeof v === "number") return Number.isFinite(v);
+     if (typeof v === "string") return v.length <= 4000;
+@@ -89,41 +89,18 @@
+   combo_id: optional(id), combo_source: optional(enumeration("build-core-v1", "construction-transition", "brain")),
+   win_complete: optional(nullable(estimate)), win_incomplete: optional(nullable(estimate)),
+   incomplete_source: optional(enumeration("empirical", "unknown")), expected_win: optional(nullable(probability)),
+-  formula: optional(literal("formation_times_completed")),
+-  expected_win_bound: optional(object({ lower: probability, upper: probability,
+-    reason: enumeration("low_probability_not_simulated", "formation_impossible") })),
+-  trust_details: optional(object({ n: nullable(count), brier: nullable(number(0)), bias: nullable(number(-1, 1)), passed: nullable(boolean) })),
+   direction_value: optional(nullable(probability)), combo_metrics: optional(nullable(snapshot)),
+-  // A completed target remains readable while other combinations/targets are pending.
+-  combination_coverage: optional(object({ selection: enumeration("catalog_maximum", "computed_subset_maximum", "unknown"),
+-    selected_combination_id: nullable(id), evaluated_combinations: number(0, 1000, true),
+-    catalog_combinations: number(1, 1000, true), pending_combinations: number(0, 1000, true) })),
+ });
+ export const projectionEntrySchema = projectionSchema();
+ export type ProjectionEntry = Infer<typeof projectionEntrySchema>;
+ const projectionChecks = (entry: ProjectionEntry, e: string[]): void => {
+   if (entry.win === null && entry.win_tier !== "unknown") e.push("win_tier: missing estimate must remain unknown");
+   if (entry.paired_delta === null && entry.delta_tier !== "unknown") e.push("delta_tier: missing paired estimate must remain unknown");
+-  if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.expected_win_bound, entry.combo_metrics, entry.formula].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
++  if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
+   if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
+   if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
+   const p = entry.availability.take;
+-  if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (!entry.formula && p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
+-  if (entry.formula) {
+-    if (entry.win_incomplete != null) e.push("win_incomplete: omitted by formation_times_completed");
+-    if (entry.expected_win != null && p !== null && entry.win_complete != null
+-      && Math.abs(entry.expected_win - p * entry.win_complete.value) > 1e-10) e.push("expected_win: must equal P times completed win");
+-  }
+-  const bound = entry.expected_win_bound;
+-  if (bound && (p === null || p >= .05 || bound.lower !== 0 || bound.upper !== p || entry.expected_win != null
+-    || (bound.reason === "formation_impossible") !== (p === 0))) e.push("expected_win_bound: exact low-P interval required, never a point estimate");
+-  const coverage = entry.combination_coverage;
+-  if (coverage) {
+-    if (coverage.evaluated_combinations + coverage.pending_combinations !== coverage.catalog_combinations) e.push("combination_coverage: counts must reconcile");
+-    if ((coverage.selection === "unknown") !== (coverage.selected_combination_id === null)) e.push("combination_coverage: selected combination must match selection");
+-    if (coverage.selection === "catalog_maximum" && coverage.pending_combinations !== 0
+-      || coverage.selection === "computed_subset_maximum" && coverage.pending_combinations === 0) e.push("combination_coverage: pending competitors must match selection");
+-  }
++  if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
+ };
+ const checkedProjectionSchema = refine(projectionEntrySchema, projectionChecks);
+ export function validateProjectionEntry(v: unknown): Result<ProjectionEntry> {
+--- a/agent/src/v6/log.ts
++++ b/agent/src/v6/log.ts
+@@ -4,7 +4,7 @@
+ import { PROJECT_ROOT } from "../core/paths.js";
+ import { appendJsonLine } from "../core/util/jsonl.js";
+ import { array, enumeration, id, literal, nullable, number, object, optional, record, text, validate, type Infer } from "./schema.js";
+-import { characterSchema, validateProjectionEntries, projectionEntrySchema } from "./formats.js";
++import { characterSchema, validateProjectionEntry, projectionEntrySchema } from "./formats.js";
+ import type { V6Config } from "./config.js";
+ import { asRecord } from "../core/util/json.js";
+ 
+@@ -32,31 +32,31 @@
+     // Deduplicate large opaque snapshots instead of repeating megabytes for every option/target.
+     const audits = new Map<string, { json: string; file: string; sha256: string; direction_id: string; combo_id: string }>();
+     const snapshots = new WeakMap<object, { json: string; sha256: string }>();
+-
++    const verified = new Set<string>();
+     const raw = asRecord(row);
+-    // Validate shared metric objects once, even when invalid. Never hash/stringify
+-    // the same rejected snapshot again for every option and target.
+-    if (!Array.isArray(raw.entries) || validateProjectionEntries(raw.entries).some(r => !r.ok))
+-      return { written: false, reason: "invalid entries" };
+-    const entries = raw.entries.map(entry => {
++    const entries = Array.isArray(raw.entries) ? raw.entries.map(entry => {
+       const e = asRecord(entry);
+       if (e.combo_metrics == null) return entry;
+       const cached = typeof e.combo_metrics === "object" ? snapshots.get(e.combo_metrics) : undefined;
+       const json = cached?.json ?? JSON.stringify(e.combo_metrics);
+       if (json.length <= 32_000) return entry;
+       const sha256 = cached?.sha256 ?? createHash("sha256").update(json).digest("hex");
+-      if (!cached && unsafe(json)) return entry;
++      if (!verified.has(sha256)) {
++        if (!validateProjectionEntry(entry).ok || unsafe(json)) return entry;
++        verified.add(sha256);
++      }
+       if (typeof e.combo_metrics === "object") snapshots.set(e.combo_metrics, { json, sha256 });
+       const file = `v6-metrics/${sha256}.json`;
+       audits.set(`${e.direction_id}:${e.combo_id}:${sha256}`, { json, file, sha256, direction_id: String(e.direction_id), combo_id: String(e.combo_id) });
+       const { combo_metrics: _snapshot, ...numeric } = e;
+       return numeric;
+-    });
++    }) : raw.entries;
+     const parsed = validate(v6LogSchema, audits.size ? { ...raw, entries,
+       metric_audits: [...audits.values()].map(({ json: _json, ...ref }) => ref) } : row);
+     if (!parsed.ok) return { written: false, reason: "invalid row" };
+     const value = parsed.value;
+-    if (value.mode !== this.config.mode || !Number.isFinite(Date.parse(value.ts)) || value.unknown.count > value.unknown.total) return { written: false, reason: "inconsistent row" };
++    if (value.mode !== this.config.mode || !Number.isFinite(Date.parse(value.ts)) || value.unknown.count > value.unknown.total
++      || value.entries.some(e => !validateProjectionEntry(e).ok)) return { written: false, reason: "inconsistent row" };
+     try {
+       const json = JSON.stringify(value);
+       if (json.length > 2 * 1024 * 1024 || unsafe(json)) return { written: false, reason: "unsafe or oversized row" };
+--- a/agent/src/v6/target-values.ts
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/** Target-local knownness. Optional later targets never erase current-boss information. */
+-import type { V6CombinationProjection, V6ProjectionTable } from "../sim/v6-projection.js";
+-import type { JsonValue } from "../core/util/json.js";
+-const finiteProbability = (p: unknown): p is number => typeof p === "number" && Number.isFinite(p) && p >= 0 && p <= 1;
+-export function knownCombination(row: V6CombinationProjection): boolean {
+-  const e = row.entry, p = e.availability.take, w = e.win_complete, bound = e.expected_win_bound;
+-  if (!row.combination_id || !finiteProbability(p)) return false;
+-  if (bound) return p < .05 && bound.lower === 0 && bound.upper === p && e.expected_win == null
+-    && bound.reason === (p === 0 ? "formation_impossible" : "low_probability_not_simulated");
+-  return finiteProbability(e.expected_win) && !!w && finiteProbability(w.value) && Number.isInteger(w.n) && w.n >= 2
+-    && Number.isFinite(w.se) && w.se >= 0 && Math.abs(e.expected_win - p * w.value) < 1e-9;
+-}
+-export function bestTargetCombination(table: V6ProjectionTable, option: string, target: string): V6CombinationProjection | undefined {
+-  const rows = table.combinations.filter(r => r.entry.option_id === option && r.entry.target_id === target && knownCombination(r));
+-  // Prefer measured expectations. Bounds remain separate and explicitly retain their unmeasured W.
+-  return rows.sort((a, b) => Number(b.entry.expected_win != null) - Number(a.entry.expected_win != null)
+-    || (b.entry.expected_win ?? b.entry.expected_win_bound!.upper) - (a.entry.expected_win ?? a.entry.expected_win_bound!.upper)
+-    || String(a.combination_id).localeCompare(String(b.combination_id)))[0];
+-}
+-export function currentBossKnown(table: V6ProjectionTable | null | undefined, option: string): boolean {
+-  if (!table?.enabled) return false;
+-  const targets = table.targets.filter(t => t.kind === "current");
+-  return targets.length === 1 && !targets[0]!.unknown && targets[0]!.probability === 1
+-    && !!bestTargetCombination(table, option, targets[0]!.id);
+-}
+-/** Small mandatory per-option current target, plus optional known/unknown later targets. */
+-export function targetValueSummaries(table: V6ProjectionTable | undefined, option: string): JsonValue[] {
+-  if (!table) return [];
+-  return [...table.targets].sort((a, b) => Number(b.kind === "current") - Number(a.kind === "current"))
+-    .map(t => {
+-      const r = bestTargetCombination(table, option, t.id), e = r?.entry;
+-      return { target: t.id, kind: t.kind, combo: r?.combination_id ?? null,
+-        P: e?.availability.take ?? null, W: e?.win_complete?.value ?? null, n: e?.win_complete?.n ?? 0,
+-        ...(e ? { P_baseline: e.availability.skip, delta_P: e.availability.take != null && e.availability.skip != null ? e.availability.take - e.availability.skip : null } : {}),
+-        PW: e?.expected_win ?? null, ...(e?.expected_win_bound ? { PW_bound: [0, e.expected_win_bound.upper], reason: e.expected_win_bound.reason } : {}),
+-        trust: e?.trust ?? "unknown", ...(e?.trust_details ? { validation: e.trust_details } : {}),
+-        selection: "computed_subset_best", ...(r ? {} : { reason: t.unknown ?? "target_value_unavailable" }) };
+-    });
+-}
+--- a/agent/src/hand/screens/v6-room-projection.ts
++++ b/agent/src/hand/screens/v6-room-projection.ts
+@@ -44,7 +44,7 @@
+     const request = { ...result.request, config: { ...result.request.config, budgets: {
+       ...result.request.config.budgets, pick_ms: milliseconds } } };
+     const table = await evaluate(request, { budget_ms: milliseconds, signal: context.signal });
+-    if (context.signal.aborted) return null;
++    if (context.signal.aborted || remaining() <= 0) return null;
+     return { table, reason: table ? "ready" : "projection_evaluation_unavailable", labels: result.labels, rejected_options: [...local, ...result.rejected_options] };
+   };
+ }
