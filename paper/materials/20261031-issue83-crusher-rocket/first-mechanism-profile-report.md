@@ -1,4 +1,5 @@
 # CRUSHER+ROCKET 首版机制、五局诊断与档案
+> 校准口径更正：本报告原“正式107 tune”表述错误。已批方案要求只原tune首试拟合，主准入恢复70首试；107训练只作诊断敏感性附表，原红及错误说明保留，未发布或开关。当前正式文件名带 approved-first70 / approved-a10-first；原段落保留为历史。
 
 先交原20:30 ETA的首版，保持候选与实际验收分开。三条reflex-entry-v1候选及对应vocab写在candidate-reflex.json、candidate-vocab.json，仅材料目录，不改角色知识或生产。当前均为0.3低置信机制提醒，不含任何虚构胜率/HP增益；没有真实配对/发布/开启。
 
