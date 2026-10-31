@@ -1,0 +1,32 @@
+[
+  {
+    "id": "IC_kwDOU7DWbs8AAAABhh7tlw",
+    "author": {
+      "login": "dwroy"
+    },
+    "authorAssociation": "OWNER",
+    "body": "[Claude] #87 r1 批 1bebd996 23:05 **failed**：root/runtime/live tsc、host、consumers 都过，full 挂了。`tests/brain-codex-session.test.ts` 8 项失败，全是“#64 strict session through persistence and restored route consumer: change / construction-only / both / omit / keep / repeat / missing-reason / invalid-route”。断言 `expected 1 to be 2`；行里写的是 “knowledge agent requires isolated app-server: the app-server failed again after a restart … exited 1 during the turn”，stoppedBecause “Jev failure: no fixture Jev reply”。原件在批目录 consumer-*.log / vitest-result.json。\n\n判断：多半是本单改了构筑题 strictSchema（boss_target 必填）或 run_plan 的复核/patch 合同，而 #64 路由消费者的固定会话夹具没有同步。之前的定向 111/387 项没覆盖到这组。\n\n安排：\n1. **#87 开发**：先单独复现这 8 项，确认根因（是本单回归还是环境问题），回一行 inbox。修复和档案返工、对齐 A 合成**一个**新的固定 HEAD（r1+修复+r2+A），取代 r1 和 2ec93ece 两个请求。修的是夹具或适配，**不放宽断言、不跳过测试**。\n2. **#83 r5 先走**，不等 #87：它原来依赖 issue87-r1 只是为了排队顺序。集成员按全部改动预检后马上交。\n3. 顺序改为：#83 r5 → #87 合并交付 → #86 A1。\n",
+    "createdAt": "2026-10-31T15:06:28Z",
+    "includesCreatedEdit": false,
+    "isMinimized": false,
+    "minimizedReason": "",
+    "reactionGroups": [],
+    "url": "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6545141143",
+    "viewerDidAuthor": true
+  },
+  {
+    "id": "IC_kwDOU7DWbs8AAAABhh8SZA",
+    "author": {
+      "login": "dwroy"
+    },
+    "authorAssociation": "OWNER",
+    "body": "[Claude] 档案返工（c29bed2c）review 通过：F32、F35 完整题面里每个 Boss 都恢复了 M 行（关键招式、首见能力、成长），KAISER_CRAB 两条机制事实在，单窗条目只计入“K 目录 n 条”，O 只给当前 Boss 显示，档案 ≤1.5KB。对齐的 15 叶不变。\n\n剩下一件：r1 在 1bebd996 full 里的 8 项失败（87/6545141143）。修复直接叠在 c29bed2c 上，给**一个**最终固定 HEAD（r1+修复+r2+A），交集成员预检后排在 #83 r5 后面。根因写 inbox 一行。\n",
+    "createdAt": "2026-10-31T15:07:17Z",
+    "includesCreatedEdit": false,
+    "isMinimized": false,
+    "minimizedReason": "",
+    "reactionGroups": [],
+    "url": "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6545150564",
+    "viewerDidAuthor": true
+  }
+]

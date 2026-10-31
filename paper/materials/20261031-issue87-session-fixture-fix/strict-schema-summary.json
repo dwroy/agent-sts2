@@ -1,0 +1,207 @@
+{
+  "reproduced_failures": 8,
+  "baseline": "c29bed2c2932c77985def6ec114389f1596156e9",
+  "old_initial_fixture_keys": [
+    "route",
+    "reason",
+    "run_plan"
+  ],
+  "old_reward_fixture_missing": "boss_target",
+  "strict_required_field": {
+    "type": "object",
+    "nullable": false,
+    "required": [
+      "boss_ids",
+      "gap",
+      "reason"
+    ]
+  },
+  "failure_chain": [
+    "missing answer.boss_target",
+    "fake strict checker fills missing required key with null",
+    "null fails nonnullable object type",
+    "fake app-server exits 1",
+    "isolated knowledge session retries and fails",
+    "fixture Jev reply rejects",
+    "acts 1 != 2"
+  ],
+  "observed_turns": [
+    {
+      "turn": 1,
+      "top_required": [
+        "route",
+        "reason",
+        "discard",
+        "drink",
+        "run_plan",
+        "boss_target"
+      ],
+      "run_plan_required": [
+        "archetype",
+        "want",
+        "avoid",
+        "remove",
+        "block_target",
+        "elites",
+        "rest",
+        "boss_prep",
+        "summary",
+        "construction",
+        "endgame"
+      ],
+      "context": {
+        "schema": "boss-target-context-v1",
+        "run": "ROUTE_CONTRACT_FIXTURE",
+        "floor": 0,
+        "act": 1,
+        "act_boss": "SLIME",
+        "final": [
+          null,
+          null
+        ],
+        "candidates": [
+          "KAISER_CRAB",
+          "KNOWLEDGE_DEMON",
+          "THE_INSATIABLE",
+          "AEONGLASS",
+          "QUEEN",
+          "TEST_SUBJECT",
+          "SLIME"
+        ],
+        "review_required": true
+      }
+    },
+    {
+      "turn": 2,
+      "top_required": [
+        "route",
+        "reason",
+        "discard",
+        "drink",
+        "run_plan",
+        "boss_target"
+      ],
+      "run_plan_required": [
+        "archetype",
+        "want",
+        "avoid",
+        "remove",
+        "block_target",
+        "elites",
+        "rest",
+        "boss_prep",
+        "summary",
+        "construction",
+        "endgame"
+      ],
+      "context": {
+        "schema": "boss-target-context-v1",
+        "run": "ROUTE_CONTRACT_FIXTURE",
+        "floor": 0,
+        "act": 1,
+        "act_boss": "SLIME",
+        "final": [
+          null,
+          null
+        ],
+        "candidates": [
+          "KAISER_CRAB",
+          "KNOWLEDGE_DEMON",
+          "THE_INSATIABLE",
+          "AEONGLASS",
+          "QUEEN",
+          "TEST_SUBJECT",
+          "SLIME"
+        ],
+        "review_required": true
+      }
+    },
+    {
+      "turn": 3,
+      "top_required": [
+        "choice",
+        "reason",
+        "run_plan",
+        "boss_target"
+      ],
+      "run_plan_required": [
+        "archetype",
+        "want",
+        "avoid",
+        "remove",
+        "block_target",
+        "elites",
+        "rest",
+        "boss_prep",
+        "summary",
+        "construction",
+        "endgame"
+      ],
+      "context": {
+        "schema": "boss-target-context-v1",
+        "run": "ROUTE_CONTRACT_FIXTURE",
+        "floor": 1,
+        "act": 1,
+        "act_boss": "SLIME",
+        "final": [
+          null,
+          null
+        ],
+        "candidates": [
+          "KAISER_CRAB",
+          "KNOWLEDGE_DEMON",
+          "THE_INSATIABLE",
+          "AEONGLASS",
+          "QUEEN",
+          "TEST_SUBJECT",
+          "SLIME"
+        ],
+        "review_required": true
+      }
+    },
+    {
+      "turn": 4,
+      "top_required": [
+        "choice",
+        "reason",
+        "run_plan",
+        "boss_target"
+      ],
+      "run_plan_required": [
+        "archetype",
+        "want",
+        "avoid",
+        "remove",
+        "block_target",
+        "elites",
+        "rest",
+        "boss_prep",
+        "summary",
+        "construction",
+        "endgame"
+      ],
+      "context": {
+        "schema": "boss-target-context-v1",
+        "run": "ROUTE_CONTRACT_FIXTURE",
+        "floor": 1,
+        "act": 1,
+        "act_boss": "SLIME",
+        "final": [
+          null,
+          null
+        ],
+        "candidates": [
+          "KAISER_CRAB",
+          "KNOWLEDGE_DEMON",
+          "THE_INSATIABLE",
+          "AEONGLASS",
+          "QUEEN",
+          "TEST_SUBJECT",
+          "SLIME"
+        ],
+        "review_required": true
+      }
+    }
+  ],
+  "first_plan_review": "fix also proves persisted same Boss context review_required=false on reward"
+}

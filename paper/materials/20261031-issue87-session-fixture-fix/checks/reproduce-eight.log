@@ -1,0 +1,175 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:2016181) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-codex-session.test.ts (35 tests | 8 failed | 27 skipped) 36308ms
+   × #64 strict session through persistence and restored route consumer: change 4775ms
+   × #64 strict session through persistence and restored route consumer: construction-only 4510ms
+   × #64 strict session through persistence and restored route consumer: both 4510ms
+   × #64 strict session through persistence and restored route consumer: omit 4479ms
+   × #64 strict session through persistence and restored route consumer: keep 4569ms
+   × #64 strict session through persistence and restored route consumer: repeat 4520ms
+   × #64 strict session through persistence and restored route consumer: missing-reason 4471ms
+   × #64 strict session through persistence and restored route consumer: invalid-route 4472ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: change
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4748,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-change/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4748},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: construction-only
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4501,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-construction-only/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4501},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: both
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4504,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-both/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4504},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: omit
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4473,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-omit/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4473},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: keep
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4560,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-keep/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4560},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: repeat
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4512,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-repeat/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4512},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: missing-reason
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4465,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-missing-reason/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4465},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: invalid-route
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4467,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-EYZXcV/fake-codex-session-i5TKP4/route-reason-invalid-route/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4467},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:669:128
+    667|     try {
+    668|       const firstStats = await run(2);
+    669|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    670|       const requests = fake.requests().filter(r => r.method === "turn/…
+    671|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 27 skipped (35)
+   Start at  23:07:39
+   Duration  41.05s (transform 3.89s, setup 929ms, import 3.63s, tests 36.31s, environment 0ms)
+

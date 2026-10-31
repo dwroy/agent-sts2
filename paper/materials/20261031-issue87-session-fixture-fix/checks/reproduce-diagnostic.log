@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-87-boss-target-dossier/agent
+
+(node:2025518) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-codex-session.test.ts (35 tests | 1 failed | 34 skipped) 4810ms
+   × #64 strict session through persistence and restored route consumer: change 4808ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: change
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4778,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-gIi5hR/fake-codex-session-to41OI/route-reason-change/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4778},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:670:128
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 34 skipped (35)
+   Start at  23:09:39
+   Duration  8.79s (transform 3.21s, setup 543ms, import 3.27s, tests 4.81s, environment 0ms)
+

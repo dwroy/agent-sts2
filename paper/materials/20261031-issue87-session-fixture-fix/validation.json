@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-10-31T23:15:56+08:00",
+  "before": {
+    "scope": "original eight route-consumer scenarios",
+    "failed": 8,
+    "passed": 0,
+    "baseline": "c29bed2c",
+    "log": "checks/reproduce-eight.log"
+  },
+  "after_eight": {
+    "passed": 8,
+    "selected_only": true,
+    "unselected": 27,
+    "log": "checks/fixed-eight.log"
+  },
+  "final_directed": {
+    "files": 4,
+    "tests": 69,
+    "first_passed": 68,
+    "first_failed": 1,
+    "failure": "unchanged tracked historical issue29 sparse fixture absent after branch switch",
+    "log": "checks/final-targeted.log",
+    "native_session_file_tests": 35,
+    "native_session_file_passed": 35,
+    "boss_dossier_and_report_tests": 33,
+    "boss_dossier_and_report_passed": 33
+  },
+  "restored_fixture_retest": {
+    "tests": 1,
+    "passed": 1,
+    "blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "log": "checks/import-fixture-final.log"
+  },
+  "production_tsc": "passed",
+  "scoped_tools_learner_tsc": "passed",
+  "runtime_changes_from_approved_c29": 0,
+  "method_changes_from_approved_c29": 0,
+  "previous_method_checks": "24 passed on byte-identical c29 production/declaration",
+  "full": "original r1 batch 1bebd996 failed; preserved. New combined final full is original integrator combination only. No own full run.",
+  "log_sha256": {
+    "reproduce-eight.log": "cd58227c49bec6a55e9b642b1d24f70218a538f04fae5b31a5e0019465df9cf5",
+    "reproduce-diagnostic.log": "1311b40a498077ddbdfbb493c3f36630b3eafb314999983c7cb6ed65e23f30a0",
+    "fixed-eight.log": "d4afb98b167ac9ae7a6671e6ee76652a50f9b7165b71298efcd6d763148e873d",
+    "final-targeted.log": "d310a6dd26a27293f202fdc53365ae19c276ca88216b70d09c1b4deae84935c0",
+    "import-fixture-final.log": "2c4039098e7bf0127e17893e1fec57205d0655653c02f64f9507bfa1a457a8f7",
+    "tsc-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools-tsc-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

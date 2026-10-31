@@ -636,12 +636,13 @@ for (const scenario of ["change", "construction-only", "both", "omit", "keep", "
     setKnowledgeCharacter("silent");
     const change = ["change", "both", "missing-reason", "invalid-route"].includes(scenario);
     const construction = ["construction-only", "both", "missing-reason"].includes(scenario);
-    const answer = { choice: "card0", reason: "格式选择",
+    const bossTarget = { boss_ids: [], gap: "unknown", reason: "固定格式，本步不补构筑" };
+    const answer = { choice: "card0", reason: "格式选择", boss_target: bossTarget,
       ...(scenario === "omit" || scenario === "construction-only" ? {} : { route: scenario === "keep" ? "keep" : scenario === "repeat" ? previousRoute : scenario === "invalid-route" ? "r99c0" : changedRoute }),
       ...(change && scenario !== "missing-reason" ? { route_reason: routeReason } : {}),
       ...(construction ? { run_plan: constructionPatch } : {}) };
     const fake = fakeSession(`route-reason-${scenario}`, { strictAnswers: true, turns: [
-      answering({ route: initialRoute, reason: "格式初始路线", run_plan: initialPlan }), answering(answer), answering(answer),
+      answering({ route: initialRoute, reason: "格式初始路线", run_plan: initialPlan, boss_target: bossTarget }), answering(answer), answering(answer),
     ] });
     const { engine } = sessionEngine(fake, { knowledgeAgent: true, env: { BRAIN_CODEX_ROUTE_REASON: "drop", BRAIN_CODEX_ROUTE_PATTERN: "on" } });
     const cfg = loadConfig({ BRAIN_RUN_CONFIG: JSON.stringify({ engine: "codex", effort: "high" }), BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off", BUILD_DECIDER: "deepseek" });
@@ -671,16 +672,19 @@ for (const scenario of ["change", "construction-only", "both", "omit", "keep", "
       const schema = requests[1]!.params.outputSchema;
       expect(schema).toMatchObject({ additionalProperties: false, properties: { route_reason: { type: ["string", "null"], maxLength: 60 } } });
       expect(schema.required).toContain("route_reason");
+      expect(schema.required).toContain("boss_target");
       const prompt = JSON.parse(requests[1]!.params.input[0].text);
       expect(prompt.question).toContain("route_reason");
       expect(prompt.state.route_review.plan).toContain("r1c0");
       expect(prompt.state.route_review.plan_facts).toBeDefined();
+      expect(prompt.state.facts.boss_target_context.review_required).toBe(false);
       expect(rows[1]!.answer).toMatchObject({ choice: "card0" });
       const validChange = change && !["missing-reason", "invalid-route"].includes(scenario);
       expect(requests).toHaveLength(validChange || !change ? 2 : 3);
       const records = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
       const pick = records.find(r => r.label === "reward/card");
       expect(pick.route_review.outcome).toBe(validChange ? "change" : change ? "invalid" : "keep");
+      expect(pick.deepseek.boss_target).toEqual(bossTarget);
       const routeChanges = records.filter(r => r.label === "map/route-change");
       expect(routeChanges).toHaveLength(validChange ? 1 : 0);
       if (validChange) {
