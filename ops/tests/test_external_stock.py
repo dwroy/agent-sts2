@@ -528,5 +528,85 @@ class Stock(unittest.TestCase):
             cli.prepare(args)
 
 
+class StockSource(unittest.TestCase):
+    # Source-only checks do not need the dispatch fixture's 240 durable inventory files.
+    ref = Stock.ref
+    row = Stock.row
+    source_package = Stock.source_package
+    save_config = Stock.save_config
+    freeze = Stock.freeze
+    quota = Stock.quota
+    setUp = external_fixture.External.setUp
+
+
+    def test_pinned_room_namespace_preserves_all_55_fields_and_complete_windows(self):
+        package_ref, receipt_ref, _, body, cache = self.source_package()
+        # Match the incident's 55 fields in two complete trajectories, without game knowledge.
+        for i, count in enumerate((27, 28)):
+            cache[i]['nodes'][0]['rooms'] = [dict(kind=kind,
+                id=('EVENT' if kind == 'event' else 'ENCOUNTER') + '.ACTSFROMTHEPAST-FIXED_' + str(j), turns=2)
+                for j in range(count) for kind in [('monster', 'elite', 'boss', 'event')[j % 4]]]
+            cache[i]['content_sha256'] = data.fingerprint({k: v for k, v in cache[i].items() if k != 'content_sha256'})
+        raw = gzip.compress(data.canonical(cache), mtime=0)
+        cache_ref = data.immutable(self.root, 'data/external/namespaced/runs.json.gz', raw)
+        receipt = json.loads(shared.artifact(self.root, receipt_ref)); receipt['cache_sha256'] = shared.digest(raw)
+        receipt_ref = self.ref('data/external/namespaced/receipt.json', receipt)
+        before = shared.artifact(self.root, cache_ref)
+        rows = list(data.cached_records(self.root, receipt_ref, cache_ref, body))
+        self.assertEqual(len(rows), 20)
+        self.assertEqual([r['content_sha256'] for r in rows], [r['content_sha256'] for r in cache])
+        self.assertEqual(sum(r['win'] for r in rows), sum(r['win'] for r in cache))
+        self.assertEqual(sum(data.namespaced_room(room[0], room[1]) for row in rows
+                             for point in row['timeline'] for room in point[3]), 55)
+        for row, original in zip(rows, cache):
+            self.assertEqual(row['window'], [1, len(original['nodes'])])
+            self.assertEqual([p[3] for p in row['timeline']],
+                             [[[r['kind'], r['id'], r['turns']] for r in p['rooms']] for p in original['nodes']])
+        imported = data.import_catalog(self.root, package_ref, self.manifest['contracts'],
+            'data/external/namespaced/catalog', receipt_ref=receipt_ref, cache_ref=cache_ref)
+        source = json.loads(shared.artifact(self.root, imported))
+        self.assertEqual(len(source['records']), 20)
+        self.assertEqual(source['cohorts'], body['cohorts'])
+        cfg = dict(catalog=imported, max_input_bytes=256000, context_input_bytes=128000,
+                   max_page_bytes=24000, target_records=40)
+        plan = stock.make_plan(self.root, cfg, source, source['records'])
+        manifest = json.loads(shared.artifact(self.root, plan['input_manifest']))
+        self.assertEqual((manifest['cohorts'][0]['sample_count'], manifest['cohorts'][0]['sample_denominator']), (20, 20))
+        spec = shared.artifact(self.root, plan['work_spec']).decode()
+        self.assertIn('不得去掉命名空间', spec)
+        for row in rows[:2]:
+            self.assertIn(data.record_key(row), spec)
+        self.assertEqual(stock.selected_records(self.root, manifest['stock']),
+                         sorted(rows, key=data.record_key))
+        self.assertEqual(shared.artifact(self.root, cache_ref), before)
+        # Original safe-cache byte and content pins still apply to the accepted syntax.
+        with self.assertRaises(ValueError):
+            list(data.cached_records(self.root, receipt_ref, {**cache_ref, 'sha256': '0' * 64}, body))
+
+    def test_room_namespace_exception_rejects_other_namespaces_types_and_fields(self):
+        for kind, ident in [('monster', 'ENCOUNTER.OTHER-FIXED'),
+                            ('monster', 'EVENT.ACTSFROMTHEPAST-FIXED'),
+                            ('event', 'ENCOUNTER.ACTSFROMTHEPAST-FIXED'),
+                            ('shop', 'ENCOUNTER.ACTSFROMTHEPAST-FIXED'),
+                            ('monster', 'ENCOUNTER.ACTSFROMTHEPAST-lowercase'),
+                            ('monster', 'ENCOUNTER.ACTSFROMTHEPAST-FIXED/PRIVATE'),
+                            ('monster', 'ENCOUNTER.ACTSFROMTHEPAST-FIXED.EXTRA'),
+                            ('monster', 'ENCOUNTER.ACTSFROMTHEPAST-')]:
+            with self.subTest(kind=kind, ident=ident):
+                row = self.row(0); row['timeline'][0][3] = [[kind, ident, 2]]
+                with self.assertRaisesRegex(ValueError, 'model ID'):
+                    data.validate_record(row)
+        ident = 'ENCOUNTER.ACTSFROMTHEPAST-FIXED'
+        for field in ('deck', 'relic', 'choice', 'gained', 'transform'):
+            with self.subTest(field=field):
+                row = self.row(0)
+                if field == 'deck': row['terminal_deck'] = {ident: 1}
+                elif field == 'relic': row['terminal_relics'] = [ident]
+                elif field == 'choice': row['timeline'][0][9] = [[ident, True]]
+                elif field == 'gained': row['timeline'][0][10] = [ident]
+                else: row['timeline'][0][12] = [dict(old=ident, new=None)]
+                with self.assertRaisesRegex(ValueError, 'model ID'):
+                    data.validate_record(row)
+
 if __name__ == '__main__':
     unittest.main()

@@ -60,7 +60,8 @@
     "ops.tests.test_learning_runtime",
     "ops.tests.test_fixed_producer_admission",
     "ops.tests.test_llm_handoff",
-    "ops.tests.test_learning_concurrency"
+    "ops.tests.test_learning_concurrency",
+    "ops.tests.test_public_web_question"
   ],
   "consumer_commands": [
     {
@@ -243,9 +244,22 @@
         "tests/grade-strategies-frozen.test.ts",
         "--maxWorkers=1"
       ]
+    },
+    {
+      "tree": "root",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-public-web.test.ts",
+        "tests/learner-public-web-launcher.test.ts",
+        "tests/external-stock.test.ts",
+        "--maxWorkers=1"
+      ]
     }
   ],
-  "consumer_scope": "Approved #56 c0075dfa (56/6538878220) + #85 offline regrade 8985dcafa (85/6539507824; Claude explicitly approved), normalized as one ROOT-only batch on adopted main e959bea7. Exact source deltas with two fixture conflict reconciliations retaining adopted queue/heavy isolation, production board unchanged. LIVE runtime delta empty. Preserve prior consumers0-15 and host modules, add learning concurrency host and fixed ROOT concurrency/regrade consumer16. Source tests are not this candidate full. Original six gates, unique full, strict LIVE byte gate, publication and all scientific parents retained. Actual learning configuration and current-method admission/CAS remain original ops natural-boundary work; no interruption, no claimed production knowledge delivery or outcome.",
+  "consumer_scope": "Approved #56 c0075dfa (56/6538878220) + #85 offline regrade 8985dcafa (85/6539507824; Claude explicitly approved), normalized as one ROOT-only batch on adopted main e959bea7. Exact source deltas with two fixture conflict reconciliations retaining adopted queue/heavy isolation, production board unchanged. LIVE runtime delta empty. Preserve prior consumers0-15 and host modules, add learning concurrency host and fixed ROOT concurrency/regrade consumer16. Source tests are not this candidate full. Original six gates, unique full, strict LIVE byte gate, publication and all scientific parents retained. Actual learning configuration and current-method admission/CAS remain original ops natural-boundary work; no interruption, no claimed production knowledge delivery or outcome. New explicit Claude approval 69/6540062084 and 71/6540061806 adds exact ea6d7cd3/d0579bd5 deltas to this same batch on e959bea7. Keep #56 shared learner dispatch/concurrency, #77 successor; 71 fixture child/outer60s approved source wins over adopted25s. ROOT public-web question host+consumer17 covers frozen question and namespaced-room stock; no LIVE runtime delta, no authority/capacity/data publication. All four use one candidate full.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

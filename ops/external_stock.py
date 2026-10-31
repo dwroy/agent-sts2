@@ -188,6 +188,11 @@ def make_plan(root, cfg, source, refs):
     stock = dict(schema=data.SCHEMA, parent='github-issue-71', task_type=data.TASK, lane='A',
         question='whole-run-observation-v1', records=refs, catalog=cfg['catalog'],
         input_budget_bytes=min(cfg['max_input_bytes'], cfg['context_input_bytes']), max_page_bytes=cfg['max_page_bytes'])
+    namespaced = [data.record_key(row) for row in rows if any(data.namespaced_room(room[0], room[1])
+                  for point in row['timeline'] for room in point[3])]
+    namespace_note = ('房间ID含' + data.ROOM_NAMESPACE + '命名空间的完整窗口：' + json.dumps(namespaced) + '。'
+        '这些原始ID按字节保留；无modifier筛选不能证明无mod内容。不得去掉命名空间、视同原版机制，'
+        '或把这些窗口与其他窗口混作原版适用性证据；提炼时按命名空间及具体窗口分账并保留限制。\n') if namespaced else ''
     spec = ('# 持续整局学习单元\n本单元仅按下列冻结窗口学习，不自动重学、不扩样本、不改源码。\n'
         '目标40条完整匿名轨迹，字节或可用样本不足时拆小；这是工程初值，不是统计/可信度门槛。\n'
         '按实际观察顺序追踪构筑、阶段、资源消耗与胜败差异，簇/终止幕仅作事后描述，不作因果策略。\n'
@@ -202,7 +207,7 @@ def make_plan(root, cfg, source, refs):
         'external_coverage逐key写{key,state:pending或excluded或candidate,reason,destinations:[]}；'
         'unread只能pending，excluded写真实排除/反证理由；candidate逐项列与external_results完全相同的目标，'
         '目标文件的既有来源/限制字段必须引用该完整窗口key，不能把同批未引用窗口计成已入库证据。\n'
-        '本批完整窗口：\n' + json.dumps([dict(key=r['key'], version=r['version'], build=r['build'], cluster=r['cluster'],
+        + namespace_note + '本批完整窗口：\n' + json.dumps([dict(key=r['key'], version=r['version'], build=r['build'], cluster=r['cluster'],
             win=r['win'], nodes=r['nodes']) for r in refs], ensure_ascii=False) + '\n')
     spec_ref = data.immutable(root, relative + '/work.md', spec.encode())
     aggregates = [r['artifact'] for r in refs]

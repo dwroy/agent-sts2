@@ -1,0 +1,66 @@
+{
+  "verified_at": "2026-10-30T21:34:20.265357+08:00",
+  "base": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "runtime_sha256": {
+    "ops/external_stock_source.py": "311b2e62f2efde5d507a850bc6b770cb634edf142a27f87ec663d2ec77ba8055",
+    "ops/external_stock.py": "dcc36d1aeafd3a9a008849f6eb26b6cd94422a0e01601fc73910a07da4532bbd",
+    "ops/tests/test_external_stock.py": "c4013df30de57ee3b8b3c441da67a1e9b2466ade7ca0f0670b44fe822ee67b66"
+  },
+  "package_manifest": {
+    "path": "knowledge/external/sts2fun/builds-v1/manifest.json",
+    "sha256": "ac5f0d359e445d4bf605681d67f403155e84f292bb19872903fa13b7bc3ea852",
+    "bytes": 1197
+  },
+  "package": {
+    "path": "knowledge/external/sts2fun/builds-v1/archetypes.json",
+    "bytes": 96798,
+    "sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c"
+  },
+  "cache": {
+    "path": "data/external/issue54-safe-cache/runs.json.gz",
+    "sha256": "5c040c644cce7ad28eb247aef33f90413030ee23bc7015ac84366390e830b58f",
+    "bytes": 7445459
+  },
+  "receipt": {
+    "path": "data/external/issue54-safe-cache/receipt.json",
+    "sha256": "8f71e081787e100cf1ae1ebbf05e95ccd0f69b58e74cd42c95dfcf4e65dcd57c",
+    "bytes": 681
+  },
+  "baseline": {
+    "error": "invalid projected model ID",
+    "invalid_room_fields": 55,
+    "affected_complete_windows": 2,
+    "fields_by_kind": {
+      "monster": 30,
+      "event": 6,
+      "elite": 14,
+      "boss": 5
+    }
+  },
+  "fixed": {
+    "input_records": 6348,
+    "normalized_records": 6348,
+    "versions": {
+      "v0.107": 2932,
+      "v0.108": 683,
+      "v0.111": 1739,
+      "v0.109": 583,
+      "v0.110": 411
+    },
+    "exact_builds": {
+      "v0.107.1": 1874,
+      "v0.108.0": 683,
+      "v0.111.0": 1739,
+      "v0.107.0": 1058,
+      "v0.109.0": 451,
+      "v0.110.1": 399,
+      "v0.109.1": 132,
+      "v0.110.0": 12
+    },
+    "wins": 1704,
+    "record_identity_digest": "a16f2d157a38bfe84595a39fe63d05dd9a44ab9b465d86706928eef8a9ccfe7e",
+    "raw_cache_and_receipt_unchanged": true,
+    "room_ids_windows_outcomes_and_keys_unchanged": true
+  },
+  "scope": "read-only safe-cache validation; no raw DB, production prepare/control/tick, model or publication"
+}
