@@ -1,4 +1,4 @@
-/** Narrow, evidence-preserving three-way continuation for reviewed strategy/classification objects. */
+/** Narrow, evidence-preserving three-way continuation for approved whole objects. */
 import { canonical } from "./classification.js";
 import { object, type Row } from "./validation.js";
 import { createHash } from "node:crypto";
@@ -8,7 +8,7 @@ export function mergeApprovedDelta(character: string, before: Record<string, str
  if (!/^[a-z0-9_]+$/.test(character) || ["migration", "common"].includes(character)) throw Error("unsupported continuation character");
  const files: Record<string, string> = {}, delta: Delta[] = [];
  for (const [path, text] of Object.entries(changes)) {
-  if (!["strategy-entries.json", "classification.json"].some(name => path === `characters/${character}/${name}`)) throw Error("unsupported continuation document");
+  if (!["strategy-entries.json", "classification.json", "build-research.json"].some(name => path === `characters/${character}/${name}`)) throw Error("unsupported continuation document");
   const next = JSON.parse(text), old = before[path] ? JSON.parse(before[path]!) : { ...next, entries: [] }, head = current[path] ? JSON.parse(current[path]!) : { ...next, entries: [] };
   const header = (doc: Row) => Object.fromEntries(Object.entries(doc).filter(([key]) => key !== "entries"));
   const index = (doc: Row): Map<string, Row> => {
@@ -24,6 +24,7 @@ export function mergeApprovedDelta(character: string, before: Record<string, str
   for (const [id, value] of n) {
    const prior = b.get(id);
    if (canonical(prior ?? null) === canonical(value)) continue;
+   if (path.endsWith("/build-research.json") && prior) throw Error("build research continuation only appends new IDs");
    // Even identical concurrent edits are outside the reviewed disjoint-object contract.
    if (canonical(h.get(id) ?? null) !== canonical(prior ?? null)) throw Error("continuation object conflict");
    replacements.set(id, value);

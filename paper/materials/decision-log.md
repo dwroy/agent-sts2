@@ -7208,3 +7208,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 
 - 2026-10-30T21:39:58+08:00 [dev #71] 按20/6523733863在原树原线程对齐实际main1b7c652c，先修10/28安全缓存55字段model_id缺口：仅room已观察ACTSFROMTHEPAST命名空间及对应类型准入，原ID/轨迹/分母不改；冻结任务逐窗口注明适用性分账。旧main报错复现，原缓存6348/6348只读通过且SHA/窗口/胜败/key均不变；固定Python30、定向Vitest45及生产tsc绿，磁盘临时目录包装超时原件保并按完整检查60秒对齐。仅两ROOT源码与两测试差量，零LIVE；最终组合唯一full与自然prepare/两后继学习/K1读回交原集成和ops，不重启/停会话、不改live/STOP、不关闭父项。材料paper/materials/20261030-issue71-model-id-rework/。
+
+- 2026-10-31T19:00:21+08:00 [dev #77] 按6542025683交学习受理P0最小批：原build-research新ID沿显式continuation全schema/update/原批准/CAS续接；研究总32MiB/单条8MiB、其他8MiB/候选32MiB，四原候选96匿名窗口只读依次合并绿，原件/current不变。原生完成待审沿完整退场/宿主空闲证据释放自有/外部/库存计算位，plan/unit/语义待审留存不重派；fix-batch恢复新epoch归档原75/deferral，只落native完成待审，不回放finish/改原业务rc。ROOT9叶，fixed方法13核同2换指纹；实际LIVE旧组合11/13、两既有v6-room偏差连原前像交原集成，不覆盖并行差量。tsc/七Python233/四TS23与冻结sandbox659文件6097+paths11绿、16叶SHA不变，首红/启动错误分账保留。原树issue-77-learning-acceptance基于8581aa5f，交原队列优先账号P1前；1684480c/r3及旧refs保留，未submit/部署/生产控制/重学/对局/模型或改账号/home/selected_home/档位/workers上限/权限/科学父。材料paper/materials/20261031-issue77-learning-acceptance/。

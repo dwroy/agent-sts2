@@ -4,7 +4,9 @@
 
 ## 支持范围
 
-只接同一角色 `strategy-entries.json`、`classification.json` 的对象级增量。按原 `id` 比较旧 base、原候选和明确指定的当前版本：候选变动对象在当前版本必须仍与旧 base 相同；当前版本的其他对象按原内容和顺序保留，新增候选对象追加。文档头必须三方一致。不按字段拼同一对象，不自动刷新分类 target，不扩大角色或科学适用范围。
+只接同一角色 `strategy-entries.json`、`classification.json` 的对象级增量，以及 `build-research.json` 的完整新 ID 追加。按原 `id` 比较旧 base、原候选和明确指定的当前版本：候选变动对象在当前版本必须仍与旧 base 相同；当前版本的其他对象按原内容和顺序保留，新增候选对象追加。文档头必须三方一致。不按字段拼同一对象，不自动刷新分类 target，不扩大角色或科学适用范围。
+
+#77 的整局构筑研究兼容只接旧 base 与当前版本均不存在的新研究 ID，不接受原有研究对象的任何修订。新增整条对象仍沿原 schema/update/approval 检查，保留全部阶段、原文、附件和 SHA、来源分母、反证与 unknown；当前其他对象及 revision 不变。原候选/报告/批准件只读复用，多个原批逐个鲜核 current 后沿本入口受理，不重学或回放 finish。96 个匿名外部上传窗口仍按来源分账，不计为独立玩家或本系统验证分母。
 
 删除对象、非支持文档、头字段变化、同对象并行变动（即使最终内容相同）、来源批准不符、分类 target/引用不符都拒绝。校验沿原 `validateDocuments`、`validateUpdate`、`auditApprovedChanges`；合并前核原 delta，合并后核相对新 base 的实际 delta。分类 target SHA 由完整文档校验重新核对。
 
