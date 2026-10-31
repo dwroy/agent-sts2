@@ -1,0 +1,150 @@
+E.EEE.EEF
+======================================================================
+ERROR: test_disabled_pause_and_environment_off_do_not_exec (__main__.MinuteEntry.test_disabled_pause_and_environment_off_do_not_exec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 53, in test_disabled_pause_and_environment_off_do_not_exec
+    adapter.set_mode(self.board,'on','minute')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 75, in set_mode
+    queue_installation(board)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 21, in queue_installation
+    verify_queue_kit(board.root, settings['install'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 49, in verify
+    value = manifest(root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 32, in manifest
+    value = json.loads(local(root, '.agents/board-kit-pin.json').read_text())
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp1ntvxb9j/.agents/board-kit-pin.json'
+
+======================================================================
+ERROR: test_minute_global_dry_run_is_available_before_activation (__main__.MinuteEntry.test_minute_global_dry_run_is_available_before_activation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 84, in test_minute_global_dry_run_is_available_before_activation
+    self.assertIn('--poll',execute.call_args.args[1]); self.assertIn('--dry-run',execute.call_args.args[1])
+                           ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'args'
+
+======================================================================
+ERROR: test_missing_poll_module_blocks_activation_and_preserves_control (__main__.MinuteEntry.test_missing_poll_module_blocks_activation_and_preserves_control)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 71, in test_missing_poll_module_blocks_activation_and_preserves_control
+    adapter.set_mode(self.board,'on')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 75, in set_mode
+    queue_installation(board)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 21, in queue_installation
+    verify_queue_kit(board.root, settings['install'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 49, in verify
+    value = manifest(root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 32, in manifest
+    value = json.loads(local(root, '.agents/board-kit-pin.json').read_text())
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmph1ij5pks/.agents/board-kit-pin.json'
+
+======================================================================
+ERROR: test_old_control_keeps_stall_until_ops_switches_source (__main__.MinuteEntry.test_old_control_keeps_stall_until_ops_switches_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 40, in test_old_control_keeps_stall_until_ops_switches_source
+    adapter.set_mode(self.board,'on')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 75, in set_mode
+    queue_installation(board)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 21, in queue_installation
+    verify_queue_kit(board.root, settings['install'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 49, in verify
+    value = manifest(root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 32, in manifest
+    value = json.loads(local(root, '.agents/board-kit-pin.json').read_text())
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpltc2t76r/.agents/board-kit-pin.json'
+
+======================================================================
+ERROR: test_queue_only_requires_complete_pin_when_explicitly_enabled (__main__.MinuteEntry.test_queue_only_requires_complete_pin_when_explicitly_enabled)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 88, in test_queue_only_requires_complete_pin_when_explicitly_enabled
+    adapter.queue_installation(self.board)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 21, in queue_installation
+    verify_queue_kit(board.root, settings['install'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 49, in verify
+    value = manifest(root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 32, in manifest
+    value = json.loads(local(root, '.agents/board-kit-pin.json').read_text())
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpvfxa_hov/.agents/board-kit-pin.json'
+
+======================================================================
+ERROR: test_retention_off_is_forwarded_and_minute_entry_has_no_stall_jobs (__main__.MinuteEntry.test_retention_off_is_forwarded_and_minute_entry_has_no_stall_jobs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 115, in test_retention_off_is_forwarded_and_minute_entry_has_no_stall_jobs
+    adapter.set_mode(self.board,'on','minute'); os.environ['CODEX_OPS_RETENTION']='off'
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 75, in set_mode
+    queue_installation(board)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/agent_board.py", line 21, in queue_installation
+    verify_queue_kit(board.root, settings['install'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 49, in verify
+    value = manifest(root)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/board_queue_pin.py", line 32, in manifest
+    value = json.loads(local(root, '.agents/board-kit-pin.json').read_text())
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpsg4hif1f/.agents/board-kit-pin.json'
+
+======================================================================
+FAIL: test_source_change_and_enable_never_dispatch_or_lose_active_source (__main__.MinuteEntry.test_source_change_and_enable_never_dispatch_or_lose_active_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/.tmp/issue77-base-fixtures-etmj9ugx/ops/tests/test_agent_board_poll.py", line 63, in test_source_change_and_enable_never_dispatch_or_lose_active_source
+    self.assertEqual(self.main('--set-enabled','on')[0],0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.140s
+
+FAILED (failures=1, errors=6)

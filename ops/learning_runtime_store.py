@@ -182,12 +182,14 @@ class Store:
     def submission_history(self, batch):
         return [dict(row) for row in self.db.execute("SELECT digest,state,error,created FROM submission_events WHERE batch=? ORDER BY id", (batch,))]
 
-    def complete(self, body, objects, engineering=False):
+    def complete(self, body, objects, engineering=False, *, source_revalidation=None):
         identity = body["id"]
         digest = sha(packed(body).encode())
         receipt = {"schema": "operational-completion-v1", "id": identity, "digest": digest,
                    "task": body["task"], "character": body["character"], "records": len(body["records"]),
                    "source_delivery": False, "parent_closed": False, "engineering_required": engineering}
+        if source_revalidation:
+            receipt["source_revalidation"] = source_revalidation
         with self.transaction():
             prior = self.db.execute("SELECT digest,receipt FROM completions WHERE id=?", (identity,)).fetchone()
             if prior:

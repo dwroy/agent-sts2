@@ -1,9 +1,7 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [
-    "agent/src/core/config.ts"
-  ],
+  "runtime_install_paths": [],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -58,7 +56,10 @@
     "ops.tests.test_strategy_backfill",
     "ops.tests.test_learner_registration_pipeline",
     "ops.tests.test_learner_supervisor_close",
-    "ops.tests.test_learner_tui_recovery"
+    "ops.tests.test_learner_tui_recovery",
+    "ops.tests.test_learning_runtime",
+    "ops.tests.test_fixed_producer_admission",
+    "ops.tests.test_llm_handoff"
   ],
   "consumer_commands": [
     {
@@ -211,7 +212,7 @@
       ]
     },
     {
-      "tree": "live",
+      "tree": "root",
       "cwd": "agent",
       "argv": [
         "node",
@@ -221,7 +222,7 @@
       ]
     }
   ],
-  "consumer_scope": "Issue81 brain fast 68fd783d normalized on published main1b7c652c; issue77 supervisor-close already adopted. ROOT config plus producer declaration; LIVE config only. Preserve consumers0-13 and all host modules exactly; add isolated installed LIVE tier contract. Original six gates, single full worker, fixtures, historical skips and workspace admission unchanged. Two producer config input SHA/opaque-site updates change method identities; ops must use new terminal-bound admission/CAS in original publication transaction. No production configuration, models, account/home, learner/ops tier changes; natural game boundary activation only.",
+  "consumer_scope": "Issue77 P0 knowledge-rebase efae4d79 on adopted main39e48ce9. ROOT/host learning_runtime.py, learning_runtime_store.py and exact producer declaration; zero LIVE installs. Preserve consumers0-13 exactly, including consumer8 real runtime complete/store and all thirteen producer closures/admission. Retain consumer14 tier contract on candidate ROOT because fast is not installed on actual LIVE. Preserve prior host modules and add runtime, producer-admission and handoff fixtures. Original six gates, sole full worker, fixtures, two historical skips and workspace admission unchanged. Updated ROOT validator identities require fresh actual-terminal method admission/CAS; previews are not production tickets. No production config/account/home/capacity changes. After adoption original ops reenters original 204303 candidate/id without rewriting base, candidate, report or prior failures.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"
