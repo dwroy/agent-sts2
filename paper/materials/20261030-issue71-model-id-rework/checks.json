@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-10-30T21:40:23.188429+08:00",
+  "base": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "source_sha256": {
+    "ops/external_stock_source.py": "311b2e62f2efde5d507a850bc6b770cb634edf142a27f87ec663d2ec77ba8055",
+    "ops/external_stock.py": "dcc36d1aeafd3a9a008849f6eb26b6cd94422a0e01601fc73910a07da4532bbd",
+    "ops/tests/test_external_stock.py": "a87c49f28ad5267b46b69ee8900ae529752ce3dd8a816db25e3d66433f8fec5b",
+    "agent/tests/external-stock.test.ts": "b4876e1bdb4933a19cbd704c08fb227a17ee9f0c2d5a20e36308d1abf120dbe9"
+  },
+  "production_tsc": {
+    "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "rc": 0,
+    "log": "production-tsc-r2.log"
+  },
+  "targeted_vitest": {
+    "files": [
+      "external-stock.test.ts",
+      "strategy-backfill.test.ts",
+      "external-strategy-evidence.test.ts"
+    ],
+    "pool": "threads",
+    "workers": 1,
+    "file_parallelism": false,
+    "testTimeout": 60000,
+    "rc": 0,
+    "files_passed": 3,
+    "tests_passed": 45,
+    "nested_python_passed": 30,
+    "log": "targeted-vitest-r3.log"
+  },
+  "safe_cache": {
+    "rc": 0,
+    "report": "safe-cache-verification-r2.json",
+    "records": 6348
+  },
+  "full": {
+    "run": false,
+    "owner": "original integrator, final actual combination"
+  },
+  "retained_failures": [
+    "initial test tuple access error described in report.md",
+    "targeted-vitest.log",
+    "stock-vitest-recheck.log",
+    "targeted-vitest-r2.log"
+  ],
+  "verification_raw_archive": {
+    "safe-cache-verification.json": {
+      "raw_path": ".cache/issue71-verification-originals/safe-cache-verification.json",
+      "raw_sha256": "84721856348c1e43f55b3e1c289f510d1860d10b2172ccdcef08241e87cff19e"
+    },
+    "safe-cache-verification-r2.json": {
+      "raw_path": ".cache/issue71-verification-originals/safe-cache-verification-r2.json",
+      "raw_sha256": "5a0193495056bd5dd53067ee65f119c4dcd5f708a4c5365c673642e63977a32c"
+    }
+  }
+}
