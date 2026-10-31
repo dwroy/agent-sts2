@@ -1,0 +1,738 @@
+{
+  "schema": "strategy-regrading-receipt-v1",
+  "original_batch": "20261026-182334-strategy-proposal",
+  "base": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+  "source_input_sha256": "15042ed977def62948321bac6d3e2fbc2bee85ba80b8cc76c48c608d6fd2c81e",
+  "assessments_sha256": "eb5d55911b0cb3f8ee837b3a99e301b9beb8d861803cfe5afa9746ecdf185122",
+  "authority_sha256": "be171131c45c9ce7f4faf6da2ffa37b1d17436d12134c5d824671d9669c3c86a",
+  "authorization": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6539128264",
+  "status": "graded-awaiting-original-79-admission",
+  "production_published": false,
+  "classifications_unchanged": true,
+  "source_classifications_sha256": "be599519a8eb73f21467d2742b54b29004bef971d51337cd83b403d79a7a2f74",
+  "entries": [
+    {
+      "id": "silent-route-hp-observation",
+      "version": "2026-10-26.stock002-c3",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "event"
+        ]
+      },
+      "strategy": "核路线仍按当前合法分支、到火前及离火后资源比较，不预支未来恢复。外部v0.111两条完整反向路径：1a0a n24精英伤23剩3，n25回36到39，n27伤31剩8，后经商店/营火恢复终胜；8f86二幕n18回42至47，后继战斗与事件逐步耗到16，n24回17到33，n25精英伤33终止。各1上传，恢复与后继耗竭并存，非路线收益。\n范围：Silent A10、幕初/营火/事件路线复核；节点末HP为代理，damage/healed分列，不将净变化当毛伤或从遗物名补机制。只有金币支出，无余额/完整地图备选/用药时点或事件菜单，不定回血动作、安全线或替代路线。旧自有280局等分母、历次外部反向窗口及原文全部保留；本批runs=[]。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "JMH5C51RLN4E",
+          "floor": 8,
+          "ref": "logs/decisions.jsonl@566244311+1910;sha256=3104b2c4211645b1bc66c506e361675e54125a5ac05e1e0e5b359f967ad7bb41",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9ZERN492CSHX",
+          "floor": 7,
+          "ref": "logs/decisions.jsonl@3076195162+2618;sha256=9e34489fc627bb47c5672c17a0e5a515602054a72a5a36f8c059407a26fdf032",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "MGA0CZDDKC0P",
+          "floor": 6,
+          "ref": "logs/decisions.jsonl@559694510+1745;sha256=1168bd0a2c8cbe6fe48c15ba02e3dabde31d6986a204b207d7b2668d07430e6a",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "UJ0K3G10609Y",
+          "floor": 34,
+          "ref": "logs/decisions.jsonl@585043632+1972;sha256=156869b43b12d0a8f70764970e7eb406744672f6c2c9de357aa1d81006b6ec9f",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "D4LJ9QMGFB8Q",
+          "floor": 1,
+          "ref": "logs/decisions.jsonl@590273768+5566;sha256=207a0a814550ae442deea952d8f009f0004a63495cf2e0aaa4386fad7c937483",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; builds-v1 cluster3 offset5..9; 仅projection-ddbc08c6a66a5597与projection-4dfd637b3ddd8712；连续节点末HP，包含胜战成本、休息恢复及终止；非替代路线对照"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_explicit_continuous_second_act_resource_chain",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "胜负各半、早期画像近邻配对的代表选择，非随机样本/科学留出，不能用5/10估计胜率或策略收益。",
+            "独立分母为指定摘要不同的上传记录；玩家独立性、重复上传、SL与自选上传混杂未知。",
+            "已拿/所得/变化/升级前缀是时序代理；推定初始值及终局一致不证明中间真实牌组。前节点末HP是入场资源代理，node不是floor。",
+            "缺手牌、用药、真实战前/场间快照、事件完整菜单及意图；不能从事件ID或遗物名补机制。",
+            "仅外部v0.111/Silent A10；与自有unknown版本/各进阶/重试分账，机改对照未知，不合版本池。",
+            "簇3仅定位证据，不是当前触发。100比较组/300模块门未达到，不推固定排序、血线或因果收益。"
+          ],
+          "ref": "pair-6.json#ddbc/n18..22;pair-5.json#4dfd/n32..36;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock001 cluster0 offset0..9, full 20 trajectories read; selected case subset=74fbfafba8fb707a/n27..33"
+          },
+          "statistic": {
+            "name": "three_followup_nodes_recorded_damage_sum",
+            "value": 111,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 1
+          },
+          "design": "observational",
+          "limitations": [
+            "胜负各半与前5节点画像近邻选择，非随机样本；10胜10负不能估计完整Silent A10胜率或策略收益。",
+            "分母仅为指定摘要不同的匿名上传轨迹；独立玩家数、重复上传、SL、自选上传、水平与未观察混杂未知。",
+            "完整指所有投影节点，不指原库全字段；初始牌组推定、所得/移除/变化前缀是时序代理，不是真实逐战快照。",
+            "前节点末HP只是入场资源代理，node不是floor；gross damage、healed与净HP分别记录，不从遗物名补回复机制。",
+            "金币只有本节点支出，无余额/收入；商店货单、遗物原文、用药时点、手牌/能量、事件完整题面及玩家意图未知。",
+            "仅外部v0.111/Silent A10。其他版本机改对照未知，不合并；本系统自有证据继承K1原件另账，runs=[]。",
+            "终局簇与终局牌组仅离线定位；不能把结局、后来取得的牌或终局簇写作当前触发。",
+            "无新增单牌两组各100样本比较，无300模拟样本；节点/卡/配对/继承旧证据不相加充门槛。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-053954/learner/runs/20261026-054011-891e9dbb-f77c-4c79-b903-6b26cad45d0f-strategy-proposal/scratch/evidence-statistics.json;input_sha256=d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock001 cluster1 offset0..9完整20轨迹已读；本证据仅指定摘要子组=6d7ce6aa48e7a0cb,82fb8237ce667ab6; 非随机反事实"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_opposed_post_rest_resource_outcomes",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "胜败各10、按前5节点已记录所得/选择/遗物近邻挑选；20上传不是随机样本，不能以10/20估计Silent A10胜率或策略收益。",
+            "独立计数限于不同脱敏投影摘要的上传轨迹；独立玩家数/同玩家重复相关性、SL、自选上传与水平混杂未知。",
+            "完整仅指所有投影节点；起始牌组推定、已拿奖励/所得/移除/变化前缀都是代理，终局一致不证明所有中间状态。",
+            "节点序号不是floor；前节点末HP只是入场资源代理。damage/healed与净HP分别记录，不由遗物名称推回复机制。",
+            "只有金币支出，无余额、收入或逐物价格；缺完整商店货架、事件题面、战前手牌/能量/药栏、用药时点及玩家意图。",
+            "仅Silent A10外部v0.111，采集2026-10-21；自有unknown版本证据只继承原K1、未重读且不计本批runs；历史机改对照未知，不跨版合并。",
+            "终局簇及终局牌组仅离线定位，不作当前触发；没拿到的未来牌、后来回复与赢家身份不得前移。",
+            "未达到单牌比较组各100或模块300门槛；20轨迹/节点/配对/旧证据不相加充门槛。没有可核因果收益或固定安全血线。",
+            "c94d营火记录1/2/4/8/16张ADRENALINE且终局32张；机制和菜单未知，单列异常资源路径，不外推普通路线。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/evidence-statistics.json;input_sha256=d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock002 cluster2 offsets0..9完整20条已读；仅35d21360105dc876、e990858727a3c22a；离火后到下一检查点连续链，非回血收益。"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_opposed_post_rest_followup_outcomes",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "胜负各10、按前5节点画像近邻选取；20条不同匿名上传投影不是随机样本，10/20由设计决定，不能估计真实Silent A10胜率。",
+            "上传轨迹按safe_projection_sha256去重；独立玩家数、重复上传、SL、水平、自选上传和未观察混杂未知，不当20独立玩家。",
+            "终局簇2仅离线定位；同簇含早亡/异原ID混合/随机变化，不能命名为已验证流派或写作当前触发。",
+            "取得/移除/变化前缀和前节点末HP均显式代理；节点非floor，完整投影非真实战前/场间全字段快照。",
+            "无金币余额/收入、逐物报价、原始药栏/用药时点、完整商店/事件题面、逐回合状态或玩家意图；不由名称补机制。",
+            "仅外部v0.111/Silent A10，下载2026-10-21；原build更细版本和目录历史机制对齐未知，其他版本机改未知，不合池。",
+            "无单牌比较组各100或模拟300样本；20上传、766节点、继承旧证据不相加充门槛；不推固定拿牌/血线/排序或因果收益。",
+            "本系统runs=[]；旧K1自有证据仅保留，不重读、不新增自有验证；候选、正式发布、工具读回和自然采用分账。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-161304/learner/runs/20261026-161319-992405a8-e493-40b1-b006-224036acd977-strategy-proposal/evidence-statistics.json#35d21360105dc876/n24..34;e990858727a3c22a/n18..27;input_sha256=d743386c5eb8d66a4511f319633bb06f464bf778b3b17b60d63e47b1875eebb4;artifact_sha256=78d23feccee51473271a876a182551370d49bc100957ed7fa6f6b23df5f82f83",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock003 cluster4 offsets0..9完整20轨迹已读；本证据仅指定摘要子组=d61dfd35d08672c47a0c34418fd21be342cab2cdfb8417904c8493e5f5b2b6bd,48d7f0553b7ef5e8da922d9a580d671f2f4352052202a76e710214b82c0409b8; 簇仅定位，非当前条件；非随机反事实。"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_post_rest_depletion_and_opposed_whole_run_outcomes",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "20轨迹由10胜10负及早期画像近邻选择；不是随机样本，10/20不估计Silent A10胜率或策略收益。",
+            "分母仅为safe_projection_sha256不同的匿名上传轨迹；独立玩家、重复上传、SL、水平、自选上传和未观察混杂未知。",
+            "全部投影节点并非原始全字段。初始牌组推定、取得/移除/变化前缀是代理；终局一致不证明全部中间状态。",
+            "前一节点末HP只是入场资源代理，node不是floor；毛伤damage、healed及净HP分开，升级和回血可同节点出现，不由遗物名补机制。",
+            "金币只有支出，没有余额、收入、逐物价格或完整货架；合法备选地图、事件完整菜单、药栏/用药时点、手牌/能量、玩家意图均unknown。",
+            "仅external:sts2fun/Silent A10/v0.111，采集2026-10-21；更细build机制对齐与跨版本机改对照unknown，不合其他版本池。",
+            "终局簇及结局仅离线定位；不能把未来取得牌/恢复或赢家身份写作当时触发。特殊异原ID和批量变化仅记录实际发生，不补其机制。",
+            "没有两比较组各100或模拟300样本；轨迹、节点、配对、旧K1证据和350聚合分母不相加充门槛。",
+            "本系统runs=[]，自有证据只从绑定K1原样保留，未重新取证；形式候选、正式发布、消费者读回、自然采用和收益各自pending。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-171221/learner/runs/20261026-171242-4cbc075a-98d5-4e3c-bb07-27e521ee61bb-strategy-proposal/evidence-statistics.json;input_sha256=80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23;artifact_sha256=db3480e4f110b110ec012bdba40d58e00f7f93cb61e52ef72be09359174e0ce8",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock002 cluster3 offsets0..9 all20 full trajectories read; this evidence subset=6e5a296f44086a3510d1b9665d49172668589e4b1ca67143f598e1d48860fe9f,a6176e8facbb296fff71c15889f4fe89c230a9b3f132982abd09e098e9ff07a4; distinct uploads, player independence unknown; retrospective selection, noncausal"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_post_recovery_depletion_and_opposed_final_outcomes",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "10胜10负及前5节点画像近邻选择；20匿名上传轨迹非随机样本，10/20由设计决定，不估计Silent A10整体胜率或策略收益。",
+            "safe_projection_sha256不同只证明投影内容不同；独立玩家数、重复上传、SL、自选上传、水平与未观察混杂unknown，不当20独立玩家。",
+            "完整仅指投影所有节点；推定初始牌组及取得/移除/变化前缀是代理，终局一致不证明真实中间牌组。节点不是floor。",
+            "前节点末HP只是入场资源代理；damage、healed和净HP分开。回血与升级可同节点出现，不能由HP增加推选择休息或从遗物名补机制。",
+            "金币仅本节点支出，没有余额/收入/逐物报价/完整货架；合法地图备选、药栏/用药时点、事件题面、战前/场间手牌能量与玩家意图均unknown。",
+            "仅external:sts2fun/Silent A10/v0.111，采集2026-10-21；细build对齐、其他版本机改对照unknown，不跨版合池。",
+            "终局簇和终局牌组仅定位证据；不能把后来得到的牌、恢复、结局、簇号当当前触发。异原ID/批量变化只记录所得，不猜机制。",
+            "无两比较组各100、无300模拟样本；778节点、10配对、224背景上传及旧K1证据不相加充门槛。没有因果收益、固定拿牌命令或安全血线。",
+            "本系统runs=[]；旧K1自有证据与反证原样继承，未重新取证，不计本批自有验证。正式发布、工具读回、自然采用、整局收益均pending。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-175024/learner/runs/20261026-175041-4db56059-eccc-47f5-97a6-98bb2fd27804-strategy-proposal/evidence-statistics.json;input_sha256=d743386c5eb8d66a4511f319633bb06f464bf778b3b17b60d63e47b1875eebb4;artifact_sha256=78d23feccee51473271a876a182551370d49bc100957ed7fa6f6b23df5f82f83",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock003/c5 offsets0..9完整读完; 限定已读代表1a0a/8f86各1上传，观察连续耗竭与恢复，一胜一败；不是可加独立玩家或休息效果比较"
+          },
+          "statistic": {
+            "name": "selected_complete_resource_case_paths",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "胜负各10、前5节点画像近邻配对并按终局簇定位；选样非随机，10/20由设计决定，不能估计Silent A10胜率。",
+            "按safe_projection_sha256核20个不同匿名上传投影，不等20独立玩家；重复上传、玩家内相关、水平、自选上传、SL与死亡删失未知。",
+            "终局簇5只离线定位；不得以终局牌组、结局、后来所得牌作当前触发或将簇号当流派名称。",
+            "已记录取得/删除/变化前缀及前节点末HP均为代理；全节点覆盖非真实战前或场间全字段快照，node非已核floor。",
+            "只有gold_spent，无金币余额/收入或逐物报价；完整地图分支、事件题面、药栏/用药时点、手牌/能量、实际能力建立及玩家意图unknown。",
+            "仅external:sts2fun、Silent A10、v0.111，采集2026-10-21；build小版本/历史目录机制对齐未知，其他版本机制是否改变未知，不合池。",
+            "仅时序描述与观察关联，无单牌两比较组各100、模拟300、随机反事实、因果收益或固定拿牌/休息/血线规则。",
+            "runs=[]；基线自有证据只保留，未重读或新增本系统验证；候选、事务发布、实际工具读回、自然采用和整局收益各自验收。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/evidence-statistics.json;input_sha256=80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23;artifact_sha256=db3480e4f110b110ec012bdba40d58e00f7f93cb61e52ef72be09359174e0ce8",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "consumer_readback": "pending",
+      "batch_supplements": [
+        {
+          "batch": "20261026-053954-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-053954/learner/runs/20261026-054011-891e9dbb-f77c-4c79-b903-6b26cad45d0f-strategy-proposal/scratch/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-053954/learner/runs/20261026-054011-891e9dbb-f77c-4c79-b903-6b26cad45d0f-strategy-proposal/scratch/trajectory-cases.json",
+          "design": "observational",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "source_denominator": 1,
+          "independent_players": null,
+          "boundary": "本批不重读、不扩充自有run证据；仅原ID附外部描述，不改trigger/confidence/scope，不改出牌/用药/SL/终局执行规则。"
+        },
+        {
+          "batch": "20261026-154241-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/trajectory-cases.json",
+          "source_denominator": 2,
+          "independent_players": null,
+          "design": "observational",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "boundary": "只补外部证据；旧trigger/confidence/范围/自有证据及反证全保留，不改执行规则。"
+        },
+        {
+          "batch": "20261026-161304-strategy-proposal",
+          "source": "external:sts2fun",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "input_sha256": "d743386c5eb8d66a4511f319633bb06f464bf778b3b17b60d63e47b1875eebb4",
+          "artifact_sha256": "78d23feccee51473271a876a182551370d49bc100957ed7fa6f6b23df5f82f83",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-161304/learner/runs/20261026-161319-992405a8-e493-40b1-b006-224036acd977-strategy-proposal/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-161304/learner/runs/20261026-161319-992405a8-e493-40b1-b006-224036acd977-strategy-proposal/trajectory-cases.json",
+          "source_denominator": 2,
+          "independent_players": null,
+          "design": "observational",
+          "detail": "35d2节点30末1，31商店支436/得REGAL_PILLOW、32回36至37、33伤35末2、34回54，终胜；e990节点24回15至53，25伤34回14至33，27伤35回2终止。两不同上传不是营火反事实，未来火/商店不可预支。",
+          "boundary": "继承旧trigger/范围/自有证据/反证/可信度；本批只补外部描述，不改出牌/药水/SL/终局执行规则。",
+          "formal_publication": "pending",
+          "consumer_readback": "pending"
+        },
+        {
+          "batch": "20261026-171221-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-171221/learner/runs/20261026-171242-4cbc075a-98d5-4e3c-bb07-27e521ee61bb-strategy-proposal/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-171221/learner/runs/20261026-171242-4cbc075a-98d5-4e3c-bb07-27e521ee61bb-strategy-proposal/trajectory-cases.json",
+          "source_denominator": 2,
+          "independent_players": null,
+          "summary": "火后仍须重核下一段消耗：2条上传中，48d7二幕火回40后精英毛伤56/回2只剩4而终胜；d61d后段火回21到24、随后伤24终止。",
+          "scope": "仅Silent A10/v0.111外部观察；有路线复核的当前题，前节点末HP是入场资源代理，缺地图备选不推绕路必胜。",
+          "design": "observational",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "boundary": "沿旧情境ID补外部时序/资源案例；trigger、confidence、自有证据、反证和适用范围保持；非新规则。"
+        },
+        {
+          "batch": "20261026-175024-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "d743386c5eb8d66a4511f319633bb06f464bf778b3b17b60d63e47b1875eebb4",
+          "artifact_sha256": "78d23feccee51473271a876a182551370d49bc100957ed7fa6f6b23df5f82f83",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-175024/learner/runs/20261026-175041-4db56059-eccc-47f5-97a6-98bb2fd27804-strategy-proposal/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-175024/learner/runs/20261026-175041-4db56059-eccc-47f5-97a6-98bb2fd27804-strategy-proposal/trajectory-cases.json",
+          "source_denominator": 2,
+          "denominator_note": "evidence subsets are distinct within this entry only; not additive across entries or inherited revisions",
+          "independent_players": null,
+          "design": "observational",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "boundary": "old trigger/confidence/scope/own evidence/conflicts unchanged; no game execution rule changes"
+        },
+        {
+          "batch": "20261026-182334-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/trajectory-cases.json",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "independent_players": null,
+          "own_runs_added": 0,
+          "boundary": "保原ID/trigger/scope/confidence/evidence_status及所有旧证据、反例；不改出牌/药水/SL/终局执行规则。"
+        }
+      ],
+      "prior_texts": [
+        {
+          "version": "2026-10-26.stock002-c2",
+          "strategy": "核路线时先确认当前合法分支及到火前资源，不把未来营火预支为现有HP。Silent A10、版本unknown：精英/火同为备选524次/280局；走火475次平均后继净增14.50血，走精英15次中14次有后继、平均净减25血，另1次缺失；题前HP均37.32/63.27，非同状态对照。每局每幕首次多备选的960个窗口中90未观测到下火；831个已到火且地图标记战斗≥2的段均净减23.26，亦见净增。适用：幕初/带路线复核题；标记战斗数及跨节点净变化是代理，含事件/SL混杂；不作战斗毛伤、绕路收益或安全线。\n外部新窗口：ddbc幕2节点18末64→19末48→21末42→22末0；4dfd节点32末73→33末19→34末41→35末2，后来仍胜（各1上传）。到火前及离火后分开复核；HP皆节点末代理、用药未知，不外推安全线。\n新库存：74fb节点27/29/32各回33，后继各伤37/35/39、回2仍败（1上传）；火后预算不能以已回血代替。\nc1：6d7c节点24休29→50、25伤52/回2终止；82fb节点25末1经后续恢复终胜（各1上传）。\nc2：e990休后53，后两精英伤34/35仍败。",
+          "knowledge_base": "K1-80a755182a5cfd142fbfdcdf4f41489d8db620e75bee41e2ec6bf412c9281790",
+          "reason": "1200 UTF-8字节正文上限；旧原文完整保留，不丢旧统计与反例。"
+        },
+        {
+          "batch": "20261026-175024-strategy-proposal",
+          "version": "2026-10-26.stock003-c4",
+          "strategy": "核路线时确认当前合法分支及到火前、离火后资源，不预支未来营火为现有HP。旧自有A10/版本unknown：精英/火同为备选524次/280局，走火475次后继均净增14.50血，走精英15次有14次后继均净减25血、1缺失；题前HP均37.32/63.27，非同状态。831个已到火且地图标记战斗≥2段均净减23.26，也见净增。\n新外部v0.111两案例：48d7二幕n24精英伤49，n27火回40到58，n28精英毛伤56回2只剩4，后续恢复仍终胜；d61d n29精英伤27剩3，n32火回21至24，n33伤24终止。恢复与高消耗并存，两案例不是策略收益比较。\n范围：Silent A10、幕初/带路线复核题；节点末HP及标记战斗数是代理，缺完整地图、金币余额、用药/事件题面；净变化含混杂，不当毛伤、绕路收益或安全线。旧反向窗口与原文全部保留于证据/历史文本。",
+          "reason": "retain exact previous text while incorporating current bounded evidence"
+        },
+        {
+          "batch": "20261026-182334-strategy-proposal",
+          "knowledge_base": "K1-533bcdcf7832a397912dde52919892be2ddf92a6b97f560d27f4b00409a25c95",
+          "version": "2026-10-26.stock002-c3",
+          "strategy": "核路线仍以当前合法分支、到火前与离火后资源比较，不预支未来恢复。外部v0.111本批2例：6e5a n28回31至70，n29/30/31分别伤18/5/41至6，n32回36至42仍n33终止；a617 n25伤47剩16、n27回42至58，后续连续消耗及恢复后n33剩22，最终胜。两例说明恢复与后继耗竭可并存，非路线收益比较。\n范围：Silent A10/连续资源复核；节点末HP为入场代理，damage/healed分开，升级和回血可同节点发生。金币仅支出、地图备选/用药/事件菜单unknown，不定休息动作、安全线或替代路线。旧自有280局等口径及所有原文/反证保留于证据和prior_texts，本批runs=[]。",
+          "reason": "Preserve exact previous text and all prior evidence while adding bounded stock003-c5 observations."
+        }
+      ],
+      "confidence": 0.29697,
+      "evidence_type": "单臂统计",
+      "grading": {
+        "schema": "strategy-grading-v1",
+        "grade": "B+",
+        "category": "路线资源",
+        "evidence_type": "单臂统计",
+        "summary": "单臂统计，非对照：原自有unknown版本Silent A10的280局/524机会资源描述仍在完整历史中，当前路线复核主张未改为固定回血/精英/安全线；新增v0.111两条轨迹仅并列实例，不加入280分母或解释因果收益。",
+        "single_observation_window": false,
+        "basis": {
+          "checkpoint_sha256": "eb5d55911b0cb3f8ee837b3a99e301b9beb8d861803cfe5afa9746ecdf185122",
+          "original_entry_sha256": "5adde8b951bade4ab309b433be7c743a221cb612771b47b35a622e2eff4a10f2",
+          "assessment_sha256": "b1566f74a90b4f371a681bcd0b9bcd9a6074037c613e8e7c0bd8936cf54df5d1"
+        }
+      },
+      "grading_population": {
+        "source": "own",
+        "n": 280,
+        "unit": "independent_runs",
+        "wins": 6,
+        "opportunities": 524,
+        "game_version": "unknown",
+        "source_sha256": "717645804aea466d8c2381ba0f7962cd8f1c194a09df1f592f92b2570eea2069",
+        "pointer": "/rest_elite_branch/all",
+        "scope_notice": "只支撑完整历史中保留的旧机会总体描述；182334外部2例另账，不将其置信度说成由280局验证。"
+      },
+      "grading_limitations": [
+        "支持分=0.35×280/(280+50)=0.296970，只针对保留的历史机会描述，不是新两例的可靠度/胜率/因果概率。",
+        "自有unknown版本与外部v0.111分账；524窗口不当524独立局；自有重复/SL及选择差异保留。",
+        "新增两个外部完整投影均是节点末HP代理，缺地图全备选/用药/事件菜单；不定回血动作、安全线、替代路线或恢复机制。",
+        "旧辅助定位缺口保留，不因缺文件或继承记录自动补验证；本批新增系统对局0。"
+      ],
+      "grading_origin": {
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+        "path": "characters/silent/strategy-entries.json",
+        "document_sha256": "e8bef3d8bcadf2a9a565be549d626607dd0cfd23a733ba8930359014e4315f8b",
+        "id": "silent-route-hp-observation",
+        "source_content_sha256": "5adde8b951bade4ab309b433be7c743a221cb612771b47b35a622e2eff4a10f2",
+        "source_input_sha256": "15042ed977def62948321bac6d3e2fbc2bee85ba80b8cc76c48c608d6fd2c81e"
+      },
+      "formal_publication": {
+        "schema": "strategy-publication-v1",
+        "status": "published",
+        "authorization": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6539128264",
+        "authorization_sha256": "6a1b0a21f69fc82f18e7bc5a73917830538e0f4a3cd1c68bbaf98299b2c5dd42",
+        "grading_sha256": "e6347cd9eaf8f13b91bfb7fffbdf53cdf41e4a89083bbf6504e5c4580c8e784d"
+      }
+    },
+    {
+      "id": "silent-brain-poison-footwork-realization-review",
+      "version": "2026-10-26.stock001-c1",
+      "trigger": {
+        "question_types": [
+          "card_reward",
+          "shop",
+          "rest",
+          "act_plan",
+          "fight_plan"
+        ],
+        "acts": [
+          1,
+          2
+        ],
+        "deck_cards": [
+          {
+            "name": "SNAKEBITE",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "ACCELERANT",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "FOOTWORK",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "同持蛇咬、触媒和灵动步法时，仍核已持、实际建立及下一段生存资源，不把签名齐备当停止补强或安全证明。旧自有A10/版本unknown两局虽过首Boss，二幕后续仍多次赢战耗血且最终重试失败；原局部机会与反例保留。\n新外部v0.111在幕1/2前缀记录三签名的4条选定赢家也有后继高消耗：1a0a n22齐后，n24精英伤23剩3，n25回36至39，n27又伤31剩8；cfae n31齐后，n33毛伤43回25只余32。4条是选定赢家描述，不是齐备后胜率；78d6幕3才齐且终败不扩本条幕1/2范围。\n范围：Silent A10，原两幕题型及持牌条件保持；外部取得前缀/节点末HP为代理，能力是否实际启动及药栏未知，不定固定顺序、血线或因果收益。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "BKK8KAR3E83C",
+          "floor": 6,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-resume-2033-ops/original/candidate-source-refs.json#BKK8KAR3E83C",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "TB5YKELW0355",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue48-resume-2033-ops/original/candidate-source-refs.json#TB5YKELW0355",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock001 cluster1 offset0..9完整20轨迹已读；本证据仅指定摘要子组=f96c3d17aff4fd54,bc3f2064a7b0f739; 非随机反事实"
+          },
+          "statistic": {
+            "name": "selected_uploads_with_signature_prefix_and_opposed_whole_run_outcomes",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "胜败各10、按前5节点已记录所得/选择/遗物近邻挑选；20上传不是随机样本，不能以10/20估计Silent A10胜率或策略收益。",
+            "独立计数限于不同脱敏投影摘要的上传轨迹；独立玩家数/同玩家重复相关性、SL、自选上传与水平混杂未知。",
+            "完整仅指所有投影节点；起始牌组推定、已拿奖励/所得/移除/变化前缀都是代理，终局一致不证明所有中间状态。",
+            "节点序号不是floor；前节点末HP只是入场资源代理。damage/healed与净HP分别记录，不由遗物名称推回复机制。",
+            "只有金币支出，无余额、收入或逐物价格；缺完整商店货架、事件题面、战前手牌/能量/药栏、用药时点及玩家意图。",
+            "仅Silent A10外部v0.111，采集2026-10-21；自有unknown版本证据只继承原K1、未重读且不计本批runs；历史机改对照未知，不跨版合并。",
+            "终局簇及终局牌组仅离线定位，不作当前触发；没拿到的未来牌、后来回复与赢家身份不得前移。",
+            "未达到单牌比较组各100或模块300门槛；20轨迹/节点/配对/旧证据不相加充门槛。没有可核因果收益或固定安全血线。",
+            "c94d营火记录1/2/4/8/16张ADRENALINE且终局32张；机制和菜单未知，单列异常资源路径，不外推普通路线。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/evidence-statistics.json;input_sha256=d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; stock003/c5 offsets0..9完整读完; 选定10赢家中771c/14e5/1a0a/cfae四条在幕1/2记录SNAKEBITE+ACCELERANT+FOOTWORK；其余6条不是当前条件；旧自有验证另账"
+          },
+          "statistic": {
+            "name": "selected_winner_triple_prefix_in_act1_or_2",
+            "value": 4,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 10
+          },
+          "design": "observational",
+          "limitations": [
+            "胜负各10、前5节点画像近邻配对并按终局簇定位；选样非随机，10/20由设计决定，不能估计Silent A10胜率。",
+            "按safe_projection_sha256核20个不同匿名上传投影，不等20独立玩家；重复上传、玩家内相关、水平、自选上传、SL与死亡删失未知。",
+            "终局簇5只离线定位；不得以终局牌组、结局、后来所得牌作当前触发或将簇号当流派名称。",
+            "已记录取得/删除/变化前缀及前节点末HP均为代理；全节点覆盖非真实战前或场间全字段快照，node非已核floor。",
+            "只有gold_spent，无金币余额/收入或逐物报价；完整地图分支、事件题面、药栏/用药时点、手牌/能量、实际能力建立及玩家意图unknown。",
+            "仅external:sts2fun、Silent A10、v0.111，采集2026-10-21；build小版本/历史目录机制对齐未知，其他版本机制是否改变未知，不合池。",
+            "仅时序描述与观察关联，无单牌两比较组各100、模拟300、随机反事实、因果收益或固定拿牌/休息/血线规则。",
+            "runs=[]；基线自有证据只保留，未重读或新增本系统验证；候选、事务发布、实际工具读回、自然采用和整局收益各自验收。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/evidence-statistics.json;input_sha256=80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23;artifact_sha256=db3480e4f110b110ec012bdba40d58e00f7f93cb61e52ef72be09359174e0ce8",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "design": "observational",
+      "source_experience": [
+        "silent-core-poison-defense-observation",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "source_ledger": [
+        "silent-0352",
+        "silent-0019",
+        "silent-0020"
+      ],
+      "limitations": [
+        "两个独立A10局；同一局SL不增加分母，首试与最终结果分列。",
+        "非因果、无替线对照；首Boss胜是反对必败的实证，不是完整循环验证。",
+        "两局F32原计划已经注明启动/持续防御缺口，本候选未证明能新增信息或纠正当局决策。",
+        "本批未冻结读取外部统计及外部代表完整局，只能称自有局部候选。",
+        "精确运行源码SHA缺失，版本未知；原题外部附件不计本系统验证。",
+        "原文“本批未读外部”指历史20261024批；本次只新增冻结外部v0.111完整轨迹，未新增自有验证。"
+      ],
+      "publication": "registered-query-library-by-ops",
+      "evidence_status": "unassessed",
+      "consumer_readback": "pending",
+      "batch_supplements": [
+        {
+          "batch": "20261026-154241-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "d5224e7ac8b18de2b8bb796f300213e7b2159b1b12a79922c5d0153d9617c9aa",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-154241/learner/runs/20261026-154259-5cad5fda-abce-48e7-97fe-a43cd2dda3f3-strategy-proposal/scratch/trajectory-cases.json",
+          "source_denominator": 2,
+          "independent_players": null,
+          "design": "observational",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "boundary": "只补外部证据；旧trigger/confidence/范围/自有证据及反证全保留，不改执行规则。"
+        },
+        {
+          "batch": "20261026-182334-strategy-proposal",
+          "source": "external:sts2fun",
+          "input_sha256": "80d5ee3e39e1163273004d1f1fc15315deb3dba06cb4636fcc6033b1835b4c23",
+          "game_version": "v0.111",
+          "collected_at": "2026-10-21",
+          "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/source-ledger.json",
+          "full_history_dto": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261026-182334/learner/runs/20261026-182350-3d4240bd-1639-4ecf-af46-77fa2eed9716-strategy-proposal/scratch/trajectory-cases.json",
+          "formal_publication": "pending",
+          "consumer_readback": "pending",
+          "independent_players": null,
+          "own_runs_added": 0,
+          "boundary": "保原ID/trigger/scope/confidence/evidence_status及所有旧证据、反例；不改出牌/药水/SL/终局执行规则。"
+        }
+      ],
+      "prior_texts": [
+        {
+          "batch": "20261026-182334-strategy-proposal",
+          "knowledge_base": "K1-533bcdcf7832a397912dde52919892be2ddf92a6b97f560d27f4b00409a25c95",
+          "version": "2026-10-26.stock001-c1",
+          "strategy": "仅Silent A10观察：同时持有蛇咬、触媒、灵动步法时，补牌、购物、营火与备战仍分开核对持牌、实际建立和可重复生存；沿最近赢战的净HP与药槽变化检查下一场资源，不把签名齐备当作停止补强的依据。BKK在F6齐备，F17胜仍77→9，二幕F19胜63→30，F33四试失败；TB在F14齐备，F17胜61→26，二幕F28胜51→17、F30胜38→18，F32休至36后F33四试失败。两局都过首Boss，反对“组件齐备就必败”；终败也不能证明蛇咬、触媒、步法或休息选择导致失败。只复核眼前缺口，不指定必拿牌、血线、杀序或喝药时点；替代选择的整战收益未知，其他进阶和版本未验证。\n外部v0.111补证：f96c节点23已有三签名，后续精英仍伤22/23而终胜；bc3f节点21齐，24休至38后25伤37、27止（各1上传）。仅取得前缀/节点末HP代理；不证明启动、顺序收益或安全。",
+          "reason": "Preserve exact previous text and all prior evidence while adding bounded stock003-c5 observations."
+        }
+      ],
+      "confidence": 0,
+      "evidence_type": "原观察/策略（仅引用）",
+      "grading": {
+        "schema": "strategy-grading-v1",
+        "grade": "B−",
+        "category": "构筑组合",
+        "evidence_type": "原观察/策略（仅引用）",
+        "summary": "仅引用：自有2局及少量外部选定案例；182334的4/10是选定赢家中幕1/2记录三签名的比例，不是齐备后的胜率或动作收益，能力是否实际建立未知。",
+        "single_observation_window": false,
+        "basis": {
+          "checkpoint_sha256": "eb5d55911b0cb3f8ee837b3a99e301b9beb8d861803cfe5afa9746ecdf185122",
+          "original_entry_sha256": "401e79a837826674a552db10ce7368870ac4c2ca0590b26677459263cfc98ebf",
+          "assessment_sha256": "6456fd8978e8c33493353162a0930a08a781e5e2454ed7c2cd78025d95e4d55b"
+        }
+      },
+      "grading_population": null,
+      "grading_limitations": [
+        "B−保守支持分0表示未达本级正文门，不表示负效果或策略错误；只查询/引用。",
+        "原两局过首Boss只反对组件齐备必败，不证明完整循环、安全保证、启动顺序或单牌收益。",
+        "终局簇及赢家/后来所得牌不能写入当前触发；取得前缀和节点末HP不是完整实际战前/能力部署快照。",
+        "原幕1/2、持牌、题型、所有证据/反例/历史限制不改；新增自有验证0，旧版本unknown与外部v0.111不合池。"
+      ],
+      "grading_origin": {
+        "knowledge_version": "K1-753af285189835e26c864fe38d6cf5550eab1399158bbb68ce8f73ce078e7fec",
+        "path": "characters/silent/strategy-entries.json",
+        "document_sha256": "e8bef3d8bcadf2a9a565be549d626607dd0cfd23a733ba8930359014e4315f8b",
+        "id": "silent-brain-poison-footwork-realization-review",
+        "source_content_sha256": "401e79a837826674a552db10ce7368870ac4c2ca0590b26677459263cfc98ebf",
+        "source_input_sha256": "15042ed977def62948321bac6d3e2fbc2bee85ba80b8cc76c48c608d6fd2c81e"
+      },
+      "formal_publication": {
+        "schema": "strategy-publication-v1",
+        "status": "reference_only",
+        "authorization": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6539128264",
+        "authorization_sha256": "6a1b0a21f69fc82f18e7bc5a73917830538e0f4a3cd1c68bbaf98299b2c5dd42",
+        "grading_sha256": "51e139c68393de8fd455dc05d5926a6be0e71912dfb87c62cee8c53c9cfa8110"
+      }
+    }
+  ],
+  "revisions": [
+    {
+      "id": "silent-route-hp-observation",
+      "version": "2026-10-26.stock002-c3",
+      "source_sha256": "5adde8b951bade4ab309b433be7c743a221cb612771b47b35a622e2eff4a10f2",
+      "assessment_sha256": "b1566f74a90b4f371a681bcd0b9bcd9a6074037c613e8e7c0bd8936cf54df5d1",
+      "final_sha256": "968758b499ccf867d45b163edada011b6dde7268f6a3769dc9026d8904487cd7",
+      "runtime_revision": "c6537c17e5fab7cec2568b6e8dd586df7e072431d943393b3a8aa68f65ee168d",
+      "grade": "B+",
+      "confidence": 0.29697,
+      "formal_status": "published",
+      "production_published": false
+    },
+    {
+      "id": "silent-brain-poison-footwork-realization-review",
+      "version": "2026-10-26.stock001-c1",
+      "source_sha256": "401e79a837826674a552db10ce7368870ac4c2ca0590b26677459263cfc98ebf",
+      "assessment_sha256": "6456fd8978e8c33493353162a0930a08a781e5e2454ed7c2cd78025d95e4d55b",
+      "final_sha256": "39afcd5f25083d3d0c35808add90eea3b23a298387811114843475e93b9d39bf",
+      "runtime_revision": "8dd074065bdd3831e472a88f879c00bbc9cba492d1e29e5345e76506a2ccae11",
+      "grade": "B−",
+      "confidence": 0,
+      "formal_status": "reference_only",
+      "production_published": false
+    }
+  ]
+}
