@@ -1,0 +1,259 @@
+{
+  "captured_at": "2026-10-31T21:46:01+08:00",
+  "conclusion": {
+    "prepareV6RoomDecision": "called on the ordinary non-fallback loop path; returns original non-V6 decision",
+    "buildV6RoomDecision": "not reached by production shop/rest under brain deciders",
+    "provider": "not called through the room path",
+    "admission": "fixed telemetry value, not a runtime guard"
+  },
+  "sources": [
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "22cde4bc18122b86bd88d3c7af7df151082381d647c6fa5929b7dd42cbd2137b",
+      "excerpts": [
+        {
+          "start": 970,
+          "end": 974,
+          "text": "    let decision = env.v6BrainFallback ? planned.decision : v6Config().mode === \"on\" && v6CardPick ? v6CardPick.decision\n      : await prepareV6RoomDecision(planned.decision, env, v6RoomProjection);\n    const construction = constructionQuestion(env, decision);\n    const handover = (reason: string, elapsed = 0): void => {\n      if (!construction || v6HandoverState.current) return;"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/hand/screens/v6-room-options.ts",
+      "sha256": "a7690a0cc3c7d602820162c53083dddff3f9a0b96579b4aefa5c3ae7106ad7bd",
+      "excerpts": [
+        {
+          "start": 18,
+          "end": 22,
+          "text": "export function v6RoomActive(env: DecisionEnv, kind: V6RoomKind): boolean {\n  const config = v6Config();\n  return !env.v6BrainFallback && config.mode === \"on\" && config.deciders[kind] === \"jev\" && !env.state.in_combat;\n}\n"
+        },
+        {
+          "start": 98,
+          "end": 102,
+          "text": "export function v6ShopOptions(env: DecisionEnv): V6RoomOptions | null {\n  if (!v6RoomActive(env, \"shop\")) return null;\n  const raw = asRecord(env.state.raw.shop), actions = env.state.available_actions;\n  if (!bool(raw.is_open)) return null;\n  const baseline = initialState(env), options: PickOption[] = [];"
+        },
+        {
+          "start": 136,
+          "end": 140,
+          "text": "export function v6RestOptions(env: DecisionEnv): V6RoomOptions | null {\n  if (!v6RoomActive(env, \"rest\")) return null;\n  const options: PickOption[] = [];\n  if (!env.state.available_actions.includes(\"choose_rest_option\")) return null;\n  for (const row of asArray(asRecord(env.state.raw.rest).options).map(asRecord)) {"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/hand/screens/shop.ts",
+      "sha256": "0dd2d50752caf48484ab83843b508ba471e473ef5272ee907cb608a8a831b532",
+      "excerpts": [
+        {
+          "start": 95,
+          "end": 99,
+          "text": "  const v6 = v6ShopOptions(env);\n  if (v6) return buildV6RoomDecision(env, v6);\n\n  const options: PickOption[] = [];\n  /** Every stocked item, affordable or not, with its value as if affordable (the one-shot plan's view). */"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/hand/screens/rest.ts",
+      "sha256": "0f8ad04a5e9682d8bbe2331352a314511ee5c1984994a1dc427581adc113ed52",
+      "excerpts": [
+        {
+          "start": 34,
+          "end": 38,
+          "text": "  const v6 = v6RestOptions(env);\n  if (v6) return buildV6RoomDecision(env, v6);\n\n  const options: PickOption[] = [];\n  /** Each option's game entry (its id and text tell which deck selection it opens). */"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/hand/screens/v6-room.ts",
+      "sha256": "a4d88ee2463323da9e4fb32242d3fd45bf06a89a8a3fcebacfe7b2de2e2a67f1",
+      "excerpts": [
+        {
+          "start": 36,
+          "end": 40,
+          "text": "export function isV6RoomDecision(value: Decision): value is V6RoomDecision { return value.kind === \"ask\" && \"v6Room\" in value; }\nfunction compact(value: JsonValue): JsonValue {\n  if (Array.isArray(value)) return value.map(compact);\n  if (value && typeof value === \"object\") return Object.fromEntries(Object.entries(value)\n    .filter(([key]) => key !== \"evidence\" && key !== \"run_ids\" && key !== \"card_outcome_stats\").map(([key, v]) => [key, compact(v)]));"
+        },
+        {
+          "start": 143,
+          "end": 147,
+          "text": "export async function prepareV6RoomDecision(decision: Decision, env: DecisionEnv, provider?: V6RoomProjection, dir = KNOWLEDGE_DIR): Promise<Decision> {\n  if (!isV6RoomDecision(decision) || !provider) return decision;\n  const parent = currentDecisionBudget(), running = parent?.running;\n  const ms = Math.min(5000, v6Config().budgets.pick_ms), controller = new AbortController();\n  parent?.pause();"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/v6/config.ts",
+      "sha256": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083",
+      "excerpts": [
+        {
+          "start": 18,
+          "end": 22,
+          "text": "  const deciders = Object.fromEntries([\"CARD\", \"POTION\", \"SHOP\", \"REST\"].map(kind =>\n    [kind.toLowerCase(), choice(`V6_${kind}_DECIDER`, [\"brain\", \"jev\"], \"brain\")])) as Record<\"card\" | \"potion\" | \"shop\" | \"rest\", \"brain\" | \"jev\">;\n  const reflex = choice(\"V6_REFLEX\", [\"off\", \"shadow\", \"on\"], \"off\");\n  const direction_replan = choice(\"V6_DIRECTION_REPLAN\", [\"off\", \"on\"], \"off\");\n  const win = {"
+        },
+        {
+          "start": 34,
+          "end": 38,
+          "text": "    admission: \"interfaces_only\" as const, delivered: false as const,\n    samples_pick: numeric(\"V6_SAMPLES_PICK\", 20, 1, 10000, true), samples_act: numeric(\"V6_SAMPLES_ACT\", 100, 1, 10000, true),\n    min_known_option_ratio: numeric(\"V6_MIN_KNOWN_OPTION_RATIO\", .50, 0, 1),\n    direction_min_weight: numeric(\"V6_DIRECTION_MIN_WEIGHT\", .10, 0, 1), win, delta,\n    triggers: {"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/core/decision-budget.ts",
+      "sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+      "excerpts": [
+        {
+          "start": 144,
+          "end": 161,
+          "text": "export async function withinDecisionBudget<T>(stage: string, work: (signal?: AbortSignal) => Promise<T>, cap = Infinity): Promise<T> {\n  const budget = currentDecisionBudget();\n  if (!budget) return work();\n  const ms = budget.remaining(cap), started = budget.now();\n  if (ms <= 0) throw new DecisionBudgetExpired(stage);\n  const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;\n  const expires = new Promise<never>((_, reject) => { timer = setTimeout(() => {\n    controller.abort(); reject(new DecisionBudgetExpired(stage));\n  }, ms); });\n  let timedOut = false;\n  try {\n    const result = await Promise.race([work(controller.signal), expires]);\n    if (budget.remaining() <= 0) { controller.abort(); throw new DecisionBudgetExpired(stage); }\n    return result;\n  }\n  catch (error) { timedOut = error instanceof DecisionBudgetExpired; throw error; }\n  finally {\n    clearTimeout(timer);"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "22cde4bc18122b86bd88d3c7af7df151082381d647c6fa5929b7dd42cbd2137b",
+      "excerpts": [
+        {
+          "start": 970,
+          "end": 974,
+          "text": "    let decision = env.v6BrainFallback ? planned.decision : v6Config().mode === \"on\" && v6CardPick ? v6CardPick.decision\n      : await prepareV6RoomDecision(planned.decision, env, v6RoomProjection);\n    const construction = constructionQuestion(env, decision);\n    const handover = (reason: string, elapsed = 0): void => {\n      if (!construction || v6HandoverState.current) return;"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/hand/screens/v6-room-options.ts",
+      "sha256": "a7690a0cc3c7d602820162c53083dddff3f9a0b96579b4aefa5c3ae7106ad7bd",
+      "excerpts": [
+        {
+          "start": 18,
+          "end": 22,
+          "text": "export function v6RoomActive(env: DecisionEnv, kind: V6RoomKind): boolean {\n  const config = v6Config();\n  return !env.v6BrainFallback && config.mode === \"on\" && config.deciders[kind] === \"jev\" && !env.state.in_combat;\n}\n"
+        },
+        {
+          "start": 98,
+          "end": 102,
+          "text": "export function v6ShopOptions(env: DecisionEnv): V6RoomOptions | null {\n  if (!v6RoomActive(env, \"shop\")) return null;\n  const raw = asRecord(env.state.raw.shop), actions = env.state.available_actions;\n  if (!bool(raw.is_open)) return null;\n  const baseline = initialState(env), options: PickOption[] = [];"
+        },
+        {
+          "start": 136,
+          "end": 140,
+          "text": "export function v6RestOptions(env: DecisionEnv): V6RoomOptions | null {\n  if (!v6RoomActive(env, \"rest\")) return null;\n  const options: PickOption[] = [];\n  if (!env.state.available_actions.includes(\"choose_rest_option\")) return null;\n  for (const row of asArray(asRecord(env.state.raw.rest).options).map(asRecord)) {"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/hand/screens/shop.ts",
+      "sha256": "0dd2d50752caf48484ab83843b508ba471e473ef5272ee907cb608a8a831b532",
+      "excerpts": [
+        {
+          "start": 95,
+          "end": 99,
+          "text": "  const v6 = v6ShopOptions(env);\n  if (v6) return buildV6RoomDecision(env, v6);\n\n  const options: PickOption[] = [];\n  /** Every stocked item, affordable or not, with its value as if affordable (the one-shot plan's view). */"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/hand/screens/rest.ts",
+      "sha256": "0f8ad04a5e9682d8bbe2331352a314511ee5c1984994a1dc427581adc113ed52",
+      "excerpts": [
+        {
+          "start": 34,
+          "end": 38,
+          "text": "  const v6 = v6RestOptions(env);\n  if (v6) return buildV6RoomDecision(env, v6);\n\n  const options: PickOption[] = [];\n  /** Each option's game entry (its id and text tell which deck selection it opens). */"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/hand/screens/v6-room.ts",
+      "sha256": "451cc5290cb19d9e104494e9518738a515397cc87bd9a8fffb8c8d3b1165c58f",
+      "excerpts": [
+        {
+          "start": 35,
+          "end": 39,
+          "text": "export function isV6RoomDecision(value: Decision): value is V6RoomDecision { return value.kind === \"ask\" && \"v6Room\" in value; }\nfunction compact(value: JsonValue): JsonValue {\n  if (Array.isArray(value)) return value.map(compact);\n  if (value && typeof value === \"object\") return Object.fromEntries(Object.entries(value)\n    .filter(([key]) => key !== \"evidence\" && key !== \"run_ids\" && key !== \"card_outcome_stats\").map(([key, v]) => [key, compact(v)]));"
+        },
+        {
+          "start": 142,
+          "end": 146,
+          "text": "export async function prepareV6RoomDecision(decision: Decision, env: DecisionEnv, provider?: V6RoomProjection, dir = KNOWLEDGE_DIR): Promise<Decision> {\n  if (!isV6RoomDecision(decision) || !provider) return decision;\n  const parent = currentDecisionBudget(), running = parent?.running;\n  const ms = Math.min(5000, v6Config().budgets.pick_ms), controller = new AbortController();\n  parent?.pause();"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/v6/config.ts",
+      "sha256": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083",
+      "excerpts": [
+        {
+          "start": 18,
+          "end": 22,
+          "text": "  const deciders = Object.fromEntries([\"CARD\", \"POTION\", \"SHOP\", \"REST\"].map(kind =>\n    [kind.toLowerCase(), choice(`V6_${kind}_DECIDER`, [\"brain\", \"jev\"], \"brain\")])) as Record<\"card\" | \"potion\" | \"shop\" | \"rest\", \"brain\" | \"jev\">;\n  const reflex = choice(\"V6_REFLEX\", [\"off\", \"shadow\", \"on\"], \"off\");\n  const direction_replan = choice(\"V6_DIRECTION_REPLAN\", [\"off\", \"on\"], \"off\");\n  const win = {"
+        },
+        {
+          "start": 34,
+          "end": 38,
+          "text": "    admission: \"interfaces_only\" as const, delivered: false as const,\n    samples_pick: numeric(\"V6_SAMPLES_PICK\", 20, 1, 10000, true), samples_act: numeric(\"V6_SAMPLES_ACT\", 100, 1, 10000, true),\n    min_known_option_ratio: numeric(\"V6_MIN_KNOWN_OPTION_RATIO\", .50, 0, 1),\n    direction_min_weight: numeric(\"V6_DIRECTION_MIN_WEIGHT\", .10, 0, 1), win, delta,\n    triggers: {"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/core/decision-budget.ts",
+      "sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+      "excerpts": [
+        {
+          "start": 144,
+          "end": 161,
+          "text": "export async function withinDecisionBudget<T>(stage: string, work: (signal?: AbortSignal) => Promise<T>, cap = Infinity): Promise<T> {\n  const budget = currentDecisionBudget();\n  if (!budget) return work();\n  const ms = budget.remaining(cap), started = budget.now();\n  if (ms <= 0) throw new DecisionBudgetExpired(stage);\n  const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;\n  const expires = new Promise<never>((_, reject) => { timer = setTimeout(() => {\n    controller.abort(); reject(new DecisionBudgetExpired(stage));\n  }, ms); });\n  let timedOut = false;\n  try {\n    const result = await Promise.race([work(controller.signal), expires]);\n    if (budget.remaining() <= 0) { controller.abort(); throw new DecisionBudgetExpired(stage); }\n    return result;\n  }\n  catch (error) { timedOut = error instanceof DecisionBudgetExpired; throw error; }\n  finally {\n    clearTimeout(timer);"
+        }
+      ]
+    },
+    {
+      "view": "main",
+      "commit": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+      "path": "agent/src/v6/card-pick.ts",
+      "sha256": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+      "excerpts": [
+        {
+          "start": 29,
+          "end": 36,
+          "text": "export function v6CardActive(env: DecisionEnv): boolean {\n  const c = v6Config();\n  return !env.v6BrainFallback && c.mode !== \"off\" && c.deciders.card === \"jev\"\n    && postCombatCardReward(env.screenMemory, env.state);\n}\n\n/** Unknown estimates stay unknown; only W3's weighted paired comparisons rank choices. */\nexport function cardFallback(choices: readonly string[], table?: V6ProjectionTable): string {"
+        }
+      ]
+    },
+    {
+      "view": "LIVE",
+      "commit": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+      "path": "agent/src/v6/card-pick.ts",
+      "sha256": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+      "excerpts": [
+        {
+          "start": 29,
+          "end": 36,
+          "text": "export function v6CardActive(env: DecisionEnv): boolean {\n  const c = v6Config();\n  return !env.v6BrainFallback && c.mode !== \"off\" && c.deciders.card === \"jev\"\n    && postCombatCardReward(env.screenMemory, env.state);\n}\n\n/** Unknown estimates stay unknown; only W3's weighted paired comparisons rank choices. */\nexport function cardFallback(choices: readonly string[], table?: V6ProjectionTable): string {"
+        }
+      ]
+    }
+  ]
+}

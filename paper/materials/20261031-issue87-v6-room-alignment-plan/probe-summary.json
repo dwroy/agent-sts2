@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "probes": [
+    {
+      "view": "main",
+      "prepare_cases_passed": 6,
+      "provider_calls": 0,
+      "same_object_all": true,
+      "jev_on_positive_gate": true,
+      "output_sha256": "3c9ad5236508d16ae5bd1209f08915ba686743a3e5fac8d13ae692546519789d"
+    },
+    {
+      "view": "live",
+      "prepare_cases_passed": 6,
+      "provider_calls": 0,
+      "same_object_all": true,
+      "jev_on_positive_gate": true,
+      "output_sha256": "3c9ad5236508d16ae5bd1209f08915ba686743a3e5fac8d13ae692546519789d"
+    }
+  ],
+  "source_hashes_unchanged_after_probe": true,
+  "affected_current_declarations": [
+    {
+      "producer": "v6-history",
+      "leaves": [
+        "code:agent/src/hand/screens/v6-room.ts"
+      ]
+    },
+    {
+      "producer": "silent-boss-calibration",
+      "leaves": [
+        "code:agent/src/hand/screens/v6-room-projection.ts",
+        "code:agent/src/hand/screens/v6-room.ts"
+      ]
+    }
+  ],
+  "initial_attempt": "Module resolution failed from repository root (tsx installed under agent/); original stderr retained. Retried with correct agent cwd, no install or source edits.",
+  "limitation": "Fixed probes directly call early-return function and guards, not production traces. Production call conclusion comes from frozen deployed source and bounded latest run-config receipt."
+}
