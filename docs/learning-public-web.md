@@ -16,6 +16,24 @@ nice -n 19 python3 ops/codex-ops-learn.py write --task strategy-proposal --chara
 
 优先已下载玩家 A10 库；资料不足才检索/实际打开公开页面。一个合法真实单元依次保存：原批次登记、启动命令/前导、原生 `turn_context` 与 web 事件、来源账本、逐来源去向、真实候选及事务发布回执、该版本的本地工具读取结果。若已下载资料已足够，可以不搜索；这能交内容，但不能称真实搜索/读取验收完成。失败/空结果保留并正常交无增量报告，不伪造来源或知识。后续正常局核该条目实际采用；不为验收开局，搜索或发布成功不代表胜率提升。
 
+## 显式问题输入（#69 后继，2026-10-26）
+
+原053512按缓存优先合同完成且发布了内容，真实search/open为0；两个事实保持，不追加旧线程turn或改写cached/read。需要处理一个缓存未覆盖的公开问题时，在原入口显式给问题文件及其**原始字节SHA256**，不混用历史 `--request` / `research_request`。
+
+本次已授权的问题文件为 `learner/requests/public-web/issue69-accuracy-v0111.json`，仅要求核公开ACCURACY原牌文/升级差异及是否对应缓存v0.111.0，不预填机制、数值或策略。配套代码经新固定组合检查/部署后，ops准确命令为：
+
+```bash
+nice -n 19 python3 ops/codex-ops-learn.py write --task strategy-proposal --character silent --public-web \
+  --public-web-question learner/requests/public-web/issue69-accuracy-v0111.json \
+  --public-web-question-sha256 884051eae3d739536fa7c7c2695628578bfa127fb40eafc7d2b35494a277c43d
+```
+
+本文件是研究输入，SHA变化须用新明确输入，不自行从当前文件重算并冒用原批准题目。schema为 `public-web-question-v1`，精确字段：`id/task/character/question/source_intent/target_game_version/parent`；task固定strategy-proposal、character固定silent，source_intent固定search-and-open-public-sts2，parent指原缓存/研究单元。问题文本是数据，不赋予代码、网络或账号权限。输入只从本仓 `learner/requests/public-web/*.json` 读取，限16KiB，不跟随软链接；任务/角色/来源意图/字段或SHA错误、参数缺一、其他任务及历史request混用均拒绝。
+
+派发前保存原JSON文本、相对路径和SHA到新批的 `public_web.question`，原key绑定题目ID/SHA。同一输入处于running/done/awaiting_review时不盲目重派；失败沿原有界重试门。prepare及TS启动器核原登记；派发后不重新读取可变原问题文件。launcher在新scratch保存原字节 `public-web-question.json`，启动日志保存ID/路径/来源意图/输入SHA，原生原提示绑定沿原链。仅这个显式单元注入缺口问题和搜索/读取意图，覆盖缓存足够即可选题的默认；旧模板原字节/SHA及无问题旧批合同保持，不把所有学习改成必搜。
+
+报告原JSON增加 `public_web_question:{id,input_sha256,status,version_match,conclusion}`，精确引用原ID和输入SHA。status为answered/waiting；version_match为matched/mismatch/unknown，conclusion保实际结论与限制。**answered须同时有原生已完成search及同URL实际已读页面的来源记录**，缓存单独不能冒问题已回答。搜索失败/空结果/读取受阻或未覆盖则waiting，未调用不冒网络失败；可以保无增量/反证，不强发知识。版本无法核对应就unknown，不以现行网页替换旧版本，不因已入库提升可信度。完成证明单列题目ID/SHA、parent/来源意图/目标版本、实际search/read ID及question状态；批次结算不等于问题/联网验收已过。正式候选仍走原K1，部分内容有支持才发布，旧内容成果与自然采用/胜率分账。
+
 ## 来源保存
 
 来源助手只处理 stdin JSON 和本批 scratch，不联网，也不读取传入的任意文件路径。写时间前先 `date`。调用：

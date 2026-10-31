@@ -63,6 +63,35 @@ it("refuses unauthorized ordinary registrations and unsupported engines before e
   expect(f.deps.checkKeys).not.toHaveBeenCalled();
 });
 
+it("injects only the registered question, freezes its bytes in scratch and records its input SHA before TUI acceptance", async () => {
+  const f = fixture();
+  const document = { schema: "public-web-question-v1", id: "fixture-question", task: "strategy-proposal", character: "silent",
+    question: "固定缺口，请核公开页面，不预填知识", source_intent: "search-and-open-public-sts2", target_game_version: "fixture-v1", parent: "fixture-cache" };
+  const content = JSON.stringify(document), sha256 = createHash("sha256").update(content).digest("hex");
+  (f.batch.public_web as Record<string, unknown>).question = { content, sha256, path: "learner/requests/public-web/fixed.json" };
+  f.batch.key = `public-web-question:${document.id}:${sha256}`; f.save();
+  // The host uses persisted input bytes; no mutable question path is read at launch.
+  transport.mockImplementation(async o => {
+    expect(o.prompt).toContain(document.question); expect(o.prompt).toContain(sha256);
+    expect(o.prompt).toContain("status:answered或waiting"); expect(o.prompt).toContain("unknown");
+    expect(readFileSync(join(o.scratch, "public-web-question.json"), "utf8")).toBe(content);
+    const result = { code: 0, reason: "native-task-complete", message: "fixed waiting question report", stopped: true };
+    writeFileSync(o.receipt, JSON.stringify({ state: "session-ended", result })); return result;
+  });
+  expect(await f.run(), f.err.join("")).toBe(0);
+  const file = readdirSync(join(f.root, "runs")).find(n => n.endsWith(".jsonl"))!;
+  const launch = JSON.parse(readFileSync(join(f.root, "runs", file), "utf8").split("\n")[0]!);
+  expect(launch.public_web.question).toEqual({ id: document.id, input_sha256: sha256,
+    path: "learner/requests/public-web/fixed.json", source_intent: document.source_intent });
+});
+
+it("rejects missing or corrupted explicit question input before prechecks or any model", async () => {
+  const f = fixture(); f.batch.key = "public-web-question:fixture-missing:" + "a".repeat(64); f.save();
+  expect(await f.run()).toBe(2); expect(transport).not.toHaveBeenCalled(); expect(f.deps.checkKeys).not.toHaveBeenCalled();
+  (f.batch.public_web as Record<string, unknown>).question = { path: "learner/requests/public-web/fixed.json", content: "{}", sha256: "a".repeat(64) }; f.save();
+  expect(await f.run()).toBe(2); expect(transport).not.toHaveBeenCalled();
+});
+
 it.each([true, false])("persists exec search projections and only harvests page calls after the exact original native prompt (match=%s)", async match => {
   const f = fixture();
   delete (f.deps.env as NodeJS.ProcessEnv).LEARNER_HERDR_PANE;
