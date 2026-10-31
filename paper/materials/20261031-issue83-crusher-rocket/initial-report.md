@@ -18,7 +18,7 @@
 
 外部只读#82已审计1003份Silent A10/v0.111.0安全投影，逐文件重新核SHA。完整下载仍partial，未加自有val。外部KAISER_CRAB_BOSS以199个combat_start的真实CRUSHER、ROCKET实体证明对应，不能仅凭字符串搜索得到错误的0样本。
 
-| 外部首次尝试 | 发现 | 留出 | 重试另列 |
+| 原投影first源标记（独立分母修正见下） | 发现 | 留出 | 重试另列 |
 |---|---:|---:|---:|
 | CRUSHER+ROCKET，全部观察层数 | 114（81胜/11负/22缺end） | 58（41胜/6负/11缺end） | 27 |
 | CRUSHER+ROCKET，仅act2 F33 | 110（78胜/11负/21缺end） | 57（40胜/6负/11缺end） | 27 |
@@ -32,3 +32,10 @@
 KNOWLEDGE_DEMON排下一批，先同步盘点给#87；CRUSHER首版/首轮检查未完成前不抢其计算资源。开发不运行play、不改live/STOP/生产变量/其他会话，逐Boss开启仍由原ops在验证通过后按原授权及自然边界执行，原回滚条件不变。#87当前可先用事实计数/unknown，不能把候选当已发布K1策略或已证机制。
 
 本次首轮提取误用了无duckdb的系统Python，未改数据/安装依赖；原错误日志保留，改用既有data/logdb-venv后只读提取成功：新增30个结束Silent A10局、95尝试、48实际可用，未sync或写生产DB。较早原窗口/较晚val、外部/自有继续分账。
+
+
+## 18:40 独立分母复核修正
+
+初报把投影的first源标记作为首次场次，进一步查出同一run/act/floor存在带#1后缀的新combat_id且attempt_id重新从0开始。CRUSHER的172标记含14个重复冲突段，KNOWLEDGE_DEMON的162含9个。不能算独立首试，也不擅自推定后段就是哪一次重试。按每个run/act/floor最早start_line保留“首个观察段”，后来冲突段另列unknown；原投影first/retry/default_eligible不改写。
+
+修正后CRUSHER为158个首个观察段（发现104/留出54）；仅F33为153（发现100/留出53）。KNOWLEDGE_DEMON为153（发现95/留出58）；仅F33为151（发现94/留出57）。所有胜败/缺end及冲突原件见external-first-conflict-audit.json。按seed分组不变，自有113/104和val52/68不受影响。原计数表及旧提交保留用于审计，#87应用修正分母。
