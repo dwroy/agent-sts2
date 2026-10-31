@@ -18,6 +18,7 @@
   "json_baseline": "21 repeated read+parse samples per fixed Git leaf; see json-baseline.json; not a DB or end-to-end comparison",
   "diff_check": "git diff --check passed",
   "retained_setup_failure": "Initial git add rejected new materials outside sparse-checkout patterns (rc1); use explicit git add --sparse, without changing sparse/shared configuration. Initial staged scan covered decision-log only; rescan after staging every artifact.",
+  "retained_format_failure": "First full staged diff check (rc2) flagged CSV writer CRLF as trailing whitespace on 604 TSV lines. The initial unstaged diff check did not cover untracked materials. Changed writer to explicit LF and normalized only the generated TSV, then checked the complete base-to-final diff again.",
   "runtime_checks": "not run: proposal only, no agent/learner/eval/ops/builders implementation changed; preserve sole check slot",
   "production_operations": "short read-only K1 and D1 transactions, selected control-field readback and file metadata inspection only; no publication or migration",
   "pending": ["supervisor proposal approval", "all implementation, database comparison, latency, fault, release and natural-consumption checks"]

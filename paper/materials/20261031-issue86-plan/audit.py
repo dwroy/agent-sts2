@@ -146,7 +146,7 @@ def main():
         rows[-1].update(producer=producer, consumers=consumers, cadence=cadence, destination=destination)
     (OUT / 'files.json').write_text(json.dumps(rows, ensure_ascii=False, indent=2) + '\n')
     with (OUT / 'files.tsv').open('w') as f:
-        w = csv.writer(f, delimiter='\t')
+        w = csv.writer(f, delimiter='\t', lineterminator='\n')
         w.writerow(['path', 'class', 'family', 'base_bytes', 'live_bytes', 'base_sha256', 'grep_key', 'producer', 'consumers', 'cadence', 'destination'])
         for r in rows:
             w.writerow([r['path'], r['class'], r['family'], r['base_bytes'], r['live'].get('bytes'), r['base_sha256'], r['evidence_key'], r['producer'], r['consumers'], r['cadence'], r['destination']])
