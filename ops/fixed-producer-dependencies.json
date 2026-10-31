@@ -5936,6 +5936,7 @@
             "agent/src/knowledge/render/potion-text.ts",
             "agent/src/knowledge/render/stats-text.ts",
             "agent/src/knowledge/room-costs.ts",
+            "agent/src/knowledge/runtime/approval.ts",
             "agent/src/knowledge/runtime/build-research.ts",
             "agent/src/knowledge/runtime/classification-schema.ts",
             "agent/src/knowledge/runtime/classification.ts",
@@ -8574,8 +8575,9 @@
           ]
         },
         "code:agent/src/knowledge/runtime/store.ts": {
-          "sha256": "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a",
+          "sha256": "2c6cda3bddd16acc6dcbc91acf69a76768a32e29c29779e2d913570134bac3a7",
           "dependencies": [
+            "code:agent/src/knowledge/runtime/approval.ts",
             "code:agent/src/knowledge/runtime/build-research.ts",
             "code:agent/src/knowledge/runtime/classification-schema.ts",
             "code:agent/src/knowledge/runtime/classification.ts",
@@ -8589,7 +8591,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a"
+            "2c6cda3bddd16acc6dcbc91acf69a76768a32e29c29779e2d913570134bac3a7"
           ]
         },
         "code:agent/src/knowledge/runtime/typed-schema.ts": {
@@ -12132,6 +12134,7 @@
             "code:agent/src/knowledge/room-costs.ts",
             "code:agent/src/knowledge/runtime-data.ts",
             "code:agent/src/knowledge/runtime-paths.ts",
+            "code:agent/src/knowledge/runtime/approval.ts",
             "code:agent/src/knowledge/runtime/build-research.ts",
             "code:agent/src/knowledge/runtime/classification-schema.ts",
             "code:agent/src/knowledge/runtime/classification.ts",
@@ -12639,6 +12642,18 @@
           "functions": [],
           "opaque_sites": [
             "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
+          ]
+        },
+        "code:agent/src/knowledge/runtime/approval.ts": {
+          "sha256": "9ba3c58318d2ff15181eaf58930c16aedea276dc7f5761a78af7949cca145143",
+          "dependencies": [
+            "code:agent/src/knowledge/runtime/classification.ts",
+            "code:agent/src/knowledge/runtime/validation.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "9ba3c58318d2ff15181eaf58930c16aedea276dc7f5761a78af7949cca145143"
           ]
         }
       }

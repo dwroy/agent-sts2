@@ -1,0 +1,77 @@
+{
+  "schema": "issue79-checks-v1",
+  "baseline": "3f72590d1943914a254188b1763362bf1692d320",
+  "production_tsc": {
+    "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit",
+    "exit": 0,
+    "evidence": "initial explicit check and sandbox tsc stage before Vitest"
+  },
+  "runtime_tsc": {
+    "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.knowledge-runtime.json --noEmit",
+    "exit": 0,
+    "final_source_emit_check": {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.knowledge-runtime.json --outDir ../.artifacts/issue79/compiled",
+      "cwd": "agent",
+      "exit": 0
+    }
+  },
+  "first_targeted": {
+    "files": 3,
+    "passed": 29,
+    "failed": 0,
+    "duration_seconds": 2.61,
+    "evidence": "native exec output at 19:22:55, source unchanged"
+  },
+  "sandbox": {
+    "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh",
+    "files_passed": 644,
+    "files_failed": 1,
+    "tests_passed": 5958,
+    "tests_failed": 1,
+    "duration_seconds": 1544.57,
+    "failure": "check-imports: missing cold Git fixture paper/materials/issue29-brain-speed/results.jsonl",
+    "log": {
+      "path": ".artifacts/issue79/sandbox.log",
+      "sha256": "c397bfdacbde6c6f606de45339df2ef2b19975adbff6c5ad330e1c4d4c9c0201",
+      "bytes": 28198,
+      "exit": 1
+    }
+  },
+  "cold_fixture_recovery": {
+    "path": "paper/materials/issue29-brain-speed/results.jsonl",
+    "baseline": "3f72590d1943914a254188b1763362bf1692d320",
+    "git_blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "actual_blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
+    "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef",
+    "bytes": 211076,
+    "runtime_source_changed": false
+  },
+  "final_targeted": {
+    "command": "node agent/node_modules/vitest/vitest.mjs run --root agent tests/check-imports.test.ts tests/knowledge-approval.test.ts tests/knowledge-continuation.test.ts tests/knowledge-runtime.test.ts --pool=threads --maxWorkers=1",
+    "files": 4,
+    "passed": 30,
+    "failed": 0,
+    "log": {
+      "path": ".artifacts/issue79/targeted-final.log",
+      "sha256": "41ac28c48ef6e879b9f7c05a886775581cac7d19fae7ae56edd09d8097072784",
+      "bytes": 780,
+      "exit": 0
+    }
+  },
+  "paths": {
+    "command": "node agent/node_modules/vitest/vitest.mjs run --root agent tests/paths.test.ts --pool=forks --maxWorkers=1",
+    "files": 1,
+    "passed": 11,
+    "failed": 0,
+    "log": {
+      "path": ".artifacts/issue79/paths-final.log",
+      "sha256": "e846df8996627f006201c50493aa5f2a82c0f9b4037ec7a631a114a5f69c824d",
+      "bytes": 437,
+      "exit": 0
+    }
+  },
+  "original_batch_replay": "original-replay.json; original inputs read-only, isolated K1 is not production publication",
+  "code_leaves_match_delivery_manifest": true,
+  "runtime_source_changes_after_first_targeted": false,
+  "full_integration_check": "pending original integrator actual ROOT/LIVE combination"
+}

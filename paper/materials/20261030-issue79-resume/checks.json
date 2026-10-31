@@ -1,0 +1,115 @@
+{
+  "schema": "issue79-resume-checks-v1",
+  "main_at_start_and_final": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "original_source": "e08a2365b42c60df59899fb2feff04cb9771a909",
+  "production_tsc": {
+    "exit": 0,
+    "command": "npx tsc -p tsconfig.json --noEmit",
+    "evidence": "sandbox set-e completed tsc and entered Vitest; runtime sources unchanged afterwards"
+  },
+  "runtime_tsc": {
+    "exit": 0,
+    "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.knowledge-runtime.json --outDir .artifacts/issue79/resume-20261030/compiled",
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/tsc-cli.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exit": 0
+    }
+  },
+  "first_targeted": {
+    "files": 7,
+    "passed": 69,
+    "failed": 0,
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/targeted.log",
+      "sha256": "be63c4049758313e4f83a93d1767d7353fac70e79c0a807ae8f1165a82e321dd",
+      "bytes": 1465,
+      "exit": 0
+    }
+  },
+  "sandbox": {
+    "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh --testTimeout=60000",
+    "files_passed": 654,
+    "files_failed": 1,
+    "tests_passed": 6072,
+    "tests_failed": 1,
+    "duration_seconds": 1533.52,
+    "failure": "learning-runtime fixed synthetic calibration fixture: source store SHA versus engineering declaration mismatch",
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/sandbox.log",
+      "sha256": "44b2037f53e3456f72c6760502ee06de7fec633f623ac1000e93fc5001f04da1",
+      "bytes": 31261,
+      "exit": 1
+    },
+    "not_claimed_all_green": true
+  },
+  "declaration": {
+    "first_red": "calibration source read family needs explicit dependency declaration",
+    "all_13_closed": true,
+    "other_12_methods_unchanged": true,
+    "updated_during_sandbox": true,
+    "producer": "silent-boss-calibration",
+    "production_admission": false,
+    "verification": "declaration-verification.json"
+  },
+  "fixed_producer_tests": {
+    "passed": 24,
+    "failed": 0,
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/fixed-producer-tests.log",
+      "sha256": "eacab757d0779721c034fd882089d7c677fe09d09b608d31f378d25c6860486e",
+      "bytes": 124,
+      "exit": 0
+    }
+  },
+  "final_targeted": {
+    "files": 5,
+    "passed": 34,
+    "failed": 0,
+    "includes_original_20_Python_operational_and_calibration_CLI_cases": true,
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/final-targeted.log",
+      "sha256": "a95bf7e52c5bf43f6ec7610a853398ff1486067e5b4d0510f514d9a28625145e",
+      "bytes": 782,
+      "exit": 0
+    }
+  },
+  "retest_preparation_failure": {
+    "reason": "developer invoked Vitest from repository root; ../ops in the unchanged Python wrapper resolved outside this checkout; corrected by cd agent",
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/final-targeted-wrong-cwd.log",
+      "sha256": "1268c2f66acaffb90b1ee39ae056f3ae90d2b42e56978d4e3cf1517bb364e7e7",
+      "bytes": 1891,
+      "exit": 1
+    },
+    "runtime_source_or_assertions_changed": false
+  },
+  "paths": {
+    "files": 1,
+    "passed": 11,
+    "failed": 0,
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/paths.log",
+      "sha256": "5f7e8a612a707480c1db40a04132716714923ab3576eb5014fb7e4c965775355",
+      "bytes": 437,
+      "exit": 0
+    }
+  },
+  "probe": {
+    "exit": 0,
+    "log": {
+      "path": ".artifacts/issue79/resume-20261030/probe.log",
+      "sha256": "9faea84bc5c30959a9eb5009330a2ba7868a180dc9f3b3df12d5d5f50b8e9cd2",
+      "bytes": 3062,
+      "exit": 0
+    },
+    "current_consumer_summary": "consumer-summary.json",
+    "production_writes": false,
+    "preparation_history": "probe-preparation-history.json"
+  },
+  "runtime_source_sha_matches_before_checks": true,
+  "fixed_declaration_input_updated_after_checks_started_and_retested": true,
+  "actual_ROOT_LIVE_combination_full": "pending original integrator",
+  "production_publication": "pending original owner resolution of 4 continuation conflicts and original ops"
+}

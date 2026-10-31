@@ -1,0 +1,78 @@
+{
+  "schema": "issue79-resume-deployment-v1",
+  "actual_main_at_alignment": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "original_preserved": "e08a2365b42c60df59899fb2feff04cb9771a909",
+  "leaves": [
+    {
+      "path": "agent/src/knowledge/runtime/approval.ts",
+      "sha256": "9ba3c58318d2ff15181eaf58930c16aedea276dc7f5761a78af7949cca145143",
+      "git_blob": "e4364250ddcb7bc547ce67377ebc844fa6551d68",
+      "mode": "0o644",
+      "base_sha256": null,
+      "targets": [
+        "ROOT knowledge CLI",
+        "LIVE knowledge CLI import dependency"
+      ]
+    },
+    {
+      "path": "agent/src/knowledge/runtime/store.ts",
+      "sha256": "2c6cda3bddd16acc6dcbc91acf69a76768a32e29c29779e2d913570134bac3a7",
+      "git_blob": "34f11f57f84af1765b559401a2f33b141ab0f9ed",
+      "mode": "0o644",
+      "base_sha256": "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a",
+      "targets": [
+        "ROOT knowledge CLI",
+        "LIVE knowledge CLI; retain actual schema5/context differences"
+      ]
+    },
+    {
+      "path": "learner/lib/knowledge-classification.ts",
+      "sha256": "3bd75d534a9da86fb37d9d25c11e9e506a77b06bad9065f5d99a1fdf9f160a69",
+      "git_blob": "971b747681185b5b3b30220f8952365a2aa3cb58",
+      "mode": "0o664",
+      "base_sha256": "3bdbdba2a7271c76ed4743894e1a0c357ffa2aa47b082847326de02ecd948b4e",
+      "targets": [
+        "ROOT learner injection only"
+      ]
+    },
+    {
+      "path": "ops/fixed-producer-dependencies.json",
+      "sha256": "0b1a7f11fdea4ad193658a312d498f116c8933b1856784d62f4db9d121770802",
+      "git_blob": "4432b7545bf5cd91cd34a57527ae6aa20cdcd067",
+      "mode": "0o644",
+      "base_sha256": "b5f93125c5ae5ae97d10f2f9e338654dd60e054a245df68318109987c25298f6",
+      "targets": [
+        "ROOT engineering declaration; no control/method admission by dev"
+      ]
+    },
+    {
+      "path": "agent/tests/knowledge-approval.test.ts",
+      "sha256": "015ad81e87a76fa8be04c9732ed5c018581a7a3ba5ce9f5c5401d4505349d46a",
+      "git_blob": "faf053879b78d5392ee83341baf79b7423d088da",
+      "mode": "0o644",
+      "base_sha256": null,
+      "targets": [
+        "ROOT fixed tests; may materialize as isolated LIVE consumer fixture, never production data"
+      ]
+    },
+    {
+      "path": "docs/knowledge-source-approval.md",
+      "sha256": "2ac795626340171e15b3b48d4e1e39ce5c27aeac79214eef4c8c8ecf65dec8bd",
+      "git_blob": "8c23df1780193fd3d18e4071aa8370908e571d25",
+      "mode": "0o644",
+      "base_sha256": null,
+      "targets": [
+        "documentation only"
+      ]
+    }
+  ],
+  "runtime_code_leaf_count": 3,
+  "root_declaration_leaf_count": 1,
+  "behavior_release_allocated": false,
+  "new_table_or_schema_change": false,
+  "runtime_pending": [
+    "original owner review for 4 same-object continuation conflicts",
+    "actual publication by original ops",
+    "production tools and original wrapper supervision"
+  ]
+}
