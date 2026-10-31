@@ -1,0 +1,43 @@
+{
+  "schema": "issue83-mechanism-grading-assessment-v1",
+  "policy": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6512932583",
+  "content_authorization": "https://github.com/dwroy/agent-sts2/issues/83#issuecomment-6543327817",
+  "checkpoint_sha256": "a042e3db77213f7ae5568d3d220ad5467238722a13006e44576c004a5cde329c",
+  "conclusion": "two B+ deterministic observed mechanism facts, confidence=null; no low-confidence combat candidate or causal strategy",
+  "entries": {
+    "mechanism-rocket-death-crusher-rage-a10": {
+      "original_entry_sha256": "27f703322ac1e940915baa689bce1ee7bb8c2e14a6f6130a1b7f8a7b92ec78e4",
+      "own_run": "9TG1RP5LFAAK",
+      "source_fact_sha256": "74090383e0444f5b2d6d325f8661a0eb0fe1fc44f57b5912d444bef60f7967bf",
+      "retained_limits": [
+        "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+        "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+        "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+        "76/100包含两个死亡方向；本条ROCKET死→CRUSHER的独立支持为60，不是76%触发概率。",
+        "本条只发布ROCKET死→CRUSHER，其他方向/角色/进阶须保原证据适用范围；99为获得值，不保证下一回合仍完整99。",
+        "旧power描述+5与原帧+6冲突保留，不用描述覆盖实测。"
+      ]
+    },
+    "mechanism-rocket-charge-laser-a10": {
+      "original_entry_sha256": "a2d1965b5eae4434cb14f97cb1bfd6953a876fb552ebd010ca1728337508242e",
+      "own_run": "9TG1RP5LFAAK",
+      "source_fact_sha256": "f898e94128367c08b36373d4a0c69dbdec2a71d7da12111579aa89a592c325fe",
+      "retained_limits": [
+        "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+        "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+        "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+        "窗口计数不是独立run数。",
+        "重复同招与10个未解析buff窗口保留；不得写成一定/必然接激光。",
+        "不含具体卡牌推荐、胜率/HP收益或先杀目标策略。"
+      ]
+    }
+  },
+  "dedup": {
+    "baseline": "K1-880299947230dc7c1657051e9f6b3114bd19263c0f44cd8e50c48bc6d2b91853",
+    "related_old_ids": [
+      "silent-brain-crab-surviving-part-budget",
+      "issue80-tactics-crab-two-side-current-budget"
+    ],
+    "decision": "old rows are action/target-budget observations, not these explicit numeric mechanism endpoints; append two narrowly scoped facts, preserve all173 old objects and evidence unchanged"
+  }
+}

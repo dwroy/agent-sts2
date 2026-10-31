@@ -1,0 +1,282 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "mechanism-rocket-death-crusher-rage-a10",
+      "version": "2026-10-31-issue83-mechanism-v1",
+      "name": "ROCKET死后CRUSHER获得6力量/99格挡",
+      "aliases": [
+        "CRUSHER",
+        "ROCKET"
+      ],
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "fight_plan",
+          "card_reward",
+          "rest",
+          "shop"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "KAISER_CRAB_BOSS",
+          "KAISER_CRAB",
+          "CRUSHER+ROCKET"
+        ]
+      },
+      "strategy": "机制事实（已从原件复核）：Silent A10已观察ROCKET死亡后，存活CRUSHER力量+6并获得99格挡；自有首试9TG1RP5LFAAK F33 T7→8为力量3→9、格挡0→99。外部100个发现run中60个同向完整窗口支持；反向16个另账。99是获得值，不保证下个回合仍有完整99；旧描述+5与实测+6冲突保留。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9TG1RP5LFAAK",
+          "floor": 33,
+          "role": "support",
+          "ref": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json#own.single_claw_death; SHA256=42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:spire-codex",
+          "url": "https://spire-codex.com",
+          "version": "v0.111.0",
+          "dataset_sha256": "5626aa6ea46a70d24a6eff3d4a9be2c2f40f3c45b7a170f4d881f940e865718a",
+          "downloaded_at": "2026-10-31",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "partial1003 safe projection; discovery only; act2/F33; earliest observed run/act/floor start; source-first duplicates excluded; exact Crusher219/Rocket209"
+          },
+          "statistic": {
+            "name": "rocket_death_crusher_strength6_block99_observed_runs",
+            "value": 60,
+            "unit": "observed_runs"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+            "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+            "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+            "76/100包含两个死亡方向；本条ROCKET死→CRUSHER的独立支持为60，不是76%触发概率。",
+            "本条只发布ROCKET死→CRUSHER，其他方向/角色/进阶须保原证据适用范围；99为获得值，不保证下一回合仍完整99。",
+            "旧power描述+5与原帧+6冲突保留，不用描述覆盖实测。"
+          ],
+          "license": "Public source attribution; derived statistics/minimal event witnesses only; no raw replay redistribution",
+          "ref": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json#external_rage",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": null,
+      "evidence_type": "机制事实",
+      "evidence_status": "aligned",
+      "limits": [
+        "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+        "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+        "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+        "76/100包含两个死亡方向；本条ROCKET死→CRUSHER的独立支持为60，不是76%触发概率。",
+        "本条只发布ROCKET死→CRUSHER，其他方向/角色/进阶须保原证据适用范围；99为获得值，不保证下一回合仍完整99。",
+        "旧power描述+5与原帧+6冲突保留，不用描述覆盖实测。"
+      ],
+      "review_observation": {
+        "conditions": {
+          "character": "silent",
+          "ascension": 10,
+          "own_game_version": "unknown",
+          "external_game_version": "v0.111.0"
+        },
+        "denominators": {
+          "own_independent_runs": 1,
+          "own_attempt": 1,
+          "external_discovery_first_observed_runs": 100,
+          "external_matching_same_direction_runs": 60,
+          "external_charge_strength3_windows": null,
+          "external_charge_laser_transitions": null,
+          "player_count": null
+        },
+        "counterexamples": [],
+        "limitations": [
+          "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+          "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+          "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+          "76/100包含两个死亡方向；本条ROCKET死→CRUSHER的独立支持为60，不是76%触发概率。",
+          "本条只发布ROCKET死→CRUSHER，其他方向/角色/进阶须保原证据适用范围；99为获得值，不保证下一回合仍完整99。",
+          "旧power描述+5与原帧+6冲突保留，不用描述覆盖实测。"
+        ]
+      },
+      "grading": {
+        "schema": "strategy-grading-v1",
+        "grade": "B+",
+        "category": "Boss打法",
+        "evidence_type": "机制事实",
+        "summary": "机制事实（已从原件复核）：Silent A10已观察ROCKET死亡后，存活CRUSHER力量+6并获得99格挡；自有首试9TG1RP5LFAAK F33 T7→8为力量3→9、格挡0→99。外部100个发现run中60个同向完整窗口支持；反向16个另账。99是获得值，不保证下个回合仍有完整99；旧描述+5与实测+6冲突保留。",
+        "single_observation_window": false,
+        "basis": {
+          "checkpoint_sha256": "a042e3db77213f7ae5568d3d220ad5467238722a13006e44576c004a5cde329c",
+          "original_entry_sha256": "27f703322ac1e940915baa689bce1ee7bb8c2e14a6f6130a1b7f8a7b92ec78e4",
+          "assessment_sha256": "e7a760bfea44a5c6122a901efeb07fa83e6ea87a230768e4569c7a662ebe8a09"
+        }
+      },
+      "formal_publication": {
+        "schema": "strategy-publication-v1",
+        "status": "published",
+        "authorization": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6512932583",
+        "authorization_sha256": "8f6bcb91e9828ff9b8202f7d3f687b82a41b41032699392230a3f0f929a21271",
+        "grading_sha256": "1b542a441cbc20360905bf8e94d244ce680782e9cd30b931faed8d62f032b892",
+        "content_authorization": "https://github.com/dwroy/agent-sts2/issues/83#issuecomment-6543327817",
+        "content_authorization_sha256": "6f3456ffb7681d30a64f2c35a4bcb7c306d40d84019ded22fe5d586d35d03418",
+        "note": "formal eligibility under mechanism-fact contract; actual K1 publication/consumer receipt pending ops"
+      }
+    },
+    {
+      "id": "mechanism-rocket-charge-laser-a10",
+      "version": "2026-10-31-issue83-mechanism-v1",
+      "name": "ROCKET充能+3力量后通常激光",
+      "aliases": [
+        "CRUSHER",
+        "ROCKET"
+      ],
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "fight_plan",
+          "card_reward",
+          "rest",
+          "shop"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "KAISER_CRAB_BOSS",
+          "KAISER_CRAB",
+          "CRUSHER+ROCKET"
+        ]
+      },
+      "strategy": "机制事实（已从原件复核）：Silent A10已观察ROCKET充能获得3力量，随后通常接激光；自有首试9TG1RP5LFAAK F33 T3→4及外部100个发现run的104个+3窗口、113次相邻充能→激光转移。窗口不等于独立局；存在重复同招及未解析buff窗口，不能说一定或无例外循环。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "9TG1RP5LFAAK",
+          "floor": 33,
+          "role": "support",
+          "ref": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json#own.t3_t4_charge; SHA256=42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:spire-codex",
+          "url": "https://spire-codex.com",
+          "version": "v0.111.0",
+          "dataset_sha256": "5626aa6ea46a70d24a6eff3d4a9be2c2f40f3c45b7a170f4d881f940e865718a",
+          "downloaded_at": "2026-10-31",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "partial1003 safe projection; discovery only; act2/F33; earliest observed run/act/floor start; source-first duplicates excluded; exact Crusher219/Rocket209"
+          },
+          "statistic": {
+            "name": "charge_to_laser_observed_adjacent_transitions",
+            "value": 113,
+            "unit": "adjacent_transitions"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+            "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+            "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+            "窗口计数不是独立run数。",
+            "重复同招与10个未解析buff窗口保留；不得写成一定/必然接激光。",
+            "不含具体卡牌推荐、胜率/HP收益或先杀目标策略。"
+          ],
+          "license": "Public source attribution; derived statistics/minimal event witnesses only; no raw replay redistribution",
+          "ref": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json#external.intent_transitions",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": null,
+      "evidence_type": "机制事实",
+      "evidence_status": "aligned",
+      "limits": [
+        "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+        "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+        "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+        "窗口计数不是独立run数。",
+        "重复同招与10个未解析buff窗口保留；不得写成一定/必然接激光。",
+        "不含具体卡牌推荐、胜率/HP收益或先杀目标策略。"
+      ],
+      "review_observation": {
+        "conditions": {
+          "character": "silent",
+          "ascension": 10,
+          "own_game_version": "unknown",
+          "external_game_version": "v0.111.0"
+        },
+        "denominators": {
+          "own_independent_runs": 1,
+          "own_attempt": 1,
+          "external_discovery_first_observed_runs": 100,
+          "external_matching_same_direction_runs": null,
+          "external_charge_strength3_windows": 104,
+          "external_charge_laser_transitions": 113,
+          "player_count": null
+        },
+        "counterexamples": [
+          "同招重复与10个未解析buff窗口；仅声明通常，不作强制循环。"
+        ],
+        "limitations": [
+          "仅Silent A10；自有原局build unknown，外部确切v0.111.0，不按日期补版本。",
+          "外部partial1003的发现组、F33首个观察段100个run；首段可能缺前缀，玩家独立性未知；不计自有校准n。",
+          "只声明可复核机制，不声明卡牌优劣、固定杀序、胜率/HP收益或已过模型准入。",
+          "窗口计数不是独立run数。",
+          "重复同招与10个未解析buff窗口保留；不得写成一定/必然接激光。",
+          "不含具体卡牌推荐、胜率/HP收益或先杀目标策略。"
+        ]
+      },
+      "grading": {
+        "schema": "strategy-grading-v1",
+        "grade": "B+",
+        "category": "Boss打法",
+        "evidence_type": "机制事实",
+        "summary": "机制事实（已从原件复核）：Silent A10已观察ROCKET充能获得3力量，随后通常接激光；自有首试9TG1RP5LFAAK F33 T3→4及外部100个发现run的104个+3窗口、113次相邻充能→激光转移。窗口不等于独立局；存在重复同招及未解析buff窗口，不能说一定或无例外循环。",
+        "single_observation_window": false,
+        "basis": {
+          "checkpoint_sha256": "bb2315049f07425fe5562748ab60a03bd47b1c7d7a7d7a3aef75c91b1c5a6682",
+          "original_entry_sha256": "a2d1965b5eae4434cb14f97cb1bfd6953a876fb552ebd010ca1728337508242e",
+          "assessment_sha256": "e7a760bfea44a5c6122a901efeb07fa83e6ea87a230768e4569c7a662ebe8a09"
+        }
+      },
+      "formal_publication": {
+        "schema": "strategy-publication-v1",
+        "status": "published",
+        "authorization": "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6512932583",
+        "authorization_sha256": "8f6bcb91e9828ff9b8202f7d3f687b82a41b41032699392230a3f0f929a21271",
+        "grading_sha256": "f5d79d452f004ee82a372409b8f7819fd28ba39f72c870c666cbfa2c6fec6309",
+        "content_authorization": "https://github.com/dwroy/agent-sts2/issues/83#issuecomment-6543327817",
+        "content_authorization_sha256": "6f3456ffb7681d30a64f2c35a4bcb7c306d40d84019ded22fe5d586d35d03418",
+        "note": "formal eligibility under mechanism-fact contract; actual K1 publication/consumer receipt pending ops"
+      }
+    }
+  ]
+}
