@@ -18,6 +18,7 @@ if [ "${ROOT:-}" = /home/dw/Projects/agent-sts2 ] \
   && [ "${CHARACTER:-SILENT}" = SILENT ] \
   && [ "${BRAIN_ENGINE:-codex}" = codex ]; then
   export BRAIN_CODEX_EFFORT=xhigh
+  export BRAIN_CODEX_SERVICE_TIER=fast
 fi
 export V6_BUILD="${V6_BUILD:-off}" V6_REFLEX="${V6_REFLEX:-off}"
 export V6_CARD_DECIDER="${V6_CARD_DECIDER:-brain}" V6_POTION_DECIDER="${V6_POTION_DECIDER:-brain}"
