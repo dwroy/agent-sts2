@@ -1,7 +1,10 @@
 /** Explicit #83 deployment scope, not inferred encounter aliases or gameplay knowledge. */
 import { plain, safeKey } from "./schema.js";
 
-const BOSSES = new Set(["AEONGLASS", "TEST_SUBJECT", "THE_INSATIABLE", "QUEEN"]);
+const SINGLE_BOSSES = new Set(["AEONGLASS", "TEST_SUBJECT", "THE_INSATIABLE", "QUEEN"]);
+const CRAB_PAIR = "CRUSHER+ROCKET";
+const CRAB_PARTS = new Set(["CRUSHER", "ROCKET"]);
+const BOSSES = new Set([...SINGLE_BOSSES, CRAB_PAIR]);
 export type CombatEntrySelectionConfig = { mode: "legacy" } | { mode: "invalid" }
   | { mode: "restricted"; bosses: Record<string, string[]> };
 export interface CombatEntrySelection {
@@ -28,15 +31,30 @@ export function combatEntrySelectionConfig(raw: string | undefined): CombatEntry
   } catch { return { mode: "invalid" }; }
 }
 
-/** Match the observed living entity, never the next run boss or a name parsed from prose. */
+/** Match observed entities, never the next run boss or a name parsed from prose. */
 export function selectedCombatEntries<T extends { id: string }>(entries: T[], character: string, context: Record<string, unknown>,
   config: CombatEntrySelectionConfig): { entries: T[]; selection?: CombatEntrySelection } | null {
   if (character !== "silent" || config.mode === "legacy") return { entries };
   if (config.mode === "invalid" || !Number.isInteger(context.act) || ![1, 2, 3].includes(Number(context.act))
     || !plain(context.enemies) || !Array.isArray(context.enemies.items)) return null;
-  const bosses = context.enemies.items.filter(plain).filter(e => e.alive === true && typeof e.id === "string" && BOSSES.has(e.id));
-  if (bosses.length !== 1) return null;
-  const boss = String(bosses[0]!.id), ids = config.bosses[boss];
+  const entities = context.enemies.items.filter(plain);
+  const crabEntities = entities.filter(e => typeof e.id === "string" && CRAB_PARTS.has(e.id));
+  const parts = crabEntities.filter(e => e.alive === true);
+  let boss: string;
+  if (parts.length) {
+    // Own and attributed replay openings identify this Act 2 encounter by both
+    // parts. Later own frames remove the dead part, so a known survivor is valid.
+    // Extra/unknown living entities and duplicate parts cannot certify the pair.
+    if (context.act !== 2 || new Set(crabEntities.map(e => e.id)).size !== crabEntities.length
+      || entities.length !== context.enemies.items.length
+      || entities.some(e => e.alive !== false && !parts.includes(e))) return null;
+    boss = CRAB_PAIR;
+  } else {
+    const bosses = entities.filter(e => e.alive === true && typeof e.id === "string" && SINGLE_BOSSES.has(e.id));
+    if (bosses.length !== 1) return null;
+    boss = String(bosses[0]!.id);
+  }
+  const ids = config.bosses[boss];
   if (!ids?.length || ids.some(id => !entries.some(entry => entry.id === id))) return null;
   const allowed = new Set(ids);
   return { entries: entries.filter(entry => allowed.has(entry.id)),

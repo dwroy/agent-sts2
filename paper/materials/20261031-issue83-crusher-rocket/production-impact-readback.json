@@ -1,0 +1,59 @@
+{
+  "schema": "issue83-production-impact-readback-v1",
+  "observed_live_HEAD": "3a3eba6a6eb35abc82d06c325dec340b23cc0d70",
+  "source_refs": {
+    "agent/src/reflex/rollout.ts": {
+      "sha256": "4ef15bad2f859038e81f750f114f25997f1937440dc138230d2fe3a0f4cbba36"
+    },
+    "agent/src/reflex/combat-plan.ts": {
+      "sha256": "45ca9e18dc449aa5e7e0a6f4fcf3f2918ca034a69e11694201ea3c9e60ea5411"
+    },
+    "agent/src/sim/build-sim-worker.ts": {
+      "sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087"
+    },
+    "agent/src/sim/boss-lines-worker.ts": {
+      "sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9"
+    },
+    "agent/src/sim/boss-sim.ts": {
+      "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6"
+    },
+    "agent/src/sim/build-sim-facts.ts": {
+      "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e"
+    },
+    "agent/src/sim/build-sim.ts": {
+      "sha256": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115"
+    },
+    "agent/src/core/config.ts": {
+      "sha256": "8a7735314bda471628a728be6cd063e23c69cce63a3b36a2d2abb9da3a46cdb5"
+    },
+    "agent/src/hand/loop.ts": {
+      "sha256": "22cde4bc18122b86bd88d3c7af7df151082381d647c6fa5929b7dd42cbd2137b"
+    }
+  },
+  "latest_run_config": {
+    "ts": "2026-10-31T11:55:16.570Z",
+    "run_id": "AGS1M9XHX83H",
+    "character": "SILENT",
+    "source_commit": null,
+    "source_error": "git status failed: spawnSync git ENOBUFS",
+    "loop": {
+      "boss_sim_build": "on",
+      "sim_adaptive": "on",
+      "sim_adaptive_requested": "on",
+      "sim_adaptive_admission": "accepted",
+      "boss_sim_completion": "required-full-paired-v1",
+      "boss_sim_build_requested": "on"
+    }
+  },
+  "used_in_production": true,
+  "entrypoints": {
+    "B3": "build-sim-facts -> compareOptions/BuildSimPool or adaptive-decks -> build-sim-worker fightSample -> simulateFight -> applyPlan; act_boss_sim and per-option boss_sim",
+    "adaptive": "SIM_ADAPTIVE changes sample allocation only; B3/B2 still use same whole-fight physics",
+    "B2": "bossLineSim -> runLines/adaptive -> boss-lines-worker fightSample -> simulateFight -> applyPlan; required Silent evaluation runs; low trust normally hides first-attempt whole-fight payload and does not rank; SL retry showSim can expose low-confidence numbers",
+    "five_turn": "rolloutDecision -> simulate(fullFight false) -> shared applyPlan unconditional block reset; remaining defect outside current whole-fight-only isolation scope",
+    "one_turn": "solveTurn alone is not affected by this later block reset; already produces +6/99"
+  },
+  "effect_limit": "Missing enemy block can bias downstream forecast optimistically in affected trajectories; no causal per-decision magnitude established",
+  "engineering_action": "prepare independent whole-fight repair after87; keep C request queued and selectors off",
+  "no_production_changes": true
+}

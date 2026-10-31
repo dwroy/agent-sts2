@@ -27,8 +27,10 @@ function plan(value: unknown): Plan | null {
     if (typeof value.outcome[key] !== "number" || !Number.isFinite(value.outcome[key])) throw Error("Plan outcome field missing");
   }
   for (const step of value.steps) {
+    // Production Step.target is number | null; null denotes an untargeted play.
     if (!plain(step) || typeof step.cardId !== "string" || !step.cardId
-      || ["cardIndex", "cost", "target"].some(k => step[k] !== undefined && (typeof step[k] !== "number" || !Number.isFinite(step[k])))) throw Error("invalid frozen step");
+      || ["cardIndex", "cost"].some(k => step[k] !== undefined && (typeof step[k] !== "number" || !Number.isFinite(step[k])))
+      || step.target !== undefined && step.target !== null && (typeof step.target !== "number" || !Number.isFinite(step.target))) throw Error("invalid frozen step");
     if (step.pileCard !== undefined && !plain(step.pileCard)) throw Error("invalid frozen pile card");
   }
   return value as unknown as Plan;

@@ -1,0 +1,47 @@
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -628,0 +629,2 @@
++  /** Observed Silent A10 whole-fight poison-triggered Crab Rage block carry. */
++  observedSilentCrabPoisonRageCarry?: boolean;
+@@ -2085,0 +2088 @@
++  turnSolver?: SolverInput,
+@@ -2256,0 +2260,20 @@
++  // 9TG1RP5LFAAK F33 T7->T8: Rocket dies to poison after the enemy
++  // block reset; Crusher's new 99 Block remains for our following turn.
++  let observedLateRage = -1;
++  const crusher = enemies.find(e => e.id === "CRUSHER"), rocket = enemies.find(e => e.id === "ROCKET");
++  if (fullFight && input.observedSilentCrabPoisonRageCarry === true && input.meta.asc === 10 && turnSolver &&
++      crusher?.alive && rocket?.alive && enemies.length === 2 && crusher.maxHp === 219 && rocket.maxHp === 209 &&
++      crusher.move === "ENLARGING_STRIKE_MOVE" && crusher.block === 0 &&
++      (crusher.powers["CRAB_RAGE_POWER"] ?? 0) === 1 && (rocket.powers["CRAB_RAGE_POWER"] ?? 0) === 1 &&
++      !turnSolver.player.parryingShield && !(turnSolver.player.juggernaut ?? 0) &&
++      !hand.some(c => c.cardId === "HOWL_FROM_BEYOND")) {
++    const survivor = after.get(crusher.index), dead = after.get(rocket.index);
++    if (survivor && dead && survivor.hp > 0 && dead.hp === 0 && survivor.strengthGained === 6 && survivor.block === 99) {
++      const traced = traceSteps(turnSolver, plan.steps);
++      const beforeEnd = traced.transitions.at(-1)?.after ?? traced.initial;
++      const stillAlive = beforeEnd.enemies.find(e => e.index === rocket.index);
++      if (traced.complete && !beforeEnd.pendingSelection && beforeEnd.unknown.length === 0 && beforeEnd.unknownHand === 0 &&
++          stillAlive && stillAlive.hp > 0 && stillAlive.poison >= stillAlive.hp) observedLateRage = crusher.index;
++    }
++  }
++
+@@ -2474 +2497 @@
+-        e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
++        e.block = (e.index === observedLateRage ? 99 : e.burrowed ? e.block : 0) + (m?.block ?? 0);
+@@ -2916 +2939 @@
+-  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
++  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown, firstSolver));
+@@ -3140 +3163 @@
+-    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
++    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known, turnSolver));
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -827 +827 @@
+-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "observedSilentQueenAllyStrength" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
++): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "observedSilentQueenAllyStrength" | "observedSilentCrabPoisonRageCarry" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+@@ -928,0 +929,4 @@
++    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 2 &&
++      raw.some(e => str(e["enemy_id"]) === "CRUSHER" && e["max_hp"] === 219 && powersOf(e)["CRAB_RAGE_POWER"] === 1) &&
++      raw.some(e => str(e["enemy_id"]) === "ROCKET" && e["max_hp"] === 209 && powersOf(e)["CRAB_RAGE_POWER"] === 1)
++      ? { observedSilentCrabPoisonRageCarry: true } : {}),

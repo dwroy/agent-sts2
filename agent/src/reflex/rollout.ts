@@ -626,6 +626,8 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  /** Observed Silent A10 poison-triggered Crab Rage block carry (whole and five-turn). */
+  observedSilentCrabPoisonRageCarry?: boolean;
   captureBossMargin?: boolean;
   /** Opt-in trace of selected lines only; the search and random stream are unchanged. */
   captureCore?: boolean;
@@ -2083,6 +2085,7 @@ function applyPlan(
   fullFight = false,
   /** Whole fights: the cards the hand's draw cards draw, known from the pile (knownDraws), by their solver index. */
   known?: Map<number, { card: CardModel; base: CardModel }>,
+  turnSolver?: SolverInput,
 ): TurnRecord {
   const o = plan.outcome;
   const startHp = player.hp;
@@ -2254,6 +2257,26 @@ function applyPlan(
   // Self-Forming Clay: this turn's HP losses give the next turn's block.
   player.clayNext = o.clayBlockNext ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
+  // 9TG1RP5LFAAK F33 T7->T8: Rocket dies to poison after the enemy
+  // block reset; Crusher's new 99 Block remains for our following turn.
+  let observedLateRage = -1;
+  const crusher = enemies.find(e => e.id === "CRUSHER"), rocket = enemies.find(e => e.id === "ROCKET");
+  if (input.observedSilentCrabPoisonRageCarry === true && input.meta.asc === 10 && input.meta.act === 2 && turnSolver &&
+      crusher?.alive && rocket?.alive && enemies.length === 2 && crusher.maxHp === 219 && rocket.maxHp === 209 &&
+      crusher.move === "ENLARGING_STRIKE_MOVE" && crusher.block === 0 &&
+      (crusher.powers["CRAB_RAGE_POWER"] ?? 0) === 1 && (rocket.powers["CRAB_RAGE_POWER"] ?? 0) === 1 &&
+      !turnSolver.player.parryingShield && !(turnSolver.player.juggernaut ?? 0) &&
+      !hand.some(c => c.cardId === "HOWL_FROM_BEYOND")) {
+    const survivor = after.get(crusher.index), dead = after.get(rocket.index);
+    if (survivor && dead && survivor.hp > 0 && dead.hp === 0 && survivor.strengthGained === 6 && survivor.block === 99) {
+      const traced = traceSteps(turnSolver, plan.steps);
+      const beforeEnd = traced.transitions.at(-1)?.after ?? traced.initial;
+      const stillAlive = beforeEnd.enemies.find(e => e.index === rocket.index);
+      if (traced.complete && !beforeEnd.pendingSelection && beforeEnd.unknown.length === 0 && beforeEnd.unknownHand === 0 &&
+          stillAlive && stillAlive.hp > 0 && stillAlive.poison >= stillAlive.hp) observedLateRage = crusher.index;
+    }
+  }
+
   // Shriek/Plow: taken to its threshold this turn (the first time), it is stunned and this turn's move is lost
   // (the solver already left its hit out); it goes on from STUNNED (Terror Eel: Terror next), and a move it
   // did not make neither spends its Vigor nor gains Strength or Block (XLJQ F7 T5: stunned at 65 with
@@ -2471,7 +2494,7 @@ function applyPlan(
         if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").
-        e.block = (e.burrowed ? e.block : 0) + (m?.block ?? 0);
+        e.block = (e.index === observedLateRage ? 99 : e.burrowed ? e.block : 0) + (m?.block ?? 0);
         if (m?.burrows) e.burrowed = true;
         // Plating: a stack less at the start of its turn (not its first), its block at the end.
         if (e.plating > 0 && input.meta.t + turn >= 2) e.plating -= 1;
@@ -2913,7 +2936,7 @@ function simulate(
   const turnTo = (line: Plan) => {
     for (const step of line.steps) if (typeof step.target === "number") facing = step.target;
   };
-  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown));
+  records.push(applyPlan(0, first, firstHand, firstBase, player, enemies, piles, input, random, powers, fullFight, firstKnown, firstSolver));
   const capture = (solver: SolverInput, line: Plan, turn: number) => {
     if (!input.captureCore) return;
     const traced = traceSteps(solver, line.steps);
@@ -3137,7 +3160,7 @@ function simulate(
     if (solved.timedOut || (Number.isFinite(deadline) && budget.now() - budget.start >= deadline)) return null;
     const best = solved.plans[0];
     if (!best) break;
-    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
+    records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known, turnSolver));
     capture(turnSolver, best, (s.turn ?? 1) + h);
     turnTo(best);
     witherPlayed += cardPlays(best);

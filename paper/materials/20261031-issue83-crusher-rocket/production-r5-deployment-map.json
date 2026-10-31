@@ -1,0 +1,63 @@
+{
+  "schema": "issue83-production-r5-deployment-v1",
+  "baseline": "f2d8e742776751620a675fae168c04b4323421f7",
+  "authorization": "83/6543650548",
+  "supersedes": "issue-83-crab-tools-r4 / c7e4252ab74c0be78efbc47354b6c610b01307c8 (not submitted; invalidated by original integrator 83/6543677604)",
+  "order": "after #87; before #86 A1; #77 remains first",
+  "files": {
+    "agent/src/v6/combat-entry-selection.ts": {
+      "sha256": "a43e6d52cc4095b7b7b953f33e17b3907b4acae4030c069322c9eaf19864f7ab",
+      "bytes": 4410,
+      "deploy": "LIVE+ROOT"
+    },
+    "agent/tools/v6/capture-combat-entry-replay.ts": {
+      "sha256": "0daf78e557732fad91bd479262edd325370880d7aa1e5de3f45620dd7ebc0715",
+      "bytes": 5884,
+      "deploy": "ROOT-only"
+    },
+    "agent/src/reflex/rollout.ts": {
+      "sha256": "e606a5024fb71e54071e1cd1a75f8db5f8817ea1b8c01bc650122a0e2cac28a3",
+      "bytes": 221744,
+      "deploy": "LIVE+ROOT"
+    },
+    "agent/src/reflex/rollout-live.ts": {
+      "sha256": "2bf6d984a1d09602792f7a955da1c7d155dc1c8cc68e41ab57b063980cbf9353",
+      "bytes": 80331,
+      "deploy": "LIVE+ROOT"
+    },
+    "ops/fixed-producer-dependencies.json": {
+      "sha256": "1b548d87bb1bc3f6a36ceccdbb4804c89863338510f54b81323ad508df073f42",
+      "bytes": 561297,
+      "deploy": "ROOT-only"
+    },
+    "agent/tests/combat-entry-selection.test.ts": {
+      "sha256": "a30a4c957bbc12b379348950199794bddb21e8dfb18b3520d07251a38673f7a1",
+      "bytes": 15350,
+      "deploy": "test-only"
+    },
+    "agent/tests/silent-crab-poison-rage-carry.test.ts": {
+      "sha256": "e53d6a7432f95f9d7f604869c14bfb1169eab62c596fbcc532fbfb19f7a36b41",
+      "bytes": 5358,
+      "deploy": "test-only"
+    },
+    "agent/tests/fixtures/silent-crab-poison-rage-tune.json": {
+      "sha256": "7100b8f2d025b77ca8039aac926f8f850d0ff8bb63a15a08c6262deae4d73a3e",
+      "bytes": 92202,
+      "deploy": "test-fixture-only"
+    }
+  },
+  "ROOT_production_leaves": 5,
+  "LIVE_production_leaves": 3,
+  "normalization_main": "caa8a54598d82d55f1593d6650c6987007b84223",
+  "registry_methods_changed": [
+    "v6-history",
+    "silent-boss-calibration"
+  ],
+  "registry_other_11_methods": "unchanged against normalization main; actual integration must preserve later parallel owners",
+  "r3_leaves": "already adopted R462/off; do not redeploy",
+  "production_switch": "V6_COMBAT_ENTRIES remains off; developer does not write production controls",
+  "calibration": "no model parameters or calibration data change",
+  "C": "Zero-output infrastructure failure retained; one manual retry authorized83/6544100940, catalog restored unchanged, after merge batches; not started",
+  "status": "developer engineering checks complete; fixed source HEAD assigned by commit containing this manifest; original integration/release pending",
+  "queue_dependency": "issue87-r1"
+}

@@ -79,6 +79,52 @@ it.each([1, 2, 3])("selects the observed boss in valid act %s without assuming a
   }
 });
 
+it("selects the observed Act 2 crab pair and either survivor with one exact shared entry set", () => {
+  const { dir, state } = fixture();
+  state.run!.act_id = "1";
+  const env = { V6_COMBAT_ENTRIES: "on", V6_COMBAT_ENTRY_SELECTION: '{"CRUSHER+ROCKET":["TEST_HP"]}' };
+  for (const enemies of [
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "ROCKET", is_alive: true }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "ROCKET", is_alive: false }],
+    [{ enemy_id: "CRUSHER", is_alive: true }], [{ enemy_id: "ROCKET", is_alive: true }],
+  ]) {
+    (state.raw.combat as Record<string, unknown>).enemies = enemies;
+    const session = loadCombatEntries(state, dir, env)!;
+    expect(session.entries.map(e => e.id)).toEqual(["TEST_HP"]);
+    expect(session.selection).toEqual({ schema: "combat-entry-selection-v1", boss: "CRUSHER+ROCKET", entry_ids: ["TEST_HP"] });
+    expect(loadCombatEntries(state, dir, { ...env, V6_COMBAT_ENTRIES: "off" })).toBeNull();
+    expect(loadCombatEntries(state, dir, { ...env, V6_COMBAT_ENTRY_SELECTION: '{"AEONGLASS":["TEST_HP"]}' })).toBeNull();
+    const request = annotatedFrozen(dir);
+    request.state.v6_combat_entries = combatEntriesState(session, false);
+    for (const q of Object.values(request.questions)) if (q.type === "choice") for (const key of Object.keys(q.criteria)) {
+      const facts = JSON.parse(q.criteria[key]!); facts.v6_combat_entry = combatEntryAudit(session, fixedPlan, null, null);
+      q.criteria[key] = JSON.stringify(facts);
+    }
+    expect(Object.values(prepareCombatEntryReplay(request).matched).every(ids => JSON.stringify(ids) === '["TEST_HP"]')).toBe(true);
+    expect(projectCombatDecision(request.state, request.questions, env)!.contract.schema).toBe("v6-combat-decision-v1");
+  }
+});
+
+it("rejects ambiguous crab membership, missing liveness, wrong acts and an individual part selector", () => {
+  const { dir, state } = fixture(); state.run!.act_id = "1";
+  const env = { V6_COMBAT_ENTRIES: "on", V6_COMBAT_ENTRY_SELECTION: '{"CRUSHER+ROCKET":["TEST_HP"]}' };
+  for (const enemies of [[], [{ enemy_id: "CRUSHER" }], [{ enemy_id: "ROCKET", is_alive: false }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "ROCKET" }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "CRUSHER", is_alive: true }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "CRUSHER", is_alive: false }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "OTHER", is_alive: true }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, { enemy_id: "AEONGLASS", is_alive: true }],
+    [{ enemy_id: "CRUSHER", is_alive: true }, null]]) {
+    (state.raw.combat as Record<string, unknown>).enemies = enemies;
+    expect(loadCombatEntries(state, dir, env)).toBeNull();
+  }
+  (state.raw.combat as Record<string, unknown>).enemies = [{ enemy_id: "ROCKET", is_alive: true }];
+  for (const act of ["0", "2"]) { state.run!.act_id = act; expect(loadCombatEntries(state, dir, env)).toBeNull(); }
+  state.run!.act_id = "1";
+  for (const part of ["CRUSHER", "ROCKET", "KAISER_CRAB_BOSS"])
+    expect(loadCombatEntries(state, dir, { ...env, V6_COMBAT_ENTRY_SELECTION: JSON.stringify({ [part]: ["TEST_HP"] }) })).toBeNull();
+});
+
 it("preserves unconfigured and Ironclad behavior, even if Silent's selector is invalid", () => {
   const { dir, state, env } = fixture(); installFixture(dir, "ironclad");
   const legacy = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
@@ -143,4 +189,31 @@ it("records effective selection and invalid status in run-config identity withou
   expect(row({ V6_COMBAT_ENTRIES: "on", V6_COMBAT_ENTRY_SELECTION: "malformed" }).combat_entries)
     .toEqual({ requested: "on", selection: { mode: "invalid" } });
   expect(selected.config_sha).not.toBe(row({ V6_COMBAT_ENTRIES: "on" }).config_sha);
+});
+
+it("captures production untargeted null steps without inventing an enemy target or changing the Plan", () => {
+  const { dir, state, env } = fixture(), request = annotatedFrozen(dir);
+  delete request.state.v6_combat_entries;
+  (request.state.run_brief as any).floor = state.run!.floor;
+  (request.state.situation as any).turn = state.turn;
+  const plans: Record<string, typeof fixedPlan> = {};
+  for (const q of Object.values(request.questions)) if (q.type === "choice") for (const key of Object.keys(q.criteria)) {
+    const facts = JSON.parse(q.criteria[key]!); delete facts.v6_combat_entry; q.criteria[key] = JSON.stringify(facts);
+    plans[key] = { ...fixedPlan, steps: [{ cardIndex: 0, cardId: "TEST_UNTARGETED", upgraded: false,
+      cost: 1, name: "Fixed card", target: null, targetName: null }] };
+  }
+  const before = JSON.stringify(plans);
+  const capture = () => captureCombatEntryReplay({ schema: "combat-entry-capture-input-v1", state: state.raw, request, plans }, dir, env.V6_COMBAT_ENTRY_SELECTION);
+  const captured = capture();
+  expect(JSON.stringify(plans)).toBe(before);
+  expect(Object.values(prepareCombatEntryReplay(captured).matched).every(ids => JSON.stringify(ids) === '["TEST_HP"]')).toBe(true);
+  for (const q of Object.values(captured.questions)) if (q.type === "choice") for (const text of Object.values(q.criteria)) {
+    const action = JSON.parse(text!).v6_combat_entry.context.option.actions[0];
+    expect(action.card.id).toBe("TEST_UNTARGETED"); expect(action).not.toHaveProperty("target");
+  }
+  const step = plans[Object.keys(plans)[0]!]!.steps[0]!;
+  for (const [field, value] of [["target", "none"], ["cardIndex", null], ["cost", "1"]] as const) {
+    const old = (step as any)[field]; (step as any)[field] = value;
+    expect(capture).toThrow(/invalid frozen step/); (step as any)[field] = old;
+  }
 });

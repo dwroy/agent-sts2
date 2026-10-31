@@ -1,0 +1,333 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent83-crab-rage",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "eq",
+            "field": "enemies.alive",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "CRUSHER"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "ROCKET"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent83-crab-rage-tag",
+        "unit": "label"
+      },
+      "label_en": "Solo kill grants survivor 6 Strength and 99 Block",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33,
+            "turn": 7
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "original Silent A10 first-tune 9TG1RP5LFAAK; T1/T3/T4/T7-T8 original frame offsets and SHA; no val outcome used for candidate discovery"
+          }
+        },
+        {
+          "source": "external:spire-codex",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 100,
+            "players": null,
+            "selection": "partial1003 safe projection; discovery only; earliest observed first per run/act/F33; enemies219+209; holdout not used; source-marker duplicates excluded; 76 exact rage event windows"
+          },
+          "url": "https://spire-codex.com",
+          "license": "Public source attribution; only derived statistics and three minimal event windows included, full raw replay not redistributed"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent83-crab-charge-laser",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "ROCKET"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "CHARGE_UP_MOVE"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent83-crab-charge-laser-tag",
+        "unit": "label"
+      },
+      "label_en": "Charge Up usually precedes Laser and adds 3 Strength",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "original Silent A10 first-tune 9TG1RP5LFAAK; T1/T3/T4/T7-T8 original frame offsets and SHA; no val outcome used for candidate discovery"
+          }
+        },
+        {
+          "source": "external:spire-codex",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 100,
+            "players": null,
+            "selection": "partial1003 safe projection; discovery only; earliest observed first per run/act/F33; enemies219+209; holdout not used; source-marker duplicates excluded; 76 exact rage event windows"
+          },
+          "url": "https://spire-codex.com",
+          "license": "Public source attribution; only derived statistics and three minimal event windows included, full raw replay not redistributed"
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent83-crab-facing",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "and",
+            "args": [
+              {
+                "op": "eq",
+                "field": "act",
+                "value": 2
+              },
+              {
+                "op": "eq",
+                "field": "enemies.alive",
+                "value": 2
+              },
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "CRUSHER"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "any",
+                "field": "enemies.items",
+                "arg": {
+                  "op": "and",
+                  "args": [
+                    {
+                      "op": "eq",
+                      "field": "enemy.id",
+                      "value": "ROCKET"
+                    },
+                    {
+                      "op": "eq",
+                      "field": "enemy.alive",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "op": "gt",
+            "field": "player.powers.SURROUNDED_POWER",
+            "value": 0
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent83-crab-facing-tag",
+        "unit": "label"
+      },
+      "label_en": "Facing changes the flank exposed while both claws live",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "9TG1RP5LFAAK",
+            "floor": 33,
+            "turn": 1
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "original Silent A10 first-tune 9TG1RP5LFAAK; T1/T3/T4/T7-T8 original frame offsets and SHA; no val outcome used for candidate discovery"
+          }
+        },
+        {
+          "source": "external:spire-codex",
+          "path": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+          "sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+          "game_version": "v0.111.0",
+          "retrieved_at": "2026-10-31",
+          "sample": {
+            "runs": 100,
+            "players": null,
+            "selection": "partial1003 safe projection; discovery only; earliest observed first per run/act/F33; enemies219+209; holdout not used; source-marker duplicates excluded; 76 exact rage event windows"
+          },
+          "url": "https://spire-codex.com",
+          "license": "Public source attribution; only derived statistics and three minimal event windows included, full raw replay not redistributed"
+        }
+      ]
+    }
+  ]
+}
