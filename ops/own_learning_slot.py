@@ -47,7 +47,7 @@ def native_terminal(receipt, raw):
         raise ValueError("original bound turn is still open")
 
 
-def inactive_workspace(root, directory, batch, row, receipt):
+def inactive_workspace(root, directory, batch, row, receipt, *, shared_content=False):
     """Reuse the original host/pane/input/process guards without retirement actions."""
     import issue_session
     from issue_session_support import load, require_host_process_view, safe_path
@@ -80,14 +80,19 @@ def inactive_workspace(root, directory, batch, row, receipt):
             raise ValueError("original pane identity changed")
         identity = tabs.idle(pane)
     tree = safe_path(root, receipt["cwd"])
-    # A shared project cwd cannot attribute detached tests/writers to this batch.
-    # Keep it unknown rather than ignoring other jobs or treating them as this owner.
-    if tree == root or tree.parent != root / ".worktrees":
+    # Shared content-only ROOT batches have no implementation workspace lease.
+    # All other batches must prove their dedicated workspace has no active work.
+    if tree == root and shared_content:
+        # A completed content-only ROOT learner does not own other roles' work.
+        if row.get("checks_pending") or any(row.get("report", {}).get(k) for k in
+                ("commit", "merged", "fixes", "source_commit", "implementation_domains")):
+            raise ValueError("shared workspace activity cannot be scoped")
+    elif tree == root or tree.parent != root / ".worktrees":
         raise ValueError("shared workspace activity cannot be scoped")
     context = SimpleNamespace(root=root, board=tabs.board)
     probe = lambda proc: issue_session.Sessions.process_cwd(context, proc)
     allowed = set() if absent else {identity["shell_pid"]}
-    if issue_session.processes(tree, allowed, probe):
+    if tree != root and issue_session.processes(tree, allowed, probe):
         raise ValueError("workspace command/model/test/write process is active")
     if (absent and not pane_absent()) or (not absent and tabs.idle(tabs.pane(row, host, label)) != identity):
         raise ValueError("pane activity changed during admission")
@@ -124,6 +129,29 @@ def batch_status(batch, row, directory, alive, *, birth=process_birth, activity=
         from learner_tui import REGISTRATION_FIELDS
         if not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?[a-z-]+)?", batch):
             raise ValueError("invalid batch")
+        if row.get("knowledge_pending") or row.get("operational_pending") or row.get("semantic_review"):
+            stage = "content_retirement"
+            from learner_tui import verify
+            receipt_path = safe_path(root, directory / "learner" / (batch_label(batch, row) + ".tui.json"))
+            receipt, receipt_sha = read_json(receipt_path)
+            result["native"] = {k: receipt.get(k) for k in ("pid", "birth", "session", "turn")}
+            if (current is not None or alive(row["pid"]) or receipt.get("label") != batch_label(batch, row)
+                    or receipt.get("pane") != row.get("pane") or receipt.get("cwd") != (row.get("worktree") or str(root))
+                    or receipt.get("result", {}).get("code") != 0 or birth(receipt.get("pid")) is not None
+                    or alive(receipt["pid"])):
+                raise ValueError("content owner or native identity is active/unverified")
+            evidence, raw = native_evidence(root, directory, receipt)
+            native_terminal(receipt, raw)
+            output = safe_path(root, directory / "learner" / (batch + ".out"))
+            verify(receipt_path, output, persist_output=False)
+            identity = (inactive_workspace(root, directory, batch, row, receipt, shared_content=True)
+                        if activity is inactive_workspace else activity(root, directory, batch, row, receipt))
+            if (read_json(receipt_path)[1] != receipt_sha or native_evidence(root, directory, receipt)[0] != evidence
+                    or birth(row["pid"]) is not None or birth(receipt["pid"]) is not None):
+                raise ValueError("content retirement evidence changed")
+            result.update(occupies=False, reason="verified_content_pending_review", semantic_pending=True,
+                          evidence=dict(receipt_sha256=receipt_sha, native_sha256=evidence["sha256"], activity=identity))
+            return result
         stage = "deferral_binding"
         path = safe_path(root, directory / "learner" / (batch + ".verification-deferred.json"))
         deferred, deferred_sha = read_json(path)

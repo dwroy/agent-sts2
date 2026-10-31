@@ -573,23 +573,36 @@ def recovery_native(receipt):
 
 def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=None, finish_runner=None,
                       birth_fn=process_birth, clock=time.monotonic, pause=time.sleep):
-    """Explicit new supervisor transaction for a completed retained postmortem/experience turn."""
+    """Recover native completion only; semantic acceptance never replays finish."""
     root, directory = Path(root).resolve(), Path(directory).resolve()
-    if (not directory.is_relative_to(root / "ops") or not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-experience-update)?", batch)
+    if (not directory.is_relative_to(root / "ops") or not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-(?:experience-update|fix-batch))?", batch)
             or not re.fullmatch(r"[a-f0-9]{64}", expected_sha)):
         raise ValueError("invalid recovery identity")
     state_path = directory / "learn.json"
     before = json.loads(state_path.read_text())
     original_row = before["batches"][batch]
     task = original_row.get("task", "postmortem")
-    if task not in ("postmortem", "experience-update"):
+    if task not in ("postmortem", "experience-update", "fix-batch"):
         raise ValueError("unsupported retained task")
+    if (task == "fix-batch") != batch.endswith("-fix-batch"):
+        raise ValueError("fix recovery task/batch differs")
     label = "learner-" + batch + ("-postmortem" if task == "postmortem" else "")
     path = directory / "learner" / (label + ".tui.json")
     output = directory / "learner" / (batch + ".out")
     raw = path.read_bytes()
     original = json.loads(raw)
-    native = Path(original["rollout"]).resolve()
+    from learner_tabs import native_evidence
+    native_ref, mapped_native = native_evidence(root, directory, original)
+    marker = original_row.get("semantic_review", {})
+    if (marker.get("schema") == "native-complete-review-v1"
+            and original_row.get("tui_recovery", {}).get("origin_sha256") == expected_sha):
+        if marker.get("receipt_sha256") != hashlib.sha256(raw).hexdigest() or birth_fn(original_row["pid"]) is not None:
+            raise ValueError("recovered native receipt or owner changed")
+        verify(path, output, persist_output=False)
+        return dict(batch=batch, state="native-complete", batch_state=original_row["state"], native_rc=0,
+                    acceptance_pending=True, finish_replayed=False, already_recovered=True,
+                    archive=marker["archive"], seal="pending-original-20-gate")
+    native = Path(original["rollout"])
     if (hashlib.sha256(raw).hexdigest() != expected_sha or not native.is_relative_to(root) or "sessions" not in native.parts or native.suffix != ".jsonl"
             or original.get("state") != "needs-attention" or original.get("result", {}).get("code") != 75
             or original.get("submitted") is not True or not original.get("bindings") or original.get("retirement_authorized") is not False
@@ -603,6 +616,8 @@ def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=No
             or birth_fn(original_row["pid"]) is not None):
         raise ValueError("original supervisor or recovery registration is not available")
     candidate, native_data = recovery_native(original)
+    if native_data != mapped_native:
+        raise ValueError("original mapped native changed")
     # Validate the bounded full-label/native-name binding before claiming any control.
     binding = json.dumps([label, original["pane"], os.path.abspath(original["cwd"])], ensure_ascii=False, separators=(",", ":"))
     if (original.get("agent_name_version") != 1 or original.get("agent_name") != "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
@@ -619,11 +634,7 @@ def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=No
         def h(args):
             reply = subprocess.run([os.environ.get("HERDR_BIN", "herdr"), *args], check=True, capture_output=True, timeout=20)
             return reply.stdout.decode() if args[:2] == ["pane", "read"] else json.loads(reply.stdout)["result"]
-    if finish_runner is None:
-        def finish_runner(stage, argv):
-            script = root / "ops" / ("codex-ops-learn.py" if stage == "finish" else "learner_tui.py")
-            subprocess.run([sys.executable, str(script), *argv], cwd=root, check=True, timeout=120, capture_output=True,
-                           env={**os.environ, "CODEX_OPS_ROOT": str(root), "CODEX_OPS_DIR": str(directory)})
+    # Keep the injected legacy argument callable-compatible, but never invoke it.
     import issue_session
     owner = os.getpid()
     owner_birth = process_birth(owner)
@@ -646,6 +657,12 @@ def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=No
                     target = attempt / name
                     with target.open("xb") as archive:
                         os.fchmod(archive.fileno(), 0o600); archive.write(data); archive.flush(); os.fsync(archive.fileno())
+                deferred = directory / "learner" / (batch + ".verification-deferred.json")
+                if deferred.exists():
+                    if deferred.is_symlink() or not deferred.is_file():
+                        raise ValueError("original deferral is not a regular file")
+                    with (attempt / "original.verification-deferred.json").open("xb") as archive:
+                        archive.write(deferred.read_bytes()); archive.flush(); os.fsync(archive.fileno())
                 archived_output_sha = digest(attempt / "original.out")
                 if digest(output) != archived_output_sha:
                     raise ValueError("original output changed during archival")
@@ -667,7 +684,8 @@ def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=No
 
             def authority():
                 if (json.loads(state_path.read_text())["batches"].get(batch) != current or digest(path) != expected_sha
-                        or digest(native) != native_sha or digest(output) != journal["original_output_sha256"]):
+                        or digest(native) != native_sha or digest(output) != journal["original_output_sha256"]
+                        or native_evidence(root, directory, original)[0] != native_ref):
                     raise ValueError("recovery lease or original evidence changed")
                 pane = h(["pane", "get", original["pane"]])["pane"]
                 if any(not original.get("identity", {}).get(k) or pane.get(k) != original["identity"][k]
@@ -728,13 +746,14 @@ def recover_completed(root, directory, batch, expected_sha, *, apply=False, h=No
                 if state["batches"].get(batch) != current or digest(path) != expected_sha:
                     raise ValueError("recovery registration changed before publication")
                 persist(path, verified)
-            journal["phase"] = "native-retired-and-published"; persist(attempt / "recovery.json", journal)
-            finish_runner("finish", ["finish", "--batch", batch, "--rc", "0", "--character", str(original_row.get("character", "silent"))])
-            finish_runner("finished", ["finished", str(state_path), batch, str(path), str(output), "0", str(owner)])
-            journal["phase"] = "finished"; persist(attempt / "recovery.json", journal)
-            terminal = json.loads(state_path.read_text())["batches"][batch]
-            return dict(batch=batch, state="finished", batch_state=terminal["state"], native_rc=0,
-                        archive=str(attempt), seal="pending-original-20-gate")
+                current.update(state="awaiting_review", review_required="native-complete-awaiting-acceptance",
+                               semantic_review=dict(schema="native-complete-review-v1", native_rc=0,
+                                                    receipt_sha256=digest(path), archive=str(attempt)))
+                state["batches"][batch] = current
+                persist(state_path, state)
+            journal["phase"] = "native-retired-awaiting-acceptance"; persist(attempt / "recovery.json", journal)
+            return dict(batch=batch, state="native-complete", batch_state="awaiting_review", native_rc=0,
+                        acceptance_pending=True, finish_replayed=False, archive=str(attempt), seal="pending-original-20-gate")
         except BaseException:
             if claimed:
                 journal["phase"] = "awaiting-review"; persist(attempt / "recovery.json", journal)

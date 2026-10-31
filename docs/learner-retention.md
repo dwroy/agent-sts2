@@ -144,6 +144,8 @@ own/external 接受 0–10 整数、total 接受 1–10 整数，布尔、浮点
 
 主题 A–D 与 ext1–ext10 席位分别记录：external<=4 时仍每主题一个，任意 A–D 均可轮转；显式扩到>4 后才可让同主题的不同合法 plan/unit 占不同席位。仍核来源冻结、plan/generation、unit 不重叠、原生退役与工作树独占。旧行不补写席位，按原 owner 保守占位；高编号席位缩容后仍计占用。自有 owner 沿 #77 原生终态/宿主空闲及主管作废回执核计算位，审计 batch/同一 request lease 只算一次。其他未明 owner/孤立 lease 保留。
 
+#77 的内容待审与计算位分账：`awaiting_review` 且 `knowledge_pending` / `operational_pending` / `semantic_review` 的原批，只有完整原 prompt/环境/turn、session-ended/rc0/summary、监督与原生 PID 已退、原 pane/空输入及宿主空闲均鲜核通过才释放计算位。自有与外部总预算、主题/席位及库存 worker 计数使用同一证明；原批状态、候选、失败、plan/generation/unit 与待审标记照留，不重新派原单元。ROOT 纯内容批不持有其他角色的 ROOT 计算任务；有代码提交、修复或未完成检查仍保守占位，专属工作树继续核全部活动命令。未知/活动 PID、摘要或来源不符、非空输入和本批在途命令均不释放。这不授权完成验收、封存、关闭 tab 或回收工作树。
+
 自然 tick、手动 write/dispatch、finish 后续派、feature、learning_requests 接续、审计和 boss-sim 都在启动前查同一当前 state。新 PID/launching 行在原 learn.lock 内消耗预算；完整 metadata 后原子发布 batch 屏障，120秒不变。降档或缩槽只挡新准入，不发信号、不重写状态/线程/租约；已注册 wrapper 继续核账号、服务档及原来源，不因后来的容量变化被中断。8个在途降为4时可继续显示8/4，占位降到3才可再准入一个。
 
 原 tick 首次和之后至少间隔7200秒在 `ops/codex-ops/inbox-claude.md` 追加一行，含登记为 running 且 supervisor PID 存活的在跑数/有效总限、保守占位 own/ext、配置、周已用%、降档及原因；未知另列，不冒报为模型在跑。candidate-only/暂停准入的原 tick 也报告，原报告 ID 处理追加后落盘中断的去重，报告水位另存 `learning-concurrency-report.json`；排空 tick 不重写 learn.json，正常 tick 可缓存报告水位。不新增定时器、采样或模型进程。上线/撤回仍由集成员与 ops 沿原批次执行，保留所有批次、原生证据、slot、知识和未完成父项。

@@ -92,10 +92,10 @@ class CompletedRecovery(unittest.TestCase):
         self.assertEqual(tui.digest(self.path), self.sha)
         self.assertEqual(self.state.read_bytes(), state)
 
-    def test_new_supervisor_epoch_preserves_original75_and_semantic_failure(self):
+    def test_new_supervisor_epoch_preserves_original75_and_pending_acceptance(self):
         report = self.recover()
-        self.assertEqual(report["state"], "finished")
-        self.assertEqual(report["batch_state"], "failed")
+        self.assertEqual(report["state"], "native-complete")
+        self.assertEqual(report["batch_state"], "awaiting_review")
         archive = Path(report["archive"])
         self.assertEqual(tui.digest(archive / "original.tui.json"), self.sha)
         self.assertEqual(json.loads((archive / "original.tui.json").read_text())["result"]["code"], 75)
@@ -106,8 +106,11 @@ class CompletedRecovery(unittest.TestCase):
         self.assertEqual(result["result"]["code"], 0)
         self.assertTrue(result["result"]["stopped"])
         self.assertEqual(result["native_environment_updates"], [FIXTURE["proof"]])
-        self.assertEqual(result["wrapper"]["state"], "failed")
-        self.assertEqual(self.stages, ["finish", "finished"])
+        self.assertNotIn("wrapper", result)
+        self.assertEqual(self.stages, [])
+        row = json.loads(self.state.read_text())["batches"][self.batch]
+        self.assertNotIn("rc", row)
+        self.assertEqual(row["semantic_review"]["native_rc"], 0)
         self.assertEqual(len([call for call in self.calls if call[:2] == ["agent", "send-keys"]]), 1)
 
     def test_live_original_supervisor_blocks_takeover(self):
@@ -162,17 +165,40 @@ class CompletedRecovery(unittest.TestCase):
                 self.assertFalse(any(call[:2] == ["agent", "send-keys"] for call in self.calls))
                 self.assertEqual(tui.digest(self.path), self.sha)
 
-    def test_finish_failure_keeps_retirement_evidence_but_cannot_claim_wrapper_completion(self):
-        with self.assertRaises(ValueError):
-            self.recover(finish=lambda stage, argv: (_ for _ in ()).throw(ValueError("finish unavailable")))
+    def test_recovery_never_replays_finish_even_when_callback_is_supplied(self):
+        self.recover(finish=lambda stage, argv: self.fail("finish must never be replayed"))
         state = json.loads(self.state.read_text())["batches"][self.batch]
         self.assertEqual(state["state"], "awaiting_review")
-        self.assertEqual(state["review_required"], "tui-recovery-unverified")
+        self.assertEqual(state["review_required"], "native-complete-awaiting-acceptance")
         archive = Path(state["tui_recovery"]["archive"])
         self.assertEqual(tui.digest(archive / "original.tui.json"), self.sha)
         fresh = json.loads(self.path.read_text())
         self.assertTrue(fresh["result"]["stopped"])
         self.assertNotIn("wrapper", fresh)
+
+    def test_fix_batch_recovers_native_only_and_successful_retry_is_idempotent(self):
+        self.batch += "-fix-batch"
+        self.row["task"] = "fix-batch"
+        self.receipt["label"] = "learner-" + self.batch
+        binding = json.dumps([self.receipt["label"], self.receipt["pane"], os.path.abspath(self.receipt["cwd"])],
+                             ensure_ascii=False, separators=(",", ":"))
+        self.receipt["agent_name"] = "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
+        self.path = self.directory / "learner" / (self.receipt["label"] + ".tui.json")
+        self.path.write_text(json.dumps(self.receipt)); self.sha = tui.digest(self.path)
+        self.output = self.directory / "learner" / (self.batch + ".out")
+        self.output.write_bytes(self.old_output)
+        deferred = self.directory / "learner" / (self.batch + ".verification-deferred.json")
+        deferred.write_text('{"original_failure":75}\n')
+        self.state.write_text(json.dumps(dict(batches={self.batch:self.row})))
+        result = self.recover(finish=lambda *args: self.fail("fix finish must never run"))
+        self.assertFalse(result["finish_replayed"])
+        self.assertTrue(result["acceptance_pending"])
+        self.assertEqual((Path(result["archive"]) / "original.verification-deferred.json").read_bytes(), deferred.read_bytes())
+        output = self.output.read_bytes(); calls = list(self.calls)
+        again = self.recover()
+        self.assertTrue(again["already_recovered"])
+        self.assertEqual(self.output.read_bytes(), output)
+        self.assertEqual(self.calls, calls)
 
     def test_uncertain_retirement_never_replays_or_reclaims(self):
         def h(args):

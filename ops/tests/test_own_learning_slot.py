@@ -68,6 +68,53 @@ class OwnSlot(unittest.TestCase):
         self.activity_calls.append(args[2])
         return dict(shell_pid=999992, shell_birth="303", revision=1)
 
+    def content_pending(self):
+        self.row.update(knowledge_pending=True, rc=0, report={})
+        self.receipt.update(state="session-ended", retirement_authorized=True)
+        self.receipt["result"].update(code=0, stopped=True, message="fixed result")
+        log = self.root / "completed.jsonl"
+        log.write_text(json.dumps(dict(type="learner_summary", exit_code=0, summary=dict(sessionId="fixed-session"))) + "\n")
+        self.receipt["artifacts"] = dict(log=str(log), sha256=tui.digest(log), summary=True)
+        (self.directory / "learner" / (self.batch + ".out")).write_text("fixed result\n")
+        self.save()
+        self.path.unlink()
+        self.row.pop("verification_deferred")
+
+    def test_content_review_without_deferral_releases_compute_and_preserves_semantics(self):
+        self.content_pending()
+        before = copy.deepcopy(self.state)
+        result = self.snapshot()
+        self.assertFalse(result["busy"], result)
+        self.assertTrue(result["pending_review"][0]["semantic_pending"])
+        self.assertEqual(result["pending_review"][0]["reason"], "verified_content_pending_review")
+        self.assertEqual(self.state, before)
+        self.assertFalse(jobs.retryable(self.state, self.row["task"], self.row["key"]))
+
+    def test_content_review_keeps_active_and_unverified_native_owners(self):
+        self.content_pending()
+        for pid in (999990, 999991):
+            self.live[pid] = "still-live"
+            self.assertTrue(self.snapshot()["busy"])
+            self.live.clear()
+        Path(self.receipt["artifacts"]["log"]).write_text("changed summary\n")
+        self.assertTrue(self.snapshot()["busy"])
+
+    def test_external_pending_plan_retains_identity_but_reuses_compute_slot(self):
+        import strategy_external_jobs as external
+        import learning_concurrency as capacity
+        self.content_pending()
+        self.row.update(external_source="retained-plan", external_lane="A", external_slot="ext1")
+        original_status = slot.batch_status
+        def checked(bid, row, directory, alive):
+            return original_status(bid, row, directory, alive, birth=lambda p:self.live.get(p), activity=self.activity)
+        with patch.object(slot, "batch_status", side_effect=checked):
+            self.assertEqual(external.lane_owners(self.state, lambda _:False, self.directory), [self.row])
+            self.assertEqual(external.compute_owners(self.state, lambda _:False, self.directory), [])
+            self.assertEqual(capacity.occupancy(self.state, lambda _:False, self.directory)["total"], 0)
+            self.assertEqual(external.slot_available(self.state, self.root, lambda _:False, self.directory), "ext1")
+        self.assertTrue(self.row["knowledge_pending"])
+        self.assertEqual(self.row["state"], "awaiting_review")
+
     def snapshot(self, activity=None, birth=None):
         return slot.snapshot(self.state, lambda pid: pid in self.live, self.directory,
                              birth=birth or (lambda pid: self.live.get(pid)), activity=activity or self.activity)
@@ -173,6 +220,30 @@ class OwnSlot(unittest.TestCase):
 
 
 class ConcurrentExternal(unittest.TestCase):
+    def test_released_compute_cannot_replay_pending_plan_even_with_new_generation(self):
+        case = external_fixtures.External("runTest"); case.setUp()
+        self.addCleanup(case.doCleanups)
+        case.four_plans()
+        first = case.dispatch()
+        old = case.state["batches"][first[0]]
+        old.update(state="awaiting_review", knowledge_pending=True)
+        for plan in case.config["plans"]:
+            if plan["plan_id"] == old["external_source"]:
+                plan["retry_generation"] = 1
+        case.save_config()
+        before = copy.deepcopy(old)
+        original = slot.batch_status
+        def checked(bid, row, directory, alive):
+            if row is old:
+                return dict(reason="verified_content_pending_review", occupies=False)
+            return original(bid, row, directory, alive)
+        with patch.object(slot, "batch_status", side_effect=checked):
+            self.assertNotIn(old, external_fixtures.external.compute_owners(case.state, lambda p:p == 10, case.directory))
+            resumed = case.lanes("20260101-000020")
+        self.assertTrue(resumed)
+        self.assertTrue(all(case.state["batches"][bid]["external_source"] != old["external_source"] for bid, _ in resumed))
+        self.assertEqual(old, before)
+
     def test_real_four_lane_dispatch_continues_while_ordinary_hold_explains_owner(self):
         case = external_fixtures.External("runTest"); case.setUp()
         self.addCleanup(case.doCleanups)
@@ -209,13 +280,14 @@ class HostActivity(unittest.TestCase):
         self.case.setUp()
         self.addCleanup(self.case.doCleanups)
 
-    def check(self, processes=False):
+    def check(self, processes=False, shared_content=False):
         case = self.case
         import learner_tabs
         with patch.object(learner_tabs, "LearnerTabs", return_value=case.worker), \
                 patch("issue_session_support.require_host_process_view"), \
                 patch("issue_session.processes", return_value=processes):
-            return slot.inactive_workspace(case.root, case.directory, case.batch, case.row, case.receipt)
+            return slot.inactive_workspace(case.root, case.directory, case.batch, case.row, case.receipt,
+                                           shared_content=shared_content)
 
     def test_present_empty_shell_and_absent_original_pane_are_readonly(self):
         case = self.case
@@ -241,6 +313,22 @@ class HostActivity(unittest.TestCase):
         self.case.receipt["cwd"] = str(self.case.root)
         with self.assertRaisesRegex(ValueError, "shared workspace"):
             self.check()
+
+    def test_completed_shared_content_has_no_lease_on_other_roles_root_work(self):
+        case = self.case
+        case.receipt["cwd"] = str(case.root)
+        case.row["report"] = {}
+        self.assertEqual(self.check(processes=True, shared_content=True)["shell_pid"], 333)
+        for field in ("checks_pending", "commit", "merged", "fixes", "source_commit", "implementation_domains"):
+            with self.subTest(field=field):
+                case.row["checks_pending"] = field == "checks_pending"
+                case.row["report"] = {} if field == "checks_pending" else {field: "in-flight"}
+                with self.assertRaisesRegex(ValueError, "shared workspace"):
+                    self.check(processes=True, shared_content=True)
+        case.row.update(checks_pending=False, report={})
+        case.screen = b"dw@host:~/fixture$ draft"
+        with self.assertRaises(ValueError):
+            self.check(shared_content=True)
 
 
 if __name__ == "__main__":

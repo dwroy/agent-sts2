@@ -1,0 +1,44 @@
+.......F..F.....
+======================================================================
+FAIL: test_content_review_without_deferral_releases_compute_and_preserves_semantics (test_own_learning_slot.OwnSlot.test_content_review_without_deferral_releases_compute_and_preserves_semantics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/test_own_learning_slot.py", line 86, in test_content_review_without_deferral_releases_compute_and_preserves_semantics
+    self.assertFalse(result["busy"], result)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : {'schema': 'own-learning-slot-v1', 'busy': True, 'blockers': [{'batch': '20261025-024302-strategy-proposal', 'task': 'strategy-proposal', 'state': 'awaiting_review', 'pane': 'w1:p2', 'supervisor': {'pid': 999990, 'birth': None, 'observed_birth': None}, 'native': {'pid': 999991, 'birth': '202', 'session': 'fixed-session', 'turn': 'fixed-turn'}, 'occupies': True, 'reason': 'content_retirement_unverified'}], 'pending_review': [{'batch': '20261025-024302-strategy-proposal', 'task': 'strategy-proposal', 'state': 'awaiting_review', 'pane': 'w1:p2', 'supervisor': {'pid': 999990, 'birth': None, 'observed_birth': None}, 'native': {'pid': 999991, 'birth': '202', 'session': 'fixed-session', 'turn': 'fixed-turn'}, 'occupies': True, 'reason': 'content_retirement_unverified'}], 'closed': []}
+
+======================================================================
+FAIL: test_external_pending_plan_retains_identity_but_reuses_compute_slot (test_own_learning_slot.OwnSlot.test_external_pending_plan_retains_identity_but_reuses_compute_slot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-77-own-learning-slot/ops/tests/test_own_learning_slot.py", line 111, in test_external_pending_plan_retains_identity_but_reuses_compute_slot
+    self.assertEqual(external.compute_owners(self.state, lambda _:False, self.directory), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'task': 'strategy-proposal', 'state': 'a[355 chars]t1'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'task': 'strategy-proposal', 'state': 'awaiting_review', 'pid': 999990, 'pane': 'w1:p2', 'character': 'silent', 'runs': ['FIXTURE000001'], 'key': 'original-demand', 'worktree': '/tmp/tmpu8pkq2xh/.worktrees/ordinary', 'rc': 0, 'report': {}, 'review_required': 'terminal-unverified-receipt', 'knowledge_pending': True, 'external_source': 'retained-plan', 'external_lane': 'A', 'external_slot': 'ext1'}
+
++ []
+- [{'character': 'silent',
+-   'external_lane': 'A',
+-   'external_slot': 'ext1',
+-   'external_source': 'retained-plan',
+-   'key': 'original-demand',
+-   'knowledge_pending': True,
+-   'pane': 'w1:p2',
+-   'pid': 999990,
+-   'rc': 0,
+-   'report': {},
+-   'review_required': 'terminal-unverified-receipt',
+-   'runs': ['FIXTURE000001'],
+-   'state': 'awaiting_review',
+-   'task': 'strategy-proposal',
+-   'worktree': '/tmp/tmpu8pkq2xh/.worktrees/ordinary'}]
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.132s
+
+FAILED (failures=2)
