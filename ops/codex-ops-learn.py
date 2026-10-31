@@ -610,8 +610,18 @@ def cmd_write(args):
     if getattr(args, "public_web", False):
         if args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request:
             return 2
+        question = None
+        if getattr(args, "public_web_question", ""):
+            from public_web_jobs import load_question, question_key
+            try:
+                question = load_question(ROOT, args.public_web_question, args.public_web_question_sha256)
+            except (OSError, ValueError, TypeError, KeyError, UnicodeError):
+                print(json.dumps({"dispatched": None, "reason": "invalid_public_web_question_input"}))
+                return 2
+        kwargs = {"public_web_question": question} if question is not None else {}
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
-                                "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
+                                question_key(question) if question is not None else "public-web:issue69", "ops", alive,
+                                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True, **kwargs)
         save_state(state)
         print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
@@ -793,6 +803,8 @@ def main():
     parser.add_argument("--runs", default="")
     parser.add_argument("--request", default="")
     parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
+    parser.add_argument("--public-web-question", default="", help="fixed JSON under learner/requests/public-web/")
+    parser.add_argument("--public-web-question-sha256", default="", help="required SHA256 of the exact question input")
     parser.add_argument("--batch", default="")
     parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
     parser.add_argument("--rc", type=int, default=1)
@@ -803,6 +815,9 @@ def main():
         parser.error("--verdict requires close")
     if args.public_web and args.command != "write":
         parser.error("--public-web requires write")
+    if (bool(args.public_web_question) != bool(args.public_web_question_sha256)
+            or (args.public_web_question and (not args.public_web or args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request))):
+        parser.error("question input and SHA require explicit Silent public-web write without runs/request")
     args.character = character_key(args.character) or "silent"
     if args.command in ("tick", "dispatch", "write", "boss-check"):
         try:

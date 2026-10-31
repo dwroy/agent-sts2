@@ -1,0 +1,92 @@
+{
+  "schema": "issue69-main-alignment-v1",
+  "base": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "requested_ancestor": "9dbb37b5dd84c42809017c94bf224eced4a8d5f9",
+  "replayed_head": "3888e2a715f596e5f7ef5826705db9f98372396f",
+  "archived_old_head": "58a49914587ac1f024c39a167c79dcecbdad374f",
+  "production_root": [
+    "ops/codex-ops-learn.py",
+    "ops/learner_jobs.py",
+    "ops/public_web_jobs.py",
+    "learner/lib/public-web.ts",
+    "learner/lib/launcher.ts"
+  ],
+  "root_fixed_input": [
+    "learner/requests/public-web/issue69-accuracy-v0111.json"
+  ],
+  "live": [],
+  "leaves": [
+    {
+      "path": "ops/codex-ops-learn.py",
+      "sha256": "cce3da3cdc2c7d7d0f5deb930b75cc73b6d5044a785ac83b63d4cc19c8ba9460",
+      "git_leaf": "100644 blob 3c6c896c053d7c4126ee1b07c9d7704a01dc3a7d\tops/codex-ops-learn.py",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "sha256": "d72d6dcc9a270079790cfd618683ff57b234974195a3b8ac377b8ed5925284d1",
+      "git_leaf": "100644 blob 99add1fba59658b18c854bbe144db511b3ac8ae3\tops/learner_jobs.py",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "ops/public_web_jobs.py",
+      "sha256": "d5b9467379788d4e1b8a3af9520ef337948ed50e556e88e80aec2fd3b4c0c65e",
+      "git_leaf": "100644 blob 741d1ce6e074440ef1f8c212aae347a45d349f82\tops/public_web_jobs.py",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "learner/lib/public-web.ts",
+      "sha256": "f931808652fa0252beb52c229c5884cda5fd9736dd0e01af1d4a7bcc7719113b",
+      "git_leaf": "100644 blob d93fea1d808183acc988e1999cf8c6eba07506ab\tlearner/lib/public-web.ts",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "learner/lib/launcher.ts",
+      "sha256": "e344b934d0626fe52a8b3eb707e2265d37d6d515323171aae59b4692e4249369",
+      "git_leaf": "100644 blob ac8d1e13af173dd8668ab3d71ed3ff65e705d0fa\tlearner/lib/launcher.ts",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "learner/requests/public-web/issue69-accuracy-v0111.json",
+      "sha256": "884051eae3d739536fa7c7c2695628578bfa127fb40eafc7d2b35494a277c43d",
+      "git_leaf": "100644 blob f2b2304cb4d23949abcc5a9a90d8aa390a5b579c\tlearner/requests/public-web/issue69-accuracy-v0111.json",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "agent/tests/learner-public-web.test.ts",
+      "sha256": "076677cf34ef2a0c44a6e613348a4cef4ece12a9fddc7af28b2c6dbbe5ba4c80",
+      "git_leaf": "100644 blob 37a275c7e32ad82b687f5853e58af57cdb064a01\tagent/tests/learner-public-web.test.ts",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "agent/tests/learner-public-web-launcher.test.ts",
+      "sha256": "3e94f098ca27fb961a33ab3494c0290912ddc56d0579755caa68c2ac8db60149",
+      "git_leaf": "100644 blob 0dad5b4c5701fdea57671d6885e949de74b0aa1f\tagent/tests/learner-public-web-launcher.test.ts",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "ops/tests/test_public_web.py",
+      "sha256": "db2995f59edfec3175681b5b6a136391a60d5c481ace5e916b7ba14c32df018f",
+      "git_leaf": "100644 blob 748e3050c440cd4b5850524713cbe761e334ea8f\tops/tests/test_public_web.py",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "ops/tests/test_public_web_question.py",
+      "sha256": "fef020b8cd6493299e591684da8d7291d21e4f897f5a144b6c0af77fb3acda12",
+      "git_leaf": "100644 blob 8720d8c3e7fc878c13bedcadcbf415995f5925b5\tops/tests/test_public_web_question.py",
+      "same_added_removed_lines_as_58a49914": true
+    },
+    {
+      "path": "docs/learning-public-web.md",
+      "sha256": "01a35a3c4a514d05f19b43ca574e6142452609fa7297060e76afc30b4e029c32",
+      "git_leaf": "100644 blob addeb3a138f43f1a622bb8480092ea90be91c036\tdocs/learning-public-web.md",
+      "same_added_removed_lines_as_58a49914": true
+    }
+  ],
+  "template": {
+    "path": "learner/tasks/public-web/strategy-proposal.md",
+    "sha256": "ecbc947dc231d9b3ba22dd771ee21ff22bae56892788f7c3dfe0c591413c493f"
+  },
+  "conflict": "decision-log only; preserved main then appended original 2026-10-26 line",
+  "source_effect": "all 11 delivery code/input/test/doc leaves have identical added/removed lines; current main context retained"
+}

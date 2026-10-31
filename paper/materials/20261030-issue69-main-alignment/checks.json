@@ -1,0 +1,75 @@
+{
+  "schema": "issue69-alignment-checks-v1",
+  "tested_source_head": "3888e2a715f596e5f7ef5826705db9f98372396f",
+  "base": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "nice": 19,
+  "max_workers": 1,
+  "production_tsc": {
+    "exit": 0,
+    "log": "tsc-final.log",
+    "command": "sandbox-direct.py tsc"
+  },
+  "targeted": {
+    "exit": 0,
+    "files": 7,
+    "tests": 34,
+    "log": "targeted.log"
+  },
+  "python": {
+    "exit": 0,
+    "tests": 41,
+    "log": "python-first.log",
+    "modules": [
+      "ops.tests.test_public_web_question",
+      "ops.tests.test_public_web",
+      "ops.tests.test_knowledge_runtime",
+      "ops.tests.test_knowledge_runtime_env"
+    ]
+  },
+  "sandbox_first": {
+    "exit": 1,
+    "passed_files": 653,
+    "failed_files": 1,
+    "passed_tests": 6063,
+    "failed_tests": 1,
+    "duration_seconds": 1540.1,
+    "log": "sandbox-first.log",
+    "failure": "external-stock outer15000ms timeout; internal28 tests OK15.335s; no assertion failure"
+  },
+  "external_stock_recheck": {
+    "exit": 0,
+    "files": 1,
+    "tests": 1,
+    "internal_python_tests": 28,
+    "internal_seconds": 14.081,
+    "log": "external-stock-recheck.log",
+    "fixture_or_timeout_changed": false
+  },
+  "paths": {
+    "exit": 0,
+    "files": 1,
+    "tests": 11,
+    "log": "paths.log"
+  },
+  "learner_cli": {
+    "exit": 0,
+    "files": 1,
+    "tests": 47,
+    "log": "learner-cli-first.log",
+    "cwd": "repository",
+    "command": "node agent/node_modules/vitest/vitest.mjs run tests/learner.test.ts --root agent --pool=threads --maxWorkers=1"
+  },
+  "single_run_all_green": false,
+  "final_combination_full": "original integrator only; no old green reused",
+  "source_sha_unchanged": true,
+  "log_sha256": {
+    "sandbox-first.log": "e1724629fab782f61ee96e89daa4a9a73ba6e35fb2e6b9d48a58552067878cf9",
+    "tsc-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "paths.log": "3bd2b5ba733c010060ec3810103eb1f75f969dabfa98365d98921ef6f687f501",
+    "targeted.log": "4a018111be8008018edea248278c5f926cb844fda3d43c3a527194a5b34adf24",
+    "external-stock-recheck.log": "7d63ea9879d1fc648b8b5ca4d0070ad0a48e360d572fe568030af3787e962025",
+    "python-first.log": "88a01f1f48df5b4bc028a7eda558ec48b7f6614de735a1978cb2282d569e2691",
+    "tsc-first.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "learner-cli-first.log": "2fe7df32375ecfdafd07799bb03b2761a65d5a567eb4c92a7f8ce269a0f69ee0"
+  }
+}

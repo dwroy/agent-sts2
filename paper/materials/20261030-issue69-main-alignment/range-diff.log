@@ -1,0 +1,33 @@
+1:  58a499145 ! 1:  3888e2a71 feat(learner): bind explicit public research questions
+    @@ ops/codex-ops-learn.py: def cmd_write(args):
+     +                                question_key(question) if question is not None else "public-web:issue69", "ops", alive,
+     +                                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True, **kwargs)
+              save_state(state)
+    -         print(json.dumps({"dispatched": result}, ensure_ascii=False))
+    +         print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
+              return 0 if result else 1
+     @@ ops/codex-ops-learn.py: def main():
+          parser.add_argument("--runs", default="")
+    @@ ops/codex-ops-learn.py: def main():
+     +    parser.add_argument("--public-web-question", default="", help="fixed JSON under learner/requests/public-web/")
+     +    parser.add_argument("--public-web-question-sha256", default="", help="required SHA256 of the exact question input")
+          parser.add_argument("--batch", default="")
+    +     parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
+          parser.add_argument("--rc", type=int, default=1)
+    -     args = parser.parse_args()
+    +@@ ops/codex-ops-learn.py: def main():
+    +         parser.error("--verdict requires close")
+          if args.public_web and args.command != "write":
+              parser.error("--public-web requires write")
+     +    if (bool(args.public_web_question) != bool(args.public_web_question_sha256)
+    @@ paper/materials/20261026-issue69-question-input/tsc-first.log (new)
+     
+      ## paper/materials/decision-log.md ##
+     @@ paper/materials/decision-log.md: S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+    - - 2026-10-25T20:41:39+08:00 [watcher] #67固定ced73d377+#68固定fcd84d2ae精确集成当前main；实际ROOT/LIVE组合唯一full692文件/6744过/0败/2跳、三tsc0、宿主415、真实混合K1/运营SQLite和LIVE90项全过；原复制夹具缺board_queue_pin首前置失败完整保留，自有测试单叶补齐后通过。独立核原worker/子进程退出、full门释放、3129 ROOT/1795 LIVE/1417依赖SHA+mode/link/索引/树不变；保既有ROOT-LIVE差异及66原自然发布事务。已备ROOT232叶、LIVE已接66十一+67十一源码/CLI叶、51c289c十四叶宿主pin及实际method/旧写者自然结算/备份回退合同。67采用不等待68真实shadow/active或旧writer撤权；queue/heavy仍off、旧manual authority保持，ops接逐入口真实运营SQLite/D1及下游读回，未自然出现项runtime pending，旧局/批合同及原证据/提案/科学父保留，不以工程合main冒上线/全部解耦。
+    + - 2026-10-30T15:51:34+08:00 [dev #83] 按83/6517581064交工具r3：在main816b4f6a的#84工程声明原件上更新v6-history的combat-entries/新selection及Silent校准run-config/三jev叶/新selection的精确SHA、opaque与静态边，ROOT8/LIVE4，r2七源码逐字节不变。自有固定main+r2组合先复现两Python文件44项4error，再原测试44全绿32.785秒；13 producer闭包全核，只有两方法改变，旧失败e0f67bc9与原日志保。附受测方法清单/同批准入交接，实际票据须由原owner绑定新唯一组合终态及真实双根/LIVE前像，不手改control、不重旧full；排82单独采用后。材料paper/materials/20261030-issue83-boss-calibration/tools-r3-report.md，科学父/模型研究另账；未改live/STOP/开关或会话。
+      
+    - - 2026-10-25T23:27:34+08:00 [dev #69] 交学习侧显式public-web纯内容能力：原strategy槽/登记屏障/runtime，模板SHA及原租约核验后仅Codex内建live搜索/页面读取，shell/对局脑及70共享定义保持；来源摘要SHA/版本样本许可/去重冲突/原生页面事件与K1回调分账。生产tsc0、八文件161项、Python27、原CLI47过；沙箱首轮642文件5923过1旧稀疏导入败，固定HEAD原blob恢复后导入+paths12过，首败保留、18叶无漂移，不冒组合full或自然收益。交原集成唯一组合及ops真实学习→发布→本地工具读回/自然采用；未写main/live/STOP/账号/正式知识，不分配行为号。材料paper/materials/20261025-issue69-learning-web/。
+    + - 2026-10-30T18:39:30+08:00 [dev #77] 按主管6519962379/6519584366优先交主管作废收尾最小批：原learn CLI close核dwroy/[Claude]/77裁决与原行/SHA，非阻塞原K/live/D1写门；pane_absent含071302双监督器身份例外，原生最近turn结束>30分钟/空输入/独占子组快照后TERM并核全退，不KILL。原state/rc75/TUI/deferral/研究/科学父保留，只增回执指针释计算槽，不成功/发布/回收、不重派、迟到finish保留。新16/旧槽13/旧恢复10与定向5文件59绿，生产tsc及新sandbox653文件6032+paths11绿，源码SHA开测后不变；首红和主动中断143保留。原树独立issue-77-supervisor-close基于9711fd5e，三ROOT零LIVE交原集成，顺序在83r3后、原账号P1前；1684480c原ref/request及selected_home差量不动。未submit/部署/生产信号/状态/对局/模型或配置操作，实际七批CLI与自然首批读回交原ops。材料paper/materials/20261030-issue77-supervisor-close/。
+     +
+     +- 2026-10-26T11:29:07+08:00 [dev #69] 沿6406995463补显式公开研究问题输入：原write --public-web加问题JSON/原字节SHA成对参数，原batch/key/任务/来源意图快照核验，准备/提示/来源完成全链保原问题；仅显式缺口单元尝试search/open，旧模板ecbc947d和缓存单元保持，answered须原生search+已读页，失败/未知waiting不强发知识。固定ACCURACY牌文/升级及v0.111.0对应性问题SHA884051ea；生产tsc0、定向33/Python39/CLI47、沙箱642文件5927项及fork paths11过，11叶无漂移/worker退出。交原集成新差量唯一组合及ops实际网页单元，不能以旧69绿代新检查；#71固定28215511两共享叶补丁适用且库存钩子保持，60/72及脑定义未改。ROOT五代码+一问题叶/LIVE零叶，无模型/游戏/账号权限/模板热改或行为编号；材料paper/materials/20261026-issue69-question-input/。

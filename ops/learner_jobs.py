@@ -314,19 +314,23 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False, public_web_question=None):
     directory = publication_gate.directory(root)
     if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
         return None
     if not learning_concurrency.allowed(state, root, alive, external=bool(external_source), directory=directory):
         return None
     web_contract = None
+    if public_web_question is not None and not public_web:
+        return None
     if public_web:
         if (public_web is not True or task != "strategy-proposal" or character != "silent" or reason != "ops" or runs
                 or research_request or implementation_request or backfill_source or external_source):
             return None
-        from public_web_jobs import contract
-        web_contract = contract(root)
+        from public_web_jobs import contract, question_key
+        web_contract = contract(root, public_web_question)
+        if public_web_question is not None and (key != question_key(public_web_question) or not retryable(state, task, key)):
+            return None
     if external_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(external_source, str) or not ID.fullmatch(external_source)

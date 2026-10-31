@@ -165,7 +165,12 @@ class Completion(unittest.TestCase):
         row = json.loads((self.scratch / "public-web-sources.json").read_bytes())["sources"][0]
         event = {"type": "response_item", "payload": {"type": "web_search_call", "id": "fixture-call", "status": "completed", "action": {"type": "open_page", "url": row["url"]}}}
         raw = json.dumps(event, ensure_ascii=False, separators=(",", ":")).encode()
-        (self.scratch / "public-web-events.jsonl").write_text(json.dumps({"schema": "public-web-event-v1", "sha256": sources.sha(raw), "event_json": raw.decode(), "event": event}) + "\n")
+        rows = [{"schema": "public-web-event-v1", "sha256": sources.sha(raw), "event_json": raw.decode(), "event": event}]
+        if getattr(self, "question_readback", False):
+            search = {"type": "response_item", "payload": {"type": "web_search_call", "id": "fixture-search", "status": "completed", "action": {"type": "search", "query": "fixed public question"}}}
+            text = json.dumps(search, ensure_ascii=False, separators=(",", ":"))
+            rows.insert(0, {"schema": "public-web-event-v1", "sha256": sources.sha(text.encode()), "event_json": text, "event": search})
+        (self.scratch / "public-web-events.jsonl").write_text("".join(json.dumps(row) + "\n" for row in rows))
         self.cli("init", "--runtime", str(self.runtime))
         seed = self.root / "data/seed.json"
         seed.write_text(json.dumps({"schema": "knowledge-candidate-v1", "id": "seed", "base": None, "character": "silent", "source": "fixture",
