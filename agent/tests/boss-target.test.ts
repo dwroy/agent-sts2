@@ -60,6 +60,39 @@ it("projects only formally published unscored facts, retaining the full source a
   expect(facts[1]!.clause).toBe("单窗：固定窗口能量3→2");
 });
 
+it("keeps fight-plan-only and single-window fight observations out of construction facts", () => {
+  const single = mechanism("fight-only", "FIGHT_ONLY_BODY_SENTINEL"), repeated = mechanism("fight-only-not-marked-single", "REPEATED_FIGHT_BODY_SENTINEL", false);
+  single.trigger.question_types = ["fight_plan"]; repeated.trigger.question_types = ["fight_plan"];
+  const mixed = mechanism("mixed-window", "MIXED_WINDOW_SENTINEL"); mixed.trigger.question_types = ["fight_plan", "rest"];
+  const fact = mechanism("eligible-mechanism", "PART_2死亡后PART_1获得能力+2", false);
+  fact.trigger.question_types = ["fight_plan", "rest"];
+  expect(publishedBossMechanisms([single, repeated, mixed, fact]).map(f => f.id)).toEqual(["eligible-mechanism"]);
+  // A direct projection caller cannot bypass the construction scope filter.
+  const excluded = [single, repeated].map(e => ({ ...publishedBossMechanisms([{ ...e, trigger: { ...e.trigger, question_types: ["rest"] } }])[0]!, trigger: e.trigger }));
+  const source = { ...data, rows: data.rows.map(r => ({ ...r, strategies: [single.id, repeated.id], publishedMechanisms: excluded })) };
+  const result = projectBossDossier(board(), payload, source), text = (result.payload.facts as any).boss_dossier;
+  expect(text).toContain("K目录2条");
+  expect(text).not.toMatch(/FIGHT_ONLY_BODY_SENTINEL|REPEATED_FIGHT_BODY_SENTINEL/);
+  expect(result.audit.strategy_references.FORMAT_B).toEqual([single.id, repeated.id]);
+  expect(result.audit.displayed_mechanism_facts).toEqual({});
+});
+
+it("reserves every Boss M field and eligible fact before oversized O/E tails", () => {
+  const source = { ...data, rows: data.rows.map(r => ({ ...r,
+    mechanics: ["固定攻击13(n2)", "首见固定能力2(n3)", "固定成长+3(n4)"],
+    own: "O_SENTINEL".repeat(1000), external: "E_SENTINEL".repeat(1000),
+    publishedMechanisms: publishedBossMechanisms([mechanism("eligible-fact", "PART_2死亡后PART_1获得能力+2", false)]),
+  })) };
+  const result = projectBossDossier(board(), payload, source), text = (result.payload.facts as any).boss_dossier;
+  for (const row of source.rows) {
+    const line = text.split("\n").find((line: string) => line.includes(`:${row.id} `) || line.includes(`:${row.id}[`))!;
+    for (const token of [...row.mechanics, "PART_2死亡后PART_1获得能力+2"]) expect(line).toContain(token);
+  }
+  expect(text).not.toMatch(/O_SENTINEL|E_SENTINEL/);
+  expect(dossierBytes(text)).toBeLessThanOrEqual(1500);
+  expect(result.audit.omitted_fields).toBeGreaterThan(0);
+});
+
 it("separates first markers from inclusive explicit win counters without reversing rounded rates", () => {
   expect(bossOwnCounterText(bossOwnCounters({ win_rate: .667, n_outcome_known: 54 }))).toBe("O首试unknown/含重试unknown");
   expect(bossOwnCounterText(bossOwnCounters({ win_rate: .667, n_outcome_known: 54, turns_won: { n: 36 } }))).toBe("O首试unknown/含重试36/54");

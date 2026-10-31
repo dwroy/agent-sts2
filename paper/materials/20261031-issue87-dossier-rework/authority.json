@@ -1,0 +1,17 @@
+[
+  {
+    "id": "IC_kwDOU7DWbs8AAAABhhvZzw",
+    "author": {
+      "login": "dwroy"
+    },
+    "authorAssociation": "OWNER",
+    "body": "[Claude] #87 r2+A（2ec93ece）review：**对齐部分通过**（12 个恢复逐字节等于 LIVE，3 个撤出，闭包重算对得上）。**档案部分要返工一处**，修完再进预检。\n\nF32 完整题面里，KAISER_CRAB 那行正确显示了两条机制事实（K1-0924d4ea）。但其他五个 Boss 的“K事实”是单窗 fight_plan 条目，例如“单窗：当前已显示来袭/挡及手牌费用逐项核算”“单窗：同盘面两种能力启动后余能/挡原记录分别留存”。这些对构筑没有信息量，还把原来的关键招式和能力挤掉了：KNOWLEDGE_DEMON 的知识的诅咒和思考力量+3、TEST_SUBJECT 的噬咬 22、AEONGLASS 的消退 26 和人工制品 3、QUEEN 的强力冲撞 32、THE_INSATIABLE 的液化地面和力量+3。方案原文写的是：限 fight_plan 的单窗条目在构筑题只列可查目录，不进正文。\n\n修法：\n1. 机制行**只收** #85 规则下的**机制事实**（confidence=null 的机制类，比如两条蟹机制）。单窗 fight_plan 条目一律不进档案正文，只计入“K 目录 n 条，可查”。\n2. 每个 Boss 恢复 r1 里的 M 行：关键招式、伤害、首见能力和成长。档案超预算时，**先砍 O/E，不砍 M 和机制事实**。\n3. O 拆分照现在的写法（首试 unknown / 含重试 x/n）。等 #83 的首试计数正式发布后再接进来，不倒推。\n\n只改档案投影和对应测试，对齐的 15 叶不动。修完给新的固定 HEAD，附三题完整前后题面，然后请集成员预检。预计多久，回一下。\n",
+    "createdAt": "2026-10-31T14:49:37Z",
+    "includesCreatedEdit": false,
+    "isMinimized": false,
+    "minimizedReason": "",
+    "reactionGroups": [],
+    "url": "https://github.com/dwroy/agent-sts2/issues/87#issuecomment-6544939471",
+    "viewerDidAuthor": true
+  }
+]

@@ -33,6 +33,10 @@ export function publishedBossMechanisms(entries: Row[]): BossPublishedMechanism[
   return entries.flatMap(entry => {
     const g = strategyGrading(entry);
     if (!formallyGraded(entry) || entry["confidence"] !== null || g?.evidence_type !== "机制事实") return [];
+    const questions = asArray(asRecord(entry["trigger"])["question_types"]);
+    // Fight-plan-only observations stay in the lookup directory, even if graded as facts.
+    if (questions.length && questions.every(q => q === "fight_plan")
+      || g.single_observation_window && questions.includes("fight_plan")) return [];
     const body = g.summary.replace(/^机制事实（已从原件复核）[；：:]?\s*/, "");
     // A complete source clause, never a substring cut through a condition or number.
     const clause = body.split("；")[0]!.replace(/^单次观察窗口：/, "单窗：").replace(/^限定原观察窗口：/, "原窗：").replace(/^Silent A10/, "");
