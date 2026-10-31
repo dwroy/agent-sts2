@@ -1,0 +1,1174 @@
+{
+  "system": "You are an expert Slay the Spire 2 player advising a bot (Silent, climbing ascension levels). You get the game state and one question with a fixed set of option keys. Code has already computed every number shown (damage, block, HP after the enemy turn); trust those numbers. Think about winning the whole run, not just this screen. Be decisive. Do NOT recompute damage, block or HP arithmetic: the numbers in the options are exact (they already include strength, vulnerable, weak, block and enemy intents). Compare the options on their differences, weigh the few things code cannot see (future turns, deck plan, potion value), decide, and stop. Do not second-guess a decision once made. memory.knowledge, when present, is the slice of our experience base that matches this question: lessons distilled from past runs' post-mortems (scope, 置信 高/中/低 = confidence, n = supporting runs, 反例 = contradicting runs) and outcome statistics from our logs (observational: n runs, mean final floor, act-boss pass rate; low-n rows are hints only). Use it as evidence-based guidance, not orders: weigh it with the exact facts in the state and code's numbers. High-confidence, well-supported lessons deserve real weight; when the current situation differs from what a lesson assumes, the facts win. When the strategy guide or the handbook conflicts with the experience base (memory.knowledge) or measured data (outcome statistics, code's numbers), go with the data. memory.act is this act's threats and boss; memory.history is the run so far, floor by floor (floors already left); memory.this_floor is the current floor so far; state.facts, when present, is the exact current deck, relics, potions, HP and gold. Reply with JSON only: {\"choice\": \"<one option key exactly as given>\", \"reason\": \"<max 25 words>\"}, plus every other field the question asks for (such as \"route\" and \"route_reason\" when it has a route review, \"cards\", \"discard\").\n\n知识来自题面默认摘要与所给知识工具。\n工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。\n经验用kb_experience按题面非空线索与需要查询；匹配数为0、缺失或错误时跳过，不为查工具而查。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。\n可用知识工具（按当前问题需要自行选择；正式参数约束随工具提供）：\nkb_monster — 查一个怪物在本局进阶的数据：血量、每个招式的伤害×段数、给自己加的能力、给我们上的减益、塞的牌、出现回合和下一招的转移、特殊机制（复活、召唤、喷发、滑溜等），每个数带样本数 n；本进阶没记录的按相邻进阶推算并标「估」。另附它所在遭遇各进阶的战绩。按 id（如 KIN_PRIEST）或中文名（如 同族神官）查。 用途：理解启动窗口、敌人机制和本幕Boss压力，判断备战需求。\n主要输入：id（必填）。\nkb_encounter — 查遭遇和 boss 战的战绩：各进阶的场数、胜率、死亡数、赢局战内掉血中位/p75（boss 另有赢局回合和每回合掉血）。query 可以是遭遇 key（CRUSHER+ROCKET）、boss id（KAISER_CRAB）、或怪物 id/中文名（列出它参与的全部遭遇）；可按幕和房间类型筛选。 用途：根据自有遭遇失血与回合，评估本幕Boss及爬楼路线风险。\n主要输入：query（必填）；act（可选）；room（可选）=hallway/elite/boss/unknown_room。\nkb_experience — 查经验库里本局进阶适用的有效条目：结论、支持/反对局数、置信度、典型案例（run id + 复盘标题一句话）。按主题（monster=怪物/boss，deck=构筑，route=路线/休息，shop_event=商店/事件，potion=药水，mechanics=机制/综合）、条目 id 或关键词（在 id、范围、名称、结论里找）查，至少给一个；给了几个就要同时满足。 本工具查经验，reflex knowledge（rk）请用kb_reflex；relevant=true可取本题相关经验（最多12条，保留来源、置信度、支持与反证），也可按id定查。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：核对启动与过渡、费用/抽牌/防护、构筑、成长输出、持续防御及连续双Boss资源判断；保留支持、反证与未知。\n主要输入：theme（可选）=monster/deck/route/shop_event/potion/mechanics；id（可选）；keyword（可选）；relevant（可选）；detail（可选）=projection/full；document_id（可选）；document_offset（可选）；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_stats — 查统计表：room_costs = 各幕各进阶每种房间的掉血（中位/p75/p90、死亡率、n）；fights = 精英和 boss 各进阶的战绩；rest = 休息点回血/锻造按到达血量段的结果（均终层、过本幕 boss 比例）。room_costs 和 fights 可以只看一幕。 用途：比较爬楼路线、房间代价、休息回血/升级和资源安排。\n主要输入：table（必填）=room_costs/fights/rest；act（可选）。\nkb_old_knowledge — 查旧知识（早期手写，待数据验证；和数据冲突时以数据为准）：guide = 静默猎手攻略，handbook = DeepSeek 经验手册，jev_hints = Jev 战斗提示。给 keyword 只返回含关键词的行（带所在小标题）；不给就返回整份。 用途：查旧攻略背景，与当前对局证据及公开来源分清。\n主要输入：source（可选）=guide/handbook/jev_hints；keyword（可选）。\nkb_potion — 查药水换算表（本局进阶）：每瓶药留到本幕 boss 战值多少血，以及等价的伤害和格挡（boss 战实测的换算率，带来源和 n）。boss 之前喝掉一瓶药 = 付出它的持有价值。给 id（FIRE_POTION）或中文名（火焰药水）返回这瓶药的效果、日志里出现和喝的次数、各幕的数值、公式和校验；不给返回整张表。 用途：用药、Boss备战和连续两战资源取舍；不直接计算完整双Boss胜率。\n主要输入：id（可选）；act（可选）。\nkb_open_book — 查公开开卷机械资料：query 为卡牌/遗物/怪物/事件 ID、中文名或关键词；category 可限类别。返回外部来源、版本、SHA、许可；当前 mod 状态优先，资料不证明模拟支持。最多12项，可细化关键词。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。 用途：理解拿牌、删牌、升级、商店和事件选项的机械效果。\n主要输入：query（必填）；category（可选）=cards/relics/monsters/events；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_strategies — 只读查本题相关策略/剧本，按题型、幕、Boss、牌组条件及#54最近流派筛选，具体条件优先。query=* 或ID/关键词；默认3条，保留ID、来源、样本、可信度和限制；无匹配返回空，自行决定是否查询。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：查已发布的启动、过渡、构筑方向、本幕Boss、最终双Boss、路线和资源策略；未知达标线保持未知。\n主要输入：detail（可选）=projection/full；document_id（可选）；document_offset（可选）；query（必填）；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_reflex — 按非空rk线索及需要只读查reflex.json，与经验库kb_experience独立；0匹配时跳过。query=*或ID/关键词，applies_to可缩小范围。构筑题只返回构筑相关条目的一句话摘要、原可信度/证据/来源关联，不返回combat_line或原始predicate JSON；备战题保留条目条件。来源附版本/SHA，检索不证明条件成立或Jev采用。最多12条/24KB。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：查看局部打法与构筑联系，辅助拿牌、商店、休息及备战。\n主要输入：detail（可选）=projection/full；document_id（可选）；document_offset（可选）；query（必填）；applies_to（可选）=combat_line/card_pick/potion/rest/shop；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nexternal_stats_card — 查卡牌按幕的提供/拿取、拿取率与区间、拿/不拿整局胜率与区间、玩家/幕调整胜率差及重叠覆盖。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：拿牌比较的外部选择背景。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；id（必填）；act（可选）。\nexternal_stats_skip — 查按幕保留奖励点的跳过次数、跳过率和玩家簇区间。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：拿/跳牌的外部背景比较。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；act（可选）。\nexternal_stats_deck_size — 查结束牌组张数分箱与胜率（全体/已到第三幕），有存活偏差，不据此推荐张数。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：理解牌组规模与结局关联，保留存活偏差。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；scope（可选）=all/reached_act3。\nexternal_stats_encounter — 查遭遇ID的外部总受伤、回合和死亡分布、独立局/玩家数（仅v0.111）。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：了解外部Boss及路线风险的受伤、回合和死亡分布。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；id（必填）；act（可选）。\nexternal_stats_clusters — 查数据产生的簇、标签、评估胜率和区间。现有样本无法区分流派优劣、不作方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：构筑样本背景；簇不等于已验证流派。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；scope（可选）=all/reached_act3；k（可选）=3/4/5；seed（可选）=24/240/2400。\nexternal_stats_cooccurrence — 查常一起出现的卡对及lift/Jaccard，仅为描述，不是收益或方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：组合样本背景；共现不等于收益或已验证构筑方向。\n主要输入：version（可选）=v0.107/v0.108/v0.109/v0.110/v0.111；scope（可选）=all/reached_act3；card（可选）；with_card（可选）。\nkb_build_cores — 查已发布构筑核心、原scope和关联组合ID，判断有哪些待核构筑假设；返回core_summary。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。\n主要输入：query（必填）；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_build_combos — 查已发布组合的卡牌、前提、证据与原可信度；返回combo_summary，完整metrics不在工具结果。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。\n主要输入：query（必填）；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_vocab — 查已发布描述词表与维度，理解rk引用的明确tag；词表不是打法结论。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。\n主要输入：query（必填）；entity（可选）；topic（可选）=startup/boss/double_boss/build_route/climb_route。\nkb_build_research — 查整局构筑研究的完整阶段、取得顺序、转向理由、检查点、资源连续性和终局准备及证据限制。整局构筑研究候选，非已验证可执行规则；检索不证明条件匹配、自然采用或收益。unknown保持未知，不转predicate/MC参数；保原初始计划与后续复用合同，按需查询。 query为关键词或*；act/stage/goal是同阶段显式标签筛选，不自动推断状态。默认本局进阶、角色；game_version须用实际版本，未知明确返回。先检索列表，再用id读结构页；可用pointer=/phases/2或/sources直取字段；artifact选已存附件ID，JSON附件可配pointer=/cases/0直取原轨迹。所有pointer只在已绑定JSON内寻址，不读文件/SQL/网络。page_offset为sections游标、next_page_offset续取至null，每页保前后阶段和附件目录。拼接同pointer各part后JSON解析可还原全文；分页或选段不表示全文及证据已读全。阶段/目标/幕标注缺失不视作匹配证明，可去掉这些筛选查完整研究。\n主要输入：query（必填）；id（可选）；game_version（可选）；act（可选）；stage（可选）；goal（可选）；page_offset（可选）；artifact（可选）；pointer（可选）。\nkb_decision_context — 续取本题默认知识摘要的完整条目，保留原分母、条件、反证和历史；仅绑定K1、本角色和本题匹配范围。detail=full，document_id为原ID，按next_document_offset续取，拼接json_fragment后解析。\n主要输入：detail（必填）=full；document_id（必填）；source（可选）=decision_context/strategy_observation/strategy；document_offset（可选）。\n本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。 已有构筑路线和爬楼路线继续复用；路线未实质改变，不因下一道题重写完整计划或重算整条路线。结合当前牌组、遗物、HP、金币、药水、遭遇与机会，判断相较现有路线值得修改、预期有助于本局胜率后才改线；理由可含不确定性，不编造胜率提升数值。两类路线可分别调整，仅更新和重算实际受影响部分；普通状态变化只使依赖该状态的数值失效。无构筑计划时在同一答案给完整 run_plan（含 endgame）；已有计划时可省略 run_plan，确需调整只给变更字段及 change_reason（当前情况、旧/新取舍与预期收益），endgame 也只给受影响字段。幕末 endgame_checkpoint 要求的检查在 run_plan.endgame.checkpoint 作答，检查本身不要求换路线。计划是本局假设，不是知识规则；依据、可信度和未知须分清，达标线只引用已发布条目，不自行补伤害/防御/血量门槛。\n题面decision_knowledge为本局绑定K1的已发布背景摘要；保留其条件、分母与限制，不完整摘录不能当完整规则。知识也可继续按需查询。",
+  "user": "{\"memory\":{\"act\":\"第3幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:\\n连枷骑士+魔法骑士+幽灵骑士 [精英] A10: HP 294 (n=38) | 38 场 胜率 58% 阵亡 16 | 赢局失血 中位/p75 44/54.5 (n=22) | 招式 连枷骑士: 撞击 17 → 连枷 10×2 → 战争吟唱 (Buff) +3力 →循环回 撞击；魔法骑士: 强力护盾 7 → 抑制 (Debuff) → 撞击 11 → PREP_MOVE (Defend)；其他: 魔法炸弹 40；幽灵骑士: 恶咒 (Debuff) → 灵魂斩击 17 → 灵魂火焰 4×3 →循环回 灵魂斩击\\n机甲骑士 [精英] A10: HP 320 (n=19) | 19 场 胜率 90% 阵亡 2 | 赢局失血 中位/p75 39/48 (n=17) | 招式 机甲骑士: 冲锋 30 → 喷火器 12 塞4张状态牌 → 举起蓄力 (Buff+Defend) +5力 → 重斩 40 →循环回 喷火器\\n灵魂枢纽 [精英] A10: HP 254 (n=26) | 26 场 胜率 89% 阵亡 3 | 赢局失血 中位/p75 33/51.5 (n=23) | 招式 灵魂枢纽: 灵魂灼烧 31 → 汲取生命 19 →循环回 灵魂灼烧；其他: 大漩涡 7×4\\n方柱构装体×2+拳击构装体 [小怪] A10: HP 200 (n=46) | 46 场 胜率 74% 阵亡 12 | 赢局失血 中位/p75 18/25.5 (n=34) | 招式 方柱构装体: 蓄能 (Buff) +2力 → 重复轰击 8 +2力 → REPEATER_BLAST_MOVE_2 8 +2力 → 排出 6×2 →循环回 重复轰击；拳击构装体: 准备就绪 (Defend) → 快速拳 6×2 → 强力拳 16 →循环回 准备就绪\\n组装师 [小怪] A10: HP 155 (n=56) | 56 场 胜率 82% 阵亡 10 | 赢局失血 中位/p75 12.5/23.5 (n=46) | 招式 组装师: 组装 (Summon) → 瓦解 13 → 组装打击 21 →循环回 组装\\n史莱姆狂战士 [小怪] A10: HP 281 (n=59) | 59 场 胜率 90% 阵亡 6 | 赢局失血 中位/p75 10/20 (n=53) | 招式 史莱姆狂战士: 喷吐脓水 (StatusCard) 塞10张状态牌 → 狂怒连击 5×4 → 汲取之拥 (Buff+Debuff) +3力 → SMOTHER_MOVE 33 →循环回 喷吐脓水\\n遗忘之物+失落之物 [小怪] A10: HP 210 (n=51) | 51 场 胜率 86% 阵亡 7 | 赢局失血 中位/p75 11/15.8 (n=44) | 招式 遗忘之物: 瘴气 (Buff+Debuff+Defend) → 恐惧 17 →循环回 瘴气；失落之物: 致残雾霾 (Buff+Debuff) +2力 → 眼部激光 5×2 →循环回 致残雾霾\\n虔诚雕刻师 [小怪] A10: HP 172 (n=148) | 148 场 胜率 97% 阵亡 4 | 赢局失血 中位/p75 15/29 (n=144) | 招式 虔诚雕刻师: 禁忌唱诵 (Buff) → 猛烈攻击 15 →循环回 猛烈攻击\\n猫头鹰法官 [小怪] A10: HP 247 (n=57) | 57 场 胜率 93% 阵亡 4 | 赢局失血 中位/p75 18/28 (n=53) | 招式 猫头鹰法官: 法官审查 17 → 猛啄袭击 4×6 → 飞法行为 (Buff) → 裁决 36 →循环回 法官审查\\n巨斧机器人 [小怪] A10: HP 82 (n=46) | 46 场 胜率 91% 阵亡 4 | 赢局失血 中位/p75 11.5/20.8 (n=42) | 招式 巨斧机器人: 上勾锤击 18 → 两连击 11×2 →循环回 上勾锤击；其他: 启动 (Buff+Defend) +4力\\n咬人卷轴×4 [小怪] A10: HP 144 (n=45) | 45 场 胜率 91% 阵亡 4 | 赢局失血 中位/p75 12/18 (n=41) | 招式 咬人卷轴: 更多牙齿 (Buff) +2力 → 咀嚼 6×2 → 大啃 16 →循环回 更多牙齿\\n第3幕 boss: 实验体 #C97 (TEST_SUBJECT_BOSS)\\nboss 数据库 实验体 #C97 (TEST_SUBJECT) A10: HP 实验体 #C97 111 (n=69) | 阶段 HP: 111 > 212 (TEST_SUBJECT) (n=26); 111 > 212 > 313 (TEST_SUBJECT) (n=29)\\n我方战绩: 69 场，胜率 26% (n=69)，阵亡 51；赢局失血 中位/p75 50/63 (n=18)；赢局回合 15/16 (n=18)；每回合失血 4/6.2 (n=69)\\n实验体 #C97 招式: 噬咬 22 → 颅骨重击 16 →循环回 噬咬；其他: 大力猛扑 45, 燃烧之吼 (Buff+StatusCard) +3力 塞5张状态牌, 多次爪击 11×3, 撕碎 11×3, 重生 (Buff+Heal) | 能力: 适者生存, 激怒 3, 无实体, 天罚, 疼痛戳刺, 力量 3\",\"history\":\"本局历程（已离开的楼层，按层按发生顺序，只追加）: 每层首行 = 层 房间 层末 HP(/上限，变化时标出) ¥金币（房间 怪/精/问/休/店/宝/王/古，·=未知）；其下每行一件事: 决策「标签 [决策者]: 选择 — 未核实理由」（DS=DeepSeek；未核实理由 = DeepSeek 当时所写，不是事实）、「战斗 敌人: HP 战前→战后/上限 药:用掉的药水」、牌组/遗物/药水/上限变化（起始牌组与起始遗物不计）、路线规划。\\n第1幕:\\nF1 · HP56/70 ¥99\\n run-plan [DS]: (start) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n event/choose [DS]: 药瓶皮套: 获得1个药水栏位并获得2瓶随机药水。 — 未核实理由: The extra potion slot supports consecutive bosses; two immediate potions enable safer early growth without sacrificing maximum HP.\\n +遗物 药瓶皮套(事件); +药 火焰药水(事件); +药 格挡药水(事件)\\n map/route-plan [DS]: route r1c0 普通战 → r2c1 普通战 → r3c2 普通战 → r4c2 普通战 → r5c2 普通战 → r6c1 休息 → r7c2 精英 → r8c3 休息 → r9c2 宝箱 → r10c1 精英 → r11c1 休息 → r12c2 问号 → r13c3 普通战 → r14c4 问号 → r15c5 休息 → r16c3 Boss — 未核实理由: 前期战斗补牌，四火护航双精英\\nF2 怪 HP56 ¥111\\n 战斗 树叶史莱姆（小）+树枝史莱姆（中）+树枝史莱姆（小）: 56→56/70 药:火焰药水,格挡药水\\n 路线规划（第1幕 F1 定，当时 HP 80%）: 怪→怪→怪→怪→怪→休→精→休→宝→精→休→问→怪→问→休→王\\n 用药 火焰药水(战斗); 用药 格挡药水(战斗)\\n reward/card [DS]: 精确切击 — 未核实理由: Free burst improves immediate damage while preserving energy for defense; it also has the strongest eligible boss margin. Keep the existing flexible plan.\\n +卡 精确切击(奖励)\\nF3 怪 HP53 ¥126\\n 战斗 小啃兽: 56→53/70\\n reward/card [DS]: 刀刃之舞 — 未核实理由: Blade Dance supplies needed burst for upcoming fights and elites despite its worse boss margin. Core coverage remains unknown; retain the flexible plan.\\n +卡 刀刃之舞(奖励)\\nF4 怪 HP53 ¥136\\n 战斗 缩小甲虫: 53→53/70\\n +药 缚魂药水(奖励)\\n reward/card [DS]: 匕首雨 — 未核实理由: Dagger Spray supplies missing AoE for multi-enemy fights and elites, with the strongest eligible boss margin. Core coverage remains unknown; retain existing plans.\\n +卡 匕首雨(奖励)\\nF5 怪 HP51 ¥143\\n 战斗 树叶史莱姆（小）+树枝史莱姆（小）+蛇行扼杀者: 53→51/70 药:缚魂药水\\n 用药 缚魂药水(战斗)\\n reward/card [DS]: 暴露 — 未核实理由: Expose boosts existing burst without spending defensive energy and has the best eligible boss margin. Core coverage and draw dilution remain unknown.\\n +卡 暴露(奖励)\\nF6 怪 HP47 ¥152\\n 战斗 墨宝: 51→47/70\\n +药 格挡药水(奖励)\\n reward/card [DS]: 匕首雨 — 未核实理由: Second Dagger Spray strengthens multi-enemy elite fights and has the best eligible boss margin; its effect on core-card draw timing remains unknown.\\n +卡 匕首雨(奖励)\\nF7 休 HP47 ¥152\\n rest/plan [DS]: 锻造 (SMITH): upgrade 中和 — 未核实理由: Neutralize’s extra Weak improves recurring defense and has the best eligible boss margin. Block Potion and the immediate post-elite rest support smithing.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F7:rest#1 step 2: upgrade 中和 (named with the rest choice)\\n 升级 中和(休息)\\nF8 精 HP25 ¥183\\n 战斗 异蛙寄生虫+扭动虫: 47→25/70 药:格挡药水\\n 用药 格挡药水(战斗); +遗物 金刚杵(奖励)\\n reward/card [DS]: skip — 未核实理由: Accelerant lacks poison support; expensive damage cards compete with defense. Skip ties the best boss margin; precise draw-coverage effects remain unknown.\\nF9 休 HP46 ¥183\\n rest/plan [DS]: 休息: 回复最大生命值的30%（21）。 — 未核实理由: Heal to 46 HP. With no potions, the upcoming elite makes smithing too risky; retain the route with an immediate post-elite rest.\\n HP增加观测 25/70→46/70（+21；休息点内；F9/REST→F9/REST，仅帧间净变化）\\nF10 宝 HP46 ¥218\\n chest/relic [code]: only one relic offered\\n +遗物 风箱(宝箱)\\nF11 精 HP46 ¥248\\n 战斗 旧日雕像: 46→46/70\\n +药 迅捷药水(奖励); +遗物 永恒羽毛(奖励)\\n reward/card [DS]: 灵动步法 — 未核实理由: Footwork strengthens recurring block and has the best eligible boss margin despite lower DPR; complete-core performance and draw-timing effects remain unknown.\\n +卡 灵动步法(奖励)\\nF12 休 HP55 ¥248\\n HP增加观测 46/70→55/70（+9；跨层边界，来源未隔离；F11/MAP→F12/REST，仅帧间净变化）\\n rest/plan [DS]: 锻造 (SMITH): upgrade 匕首雨 — 未核实理由: Upgrade Dagger Spray: best eligible boss margin and stronger repeatable AoE. Current HP and another rest ahead favor smithing.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F12:rest#3 step 2: upgrade 匕首雨 (named with the rest choice)\\n 升级 匕首雨(休息)\\nF13 问 HP48 ¥362\\n event/choose [DS]: 潜水: 获得114金币。失去7点生命. — 未核实理由: 114 gold provides reliable purchasing power. The upcoming rest makes 48 HP manageable, while Stone Sword’s payoff requires several future elite victories.\\nF14 怪 HP48 ¥372\\n 战斗 劫掠者刺客+劫掠者暴徒+劫掠者弩手: 48→48/70 药:迅捷药水\\n 用药 迅捷药水(战斗)\\n reward/card [DS]: 蛇咬 — 未核实理由: Snakebite supplies sustained boss damage, the strongest eligible margin, and lower simulated HP loss despite reduced Footwork coverage. Retain existing plans.\\n +卡 蛇咬(奖励)\\nF15 问 HP48/62 ¥372\\n run-plan [DS]: (review) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n event/choose [DS]: 杀死树木: 失去8点最大生命。获得一件随机遗物。 — 未核实理由: Choose the relic over a retained curse. Eternal Feather and the next rest reduce healing urgency; the unmodeled relic may offset reduced maximum HP.\\n +遗物 餐券(事件); 上限 70→62(事件)\\nF16 休 HP60 ¥372\\n HP增加观测 48/62→60/62（+12；跨层边界，来源未隔离；F15/MAP→F16/REST，仅帧间净变化）\\n run-plan [DS]: (review) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n rest/plan [DS]: 锻造 (SMITH): upgrade 匕首雨 — 未核实理由: Upgrade Dagger Spray: best eligible boss margin, lower simulated HP loss, and repeatable AoE; healing gains only two HP.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F16:rest#4 step 2: upgrade 匕首雨 (named with the rest choice)\\n 升级 匕首雨(休息)\\nF17 王 HP17 ¥447\\n 战斗 仪式兽: 60→17/62\\n +药 力量药水(奖励)\\n reward/card [DS]: 跟踪 — 未核实理由: Tracking amplifies existing attacks through Neutralize+; upgrading reduces setup cost. Storm lacks discard payoffs, while Murder competes too heavily with defense.\\n +卡 跟踪(奖励)\\n第2幕:\\nF18 古 HP53 ¥447\\n HP增加观测 17/62→53/62（+36；跨层边界，来源未隔离；F17/MAP→F18/EVENT，仅帧间净变化）\\n event/act-plan [DS]: 烫嘴可可; route r1c0 普通战 → r2c0 问号 → r3c1 商店 → r4c0 问号 → r5c0 商店 → r6c0 休息 → r7c0 精英 → r8c0 宝箱 → r9c0 休息 → r10c1 普通战 → r11c0 商店 → r12c1 问号 → r13c0 普通战 → r14c0 休息 → r15c3 Boss — 未核实理由: 可可配风箱抢启动；三店三火补强保血。\\n +遗物 烫嘴可可(事件)\\n 路线规划（第2幕 F18 定，当时 HP 85%）: 怪→问→店→问→店→休→精→宝→休→怪→店→问→怪→休→王\\n map/route-follow [DS]: following the brain's route plan (floor 18): step 1/15 Monster at row 1, col 0; plan r1c0 普通战 → r2c0 问号 → r3c1 商店 → r4c0 问号 → r5c0 商店 → r6c0 休息 → r7c0 精英 → r8c0 宝箱 → r9c0 休息 → r10c1 普通战 → r11c0 商店 → r12c1 问号 → r13c0 普通战 → r14c0 休息 → r15c3 Boss\\nF19 怪 HP53 ¥457\\n 战斗 外骨骼虫: 53→53/62 药:力量药水\\n 用药 力量药水(战斗)\\n reward/card [DS]: 带毒刺击+ — 未核实理由: Poisoned Stab+ adds cheap poison and immediate damage, benefits from Vajra and Tracking, and needs no upgrade; dilution and complete-core performance remain uncertain.\\n +卡 带毒刺击+(奖励)\\nF20 问 HP53 ¥465\\n 战斗 地道虫: 53→53/62\\n +药 攻击药水(奖励)\\n reward/card [DS]: 闪躲翻滚 — 未核实理由: Dodge and Roll leverages Footwork for recurring two-turn defense, addressing our defensive shortage. Another Snakebite strains energy; Anticipate depends on matching hands.\\n +卡 闪躲翻滚(奖励)\\nF21 店 HP62 ¥188\\n HP增加观测 53/62→62/62（+9；跨层边界，来源未隔离；F20/MAP→F21/SHOP，仅帧间净变化）\\n shop/plan [DS]: shop plan: buy 毒雾 (74g), buy 后空翻 (51g), pay 100g to remove 打击, buy 能量药水 (52g), stop shopping — 未核实理由: 补成长防抽，删打击，留金下店。药补爆发。48→49 连胜未知。\\n +卡 毒雾(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F21:shop#6 step 2: buy 后空翻 (51g)\\n +卡 后空翻(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F21:shop#6 step 3: pay 100g to remove 打击\\n selection/remove [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F21:shop#6 step 4: remove 打击 (named with the shop choice)\\n -卡 打击(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F21:shop#6 step 5: buy 能量药水 (52g)\\n +药 能量药水(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F21:shop#6 step 6: stop shopping\\nF22 问 HP62 ¥188\\n event/choose [DS]: 放入普通药水: 失去攻击药水。获得一张升级过的普通技能牌。 — 未核实理由: Prefer an upgraded skill’s defense/draw potential over another attack; preserve Energy Potion for power setup or emergency defense.\\n 药水离开(战外) 攻击药水\\n reward/card [DS]: 致命毒药+ — 未核实理由: Deadly Poison+ adds energy-efficient sustained damage while preserving defensive energy compared with Snakebite. Footwork timing may suffer; low-confidence simulations establish no survival improvement.\\n +卡 致命毒药+(事件)\\nF23 店 HP62 ¥11\\n run-plan [DS]: (act) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n shop/plan [DS]: shop plan: buy 灵动步法 (78g), buy 偏折 (49g), buy 格挡药水 (50g), stop shopping — 未核实理由: 叠敏捷配零费防护，格挡药保启动\\n +卡 灵动步法(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F23:shop#7 step 2: buy 偏折 (49g)\\n +卡 偏折(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F23:shop#7 step 3: buy 格挡药水 (50g)\\n +药 格挡药水(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F23:shop#7 step 4: stop shopping\\nF24 休 HP62 ¥11\\n rest/plan [DS]: 锻造 (SMITH): upgrade 灵动步法 — 未核实理由: At full HP, smith Footwork: extra Dexterity strengthens recurring defense for poison attrition, the upcoming elite, and consecutive bosses. Simulation differences remain uncertain.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F24:rest#8 step 2: upgrade 灵动步法 (named with the rest choice)\\n 升级 灵动步法(休息)\\nF25 精 HP30 ¥39\\n 战斗 残杀千足虫: 62→30/62 药:格挡药水,能量药水\\n 用药 格挡药水(战斗); 用药 能量药水(战斗); +遗物 锁镰(奖励)\\n reward/card [DS]: 尖啸 — 未核实理由: Piercing Wail provides emergency multiattack protection while poison scales. Simulated DPR differences are inconclusive; retain the existing defensive construction and safe route.\\n +卡 尖啸(奖励)\\nF26 宝 HP30 ¥75\\n chest/relic [code]: only one relic offered\\n +遗物 带骨肉(宝箱)\\nF27 休 HP45 ¥75\\n HP增加观测 30/62→45/62（+15；跨层边界，来源未隔离；F26/MAP→F27/REST，仅帧间净变化）\\n rest/plan [DS]: 锻造 (SMITH): upgrade 毒雾 — 未核实理由: Upgrade Noxious Fumes for stronger poison growth behind double Footwork. At 45 HP, the elite-free route, shop healing, and another rest support smithing.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F27:rest#9 step 2: upgrade 毒雾 (named with the rest choice)\\n 升级 毒雾(休息)\\nF28 怪 HP32 ¥83\\n 战斗 盛碗虫（石）+盛碗虫（卵）+盛碗虫（蜜）: 45→32/62\\n reward/card [DS]: 咕嘟冒泡+ — 未核实理由: Existing poison sources enable Bubble Bubble+’s efficient damage without another upgrade. Simulated damage improves, though defensive timing and survival benefits remain uncertain.\\n +卡 咕嘟冒泡+(奖励)\\nF29 店 HP47 ¥33\\n HP增加观测 32/62→47/62（+15；跨层边界，来源未隔离；F28/MAP→F29/SHOP，仅帧间净变化）\\n shop/plan [DS]: shop plan: buy 技能药水 (50g), stop shopping — 未核实理由: 技能药灵活救急，留金补过牌不添冗毒。\\n +药 技能药水(商店)\\n shop/buy [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F29:shop#10 step 2: stop shopping\\nF30 问 HP47 ¥33\\n event/plan [DS]: 进入你的洞: enchant 灵动步法+ — 未核实理由: Avoid Normality’s three-card restriction. Choose Footwork+, a core defensive card; the enchantment’s exact effect remains unknown.\\n selection/enchant [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F30:event#11 step 2: enchant 灵动步法+ (named with the event choice)\\nF31 怪 HP39 ¥44\\n 战斗 胧光怪+寄生惧魔: 47→39/62 药:技能药水\\n 用药 技能药水(战斗)\\n run-plan [DS]: (hp_drop) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n reward/card [DS]: 扫腿 — 未核实理由: Leg Sweep’s recurring Weak complements double Footwork, poison, and Tracking; lower simulated HP loss favors it despite Backflip’s draw and uncertain DPR differences.\\n +卡 扫腿(奖励)\\nF32 休 HP57 ¥44\\n HP增加观测 39/62→57/62（+18；跨层边界，来源未隔离；F31/MAP→F32/REST，仅帧间净变化）\\n run-plan [DS]: (review) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want BLADE_DANCE, POISONED_STAB, FOOTWORK, LEG_SWEEP, BACKFLIP, BOUNCING_FLASK\\n rest/plan [DS]: 锻造 (SMITH): upgrade 灵动步法 — 未核实理由: Upgrade Footwork: recurring Dexterity strengthens poison defense; healing gains only five HP. Low-confidence simulations support reduced loss without proving faster setup.\\n selection/upgrade [DS]: DeepSeek plan 8CHJ5W30Q7Z8:F32:rest#12 step 2: upgrade 灵动步法 (named with the rest choice)\\n 升级 灵动步法(休息)\\nF33 王 HP35 ¥119\\n 战斗 知识恶魔: 57→35/62\\n +药 攻击药水(奖励)\\n reward/card [DS]: 爆发 — 未核实理由: Burst doubles Bubble Bubble+ or Dexterity-enhanced defense, supporting both consecutive bosses. Draw-timing effects and complete-core performance remain unknown.\\n +卡 爆发(奖励)\\n第3幕:\\nF34 古 HP56 ¥1007\\n HP增加观测 35/62→56/62（+21；跨层边界，来源未隔离；F33/MAP→F34/EVENT，仅帧间净变化）\\n run-plan [DS]: (act) 灵活过渡，再定成长核心 — 先补即时攻防，按实得组件定型；早期药水可用于保命换成长。 | want ACCELERANT, BACKFLIP, ACROBATICS, CALCULATED_GAMBLE, ADRENALINE, AFTERIMAGE\\n event/act-plan [DS]: 图章戒指; route r1c5 普通战 → r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c4 商店 → r6c5 精英 → r7c5 宝箱 → r8c5 休息 → r9c4 普通战 → r10c5 休息 → r11c4 问号 → r12c4 商店 → r13c5 休息 → r14c3 Boss → r15c3 Boss — 未核实理由: 戒指供双店补强，单精英后三火备连王。\\n +遗物 图章戒指(事件)\\n 路线规划（第3幕 F34 定，当时 HP 90%）: 怪→怪→怪→问→店→精→宝→休→怪→休→问→店→休→王→王\\n map/route-follow [DS]: following the brain's route plan (floor 34): step 1/15 Monster at row 1, col 5; plan r1c5 普通战 → r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c4 商店 → r6c5 精英 → r7c5 宝箱 → r8c5 休息 → r9c4 普通战 → r10c5 休息 → r11c4 问号 → r12c4 商店 → r13c5 休息 → r14c3 Boss → r15c3 Boss\",\"this_floor\":\"本层至今（F35，尚未结束；格式同 history）:\\n 战斗 咬人卷轴: 56→51/62 药:攻击药水\\n 用药 攻击药水(战斗); 上限 62→60(战斗); +药 速度药水(奖励)\",\"construction_log\":\"本局已做的选择，不是规则；运行计划的转向条件照旧有效。\\n保留开头4条及最近36条；中间省略0条（原日志保留）。\\nF2 拿 精确切击：Free burst improves  [codex]\\nF3 拿 刀刃之舞：Blade Dance supplies [codex]\\nF4 拿 匕首雨：Dagger Spray supplie [codex]\\nF5 拿 暴露：Expose boosts existi [codex]\\nF6 拿 匕首雨：Second Dagger Spray  [codex]\\nF7 升级 中和+：Neutralize’s extra W [codex]\\nF8 跳过 连续反弹/触媒/袖里乾坤：Accelerant lacks poi [codex]\\nF11 拿 灵动步法：Footwork strengthens [codex]\\nF12 升级 匕首雨+：Upgrade Dagger Spray [codex]\\nF14 拿 蛇咬：Snakebite supplies s [codex]\\nF16 升级 匕首雨+：Upgrade Dagger Spray [codex]\\nF17 拿 跟踪：Tracking amplifies e [codex]\\nF19 拿 带毒刺击+：Poisoned Stab+ adds  [codex]\\nF20 拿 闪躲翻滚：Dodge and Roll lever [codex]\\nF21 商店买 毒雾：补成长防抽，删打击，留金下店。药补爆发。 [codex]\\nF21 商店买 后空翻：补成长防抽，删打击，留金下店。药补爆发。 [codex]\\nF21 删 打击：补成长防抽，删打击，留金下店。药补爆发。 [codex]\\nF22 拿 致命毒药+：Deadly Poison+ adds  [codex]\\nF23 商店买 灵动步法：叠敏捷配零费防护，格挡药保启动 [codex]\\nF23 商店买 偏折：叠敏捷配零费防护，格挡药保启动 [codex]\\nF24 升级 灵动步法+：At full HP, smith Fo [codex]\\nF25 拿 尖啸：Piercing Wail provid [codex]\\nF27 升级 毒雾+：Upgrade Noxious Fume [codex]\\nF28 拿 咕嘟冒泡+：Existing poison sour [codex]\\nF31 拿 扫腿：Leg Sweep’s recurrin [codex]\\nF32 升级 灵动步法+：Upgrade Footwork: re [codex]\\nF33 拿 爆发：Burst doubles Bubble [codex]\",\"route\":\"本幕进度（按 F34 的路线）: 已走 1/15 [怪] | 下一步 怪（预计 HP 73%） | 剩余 14: 怪→怪→问→店→精→宝→休→怪→休→问→店→休→王→王\",\"lookahead\":\"距 boss 13 层 | 到 boss 前各路线: 精英 0–3, 休息 2–3, 商店 0–2, 问号 2–4, 宝箱 1 | 下一个节点可选: Monster x2\"},\"state\":{\"run_brief\":{\"character\":\"静默猎手\",\"notes\":[\"floor 31: moved to RestSite\",\"used a rest site\",\"card selection\",\"floor 32: moved to Boss\",\"took a card reward\",\"floor 33: moved to Ancient\",\"event choice (诺奴佩普)\",\"floor 34: moved to Monster\"]},\"route_review\":{\"map_legend\":\"节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。\",\"map\":[\"F34 r0c3 远古（已走） → r1c2 r1c5\",\"F35 r1c2 普通战 → r2c1\",\"F35 r1c5 普通战（当前） → r2c4 r2c6\",\"F36 r2c1 普通战 → r3c1\",\"F36 r2c4 普通战 → r3c4\",\"F36 r2c6 普通战 → r3c6\",\"F37 r3c1 普通战 → r4c2\",\"F37 r3c4 普通战 → r4c4\",\"F37 r3c6 问号 → r4c6\",\"F38 r4c2 普通战 → r5c3\",\"F38 r4c4 问号 → r5c3 r5c4\",\"F38 r4c6 问号 → r5c6\",\"F39 r5c3 问号 → r6c2 r6c3 r6c4\",\"F39 r5c4 商店 → r6c5\",\"F39 r5c6 普通战 → r6c6\",\"F40 r6c2 问号 → r7c1 r7c2\",\"F40 r6c3 休息 → r7c4\",\"F40 r6c4 精英 → r7c5\",\"F40 r6c5 精英 → r7c5\",\"F40 r6c6 精英 → r7c5\",\"F41 r7c1 宝箱 → r8c1\",\"F41 r7c2 宝箱 → r8c2\",\"F41 r7c4 宝箱 → r8c3 r8c4\",\"F41 r7c5 宝箱 → r8c5 r8c6\",\"F42 r8c1 商店 → r9c1\",\"F42 r8c2 休息 → r9c2\",\"F42 r8c3 精英 → r9c4\",\"F42 r8c4 问号 → r9c4\",\"F42 r8c5 休息 → r9c4 r9c6\",\"F42 r8c6 普通战 → r9c6\",\"F43 r9c1 精英 → r10c2\",\"F43 r9c2 问号 → r10c2\",\"F43 r9c4 普通战 → r10c4 r10c5\",\"F43 r9c6 精英 → r10c5\",\"F44 r10c2 休息 → r11c1 r11c3\",\"F44 r10c4 普通战 → r11c4\",\"F44 r10c5 休息 → r11c4 r11c6\",\"F45 r11c1 普通战 → r12c0\",\"F45 r11c3 精英 → r12c4\",\"F45 r11c4 问号 → r12c4\",\"F45 r11c6 精英 → r12c6\",\"F46 r12c0 普通战 → r13c0\",\"F46 r12c4 商店 → r13c5\",\"F46 r12c6 问号 → r13c5\",\"F47 r13c0 休息 → r14c3\",\"F47 r13c5 休息 → r14c3\",\"F48 r14c3 Boss（第 1 个 boss） → r15c3\",\"F49 r15c3 Boss（第 2 个 boss）\"],\"position\":\"你在 r1c5（F35 普通战）；下一步可走：r2c4、r2c6\",\"next_nodes\":[\"r2c4\",\"r2c6\"],\"winged_boots_left\":0,\"boss\":\"r14c3（F48 Boss） → r15c3（F49 Boss）\",\"walked\":\"r0c3 → r1c5\",\"plan\":\"r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c4 商店 → r6c5 精英 → r7c5 宝箱 → r8c5 休息 → r9c4 普通战 → r10c5 休息 → r11c4 问号 → r12c4 商店 → r13c5 休息 → r14c3 Boss → r15c3 Boss\",\"plan_facts\":{\"arrival\":[\"F36 r2c4 普通战：51/60（p75 51）\",\"F37 r3c4 普通战：40/60（p75 30）\",\"F38 r4c4 问号：29/60（p75 9）\",\"F39 r5c4 商店：29/60（p75 9）\",\"F40 r6c5 精英：29/60（p75 9）\",\"F41 r7c5 宝箱：0（血量耗尽）（p75 耗尽）\",\"F42 r8c5 休息：0（血量耗尽）（p75 耗尽）\",\"F43 r9c4 普通战：0（血量耗尽）（p75 耗尽）\",\"F44 r10c5 休息：0（血量耗尽）（p75 耗尽）\",\"F45 r11c4 问号：0（血量耗尽）（p75 耗尽）\",\"F46 r12c4 商店：0（血量耗尽）（p75 耗尽）\",\"F47 r13c5 休息：0（血量耗尽）（p75 耗尽）\",\"F48 r14c3 Boss：0（血量耗尽）（p75 耗尽）\",\"F49 r15c3 Boss：0（血量耗尽）（p75 耗尽）\"],\"rest_sites\":[\"F42 r8c5 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/60（p75 耗尽）；锻造（不回血）→ 耗尽/60（p75 耗尽）\",\"F44 r10c5 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/60（p75 耗尽）；锻造（不回血）→ 耗尽/60（p75 耗尽）\",\"F47 r13c5 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/60（p75 耗尽）；锻造（不回血）→ 耗尽/60（p75 耗尽）\"],\"fights_before_rest\":\"到下一个休息点 F42 r8c5 前：战斗 3 场（普通战 2、精英 1），问号 1 个，商店 1 个；本幕从上一个休息点（没有就从幕初）到当前节点已打普通战和精英 1 场（商店、问号不打断，问号不计），这一段到休息点 F42 r8c5 前共 4 场\",\"next_elite\":\"F40 r6c5：到达 29/60（p75 9）\",\"boss\":\"F48 r14c3：到达 0（血量耗尽）（p75 耗尽）；之后还有第 2 个 boss（r15c3），中间不休息\",\"hp_runs_out\":\"按中位数投影，血量在 F40 r6c5 精英 耗尽\",\"about\":\"从现在的 HP 51/60 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。\"},\"next_rest\":{\"about\":\"从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从现在的 HP 51/60 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。\",\"keep\":\"r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c4 商店 → r6c5 精英 → r7c5 宝箱 → F42 r8c5 休息：普通战 2、精英 1（这一段共 4 场）、问号 1，经过商店；到达 0（血量耗尽）（p75 耗尽）；下一只精英 F40 r6c5 进场 29/60（p75 9）\",\"switch\":[\"r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c3 问号 → F40 r6c3 休息：普通战 2、精英 0（这一段共 3 场）、问号 2，没有商店；到达 29/60（p75 9）\",\"r2c4 普通战 → r3c4 普通战 → r4c4 问号 → r5c3 问号 → r6c2 问号 → r7c2 宝箱 → F42 r8c2 休息：普通战 2、精英 0（这一段共 3 场）、问号 3，没有商店；到达 29/60（p75 9）\",\"r2c6 普通战 → r3c6 问号 → r4c6 问号 → r5c6 普通战 → r6c6 精英 → r7c5 宝箱 → F42 r8c5 休息：普通战 2、精英 1（这一段共 4 场）、问号 2，没有商店；到达 0（血量耗尽）（p75 耗尽）；下一只精英 F40 r6c6 进场 29/60（p75 9）\"]},\"room_costs\":\"第 3 幕每个房间掉血（中位数/p75，最大生命 60）：普通战 11/21（logged A10 act-3 Monster rooms, n=789 incl. 50 deaths）；精英 41/54（logged A10 act-3 Elite rooms, n=83 incl. 21 deaths）；问号 0/0（logged A10 act-3 Unknown rooms, n=663 incl. 5 deaths）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），另加 Eternal Feather +18 HP on entering (31 cards)，锻造不回血。\",\"route_calculation\":{\"plan_facts\":{\"outcome\":\"computed\",\"invalidated_by\":[\"map\",\"plan\",\"costs\",\"start\"]},\"next_rest\":{\"outcome\":\"computed\",\"invalidated_by\":[\"map\",\"plan\",\"costs\",\"start\"]}},\"vs_plan\":\"计划在 F34 定（当时 HP 90%），当时预计到达：下一节点 F36 普通战 44/60，精英 F40 精英 22/60，boss F48 Boss 0/60；现在 HP 51/60\",\"run_plan_hp\":\"根据实际血量准备应急药，避免久拖力量成长。\"},\"facts\":{\"act\":3,\"floor\":35,\"floors_to_act_boss\":13,\"ascension\":10,\"hp\":\"51/60 (85%)\",\"gold\":1016,\"act_boss\":\"TEST_SUBJECT_BOSS\",\"deck_size\":31,\"deck_profile\":\"31 张 (攻击 9/技能 17/能力 4/诅咒或状态 1) | 升级 9 | 平均费用 0.9 | 力量来源 金刚杵（牌面或遗物文字写明获得持续的力量）\",\"deck\":[\"4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。\",\"5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。\",\"NEUTRALIZE+ 中和+ (Attack, 0 energy): 造成4点伤害。 给予2层虚弱。\",\"SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。\",\"ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。\",\"PRECISE_CUT 精确切击 (Attack, 0 energy): 造成13点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。\",\"BLADE_DANCE 刀刃之舞 (Skill, 1 energy): 添加3张小刀到你的手牌。 消耗。\",\"2x DAGGER_SPRAY+ 匕首雨+ (Attack, 1 energy): 对所有敌人造成6点伤害两次。\",\"EXPOSE 暴露 (Skill, 0 energy): 去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。\",\"FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。 完美契合。\",\"SNAKEBITE 蛇咬 (Skill, 2 energy): 保留。 给予7层中毒。\",\"TRACKING 跟踪 (Power, 2 energy): 处于虚弱状态的敌人受到的攻击伤害增加50%。\",\"POISONED_STAB+ 带毒刺击+ (Attack, 1 energy): 造成8点伤害。 给予4层中毒。\",\"DODGE_AND_ROLL 闪躲翻滚 (Skill, 1 energy): 获得4点格挡。 在下个回合，获得4点格挡。\",\"NOXIOUS_FUMES+ 毒雾+ (Power, 1 energy): 在你的回合开始时，给予所有敌人3层中毒。\",\"BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。\",\"DEADLY_POISON+ 致命毒药+ (Skill, 1 energy): 给予7层中毒。\",\"FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。\",\"DEFLECT 偏折 (Skill, 0 energy): 获得4点格挡。\",\"PIERCING_WAIL 尖啸 (Skill, 1 energy): 所有敌人在本回合失去6点力量。 消耗。\",\"BUBBLE_BUBBLE+ 咕嘟冒泡+ (Skill, 1 energy): 如果敌方拥有中毒，则给予12层中毒。\",\"LEG_SWEEP 扫腿 (Skill, 2 energy): 给予2层虚弱。 获得11点格挡。\",\"BURST 爆发 (Skill, 1 energy): 在这个回合，你打出的下一张技能牌会被额外打出一次。\"],\"relics\":[\"蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。\",\"药瓶皮套: 拾起时，获得?(数值未知)个药水栏位并获得?(数值未知)瓶随机药水。\",\"金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。\",\"风箱: 你在每场战斗开始时的手牌，将被升级。\",\"永恒羽毛: 你的牌组中每有?(数值未知)张牌，当你进入休息处时就会回复?(数值未知)点生命。\",\"餐券: 每当你进入商店房间时，回复?(数值未知)点生命。\",\"烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。\",\"锁镰: 你每在同一回合内打出?(数值未知)张攻击牌，就随机对一名敌人造成?(数值未知)点伤害。\",\"带骨肉: 如果你在战斗结束时生命值等于或低于?(数值未知)%，回复?(数值未知)点生命。\",\"图章戒指: 拾起时，获得?(数值未知)金币。\"],\"potions\":[\"SPEED_POTION 速度药水: 获得5点敏捷。在你的这个回合结束时，失去5点敏捷。\"],\"potion_slots\":\"1/3 used\",\"act_boss_sim\":{\"quantitative_uncertainty\":\"模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。\",\"boss_margin_objective\":\"Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。\",\"boss\":\"实验体，A10：实验体 #C97 111 血\",\"entry_hp\":\"1/60：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法（中位投影在 boss 前血量耗尽，按 1 血算）\",\"current_deck\":\"两战原始通关率 0%，50配对样本；未经两战校准，不是必死或SL判据。\",\"samples\":\"限时完成：基准n=50，原始胜率MC95%区间0–7%（不含模型偏差）；候选各用实际n/共同前缀，目标100；误差为配对标准误，n<2时unknown；低可信、未完整；用时 1.0 秒\",\"method\":\"第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。\",\"limits\":\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\",\"relics_at_start\":\"开场生效：金刚杵、烫嘴可可\",\"relics_not_modelled\":\"蛇之戒指、风箱、餐券\",\"low_confidence\":\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\",\"low_win_rate\":\"连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。\",\"objective\":\"F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。\",\"evidence\":\"silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B\"},\"your_run_plan\":{\"made_on_floor\":34,\"archetype\":\"灵活过渡，再定成长核心\",\"want\":[\"ACCELERANT\",\"BACKFLIP\",\"ACROBATICS\",\"CALCULATED_GAMBLE\",\"ADRENALINE\",\"AFTERIMAGE\"],\"avoid\":[],\"remove\":[\"STRIKE_SILENT\"],\"block_target\":7,\"elites\":\"normal\",\"rest\":\"auto\",\"boss_prep\":\"补即时输出、持续虚弱和高效防守；根据实际血量准备应急药，避免久拖力量成长。\",\"summary\":\"先补即时攻防，按实得组件定型；早期药水可用于保命换成长。\",\"construction\":{\"primary\":\"D\",\"alternatives\":[\"P\"],\"checkpoint\":29,\"reason\":\"第二步法配现有后空翻、闪躲翻滚及毒源，支持叠敏捷防守与持续施毒；不继续补普通攻击。联合购买后的施放覆盖、启动回合及完整核心表现未知。\",\"pivot_if\":\"获得ACCELERANT后重评P；若防守启动受抽牌限制，优先补过牌与持续虚弱。\"},\"endgame\":{\"core\":\"暂以D为主线：双步法强化防守，现有毒源持续输出；完整核心与F48→F49连胜能力未知。\",\"gaps\":\"仍缺稳定过牌、持续虚弱及更快毒成长，组件齐备不代表能够及时启动。\",\"scaling_damage\":\"候选为毒源配ACCELERANT，或刀源配ACCURACY及收益遗物，未获得前输出兑现与成形概率未知。\",\"sustainable_defense\":\"双步法配后空翻、闪躲翻滚与偏折；每场重新启动，不把格挡药当长期防守。\",\"resources\":\"戒指资金在双店按实际货品补过牌、成长和药水；首店兼顾紧随的精英，必要时用药保命；F48实际余血余药承接F49，不假设中场回血。\",\"win_condition\":\"两场均能及时建立成长输出与持续防守，并以F48实际剩余血量和药水接战F49，当前是否能够达成未知。\",\"checkpoint\":\"部分成型：D已有双步法、后空翻、扫腿及毒雾+，本次升级强化持续防御，完整核心兑现未知；57/62无药，知识恶魔先立步法与毒雾，扫腿和中和续虚弱，尖啸防多段；仍缺稳定过牌及更快毒成长，F48→F49均需重新启动，以首战实际剩余血药接战且不假设回血，连胜能力未知。\"}},\"card_value_v2\":{\"model\":\"41a8ec79809b23d50f7d914c531566643603b060b3b7b5799cf191b8b47b83ec\",\"remaining\":{\"hallway\":3,\"elite\":1,\"boss\":2},\"route_source\":\"selected_route\",\"note\":\"增量多在误差范围内，仅供参考。act_hp_saved为本幕剩余战斗相对跳过预计少掉的血（正值少掉血）；error_scale为整场留出误差累计尺度，不是增量置信区间。boss为本幕Boss预计掉血、相对跳过少掉血、胜率及胜率变化（0–1概率单位），按当前HP/资源条件预测，不预测沿路存活。cores列最多两个推进组合的补牌数及还差几张；unknown条件未核实，不代表成型或收益。观察数据有历史选择混杂；null为未知；不据此强制排序。\"},\"run_constraints\":{\"id\":\"roy-20261013-v5-no-deck-cap\",\"max_permanent_cards\":null,\"activation\":\"V5: Roy removed the fixed permanent deck-size limit\",\"requirement\":\"V5没有固定牌数上限。按核心兑现、稀释、伤害/回合、升级替代及过渡存活权衡拿牌、跳牌和删牌；牌数不是目标，也不因达到30张而禁止获取。\"},\"endgame_objective\":\"本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。\",\"double_boss_preparation\":{\"objective\":\"第三幕路线和休息按F48→F49连续两战备战：第一战剩余HP/药水是第二战进场资源，四局观察没有中间营火或回血。\",\"projection\":\"沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。\",\"evidence\":[{\"run\":\"JMH5C51RLN4E\",\"floor\":49,\"turn\":1},{\"run\":\"9TG1RP5LFAAK\",\"floor\":49,\"turn\":1},{\"run\":\"ZVYUL2YP3518\",\"floor\":49,\"turn\":1},{\"run\":\"TDLBRNA0R05B\",\"floor\":49,\"turn\":1}],\"limits\":\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\",\"choice\":\"全部路线、休息和锻造选项保留，由Codex结合即时血量、牌组及连续两战原始模拟选择。\"},\"unknown_value_note\":\"?(数值未知) marks a number the mod does not expose; the text around it is accurate\",\"outcome_stats_basis\":\"outcome_stats / card_outcome_stats / option_outcome_stats = A10 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-31T11:15:42，A10 共 659 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A10 全部 659 局）：到达第1幕的局过第1幕boss 73% (n=659)，到达第2幕的局过第2幕boss 46% (n=484)，到达第3幕的局过第3幕boss 5% (n=221)。A10 的一行不足5局、而 A9/A8 的同一行够5局时，后面括号里另附那一行，标明进阶（取最近的一个进阶；另算，不与 A10 的合并）；A9 基线（全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。\",\"construction_evaluation\":{\"schema\":\"construction-evaluation-v1\",\"character\":\"silent\",\"run\":\"8CHJ5W30Q7Z8\",\"floor\":35,\"label\":\"reward/card\",\"coreCatalog\":[{\"id\":\"P\",\"name\":\"施毒触媒与持续防御\",\"candidate\":true,\"requirements\":[{\"id\":\"poison\",\"any\":[{\"id\":\"BOUNCING_FLASK\",\"kind\":\"card\"},{\"id\":\"CORROSIVE_WAVE\",\"kind\":\"card\"},{\"id\":\"DEADLY_POISON\",\"kind\":\"card\"},{\"id\":\"ENVENOM\",\"kind\":\"card\"},{\"id\":\"NOXIOUS_FUMES\",\"kind\":\"card\"},{\"id\":\"OUTBREAK\",\"kind\":\"card\"},{\"id\":\"POISONED_STAB\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false},{\"id\":\"accelerant\",\"any\":[{\"id\":\"ACCELERANT\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false},{\"id\":\"defense\",\"any\":[{\"id\":\"AFTERIMAGE\",\"kind\":\"card\"},{\"id\":\"FOOTWORK\",\"kind\":\"card\"},{\"id\":\"MIRAGE\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false}],\"evidence\":{\"runs\":[\"T082DRCUHRRD\",\"ZZMYZ5UBCG72\",\"LLYSRQQ35AVW\",\"HNX4A2WBC34W\"],\"source\":\"paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json\",\"sha256\":\"948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b\"}},{\"id\":\"D\",\"name\":\"叠敏捷多挡与持续输出\",\"candidate\":true,\"requirements\":[{\"id\":\"dexterity\",\"any\":[{\"id\":\"FOOTWORK\",\"kind\":\"card\"}],\"count\":2,\"distinct\":false},{\"id\":\"block\",\"any\":[{\"id\":\"BACKFLIP\",\"kind\":\"card\"},{\"id\":\"DASH\",\"kind\":\"card\"},{\"id\":\"LEG_SWEEP\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false},{\"id\":\"output\",\"any\":[{\"id\":\"BOLAS\",\"kind\":\"card\"},{\"id\":\"BOUNCING_FLASK\",\"kind\":\"card\"},{\"id\":\"CORROSIVE_WAVE\",\"kind\":\"card\"},{\"id\":\"DEADLY_POISON\",\"kind\":\"card\"},{\"id\":\"ENVENOM\",\"kind\":\"card\"},{\"id\":\"MAUL\",\"kind\":\"card\"},{\"id\":\"NOXIOUS_FUMES\",\"kind\":\"card\"},{\"id\":\"OUTBREAK\",\"kind\":\"card\"},{\"id\":\"POISONED_STAB\",\"kind\":\"card\"},{\"id\":\"SPEEDSTER\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false}],\"evidence\":{\"runs\":[\"1HC609GTLGN3\",\"K3676LU8B0UH\",\"4Y94N8RDPGPM\",\"25226ZFLNR1J\"],\"source\":\"paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json\",\"sha256\":\"948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b\"}},{\"id\":\"S\",\"name\":\"小刀供给增益与逐牌防御\",\"candidate\":true,\"requirements\":[{\"id\":\"supply\",\"any\":[{\"id\":\"BLADE_DANCE\",\"kind\":\"card\"},{\"id\":\"CLOAK_AND_DAGGER\",\"kind\":\"card\"},{\"id\":\"FAN_OF_KNIVES\",\"kind\":\"card\"},{\"id\":\"HIDDEN_DAGGERS\",\"kind\":\"card\"},{\"id\":\"INFINITE_BLADES\",\"kind\":\"card\"},{\"id\":\"LEADING_STRIKE\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false},{\"id\":\"gain\",\"any\":[{\"id\":\"ACCURACY\",\"kind\":\"card\"},{\"id\":\"PHANTOM_BLADES\",\"kind\":\"card\"},{\"id\":\"HELICAL_DART\",\"kind\":\"relic\"},{\"id\":\"KUNAI\",\"kind\":\"relic\"},{\"id\":\"SHURIKEN\",\"kind\":\"relic\"}],\"count\":1,\"distinct\":false},{\"id\":\"defense\",\"any\":[{\"id\":\"AFTERIMAGE\",\"kind\":\"card\"},{\"id\":\"FOOTWORK\",\"kind\":\"card\"},{\"id\":\"DAUGHTER_OF_THE_WIND\",\"kind\":\"relic\"},{\"id\":\"HELICAL_DART\",\"kind\":\"relic\"},{\"id\":\"KUNAI\",\"kind\":\"relic\"}],\"count\":1,\"distinct\":false}],\"evidence\":{\"runs\":[\"KAY522KT5NXR\",\"CSBR5CRDWQNB\",\"2SU6XN2AEJRD\",\"YF0LXT1QSTGG\"],\"source\":\"paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json\",\"sha256\":\"948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b\"}},{\"id\":\"R\",\"name\":\"抽弃循环与遗物攻防收益\",\"candidate\":true,\"requirements\":[{\"id\":\"discard\",\"any\":[{\"id\":\"ACROBATICS\",\"kind\":\"card\"},{\"id\":\"CALCULATED_GAMBLE\",\"kind\":\"card\"},{\"id\":\"DAGGER_THROW\",\"kind\":\"card\"},{\"id\":\"HAND_TRICK\",\"kind\":\"card\"},{\"id\":\"PREPARED\",\"kind\":\"card\"},{\"id\":\"SURVIVOR\",\"kind\":\"card\"},{\"id\":\"TOOLS_OF_THE_TRADE\",\"kind\":\"card\"}],\"count\":2,\"distinct\":true},{\"id\":\"key-discard\",\"any\":[{\"id\":\"ACROBATICS\",\"kind\":\"card\"},{\"id\":\"CALCULATED_GAMBLE\",\"kind\":\"card\"},{\"id\":\"HAND_TRICK\",\"kind\":\"card\"},{\"id\":\"TOOLS_OF_THE_TRADE\",\"kind\":\"card\"}],\"count\":1,\"distinct\":false},{\"id\":\"relic\",\"any\":[{\"id\":\"TINGSHA\",\"kind\":\"relic\"},{\"id\":\"TOUGH_BANDAGES\",\"kind\":\"relic\"}],\"count\":1,\"distinct\":false}],\"evidence\":{\"runs\":[\"1LMBFGSMCWKU\",\"25226ZFLNR1J\",\"L704TLETMZBM\"],\"source\":\"paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json\",\"sha256\":\"948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b\"}}],\"simulationStatus\":\"unavailable\",\"boss\":\"TEST_SUBJECT\",\"simulationSamples\":50,\"simulationError\":null,\"options\":{\"current\":{\"inventory\":{\"cards\":31,\"upgraded\":9,\"gold\":1016,\"hp\":51,\"maxHp\":60},\"inventoryDelta\":{\"cards\":0,\"upgraded\":0,\"gold\":0,\"hp\":0,\"maxHp\":0},\"unavailableReason\":\"本题该候选没有通过原模拟样本门槛的结果\",\"fight\":null},\"card0\":{\"inventory\":{\"cards\":32,\"upgraded\":9,\"gold\":1016,\"hp\":51,\"maxHp\":60},\"inventoryDelta\":{\"cards\":1,\"upgraded\":0,\"gold\":0,\"hp\":0,\"maxHp\":0},\"unavailableReason\":\"本题该候选没有通过原模拟样本门槛的结果\",\"fight\":null},\"card1\":{\"inventory\":{\"cards\":32,\"upgraded\":9,\"gold\":1016,\"hp\":51,\"maxHp\":60},\"inventoryDelta\":{\"cards\":1,\"upgraded\":0,\"gold\":0,\"hp\":0,\"maxHp\":0},\"unavailableReason\":\"本题该候选没有通过原模拟样本门槛的结果\",\"fight\":null},\"card2\":{\"inventory\":{\"cards\":32,\"upgraded\":9,\"gold\":1016,\"hp\":51,\"maxHp\":60},\"inventoryDelta\":{\"cards\":1,\"upgraded\":0,\"gold\":0,\"hp\":0,\"maxHp\":0},\"unavailableReason\":\"本题该候选没有通过原模拟样本门槛的结果\",\"fight\":null},\"skip\":{\"inventory\":{\"cards\":31,\"upgraded\":9,\"gold\":1016,\"hp\":51,\"maxHp\":60},\"inventoryDelta\":{\"cards\":0,\"upgraded\":0,\"gold\":0,\"hp\":0,\"maxHp\":0},\"unavailableReason\":\"本题该候选没有通过原模拟样本门槛的结果\",\"fight\":null}},\"limits\":\"复用本题既有boss条件模拟，不新增整战或未来路线模拟；升级、拿牌、删牌的战斗差与组件集齐率分列。DPR按完整战斗含准备轮统计，配对差保留未匹配分母；模型偏差、未建机制和完整核心资格不因采样通过而消失。\"}},\"run_plan_task\":{\"construction_context\":{\"character\":\"silent\",\"floor\":35,\"coreCatalog\":[{\"id\":\"P\",\"name\":\"施毒触媒与持续防御\",\"candidate\":true},{\"id\":\"D\",\"name\":\"叠敏捷多挡与持续输出\",\"candidate\":true},{\"id\":\"S\",\"name\":\"小刀供给增益与逐牌防御\",\"candidate\":true},{\"id\":\"R\",\"name\":\"抽弃循环与遗物攻防收益\",\"candidate\":true}],\"instruction\":\"构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若确需修改构筑方向，只更新construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。\",\"future_probability_status\":\"not supplied by this plan context\"},\"trigger\":\"review\",\"act_boss_clock\":{\"boss\":\"TEST_SUBJECT\",\"boss_hp\":636,\"boss_hp_note\":\"数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。\",\"boss_hp_parts\":[\"TEST_SUBJECT\"],\"boss_hp_phases\":[111,212,313],\"boss_hp_phases_from_ascension\":10,\"boss_enemies\":[{\"enemy\":\"TEST_SUBJECT\",\"hp\":111,\"hp_samples\":71,\"hp_from_ascension\":10,\"hp_estimated\":false,\"attacks\":[{\"move\":\"BIG_POUNCE\",\"per_hit\":45,\"hits\":1,\"basis\":\"base\",\"samples\":34,\"from_ascension\":10,\"estimated\":false,\"scaled_through_ascension\":10},{\"move\":\"BITE_MOVE\",\"per_hit\":22,\"hits\":1,\"basis\":\"base\",\"samples\":71,\"from_ascension\":10,\"estimated\":false,\"scaled_through_ascension\":10},{\"move\":\"MULTI_CLAW_MOVE\",\"per_hit\":11,\"hits\":3,\"basis\":\"base\",\"samples\":139,\"from_ascension\":10,\"estimated\":false,\"scaled_through_ascension\":10},{\"move\":\"PHASE3_LACERATE_MOVE\",\"per_hit\":11,\"hits\":3,\"basis\":\"base\",\"samples\":44,\"from_ascension\":10,\"estimated\":false,\"scaled_through_ascension\":10},{\"move\":\"SKULL_BASH_MOVE\",\"per_hit\":16,\"hits\":1,\"basis\":\"base\",\"samples\":60,\"from_ascension\":10,\"estimated\":false,\"scaled_through_ascension\":10}]}],\"boss_enemy_note\":\"攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。\",\"deck_damage_per_turn_estimate\":null,\"hp_loss_per_turn\":null,\"survivable_turns\":null,\"gap_per_turn\":null,\"estimate_note\":\"尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。\"},\"due_because\":\"复用已有计划；仅在预期有利于本局胜率时更新受影响字段\",\"current_plan\":{\"in\":\"state.facts.your_run_plan\",\"made_in_act\":3,\"made_on_floor\":34,\"hp_then\":\"90%\",\"made_because\":\"act\"},\"endgame_objective\":\"本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。\",\"endgame_plan_required\":false,\"plan_reuse\":true}},\"question\":\"Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. 若需真人样本背景，可任选 external_stats_card 按候选 id 与当前幕 act 查 Silent A10（v0.111）的拿取率与胜率关联，或 external_stats_skip 查本幕跳过率；结果仅为观察统计、非因果，与题内自有 outcome_stats 分账。 state.route_review 是已有爬楼路线，继续复用。map/next_nodes 是当前可达性，plan_facts/next_rest 是依赖当前状态的投影。无需因本题重推整条路线；仅在结合牌组、遗物、HP、资源、遭遇与机会，确认相较旧路线值得修改、预期有助于本局胜率后才改线。同一JSON可省略route，或给\\\"route\\\":\\\"keep\\\"；确需改线才给从next_nodes到boss的合法节点序列和route_reason，说明当前情况、取舍及预期收益（无需数字）。构筑路线与爬楼路线分别调整，只重算受影响部分；描述改写或重复节点序列不算改线。改线前可参考next_rest比较，未知保持未知。 boss_sim为F48→F49连续两战原始通关率及配对差，未经两战校准；HP/药水由第一战实际样本传递，全部选项保留，由Codex选择。 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若确需修改构筑方向，只更新construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。 本局终局目标：从第一幕起为 F48→F49 连赢两个 Boss 构筑，中间无休息或自动回血；同时规划成长性输出与可持续防御，血量和药水按连续两场的实际消耗计算。 已有构筑路线和爬楼路线继续复用；路线未实质改变，不因下一道题重写完整计划或重算整条路线。结合当前牌组、遗物、HP、金币、药水、遭遇与机会，判断相较现有路线值得修改、预期有助于本局胜率后才改线；理由可含不确定性，不编造胜率提升数值。两类路线可分别调整，仅更新和重算实际受影响部分；普通状态变化只使依赖该状态的数值失效。无构筑计划时在同一答案给完整 run_plan（含 endgame）；已有计划时可省略 run_plan，确需调整只给变更字段及 change_reason（当前情况、旧/新取舍与预期收益），endgame 也只给受影响字段。幕末 endgame_checkpoint 要求的检查在 run_plan.endgame.checkpoint 作答，检查本身不要求换路线。计划是本局假设，不是知识规则；依据、可信度和未知须分清，达标线只引用已发布条目，不自行补伤害/防御/血量门槛。 沿用题内当前计划；run_plan 为可选变更字段，省略即复用。\\n本题有 36 条相关策略/剧本可查。\\n\\n本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；主题仅筛明确标签，unknown不是库中没有知识，覆盖计数不当适用知识；不自动拓宽或重试刷库。构筑与爬楼路线分别判断，路线不变继续复用，不因分类更新重算。\\n{\\\"schema\\\":\\\"brain-query-cues-v3\\\",\\\"question_type\\\":\\\"card_reward\\\",\\\"experience\\\":{\\\"status\\\":\\\"ok\\\",\\\"count\\\":61,\\\"entries\\\":[{\\\"id\\\":\\\"silent-accelerant-triggers\\\",\\\"title\\\":\\\"触媒\\\",\\\"scope\\\":\\\"card:ACCELERANT\\\"},{\\\"id\\\":\\\"silent-accuracy-shiv-scaling\\\",\\\"title\\\":\\\"精准\\\",\\\"scope\\\":\\\"card:ACCURACY\\\"},{\\\"id\\\":\\\"silent-afterimage-per-card-block\\\",\\\"title\\\":\\\"余像\\\",\\\"scope\\\":\\\"card:AFTERIMAGE\\\"},{\\\"id\\\":\\\"silent-anticipate-temporary-dexterity\\\",\\\"title\\\":\\\"预判\\\",\\\"scope\\\":\\\"card:ANTICIPATE\\\"},{\\\"id\\\":\\\"silent-bouncing-flask-poison\\\",\\\"title\\\":\\\"弹跳药瓶\\\",\\\"scope\\\":\\\"card:BOUNCING_FLASK\\\"},{\\\"id\\\":\\\"silent-bubble-bubble-condition\\\",\\\"title\\\":\\\"咕嘟冒泡\\\",\\\"scope\\\":\\\"card:BUBBLE_BUBBLE\\\"}],\\\"omitted\\\":55,\\\"tool\\\":\\\"kb_experience\\\",\\\"input\\\":{\\\"relevant\\\":true}},\\\"strategies\\\":{\\\"status\\\":\\\"ok\\\",\\\"count\\\":36,\\\"tool\\\":\\\"kb_strategies\\\",\\\"input\\\":{\\\"query\\\":\\\"*\\\",\\\"limit\\\":3}},\\\"external_stats\\\":{\\\"source\\\":\\\"external:sts2fun\\\",\\\"version\\\":\\\"v0.111\\\",\\\"status\\\":\\\"ok\\\",\\\"optional\\\":true,\\\"dataset_sha256\\\":\\\"88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07\\\",\\\"candidate_cards\\\":3,\\\"matched_cards\\\":3,\\\"cards\\\":[{\\\"id\\\":\\\"BACKFLIP\\\",\\\"count\\\":1,\\\"input\\\":{\\\"id\\\":\\\"BACKFLIP\\\",\\\"act\\\":3}},{\\\"id\\\":\\\"ANTICIPATE\\\",\\\"count\\\":1,\\\"input\\\":{\\\"id\\\":\\\"ANTICIPATE\\\",\\\"act\\\":3}},{\\\"id\\\":\\\"FLICK_FLACK\\\",\\\"count\\\":1,\\\"input\\\":{\\\"id\\\":\\\"FLICK_FLACK\\\",\\\"act\\\":3}}],\\\"omitted_cards\\\":0,\\\"tools\\\":[{\\\"tool\\\":\\\"external_stats_card\\\",\\\"count\\\":1,\\\"input\\\":{\\\"id\\\":\\\"BACKFLIP\\\",\\\"act\\\":3}},{\\\"tool\\\":\\\"external_stats_skip\\\",\\\"count\\\":1,\\\"input\\\":{\\\"act\\\":3}},{\\\"tool\\\":\\\"external_stats_deck_size\\\",\\\"count\\\":19,\\\"input\\\":{\\\"scope\\\":\\\"all\\\"}},{\\\"tool\\\":\\\"external_stats_encounter\\\",\\\"count\\\":1,\\\"input\\\":{\\\"id\\\":\\\"TEST_SUBJECT_BOSS\\\",\\\"act\\\":3}},{\\\"tool\\\":\\\"external_stats_clusters\\\",\\\"count\\\":4,\\\"input\\\":{\\\"scope\\\":\\\"reached_act3\\\",\\\"k\\\":4,\\\"seed\\\":24}},{\\\"tool\\\":\\\"external_stats_cooccurrence\\\",\\\"count\\\":100,\\\"input\\\":{\\\"card\\\":\\\"BACKFLIP\\\",\\\"scope\\\":\\\"reached_act3\\\"}}],\\\"note\\\":\\\"外部Silent A10真人样本背景，由你自行决定是否查询；卡牌/跳过表是奖励机会统计，不是商店购买率。仅描述关联、非因果，与自有验证分账；聚类/共现不作构筑方向依据。\\\"}}\",\"options\":{\"card0\":\"{\\\"card\\\":\\\"后空翻\\\",\\\"type\\\":\\\"Skill\\\",\\\"rarity\\\":\\\"Common\\\",\\\"cost\\\":1,\\\"text\\\":\\\"获得5点格挡。 抽2张牌。\\\",\\\"in_deck\\\":1,\\\"outcome_stats\\\":\\\"A10 第1幕 拿了 n=265 过本幕boss 77% 均终层32 / 给了没拿 n=88 过本幕boss 74% 均终层29.8；第2幕 拿了 n=195 过本幕boss 52% 均终层38.1 / 给了没拿 n=17 过本幕boss 47% 均终层36.2；第3幕 拿了 n=72 过本幕boss 4% 均终层46.9 / 给了没拿 n=11 过本幕boss 0% 均终层45\\\",\\\"card_value_v2\\\":{\\\"act_hp_saved\\\":-5.86,\\\"error_scale\\\":146.4,\\\"boss\\\":{\\\"hp_loss\\\":39.79,\\\"hp_saved\\\":-0.77,\\\"win\\\":0.671,\\\"win_change\\\":-0.0318},\\\"cores\\\":[],\\\"more_cores\\\":0,\\\"unknown\\\":[]},\\\"id\\\":\\\"BACKFLIP\\\",\\\"quantitative_fight\\\":{\\\"samples\\\":50,\\\"raw_win_mc_interval95\\\":[6.938893903907228e-18,0.07134759913335872],\\\"boss_relative_margin\\\":{\\\"schema\\\":\\\"boss-relative-margin-v1\\\",\\\"formula\\\":\\\"my_dpr/boss_hp-enemy_dpr/my_hp\\\",\\\"unit\\\":\\\"reference_hp_fraction_per_turn\\\",\\\"status\\\":\\\"unknown_or_incomplete_attribution\\\",\\\"rankingEligible\\\":false,\\\"samples\\\":50,\\\"valid\\\":0,\\\"missing\\\":50,\\\"reference\\\":{\\\"myHp\\\":1,\\\"bossHp\\\":636,\\\"startTurn\\\":1,\\\"enemyIds\\\":[\\\"TEST_SUBJECT\\\"],\\\"unknown\\\":[]},\\\"window\\\":\\\"scenario_entry_through_terminal_including_setup_and_terminal_turns\\\",\\\"incomingScope\\\":\\\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\\\",\\\"referencesVary\\\":false,\\\"score\\\":null,\\\"observedSubset\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"myDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"enemyDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"paired\\\":{\\\"difference\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"died\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"limits\\\":\\\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\\\",\\\"modelTrust\\\":\\\"low\\\",\\\"modelTrustReason\\\":\\\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\\\"},\\\"damage_hp\\\":{\\\"n\\\":50,\\\"mean\\\":22.619999999999997,\\\"p10\\\":7,\\\"p90\\\":41,\\\"meanSe\\\":1.850513442264065},\\\"simulated_turns\\\":{\\\"n\\\":50,\\\"mean\\\":1.42,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.08126550087615939},\\\"first_turn_damage\\\":{\\\"n\\\":50,\\\"mean\\\":17.500000000000004,\\\"p10\\\":4.500000000000002,\\\"p90\\\":34,\\\"meanSe\\\":1.668006264364491},\\\"later_damage\\\":{\\\"n\\\":19,\\\"mean\\\":13.473684210526315,\\\"p10\\\":0,\\\"p90\\\":24,\\\"meanSe\\\":2.0610115342150404},\\\"effective_damage_per_turn\\\":{\\\"n\\\":50,\\\"mean\\\":17.390000000000004,\\\"p10\\\":3.95,\\\"p90\\\":34,\\\"meanSe\\\":1.6268970088948531},\\\"damage_per_turn_won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_effective_damage_per_turn\\\":{\\\"difference\\\":{\\\"n\\\":50,\\\"mean\\\":0.9966666666666666,\\\"sd\\\":11.078850047155024,\\\"meanSe\\\":1.5667859992184439,\\\"p10\\\":-13,\\\"median\\\":0,\\\"p90\\\":14.500000000000007,\\\"min\\\":-25.5,\\\"max\\\":33},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"damage_per_turn_died\\\":{\\\"n\\\":50,\\\"mean\\\":17.390000000000004,\\\"p10\\\":3.95,\\\"p90\\\":34,\\\"meanSe\\\":1.6268970088948531},\\\"damage_curve\\\":[{\\\"turn\\\":1,\\\"damage\\\":{\\\"n\\\":50,\\\"mean\\\":17.500000000000004,\\\"sd\\\":11.794585405937728,\\\"meanSe\\\":1.668006264364491,\\\"p10\\\":4.500000000000002,\\\"median\\\":14,\\\"p90\\\":34,\\\"min\\\":0,\\\"max\\\":48}},{\\\"turn\\\":2,\\\"damage\\\":{\\\"n\\\":19,\\\"mean\\\":11.789473684210527,\\\"sd\\\":9.150464149541639,\\\"meanSe\\\":2.0992604481233608,\\\"p10\\\":0,\\\"median\\\":13,\\\"p90\\\":21.599999999999998,\\\"min\\\":0,\\\"max\\\":24}},{\\\"turn\\\":3,\\\"damage\\\":{\\\"n\\\":2,\\\"mean\\\":16,\\\"sd\\\":15.556349186104045,\\\"meanSe\\\":10.999999999999998,\\\"p10\\\":7.2,\\\"median\\\":16,\\\"p90\\\":24.8,\\\"min\\\":5,\\\"max\\\":27}}],\\\"dpr_scope\\\":\\\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\\\",\\\"hp_loss\\\":{\\\"n\\\":50,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0},\\\"turns_won_only\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_hp_loss_difference\\\":{\\\"n\\\":50,\\\"mean\\\":0,\\\"p10\\\":0,\\\"p90\\\":0,\\\"meanSe\\\":0},\\\"capped\\\":0,\\\"complete_combinations\\\":null,\\\"core_window\\\":{\\\"samples\\\":50,\\\"valid\\\":46,\\\"missing\\\":4,\\\"energy_paid\\\":{\\\"n\\\":46,\\\"mean\\\":4.239130434782608,\\\"p10\\\":1.5,\\\"p90\\\":8,\\\"meanSe\\\":0.35054792529853446},\\\"manual_actions\\\":{\\\"n\\\":46,\\\"mean\\\":4.565217391304349,\\\"p10\\\":2,\\\"p90\\\":8.5,\\\"meanSe\\\":0.41196146097251873},\\\"effect_resolutions\\\":{\\\"n\\\":46,\\\"mean\\\":4.6521739130434785,\\\"p10\\\":2,\\\"p90\\\":9,\\\"meanSe\\\":0.4320688253730802},\\\"combinations\\\":{\\\"discardBandages\\\":{},\\\"poisonDefense\\\":null,\\\"dexterityDefense\\\":null,\\\"shivDefense\\\":null,\\\"limits\\\":\\\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\\\"},\\\"first_core_play_when_played\\\":{\\\"FOOTWORK\\\":{\\\"n\\\":15,\\\"mean\\\":1.3333333333333335,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.1259881576697424},\\\"BURST\\\":{\\\"n\\\":4,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0}},\\\"limits\\\":\\\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\\\"},\\\"block_gained\\\":{\\\"n\\\":50,\\\"mean\\\":14.34,\\\"p10\\\":0,\\\"p90\\\":40,\\\"meanSe\\\":2.3474884538195977},\\\"potions_used\\\":{\\\"n\\\":50,\\\"mean\\\":0.4999999999999999,\\\"p10\\\":0,\\\"p90\\\":1,\\\"meanSe\\\":0.07142857142857141},\\\"hp_remaining\\\":{\\\"n\\\":50,\\\"mean\\\":-19.82,\\\"p10\\\":-27.299999999999997,\\\"p90\\\":-11,\\\"meanSe\\\":0.9900278289224077}},\\\"boss_sim\\\":\\\"F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 613（当前牌组 615，−1.6 ± 2）（50 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少；达到上限，n=50；差值对同前缀基准）\\\",\\\"boss_sim_win_tied_with\\\":[\\\"card1\\\",\\\"card2\\\",\\\"skip\\\"],\\\"boss_sim_win_tie_note\\\":\\\"本次模拟与card1、card2、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\\\"}\",\"card1\":\"{\\\"card\\\":\\\"预判\\\",\\\"type\\\":\\\"Skill\\\",\\\"rarity\\\":\\\"Common\\\",\\\"cost\\\":0,\\\"text\\\":\\\"在本回合获得2点敏捷。\\\",\\\"in_deck\\\":0,\\\"outcome_stats\\\":\\\"A10 第1幕 拿了 n=40 过本幕boss 72% 均终层29.6 / 给了没拿 n=276 过本幕boss 76% 均终层31.2；第2幕 拿了 n=41 过本幕boss 44% 均终层35.5 / 给了没拿 n=153 过本幕boss 52% 均终层38；第3幕 拿了 n=29 过本幕boss 7% 均终层47.6 / 给了没拿 n=42 过本幕boss 7% 均终层47\\\",\\\"card_value_v2\\\":{\\\"act_hp_saved\\\":-4.62,\\\"error_scale\\\":146.4,\\\"boss\\\":{\\\"hp_loss\\\":39.44,\\\"hp_saved\\\":-0.41,\\\"win\\\":0.6247,\\\"win_change\\\":-0.0782},\\\"cores\\\":[],\\\"more_cores\\\":0,\\\"unknown\\\":[]},\\\"id\\\":\\\"ANTICIPATE\\\",\\\"quantitative_fight\\\":{\\\"samples\\\":50,\\\"raw_win_mc_interval95\\\":[6.938893903907228e-18,0.07134759913335872],\\\"boss_relative_margin\\\":{\\\"schema\\\":\\\"boss-relative-margin-v1\\\",\\\"formula\\\":\\\"my_dpr/boss_hp-enemy_dpr/my_hp\\\",\\\"unit\\\":\\\"reference_hp_fraction_per_turn\\\",\\\"status\\\":\\\"unknown_or_incomplete_attribution\\\",\\\"rankingEligible\\\":false,\\\"samples\\\":50,\\\"valid\\\":0,\\\"missing\\\":50,\\\"reference\\\":{\\\"myHp\\\":1,\\\"bossHp\\\":636,\\\"startTurn\\\":1,\\\"enemyIds\\\":[\\\"TEST_SUBJECT\\\"],\\\"unknown\\\":[]},\\\"window\\\":\\\"scenario_entry_through_terminal_including_setup_and_terminal_turns\\\",\\\"incomingScope\\\":\\\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\\\",\\\"referencesVary\\\":false,\\\"score\\\":null,\\\"observedSubset\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"myDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"enemyDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"paired\\\":{\\\"difference\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"died\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"limits\\\":\\\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\\\",\\\"modelTrust\\\":\\\"low\\\",\\\"modelTrustReason\\\":\\\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\\\"},\\\"damage_hp\\\":{\\\"n\\\":50,\\\"mean\\\":19.199999999999996,\\\"p10\\\":6.800000000000001,\\\"p90\\\":35.50000000000001,\\\"meanSe\\\":1.7549928774784243},\\\"simulated_turns\\\":{\\\"n\\\":50,\\\"mean\\\":1.2000000000000004,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.05714285714285715},\\\"first_turn_damage\\\":{\\\"n\\\":50,\\\"mean\\\":16.540000000000003,\\\"p10\\\":4.500000000000002,\\\"p90\\\":34,\\\"meanSe\\\":1.6987894849820897},\\\"later_damage\\\":{\\\"n\\\":10,\\\"mean\\\":13.299999999999999,\\\"p10\\\":0,\\\"p90\\\":21.299999999999997,\\\"meanSe\\\":2.8676354952004157},\\\"effective_damage_per_turn\\\":{\\\"n\\\":50,\\\"mean\\\":16.720000000000002,\\\"p10\\\":4.8500000000000005,\\\"p90\\\":34,\\\"meanSe\\\":1.6631762089570712},\\\"damage_per_turn_won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_effective_damage_per_turn\\\":{\\\"difference\\\":{\\\"n\\\":50,\\\"mean\\\":0.3266666666666669,\\\"sd\\\":11.204851961672372,\\\"meanSe\\\":1.5846053608579846,\\\"p10\\\":-13,\\\"median\\\":0,\\\"p90\\\":14.500000000000007,\\\"min\\\":-20,\\\"max\\\":33},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"damage_per_turn_died\\\":{\\\"n\\\":50,\\\"mean\\\":16.720000000000002,\\\"p10\\\":4.8500000000000005,\\\"p90\\\":34,\\\"meanSe\\\":1.6631762089570712},\\\"damage_curve\\\":[{\\\"turn\\\":1,\\\"damage\\\":{\\\"n\\\":50,\\\"mean\\\":16.540000000000003,\\\"sd\\\":12.012255646392383,\\\"meanSe\\\":1.6987894849820897,\\\"p10\\\":4.500000000000002,\\\"median\\\":14,\\\"p90\\\":34,\\\"min\\\":0,\\\"max\\\":48}},{\\\"turn\\\":2,\\\"damage\\\":{\\\"n\\\":10,\\\"mean\\\":13.299999999999999,\\\"sd\\\":9.068259663978163,\\\"meanSe\\\":2.8676354952004157,\\\"p10\\\":0,\\\"median\\\":14.5,\\\"p90\\\":21.299999999999997,\\\"min\\\":0,\\\"max\\\":24}}],\\\"dpr_scope\\\":\\\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\\\",\\\"hp_loss\\\":{\\\"n\\\":50,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0},\\\"turns_won_only\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_hp_loss_difference\\\":{\\\"n\\\":50,\\\"mean\\\":0,\\\"p10\\\":0,\\\"p90\\\":0,\\\"meanSe\\\":0},\\\"capped\\\":0,\\\"complete_combinations\\\":null,\\\"core_window\\\":{\\\"samples\\\":50,\\\"valid\\\":46,\\\"missing\\\":4,\\\"energy_paid\\\":{\\\"n\\\":46,\\\"mean\\\":3.3043478260869565,\\\"p10\\\":1,\\\"p90\\\":6,\\\"meanSe\\\":0.2963050478298678},\\\"manual_actions\\\":{\\\"n\\\":46,\\\"mean\\\":3.4999999999999996,\\\"p10\\\":1,\\\"p90\\\":6.5,\\\"meanSe\\\":0.3329708173660138},\\\"effect_resolutions\\\":{\\\"n\\\":46,\\\"mean\\\":3.543478260869565,\\\"p10\\\":1,\\\"p90\\\":7,\\\"meanSe\\\":0.3443211086107104},\\\"combinations\\\":{\\\"discardBandages\\\":{},\\\"poisonDefense\\\":null,\\\"dexterityDefense\\\":null,\\\"shivDefense\\\":null,\\\"limits\\\":\\\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\\\"},\\\"first_core_play_when_played\\\":{\\\"FOOTWORK\\\":{\\\"n\\\":13,\\\"mean\\\":1.153846153846154,\\\"p10\\\":1,\\\"p90\\\":1.8000000000000007,\\\"meanSe\\\":0.10415433852097386},\\\"BURST\\\":{\\\"n\\\":2,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0}},\\\"limits\\\":\\\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\\\"},\\\"block_gained\\\":{\\\"n\\\":50,\\\"mean\\\":8.46,\\\"p10\\\":0,\\\"p90\\\":26.200000000000003,\\\"meanSe\\\":1.7393899939405217},\\\"potions_used\\\":{\\\"n\\\":50,\\\"mean\\\":0.38,\\\"p10\\\":0,\\\"p90\\\":1,\\\"meanSe\\\":0.06934092056863769},\\\"hp_remaining\\\":{\\\"n\\\":50,\\\"mean\\\":-17.659999999999993,\\\"p10\\\":-21,\\\"p90\\\":-10.699999999999996,\\\"meanSe\\\":0.8464138033672488}},\\\"boss_sim\\\":\\\"F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 617（当前牌组 615，+1.8 ± 2.1）（50 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少；达到上限，n=50；差值对同前缀基准）\\\",\\\"boss_sim_win_tied_with\\\":[\\\"card0\\\",\\\"card2\\\",\\\"skip\\\"],\\\"boss_sim_win_tie_note\\\":\\\"本次模拟与card0、card2、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\\\"}\",\"card2\":\"{\\\"card\\\":\\\"翻越撑击\\\",\\\"type\\\":\\\"Attack\\\",\\\"rarity\\\":\\\"Common\\\",\\\"cost\\\":1,\\\"text\\\":\\\"奇巧。 对所有敌人造成7点伤害。\\\",\\\"in_deck\\\":0,\\\"outcome_stats\\\":\\\"A10 第1幕 拿了 n=106 过本幕boss 65% 均终层28.5 / 给了没拿 n=230 过本幕boss 73% 均终层30.7；第2幕 拿了 n=12 过本幕boss 42% 均终层36.9 / 给了没拿 n=170 过本幕boss 55% 均终层39.1；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层42 / 给了没拿 n=84 过本幕boss 2% 均终层47.1\\\",\\\"card_value_v2\\\":{\\\"act_hp_saved\\\":-11.37,\\\"error_scale\\\":146.4,\\\"boss\\\":{\\\"hp_loss\\\":40.56,\\\"hp_saved\\\":-1.54,\\\"win\\\":0.6027,\\\"win_change\\\":-0.1001},\\\"cores\\\":[],\\\"more_cores\\\":0,\\\"unknown\\\":[]},\\\"id\\\":\\\"FLICK_FLACK\\\",\\\"quantitative_fight\\\":{\\\"samples\\\":50,\\\"raw_win_mc_interval95\\\":[6.938893903907228e-18,0.07134759913335872],\\\"boss_relative_margin\\\":{\\\"schema\\\":\\\"boss-relative-margin-v1\\\",\\\"formula\\\":\\\"my_dpr/boss_hp-enemy_dpr/my_hp\\\",\\\"unit\\\":\\\"reference_hp_fraction_per_turn\\\",\\\"status\\\":\\\"unknown_or_incomplete_attribution\\\",\\\"rankingEligible\\\":false,\\\"samples\\\":50,\\\"valid\\\":0,\\\"missing\\\":50,\\\"reference\\\":{\\\"myHp\\\":1,\\\"bossHp\\\":636,\\\"startTurn\\\":1,\\\"enemyIds\\\":[\\\"TEST_SUBJECT\\\"],\\\"unknown\\\":[]},\\\"window\\\":\\\"scenario_entry_through_terminal_including_setup_and_terminal_turns\\\",\\\"incomingScope\\\":\\\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\\\",\\\"referencesVary\\\":false,\\\"score\\\":null,\\\"observedSubset\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"myDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"enemyDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"paired\\\":{\\\"difference\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"died\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"limits\\\":\\\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\\\",\\\"modelTrust\\\":\\\"low\\\",\\\"modelTrustReason\\\":\\\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\\\"},\\\"damage_hp\\\":{\\\"n\\\":50,\\\"mean\\\":22.16,\\\"p10\\\":7,\\\"p90\\\":41,\\\"meanSe\\\":1.8214952368752393},\\\"simulated_turns\\\":{\\\"n\\\":50,\\\"mean\\\":1.2000000000000004,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.05714285714285715},\\\"first_turn_damage\\\":{\\\"n\\\":50,\\\"mean\\\":19.34,\\\"p10\\\":5,\\\"p90\\\":40.1,\\\"meanSe\\\":1.8427153876819933},\\\"later_damage\\\":{\\\"n\\\":10,\\\"mean\\\":14.1,\\\"p10\\\":0,\\\"p90\\\":21.299999999999997,\\\"meanSe\\\":2.87691964897643},\\\"effective_damage_per_turn\\\":{\\\"n\\\":50,\\\"mean\\\":19.599999999999998,\\\"p10\\\":6.800000000000001,\\\"p90\\\":40.1,\\\"meanSe\\\":1.798752402105869},\\\"damage_per_turn_won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_effective_damage_per_turn\\\":{\\\"difference\\\":{\\\"n\\\":50,\\\"mean\\\":3.2066666666666674,\\\"sd\\\":11.924724215639019,\\\"meanSe\\\":1.6864106713315568,\\\"p10\\\":-10.299999999999999,\\\"median\\\":0,\\\"p90\\\":19,\\\"min\\\":-20,\\\"max\\\":34},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"damage_per_turn_died\\\":{\\\"n\\\":50,\\\"mean\\\":19.599999999999998,\\\"p10\\\":6.800000000000001,\\\"p90\\\":40.1,\\\"meanSe\\\":1.798752402105869},\\\"damage_curve\\\":[{\\\"turn\\\":1,\\\"damage\\\":{\\\"n\\\":50,\\\"mean\\\":19.34,\\\"sd\\\":13.029965464267354,\\\"meanSe\\\":1.8427153876819933,\\\"p10\\\":5,\\\"median\\\":15,\\\"p90\\\":40.1,\\\"min\\\":0,\\\"max\\\":48}},{\\\"turn\\\":2,\\\"damage\\\":{\\\"n\\\":10,\\\"mean\\\":14.1,\\\"sd\\\":9.09761873605762,\\\"meanSe\\\":2.87691964897643,\\\"p10\\\":0,\\\"median\\\":18.5,\\\"p90\\\":21.299999999999997,\\\"min\\\":0,\\\"max\\\":24}}],\\\"dpr_scope\\\":\\\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\\\",\\\"hp_loss\\\":{\\\"n\\\":50,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0},\\\"turns_won_only\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_hp_loss_difference\\\":{\\\"n\\\":50,\\\"mean\\\":0,\\\"p10\\\":0,\\\"p90\\\":0,\\\"meanSe\\\":0},\\\"capped\\\":0,\\\"complete_combinations\\\":null,\\\"core_window\\\":{\\\"samples\\\":50,\\\"valid\\\":48,\\\"missing\\\":2,\\\"energy_paid\\\":{\\\"n\\\":48,\\\"mean\\\":3.604166666666667,\\\"p10\\\":1,\\\"p90\\\":6,\\\"meanSe\\\":0.2740871104044014},\\\"manual_actions\\\":{\\\"n\\\":48,\\\"mean\\\":3.812500000000001,\\\"p10\\\":2,\\\"p90\\\":7,\\\"meanSe\\\":0.30605046691333826},\\\"effect_resolutions\\\":{\\\"n\\\":48,\\\"mean\\\":3.854166666666666,\\\"p10\\\":2,\\\"p90\\\":7,\\\"meanSe\\\":0.31649339697846657},\\\"combinations\\\":{\\\"discardBandages\\\":{},\\\"poisonDefense\\\":null,\\\"dexterityDefense\\\":null,\\\"shivDefense\\\":null,\\\"limits\\\":\\\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\\\"},\\\"first_core_play_when_played\\\":{\\\"FOOTWORK\\\":{\\\"n\\\":14,\\\"mean\\\":1.142857142857143,\\\"p10\\\":1,\\\"p90\\\":1.700000000000001,\\\"meanSe\\\":0.09705231721239392},\\\"BURST\\\":{\\\"n\\\":2,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0}},\\\"limits\\\":\\\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\\\"},\\\"block_gained\\\":{\\\"n\\\":50,\\\"mean\\\":8.46,\\\"p10\\\":0,\\\"p90\\\":26.200000000000003,\\\"meanSe\\\":1.7393899939405217},\\\"potions_used\\\":{\\\"n\\\":50,\\\"mean\\\":0.38,\\\"p10\\\":0,\\\"p90\\\":1,\\\"meanSe\\\":0.06934092056863769},\\\"hp_remaining\\\":{\\\"n\\\":50,\\\"mean\\\":-17.659999999999993,\\\"p10\\\":-21,\\\"p90\\\":-10.699999999999996,\\\"meanSe\\\":0.8464138033672488}},\\\"boss_sim\\\":\\\"F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个 0%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 614（当前牌组 615，−1.1 ± 2.1）（50 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少；达到上限，n=50；差值对同前缀基准）\\\",\\\"boss_sim_win_tied_with\\\":[\\\"card0\\\",\\\"card1\\\",\\\"skip\\\"],\\\"boss_sim_win_tie_note\\\":\\\"本次模拟与card0、card1、skip的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\\\"}\",\"skip\":\"{\\\"card\\\":\\\"skip\\\",\\\"note\\\":\\\"take no card\\\",\\\"card_value_v2\\\":{\\\"act_hp_saved\\\":0,\\\"error_scale\\\":0,\\\"boss\\\":{\\\"hp_loss\\\":39.03,\\\"hp_saved\\\":0,\\\"win\\\":0.7028,\\\"win_change\\\":0},\\\"cores\\\":[],\\\"more_cores\\\":0,\\\"unknown\\\":[]},\\\"quantitative_fight\\\":{\\\"samples\\\":50,\\\"raw_win_mc_interval95\\\":[6.938893903907228e-18,0.07134759913335872],\\\"boss_relative_margin\\\":{\\\"schema\\\":\\\"boss-relative-margin-v1\\\",\\\"formula\\\":\\\"my_dpr/boss_hp-enemy_dpr/my_hp\\\",\\\"unit\\\":\\\"reference_hp_fraction_per_turn\\\",\\\"status\\\":\\\"unknown_or_incomplete_attribution\\\",\\\"rankingEligible\\\":false,\\\"samples\\\":50,\\\"valid\\\":0,\\\"missing\\\":50,\\\"reference\\\":{\\\"myHp\\\":1,\\\"bossHp\\\":636,\\\"startTurn\\\":1,\\\"enemyIds\\\":[\\\"TEST_SUBJECT\\\"],\\\"unknown\\\":[]},\\\"window\\\":\\\"scenario_entry_through_terminal_including_setup_and_terminal_turns\\\",\\\"incomingScope\\\":\\\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\\\",\\\"referencesVary\\\":false,\\\"score\\\":null,\\\"observedSubset\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"myDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"enemyDpr\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"paired\\\":{\\\"difference\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"died\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"sd\\\":null,\\\"meanSe\\\":null,\\\"p10\\\":null,\\\"median\\\":null,\\\"p90\\\":null,\\\"min\\\":null,\\\"max\\\":null},\\\"limits\\\":\\\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\\\",\\\"modelTrust\\\":\\\"low\\\",\\\"modelTrustReason\\\":\\\"仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。\\\"},\\\"damage_hp\\\":{\\\"n\\\":50,\\\"mean\\\":21.040000000000003,\\\"p10\\\":7,\\\"p90\\\":35.50000000000001,\\\"meanSe\\\":1.738861931358131},\\\"simulated_turns\\\":{\\\"n\\\":50,\\\"mean\\\":1.3800000000000001,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.08518886580500327},\\\"first_turn_damage\\\":{\\\"n\\\":50,\\\"mean\\\":16.7,\\\"p10\\\":4.500000000000002,\\\"p90\\\":34,\\\"meanSe\\\":1.6003188457814481},\\\"later_damage\\\":{\\\"n\\\":16,\\\"mean\\\":13.562499999999998,\\\"p10\\\":3.5,\\\"p90\\\":19,\\\"meanSe\\\":2.747678944733779},\\\"effective_damage_per_turn\\\":{\\\"n\\\":50,\\\"mean\\\":16.393333333333327,\\\"p10\\\":6.800000000000001,\\\"p90\\\":27.70000000000001,\\\"meanSe\\\":1.464963141789827},\\\"damage_per_turn_won\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_effective_damage_per_turn\\\":{\\\"difference\\\":{\\\"n\\\":50,\\\"mean\\\":0,\\\"sd\\\":0,\\\"meanSe\\\":0,\\\"p10\\\":0,\\\"median\\\":0,\\\"p90\\\":0,\\\"min\\\":0,\\\"max\\\":0},\\\"unmatchedBase\\\":0,\\\"unmatchedOption\\\":0},\\\"damage_per_turn_died\\\":{\\\"n\\\":50,\\\"mean\\\":16.393333333333327,\\\"p10\\\":6.800000000000001,\\\"p90\\\":27.70000000000001,\\\"meanSe\\\":1.464963141789827},\\\"damage_curve\\\":[{\\\"turn\\\":1,\\\"damage\\\":{\\\"n\\\":50,\\\"mean\\\":16.7,\\\"sd\\\":11.315963079126908,\\\"meanSe\\\":1.6003188457814481,\\\"p10\\\":4.500000000000002,\\\"median\\\":14,\\\"p90\\\":34,\\\"min\\\":0,\\\"max\\\":48}},{\\\"turn\\\":2,\\\"damage\\\":{\\\"n\\\":16,\\\"mean\\\":9.4375,\\\"sd\\\":6.840748009781777,\\\"meanSe\\\":1.7101870024454442,\\\"p10\\\":0,\\\"median\\\":10,\\\"p90\\\":17,\\\"min\\\":0,\\\"max\\\":20}},{\\\"turn\\\":3,\\\"damage\\\":{\\\"n\\\":3,\\\"mean\\\":22,\\\"sd\\\":24.24871130596428,\\\"meanSe\\\":14,\\\"p10\\\":3.6,\\\"median\\\":18,\\\"p90\\\":42,\\\"min\\\":0,\\\"max\\\":48}}],\\\"dpr_scope\\\":\\\"逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。\\\",\\\"hp_loss\\\":{\\\"n\\\":50,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0},\\\"turns_won_only\\\":{\\\"n\\\":0,\\\"mean\\\":null,\\\"p10\\\":null,\\\"p90\\\":null,\\\"meanSe\\\":null},\\\"paired_hp_loss_difference\\\":{\\\"n\\\":50,\\\"mean\\\":0,\\\"p10\\\":0,\\\"p90\\\":0,\\\"meanSe\\\":0},\\\"capped\\\":0,\\\"complete_combinations\\\":null,\\\"core_window\\\":{\\\"samples\\\":50,\\\"valid\\\":44,\\\"missing\\\":6,\\\"energy_paid\\\":{\\\"n\\\":44,\\\"mean\\\":4.159090909090908,\\\"p10\\\":1.2999999999999998,\\\"p90\\\":7,\\\"meanSe\\\":0.36050115137967254},\\\"manual_actions\\\":{\\\"n\\\":44,\\\"mean\\\":4.499999999999999,\\\"p10\\\":2,\\\"p90\\\":7.700000000000003,\\\"meanSe\\\":0.38811628344023236},\\\"effect_resolutions\\\":{\\\"n\\\":44,\\\"mean\\\":4.545454545454545,\\\"p10\\\":2,\\\"p90\\\":7.700000000000003,\\\"meanSe\\\":0.3961422660909377},\\\"combinations\\\":{\\\"discardBandages\\\":{},\\\"poisonDefense\\\":null,\\\"dexterityDefense\\\":null,\\\"shivDefense\\\":null,\\\"limits\\\":\\\"仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。\\\"},\\\"first_core_play_when_played\\\":{\\\"FOOTWORK\\\":{\\\"n\\\":20,\\\"mean\\\":1.25,\\\"p10\\\":1,\\\"p90\\\":2,\\\"meanSe\\\":0.09933992677987827},\\\"BURST\\\":{\\\"n\\\":2,\\\"mean\\\":1,\\\"p10\\\":1,\\\"p90\\\":1,\\\"meanSe\\\":0}},\\\"limits\\\":\\\"公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。\\\"},\\\"block_gained\\\":{\\\"n\\\":50,\\\"mean\\\":13.099999999999998,\\\"p10\\\":0,\\\"p90\\\":34.1,\\\"meanSe\\\":2.0749723381485436},\\\"potions_used\\\":{\\\"n\\\":50,\\\"mean\\\":0.5599999999999999,\\\"p10\\\":0,\\\"p90\\\":1,\\\"meanSe\\\":0.07091242083423348},\\\"hp_remaining\\\":{\\\"n\\\":50,\\\"mean\\\":-17.8,\\\"p10\\\":-24.299999999999997,\\\"p90\\\":-11,\\\"meanSe\\\":1.135691823677245}},\\\"boss_sim\\\":\\\"F48→F49连续通关（第一boss 实验体，A10；低可信、未经两战校准）：不改变牌组：胜率 0%，赢局掉血中位 —，约 1 回合；boss 平均剩血 615（50 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少；达到上限，n=50；差值对同前缀基准）\\\",\\\"boss_sim_win_tied_with\\\":[\\\"card0\\\",\\\"card1\\\",\\\"card2\\\"],\\\"boss_sim_win_tie_note\\\":\\\"本次模拟与card0、card1、card2的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\\\"}\"}}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "choice": {
+        "type": "string",
+        "description": "one option key exactly as given in options",
+        "maxLength": 600
+      },
+      "reason": {
+        "type": "string",
+        "description": "max 25 words",
+        "maxLength": 600
+      },
+      "route": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "only when the question asks for a route (state.route_review, state.act_route): \"keep\" or the node ids from one of next_nodes to the boss, space-separated",
+        "maxLength": 600,
+        "pattern": "^(keep|r[0-9]+c[0-9]+( r[0-9]+c[0-9]+)*)$"
+      },
+      "route_reason": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "only when changing route: current facts, tradeoff and expected win benefit; no invented percentage",
+        "maxLength": 60
+      },
+      "run_plan": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "archetype": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "the deck direction, max 12 words",
+            "maxLength": 600
+          },
+          "want": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "description": "card ids to pick when offered, most important first, max 6",
+            "items": {
+              "type": "string",
+              "maxLength": 600
+            }
+          },
+          "avoid": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "description": "card ids not to take, max 6",
+            "items": {
+              "type": "string",
+              "maxLength": 600
+            }
+          },
+          "remove": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "description": "card ids in the deck to remove first, max 3",
+            "items": {
+              "type": "string",
+              "maxLength": 600
+            }
+          },
+          "block_target": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "number of block cards the deck should hold by the act boss (0-20)"
+          },
+          "elites": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "seek",
+              "normal",
+              "avoid",
+              null
+            ]
+          },
+          "rest": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "heal",
+              "smith",
+              "auto",
+              null
+            ]
+          },
+          "boss_prep": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "max 30 words: what to have ready for the act boss",
+            "maxLength": 600
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "max 40 words: the plan in plain words",
+            "maxLength": 600
+          },
+          "construction": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Explicit construction hypothesis; unknown complete-core performance stays unknown.",
+            "properties": {
+              "primary": {
+                "type": "string",
+                "description": "one coreCatalog ID, or uncommitted",
+                "maxLength": 600
+              },
+              "alternatives": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 600
+                },
+                "description": "up to three other coreCatalog IDs"
+              },
+              "checkpoint": {
+                "type": "integer",
+                "description": "a future floor, strictly after the current floor, to review this direction"
+              },
+              "reason": {
+                "type": "string",
+                "description": "evidence and current choice tradeoff; do not invent unavailable probabilities",
+                "maxLength": 600
+              },
+              "pivot_if": {
+                "type": "string",
+                "description": "observable conditions for changing direction",
+                "maxLength": 600
+              }
+            },
+            "required": [
+              "primary",
+              "alternatives",
+              "checkpoint",
+              "reason",
+              "pivot_if"
+            ],
+            "additionalProperties": false
+          },
+          "change_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "结合当前情况说明旧/新取舍与预期胜率收益；仅改线时给出，不编数字",
+            "maxLength": 600
+          },
+          "endgame": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "本局终局假设；每项1句，最多240 Unicode字符，缺证明确写未知。",
+            "properties": {
+              "core": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "core：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "gaps": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "gaps：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "scaling_damage": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "scaling_damage：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "sustainable_defense": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "sustainable_defense：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "resources": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "resources：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "win_condition": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "win_condition：本局假设及依据，最多240字符；复用时只给实际变更字段",
+                "maxLength": 600
+              },
+              "checkpoint": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "只在 endgame_checkpoint 给出时回答幕末检查；复用时其余题可省略",
+                "maxLength": 600
+              }
+            },
+            "required": [
+              "core",
+              "gaps",
+              "scaling_damage",
+              "sustainable_defense",
+              "resources",
+              "win_condition",
+              "checkpoint"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "archetype",
+          "want",
+          "avoid",
+          "remove",
+          "block_target",
+          "elites",
+          "rest",
+          "boss_prep",
+          "summary",
+          "construction",
+          "change_reason",
+          "endgame"
+        ],
+        "additionalProperties": false,
+        "description": "可选：只更新受影响字段；省略或null沿用当前计划。实际改线须说明预期收益。"
+      }
+    },
+    "required": [
+      "choice",
+      "reason",
+      "route",
+      "route_reason",
+      "run_plan"
+    ],
+    "additionalProperties": false
+  },
+  "tools": [
+    {
+      "name": "kb_monster",
+      "description": "查一个怪物在本局进阶的数据：血量、每个招式的伤害×段数、给自己加的能力、给我们上的减益、塞的牌、出现回合和下一招的转移、特殊机制（复活、召唤、喷发、滑溜等），每个数带样本数 n；本进阶没记录的按相邻进阶推算并标「估」。另附它所在遭遇各进阶的战绩。按 id（如 KIN_PRIEST）或中文名（如 同族神官）查。 用途：理解启动窗口、敌人机制和本幕Boss压力，判断备战需求。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "怪物 id（KIN_PRIEST）或中文名（同族神官）"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_encounter",
+      "description": "查遭遇和 boss 战的战绩：各进阶的场数、胜率、死亡数、赢局战内掉血中位/p75（boss 另有赢局回合和每回合掉血）。query 可以是遭遇 key（CRUSHER+ROCKET）、boss id（KAISER_CRAB）、或怪物 id/中文名（列出它参与的全部遭遇）；可按幕和房间类型筛选。 用途：根据自有遭遇失血与回合，评估本幕Boss及爬楼路线风险。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "遭遇 key、boss id、怪物 id 或中文名"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "只看这一幕"
+          },
+          "room": {
+            "type": "string",
+            "enum": [
+              "hallway",
+              "elite",
+              "boss",
+              "unknown_room"
+            ],
+            "description": "只看这种房间：hallway 走廊、elite 精英、boss、unknown_room 问号房"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_experience",
+      "description": "查经验库里本局进阶适用的有效条目：结论、支持/反对局数、置信度、典型案例（run id + 复盘标题一句话）。按主题（monster=怪物/boss，deck=构筑，route=路线/休息，shop_event=商店/事件，potion=药水，mechanics=机制/综合）、条目 id 或关键词（在 id、范围、名称、结论里找）查，至少给一个；给了几个就要同时满足。 本工具查经验，reflex knowledge（rk）请用kb_reflex；relevant=true可取本题相关经验（最多12条，保留来源、置信度、支持与反证），也可按id定查。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：核对启动与过渡、费用/抽牌/防护、构筑、成长输出、持续防御及连续双Boss资源判断；保留支持、反证与未知。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "monster",
+              "deck",
+              "route",
+              "shop_event",
+              "potion",
+              "mechanics"
+            ],
+            "description": "主题"
+          },
+          "id": {
+            "type": "string",
+            "description": "条目 id（如 vantom-multihit）"
+          },
+          "keyword": {
+            "type": "string",
+            "description": "关键词（中文名、卡牌/怪物 id、boss:VANTOM 之类的范围）"
+          },
+          "relevant": {
+            "type": "boolean",
+            "description": "按本题状态匹配经验；可与原有筛选条件同时使用"
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "projection",
+              "full"
+            ],
+            "description": "默认可消费投影；full须给document_id，按document_offset继续取完整JSON"
+          },
+          "document_id": {
+            "type": "string",
+            "description": "原条目精确ID；仍受本题/角色/进阶/全部查询条件限制"
+          },
+          "document_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000,
+            "description": "全文分片游标，默认0；用next_document_offset继续到null"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_stats",
+      "description": "查统计表：room_costs = 各幕各进阶每种房间的掉血（中位/p75/p90、死亡率、n）；fights = 精英和 boss 各进阶的战绩；rest = 休息点回血/锻造按到达血量段的结果（均终层、过本幕 boss 比例）。room_costs 和 fights 可以只看一幕。 用途：比较爬楼路线、房间代价、休息回血/升级和资源安排。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string",
+            "enum": [
+              "room_costs",
+              "fights",
+              "rest"
+            ],
+            "description": "表名"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "只看这一幕（rest 表不分幕）"
+          }
+        },
+        "required": [
+          "table"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_old_knowledge",
+      "description": "查旧知识（早期手写，待数据验证；和数据冲突时以数据为准）：guide = 静默猎手攻略，handbook = DeepSeek 经验手册，jev_hints = Jev 战斗提示。给 keyword 只返回含关键词的行（带所在小标题）；不给就返回整份。 用途：查旧攻略背景，与当前对局证据及公开来源分清。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "guide",
+              "handbook",
+              "jev_hints"
+            ],
+            "description": "来源；不给则查全部"
+          },
+          "keyword": {
+            "type": "string",
+            "description": "关键词"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_potion",
+      "description": "查药水换算表（本局进阶）：每瓶药留到本幕 boss 战值多少血，以及等价的伤害和格挡（boss 战实测的换算率，带来源和 n）。boss 之前喝掉一瓶药 = 付出它的持有价值。给 id（FIRE_POTION）或中文名（火焰药水）返回这瓶药的效果、日志里出现和喝的次数、各幕的数值、公式和校验；不给返回整张表。 用途：用药、Boss备战和连续两战资源取舍；不直接计算完整双Boss胜率。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "药水 id 或中文名；不给则返回整张表"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "只看这一幕（给了 id 时）"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_open_book",
+      "description": "查公开开卷机械资料：query 为卡牌/遗物/怪物/事件 ID、中文名或关键词；category 可限类别。返回外部来源、版本、SHA、许可；当前 mod 状态优先，资料不证明模拟支持。最多12项，可细化关键词。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。 用途：理解拿牌、删牌、升级、商店和事件选项的机械效果。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "cards",
+              "relics",
+              "monsters",
+              "events"
+            ]
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_strategies",
+      "description": "只读查本题相关策略/剧本，按题型、幕、Boss、牌组条件及#54最近流派筛选，具体条件优先。query=* 或ID/关键词；默认3条，保留ID、来源、样本、可信度和限制；无匹配返回空，自行决定是否查询。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：查已发布的启动、过渡、构筑方向、本幕Boss、最终双Boss、路线和资源策略；未知达标线保持未知。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum": [
+              "projection",
+              "full"
+            ],
+            "description": "默认可消费投影；full须给document_id，按document_offset继续取完整JSON"
+          },
+          "document_id": {
+            "type": "string",
+            "description": "原条目精确ID；仍受本题/角色/进阶/全部查询条件限制"
+          },
+          "document_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000,
+            "description": "全文分片游标，默认0；用next_document_offset继续到null"
+          },
+          "query": {
+            "type": "string",
+            "description": "* 查本题相关项，或条目ID/关键词"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "默认3条，最多6条；另受24KB限制"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 500,
+            "description": "默认0；用next_offset继续，无需反复全库查询"
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_reflex",
+      "description": "按非空rk线索及需要只读查reflex.json，与经验库kb_experience独立；0匹配时跳过。query=*或ID/关键词，applies_to可缩小范围。构筑题只返回构筑相关条目的一句话摘要、原可信度/证据/来源关联，不返回combat_line或原始predicate JSON；备战题保留条目条件。来源附版本/SHA，检索不证明条件成立或Jev采用。最多12条/24KB。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。大条目返回固定预算投影，truncated/omitted_fields明示省略；证据引用按原数组末项（不推定日期）及最大外部分母选取，保反证，外部分母不相加。全文用同查询加detail=full、document_id=原ID，按next_document_offset续取；拼接json_fragment后解析还原完整原条目。检索不证明条件成立或采用。 用途：查看局部打法与构筑联系，辅助拿牌、商店、休息及备战。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum": [
+              "projection",
+              "full"
+            ],
+            "description": "默认可消费投影；full须给document_id，按document_offset继续取完整JSON"
+          },
+          "document_id": {
+            "type": "string",
+            "description": "原条目精确ID；仍受本题/角色/进阶/全部查询条件限制"
+          },
+          "document_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000,
+            "description": "全文分片游标，默认0；用next_document_offset继续到null"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "query": {
+            "type": "string",
+            "description": "reflex条目ID、Boss/精英/卡牌ID等关键词；*查当前角色/进阶的全部检索候选"
+          },
+          "applies_to": {
+            "type": "string",
+            "enum": [
+              "combat_line",
+              "card_pick",
+              "potion",
+              "rest",
+              "shop"
+            ],
+            "description": "可选：限制原条目用途，不改变条目条件"
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_card",
+      "description": "查卡牌按幕的提供/拿取、拿取率与区间、拿/不拿整局胜率与区间、玩家/幕调整胜率差及重叠覆盖。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：拿牌比较的外部选择背景。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "id": {
+            "type": "string",
+            "description": "精确卡牌ID，如SNAKEBITE；可带CARD.，不接受中文猜映射"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_skip",
+      "description": "查按幕保留奖励点的跳过次数、跳过率和玩家簇区间。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：拿/跳牌的外部背景比较。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_deck_size",
+      "description": "查结束牌组张数分箱与胜率（全体/已到第三幕），有存活偏差，不据此推荐张数。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：理解牌组规模与结局关联，保留存活偏差。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_encounter",
+      "description": "查遭遇ID的外部总受伤、回合和死亡分布、独立局/玩家数（仅v0.111）。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：了解外部Boss及路线风险的受伤、回合和死亡分布。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "id": {
+            "type": "string",
+            "description": "精确遭遇ID，如DECIMILLIPEDE_ELITE；可带ENCOUNTER.，不猜怪物/本系统映射"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "幕；省略返回all及各幕已有行（遭遇只分幕）"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_clusters",
+      "description": "查数据产生的簇、标签、评估胜率和区间。现有样本无法区分流派优劣、不作方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：构筑样本背景；簇不等于已验证流派。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "k": {
+            "type": "integer",
+            "enum": [
+              3,
+              4,
+              5
+            ],
+            "description": "聚类数量，默认4"
+          },
+          "seed": {
+            "type": "integer",
+            "enum": [
+              24,
+              240,
+              2400
+            ],
+            "description": "模型初始化，默认24；编号不跨模型对齐"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "external_stats_cooccurrence",
+      "description": "查常一起出现的卡对及lift/Jaccard，仅为描述，不是收益或方向依据。 仅external:sts2fun；Silent A10，默认v0.111；只读聚合，与自有分母分账。返回来源、版本、样本、区间、下载日期和SHA；有分页和16000字节硬上限。 用途：组合样本背景；共现不等于收益或已验证构筑方向。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "enum": [
+              "v0.107",
+              "v0.108",
+              "v0.109",
+              "v0.110",
+              "v0.111"
+            ],
+            "description": "外部游戏版本，默认v0.111（其build全为v0.111.0）；其他版本分账"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "reached_act3"
+            ],
+            "description": "全体或已到第三幕；牌组张数省略列两范围，聚类/共现默认reached_act3"
+          },
+          "card": {
+            "type": "string",
+            "description": "可选卡牌ID，筛选包含该卡的共现对"
+          },
+          "with_card": {
+            "type": "string",
+            "description": "可选另一卡ID，必须同时给card，精确查一对"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "最多返回几行，默认4；最多10，另受16000字节上限约束"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "分页起点，默认0；按返回的next_offset继续"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_build_cores",
+      "description": "查已发布构筑核心、原scope和关联组合ID，判断有哪些待核构筑假设；返回core_summary。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_build_combos",
+      "description": "查已发布组合的卡牌、前提、证据与原可信度；返回combo_summary，完整metrics不在工具结果。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_vocab",
+      "description": "查已发布描述词表与维度，理解rk引用的明确tag；词表不是打法结论。 query为ID/关键词或*。保留原证据/反证/限制，candidate不等于已验证；动态predicate未求值。 SQLite绑定时直查类型索引：entity匹配ID/明确别名，topic为显式多主题之一；未分类保持unknown。空因与分类覆盖是诊断计数，不是适用知识；不自动扩大查询。next_offset继续。构筑路线build_route与爬楼路线climb_route分开，分类更新不要求重算路线。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "entity": {
+            "type": "string",
+            "description": "可选实体ID、中文名或明确别名"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "startup",
+              "boss",
+              "double_boss",
+              "build_route",
+              "climb_route"
+            ],
+            "description": "只匹配明确主题标注；未分类不当作无关知识"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_build_research",
+      "description": "查整局构筑研究的完整阶段、取得顺序、转向理由、检查点、资源连续性和终局准备及证据限制。整局构筑研究候选，非已验证可执行规则；检索不证明条件匹配、自然采用或收益。unknown保持未知，不转predicate/MC参数；保原初始计划与后续复用合同，按需查询。 query为关键词或*；act/stage/goal是同阶段显式标签筛选，不自动推断状态。默认本局进阶、角色；game_version须用实际版本，未知明确返回。先检索列表，再用id读结构页；可用pointer=/phases/2或/sources直取字段；artifact选已存附件ID，JSON附件可配pointer=/cases/0直取原轨迹。所有pointer只在已绑定JSON内寻址，不读文件/SQL/网络。page_offset为sections游标、next_page_offset续取至null，每页保前后阶段和附件目录。拼接同pointer各part后JSON解析可还原全文；分页或选段不表示全文及证据已读全。阶段/目标/幕标注缺失不视作匹配证明，可去掉这些筛选查完整研究。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "game_version": {
+            "type": "string"
+          },
+          "act": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "stage": {
+            "type": "string"
+          },
+          "goal": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "page_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "artifact": {
+            "type": "string",
+            "description": "已归档附件ID，绝非路径或URL"
+          },
+          "pointer": {
+            "type": "string",
+            "description": "研究或JSON附件内的JSON pointer；可省略"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "kb_decision_context",
+      "description": "续取本题默认知识摘要的完整条目，保留原分母、条件、反证和历史；仅绑定K1、本角色和本题匹配范围。detail=full，document_id为原ID，按next_document_offset续取，拼接json_fragment后解析。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum": [
+              "full"
+            ]
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "decision_context",
+              "strategy_observation",
+              "strategy"
+            ]
+          },
+          "document_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "detail",
+          "document_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "bytes": {
+    "system": 19586,
+    "user": 87090,
+    "schema": 4533,
+    "total": 111209
+  },
+  "sha256": {
+    "system": "f9b6c64d5d902e6d9f7f430ba376c545c1cfa7505c534843e7b564495a707e44",
+    "user": "67dae9cc63a914afb329d72bc2018b42ee5711d149a0fd689b4269c3b191cb89",
+    "schema": "8b5c36e44df00bd7dd525e861729c7332bad0808aea45fa6415ea8904755aca4"
+  }
+}

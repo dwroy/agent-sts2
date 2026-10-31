@@ -156,14 +156,14 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
       vi.spyOn(brain.router, "decide").mockImplementation(async req => {
         requests.push(req);
         const checkpoint = (req.payload as any).run_plan_task?.endgame_checkpoint ? "幕末格式判断：核心和缺口待证，两战资源未知" : "";
-        const answer = { choice: Object.keys(req.options ?? {})[0], reason: "格式构筑理由", run_plan: { ...plan(requests.length, checkpoint),
+        const answer = { choice: Object.keys(req.options ?? {})[0], reason: "格式构筑理由", boss_target: { boss_ids: [], gap: "本步不补，格式夹具", reason: "格式过渡，能力需求未知" }, run_plan: { ...plan(requests.length, checkpoint),
           ...((req.payload as any).run_plan_task?.plan_reuse ? { change_reason: "格式新证据下调整核心，预期改善本局胜率，效果未知" } : {}),
           ...(req.spec.schema.properties?.["run_plan"]?.properties?.["construction"] ? { construction: {
             primary: "uncommitted", alternatives: [], checkpoint: start.floor + sent + 1, reason: "格式方向依据待证", pivot_if: "出现新证据再改" } } : {}) } };
         if (start.recovery === "reuse" && requests.length === 2) delete (answer as any).run_plan;
         expect(req.spec.validate(answer)).toEqual([]);
-        if ((req.payload as any).run_plan_task?.endgame_plan_required || checkpoint) expect(req.spec.validate({ choice: answer.choice, reason: "缺计划" }).join()).toContain("run_plan");
-        else expect(req.spec.validate({ choice: answer.choice, reason: "复用" })).toEqual([]);
+        if ((req.payload as any).run_plan_task?.endgame_plan_required || checkpoint) expect(req.spec.validate({ choice: answer.choice, reason: "缺计划", boss_target: answer.boss_target }).join()).toContain("run_plan");
+        else expect(req.spec.validate({ choice: answer.choice, reason: "复用", boss_target: answer.boss_target })).toEqual([]);
         return { engine, model: "fixed", answer, problems: [], attempts: 1, latencyMs: 1,
           usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
       });
@@ -211,6 +211,11 @@ for (const engine of ["codex", "deepseek"] as const) for (const start of [
     expect(jevAsk).toHaveBeenCalledTimes(3);
     expect(jevAsk.mock.calls.every(args => (args[0] as any).direction === "uncommitted")).toBe(true);
     const stored = readFileSync(cfg.runPlanLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
+    expect(stored.filter(r => r.merged_into && r.plan?.endgame).every(r => r.plan.bossContext?.schema === "boss-target-context-v1" && r.plan.bossContext.run === r.plan.runId)).toBe(true);
+    const decisions = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
+    const accepted = decisions.filter(r => r.deepseek?.direct && !r.deepseek?.invalid);
+    expect(accepted).toHaveLength(3);
+    expect(accepted.every(r => r.deepseek.boss_target?.reason === "格式过渡，能力需求未知")).toBe(true);
     expect(stored.filter(r => r.merged_into && r.plan?.endgame).map(r => r.plan.endgame.core)).toEqual(["格式核心1", start.recovery === "reuse" ? "格式核心1" : "格式核心2", "格式核心3"]);
     if (start.recovery === "reuse") expect(stored.find(r => r.plan_update)?.plan_update).toMatchObject({ outcome: "reused", changed_fields: [] });
     expect(stored.filter(r => r.plan?.endgame?.checkpoint)).toHaveLength(start.floor === 31 ? 2 : 0);

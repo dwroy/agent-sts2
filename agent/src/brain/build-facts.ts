@@ -79,6 +79,8 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
           summary: plan.summary,
           ...(plan.construction ? { construction: plan.construction } : {}),
           ...(plan.endgame ? { endgame: plan.endgame } : {}),
+          ...(plan.bossContext && plan.bossContext.run === str(state.raw["run_id"]) && floor !== null && plan.bossContext.floor <= floor
+            ? { boss_context: { ...plan.bossContext } } : {}),
         }
       : null,
     ...extra,

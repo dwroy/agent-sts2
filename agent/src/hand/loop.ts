@@ -46,6 +46,8 @@ import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_
 import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "../memory/run-plan-merge.js";
 import { updateRunPlan, runPlanUpdateProblems } from "../memory/run-plan-update.js";
 import { endgameScope, endgameQuestion, endgameTask, endgameProblems, endgameCheckpointRequired, endgameReuse } from "../memory/endgame-plan.js";
+import { attachBossDossier } from "../brain/boss-dossier.js";
+import { bossReviewRequired, observedBossContext } from "../brain/boss-target.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -1161,6 +1163,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of
         // its own call. Anything wrong in building it: the question goes as without it, the plan stays due.
         const endgameUpdate = endgamePlanning && endgameQuestion(state, decision.label);
+        if (endgameUpdate) {
+          const dossier = attachBossDossier(state.raw, decision.state, decision.label);
+          if (dossier) decision = { ...decision, state: dossier.payload };
+        }
         if (endgameUpdate || runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
           try {
             const runId = str(state.raw["run_id"]);
@@ -1170,6 +1176,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
               const reuse = endgameUpdate && Boolean(plan?.endgame);
               const context = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), reuse ? null : trigger, decision.label, config.runPlanLog);
               const task = endgameUpdate ? { ...context, ...endgameTask(state, decision.label, reuse),
+                ...(bossReviewRequired(decision.state) ? { boss_reveal_update: true } : {}),
                 due_because: reuse ? "复用已有计划；仅在预期有利于本局胜率时更新受影响字段" : "建立本局终局计划" } : context;
               const carried = withRunPlanTask({ ...decision, deepseek: spec }, task);
               const carriedQuestion = carried.questions[spec.question];
@@ -1265,6 +1272,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             const previous = screenMemory.runPlan;
             if (!previous || previous.runId !== runId) return fail("missing", "the previous run plan is unavailable");
             const update = updateRunPlan(previous, value, state, knowledge, ride.trigger);
+            const bossContext = observedBossContext(ask.state);
+            if (bossContext) update.plan = { ...update.plan, bossContext };
             screenMemory.runPlan = update.plan;
             screenMemory.runPlanPending = undefined;
             runPlanRideLog = { trigger: ride.trigger, outcome: update.outcome, changed_fields: update.changed, reason: update.reason };
@@ -1286,6 +1295,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           }
           try {
             const plan = parseRunPlan(found.plan, state, knowledge, ride.trigger);
+            const bossContext = observedBossContext(ask.state);
+            if (bossContext) plan.bossContext = bossContext;
             acceptDirectionRide(env, plan, found.plan, directionRide, ask.label, config.runPlanLog);
             directionRideFinished = true;
             screenMemory.runPlan = plan;
@@ -1340,6 +1351,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             direct: true,
             choice: answer.choice,
             reason: answer.reason,
+            ...(answer.bossTarget ? { boss_target: toJsonValue(answer.bossTarget) } : {}),
             ...(answer.rankingOverrideReason !== undefined ? { ranking_override_reason: answer.rankingOverrideReason } : {}),
             latency_ms: answer.latencyMs,
             tokens: answer.inputTokens + answer.outputTokens,
@@ -1391,6 +1403,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             deepseekLatency = meta.latencyMs;
             const reason = str(json["reason"]).trim();
             const usage = {
+              ...(json["boss_target"] ? { boss_target: toJsonValue(json["boss_target"]) } : {}),
               latency_ms: meta.latencyMs,
               tokens: meta.inputTokens + meta.outputTokens,
               input_tokens: meta.inputTokens,

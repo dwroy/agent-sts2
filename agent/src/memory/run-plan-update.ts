@@ -4,6 +4,7 @@ import type { GameState } from "../hand/mod/schema.js";
 import { asRecord, str } from "../core/util/json.js";
 import { ENDGAME_FIELDS, endgameCheckpointRequired, endgameProblems, endgameReuse, parseEndgamePlan } from "./endgame-plan.js";
 import { actOf, hpFraction, parseRunPlan, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
+import { bossReviewProblems } from "../brain/boss-target.js";
 
 const FIELDS = ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary", "construction"] as const;
 const canonical = (v: unknown): string => JSON.stringify(v, (_k, value: unknown) => value && typeof value === "object" && !Array.isArray(value)
@@ -12,7 +13,8 @@ const live = (v: unknown): boolean => v !== null && v !== undefined;
 export function runPlanReply(plan: RunPlan): Record<string, unknown> {
   return { archetype: plan.archetype, want: plan.want, avoid: plan.avoid, remove: plan.remove, block_target: plan.blockTarget,
     elites: plan.elites, rest: plan.rest, boss_prep: plan.bossPrep, summary: plan.summary,
-    ...(plan.construction ? { construction: plan.construction } : {}), ...(plan.endgame ? { endgame: plan.endgame } : {}) };
+    ...(plan.construction ? { construction: plan.construction } : {}), ...(plan.endgame ? { endgame: plan.endgame } : {}),
+    ...(plan.bossContext ? { boss_context: plan.bossContext } : {}) };
 }
 /** Null optional fields from strict engine schemas also mean reuse. Arrays, including [], are deliberate updates. */
 export function runPlanPatch(value: unknown): Record<string, unknown> {
@@ -29,6 +31,7 @@ export function runPlanUpdateProblems(value: unknown, payload: unknown): string[
   if (!endgameReuse(payload)) return [];
   if (value !== undefined && value !== null && (typeof value !== "object" || Array.isArray(value))) return ["run_plan must be an object when updating"];
   const patch = runPlanPatch(value), before = priorReply(payload), problems: string[] = [];
+  problems.push(...bossReviewProblems(value, payload));
   const endgame = asRecord(patch["endgame"]), oldEndgame = asRecord(before["endgame"]);
   const substantive = Object.keys(patch).filter(k => k !== "endgame").some(k => {
     const stored = k === "block_target" ? "blockTarget" : k === "boss_prep" ? "bossPrep" : k;

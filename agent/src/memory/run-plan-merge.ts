@@ -164,7 +164,7 @@ export function withRunPlanTask(decision: AskDecision & { deepseek: NonNullable<
     ...decision,
     state: { ...decision.state, [RUN_PLAN_TASK_KEY]: task },
     questions: { ...decision.questions, [key]: { ...question, instructions: `${task["plan_reuse"] === true ? reuseInstruction(question.instructions) : question.instructions} ${typeof task["endgame_objective"] === "string"
-      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} ${task["plan_reuse"] === true ? "沿用题内当前计划；run_plan 为可选变更字段，省略即复用。" : `在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`}`
+      ? `${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE} ${task["plan_reuse"] === true ? task["boss_reveal_update"] === true ? "Boss揭晓/目标变化，本题run_plan.endgame显式复核win_condition、gaps、resources；其余字段沿用。" : "沿用题内当前计划；run_plan 为可选变更字段，省略即复用。" : `在同一 JSON 中给 run_plan，原计划字段格式：${RUN_PLAN_FORMAT}，另加 endgame 对象（core, gaps, scaling_damage, sustainable_defense, resources, win_condition, checkpoint，均为字符串）。`}`
       : RUN_PLAN_MERGE_NOTE}` } },
   };
 }

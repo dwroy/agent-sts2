@@ -1,0 +1,195 @@
+{
+  "schema": "issue87-engineering-validation-v1",
+  "captured_at": "2026-10-31T20:19:54+08:00",
+  "status": "ready-for-review; final combination full pending",
+  "authority": {
+    "source": "latest direct user [Claude] instruction in this development thread",
+    "instruction": "现在就按已冻结的实现和三题前后完整题面交付（附第一轮6118/6119、补好的夹具复验和定向结果）。最终全量检查用合并批的组合检查代替。",
+    "effect": "No second self full. Integrator review/final exact-combination check remains required."
+  },
+  "source_freeze_sha256": "4c5514f568047d4862ec6710656219bdb6dcb71b26b0fa620445f5ba94304af7",
+  "checks": {
+    "production_tsc": {
+      "result": "passed",
+      "evidence": "canonical sandbox uses set -e and production tsc before Vitest; first full reached Vitest19:21:20; production source unchanged thereafter"
+    },
+    "targeted_before_report_provenance_revision": {
+      "result": "passed",
+      "files": 8,
+      "tests": 111,
+      "log": "data/issue87-implementation/targeted-pre-freeze.log"
+    },
+    "final_short_report_and_restored_fixture": {
+      "result": "passed",
+      "exit_code": 0,
+      "files": 2,
+      "tests": 8,
+      "start": "20:18:25",
+      "duration_seconds": 0.919,
+      "log": "data/issue87-implementation/final-directed-report-fixture.log",
+      "scope": [
+        "tests/boss-target-report.test.ts (7)",
+        "tests/check-imports.test.ts (1)"
+      ]
+    },
+    "scoped_cli_and_production_tsc": {
+      "result": "passed",
+      "exit_code": 0,
+      "command": "node node_modules/typescript/bin/tsc -p ../data/issue87-implementation/tsconfig.tools.json --noEmit",
+      "config": {
+        "extends": "../../agent/tsconfig.json",
+        "compilerOptions": {
+          "noEmit": true,
+          "typeRoots": [
+            "../../agent/node_modules/@types"
+          ]
+        },
+        "include": [
+          "../../agent/src/**/*.ts",
+          "../../agent/tools/boss-target-report.ts",
+          "../../agent/tools/boss-target-replay.ts",
+          "../../learner/**/*.ts"
+        ]
+      },
+      "log": "data/issue87-implementation/tools-tsc-delivery.log",
+      "scope": "all production src, learner src and both new CLIs; not every old tool"
+    },
+    "fixed_producer_admission": {
+      "result": "passed",
+      "exit_code": 0,
+      "tests": 24,
+      "log": "data/issue87-implementation/fixed-producer-final.log"
+    },
+    "frozen_prompt_replay": {
+      "result": "passed",
+      "cases": 3,
+      "model_calls": 0,
+      "report": "full-prompts-final/report.json",
+      "case_checks": [
+        {
+          "id": "act3_revealed",
+          "dossier_bytes": 1498,
+          "complete_message_delta": 2012,
+          "warm_projection_n": 100,
+          "warm_projection_p50_ms": 0.28519900000000575,
+          "warm_projection_p95_ms": 0.5356800000000135,
+          "model_calls": 0,
+          "checks": {
+            "original_system_short_sha_and_length_match": true,
+            "tools_and_memory_from_frozen_original": true,
+            "sim_except_objective_equal": true,
+            "dossier_le_1500": true,
+            "boss_target_required": true,
+            "current_boss": "TEST_SUBJECT",
+            "final_bosses": [
+              "TEST_SUBJECT",
+              null
+            ]
+          }
+        },
+        {
+          "id": "act2_before_boss",
+          "dossier_bytes": 1496,
+          "complete_message_delta": 2017,
+          "warm_projection_n": 100,
+          "warm_projection_p50_ms": 0.2248880000000213,
+          "warm_projection_p95_ms": 0.4347490000000107,
+          "model_calls": 0,
+          "checks": {
+            "original_system_short_sha_and_length_match": true,
+            "tools_and_memory_from_frozen_original": true,
+            "sim_except_objective_equal": true,
+            "dossier_le_1500": true,
+            "boss_target_required": true,
+            "current_boss": "KAISER_CRAB",
+            "final_bosses": [
+              null,
+              null
+            ]
+          }
+        },
+        {
+          "id": "opening",
+          "dossier_bytes": 1483,
+          "complete_message_delta": 2022,
+          "warm_projection_n": 100,
+          "warm_projection_p50_ms": 0.15103850000002694,
+          "warm_projection_p95_ms": 0.2564109999999573,
+          "model_calls": 0,
+          "checks": {
+            "original_system_short_sha_and_length_match": true,
+            "tools_and_memory_from_frozen_original": true,
+            "sim_except_objective_equal": true,
+            "dossier_le_1500": true,
+            "boss_target_required": true,
+            "current_boss": "LAGAVULIN_MATRIARCH",
+            "final_bosses": [
+              null,
+              null
+            ]
+          }
+        }
+      ]
+    },
+    "all_13_method_closures": {
+      "result": "passed for this source view",
+      "report": "declaration-delta.json",
+      "changed": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "unchanged_count": 11,
+      "production_admission": false
+    }
+  },
+  "full_attempts": [
+    {
+      "attempt": 1,
+      "entry": "original main board_heavy.py dev -- env SANDBOX_WORKERS=1 bash tools/test-sandbox.sh",
+      "exit_code": 1,
+      "files_passed": 659,
+      "files_failed": 1,
+      "tests_passed": 6118,
+      "tests_failed": 1,
+      "start": "2026-10-31T19:21:20+08:00",
+      "duration_seconds": 1625.88,
+      "failure": "Only absent tracked sparse issue29-brain-speed/results.jsonl in relative import checker",
+      "resolution": "exact original Git bytes restored; final Vitest import check passed",
+      "fixture_receipt": "sparse-fixture-receipt.json",
+      "log": "data/issue87-implementation/sandbox-final.log",
+      "paths_fork_stage": "not reached after rc1; final combination owns remaining applicable whole-suite checks"
+    },
+    {
+      "attempt": 2,
+      "started": false,
+      "state": "own queued runner deferred for #77 priority",
+      "exit_code": 130,
+      "receipt": "resource-deferral.json"
+    },
+    {
+      "attempt": "final",
+      "state": "not run in development session per supervisor instruction",
+      "owner": "integrator final exact merge combination"
+    }
+  ],
+  "other_diagnostics": {
+    "broad_tsconfig_tools": "not green; errors at old tool paths recorded, no unrelated fixes",
+    "log": "data/issue87-implementation/tools-tsc-initial.log"
+  },
+  "gitleaks": {
+    "materials": {
+      "exit_code": 0,
+      "log": "data/issue87-implementation/materials-delivery-gitleaks.log"
+    },
+    "staged": "verified separately before commit",
+    "public_comment": "scanned separately before posting"
+  },
+  "not_claimed": [
+    "final combination full green",
+    "actual main/live deployment or release_id",
+    "new #83 data publication or natural consumer adoption",
+    "10 natural games behavior acceptance",
+    "30 ended games first-attempt effects",
+    "historical ROOT lock ownership"
+  ]
+}

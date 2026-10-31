@@ -21,6 +21,7 @@ import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems, endgameReuse, endgamePlanningTask } from "../memory/endgame-plan.js";
 
 import { runPlanPatch, runPlanUpdateProblems } from "../memory/run-plan-update.js";
+import { BOSS_TARGET_SCHEMA, bossReviewRequired } from "./boss-target.js";
 
 type Json = Record<string, unknown>;
 
@@ -273,6 +274,11 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
  * already. spec.validate still checks the question's own keys and fields.
  */
 export function stableSchema(spec: AnswerSpec): JsonSchema {
+  const base = stableBaseSchema(spec);
+  return spec.schema.properties?.["boss_target"] ? { ...base, properties: { ...base.properties, boss_target: BOSS_TARGET_SCHEMA },
+    required: [...new Set([...(base.required ?? []), "boss_target", ...(spec.schema.required?.includes("run_plan") ? ["run_plan"] : [])])] } : base;
+}
+function stableBaseSchema(spec: AnswerSpec): JsonSchema {
   if (spec.kind === "pick") {
     const run = spec.schema.properties?.["run_plan"];
     const base = run?.properties?.["construction"] || run?.properties?.["v6"] || run?.properties?.["endgame"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run },
@@ -430,8 +436,8 @@ function runPlanField(state: unknown): JsonSchema {
     ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
   if (endgameReuse(state)) return { ...schema, description: "可选：只更新受影响字段；省略或null沿用当前计划。实际改线须说明预期收益。",
     properties: { ...schema.properties, change_reason: { type: "string", description: "结合当前情况说明旧/新取舍与预期胜率收益；仅改线时给出，不编数字" },
-      endgame: { ...ENDGAME_PLAN_SCHEMA, required: endgameCheckpointRequired(state) ? ["checkpoint"] : [] } },
-    required: endgameCheckpointRequired(state) ? ["endgame"] : [] };
+      endgame: { ...ENDGAME_PLAN_SCHEMA, required: [...(endgameCheckpointRequired(state) ? ["checkpoint"] : []), ...(bossReviewRequired(state) ? ["win_condition", "gaps", "resources"] : [])] } },
+    required: endgameCheckpointRequired(state) || bossReviewRequired(state) ? ["endgame"] : [] };
   return endgameRequired(state) ? { ...schema, properties: { ...schema.properties, endgame: ENDGAME_PLAN_SCHEMA },
     required: [...(schema.required ?? []), "endgame"] } : schema;
 }

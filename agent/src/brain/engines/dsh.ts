@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage } from "../types.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
+import { recordBossPromptMetrics } from "../boss-prompt-metrics.js";
 import { EngineFailure, withNotes } from "../router.js";
 import type { BrainConfig } from "../../core/config.js";
 import { PROJECT_ROOT } from "../../core/paths.js";
@@ -85,6 +86,7 @@ export class DshEngine implements BrainEngine {
       const sessions = join(root, "sessions");
       writeFileSync(patch, JSON.stringify(dshPatch(ids, req.system, this.model, effort, sessions, req.tools?.length ? this.mcpUrl : undefined)));
       req.prepareForSend?.(req);
+      recordBossPromptMetrics(req, req.spec.schema, "dsh");
       const result = await this.run(["headless", "--patch", patch, "--json", "-"], cwd,
         `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal, req.observe);
       const parsed = parseAnswerText(result.text);

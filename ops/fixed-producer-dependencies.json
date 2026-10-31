@@ -997,8 +997,10 @@
       },
       "inputs": {
         "code:agent/src/brain/brain.ts": {
-          "sha256": "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b",
+          "sha256": "3b91c8343c30011a675ae0b6563474e5b1af52ab25eebf17962519a69d737a31",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/decision-knowledge.ts",
             "code:agent/src/brain/engines/claude.ts",
             "code:agent/src/brain/engines/codex-usage.ts",
@@ -1031,11 +1033,11 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b"
+            "3b91c8343c30011a675ae0b6563474e5b1af52ab25eebf17962519a69d737a31"
           ]
         },
         "code:agent/src/brain/build-facts.ts": {
-          "sha256": "83dba1210c7b0e205f205e0e95e2fe25a2b54af17ed7072bce29986775ba1012",
+          "sha256": "86eace73a2e59669014e7296508d7bac9edf487b7badb60f4cddb7c08f4dfbc0",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
             "code:agent/src/knowledge/boss-phase.ts",
@@ -1054,7 +1056,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "83dba1210c7b0e205f205e0e95e2fe25a2b54af17ed7072bce29986775ba1012"
+            "86eace73a2e59669014e7296508d7bac9edf487b7badb60f4cddb7c08f4dfbc0"
           ]
         },
         "code:agent/src/brain/decision-knowledge-exposure.ts": {
@@ -1165,8 +1167,9 @@
           ]
         },
         "code:agent/src/brain/engines/codex.ts": {
-          "sha256": "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697",
+          "sha256": "7bcd1bc796dc54ca5843af966715730c3662eab57bc9df528ce21716e4c36e5c",
           "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
             "code:agent/src/brain/engines/codex-cache.ts",
             "code:agent/src/brain/engines/codex-session.ts",
             "code:agent/src/brain/engines/codex-usage.ts",
@@ -1184,7 +1187,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697"
+            "7bcd1bc796dc54ca5843af966715730c3662eab57bc9df528ce21716e4c36e5c"
           ]
         },
         "code:agent/src/brain/engines/deepseek.ts": {
@@ -1204,8 +1207,9 @@
           ]
         },
         "code:agent/src/brain/engines/dsh.ts": {
-          "sha256": "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7",
+          "sha256": "1d62c0d19eb4b0745f4135a19f206c0520695d9fbe098d86cb9f4444bff6dcc5",
           "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
             "code:agent/src/brain/live-view.ts",
             "code:agent/src/brain/message.ts",
             "code:agent/src/brain/router.ts",
@@ -1216,7 +1220,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7"
+            "1d62c0d19eb4b0745f4135a19f206c0520695d9fbe098d86cb9f4444bff6dcc5"
           ]
         },
         "code:agent/src/brain/engines/knowledge-agent.ts": {
@@ -1372,8 +1376,9 @@
           ]
         },
         "code:agent/src/brain/router.ts": {
-          "sha256": "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703",
+          "sha256": "3bc4d458f30c87f647f27d3ce350490d909dbfc376ea89c7795e6290cb0b4918",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
             "code:agent/src/brain/decision-knowledge-exposure.ts",
             "code:agent/src/brain/decision-knowledge.ts",
             "code:agent/src/brain/evidence.ts",
@@ -1391,7 +1396,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703"
+            "3bc4d458f30c87f647f27d3ce350490d909dbfc376ea89c7795e6290cb0b4918"
           ]
         },
         "code:agent/src/brain/run-profile.ts": {
@@ -1404,8 +1409,9 @@
           ]
         },
         "code:agent/src/brain/specs.ts": {
-          "sha256": "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0",
+          "sha256": "1bf25f6824f7a08633afc91197245fc3807cf19e31fafefcb057b55ad042d26c",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/tools/types.ts",
             "code:agent/src/brain/types.ts",
             "code:agent/src/memory/endgame-plan.ts",
@@ -1419,7 +1425,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0"
+            "1bf25f6824f7a08633afc91197245fc3807cf19e31fafefcb057b55ad042d26c"
           ]
         },
         "code:agent/src/brain/tools/agent-knowledge.ts": {
@@ -1700,8 +1706,9 @@
           ]
         },
         "code:agent/src/brain/types.ts": {
-          "sha256": "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2",
+          "sha256": "5680f1e1d58a0c02599199b1b3a328cc28f3e6d0d2ea0ea7d7a0cf1ad0b53e1c",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
             "code:agent/src/brain/evidence.ts",
             "code:agent/src/brain/live-view.ts",
             "code:agent/src/brain/run-profile.ts",
@@ -1710,7 +1717,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2"
+            "5680f1e1d58a0c02599199b1b3a328cc28f3e6d0d2ea0ea7d7a0cf1ad0b53e1c"
           ]
         },
         "code:agent/src/brain/wait.ts": {
@@ -1764,16 +1771,17 @@
           ]
         },
         "code:agent/src/construction/consumer.ts": {
-          "sha256": "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf",
+          "sha256": "84489630dc3593f71c8483c2bf1d279e07ea156d0ab978c17ab635ee1ef6f496",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
+            "code:agent/src/memory/endgame-plan.ts",
             "code:agent/src/memory/types.ts",
             "code:agent/src/sim/boss-margin.ts"
           ],
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf"
+            "84489630dc3593f71c8483c2bf1d279e07ea156d0ab978c17ab635ee1ef6f496"
           ]
         },
         "code:agent/src/construction/data.ts": {
@@ -3102,7 +3110,7 @@
           ]
         },
         "code:agent/src/memory/run-plan-merge.ts": {
-          "sha256": "1c792dce1876e193c7879d13043d862736c19f7cfe1690060fb25435e0e4f22a",
+          "sha256": "70d4fa626242c7844b26bd54d4a29aa6443b869a3dae9995194ca24321718185",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
             "code:agent/src/hand/mod/schema.ts",
@@ -3115,12 +3123,13 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "1c792dce1876e193c7879d13043d862736c19f7cfe1690060fb25435e0e4f22a"
+            "70d4fa626242c7844b26bd54d4a29aa6443b869a3dae9995194ca24321718185"
           ]
         },
         "code:agent/src/memory/run-plan-update.ts": {
-          "sha256": "18d1cf144b95908053d2e60b8e933bbf52aba8b8cabe685c2993ae58582598f1",
+          "sha256": "5b3c5820def12186c67b65467b130749751eb794538a9c254bc6806791101195",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/core/util/json.ts",
             "code:agent/src/hand/mod/schema.ts",
             "code:agent/src/knowledge/index.ts",
@@ -3130,12 +3139,13 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "18d1cf144b95908053d2e60b8e933bbf52aba8b8cabe685c2993ae58582598f1"
+            "5b3c5820def12186c67b65467b130749751eb794538a9c254bc6806791101195"
           ]
         },
         "code:agent/src/memory/run-plan.ts": {
-          "sha256": "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab",
+          "sha256": "12dd9df99ea18f7d0914131ac891129e7b01237bdda2f349f7f3b689b01c80b5",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/construction/consumer.ts",
             "code:agent/src/construction/data.ts",
             "code:agent/src/core/util/json.ts",
@@ -3151,7 +3161,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab"
+            "12dd9df99ea18f7d0914131ac891129e7b01237bdda2f349f7f3b689b01c80b5"
           ]
         },
         "code:agent/src/memory/types.ts": {
@@ -4086,7 +4096,7 @@
           ]
         },
         "code:agent/src/sim/build-sim-facts.ts": {
-          "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+          "sha256": "953f05de2029ae2d54ee19204807863fd5e0c8e0f45e410eb74b3c1ff8141bdd",
           "dependencies": [
             "code:agent/src/core/config.ts",
             "code:agent/src/core/decision-budget.ts",
@@ -4102,6 +4112,7 @@
             "code:agent/src/knowledge/card-upgrades.ts",
             "code:agent/src/knowledge/double-boss.ts",
             "code:agent/src/knowledge/monster-db.ts",
+            "code:agent/src/memory/endgame-plan.ts",
             "code:agent/src/memory/types.ts",
             "code:agent/src/reflex/card-model.ts",
             "code:agent/src/reflex/rollout.ts",
@@ -4130,7 +4141,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e"
+            "953f05de2029ae2d54ee19204807863fd5e0c8e0f45e410eb74b3c1ff8141bdd"
           ]
         },
         "code:agent/src/sim/build-sim-pool.ts": {
@@ -5591,6 +5602,82 @@
           "opaque_sites": [
             "7853e34098b4c24d838751146a747d7da133572f56ca26a5434608d35bba93d2"
           ]
+        },
+        "code:agent/src/brain/boss-dossier.ts": {
+          "sha256": "fb2f413fed9707c95d8da9f829a1002575d57d3e7072c052fb95eff92bc16e4e",
+          "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
+            "code:agent/src/brain/boss-target.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/core/util/json.ts",
+            "code:agent/src/hand/mod/schema.ts",
+            "code:agent/src/knowledge/boss-phase.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/files.ts",
+            "code:agent/src/memory/construction-log.ts",
+            "code:agent/src/memory/endgame-plan.ts",
+            "code:agent/src/sim/boss-margin.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "fb2f413fed9707c95d8da9f829a1002575d57d3e7072c052fb95eff92bc16e4e"
+          ]
+        },
+        "code:agent/src/brain/boss-target.ts": {
+          "sha256": "f0ea71fbba50d71fd5bd6ba209d611ad54a3931568b59a7f1a035b5fd69d9170",
+          "dependencies": [
+            "code:agent/src/brain/tools/types.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/core/util/json.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "f0ea71fbba50d71fd5bd6ba209d611ad54a3931568b59a7f1a035b5fd69d9170"
+          ]
+        },
+        "code:agent/src/brain/boss-prompt-metrics.ts": {
+          "sha256": "e7e86e6d1c08fd0617067731cdadb80f58c3962bb37a7185a3aa9ab5924cabf1",
+          "dependencies": [
+            "code:agent/src/brain/message.ts",
+            "code:agent/src/brain/types.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "e7e86e6d1c08fd0617067731cdadb80f58c3962bb37a7185a3aa9ab5924cabf1"
+          ]
+        },
+        "code:agent/src/knowledge/boss-planning-data.ts": {
+          "sha256": "b0ecb9ad61e02c647cbc7cda5df3534b7a6eee81f9409ee493f2e30c49034390",
+          "dependencies": [
+            "code:agent/src/brain/tools/external-stats-tools.ts",
+            "code:agent/src/core/util/json.ts",
+            "code:agent/src/knowledge/boss-profile.ts",
+            "code:agent/src/knowledge/catalog.ts",
+            "code:agent/src/knowledge/monster-db.ts",
+            "code:agent/src/knowledge/runtime-data.ts",
+            "code:agent/src/knowledge/runtime-paths.ts",
+            "code:agent/src/knowledge/runtime/reader.ts",
+            "code:agent/src/knowledge/strategy-grading.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "b0ecb9ad61e02c647cbc7cda5df3534b7a6eee81f9409ee493f2e30c49034390"
+          ]
+        },
+        "code:agent/src/knowledge/boss-profile.ts": {
+          "sha256": "97edd9f7136c8c3cda0ec747d371d53cec0fbef34a4fa30d355ff09bde4e76c0",
+          "dependencies": [
+            "code:agent/src/core/util/json.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "97edd9f7136c8c3cda0ec747d371d53cec0fbef34a4fa30d355ff09bde4e76c0"
+          ]
         }
       }
     },
@@ -5788,6 +5875,9 @@
             "ops/knowledge_runtime_env.py"
           ],
           "agent/tools/boss-sim/refresh-silent.py": [
+            "agent/src/brain/boss-dossier.ts",
+            "agent/src/brain/boss-prompt-metrics.ts",
+            "agent/src/brain/boss-target.ts",
             "agent/src/brain/brain.ts",
             "agent/src/brain/build-facts.ts",
             "agent/src/brain/decision-knowledge-exposure.ts",
@@ -5905,6 +5995,8 @@
             "agent/src/hand/screens/v6-room.ts",
             "agent/src/index.ts",
             "agent/src/knowledge/boss-phase.ts",
+            "agent/src/knowledge/boss-planning-data.ts",
+            "agent/src/knowledge/boss-profile.ts",
             "agent/src/knowledge/card-references.ts",
             "agent/src/knowledge/card-upgrades.ts",
             "agent/src/knowledge/catalog.ts",
@@ -5936,6 +6028,8 @@
             "agent/src/knowledge/render/potion-text.ts",
             "agent/src/knowledge/render/stats-text.ts",
             "agent/src/knowledge/room-costs.ts",
+            "agent/src/knowledge/runtime-data.ts",
+            "agent/src/knowledge/runtime-paths.ts",
             "agent/src/knowledge/runtime/approval.ts",
             "agent/src/knowledge/runtime/build-research.ts",
             "agent/src/knowledge/runtime/classification-schema.ts",
@@ -5948,8 +6042,6 @@
             "agent/src/knowledge/runtime/store.ts",
             "agent/src/knowledge/runtime/typed-schema.ts",
             "agent/src/knowledge/runtime/validation.ts",
-            "agent/src/knowledge/runtime-data.ts",
-            "agent/src/knowledge/runtime-paths.ts",
             "agent/src/knowledge/shared-experience.ts",
             "agent/src/knowledge/strategy-archetypes.ts",
             "agent/src/knowledge/strategy-entries.ts",
@@ -5977,6 +6069,7 @@
             "agent/src/reflex/damage.ts",
             "agent/src/reflex/fight-plays.ts",
             "agent/src/reflex/fight-value.ts",
+            "agent/src/reflex/jev-experience.ts",
             "agent/src/reflex/jev/answers.ts",
             "agent/src/reflex/jev/client.ts",
             "agent/src/reflex/jev/combat-entries.ts",
@@ -5988,7 +6081,6 @@
             "agent/src/reflex/jev/predicate-context.ts",
             "agent/src/reflex/jev/pricing.ts",
             "agent/src/reflex/jev/questions.ts",
-            "agent/src/reflex/jev-experience.ts",
             "agent/src/reflex/pace-solver-cache.ts",
             "agent/src/reflex/passive-pieces.ts",
             "agent/src/reflex/permafrost.ts",
@@ -6179,8 +6271,10 @@
       },
       "inputs": {
         "code:agent/src/brain/brain.ts": {
-          "sha256": "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b",
+          "sha256": "3b91c8343c30011a675ae0b6563474e5b1af52ab25eebf17962519a69d737a31",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/decision-knowledge.ts",
             "code:agent/src/brain/engines/claude.ts",
             "code:agent/src/brain/engines/codex-usage.ts",
@@ -6213,11 +6307,11 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b"
+            "3b91c8343c30011a675ae0b6563474e5b1af52ab25eebf17962519a69d737a31"
           ]
         },
         "code:agent/src/brain/build-facts.ts": {
-          "sha256": "83dba1210c7b0e205f205e0e95e2fe25a2b54af17ed7072bce29986775ba1012",
+          "sha256": "86eace73a2e59669014e7296508d7bac9edf487b7badb60f4cddb7c08f4dfbc0",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
             "code:agent/src/knowledge/boss-phase.ts",
@@ -6236,7 +6330,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "83dba1210c7b0e205f205e0e95e2fe25a2b54af17ed7072bce29986775ba1012"
+            "86eace73a2e59669014e7296508d7bac9edf487b7badb60f4cddb7c08f4dfbc0"
           ]
         },
         "code:agent/src/brain/decision-knowledge-exposure.ts": {
@@ -6347,8 +6441,9 @@
           ]
         },
         "code:agent/src/brain/engines/codex.ts": {
-          "sha256": "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697",
+          "sha256": "7bcd1bc796dc54ca5843af966715730c3662eab57bc9df528ce21716e4c36e5c",
           "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
             "code:agent/src/brain/engines/codex-cache.ts",
             "code:agent/src/brain/engines/codex-session.ts",
             "code:agent/src/brain/engines/codex-usage.ts",
@@ -6366,7 +6461,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697"
+            "7bcd1bc796dc54ca5843af966715730c3662eab57bc9df528ce21716e4c36e5c"
           ]
         },
         "code:agent/src/brain/engines/deepseek.ts": {
@@ -6386,8 +6481,9 @@
           ]
         },
         "code:agent/src/brain/engines/dsh.ts": {
-          "sha256": "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7",
+          "sha256": "1d62c0d19eb4b0745f4135a19f206c0520695d9fbe098d86cb9f4444bff6dcc5",
           "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
             "code:agent/src/brain/live-view.ts",
             "code:agent/src/brain/message.ts",
             "code:agent/src/brain/router.ts",
@@ -6398,7 +6494,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7"
+            "1d62c0d19eb4b0745f4135a19f206c0520695d9fbe098d86cb9f4444bff6dcc5"
           ]
         },
         "code:agent/src/brain/engines/knowledge-agent.ts": {
@@ -6554,8 +6650,9 @@
           ]
         },
         "code:agent/src/brain/router.ts": {
-          "sha256": "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703",
+          "sha256": "3bc4d458f30c87f647f27d3ce350490d909dbfc376ea89c7795e6290cb0b4918",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
             "code:agent/src/brain/decision-knowledge-exposure.ts",
             "code:agent/src/brain/decision-knowledge.ts",
             "code:agent/src/brain/evidence.ts",
@@ -6573,7 +6670,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703"
+            "3bc4d458f30c87f647f27d3ce350490d909dbfc376ea89c7795e6290cb0b4918"
           ]
         },
         "code:agent/src/brain/run-profile.ts": {
@@ -6595,8 +6692,9 @@
           ]
         },
         "code:agent/src/brain/specs.ts": {
-          "sha256": "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0",
+          "sha256": "1bf25f6824f7a08633afc91197245fc3807cf19e31fafefcb057b55ad042d26c",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/tools/types.ts",
             "code:agent/src/brain/types.ts",
             "code:agent/src/memory/endgame-plan.ts",
@@ -6610,7 +6708,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0"
+            "1bf25f6824f7a08633afc91197245fc3807cf19e31fafefcb057b55ad042d26c"
           ]
         },
         "code:agent/src/brain/tools/agent-knowledge.ts": {
@@ -6891,8 +6989,9 @@
           ]
         },
         "code:agent/src/brain/types.ts": {
-          "sha256": "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2",
+          "sha256": "5680f1e1d58a0c02599199b1b3a328cc28f3e6d0d2ea0ea7d7a0cf1ad0b53e1c",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
             "code:agent/src/brain/evidence.ts",
             "code:agent/src/brain/live-view.ts",
             "code:agent/src/brain/run-profile.ts",
@@ -6901,7 +7000,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2"
+            "5680f1e1d58a0c02599199b1b3a328cc28f3e6d0d2ea0ea7d7a0cf1ad0b53e1c"
           ]
         },
         "code:agent/src/brain/wait.ts": {
@@ -6966,16 +7065,17 @@
           ]
         },
         "code:agent/src/construction/consumer.ts": {
-          "sha256": "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf",
+          "sha256": "84489630dc3593f71c8483c2bf1d279e07ea156d0ab978c17ab635ee1ef6f496",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
+            "code:agent/src/memory/endgame-plan.ts",
             "code:agent/src/memory/types.ts",
             "code:agent/src/sim/boss-margin.ts"
           ],
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf"
+            "84489630dc3593f71c8483c2bf1d279e07ea156d0ab978c17ab635ee1ef6f496"
           ]
         },
         "code:agent/src/construction/data.ts": {
@@ -7374,8 +7474,10 @@
           ]
         },
         "code:agent/src/hand/loop.ts": {
-          "sha256": "22cde4bc18122b86bd88d3c7af7df151082381d647c6fa5929b7dd42cbd2137b",
+          "sha256": "4ac7d3c237442422ad2bcc7d49b607efb089ea79fa79b2f53a3261c0f8b1a24a",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/brain.ts",
             "code:agent/src/brain/labels.ts",
             "code:agent/src/brain/llm/deepseek.ts",
@@ -7449,7 +7551,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "22cde4bc18122b86bd88d3c7af7df151082381d647c6fa5929b7dd42cbd2137b"
+            "4ac7d3c237442422ad2bcc7d49b607efb089ea79fa79b2f53a3261c0f8b1a24a"
           ]
         },
         "code:agent/src/hand/mod/client.ts": {
@@ -8868,7 +8970,7 @@
           ]
         },
         "code:agent/src/memory/run-plan-merge.ts": {
-          "sha256": "1c792dce1876e193c7879d13043d862736c19f7cfe1690060fb25435e0e4f22a",
+          "sha256": "70d4fa626242c7844b26bd54d4a29aa6443b869a3dae9995194ca24321718185",
           "dependencies": [
             "code:agent/src/core/util/json.ts",
             "code:agent/src/hand/mod/schema.ts",
@@ -8881,12 +8983,13 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "1c792dce1876e193c7879d13043d862736c19f7cfe1690060fb25435e0e4f22a"
+            "70d4fa626242c7844b26bd54d4a29aa6443b869a3dae9995194ca24321718185"
           ]
         },
         "code:agent/src/memory/run-plan-update.ts": {
-          "sha256": "18d1cf144b95908053d2e60b8e933bbf52aba8b8cabe685c2993ae58582598f1",
+          "sha256": "5b3c5820def12186c67b65467b130749751eb794538a9c254bc6806791101195",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/core/util/json.ts",
             "code:agent/src/hand/mod/schema.ts",
             "code:agent/src/knowledge/index.ts",
@@ -8896,12 +8999,13 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "18d1cf144b95908053d2e60b8e933bbf52aba8b8cabe685c2993ae58582598f1"
+            "5b3c5820def12186c67b65467b130749751eb794538a9c254bc6806791101195"
           ]
         },
         "code:agent/src/memory/run-plan.ts": {
-          "sha256": "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab",
+          "sha256": "12dd9df99ea18f7d0914131ac891129e7b01237bdda2f349f7f3b689b01c80b5",
           "dependencies": [
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/construction/consumer.ts",
             "code:agent/src/construction/data.ts",
             "code:agent/src/core/util/json.ts",
@@ -8917,7 +9021,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "a24918b27d0a68c5b2881d281818571dea718ff9e0072aa01b3395a68dd028ab"
+            "12dd9df99ea18f7d0914131ac891129e7b01237bdda2f349f7f3b689b01c80b5"
           ]
         },
         "code:agent/src/memory/types.ts": {
@@ -9997,7 +10101,7 @@
           ]
         },
         "code:agent/src/sim/build-sim-facts.ts": {
-          "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+          "sha256": "953f05de2029ae2d54ee19204807863fd5e0c8e0f45e410eb74b3c1ff8141bdd",
           "dependencies": [
             "code:agent/src/core/config.ts",
             "code:agent/src/core/decision-budget.ts",
@@ -10013,6 +10117,7 @@
             "code:agent/src/knowledge/card-upgrades.ts",
             "code:agent/src/knowledge/double-boss.ts",
             "code:agent/src/knowledge/monster-db.ts",
+            "code:agent/src/memory/endgame-plan.ts",
             "code:agent/src/memory/types.ts",
             "code:agent/src/reflex/card-model.ts",
             "code:agent/src/reflex/rollout.ts",
@@ -10041,7 +10146,7 @@
           "scan": "all",
           "functions": [],
           "opaque_sites": [
-            "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e"
+            "953f05de2029ae2d54ee19204807863fd5e0c8e0f45e410eb74b3c1ff8141bdd"
           ]
         },
         "code:agent/src/sim/build-sim-pool.ts": {
@@ -11986,6 +12091,9 @@
         "code:agent/tools/boss-sim/refresh-silent.py": {
           "sha256": "4ce27bae9f328788a82773b6df2c8af6585db65c849749c9fcf97a306d071fa7",
           "dependencies": [
+            "code:agent/src/brain/boss-dossier.ts",
+            "code:agent/src/brain/boss-prompt-metrics.ts",
+            "code:agent/src/brain/boss-target.ts",
             "code:agent/src/brain/brain.ts",
             "code:agent/src/brain/build-facts.ts",
             "code:agent/src/brain/decision-knowledge.ts",
@@ -12101,6 +12209,8 @@
             "code:agent/src/hand/screens/v6-room.ts",
             "code:agent/src/index.ts",
             "code:agent/src/knowledge/boss-phase.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/boss-profile.ts",
             "code:agent/src/knowledge/card-references.ts",
             "code:agent/src/knowledge/card-upgrades.ts",
             "code:agent/src/knowledge/catalog.ts",
@@ -12654,6 +12764,82 @@
           "functions": [],
           "opaque_sites": [
             "9ba3c58318d2ff15181eaf58930c16aedea276dc7f5761a78af7949cca145143"
+          ]
+        },
+        "code:agent/src/brain/boss-dossier.ts": {
+          "sha256": "fb2f413fed9707c95d8da9f829a1002575d57d3e7072c052fb95eff92bc16e4e",
+          "dependencies": [
+            "code:agent/src/brain/boss-prompt-metrics.ts",
+            "code:agent/src/brain/boss-target.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/core/util/json.ts",
+            "code:agent/src/hand/mod/schema.ts",
+            "code:agent/src/knowledge/boss-phase.ts",
+            "code:agent/src/knowledge/boss-planning-data.ts",
+            "code:agent/src/knowledge/files.ts",
+            "code:agent/src/memory/construction-log.ts",
+            "code:agent/src/memory/endgame-plan.ts",
+            "code:agent/src/sim/boss-margin.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "fb2f413fed9707c95d8da9f829a1002575d57d3e7072c052fb95eff92bc16e4e"
+          ]
+        },
+        "code:agent/src/brain/boss-target.ts": {
+          "sha256": "f0ea71fbba50d71fd5bd6ba209d611ad54a3931568b59a7f1a035b5fd69d9170",
+          "dependencies": [
+            "code:agent/src/brain/tools/types.ts",
+            "code:agent/src/brain/types.ts",
+            "code:agent/src/core/util/json.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "f0ea71fbba50d71fd5bd6ba209d611ad54a3931568b59a7f1a035b5fd69d9170"
+          ]
+        },
+        "code:agent/src/brain/boss-prompt-metrics.ts": {
+          "sha256": "e7e86e6d1c08fd0617067731cdadb80f58c3962bb37a7185a3aa9ab5924cabf1",
+          "dependencies": [
+            "code:agent/src/brain/message.ts",
+            "code:agent/src/brain/types.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "e7e86e6d1c08fd0617067731cdadb80f58c3962bb37a7185a3aa9ab5924cabf1"
+          ]
+        },
+        "code:agent/src/knowledge/boss-planning-data.ts": {
+          "sha256": "b0ecb9ad61e02c647cbc7cda5df3534b7a6eee81f9409ee493f2e30c49034390",
+          "dependencies": [
+            "code:agent/src/brain/tools/external-stats-tools.ts",
+            "code:agent/src/core/util/json.ts",
+            "code:agent/src/knowledge/boss-profile.ts",
+            "code:agent/src/knowledge/catalog.ts",
+            "code:agent/src/knowledge/monster-db.ts",
+            "code:agent/src/knowledge/runtime-data.ts",
+            "code:agent/src/knowledge/runtime-paths.ts",
+            "code:agent/src/knowledge/runtime/reader.ts",
+            "code:agent/src/knowledge/strategy-grading.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "b0ecb9ad61e02c647cbc7cda5df3534b7a6eee81f9409ee493f2e30c49034390"
+          ]
+        },
+        "code:agent/src/knowledge/boss-profile.ts": {
+          "sha256": "97edd9f7136c8c3cda0ec747d371d53cec0fbef34a4fa30d355ff09bde4e76c0",
+          "dependencies": [
+            "code:agent/src/core/util/json.ts"
+          ],
+          "scan": "all",
+          "functions": [],
+          "opaque_sites": [
+            "97edd9f7136c8c3cda0ec747d371d53cec0fbef34a4fa30d355ff09bde4e76c0"
           ]
         }
       }

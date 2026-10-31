@@ -155,6 +155,7 @@ export function failureKind(error: unknown): FailureKind {
 type Attempt = BrainAnswer & { first?: { answer: unknown; problems: string[] }; reasks?: number };
 
 export interface BrainLogRow {
+  boss_dossier?: import("./boss-dossier.js").BossDossierAudit;
   evidence?: ReturnType<BrainEvidence["snapshot"]>;
   ts: string;
   /** The run the question belongs to (the same value as decisions.jsonl's run_id), when known. */
@@ -774,6 +775,7 @@ export class BrainRouter {
       question: req.question,
       ...(req.options ? { options: req.options } : {}),
       payload: req.payload,
+      ...(req.bossDossier ? { boss_dossier: req.bossDossier } : {}),
       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
       tool_calls: toolCalls,
       ...(evidence ? { evidence } : {}),

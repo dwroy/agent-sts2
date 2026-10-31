@@ -51,6 +51,8 @@ export interface AnswerSpec {
 }
 
 export interface BrainRequest {
+  /** Run-bound facts and provenance; logged separately, never serialized into model input. */
+  bossDossier?: import("./boss-dossier.js").BossDossierAudit;
   /** Local durable exposure reservation, invoked before each newly dispatched native prompt. Never serialized. */
   prepareForSend?: (request: BrainRequest) => void;
   /** Process-owned evidence journal, shared by phases and re-asks; never sent to a model. */

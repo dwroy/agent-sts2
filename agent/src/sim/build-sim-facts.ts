@@ -49,6 +49,7 @@ import { silentBuildWinTies } from "./silent-build-win-ties.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
 import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
+import { endgameQuestion } from "../memory/endgame-plan.js";
 import { sReadinessMode, simAdaptivePolicy, sBuildRankMode } from "../core/config.js";
 import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { readinessText } from "./boss-readiness.js";
@@ -704,7 +705,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const b = result.base;
     const ms = Math.round(now() - started);
     const simFacts: Record<string, JsonValue> = {
-      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS, ...(!rankingOn ? { boss_margin_objective: BOSS_MARGIN_NOTE } : {}) } : {}),
+      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS, ...(!rankingOn && !endgameQuestion(state, decision.label) ? { boss_margin_objective: BOSS_MARGIN_NOTE } : {}) } : {}),
       // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
       // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,

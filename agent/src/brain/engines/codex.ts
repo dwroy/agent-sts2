@@ -60,6 +60,7 @@ import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, 
 import type { JsonSchema } from "../tools/types.js";
 import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
+import { recordBossPromptMetrics } from "../boss-prompt-metrics.js";
 import { lenientRoute, stableSchema } from "../specs.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
@@ -1097,10 +1098,12 @@ export class CodexEngine implements BrainEngine {
    * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
    */
   private prepareSend(req: BrainRequest, c: CodexCall): void {
-    if (!req.prepareForSend) return;
-    req.prepareForSend(req);
-    c.cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system,
-      prompt: promptWithReask(req), schema: c.schema, serviceTier: this.opts.codex.serviceTier });
+    if (req.prepareForSend) {
+      req.prepareForSend(req);
+      c.cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system,
+        prompt: promptWithReask(req), schema: c.schema, serviceTier: this.opts.codex.serviceTier });
+    }
+    recordBossPromptMetrics(req, c.schema, "codex");
   }
 
   private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {

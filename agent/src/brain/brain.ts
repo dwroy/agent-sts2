@@ -50,6 +50,8 @@ import { knowledgeCharacter } from "../knowledge/files.js";
 import { attachQueryGuidance } from "./tools/query-guidance.js";
 import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope, endgameReuse } from "../memory/endgame-plan.js";
 import { decisionContextTool } from "./decision-knowledge.js";
+import { withBossPlanningRequest } from "./boss-dossier.js";
+import type { BossTarget } from "./boss-target.js";
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
 export function agentSystemPrompt(state?: unknown, tools: readonly ToolDef[] = buildKnowledgeTools({ ascension: 0, knowledgeDir: KNOWLEDGE_DIR, logsDir: "" })): string {
@@ -77,7 +79,7 @@ export interface BrainMeta {
   notes?: string[];
 }
 
-export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta; rankingOverrideReason?: string; v6?: unknown };
+export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta; rankingOverrideReason?: string; bossTarget?: BossTarget; v6?: unknown };
 export type BrainMetaUsage = Omit<DeepSeekAnswer, "choice" | "reason"> & { brain?: BrainMeta };
 
 type Json = Record<string, unknown>;
@@ -303,6 +305,12 @@ export class Brain {
     const runId = typeof liveRun === "string" ? liveRun : "";
     // Legacy fixed-data adapters retain their historical prompt layout.
     const agentMode = this.router.knowledgeAgent;
+    const bossRequest = agentMode ? withBossPlanningRequest({ label, question, payload, spec, system: "" }, this.context?.state, this.context?.knowledgeDir) : null;
+    if (bossRequest?.bossDossier) {
+      payload = bossRequest.payload;
+      question = bossRequest.question;
+      spec = bossRequest.spec;
+    }
     const combatQuestion = isObject(this.context?.state) && this.context.state["in_combat"] === true;
     if (agentMode && !combatQuestion && isConstructionQuestion(label) && spec.schema.properties?.["reason"]) {
       // Reuse the answer already requested; truncation at the journal boundary never causes a re-ask.
@@ -329,6 +337,7 @@ export class Brain {
       spec: (this.router.codexOnly || agentMode) && isObject(payload) && carriesRunPlan(payload) ? {
         ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec("run-plan", payload).validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
       } : spec,
+      ...(bossRequest?.bossDossier ? { bossDossier: bossRequest.bossDossier } : {}),
       ...this.toolsFor(label),
     };
     if (agentMode) {
@@ -463,6 +472,7 @@ export class Brain {
       choice: answer["choice"],
       reason: typeof answer["reason"] === "string" ? answer["reason"].trim() : "",
       ...(typeof answer["ranking_override_reason"] === "string" ? { rankingOverrideReason: answer["ranking_override_reason"].trim() } : {}),
+      ...(isObject(answer["boss_target"]) ? { bossTarget: answer["boss_target"] as unknown as BossTarget } : {}),
       ...(cards.length > 0 ? { cards } : {}),
       ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
       ...(discard.length > 0 ? { discard } : {}),

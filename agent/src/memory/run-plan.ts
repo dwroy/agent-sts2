@@ -57,6 +57,8 @@ export interface RunPlan {
   bossPrep: string;
   summary: string;
   endgame?: EndgamePlan;
+  /** Server-observed targets last explicitly reviewed by the brain; restored with this floor's plan. */
+  bossContext?: import("../brain/boss-target.js").BossTargetContext;
   construction?: { primary: string; alternatives: string[]; checkpoint: number; reason: string; pivot_if: string };
 }
 
