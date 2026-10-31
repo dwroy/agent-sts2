@@ -1,0 +1,934 @@
+{
+  "schema": "issue83-mechanism-fact-handoff-v1",
+  "authorization": "83/6543327817",
+  "destination": "ops normal learning publication to K1; not a direct database write",
+  "status": "prepared_not_published",
+  "confidence": null,
+  "rule": "#85 mechanism facts only; not strategy_observation grading",
+  "evidence_file": "paper/materials/20261031-issue83-crusher-rocket/mechanism-evidence.json",
+  "evidence_sha256": "42295a227a11eadb251945a1ea88dfdae054dbc085e633e16edfeb649654e3fe",
+  "scope": {
+    "character_evidence": "silent",
+    "ascension": 10,
+    "game_build": "own build not asserted; external v0.111.0",
+    "encounter": "CRUSHER+ROCKET",
+    "act": 2
+  },
+  "facts": [
+    {
+      "proposed_id": "mechanism-rocket-death-crusher-rage-a10",
+      "kind": "mechanism_fact",
+      "confidence": null,
+      "text": "已观察ROCKET死亡后存活CRUSHER力量+6、获得99格挡；原tune为力量3→9、格挡0→99。",
+      "own_evidence": {
+        "run": "9TG1RP5LFAAK",
+        "attempt": 1,
+        "floor": 33,
+        "turns": [
+          7,
+          8
+        ],
+        "independent_runs": 1,
+        "path": "own.single_claw_death"
+      },
+      "external_evidence": {
+        "source": "external:spire-codex",
+        "discovery_first_observed_runs": 100,
+        "path": "external_rage",
+        "manifest_sha256": "5626aa6ea46a70d24a6eff3d4a9be2c2f40f3c45b7a170f4d881f940e865718a",
+        "matched_runs_both_directions": 76,
+        "rocket_dead_crusher_survivor_runs": 60,
+        "crusher_dead_rocket_survivor_runs": 16,
+        "direction_audit_source_sha256": "92f640e2c7b25afb555610f5dfcbd36efb367de960f71c4c7cda490d8738714a",
+        "direction_witnesses": [
+          {
+            "run_id": "run_07570f15fd8d893206d5ffde78a64d3cc3509dcc502bb20a083303457b9b954a",
+            "combat_key": "run_07570f15fd8d893206d5ffde78a64d3cc3509dcc502bb20a083303457b9b954a:3424",
+            "turn": 13,
+            "line": 4071,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_08e631c0009d3540f48b7d6395d8aa5ca4df2a3ea80d944f6576013988b82ec4",
+            "combat_key": "run_08e631c0009d3540f48b7d6395d8aa5ca4df2a3ea80d944f6576013988b82ec4:3666",
+            "turn": 5,
+            "line": 3912,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_24c04826aa425a90e00912ee75b4b433c918ae6920aef89ec9f3522ed57b111f",
+            "combat_key": "run_24c04826aa425a90e00912ee75b4b433c918ae6920aef89ec9f3522ed57b111f:2871",
+            "turn": 7,
+            "line": 3316,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_266440aff6eb413ae0bd12b6cc2638ce830eed632471d2986fa144f35d1413b5",
+            "combat_key": "run_266440aff6eb413ae0bd12b6cc2638ce830eed632471d2986fa144f35d1413b5:3902",
+            "turn": 10,
+            "line": 4381,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_27dd0afc3b7f96f536403e2c7b0b24de4f3fdb4f49d4f9e19993c3e01a9081bc",
+            "combat_key": "run_27dd0afc3b7f96f536403e2c7b0b24de4f3fdb4f49d4f9e19993c3e01a9081bc:4768",
+            "turn": 10,
+            "line": 5299,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_2c98daee6b2741acf1f1c8d010281f33f6eb5be228384c674b46a2ceafd09df5",
+            "combat_key": "run_2c98daee6b2741acf1f1c8d010281f33f6eb5be228384c674b46a2ceafd09df5:3094",
+            "turn": 4,
+            "line": 3333,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_2ec1331c8bb995ea545df9a1f2d26975d0591e6fcdf18a5aed0524a13f26236b",
+            "combat_key": "run_2ec1331c8bb995ea545df9a1f2d26975d0591e6fcdf18a5aed0524a13f26236b:4832",
+            "turn": 7,
+            "line": 5188,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_364f3aea48a9702d2c63c6b18b8fd1da58be65de6545c354201a31ab86f35b59",
+            "combat_key": "run_364f3aea48a9702d2c63c6b18b8fd1da58be65de6545c354201a31ab86f35b59:5463",
+            "turn": 5,
+            "line": 5776,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_38e82789e99e6be065ad8f17b3e996c6926efbe22027d0517d3a23c26019ebca",
+            "combat_key": "run_38e82789e99e6be065ad8f17b3e996c6926efbe22027d0517d3a23c26019ebca:4151",
+            "turn": 9,
+            "line": 4586,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_44ba1aea7417af93185cc920a826ee22744dc255c3a63e24f5c7fa3f6e6796db",
+            "combat_key": "run_44ba1aea7417af93185cc920a826ee22744dc255c3a63e24f5c7fa3f6e6796db:3904",
+            "turn": 6,
+            "line": 4254,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_4a2e3dae53235ae6025658ef98c992aba0a4f23f7ade4fba788657171df7b7e5",
+            "combat_key": "run_4a2e3dae53235ae6025658ef98c992aba0a4f23f7ade4fba788657171df7b7e5:3321",
+            "turn": 9,
+            "line": 3714,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_4bd9c00d0c8be0ffae7239127fd9e6aab5ed507953010330efcd8331b3b9f2e3",
+            "combat_key": "run_4bd9c00d0c8be0ffae7239127fd9e6aab5ed507953010330efcd8331b3b9f2e3:3617",
+            "turn": 8,
+            "line": 4038,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_54f3c0bf91a64f502a3d6ec3afaefcb72d7c8d6926c8a5e5570e5845d4e719dc",
+            "combat_key": "run_54f3c0bf91a64f502a3d6ec3afaefcb72d7c8d6926c8a5e5570e5845d4e719dc:2995",
+            "turn": 7,
+            "line": 3246,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_5a304d3ab8af5295c337992d351a9776e5c1ff104273653eedc71bf5f42a8c07",
+            "combat_key": "run_5a304d3ab8af5295c337992d351a9776e5c1ff104273653eedc71bf5f42a8c07:3495",
+            "turn": 5,
+            "line": 3872,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_5e91e15a3f7f6ee818e42e4f3a18bc27b5eec36d63fe4895b5a3fa92b59f7aa5",
+            "combat_key": "run_5e91e15a3f7f6ee818e42e4f3a18bc27b5eec36d63fe4895b5a3fa92b59f7aa5:5543",
+            "turn": 10,
+            "line": 5969,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_60a2e0c4169f82f1a13abf5ff2bc49200c1b6131a6f0e24217cc4e4c70d5026f",
+            "combat_key": "run_60a2e0c4169f82f1a13abf5ff2bc49200c1b6131a6f0e24217cc4e4c70d5026f:6448",
+            "turn": 8,
+            "line": 6932,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_6455456531c8846910aed387bcecda6e075be18d4517ec29c8df81a10e962bc6",
+            "combat_key": "run_6455456531c8846910aed387bcecda6e075be18d4517ec29c8df81a10e962bc6:2879",
+            "turn": 2,
+            "line": 3076,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_6484bdf42ac6e0867f8128b534f4863aa65743750ba9e911c3727ccbccc2dc34",
+            "combat_key": "run_6484bdf42ac6e0867f8128b534f4863aa65743750ba9e911c3727ccbccc2dc34:2697",
+            "turn": 5,
+            "line": 2952,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_661a0c803d86a46a1337e7e65bb0d86260820a1dba335cd4fd352a18456bfdc1",
+            "combat_key": "run_661a0c803d86a46a1337e7e65bb0d86260820a1dba335cd4fd352a18456bfdc1:3692",
+            "turn": 5,
+            "line": 3965,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_69df3c2553841f2ecfd3cb655f5ab878118880e6b11428d0a85f64790891db0f",
+            "combat_key": "run_69df3c2553841f2ecfd3cb655f5ab878118880e6b11428d0a85f64790891db0f:4160",
+            "turn": 24,
+            "line": 5520,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_6bbf732d661b57b03fb1a12e84298c99f75cd90dcf2019c85f320541e1c03276",
+            "combat_key": "run_6bbf732d661b57b03fb1a12e84298c99f75cd90dcf2019c85f320541e1c03276:3424",
+            "turn": 6,
+            "line": 3735,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_71a851412c32f89600c2106b4854dd985c4aa056f1c17c8a9ee7c8621c43daf4",
+            "combat_key": "run_71a851412c32f89600c2106b4854dd985c4aa056f1c17c8a9ee7c8621c43daf4:3114",
+            "turn": 9,
+            "line": 3580,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_72f4ef226b881abaa558c8af3eedb27afdf1ee5f1ad946d47cfc605b65da5340",
+            "combat_key": "run_72f4ef226b881abaa558c8af3eedb27afdf1ee5f1ad946d47cfc605b65da5340:3292",
+            "turn": 4,
+            "line": 3540,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_763a83700f6d255defbbfbc1dfbda58a1c0c0ba4db22ad7ce546dbc10c53ce9f",
+            "combat_key": "run_763a83700f6d255defbbfbc1dfbda58a1c0c0ba4db22ad7ce546dbc10c53ce9f:3749",
+            "turn": 6,
+            "line": 4049,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_7bd464e2850d06be9e39af8651eafc45fd5f46fcd584734a8b5c5f282262238c",
+            "combat_key": "run_7bd464e2850d06be9e39af8651eafc45fd5f46fcd584734a8b5c5f282262238c:3691",
+            "turn": 4,
+            "line": 3896,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_821c29d3bf02b15e56dc5f5434bca1a62ada5f74a3fa19ab03efa28c27b7bb29",
+            "combat_key": "run_821c29d3bf02b15e56dc5f5434bca1a62ada5f74a3fa19ab03efa28c27b7bb29:3446",
+            "turn": 7,
+            "line": 3847,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_865e3d31cca85147d575f31a4682a4bfefdc70ffd3e7abecdfd25d723a199327",
+            "combat_key": "run_865e3d31cca85147d575f31a4682a4bfefdc70ffd3e7abecdfd25d723a199327:4271",
+            "turn": 9,
+            "line": 4826,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_8b7ee269e438327aed84c7fb33c4b81db62e37e34a533d9520ed63b61a451035",
+            "combat_key": "run_8b7ee269e438327aed84c7fb33c4b81db62e37e34a533d9520ed63b61a451035:2596",
+            "turn": 7,
+            "line": 2969,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_956c4b971234b2060c19f4b10bf6756c6d905101a99f0f84dcfc405cc9912734",
+            "combat_key": "run_956c4b971234b2060c19f4b10bf6756c6d905101a99f0f84dcfc405cc9912734:2372",
+            "turn": 6,
+            "line": 2710,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_9c08b2c0a1818a3a6693b80a2bf419e51df2beeca85fda6fa28d325e8aa2111d",
+            "combat_key": "run_9c08b2c0a1818a3a6693b80a2bf419e51df2beeca85fda6fa28d325e8aa2111d:2597",
+            "turn": 6,
+            "line": 2869,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_a30798825c12ac6fafcf6594d3784489cbcf8a4bd61ec80e1536be5582ea167f",
+            "combat_key": "run_a30798825c12ac6fafcf6594d3784489cbcf8a4bd61ec80e1536be5582ea167f:4988",
+            "turn": 11,
+            "line": 5499,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_a75b45fc393db5294d6e05977ee79e95424c94b0001a40d94d10cc7b689fc9b5",
+            "combat_key": "run_a75b45fc393db5294d6e05977ee79e95424c94b0001a40d94d10cc7b689fc9b5:3722",
+            "turn": 5,
+            "line": 3987,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_a90811818e63d7d3c6f27f9f93c9a850839a94294ca2b7e68bea3aa850bf74dc",
+            "combat_key": "run_a90811818e63d7d3c6f27f9f93c9a850839a94294ca2b7e68bea3aa850bf74dc:5324",
+            "turn": 11,
+            "line": 5976,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_a91a792e37fcd7d2285203f09b31ae96cd063645377cb2531395575c6ba27045",
+            "combat_key": "run_a91a792e37fcd7d2285203f09b31ae96cd063645377cb2531395575c6ba27045:2566",
+            "turn": 6,
+            "line": 2827,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_a92766164f58a3d7a1ffc153ecac74c122a7dbea8f5176e8a7871e0f2b4cf7ce",
+            "combat_key": "run_a92766164f58a3d7a1ffc153ecac74c122a7dbea8f5176e8a7871e0f2b4cf7ce:3812",
+            "turn": 7,
+            "line": 4234,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_aae896b39cbde5a0ef2146f02d9b0dce9ccbbd11516ac56fd93ab7dd8008a330",
+            "combat_key": "run_aae896b39cbde5a0ef2146f02d9b0dce9ccbbd11516ac56fd93ab7dd8008a330:3298",
+            "turn": 4,
+            "line": 3517,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_ab5f6efea49d4c7c017e6c7f34ea999333592584f3f792e26a882ecf28503d2c",
+            "combat_key": "run_ab5f6efea49d4c7c017e6c7f34ea999333592584f3f792e26a882ecf28503d2c:2561",
+            "turn": 5,
+            "line": 2803,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_b5d839210495a5b21bc797e50861c5bd6df3564684e0f6dbe47857a00f1d5c61",
+            "combat_key": "run_b5d839210495a5b21bc797e50861c5bd6df3564684e0f6dbe47857a00f1d5c61:3519",
+            "turn": 6,
+            "line": 3827,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_b6598f8a0c63d1ecec420a868d5ca9dc438c47a3b44b0a7553ee0201def0bb69",
+            "combat_key": "run_b6598f8a0c63d1ecec420a868d5ca9dc438c47a3b44b0a7553ee0201def0bb69:2845",
+            "turn": 14,
+            "line": 3587,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_bf592778542e6c74a6839b420548365189c14bad21cf35ee96ee38f44cd47e20",
+            "combat_key": "run_bf592778542e6c74a6839b420548365189c14bad21cf35ee96ee38f44cd47e20:4070",
+            "turn": 7,
+            "line": 4384,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_c1f684410beb32ffc0c48d83b56afca747ba2159d9da974e4cfe2c7d4ba47e10",
+            "combat_key": "run_c1f684410beb32ffc0c48d83b56afca747ba2159d9da974e4cfe2c7d4ba47e10:4634",
+            "turn": 8,
+            "line": 5103,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_c3c4ef3a327ab29f44d980f94e9195bfcda352ae0e84a0ce88d8da6b81255da8",
+            "combat_key": "run_c3c4ef3a327ab29f44d980f94e9195bfcda352ae0e84a0ce88d8da6b81255da8:3328",
+            "turn": 7,
+            "line": 3645,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_c5f5f14379a8c048145291a0c7e3e5ea8cf8486ed85839d578efc03d8afa64ab",
+            "combat_key": "run_c5f5f14379a8c048145291a0c7e3e5ea8cf8486ed85839d578efc03d8afa64ab:3730",
+            "turn": 7,
+            "line": 4036,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_c6a036a4074bad7076724ea846adb902bf00a04992969f7ad34bf0652f501159",
+            "combat_key": "run_c6a036a4074bad7076724ea846adb902bf00a04992969f7ad34bf0652f501159:3023",
+            "turn": 3,
+            "line": 3155,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_d0e2c350e3519da390be0b65314e096dacdcb63fb714b477d69b039e7a32d1b7",
+            "combat_key": "run_d0e2c350e3519da390be0b65314e096dacdcb63fb714b477d69b039e7a32d1b7:3242",
+            "turn": 7,
+            "line": 3540,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_d9047cb7aa239da33e317f7daccd012ac8d894e4546ae0775955c25744d38cfa",
+            "combat_key": "run_d9047cb7aa239da33e317f7daccd012ac8d894e4546ae0775955c25744d38cfa:4895",
+            "turn": 9,
+            "line": 5383,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_dc32b471a62c790fa452d0fbde490e14b592af6fb5c9b599637adf69318f8e24",
+            "combat_key": "run_dc32b471a62c790fa452d0fbde490e14b592af6fb5c9b599637adf69318f8e24:3694",
+            "turn": 7,
+            "line": 4132,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_e55361e0153d6e184f57150ffa06e782d3371ea890a5678ed2bddfb21046fd19",
+            "combat_key": "run_e55361e0153d6e184f57150ffa06e782d3371ea890a5678ed2bddfb21046fd19:4555",
+            "turn": 9,
+            "line": 5024,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_e71e3f7cb54be648667249aae5eaf1b60c084f7ceb5d4b9d6d13959dd8f3b71e",
+            "combat_key": "run_e71e3f7cb54be648667249aae5eaf1b60c084f7ceb5d4b9d6d13959dd8f3b71e:3276",
+            "turn": 6,
+            "line": 3552,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_e7a3accf04167001021404912addf5ca588e2c4f2b94af50490d672c2cb58c2d",
+            "combat_key": "run_e7a3accf04167001021404912addf5ca588e2c4f2b94af50490d672c2cb58c2d:3410",
+            "turn": 7,
+            "line": 3736,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_e8ed0535ce84d8fcbc684fd971dab52e6dbe966bc1db5bb111f9dc375f24d8b7",
+            "combat_key": "run_e8ed0535ce84d8fcbc684fd971dab52e6dbe966bc1db5bb111f9dc375f24d8b7:4439",
+            "turn": 7,
+            "line": 4752,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_e9002b33478e9d48af16f3a51542bd431772c4569faf85788742da0bf1f2b9db",
+            "combat_key": "run_e9002b33478e9d48af16f3a51542bd431772c4569faf85788742da0bf1f2b9db:3914",
+            "turn": 8,
+            "line": 4248,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_ecbf7c4966054eac886659ebf4392439e2b339b33ca95b17e01a23bb7ec34e30",
+            "combat_key": "run_ecbf7c4966054eac886659ebf4392439e2b339b33ca95b17e01a23bb7ec34e30:4258",
+            "turn": 7,
+            "line": 4587,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_ecde8ad8c97d150293f290097e36871d255978c684f35928206ce44cadba54bf",
+            "combat_key": "run_ecde8ad8c97d150293f290097e36871d255978c684f35928206ce44cadba54bf:3063",
+            "turn": 4,
+            "line": 3268,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_eeb02150910f6888f88bbd289b31619d28557ba9428ab501a56015ec256fdf89",
+            "combat_key": "run_eeb02150910f6888f88bbd289b31619d28557ba9428ab501a56015ec256fdf89:4073",
+            "turn": 5,
+            "line": 4323,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_ef5b3240b1c417a2a9def8189643be62a4262596e5a9fd0e8623cab2c4367754",
+            "combat_key": "run_ef5b3240b1c417a2a9def8189643be62a4262596e5a9fd0e8623cab2c4367754:4844",
+            "turn": 7,
+            "line": 5226,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_f940c37ce1cd3608e4f3844ea78999d8a7facdee8cb8daef89e6c472085a7f2a",
+            "combat_key": "run_f940c37ce1cd3608e4f3844ea78999d8a7facdee8cb8daef89e6c472085a7f2a:4943",
+            "turn": 7,
+            "line": 5289,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_fd123a79bdf533541cddc4b610ae7d11223e03e4da6bbdcc27dc572f80a1650d",
+            "combat_key": "run_fd123a79bdf533541cddc4b610ae7d11223e03e4da6bbdcc27dc572f80a1650d:4080",
+            "turn": 3,
+            "line": 4320,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_fef5cfb2e391de59449234055e145d3ff9981e3112727e26b7b1c969a55c980d",
+            "combat_key": "run_fef5cfb2e391de59449234055e145d3ff9981e3112727e26b7b1c969a55c980d:4103",
+            "turn": 4,
+            "line": 4298,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          },
+          {
+            "run_id": "run_ffd0a43587565139e867fae628a2370b8b502950737bb51085ad40f2f7fb71e5",
+            "combat_key": "run_ffd0a43587565139e867fae628a2370b8b502950737bb51085ad40f2f7fb71e5:2535",
+            "turn": 6,
+            "line": 2957,
+            "dead": "ROCKET",
+            "survivor": "CRUSHER",
+            "strength": [
+              6
+            ],
+            "block": [
+              99
+            ]
+          }
+        ]
+      },
+      "limits": [
+        "76/100包含两个死亡方向；本条ROCKET死→CRUSHER的独立支持为60，不是76%触发概率。",
+        "本条只发布ROCKET死→CRUSHER，其他方向/角色/进阶须保原证据适用范围；99为获得值，不保证下一回合仍完整99。",
+        "旧power描述+5与原帧+6冲突保留，不用描述覆盖实测。"
+      ]
+    },
+    {
+      "proposed_id": "mechanism-rocket-charge-laser-a10",
+      "kind": "mechanism_fact",
+      "confidence": null,
+      "text": "已观察ROCKET充能获得3力量，随后通常进入激光；不是无例外的强制循环。",
+      "own_evidence": {
+        "run": "9TG1RP5LFAAK",
+        "attempt": 1,
+        "floor": 33,
+        "turns": [
+          3,
+          4
+        ],
+        "independent_runs": 1,
+        "path": "own.t3_t4_charge"
+      },
+      "external_evidence": {
+        "source": "external:spire-codex",
+        "discovery_first_observed_runs": 100,
+        "strength_plus3_windows": 104,
+        "charge_to_laser_transitions": 113,
+        "path": "external.move_strength_gain / external.intent_transitions",
+        "manifest_sha256": "5626aa6ea46a70d24a6eff3d4a9be2c2f40f3c45b7a170f4d881f940e865718a"
+      },
+      "limits": [
+        "窗口计数不是独立run数。",
+        "重复同招与10个未解析buff窗口保留；不得写成一定/必然接激光。",
+        "不含具体卡牌推荐、胜率/HP收益或先杀目标策略。"
+      ]
+    }
+  ],
+  "do_not_publish": [
+    "silent83-crab-rage",
+    "silent83-crab-charge-laser",
+    "silent83-crab-facing"
+  ],
+  "required_receipts": [
+    "原学习要求/来源身份登记与同ID去重",
+    "实际K1版本/逐ID内容SHA/发布回执",
+    "真实消费者读回及自然采用分账，回83并同步87"
+  ],
+  "models_and_combat_switch": "unchanged/off; publication does not prove model admission or tactic benefit"
+}

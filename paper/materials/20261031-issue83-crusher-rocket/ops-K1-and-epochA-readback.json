@@ -1,0 +1,184 @@
+{
+  "schema": "issue83-ops-publication-epoch-receipt-readback-v1",
+  "read_at": "2026-10-31T21:41:04+08:00",
+  "issue_receipt": "83/6544040936",
+  "source_refs": {
+    "issue83-original-registration.json": {
+      "path": "paper/materials/20261031-2120-epochA-EBF-ops/issue83-original-registration.json",
+      "sha256": "0cf2d1482c1cee1eb49de195ca68a9e53cd4b427f969bc94361b10f5c2f0e024",
+      "bytes": 1332
+    },
+    "issue83-actual-K1-publication.json": {
+      "path": "paper/materials/20261031-2120-epochA-EBF-ops/issue83-actual-K1-publication.json",
+      "sha256": "8974912f83aa852d3971cc4adddf16343be472331ed1da96fea2a3cc54dd462d",
+      "bytes": 451
+    },
+    "issue83-production-tool-readback.json": {
+      "path": "paper/materials/20261031-2120-epochA-EBF-ops/issue83-production-tool-readback.json",
+      "sha256": "f1ce6291e788949e7d69df5d512d4b357389b582746fbccf10767d8a9213c22d",
+      "bytes": 1727
+    },
+    "T0-independent-readback.json": {
+      "path": "paper/materials/20261031-2120-epochA-EBF-ops/T0-independent-readback.json",
+      "sha256": "3f6e6863835ef786b799f7550d52fdbefd4461b23968b60042f7b35b75ddc886",
+      "bytes": 2849
+    }
+  },
+  "publication": {
+    "schema": "knowledge-completion-v1",
+    "candidate": "issue83-mechanism-facts-20261031-r1",
+    "publication_candidate": "continuation:7d0a48a6ff020e4f9349e1f30a511e2e182b79a61a5e74dcb545c205a38ce065",
+    "version": "K1-0924d4ea26809fc410f7fbbfa0e22ce2b5bf60091686bbefb62db2b7bcf0be30",
+    "code": "159cfa750cd94dbafbf84d26b1e2f79afdd0a2cb",
+    "event_request": "complete:issue83-mechanism-facts-20261031-r1",
+    "event_time_ns": "1793453394562000000"
+  },
+  "tool_readback": {
+    "at": "2026-10-31T13:32:24.022Z",
+    "source": "actual LIVE buildKnowledgeTools kb_strategies, immutable production K1",
+    "version": "K1-0924d4ea26809fc410f7fbbfa0e22ce2b5bf60091686bbefb62db2b7bcf0be30",
+    "current_at_read": "K1-0924d4ea26809fc410f7fbbfa0e22ce2b5bf60091686bbefb62db2b7bcf0be30",
+    "completion_event_count": 1,
+    "entries": [
+      {
+        "id": "mechanism-rocket-death-crusher-rage-a10",
+        "canonical_sha256": "574c370bb224e7b0e7389c0b92ff9db81a6de7394e5afd560f323aa1ff34d53d",
+        "document_sha256": "574c370bb224e7b0e7389c0b92ff9db81a6de7394e5afd560f323aa1ff34d53d",
+        "pages": 1,
+        "confidence": null,
+        "evidence_type": "机制事实",
+        "grade": "B+",
+        "full_original_reconstructed": true
+      },
+      {
+        "id": "mechanism-rocket-charge-laser-a10",
+        "canonical_sha256": "3db65802b7142d93facaf2b36305496e2dd264769918c134efd045c2b2f6abe8",
+        "document_sha256": "3db65802b7142d93facaf2b36305496e2dd264769918c134efd045c2b2f6abe8",
+        "pages": 1,
+        "confidence": null,
+        "evidence_type": "机制事实",
+        "grade": "B+",
+        "full_original_reconstructed": true
+      }
+    ],
+    "negatives": {
+      "wrong_act": {
+        "returned": 0
+      },
+      "wrong_boss": {
+        "returned": 0
+      },
+      "wrong_ascension": {
+        "returned": 0
+      },
+      "old_binding": {
+        "returned": 0
+      },
+      "ironclad": {
+        "returned": 0
+      }
+    },
+    "unchanged_non_strategy_documents": true,
+    "old173_preserved": true,
+    "no_three_low_confidence_candidates": true,
+    "tool_calls": 9,
+    "original_candidate_SHA": "f57138609adc6aa3f1a5d1ccd09a998fbab48eeeda5e9ef0ae799e1d073800a5",
+    "natural_query_or_adoption_ACK": false,
+    "learning_scientific_parents_closed": false
+  },
+  "T0_readback": {
+    "at": "2026-10-31T21:28:07+08:00",
+    "T0": {
+      "schema": "issue83-prospective-epoch-A-T0-v1",
+      "authority": "83/6543440546",
+      "T0_UTC": "2026-10-31T13:16:00.093Z",
+      "T0_basis": "actual original natural startup UTC observed by pre-armed reader; not retrospective outcome selection",
+      "receipt_written_UTC": "2026-10-31T13:16:03.976664060Z",
+      "run_id": "EBF9A9ASTK56",
+      "launch": "launch:20261031-211551-3a3eba6a6+dirty",
+      "startup": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/run-config.jsonl",
+        "offset": 6195851,
+        "length": 6732,
+        "sha256": "4efe2f4609336bc4c2eca2550e7110c9d7007b95f5076b304c7ce77041d3aafd"
+      },
+      "startup_process": {
+        "pid": 1427590,
+        "started": "2026-10-31T13:16:00.093Z"
+      },
+      "original_autoplay": {
+        "pid": 3424707,
+        "birth": "85530629"
+      },
+      "original_ancestry": [
+        {
+          "pid": 1427590,
+          "birth": "87705725"
+        },
+        {
+          "pid": 1427266,
+          "birth": "87705103"
+        }
+      ],
+      "input": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261031-2037-issue83-epoch-A-ops/armed-manifest.json",
+        "sha256": "01886d9e289fb04dfbafb16c5f21d9399f1278db1117af1f28a9315c6f6acb8a"
+      },
+      "approved_draft_inputs": [
+        {
+          "path": "paper/materials/20261031-2037-issue83-epoch-A-ops/authority.json",
+          "sha256": "94f9afd56be929736091e12e67e494009f3b1e4d296435e2c3424f0682d51bcb"
+        },
+        {
+          "path": "paper/materials/20261031-2037-issue83-epoch-A-ops/prospective-epoch-draft.md",
+          "sha256": "776d4f75d90b87a18cbebad6a75f4ff6271693711ec2edf8f4bf5bd07148d79f"
+        },
+        {
+          "path": "paper/materials/20261031-2037-issue83-epoch-A-ops/input-manifest.json",
+          "sha256": "0faf3dce9716de899ce983e5fac74da01e0d88707ef70857378fee828b9e955d"
+        }
+      ],
+      "current_exact_game_build": null,
+      "no_training_or_validation_samples_certified": true,
+      "no_start_block_or_game_action": true
+    },
+    "original_startup_SHA_verified": true,
+    "approved_inputs_SHA_verified": true,
+    "original_live_ancestry_now": [
+      {
+        "pid": 1427590,
+        "birth": "87705725",
+        "ppid": 1427266
+      },
+      {
+        "pid": 1427266,
+        "birth": "87705103",
+        "ppid": 3424707
+      },
+      {
+        "pid": 3424707,
+        "birth": "85530629",
+        "ppid": 875
+      }
+    ],
+    "original_observer_exited": true,
+    "collector_called_once": true,
+    "registered": 1,
+    "position": 1,
+    "phase": "new-tune",
+    "outcome": "unknown-not-evaluated",
+    "fit_eligible": false,
+    "code_identity_gap": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    },
+    "exact_game_build": null,
+    "marker_does_not_certify_outcomes": true
+  },
+  "dev_scope": "Read original ops receipts; no ops ACK or registration written by dev; natural adoption and scientific parents remain open"
+}

@@ -1,0 +1,1095 @@
+{
+  "schema": "issue83-tune-mapping-diagnostic-v1",
+  "input_sha256": "3d045359779a5e7fcc22980a3ad0a5d19d4d4a775d2f550900706b4768aa7425",
+  "preregistration_commit": "0be0880ef95eb7e0b5d8a31c0981deb2bbc4f1e2",
+  "tune_only": true,
+  "validation_used": false,
+  "production_admitted": false,
+  "selected_candidate": null,
+  "conclusion": "not_identifiable",
+  "runs": 38,
+  "starts": {
+    "t1": {
+      "first_n": 70,
+      "wins": 69,
+      "crab_n": 7,
+      "crab_losses": 0,
+      "descriptive_full_fit": {
+        "identity": {
+          "model": "identity",
+          "metrics": {
+            "n": 70,
+            "brier": 0.19570142857142855,
+            "logloss": 2.4398491317804245,
+            "mean_prediction": 0.7161428571428572,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0
+        },
+        "platt": {
+          "model": {
+            "a": 4.2987,
+            "b": 0.3321,
+            "c": 0.0
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.014087637623648052,
+            "logloss": 0.06378548364511716,
+            "mean_prediction": 0.9857156456252264,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.9095461045071451
+        },
+        "ridge-1": {
+          "model": {
+            "a": 2.7134834136740773,
+            "b": 0.22224839560478796,
+            "c": 0.0,
+            "lambda": 1,
+            "converged": true,
+            "iterations": 8
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.016397696759957853,
+            "logloss": 0.08644106965473893,
+            "mean_prediction": 0.9469502369475131,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.7992053380715521
+        },
+        "ridge-10": {
+          "model": {
+            "a": 1.187117881550399,
+            "b": 0.27314448715436906,
+            "c": 0.0,
+            "lambda": 10,
+            "converged": true,
+            "iterations": 7
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.06082471713104218,
+            "logloss": 0.2334032743507952,
+            "mean_prediction": 0.8161260169213715,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.3893370763576632
+        },
+        "ridge-100": {
+          "model": {
+            "a": 0.1875048521954808,
+            "b": 0.6721098842586917,
+            "c": 0.0,
+            "lambda": 100,
+            "converged": true,
+            "iterations": 5
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.17190240540544874,
+            "logloss": 0.5866348666300463,
+            "mean_prediction": 0.7178502111493132,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.021018785488744394
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "train_keys": [
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "75X1BARMNZ03:17:1:6816716490",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "3KME36ADUE4U:17:1:7105260096",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "check_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607"
+          ],
+          "train_n": 46,
+          "train_wins": 46,
+          "check_n": 24,
+          "check_wins": 23,
+          "train_both_classes": false,
+          "check_both_classes": true,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 24,
+                "brier": 0.21715833333333334,
+                "logloss": 3.285962324414021,
+                "mean_prediction": 0.6658333333333334,
+                "actual_win": 0.9583333333333334
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            }
+          }
+        },
+        {
+          "fold": 1,
+          "train_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "75X1BARMNZ03:17:1:6816716490",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "check_keys": [
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "3KME36ADUE4U:17:1:7105260096",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841"
+          ],
+          "train_n": 46,
+          "train_wins": 45,
+          "check_n": 24,
+          "check_wins": 24,
+          "train_both_classes": true,
+          "check_both_classes": false,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 24,
+                "brier": 0.28906666666666664,
+                "logloss": 3.627093694780966,
+                "mean_prediction": 0.6466666666666666,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": {
+                "a": 3.7916,
+                "b": 0.4117,
+                "c": 0.0
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.005521495846297954,
+                "logloss": 0.04282363398120586,
+                "mean_prediction": 0.960320307910458,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": {
+                "a": 2.2784319927029997,
+                "b": 0.31163345101305606,
+                "c": 0.0,
+                "lambda": 1,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.025716271689015028,
+                "logloss": 0.12139369771681445,
+                "mean_prediction": 0.8952592794676596,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": {
+                "a": 0.813977076818778,
+                "b": 0.4487032040266952,
+                "c": 0.0,
+                "lambda": 10,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.16190780733737672,
+                "logloss": 0.46888285144645575,
+                "mean_prediction": 0.7246617526786827,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": {
+                "a": 0.10308818941518048,
+                "b": 0.8661576526225271,
+                "c": 0.0,
+                "lambda": 100,
+                "converged": true,
+                "iterations": 4
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.27486068234020383,
+                "logloss": 1.0752198258318082,
+                "mean_prediction": 0.6527349671866037,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "3KME36ADUE4U:17:1:7105260096",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841"
+          ],
+          "check_keys": [
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "75X1BARMNZ03:17:1:6816716490",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "train_n": 48,
+          "train_wins": 47,
+          "check_n": 22,
+          "check_wins": 22,
+          "train_both_classes": true,
+          "check_both_classes": false,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 22,
+                "brier": 0.0704409090909091,
+                "logloss": 0.22164067108863722,
+                "mean_prediction": 0.8468181818181818,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": {
+                "a": 3.9776,
+                "b": 0.2753,
+                "c": 0.0
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.00013114143015717942,
+                "logloss": 0.009708946061415652,
+                "mean_prediction": 0.9903573875622736,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": {
+                "a": 2.4682717757846904,
+                "b": 0.1753984835806819,
+                "c": 0.0,
+                "lambda": 1,
+                "converged": true,
+                "iterations": 8
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.0029215506987216727,
+                "logloss": 0.05189429071721335,
+                "mean_prediction": 0.9496337319521184,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": {
+                "a": 1.012562491188574,
+                "b": 0.22324743812802628,
+                "c": 0.0,
+                "lambda": 10,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.03252232259623878,
+                "logloss": 0.18511115881303006,
+                "mean_prediction": 0.8341410008149377,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": {
+                "a": 0.15195007552201828,
+                "b": 0.6487038509314823,
+                "c": 0.0,
+                "lambda": 100,
+                "converged": true,
+                "iterations": 5
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.06539105663404166,
+                "logloss": 0.22980271205931188,
+                "mean_prediction": 0.8218087694924008,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            }
+          }
+        }
+      ],
+      "failed_identification_gates": [
+        "crab_tune_has_no_negative",
+        "at_least_one_training_fold_has_no_negative",
+        "at_least_one_check_fold_has_no_negative"
+      ]
+    },
+    "pre": {
+      "first_n": 70,
+      "wins": 69,
+      "crab_n": 7,
+      "crab_losses": 0,
+      "descriptive_full_fit": {
+        "identity": {
+          "model": "identity",
+          "metrics": {
+            "n": 70,
+            "brier": 0.19617857142857142,
+            "logloss": 2.00383861734261,
+            "mean_prediction": 0.7021428571428571,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0
+        },
+        "platt": {
+          "model": {
+            "a": 4.3622,
+            "b": 0.3689,
+            "c": 0.0
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.014105774664718384,
+            "logloss": 0.06335994928941907,
+            "mean_prediction": 0.9857150139657782,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.8957647659315067
+        },
+        "ridge-1": {
+          "model": {
+            "a": 2.7353602285800127,
+            "b": 0.23727788621260093,
+            "c": 0.0,
+            "lambda": 1,
+            "converged": true,
+            "iterations": 8
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.01630012646490398,
+            "logloss": 0.08648223588284164,
+            "mean_prediction": 0.9466377110202854,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.788035733730135
+        },
+        "ridge-10": {
+          "model": {
+            "a": 1.2068840608282303,
+            "b": 0.2900938020674955,
+            "c": 0.0,
+            "lambda": 10,
+            "converged": true,
+            "iterations": 7
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.060456854634042705,
+            "logloss": 0.23546392858784512,
+            "mean_prediction": 0.8133022770245386,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.3700675583472849
+        },
+        "ridge-100": {
+          "model": {
+            "a": 0.1962525937584488,
+            "b": 0.709236207693459,
+            "c": 0.0,
+            "lambda": 100,
+            "converged": true,
+            "iterations": 5
+          },
+          "metrics": {
+            "n": 70,
+            "brier": 0.17292973190160826,
+            "logloss": 0.5918336513518913,
+            "mean_prediction": 0.7053534374879302,
+            "actual_win": 0.9857142857142858
+          },
+          "mapped_raw_zero": 0.017042060799517925
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "train_keys": [
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "75X1BARMNZ03:17:1:6816716490",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "3KME36ADUE4U:17:1:7105260096",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "check_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607"
+          ],
+          "train_n": 46,
+          "train_wins": 46,
+          "check_n": 24,
+          "check_wins": 23,
+          "train_both_classes": false,
+          "check_both_classes": true,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 24,
+                "brier": 0.2368125,
+                "logloss": 2.0881860652959947,
+                "mean_prediction": 0.64625,
+                "actual_win": 0.9583333333333334
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": null,
+              "check": null,
+              "admissible": false
+            }
+          }
+        },
+        {
+          "fold": 1,
+          "train_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "75X1BARMNZ03:17:1:6816716490",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "check_keys": [
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "3KME36ADUE4U:17:1:7105260096",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841"
+          ],
+          "train_n": 46,
+          "train_wins": 45,
+          "check_n": 24,
+          "check_wins": 24,
+          "train_both_classes": true,
+          "check_both_classes": false,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 24,
+                "brier": 0.25897916666666665,
+                "logloss": 3.5136600432900575,
+                "mean_prediction": 0.65625,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": {
+                "a": 3.9075,
+                "b": 0.4804,
+                "c": 0.0
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.007541397010867007,
+                "logloss": 0.04653706108116648,
+                "mean_prediction": 0.9579528808631846,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": {
+                "a": 2.3161062390027687,
+                "b": 0.33684670632264524,
+                "c": 0.0,
+                "lambda": 1,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.025891863839213745,
+                "logloss": 0.12046843919845573,
+                "mean_prediction": 0.8967400074201577,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": {
+                "a": 0.853721391705643,
+                "b": 0.46539360403987395,
+                "c": 0.0,
+                "lambda": 10,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.14808816854187434,
+                "logloss": 0.4481545150209923,
+                "mean_prediction": 0.7308208446870853,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": {
+                "a": 0.11420779931430469,
+                "b": 0.8732255344978218,
+                "c": 0.0,
+                "lambda": 100,
+                "converged": true,
+                "iterations": 4
+              },
+              "check": {
+                "n": 24,
+                "brier": 0.2469949381574491,
+                "logloss": 0.9882830040846468,
+                "mean_prediction": 0.6604985153760582,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_keys": [
+            "LRN0HPZ0FZS1:33:1:6321043589",
+            "LRN0HPZ0FZS1:48:1:6334569591",
+            "T082DRCUHRRD:17:1:6341775990",
+            "T082DRCUHRRD:33:1:6349692921",
+            "R0HEV5E3QT6G:17:1:6397481187",
+            "R0HEV5E3QT6G:33:1:6408234063",
+            "KAY522KT5NXR:17:1:6430859488",
+            "KAY522KT5NXR:33:1:6439505402",
+            "XYYQYBRM2A01:17:1:6477191929",
+            "K3676LU8B0UH:17:1:6507817530",
+            "K3676LU8B0UH:33:1:6513768685",
+            "CSBR5CRDWQNB:17:1:6533613352",
+            "ZZMYZ5UBCG72:17:1:6551916676",
+            "ZZMYZ5UBCG72:33:1:6563810567",
+            "ZZMYZ5UBCG72:48:1:6575079429",
+            "10GPK5XGHCK3:17:1:6583239676",
+            "10GPK5XGHCK3:33:1:6592407972",
+            "10GPK5XGHCK3:48:1:6609704779",
+            "F9PP859XZ3RJ:17:1:6633104385",
+            "F9PP859XZ3RJ:33:1:6642097641",
+            "1LMBFGSMCWKU:17:1:6694795755",
+            "1LMBFGSMCWKU:33:1:6701566816",
+            "1LMBFGSMCWKU:48:1:6708335172",
+            "ZE8F192FKX24:17:1:6716187206",
+            "ZE8F192FKX24:33:1:6721949896",
+            "UACFSW4VDDLD:17:1:6746311618",
+            "VN7RQJMJEFMX:17:1:6792771942",
+            "VN7RQJMJEFMX:33:1:6800609516",
+            "ARKQLHG6RS4W:17:1:6827432175",
+            "6EV5V6PJJS9D:17:1:6849282819",
+            "6EV5V6PJJS9D:33:1:6857178722",
+            "8CFMW9SAGFWQ:17:1:6868409627",
+            "2L1BNN9ZJEFU:17:1:6879319819",
+            "2L1BNN9ZJEFU:33:1:6891440791",
+            "53FLQ68CETW0:17:1:6928043908",
+            "53FLQ68CETW0:33:1:6936742794",
+            "2SU6XN2AEJRD:17:1:7002690136",
+            "2SU6XN2AEJRD:33:1:7012038091",
+            "2SU6XN2AEJRD:48:1:7023049602",
+            "3KME36ADUE4U:17:1:7105260096",
+            "HMVJKM56S4Q8:17:1:7273322692",
+            "F4QKG4J1AJJZ:17:1:7295500618",
+            "25226ZFLNR1J:17:1:7356626759",
+            "25226ZFLNR1J:33:1:7364026607",
+            "JMH5C51RLN4E:17:1:7418282395",
+            "JMH5C51RLN4E:33:1:7426655065",
+            "9TG1RP5LFAAK:17:1:7448439700",
+            "9TG1RP5LFAAK:33:1:7456072841"
+          ],
+          "check_keys": [
+            "1NZ8FE5F34R9:17:1:6620634917",
+            "9YBKCNBFP0X5:17:1:6652097629",
+            "9YBKCNBFP0X5:33:1:6662582055",
+            "75X1BARMNZ03:17:1:6816716490",
+            "ENKYQMS9W4ZD:17:1:6976480396",
+            "SADL3CGYTGSR:17:1:7033201155",
+            "SADL3CGYTGSR:33:1:7043554088",
+            "Z6CFLDR3N4SB:17:1:7076333270",
+            "Z6CFLDR3N4SB:33:1:7082249028",
+            "VLV17NUSFS61:17:1:7121374596",
+            "VLV17NUSFS61:33:1:7130718935",
+            "2PVLGRBGUX9S:17:1:7176516701",
+            "2PVLGRBGUX9S:33:1:7184216884",
+            "4Y94N8RDPGPM:17:1:7225413438",
+            "4Y94N8RDPGPM:33:1:7230442071",
+            "4Y94N8RDPGPM:48:1:7239665258",
+            "LLYSRQQ35AVW:17:1:7249055797",
+            "LLYSRQQ35AVW:33:1:7256971352",
+            "LLYSRQQ35AVW:48:1:7265109287",
+            "G403VCZ3BH1B:17:1:7319796513",
+            "G403VCZ3BH1B:33:1:7325903904",
+            "JQPT83P8KDSZ:17:1:7484146537"
+          ],
+          "train_n": 48,
+          "train_wins": 47,
+          "check_n": 22,
+          "check_wins": 22,
+          "train_both_classes": true,
+          "check_both_classes": false,
+          "results": {
+            "identity": {
+              "model": "identity",
+              "check": {
+                "n": 22,
+                "brier": 0.08334090909090909,
+                "logloss": 0.26474530035988386,
+                "mean_prediction": 0.8131818181818182,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "platt": {
+              "model": {
+                "a": 4.0203,
+                "b": 0.3065,
+                "c": 0.0
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.00013796448137179884,
+                "logloss": 0.010103813043406193,
+                "mean_prediction": 0.989965958317894,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-1": {
+              "model": {
+                "a": 2.476835891754335,
+                "b": 0.18897965083205553,
+                "c": 0.0,
+                "lambda": 1,
+                "converged": true,
+                "iterations": 8
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.0032090308026486215,
+                "logloss": 0.054805039995637454,
+                "mean_prediction": 0.9468749330416557,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-10": {
+              "model": {
+                "a": 1.0190089427335733,
+                "b": 0.2399865601036448,
+                "c": 0.0,
+                "lambda": 10,
+                "converged": true,
+                "iterations": 7
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.036287567038628545,
+                "logloss": 0.1983330602515613,
+                "mean_prediction": 0.8232255746290025,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            },
+            "ridge-100": {
+              "model": {
+                "a": 0.1550242145370393,
+                "b": 0.6852105943674005,
+                "c": 0.0,
+                "lambda": 100,
+                "converged": true,
+                "iterations": 5
+              },
+              "check": {
+                "n": 22,
+                "brier": 0.07700044133041982,
+                "logloss": 0.26802063576760027,
+                "mean_prediction": 0.7923292629320685,
+                "actual_win": 1.0
+              },
+              "admissible": false
+            }
+          }
+        }
+      ],
+      "failed_identification_gates": [
+        "crab_tune_has_no_negative",
+        "at_least_one_training_fold_has_no_negative",
+        "at_least_one_check_fold_has_no_negative"
+      ]
+    }
+  }
+}

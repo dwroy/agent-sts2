@@ -1,0 +1,39 @@
+{
+  "schema": "issue83-approved-passive-epoch-handoff-v1",
+  "authorization": "83/6543440546",
+  "owner": "original ops",
+  "implementation_status": "handoff_only_no_collector_started_by_dev",
+  "T0": null,
+  "T0_rule": "原ops在本批准后下一个自然新局边界写UTC及原启动/输入SHA回执；以实际回执为准，开发不代填",
+  "tune_runs": 900,
+  "val_runs": 900,
+  "run_unit": "natural Silent A10; start>=T0; grouped complete run; source startup order then run_id; missing/unfinished retains slot",
+  "minimum_tune": {
+    "all_actual_first": 100,
+    "independent_runs": 50,
+    "global_actual_losses": 10,
+    "crab_actual_first": 30,
+    "crab_wins": 5,
+    "crab_actual_losses": 5,
+    "fold_classes": "each train/check both classes"
+  },
+  "minimum_val": {
+    "all_actual_first": 100,
+    "crab_actual_first": 30,
+    "trust_gates": "unchanged B2/B3/B4/B5"
+  },
+  "reference": "prospective-epoch-draft.md section A as approved; section B not commissioned",
+  "no_changes": [
+    "No play or extra games",
+    "No change to SL/potions or behavior to collect outcomes",
+    "No mapping old val into tune",
+    "No developer slot or new model session",
+    "No fit before thresholds and appropriate frozen model/source"
+  ],
+  "requested_receipt": [
+    "actual T0/source identity",
+    "passive registration and source windows",
+    "phase progress/unknown/censored counts; no effectiveness claim"
+  ],
+  "C": "separate fixed already-seen-val raw-probability revalidation, passing still requires supervisor report to Roy"
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "issue83-C-zero-output-infrastructure-failure-v1",
+  "at": "2026-10-31T21:38:34+08:00",
+  "prereg_commit": "2ea70cb1fd24cc761203ce544c660e4fee1c228c",
+  "request": "e84b5f60b481414285a32f44b1950102",
+  "start_utc": "2026-10-31T13:26:50.482140Z",
+  "coordinator_exit": 1,
+  "stage_exit": 1,
+  "stage_seconds": 0.4116706848144531,
+  "stage": "old51",
+  "failure": "ENOENT isolated candidate-source/data/game-data.json while loading catalog at backtest-runner-C.ts:157, before simulation",
+  "result_records": 0,
+  "result_bytes": 0,
+  "new1_started": false,
+  "scientific_result": null,
+  "completed": false,
+  "automatic_retry": false,
+  "preserved": {
+    "started.json": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/started.json",
+      "bytes": 71003,
+      "sha256": "e2da2d40c22fbff33712f408472e894928eb8bb83959a97014fede839ccda48c"
+    },
+    "progress.json": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/progress.json",
+      "bytes": 1282,
+      "sha256": "4ca06aa29892ca0190fa81f35d6ceaae7709cee523bf960a0e4690e49cd03193"
+    },
+    "registered-run.log": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/registered-run.log",
+      "bytes": 581,
+      "sha256": "86f3d5c692778e379ffbe0f492fa0219b13b857beea7e100720f9b7c64ffd7a8"
+    },
+    "old51/results-0.jsonl": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/old51/results-0.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "old51/stderr.log": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/old51/stderr.log",
+      "bytes": 1373,
+      "sha256": "3801ae6459f0b166add7f1452c457a2a6f7d91ebd2acba548000cca5f2d2b159"
+    },
+    "old51/stdout.log": {
+      "path": ".artifacts/issue83/crusher-rocket/C-raw-once/old51/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "fixed_catalog": {
+    "path": ".artifacts/issue83/model-pair/game-data.json",
+    "bytes": 626168,
+    "sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69"
+  },
+  "next_proposal": "Restore exactly the preregistered frozen catalog (SHA 8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69) into the isolated catalog path; preserve this zero-output failed invocation and all prereg/source/seed values. No new execution until disposition of the explicit no-automatic-retry contract.",
+  "engineering": "P0+r4 original dev pipeline remains running; its 8 frozen files unchanged; no C dependency of source delivery",
+  "production_admitted": false
+}

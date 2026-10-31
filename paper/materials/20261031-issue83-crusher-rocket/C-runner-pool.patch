@@ -1,0 +1,16 @@
+--- a/agent/tools/boss-sim/backtest-runner.ts
++++ b/agent/tools/boss-sim/backtest-runner-C.ts
+@@ -35 +35 @@
+-import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
++import { BossSimPool, BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
+@@ -151,0 +152 @@
++const pool = new BossSimPool(2);
+@@ -215 +216 @@
+-          const res = await runBestOrder(runBossSim, simInput, [simLine], simOpts);
++          const res = await runBestOrder(pool.run.bind(pool), simInput, [simLine], simOpts);
+@@ -221 +222 @@
+-          const res = runBossSim(simInput, [simLine], { ...simOpts, order });
++          const res = await pool.run(simInput, [simLine], { ...simOpts, order });
+@@ -276 +277 @@
+-await main();
++try { await main(); } finally { await pool.close(); }
